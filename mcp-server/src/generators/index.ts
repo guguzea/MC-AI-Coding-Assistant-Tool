@@ -1,4 +1,4 @@
-import { normalizeModIdentifier, toPascalCase, toJavaClassName, stripJavaTypeSuffix, type GeneratorResult, noNativeGeneratorError, docsToolForGeneratorPlatform, exactMcVersion, eraUpperBoundError } from "./common.js";
+import { normalizeModIdentifier, toPascalCase, toJavaClassName, stripJavaTypeSuffix, type GeneratorResult, noNativeGeneratorError, docsToolForGeneratorPlatform, exactMcVersion, eraUpperBoundError, MC_MAX_MINOR_26X } from "./common.js";
 import { isMcVersionFamily } from "../utils/minecraft-version.js";
 
 function usesClientItemsModelPath(version: string): boolean {
@@ -117,7 +117,8 @@ export function generateLang(modId: string, entries: Record<string, string>, ver
   const zh: Record<string, string> = {};
   const warnings: string[] = ["骨架不随 pack_format 变"];
   if (mod.warned) warnings.push("标识符已归一化");
-  for (const [k, v] of Object.entries(entries)) {
+  const given: [string, string][] = Object.entries(entries ?? {});
+  for (const [k, v] of given) {
     let key: string;
     if (k.includes(".")) {
       key = k;
@@ -140,6 +141,19 @@ export function generateLang(modId: string, entries: Record<string, string>, ver
     en[key] = v;
     zh[key] = v;
   }
+  // S6-3（2026-09-25 用户裁定 = 方案 B）：空骨架是**合法产物**（用户可能只要这两个路径去手填），
+  // 三态不得改动（仍 ok:true + resultKind:"ok"，不新增第三种状态）；但「两个文件都是 {}」这件事
+  // **必须披露**——旧行为只回一句「骨架不随 pack_format 变」，调用方看不出自已产出了空东西。
+  // 判据取「落进文件的条数 = 0」而非「入参条数 = 0」：入参非空但全部键无法推断时同样是空文件。
+  // 机读面 emptyEntries 让门/脚本按字段分支，不必解析这条中文串。
+  const emptyEntries = Object.keys(en).length === 0;
+  if (emptyEntries) {
+    warnings.push(
+      `本次未产出任何 lang 条目：en_us.json / zh_cn.json 均为空对象 {}（空骨架是合法产物，不是失败）。` +
+        `要生成内容请传 entries 参数，CLI 写法：--entries='{"${mod.value}.key":"值"}'；` +
+        `或按 suggestedPaths 用编辑器手填这两个文件。`,
+    );
+  }
   return {
     code: null,
     files: {
@@ -147,6 +161,7 @@ export function generateLang(modId: string, entries: Record<string, string>, ver
       [`assets/${mod.value}/lang/zh_cn.json`]: JSON.stringify(zh, null, 2),
     },
     warnings,
+    emptyEntries,
   };
 }
 
@@ -1620,6 +1635,24 @@ export function generateWorldgen(
           noNativeGeneratorError("search_*_docs", "规则 07 / mc-worldgen Skill"),
       ],
     };
+  } else {
+    // N6 同形（2026-09-22 S9/T3）：26.x 侧此前**只有**上面那条形状门，没有 1.x 那样的**上界哨兵**
+    // ⇒ 实测 `generate_worldgen --platform=neoforge --version=26.99.9` 一路吐完整 files + exit 0，
+    // 而 `1.99.9` 被 WORLDGEN_MAX_MINOR_1X 正确拒绝。补同款 era 哨兵；数值复用
+    // generators/common.js 的 MC_MAX_MINOR_26X（与 eraUpperBoundError 同源，本仓 as-of 2026-09-21
+    // 只核到 26.1.x），不再新增第二份硬编码常量。上游出新代时抬那个常量并附依据。
+    const mm26 = ver.match(/^26\.(\d+)/);
+    const minor26 = mm26 ? Number(mm26[1]) : 0;
+    if (minor26 > MC_MAX_MINOR_26X) {
+      return {
+        code: null,
+        errors: [
+          `generate_worldgen 未跟进 26.${minor26}.x（本仓 as-of 2026-09-21 只核到 26.${MC_MAX_MINOR_26X}.x 的 datapack feature 格式）—— 禁止默默生成；` +
+            `先按 search_*_docs 核该代格式，再抬 MC_MAX_MINOR_26X。` +
+            noNativeGeneratorError("search_*_docs", "规则 07 / mc-worldgen Skill"),
+        ],
+      };
+    }
   }
   const p = platform.trim().toLowerCase();
   const allowed = ["forge", "neoforge", "fabric", "quilt"];

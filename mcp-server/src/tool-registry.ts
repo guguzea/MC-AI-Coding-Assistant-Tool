@@ -8,7 +8,7 @@ import { missingMcVersion, versionRequiredAction } from "./utils/actionable.js";
 import { getBuildStatus } from "./utils/build-status.js";
 import { assertToolRegistrationComplete, patchToolCollection } from "./tool-handlers.js";
 import { queryApi, warmupApi, listApiPreloadStatuses, getApiPreloadStatus } from "./api/index.js";
-import { convertMapping, getMethodParams } from "./mappings/index.js";
+import { getMethodParams, convertMappingEx } from "./mappings/index.js";
 import { readableSignature, returnType, parameterTypes } from "./utils/descriptor.js";
 import { getUpdateHint } from "./update/index.js";
 import { getVersionInfo } from "./version/index.js";
@@ -119,12 +119,17 @@ export const getMethodParamsSchema = z.object({
 
 export const convertMappingSchema = z.object({
   from: z
-    .enum(["mojang", "mcp", "yarn", "parchment", "obfuscated", "intermediary"])
-    .describe("源映射类型；obfuscated=Tiny official 混淆短名；intermediary=method_6032 类"),
+    .enum(["mojang", "mcp", "yarn", "parchment", "obfuscated", "intermediary", "legacy-yarn", "barn", "feather", "plasma", "yarrn", "quilt-mappings"])
+    .describe("源映射类型；obfuscated=Tiny official 混淆短名；intermediary=method_6032 类。⚠️ legacy-yarn / barn / feather / plasma / yarrn / quilt-mappings 为 Linkie 扩展 namespace：一律返回 UNSUPPORTED_NAMESPACE + 指路（前三个本仓已内置类级对照）"),
   to: z
-    .enum(["mojang", "mcp", "yarn", "parchment", "obfuscated", "intermediary"])
-    .describe("目标映射类型；to=mojang 与 obfuscated 同为混淆短名（兼容旧行为）"),
-  memberName: z.string().describe("成员名（字段或方法）"),
+    .enum(["mojang", "mcp", "yarn", "parchment", "obfuscated", "intermediary", "legacy-yarn", "barn", "feather", "plasma", "yarrn", "quilt-mappings"])
+    .describe("目标映射类型；to=mojang 与 obfuscated 同为混淆短名（兼容旧行为）。⚠️ 同上：Linkie 扩展 namespace 一律拒绝 + 指路"),
+  memberName: z
+    .string()
+    .describe(
+      "成员名（字段或方法）/ 类名。S3 批量：用逗号或换行分隔多个名字（≤50），一次调用返回逐条 results；"
+        + "单个名字时行为与以前完全一致",
+    ),
   ownerClass: z.string().optional().describe("所属类；1.12–1.13 SRG+CSV 与 1.16+ 方法查询需要；纯 CSV（1.14–1.15）勿传"),
   descriptor: z.string().optional().describe("JNI 方法描述符，重载消歧强烈建议传入，如 ()F"),
   version: z.string().min(1).describe("Minecraft 版本，必填，禁止默认 1.20.1"),
@@ -136,6 +141,25 @@ export const convertMappingSchema = z.object({
     .boolean()
     .optional()
     .describe("过渡参数：无映射时回传原名（found 仍为 false，fallbackUsed=true）"),
+  accessLines: z
+    .boolean()
+    .optional()
+    .describe(
+      "S2：附带可直接粘贴的 AT / AW 条目行（结果里的 accessLines.entries）。"
+        + "成员行需要 descriptor；Forge AT 成员行还必须是 SRG 名，取不到时行里留 <TODO> 而不猜名",
+    ),
+  platform: z
+    .enum(["forge", "neoforge", "fabric", "quilt", "liteloader", "rift", "modloader", "bedrock"])
+    .optional()
+    .describe("只被 accessLines 消费：forge→AT 要 SRG 名，neoforge→AT 用可读名，fabric/quilt→AW 条目；缺省 AT 与 AW 都给；其余加载器返回拒绝说明（没有这两种条目文件）"),
+  access: z
+    .enum(["public", "protected", "private", "default"])
+    .optional()
+    .describe("只被 accessLines 消费：条目行的目标可见性，缺省 public"),
+  finalOp: z
+    .enum(["add", "remove"])
+    .optional()
+    .describe("只被 accessLines 消费：AT 的 +f / -f 后缀（remove = 去掉 final）"),
 });
 
 export const getServerStatusSchema = z.object({
@@ -228,15 +252,27 @@ export const portProjectSchema = z.object({
 
 export const queryUpstreamReleasesSchema = z.object({
   source: z
-    .enum(["forge", "neoforge", "fabric-loader", "fabric-yarn", "quilt-loader", "parchment", "modrinth"])
-    .describe("上游发布源。forge 走 maven-metadata.xml（全量，可选按 MC 过滤）；neoforge 同（注意 NeoForge 编号去掉前导 1.：MC 1.21.1 → 21.1.x）；fabric-loader / fabric-yarn / quilt-loader / parchment 的端点按 MC 版本分列，**必须带 minecraftVersion**；modrinth 走 project slug 查任意第三方模组/库"),
+    .enum([
+      "forge", "neoforge", "fabric-loader", "fabric-yarn", "quilt-loader", "parchment", "modrinth",
+      // A4c（2026-09-24 用户裁定「全补 8+3」）
+      "legacyfabric-loader", "maven", "mojang-manifest",
+    ])
+    .describe("上游发布源。forge 走 maven-metadata.xml（全量，可选按 MC 过滤）；neoforge 同（注意 NeoForge 编号去掉前导 1.：MC 1.21.1 → 21.1.x）；fabric-loader / fabric-yarn / quilt-loader / parchment / legacyfabric-loader 的端点按 MC 版本分列，**必须带 minecraftVersion**；modrinth 走 project slug 查任意第三方模组/库；maven 需 slug=<alias>:<group>/<artifact>（别名表写死在 releases.ts，见 MAVEN_HOST_ALIASES）；mojang-manifest 是官方版本清单（带 minecraftVersion 就按 versions[].id 过滤）"),
   minecraftVersion: z
     .string()
     .min(1)
     .optional()
-    .describe('Minecraft 版本，如 "1.20.1"。fabric-loader / fabric-yarn / quilt-loader / parchment 必填（后两者按 artifact 名分列）；forge / neoforge / modrinth 可选（传了就只回该 MC 的版本，不传回全表）'),
-  slug: z.string().optional().describe("modrinth 专用：project slug（小写字母数字与连字符，如 fabric-api）。其它源忽略。CLI 侧故意不叫 project —— --project 在本仓 CLI 是 projectPath 的保留别名，会被吞掉"),
+    .describe('Minecraft 版本，如 "1.20.1"。fabric-loader / fabric-yarn / quilt-loader / parchment / legacyfabric-loader 必填（后两者按 artifact 名分列）；forge / neoforge / modrinth / maven / mojang-manifest 可选（传了就只回该 MC 的版本，不传回全表）'),
+  slug: z.string().optional().describe("modrinth 用 project slug（小写字母数字与连字符，如 fabric-api）；maven 用 <alias>:<group>/<artifact>（如 fabric:net/fabricmc/yarn、blamejared:mezz/jei/jei-1.20.1-forge）。其它源忽略。CLI 侧故意不叫 project —— --project 在本仓 CLI 是 projectPath 的保留别名，会被吞掉"),
   limit: z.number().int().min(1).max(200).optional().default(12).describe("最多回几条（按版本号降序取前 N），默认 12；total 始终是过滤后的总条数"),
+  refresh: z
+    .boolean()
+    .optional()
+    .describe(
+      "S4′：true = 跳过磁盘缓存强制打上游（结果照旧回写）。默认按档吃缓存：" +
+        "available:true 存 6 小时、available:false（上游确实没有）存 2 小时，ok:false（没查到）**不缓存**；" +
+        "每次响应都带 cache{hit,tier,ttlMs,ageMs?,wrote?,note?} 说明这发到底从哪来",
+    ),
 });
 
 /**
@@ -246,7 +282,7 @@ export const queryUpstreamReleasesSchema = z.object({
  */
 export const queryUpstreamReleasesOutputSchema = z.object({
   ok: z.boolean(),
-  source: z.enum(["forge", "neoforge", "fabric-loader", "fabric-yarn", "quilt-loader", "parchment", "modrinth"]),
+  source: z.enum(["forge", "neoforge", "fabric-loader", "fabric-yarn", "quilt-loader", "parchment", "modrinth", "legacyfabric-loader", "maven", "mojang-manifest"]),
   url: z.string(),
   minecraftVersion: z.string().optional(),
   available: z.boolean(),
@@ -257,6 +293,7 @@ export const queryUpstreamReleasesOutputSchema = z.object({
       maven: z.string().optional(),
       timestamp: z.string().optional(),
       stable: z.boolean().optional(),
+      versionType: z.string().optional(),
       gameVersions: z.array(z.string()).optional(),
       loaders: z.array(z.string()).optional(),
     }),
@@ -269,6 +306,18 @@ export const queryUpstreamReleasesOutputSchema = z.object({
   redirectedTo: z.string().optional(),
   error: z.object({ code: z.string(), message: z.string(), hint: z.string().optional() }).optional(),
   fetchedAt: z.string(),
+  // S4′：这发到底从哪来（缓存命中 / 打了上游 / 没写成的原因）。档与 TTL 只在这里声明一次。
+  cache: z
+    .object({
+      hit: z.boolean(),
+      tier: z.enum(["available", "absent"]).nullable(),
+      ttlMs: z.number().int().nullable(),
+      ageMs: z.number().int().optional(),
+      wrote: z.boolean().optional(),
+      note: z.string().optional(),
+      file: z.string().optional(),
+    })
+    .optional(),
 });
 
 function communityDocError(e: unknown): CallToolResult {
@@ -330,15 +379,26 @@ const CONVERT_MAPPING_DESC =
   "无 ownerClass 时 obfuscated/intermediary→yarn/mcp 走 method→field→class 全局反查（崩溃日志单 token）。26.1+ 无混淆层 → UNOBFUSCATED_NO_YARN。\n" +
   "mcp↔parchment 为同名层（identity）；参数名请用 get_method_params。\n" +
   "yarn-tiny 数据（fabric 1.14.4–1.21.x）无 MCP/Parchment 可读层：from 或 to 取 mcp/parchment 一律拒绝（YARN_TINY_NO_MCP_LAYER，反向会把 Yarn 名列当 MCP 列伪报 found:true），改用 query_api / get_method_params 或 to=yarn。\n" +
+  "Linkie 扩展 namespace（legacy-yarn / feather / quilt-mappings / barn / plasma / yarrn）不在支持面：一律返回 UNSUPPORTED_NAMESPACE + 指路（nextSteps）。前三个本仓已内置类级对照数据：" +
+  "data/_mcp-legacyyarn-pairs/（MCP↔LegacyYarn，1.7.10–1.13.2）、data/_mcp-feather-pairs/（MCP↔Feather，同 7 档）、data/_qm-yarn-pairs/（QuiltMappings↔Yarn，1.18.2–1.21.11）；" +
+  "barn / plasma / yarrn 本仓无对应版本档、不建语料，指路上游。\n" +
   "方法重载请传 descriptor；无 descriptor 且多重载时 found=false 且 ambiguous=true，返回 candidates。\n" +
   "1.12–1.13 SRG/TSRG+CSV：可带 ownerClass（MCP named→searge→obf）；1.14–1.15 纯 CSV 仅全局 searge↔named（勿传 owner）。\n" +
+  "批量（S3）：memberName 用逗号 / 分号 / 换行分隔多个名字（≤50）→ 顶层仍是第一个名的结果，另附 results[] 与 batch{requested,found,missing}；单个名字时输出形状与以前完全一致。\n" +
+  "条目行（S2）：accessLines=true 时附 accessLines.entries —— 可直接粘贴的 AT / AW 条目。名字层按语料分叉且不可混用：" +
+  "Forge AT 成员行必须 SRG 名（forge_1.20.1 advanced_accesstransformers.md:55），NeoForge AT 成员行用可读名 + 粘连描述符" +
+  "（neoforge_1.21.1 同页 :127,:137），Fabric/Quilt AW 条目的名与描述符须与工程当前映射层一致" +
+  "（fabric_1.21.11 develop_class-tweakers_access-widening.md:82）。取不到 SRG 名或 descriptor 时行里留 <TODO…>（complete=false），" +
+  "不拿可读名顶替；完整的行会回灌 validate_at / validate_aw 用的同一个解析器自检（selfCheckOk）。\n" +
   "失败默认 converted=null；allow_fallback=true 时可回传原名并设 fallbackUsed（过渡期）。\n" +
   "@example 成功：from=mcp to=mojang memberName=getHealth ownerClass=net.minecraft.world.entity.LivingEntity version=1.20.1 → converted=er\n" +
   "@example obfuscated：from=intermediary to=obfuscated memberName=method_6032 → er；崩溃日志可用 lookup_obfuscated\n" +
   "@example 歧义：同名多重载且不传 descriptor → found=false ambiguous=true candidates=[...]\n" +
   "@example 1.12.2：getHealth + EntityLivingBase → obf（如 cd）；无 owner 的 getHealth → ambiguous\n" +
   "@example CSV：1.14.4 memberName=func_110143_aJ → getHealth；传 ownerClass → csv-no-owner（全量数据下带 owner 未命中时附 CSV 指引）\n" +
-  "@example allow_fallback=true 且无表 → found=false converted=原名 fallbackUsed=true";
+  "@example allow_fallback=true 且无表 → found=false converted=原名 fallbackUsed=true\n" +
+  "@example 条目行：from=yarn to=yarn memberName=formatValue ownerClass=net.minecraft.network.chat.TextColor version=1.21.1 accessLines=true platform=fabric descriptor=()Ljava/lang/String; → accessLines.entries 给出 AW 方法行\n" +
+  "@example 批量：memberName='getHealth, fall, hurt' version=1.21.1 → results 三条 + batch.missing 列出没命中的名";
 
 const GET_VERSION_INFO_DESC =
   "【Forge only】获取指定 Minecraft/Forge 版本的推荐做法、关键变更点和官方 Changelog 链接。" +
@@ -376,12 +436,16 @@ const LIST_DOC_VERSIONS_DESC =
  */
 const QUERY_UPSTREAM_RELEASES_DESC =
   "查上游发布源「某个加载器/映射/模组的哪个版本到底存在吗、最新出到第几 build」。" +
-  "source 七选一：forge / neoforge（maven-metadata.xml，全量可查）、fabric-loader / fabric-yarn / quilt-loader / parchment（端点按 MC 版本分列，**必须带 minecraftVersion**；parchment 的 artifact 名是 parchment-<mc>，版本串本身是日期）、modrinth（需 slug，查任意第三方模组/库）。" +
+  "source 十选一：forge / neoforge（maven-metadata.xml，全量可查）、fabric-loader / fabric-yarn / quilt-loader / parchment / legacyfabric-loader（端点按 MC 版本分列，**必须带 minecraftVersion**；parchment 的 artifact 名是 parchment-<mc>，版本串本身是日期；legacyfabric 的过滤走查询串 ?game_version=，路径式 /<mc> 实测回 400）、modrinth（需 slug，查任意第三方模组/库）、" +
+  "maven（需 slug=<alias>:<group>/<artifact>，如 fabric:net/fabricmc/yarn、blamejared:mezz/jei/jei-1.20.1-forge；别名表见 src/upstream/releases.ts 的 MAVEN_HOST_ALIASES —— 主机写死，拼不出任意主机）、" +
+  "mojang-manifest（Mojang 官方 version_manifest_v2：给 minecraftVersion 就按 versions[].id 过滤；该源现成带 type ⇒ 逐字进 versionType）。" +
   "【与 list_*_versions 的区别】那些列的是**本仓库已入库**的文档档位，不在清单 ≠ 上游没有；要回答「上游有没有 1.20.1 的 Forge 47.4.x」「yarn 对 1.21.4 出到第几 build」用本工具。" +
   "【三态必读】ok:false ⇒ 没查到（网络/HTTP/解析失败，原因在 error），不得据此断言上游没有；" +
   "ok:true + available:false ⇒ 上游确实没有该版本（404 或按 matchRule 过滤后 0 条）。" +
+  "⚠️ **唯一收窄**：`source=maven` 的 404 只证「该坐标没有 maven-metadata.xml」——分不清「构件不存在」与「group/artifact 写法不对」（按路径寻址，层级与大小写都要逐字对），该源 404 载荷带 `hint` 说明；要断言「某模组上游不存在」请换 source=modrinth（按 project slug 查）。" +
   "matchRule 回显本次用的版本归属规则（如 neoforge：MC 1.21.1 → 前缀 21.1.），核对判据用。" +
   "releases 按版本号降序、截断到 limit（默认 12），total 是过滤后总条数、truncated 说明是否被截。正式版排在同号的 nightly / beta 之前。" +
+  "每条 release 带 versionType 时是**上游自报**的类型（目前只有 modrinth 提供 version_type：release / beta / alpha，逐字回显）；其它源上游不提供该字段 ⇒ **缺席**，缺席 ≠ release，禁止据版本串（如 -beta 后缀）猜 release/beta。" +
   "【边界】要联网；Node TLS 失败时自动回退 curl.exe --ssl-no-revoke，不改系统证书库或代理。入口与重定向落点都过主机白名单（parchment 的托管后端 ldtteam.jfrog.io 已显式登记），落点不在白名单 ⇒ 不读正文并报 URL_REJECTED。" +
   "不返回依赖坐标写法与 API 说明，那些仍走 search_*_docs / diagnose_gradle。";
 
@@ -419,6 +483,8 @@ const PORT_PROJECT_DESC =
   "且 projectPath 位于 MC_SKILL_PROJECT_ROOT 允许目录内。" +
   "适用于：接收到 analyze_porting_path 输出的 nextSteps 后，按步骤执行。" +
   "注意：extract_common 仅做静态分析，输出候选清单，不执行文件移动。" +
+  "两态合同：dryRun=false 而未传 confirmed=true ⇒ 不写任何文件（CONFIRMATION_REQUIRED），不是静默成功。" +
+  "REFUSE_KNOWLEDGE_REPO 只在**真要写盘**时判；只读分析（extract_common、dryRun=true 预览）在本知识库仓内可用。" +
   "apply_version_migration 在确认写入时会真实执行包名替换（两阶段提交，失败自动回滚）；冲突文件在 confirmed 写入时会被拒绝。";
 
 /** Z-2（sweep81 顺延）：MCP server 版本从 package.json 单源读取 —— 曾硬编码 0.1.0 而实际 1.0.4。 */
@@ -477,8 +543,10 @@ server.registerTool(
     description: CONVERT_MAPPING_DESC,
     inputSchema: convertMappingSchema,
   },
-  async ({ from, to, memberName, ownerClass, descriptor, version, memberKind, allow_fallback }): Promise<CallToolResult> => {
-    const result = convertMapping({
+  async ({ from, to, memberName, ownerClass, descriptor, version, memberKind, allow_fallback, accessLines, platform, access, finalOp }): Promise<CallToolResult> => {
+    // S2/S3 的逻辑在 dist/mappings/convert-extras.js —— test-core 跑的是同一条路径，
+    // 这里只负责调用与序列化，不夹判断。
+    const result = convertMappingEx({
       from,
       to,
       memberName,
@@ -487,6 +555,10 @@ server.registerTool(
       version,
       memberKind,
       allow_fallback,
+      accessLines,
+      platform,
+      access,
+      finalOp,
     });
     return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
   }
@@ -546,6 +618,12 @@ server.registerTool(
           ? "JDK 可用（反编译 / remap 需要 17+）。"
           : "反编译 / remap 需要 JDK 17+。未设置 JAVA_HOME 时请安装 Temurin 17+ 并加入 PATH。",
       },
+      /**
+       * A4a 探针（2026-09-25 用户裁定落地）：宿主 clientCapabilities 原样回显。
+       * 「本仓哪些输出会被宿主拦截/改写（resource_link 等）」从此可在服务端侧直接观察，
+       * 探测结论 = `docs/mcmap-linkie-absorption.md` §4。无宿主会话（CLI 直调）时为 null。
+       */
+      clientCapabilities: server.server.getClientCapabilities?.() ?? null,
     };
     return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
   }
@@ -681,6 +759,7 @@ server.registerTool(
       query: args.query,
       version: args.version,
       tags: args.tags,
+      limit: args.limit,
     });
   }
 );
@@ -829,7 +908,7 @@ server.registerTool(
     inputSchema: searchFabricDocsSchema.inputSchema,
   },
   async (args): Promise<CallToolResult> => {
-    return searchFabricDocs({ query: args.query, version: args.version, tags: args.tags, source: args.source });
+    return searchFabricDocs({ query: args.query, version: args.version, tags: args.tags, source: args.source, limit: args.limit });
   }
 );
 
@@ -932,6 +1011,7 @@ server.registerTool(
       query: args.query,
       version: args.version,
       tags: args.tags,
+      limit: args.limit,
     });
   }
 );
@@ -1010,6 +1090,7 @@ server.registerTool(
       platform: args.platform,
       tags: args.tags,
       source: args.source,
+      limit: args.limit,
     });
   }
 );
@@ -1073,6 +1154,7 @@ server.registerTool(
       minecraftVersion: args.minecraftVersion,
       slug: args.slug,
       limit: args.limit,
+      refresh: args.refresh,
     });
     return {
       content: [{ type: "text", text: JSON.stringify(result, null, 2) }],

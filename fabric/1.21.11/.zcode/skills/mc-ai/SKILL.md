@@ -5,6 +5,7 @@ platform: fabric
 version: "1.21.11"
 dependencies: []
 mappings: yarn
+mappings_alt: mojmap
 ---
 
 # mc-ai
@@ -82,6 +83,22 @@ public static AttributeSupplier.Builder createCubeAttributes() {
 - **自定义 `Goal` 子类**：`Goal` 基类本身、其生命周期方法（能否开始/结束/是否需要 tick 之类）在本档语料未出现 ⇒ `TODO(未核实)`。
 - **Goal 的移除、优先级冲突行为、`goalSelector` 的类型与获取方式以外的 API**：页内只演示 `addGoal(int, Goal)` ⇒ 其余不猜。
 - **实体注册与渲染**：走同页的 `:::registerclass` / `:::types` 与渲染章节，见 `mc-entity`，本件不复制。
+
+### ⚠️ 映射口径：本文件引用的参考文件是 mojmap
+
+本文件围栏里的类名逐字抄自参考文件，是 **mojmap 原名**；本档工程映射按 frontmatter 为 Yarn，**两套名不能混用**。
+
+| mojmap 名 | Yarn 名 | 适用版本（13 档逐档 join 实测） | 依据 |
+| --- | --- | --- | --- |
+| `RandomStrollGoal` | `WanderAroundGoal` | 1.16.5–1.21.11 | join（`net.minecraft.entity.ai.goal.WanderAroundGoal`） |
+| `LookAtPlayerGoal` | `LookAtEntityGoal` | 1.16.5–1.21.11 | join（`net.minecraft.entity.ai.goal.LookAtEntityGoal`） |
+| `RandomLookAroundGoal` | `LookAroundGoal` | 1.16.5–1.21.11 | join（`net.minecraft.entity.ai.goal.LookAroundGoal`） |
+| `Cow` | `CowEntity` | 1.16.5–1.21.11 | join（`net.minecraft.entity.passive.CowEntity`） |
+| `PathfinderMob` | `PathAwareEntity` | 1.16.5–1.21.11 | join（`net.minecraft.entity.mob.PathAwareEntity`） |
+| `AttributeSupplier` | `DefaultAttributeContainer` | 1.16.5–1.21.11 | join（`net.minecraft.entity.attribute.DefaultAttributeContainer`） |
+
+- 上表只由本档 `mappings/yarn-mappings.sqlite`（与 mojmap `client.txt` 的 join）证实**类名存在与包路径**，不证实方法名/参数/返回值；逐签名以 Yarn 源码为准。
+- 引用参考文件原文时保留 mojmap 名（考证价值），但落到用户工程必须换上表 Yarn 列。
 
 ## 相关
 

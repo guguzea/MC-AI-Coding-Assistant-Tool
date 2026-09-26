@@ -34,7 +34,7 @@ interface Cmd {
 }
 
 const COMMANDS: Cmd[] = [
-  { group: "lib", name: "resolve", summary: "按 (platform, mcVersion) 解析库 skill 源稿（组映射 + frontmatter platforms/mcVersions 过滤）；--validate 跑三组合校验", script: "scripts/resolve-lib-skills.mjs" },
+  { group: "lib", name: "resolve", summary: "按 (platform, mcVersion) 解析库 skill 源稿（组映射 + frontmatter platforms/mcVersions/mcVersionsByPlatform 过滤）；--validate 按 VALIDATE_COMBOS 逐组合校验", script: "scripts/resolve-lib-skills.mjs" },
   { group: "lib", name: "summary", summary: "从反编译树提取库 API 摘要：--only <slug|modId> --write [--max-* 上限]", script: "scripts/build-api-summaries.mjs" },
   { group: "lib", name: "ownership", summary: "G1 库归属门（摘要↔catalog↔取件记录一致性 + 台账签字）", script: "mcp-server/scripts/assert-lib-ownership.mjs" },
   { group: "corpus", name: "decompile", summary: "批量反编译库 jar：--filter <key=value,...> [--resume]（读写 $MC_SKILL_CACHE）", script: "scripts/batch-decompile.mjs" },

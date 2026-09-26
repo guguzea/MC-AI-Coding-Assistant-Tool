@@ -4,6 +4,7 @@ description: PlayerAbilityLib（PAL）玩家能力库。触发词：PAL、Player
 platforms: [fabric, quilt]
 mcVersions: ["1.20-26.1"]
 communityDocId: authored/lib-player-ability-lib
+modrinthSlug: pal
 mappings: hint
 ---
 

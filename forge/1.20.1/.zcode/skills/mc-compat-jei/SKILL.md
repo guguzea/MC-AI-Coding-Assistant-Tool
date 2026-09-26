@@ -4,7 +4,7 @@ description: JEI/EMI/REI 配方查看器插件集成。触发词：JEI、EMI、R
 platforms: [fabric, forge, neoforge]
 mcVersions: ["1.20.1+"]
 communityDocId: authored/library-integration-jei-emi
-mappings: hint
+mappings: parchment
 ---
 
 # JEI / EMI / REI 配方查看器集成

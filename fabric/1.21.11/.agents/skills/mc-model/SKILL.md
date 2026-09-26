@@ -197,6 +197,7 @@ public void generateItemModels(ItemModelGenerators itemModelGenerator) {
 | `ItemModelGenerators` | `ItemModelGenerator` | 1.16.5–1.21.11 | join（`net.minecraft.client.data.ItemModelGenerator`） |
 | `BlockModelGenerators` | `BlockStateModelGenerator` | 1.16.5–1.21.11 | join（`net.minecraft.client.data.BlockStateModelGenerator`） |
 | `ModelTemplates` | `Models` | 1.16.5–1.21.11 | join（`net.minecraft.client.data.Models`） |
+| `StateDefinition` | `StateManager` | 1.16.5–1.21.11 | join（`net.minecraft.state.StateManager`） |
 
 - 上表「Yarn 对应名」只由本档 `mappings/yarn-mappings.sqlite` 证实**类名存在与其包路径**，**不证实**方法名、参数与返回值。逐签名以 Yarn 源码为准：`get_minecraft_source`（需 JDK 17+）或 IDE `./gradlew genSources`。
 - 反过来，mojmap 侧这些名在本档 Yarn 映射里 **0 命中** ⇒ 抄进 Yarn 工程必编译失败。

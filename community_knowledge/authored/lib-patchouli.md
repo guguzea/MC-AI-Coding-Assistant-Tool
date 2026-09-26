@@ -1,13 +1,13 @@
 ---
 id: authored/lib-patchouli
 title: Patchouli 指南书集成要点
-tags: [patchouli, guidebook, documentation, datapack, fabric, forge, neoforge]
+tags: [patchouli, guidebook, documentation, datapack, fabric, forge, neoforge, quilt]
 summary: 游戏内指南书库，book 资源放 data/<modid>/patchouli_books/，数据包为主、自定义页面类型才写 Java；解锁与进度联动可选；1.21.1 起弃 Forge 转 NeoForge。
 mcHint: 1.14.4-26.1
 minecraftVersions: "1.14.4-26.1"
 sourceKind: authored
 modIds: [patchouli]
-loaders: [fabric, forge, neoforge]
+loaders: [fabric, forge, neoforge, quilt]
 modrinthSlug: patchouli
 role: api
 skillId: mc-patchouli
@@ -31,6 +31,22 @@ skillId: mc-patchouli
 
 - 1.18 起 Fabric 与 Forge 同仓库维护（Fabric 构建为 patchouli-fabric）
 - **1.21.1 起弃 MinecraftForge、转向 NeoForge**；1.20.6 及以前才出 Forge 版
+
+### 构件面逐 loader 实测（2026-09-25，本档 `loaders` 由 [fabric, forge, neoforge] 补成含 `quilt`）
+
+口径 = 2026-09-22 裁定④ + 2026-09-24 延伸：**点名某 loader ⇔ 构件面该 loader 有 `versionType=release` 的文件行**，窗口终点取该 loader 的 release 上界，只有 beta/alpha 撑着的必须在此披露。数据 = `mcp-server/data/lib-manifests/all.json` 的 slug `patchouli`（快照 as-of 2026-09-16；本轮未重抓，欠账挂 `CONTRIBUTING.md` `L42` ①），分母 = 该 slug 50 行：
+
+| loader | 行 | release | 点分 `gameVersion` 上界（数值序，非字典序） | 判定 |
+|---|---|---|---|---|
+| fabric | 17 | 14 | 1.21.1 | 原已点名；26.1 / 26.1.1 / 26.1.2 三条是 **beta** |
+| forge | 13 | 13 | 1.20.1 | 原已点名（与上条「1.21.1 起弃 Forge」一致） |
+| neoforge | 7 | 4 | 1.21.1 | 原已点名；26.x 三条 beta |
+| **quilt** | 13 | **10** | **1.21.1** | ⇒ 补点名；其中 26.1 / 26.1.1 / 26.1.2 三条记 **beta** ⇒ **release 止 1.21.1**，Quilt 工程要 26.x 时按「beta 构件至 26.1.2、无 release 支撑」读，别当稳定版推荐 |
+
+- 13 条 quilt 行的 fileName 与 fabric 行同源（`Patchouli-*-FABRIC.jar` / `patchouli-fabric-*.jar`，与 fabric 行 fileName 交集 11）⇒ Quilt 走的就是 `patchouli-fabric` 构建，与本节第一条「Fabric 构建为 patchouli-fabric」一致。
+- 与 `platforms` 的关系：本条只补 `loaders`（= `check_dependencies` 的 `detectedLibraries[].loaders`），**未动** `knowledge/libs/all-platforms/mc-patchouli/SKILL.md` 的 `platforms` / `mcVersionsByPlatform`（后者早已写 `quilt=1.18.2-1.21.1`，与本表同向）。
+- 复核（只读、不落盘）：`node temp/ralph-20260922/_r37-probe-slug-loader.mjs` · `node temp/ralph-20260922/_r37-probe-rows.mjs` （第 37 轮探针脚本落在 `temp/**`，**不入库** ⇒ 只在本机这一轮可跑；持久口径 = 直接按 `mcp-server/data/lib-manifests/all.json` 里该 slug 的 `entries` 数 `loader` × `versionType`，点分 `gameVersion` 按数值序取上界）。
+
 
 ## Decision Flow
 

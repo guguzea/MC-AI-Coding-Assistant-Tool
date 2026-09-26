@@ -4,7 +4,7 @@ description: 客户端实体/方块渲染、BER、层与纹理。触发词：Ren
 platform: forge
 version: "1.18.2"
 dependencies: []
-mappings: mcp
+mappings: parchment
 ---
 
 # mc-renderer

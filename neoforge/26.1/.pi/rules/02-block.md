@@ -12,7 +12,7 @@ description: 02 — 方块（NeoForge 26.1）
 public static final DeferredBlock<Block> DRIEDGHAST_BLOCK = BLOCKS.registerBlock(
     "driedghast_block",
     Block::new,
-    BlockBehaviour.Properties.of().mapColor(MapColor.STONE));
+    () -> BlockBehaviour.Properties.of().mapColor(MapColor.STONE));
 ```
 
 属性工厂签名随版本变（26.1 以文档/MDK 为准：1.20.4 MDK 传 `Properties` 对象；26.1 MDK `registerSimpleBlock` 用 `p -> p.mapColor(...)`）。

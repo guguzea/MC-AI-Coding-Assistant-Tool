@@ -99,6 +99,25 @@ function fileStem(path: string): string {
   return file.replace(/\.java$/i, "");
 }
 
+function normalizeBlockRef(raw: string): string {
+  let s = raw.trim();
+  // 上面的正则在**第一个** `)` 处收尾，所以 `X.get()` 会捕获成 `X.get(`；
+  // 三种尾巴都得剥掉，否则 `get(` 会被当成 Block 名（实测第 6 轮 S8/T4 夹具抓到）。
+  s = s.replace(/\(\s*\)\s*$/, "");
+  s = s.replace(/\(\s*$/, "");
+  s = s.replace(/\.get$/i, "");
+  s = s.slice(s.lastIndexOf(".") + 1);
+  return s.trim();
+}
+
+/**
+ * 提取 `BlockEntityType.Builder.of(<工厂>, <Block 实参>)` 里引用的 **Block 实参**。
+ * R66/S8-T3 附带核查（现读判定：确是同一类「假 warning」缺陷，一并修）：
+ * 本函数此前取 `match[1]` —— 那是第一个实参「工厂 supplier」（如 `ModBlockEntities::new`），
+ * 它在任何写法下都不可能等于 `BLOCKS.register("…")` 的注册名，于是**每一条** Builder.of
+ * 都会出一句「引用了 'ModBlockEntities::new'，但未在同文件中找到对应的 BLOCKS.register()」。
+ * 现取 `match[2]`（第二个实参 = Block 引用），并归一化掉 `.get()` 与 `ModBlocks.` 类名限定。
+ */
 function extractBlockNamesFromBlockEntity(
   content: string,
 ): Array<{ name: string; line: number }> {
@@ -110,7 +129,8 @@ function extractBlockNamesFromBlockEntity(
       /BlockEntityType\.Builder\.of\s*\(\s*([^,)]+)\s*,\s*([^)]+)\s*\)/,
     );
     if (match) {
-      results.push({ name: match[1].trim(), line: i + 1 });
+      const name = normalizeBlockRef(match[2]);
+      if (name) results.push({ name, line: i + 1 });
     }
   }
   return results;
@@ -305,27 +325,35 @@ function checkBlockEntityReferences(
       /RegistryObject\s*<\s*Block\s*>\s+([A-Z_][A-Z0-9_]*)/g,
     );
     for (const rm of roMatches) {
-      // 假设 RegistryObject 名称是 BLOCK 形式（去后缀），对应小写注册名
+      // R66/S8-T3：这里此前把**已经按 `[A-Z_][A-Z0-9_]*` 抓出来的**常量名再套一次
+      // `/([A-Z])/g → "_$1"`，`EXAMPLE_BLOCK` 被逐字母拆成 `e_x_a_m_p_l_e__b_l_o_c_k`，
+      // 于是 `includes("_block")` 永假、这个集合永远是空 ⇒ 标准 DeferredRegister 写法
+      // （`RegistryObject<Block> EXAMPLE_BLOCK` + `Builder.of(F, ModBlocks.EXAMPLE_BLOCK.get())`）
+      // 100% 被判「未找到 BLOCKS.register」假 warning。
+      // 现按原始常量名入集，并只剥**一次**尾部 `_BLOCK`；大小写各存一份：
+      // Builder.of 引的是 Java 常量名，BLOCKS.register 的第一参是注册表 id（小写）。
+      //   EXAMPLE_BLOCK -> EXAMPLE_BLOCK / example_block / EXAMPLE / example
       const name = rm[1];
-      // 简化：如果 RegistryObject 名为 EXAMPLE_BLOCK，提取 example_block
-      const simple = name.replace(/([A-Z])/g, "_$1").toLowerCase().replace(/^_/, "");
-      if (simple.includes("_block")) {
-        registeredBlocks.add(simple.replace("_block", ""));
+      registeredBlocks.add(name);
+      registeredBlocks.add(name.toLowerCase());
+      const stripped = name.replace(/_BLOCK$/, "");
+      if (stripped !== name) {
+        registeredBlocks.add(stripped);
+        registeredBlocks.add(stripped.toLowerCase());
       }
     }
 
     for (const ref of blockRefs) {
       // 尝试多种匹配方式
       const refName = ref.name.trim();
+      // camelCase -> snake_case（对 SCREAMING_SNAKE 恒等，只在用户把常量写成小驼峰时才多一条腿）
       const asRegName = refName
         .replace(/([A-Z])/g, "_$1")
         .toLowerCase()
         .replace(/^_/, "");
 
-      const found =
-        registeredBlocks.has(refName) ||
-        registeredBlocks.has(asRegName) ||
-        registeredBlocks.has(refName.replace(/\.get\(\)$/, ""));
+      const candidates = [refName, refName.toLowerCase(), asRegName];
+      const found = candidates.some((c) => registeredBlocks.has(c));
 
       if (!found) {
         warnings.push(
@@ -402,7 +430,8 @@ function checkObjectHolder(
           if (modsTomlModId) {
             warnings.push(
               `[${path}] @ObjectHolder value='${value}' 未指定命名空间，默认为 '${modsTomlModId}:${value}'，` +
-                "建议显式写为 '@ObjectHolder(\"${modsTomlModId}:${value}\")' 以避免歧义",
+              "建议显式写为 " +
+                `\`@ObjectHolder("${modsTomlModId}:${value}")\` 以避免歧义`,
             );
           }
         }
@@ -928,8 +957,13 @@ export function validateProject(query: ValidateQuery): ValidationResult {
     // RegistryObject 缺少 static/final
     // 两阶段方案：1. 提取包含 RegistryObject 的声明行；2. 分析修饰符和变量名
     // 支持嵌套泛型：<Supplier<Block>>，通过 [^<>]+(?:<[^<>]+>)* 匹配
+    // S8/T4 夹具抓到同族假 warning（2026-09-22 第 6 轮）：修饰符那组此前写成
+    // `((?:static|final)\s+)*` —— 捕获组只保留**最后一次**迭代，所以标准写法
+    // `public static final RegistryObject<Block> X` 里 modifiers 只剩 "final "，
+    // `/\bstatic\b/` 恒假 ⇒ 每一条正确的 `static final` 声明都被判「缺少 static 修饰符」。
+    // 改成把整段修饰符序列一次捕获进组 2（`(?:static\s+|final\s+)*`），两条腿才同时成立。
     const roDeclPattern =
-      /((?:private|public|protected)\s+)?((?:static|final)\s+)*(RegistryObject\s*<[^<>]+(?:<[^<>]+>)*>\s+([A-Z_][A-Z0-9_]*))/gm;
+      /((?:private|public|protected)\s+)?((?:static\s+|final\s+)*)(RegistryObject\s*<[^<>]+(?:<[^<>]+>)*>\s+([A-Z_][A-Z0-9_]*))/gm;
     let rm;
     let roCount = 0;
     while ((rm = roDeclPattern.exec(content)) !== null) {

@@ -4,6 +4,7 @@ description: Balm 跨加载器抽象层（Blay）。注册/事件/网络/配置/
 platforms: [fabric, forge, neoforge]
 mcVersions: ["1.18-26.2"]
 communityDocId: authored/lib-balm
+modrinthSlug: balm
 mappings: "库按各 loader 预重映射；公共代码禁止 import 平台类，映射差异由 Balm 隔离"
 ---
 
@@ -12,7 +13,7 @@ mappings: "库按各 loader 预重映射；公共代码禁止 import 平台类�
 
 # Balm 跨平台抽象（操作指引）
 
-给 AI 的操作指引：一码多端（Fabric + Forge + NeoForge）且愿意跟随 Blay 体系时，用 Balm 统一注册/事件/网络/配置/按键/模型加载的平台差异。详细信息用 `search_community_docs` 查 `authored/lib-balm`，API 细节以 [官方仓库](https://github.com/BlayTheNinth/Balm) 当前 README 与示例 mod（Waystones 源码是现成范例）为准。
+给 AI 的操作指引：一码多端（Fabric + Forge + NeoForge）且愿意跟随 Blay 体系时，用 Balm 统一注册/事件/网络/配置/按键/模型加载的平台差异。详细信息用 `search_community_docs` 查 `authored/lib-balm`，API 细节以 [官方仓库](https://github.com/TwelveIterations/Balm) 当前 README 与示例 mod（Waystones 源码是现成范例）为准。
 
 ## 何时用 / 何时不用
 
@@ -63,7 +64,7 @@ Decision: 要不要用 Balm
 
 ## 参考
 
-- 官方：https://github.com/BlayTheNinth/Balm
+- 官方：https://github.com/TwelveIterations/Balm
 - 社区：`search_community_docs` → `authored/lib-balm`；相关短文：`authored/lib-architectury`（对比）、`authored/soft-deps-modlist`（门闩）
 - 相关 Skill：`mc-registry`、`mc-networking`、`mc-config`、`mc-events`、`mc-architectury`
 - 不确定时：打开 Balm README + 示例 mod（Waystones 源码），未核对前不写死任何类名/方法签名

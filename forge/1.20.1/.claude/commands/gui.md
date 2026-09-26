@@ -4,7 +4,7 @@ description: Minecraft Forge GUI/菜单开发。创建自定义 ContainerMenu、
 platform: forge
 version: "1.20.1"
 dependencies: []
-mappings: mcp
+mappings: parchment
 ---
 
 # GUI/菜单开发（Forge 1.20.1）

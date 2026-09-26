@@ -63,7 +63,7 @@ public static final RegistryObject<FlowingFluid> MY_FLUID_FLOWING =
 public static final RegistryObject<FlowingFluidBlock> MY_FLUID_BLOCK =
     BLOCKS.register("my_fluid",
         () -> new FlowingFluidBlock(MY_FLUID_SOURCE,
-            Block.Properties.of(Material.WATER)
+            AbstractBlock.Properties.of(Material.WATER)
                 .noCollission()
                 .strength(100.0f)
                 .noDrops()

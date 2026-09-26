@@ -4,6 +4,7 @@ description: Curios 饰品槽（Forge）。触发词：Curios、饰品槽、acce
 platforms: [forge]
 mcVersions: ["1.13.2-1.20.6"]
 communityDocId: authored/lib-curios
+modrinthSlug: curios
 mappings: hint
 ---
 

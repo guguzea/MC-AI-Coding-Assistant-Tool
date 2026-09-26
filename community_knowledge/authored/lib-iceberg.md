@@ -54,7 +54,7 @@ Decision: 要不要把 Iceberg 作为依赖
 - MCP：check_dependencies、search_community_docs、crash_analyze
 - Skill：mc-author-shared-libs（作者全家桶共享库纪律）
 - 全览：§三 全家桶共享库；相关：authored/library-catalog-2026、authored/library-integration、authored/soft-deps-modlist
-- 官方：https://github.com/Grend-G/Iceberg
+- 官方：https://github.com/AHilyard/Iceberg
 - 不清楚时：打开 Iceberg GitHub README；AGENT_USAGE.md 规则先行
 
 ## 核对（2026-08 反编译验证）

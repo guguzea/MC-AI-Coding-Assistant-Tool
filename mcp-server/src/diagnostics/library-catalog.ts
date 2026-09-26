@@ -105286,7 +105286,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "api",
     communityDocId: "authored/lib-balm",
     skillId: "mc-balm",
-    officialUrls: ["https://github.com/BlayTheNinth/Balm"],
+ officialUrls: ["https://github.com/TwelveIterations/Balm"],
     verifiedApi: {
       "26.1.2/forge": {
         "verifiedAt": "2026-08",
@@ -139935,12 +139935,12 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
   {
     id: "authored/lib-bookshelf",
     modIds: ["bookshelf"],
-    loaders: ["forge","neoforge"],
+    loaders: ["fabric","forge","neoforge","quilt"],
     modrinthSlug: "bookshelf-lib",
     role: "author_shared",
     communityDocId: "authored/lib-bookshelf",
     skillId: "mc-author-shared-libs",
-    officialUrls: ["https://github.com/Darkhax/Bookshelf"],
+ officialUrls: ["https://github.com/Darkhax-Minecraft/Bookshelf"],
     verifiedApi: {
       "1.11.2/forge": {
         "verifiedAt": "2026-08",
@@ -146081,7 +146081,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "api",
     communityDocId: "authored/lib-cloth-config",
     skillId: "mc-config",
-    officialUrls: ["https://github.com/shedaniel/cloth-config","https://github.com/isxander/yet-another-config-lib"],
+ officialUrls: ["https://github.com/shedaniel/cloth-config","https://github.com/isXander/YetAnotherConfigLib"],
     verifiedApi: {
       "1.20.1/fabric": {
         "verifiedAt": "2026-08",
@@ -153172,7 +153172,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "api",
     communityDocId: "authored/lib-config-legacy",
     skillId: "mc-config",
-    officialUrls: ["https://github.com/isxander/yet-another-config-lib","https://github.com/shedaniel/cloth-config","https://github.com/fzzyhmstrs/fzzy_config"],
+ officialUrls: ["https://github.com/isXander/YetAnotherConfigLib","https://github.com/shedaniel/cloth-config","https://github.com/fzzyhmstrs/fconfig"],
     supportedVersions: [],
   },
   {
@@ -155574,7 +155574,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "api",
     communityDocId: "authored/lib-fzzy-config",
     skillId: "mc-config",
-    officialUrls: ["https://github.com/fzzyhmstrs/fzzy_config"],
+ officialUrls: ["https://github.com/fzzyhmstrs/fconfig"],
     verifiedApi: {
       "1.20.1/forge": {
         "verifiedAt": "2026-08",
@@ -162223,7 +162223,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "api",
     communityDocId: "authored/lib-geckolib",
     skillId: "mc-geckolib",
-    officialUrls: ["https://docs.geckolib.com/","https://github.com/bernie-g/geckolib"],
+    officialUrls: ["https://github.com/bernie-g/geckolib/wiki","https://github.com/bernie-g/geckolib"],
     verifiedApi: {
       "1.20.1/fabric": {
         "verifiedAt": "2026-09",
@@ -166551,7 +166551,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "author_shared",
     communityDocId: "authored/lib-iceberg",
     skillId: "mc-author-shared-libs",
-    officialUrls: ["https://github.com/Grend-G/Iceberg"],
+ officialUrls: ["https://github.com/AHilyard/Iceberg"],
     verifiedApi: {
       "1.18.2/fabric": {
         "verifiedAt": "2026-08",
@@ -177986,6 +177986,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     communityDocId: "authored/lib-libgui",
     skillId: "mc-libgui",
     officialUrls: ["https://github.com/CottonMC/LibGui"],
+    notes: "API 摘要已补建（2026-09-16 缺口补建批次）：`lib-api-summaries/libgui.json`（26.3 线，64 类 / 636 方法；来源 GitHub Releases `LibGui-18.0.1+26.3-rc-2.jar`）；Modrinth 无项目、分发走 GitHub Releases / Cotton maven；包根 `io.github.cottonmc.cotton.gui.*`。旧记：无 API 摘要、需 `ingest_loader_api` 自备 jar 核实（2026-09-14）",
     verifiedApi: {
       "26.3/fabric": {
         "verifiedAt": "2026-09",
@@ -178039,13 +178040,12 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         }
       }
     },
-    notes: "API 摘要已补建（2026-09-16 缺口补建批次）：`lib-api-summaries/libgui.json`（26.3 线，64 类 / 636 方法；来源 GitHub Releases `LibGui-18.0.1+26.3-rc-2.jar`）；Modrinth 无项目、分发走 GitHub Releases / Cotton maven；包根 `io.github.cottonmc.cotton.gui.*`。旧记：无 API 摘要、需 `ingest_loader_api` 自备 jar 核实（2026-09-14）",
     supportedVersions: [],
   },
   {
     id: "authored/lib-libx",
     modIds: ["libx"],
-    loaders: ["fabric","forge","neoforge"],
+    loaders: ["forge","neoforge"],
     modrinthSlug: "libx",
     role: "author_shared",
     communityDocId: "authored/lib-libx",
@@ -181236,7 +181236,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
   {
     id: "authored/lib-modern-ui",
     modIds: ["modernui"],
-    loaders: ["fabric","forge","neoforge"],
+    loaders: ["fabric","forge","neoforge","quilt"],
     modrinthSlug: "modern-ui",
     role: "api",
     communityDocId: "authored/lib-modern-ui",
@@ -184787,7 +184787,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "author_shared",
     communityDocId: "authored/lib-necronomicon",
     skillId: "mc-author-shared-libs",
-    officialUrls: ["https://github.com/ElocinDev/Necronomicon"],
+ officialUrls: ["https://github.com/nvb-uy/Necronomicon"],
     verifiedApi: {
       "1.17/forge": {
         "verifiedAt": "2026-08",
@@ -199860,7 +199860,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
   {
     id: "authored/lib-patchouli",
     modIds: ["patchouli"],
-    loaders: ["fabric","forge","neoforge"],
+    loaders: ["fabric","forge","neoforge","quilt"],
     modrinthSlug: "patchouli",
     role: "api",
     communityDocId: "authored/lib-patchouli",
@@ -200884,16 +200884,13 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
   },
   {
     id: "authored/lib-player-ability-lib",
-    // 2026-09-16：补 `pal` 段 —— 反编译树里是 `io.github.ladysnake.pal.*`（与 impersonate 同
-    // 「3 段根」`io.github.ladysnake`）；缺本段时 G1 会把 120 个本库类判成「冒领他方包根」。
-    modIds: ["playerabilitylib", "pal"],
+    modIds: ["playerabilitylib","pal"],
     loaders: ["fabric","quilt"],
     modrinthSlug: "pal",
     role: "api",
     communityDocId: "authored/lib-player-ability-lib",
     skillId: "mc-player-ability-lib",
     officialUrls: ["https://github.com/Ladysnake/PlayerAbilityLib"],
-    verifiedApi: {},
     supportedVersions: ["1.20","1.21.3","1.21.9","1.20.2","1.21.5","26.1","1.21","1.21.6"],
   },
   {
@@ -200904,7 +200901,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "api",
     communityDocId: "authored/lib-playeranimator",
     skillId: "mc-playeranimator",
-    officialUrls: ["https://github.com/KosmX/playerAnimator"],
+    officialUrls: ["https://github.com/KosmX/minecraftPlayerAnimator"],
     verifiedApi: {
       "1.16.4/fabric": {
         "verifiedAt": "2026-08",
@@ -204227,12 +204224,12 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
   {
     id: "authored/lib-puzzles-lib",
     modIds: ["puzzleslib"],
-    loaders: ["fabric","forge","neoforge","quilt"],
+    loaders: ["fabric","forge","neoforge"],
     modrinthSlug: "puzzles-lib",
     role: "author_shared",
     communityDocId: "authored/lib-puzzles-lib",
     skillId: "mc-author-shared-libs",
-    officialUrls: ["https://github.com/Fuzss/PuzzlesLib"],
+ officialUrls: ["https://github.com/Fuzss/puzzles-lib"],
     verifiedApi: {
       "1.18.2/fabric": {
         "verifiedAt": "2026-08",
@@ -212061,7 +212058,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
   {
     id: "authored/lib-satin",
     modIds: ["satin"],
-    loaders: ["fabric"],
+    loaders: ["fabric","quilt"],
     modrinthSlug: "satin-api",
     role: "api",
     communityDocId: "authored/lib-satin",
@@ -213309,7 +213306,8 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "api",
     communityDocId: "authored/lib-server-translations",
     skillId: "mc-server-translations",
-    officialUrls: ["https://github.com/NucleoidMC/server-translations-api"],
+ officialUrls: ["https://github.com/NucleoidMC/Server-Translations"],
+    notes: "API 摘要已补建（2026-09-16 缺口补建批次）：`lib-api-summaries/server-translations.json`（1.21.5 线，5 类 / 17 方法；来源 maven.nucleoid.xyz `server-translations-api-2.5.1+1.21.5.jar`）；包根 `xyz.nucleoid.server.translations.api.*`。旧记：无 API 摘要、Modrinth 页面已下架（2026-09-14）",
     verifiedApi: {
       "1.21.5/fabric": {
         "verifiedAt": "2026-09",
@@ -213333,7 +213331,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         }
       }
     },
-    notes: "API 摘要已补建（2026-09-16 缺口补建批次）：`lib-api-summaries/server-translations.json`（1.21.5 线，5 类 / 17 方法；来源 maven.nucleoid.xyz `server-translations-api-2.5.1+1.21.5.jar`）；包根 `xyz.nucleoid.server.translations.api.*`。旧记：无 API 摘要、Modrinth 页面已下架（2026-09-14）",
     supportedVersions: [],
   },
   {
@@ -213814,7 +213811,8 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "api",
     communityDocId: "authored/lib-spruceui-obsidianui",
     skillId: "mc-spruceui",
-    officialUrls: ["https://github.com/architectury/ObsidianUI","https://github.com/LambdAurora/SpruceUI"],
+ officialUrls: ["https://github.com/ThinkingStudios/ObsidianUI","https://github.com/LambdAurora/SpruceUI"],
+    notes: "API 摘要已补建（2026-09-16 缺口补建批次）：`lib-api-summaries/spruceui-obsidianui.json`（1.21.5 线，72 类 / 498 方法；来源 Modrinth CDN `ObsidianUI-fabric-0.2.12+mc1.21.6.jar`，sha512 与上游逐字节一致）；包根 `org.thinkingstudio.obsidianui.*`（ObsidianUI 线）。SpruceUI 原版 Modrinth 仍 404（历史库）。旧记：无 API 摘要（2026-09-14）",
     verifiedApi: {
       "1.21.5/fabric": {
         "verifiedAt": "2026-09",
@@ -213928,7 +213926,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         }
       }
     },
-    notes: "API 摘要已补建（2026-09-16 缺口补建批次）：`lib-api-summaries/spruceui-obsidianui.json`（1.21.5 线，72 类 / 498 方法；来源 Modrinth CDN `ObsidianUI-fabric-0.2.12+mc1.21.6.jar`，sha512 与上游逐字节一致）；包根 `org.thinkingstudio.obsidianui.*`（ObsidianUI 线）。SpruceUI 原版 Modrinth 仍 404（历史库）。旧记：无 API 摘要（2026-09-14）",
     supportedVersions: [],
   },
   {
@@ -214636,7 +214633,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "api",
     communityDocId: "authored/lib-text-placeholder-api",
     skillId: "mc-text-placeholder",
-    officialUrls: ["https://github.com/Patbox/text_placeholder_api"],
+ officialUrls: ["https://github.com/Patbox/TextPlaceholderAPI"],
     verifiedApi: {
       "1.19/fabric": {
         "verifiedAt": "2026-08",
@@ -217516,7 +217513,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "api",
     communityDocId: "authored/lib-yacl",
     skillId: "mc-yacl",
-    officialUrls: ["https://github.com/isxander/yet-another-config-lib","https://github.com/shedaniel/cloth-config"],
+ officialUrls: ["https://github.com/isXander/YetAnotherConfigLib","https://github.com/shedaniel/cloth-config"],
     verifiedApi: {
       "1.19.3/fabric": {
         "verifiedAt": "2026-08",

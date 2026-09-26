@@ -755,6 +755,49 @@ export function joinSearchWarnings(...parts: Array<string | undefined | false>):
   return xs.length ? xs.join("；") : undefined;
 }
 
+/**
+ * A2（2026-09-24）：四个平台 `search_*` 面的**按调用窗口**块（与基岩 `demotion` 块同族但语义更窄：
+ * 这里没有降权腿，只有「窗口」）。
+ *
+ * 为什么要有它：`limit` 参数如果不把「实际可得」说破，调用方就会把「只返回 8 条」
+ * 读成「该档只有 8 条相关页」。所以只要**显式传了 limit**，响应就带本块：
+ *   · `requestedLimit` 调用方请求值（未传时不带本块，保证默认载荷逐字不变）
+ *   · `resultLimit`   本次实际窗口 = min(请求, 候选池)
+ *   · `candidates`    截断前候选池条数（L0 命中 ∪ 语义命中，已过 tag / 成员校验）
+ *   · `limitMax`      schema 声明的上界（与 schema 常量同源）
+ *   · `clamped`       请求 > 候选池 ⇒ 已按池截断，并在 warning 里点名池大小
+ */
+export interface SearchLimitWindow {
+  requestedLimit: number;
+  resultLimit: number;
+  candidates: number;
+  limitMax: number;
+  clamped: boolean;
+}
+
+/** 未传 limit ⇒ undefined（不往载荷里加字段：默认载荷必须与加参数之前逐字相同）。 */
+export function limitWindowOf(args: {
+  requested: number | undefined;
+  candidates: number;
+  limitMax: number;
+}): SearchLimitWindow | undefined {
+  if (args.requested === undefined) return undefined;
+  const candidates = Math.max(0, args.candidates);
+  return {
+    requestedLimit: args.requested,
+    resultLimit: Math.min(args.requested, candidates),
+    candidates,
+    limitMax: args.limitMax,
+    clamped: args.requested > candidates,
+  };
+}
+
+/** 要的比池宽必须披露（否则「调大没变多」会被读成丢了页）。 */
+export function limitClampWarning(w: SearchLimitWindow | undefined): string | undefined {
+  if (!w || !w.clamped) return undefined;
+  return `请求 limit=${w.requestedLimit} 比本次候选池（${w.candidates} 条）还宽 ⇒ 已按池截断返回 ${w.resultLimit} 条（不是丢了页；池 = L0 命中 ∪ 语义命中）。`;
+}
+
 /** LiteLoader / Rift 官方 wiki 挂在薄档 L0 上时的现行站警告（不触发 fabric-docs fallback 文案）。 */
 export function thinLoaderWikiWarning(
   platform: string,

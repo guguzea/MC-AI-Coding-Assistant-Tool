@@ -23,6 +23,13 @@
  *      N 与实际小节数不等 ⇒ 当场红（不依赖地板，抓的是单页截断）；Σ 地板抓的是整树掉页。
  *      稳定计数源 = 生产者留在树上的 `scriptapi-typed.json`（它自己解析 npm d.ts 的成员清单），
  *      三方对账由 `assert-bedrock-scriptapi-members.mjs` 负责；本判据只读语料，不读那份 JSON。
+ *   ⑧ `files` 锚（S16-1，2026-09-24）：基线每树钉的 `files` 必须真被比对 —— **实测 < 基线 ⇒ 红**。
+ *      存在的理由 = 此前 `b.files` 在全文件 **0 引用**：门一路绿并打印「树 60 / 篇 20648」，而基线
+ *      Σfiles = 21322（asOf 2026-09-18），−674 的掉页没有任何判据读过（基线自己的 bedrock `_note`
+ *      还写着「files 882→258 是本树真实篇数」= 一个没人核对的真值声明）。
+ *      方向：**只钉下界**（掉页 = 正文消失）；实测多于基线**不判红** —— 补抓只会涨，做成等式棘轮会把
+ *      正常补抓变成噪声源，也违 R47「地板只许 `<`」。涨的部分由汇总行的 `Δ` 同屏打出，重签走 RELEDGER。
+ *      基线缺 `files` 字段 ⇒ 红（判据空转，同 ⑥⑦ 的「钉了地板但统计没算」口径）。
  *
  * 诚实边界（明写，不夸大）：
  *   · `sectionless`（无 `## ` 小节）**只打印、不判红** —— 2026-09-18 **逐族定性完成**
@@ -169,6 +176,15 @@ export function judgeTrees(stats, baseline) {
         `${s.tree}: 标题桩 ${s.stub} 篇 > 基线允许 ${b.allowedStubs} 篇（ratchet 只许降；正文退回空壳即红）`,
       );
     }
+    // 判据⑧（S16-1）：`files` 锚。此前 `b.files` 全文件 0 引用 ⇒ 基线钉的篇数只是装饰。
+    // 只钉下界（掉页必红）；实测 > 基线不判红（见文件头：等式棘轮会把正常补抓变噪声源，违 R47）。
+    if (typeof b.files !== 'number') {
+      problems.push(`${s.tree}: 基线未钉 files ⇒ 篇数无锚（判据空转）；跑 MC_SKILL_CORPUS_SEMANTICS_RELEDGER=1 补签`);
+    } else if (s.files < b.files) {
+      problems.push(
+        `${s.tree}: 实测 ${s.files} 篇 < 基线钉的 ${b.files} 篇（Δ${s.files - b.files}，掉页/挪树 ⇒ 先核正文是真丢了还是改名了，确认有意才按 RELEDGER 重签）`,
+      );
+    }
     const floor = Math.max(GLOBAL_MEDIAN_FLOOR, typeof b.medianFloor === 'number' ? b.medianFloor : 0);
     if (s.files >= 5 && s.median < floor) {
       problems.push(`${s.tree}: 正文中位 ${s.median} < 地板 ${floor}（整树变薄/回退为桩）`);
@@ -258,7 +274,10 @@ function selftest() {
     { tree: 'b/thin/1', files: 10, ...b },
   ];
   const base = (trees, budget = 10) => B(trees, budget);
-  const twoTrees = { 'a/good/1': { allowedStubs: 1, medianFloor: 100 }, 'b/thin/1': { allowedStubs: 0, medianFloor: 500 } };
+  const twoTrees = {
+    'a/good/1': { allowedStubs: 1, medianFloor: 100, files: 10 },
+    'b/thin/1': { allowedStubs: 0, medianFloor: 500, files: 10 },
+  };
   const cases = [
     ['good', two({ stub: 1, median: 400 }, { stub: 0, median: 600 }), base(twoTrees), true],
     ['stub 超预算', two({ stub: 2, median: 400 }, { stub: 0, median: 600 }), base(twoTrees), false],
@@ -272,7 +291,7 @@ function selftest() {
     [
       '全局预算超',
       two({ stub: 1, median: 600 }, { stub: 1, median: 600 }),
-      base({ 'a/good/1': { allowedStubs: 2, medianFloor: 0 }, 'b/thin/1': { allowedStubs: 2, medianFloor: 0 } }, 1),
+      base({ 'a/good/1': { allowedStubs: 2, medianFloor: 0, files: 10 }, 'b/thin/1': { allowedStubs: 2, medianFloor: 0, files: 10 } }, 1),
       false,
     ],
     [
@@ -280,7 +299,7 @@ function selftest() {
       [{ tree: 'a/good/1', files: 10, stub: 1, median: 400, stubFiles: ['processed/x.md'] }],
       {
         totalStubBudget: 1,
-        trees: { 'a/good/1': { allowedStubs: 1, medianFloor: 100 } },
+        trees: { 'a/good/1': { allowedStubs: 1, medianFloor: 100, files: 10 } },
         residue: [{ tree: 'a/good/1', file: 'processed/x.md', reason: 'fixture' }],
       },
       true,
@@ -290,7 +309,7 @@ function selftest() {
       [{ tree: 'a/good/1', files: 10, stub: 2, median: 400, stubFiles: ['processed/x.md', 'processed/y.md'] }],
       {
         totalStubBudget: 2,
-        trees: { 'a/good/1': { allowedStubs: 2, medianFloor: 100 } },
+        trees: { 'a/good/1': { allowedStubs: 2, medianFloor: 100, files: 10 } },
         residue: [{ tree: 'a/good/1', file: 'processed/x.md', reason: 'fixture' }],
       },
       false,
@@ -300,7 +319,7 @@ function selftest() {
       [{ tree: 'a/good/1', files: 10, stub: 0, median: 400, stubFiles: [] }],
       {
         totalStubBudget: 0,
-        trees: { 'a/good/1': { allowedStubs: 0, medianFloor: 100 } },
+        trees: { 'a/good/1': { allowedStubs: 0, medianFloor: 100, files: 10 } },
         residue: [{ tree: 'a/good/1', file: 'processed/x.md', reason: 'fixture' }],
       },
       false,
@@ -309,19 +328,19 @@ function selftest() {
       // 判据⑥：p10 地板（2026-09-22 用户裁定③）。三例钉住"尾塌而 median 不动"这个 median 抓不到的形状。
       'p10 达标（应绿）',
       [{ tree: 'a/good/1', files: 624, stub: 0, median: 363, p10: 123 }],
-      { totalStubBudget: 0, trees: { 'a/good/1': { allowedStubs: 0, medianFloor: 200, p10Floor: 110 } } },
+      { totalStubBudget: 0, trees: { 'a/good/1': { allowedStubs: 0, medianFloor: 200, p10Floor: 110, files: 624 } } },
       true,
     ],
     [
       'p10 掉一半而 median 未动（最薄的一成先塌 ⇒ 必红）',
       [{ tree: 'a/good/1', files: 624, stub: 0, median: 363, p10: 61 }],
-      { totalStubBudget: 0, trees: { 'a/good/1': { allowedStubs: 0, medianFloor: 200, p10Floor: 110 } } },
+      { totalStubBudget: 0, trees: { 'a/good/1': { allowedStubs: 0, medianFloor: 200, p10Floor: 110, files: 624 } } },
       false,
     ],
     [
       '基线钉了 p10Floor 但统计没算 p10（判据空转 ⇒ 必红）',
       [{ tree: 'a/good/1', files: 624, stub: 0, median: 363 }],
-      { totalStubBudget: 0, trees: { 'a/good/1': { allowedStubs: 0, medianFloor: 200, p10Floor: 110 } } },
+      { totalStubBudget: 0, trees: { 'a/good/1': { allowedStubs: 0, medianFloor: 200, p10Floor: 110, files: 624 } } },
       false,
     ],
     [
@@ -329,13 +348,13 @@ function selftest() {
       // 各自只让 ⑦ 的一条腿红，另两条腿保持绿，证明它不是前两条的重述。
       '成员 Σ 与逐页自洽都达标（应绿）',
       [{ tree: 'a/good/1', files: 624, stub: 0, median: 363, p10: 123, members: 2590, memberMismatch: 0 }],
-      { totalStubBudget: 0, trees: { 'a/good/1': { allowedStubs: 0, medianFloor: 200, p10Floor: 110, membersFloor: 1554 } } },
+      { totalStubBudget: 0, trees: { 'a/good/1': { allowedStubs: 0, medianFloor: 200, p10Floor: 110, membersFloor: 1554, files: 624 } } },
       true,
     ],
     [
       'Σ成员掉到地板以下（成员列表成片消失 ⇒ 必红）',
       [{ tree: 'a/good/1', files: 624, stub: 0, median: 363, p10: 123, members: 900, memberMismatch: 0 }],
-      { totalStubBudget: 0, trees: { 'a/good/1': { allowedStubs: 0, medianFloor: 200, p10Floor: 110, membersFloor: 1554 } } },
+      { totalStubBudget: 0, trees: { 'a/good/1': { allowedStubs: 0, medianFloor: 200, p10Floor: 110, membersFloor: 1554, files: 624 } } },
       false,
     ],
     [
@@ -346,13 +365,39 @@ function selftest() {
           memberMismatch: 1, memberMismatchFiles: ['scriptapi/AABB.md: 自报 12 实际 5'],
         },
       ],
-      { totalStubBudget: 0, trees: { 'a/good/1': { allowedStubs: 0, medianFloor: 200, p10Floor: 110, membersFloor: 1554 } } },
+      { totalStubBudget: 0, trees: { 'a/good/1': { allowedStubs: 0, medianFloor: 200, p10Floor: 110, membersFloor: 1554, files: 624 } } },
       false,
     ],
     [
       '基线钉了 membersFloor 但统计没算 members（判据空转 ⇒ 必红）',
       [{ tree: 'a/good/1', files: 624, stub: 0, median: 363, p10: 123 }],
-      { totalStubBudget: 0, trees: { 'a/good/1': { allowedStubs: 0, medianFloor: 200, membersFloor: 1554 } } },
+      { totalStubBudget: 0, trees: { 'a/good/1': { allowedStubs: 0, medianFloor: 200, membersFloor: 1554, files: 624 } } },
+      false,
+    ],
+    [
+      // 判据⑧（S16-1）：`files` 锚。此前 `b.files` 全文件 0 引用 ⇒ 掉页 674 篇照样绿。
+      // 这四例各自只让 ⑧ 的一条腿动，其余腿保持绿 ⇒ 证明它不是 ③④⑥⑦ 的重述。
+      'files 实测 == 基线钉（应绿）',
+      [{ tree: 'a/good/1', files: 624, stub: 0, median: 400 }],
+      { totalStubBudget: 0, trees: { 'a/good/1': { allowedStubs: 0, medianFloor: 100, files: 624 } } },
+      true,
+    ],
+    [
+      'files 实测 < 基线钉（掉页 24 篇 ⇒ 必红；median/stub 全达标，抓的就是篇数）',
+      [{ tree: 'a/good/1', files: 600, stub: 0, median: 400 }],
+      { totalStubBudget: 0, trees: { 'a/good/1': { allowedStubs: 0, medianFloor: 100, files: 624 } } },
+      false,
+    ],
+    [
+      'files 实测 > 基线钉（补抓涨页 ⇒ 不判红，非等式棘轮；Δ 只在汇总行可见）',
+      [{ tree: 'a/good/1', files: 700, stub: 0, median: 400 }],
+      { totalStubBudget: 0, trees: { 'a/good/1': { allowedStubs: 0, medianFloor: 100, files: 624 } } },
+      true,
+    ],
+    [
+      '基线没钉 files（篇数无锚 = 判据空转 ⇒ 必红，防止 ⑧ 退化成装饰）',
+      [{ tree: 'a/good/1', files: 624, stub: 0, median: 400 }],
+      { totalStubBudget: 0, trees: { 'a/good/1': { allowedStubs: 0, medianFloor: 100 } } },
       false,
     ],
   ];
@@ -394,7 +439,12 @@ if (process.argv.includes('--selftest')) {
   const problems = judgeTrees(stats, baseline);
 
   if (RELEDGER) {
-    const next = { totalStubBudget: stats.reduce((a, s) => a + s.stub, 0), trees: {} };
+    const next = {
+      // asOf 必须随重签走：⑧ 的汇总行拿它当「钉是什么时候的真相」的唯一凭据，丢了它 Δ 就没法读。
+      asOf: new Date().toISOString().slice(0, 10),
+      totalStubBudget: stats.reduce((a, s) => a + s.stub, 0),
+      trees: {},
+    };
     for (const s of stats) {
       const prev = baseline.trees[s.tree] ?? {};
       next.trees[s.tree] = {
@@ -415,6 +465,17 @@ if (process.argv.includes('--selftest')) {
 
   const totalStub = stats.reduce((a, s) => a + s.stub, 0);
   const totalFiles = stats.reduce((a, s) => a + s.files, 0);
+  // R47 汇总（无条件打印，红绿都打）：扫了几 / 判了几 / 拒了几 + 基线钉的篇数 vs 实测篇数。
+  // 涨页不判红，但 Δ 必须同屏可见 —— 否则「基线越钉越旧」又是静默绿的一种形状。
+  const pinnedFiles = Object.values(baseline.trees ?? {}).reduce(
+    (a, b) => a + (typeof b?.files === 'number' ? b.files : 0),
+    0,
+  );
+  const judged = stats.filter((s) => baseline.trees?.[s.tree]).length;
+  console.log(
+    `[R47] 扫树=${stats.length} 判树=${judged} 拒=${problems.length} · Σ篇 实测 ${totalFiles} / 基线钉 ${pinnedFiles}` +
+      `（Δ ${totalFiles - pinnedFiles >= 0 ? '+' : ''}${totalFiles - pinnedFiles}，基线 asOf ${baseline.asOf ?? '未注明'}）`,
+  );
   if (INFO) {
     console.log('tree | files | stub(真·空页) | thin(薄但有结构) | sectionless | p10 | median | Σ成员(页自报) | 成员不自洽页');
     for (const s of stats) {

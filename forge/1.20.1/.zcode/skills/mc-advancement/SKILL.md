@@ -4,7 +4,7 @@ description: 进度 JSON 与 AdvancementProvider。触发词：advancement、cri
 platform: forge
 version: "1.20.1"
 dependencies: []
-mappings: mcp
+mappings: parchment
 ---
 
 # mc-advancement
@@ -31,9 +31,9 @@ mappings: mcp
 },
 
 // This advancement is only unlocked once
-// - Criteria 1 AND 2 have been met
+// - criterion 1 AND 2 have been met
 // OR
-// - Criteria 3 and 4 have been met
+// - criterion 3 and 4 have been met
 "requirements": [
   ["example_criterion1", "example_criterion2"],
   ["example_criterion3", "example_criterion4"]

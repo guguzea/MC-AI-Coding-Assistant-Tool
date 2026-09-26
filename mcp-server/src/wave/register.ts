@@ -140,6 +140,9 @@ export const getWorkflowTemplateSchema = z.object({
     "mc-combat-attribute",
     "mc-multi-loader",
     "mc-modpack",
+    "mc-events-forge",
+    "mc-events-neoforge",
+    "mc-events-fabric",
   ]),
 });
 export const localizeModSchema = z.object({
@@ -209,7 +212,10 @@ export const ACTIVATE_PLATFORM_PACK_DESCRIPTION =
   "ok=true 且带「已加载底座规则 00/01/09」warning = 平台包可用但规则未按任务扩展（rulesMode=base，带 next 对象；不要当失败，也不要当已灌 02–10）。" +
   "包存在但缺 00/01/09 文件 → ok:false + PACK_INCOMPLETE（与 PACK_NOT_FOUND 区分）。" +
   "rulesMode：includeAllRules=true→all；否则有效 task/topics 且规则集大于底座→extended；否则 base。" +
-  "write 默认 dryRun；hosts 必填；目标只能是用户模组工程（拒绝知识库整树）。不能开关 IDE 扫描器。";
+  "write 默认 dryRun；hosts 必填；目标只能是用户模组工程（拒绝知识库整树）。不能开关 IDE 扫描器。" +
+  "write/deactivate 的未确认写盘是**两态**，不是静默成功：dryRun=true（或不传）→ ok:true + 预览（planned / willDelete）；" +
+  "dryRun=false 而未传 confirmed=true → ok:false + action.code=CONFIRMATION_REQUIRED，盘上 0 文件，CLI 出 rc=1" +
+  "（与 mc_skill_update apply 同一合同，按退出码判断即安全）。";
 export const generateModelSchema = z.object({
   modId: z.string(),
   blockName: z.string(),

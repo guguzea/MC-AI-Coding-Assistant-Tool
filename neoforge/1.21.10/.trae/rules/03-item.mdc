@@ -2,7 +2,7 @@
 
 来源：https://docs.neoforged.net/docs/1.21.10/items/
 
-`DeferredRegister.Items` + `registerItem` / `registerSimpleItem` / `registerSimpleBlockItem`。文档示例返回 **`DeferredItem<Item>`**。`Item.Properties#setId` **必须设置**（`registerItem` 内部会写入）。第三参仍是 `new Item.Properties()`，不是 26.1 的 unary operator。
+`DeferredRegister.Items` + `registerItem` / `registerSimpleItem` / `registerSimpleBlockItem`。文档示例返回 **`DeferredItem<Item>`**。`Item.Properties#setId` **必须设置**（`registerItem` 内部会写入）。第三参：本档 **docs** 示例给 eager `new Item.Properties()`，同档 **scaffold / 官方 MDK** 用 unary（`scaffold/src/main/java/com/example/examplemod/ExampleMod.java:49/:54` 的 `p -> p.mapColor(...)` / `p -> p.food(...)`）⇒ 两套官方口径本身不一致，本档两者都接受并各自注明出处；unary 重载的 **docs** 支撑出现在 1.21.11 与 26.1 两档、本档 docs 未出现 ⇒ 不得写成「unary 是 26.1 的」，也不得说本档 docs 给了 unary。
 
 官方列出的常用 Properties：`setId`、`overrideDescription`、`useBlockDescriptionPrefix`（BlockItem 应调用）、`stacksTo`、`durability`、`fireResistant`、`rarity`、`setNoCombineRepair`（不是 `setNoRepair`）、`jukeboxPlayable`、`food`。余量与冷却：`craftRemainder`、`usingConvertsTo`、`useCooldown`。工具/盔甲向：`enchantable`、`repairable`、`equippable` / `equippableUnswappable`。
 

@@ -473,7 +473,50 @@ function testAccessWidener(index) {
     index,
   );
   assert.equal(dualValid.errors.length, 0, JSON.stringify(dualValid.errors));
-  console.log("  [ok] AW: 存在性/transitive/namespace 告警/跨文件冲突");
+
+  // ── #55：两族 class tweaker 新指令走 jar 索引（test-core 那批只测纯解析，这里补 jar 腿）──
+  const inj = validateAccessWidener(
+    "classTweaker v2 official\ninject-interface com/example/Fixture com/example/MyIface\n",
+    index,
+  );
+  assert.equal(inj.valid, true, `注入接口的目标类在 jar 里 ⇒ 必须绿: ${JSON.stringify(inj.errors)}`);
+  assert.equal(inj.checkedMembers, 0, "inject-interface 不是成员级条目，checkedMembers 不得虚增");
+  const injMissing = validateAccessWidener(
+    "classTweaker v2 official\ninject-interface com/example/NoSuchClass com/example/MyIface\n",
+    index,
+  );
+  assert.equal(injMissing.valid, false, "目标类不存在必须红 —— 这条是「owner 那腿真跑了」的证据");
+  assert.ok(injMissing.errors.some((e) => e.target.includes("NoSuchClass")), JSON.stringify(injMissing.errors));
+  const injTwoIfaces = validateAccessWidenerFiles(
+    [
+      "classTweaker v2 official\ninject-interface com/example/Fixture com/example/A\n",
+      "classTweaker v2 official\ninject-interface com/example/Fixture com/example/B\n",
+    ],
+    index,
+  );
+  assert.equal(injTwoIfaces.crossFileConflicts.length, 0, JSON.stringify(injTwoIfaces.crossFileConflicts));
+  assert.ok(
+    !injTwoIfaces.warnings.some((w) => /重复/.test(w)),
+    `同目标注入两个接口是合法的，不得报「重复声明」: ${JSON.stringify(injTwoIfaces.warnings)}`,
+  );
+  const injDup = validateAccessWidenerFiles(
+    [
+      "classTweaker v2 official\ninject-interface com/example/Fixture com/example/A\n",
+      "classTweaker v2 official\ninject-interface com/example/Fixture com/example/A\n",
+    ],
+    index,
+  );
+  assert.ok(
+    injDup.warnings.some((w) => /重复/.test(w)),
+    `反证：真重复（同目标同接口）仍必须念「重复声明」，否则上面那条绿是分组的假绿: ${JSON.stringify(injDup.warnings)}`,
+  );
+  const enumExt = validateAccessWidener(
+    "classTweaker v2 official\nextend-enum com/example/Fixture EXAMPLE_MOD_ONE\n",
+    index,
+  );
+  assert.equal(enumExt.errors.length, 0, `extend-enum 的常量名不得被当成员去 jar 里查: ${JSON.stringify(enumExt.errors)}`);
+  assert.equal(enumExt.checkedMembers, 0);
+  console.log("  [ok] AW: 存在性/transitive/namespace 告警/跨文件冲突 + classTweaker 五族（#55）");
 }
 
 // ── 4. deep-validate.ts ───────────────────────────────────────────────────────

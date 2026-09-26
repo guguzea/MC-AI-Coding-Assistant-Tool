@@ -20,6 +20,6 @@ description: 09 — 基岩反模式
 - 一律写 `"experimentalGameplay": true`
 - 发明 `worldgen/experimental.json` 当世界实验开关
 - 把 `assets/<modid>/models`、DeferredRegister、`EntityType`、`BlockBehaviour`、`generate_datagen` 写进基岩包
-- 未点名 Beta 就生成 Beta 事件或 `@minecraft/server-beta`
+- 未点名 Beta 就生成 Beta 事件，或把模块名写成不存在的 `@minecraft/server-beta`（真实名只有 `@minecraft/server`，beta 走 `version: "beta"` 串；出处：npm `@minecraft/server` 的 dist-tag `beta` + Learn `minecraft-server` 模块页 Manifest Details，as-of 2026-09-23）
 - 以为 pack JSON 能替玩家打开世界「Beta APIs」（须游戏 UI：`stable/experimental-features-toggle` 只给新/旧世界的 Game Settings → Experiments 开关）。`level.dat` → `experiments` compound 与键名 `gametest` = **社区权威已核实**（wiki.bedrock.dev/nbt/enabling-experiments，2026-09-02 取），**非 Learn 官方**，键名仅供手工改 `level.dat` 分诊；见 07 与 `knowledge/common/experiments.md`
 - `diagnose_gradle` 修 Loom/Forge 来「修」Add-On

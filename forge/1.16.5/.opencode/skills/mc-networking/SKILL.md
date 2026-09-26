@@ -9,6 +9,8 @@ mappings: mcp
 
 # 网络通信（Forge 1.16.5）
 
+> ⚠️ mappings：本档是**混合档**——两通道类名同一套（MCP 形），差别只在成员名（official = Mojang：`getLevel`/`isClientSide`；mcp = MCP：`getEntityWorld`/`isRemote`）。本件 frontmatter 记 `mappings: mcp`，但围栏里的 `sendToServer` / `readInt` 等**是 Mojang 侧名**（2026-09-25 腿 E 实测，`assert-cross-layer-names.mjs`）；照抄前先核对本件成员名族（本档 AGENTS.md「Mappings」行）。
+
 ## 快速开始
 
 ```java

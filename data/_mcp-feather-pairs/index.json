@@ -1,0 +1,56 @@
+{
+ "asOf": "2026-09-25T16:38:05.130Z",
+ "dir": "D:\\mc-skill-temp\\cache\\mcp-feather-pairs",
+ "family": "mcp-feather",
+ "versions": {
+  "1.7.10": {
+   "file": "mcp-feather-1.7.10.json",
+   "count": 1836,
+   "featherBuild": "1.7.10+build.2",
+   "featherUrl": "https://maven.ornithemc.net/releases/net/ornithemc/feather-gen2/1.7.10+build.2/feather-gen2-1.7.10+build.2-mergedv2.jar",
+   "mcpSource": "data/forge_1.7.10/mappings/joined.srg"
+  },
+  "1.8.9": {
+   "file": "mcp-feather-1.8.9.json",
+   "count": 2541,
+   "featherBuild": "1.8.9+build.2",
+   "featherUrl": "https://maven.ornithemc.net/releases/net/ornithemc/feather-gen2/1.8.9+build.2/feather-gen2-1.8.9+build.2-mergedv2.jar",
+   "mcpSource": "data/forge_1.8.9/mappings/joined.srg"
+  },
+  "1.9.4": {
+   "file": "mcp-feather-1.9.4.json",
+   "count": 2939,
+   "featherBuild": "1.9.4+build.2",
+   "featherUrl": "https://maven.ornithemc.net/releases/net/ornithemc/feather-gen2/1.9.4+build.2/feather-gen2-1.9.4+build.2-mergedv2.jar",
+   "mcpSource": "data/forge_1.9.4/mappings/joined.srg"
+  },
+  "1.10.2": {
+   "file": "mcp-feather-1.10.2.json",
+   "count": 2980,
+   "featherBuild": "1.10.2+build.2",
+   "featherUrl": "https://maven.ornithemc.net/releases/net/ornithemc/feather-gen2/1.10.2+build.2/feather-gen2-1.10.2+build.2-mergedv2.jar",
+   "mcpSource": "data/forge_1.10.2/mappings/joined.srg"
+  },
+  "1.11.2": {
+   "file": "mcp-feather-1.11.2.json",
+   "count": 3122,
+   "featherBuild": "1.11.2+build.2",
+   "featherUrl": "https://maven.ornithemc.net/releases/net/ornithemc/feather-gen2/1.11.2+build.2/feather-gen2-1.11.2+build.2-mergedv2.jar",
+   "mcpSource": "data/forge_1.11.2/mappings/joined.srg"
+  },
+  "1.12.2": {
+   "file": "mcp-feather-1.12.2.json",
+   "count": 3344,
+   "featherBuild": "1.12.2+build.2",
+   "featherUrl": "https://maven.ornithemc.net/releases/net/ornithemc/feather-gen2/1.12.2+build.2/feather-gen2-1.12.2+build.2-mergedv2.jar",
+   "mcpSource": "data/forge_1.12.2/mappings/joined.srg"
+  },
+  "1.13.2": {
+   "file": "mcp-feather-1.13.2.json",
+   "count": 4027,
+   "featherBuild": "1.13.2+build.2",
+   "featherUrl": "https://maven.ornithemc.net/releases/net/ornithemc/feather-gen2/1.13.2+build.2/feather-gen2-1.13.2+build.2-mergedv2.jar",
+   "mcpSource": "data/forge_1.13.2/mappings/joined.tsrg"
+  }
+ }
+}

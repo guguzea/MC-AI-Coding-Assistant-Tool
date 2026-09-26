@@ -4,7 +4,7 @@ description: Minecraft Forge JEI/EMI 1.18.2 兼容层（JEI 10.x 构件核验；
 platform: forge
 version: "1.18.2"
 dependencies: []
-mappings: mcp
+mappings: parchment
 ---
 
 # JEI/EMI 兼容（Forge 1.18.2）

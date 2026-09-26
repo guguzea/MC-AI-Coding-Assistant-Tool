@@ -14,7 +14,7 @@ mappings: mcp
 ## 快速入口
 
 - 世界与群系：`mc-worldgen`、`query_registry`（biomes）
-- Vanilla API：`query_api`（Level / ServerLevel 天气相关方法）
+- Vanilla API：`query_api`（World / ServerWorld 天气相关方法）
 - 反模式：`forge/1.15.2/knowledge/antipatterns/`
 
 ## 下一步

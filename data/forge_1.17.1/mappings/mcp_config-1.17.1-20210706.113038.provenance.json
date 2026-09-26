@@ -1,0 +1,48 @@
+{
+  "publishedAt": "2026-09-25",
+  "generator": "mcp-server/scripts/ingest-forge-srg.mjs",
+  "kind": "mcpconfig-srg-to-official/reduced",
+  "upstream": {
+    "coordinate": "de.oceanlabs.mcp:mcp_config:1.17.1-20210706.113038",
+    "repository": "https://maven.neoforged.net/releases/de/oceanlabs/mcp/mcp_config/",
+    "mcpConfigCommits": {
+      "mapping": "09b4d791554e378368a9b18649f16baf40dc30ef",
+      "mcp": "167aca7986a92c1cc87ad5d7d9588983f2e81f5e"
+    },
+    "commitKeys": [
+      "mapping",
+      "mcp"
+    ],
+    "note": "commits 抄自 ForgeGradle 留下的 <文件>.input（mapping= / mcp=）；无该文件时为 null，不猜 SHA。"
+  },
+  "sourceOnThisMachine": {
+    "path": "~/.gradle/caches/forge_gradle/minecraft_user_repo/de/oceanlabs/mcp/mcp_config/1.17.1-20210706.113038/srg_to_official_1.17.1.tsrg",
+    "bytes": 7303857,
+    "sha256": "26608ba4b22e1803836192b351889549d90391f77988b714edbb0267a71dede8",
+    "flavor": "official"
+  },
+  "derived": {
+    "file": "data/forge_1.17.1/mappings/srg_to_official-1.17.1.tsrg",
+    "bytes": 4811791,
+    "sha256": "9a85977cb1fe8c82890898c3d8e255d44a90aed4bbccd21ad05db95b1a6dc75a",
+    "headerLine": "tsrg2 srg official",
+    "columns": "类行 `<srgClass> <officialClass>`；成员行 `\\t<srgName>\\t<descriptor>\\t<officialName>`",
+    "classes": 6113,
+    "methods": 40443,
+    "fields": 25986,
+    "fieldsWithDescriptor": 0,
+    "sourceLines": 173426,
+    "droppedLines": {
+      "param": 75032,
+      "modifier": 13691,
+      "ctor": 8043,
+      "other": 4116
+    },
+    "reduction": "丢参数层行（\\t\\t…）、修饰行（static/final）、`<init>`/`<clinit>` 与一切非 `m_/f_` 形状的成员行 ⇒ 入库件不是上游件的原样副本"
+  },
+  "consumedBy": [
+    "mcp-server/scripts/_lib/build-yarn-sqlite.mjs（候选 kind=srg-to-official → mappingEra=mcp-config-srg）",
+    "convert_mapping / generate_* 的 Forge AT 成员行（access-lines.ts 读 named 列并核 SRG_SHAPE_RE）"
+  ],
+  "licenseNote": "Mojang 映射许可禁的是「完整且未修改地再分发」（仓根 AGENTS.md §Mappings / data/**/client.txt 头部原文）。本件是削减后的派生表，与既有 tracked 的 data/forge_1.16.5/mappings/obf_to_srg.tsrg 同类；原始 client.txt 继续由 .gitignore 排除、不入库。"
+}

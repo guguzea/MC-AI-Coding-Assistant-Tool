@@ -1489,9 +1489,9 @@
   },
   "https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/minecraft-server?view=minecraft-bedrock-stable": {
     "documentId": "7efaca22-7ee0-4ef8-1754-8dedc3169f7d",
-    "updatedAt": "2026-09-16T16:14:00Z",
-    "commit": "6a6390ab15d243ef05e56c07074239722248b981",
-    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/6a6390ab15d243ef05e56c07074239722248b981/creator/ScriptAPI/minecraft/server/minecraft-server.md"
+    "updatedAt": "2026-09-22T16:38:00Z",
+    "commit": "a4f94ad910dae79246ce0f4f33d7cc4e785a97fe",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/a4f94ad910dae79246ce0f4f33d7cc4e785a97fe/creator/ScriptAPI/minecraft/server/minecraft-server.md"
   },
   "https://learn.microsoft.com/en-us/minecraft/creator/documents/customblock?view=minecraft-bedrock-stable": {
     "documentId": "63bccc5e-a22b-a564-c0af-bcc0d4ebbe2a",
@@ -1537,9 +1537,9 @@
   },
   "https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server-ui/minecraft-server-ui?view=minecraft-bedrock-stable": {
     "documentId": "0d089746-9c4b-101f-71f4-34140c0a6b05",
-    "updatedAt": "2026-09-16T16:14:00Z",
-    "commit": "6a6390ab15d243ef05e56c07074239722248b981",
-    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/6a6390ab15d243ef05e56c07074239722248b981/creator/ScriptAPI/minecraft/server-ui/minecraft-server-ui.md"
+    "updatedAt": "2026-09-22T16:38:00Z",
+    "commit": "a4f94ad910dae79246ce0f4f33d7cc4e785a97fe",
+    "commitUrl": "https://github.com/MicrosoftDocs/minecraft-creator-pr/blob/a4f94ad910dae79246ce0f4f33d7cc4e785a97fe/creator/ScriptAPI/minecraft/server-ui/minecraft-server-ui.md"
   },
   "https://learn.microsoft.com/en-us/minecraft/creator/documents/rtxpbrtutorial?view=minecraft-bedrock-stable": {
     "documentId": "9949239b-db87-e3e4-ee23-f590c8163cde",

@@ -6,10 +6,14 @@
  * 不重建语义向量（Quilt 已有 embeddings）。
  * 默认 dry-run：目标经 write-guard 打印 DRYRUN，加 --write 才落仓库 data/。
  */
+import { createHash } from "crypto";
 import { existsSync, readFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import { emit, emitCopy, logDryRunBanner, wantWrite } from "./_lib/write-guard.mjs";
+
+/** G4 清尾（2026-09-25）：条目 sha256 口径 = processed 内容哈希（与 fetch-quilt-docs.js:157 的 sha(content) 同）。 */
+const sha = (s) => createHash("sha256").update(s).digest("hex");
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 if (!wantWrite()) logDryRunBanner("index-qsl-verified");
@@ -49,8 +53,19 @@ for (const ver of VERSIONS) {
     continue;
   }
   const id = `${ver}/qsl-verified`;
-  if (index.some((e) => e.id === id)) {
-    console.log(`${ver}: ${copied ? "processed 已写" : "processed 待写"}，L0 已有 ${id}`);
+  const srcText = readFileSync(src, "utf8");
+  const existing = index.find((e) => e.id === id);
+  if (existing) {
+    // G4 清尾（2026-09-25）：已存在条目也刷 sha256。此前这里直接 continue ⇒ 6 档 qsl-verified
+    // 是全族 18 条目里唯一缺 sha 的（补一次后，本段防它再漂）。fetchedAt 语义 = 派生件**建立时间**，
+    // 是历史真值，不追齐同档抓取日（门头注有裁定）。
+    const next = sha(srcText);
+    const changed = existing.sha256 !== next;
+    if (changed) existing.sha256 = next;
+    const rewritten = changed ? emit(indexPath, JSON.stringify(index, null, 2) + "\n") : false;
+    console.log(
+      `${ver}: ${copied ? "processed 已写" : "processed 待写"}，L0 已有 ${id}（sha ${changed ? "已刷新" : "未变"}${rewritten ? "；index 已写" : ""}）`,
+    );
     continue;
   }
   index.push({
@@ -63,6 +78,7 @@ for (const ver of VERSIONS) {
     sectionCount: 1,
     source: "quilt-docs",
     fetchedAt: new Date().toISOString(),
+    sha256: sha(srcText),
   });
   const written = emit(indexPath, JSON.stringify(index, null, 2) + "\n");
   console.log(`${ver}: ${written ? "已写入" : "预览"} ${id}（${index.length} 页）`);

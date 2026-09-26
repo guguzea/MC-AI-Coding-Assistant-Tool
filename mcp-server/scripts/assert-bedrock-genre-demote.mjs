@@ -21,6 +21,24 @@
  *     schema 侧：带上界的有界整数（无上界 = 能一句话把 token 打穿，也能谎称能给更多页）；
  *     行为侧（真 handler 对真语料跑两次）：默认响应必须是放宽响应的前缀、默认里的 RN 页在放宽后
  *     仍在、候选池必须 ≥ 窗口、要的比池宽时必须披露（否则"调大没变多"会被读成丢了页）。
+ *     【A2/A3 扩面 2026-09-24】同一判据铺到四个平台面（`search_forge_docs` / `search_neoforge_docs` /
+ *     `search_fabric_docs` / `search_docs`）：真跑 4 面 × 2 探针，核 `limitWindow{candidates,…}` 与常量同源、
+ *     默认载荷**不带**该块（逐字不变）、默认是放宽的前缀、**池够时必须正好给 min(请求, 池) 条**
+ *     ——「少给」= 内部窗口与声明上界脱钩，是本轮把「等价变异期望绿」翻成真投毒的那一条。
+ *     常量与 handler 都从 `dist/docs-platform` 取，门里不抄任何数字。
+ *     【A3 残面① 2026-09-25】`search_docs(platform=quilt)` 进判据面 —— 但它是**只收窄面**
+ *     （`QUILT_SEARCH_DEFAULT_LIMIT == QUILT_SEARCH_LIMIT_MAX == 20`，池构造上界同值；
+ *     `src/docs-platform/quilt-search.ts:165-166` 自述「只收窄不放大」）⇒ **放宽腿不适用**：
+ *     若照搬「必须多给」会把合法面判成「放宽是摆设」而假红。改用**只收窄腿**
+ *     （`checkNarrowOnlyFaceWindow`）：默认载荷不带 limitWindow；limit=1 必须真的只给 1 条
+ *     （「只收窄」承重）；limit=上界 与默认逐 id 同序（默认即上界，不得借参数重排）；
+ *     limitWindow 的 resultLimit/clamped 与池一致；行数永不超池。
+ *     【A3 残面② 2026-09-25 登记（未管面盘点，待逐面核语义后铺腿，勿当成已覆盖）】
+ *     `search_community_docs`（src/docs-platform/community/index.ts:23，limit int(1..50) 默认 20，无常量导出）、
+ *     `search_loader_api`（src/wave/register.ts:51 与 :402 两处 limit 语义待核）、
+ *     `get_*_doc_related` ×5（forge/index.ts:1140、neoforge/index.ts:466，default 5 的固定小窗）、
+ *     `query_registry`（limit 形态待核）、`query_upstream_releases`（tool-registry.ts:267，
+ *     limit int(1..200) default 12，**total 恒全量** ⇒ 语义是 top-N 截断而非池披露，照搬 min(请求,池) 腿必假红）。
  *
  * 用法：
  *   node scripts/assert-bedrock-genre-demote.mjs              # 真跑（核 ①②③ + 用 dist 真函数核 ④⑤）
@@ -96,6 +114,20 @@ async function loadProducer() {
 async function loadDistConsumer() {
   const distEntry = join(REPO_ROOT, "mcp-server", "dist", "bedrock", "index.js");
   if (!existsSync(distEntry)) throw new Error(`dist/bedrock/index.js 不存在（先 cd mcp-server && npm run build）：${distEntry}`);
+  return import(pathToFileURL(distEntry).href);
+}
+
+/** A3（2026-09-24）：四个平台 search_* 面的 dist 入口（常量与 handler 都从这里取）。 */
+async function loadDocsConsumer() {
+  const distEntry = join(REPO_ROOT, "mcp-server", "dist", "docs-platform", "index.js");
+  if (!existsSync(distEntry)) throw new Error(`dist/docs-platform/index.js 不存在（先 cd mcp-server && npm run build）：${distEntry}`);
+  return import(pathToFileURL(distEntry).href);
+}
+
+/** A3 残面①（2026-09-25）：quilt 面的常量真值源在 dist/docs-platform/quilt-search.js（index 不转发）。 */
+async function loadQuiltConstants() {
+  const distEntry = join(REPO_ROOT, "mcp-server", "dist", "docs-platform", "quilt-search.js");
+  if (!existsSync(distEntry)) throw new Error(`dist/docs-platform/quilt-search.js 不存在（先 cd mcp-server && npm run build）：${distEntry}`);
   return import(pathToFileURL(distEntry).href);
 }
 
@@ -227,6 +259,171 @@ function realRun() {
       } else {
         problems.push("⑥ dist 里没有 searchBedrockDocs / BEDROCK_RESULT_LIMIT_MAX ⇒ 放宽窗口这条腿没挂上（改了 src 要 npm run build）");
       }
+
+      // ⑥（A2/A3 扩面，2026-09-24）：四个平台 search_* 面的按调用窗口 —— 真 handler、真语料、真融合。
+      // 常量一律从 dist 取（文档面自己的真值源），门里不抄数字；探针池不够大时另报，不许静默当通过。
+      const docsDist = await loadDocsConsumer();
+      const prevDataEnv = process.env.MC_SKILL_DATA;
+      if (!process.env.MC_SKILL_DATA) process.env.MC_SKILL_DATA = DATA_ROOT;
+      try {
+        const callFace = async (fn, args) => {
+          try {
+            const res = await fn(args);
+            const text = res?.content?.[0]?.type === "text" ? res.content[0].text : "{}";
+            return JSON.parse(text);
+          } catch (e) {
+            return { ok: false, error: { message: e?.message ?? String(e) } };
+          }
+        };
+        const FACES = [
+          {
+            label: "search_forge_docs",
+            fn: "searchForgeDocs", schema: "searchForgeDocsSchema",
+            dk: "FORGE_SEARCH_DEFAULT_LIMIT", mk: "FORGE_SEARCH_LIMIT_MAX",
+            base: { query: "x", version: "1.20.1" },
+            probes: [{ query: "event", version: "1.20.1" }, { query: "datagen", version: "1.20.1" }],
+          },
+          {
+            label: "search_neoforge_docs",
+            fn: "searchNeoForgeDocs", schema: "searchNeoForgeDocsSchema",
+            dk: "NEOFORGE_SEARCH_DEFAULT_LIMIT", mk: "NEOFORGE_SEARCH_LIMIT_MAX",
+            base: { query: "x", version: "1.21.1" },
+            probes: [{ query: "registry", version: "1.21.1" }, { query: "event", version: "1.21.1" }],
+          },
+          {
+            label: "search_fabric_docs",
+            fn: "searchFabricDocs", schema: "searchFabricDocsSchema",
+            dk: "FABRIC_SEARCH_DEFAULT_LIMIT", mk: "FABRIC_SEARCH_LIMIT_MAX",
+            base: { query: "x", version: "1.21.11" },
+            probes: [{ query: "event", version: "1.21.11" }, { query: "registry", version: "1.21.11" }],
+          },
+          {
+            label: "search_docs(neoforge)",
+            fn: "searchDocs", schema: "searchDocsSchema",
+            dk: "SEARCH_DOCS_DEFAULT_LIMIT", mk: "SEARCH_DOCS_LIMIT_MAX",
+            base: { query: "x", version: "1.21.1", platform: "neoforge" },
+            probes: [
+              { query: "registry", version: "1.21.1", platform: "neoforge" },
+              { query: "event", version: "1.21.1", platform: "neoforge" },
+            ],
+          },
+          {
+            // A3 残面①（2026-09-25）：只收窄面 —— 常量在 dist/docs-platform/quilt-search.js（index 不转发），
+            // 池构造上界 = 默认 = 20 ⇒ 无「放宽」可核，判据走 narrowOnly 分支（见门头 ⑥ 注记）。
+            label: "search_docs(quilt)",
+            fn: "searchDocs", schema: "searchDocsSchema",
+            dk: "QUILT_SEARCH_DEFAULT_LIMIT", mk: "QUILT_SEARCH_LIMIT_MAX",
+            constModule: "quilt-search",
+            schemaMaxKey: "SEARCH_DOCS_LIMIT_MAX", // 共用 schema 的 limit 上界（30）；面界 20 由面内 clamp 兜底
+            base: { query: "x", version: "1.20.1", platform: "quilt" },
+            probes: [
+              { query: "registry", version: "1.20.1", platform: "quilt" },
+              { query: "event", version: "1.20.1", platform: "quilt" },
+            ],
+            narrowOnly: true,
+          },
+        ];
+        const quiltConsts = await loadQuiltConstants();
+        for (const face of FACES) {
+          const fn = docsDist[face.fn];
+          const schema = docsDist[face.schema];
+          const constSrc = face.constModule === "quilt-search" ? quiltConsts : docsDist;
+          const dk = constSrc[face.dk];
+          const mk = constSrc[face.mk];
+          if (typeof fn !== "function" || !schema || typeof dk !== "number" || typeof mk !== "number") {
+            problems.push(
+              `⑥ ${face.label}：dist 里缺 ${face.fn} / ${face.schema} / ${face.dk} / ${face.mk} 之一 ⇒ 这条腿没挂上（改了 src 要 npm run build）`,
+            );
+            continue;
+          }
+          // A3 残面①：只收窄面走反向腿 —— 不核「放宽必须变多」（默认==上界，那条腿必假红）。
+          // schema 腿也不共用：共用 schema 的 limit 上界（SEARCH_DOCS_LIMIT_MAX=30）> 面界（20），
+          // 拿面界判 schema 必假红（21 被共用 schema 接受是**合法**的，面内 clamp 兜底）⇒ schemaMaxKey 分流。
+          if (face.narrowOnly) {
+            const schemaMax = face.schemaMaxKey ? docsDist[face.schemaMaxKey] : mk;
+            if (typeof schemaMax !== "number") {
+              problems.push(`⑥ ${face.label}：schemaMaxKey 指向的常量不在 dist ⇒ schema 腿没法判`);
+            } else {
+              for (const p of checkFaceLimitSchema({ schema, limitMax: schemaMax, base: face.base })) {
+                problems.push(`${p}（${face.label}）`);
+              }
+            }
+            let probed = 0;
+            let narrowed = false;
+            let clamped = false;
+            for (const probe of face.probes) {
+              const args = {
+                query: probe.query,
+                version: probe.version,
+                ...(probe.platform ? { platform: probe.platform } : {}),
+              };
+              const d = await callFace(fn, args);
+              const one = await callFace(fn, { ...args, limit: 1 });
+              const w = await callFace(fn, { ...args, limit: mk });
+              const over = await callFace(fn, { ...args, limit: mk + 1 });
+              if (!d?.ok || !one?.ok || !w?.ok || !over?.ok) {
+                problems.push(`⑥ ${face.label} 探针 ${probe.query}@${probe.version} 真跑没拿到 ok（默认 ${JSON.stringify(d?.ok)} / 收窄 ${JSON.stringify(one?.ok)} / 上界 ${JSON.stringify(w?.ok)} / 超面界 ${JSON.stringify(over?.ok)}）⇒ 这条腿没核到任何东西，别当成通过`);
+                continue;
+              }
+              probed += 1;
+              for (const x of checkNarrowOnlyFaceWindow(d, one, w, over, { defaultLimit: dk, limitMax: mk, overLimit: mk + 1, label: `${face.label}/${probe.query}` })) {
+                problems.push(x);
+              }
+              if ((one.results ?? []).length === 1) narrowed = true;
+              if (over?.limitWindow?.clamped === true) clamped = true;
+            }
+            if (probed === 0) {
+              problems.push(`⑥ ${face.label}：两条探针都没跑成 ⇒ 该面完全没被核到`);
+            } else if (!narrowed) {
+              problems.push(`⑥ ${face.label}：limit=1 都没能真的收窄到 1 条 ⇒「只收窄」是摆设，需人工确认`);
+            } else if (!clamped) {
+              problems.push(`⑥ ${face.label}：超面界请求（limit=${mk + 1}）没有被 clamp（limitWindow.clamped 应为 true）⇒ 面界 20 只是注释，不是行为`);
+            } else {
+              notes.push(`⑥ ${face.label}: 只收窄腿实测可收窄（默认=上界 ${dk}；schema 上界 ${schemaMax} 由面内 clamp 兜底；探针 ${probed} 组；反向腿 = 不核「放宽变多」）`);
+            }
+            continue;
+          }
+          let widened = false;
+          let probed = 0;
+          for (const probe of face.probes) {
+            const args = {
+              query: probe.query,
+              version: probe.version,
+              ...(probe.platform ? { platform: probe.platform } : {}),
+            };
+            const d = await callFace(fn, args);
+            const w = await callFace(fn, { ...args, limit: mk });
+            if (!d?.ok || !w?.ok) {
+              problems.push(`⑥ ${face.label} 探针 ${probe.query}@${probe.version} 真跑没拿到 ok（默认 ${JSON.stringify(d?.ok)} / 放宽 ${JSON.stringify(w?.ok)}）⇒ 这条腿没核到任何东西，别当成通过`);
+              continue;
+            }
+            probed += 1;
+            for (const x of checkFaceLimitWindow(d, w, { defaultLimit: dk, limitMax: mk, label: `${face.label}/${probe.query}` })) {
+              problems.push(x);
+            }
+            // 显式传「默认窗口」必须与不传逐行同结果（只多一个 limitWindow 块）——截断点不许因加参数而挪。
+            const same = await callFace(fn, { ...args, limit: dk });
+            const idOf = (r) => JSON.stringify((r?.results ?? []).map((x) => x.id));
+            if (idOf(same) !== idOf(d)) {
+              problems.push(`⑥ ${face.label}/${probe.query} 显式传默认窗口 ${dk} 与不传的结果不同 ⇒ 默认口径被参数化改坏了`);
+            }
+            const pool = w.limitWindow?.candidates ?? 0;
+            if (pool > dk && (w.results ?? []).length > (d.results ?? []).length) widened = true;
+          }
+          if (probed === 0) {
+            problems.push(`⑥ ${face.label}：两条探针都没跑成 ⇒ 该面完全没被核到`);
+          } else if (!widened) {
+            problems.push(
+              `⑥ ${face.label}：探针里「池 > 默认窗口 ${dk}」时都没能真的多给 ⇒ 放宽是摆设（内部窗口与 limitMax 脱钩）或该档语料池变小，需人工确认`,
+            );
+          } else {
+            notes.push(`⑥ ${face.label}: 放宽腿实测可多给（默认 ${dk} / 上界 ${mk}；探针 ${probed} 组）`);
+          }
+        }
+      } finally {
+        if (prevDataEnv === undefined) delete process.env.MC_SKILL_DATA;
+        else process.env.MC_SKILL_DATA = prevDataEnv;
+      }
       finish(problems, notes);
     })
     .catch((e) => {
@@ -329,6 +526,180 @@ export function checkLimitSchema({ schema, limitMax, tag }) {
   return problems;
 }
 
+/**
+ * 判据⑥（A2/A3 扩面，2026-09-24）：四个平台 `search_*` 面的 schema 必须给 `limit` 留出**有界**通道。
+ * 与基岩那条同形，但四个面的必填字段不同（version / platform），故 `base` 由调用方给。
+ */
+export function checkFaceLimitSchema({ schema, limitMax, base }) {
+  const problems = [];
+  // 四个面导出的是 `{ name, description, inputSchema }` 包装件（基岩那条导出的是 zod 本体）⇒ 两种都吃。
+  const zod = typeof schema?.safeParse === "function" ? schema : schema?.inputSchema;
+  if (typeof zod?.safeParse !== "function") return ["⑥ 面的 schema 不可用"];
+  const ok = (v) => zod.safeParse({ ...base, ...(v === undefined ? {} : { limit: v }) }).success;
+  if (!ok(undefined)) problems.push("⑥ 不传 limit 必须合法（默认窗口是既有契约）");
+  if (!ok(1)) problems.push("⑥ limit=1 被拒 ⇒ 收紧窗口的用法没了");
+  if (!ok(limitMax)) problems.push(`⑥ limit=${limitMax}（= 声明的上界）被拒 ⇒ schema 与常量不同源`);
+  if (ok(0)) problems.push("⑥ limit=0 被接受 ⇒ 可以一句话把对外结果清空");
+  if (ok(limitMax + 1)) problems.push(`⑥ limit=${limitMax + 1} 被接受 ⇒ 无上界（token 与「谎称能给更多」都拦不住）`);
+  if (ok(1.5)) problems.push("⑥ 非整数 limit 被接受 ⇒ 截断点会出现 20.5 条这种形态");
+  if (ok(String(limitMax))) problems.push("⑥ 字符串 limit 被接受 ⇒ 类型没校验");
+  return problems;
+}
+
+/**
+ * 判据⑥（A2/A3 扩面）：四个平台面的「按调用窗口只放宽、不重排、超池必披露」。
+ *
+ * 承重的一条是**放宽必须真的变多**：`candidates > defaultLimit` 时 `wide.length` 必须 > `def.length`。
+ * 它专抓「内部窗口与 schema 上界脱钩」——池明明够大、schema 也宣称能到 limitMax，
+ * 但截断点被硬编码钉死 ⇒ 参数是摆设（**此前这种等价变异期望绿，A2 铺开后必须红**）。
+ * @param {object} def 未传 limit 的响应
+ * @param {object} wide 传 limit=limitMax 的同一查询响应
+ */
+export function checkFaceLimitWindow(def, wide, { defaultLimit, limitMax, label }) {
+  const problems = [];
+  const ids = (r) => (r?.results ?? []).map((x) => x.id);
+  const a = ids(def), b = ids(wide);
+  if (def?.limitWindow !== undefined) {
+    problems.push(`⑥ ${label} 未传 limit 却带了 limitWindow ⇒ 默认载荷不再逐字不变`);
+  }
+  const lw = wide?.limitWindow;
+  if (!lw) return [`⑥ ${label} 传了 limit 但载荷没有 limitWindow ⇒ 池/窗口不可观测`];
+  if (lw.requestedLimit !== limitMax) {
+    problems.push(`⑥ ${label} requestedLimit=${JSON.stringify(lw.requestedLimit)} ≠ ${limitMax} ⇒ 参数没接到窗口`);
+  }
+  if (lw.limitMax !== limitMax) {
+    problems.push(`⑥ ${label} limitMax=${lw.limitMax} ≠ schema 常量 ${limitMax} ⇒ 两份期望（回显与 schema 不同源）`);
+  }
+  const pool = lw.candidates;
+  if (!Number.isInteger(pool) || pool < 0) {
+    problems.push(`⑥ ${label} candidates=${JSON.stringify(pool)} 不是非负整数`);
+    return problems;
+  }
+  if (lw.resultLimit !== Math.min(limitMax, pool)) {
+    problems.push(`⑥ ${label} resultLimit=${lw.resultLimit} ≠ min(${limitMax}, 池 ${pool}) ⇒ 截断点与池脱钩`);
+  }
+  if (lw.clamped !== limitMax > pool) {
+    problems.push(`⑥ ${label} clamped=${lw.clamped} 与「请求 > 池」不一致`);
+  }
+  if (b.length > pool) {
+    problems.push(`⑥ ${label} 返回 ${b.length} 条 > 候选池 ${pool} ⇒ 从没构建过的行被凭空给出`);
+  }
+  // 承重判据（A3 翻真投毒）：池与请求都够时，放宽结果必须**正好**给出 min(请求, 池) 条。
+  // 少给 = 内部窗口被钉死（candidateLimit 与 limitMax 脱钩）⇒ 参数是摆设，必须红。
+  const available = Math.min(limitMax, pool);
+  if (b.length < available) {
+    problems.push(`⑥ ${label} 池 ${pool} / 请求 ${limitMax} ⇒ 应给出 ${available} 条，实给 ${b.length} ⇒ 放宽是摆设：内部窗口与声明上界脱钩`);
+  }
+  if (a.length > defaultLimit) {
+    problems.push(`⑥ ${label} 未传 limit 却返回 ${a.length} 条 > 默认窗口 ${defaultLimit} ⇒ 加参数顺手改了默认口径`);
+  }
+  if (b.length < a.length) problems.push(`⑥ ${label} 放宽后反而少给：${b.length} < ${a.length}`);
+  const n = Math.min(a.length, b.length);
+  for (let i = 0; i < n; i++) {
+    if (a[i] !== b[i]) {
+      problems.push(`⑥ ${label} 前缀不稳：第 ${i + 1} 行默认给 ${a[i]}、放宽给 ${b[i]} ⇒ 放宽窗口改了排序，不是只多给几条`);
+      break;
+    }
+  }
+  if (limitMax > pool) {
+    const w = Array.isArray(wide.warning) ? wide.warning.join(" ") : String(wide.warning ?? "");
+    if (!/候选池|池/.test(w)) {
+      problems.push(`⑥ ${label} limit=${limitMax} 比候选池（${pool} 条）还宽却没披露 ⇒ 调用方会把「只返回 ${b.length} 条」读成丢了页`);
+    }
+  }
+  return problems;
+}
+
+/**
+ * 判据⑥（A3 残面①，2026-09-25）：**只收窄面**的窗口判据（`search_docs(platform=quilt)`）。
+ *
+ * 与放宽面（checkFaceLimitWindow）的差别：默认 == 上界（DEFAULT == MAX == 池构造上界）⇒
+ * 「放宽必须变多」那条承重判据**不适用**（照搬会把合法面假红）。反向承重的是「收窄必须真的少」；
+ * 面界之上的请求（schema 是共用件、上界更大）必须被**运行时 clamp + 披露**兜住。
+ * @param def    未传 limit 的响应
+ * @param one    传 limit=1 的响应
+ * @param wide   传 limit=limitMax（== 默认）的响应
+ * @param over   传 limit=overLimit（> 面界）的响应
+ */
+export function checkNarrowOnlyFaceWindow(def, one, wide, over, { defaultLimit, limitMax, overLimit, label }) {
+  const problems = [];
+  const ids = (r) => (r?.results ?? []).map((x) => x.id);
+  const a = ids(def), n = ids(one), b = ids(wide);
+  if (def?.limitWindow !== undefined) {
+    problems.push(`⑥ ${label} 未传 limit 却带了 limitWindow ⇒ 默认载荷不再逐字不变`);
+  }
+  if (defaultLimit !== limitMax) {
+    problems.push(`⑥ ${label} 只收窄面的前提是默认 ${defaultLimit} == 上界 ${limitMax} ⇒ 常量变了就不是这个判据族，先改门再改面`);
+  }
+  // 承重（收窄侧）：limit=1 必须恰好 1 条，且是默认结果的前缀（收窄只许截断，不许重排）。
+  if (n.length !== 1) {
+    problems.push(`⑥ ${label} limit=1 实给 ${n.length} 条 ⇒ 「只收窄」没落到截断点`);
+  }
+  const pre = Math.min(n.length, a.length);
+  for (let i = 0; i < pre; i++) {
+    if (n[i] !== a[i]) {
+      problems.push(`⑥ ${label} 收窄前缀不稳：第 ${i + 1} 行默认 ${a[i]} / 收窄 ${n[i]} ⇒ limit 动了排序`);
+      break;
+    }
+  }
+  // 宽限 = 上界（== 默认）：不得「借参数重排」，行数永不超池 / 超上界。
+  const lw = wide?.limitWindow;
+  if (!lw) return [...problems, `⑥ ${label} 传了 limit 但载荷没有 limitWindow ⇒ 池/窗口不可观测`];
+  if (lw.requestedLimit !== limitMax) {
+    problems.push(`⑥ ${label} requestedLimit=${JSON.stringify(lw.requestedLimit)} ≠ ${limitMax} ⇒ 参数没接到窗口`);
+  }
+  if (lw.limitMax !== limitMax) {
+    problems.push(`⑥ ${label} limitMax 回显 ${lw.limitMax} ≠ 常量 ${limitMax} ⇒ 两份期望不同源`);
+  }
+  const pool = lw.candidates;
+  if (!Number.isInteger(pool) || pool < 0) {
+    return [...problems, `⑥ ${label} candidates=${JSON.stringify(pool)} 不是非负整数`];
+  }
+  if (lw.resultLimit !== Math.min(limitMax, pool)) {
+    problems.push(`⑥ ${label} resultLimit=${lw.resultLimit} ≠ min(${limitMax}, 池 ${pool}) ⇒ 截断点与池脱钩`);
+  }
+  if (lw.clamped !== limitMax > pool) {
+    problems.push(`⑥ ${label} clamped=${lw.clamped} 与「请求 > 池」不一致`);
+  }
+  if (b.length > pool) {
+    problems.push(`⑥ ${label} 返回 ${b.length} 条 > 候选池 ${pool} ⇒ 从没构建过的行被凭空给出`);
+  }
+  const m = Math.min(a.length, b.length);
+  for (let i = 0; i < m; i++) {
+    if (a[i] !== b[i]) {
+      problems.push(`⑥ ${label} 上界窗口与默认结果不同序：第 ${i + 1} 行默认 ${a[i]} / 上界 ${b[i]} ⇒ 默认即上界的面不该借参数重排`);
+      break;
+    }
+  }
+  // 面界之上的请求：必须被 clamp 到面界与池的较小者，且披露（schema 是共用件、上界更大 ⇒
+  // 面界若不是行为，这里就会给出比面界多的行 / 或不 clamp）。
+  if (over && typeof overLimit === "number") {
+    const ov = over?.limitWindow;
+    if (!ov) {
+      problems.push(`⑥ ${label} limit=${overLimit}（超面界）响应没有 limitWindow ⇒ 面界兜底不可观测`);
+    } else {
+      if (ov.requestedLimit !== overLimit) {
+        problems.push(`⑥ ${label} 超面界请求 requestedLimit=${JSON.stringify(ov.requestedLimit)} ≠ ${overLimit} ⇒ 参数没接到窗口`);
+      }
+      if (ov.resultLimit !== Math.min(overLimit, pool)) {
+        problems.push(`⑥ ${label} 超面界 resultLimit=${ov.resultLimit} ≠ min(${overLimit}, 池 ${pool}) ⇒ clamp 与池脱钩`);
+      }
+      if (ov.clamped !== true) {
+        problems.push(`⑥ ${label} 超面界请求 clamped=${ov.clamped} ≠ true ⇒ 面界 ${limitMax} 只是注释，不是行为`);
+      }
+      const ob = ids(over);
+      if (ob.length > pool) {
+        problems.push(`⑥ ${label} 超面界请求返回 ${ob.length} 条 > 池 ${pool} ⇒ 面界没兜住`);
+      }
+      const ow = Array.isArray(over.warning) ? over.warning.join(" ") : String(over.warning ?? "");
+      if (!/池|窗口|clamp/i.test(ow)) {
+        problems.push(`⑥ ${label} 超面界被 clamp 却未在 warning 披露 ⇒ 调用方会把「只返回 ${ob.length} 条」读成丢了页`);
+      }
+    }
+  }
+  return problems;
+}
+
 function selfTest() {
   const problems = [];
   const expect = (label, got, want) => {
@@ -407,7 +778,103 @@ function selfTest() {
   expect("⑥ schema：无上界 ⇒ 红", checkLimitSchema({ schema: stubSchema(1e9), limitMax: 60, tag: TAG }).length > 0, true);
   expect("⑥ schema：允许非整数（含 0）⇒ 红", checkLimitSchema({ schema: stubSchema(60, { int: false }), limitMax: 60, tag: TAG }).length > 0, true);
   expect("⑥ schema：字符串被 coerce ⇒ 红", checkLimitSchema({ schema: stubSchema(60, { coerced: true }), limitMax: 60, tag: TAG }).length > 0, true);
-  finish(problems, ["--selftest：4 种降权失守（A 删行 / B factor=1 / C 打乱普通页序 / D 原序返回）+ factor 两端 + 3 种对账形态 + 9 种 limit 失守 + 4 种 schema 形状"]);
+  // 判据⑥（A2/A3 扩面）：四个平台面的窗口/池一致腿。夹具世界：默认窗口 2、上界 5、池 5（够宽）。
+  const FDL = 2;
+  const FMX = 5;
+  const faceAttrs = { defaultLimit: FDL, limitMax: FMX, label: "夹具面" };
+  const faceDef = { results: [{ id: "p1" }, { id: "p2" }] };
+  const faceWide = {
+    results: [{ id: "p1" }, { id: "p2" }, { id: "p3" }, { id: "p4" }, { id: "p5" }],
+    limitWindow: { requestedLimit: FMX, resultLimit: FMX, candidates: 5, limitMax: FMX, clamped: false },
+  };
+  expect("⑥ 扩面：默认是放宽前缀、池够、字段一致 ⇒ 绿", checkFaceLimitWindow(faceDef, faceWide, faceAttrs).length, 0);
+  // A3 翻真投毒：池 5 > 默认 2，但内部窗口被钉死 ⇒ 放宽没变多（此前这种等价变异期望绿，现在必须红）。
+  expect(
+    "⑥ 扩面失守：池够大却没能多给（内部窗口与上界脱钩）⇒ 必红",
+    checkFaceLimitWindow(faceDef, { results: faceDef.results, limitWindow: { ...faceWide.limitWindow } }, faceAttrs).length > 0,
+    true,
+  );
+  expect(
+    "⑥ 扩面失守：截断点与池脱钩（resultLimit 不看池）⇒ 必红",
+    checkFaceLimitWindow(faceDef, { ...faceWide, limitWindow: { ...faceWide.limitWindow, resultLimit: 4 } }, faceAttrs).length > 0,
+    true,
+  );
+  expect(
+    "⑥ 扩面失守：超池未披露 ⇒ 必红",
+    checkFaceLimitWindow(faceDef, { ...faceWide, limitWindow: { ...faceWide.limitWindow, candidates: 2, resultLimit: 2 }, warning: "" }, faceAttrs).length > 0,
+    true,
+  );
+  expect(
+    "⑥ 扩面失守：默认载荷带了 limitWindow ⇒ 必红（默认必须逐字不变）",
+    checkFaceLimitWindow({ ...faceDef, limitWindow: faceWide.limitWindow }, faceWide, faceAttrs).length > 0,
+    true,
+  );
+  expect(
+    "⑥ 扩面失守：放宽后前缀换了（= 重排）⇒ 必红",
+    checkFaceLimitWindow(faceDef, { results: [{ id: "p2" }, { id: "p1" }], limitWindow: faceWide.limitWindow }, faceAttrs).length > 0,
+    true,
+  );
+  expect(
+    "⑥ 扩面失守：limitMax 回显与 schema 常量不同源 ⇒ 必红",
+    checkFaceLimitWindow(faceDef, { ...faceWide, limitWindow: { ...faceWide.limitWindow, limitMax: FMX + 1 } }, faceAttrs).length > 0,
+    true,
+  );
+  expect(
+    "⑥ 扩面 schema：有界整数 ⇒ 绿（必填字段由 base 给）",
+    checkFaceLimitSchema({ schema: stubSchema(FMX), limitMax: FMX, base: { query: "x", version: "1.20.1" } }).length,
+    0,
+  );
+  expect(
+    "⑥ 扩面 schema：无上界 ⇒ 红",
+    checkFaceLimitSchema({ schema: stubSchema(1e9), limitMax: FMX, base: { query: "x", version: "1.20.1" } }).length > 0,
+    true,
+  );
+  // 判据⑥（A3 残面①）：只收窄面。夹具世界：默认 == 上界 == 2（quilt 同形），收窄到 1 必须真的少给；
+  // over = 超面界请求（3 > 2），必须被 clamp 到池并披露（schema 共用件上界更大 ⇒ 面界靠行为兜底）。
+  const QDL = 2;
+  const narrowAttrs = { defaultLimit: QDL, limitMax: QDL, overLimit: 3, label: "夹具只收窄面" };
+  const narrowDef = { results: [{ id: "q1" }, { id: "q2" }] };
+  const narrowWide = {
+    results: [{ id: "q1" }, { id: "q2" }],
+    limitWindow: { requestedLimit: QDL, resultLimit: QDL, candidates: 2, limitMax: QDL, clamped: false },
+  };
+  const narrowOver = {
+    results: [{ id: "q1" }, { id: "q2" }],
+    limitWindow: { requestedLimit: 3, resultLimit: 2, candidates: 2, limitMax: QDL, clamped: true },
+    warning: "候选池只有 2 条，已按池截断",
+  };
+  expect("⑥ 只收窄：默认无 limitWindow、limit=1 恰 1 条且保序、上界窗口与默认同序、超面界被 clamp+披露 ⇒ 绿",
+    checkNarrowOnlyFaceWindow(narrowDef, { results: [{ id: "q1" }] }, narrowWide, narrowOver, narrowAttrs).length, 0);
+  // 对照（为什么不能照搬放宽腿）：只收窄面的假红向量在**运行腿的 !widened 判定** ——
+  // 默认==上界 ⇒ `pool > dk` 永假 ⇒ widened 永假 ⇒ 照搬必判「放宽是摆设」。
+  // 窗检（checkFaceLimitWindow）在 limitMax==池 时对合法夹具恰好不红，但它核的「放宽变多」
+  // 性质对本面**无从成立**，所以 narrowOnly 分支整个绕开 widened 腿（门头注记）。
+  {
+    const dk = QDL, pool = narrowWide.limitWindow.candidates;
+    const widenedIfCopied = pool > dk; // 只收窄面：pool ≤ dk 恒真 ⇒ 永远进不了 widened
+    expect("⑥ 只收窄对照：照搬放宽腿时 widened 恒假（= 必判「放宽是摆设」假红）", widenedIfCopied, false);
+    expect("⑥ 只收窄对照：合法夹具过窗检不红（假红向量不在窗检）",
+      checkFaceLimitWindow(narrowDef, narrowWide, { defaultLimit: QDL, limitMax: QDL, label: "夹具" }).length, 0);
+  }
+  expect("⑥ 只收窄失守：limit=1 给了 2 条（收窄是摆设）⇒ 红",
+    checkNarrowOnlyFaceWindow(narrowDef, { results: [{ id: "q1" }, { id: "q2" }] }, narrowWide, narrowOver, narrowAttrs).length > 0, true);
+  expect("⑥ 只收窄失守：默认载荷带了 limitWindow ⇒ 红",
+    checkNarrowOnlyFaceWindow({ ...narrowDef, limitWindow: narrowWide.limitWindow }, { results: [{ id: "q1" }] }, narrowWide, narrowOver, narrowAttrs).length > 0, true);
+  expect("⑥ 只收窄失守：上界窗口借参数重排 ⇒ 红",
+    checkNarrowOnlyFaceWindow(narrowDef, { results: [{ id: "q1" }] }, { ...narrowWide, results: [{ id: "q2" }, { id: "q1" }] }, narrowOver, narrowAttrs).length > 0, true);
+  expect("⑥ 只收窄失守：resultLimit 与池脱钩 ⇒ 红",
+    checkNarrowOnlyFaceWindow(narrowDef, { results: [{ id: "q1" }] }, { ...narrowWide, limitWindow: { ...narrowWide.limitWindow, resultLimit: 1 } }, narrowOver, narrowAttrs).length > 0, true);
+  expect("⑥ 只收窄失守：超面界请求没被 clamp（面界只是注释）⇒ 红",
+    checkNarrowOnlyFaceWindow(narrowDef, { results: [{ id: "q1" }] }, narrowWide, { ...narrowOver, limitWindow: { ...narrowOver.limitWindow, clamped: false } }, narrowAttrs).length > 0, true);
+  expect("⑥ 只收窄失守：超面界被 clamp 却未披露 ⇒ 红",
+    checkNarrowOnlyFaceWindow(narrowDef, { results: [{ id: "q1" }] }, narrowWide, { ...narrowOver, warning: "" }, narrowAttrs).length > 0, true);
+  expect("⑥ 只收窄失守：默认 ≠ 上界（常量前提被打破）⇒ 红",
+    checkNarrowOnlyFaceWindow(narrowDef, { results: [{ id: "q1" }] }, narrowWide, narrowOver, { defaultLimit: 1, limitMax: QDL, label: "夹具" }).length > 0, true);
+  finish(problems, [
+    "--selftest：4 种降权失守（A 删行 / B factor=1 / C 打乱普通页序 / D 原序返回）+ factor 两端 + 3 种对账形态 + 9 种 limit 失守 + 4 种 schema 形状" +
+      " + A3 扩面 7 种窗口失守（含「池够大却不多给」翻真投毒）+ 2 种扩面 schema 形状" +
+      " + A3 残面① 只收窄面 7 种失守 + 2 条对照（照搬放宽腿 widened 恒假 ⇒ 必假红 / 合法夹具过窗检不红）",
+  ]);
 }
 
 if (SELFTEST) selfTest();

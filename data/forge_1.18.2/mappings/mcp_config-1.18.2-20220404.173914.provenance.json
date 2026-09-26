@@ -1,0 +1,48 @@
+{
+  "publishedAt": "2026-09-25",
+  "generator": "mcp-server/scripts/ingest-forge-srg.mjs",
+  "kind": "mcpconfig-srg-to-official/reduced",
+  "upstream": {
+    "coordinate": "de.oceanlabs.mcp:mcp_config:1.18.2-20220404.173914",
+    "repository": "https://maven.neoforged.net/releases/de/oceanlabs/mcp/mcp_config/",
+    "mcpConfigCommits": {
+      "mapping": "d0257a1b790de5e0f96c9d6703abc9901d5a390f",
+      "mcp": "ce7571bb8b3367a0368e4b94f6a182e1b523bb4a"
+    },
+    "commitKeys": [
+      "mapping",
+      "mcp"
+    ],
+    "note": "commits 抄自 ForgeGradle 留下的 <文件>.input（mapping= / mcp=）；无该文件时为 null，不猜 SHA。"
+  },
+  "sourceOnThisMachine": {
+    "path": "~/.gradle/caches/forge_gradle/minecraft_user_repo/de/oceanlabs/mcp/mcp_config/1.18.2-20220404.173914/srg_to_parchment_2022.08.21-1.18.2.tsrg",
+    "bytes": 7610242,
+    "sha256": "287d90d672d256db73a8346b8b7cd078c562c530cbd7248ff17fb2d8340ff49f",
+    "flavor": "parchment（official 件不在该目录时的回落）"
+  },
+  "derived": {
+    "file": "data/forge_1.18.2/mappings/srg_to_official-1.18.2.tsrg",
+    "bytes": 5033828,
+    "sha256": "9e3bfc17e0233c59b26dd11c5b3a872137591ee8ea017ab80da24565774826d0",
+    "headerLine": "tsrg2 srg official",
+    "columns": "类行 `<srgClass> <officialClass>`；成员行 `\\t<srgName>\\t<descriptor>\\t<officialName>`",
+    "classes": 6399,
+    "methods": 42102,
+    "fields": 27498,
+    "fieldsWithDescriptor": 425,
+    "sourceLines": 180996,
+    "droppedLines": {
+      "param": 77183,
+      "modifier": 14704,
+      "ctor": 8411,
+      "other": 4697
+    },
+    "reduction": "丢参数层行（\\t\\t…）、修饰行（static/final）、`<init>`/`<clinit>` 与一切非 `m_/f_` 形状的成员行 ⇒ 入库件不是上游件的原样副本"
+  },
+  "consumedBy": [
+    "mcp-server/scripts/_lib/build-yarn-sqlite.mjs（候选 kind=srg-to-official → mappingEra=mcp-config-srg）",
+    "convert_mapping / generate_* 的 Forge AT 成员行（access-lines.ts 读 named 列并核 SRG_SHAPE_RE）"
+  ],
+  "licenseNote": "Mojang 映射许可禁的是「完整且未修改地再分发」（仓根 AGENTS.md §Mappings / data/**/client.txt 头部原文）。本件是削减后的派生表，与既有 tracked 的 data/forge_1.16.5/mappings/obf_to_srg.tsrg 同类；原始 client.txt 继续由 .gitignore 排除、不入库。"
+}

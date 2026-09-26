@@ -3,11 +3,16 @@ name: mc-owo
 description: owo-lib 配置与 GUI（owo-config、owo-ui）。触发词：owo、owo-lib、owo-config、owo-ui、wispforest、注解式配置、自动配置界面
 platforms: [fabric, neoforge, quilt]
 mcVersions: ["1.17-26.2"]
+mcVersionsByPlatform: "fabric=1.17-26.2; quilt=1.17-26.2; neoforge=1.21.1-1.21.10"
 communityDocId: authored/lib-owo
+modrinthSlug: owo-lib
 ---
 
 > 数据读取日期：2026-09-14（源：Modrinth project/owo-lib limit=100：release 上界 fabric=26.2 / quilt=26.2（0.13.1+26.2，2026-08-19），neoforge=1.21.10（0.12.28+1.21.10，2025-11-22）；声明 forge 的构建 0 个）
-> 复核：curl.exe --ssl-no-revoke -sS "https://api.modrinth.com/v2/project/owo-lib/version?limit=100" 后按 game_versions + loaders + version_type 重取上界（本轮 limit=100 覆盖不到低界时改定向 game_versions 查询）
+> **构件面复测（as-of 2026-09-25，源 = `mcp-server/data/lib-manifests/all.json` 重抓后的完整面 49 slug / 3003 行；探针 `node temp/ralph-20260922/_v45-ceilings.mjs` → `temp/ralph-20260922/logs/r45-ceilings.log`，逐 loader 明细见 `logs/r45-loaderlegs.log`）**：`owo-lib` 该 slug 现 70 行，逐 loader 的 **release 上界 = fabric 26.2 / quilt 26.2 / neoforge 1.21.10**，与上面 09-14 的直读**逐字相同**（⇒ 本库的窗口终点没有被翻页重抓挪动）。两条必须点名的口径限制：
+> ① **NeoForge 的 1.21.1 / 1.21.3 / 1.21.4 / 1.21.5 / 1.21.8 五行在构件面是 `versionType=beta`，release 只有 1.21.9 与 1.21.10 两行** ⇒ 键里的 `neoforge=1.21.1-…` 下界是**「有构件」**而非「有 release」，工程上要用 1.21.1-1.21.8 的 Neo 构建就得接受它是 beta 件。
+> ② **下界一律不按构件面取**：该面每版本只留 primary 一个构件（`scripts/build-lib-manifest.mjs:209`），同版本兄弟加载器的件会被丢 ⇒ 构件面能证「上界到此」，证不了「下界从此开始」。因此 `quilt` 下界沿用正文既有的 1.17（构件面 quilt 行最早 1.19），不据面收窄。
+> 复核：`node temp/ralph-20260922/_v45-ceilings.mjs`（只读，打印基准目录）
 
 # owo-lib（owo-config / owo-ui）集成
 
@@ -15,7 +20,7 @@ communityDocId: authored/lib-owo
 - **Fabric / Quilt：1.17-26.2**（最新 release `0.13.1+26.2`，2026-08-19）
 - **NeoForge：1.21.1-1.21.10**（最新 release `0.12.28+1.21.10`，2025-11-22；1.21.11 与 26.x **没有 NeoForge 构建**）
 
-（Modrinth 实读 2026-09-13。frontmatter 的 `1.17-26.2` 取三 loader **并集**，NeoForge 工程一律以上面的 Neo 窗口为准。）Forge 用户请直接用 Cloth / YACL / ForgeConfigSpec，本 skill 的 Forge 分支没有可用方案。
+（Modrinth 实读 2026-09-13 + 构件面复测 2026-09-25。**第 45 轮起 frontmatter 已写 `mcVersionsByPlatform`，三条 loader 窗口分别生效**：`mcVersions: ["1.17-26.2"]` 那份并集不再是解析依据 —— 解析侧（`scripts/resolve-lib-skills.mjs`）与 session 侧（`mcp-server/src/platform-pack/catalog.ts`）命中平台键时**整组替换** union，两侧一致性由 `mcp-server/scripts/assert-lib-session-resolve-parity.mjs` 钉。NeoForge 工程一律以上面的 Neo 窗口为准，超出 1.21.10 的 1.21.11 / 26.x 请改口 Cloth / YACL。）Forge 用户请直接用 Cloth / YACL / ForgeConfigSpec，本 skill 的 Forge 分支没有可用方案。
 
 ## Decision: 用不用 owo-config
 

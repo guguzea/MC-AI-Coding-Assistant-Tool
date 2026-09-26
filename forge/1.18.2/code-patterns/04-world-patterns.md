@@ -48,7 +48,7 @@ int minY = accessor.getMinBuildHeight();  // -64
 ## 自定义结构
 
 ```java
-public class MyStructure extends Structure.StructureSettings {
-    // 继承 StructureSettings 配置生成参数
+public class MyStructure extends StructureFeature<MyStructureConfig> {
+    // 1.18.2：继承 StructureFeature，配置类型经 Codec 泛参注入（1.16 的结构设置嵌套类在本档不存在）
 }
 ```

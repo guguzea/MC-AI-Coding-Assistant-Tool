@@ -17,49 +17,54 @@ mcHint: 见各条；跨度 1.7.10–26.x，引用前先对版本
 | 帖子 | 范围 | 协议 | 备注 |
 |------|------|------|------|
 | [用Java代码开发匠魂3附属模组](https://www.mcmod.cn/post/3282.html) | Forge 1.18.2 + TiC3 全流程 | ❌ 禁转载 | 已提炼 `authored/addon-dev-workflow` |
-| [匠魂3附属开发进阶](https://www.mcmod.cn/post/4413.html) | TiC3 附属进阶（配3282） | 显式 BY-NC-SA | 中文 TiC 社区活跃 |
-| [如何试着去制作一个CEu的附属模组](https://www.mcmod.cn/post/3414.html) | GTCEu 附属开发（正文声明 CC BY-NC-ND，禁止演绎） | 显式 BY-NC-ND | GT 方向附属实例 |
+| [匠魂3附属开发进阶](https://www.mcmod.cn/post/4413.html) | TiC3 附属进阶（配3282） | ⚠️ 帖内无逐帖显式声明，站级默认 BY-NC-SA 3.0 适用（as-of 2026-09-25 内置浏览器直访 post/4413.html，外部-only） | 中文 TiC 社区活跃 |
+| [如何试着去制作一个CEu的附属模组](https://www.mcmod.cn/post/3414.html) | GTCEu 附属开发（正文声明 CC BY-NC-ND，禁止演绎） | **A 级**：帖内声明行「…CC BY-NC-ND 协议。」（as-of 2026-09-25 内置浏览器直访 post/3414.html）；另正文「本教程遵循CC: BY-NC-ND协议，MCMOD为唯一发布站。」⇒ **附加限制：MCMOD 为唯一发布站** | GT 方向附属实例 |
 | [【开发向】Curios API 添加饰品](https://www.mcmod.cn/post/3102.html) | Forge 例：饰品栏 API 接入 | 显式 BY-NC-SA | 配 `lib-curios` |
-| [1.18模组开发](https://www.mcmod.cn/post/3853.html) 系列 | IDEA 向 1.18 开发；同作者续篇 [AT访问转换器](https://www.mcmod.cn/post/3921.html)、[ModuleManager与配置](https://www.mcmod.cn/post/3864.html) | 3853 显式 BY-NC-SA（续篇未核） | AT 是进阶必读 |
-| [1.18模组制作之Mixin的使用](https://www.mcmod.cn/post/3979.html) | 1.18 Mixin 实战 | 显式 BY-NC-SA | 配 `authored/mixin-practices-crossplatform` |
+| [1.18模组开发](https://www.mcmod.cn/post/3853.html) | IDEA 向 1.18 开发（系列首篇） | ⚠️ 帖内无逐帖显式声明，站级默认 BY-NC-SA 3.0 适用（as-of 2026-09-25 内置浏览器直访 post/3853.html，外部-only）（此前记「显式」= 虚标） | AT 是进阶必读 |
+| ↳ 同作者续篇 [AT访问转换器](https://www.mcmod.cn/post/3921.html) | Mixin 之外的 AT 访问转换器 | ⚠️ 帖内无逐帖显式声明，站级默认 BY-NC-SA 3.0 适用（as-of 2026-09-25 内置浏览器直访 post/3921.html，外部-only）（此前「续篇未核」，本轮已补核） | 进阶必读 |
+| ↳ 同作者续篇 [ModuleManager与配置](https://www.mcmod.cn/post/3864.html) | ModuleManager 与配置 | ⚠️ 帖内无逐帖显式声明，站级默认 BY-NC-SA 3.0 适用（as-of 2026-09-25 内置浏览器直访 post/3864.html，外部-only）（此前「续篇未核」，本轮已补核） | 配 `authored/mod-config-schemes` |
+| [1.18模组制作之Mixin的使用](https://www.mcmod.cn/post/3979.html) | 1.18 Mixin 实战 | ⚠️ 帖内无逐帖显式声明，站级默认 BY-NC-SA 3.0 适用（as-of 2026-09-25 内置浏览器直访 post/3979.html，外部-only） | 配 `authored/mixin-practices-crossplatform` |
 | [Neoforge 1.21.4 详细教程](https://www.mcmod.cn/post/4971.html) | NeoForge 1.21.4 入门（需 Java 基础） | ❌ 禁转载 | 最新版入门 |
-| [Forge Mod制作入门完整教程（极简版）](https://www.mcmod.cn/post/6383.html) | 主流 1.x 从零到第一个 Mod，环境搭建避坑 | 显式 BY-NC-SA | 新手首推 |
-| [全民写端01：构建运行与简易功能模块](https://www.mcmod.cn/post/4725.html) | IDEA Minecraft Development 插件生成 **1.21 NeoForge** 项目并实现功能模块（系列首篇） | 显式 BY-NC-SA | 抽样审计发现的新宝石 |
-| [Fabric Mod开发教程-01 环境](https://www.mcmod.cn/post/3211.html) | Fabric 系列入门；02 创世之力 ❌禁转载 | 01 显式 BY-NC-SA | Fabric 侧成体系 |
-| [基于Cleanroom开发模组（实验）](https://www.mcmod.cn/post/3978.html) ＋ [新人如何用Cleanroom现代化开发](https://www.mcmod.cn/post/5838.html) | **1.7.10 分支 Cleanroom 上的真开发** | 显式 BY-NC-SA | 老版开发独苗，配 `links/legacy-loader-upstreams` |
-| [在2025年怎么编写一个Forge Coremod？](https://www.mcmod.cn/post/4861.html) | Coremod/ASMTransformer 编写 | 显式 BY-NC-SA | 高级：字节码改造 |
+| [Forge Mod制作入门完整教程（极简版）](https://www.mcmod.cn/post/6383.html) | 主流 1.x 从零到第一个 Mod，环境搭建避坑 | ⚠️ 帖内无逐帖显式声明，站级默认 BY-NC-SA 3.0 适用（as-of 2026-09-25 内置浏览器直访 post/6383.html，外部-only） | 新手首推 |
+| [全民写端01：构建运行与简易功能模块](https://www.mcmod.cn/post/4725.html) | IDEA Minecraft Development 插件生成 **1.21 NeoForge** 项目并实现功能模块（系列首篇） | ⚠️ 帖内无逐帖显式声明，站级默认 BY-NC-SA 3.0 适用（as-of 2026-09-25 内置浏览器直访 post/4725.html，外部-only） | 抽样审计发现的新宝石 |
+| [Fabric Mod开发教程-01 环境](https://www.mcmod.cn/post/3211.html) | Fabric 系列入门（01） | ⚠️ 帖内无逐帖显式声明，站级默认 BY-NC-SA 3.0 适用（as-of 2026-09-25 内置浏览器直访 post/3211.html，外部-only）（此前记「01 显式」= 虚标） | Fabric 侧成体系 |
+| ↳ 同系列 02「创世之力」（**帖 id 未登记在本行**） | Fabric 系列第 2 篇 | ❌ 禁转载（**本轮取证未覆盖：帖 id 未登记 ⇒ 维持原值 + `未复测`**） | 要复核须先补回 02 的 id |
+| [基于Cleanroom开发模组（实验）](https://www.mcmod.cn/post/3978.html) | **1.7.10 分支 Cleanroom 上的真开发** | **A 级**：帖内声明行「…CC BY-NC 协议。」（as-of 2026-09-25 内置浏览器直访 post/3978.html）；**无 SA** ⇒ 此前「BY-NC-SA」是类型错 | 老版开发独苗，配 `links/legacy-loader-upstreams` |
+| ↳ [新人如何用Cleanroom现代化开发](https://www.mcmod.cn/post/5838.html) | Cleanroom 现代化开发入门（同主题第二帖） | ⚠️ 帖内无逐帖显式声明，站级默认 BY-NC-SA 3.0 适用（as-of 2026-09-25 内置浏览器直访 post/5838.html，外部-only）（此前与 3978 共用一个协议值 = 虚标） | 配 `links/legacy-loader-upstreams` |
+| [在2025年怎么编写一个Forge Coremod？](https://www.mcmod.cn/post/4861.html) | Coremod/ASMTransformer 编写 | **A 级**：帖内声明行「…CC BY-NC 协议。」（as-of 2026-09-25 内置浏览器直访 post/4861.html）；**无 SA**，不得据此判「允许演绎」 | 高级：字节码改造 |
 | [如何搭建带mixin的1.12.2Forge开发环境并为匠魂2编写模组](https://www.mcmod.cn/post/3313.html) | 1.12.2 开发环境 + TiC2 实战 | ❌ 禁转载 | 老版开发环境 |
 | [匠魂2源码分析的补充](https://www.mcmod.cn/post/1990.html) | 读宿主源码实践（不适合新手） | 显式 BY-NC-SA | 「读源码写附属」示范 |
-| [Ponder——为你的模组添加思索引导](https://www.mcmod.cn/post/5404.html) | 给自己的 mod 加 Create 式 Ponder 引导 | 显式 BY-NC-SA | 文档化体验 |
-| [正确修改模组支持版本/加载器/依赖元数据](https://www.mcmod.cn/post/5173.html) | mods.toml/fabric.mod.json 版本互通与依赖调整 | 显式 BY-NC-SA | 维护向干货 |
-| [FML 加载模组过程](https://www.mcmod.cn/post/2338.html) | ModLauncher/ASM 加载链路原理 | 默认 BY-NC-SA | 原理视角 |
-| [浅谈 Forge 的事件系统和使用](https://www.mcmod.cn/post/2571.html) | Forge 事件系统机制与订阅实战（需 Java 基础）——正文级扫描发现的漏网宝石，标题完全隐蔽 | ⚠️ 未声明（2026-08-24 复核列表行与帖页均无协议声明，此前误记显式 BY-NC-SA） | 已提炼 `authored/forge-event-system-practices`（自写综述，未复制原文表达） |
-| [如何在 NeoForge 开发中接入 PlayerAnimator 前置](https://www.mcmod.cn/post/4987.html) | build.gradle 加 KosmX maven + 依赖（NeoForge 1.21.4/1.21.5 实测版本表） | 默认（未声明） | 动画库前置接入示例 |
-| [匠魂2、3主要差异参考](https://www.mcmod.cn/post/2012.html) | TiC2→TiC3 迁移：工具类型增删/材料体系变化（配 6123） | 默认（未声明） | 版本迁移知识 |
-| [1.12.2 一些可用的 WorldProvider](https://www.mcmod.cn/post/1347.html) | 老版自定义维度 provider 清单：原版/JED/BOP 各世界提供者 | 默认（未声明） | 配 `authored/custom-dimension-and-biomes` 老版侧 |
+| [Ponder——为你的模组添加思索引导](https://www.mcmod.cn/post/5404.html) | 给自己的 mod 加 Create 式 Ponder 引导 | **A 级**：帖内声明行「…CC BY-NC 协议。」（as-of 2026-09-25 内置浏览器直访 post/5404.html）；**无 SA** | 文档化体验 |
+| [正确修改模组支持版本/加载器/依赖元数据](https://www.mcmod.cn/post/5173.html) | mods.toml/fabric.mod.json 版本互通与依赖调整 | ⚠️ 帖内无逐帖显式声明，站级默认 BY-NC-SA 3.0 适用（as-of 2026-09-25 内置浏览器直访 post/5173.html，外部-only） | 维护向干货 |
+| [FML 加载模组过程](https://www.mcmod.cn/post/2338.html) | ModLauncher/ASM 加载链路原理 | ⚠️ 帖内无逐帖显式声明，站级默认 BY-NC-SA 3.0 适用（as-of 2026-09-25 内置浏览器直访 post/2338.html，外部-only） | 原理视角 |
+| [浅谈 Forge 的事件系统和使用](https://www.mcmod.cn/post/2571.html) | Forge 事件系统机制与订阅实战（需 Java 基础）——正文级扫描发现的漏网宝石，标题完全隐蔽 | ⚠️ 许可第三态：**帖内无逐帖显式声明**，但 **站级默认 BY-NC-SA 3.0 适用**（2026-09-24 用户裁定，取证 as-of 2026-09-24、外部-only） | 已提炼 `authored/forge-event-system-practices`（自写综述，未复制原文表达） |
+| [如何在 NeoForge 开发中接入 PlayerAnimator 前置](https://www.mcmod.cn/post/4987.html) | build.gradle 加 KosmX maven + 依赖（NeoForge 1.21.4/1.21.5 实测版本表） | ⚠️ 帖内无逐帖显式声明，站级默认 BY-NC-SA 3.0 适用（as-of 2026-09-25 内置浏览器直访 post/4987.html，外部-only） | 动画库前置接入示例 |
+| [匠魂2、3主要差异参考](https://www.mcmod.cn/post/2012.html) | TiC2→TiC3 迁移：工具类型增删/材料体系变化（配 6123） | ⚠️ 帖内无逐帖显式声明，站级默认 BY-NC-SA 3.0 适用（as-of 2026-09-25 内置浏览器直访 post/2012.html，外部-only） | 版本迁移知识 |
+| [1.12.2 一些可用的 WorldProvider](https://www.mcmod.cn/post/1347.html) | 老版自定义维度 provider 清单：原版/JED/BOP 各世界提供者 | ⚠️ 帖内无逐帖显式声明，站级默认 BY-NC-SA 3.0 适用（as-of 2026-09-25 内置浏览器直访 post/1347.html，外部-only） | 配 `authored/custom-dimension-and-biomes` 老版侧 |
 | [GT魔改入门作者必读（两期）](https://www.mcmod.cn/post/2427.html)＋[第二期](https://www.mcmod.cn/post/2430.html) | GTCE/CEu 的 CrT 魔改：RecipeMap 写法与原版写法差异（源自 CrT 官方 wiki） | 显式 BY-NC-ND | GT 生态脚本化魔改入门 |
-| [如何使用 YACL 为 Fabric 模组添加配置](https://www.mcmod.cn/post/3836.html) | YACL（YetAnotherConfigLib）开发向接入 ★个人区全量扫描找回的真身（此前误记 4386，实为 CFB 任务帖） | ❌ 禁转载 | 配 `lib-catalog` Fabric 配置库 |
-| [简单易懂的 AccessTransformer 使用方法](https://www.mcmod.cn/post/4679.html) | AT 声明与使用（配 3921 同作者系列） | 默认（未声明） | 进阶：字段/方法访问放宽 |
-| [!MixinBooter 使用方法（面向开发者）](https://www.mcmod.cn/post/3142.html) | 老 Forge(1.8–1.12.2) Mixin 开发启用（配 3340 玩家向） | 默认（未声明） | 配 `authored/mixin-practices-crossplatform` 启用方式表 |
+| [如何使用 YACL 为 Fabric 模组添加配置](https://www.mcmod.cn/post/3836.html) | YACL（YetAnotherConfigLib）开发向接入 ★个人区全量扫描找回的真身（此前误记 4386，实为 CFB 任务帖） | **A 级**：帖内声明行「…CC BY-NC-SA 协议。」（as-of 2026-09-25 内置浏览器直访 post/3836.html）；另正文「教程的代码受 MIT 协议保护」⇒ **方向反：并非禁转载** | 配 `lib-catalog` Fabric 配置库 |
+| [简单易懂的 AccessTransformer 使用方法](https://www.mcmod.cn/post/4679.html) | AT 声明与使用（配 3921 同作者系列） | ⚠️ 帖内无逐帖显式声明，站级默认 BY-NC-SA 3.0 适用（as-of 2026-09-25 内置浏览器直访 post/4679.html，外部-only） | 进阶：字段/方法访问放宽 |
+| [!MixinBooter 使用方法（面向开发者）](https://www.mcmod.cn/post/3142.html) | 老 Forge(1.8–1.12.2) Mixin 开发启用（配 3340 玩家向） | ❌ 禁转载：帖内声明行「…未经允许禁止转载。」（as-of 2026-09-25 内置浏览器直访 post/3142.html） ⇒ **方向反：此前记成未声明** | 配 `authored/mixin-practices-crossplatform` 启用方式表 |
 
 ## 数据驱动 / 资产开发
 
 | 帖子 | 范围 | 协议 |
 |------|------|------|
-| [开发自己的数据包！](https://www.mcmod.cn/post/3014.html) | 数据包开发入门 | 显式 BY-NC-SA |
-| [Fabric 与 Forge 的游戏内数据包命名与作用](https://www.mcmod.cn/post/4045.html) | 双平台数据包目录差异 ★跨平台 | 显式 BY-NC-SA |
-| [战利品表数据包制作](https://www.mcmod.cn/post/3603.html) | loot table 数据包 | 显式 BY-NC-SA |
+| [开发自己的数据包！](https://www.mcmod.cn/post/3014.html) | 数据包开发入门 | **A 级**：帖内声明行「…CC BY-NC 协议。」（as-of 2026-09-25 内置浏览器直访 post/3014.html）；**无 SA** |
+| [Fabric 与 Forge 的游戏内数据包命名与作用](https://www.mcmod.cn/post/4045.html) | 双平台数据包目录差异 ★跨平台 | ⚠️ 帖内无逐帖显式声明，站级默认 BY-NC-SA 3.0 适用（as-of 2026-09-25 内置浏览器直访 post/4045.html，外部-only） |
+| [战利品表数据包制作](https://www.mcmod.cn/post/3603.html) | loot table 数据包 | ⚠️ 帖内无逐帖显式声明，站级默认 BY-NC-SA 3.0 适用（as-of 2026-09-25 内置浏览器直访 post/3603.html，外部-only） |
 | [资源包元数据 pack.mcmeta 详细写法](https://www.mcmod.cn/post/6251.html) | 资产元数据 | 显式 BY-NC-SA |
-| [OBJ 模型文件制作](https://www.mcmod.cn/post/3814.html) ＋ [OBJ 常见问题解答](https://www.mcmod.cn/post/4163.html) | Blender/Blockbench 出 OBJ、资源包 JSON 引用与排错 | 显式 BY-NC-SA |
-| [Athena 连接纹理创作教程](https://www.mcmod.cn/post/6141.html) | CTM 连接纹理绘制 | 显式 BY-NC-SA |
-| [自定义模型完整指南](https://www.mcmod.cn/post/2955.html) | 模型开发综合 | 默认 BY-NC-SA |
+| [OBJ 模型文件制作](https://www.mcmod.cn/post/3814.html) | Blender/Blockbench 出 OBJ、资源包 JSON 引用 | ⚠️ 帖内无逐帖显式声明，站级默认 BY-NC-SA 3.0 适用（as-of 2026-09-25 内置浏览器直访 post/3814.html，外部-only）（此前记「显式」= 虚标） |
+| ↳ [OBJ 常见问题解答](https://www.mcmod.cn/post/4163.html) | OBJ 排错问答 | ⚠️ 帖内无逐帖显式声明，站级默认 BY-NC-SA 3.0 适用（as-of 2026-09-25 内置浏览器直访 post/4163.html，外部-only）（此前与 3814 共用一个协议值 = 两帖都虚标） |
+| [Athena 连接纹理创作教程](https://www.mcmod.cn/post/6141.html) | CTM 连接纹理绘制 | ⚠️ 帖内无逐帖显式声明，站级默认 BY-NC-SA 3.0 适用（as-of 2026-09-25 内置浏览器直访 post/6141.html，外部-only） |
+| [自定义模型完整指南](https://www.mcmod.cn/post/2955.html) | 模型开发综合 | ⚠️ 帖内无逐帖显式声明，站级默认 BY-NC-SA 3.0 适用（as-of 2026-09-25 内置浏览器直访 post/2955.html，外部-only） |
 | [多版本可翻译文本的实现（从简单到硬编码汉化）](https://www.mcmod.cn/post/5167.html) | 本地化实现谱系 | 显式 BY-NC-SA |
-| [In Control wiki 搬运（译）](https://www.mcmod.cn/post/2049.html) | spawner/spawn.json 生成控制（新增≠限制） | 默认 BY-NC-SA |
-| [IC2C 自定义合成表（官方文档译）](https://www.mcmod.cn/post/1863.html) | customCraftingRecipes.json 数据驱动配方 | 默认 BY-NC-SA |
-| [挖矿与砍杀 数据包及资源包制作](https://www.mcmod.cn/post/4155.html) | 新武器类型+自制技能（单模组但方法论通用） | 显式 BY-NC-SA |
-| [群系删除或替换](https://www.mcmod.cn/post/3846.html) | 解压 Terralith 等数据包编辑 `dimension/overworld.json` 移除群系（非官方支持但可行） | 默认 BY-NC-SA |
-| [TC6 自定义研究](https://www.mcmod.cn/post/549.html) | 神秘时代6 研究数据 JSON 结构（entries/key 等字段写法） | 默认 BY-NC-SA |
-| [自定义采矿维度的世界类型](https://www.mcmod.cn/post/1560.html) | 数据包创建自定义世界类型/采矿维度 | 默认 BY-NC-SA |
+| [In Control wiki 搬运（译）](https://www.mcmod.cn/post/2049.html) | spawner/spawn.json 生成控制（新增≠限制） | ⚠️ 帖内无逐帖显式声明，站级默认 BY-NC-SA 3.0 适用（as-of 2026-09-25 内置浏览器直访 post/2049.html，外部-only） |
+| [IC2C 自定义合成表（官方文档译）](https://www.mcmod.cn/post/1863.html) | customCraftingRecipes.json 数据驱动配方 | ⚠️ 帖内无逐帖显式声明，站级默认 BY-NC-SA 3.0 适用（as-of 2026-09-25 内置浏览器直访 post/1863.html，外部-only） |
+| [挖矿与砍杀 数据包及资源包制作](https://www.mcmod.cn/post/4155.html) | 新武器类型+自制技能（单模组但方法论通用） | ⚠️ 帖内无逐帖显式声明，站级默认 BY-NC-SA 3.0 适用（as-of 2026-09-25 内置浏览器直访 post/4155.html，外部-only） |
+| [群系删除或替换](https://www.mcmod.cn/post/3846.html) | 解压 Terralith 等数据包编辑 `dimension/overworld.json` 移除群系（非官方支持但可行） | ⚠️ 帖内无逐帖显式声明，站级默认 BY-NC-SA 3.0 适用（as-of 2026-09-25 内置浏览器直访 post/3846.html，外部-only） |
+| [TC6 自定义研究](https://www.mcmod.cn/post/549.html) | 神秘时代6 研究数据 JSON 结构（entries/key 等字段写法） | ⚠️ 帖内无逐帖显式声明，站级默认 BY-NC-SA 3.0 适用（as-of 2026-09-25 内置浏览器直访 post/549.html，外部-only） |
+| [自定义采矿维度的世界类型](https://www.mcmod.cn/post/1560.html) | 数据包创建自定义世界类型/采矿维度 | ⚠️ 帖内无逐帖显式声明，站级默认 BY-NC-SA 3.0 适用（as-of 2026-09-25 内置浏览器直访 post/1560.html，外部-only） |
 
 ### 仅外链（禁转载，但内容值得知道存在）
 
@@ -69,13 +74,13 @@ mcHint: 见各条；跨度 1.7.10–26.x，引用前先对版本
 
 | 帖子 | 范围 | 协议 |
 |------|------|------|
-| [KubeJS6 面向新手的配方魔改教程](https://www.mcmod.cn/post/3160.html) | KubeJS 6 入门 | 默认 BY-NC-SA |
-| [new与函数与类型——KubeJS开发的奇巧方法](https://www.mcmod.cn/post/3887.html) | KubeJS 进阶 | 显式 BY-NC-SA |
-| [CraftTweaker和KubeJs配方修改](https://www.mcmod.cn/post/2306.html) | 双体系对照 | 显式 BY-NC-SA |
-| [从〇开始的编程逻辑](https://www.mcmod.cn/post/2561.html) | CrT 语境编程入门 | 显式 BY-NC-SA |
-| [反射在KubeJS中的用法](https://www.mcmod.cn/post/4093.html) ★ | 反射突破脚本边界 | 显式 BY-NC-SA |
+| [KubeJS6 面向新手的配方魔改教程](https://www.mcmod.cn/post/3160.html) | KubeJS 6 入门 | ⚠️ 帖内无逐帖显式声明，站级默认 BY-NC-SA 3.0 适用（as-of 2026-09-25 内置浏览器直访 post/3160.html，外部-only）。⚠️ `ATTRIBUTION.md:49` 把该帖记成「站点默认 BY-NC-SA **4.0**」⇒ 与本页 halfB 的 3.0 口径不一致，已登记等人裁（**本格按帖页 + 站页脚取 3.0，不据 4.0 改判**） |
+| [new与函数与类型——KubeJS开发的奇巧方法](https://www.mcmod.cn/post/3887.html) | KubeJS 进阶 | ⚠️ 帖内无逐帖显式声明，站级默认 BY-NC-SA 3.0 适用（as-of 2026-09-25 内置浏览器直访 post/3887.html，外部-only） |
+| [CraftTweaker和KubeJs配方修改](https://www.mcmod.cn/post/2306.html) | 双体系对照 | ⚠️ 帖内无逐帖显式声明，站级默认 BY-NC-SA 3.0 适用（as-of 2026-09-25 内置浏览器直访 post/2306.html，外部-only） |
+| [从〇开始的编程逻辑](https://www.mcmod.cn/post/2561.html) | CrT 语境编程入门 | ⚠️ 帖内无逐帖显式声明，站级默认 BY-NC-SA 3.0 适用（as-of 2026-09-25 内置浏览器直访 post/2561.html，外部-only） |
+| [反射在KubeJS中的用法](https://www.mcmod.cn/post/4093.html) ★ | 反射突破脚本边界 | **A 级**：帖内声明行「…CC BY-NC-ND 协议。」（as-of 2026-09-25 内置浏览器直访 post/4093.html）；**ND = 禁止演绎**（此前记成 SA 把演绎限制判反） |
 | [ProbeJS 插件及 VSC 实用技巧](https://www.mcmod.cn/post/5939.html) ★ | KubeJS 自动补全工具链 | 显式 BY-NC-SA |
-| [KubeJS Wiki 1.21.1 中文翻译（持续更新）](https://www.mcmod.cn/post/6142.html) | 官方 wiki 翻译 | 显式 BY-NC-SA |
+| [KubeJS Wiki 1.21.1 中文翻译（持续更新）](https://www.mcmod.cn/post/6142.html) | 官方 wiki 翻译 | **A 级**：帖内声明行「…CC BY-NC 协议。」（as-of 2026-09-25 内置浏览器直访 post/6142.html）；**无 SA**（且系 KubeJS 官方 wiki 中译，上游许可另计） |
 
 ### 脚本速查（标题定位明确，未逐篇核正文）
 
@@ -89,18 +94,22 @@ mcHint: 见各条；跨度 1.7.10–26.x，引用前先对版本
 
 | 帖子 | 内容 | 协议 |
 |------|------|------|
-| [站内收录模组加载器汇总](https://www.mcmod.cn/post/4880.html) | 20+ 加载器名录，配 `links/legacy-loader-upstreams` | 默认 BY-NC-SA |
-| [如何在 GitHub 提交汉化](https://www.mcmod.cn/post/4473.html) ＋ [简单提交汉化](https://www.mcmod.cn/post/3419.html) | 上游 PR 补汉化流程 | 前者显式 BY-NC-SA |
-| [NeoForge 中文文档 [Gpt4o出品]](https://www.mcmod.cn/post/5487.html) ＋ [1.21.x NeoForge 开发文档中文翻译](https://www.mcmod.cn/post/4403.html) | ⚠️ 机翻阅读辅助，权威以英文原文+`search_neoforge_docs` 为准 | 显式 BY-NC-SA |
-| [利用创可贴和 Recaf 修改停更模组](https://www.mcmod.cn/post/3012.html) | 字节码打补丁续命；已提炼 `authored/legacy-mod-patching` | 默认 BY-NC-SA |
-| [让任务文本使用语言文件](https://www.mcmod.cn/post/2194.html) | FTB Quests snbt 本地化键技巧 | 默认 BY-NC-SA |
-| [1.7.10 Intel 核显渲染错误排查](https://www.mcmod.cn/post/4930.html) | 1.7.10 花屏/色块/全黑等 Intel iGPU 渲染问题与对策 | 默认 BY-NC-SA |
-| [加速模组/插件构建——Lss233's.Mirror 篇](https://www.mcmod.cn/post/3793.html) | 构建依赖镜像加速 | 待核（默认 BY-NC-SA） |
-| [Meddle 手动安装教程](https://www.mcmod.cn/post/4315.html) ＋ [原生打包 Cleanroom 整合包](https://www.mcmod.cn/post/6258.html) | 冷门加载器/1.7.10 生态运维 | 待核（默认 BY-NC-SA） |
-| [(译) makamys《List of "Essential" 1.7.10 Mods》](https://www.mcmod.cn/post/3881.html) | 1.7.10 必备优化/修复/移植类模组全清单（含 Mixin 依赖说明），老版开发生态索引 ★回填扫描发现 | 默认（未声明，译作） |
-| [Retromod 官方兼容评级](https://www.mcmod.cn/post/6659.html) | 五级评级评估旧模组字节码转换后在目标版本的实际可用度（Diamond≈原生移植…），配 `authored/legacy-mod-patching` | 默认（未声明） |
-| [如何让 1.12.2 等于高版本？](https://www.mcmod.cn/post/4392.html) ＋ [我是如何用1.12.2以假乱真高版本的](https://www.mcmod.cn/post/1458.html) | 1.12.2 回搬高版本内容的 backport 模组生态清单对（Et Futurum 系等），配 `links/legacy-loader-upstreams` | ❌ 禁转载 |
-| [如何用 spark 找到卡顿的源头](https://www.mcmod.cn/post/2523.html) | spark profiler 实操排查 tick 卡顿，配 `authored/profiling-performance` | 默认（未声明） |
+| [站内收录模组加载器汇总](https://www.mcmod.cn/post/4880.html) | 20+ 加载器名录，配 `links/legacy-loader-upstreams` | ⚠️ 帖内无逐帖显式声明，站级默认 BY-NC-SA 3.0 适用（as-of 2026-09-25 内置浏览器直访 post/4880.html，外部-only） |
+| [如何在 GitHub 提交汉化](https://www.mcmod.cn/post/4473.html) | 上游 PR 补汉化流程 | ⚠️ 帖内无逐帖显式声明，站级默认 BY-NC-SA 3.0 适用（as-of 2026-09-25 内置浏览器直访 post/4473.html，外部-only）（此前记「前者显式」= 虚标） |
+| ↳ [简单提交汉化](https://www.mcmod.cn/post/3419.html) | 简化版汉化提交流程 | ⚠️ 帖内无逐帖显式声明，站级默认 BY-NC-SA 3.0 适用（as-of 2026-09-25 内置浏览器直访 post/3419.html，外部-only）（此前该格未表态） |
+| [NeoForge 中文文档 [Gpt4o出品]](https://www.mcmod.cn/post/5487.html) | ⚠️ 机翻阅读辅助，权威以英文原文+`search_neoforge_docs` 为准 | ⚠️ 帖内无逐帖显式声明，站级默认 BY-NC-SA 3.0 适用（as-of 2026-09-25 内置浏览器直访 post/5487.html，外部-only）（此前记「显式」= 虚标） |
+| ↳ [1.21.x NeoForge 开发文档中文翻译](https://www.mcmod.cn/post/4403.html) | ⚠️ 同上：机翻辅助 | ❌ 禁转载：帖内声明行「…未经允许禁止转载。」（as-of 2026-09-25 内置浏览器直访 post/4403.html） ⇒ **双错：既虚标又方向反** |
+| [利用创可贴和 Recaf 修改停更模组](https://www.mcmod.cn/post/3012.html) | 字节码打补丁续命；已提炼 `authored/legacy-mod-patching` | ⚠️ 帖内无逐帖显式声明，站级默认 BY-NC-SA 3.0 适用（as-of 2026-09-25 内置浏览器直访 post/3012.html，外部-only） |
+| [让任务文本使用语言文件](https://www.mcmod.cn/post/2194.html) | FTB Quests snbt 本地化键技巧 | ⚠️ 帖内无逐帖显式声明，站级默认 BY-NC-SA 3.0 适用（as-of 2026-09-25 内置浏览器直访 post/2194.html，外部-only） |
+| [1.7.10 Intel 核显渲染错误排查](https://www.mcmod.cn/post/4930.html) | 1.7.10 花屏/色块/全黑等 Intel iGPU 渲染问题与对策 | ⚠️ 帖内无逐帖显式声明，站级默认 BY-NC-SA 3.0 适用（as-of 2026-09-25 内置浏览器直访 post/4930.html，外部-only） |
+| [加速模组/插件构建——Lss233's.Mirror 篇](https://www.mcmod.cn/post/3793.html) | 构建依赖镜像加速 | **A 级**：帖内声明行「…CC BY-NC-SA 协议。」（as-of 2026-09-25 内置浏览器直访 post/3793.html） ⇒ 由「待核」升为**显式** |
+| [Meddle 手动安装教程](https://www.mcmod.cn/post/4315.html) | 冷门加载器运维 | ⚠️ 帖内无逐帖显式声明，站级默认 BY-NC-SA 3.0 适用（as-of 2026-09-25 内置浏览器直访 post/4315.html，外部-only） ⇒ 由「待核」**定稿** |
+| ↳ [原生打包 Cleanroom 整合包](https://www.mcmod.cn/post/6258.html) | 1.7.10 生态运维 | ⚠️ 帖内无逐帖显式声明，站级默认 BY-NC-SA 3.0 适用（as-of 2026-09-25 内置浏览器直访 post/6258.html，外部-only） ⇒ 由「待核」**定稿** |
+| [(译) makamys《List of "Essential" 1.7.10 Mods》](https://www.mcmod.cn/post/3881.html) | 1.7.10 必备优化/修复/移植类模组全清单（含 Mixin 依赖说明），老版开发生态索引 ★回填扫描发现 | ⚠️ 帖内无逐帖显式声明，站级默认 BY-NC-SA 3.0 适用（as-of 2026-09-25 内置浏览器直访 post/3881.html，外部-only）；**译作**（上游件自身许可另计） |
+| [Retromod 官方兼容评级](https://www.mcmod.cn/post/6659.html) | 五级评级评估旧模组字节码转换后在目标版本的实际可用度（Diamond≈原生移植…），配 `authored/legacy-mod-patching` | ⚠️ 帖内无逐帖显式声明，站级默认 BY-NC-SA 3.0 适用（as-of 2026-09-25 内置浏览器直访 post/6659.html，外部-only） |
+| [如何让 1.12.2 等于高版本？](https://www.mcmod.cn/post/4392.html) | 1.12.2 backport 生态清单（Et Futurum 系等），配 `links/legacy-loader-upstreams` | ❌ 禁转载：帖内声明行「…未经允许禁止转载。」（as-of 2026-09-25 内置浏览器直访 post/4392.html）（核实为对） |
+| ↳ [我是如何用1.12.2以假乱真高版本的](https://www.mcmod.cn/post/1458.html) | 同主题第二帖 | **A 级**：帖内声明行「…CC BY-NC-ND 协议。」（as-of 2026-09-25 内置浏览器直访 post/1458.html）；**ND** ⇒ 此前整格记「禁转载」是半错（禁止演绎 ≠ 禁止转载） |
+| [如何用 spark 找到卡顿的源头](https://www.mcmod.cn/post/2523.html) | spark profiler 实操排查 tick 卡顿，配 `authored/profiling-performance` | ⚠️ 帖内无逐帖显式声明，站级默认 BY-NC-SA 3.0 适用（as-of 2026-09-25 内置浏览器直访 post/2523.html，外部-only） |
 
 ## 已在库内的 mcmod 开发帖（不重复入库）
 
@@ -141,3 +150,87 @@ mcHint: 见各条；跨度 1.7.10–26.x，引用前先对版本
 - 「声明协议」列在 `/post/` 列表页可见；新增 mcmod 条目前先核该列，禁转载只进 `links/`。
 - 个人教程区扫描基于 `order=hot` 全量分页；`order=time` 的增量更新可在需要时补扫。
 - **正文核查覆盖声明（2026-08-24）**：主表全部行已逐篇读正文复核；脚本速查行为标题级定位；另按每约21篇抽1篇对未收录帖做了 **251 篇正文抽样审计**（ID 108–6680 系统抽样），发现漏网开发内容 2 篇（2875、4725，已补录），其余均为玩法/配置类——据此估算标题级筛选的漏网率约 1%，且漏网者多为单模组脚本实例。
+
+## 协议列的逐行证据位（2026-09-25 全表重建 · 第 48 轮；取证件 = `temp/audit-20260921/mcmod-license-20260925.md`）
+
+**这一版改了取值**：2026-09-01 裁定「协议/许可面不新增、不降级、不删除」+ 2026-09-24 裁定 (a)（2571 第三态）**只约束「拿不出帖内原话就动它」**。本轮 67 个帖 id 全部由用户以**内置浏览器逐帖直访 `www.mcmod.cn/post/<id>.html`** 取到声明行的有无，判词落在上面那份取证件里 ⇒ 动值的依据 = 帖内实测，不是推断、也不是上一轮的口述。动值清单与格数：**虚标 → 第三态 17**、**类型错 → 帖页形态 8**、**方向反 2**、**待核升级 / 定稿 2**、**附加限制补记 1**（3414 的「MCMOD 为唯一发布站」）；另把 8 个「一格多帖」拆成逐帖一行（3853/3921/3864、3211/系列02、3978/5838、3814/4163、4473/3419、5487/4403、4315/6258、4392/1458），拆行后不再共用一个协议值。
+
+**方法边界（不得越过）**：取证只认「本篇教程 / 本教程 / 本文」开头的模板声明行；作者若用其它句式声明，会被记成「无声明」⇒ 下表标 **A（无声明）** 的含义是**没有模板声明行**，不是「作者没有许可意图」。统一免责（第 49 轮 L59-F=③ 加硬，与下表 46 个无声明格末格同一句）：无声明只说明**帖内无逐帖显式声明**、**站级默认 BY-NC-SA 3.0 适用**这一口径下限，**不构成对「可否商用 / 可否演绎 / 可否转载」的任何方向的判断；点名要引用须先向作者确认**。禁转载那几条同趟命中了 deny 侧正则，方向是确证的。取证时间 `as-of 2026-09-25`；该站内容会变，改值前须重新直访。声明行原文的**省略号照抄取证件、未补全**（补全就是发明原话）。
+
+**两侧一致性**：`community_knowledge/ATTRIBUTION.md:50`（**禁区、本轮未改，只能由用户直接编辑**）把 2306 / 3603 / 3887 与 3340 / 5442 并列成「**显式 BY-NC-SA**」，本轮逐帖直访这三帖均**无声明行** ⇒ 该 5 条里在表的 3 条已改第三态，**ATTRIBUTION.md 与本表自 2026-09-25 起互相矛盾**（已登记，等人改禁区那一行）。3340 / 5442 不在主表内（3340 只以 3142 行备注的「玩家向」出现）。
+
+**判据的实话（2026-09-25 第 49 轮 L59-E=③ 扩判面后改口）**：`mcp-server/scripts/assert-community-attribution.mjs` 现在有两层判面。**单行腿**（`THIRD_STATE`）只咬「含 2571 那篇站内链接串的行」（门内 `THIRD_STATE.key`；本句刻意不照抄那个串 —— 2026-09-25 实测：把它照抄进本行会让门把**这句说明**当成 2571 行来要两半措辞，自造一根假红），只管主表 2571 那一行。**全表腿**（`thirdStateFace`，第 49 轮新增）是双采集器交叉：采集 = 下表 证据级 列逐字为 A（无声明）的帖 id 清单 × 主表协议格（split 第 3 格）带 ⚠️ 的行；判定 = 交集内每格的协议列必须同时含门内 `THIRD_STATE.halfA` + `halfB` 两个逐字半句 + 一个 as-of 20xx-xx-xx 串，缺任一判红点名 id；交叉矛盾（⚠️ 格但证据级不是 A（无声明））也判红。采集**不**按第三态措辞本身找行 ⇒ 谁剪措辞谁不会从判面消失。现值 = 采集 46 / 实判 25 / 含 as-of 25；活性反证 = 门 `--selftest` 的 R49 七例 + `temp/ralph-20260922/_r49-poison-proofs.mjs` 对本文本真面目的六例（temp 副本投毒，生产零改动）。**折中的边界要说死**：把某格连 ⚠️ 带措辞**整格改判**成别的协议值，仍会从这条腿逃逸 —— 那是 `L58` 欠账二「协议列取值 ↔ 证据级全表一致」新门的活（另轮）。另有 21 个 A（无声明）id 的主表格不是第三态措辞、不受判：19 格旧「默认 BY-NC-SA / 默认（未声明）」✅ 行 + 3978 / 4403 两格引着帖内声明行（这两格的证据行系本脚本对「一格两帖」复合行 `/无声明/` 的糊判，派单 F.3 明令 67/21/46 计数不得变 ⇒ 本轮未修，登记在 `CONTRIBUTING.md`）。
+
+| 本文件行 | 帖 id | 本轮判定（取证件原文） | 证据级 | 读到什么 |
+|---|---|---|---|---|
+| :19 | 3282 | ✅对 | **A** | 声明行 = 「本篇教程由作者设定未经允许禁止转载。」（as-of 2026-09-25 内置浏览器直访 post/3282.html；省略号照抄未补全） |
+| :20 | 4413 | ❌虚标 | **A（无声明）** | 帖页没有模板声明行（实测声明行形态枚举：CC BY-NC / CC BY-NC-SA / CC BY-NC-ND / 未经允许禁止转载）⇒ 只说明**帖内无逐帖显式声明**、**站级默认 BY-NC-SA 3.0 适用**这一口径下限，不构成对「可否商用 / 可否演绎 / 可否转载」的任何方向的判断；点名要引用须先向作者确认 |
+| :21 | 3414 | ✅类型对，漏记“MCMOD唯一发布站”附加限制 | **A** | 声明行 = 「…CC BY-NC-ND 协议。」另正文有「本教程遵循CC: BY-NC-ND协议，MCMOD为唯一发布站。」（as-of 2026-09-25 内置浏览器直访 post/3414.html；省略号照抄未补全） |
+| :22 | 3102 | ✅对 | **A** | 声明行 = 「…CC BY-NC-SA 协议。」（as-of 2026-09-25 内置浏览器直访 post/3102.html；省略号照抄未补全） |
+| :23 | 3853 | ❌虚标（续篇已补核） | **A（无声明）** | 帖页没有模板声明行（实测声明行形态枚举：CC BY-NC / CC BY-NC-SA / CC BY-NC-ND / 未经允许禁止转载）⇒ 只说明**帖内无逐帖显式声明**、**站级默认 BY-NC-SA 3.0 适用**这一口径下限，不构成对「可否商用 / 可否演绎 / 可否转载」的任何方向的判断；点名要引用须先向作者确认 |
+| :24 | 3921 | ❌虚标（续篇已补核） | **A（无声明）** | 帖页没有模板声明行（实测声明行形态枚举：CC BY-NC / CC BY-NC-SA / CC BY-NC-ND / 未经允许禁止转载）⇒ 只说明**帖内无逐帖显式声明**、**站级默认 BY-NC-SA 3.0 适用**这一口径下限，不构成对「可否商用 / 可否演绎 / 可否转载」的任何方向的判断；点名要引用须先向作者确认 |
+| :25 | 3864 | ❌虚标（续篇已补核） | **A（无声明）** | 帖页没有模板声明行（实测声明行形态枚举：CC BY-NC / CC BY-NC-SA / CC BY-NC-ND / 未经允许禁止转载）⇒ 只说明**帖内无逐帖显式声明**、**站级默认 BY-NC-SA 3.0 适用**这一口径下限，不构成对「可否商用 / 可否演绎 / 可否转载」的任何方向的判断；点名要引用须先向作者确认 |
+| :26 | 3979 | ❌虚标 | **A（无声明）** | 帖页没有模板声明行（实测声明行形态枚举：CC BY-NC / CC BY-NC-SA / CC BY-NC-ND / 未经允许禁止转载）⇒ 只说明**帖内无逐帖显式声明**、**站级默认 BY-NC-SA 3.0 适用**这一口径下限，不构成对「可否商用 / 可否演绎 / 可否转载」的任何方向的判断；点名要引用须先向作者确认 |
+| :27 | 4971 | ✅对 | **A** | 声明行 = 禁转载（as-of 2026-09-25 内置浏览器直访 post/4971.html；省略号照抄未补全） |
+| :28 | 6383 | ❌虚标 | **A（无声明）** | 帖页没有模板声明行（实测声明行形态枚举：CC BY-NC / CC BY-NC-SA / CC BY-NC-ND / 未经允许禁止转载）⇒ 只说明**帖内无逐帖显式声明**、**站级默认 BY-NC-SA 3.0 适用**这一口径下限，不构成对「可否商用 / 可否演绎 / 可否转载」的任何方向的判断；点名要引用须先向作者确认 |
+| :29 | 4725 | ❌虚标 | **A（无声明）** | 帖页没有模板声明行（实测声明行形态枚举：CC BY-NC / CC BY-NC-SA / CC BY-NC-ND / 未经允许禁止转载）⇒ 只说明**帖内无逐帖显式声明**、**站级默认 BY-NC-SA 3.0 适用**这一口径下限，不构成对「可否商用 / 可否演绎 / 可否转载」的任何方向的判断；点名要引用须先向作者确认 |
+| :30 | 3211 | ❌虚标 | **A（无声明）** | 帖页没有模板声明行（实测声明行形态枚举：CC BY-NC / CC BY-NC-SA / CC BY-NC-ND / 未经允许禁止转载）⇒ 只说明**帖内无逐帖显式声明**、**站级默认 BY-NC-SA 3.0 适用**这一口径下限，不构成对「可否商用 / 可否演绎 / 可否转载」的任何方向的判断；点名要引用须先向作者确认 |
+| :32 | 3978 | ❌类型错 + 虚标（一格两帖） | **A** | 声明行 = 3978 「…CC BY-NC 协议。」（无 SA）（as-of 2026-09-25 内置浏览器直访 post/3978.html；省略号照抄未补全） |
+| :33 | 5838 | ❌类型错 + 虚标（一格两帖） | **A（无声明）** | 帖页没有模板声明行（实测声明行形态枚举：CC BY-NC / CC BY-NC-SA / CC BY-NC-ND / 未经允许禁止转载）⇒ 只说明**帖内无逐帖显式声明**、**站级默认 BY-NC-SA 3.0 适用**这一口径下限，不构成对「可否商用 / 可否演绎 / 可否转载」的任何方向的判断；点名要引用须先向作者确认 |
+| :34 | 4861 | ❌类型错（无 SA） | **A** | 声明行 = 「…CC BY-NC 协议。」（as-of 2026-09-25 内置浏览器直访 post/4861.html；省略号照抄未补全） |
+| :35 | 3313 | ✅对 | **A** | 声明行 = 禁转载（as-of 2026-09-25 内置浏览器直访 post/3313.html；省略号照抄未补全） |
+| :36 | 1990 | ✅对 | **A** | 声明行 = 「…CC BY-NC-SA 协议。」（as-of 2026-09-25 内置浏览器直访 post/1990.html；省略号照抄未补全） |
+| :37 | 5404 | ❌类型错（无 SA） | **A** | 声明行 = 「…CC BY-NC 协议。」（as-of 2026-09-25 内置浏览器直访 post/5404.html；省略号照抄未补全） |
+| :38 | 5173 | ❌虚标 | **A（无声明）** | 帖页没有模板声明行（实测声明行形态枚举：CC BY-NC / CC BY-NC-SA / CC BY-NC-ND / 未经允许禁止转载）⇒ 只说明**帖内无逐帖显式声明**、**站级默认 BY-NC-SA 3.0 适用**这一口径下限，不构成对「可否商用 / 可否演绎 / 可否转载」的任何方向的判断；点名要引用须先向作者确认 |
+| :39 | 2338 | ✅口径对 | **A（无声明）** | 帖页没有模板声明行（实测声明行形态枚举：CC BY-NC / CC BY-NC-SA / CC BY-NC-ND / 未经允许禁止转载）⇒ 只说明**帖内无逐帖显式声明**、**站级默认 BY-NC-SA 3.0 适用**这一口径下限，不构成对「可否商用 / 可否演绎 / 可否转载」的任何方向的判断；点名要引用须先向作者确认 |
+| :40 | 2571 | ✅第三态正确 | **A（无声明）** | 帖页没有模板声明行（实测声明行形态枚举：CC BY-NC / CC BY-NC-SA / CC BY-NC-ND / 未经允许禁止转载）⇒ 只说明**帖内无逐帖显式声明**、**站级默认 BY-NC-SA 3.0 适用**这一口径下限，不构成对「可否商用 / 可否演绎 / 可否转载」的任何方向的判断；点名要引用须先向作者确认 |
+| :41 | 4987 | ✅ | **A（无声明）** | 帖页没有模板声明行（实测声明行形态枚举：CC BY-NC / CC BY-NC-SA / CC BY-NC-ND / 未经允许禁止转载）⇒ 只说明**帖内无逐帖显式声明**、**站级默认 BY-NC-SA 3.0 适用**这一口径下限，不构成对「可否商用 / 可否演绎 / 可否转载」的任何方向的判断；点名要引用须先向作者确认 |
+| :42 | 2012 | ✅ | **A（无声明）** | 帖页没有模板声明行（实测声明行形态枚举：CC BY-NC / CC BY-NC-SA / CC BY-NC-ND / 未经允许禁止转载）⇒ 只说明**帖内无逐帖显式声明**、**站级默认 BY-NC-SA 3.0 适用**这一口径下限，不构成对「可否商用 / 可否演绎 / 可否转载」的任何方向的判断；点名要引用须先向作者确认 |
+| :43 | 1347 | ✅ | **A（无声明）** | 帖页没有模板声明行（实测声明行形态枚举：CC BY-NC / CC BY-NC-SA / CC BY-NC-ND / 未经允许禁止转载）⇒ 只说明**帖内无逐帖显式声明**、**站级默认 BY-NC-SA 3.0 适用**这一口径下限，不构成对「可否商用 / 可否演绎 / 可否转载」的任何方向的判断；点名要引用须先向作者确认 |
+| :44 | 2427 | ✅ | **A** | 声明行 = 两帖均「…CC BY-NC-ND 协议。」（as-of 2026-09-25 内置浏览器直访 post/2427.html；省略号照抄未补全） |
+| :44 | 2430 | ✅ | **A** | 声明行 = 两帖均「…CC BY-NC-ND 协议。」（as-of 2026-09-25 内置浏览器直访 post/2430.html；省略号照抄未补全） |
+| :45 | 3836 | ❌反向错（确认原审计） | **A** | 声明行 = 「…CC BY-NC-SA 协议。」另正文「教程的代码受 MIT 协议保护」（as-of 2026-09-25 内置浏览器直访 post/3836.html；省略号照抄未补全） |
+| :46 | 4679 | ✅ | **A（无声明）** | 帖页没有模板声明行（实测声明行形态枚举：CC BY-NC / CC BY-NC-SA / CC BY-NC-ND / 未经允许禁止转载）⇒ 只说明**帖内无逐帖显式声明**、**站级默认 BY-NC-SA 3.0 适用**这一口径下限，不构成对「可否商用 / 可否演绎 / 可否转载」的任何方向的判断；点名要引用须先向作者确认 |
+| :47 | 3142 | ❌漏记（方向反：是禁转载） | **A** | 声明行 = 「…未经允许禁止转载。」（as-of 2026-09-25 内置浏览器直访 post/3142.html；省略号照抄未补全） |
+| :53 | 3014 | ❌类型错（无 SA） | **A** | 声明行 = 「…CC BY-NC 协议。」（as-of 2026-09-25 内置浏览器直访 post/3014.html；省略号照抄未补全） |
+| :54 | 4045 | ❌虚标 | **A（无声明）** | 帖页没有模板声明行（实测声明行形态枚举：CC BY-NC / CC BY-NC-SA / CC BY-NC-ND / 未经允许禁止转载）⇒ 只说明**帖内无逐帖显式声明**、**站级默认 BY-NC-SA 3.0 适用**这一口径下限，不构成对「可否商用 / 可否演绎 / 可否转载」的任何方向的判断；点名要引用须先向作者确认 |
+| :55 | 3603 | ❌虚标 | **A（无声明）** | 帖页没有模板声明行（实测声明行形态枚举：CC BY-NC / CC BY-NC-SA / CC BY-NC-ND / 未经允许禁止转载）⇒ 只说明**帖内无逐帖显式声明**、**站级默认 BY-NC-SA 3.0 适用**这一口径下限，不构成对「可否商用 / 可否演绎 / 可否转载」的任何方向的判断；点名要引用须先向作者确认 |
+| :56 | 6251 | ✅ | **A** | 声明行 = 「…CC BY-NC-SA 协议。」（as-of 2026-09-25 内置浏览器直访 post/6251.html；省略号照抄未补全） |
+| :57 | 3814 | ❌虚标（两帖都空） | **A（无声明）** | 帖页没有模板声明行（实测声明行形态枚举：CC BY-NC / CC BY-NC-SA / CC BY-NC-ND / 未经允许禁止转载）⇒ 只说明**帖内无逐帖显式声明**、**站级默认 BY-NC-SA 3.0 适用**这一口径下限，不构成对「可否商用 / 可否演绎 / 可否转载」的任何方向的判断；点名要引用须先向作者确认 |
+| :58 | 4163 | ❌虚标（两帖都空） | **A（无声明）** | 帖页没有模板声明行（实测声明行形态枚举：CC BY-NC / CC BY-NC-SA / CC BY-NC-ND / 未经允许禁止转载）⇒ 只说明**帖内无逐帖显式声明**、**站级默认 BY-NC-SA 3.0 适用**这一口径下限，不构成对「可否商用 / 可否演绎 / 可否转载」的任何方向的判断；点名要引用须先向作者确认 |
+| :59 | 6141 | ❌虚标 | **A（无声明）** | 帖页没有模板声明行（实测声明行形态枚举：CC BY-NC / CC BY-NC-SA / CC BY-NC-ND / 未经允许禁止转载）⇒ 只说明**帖内无逐帖显式声明**、**站级默认 BY-NC-SA 3.0 适用**这一口径下限，不构成对「可否商用 / 可否演绎 / 可否转载」的任何方向的判断；点名要引用须先向作者确认 |
+| :60 | 2955 | ✅ | **A（无声明）** | 帖页没有模板声明行（实测声明行形态枚举：CC BY-NC / CC BY-NC-SA / CC BY-NC-ND / 未经允许禁止转载）⇒ 只说明**帖内无逐帖显式声明**、**站级默认 BY-NC-SA 3.0 适用**这一口径下限，不构成对「可否商用 / 可否演绎 / 可否转载」的任何方向的判断；点名要引用须先向作者确认 |
+| :61 | 5167 | ✅ | **A** | 声明行 = 「…CC BY-NC-SA 协议。」（as-of 2026-09-25 内置浏览器直访 post/5167.html；省略号照抄未补全） |
+| :62 | 2049 | ✅ | **A（无声明）** | 帖页没有模板声明行（实测声明行形态枚举：CC BY-NC / CC BY-NC-SA / CC BY-NC-ND / 未经允许禁止转载）⇒ 只说明**帖内无逐帖显式声明**、**站级默认 BY-NC-SA 3.0 适用**这一口径下限，不构成对「可否商用 / 可否演绎 / 可否转载」的任何方向的判断；点名要引用须先向作者确认 |
+| :63 | 1863 | ✅ | **A（无声明）** | 帖页没有模板声明行（实测声明行形态枚举：CC BY-NC / CC BY-NC-SA / CC BY-NC-ND / 未经允许禁止转载）⇒ 只说明**帖内无逐帖显式声明**、**站级默认 BY-NC-SA 3.0 适用**这一口径下限，不构成对「可否商用 / 可否演绎 / 可否转载」的任何方向的判断；点名要引用须先向作者确认 |
+| :64 | 4155 | ❌虚标 | **A（无声明）** | 帖页没有模板声明行（实测声明行形态枚举：CC BY-NC / CC BY-NC-SA / CC BY-NC-ND / 未经允许禁止转载）⇒ 只说明**帖内无逐帖显式声明**、**站级默认 BY-NC-SA 3.0 适用**这一口径下限，不构成对「可否商用 / 可否演绎 / 可否转载」的任何方向的判断；点名要引用须先向作者确认 |
+| :65 | 3846 | ✅ | **A（无声明）** | 帖页没有模板声明行（实测声明行形态枚举：CC BY-NC / CC BY-NC-SA / CC BY-NC-ND / 未经允许禁止转载）⇒ 只说明**帖内无逐帖显式声明**、**站级默认 BY-NC-SA 3.0 适用**这一口径下限，不构成对「可否商用 / 可否演绎 / 可否转载」的任何方向的判断；点名要引用须先向作者确认 |
+| :66 | 549 | ✅ | **A（无声明）** | 帖页没有模板声明行（实测声明行形态枚举：CC BY-NC / CC BY-NC-SA / CC BY-NC-ND / 未经允许禁止转载）⇒ 只说明**帖内无逐帖显式声明**、**站级默认 BY-NC-SA 3.0 适用**这一口径下限，不构成对「可否商用 / 可否演绎 / 可否转载」的任何方向的判断；点名要引用须先向作者确认 |
+| :67 | 1560 | ✅ | **A（无声明）** | 帖页没有模板声明行（实测声明行形态枚举：CC BY-NC / CC BY-NC-SA / CC BY-NC-ND / 未经允许禁止转载）⇒ 只说明**帖内无逐帖显式声明**、**站级默认 BY-NC-SA 3.0 适用**这一口径下限，不构成对「可否商用 / 可否演绎 / 可否转载」的任何方向的判断；点名要引用须先向作者确认 |
+| :77 | 3160 | ✅ | **A（无声明）** | 帖页没有模板声明行（实测声明行形态枚举：CC BY-NC / CC BY-NC-SA / CC BY-NC-ND / 未经允许禁止转载）⇒ 只说明**帖内无逐帖显式声明**、**站级默认 BY-NC-SA 3.0 适用**这一口径下限，不构成对「可否商用 / 可否演绎 / 可否转载」的任何方向的判断；点名要引用须先向作者确认 |
+| :78 | 3887 | ❌虚标 | **A（无声明）** | 帖页没有模板声明行（实测声明行形态枚举：CC BY-NC / CC BY-NC-SA / CC BY-NC-ND / 未经允许禁止转载）⇒ 只说明**帖内无逐帖显式声明**、**站级默认 BY-NC-SA 3.0 适用**这一口径下限，不构成对「可否商用 / 可否演绎 / 可否转载」的任何方向的判断；点名要引用须先向作者确认 |
+| :79 | 2306 | ❌虚标 | **A（无声明）** | 帖页没有模板声明行（实测声明行形态枚举：CC BY-NC / CC BY-NC-SA / CC BY-NC-ND / 未经允许禁止转载）⇒ 只说明**帖内无逐帖显式声明**、**站级默认 BY-NC-SA 3.0 适用**这一口径下限，不构成对「可否商用 / 可否演绎 / 可否转载」的任何方向的判断；点名要引用须先向作者确认 |
+| :80 | 2561 | ❌虚标 | **A（无声明）** | 帖页没有模板声明行（实测声明行形态枚举：CC BY-NC / CC BY-NC-SA / CC BY-NC-ND / 未经允许禁止转载）⇒ 只说明**帖内无逐帖显式声明**、**站级默认 BY-NC-SA 3.0 适用**这一口径下限，不构成对「可否商用 / 可否演绎 / 可否转载」的任何方向的判断；点名要引用须先向作者确认 |
+| :81 | 4093 | ❌类型错（ND 记成 SA，演绎限制相反） | **A** | 声明行 = 「…CC BY-NC-ND 协议。」（as-of 2026-09-25 内置浏览器直访 post/4093.html；省略号照抄未补全） |
+| :82 | 5939 | ✅ | **A** | 声明行 = 「…CC BY-NC-SA 协议。」（as-of 2026-09-25 内置浏览器直访 post/5939.html；省略号照抄未补全） |
+| :83 | 6142 | ❌类型错（无 SA） | **A** | 声明行 = 「…CC BY-NC 协议。」（as-of 2026-09-25 内置浏览器直访 post/6142.html；省略号照抄未补全） |
+| :97 | 4880 | ✅ | **A（无声明）** | 帖页没有模板声明行（实测声明行形态枚举：CC BY-NC / CC BY-NC-SA / CC BY-NC-ND / 未经允许禁止转载）⇒ 只说明**帖内无逐帖显式声明**、**站级默认 BY-NC-SA 3.0 适用**这一口径下限，不构成对「可否商用 / 可否演绎 / 可否转载」的任何方向的判断；点名要引用须先向作者确认 |
+| :98 | 4473 | ❌虚标 | **A（无声明）** | 帖页没有模板声明行（实测声明行形态枚举：CC BY-NC / CC BY-NC-SA / CC BY-NC-ND / 未经允许禁止转载）⇒ 只说明**帖内无逐帖显式声明**、**站级默认 BY-NC-SA 3.0 适用**这一口径下限，不构成对「可否商用 / 可否演绎 / 可否转载」的任何方向的判断；点名要引用须先向作者确认 |
+| :99 | 3419 | ❌虚标 | **A（无声明）** | 帖页没有模板声明行（实测声明行形态枚举：CC BY-NC / CC BY-NC-SA / CC BY-NC-ND / 未经允许禁止转载）⇒ 只说明**帖内无逐帖显式声明**、**站级默认 BY-NC-SA 3.0 适用**这一口径下限，不构成对「可否商用 / 可否演绎 / 可否转载」的任何方向的判断；点名要引用须先向作者确认 |
+| :100 | 5487 | ❌双错：虚标 + 方向反（一格两帖） | **A（无声明）** | 帖页没有模板声明行（实测声明行形态枚举：CC BY-NC / CC BY-NC-SA / CC BY-NC-ND / 未经允许禁止转载）⇒ 只说明**帖内无逐帖显式声明**、**站级默认 BY-NC-SA 3.0 适用**这一口径下限，不构成对「可否商用 / 可否演绎 / 可否转载」的任何方向的判断；点名要引用须先向作者确认 |
+| :101 | 4403 | ❌双错：虚标 + 方向反（一格两帖） | **A** | 声明行 = 4403 「…未经允许禁止转载。」（as-of 2026-09-25 内置浏览器直访 post/4403.html；省略号照抄未补全） |
+| :102 | 3012 | ✅ | **A（无声明）** | 帖页没有模板声明行（实测声明行形态枚举：CC BY-NC / CC BY-NC-SA / CC BY-NC-ND / 未经允许禁止转载）⇒ 只说明**帖内无逐帖显式声明**、**站级默认 BY-NC-SA 3.0 适用**这一口径下限，不构成对「可否商用 / 可否演绎 / 可否转载」的任何方向的判断；点名要引用须先向作者确认 |
+| :103 | 2194 | ✅ | **A（无声明）** | 帖页没有模板声明行（实测声明行形态枚举：CC BY-NC / CC BY-NC-SA / CC BY-NC-ND / 未经允许禁止转载）⇒ 只说明**帖内无逐帖显式声明**、**站级默认 BY-NC-SA 3.0 适用**这一口径下限，不构成对「可否商用 / 可否演绎 / 可否转载」的任何方向的判断；点名要引用须先向作者确认 |
+| :104 | 4930 | ✅ | **A（无声明）** | 帖页没有模板声明行（实测声明行形态枚举：CC BY-NC / CC BY-NC-SA / CC BY-NC-ND / 未经允许禁止转载）⇒ 只说明**帖内无逐帖显式声明**、**站级默认 BY-NC-SA 3.0 适用**这一口径下限，不构成对「可否商用 / 可否演绎 / 可否转载」的任何方向的判断；点名要引用须先向作者确认 |
+| :105 | 3793 | ⬆可升级为显式 BY-NC-SA | **A** | 声明行 = 「…CC BY-NC-SA 协议。」（as-of 2026-09-25 内置浏览器直访 post/3793.html；省略号照抄未补全） |
+| :106 | 4315 | ⬇可定稿为「帖级未声明/站级默认」 | **A（无声明）** | 帖页没有模板声明行（实测声明行形态枚举：CC BY-NC / CC BY-NC-SA / CC BY-NC-ND / 未经允许禁止转载）⇒ 只说明**帖内无逐帖显式声明**、**站级默认 BY-NC-SA 3.0 适用**这一口径下限，不构成对「可否商用 / 可否演绎 / 可否转载」的任何方向的判断；点名要引用须先向作者确认 |
+| :107 | 6258 | ⬇可定稿为「帖级未声明/站级默认」 | **A（无声明）** | 帖页没有模板声明行（实测声明行形态枚举：CC BY-NC / CC BY-NC-SA / CC BY-NC-ND / 未经允许禁止转载）⇒ 只说明**帖内无逐帖显式声明**、**站级默认 BY-NC-SA 3.0 适用**这一口径下限，不构成对「可否商用 / 可否演绎 / 可否转载」的任何方向的判断；点名要引用须先向作者确认 |
+| :108 | 3881 | ✅ | **A（无声明）** | 帖页没有模板声明行（实测声明行形态枚举：CC BY-NC / CC BY-NC-SA / CC BY-NC-ND / 未经允许禁止转载）⇒ 只说明**帖内无逐帖显式声明**、**站级默认 BY-NC-SA 3.0 适用**这一口径下限，不构成对「可否商用 / 可否演绎 / 可否转载」的任何方向的判断；点名要引用须先向作者确认 |
+| :109 | 6659 | ✅ | **A（无声明）** | 帖页没有模板声明行（实测声明行形态枚举：CC BY-NC / CC BY-NC-SA / CC BY-NC-ND / 未经允许禁止转载）⇒ 只说明**帖内无逐帖显式声明**、**站级默认 BY-NC-SA 3.0 适用**这一口径下限，不构成对「可否商用 / 可否演绎 / 可否转载」的任何方向的判断；点名要引用须先向作者确认 |
+| :110 | 4392 | ❌半错：1458 实为 ND 可演绎与否相反（一格两帖） | **A** | 声明行 = 4392 禁转载（as-of 2026-09-25 内置浏览器直访 post/4392.html；省略号照抄未补全） |
+| :111 | 1458 | ❌半错：1458 实为 ND 可演绎与否相反（一格两帖） | **A** | 声明行 = 1458 「…CC BY-NC-ND 协议。」（as-of 2026-09-25 内置浏览器直访 post/1458.html；省略号照抄未补全） |
+| :112 | 2523 | ✅ | **A（无声明）** | 帖页没有模板声明行（实测声明行形态枚举：CC BY-NC / CC BY-NC-SA / CC BY-NC-ND / 未经允许禁止转载）⇒ 只说明**帖内无逐帖显式声明**、**站级默认 BY-NC-SA 3.0 适用**这一口径下限，不构成对「可否商用 / 可否演绎 / 可否转载」的任何方向的判断；点名要引用须先向作者确认 |
+
+统计（脚本现算，非手抄）：登记 67 个帖 id = 有声明行 **23** + 无声明行 **44**。口径 = 取证件「帖页实测」列逐行数；**行号是本文件改后实测行号**（脚本只在以竖线开头的表行里找 `post/<id>.html`，第一处命中即本行 —— 3282 因此从 frontmatter 的 :4 纠回 :19）。
+
+与 2026-09-24 那版的差异：那版逐行只到 B/C 级（「缺帖内原话副本」），本节把**每一条**升到 A 级；那版的成因（「协议列没有证据位就会被反复改口」）依然成立。2571 那行的第三态措辞第 48 轮**一字未动**（diff 验过逐字节相同）；第 49 轮起门内 `thirdStateFace` 全表腿把三件套判据从「只盯该行」扩到主表全部第三态格（现判 25 行），该行不再是唯一被盯住的行。

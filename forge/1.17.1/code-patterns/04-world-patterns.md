@@ -11,7 +11,7 @@ public static final RegistryObject<Biome> MY_BIOME = BIOMES.register("my_biome",
     () -> new Biome.Builder()
         .temperature(0.8f)
         .downfall(0.4f)
-        .specialEffects(new BiomeAmbience.Builder()
+        .specialEffects(new BiomeSpecialEffects.Builder()
             .waterColor(0x3f76e4)
             .waterFogColor(0x50533)
             .skyColor(0x78a9ff)
@@ -27,22 +27,6 @@ public static final RegistryObject<Biome> MY_BIOME = BIOMES.register("my_biome",
 
 ## 自定义结构
 
-```java
-public class MyStructure extends Structure {
-    // 继承 Structure 配置生成参数
-    public MyStructure() {
-        super(NoFeatureConfiguration.CODEC);
-    }
+> **TODO(未核实)**：1.17.1 自定义结构的骨架样例缺一手出处——`GenerationStub` / `GenerationContext` / `NoFeatureConfiguration` 在本档 `client.txt` 顶层**零命中**（疑为 1.18+/1.19+ 名下渗），本仓语料亦无 1.17.1 结构注册逐字样例。待 `get_minecraft_source` 反编译逐签名核后重写；在此之前**不要**把旧样例当 1.17.1 写法抄用。
 
-    @Override
-    public GenerationStub buildStructure(GenerationContext context) {
-        // 自定义结构生成逻辑
-        return start(
-            new ResourceLocation(MOD_ID, "my_structure"),
-            context
-        ).type(StructureFeature.TEMPLATES);
-    }
-}
-```
-
-> **注意：** Forge 1.17.1 的世界生成 API 与 1.18+ 有较大差异。1.17.1 使用 `Structure` 类配合 `ConfiguredStructureFeature` 注册，1.18+ 重构为 `Structure` + `StructureType` + `GenerationStep.Decoration` 模式。
+> **注意：** Forge 1.17.1 的世界生成 API 与 1.18+ 有较大差异。1.17.1 使用 `StructureFeature` 类配合 `ConfiguredStructureFeature` 注册，1.19+ 重构为 `Structure` + `StructureType` + `GenerationStep.Decoration` 模式。

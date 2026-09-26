@@ -1,0 +1,56 @@
+{
+ "asOf": "2026-09-25T16:14:48.299Z",
+ "dir": "D:\\mc-skill-temp\\cache\\mcp-legacyyarn-pairs",
+ "family": "mcp-legacyyarn",
+ "versions": {
+  "1.7.10": {
+   "file": "mcp-legacyyarn-1.7.10.json",
+   "count": 1836,
+   "legacyBuild": "1.7.10+build.603",
+   "legacyUrl": "https://maven.legacyfabric.net/net/legacyfabric/yarn/1.7.10+build.603/yarn-1.7.10+build.603-mergedv2.jar",
+   "mcpSource": "data/forge_1.7.10/mappings/joined.srg"
+  },
+  "1.8.9": {
+   "file": "mcp-legacyyarn-1.8.9.json",
+   "count": 2541,
+   "legacyBuild": "1.8.9+build.604",
+   "legacyUrl": "https://maven.legacyfabric.net/net/legacyfabric/yarn/1.8.9+build.604/yarn-1.8.9+build.604-mergedv2.jar",
+   "mcpSource": "data/forge_1.8.9/mappings/joined.srg"
+  },
+  "1.9.4": {
+   "file": "mcp-legacyyarn-1.9.4.json",
+   "count": 2939,
+   "legacyBuild": "1.9.4+build.604",
+   "legacyUrl": "https://maven.legacyfabric.net/net/legacyfabric/yarn/1.9.4+build.604/yarn-1.9.4+build.604-mergedv2.jar",
+   "mcpSource": "data/forge_1.9.4/mappings/joined.srg"
+  },
+  "1.10.2": {
+   "file": "mcp-legacyyarn-1.10.2.json",
+   "count": 2980,
+   "legacyBuild": "1.10.2+build.604",
+   "legacyUrl": "https://maven.legacyfabric.net/net/legacyfabric/yarn/1.10.2+build.604/yarn-1.10.2+build.604-mergedv2.jar",
+   "mcpSource": "data/forge_1.10.2/mappings/joined.srg"
+  },
+  "1.11.2": {
+   "file": "mcp-legacyyarn-1.11.2.json",
+   "count": 3122,
+   "legacyBuild": "1.11.2+build.604",
+   "legacyUrl": "https://maven.legacyfabric.net/net/legacyfabric/yarn/1.11.2+build.604/yarn-1.11.2+build.604-mergedv2.jar",
+   "mcpSource": "data/forge_1.11.2/mappings/joined.srg"
+  },
+  "1.12.2": {
+   "file": "mcp-legacyyarn-1.12.2.json",
+   "count": 3344,
+   "legacyBuild": "1.12.2+build.604",
+   "legacyUrl": "https://maven.legacyfabric.net/net/legacyfabric/yarn/1.12.2+build.604/yarn-1.12.2+build.604-mergedv2.jar",
+   "mcpSource": "data/forge_1.12.2/mappings/joined.srg"
+  },
+  "1.13.2": {
+   "file": "mcp-legacyyarn-1.13.2.json",
+   "count": 4027,
+   "legacyBuild": "1.13.2+build.604",
+   "legacyUrl": "https://maven.legacyfabric.net/net/legacyfabric/yarn/1.13.2+build.604/yarn-1.13.2+build.604-mergedv2.jar",
+   "mcpSource": "data/forge_1.13.2/mappings/joined.tsrg"
+  }
+ }
+}

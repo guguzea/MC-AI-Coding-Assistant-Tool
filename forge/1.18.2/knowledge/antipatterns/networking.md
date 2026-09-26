@@ -68,7 +68,7 @@ public class SyncAllDataMessage {
 ```java
 // 错误（客户端收到消息时）
 public void onMessage(MyMessage message, Supplier<NetworkEvent.Context> ctx) {
-    ServerWorld world = ctx.get().getSender().getLevel(); // ❌ 客户端没有 ServerWorld
+    ServerLevel world = ctx.get().getSender().getLevel(); // ❌ 客户端没有 ServerLevel
 }
 ```
 

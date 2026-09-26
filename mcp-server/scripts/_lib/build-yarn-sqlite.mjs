@@ -16,6 +16,7 @@ import fs from "node:fs";
 import path from "node:path";
 import os from "node:os";
 import { createHash } from "node:crypto";
+import zlib from "node:zlib";
 import { fileURLToPath } from "node:url";
 import { DatabaseSync } from "node:sqlite";
 import { GUARD_ROOT, emit, logDryRunBanner, wantWrite } from "../../../scripts/_lib/write-guard.mjs";
@@ -23,6 +24,7 @@ import { parseTiny, findTinyPath } from "./parse-tiny.mjs";
 import { importTsrgStream } from "./import-tsrg.mjs";
 import { importForgeSrgStream } from "./import-forge-srg.mjs";
 import { importMcpCsvMethods, importMcpCsvFields } from "./import-mcp-csv.mjs";
+import { importSrgToOfficialStream } from "./import-srg-to-official.mjs";
 
 const SCHEMA_VERSION = "4";
 
@@ -426,6 +428,18 @@ function listCandidateSources(mappingsDir) {
   if (fs.existsSync(tsrg)) candidates.push({ kind: "tsrg", path: tsrg });
   const srg = path.join(mappingsDir, "joined.srg");
   if (fs.existsSync(srg)) candidates.push({ kind: "srg", path: srg });
+  // MCPConfig 的 `tsrg2 left right`（SRG ↔ mojmap 可读名）——Forge 1.17+ 唯一有 `m_/f_`
+  // 成员名的来源，由 scripts/ingest-forge-srg.mjs 削减后入库（.tsrg.gz）。
+  // 排在 csv 之前、joined.* 之后：这三样同档共存时不抢既有档的行为。
+  try {
+    for (const name of fs.readdirSync(mappingsDir).sort()) {
+      if (/^srg_to_(official|parchment|snapshot).*\.tsrg(\.gz)?$/.test(name)) {
+        candidates.push({ kind: "srg-to-official", path: path.join(mappingsDir, name) });
+      }
+    }
+  } catch {
+    /* 目录读不到 = 该档无来源，交给上层报「无候选」 */
+  }
   const csv = path.join(mappingsDir, "methods.csv");
   if (fs.existsSync(csv)) candidates.push({ kind: "csv", path: csv });
   const json = path.join(mappingsDir, "yarn-mappings.json");
@@ -475,6 +489,35 @@ async function tryImportSource(db, source, opts) {
       classCount: String(r.classCount),
       methodCount: String(r.methodCount),
       fieldCount: String(r.fieldCount ?? 0),
+    });
+    return r;
+  }
+  if (source.kind === "srg-to-official") {
+    initYarnSchema(db);
+    clearMappingTables(db);
+    const raw = fs.createReadStream(source.path);
+    const input = String(source.path).endsWith(".gz") ? raw.pipe(zlib.createGunzip()) : raw;
+    const r = await importSrgToOfficialStream(db, input, { version: opts.version, source: source.path });
+    // ⚠️ searge_* 表按 `searge` 做主键，而 MCPConfig 的同一个 `m_<id>_` 会在多个 owner 下各列一行
+    // （实测 1.20.1：方法 48,575 行 / 唯一 SRG 键 33,222；字段 32,079 行 / 31,003 键，那 1,076 个
+    // 是同 owner 的「裸形 + 带描述符形」两行）。**可读名逐键唯一 ⇒ 塌行不丢信息**，但 meta 若照抄
+    // 行数就是 `DEBT_MAPPING_COUNT` 那个病（读侧直接信 meta ⇒ 覆盖数虚报）⇒ 这里必须数表内实数。
+    const countRows = (t) => String(db.prepare(`SELECT COUNT(*) AS c FROM ${t}`).get().c);
+    setMeta(db, {
+      schemaVersion: SCHEMA_VERSION,
+      version: opts.version ?? "",
+      mappingEra: "mcp-config-srg",
+      format: "mcpconfig-srg-to-official",
+      source: source.path,
+      sourceFile: source.path,
+      builtAt: new Date().toISOString(),
+      classCount: String(r.classCount),
+      methodCount: String(r.methodCount),
+      fieldCount: String(r.fieldCount),
+      seargeMethodCount: countRows("searge_methods"),
+      seargeFieldCount: countRows("searge_fields"),
+      srgNameCollisionNote:
+        "searge_* 按 SRG 名主键去重：同名的跨 owner 副本只留一行（可读名逐键唯一，不丢信息）；methods/fields 表按 owner 存全量行",
     });
     return r;
   }

@@ -73,7 +73,8 @@
     "file": "qsl-verified.md",
     "processedFile": "processed/qsl-verified.md",
     "source": "quilt-docs",
-    "fetchedAt": "2026-08-14T22:55:03.643Z"
+    "fetchedAt": "2026-08-14T22:55:03.643Z",
+    "sha256": "dce2e9105c8f50df9b8430244f2b0467e574fe18173491c7f80d127b39a10036"
   },
   {
     "id": "1.18.2/wiki-getting-started",

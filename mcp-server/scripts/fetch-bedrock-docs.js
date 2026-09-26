@@ -7,18 +7,24 @@
  * 文件顶部的 PAGES 降级为「精选兜底」：它只保证这 20 个 id 的**文件名与标签**稳定（既有语料不能改名），
  * 不再充当期望清单 —— 计数、缺页判据一律以 toc 为准。
  *
- *   node scripts/fetch-bedrock-docs.js [--dry-run] [--force] [--probe] [--retag [--write]] [--limit=N] [--parallel=N]
+ *   node scripts/fetch-bedrock-docs.js [--dry-run] [--force] [--probe] [--retag [--write]] [--reprocess [--write] [--ids=a,b]] [--limit=N] [--parallel=N]
  *
  *   --dry-run   只列计划（拉 toc、算 id、不抓正文、不写盘）
  *   --force     重抓已落盘的页（默认跳过，增量）
  *   --probe     只跑 HEAD 探针：测远端 revision 并回写 stale，不碰语料
  *   --retag     离线：把体裁判据（isReleaseNotesPage / withGenreTags）重放到已落盘的 index-l0.json，
  *               默认 dry-run；加 --write 才落盘，并同步 semantic/db.sqlite 的 docs.tags_json
+ *   --reprocess 只重处理**顶部精选页**（PAGES 那 20 个 id，`--ids=` 可缩到子集），不碰 toc 抓来的
+ *               其余页：优先读本机 raw HTML 缓存（$MC_SKILL_CACHE/bedrock-raw/），缓存缺失才逐 URL
+ *               补抓并把 HTML 存进该缓存（第二次跑即零网络）。默认只列现状、不写盘；加 --write 才落
+ *               processed/<id>.md + index-l0.json + fingerprints.json。存在的理由：转换器改版后要把
+ *               旧页重过一遍管线，而 --force 会重抓整棵树。
  *
  * 退出码：有任一页抓取/写盘失败，或 toc 取不到 ⇒ 非 0（抓到 0 字节 / 空壳页同样计失败，不静默咽掉）。
  */
 import { existsSync, mkdirSync, writeFileSync, readFileSync } from "fs";
-import { join } from "path";
+import { join, isAbsolute, resolve } from "path";
+import { homedir } from "os";
 import { pathToFileURL } from "url";
 import { fetchJsonWithUa, fetchWithUa } from "../../scripts/_lib/fetch-with-ua.mjs";
 import {
@@ -260,11 +266,27 @@ async function pool(items, size, worker) {
   return out;
 }
 
+/**
+ * `--reprocess` 腿的 raw HTML 缓存目录 —— 与 `mcp-server/src/utils/path.ts` 的
+ * `resolveCacheRoot()` 同一优先级（MC_SKILL_CACHE → %APPDATA%/mc-skill-cache →
+ * ~/.config/mc-skill-cache），**绝不落在仓库 data/ 下**：data/ 是上游逐字语料，
+ * 抓取中间产物进去就等于污染真源。
+ */
+export function reprocessRawDir() {
+  const env = process.env.MC_SKILL_CACHE;
+  let root;
+  if (env) root = isAbsolute(env) ? env : resolve(env);
+  else if (process.platform === "win32") root = process.env.APPDATA ? join(process.env.APPDATA, "mc-skill-cache") : join(homedir(), "mc-skill-cache");
+  else root = join(homedir(), ".config", "mc-skill-cache");
+  return join(root, "bedrock-raw");
+}
+
 async function main() {
   const dry = process.argv.includes("--dry-run");
   const force = process.argv.includes("--force");
   const probeOnly = process.argv.includes("--probe");
   const retagOnly = process.argv.includes("--retag");
+  const reprocessOnly = process.argv.includes("--reprocess");
   const writeRetag = process.argv.includes("--write");
   const limitArg = process.argv.find((a) => a.startsWith("--limit="));
   const parArg = process.argv.find((a) => a.startsWith("--parallel="));
@@ -364,6 +386,112 @@ async function main() {
     return;
   }
 
+  // ── 重处理腿：同一份 raw HTML 再过一遍转换管线，不重抓、不动其余页 ─────────────
+  // 存在的理由：`--force` 的语义是「整棵树重抓」，代价是 250+ 页网络写盘；而转换器改版后
+  // 真正想验证的是**同一份 HTML 重新过管线**的结果。本腿把 HTML 缓到
+  // `resolveCacheRoot()/bedrock-raw/<id>.html`（**绝不写 data/**，与 `ingest_loader_api`
+  // 只写 overlay 同一口径），于是第二次 `--reprocess` 是零网络的。缓存缺失才逐 URL 补抓，
+  // 抓到的 HTML 当场入缓存。默认 dry-run，`--write` 才落盘（与 --retag 同规矩）。
+  if (reprocessOnly) {
+    const idsArg = process.argv.find((a) => a.startsWith("--ids="));
+    const want = idsArg ? idsArg.slice("--ids=".length).split(",").map((s) => s.trim()).filter(Boolean) : null;
+    const targets = PAGES.filter((p) => !want || want.includes(p.id));
+    if (!targets.length) {
+      console.error(`REPROCESS FAIL：--ids 一个都没命中。可选 id：${PAGES.map((p) => p.id).join(", ")}`);
+      process.exitCode = 1;
+      return;
+    }
+    const rawDir = reprocessRawDir();
+    const cached = targets.filter((p) => existsSync(join(rawDir, `${p.id}.html`)));
+    console.log(
+      `reprocess ${writeRetag ? "WRITE" : "DRY-RUN"}：目标 ${targets.length} 页 · 本地 HTML 缓存命中 ${cached.length} / ` +
+        `需补抓 ${targets.length - cached.length}（缓存目录 ${rawDir}）`,
+    );
+    for (const p of targets) {
+      const f = join(PROCESSED_DIR, `${p.id}.md`);
+      const cur = existsSync(f) ? readFileSync(f, "utf8") : "";
+      console.log(
+        `  ${p.id}: ${cur ? `${cur.length} B` : "缺失"} ` +
+          `抓取时间 ${(cur.match(/抓取时间：(\S+)/) ?? [])[1] ?? "-"}`,
+      );
+    }
+    if (!writeRetag) {
+      console.log("（未写盘；加 --write 才落 processed/*.md + index-l0.json + fingerprints.json）");
+      return;
+    }
+    mkdirSync(rawDir, { recursive: true });
+    mkdirSync(PROCESSED_DIR, { recursive: true });
+    const fpDisk = readJsonSafe(FINGERPRINTS) ?? {};
+    const index = [];
+    const failures = [];
+    let fromCache = 0;
+    let refetched = 0;
+    for (const p of targets) {
+      const cacheFile = join(rawDir, `${p.id}.html`);
+      let html = null;
+      if (existsSync(cacheFile)) {
+        html = readFileSync(cacheFile, "utf8");
+        fromCache++;
+      } else {
+        const r = await fetchWithUa(p.url, { timeoutMs: 60_000 });
+        if (!r.ok || !r.text) {
+          failures.push({ id: p.id, url: p.url, failureClass: r.failureClass ?? "UNKNOWN", status: r.status ?? 0, reason: String(r.reason ?? "无正文").slice(0, 200) });
+          continue;
+        }
+        html = r.text;
+        try {
+          writeFileSync(cacheFile, html);
+        } catch (e) {
+          console.log(`  ! HTML 缓存写入失败（不影响语料）：${e?.code ?? ""} ${e?.message ?? e}`.slice(0, 160));
+        }
+        refetched++;
+      }
+      if (html.length < 1000) {
+        failures.push({ id: p.id, url: p.url, failureClass: "TOO_SMALL", status: 200, reason: `HTML 仅 ${html.length} 字节` });
+        continue;
+      }
+      const body = learnToMarkdown(html, p.url);
+      if (body.length < SHELL_BODY_CHARS) {
+        failures.push({ id: p.id, url: p.url, failureClass: "EMPTY_SHELL", status: 200, reason: `正文仅 ${body.length} 字符（< ${SHELL_BODY_CHARS}）` });
+        continue;
+      }
+      const md = `${bedrockMdHeader(p.url)}${body.slice(0, 200_000)}\n`;
+      try {
+        await writeWithRetry(join(PROCESSED_DIR, `${p.id}.md`), md);
+      } catch (e) {
+        failures.push({ id: p.id, url: p.url, failureClass: "WRITE_FAIL", status: 0, reason: `${e.code ?? ""} ${e.message}`.slice(0, 200) });
+        continue;
+      }
+      fpDisk[p.url] = learnPageFingerprint(html);
+      index.push({
+        id: `${ver}/${p.id}`,
+        version: ver,
+        label: p.label,
+        url: p.url,
+        tags: withGenreTags(p.tags, p.id, p.label),
+        priority: "⭐",
+        // P-2（2026-09-25）：S14-T3 的口径推广到本腿，此前硬编码 1 把整棵树刷成直方 {"1":258}。
+        // 口径与 fetch-bedrock-script-api.mjs:376 一致 = 页面 `^## ` 一级章节数。
+        sectionCount: [...md.matchAll(/^## /gm)].length,
+        source: "bedrock-docs",
+        origin: p.source ?? "curated",
+        fetchedAt: new Date().toISOString(),
+        sha256: sha256(md),
+      });
+      console.log(`  ok ${p.id} ${md.length} B`);
+    }
+    if (index.length) {
+      await writeJsonWithRetry(INDEX_L0, mergeIndexL0(index));
+      await writeJsonWithRetry(FINGERPRINTS, fpDisk);
+    }
+    console.log(
+      `reprocess 完成：重写 ${index.length}/${targets.length} 页（HTML 来自缓存 ${fromCache} / 补抓 ${refetched}）· 失败 ${failures.length}`,
+    );
+    for (const x of failures.slice(0, 20)) console.log(`  FAIL ${x.id} ${x.failureClass} ${x.reason}`);
+    process.exitCode = failures.length ? 1 : 0;
+    return;
+  }
+
   // ── 枚举腿：toc 真源 ─────────────────────────────────────────────────────────
   const toc = await fetchJsonWithUa(TOC_URL, { timeoutMs: 90_000 });
   if (!toc.ok) {
@@ -455,6 +583,9 @@ async function main() {
   for (const res of results) {
     if (!res || res.kind === "fetchfail" || res.kind === "shell" || res.kind === "writefail") continue;
     const p = res.page;
+    // P-2（2026-09-25）：正文只读一次，sectionCount 与 sha256 共用。reused 腿没有 res.md，读盘上正文；
+    // sectionCount 口径与 fetch-bedrock-script-api.mjs:376 一致 = `^## ` 一级章节数，此前硬编码 1。
+    const mdText = res.md ?? (existsSync(res.file) ? readFileSync(res.file, "utf8") : "");
     index.push({
       id: `${ver}/${p.id}`,
       version: ver,
@@ -464,11 +595,11 @@ async function main() {
       // 分支都绕过了上面那处，索引写盘前的这个收口才是两类分支共同的必经通道。
       tags: withGenreTags(p.tags, p.id, p.label),
       priority: "⭐",
-      sectionCount: 1,
+      sectionCount: [...mdText.matchAll(/^## /gm)].length,
       source: "bedrock-docs",
       origin: p.source,
       fetchedAt: new Date().toISOString(),
-      sha256: sha256(res.md ?? (existsSync(res.file) ? readFileSync(res.file, "utf8") : "")),
+      sha256: sha256(mdText),
     });
     console.log(`${res.kind === "ok" ? "ok" : "reuse"} ${p.id}`);
   }

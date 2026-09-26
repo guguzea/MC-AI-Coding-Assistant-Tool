@@ -13,14 +13,14 @@
 | 入口 | `@Mod` + `public ExampleMod(IEventBus modEventBus)` |
 | 元数据 | neoforge.mods.toml |
 | 资源 id | `ResourceLocation` |
-| 网络 | networking 页 Payload（以该版文档为准，不要抄 1.21.1 复数 Handlers 除非该页写明） |
+| 网络 | networking 页 Payload（本档该页正文逐字用复数 `RegisterPayloadHandlersEvent`，实测 verbatim:true；出处 `06-networking:5` / `06-networking:7`） |
 | 文档 | https://docs.neoforged.net/docs/1.20.6/ |
 
 类名必须能在 `knowledge/common/verified-api-1.20.6.md` 或 `search_neoforge_docs` 该版页面找到。
 
 pack-status: ready
 
-`generate_network_packet` **没有** `neoforge_1.20.6` 模板（本档无已核实 payload 页）。网络代码改口 `search_neoforge_docs` version=1.20.6 + 规则 06，禁止抄 1.21.1 复数 `RegisterPayloadHandlersEvent` 除非该页写明。
+`generate_network_packet` **没有** `neoforge_1.20.6` 模板 —— 缺的是模板，不是文档页：实测 `search_neoforge_docs version=1.20.6 query=networking/payload` → `ok:true` / `total:10` / 首选 id `networking/payload` / `versionFallback:false`（本档**有** payload 页，签名清单见 `06-networking:7`）。该页正文逐字用复数 `RegisterPayloadHandlersEvent`（×3，逐字支撑 verbatim:true）；单数 `RegisterPayloadHandlerEvent` 在本档该页 verbatim:false ⇒ 本档事件名 = 复数。网络代码改口 `search_neoforge_docs` version=1.20.6 + 规则 06。
 
 ## 配置（不落盘树级 mc-config）
 

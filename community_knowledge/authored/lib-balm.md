@@ -15,7 +15,7 @@ skillId: mc-balm
 
 # Balm 跨平台抽象层集成要点
 
-自写短文。Balm 的模块划分、类名与版本细节以 [Balm 官方仓库](https://github.com/BlayTheNinth/Balm) 当前 README 与示例 mod 为准。
+自写短文。Balm 的模块划分、类名与版本细节以 [Balm 官方仓库](https://github.com/TwelveIterations/Balm) 当前 README 与示例 mod 为准。
 
 ## 何时用 / 何时不用
 
@@ -80,7 +80,7 @@ Decision: 要不要用 Balm
 - MCP：`check_dependencies`、`analyze_mod_jar`、`search_community_docs`
 - Skill：`mc-balm`；相关：`mc-registry`、`mc-networking`、`mc-config`、`mc-events`
 - 全览：§二.3 跨加载器抽象层、§四 一码多端路线；`authored/library-catalog-2026`、`authored/lib-architectury`、`authored/soft-deps-modlist`
-- 官方：https://github.com/BlayTheNinth/Balm
+- 官方：https://github.com/TwelveIterations/Balm
 - 不清楚时：打开 Balm README + 示例 mod（Waystones 源码是现成范例）；AGENT_USAGE.md 规则先行
 
 ## 核对（2026-08 反编译验证）

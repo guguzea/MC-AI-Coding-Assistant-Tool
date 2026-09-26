@@ -23,6 +23,91 @@ const REPO = join(__dirname, "..");
 const DATA = process.env.MC_SKILL_DATA ?? join(REPO, "..", "data");
 const TIMEOUT_MS = Number(process.env.MCP_TIMEOUT_MS ?? 60000);
 
+/* ------------------------------------------------------------------
+ * 工具数「分解腿」（第 29 轮，2026-09-24）：文档印的分解 vs 代码实算。
+ * 原来本脚本只把两半相加后与 tools/list 比（合计对得上就算过），于是
+ * 「47 + 35」（实为 46 + 36）这种**两半都错但合计正确**的写法能长期在盘。
+ * 本腿把 AUTO_SETUP.md / mcp-server/README.md 里印在括号中的那一对数
+ * **现扫**出来，与代码侧实算逐一对齐 —— 不硬钉 46/36 成常量（硬钉会让
+ * 「合法地往 tool-registry.ts 上方加一个工具」变假红）。
+ * 采集器解出 0 个数 = 正则没命中 = 判红（COLLECTOR_RETURNED_ZERO），
+ * 不许空跑变绿。
+ * ------------------------------------------------------------------ */
+const TOOL_PAIR_RE = /tool-registry\.ts[`\s]*\*{0,2}(\d+)\*{0,2}\s*\+\s*[^\n]{0,40}?register\.ts[`\s]*\*{0,2}(\d+)\*{0,2}/g;
+
+function collectToolPairs(text) {
+  return [...text.matchAll(TOOL_PAIR_RE)].map((m) => [Number(m[1]), Number(m[2])]);
+}
+
+function checkToolSplit({ registrySrc, waveSrc, docs }) {
+  const code = {
+    registry: [...registrySrc.matchAll(/\.registerTool\(/g)].length,
+    wave: [...waveSrc.matchAll(/server\.registerTool\(/g)].length,
+  };
+  const problems = [];
+  let collected = 0;
+  if (code.registry === 0 || code.wave === 0) {
+    problems.push(`COLLECTOR_RETURNED_ZERO: 代码侧某一腿解出 0（registry=${code.registry} wave=${code.wave}），采集面失效`);
+  }
+  for (const d of docs) {
+    const pairs = collectToolPairs(d.text);
+    if (pairs.length === 0) {
+      problems.push(`COLLECTOR_RETURNED_ZERO: ${d.file} 未解出任何「(registry + wave)」分解数`);
+      continue;
+    }
+    for (const [a, b] of pairs) {
+      collected++;
+      if (a !== code.registry || b !== code.wave) {
+        problems.push(`${d.file}: 文档写 ${a} + ${b}，代码实算 ${code.registry} + ${code.wave}`);
+      }
+      if (a + b !== code.registry + code.wave) {
+        problems.push(`${d.file}: 文档合计 ${a + b} ≠ 代码合计 ${code.registry + code.wave}`);
+      }
+    }
+  }
+  if (collected === 0) problems.push("COLLECTOR_RETURNED_ZERO: 全部文档腿解出 0 个数");
+  return { code, collected, problems };
+}
+
+function toolSplitSelftest() {
+  const reg = "\n".repeat(0) + Array.from({ length: 46 }, () => "server.registerTool(").join("\n");
+  const wav = Array.from({ length: 36 }, () => "server.registerTool(").join("\n");
+  const docs = (a, b) => [{ file: "AUTO_SETUP.md", text: `数量 **${a + b}**（\`tool-registry.ts\` ${a} + \`wave/register.ts\` ${b}）` }];
+  const cases = [
+    // [名称, got=「该腿是否判绿」, expectGreen]；got===expectGreen 才算 selftest 通过
+    ["正对照：文档印 46 + 36", checkToolSplit({ registrySrc: reg, waveSrc: wav, docs: docs(46, 36) }).problems.length === 0, true],
+    ["投毒：文档印 47 + 35（合计仍 82）", checkToolSplit({ registrySrc: reg, waveSrc: wav, docs: docs(47, 35) }).problems.length === 0, false],
+    ["投毒：文档印 45 + 37（合计仍 82）", checkToolSplit({ registrySrc: reg, waveSrc: wav, docs: docs(45, 37) }).problems.length === 0, false],
+    ["投毒：文档改写成散文 ⇒ 采集器 0 个数", (() => { const r = checkToolSplit({ registrySrc: reg, waveSrc: wav, docs: [{ file: "X.md", text: "共 82 个工具" }] }); return !(r.problems.length > 0 && r.problems.some((p) => p.startsWith("COLLECTOR_RETURNED_ZERO"))); })(), false],
+    ["投毒：代码侧某一腿空 ⇒ COLLECTOR_RETURNED_ZERO", (() => { const r = checkToolSplit({ registrySrc: reg, waveSrc: "", docs: docs(46, 36) }); return !(r.problems.length > 0 && r.problems.some((p) => p.startsWith("COLLECTOR_RETURNED_ZERO"))); })(), false],
+    ["正对照：仓库真文件 + 真文档（本轮实况）", (() => {
+      const real = checkToolSplit({
+        registrySrc: readFileSync(join(REPO, "src", "tool-registry.ts"), "utf8"),
+        waveSrc: readFileSync(join(REPO, "src", "wave", "register.ts"), "utf8"),
+        docs: [
+          { file: "AUTO_SETUP.md", text: readFileSync(join(REPO, "..", "AUTO_SETUP.md"), "utf8") },
+          { file: "mcp-server/README.md", text: readFileSync(join(REPO, "README.md"), "utf8") },
+        ],
+      });
+      console.log(`  代码实算 ${real.code.registry} + ${real.code.wave} = ${real.code.registry + real.code.wave} / 文档腿 ${real.collected} 处 / problems=${real.problems.length}`);
+      return real.problems.length === 0 && real.collected >= 2;
+    })(), true],
+  ];
+  let bad = 0;
+  for (const [name, got, expectGreen] of cases) {
+    const ok = got === expectGreen;
+    if (!ok) bad++;
+    console.log(`[${ok ? "PASS" : "FAIL"}] selftest-tool-split · ${name} → ${expectGreen ? "应放行" : "应判红"}`);
+  }
+  console.log(bad === 0 ? "selftest-tool-split: 全部符合预期（投毒必红 + 正对照必绿）" : `selftest-tool-split: ${bad} 记不符预期`);
+  return bad === 0 ? 0 : 1;
+}
+
+if (process.argv.includes("--selftest-tool-split")) {
+  process.exit(toolSplitSelftest());
+}
+
+
 assert.ok(existsSync(join(REPO, "dist", "index.js")), "build first: npm run build");
 assert.ok(existsSync(DATA), `data missing: ${DATA}`);
 
@@ -121,6 +206,24 @@ try {
     [...registrySrc.matchAll(/\.registerTool\(/g)].length +
     [...waveSrc.matchAll(/server\.registerTool\(/g)].length;
   assert.equal(names.length, expectedToolCount);
+
+  // 分解腿：两半各自与文档印数对齐（合计相等但两半写反/写旧也要红）
+  const splitCheck = checkToolSplit({
+    registrySrc,
+    waveSrc,
+    docs: [
+      { file: "AUTO_SETUP.md", text: readFileSync(join(REPO, "..", "AUTO_SETUP.md"), "utf8") },
+      { file: "mcp-server/README.md", text: readFileSync(join(REPO, "README.md"), "utf8") },
+    ],
+  });
+  assert.equal(
+    splitCheck.problems.length,
+    0,
+    `tool split 文档↔代码不一致：\n${splitCheck.problems.join("\n")}`,
+  );
+  assert.ok(splitCheck.collected >= 2, `tool split 采集面 <2 处（实得 ${splitCheck.collected}）`);
+  console.log(`[smoke] tool split: 代码 ${splitCheck.code.registry}+${splitCheck.code.wave}=${splitCheck.code.registry + splitCheck.code.wave} · 文档 ${splitCheck.collected} 处逐一对齐`);
+
   assert.ok(names.includes("download_official_mdk"));
 
   const convertSchema = tools.find((t) => t.name === "convert_mapping")?.inputSchema;

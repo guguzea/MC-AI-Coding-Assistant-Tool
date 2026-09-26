@@ -87,7 +87,7 @@ public class MyBE extends BlockEntity {
 
 > **保留字段名**：`id`、`x`、`y`、`z`、`ForgeData`、`ForgeCaps` 不能用作自己的 key。
 
-**当数据变化时必须调用 `setChanged()`**，否则该 BE 所在的 Chunk 保存时可能被跳过：
+**当数据变化时必须调用 `setChanged()`**，否则该 BE 所在的 `LevelChunk` 保存时可能被跳过：
 
 ```java
 counter++;
@@ -187,7 +187,7 @@ public class MyBER implements BlockEntityRenderer<MyBE> {
 
 ```
 IF 数据量小、静态（每次打开 GUI 不变）
-  → getUpdateTag / handleUpdateTag（Chunk 加载时同步）
+  → getUpdateTag / handleUpdateTag（LevelChunk 加载时同步）
 
 IF 高频或大数据量
   → 自定义网络包（见 mc-networking Skill）

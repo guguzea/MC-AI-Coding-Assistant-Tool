@@ -888,6 +888,81 @@ testAsync("S6 26.2 旁路必须带 sourcePlatform 且 sourceIsRequestedVersion=f
   assert.equal(out.fallback, true, "旁路必须带 fallback 标记，不得让 ok:true 被当成本版正文");
 });
 
+// ── S11：docs-platform 层的载荷自相矛盾（回归门，2026-09-22）──────────────────────
+// 两条腿都必须跑真语料（data/ 在盘），否则「缺库」与「codeBlockCount=0」这两种谎查不出来。
+// 无该档语料时按档面 skip（打 SKIP 行），不得静默 pass。
+const S11_DATA = process.env.MC_SKILL_DATA || join(process.cwd(), "..", "data");
+
+testAsync("S11/T1: 语义命中时不得再报「语义索引缺库」（neoforge 1.20.1 走 Forge 兼容库）", async () => {
+  if (!existsSync(semanticDbPath(S11_DATA, "forge", "1.20.1", "forge-docs"))) {
+    console.log("  SKIP S11/T1: 无 data/forge_1.20.1 语义库");
+    return;
+  }
+  const prev = process.env.MC_SKILL_DATA;
+  process.env.MC_SKILL_DATA = S11_DATA;
+  try {
+    const { searchDocs } = await import("./dist/docs-platform/forge/index.js");
+    const { missingSemanticDbWarning } = await import("./dist/docs-platform/semantic/status.js");
+    const out = JSON.parse(
+      (await searchDocs({ query: "registry", platform: "neoforge", version: "1.20.1" })).content[0].text,
+    );
+    assert.equal(out.forgeCompatible, true, `夹具前提：应走 Forge 兼容数据，实得 ${JSON.stringify(out).slice(0, 200)}`);
+    assert.equal(out.semantic, true, "夹具前提：本查询应命中语义层");
+    assert.ok((out.total ?? 0) > 0, `夹具前提：total 应 > 0，实得 ${out.total}`);
+    assert.ok(
+      !/语义索引缺库/.test(String(out.warning ?? "")),
+      `semantic:true + total>0 的同一份载荷里不得报缺库（改前恒报，因缺库判定用了请求侧 neoforge_1.20.1 路径）：${out.warning}`,
+    );
+    // 反证：把库真删掉的路径仍须响亮报缺库 —— 判定不能退化成「永远不报」。
+    assert.ok(
+      missingSemanticDbWarning(true),
+      "missingSemanticDbWarning(true) 必须仍产出文案，否则本门是删断言变绿",
+    );
+  } finally {
+    if (prev === undefined) delete process.env.MC_SKILL_DATA;
+    else process.env.MC_SKILL_DATA = prev;
+    const { closeSemanticStatusDbs } = await import("./dist/docs-platform/semantic/status.js");
+    closeSemanticStatusDbs();
+  }
+});
+
+testAsync("S11/T2: 只含 <<< 转引的页也要重算 meta.codeBlockCount（26.1.2 blockstates）", async () => {
+  if (!existsSync(join(S11_DATA, "fabric_26.1.2", "fabric-docs", "26.1.2", "processed"))) {
+    console.log("  SKIP S11/T2: 无 data/fabric_26.1.2 processed 页");
+    return;
+  }
+  const prev = process.env.MC_SKILL_DATA;
+  process.env.MC_SKILL_DATA = S11_DATA;
+  try {
+    const { getFabricDocFull } = await import("./dist/docs-platform/fabric/index.js");
+    const out = JSON.parse(
+      (
+        await getFabricDocFull({
+          id: "26.1.2/develop_blocks_blockstates",
+          version: "26.1.2",
+          highlight_key: false,
+        })
+      ).content[0].text,
+    );
+    const content = String(out.content ?? "");
+    const ticks = (content.match(/```/g) ?? []).length;
+    assert.ok(ticks >= 2, `夹具前提：展开后正文应有围栏代码块，实得 ticks=${ticks}`);
+    assert.equal(
+      out.meta?.hasCodeBlocks,
+      true,
+      `<<<-only 页必须重算 meta，改前报 hasCodeBlocks:false（l2 按未展开正文统计）：${JSON.stringify(out.meta)}`,
+    );
+    assert.equal(
+      out.meta?.codeBlockCount,
+      Math.floor(ticks / 2),
+      "codeBlockCount 须与尺子（三反引号计数 / 2 取整）一致，实得 " + out.meta?.codeBlockCount + " vs ticks=" + ticks,
+    );
+  } finally {
+    if (prev === undefined) delete process.env.MC_SKILL_DATA;
+    else process.env.MC_SKILL_DATA = prev;
+  }
+});
+
 await Promise.all(asyncTasks);
 
 if (failures > 0) {

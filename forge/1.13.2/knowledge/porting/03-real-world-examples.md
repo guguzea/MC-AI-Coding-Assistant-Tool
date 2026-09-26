@@ -45,7 +45,7 @@
 | 位置 | 用途 |
 |------|------|
 | `forge/1.13.2/.cursor/rules/01-registry.mdc` … `10-gui.mdc` | 本档正面教程（注册 / 方块 / 物品 / 实体 / 事件 / 网络 / datagen / 客户端-服务端 / 反模式 / GUI） |
-| `forge/1.13.2/knowledge/version-changes/1.13.x.md` | 1.13–1.16.5 与 1.17+ 命名分段表（`TileEntity`、`NBTTagCompound`、`Container`/`ContainerType`、`ItemGroup`、`world.isRemote`）；注意其 `Block.Properties.create(Material)` 与 `mapping_channel=mcp` 两点和官方语料冲突，见 `00-porting-guide.md` §冲突 |
+| `forge/1.13.2/knowledge/version-changes/1.13.x.md` | 1.13–1.16.5 与 1.17+ 命名分段表（`TileEntity`、`NBTTagCompound`、`Container`/`ContainerType`、`ItemGroup`、`world.isRemote`）；注意其 `Block.Properties.create(Material)` 一点仍与官方语料互斥（**未核实**，见 `00-porting-guide.md` §冲突表「方块属性 / 创造标签页」行 :101）。原并列登记的第二点 `mapping_channel=mcp` **已于 2026-09-23 消解**：本节 :108-109 现写 `snapshot` + `20180921-1.13`，与本包 `scaffold/gradle.properties:14-15`、官方 1.13.2-25.0.223 MDK 同值（历史账见 `00-porting-guide.md:99`） |
 | `forge/1.13.2/knowledge/antipatterns/*.md` | 按症状查（registry / item / block / entity / events / networking / gradle） |
 | `forge/1.13.2/code-patterns/*.md` | 本档短片段（block / item / entity / world / datagen） |
 | `knowledge/patterns/examples/cube-all-resources.md` | 通用「blockstate + block model + item model + 贴图」四件套示范（跨版本可用） |

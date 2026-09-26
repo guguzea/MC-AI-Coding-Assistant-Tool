@@ -15,6 +15,9 @@ export {
   getForgeDocSummary, getForgeDocSummarySchema,
   getForgeDocFull, getForgeDocFullSchema,
   getForgeDocRelated, getForgeDocRelatedSchema,
+  // A2（2026-09-24）：按调用窗口常量（门与宿主都从这里取，杜绝第二份期望）
+  FORGE_SEARCH_DEFAULT_LIMIT, FORGE_SEARCH_LIMIT_MAX,
+  SEARCH_DOCS_DEFAULT_LIMIT, SEARCH_DOCS_LIMIT_MAX,
 } from "./forge/index.js";
 
 export {
@@ -24,6 +27,7 @@ export {
   getFabricDocSummary, getFabricDocSummarySchema,
   getFabricDocFull, getFabricDocFullSchema,
   getFabricDocRelated, getFabricDocRelatedSchema,
+  FABRIC_SEARCH_DEFAULT_LIMIT, FABRIC_SEARCH_PORTING_CAP, FABRIC_SEARCH_LIMIT_MAX,
 } from "./fabric/index.js";
 
 export {
@@ -33,6 +37,7 @@ export {
   getNeoForgeDocSummary, getNeoForgeDocSummarySchema,
   getNeoForgeDocFull, getNeoForgeDocFullSchema,
   getNeoForgeDocRelated, getNeoForgeDocRelatedSchema,
+  NEOFORGE_SEARCH_DEFAULT_LIMIT, NEOFORGE_SEARCH_LIMIT_MAX,
 } from "./neoforge/index.js";
 
 export {

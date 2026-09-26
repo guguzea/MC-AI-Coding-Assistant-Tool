@@ -18,6 +18,10 @@
  *  B. 台账层（只跑真数据根；测试假根跳过）
  *     逐版 processed 处数 = 127/224/260/278/344/439，合计 1672，raw+processed = 3344，
  *     全局唯一目标 = 669。这些数与 §12 台账和 plan 里的「3344 处 / 669 目标」同口径。
+ *  C. 摘要位（2026-09-25 补）：`sections[].summary` / `firstParagraph` 是烘焙期按**未展开**原文
+ *     截的首段，会把裸标记当正文交给模型。本腿造真 store 调 `loadSummary` / `loadFullDoc`，
+ *     判服务出的响应（读文件比对字符串看不见「清洗调用被摘掉」这种变异）；另配两条合成串
+ *     单元腿，语料哪天重烘焙（靶子归 0）也不失去判据。
  *
  * 投毒自检在 `test-scripts.mjs`：假根里删一个 reference 文件 / 改一个字节 / 删一行 processed 标记，
  * 本 gate 必须立刻红并且点名该目标。
@@ -43,6 +47,7 @@ const {
   loadReferenceProvenance,
   referenceAvailable,
   scanTranscludeSites,
+  stripTranscludeMarkers,
   upstreamRelPathFor,
   referenceLocalPath,
 } = runtime;
@@ -341,6 +346,110 @@ if (!TEST_ROOT) {
   }
 }
 
+// ── C. 摘要位（sections[].summary / firstParagraph）不得吐裸标记 ───────────────
+// 展开只发生在**正文**读取路径；摘要是烘焙期按未展开原文截的首段，于是 `<<< @/…` 会被当正文
+// 交给模型。实测口径（2026-09-25 现扫 DATA_DIR 全部 index-l*.json：63 目录 / 183 文件）：
+// 72 处，全部落在 `[].sections[].summary`，只 fabric_1.21.11（2）与 fabric_26.1.2（70）两档。
+// 本腿不比对文件字符串 —— 那对「把清洗调用从载入处摘掉」这种变异是瞎的（实测：字符串全在，
+// 行为没了）。所以直接造真 store 调 loadSummary / loadFullDoc，判的是**服务出来的响应**。
+const SUMMARY_MARK = /<<<\s*@\s*\S+|@\[code\b/g;
+const storeRuntime = await import("../dist/docs-platform/fabric/store.js").then(
+  (m) => m,
+  () => {
+    fail("缺 dist/docs-platform/fabric/store.js —— 先 `npm run build`（本腿调的是运行时真入口）");
+    return null;
+  },
+);
+let summaryTargets = [];
+let summarySwept = 0;
+let summaryLeaks = 0;
+if (storeRuntime) {
+  const findBakedIndex = (dir, out = []) => {
+    let entries;
+    try {
+      entries = fs.readdirSync(dir, { withFileTypes: true });
+    } catch {
+      return out;
+    }
+    for (const e of entries) {
+      const ap = path.join(dir, e.name);
+      if (e.isDirectory()) findBakedIndex(ap, out);
+      else if (/^index-l[12]\.json$/.test(e.name)) out.push(ap);
+    }
+    return out;
+  };
+  const seen = new Set();
+  for (const d of fs.existsSync(DATA_DIR) ? fs.readdirSync(DATA_DIR) : []) {
+    if (!/^fabric_/.test(d)) continue;
+    const version = d.slice("fabric_".length);
+    for (const f of findBakedIndex(path.join(DATA_DIR, d))) {
+      let arr;
+      try {
+        arr = JSON.parse(fs.readFileSync(f, "utf8"));
+      } catch {
+        continue; // 坏 json 由别的门管，本腿只找靶子
+      }
+      for (const e of Array.isArray(arr) ? arr : []) {
+        const fields = [e?.firstParagraph, ...(e?.sections ?? []).map((s) => s?.summary)].filter(
+          (t) => typeof t === "string",
+        );
+        const hit = fields.some((t) => {
+          SUMMARY_MARK.lastIndex = 0;
+          return SUMMARY_MARK.test(t);
+        });
+        if (!hit || !e.id) continue;
+        const key = `${version}#${e.id}`;
+        if (seen.has(key)) continue;
+        seen.add(key);
+        summaryTargets.push({ version, id: e.id });
+      }
+    }
+  }
+  for (const t of summaryTargets) {
+    const store = storeRuntime.createFabricDocStore(t.version, "fabric-docs", DATA_DIR);
+    let payloads;
+    try {
+      payloads = [store.loadSummary(t.id, t.version), await store.loadFullDoc(t.id, t.version)];
+    } catch (err) {
+      fail(`摘要靶子 ${t.version}/${t.id} 取不到响应（${err?.constructor?.name}）⇒ 本腿无法判定`);
+      continue;
+    }
+    for (const p of payloads) {
+      const served = [p?.firstParagraph, ...((p?.sections ?? p?.meta?.sections) ?? []).map((s) => s?.summary)].filter(
+        (x) => typeof x === "string",
+      );
+      for (const text of served) {
+        summarySwept++;
+        SUMMARY_MARK.lastIndex = 0;
+        if (SUMMARY_MARK.test(text)) {
+          summaryLeaks++;
+          if (summaryLeaks <= 5) {
+            fail(`服务出的摘要仍含裸标记 ${t.version}/${t.id}: ${JSON.stringify(text.slice(0, 120))}`);
+          }
+        }
+      }
+    }
+  }
+  // 单元层：真实语料哪天被重烘焙（靶子归 0）时，这条腿仍要有靶子。两种标记形态都过一遍。
+  if (typeof stripTranscludeMarkers !== "function") {
+    fail("transclude.js 未导出 stripTranscludeMarkers：摘要位清洗失去实现，单元腿无法判");
+  } else {
+    for (const s of [
+      "create the interface you'd like to inject: <<< @/reference/latest/src/main/java/a.java#region",
+      "you can create your tool items: @[code lang=java](@/reference/26.1.2/src/main/java/b.java)",
+    ]) {
+      SUMMARY_MARK.lastIndex = 0;
+      if (!SUMMARY_MARK.test(s)) fail(`合成靶子本身不含标记（${JSON.stringify(s.slice(0, 60))}）⇒ 判据空扫`);
+      const head = s.split(/<<<|@\[code/)[0].trim();
+      const cut = stripTranscludeMarkers(s);
+      SUMMARY_MARK.lastIndex = 0;
+      if (SUMMARY_MARK.test(cut)) fail(`合成串清洗后仍含标记: ${JSON.stringify(cut.slice(0, 90))}`);
+      if (!cut.startsWith(head.slice(0, 20))) fail(`合成串清洗把正文也吃掉了: ${JSON.stringify(cut.slice(0, 90))}`);
+      if (s === cut) fail(`合成串清洗是空转（前后逐字相同）: ${JSON.stringify(cut.slice(0, 60))}`);
+    }
+  }
+}
+
 const summary = {
   dataDir: rel(DATA_DIR),
   packs: packs.length,
@@ -349,6 +458,9 @@ const summary = {
   uniqueTargets: census.uniqueTargets.size,
   perVersion: census.perVersion,
   ledger: TEST_ROOT ? "skipped(test-root)" : "checked",
+  summaryTargets: summaryTargets.length,
+  summarySwept,
+  summaryLeaks,
 };
 
 if (failures.length > 0) {
@@ -360,5 +472,6 @@ if (failures.length > 0) {
 
 console.log(
   `  assert-fabric-transcludes: ${packs.length} 档 · processed 占位符 ${census.processedSites} 处全部展开 · ` +
-    `唯一目标 ${census.uniqueTargets.size} · 台账 ${summary.ledger}`,
+    `唯一目标 ${census.uniqueTargets.size} · 台账 ${summary.ledger} · ` +
+    `摘要位 靶子 ${summary.summaryTargets} 页 / 扫出字段 ${summary.summarySwept} 条 / 残留 ${summary.summaryLeaks} 条`,
 );

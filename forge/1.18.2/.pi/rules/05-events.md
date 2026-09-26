@@ -188,7 +188,7 @@ public class ModSetup {
 public class ClientSetup {
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
-        // KeyBinding 在 RegisterKeyMappingsEvent 中注册
+        // KeyMapping 在 RegisterKeyMappingsEvent 中注册
     }
 
     @SubscribeEvent
@@ -198,7 +198,7 @@ public class ClientSetup {
 }
 ```
 
-KeyBinding 注册应使用 `RegisterKeyMappingsEvent` + `event.register()`。
+KeyMapping 注册应使用 `RegisterKeyMappingsEvent` + `event.register()`。
 
 ## 示例：Capability 附加事件
 

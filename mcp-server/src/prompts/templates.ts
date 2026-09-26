@@ -29,11 +29,11 @@ export const WORKFLOW_TEMPLATES: Record<string, { title: string; body: string }>
 3. 注册 BlockItem（现代档）或该时代等价物
 4. 资源：现代档 generate_model（须传 version）或 DataGen；老平台手写 assets/ JSON
 5. lang：generate_lang（须传 version；en_us/zh_cn）
-6. 战利品/合成：Forge 1.20.1 与 NeoForge 1.21.x 才 generate_datagen；其余手写 data/ 或 ModLoader.addRecipe`,
+6. 战利品/合成：generate_datagen 白名单 = Forge 1.20.1 / 1.20.4；NeoForge 1.20.4 / 1.20.6（仅 recipe）、1.21.0–1.21.11、26.1；Fabric 1.21.1 / 1.21.3 / 1.21.4 / 1.21.8 / 1.21.10 / 1.21.11 / 26.1；其余手写 data/ 或 ModLoader.addRecipe`,
   },
   "mc-new-entity": {
     title: "新实体工作流",
-    body: `1. 确认平台与精确 MC 版本（从零才 download_official_mdk；已有工程不要下）
+    body: `${WORKFLOW_HITL}\n1. 确认平台与精确 MC 版本（从零才 download_official_mdk；已有工程不要下）
 2. 先 activate_platform_pack action=session（可 task=mc-new-entity），用返回的 rules / skillBodies；禁止 Read 平台/<ver>/.cursor：
    - Forge/NeoForge：EntityType + 该档注册 API（Neo 用 DeferredHolder 族，禁止把 Forge RegistryObject 当 Neo）
    - Fabric/Quilt：Registry.register EntityType；基岩用 BP/RP JSON，不是 EntityType
@@ -43,7 +43,7 @@ export const WORKFLOW_TEMPLATES: Record<string, { title: string; body: string }>
   },
   "mc-new-gui": {
     title: "GUI 工作流",
-    body: `1. 确认平台与 MC 版本（已有工程不要下 MDK）
+    body: `${WORKFLOW_HITL}\n1. 确认平台与 MC 版本（已有工程不要下 MDK）
 2. 先 activate_platform_pack action=session（可 task=mc-new-gui），用返回的 rules / skillBodies；禁止 Read 平台/<ver>/.cursor。按平台分支，不要默认 MenuType：
    - 现代 NeoForge / Forge：MenuType + AbstractContainerMenu；Screen 注册按该档 10-gui / mc-gui（勿写死 MenuScreens.register）
    - Fabric / Quilt：该版 10-gui（Quilt 02–10 仍读 fabric/<ver>）
@@ -147,7 +147,7 @@ export const WORKFLOW_TEMPLATES: Record<string, { title: string; body: string }>
   },
   "mc-decompile-mod": {
     title: "模组反编译研究（定位真实实现 → 修改建议）",
-    body: `【前置】反编译是显式用户动作：默认零下载、仅写 $MC_SKILL_CACHE（不写项目目录）。
+    body: `${WORKFLOW_HITL}\n【前置】反编译是显式用户动作：默认零下载、仅写 $MC_SKILL_CACHE（不写项目目录）。
 先确认用户意图：查签名 → query_api / get_method_params（勿触发下载）；要完整源码 → 本工作流。
 Java 前置：本机需 Java 17+（Temurin/Adoptium https://adoptium.net/temurin/releases/?version=17）；缺失时工具会返回 TOOLCHAIN_MISSING 指引。
 
@@ -162,7 +162,7 @@ Java 前置：本机需 Java 17+（Temurin/Adoptium https://adoptium.net/temurin
   },
   "mc-new-item": {
     title: "新物品工作流",
-    body: `1. 确认平台与精确 MC 版本。已有工程不要 download_official_mdk。
+    body: `${WORKFLOW_HITL}\n1. 确认平台与精确 MC 版本。已有工程不要 download_official_mdk。
 2. 先 activate_platform_pack action=session（可 task=mc-new-item），用返回的 rules / skillBodies；禁止 Read 平台/<ver>/.cursor。不要默认 Forge 1.20 Item：
    - Forge：DeferredRegister ITEMS（该版规则）
    - NeoForge：该档 DeferredItem / DeferredHolder；禁止 RegistryObject 冒充 1.20.4+ Neo
@@ -171,11 +171,11 @@ Java 前置：本机需 Java 17+（Temurin/Adoptium https://adoptium.net/temurin
    - 老平台：核实表；禁止 DeferredRegister
 3. 创造栏 / 食物 / 工具属性按该档 03，不要抄邻版
 4. 模型：generate_model（须传 version）或 DataGen；lang：generate_lang（须传 version）
-5. 合成：generate_datagen 仅 Forge 1.20.1 与 NeoForge 1.21.x / 已提供的 26.1 模板；其余手写 data/`,
+5. 合成：generate_datagen 白名单 = Forge 1.20.1 / 1.20.4；NeoForge 1.20.4 / 1.20.6（仅 recipe）、1.21.0–1.21.11、26.1；Fabric 1.21.1 / 1.21.3 / 1.21.4 / 1.21.8 / 1.21.10 / 1.21.11 / 26.1；其余手写 data/`,
   },
   "mc-new-blockentity": {
     title: "方块实体工作流",
-    body: `1. 确认平台与精确 MC 版本
+    body: `${WORKFLOW_HITL}\n1. 确认平台与精确 MC 版本
 2. 先 activate_platform_pack action=session（可 task=mc-new-blockentity），用返回的 rules / skillBodies；禁止 Read 平台/<ver>/.cursor：
    - Forge/NeoForge：BlockEntityType + 该档注册（Neo 用 DeferredHolder 族）
    - Fabric/Quilt：BlockEntityType.Builder + Registry.register
@@ -186,7 +186,7 @@ Java 前置：本机需 Java 17+（Temurin/Adoptium https://adoptium.net/temurin
   },
   "mc-mixin": {
     title: "Mixin 工作流",
-    body: `${WORKFLOW_ERA_GUARD}
+    body: `${WORKFLOW_HITL}\n${WORKFLOW_ERA_GUARD}
 1. 确认平台与 MC 版本；先 mixin_analyze（静态）。deep:true 需已缓存 remapped 客户端 jar，未缓存会 CACHE_MISS，不要自动下载。LiteLoader/Rift/ModLoader 若核实表无 Mixin，停止，不要吐 @Inject 现代骨架。
 2. mixins.json：common 进 mixins[]，client/server 分桶，不要把 common 写进 client。
 3. 注入点用该档 mappings（Yarn named / Mojmap / MCP）；禁止 class_ / method_ 中间名当 API。
@@ -195,7 +195,7 @@ Java 前置：本机需 Java 17+（Temurin/Adoptium https://adoptium.net/temurin
   },
   "mc-worldgen": {
     title: "世界生成工作流",
-    body: `${WORKFLOW_ERA_GUARD}
+    body: `${WORKFLOW_HITL}\n${WORKFLOW_ERA_GUARD}
 1. 确认平台与精确 MC 版本。先 activate_platform_pack action=session（可 task=mc-worldgen），用返回的 rules / skillBodies；禁止 Read 平台/<ver>/.cursor。禁止默认 Forge biome_modifier。LiteLoader/Rift/ModLoader 无 biome_modifier / placed_feature 时代 API 时改口核实表，不要吐 1.18+ JSON 骨架冒充已核。
 2. 配置：configured_feature / placed_feature JSON 或该档 Datagen。
 3. 注入生物群系：
@@ -255,7 +255,7 @@ Java 前置：本机需 Java 17+（Temurin/Adoptium https://adoptium.net/temurin
     body: `清单${WORKFLOW_HITL_STEPS}。对应 Skill：mc-recipe / mc-loottable / mc-advancement；规则 07-datagen。
 1. 确认平台与精确 MC 版本。
 2. 配方/战利品/进度 JSON 路径按该档 data/<modid>/。
-3. generate_datagen 仅白名单版本（Forge 1.20.1 / 1.20.4 FinishedRecipe；NeoForge 1.20.1 改口 search_neoforge_docs，禁止默写 Forge import；NeoForge 1.20.4 / 1.20.6 仅 recipe——1.20.4 一参 PackOutput+RecipeOutput，1.20.6 两参 PackOutput+HolderLookup；1.21.0–1.21.4 为 GatherDataEvent+addProvider，1.21.5+ 为 GatherDataEvent.Client+createProvider，1.21.11/26.1 用 Identifier；Fabric 方法名按**映射**取（Yarn=generate(RecipeExporter) / Mojmap=buildRecipes，同类同名差异，不是版本差异，禁止同一文件混映射），26.1 Loom；Quilt 无足够 QSL 类名则 error）。其它版本 search_*_docs + 手写，参考 07-datagen / mc-datagen。
+3. generate_datagen 仅白名单版本（Forge 1.20.1 FinishedRecipe / Forge 1.20.4 RecipeProvider.buildRecipes(RecipeOutput)——1.20.4 已无 FinishedRecipe（src/datagen/forge-1.20.4.ts 核实）；NeoForge 1.20.1 改口 search_neoforge_docs，禁止默写 Forge import；NeoForge 1.20.4 / 1.20.6 仅 recipe——1.20.4 一参 PackOutput+RecipeOutput，1.20.6 两参 PackOutput+HolderLookup；1.21.0–1.21.4 为 GatherDataEvent+addProvider，1.21.5+ 为 GatherDataEvent.Client+createProvider，1.21.11/26.1 用 Identifier；Fabric 方法名按**映射**取（Yarn=generate(RecipeExporter) / Mojmap=buildRecipes，同类同名差异，不是版本差异，禁止同一文件混映射），26.1 Loom；Quilt 无足够 QSL 类名则 error）。其它版本 search_*_docs + 手写，参考 07-datagen / mc-datagen。
 4. validate_datapack_json 须传 version；minecraft:crafting_special_* 无 result 不报错。`,
   },
   "mc-audio-vfx": {
@@ -516,6 +516,63 @@ ${WORKFLOW_ERA_GUARD}
 7. 资源与配方面冲突：audit_resources 看模型 / 纹理引用与命名空间（传 resourceRoot 或 projectPath）；配方 / 战利品 / 进度 / 标签 JSON 用 validate_datapack_json 且必须传精确 version。两者都不判同名覆盖优先级，那要按档查文档。
 8. 真机验证接 mc-ingame-iterate（隔离实例、路径与拷贝先经用户确认）；多人服务端表现接 mc-server-multiplayer-test；卡顿与内存接 mc-profiling。
 9. 【停】发布与分发不在本流程内：不代调 Curse / Modrinth 上传接口、不代下第三方 jar；每个 mod 的授权与再分发条款由用户自行核对（可接 mc-publish 与 mc-ci-publish-extra，二者都只出清单）。`,
+  },
+  "mc-events-forge": {
+    title: "Forge 事件系统清单",
+    body: `清单${WORKFLOW_HITL_STEPS}。对应 Skill：mc-events（例：forge/1.20.1/.cursor/skills/mc-events/SKILL.md）；规则 05-events。
+1. 确认平台与精确 MC 版本（改已有代码不要调本工作流）。先 activate_platform_pack action=session（task=mc-events-forge 或 topics=["05"]），用返回的 rules / skillBodies；禁止 Read 平台/<ver>/.cursor 当加载器。
+2. 【分叉 · 注册期订阅 vs 运行期订阅——≤1.17 起逐版取各档 forge/<ver>/.cursor/rules/05-events.mdc 的「事件订阅时机」表，禁止邻档互顶】
+   - 1.12.2（forge/1.12.2/.cursor/rules/05-events.mdc）：本档无 Bus.MOD/Bus.FORGE 之分。运行期游戏事件走 @Mod.EventBusSubscriber(modid=…)（挂 Forge EVENT_BUS）或 MinecraftForge.EVENT_BUS.register(...) + @SubscribeEvent；注册期内容注册在 @Mod 类 @EventHandler 生命周期里——FMLInitializationEvent 即本档「初始化，注册物品方块」阶段，注册事件 RegistryEvent.Register<T> 同样按本档表在 EVENT_BUS 面订阅。
+   - 1.13.2（forge/1.13.2/.cursor/rules/05-events.mdc）：两总线表——MinecraftForge.EVENT_BUS 行写「Forge 原生事件（Registry、LivingDrops 等）」，订阅方式 MinecraftForge.EVENT_BUS.register(this)（示例在 @Mod 构造函数中注册）；Mod 特有事件（FMLCommonSetupEvent / FMLClientSetupEvent）走 FMLJavaModLoadingContext.get().getModEventBus().addListener(this::method)（构造器内订阅）。禁止在错误的事件总线监听事件。
+   - 1.14.4 / 1.15.2 / 1.16.5（forge/1.14.4/.cursor/rules/05-events.mdc、forge/1.15.2/.cursor/rules/05-events.mdc、forge/1.16.5/.cursor/rules/05-events.mdc）：@Mod.EventBusSubscriber 的 bus 属性分 Bus.FORGE（默认）/ Bus.MOD。这三档自家表把 Bus.FORGE 标为「Forge 原生事件（Registry、LivingDrops 等）」，Bus.MOD 标为「Mod 自定义事件」（手动 addListener）；FML 生命周期示例（FMLCommonSetupEvent / FMLClientSetupEvent）在 bus = Bus.MOD 类中订阅。⚠️ 这三档自家表未把 RegistryEvent.Register<T> 写进 Bus.MOD 行——按本档文件落笔，禁止按 1.17+ 档的表倒推总线归属。
+   - 1.17.1 / 1.18.2（forge/1.17.1/.cursor/rules/05-events.mdc、forge/1.18.2/.cursor/rules/05-events.mdc）：本档表把分叉写死——注册期 = Bus.MOD（RegistryEvent.Register<T>、Capability 注册、FML 生命周期事件；@Mod.EventBusSubscriber(bus = Bus.MOD) 或 modEventBus.addListener(...)）；运行期 = Bus.FORGE（游戏内事件 LivingDrops、PlayerInteract 等）。
+   - 1.19.4 / 1.20.1 / 1.20.4（forge/1.19.4/.cursor/rules/05-events.mdc、forge/1.20.1/.cursor/rules/05-events.mdc、forge/1.20.4/.cursor/rules/05-events.mdc）：注册期 = Bus.MOD（FML 生命周期与注册事件：RegisterEvent、NewRegistryEvent、FMLCommonSetupEvent 等；注解或 mod 构造器内 modEventBus.addListener(...)）；运行期 = Bus.FORGE 游戏总线（PlayerInteract、LivingDrops、AttachCapabilitiesEvent 等）。本档规则原文：**在 Bus.FORGE 上订阅 RegisterEvent 永不触发**。
+3. 事件类名与物理端字段跨档改过名（以各档 05-events 的 Decision Flow 为准）：PlayerLoggedInEvent（1.12.2 档）→ PlayerEvent.PlayerLoggedInEvent（1.13.2+ 档）；EntityJoinWorldEvent（≤1.16.5 档）→ EntityJoinLevelEvent（1.17.1 档）；isRemote / isClientSide / level.isClientSide 逐档取。自家表没答案 → search_forge_docs（先 list_forge_versions；version=本档），零命中留 // TODO(未核实)，禁止邻档补名。
+4. 事件面无专用 generate_* 生成器：手动按本档规则编写，不要理解为游戏里做不了；Capability 骨架另走 generate_capability（platform 与 version 必填）与 mc-capability 工作流。
+5. 【停 · 语料边界】比 1.12.2 更老的本仓 Forge 档（1.7.10 / 1.8.9 / 1.9.4 / 1.10.2 / 1.11.2 短规则树）没有 05-events 文件（本仓实扫），forge/1.21.1 是 draft 无 00–10：这些档停止吐总线分叉骨架，读该档自身 AGENTS/核实表并改口 search_forge_docs 核实，核不到保持 stub。`,
+  },
+  "mc-events-neoforge": {
+    title: "NeoForge 事件系统清单",
+    body: `清单${WORKFLOW_HITL_STEPS}。对应 Skill：mc-events；规则 05-events。
+1. 确认精确 NeoForge 档（先 list_neoforge_versions；已建档 1.20.1 / 1.20.4 / 1.20.6 / 1.21.1 / 1.21.3 / 1.21.5 / 1.21.8 / 1.21.10 / 1.21.11 / 26.1；26.1 ≠ 1.21.1）。先 activate_platform_pack action=session（task=mc-events-neoforge 或 topics=["05"]）；禁止 Read neoforge/<ver>/.cursor 当加载器，禁止跨目录读邻档 00–10。
+2. 【分叉 · 注册期订阅 vs 运行期订阅——逐版取各档 neoforge/<ver>/.cursor/rules/05-events.mdc】≤1.17 的注册期/运行期旧分叉对 NeoForge 不适用：已建档全部 ≥1.20.1，各档 05-events 没有该分支；工程若是老 Forge 版本，改走 mc-events-forge。Neo 的分叉在 mod bus（注册期/lifecycle）与游戏总线（运行期）之间：
+   - 1.20.1（neoforge/1.20.1/.cursor/rules/05-events.mdc）：本档文件是 W5-2 备份 stub（不进注入），真值源 = forge/1.20.1/.cursor/rules/05-events.mdc——注册期（RegisterEvent、NewRegistryEvent、FML 生命周期）订 Bus.MOD 或 mod 构造器内 modEventBus.addListener；运行期事件订 Bus.FORGE 游戏总线；在 Bus.FORGE 上订阅 RegisterEvent 永不触发。禁止把 1.20.4+ 复数 Handlers 事件名当本档。
+   - 1.20.4（neoforge/1.20.4/.cursor/rules/05-events.mdc）：mod bus = 注册、lifecycle（FMLCommonSetupEvent、FMLClientSetupEvent、RegisterPayloadHandlerEvent（单数）、GatherDataEvent）；游戏总线 = NeoForge.EVENT_BUS，游玩中事件（如 ServerStartingEvent）。类级 @Mod.EventBusSubscriber（≤1.20.4 带 Mod. 前缀，默认总线 Bus.FORGE；mod bus 事件显式 bus = Bus.MOD）；入口里 modEventBus.addListener(this::commonSetup)。
+   - 1.20.6（neoforge/1.20.6/.cursor/rules/05-events.mdc）：mod bus 生命周期顺序 FMLConstructModEvent → RegisterEvent / NewRegistryEvent / DataPackRegistryEvent.NewRegistry → FMLCommonSetupEvent → FMLClientSetupEvent 或 FMLDedicatedServerSetupEvent → IMC → FMLLoadCompleteEvent；并行生命周期用 #enqueueWork。@EventBusSubscriber 默认总线 Bus.GAME；mod 总线事件（超接口 IModBusEvent）必须 bus = Bus.MOD。
+   - 1.21.1 / 1.21.3 / 1.21.8 / 1.21.11（neoforge/1.21.1/.cursor/rules/05-events.mdc、neoforge/1.21.3/.cursor/rules/05-events.mdc、neoforge/1.21.8/.cursor/rules/05-events.mdc、neoforge/1.21.11/.cursor/rules/05-events.mdc）：同形——mod bus 持注册与 lifecycle（FMLCommonSetupEvent、FMLClientSetupEvent、RegisterPayloadHandlersEvent（复数）、GatherDataEvent；1.21.1 档标注 GatherDataEvent 尚未拆成 Client/Server 子类，1.21.8 / 1.21.11 档已拆 GatherDataEvent.Client / Server）；@EventBusSubscriber（1.20.6+ 无 Mod. 前缀，默认总线 Bus.GAME；注册/lifecycle 等 mod bus 事件必须显式 bus = Bus.MOD）。
+   - 1.21.5 / 1.21.10（neoforge/1.21.5/.cursor/rules/05-events.mdc、neoforge/1.21.10/.cursor/rules/05-events.mdc）：本两档 05-events 写 @EventBusSubscriber 会同时登记到游戏总线和 mod 总线（官方文档写等价于两边 register），仍建议写 modid；游戏总线示例是嵌套名 LivingEvent.LivingJumpEvent；1.21.10 档客户端物理端检查官方写 FMLEnvironment#getDist()。
+   - 26.1（neoforge/26.1/.cursor/rules/05-events.mdc）：两总线同 1.21.11 形态（mod bus：RegisterPayloadHandlersEvent、GatherDataEvent.Client / GatherDataEvent.Server；游戏总线 NeoForge.EVENT_BUS）；但本档 **无** 独立官方 concepts/events 页——签名以 search_neoforge_docs / query_loader_api（先 ingest_loader_api，用户自备 jar）为准；1.20.6 事件页仅作 fallback 且必须标注，禁止当 26.1 签名。
+3. 各档 05-events 的禁令同样分档生效，不得互抄：禁止 MinecraftForge.EVENT_BUS（那是 Forge 名）；禁止把 Payload 注册写进 FMLCommonSetupEvent 当 SimpleChannel。
+4. 事件类名一律 search_neoforge_docs（version=本档）核实后再落笔，核不到留 // TODO(未核实)；文档 id 只取搜索结果，不要拿网站 URL。
+5. 事件面无专用 generate_* 生成器；附件/Capability 面另走 mc-capability 工作流（1.20.1 = Forge Capability 形态；1.20.4+ = Data Attachment，不是 Forge Capability）。
+6. 【停 · 语料边界】1.21.5 / 1.21.10 / 26.1 档的 05-events 是短文（无逐事件对照表），未列名事件（如 LivingHurt 一类）在这些档一律未核实；本仓无 26.2 规则树与主文档语料，禁止把 26.1 克隆成 26.2 或拿邻档正文当本版全文。`,
+  },
+  "mc-events-fabric": {
+    title: "Fabric / Quilt 事件系统清单",
+    body: `清单${WORKFLOW_HITL_STEPS}。对应 Skill：mc-events（正文档是单文件 fabric/1.21.11/.cursor/skills/mc-events.md；薄档与 26.1.2 是目录形态 fabric/1.21.4/.cursor/skills/mc-events/SKILL.md）；规则 05-events。
+1. 确认平台与精确档：本仓实扫 fabric 14 档、quilt 10 档都有 05-events.mdc（先 list_fabric_versions 核对入库档名；空洞档 1.21.2 / 1.21.5 / 1.21.6 / 1.21.7 / 1.21.9 既无规则树也无本档语料）。先 activate_platform_pack action=session（task=mc-events-fabric 或 topics=["05"]），用返回的 rules / skillBodies；禁止 Read fabric/<ver>/.cursor 或 quilt/<ver>/.cursor 当加载器，禁止跨档读邻档 00–10。Quilt 工程按根 AGENTS 的 overlay 面走：05 / 06 用本档 quilt/<ver>/ 短规则，02–04 与 07–10 才经同版 Fabric overlay。
+2. 【分叉 · 注册期 vs 运行期——逐档取该档 05-events.mdc 原文，禁止邻档互顶】Fabric 没有 Forge / NeoForge 的双总线，分叉在「初始化里注册回调」与「回调 lambda 内跑运行期逻辑」之间：
+   - 11 个正文档（1.14.4 / 1.16.5 / 1.17.1 / 1.18.2 / 1.19.4 / 1.20.1 / 1.20.4 / 1.21.1 / 1.21.3 / 1.21.11 的自家 :13 逐字同文）：**在 \`onInitialize()\` / \`onInitializeClient()\` 里对静态 \`Event\` 调用 \`.register(lambda)\`**；:14 「Fabric 事件是静态 \`Event\` 字段（单例），**没有** \`@EventHandler\` 注解」；常见错误条（如 fabric/1.21.11/.cursor/rules/05-events.mdc:205）写「❌ 在 \`onInitialize()\` 外、或条件分支里『有时才 register』」。
+   - 26.1.2（fabric/26.1.2/.cursor/rules/05-events.mdc:16）措辞改口为「在初始化里 \`SomeCallback.EVENT.register(...)\`」（本档 :17 「静态 \`Event\` 字段，不是注解总线」），且入口与类型名走 Mojmap 口径（见第 4 步）。
+   - 内容注册（Registry.register / FabricRegistryBuilder 一类）**不属本清单**：那是 01-registry 面的注册期动作，只在 onInitialize 里跑一次；本清单只管回调订阅。
+3. 回调名与事件面跨档改过名，逐档取该档实文（本仓行号已复核）：
+   - 1.14.4（fabric/1.14.4/.cursor/rules/05-events.mdc）：tick 回调是 \`ClientTickCallback\` / \`ServerTickCallback.EVENT\`（自家 :12、:195「❌ 把 1.16+ 的 ClientTickEvents / ServerTickEvents 抄到 1.14.4」）；:97 本档**没有** \`ServerLivingEntityEvents\`；:144 本档 \`UseItemCallback\` 返回类型**无仓内 oracle**（自家 \`TODO(未核实)\`）⇒ 不要照抄示例返回类型，需要时用户自备 jar 走 ingest_loader_api 核实。
+   - 1.16.5 / 1.17.1 / 1.18.2（fabric/1.16.5/.cursor/rules/05-events.mdc:102、fabric/1.18.2/.cursor/rules/05-events.mdc:102）：本档 **没有** \`ServerLivingEntityEvents\`（自家原文「约 1.19.4 才加入」）；tick 走 ClientTickEvents / ServerTickEvents（各档 :12、:71）。
+   - 1.19.4 / 1.20.1 / 1.20.4 / 1.21.1 / 1.21.3（同形，行号逐档一致：Decision Flow :55、小节标题 :100、示例 :107）：\`ServerLivingEntityEvents.ALLOW_DAMAGE\` / \`AFTER_DEATH\` / \`ALLOW_DEATH\`；本族只返回 boolean，**不能**改伤害数值（1.21.11 档同段 :102-103 写「改数值请用 Mixin」）。
+   - 1.21.11（fabric/1.21.11/.cursor/rules/05-events.mdc:25、:210）：\`BlockEvents\` / \`ItemEvents\` 是真类（经 query_loader_api found:true），本档可写的具名成员只有其嵌套回调（\`BlockEvents$UseItemOnCallback.useItemOn\` 等），两者的 \`Event\` 静态常量名三条 oracle 都不可枚举 ⇒ **禁止**写 \`BlockEvents.<常量>\` 示例，拿不到就留 // TODO(未核实)；:208 本档 Yarn 无 \`TypedActionResult\`。自定义事件：自己 \`EventFactory.createArrayBacked\` + Mixin 里 \`EVENT.invoker()\`（:200，官方 develop/events「Custom Events」）。
+   - 1.21.4 / 1.21.8 / 1.21.10 三档的 05-events 只有 10 行指路句（fabric/1.21.4/.cursor/rules/05-events.mdc:8「来源：search_fabric_docs version=1.21.4。核实表 knowledge/common/verified-api-1.21.4.md」、:10「Fabric Event；禁止 @SubscribeEvent」），三档仅版本号不同。⇒ 这三档**没有**逐事件对照表：合法停点就是「去查该页 + 读该档核实表」，禁止拿 1.21.3 / 1.21.11 的表当本档已核实正文，也禁止把「本档规则没列」说成「本档没有该 API」。
+   - 26.1.2（fabric/26.1.2/.cursor/rules/05-events.mdc:39、:43）：\`UseItemCallback\` 本档返回 \`InteractionResult\`；另有 \`KeyMappingHelper.registerKeyMapping\`（仅客户端，服务端入口注册是本档 :110 的 ❌ 项）。
+4. 映射口径（用户 2026-09-20 裁定：Fabric ≤1.21.11 教学基线 = Yarn，mojmap 只作对照列）：写回调签名按**该档 Yarn 名**落笔（\`PlayerEntity\` / \`ActionResult\` / \`world.isClient\` / \`Identifier\`）；上游 fabric-docs 正文是 mojmap 写法（\`Player\` / \`Level\` / \`InteractionResult\`），那是口径差异不是另一套 API，引用时必须点名「本档语料为 mojmap」——26.1.2 档自身就是 Mojmap 档（fabric/26.1.2/.cursor/rules/05-events.mdc:18 用 Mojmap 名、:69 示例参数名即 \`level\`、:107「❌ 把 Yarn 的 ActionResult / PlayerEntity / world.isClient 抄进 26.1.2」），**不要**反过来把它的名字往 ≤1.21.11 档抄，也**不要**对 26.1+ 做 convert_mapping 转 yarn（已去混淆，工具报 UNOBFUSCATED_NO_YARN）。类名存在性可查 \`data/fabric_<ver>/mappings/yarn-mappings.sqlite\`（只证存在不证用法，且不含 \`net.fabricmc.fabric.api.*\`）。
+5. 【Quilt 分支 · 禁止把 Fabric API 回调当 QSL】逐档读该档自家 quilt/<ver>/.cursor/rules/05-events.mdc（它比本清单权威）：
+   - 10 档共同禁令：「**禁止** \`QuiltRegistry.register()\`；不要把 FAPI Registry 事件当 QSL」——quilt/1.21.1/.cursor/rules/05-events.mdc:11（1.18.2 档同义条 :6，措辞「不要把 FAPI Registry 事件当 QSL」）、quilt/1.20.4/.cursor/rules/05-events.mdc:8；「QSL 生命周期/注册事件 ≠ \`net.fabricmc.fabric.api.event.lifecycle\`」（quilt/1.18.2/.cursor/rules/05-events.mdc:5、quilt/1.20.4/.cursor/rules/05-events.mdc:7）。⚠️ quilt/1.21.1/.cursor/rules/05-events.mdc:8 的写法不同——那一档直接说「本版本无可用 QSL/QFAPI 正式版构件；生命周期/注册事件**用** \`net.fabricmc.fabric.api.event.lifecycle\`」，两条按各自档面读，不得互抄。
+   - 默认路径：各档自家 :3（1.20.4+ 为 :5）写「默认读 \`fabric/<同版>/.cursor/rules/05-events.mdc\`。仅当用户要 **QSL 事件** 或 QFAPI 弃用提示时用本文件」⇒ Quilt 工程要事件时先按第 2–3 步的同版 Fabric 档落笔，只把入口与 mod json 换成 Quilt。
+   - 入口真值：\`org.quiltmc.loader.api.entrypoint.ModInitializer#onInitialize(ModContainer)\`（\`quilt.mod.json\` → \`entrypoints.init\`）——quilt/1.21.1/.cursor/rules/05-events.mdc:15 原句并带「禁止用 Fabric 无参 \`onInitialize()\` 记忆冒充」；别把 Fabric 的 \`ModInitializer#onInitialize()\` / \`ClientModInitializer\` 名字直接当 Quilt 入口写进 Quilt 工程。
+   - QSL 符号表不可生成：quilt/1.21.1/.cursor/rules/05-events.mdc:3 顶部横幅「本版本**无 QSL/QFAPI 正式版构件**（maven 只到 alpha）……下表 API 是**源码树考据，非可编译 API——禁止生成**」，那张表（:21-:24 的 \`RegistryEvents#getEntryAddEvent\` / \`RegistryMonitor\` / \`ServerLifecycleEvents\` / \`ClientLifecycleEvents\`）整族在文件中已划删除线，:26「以上符号在已发布构件中**不存在**」。1.20.4 / 1.21.3 / 1.21.4 / 1.21.8 / 1.21.10 / 1.21.11 六档带同款停更横幅；1.18.2 / 1.19.4 / 1.20.1 三档（9 行）没有横幅，只写「本档分支**未**打开 1.21 的 \`RegistryEvents.java\` / \`ServerLifecycleEvents\` 字段表，**禁止**把 \`quilt/1.21.1/knowledge/common/qsl-verified.md\` 的 \`getEntryAddEvent\` / \`startingServer\` 等名字抄进本档」（quilt/1.18.2/.cursor/rules/05-events.mdc:7）⇒ 这三档连「考据表」都没有，QSL 名一律未核实。
+   - QSL 方法名唯一入口：\`query_loader_api\`（先 \`ingest_loader_api\`，用**用户自备 jar**；未入库只能 // TODO(未核实)）。检索判据只看字段不看直觉：\`search_docs platform=quilt\` 普通词查询可能回 \`fallback:"fabric"\` + \`sourcePlatform:"fabric"\`（同版 Fabric 正文，**不是** QSL 证据），QSL 措辞查询会改口同线已建档语料（\`fallback:"quilt"\` + \`source_version\` 指向别的档，**不是**本版专属正文），完全无语料的空洞档才 \`VERSION_NOT_FOUND\`。本仓实扫 \`data/quilt_*\` = 6 档（1.18.2 / 1.19.4 / 1.20.1 / 1.20.4 / 1.21.1 / 1.21.11），另 4 档（1.21.3 / 1.21.4 / 1.21.8 / 1.21.10）的「离线数据」条自己写明了回退面（quilt/1.21.4/.cursor/rules/05-events.mdc:6）；\`total\` 随语料扩容变化，不是稳定契约。
+6. 名字核不到 → 语义搜索优先：\`search_fabric_docs\`（先 list_fabric_versions，参数用入库档名，如 26.1.2 而不是工程里的 \`26.1\`）/ \`search_docs platform=fabric|quilt\`，再 \`get_*_doc_full\`（一次 ≤ 2 页）；命中页的 \`verbatim:false\` 只说明该页正文没逐字出现这个名字，不构成「该 API 存在」的证据。文档 \`id\` 只取搜索结果，不要拿网站 URL。
+7. 物理端与线程：客户端回调（\`ClientTickEvents\` / \`ClientModInitializer\` 入口）只在客户端注册；写世界数据只在服务端（1.21.11 档 :207 的 ❌ 项「在客户端 lambda 里改服务端世界数据 — 用 \`world.isClient\` 区分」）。返回值不是摆设：\`ActionResult\` / \`boolean\` 决定取消或消费，\`PlayerBlockBreakEvents.BEFORE\` 是 boolean 不是 ActionResult（同档 :209）。
+8. 事件面无专用 generate_* 生成器：手写按该档规则；Attachment / Capability 骨架另走 mc-capability 工作流（Fabric 侧是 Attachment API，不是 Forge Capability）。GUI / 网络协作面看该档 05-events 末尾扩展点表（1.21.11 档 :212-:221 列 mc-registry / mc-item / mc-entity / mc-networking / mc-gui）。
+9. 【停 · 语料边界】1.14.4–1.21.11 的 fabric 语料里 7 档（1.14.4 / 1.16.5 / 1.17.1 / 1.18.2 / 1.19.4 / 1.20.1 / 1.21.3）**上游从来没有 fabric-docs 正文**，该些档本地只有 fabric-wiki 少量页 + 规则树 ⇒ 只能读该档规则与核实表，禁止拿邻版 docs 正文当本版全文，也禁止承诺补抓。基岩版没有本清单：Bedrock 事件走 Script API（另档），不要套 Fabric 回调。`,
   },
 };
 

@@ -1,0 +1,34 @@
+{
+  "publishedAt": "2026-09-26",
+  "asOf": "2026-09-25T16:41:13.561Z",
+  "generator": "mcp-server/scripts/build-qm-yarn-pairs.mjs",
+  "producedFrom": {
+    "yarn": "data/fabric_<v>/mappings/yarn-mappings.sqlite 的 classes(named, official)",
+    "quiltMappings": "maven.quiltmc.org/repository/release 的 org/quiltmc/quilt-mappings，取各档最高 build 的 quilt-mappings-<v>+build.N-mergedv2.jar → 内存解 mappings/mappings.tiny（tiny v2，列序 official/hashed/named，含 obf）",
+    "joinKey": "obf 短名"
+  },
+  "license": "QuiltMappings = CC0-1.0（QuiltMC/quilt-mappings 仓库 README 明示）。",
+  "reason": "A4i（2026-09-26 用户「本仓库没有的可不可以补一下」）：补 quilt 档（6 版本）的 QuiltMappings 命名体系对照。缘起证据 = mcp-server/docs/mcmap-linkie-absorption.md §A4g/A4i。",
+  "consumedBy": [
+    "暂无门/工具消费（数据资产：Quilt 生态命名互查；未来若建门再接）"
+  ],
+  "refreshHint": "重生成：node mcp-server/scripts/build-qm-yarn-pairs.mjs（落 $MC_SKILL_CACHE/qm-yarn-pairs；fetch→curl 退避腿，需联网）；发布：把 6 个 qm-yarn-<v>.json + index.json 复制到本目录并重算 files 哈希。",
+  "totals": {
+    "versions": 6,
+    "pairs": 46323
+  },
+  "checks": {
+    "joinHitRate": "1.21.11 实测 9934/9935（99.99%；1 个 QM 类在 fabric sqlite 无对应）",
+    "nameDiff": "1.21.11 两体系名字差异：FQCN 不同 5499/9934（55.4%）、简名不同 4977/9934（50.1%）——差异集中在匿名/内部类（QM 给语义名如 GpuBuffer$Usage，yarn 用哈希名如 $C_ahwvnalp）",
+    "counts": "1.18.2=6389 / 1.19.4=7101 / 1.20.1=7250 / 1.20.4=7518 / 1.21.1=8131 / 1.21.11=9934"
+  },
+  "files": {
+    "index.json": "6ed7a13ee2db02416782b811b8ed06c591b268bcc4054e1dc2add6427638ead4",
+    "qm-yarn-1.18.2.json": "963df646dd9912fc2d6f74db2c55b6da15b01852a78417ba1a7a2403e191f659",
+    "qm-yarn-1.19.4.json": "b1021e078ca8a142baff82cc1f69df1670796b7ac5ba71a5f5fe5c7eeb18e246",
+    "qm-yarn-1.20.1.json": "0073914e57d842802299553c78a3b2875841ad6cda4925b0b66cc788becb9421",
+    "qm-yarn-1.20.4.json": "7e9cd161b76f93202e126457c4367aa1530bb67e25304e114ff75a33b9718fb6",
+    "qm-yarn-1.21.1.json": "e23675f05d3a7b1f4b6d63fd361dd23703e5e018c4d6e02ff29ab4e938bd6085",
+    "qm-yarn-1.21.11.json": "40505fe733c7b37860c9463e0624969f8633faa1c21f0b98ee3c79c2924c3961"
+  }
+}

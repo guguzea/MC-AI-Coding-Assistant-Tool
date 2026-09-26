@@ -77,13 +77,13 @@ public class MyEntityRenderer extends LivingRenderer<MyEntity, MyEntityModel<MyE
 ```java
 // ❌ 错误
 @Override
-public <T extends TileEntity> void tick(Level level, BlockPos pos, BlockState state, T blockEntity) {
+public <T extends TileEntity> void tick(World level, BlockPos pos, BlockState state, T blockEntity) {
     // 这段代码会在客户端执行！
 }
 
 // ✅ 正确：仅在服务端执行
 @Override
-public <T extends TileEntity> void tick(Level level, BlockPos pos, BlockState state, T blockEntity) {
+public <T extends TileEntity> void tick(World level, BlockPos pos, BlockState state, T blockEntity) {
     if (level.isRemote) return;
     // 服务端逻辑
 }

@@ -212,7 +212,7 @@ public class MyBER extends BlockEntityRenderer<MyBE> {
 
 ```
 IF 数据量小、静态（每次打开 GUI 不变）
-  → getUpdateTag / handleUpdateTag（Chunk 加载时同步）
+  → getUpdateTag / handleUpdateTag（LevelChunk 加载时同步）
 
 IF 需要实时动态同步
   → getUpdatePacket / ClientboundBlockEntityDataPacket（方块更新时同步）

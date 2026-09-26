@@ -16,6 +16,7 @@ import {
   resolveCsvMappingDbPath,
   resolveMappingDbPath,
   type MappingLayer,
+  type MappingDbPreference,
 } from "./yarn-sqlite.js";
 import { resolveObfuscatedThreeWay } from "./lookup-obfuscated.js";
 import { suggestSimilarMethods } from "./suggest.js";
@@ -34,6 +35,13 @@ export interface MappingQuery {
   allow_fallback?: boolean;
   /** class | method | field；缺省时按启发式推断 */
   memberKind?: "class" | "method" | "field" | "auto";
+  /**
+   * 同一个 MC 版本两边都有映射库时（1.17–1.20.x 的 Fabric 与 Forge）该开哪一份。
+   * 不传 = 旧行为（fabric 优先）。Forge 的 SRG 查询必须显式给 "forge"，否则会被
+   * Fabric 的 yarn-tiny 库回答 —— 那份库的 name_official 是 notch 短名，
+   * 结果是把「查得到」报成 NOT_FOUND 并附赠 Yarn 相似名（假阴性）。
+   */
+  mappingDbPreference?: MappingDbPreference | null;
 }
 
 export interface MappingResult {
@@ -302,9 +310,57 @@ function yarnTinyNoMcpLayer(
   });
 }
 
+/**
+ * A4d（2026-09-26）：Linkie 侧扩展 namespace —— 不在支持面，入口直接「拒绝 + 指路」。
+ * 前三个本仓已内置类级对照数据（data/_*-pairs/）；后三个本仓无档、不建语料。见 absorption §A4d/A4i。
+ */
+const LINKIE_NAMESPACES = new Set(["legacy-yarn", "barn", "feather", "plasma", "yarrn", "quilt-mappings"]);
+const LINKIE_HAVE_DATA: Record<string, string> = {
+  "legacy-yarn": "data/_mcp-legacyyarn-pairs/（MCP↔LegacyYarn，7 档 20,789 对）",
+  feather: "data/_mcp-feather-pairs/（MCP↔Feather，7 档 20,789 对）",
+  "quilt-mappings": "data/_qm-yarn-pairs/（QuiltMappings↔Yarn，6 档 46,323 对）",
+};
+
+/** A4d：「拒绝 + 指路」出口（带内失败：found:false + action、不置 isError —— 与 batchTooLarge 同形）。 */
+function unsupportedNamespaceResult(query: MappingQuery, ns: string): MappingResult {
+  const steps: string[] = [];
+  const have = LINKIE_HAVE_DATA[ns];
+  if (have) {
+    steps.push(`本仓已内置类级对照数据：${have} —— 老档按 MCP 名先查它，别先问外部工具`);
+  }
+  if (ns === "quilt-mappings") {
+    steps.push("只要可读类名时：同版 Fabric yarn 数据即可（convert_mapping to=yarn），或 search_docs platform=quilt");
+  }
+  if (ns === "barn" || ns === "plasma" || ns === "yarrn") {
+    steps.push(
+      "本仓无该版本档（b1.7.3 / Infdev），不建语料；上游：barn→maven.glass-launcher.net、" +
+        "plasma→github.com/minecraft-cursed-legacy/Plasma、yarrn→maven.concern.i.ng（也可查 Linkie）",
+    );
+  }
+  steps.push("本仓支持面：mojang / mcp / yarn / parchment / obfuscated / intermediary");
+  return {
+    found: false,
+    original: query.memberName,
+    converted: null,
+    direction: `${query.from}→${query.to}`,
+    confidence: "low",
+    mappingType: "class",
+    notes: [`${ns} 不在本工具支持面（Linkie 扩展 namespace）`],
+    action: actionable(
+      ActionCodes.UNSUPPORTED_NAMESPACE,
+      `${ns} 不在本工具支持面（本仓只做 mojang/mcp/yarn/parchment/obfuscated/intermediary）——它是 Linkie 侧扩展 namespace，本仓不冒充支持`,
+      steps,
+      ["query_upstream_releases", "search_docs"],
+    ),
+  };
+}
+
 export function convertMapping(query: MappingQuery): MappingResult {
   const { from, to, memberName, ownerClass, descriptor } = query;
   const direction = `${from}→${to}`;
+  // A4d：Linkie 扩展 namespace 一律拒绝 + 指路（from/to 任一侧命中都拒；在任何查表逻辑之前）。
+  const nsHit = [from, to].find((x) => LINKIE_NAMESPACES.has(x));
+  if (nsHit) return unsupportedNamespaceResult(query, nsHit);
   if (missingMcVersion(query.version)) {
     return {
       found: false,
@@ -381,9 +437,10 @@ export function convertMapping(query: MappingQuery): MappingResult {
     };
   }
 
-  const era = getMappingEra(version);
-  const dbPath = resolveMappingDbPath(version);
-  const schemaVersion = getSchemaVersion(version);
+  const prefer = query.mappingDbPreference ?? null;
+  const era = getMappingEra(version, prefer);
+  const dbPath = resolveMappingDbPath(version, prefer);
+  const schemaVersion = getSchemaVersion(version, prefer);
   const kind = inferMemberKind(query, era);
 
   if (from === to) {
@@ -473,7 +530,7 @@ export function convertMapping(query: MappingQuery): MappingResult {
   //   仅收类级查询——成员级 mcp→… 经 layerColumn(name_named) 由 test-core 钉住，不在本门范围。
   // 例外：1.14.4 / 1.15.2 存在 mcp-csv searge 层，成员级 SRG↔named 走 CSV 路径照常可答。
   const yarnTinyMcpSide = mcpLayerSide(from, to, kind);
-  if (era === "yarn-tiny" && yarnTinyMcpSide !== null && !resolveCsvMappingDbPath(version)) {
+  if (era === "yarn-tiny" && yarnTinyMcpSide !== null && !resolveCsvMappingDbPath(version, prefer)) {
     const mcpLayerName = yarnTinyMcpSide === "to" ? to : from;
     return {
       found: false,
@@ -689,6 +746,7 @@ export function convertMapping(query: MappingQuery): MappingResult {
       memberName,
       descriptor,
       from,
+      preferPlatform: prefer,
     });
     if (looked.resultKind === "SCHEMA_FIELDS_UNAVAILABLE") {
       return fail(query, {
@@ -834,6 +892,7 @@ export function convertMapping(query: MappingQuery): MappingResult {
       memberName,
       descriptor,
       from,
+      preferPlatform: prefer,
     });
     if (looked.ambiguous) {
       return fail(query, {

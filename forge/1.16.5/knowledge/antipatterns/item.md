@@ -92,13 +92,13 @@ import net.minecraft.item.Food;
 
 ```java
 // ❌ 未设置 requiresCorrectToolForDrops()
-Block.Properties.of().mapColor(MapColor.STONE)
+AbstractBlock.Properties.of(Material.STONE).mapColor(MapColor.STONE)
 // 方块总是掉落（无论工具类型），但如果设置为需要特定工具才能掉落：
 ```
 
 **正确方案：**
 ```java
-Block.Properties.of()
+AbstractBlock.Properties.of(Material.STONE)
     .requiresCorrectToolForDrops()    // 需要正确工具才能掉落
     .strength(3.0f, 3.0f)
 ```

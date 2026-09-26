@@ -11,13 +11,16 @@
  *        bedrock   → bedrock-only
  *   3. 候选 = 组内每个 mc-X/SKILL.md（X 为 skill 名）；先按组限定，再读 frontmatter `platforms` 二次确认
  *   4. 版本过滤：frontmatter `mcVersions`（兼容别名 `minecraftVersions`）留空/未写 → 不限；
- *      非空 → 数组任一窗口覆盖目标 mcVersion（支持 "1.20.1"、"1.20.1+"、"≤26.2"、"1.14-26.2"）
+ *      非空 → 数组任一窗口覆盖目标 mcVersion（支持 "1.20.1"、"1.20.1+"、"≤26.2"、"1.14-26.2"）。
+ *      W0-1：若写了 `mcVersionsByPlatform`（形如 "forge=1.13.2-1.21.1; fabric=1.16.4-1.17.1"），
+ *      目标平台命中该键时**整组替换** `mcVersions`；session 链路同一语义（S22 步1 已补齐，
+ *      一致性由 `mcp-server/scripts/assert-lib-session-resolve-parity.mjs` 钉）。
  *   5. 输出 { skillId, path, modIds, platforms }（按 skillId 排序）
  *
  * CLI：
  *   node scripts/resolve-lib-skills.mjs --platform forge --version 1.20.1   # 单组合解析
  *   node scripts/resolve-lib-skills.mjs --validate                          # 校验模式（默认）
- *   校验模式：对 (forge,1.20.1)、(fabric,1.20.1)、(neoforge,1.20.4) 三组合跑 resolve，
+ *   校验模式：对 VALIDATE_COMBOS 里的每个 (platform, version) 跑 resolve，
  *   结果非空 + skillId 无重复（含全局五组查重）→ 通过；否则 fail-fast 退出码 1。
  */
 import { readFileSync, existsSync, readdirSync, statSync } from "fs";
@@ -235,6 +238,10 @@ const VALIDATE_COMBOS = [
   ["fabric", "1.20.1"],
   ["neoforge", "1.20.4"],
   ["bedrock", "stable"],
+  // S22（2026-09-24）：quilt 两条腿。1.21.1 无 QSL 正式版构件、1.20.1 有 ⇒ 是「库面按平台收窄」
+  // 最吃紧的真实分歧面；session 侧的同答由 `mcp-server/scripts/assert-lib-session-resolve-parity.mjs` 钉。
+  ["quilt", "1.21.1"],
+  ["quilt", "1.20.1"],
 ];
 
 function runValidate(allSkills) {
@@ -307,7 +314,8 @@ if (args.help) {
   node scripts/resolve-lib-skills.mjs --platform <forge|fabric|quilt|neoforge> --version <mcVersion>
       §3.6 解析：输出 {skillId, path, modIds, platforms} 列表（按 skillId 排序）
   node scripts/resolve-lib-skills.mjs --validate
-      校验模式（默认）：(forge,1.20.1) (fabric,1.20.1) (neoforge,1.20.4) 三组合非空 + 无重复 skillId`);
+      校验模式（默认）：${VALIDATE_COMBOS.map(([p, v]) => `(${p},${v})`).join(" ")}
+      逐组合非空 + 无重复 skillId`);
   process.exit(0);
 }
 

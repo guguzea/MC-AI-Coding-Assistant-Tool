@@ -12,7 +12,7 @@ mappings: mcp
 ## 快速总览
 
 ```
-数据包 JSON + 实现 IRecipe → 注册 RecipeSerializer（DeferredRegister）
+数据包 JSON + 实现 IRecipe → 注册 RecipeSerializer（RegistryEvent.Register<IRecipeSerializer<?>> + event.getRegistry().register(...)；本档无 DeferredRegister）
 ```
 
 1.13.2 **没有** `RecipeType.register()`。自定义类型在 `IRecipe#getType()` 返回静态 `IRecipeType` 实例。

@@ -145,6 +145,53 @@ function loadExistingSupportedVersions() {
   return map;
 }
 
+/**
+ * 保留既有非空 notes（第 34 轮补：`modIds`/`notes` 两处历史手改补丁重跑必丢）。
+ * 实测投毒：不加本函数时，重跑把 `libgui` / `server-translations` / `spruceui` 三条
+ * 「API 摘要已补建（2026-09-16 缺口补建批次）」的 notes 回退成 2026-09-14 的「无 API 摘要」，
+ * 而 `verifiedApi` 是按 id 保留的非空值 ⇒ 生成物自相矛盾。语义与 officialUrls 同：既有非空优先。
+ */
+function loadExistingNotes() {
+  const map = new Map();
+  if (!existsSync(OUT_FILE)) return map;
+  const text = readFileSync(OUT_FILE, "utf8");
+  for (const blk of text.split(/\},\s*\n\s*\{/)) {
+    const idMatch = blk.match(/id:\s*"([^"]+)"/);
+    const nm = blk.match(/^\s{4}notes:\s*("(?:[^"\\]|\\.)*")/m);
+    if (!idMatch || !nm) continue;
+    try {
+      const v = JSON.parse(nm[1]);
+      if (typeof v === "string" && v.trim()) map.set(idMatch[1], v);
+    } catch {
+      /* 解析失败忽略 */
+    }
+  }
+  return map;
+}
+
+/**
+ * 保留既有 modIds（并集，不覆盖 authored 新增值）。第 34 轮实测：`authored/lib-player-ability-lib`
+ * 的 `modIds` 没有 `pal` 段，而生成物里有（2026-09-16 为 G1 包根冒领补的手改补丁）——
+ * 不加本函数重跑即丢 `pal` ⇒ `assert-lib-ownership` 的 G1 会把 120 个本库类判成冒领他方包根。
+ */
+function loadExistingModIds() {
+  const map = new Map();
+  if (!existsSync(OUT_FILE)) return map;
+  const text = readFileSync(OUT_FILE, "utf8");
+  for (const blk of text.split(/\},\s*\n\s*\{/)) {
+    const idMatch = blk.match(/id:\s*"([^"]+)"/);
+    const mm = blk.match(/^\s{4}modIds:\s*(\[[^\]]*\])/m);
+    if (!idMatch || !mm) continue;
+    try {
+      const arr = JSON.parse(mm[1].replace(/'/g, '"'));
+      if (Array.isArray(arr) && arr.length) map.set(idMatch[1], arr);
+    } catch {
+      /* 解析失败忽略 */
+    }
+  }
+  return map;
+}
+
 /** 保留既有非空 officialUrls（enhance-catalog 填充；重跑不丢） */
 function loadExistingOfficialUrls() {
   const map = new Map();
@@ -232,6 +279,8 @@ function normalizeSlugList(v) {
 const existingVerifiedApi = loadExistingVerifiedApi();
 const existingSupportedVersions = loadExistingSupportedVersions();
 const existingOfficialUrls = loadExistingOfficialUrls();
+const existingNotes = loadExistingNotes();
+const existingModIds = loadExistingModIds();
 
 const lines = [];
 lines.push("// 由 scripts/build-library-catalog-from-authored.mjs 自动生成，勿手改（D 波次只 patch verifiedApi）");
@@ -240,7 +289,7 @@ lines.push("export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [");
 for (const e of entries) {
   lines.push("  {");
   lines.push(`    id: ${JSON.stringify(e.id)},`);
-  lines.push(`    modIds: ${JSON.stringify(e.modIds)},`);
+  lines.push(`    modIds: ${JSON.stringify([...new Set([...e.modIds, ...(existingModIds.get(e.id) ?? [])])])},`);
   lines.push(`    loaders: ${JSON.stringify(orderLoaders(e.loaders))},`);
   lines.push(`    modrinthSlug: ${JSON.stringify(normalizeSlugList(e.modrinthSlug))},`);
   lines.push(`    role: ${JSON.stringify(e.role)},`);
@@ -248,7 +297,8 @@ for (const e of entries) {
   if (e.skillId) lines.push(`    skillId: ${JSON.stringify(e.skillId)},`);
   const ou = existingOfficialUrls.get(e.id);
   lines.push(`    officialUrls: ${ou && ou.length > 0 ? JSON.stringify(ou) : "[]"},`);
-  if (String(e.notes ?? "").trim()) lines.push(`    notes: ${JSON.stringify(e.notes)},`);
+  const nt = existingNotes.get(e.id) ?? (typeof e.notes === "string" ? e.notes.trim() : "");
+  if (nt) lines.push(`    notes: ${JSON.stringify(nt)},`);
   const va = existingVerifiedApi.get(e.id);
   const vaRaw = va && va.length > 2 ? va : "";
   if (vaRaw) lines.push(`    verifiedApi: ${vaRaw},`);

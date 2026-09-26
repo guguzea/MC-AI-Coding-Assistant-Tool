@@ -54,7 +54,7 @@ skillId: mc-lib-catalog
 | 库（链接） | 下载 | 加载器 / 版本 | 特点 |
 |---|---|---|---|
 | Cloth Config API（[lib-cloth-config.md](lib-cloth-config.md)） | 1.631 亿（截至 2026-09-04） | F/Forge/Neo，1.14–26.2（实测 158 条构建，quilt 0） | 老牌配置 GUI，ConfigBuilder 生成界面；功能冻结但仍在按版本发版 |
-| YACL（[lib-yacl.md](lib-yacl.md)） | 1.188 亿（截至 2026-09-04） | F/Forge/Neo/Quilt，1.19–26.2 稳定（26.3 仅 snapshot） | Builder 式、GUI 契合原版风格，因 Cloth 功能冻结而生 |
+| YACL（[lib-yacl.md](lib-yacl.md)） | 1.188 亿（截至 2026-09-04） | F/Forge/Neo/Quilt，union 1.19–26.3 稳定（2026-09-25 复测；Forge 止 1.20.2、Quilt 止 1.20.4） | Builder 式、GUI 契合原版风格，因 Cloth 功能冻结而生 |
 | Fzzy Config（[lib-fzzy-config.md](lib-fzzy-config.md)） | 3420 万（2024-04 发布，增速极快） | F/Forge/Neo/Quilt，1.20.1–26.2 | 自动 GUI、强校验、服务端-客户端同步 |
 | owo-config（owo-lib 内）（[lib-owo.md](lib-owo.md)） | 见 owo-lib | F/Neo/Quilt，1.17–26.1.2 | 注解式配置 + 自动 GUI + 配置同步 |
 | MidnightLib（[lib-midnightlib.md](lib-midnightlib.md)） | 2510 万 | F/Forge/Neo/Quilt，1.17–26.2 | 轻量配置，鼓励 Jar-in-Jar 打包 |

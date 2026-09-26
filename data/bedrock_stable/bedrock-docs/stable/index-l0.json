@@ -9,11 +9,11 @@
       "bp"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 8,
     "source": "bedrock-docs",
     "origin": "curated",
-    "fetchedAt": "2026-09-21T11:54:35.194Z",
-    "sha256": "be3bab2bc36003763880b5090177017c63e1b9441b6aa50b326427f28869909a"
+    "fetchedAt": "2026-09-24T02:07:29.160Z",
+    "sha256": "68370c05cd25fa63ba2d8a817123d554fa3ece14d7afedcd7be30818dbd3cb68"
   },
   {
     "id": "stable/biomes",
@@ -28,8 +28,8 @@
     "sectionCount": 1,
     "source": "bedrock-docs",
     "origin": "curated",
-    "fetchedAt": "2026-09-21T11:54:35.239Z",
-    "sha256": "8659d9d4a5dd65b0cc4d591462df7a12f8b8331c5e0a096d114906d87809bb54"
+    "fetchedAt": "2026-09-24T02:07:36.133Z",
+    "sha256": "10ae6cc569478976244882e0354041b005eed3efa6fb571441b86d141f70ef21"
   },
   {
     "id": "stable/block-components",
@@ -41,11 +41,11 @@
       "components"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 2,
     "source": "bedrock-docs",
     "origin": "curated",
-    "fetchedAt": "2026-09-21T11:54:35.238Z",
-    "sha256": "730a61be6043c8b991e990ac573b7dfdef88789d382828ffc9ca0ab4c9e896c4"
+    "fetchedAt": "2026-09-24T03:09:21.619Z",
+    "sha256": "4af3eeecac5958b2e802cb56fb77f78534371466c74f9a12091d8d2fbbe3459d"
   },
   {
     "id": "stable/custom-block",
@@ -58,11 +58,11 @@
       "rp"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 5,
     "source": "bedrock-docs",
     "origin": "curated",
-    "fetchedAt": "2026-09-21T11:54:35.238Z",
-    "sha256": "8b1922fbde09a9ab3f7d28162404a08148ce22aea8531fbc44faee0d2e639ce0"
+    "fetchedAt": "2026-09-24T02:07:31.635Z",
+    "sha256": "d20008fdada6186f09b2f4379378b72e4c8a82236215fb8e05e2174c3120aefe"
   },
   {
     "id": "stable/custom-items",
@@ -74,11 +74,11 @@
       "bp"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 10,
     "source": "bedrock-docs",
     "origin": "curated",
-    "fetchedAt": "2026-09-21T11:54:35.196Z",
-    "sha256": "de1e724470764b03c6be196f2d7691f061d2bd0840382549f96870aed36374ca"
+    "fetchedAt": "2026-09-24T02:07:32.750Z",
+    "sha256": "b2a9c362abf5e5bae94fdee74a9cb44dffaec28b4279a50c582f9f1ea30fa986"
   },
   {
     "id": "stable/documents/actorstorage",
@@ -106,7 +106,7 @@
       "next-steps-create-a-custom-die-block"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 5,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.194Z",
@@ -122,7 +122,7 @@
       "creating-and-adding-custom-sounds"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 9,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.196Z",
@@ -154,7 +154,7 @@
       "get-fancy-create-a-sushi-block"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 7,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.194Z",
@@ -170,7 +170,7 @@
       "animation-controllers-reference"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.215Z",
@@ -186,7 +186,7 @@
       "render-controllers"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 3,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.216Z",
@@ -202,7 +202,7 @@
       "animations-overview"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 8,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.215Z",
@@ -218,7 +218,7 @@
       "upgrading-animation-scripts"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 6,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.217Z",
@@ -234,7 +234,7 @@
       "custom-animations-and-animation-controllers"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 5,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.214Z",
@@ -250,7 +250,7 @@
       "animations-vs-animation-controllers"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.216Z",
@@ -266,7 +266,7 @@
       "using-attachables"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 6,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.221Z",
@@ -282,7 +282,7 @@
       "world-templates-and-base-game-versioning"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 3,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.202Z",
@@ -298,7 +298,7 @@
       "topics"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.225Z",
@@ -314,7 +314,7 @@
       "action-bar"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.225Z",
@@ -330,7 +330,7 @@
       "block-inspector"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.230Z",
@@ -346,7 +346,7 @@
       "brush-tool"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 7,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.227Z",
@@ -362,7 +362,7 @@
       "camera-tool"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 7,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.229Z",
@@ -378,7 +378,7 @@
       "chunk-management"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.229Z",
@@ -394,7 +394,7 @@
       "custom-dimensions"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.232Z",
@@ -410,7 +410,7 @@
       "custom-mesh"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 3,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.230Z",
@@ -426,7 +426,7 @@
       "entity-inspector"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.230Z",
@@ -458,7 +458,7 @@
       "extrude-tool"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.228Z",
@@ -474,7 +474,7 @@
       "farm-tool"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 3,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.228Z",
@@ -490,7 +490,7 @@
       "fill-biomes"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.229Z",
@@ -506,7 +506,7 @@
       "smart-fill-tool"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 3,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.227Z",
@@ -522,7 +522,7 @@
       "flood"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.229Z",
@@ -538,7 +538,7 @@
       "installation-guide"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 5,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.225Z",
@@ -554,7 +554,7 @@
       "jigsaws"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.229Z",
@@ -570,7 +570,7 @@
       "keyboard-inputs"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 5,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.226Z",
@@ -586,7 +586,7 @@
       "line-tool"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 7,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.227Z",
@@ -602,7 +602,7 @@
       "world-editing-bedrock-editor"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 9,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.199Z",
@@ -618,7 +618,7 @@
       "paste-preview"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.226Z",
@@ -634,7 +634,7 @@
       "pencil-tool"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 5,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.227Z",
@@ -650,7 +650,7 @@
       "repeater-tool"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 7,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.228Z",
@@ -666,7 +666,7 @@
       "ruler-tool"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 5,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.227Z",
@@ -682,7 +682,7 @@
       "scale-tool"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.229Z",
@@ -698,7 +698,7 @@
       "selection-tool"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 8,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.227Z",
@@ -714,7 +714,7 @@
       "structures-panel"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.230Z",
@@ -730,7 +730,7 @@
       "summon-tool"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.228Z",
@@ -746,7 +746,7 @@
       "terrain-tool"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 6,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.228Z",
@@ -762,7 +762,7 @@
       "tool-mode"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 2,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.226Z",
@@ -778,7 +778,7 @@
       "tutorial"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 6,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.225Z",
@@ -794,7 +794,7 @@
       "vibrant-visuals"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 8,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.225Z",
@@ -810,7 +810,7 @@
       "workbench"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 3,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.231Z",
@@ -826,7 +826,7 @@
       "workflow"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 7,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.226Z",
@@ -842,7 +842,7 @@
       "world-options"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 8,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.226Z",
@@ -858,7 +858,7 @@
       "getting-started-with-dedicated-server"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 8,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.234Z",
@@ -874,7 +874,7 @@
       "pack-optimization-with-bedrock-dedicated-server"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 6,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.235Z",
@@ -890,7 +890,7 @@
       "scripting-bedrock-dedicated-server"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 7,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.235Z",
@@ -922,7 +922,7 @@
       "custom-behavior-and-render-controllers"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 6,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.214Z",
@@ -938,7 +938,7 @@
       "custom-biomes-overview"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 12,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.210Z",
@@ -954,7 +954,7 @@
       "partial-biome-replacements"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 3,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.211Z",
@@ -970,7 +970,7 @@
       "model-editing-blockbench"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.199Z",
@@ -986,7 +986,7 @@
       "building-sub-packs"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 5,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.200Z",
@@ -1002,7 +1002,7 @@
       "camera-system-document-list"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 2,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.211Z",
@@ -1018,7 +1018,7 @@
       "aim-assist-presets"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.212Z",
@@ -1034,7 +1034,7 @@
       "camera-system-introduction"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 20,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.211Z",
@@ -1050,7 +1050,7 @@
       "free-camera-preset-tutorial"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 2,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.211Z",
@@ -1066,7 +1066,7 @@
       "third-person-camera-preset"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 5,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.212Z",
@@ -1082,7 +1082,7 @@
       "free-camera-script-api-tutorial"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 8,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.212Z",
@@ -1098,7 +1098,7 @@
       "introduction-to-aim-assist"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.212Z",
@@ -1114,7 +1114,7 @@
       "introduction-to-the-caves-cliffs-entities"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.193Z",
@@ -1130,7 +1130,7 @@
       "chunker-advanced-mode"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 6,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.233Z",
@@ -1146,7 +1146,7 @@
       "chunker-overview"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 5,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.233Z",
@@ -1162,7 +1162,7 @@
       "chunker-the-nether"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 11,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.234Z",
@@ -1178,7 +1178,7 @@
       "chunker-world-settings"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 7,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.234Z",
@@ -1194,7 +1194,7 @@
       "getting-started-with-command-blocks"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 6,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.222Z",
@@ -1210,7 +1210,7 @@
       "use-command-blocks-to-have-a-snowball-fight"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.223Z",
@@ -1226,7 +1226,7 @@
       "the-damage-command"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.205Z",
@@ -1242,7 +1242,7 @@
       "introduction-to-commands"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 5,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.203Z",
@@ -1258,7 +1258,7 @@
       "popular-commands"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 19,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.204Z",
@@ -1274,7 +1274,7 @@
       "other-commonly-used-tools"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 7,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.199Z",
@@ -1290,7 +1290,7 @@
       "add-on-pack-contents"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 5,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.200Z",
@@ -1306,7 +1306,7 @@
       "content-error-log"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 6,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.224Z",
@@ -1322,7 +1322,7 @@
       "contributing-to-minecraft-bedrock-documentation"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 10,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.237Z",
@@ -1338,7 +1338,7 @@
       "control-schemes"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 5,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.211Z",
@@ -1354,7 +1354,7 @@
       "converting-texture-packs-from-minecraft-java-edition-to-minecraft-bedrock-edition"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 6,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.201Z",
@@ -1370,7 +1370,7 @@
       "copy-and-paste-coordinates"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.224Z",
@@ -1386,7 +1386,7 @@
       "crafting-item-catalog-customization"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 9,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.221Z",
@@ -1402,7 +1402,7 @@
       "creating-custom-potions"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.220Z",
@@ -1418,7 +1418,7 @@
       "create-an-animated-block-texture"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 8,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.195Z",
@@ -1434,7 +1434,7 @@
       "create-an-in-world-game-with-commands"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 7,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.197Z",
@@ -1450,7 +1450,7 @@
       "create-a-world-template"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 8,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.200Z",
@@ -1466,7 +1466,7 @@
       "create-a-loot-table"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.198Z",
@@ -1482,7 +1482,7 @@
       "create-a-custom-npc"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 8,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.217Z",
@@ -1498,7 +1498,7 @@
       "creating-a-trade-table"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 6,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.218Z",
@@ -1514,7 +1514,7 @@
       "creating-custom-projectiles"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 6,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.222Z",
@@ -1530,7 +1530,7 @@
       "advanced-custom-block-oversized"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 9,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.224Z",
@@ -1546,7 +1546,7 @@
       "custom-block-render-distance"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 2,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.224Z",
@@ -1562,7 +1562,7 @@
       "custom-block-render-lighting"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 5,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.223Z",
@@ -1578,7 +1578,7 @@
       "data-driven-overworld-height-and-void-generation"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 6,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.211Z",
@@ -1594,7 +1594,7 @@
       "designing-gameplay-for-various-devices"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 7,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.202Z",
@@ -1610,7 +1610,7 @@
       "differences-between-minecraft-bedrock-edition-and-minecraft-java-edition"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 9,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.236Z",
@@ -1642,7 +1642,7 @@
       "entity-versioning-and-upgrading"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 9,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.214Z",
@@ -1658,7 +1658,7 @@
       "entity-behavior-ai-components"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 3,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.213Z",
@@ -1674,7 +1674,7 @@
       "entity-components-guide"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 6,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.213Z",
@@ -1690,7 +1690,7 @@
       "built-in-entity-events"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 9,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.214Z",
@@ -1706,7 +1706,7 @@
       "entity-modeling-and-animation"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 5,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.215Z",
@@ -1722,7 +1722,7 @@
       "understanding-feature-types"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 7,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.210Z",
@@ -1738,7 +1738,7 @@
       "a-simple-feature-tutorial"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 6,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.210Z",
@@ -1754,7 +1754,7 @@
       "a-more-complex-feature-tutorial"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 6,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.210Z",
@@ -1770,7 +1770,7 @@
       "fog-in-resource-packs"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 6,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.211Z",
@@ -1786,7 +1786,7 @@
       "introduction-to-functions"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 5,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.204Z",
@@ -1802,7 +1802,7 @@
       "game-logic-overview"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.202Z",
@@ -1818,7 +1818,7 @@
       "build-your-first-gametest"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 5,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.225Z",
@@ -1834,7 +1834,7 @@
       "getting-started-with-gametest-framework"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.225Z",
@@ -1850,7 +1850,7 @@
       "using-block-traits"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 5,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.223Z",
@@ -1866,7 +1866,7 @@
       "create-a-new-entity"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 17,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.195Z",
@@ -1882,7 +1882,7 @@
       "introduction-to-animation-controllers"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 5,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.215Z",
@@ -1898,7 +1898,7 @@
       "introduction-to-entity-properties"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 11,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.213Z",
@@ -1914,7 +1914,7 @@
       "introduction-to-game-rules"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.197Z",
@@ -1930,7 +1930,7 @@
       "introduction-to-loot-and-trade-tables"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.217Z",
@@ -1946,7 +1946,7 @@
       "introduction-to-sound"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 3,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.209Z",
@@ -1962,7 +1962,7 @@
       "introduction-to-enchantments"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 3,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.221Z",
@@ -1978,7 +1978,7 @@
       "learning-journey-guide"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 7,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.193Z",
@@ -1994,7 +1994,7 @@
       "loot-and-trade-table-functions"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 5,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.217Z",
@@ -2010,7 +2010,7 @@
       "loot-overloads"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 9,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.217Z",
@@ -2042,7 +2042,7 @@
       "create-a-goblin-chef-entity"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.195Z",
@@ -2058,7 +2058,7 @@
       "managing-village-generation"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 7,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.198Z",
@@ -2074,7 +2074,7 @@
       "materials-and-material-files"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.218Z",
@@ -2090,7 +2090,7 @@
       "minecraft-creator-tools"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 9,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.199Z",
@@ -2106,7 +2106,7 @@
       "minecraft-block-wizard"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 11,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.232Z",
@@ -2122,7 +2122,7 @@
       "minecraft-entity-wizard"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 6,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.232Z",
@@ -2138,7 +2138,7 @@
       "minecraft-file-extensions"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 8,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.235Z",
@@ -2154,7 +2154,7 @@
       "minecraft-item-wizard"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 9,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.232Z",
@@ -2170,7 +2170,7 @@
       "minecraft-live-2022-creator-recap"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 5,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.193Z",
@@ -2186,7 +2186,7 @@
       "practical-molang"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 5,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.235Z",
@@ -2202,7 +2202,7 @@
       "more-sources-of-info"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 6,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.236Z",
@@ -2218,7 +2218,7 @@
       "create-a-multi-block"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 6,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.223Z",
@@ -2234,7 +2234,7 @@
       "non-player-character-npc-dialogue"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 5,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.198Z",
@@ -2250,7 +2250,7 @@
       "npc-dialoguedesigner"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 5,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.217Z",
@@ -2282,7 +2282,7 @@
       "create-a-custom-painting"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 7,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.194Z",
@@ -2298,7 +2298,7 @@
       "packaging-a-skin-pack"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 6,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.200Z",
@@ -2314,7 +2314,7 @@
       "parkour-introduction"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 3,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.209Z",
@@ -2330,7 +2330,7 @@
       "parkour-world-creation-guide"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 8,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.209Z",
@@ -2346,7 +2346,7 @@
       "parkour-world-walkthrough"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 9,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.209Z",
@@ -2362,7 +2362,7 @@
       "particle-effects"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 6,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.218Z",
@@ -2378,7 +2378,7 @@
       "building-cooperative-add-ons"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 12,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.236Z",
@@ -2394,7 +2394,7 @@
       "improving-performance-and-resource-usage"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 11,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.237Z",
@@ -2410,7 +2410,7 @@
       "use-the-latest-platform-version"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 3,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.236Z",
@@ -2426,7 +2426,7 @@
       "preparing-raw-text-for-localization"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 6,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.201Z",
@@ -2442,7 +2442,7 @@
       "introduction-to-recipes"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 5,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.220Z",
@@ -2458,7 +2458,7 @@
       "redstone-guide"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 5,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.203Z",
@@ -2474,7 +2474,7 @@
       "getting-started-with-ray-tracing"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 5,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.220Z",
@@ -2490,7 +2490,7 @@
       "introduction-to-physically-based-rendering"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 6,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.220Z",
@@ -2522,7 +2522,7 @@
       "introduction-to-scoreboards"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 6,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.209Z",
@@ -2538,7 +2538,7 @@
       "scoreboard-operations-tutorial"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.209Z",
@@ -2554,7 +2554,7 @@
       "building-with-custom-components"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.206Z",
@@ -2570,7 +2570,7 @@
       "scripting-custom-commands"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 3,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.206Z",
@@ -2586,7 +2586,7 @@
       "introduction-to-custom-components"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 7,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.206Z",
@@ -2602,7 +2602,7 @@
       "building-with-the-custom-dimension-api"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 9,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.206Z",
@@ -2618,7 +2618,7 @@
       "debugging-scripts"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 11,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.207Z",
@@ -2634,7 +2634,7 @@
       "developer-tools-for-minecraft"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 7,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.205Z",
@@ -2650,7 +2650,7 @@
       "error-handling-best-practices"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 8,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.207Z",
@@ -2666,7 +2666,7 @@
       "working-with-events"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.207Z",
@@ -2682,7 +2682,7 @@
       "scripting-execution-privilege"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 3,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.208Z",
@@ -2698,7 +2698,7 @@
       "introduction-to-the-data-driven-ui"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 11,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.208Z",
@@ -2714,7 +2714,7 @@
       "open-source-scripting-libraries"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 3,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.208Z",
@@ -2730,7 +2730,7 @@
       "building-multiplayer-aware-scripts"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 7,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.207Z",
@@ -2746,7 +2746,7 @@
       "next-steps-scripting-with-typescript"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 10,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.205Z",
@@ -2762,7 +2762,7 @@
       "game-loops-and-timed-callbacks"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.207Z",
@@ -2778,7 +2778,7 @@
       "scripting-v2-overview"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 3,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.208Z",
@@ -2794,7 +2794,7 @@
       "script-module-versioning"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 6,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.208Z",
@@ -2810,7 +2810,7 @@
       "world-and-dimension-apis"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 6,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.207Z",
@@ -2826,7 +2826,7 @@
       "understanding-simulation-distance-render-distance-and-ticking-areas"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 6,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.202Z",
@@ -2842,7 +2842,7 @@
       "change-your-look-with-a-skin-pack"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 6,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.196Z",
@@ -2874,7 +2874,7 @@
       "introduction-to-jigsaw-structures"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 5,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.210Z",
@@ -2890,7 +2890,7 @@
       "introduction-to-structure-blocks"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 7,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.209Z",
@@ -2906,7 +2906,7 @@
       "the-jigsaw-tutorial"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 6,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.210Z",
@@ -2922,7 +2922,7 @@
       "delete-rotate-and-take-a-core-sample-with-structure-blocks"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 5,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.222Z",
@@ -2938,7 +2938,7 @@
       "create-a-village-with-structure-blocks"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 6,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.198Z",
@@ -2954,7 +2954,7 @@
       "terrain-matching-tips-faq"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.210Z",
@@ -2970,7 +2970,7 @@
       "contributor-style-guide"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.237Z",
@@ -2986,7 +2986,7 @@
       "survival-spawn-creation"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.197Z",
@@ -3002,7 +3002,7 @@
       "target-selectors"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 2,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.204Z",
@@ -3018,7 +3018,7 @@
       "texture-budgets"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 2,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.201Z",
@@ -3034,7 +3034,7 @@
       "introduction-to-ticking-areas"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 5,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.205Z",
@@ -3050,7 +3050,7 @@
       "how-to-use-tick-json"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 5,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.205Z",
@@ -3066,7 +3066,7 @@
       "tips-for-using-this-site"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.237Z",
@@ -3082,7 +3082,7 @@
       "troubleshooting-and-fixing-add-on-bugs"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 13,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.236Z",
@@ -3133,7 +3133,7 @@
       "release-notes"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 7,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.192Z",
@@ -3150,7 +3150,7 @@
       "release-notes"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.192Z",
@@ -3167,7 +3167,7 @@
       "release-notes"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 5,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.192Z",
@@ -3184,7 +3184,7 @@
       "release-notes"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.192Z",
@@ -3201,7 +3201,7 @@
       "release-notes"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 3,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.192Z",
@@ -3218,7 +3218,7 @@
       "release-notes"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 7,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.192Z",
@@ -3235,7 +3235,7 @@
       "release-notes"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.192Z",
@@ -3252,7 +3252,7 @@
       "release-notes"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 7,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.192Z",
@@ -3269,7 +3269,7 @@
       "release-notes"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 6,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.191Z",
@@ -3286,7 +3286,7 @@
       "release-notes"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 6,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.191Z",
@@ -3303,7 +3303,7 @@
       "release-notes"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 8,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.191Z",
@@ -3320,7 +3320,7 @@
       "release-notes"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.191Z",
@@ -3337,7 +3337,7 @@
       "release-notes"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 7,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.188Z",
@@ -3354,7 +3354,7 @@
       "release-notes"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 8,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.187Z",
@@ -3371,7 +3371,7 @@
       "release-notes"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 9,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.187Z",
@@ -3388,7 +3388,7 @@
       "release-notes"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 15,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.187Z",
@@ -3405,7 +3405,7 @@
       "release-notes"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 8,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.190Z",
@@ -3422,7 +3422,7 @@
       "release-notes"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 10,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.190Z",
@@ -3439,7 +3439,7 @@
       "release-notes"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 10,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.190Z",
@@ -3456,7 +3456,7 @@
       "release-notes"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 9,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.190Z",
@@ -3473,7 +3473,7 @@
       "release-notes"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 10,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.189Z",
@@ -3490,7 +3490,7 @@
       "release-notes"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 9,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.189Z",
@@ -3507,7 +3507,7 @@
       "release-notes"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 9,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.189Z",
@@ -3524,7 +3524,7 @@
       "release-notes"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 11,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.188Z",
@@ -3541,7 +3541,7 @@
       "release-notes"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 17,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.187Z",
@@ -3558,7 +3558,7 @@
       "release-notes"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 16,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.186Z",
@@ -3575,7 +3575,7 @@
       "release-notes"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 21,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.186Z",
@@ -3592,7 +3592,7 @@
       "release-notes"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 32,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.185Z",
@@ -3609,7 +3609,7 @@
       "release-notes"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 14,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.185Z",
@@ -3625,7 +3625,7 @@
       "create-a-variations-block-texture"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.195Z",
@@ -3641,7 +3641,7 @@
       "vibrant-visuals-topics"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 2,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.218Z",
@@ -3657,7 +3657,7 @@
       "atmospheric-effects"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 2,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.219Z",
@@ -3673,7 +3673,7 @@
       "per-biome-customization"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 5,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.220Z",
@@ -3689,7 +3689,7 @@
       "color-grading-and-tone-mapping"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 7,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.219Z",
@@ -3705,7 +3705,7 @@
       "cubemaps"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 3,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.219Z",
@@ -3721,7 +3721,7 @@
       "intro-to-vibrant-visuals"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 3,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.218Z",
@@ -3753,7 +3753,7 @@
       "light-sources"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 6,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.219Z",
@@ -3769,7 +3769,7 @@
       "overview-of-physically-based-rendering"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 6,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.218Z",
@@ -3785,7 +3785,7 @@
       "shadows"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 3,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.219Z",
@@ -3817,7 +3817,7 @@
       "creating-texture-maps"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.219Z",
@@ -3833,7 +3833,7 @@
       "volumetric-fog-and-light-shafts"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 2,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.219Z",
@@ -3849,7 +3849,7 @@
       "vibrant-visuals-resource-packs"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 2,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.218Z",
@@ -3865,7 +3865,7 @@
       "water-effects"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 6,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.219Z",
@@ -3881,7 +3881,7 @@
       "voxel-shapes"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 5,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.224Z",
@@ -3897,7 +3897,7 @@
       "world-generation-overview"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.200Z",
@@ -3913,7 +3913,7 @@
       "world-height-changes-in-caves-and-cliffs-part-2"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 2,
     "source": "bedrock-docs",
     "origin": "toc",
     "fetchedAt": "2026-09-21T11:54:35.193Z",
@@ -3929,11 +3929,11 @@
       "bp"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 10,
     "source": "bedrock-docs",
     "origin": "curated",
-    "fetchedAt": "2026-09-21T11:54:35.213Z",
-    "sha256": "2f1c83ffd8a699b09d0df6e57844242714d56c45d88f36cb0fb70728b59215ff"
+    "fetchedAt": "2026-09-24T02:07:30.062Z",
+    "sha256": "3a35f2bc57b01d5afdffc1f5c89295ede3ff6252cf7c4542c9da8a364abbd56b"
   },
   {
     "id": "stable/entity-components",
@@ -3945,11 +3945,11 @@
       "components"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 2,
     "source": "bedrock-docs",
     "origin": "curated",
-    "fetchedAt": "2026-09-21T11:54:35.238Z",
-    "sha256": "c30c229fe51e062586295031d781992a235e6eb33151d0a139962de2b40521de"
+    "fetchedAt": "2026-09-24T02:07:30.735Z",
+    "sha256": "cb80d62222eb2f80175be4ecbc121cae8c10dd1628e8572277d1f035f73becb7"
   },
   {
     "id": "stable/experimental-features-toggle",
@@ -3961,11 +3961,11 @@
       "beta"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "curated",
-    "fetchedAt": "2026-09-21T11:54:35.200Z",
-    "sha256": "c71b297fef364f6a1888c8a1077fb6bf391f9f9ea9269ef203d9d8f6c93a7e85"
+    "fetchedAt": "2026-09-24T02:07:25.632Z",
+    "sha256": "78f5879da6f4ac5e971d081689148d04cc354163ae2036a24106ab4607a14cd9"
   },
   {
     "id": "stable/features-intro",
@@ -3977,11 +3977,11 @@
       "features"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 5,
     "source": "bedrock-docs",
     "origin": "curated",
-    "fetchedAt": "2026-09-21T11:54:35.239Z",
-    "sha256": "8cb4024a0cd6e61fcacbaca80d7f868f72bf40bea8679b30ecd7d8cc563fcd7d"
+    "fetchedAt": "2026-09-24T02:07:35.554Z",
+    "sha256": "3fb998ab41a7ff352582a15dc704ea6a5acb8f056cfd26e50dff6345e475734f"
   },
   {
     "id": "stable/getting-started",
@@ -3993,11 +3993,11 @@
       "intro"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 5,
     "source": "bedrock-docs",
     "origin": "curated",
-    "fetchedAt": "2026-09-21T11:54:35.193Z",
-    "sha256": "2db553c0810ca4eee6a2ba9c071f7924342dbe2f92375521279450846e0ed5ee"
+    "fetchedAt": "2026-09-24T02:07:27.929Z",
+    "sha256": "3ca6c5189cc5886afe7c20c6e11b77b5b3993d036c6cea5b2f8b9217706afd6c"
   },
   {
     "id": "stable/item-components",
@@ -4009,11 +4009,11 @@
       "components"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 2,
     "source": "bedrock-docs",
     "origin": "curated",
-    "fetchedAt": "2026-09-21T11:54:35.239Z",
-    "sha256": "458555934acdd1180775eba22fb22315c8a5f28f51fde18f5999e01e99b62c37"
+    "fetchedAt": "2026-09-24T02:07:33.237Z",
+    "sha256": "6565ac77fabd0314c0fa670d8332d25e7baf1c8dd84ecd25715f1e9a42ce7f3f"
   },
   {
     "id": "stable/molang-intro",
@@ -4024,11 +4024,11 @@
       "molang"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 5,
     "source": "bedrock-docs",
     "origin": "curated",
-    "fetchedAt": "2026-09-21T11:54:35.203Z",
-    "sha256": "75b62e9cf8a1d3a6fcfe56fa0aeb9be967bdcf5f4db4fab23d91e48f19c6454f"
+    "fetchedAt": "2026-09-24T02:07:33.874Z",
+    "sha256": "b557ad91c944bed3c6dd0a5b749b44657aeea0b4604f893a7211f6f161bf054f"
   },
   {
     "id": "stable/molang-syntax",
@@ -4039,11 +4039,11 @@
       "molang"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 16,
     "source": "bedrock-docs",
     "origin": "curated",
-    "fetchedAt": "2026-09-21T11:54:35.235Z",
-    "sha256": "f1d5af14074be031a62f937c9c6f3754d003fe2a4458c13616582b0c47b3a7f3"
+    "fetchedAt": "2026-09-24T02:07:34.902Z",
+    "sha256": "259765fdc6d5fadc89bc61e1c0e788f30baa21f09f6db5d9203ea1a7d23bd338"
   },
   {
     "id": "stable/pack-manifest",
@@ -4055,11 +4055,11 @@
       "pack"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "curated",
-    "fetchedAt": "2026-09-21T11:54:35.237Z",
-    "sha256": "91b7f6509eafb9c7a73472be159a346532cd1de225e751dcb1127838fc892bb6"
+    "fetchedAt": "2026-09-24T02:07:23.286Z",
+    "sha256": "6ffa899d0fff8acd52d3e5c18b3adae7cee6d24764b720641bd6d692001a718c"
   },
   {
     "id": "stable/resource-pack",
@@ -4071,11 +4071,11 @@
       "rp"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 6,
     "source": "bedrock-docs",
     "origin": "curated",
-    "fetchedAt": "2026-09-21T11:54:35.194Z",
-    "sha256": "d755ec792e23906b9cb2b1e06da9a0ed4d97a6ea2b65403faaa1e9e3bb96d73d"
+    "fetchedAt": "2026-09-24T02:07:28.637Z",
+    "sha256": "633310be4d6015965ac4fd8c5ace0de38e7aa015f0a5deac65a808a526fb043a"
   },
   {
     "id": "stable/script-api-intro",
@@ -4086,11 +4086,11 @@
       "script"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 8,
     "source": "bedrock-docs",
     "origin": "curated",
-    "fetchedAt": "2026-09-21T11:54:35.205Z",
-    "sha256": "f5eec0ec7d200d6b91ebf014dce2907682f832735f3f3364eebe487cded73c88"
+    "fetchedAt": "2026-09-24T02:07:27.396Z",
+    "sha256": "e6b359ac1521dd511439d90761ac8758cab9bb4ba3fd81cc0c4832c2bc2ba270"
   },
   {
     "id": "stable/script-server",
@@ -4102,11 +4102,11 @@
       "server"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 11,
     "source": "bedrock-docs",
     "origin": "curated",
-    "fetchedAt": "2026-09-21T11:54:35.238Z",
-    "sha256": "b9fb5bedcd6e38f3b7bb2f5f135f64ea3bfd956424673d97eb79a064cf5da92d"
+    "fetchedAt": "2026-09-24T02:07:26.627Z",
+    "sha256": "6353aadd2b93be1a3493b694d88c3370da0e40d21bfc8339532095858ce8ac29"
   },
   {
     "id": "stable/script-server-ui",
@@ -4118,11 +4118,11 @@
       "ui"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 10,
     "source": "bedrock-docs",
     "origin": "curated",
-    "fetchedAt": "2026-09-21T11:54:35.239Z",
-    "sha256": "254c60d70c9579705e843359487fd44b88cccc6a168fba736c4bf87c05766965"
+    "fetchedAt": "2026-09-24T02:07:37.851Z",
+    "sha256": "510bf97840f7ecfbd2dc3ee0ebbaeba2fd35443629577473d182ba4335bff862"
   },
   {
     "id": "stable/system-after-events",
@@ -4134,11 +4134,11 @@
       "events"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 2,
     "source": "bedrock-docs",
     "origin": "curated",
-    "fetchedAt": "2026-09-21T11:54:35.239Z",
-    "sha256": "483d6ced70c40aebf81980214a96d1fb713486ecd5a168e92108d0f1422b0bd5"
+    "fetchedAt": "2026-09-24T02:07:37.403Z",
+    "sha256": "d2869e4e5597c1ea57cb45fc4a8657f970c4189b339d4e5a4d7b16229429891e"
   },
   {
     "id": "stable/world-after-events",
@@ -4150,10 +4150,10 @@
       "events"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 2,
     "source": "bedrock-docs",
     "origin": "curated",
-    "fetchedAt": "2026-09-21T11:54:35.239Z",
-    "sha256": "1fcd6a603f3b9fea00ad4762e48df16903123cf47a6eb82ca1bb2a7283fe4502"
+    "fetchedAt": "2026-09-24T02:07:36.870Z",
+    "sha256": "04a237807cdae78a33b5d0dadc9dee3e3d87370b67d122348b4e1fa05e5f1558"
   }
 ]

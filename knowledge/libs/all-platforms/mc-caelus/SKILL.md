@@ -5,6 +5,7 @@ platforms: [fabric, forge, neoforge]
 mcVersions: ["1.13.2-1.21.5"]
 mcVersionsByPlatform: "forge=1.13.2-1.21.1; neoforge=1.20-1.21.5; fabric=1.16.4-1.17.1"
 communityDocId: authored/lib-caelus
+modrinthSlug: caelus
 ---
 
 > 数据读取日期：2026-09-14（源：Modrinth project/caelus 版本表 limit=100；本轮 release 上界 fabric=近100内无 / forge=1.21.1 / neoforge=1.21.5）

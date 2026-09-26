@@ -27,6 +27,20 @@ skillId: mc-curios
 - 只要 1-2 个固定槽 → 原版组件/NBT 自研可能更轻
 - **注意「Curios 支持 Fabric」这类说法**：Modrinth 项目级 `loaders` 标签确实含 `fabric`（**项目级标签，陈旧**），但按构建实测，147 条里只有 1 条标了 fabric —— `curios-fabric-0.0.13-1.16.5`（`version_type: beta`，game_versions 只有 1.16.5，2023-02-03 发布），**≥1.17 的 Fabric 构建 0 条**。即 Fabric 端只留下一个早期 beta 试验条，从未成为持续维护的分发线，别按项目级标签把 Curios 当 Fabric 方案；本文件 frontmatter 的 `loaders: [forge, neoforge]` 是按构建实测给的
 
+## 构件面逐 loader 实测（2026-09-25：判据⑤ 的「少推荐」欠账点名本档 `fabric`，**结论 = 不点名**）
+
+构件面 `mcp-server/data/lib-manifests/all.json` 的 slug `curios` 确有 **1 条** `loader=fabric` 的行，而本档 `loaders: [forge, neoforge]` 没点名 ⇒ 判据⑤ 腿 B 把它列成 INFO「少推荐」（不判红）。逐条实测后**维持不点名**，理由按 2026-09-24 的 release/beta 口径裁定（`loaders` 读作「该 loader 有 **release** 构件」，只有 beta 行的 ⇒ 不点名、改为在此披露）：
+
+| loader | 行 | release | beta/alpha | 点分 `gameVersion` 上界（数值序） | 判定 |
+|---|---|---|---|---|---|
+| forge | 17 | 15 | 2 beta | 1.20.6 | 原已点名 |
+| neoforge | 19 | 18 | 1 beta | 26.2 | 原已点名 |
+| **fabric** | **1** | **0** | 1 beta | — （唯一行 `1.16.5` / `curios-fabric-0.0.13-1.16.5.jar` / `versionType=beta`） | ⇒ **不补**：release 0 条 ⇒ 按裁定不点名 |
+
+- ⚠️ 「不点名」只到「**没有可用 release 构件**」这一层，**不等于**「上游不存在 Fabric 版」（快照 as-of 2026-09-16，且 `CONTRIBUTING.md` `L42` ① 记着「欠一次构件面重抓」）；判据⑤ 的口径也只到「本仓快照有没有这行」为止。
+- Fabric 侧饰品槽走 `authored/lib-trinkets`（`mc-trinkets`），**禁止**把本档的 Curios 代码当 Fabric 教程 —— 与根 `AGENTS.md` 库 Skill 第 5 条同调。
+- 复核（只读、不落盘）：`node temp/ralph-20260922/_r37-probe-slug-loader.mjs`（逐 loader 行数 + versionType 分解 + 数值序上界）· `node temp/ralph-20260922/_r37-probe-rows.mjs`（逐行 fileName / versionNumber）。
+
 ## Decision Flow
 
 ```

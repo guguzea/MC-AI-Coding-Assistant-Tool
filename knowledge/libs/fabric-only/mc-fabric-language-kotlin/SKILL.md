@@ -1,13 +1,15 @@
 ---
 name: mc-fabric-language-kotlin
 description: Fabric Language Kotlin（FLK）Kotlin 语言加载器。触发词：Kotlin、FLK、fabric-language-kotlin、协程、coroutines、语言加载器
-platforms: [fabric, quilt]
+platforms: [fabric]
 mcVersions: ["1.14-26.2"]
 communityDocId: authored/lib-fabric-language-kotlin
+modrinthSlug: fabric-language-kotlin
 mappings: hint
 ---
 
 > 数据读取日期：2026-09-14（源：Modrinth project/fabric-language-kotlin 版本表 limit=100；本轮 release 上界 fabric=26.2 / quilt=近100内无）
+> **2026-09-25 全量复核 + 定案**：`query_upstream_releases --source=modrinth --slug=fabric-language-kotlin --limit=200` → `ok:true / available:true / total:56 / truncated:false`（即全量），56 条发布 `loaders` **100% fabric**、quilt 0 条 ⇒ 按 2026-09-22 裁定④（声明 = 该 loader 有发布构件）本稿 `platforms` 摘掉 `quilt`。Quilt 工程读物仍可达本档（库面按 `fabric-only` + `all-platforms` 解析），但**禁止**据此生成「FLK 有 Quilt 构件」的坐标。
 > 复核：curl.exe --ssl-no-revoke -sS "https://api.modrinth.com/v2/project/fabric-language-kotlin/version?limit=100" 后按 game_versions + loaders + version_type 取上界
 
 # Fabric Language Kotlin（Fabric/Quilt）

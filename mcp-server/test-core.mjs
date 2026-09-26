@@ -10,7 +10,17 @@ import { DatabaseSync } from "node:sqlite";
 import { listVersions, searchForgeDocs, searchDocs, getDocFull, getDocSummary, getDocRelated, getForgeDocSummary, getForgeDocFull } from "./dist/docs-platform/forge/index.js";
 import { analyzePortingPath, portProject, javaForMcVersion } from "./dist/porting/index.js";
 import { convertYarnMember, closeAllYarnDbs, resolveMappingDbPath, resolveCsvMappingDbPath } from "./dist/mappings/yarn-sqlite.js";
-import { convertMapping, suggestSimilarMethods } from "./dist/mappings/index.js";
+import { convertMapping, suggestSimilarMethods, convertMappingEx, buildAccessLines } from "./dist/mappings/index.js";
+import { parseAccessWidener, splitWidenerFiles } from "./dist/mixin/access-widener.js";
+import {
+  UPSTREAM_TTL_MS,
+  ageUpstreamCacheEntry,
+  readUpstreamCache,
+  tierForResult,
+  upstreamCacheDir,
+  upstreamCacheKey,
+  writeUpstreamCache,
+} from "./dist/upstream/cache.js";
 import { createFabricDocStore } from "./dist/docs-platform/fabric/store.js";
 import { searchFabricDocs, listFabricVersions } from "./dist/docs-platform/fabric/index.js";
 import { ForgeDocStore } from "./dist/docs-platform/forge/store.js";
@@ -72,7 +82,7 @@ import {
 import { listSemanticDbPresence, semanticStaleSearchWarning, getSemanticIndexStatus, closeSemanticStatusDbs } from "./dist/docs-platform/semantic/status.js";
 import { isSemanticIndexStale } from "./dist/docs-platform/semantic/fingerprint.js";
 import { SEMANTIC_DDL, semanticDbPath } from "./dist/docs-platform/semantic/search.js";
-import { resolveDataDir, diagnoseDataPaths } from "./dist/utils/path.js";
+import { resolveDataDir, diagnoseDataPaths, assertDataUsable } from "./dist/utils/path.js";
 import { symlinkSync } from "node:fs";
 import { resolve } from "node:path";
 import {
@@ -101,9 +111,33 @@ function parseToolText(result) {
 }
 
 /**
- * Learn 缓存页把表格拍平成一格一行：段名 → Name[/Type]/Description → 行名、描述……
- * 取某段表格的行名（遇到「行名紧跟下一张表的 Name」即停）。
+ * 官方页的表格有两种形状：旧抓取把每格拍平成一行（段名 → Name/Type/Description → 行名……），
+ * 2026-09-24 起重抓取输出 markdown 管道表（`### 段名` + `| Name | … |`）。取某段的行名，两种都认。
  */
+const DOC_ROW_NAME_RE = /^[a-z][a-zA-Z0-9_]*$/;
+
+function pipeTableRowNames(lines, section) {
+  const quoted = section.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const head = new RegExp(`^#{2,6} ${quoted}$`);
+  for (let k = 0; k < lines.length; k++) {
+    if (!head.test(lines[k])) continue;
+    const out = [];
+    for (let i = k + 1; i < lines.length; i++) {
+      const l = lines[i];
+      if (!l.startsWith("|")) {
+        if (out.length) return out;
+        continue;
+      }
+      if (/^\|(?: *--- *\|)+$/.test(l)) continue;
+      const cell = (l.split("|")[1] ?? "").trim();
+      if (!DOC_ROW_NAME_RE.test(cell)) continue;
+      out.push(cell);
+    }
+    return out;
+  }
+  return [];
+}
+
 function docTableRowNames(pageText, section) {
   const lines = pageText.split(/\r?\n/).map((l) => l.trim());
   let start = -1;
@@ -113,10 +147,10 @@ function docTableRowNames(pageText, section) {
       break;
     }
   }
-  if (start < 0) return [];
+  if (start < 0) return pipeTableRowNames(lines, section);
   let i = start + 1;
   while (i < lines.length && ["Name", "Type", "Description"].includes(lines[i])) i++;
-  const NAME_RE = /^[a-z][a-zA-Z0-9_]*$/;
+  const NAME_RE = DOC_ROW_NAME_RE;
   const out = [];
   for (; i < lines.length; i++) {
     if (!NAME_RE.test(lines[i])) continue;
@@ -1376,6 +1410,21 @@ async function testDatagenAndMappingGates() {
   });
   assert.equal(yarnParchment201.found, false);
   assert.equal(yarnParchment201.resultKind, "YARN_TINY_NO_MCP_LAYER");
+  // 未做③（2026-09-26）的反证：1.20.1 现在**两侧都有库**（fabric_1.20.1 yarn-tiny ⊕ forge_1.20.1
+  // mcp-config-srg）。forge 那份 named 列装的是 MCP/SRG 名，绝不能替「没声明平台的 Fabric 查询」回答
+  // to=mcp/parchment —— 否则上面这条 653 契约就被一次入库悄悄改掉。判据按 **era** 落在
+  // resolveCsvMappingDbPath：mcp-config-srg 只在显式 prefer="forge" 时才算数。
+  const srgLeak201 = convertMapping({
+    from: "yarn",
+    to: "parchment",
+    memberName: "LivingEntity",
+    version: "1.20.1",
+    memberKind: "class",
+    platform: "fabric",
+  });
+  assert.equal(srgLeak201.resultKind, "YARN_TINY_NO_MCP_LAYER", `forge 侧 SRG 库漏给了 fabric 查询: ${JSON.stringify(srgLeak201)}`);
+  assert.equal(resolveCsvMappingDbPath("1.20.1", null), null, "无平台查询不得选中 mcp-config-srg 库");
+  assert.equal(typeof resolveCsvMappingDbPath("1.20.1", "forge"), "string", "显式 forge 必须选中该档 SRG 库");
   const yarnToParchment = convertMapping({
     from: "yarn",
     to: "parchment",
@@ -1444,6 +1493,36 @@ async function testDatagenAndMappingGates() {
   assert.equal(fb.found, false);
   assert.equal(fb.converted, "noSuchMethodZZZ");
   assert.equal(fb.fallbackUsed, true);
+
+  // A4d（2026-09-26）：Linkie 扩展 namespace → 拒绝 + 指路（带内失败：found:false + action，不置 isError）
+  const nsUnsupported = convertMapping({
+    from: "mcp",
+    to: "legacy-yarn",
+    memberName: "CrashReport",
+    version: "1.12.2",
+  });
+  assert.equal(nsUnsupported.found, false, "Linkie namespace 必须拒绝");
+  assert.equal(nsUnsupported.action?.code, "UNSUPPORTED_NAMESPACE");
+  assert.ok(
+    (nsUnsupported.action?.nextSteps ?? []).some((s) => s.includes("data/_mcp-legacyyarn-pairs/")),
+    `nextSteps 必须指到本仓已内置对照：${JSON.stringify(nsUnsupported.action?.nextSteps)}`,
+  );
+  const nsExternal = convertMapping({
+    from: "barn",
+    to: "yarn",
+    memberName: "Whatever",
+    version: "b1.7.3",
+  });
+  assert.equal(nsExternal.found, false);
+  assert.equal(nsExternal.action?.code, "UNSUPPORTED_NAMESPACE");
+  assert.ok(
+    (nsExternal.action?.nextSteps ?? []).some((s) => s.includes("maven.glass-launcher.net")),
+    `barn 必须指到上游：${JSON.stringify(nsExternal.action?.nextSteps)}`,
+  );
+  assert.ok(
+    (nsExternal.action?.relatedTools ?? []).includes("query_upstream_releases"),
+    "relatedTools 必须含 query_upstream_releases",
+  );
 
   const { queryApi, disposeApiData } = await import("./dist/api/index.js");
   const api = await queryApi({
@@ -1546,6 +1625,366 @@ async function testDatagenAndMappingGates() {
   assert.equal(q1211.found, false);
   assert.equal(q1211.action?.code, "DATA_UNAVAILABLE");
   assert.ok(q1211.warning && /无 Vanilla API 索引/.test(q1211.warning), JSON.stringify(q1211).slice(0, 500));
+
+  // S1′（2026-09-25 用户裁定：挂 query_api，不开新工具）：api-index 未就绪 / 未命中时，
+  // 响应必须补上「在盘映射索引」这一档出处，且 found 不得被抬成 true（存在性 ≠ 有签名）。
+  const tier1211 = await queryApi({ className: "StatusEffect", version: "1.21.1" });
+  assert.equal(tier1211.found, false, "映射索引命中不得冒充 api-index 命中 —— found 必须仍是 false");
+  assert.equal(tier1211.action?.code, "DATA_UNAVAILABLE", "原有 DATA_UNAVAILABLE 信封不得被我这次改动打散");
+  assert.ok(tier1211.nameIndex, `1.21.1 有 fabric 映射库，必须给 nameIndex: ${JSON.stringify(tier1211).slice(0, 260)}`);
+  assert.equal(tier1211.nameIndex.exists, true, "StatusEffect 在 1.21.1 的 Yarn 名里确实存在");
+  assert.equal(tier1211.nameIndex.mappingEra, "yarn-tiny", `era 必须念出来（实得 ${tier1211.nameIndex.mappingEra}）`);
+  assert.equal(tier1211.nameIndex.dbKind, "fabric", `库来源必须标明（实得 ${tier1211.nameIndex.dbKind}）`);
+  assert.match(tier1211.nameIndex.named ?? "", /net\/minecraft\/entity\/effect\/StatusEffect$/, `named 形状不符: ${tier1211.nameIndex.named}`);
+  assert.ok(tier1211.nameIndex.memberCounts.methods > 0, "成员数必须真数得出来，不许恒 0 装样子");
+  assert.ok(tier1211.nameIndex.memberSample.length > 0, "成员样本必须给得出");
+  assert.ok(
+    (tier1211.notes ?? []).some((n) => /映射索引（第二档出处）/.test(n)) &&
+      (tier1211.notes ?? []).some((n) => /mappingEra=/.test(n)) &&
+      (tier1211.notes ?? []).some((n) => /名字存在 ≠ 会用法/.test(n)),
+    `披露三句缺一不可（实得 notes=${JSON.stringify(tier1211.notes)}）`,
+  );
+  // 证伪腿：不存在的名字必须 exists:false —— 否则这一档是永真装饰，等于没门。
+  const tierNone = await queryApi({ className: "ZzzNoSuchClassAtAll", version: "1.21.1" });
+  assert.equal(tierNone.nameIndex?.exists, false, `探针必须会证伪: ${JSON.stringify(tierNone.nameIndex)}`);
+  assert.ok(
+    !(tierNone.suggestions ?? []).some((s) => /在盘映射索引里有这个类/.test(s)),
+    `exists:false 时不得念「映射索引里有这个类」: ${JSON.stringify(tierNone.suggestions)}`,
+  );
+  // 无映射库的档不得凭空多出这一档（26.1.2 无 sqlite）
+  const tier26 = await queryApi({ className: "StatusEffect", version: "26.1.2" });
+  assert.equal(tier26.nameIndex, undefined, `无库档不得有 nameIndex: ${JSON.stringify(tier26.nameIndex)}`);
+  // 命中路径零改动：api-index 命中时第二档不得出现（不混淆两个出处的分工）
+  const tierHit = await queryApi({ className: "net.minecraft.world.effect.MobEffect", version: "1.20.1" });
+  assert.equal(tierHit.found, true, "回归：1.20.1 Mojang 名必须照旧命中");
+  assert.equal(tierHit.nameIndex, undefined, `api-index 命中时不该有第二档: ${JSON.stringify(tierHit.nameIndex)}`);
+  // forge 档的 named 不是 Yarn 名 ⇒ 只要给这一档，era 就必须跟着念出来
+  const tierForge = await queryApi({ className: "LivingEntity", version: "1.14.4" });
+  if (tierForge.nameIndex) {
+    assert.ok(typeof tierForge.nameIndex.mappingEra === "string" && tierForge.nameIndex.mappingEra.length > 0,
+      `有 nameIndex 就必须有非空 mappingEra: ${JSON.stringify(tierForge.nameIndex.mappingEra)}`);
+    assert.ok((tierForge.notes ?? []).some((n) => /func_\/field_/.test(n) || /mappingEra=/.test(n)),
+      "era 披露必须在 notes 里（否则读的人会把 MCP 名当 Yarn 名）");
+  }
+
+  // ── S2 / S3（2026-09-25）：convert_mapping 的 AT·AW 条目行 + 批量名 ─────────────
+  // 走 convertMappingEx —— 与 MCP/CLI handler 同一条路径，不测副本。名字层判据全部有语料出处。
+  const s2AwClass = convertMappingEx({
+    from: "yarn", to: "intermediary", memberName: "LivingEntity",
+    version: "1.21.1", memberKind: "class", accessLines: true, platform: "fabric",
+  });
+  assert.equal(s2AwClass.found, true, "回归：yarn→intermediary 类转换照旧命中");
+  assert.equal(s2AwClass.accessLines?.entries?.length, 1, `AW 条目必须给一条: ${JSON.stringify(s2AwClass.accessLines)}`);
+  assert.match(
+    s2AwClass.accessLines.entries[0].line,
+    /^accessible {4}class {4}net\/minecraft\/class_1309$/,
+    `AW 类条目形状不符官方参考工程: ${s2AwClass.accessLines.entries[0].line}`,
+  );
+  assert.equal(s2AwClass.accessLines.entries[0].selfCheckOk, true, "生成的行必须能过自家 AW 解析器");
+  assert.match(s2AwClass.accessLines.headers.aw ?? "", /^accessWidener v2 intermediary/, "头里的 namespace 必须跟着 to 层走");
+
+  const s2AtForge = convertMappingEx({
+    from: "mcp", to: "obfuscated", memberName: "func_192067_g",
+    ownerClass: "net/minecraft/advancements/Advancement",
+    version: "1.12.2", memberKind: "method", accessLines: true, platform: "forge",
+  });
+  assert.equal(s2AtForge.found, true, "1.12.2 forge-srg 库里的真 SRG 名必须命中");
+  assert.equal(
+    s2AtForge.accessLines?.entries?.[0]?.line,
+    "public net.minecraft.advancements.Advancement func_192067_g()Lnet/minecraft/util/ResourceLocation;",
+    `Forge AT 成员行 = SRG 名 + 粘连描述符（实得 ${s2AtForge.accessLines?.entries?.[0]?.line}）`,
+  );
+  assert.equal(s2AtForge.accessLines.entries[0].complete, true);
+  assert.equal(s2AtForge.accessLines.entries[0].selfCheckOk, true);
+  // 反证（真踩过）：行尾注释绝不能是混淆短名（曾吐 `#h`）
+  assert.ok(!/#\s*[a-z]\s*$/.test(s2AtForge.accessLines.entries[0].line), "AT 行尾不得写混淆短名当可读名");
+
+  // 未做③（2026-09-26）：1.17+ 灌进 MCPConfig 的 SRG 成员层之后，同一句查询必须出**可粘贴的完整行**。
+  // 这条腿是「从 <TODO:SRG名> 翻成实名」的正证：它读的是 data/forge_1.20.1/mappings/yarn-mappings.sqlite
+  // （mappingEra=mcp-config-srg，由 scripts/ingest-forge-srg.mjs 从本机 ForgeGradle 缓存派生）。
+  const s2Srg1201 = convertMappingEx({
+    from: "mojang", to: "mcp", memberName: "makeExecutor", ownerClass: "net/minecraft/Util",
+    version: "1.20.1", memberKind: "method", accessLines: true, platform: "forge",
+  });
+  assert.equal(
+    s2Srg1201.accessLines?.entries?.[0]?.complete,
+    true,
+    `1.20.1 已有 SRG 成员层 ⇒ 不许再留 <TODO:SRG名>（实得 ${s2Srg1201.accessLines?.entries?.[0]?.line}）`,
+  );
+  assert.equal(
+    s2Srg1201.accessLines.entries[0].line,
+    "public net.minecraft.Util m_137477_(Ljava/lang/String;)Ljava/util/concurrent/ExecutorService; #makeExecutor",
+    `SRG 名/描述符须与 MCPConfig 原文件逐字一致: ${s2Srg1201.accessLines.entries[0].line}`,
+  );
+  assert.equal(s2Srg1201.accessLines.entries[0].selfCheckOk, true, "成行后必须过自家 AT 解析器");
+  // 反证①：有了库不等于什么都有 —— 真查无此名仍须留 TODO
+  const s2Ghost = convertMappingEx({
+    from: "mojang", to: "mcp", memberName: "zzNoSuchMethodAtAll", ownerClass: "net/minecraft/Util",
+    version: "1.20.1", memberKind: "method", accessLines: true, platform: "forge",
+  });
+  assert.equal(s2Ghost.accessLines?.entries?.[0]?.complete, false, "库里查无此名 ⇒ 不许当完整行");
+  assert.match(s2Ghost.accessLines.entries[0].line, /<TODO:SRG名>/, "缺 SRG 名必须留 TODO，禁止拿可读名顶替");
+  assert.equal(s2Ghost.accessLines.entries[0].selfCheckOk, null, "含 TODO 的行不得做自检（自检会替坏行背书）");
+  assert.ok(
+    (s2Ghost.accessLines.notes ?? []).some((n) => /不拿可读名顶替/.test(n)),
+    `必须有「为什么不补全」的说明: ${JSON.stringify(s2Ghost.accessLines.notes)}`,
+  );
+  // 反证②：没有该档 SRG 库（forge 1.21.1 未派生）⇒ 行为与入库前一致，仍留 TODO
+  const s2NoDb = convertMappingEx({
+    from: "mojang", to: "mcp", memberName: "makeExecutor", ownerClass: "net/minecraft/Util",
+    version: "1.21.1", memberKind: "method", accessLines: true, platform: "forge",
+  });
+  assert.equal(s2NoDb.accessLines?.entries?.[0]?.complete, false, "1.21.1 无 SRG 库 ⇒ 不许当完整行");
+  assert.match(s2NoDb.accessLines.entries[0].line, /<TODO:SRG名>/, `无库档必须退回 TODO: ${s2NoDb.accessLines.entries[0].line}`);
+
+  // SRG 形状的边界（收紧判据的反证）：`m_<id>_` / `func_<id>_x` 才算 SRG，近失名必须退回 TODO
+  const srgExact = buildAccessLines({
+    version: "1.20.1", loader: "forge", memberKind: "method",
+    className: "net.minecraft.Util", memberName: "m_137477_", memberNameInput: "makeExecutor",
+    descriptor: "(Ljava/lang/String;)Ljava/util/concurrent/ExecutorService;",
+  });
+  assert.equal(srgExact.entries[0].complete, true, `语料形状的 SRG 名必须成行: ${srgExact.entries[0].line}`);
+  assert.equal(
+    srgExact.entries[0].line,
+    "public net.minecraft.Util m_137477_(Ljava/lang/String;)Ljava/util/concurrent/ExecutorService; #makeExecutor",
+    `与语料 :118 逐字对照不符: ${srgExact.entries[0].line}`,
+  );
+  assert.equal(srgExact.entries[0].selfCheckOk, true);
+  for (const nearMiss of ["m_5_foo", "m_1", "f_77"]) {
+    const bad = buildAccessLines({
+      version: "1.20.1", loader: "forge", memberKind: "field",
+      className: "net.minecraft.server.MinecraftServer", memberName: nearMiss, memberNameInput: "random",
+    });
+    assert.equal(bad.entries[0].complete, false, `${nearMiss} 不是语料里的 SRG 形状，不得当成合法名写进行里`);
+    assert.match(bad.entries[0].line, /<TODO:SRG名>/, `${nearMiss} 必须退回 TODO: ${bad.entries[0].line}`);
+  }
+
+  const s2Neo = convertMappingEx({
+    from: "yarn", to: "yarn", memberName: "makeExecutor", ownerClass: "net.minecraft.Util",
+    version: "1.21.1", memberKind: "method", accessLines: true, platform: "neoforge",
+    descriptor: "(Ljava/lang/String;)Ljava/util/concurrent/ExecutorService;",
+  });
+  assert.equal(
+    s2Neo.accessLines?.entries?.[0]?.line,
+    "public net.minecraft.Util makeExecutor(Ljava/lang/String;)Ljava/util/concurrent/ExecutorService;",
+    `NeoForge 线用可读名（实得 ${s2Neo.accessLines?.entries?.[0]?.line}）`,
+  );
+  assert.equal(s2Neo.accessLines.entries[0].selfCheckOk, true);
+
+  const s2Deny = convertMappingEx({
+    from: "yarn", to: "yarn", memberName: "LivingEntity",
+    version: "1.21.1", memberKind: "class", accessLines: true, platform: "bedrock",
+  });
+  assert.equal(s2Deny.accessLines?.entries?.length, 0, "基岩没有 AT/AW 条目，不许硬凑一行");
+  assert.match(s2Deny.accessLines?.notes?.[0] ?? "", /既不用 AT 也不用 AW/);
+
+  const s2Plain = convertMappingEx({
+    from: "yarn", to: "intermediary", memberName: "LivingEntity", version: "1.21.1", memberKind: "class",
+  });
+  assert.equal(s2Plain.accessLines, undefined, "不传 accessLines 时输出形状必须与旧版逐键一致");
+
+  const s3Batch = convertMappingEx({
+    from: "mcp", to: "obfuscated", memberName: "func_192067_g, ZzzNope",
+    ownerClass: "net/minecraft/advancements/Advancement", version: "1.12.2", memberKind: "method",
+  });
+  assert.equal(s3Batch.batch?.requested, 2, "批量必须念出请求数");
+  assert.equal(s3Batch.batch?.found, 1, `命中数要真数得出来: ${JSON.stringify(s3Batch.batch)}`);
+  assert.deepEqual(s3Batch.batch?.missing, ["ZzzNope"], "没命中的名字必须点名");
+  assert.equal(s3Batch.results?.length, 2);
+
+  const s3Over = convertMappingEx({
+    from: "yarn", to: "yarn", memberName: Array.from({ length: 51 }, (_, i) => `n${i}`).join(","),
+    version: "1.21.1", memberKind: "method",
+  });
+  assert.equal(s3Over.action?.code, "INVALID_INPUT", "超上限必须报错，不许静默截断到 50");
+  assert.equal(s3Over.results, undefined, "拒绝时不得已经跑完 51 次转换");
+
+  // classTweaker 头（官方 1.21.11 参考工程逐字）：修前 validate_aw 会报「首行应为 accessWidener header」
+  const ct = parseAccessWidener(
+    "classTweaker v1 named\n\n"
+    + "accessible    class    net/minecraft/network/chat/TextColor\n"
+    + "transitive-accessible    method    net/minecraft/network/chat/TextColor    formatValue    ()Ljava/lang/String;\n",
+  );
+  assert.equal(ct.errors.length, 0, `classTweaker v1 头必须能解析: ${JSON.stringify(ct.errors)}`);
+  assert.equal(ct.spec, "classTweaker", "必须念出用的是哪种规范");
+  assert.equal(ct.entries.length, 2);
+  assert.equal(ct.entries[1].transitive, true);
+  assert.equal(
+    ct.warnings.filter((w) => /transitive 仅在/.test(w)).length,
+    0,
+    "classTweaker v1 支持 transitive，不该念 accessWidener v1 的警告",
+  );
+  const awV1 = parseAccessWidener("accessWidener v1 named\n\ntransitive-accessible class net/minecraft/network/chat/TextColor\n");
+  assert.ok(
+    awV1.warnings.some((w) => /transitive 仅在/.test(w)),
+    "反证：accessWidener v1 的 transitive 警告不得因为上面的修复而消失",
+  );
+  const awBad = parseAccessWidener("accessWidener v3 named\n\nclass foo\n");
+  assert.ok(awBad.errors.length > 0, "反证：不存在的版本号必须红");
+
+  // ── #55（2026-09-25）：class tweaker 五族指令 + classTweaker v2 头 ─────────────
+  // 判据源不是本工具自述：上游参考工程整份文件（逐字）+ 26.1.2 文档三页
+  //   inject-interface 语法 develop_class-tweakers_interface-injection.md:71（内部名 :74）
+  //   extend-enum 语法      develop_class-tweakers_enum-extension.md:92 + 「头须 v2」:87
+  //   transitive 五族        develop_class-tweakers_index.md:48,53,56
+  const ctFile = join(REPO_ROOT, "data/fabric_26.1.2/reference/26.1.2/src/main/resources/example-mod.classtweaker");
+  const ctUp = parseAccessWidener(readFileSync(ctFile, "utf8"));
+  assert.equal(ctUp.errors.length, 0, `上游参考工程整份必须解析通过（修前：v2 头 + 5 条新指令全红）: ${JSON.stringify(ctUp.errors)}`);
+  assert.equal(ctUp.version, 2, "该文件头是 classTweaker v2");
+  assert.equal(ctUp.entries.length, 9, `非注释条目应为 9 行（4 access + 2 inject-interface + 3 extend-enum），实得 ${ctUp.entries.length}`);
+  const ctByType = {};
+  for (const e of ctUp.entries) ctByType[e.type] = (ctByType[e.type] ?? 0) + 1;
+  assert.deepEqual(ctByType, { accessible: 4, "inject-interface": 2, "extend-enum": 3 }, "五族里必须真出现两族新指令（=0 说明采集面没扫到）");
+  assert.ok(
+    ctUp.entries.some((e) => e.operand === "com/example/docs/interface_injection/GenericInterface<+Ljava/lang/String;[Ljava/lang/Boolean;>"),
+    "带泛型的接口名必须整条落在 operand 里（被截断 = 泛型段被当多余 token 丢掉）",
+  );
+  const twoIface = parseAccessWidener(
+    "classTweaker v2 official\ninject-interface com/example/Fixture com/example/A\ninject-interface com/example/Fixture com/example/B\n",
+  );
+  assert.equal(twoIface.errors.length, 0, `同目标注入两个接口是合法的: ${JSON.stringify(twoIface.errors)}`);
+  assert.equal(twoIface.entries.length, 2);
+  const enumV1 = parseAccessWidener("classTweaker v1 named\nextend-enum com/example/Fixture EXAMPLE_MOD_FOO\n");
+  assert.equal(enumV1.errors.length, 1, `extend-enum 在 v1 头下必须红（enum-extension.md:87）: ${JSON.stringify(enumV1.errors)}`);
+  assert.match(enumV1.errors[0].suggestion ?? "", /v2/, "拒绝文案必须点名「把头改成 v2」这条出路");
+  assert.equal(enumV1.entries.length, 0, "判红的那条不得同时产出条目");
+  const shortEntry = parseAccessWidener("classTweaker v2 official\ninject-interface  net/minecraft/B\n");
+  assert.equal(shortEntry.errors.length, 1, "缺第二个元素必须红，不许按「只有目标」入账");
+  assert.match(shortEntry.errors[0].suggestion ?? "", /interface-injection\.md:71/, "拒绝文案必须给语法出处");
+  const badGenerics = parseAccessWidener("classTweaker v2 official\ninject-interface a/B c/D<Ljava/lang/String;\n");
+  assert.equal(badGenerics.errors.length, 1, "泛型括号不配对必须红");
+  assert.match(badGenerics.errors[0].issue, /泛型形状/, `红必须点名泛型形状，不是笼统「无法解析」: ${JSON.stringify(badGenerics.errors)}`);
+  const unknownDir = parseAccessWidener("classTweaker v2 official\nfrobnicate class a/B\n");
+  assert.equal(unknownDir.errors.length, 1, "反证：放宽判据不得把未知指令放进门");
+  assert.match(unknownDir.errors[0].issue, /未知 AW 类型/, `未知指令仍应报「未知 AW 类型」: ${JSON.stringify(unknownDir.errors)}`);
+  const awHeaded = parseAccessWidener("accessWidener v2 named\ninject-interface a/B c/D\n");
+  assert.equal(awHeaded.errors.length, 0, "旧名 accessWidener 头下的新指令只提示、不判红（loader 侧行为本仓语料未取证）");
+  assert.ok(awHeaded.warnings.some((w) => /class tweaker 面/.test(w)), "但必须念出「这属 class tweaker 面」的披露");
+  const tabbed = parseAccessWidener("classTweaker v2 official\ninject-interface\tnet/minecraft/B\tcom/example/I\n");
+  assert.equal(tabbed.entries.length, 1, "元素用 tab 分隔也要能吃（index.md:40）");
+  const v9 = parseAccessWidener("classTweaker v9 named\ninject-interface a/B c/D\n");
+  assert.equal(v9.errors.length, 0, "反证：认不出的 classTweaker 版本号不得判红（上游明说会长版本 index.md:34）");
+  assert.ok(v9.warnings.some((w) => /规则集过期/.test(w)), "但必须披露「本解析器只核到 v1/v2」");
+  const dotted = parseAccessWidener("classTweaker v2 official\ninject-interface net/minecraft/B com.example.I\n");
+  assert.ok(dotted.warnings.some((w) => /内部名/.test(w)), "FQCN 点号写法必须提示（interface-injection.md:74）");
+  // 多文件段：classTweaker 头也得继承，否则第二段起就「缺 header」（同一族缺陷的第二处）
+  const segs = splitWidenerFiles(
+    "classTweaker v2 official\ninject-interface a/B c/D\n\n# ==== file: second ====\nextend-enum a/E CONSTANT_ONE\n",
+  );
+  assert.equal(segs.length, 2, "分段本身要仍分成两段");
+  assert.equal(
+    segs.slice(1).flatMap((s) => parseAccessWidener(s).errors).filter((e) => /缺少 .*header/.test(e.issue)).length,
+    0,
+    `classTweaker 头未被继承: ${JSON.stringify(segs[1])}`,
+  );
+  const awSegs = splitWidenerFiles("accessWidener v2 named\naccessible class a/B\n\n# ==== file: second ====\naccessible class a/C\n");
+  assert.equal(awSegs.slice(1).flatMap((s) => parseAccessWidener(s).errors).length, 0, "反证：accessWidener 头的继承不得因为上面的改动而失效");
+
+  // ── S4′（2026-09-25）：上游查询的分档 TTL 磁盘缓存 —— **门不联网**，只测缓存层与键
+  const s4PrevCache = process.env.MC_SKILL_CACHE;
+  const s4PrevFlag = process.env.MC_SKILL_UPSTREAM_CACHE;
+  const s4Root = mkdtempSync(join(tmpdir(), "mc-skill-upstream-cache-"));
+  try {
+    process.env.MC_SKILL_CACHE = s4Root;
+    const kA = upstreamCacheKey({ source: "forge", limit: 12 });
+    assert.equal(kA, upstreamCacheKey({ source: "forge", limit: 12 }), "同参数必须同键（否则永远不命中）");
+    assert.notEqual(kA, upstreamCacheKey({ source: "forge", limit: 50 }), "limit 必须进键：limit=12 的缓存不得把 limit=50 的请求截断成 12 条");
+    const kMc = upstreamCacheKey({ source: "fabric-yarn", minecraftVersion: "1.21.1", limit: 12 });
+    assert.notEqual(kMc, upstreamCacheKey({ source: "fabric-yarn", minecraftVersion: "1.21.4", limit: 12 }), "minecraftVersion 必须进键");
+
+    assert.equal(tierForResult({ ok: true, available: true }), "available");
+    assert.equal(tierForResult({ ok: true, available: false }), "absent");
+    assert.equal(tierForResult({ ok: false, available: false }), null, "「没查到」（TLS/代理/HTML 壳）不得缓存成几小时的事实");
+    assert.ok(UPSTREAM_TTL_MS.absent < UPSTREAM_TTL_MS.available, "「上游没有」必须比「有」更短，否则一次证否被冻结整个长档");
+
+    const w = writeUpstreamCache(kA, { ok: true, available: true, source: "forge", url: "x", total: 0, releases: [], fetchedAt: new Date().toISOString() });
+    assert.equal(w.wrote, true, `写盘必须成功: ${JSON.stringify(w)}`);
+    const hit = readUpstreamCache(kA);
+    assert.equal("result" in hit, true, "刚写的条目必须读得回来");
+    assert.equal(hit.tier, "available");
+    assert.equal(hit.ttlMs, UPSTREAM_TTL_MS.available, "TTL 必须来自导出的档位表，不是各处再抄一遍");
+    assert.ok(hit.ageMs >= 0 && hit.ageMs < 60_000, `ageMs 要现算（实得 ${hit.ageMs}）`);
+
+    assert.equal(ageUpstreamCacheEntry(kA, UPSTREAM_TTL_MS.available + 1000), true, "改龄失败 ⇒ 到期这条腿是空的");
+    const stale = readUpstreamCache(kA);
+    assert.equal("result" in stale, false, "超 TTL 还命中 ⇒ 缓存把过期事实当现值卖");
+    assert.match(stale.note ?? "", /TTL/, `到期未命中必须念出原因: ${JSON.stringify(stale)}`);
+
+    const wFail = writeUpstreamCache(kMc, { ok: false, available: false, source: "fabric-yarn", url: "x", total: 0, releases: [], fetchedAt: "now" });
+    assert.equal(wFail.wrote, false);
+    assert.match(wFail.note ?? "", /不缓存/);
+    assert.equal(existsSync(join(s4Root, "upstream-cache", `${kMc}.json`)), false, "拒写却留下文件 = 半截状态");
+
+    // 原子写（tmp+rename）与坏文件的读法：并发同写一个 key / OneDrive 抖动都只能得到「未命中 + 念原因」
+    const s4CacheDir = join(s4Root, "upstream-cache");
+    // 判据：同键第二次写入必须是「新文件换掉旧文件」，不是原地截断重写。
+    // 本机 NTFS 实测定这个 discriminator（D:/mc-skill-temp/s2/probe-birthtime.mjs）：
+    // writeFileSync 原地覆盖 ⇒ birthtimeMs 不变、mtime 变；writeFileSync(tmp)+renameSync ⇒ birthtimeMs 前移。
+    // 把生产侧的 tmp+rename 换回直接写 file，下面 `birthtimeMs 必须前移` 即红（投毒已跑，见 CHANGELOG S4′ 条）。
+    const spinMs = (ms) => { const t0 = Date.now(); while (Date.now() - t0 < ms); };
+    const kRew = upstreamCacheKey({ source: "neoforge", limit: 12 });
+    const wRew1 = writeUpstreamCache(kRew, { ok: true, available: true, source: "neoforge", url: "u1", total: 1, releases: [{ v: 1 }], fetchedAt: "t1" });
+    assert.equal(wRew1.wrote, true, `首次写入必须成功（不成功则下面两条是空的）: ${JSON.stringify(wRew1)}`);
+    const birth1 = statSync(wRew1.file).birthtimeMs;
+    spinMs(30);
+    const wRew2 = writeUpstreamCache(kRew, { ok: true, available: true, source: "neoforge", url: "u2", total: 2, releases: [{ v: 1 }, { v: 2 }], fetchedAt: "t2" });
+    assert.equal(wRew2.wrote, true, `覆盖同键必须成功（rename 覆盖已有文件在本机失败 ⇒ 该腿无判据，须改生产侧或明写不覆盖）: ${JSON.stringify(wRew2)}`);
+    assert.equal(wRew2.file, wRew1.file, "两次写入必须落在同一个键路径，否则比 birthtime 没有意义");
+    assert.ok(statSync(wRew2.file).birthtimeMs > birth1, "birthtimeMs 未前移 ⇒ 是同文件截断重写，读者能在半截状态上看到坏 JSON；必须 tmp+rename");
+    assert.equal(JSON.parse(readFileSync(wRew2.file, "utf8")).result.total, 2, "覆盖必须真换成新内容（旧值残留 = 写了个寂寞）");
+    assert.equal(
+      readdirSync(s4CacheDir).filter((f) => f.includes(".tmp-")).length,
+      0,
+      "写完还留着 .tmp- ⇒ rename 或清理有一腿没跑，缓存目录会长满半截文件",
+    );
+    writeFileSync(join(s4CacheDir, `${kA}.json`), '{"key":"x","tier":"avail', "utf8"); // 人为造半截
+    const torn = readUpstreamCache(kA);
+    assert.equal("result" in torn, false, "半截 JSON 被当命中 ⇒ 缓存把坏数据卖成事实");
+    assert.match(torn.note ?? "", /读不成/, `坏文件必须念原因: ${JSON.stringify(torn)}`);
+
+    // 让「.tmp- 残留」那条腿真活起来的夹具：把最终名占成一个目录 ⇒ writeFileSync(tmp) 成功、renameSync 必败。
+    // 没有这个失败路径，上面那条残留检查永远只在「进程被杀」时才可能红 ⇒ 是装饰。
+    const kLeak = upstreamCacheKey({ source: "parchment", limit: 12 });
+    mkdirSync(join(s4CacheDir, `${kLeak}.json`));
+    let wLeak;
+    try {
+      wLeak = writeUpstreamCache(kLeak, { ok: true, available: true, source: "parchment", url: "u", total: 0, releases: [], fetchedAt: "t" });
+    } finally {
+      rmSync(join(s4CacheDir, `${kLeak}.json`), { recursive: true, force: true });
+    }
+    assert.equal(wLeak.wrote, false, `rename 失败却报 wrote:true: ${JSON.stringify(wLeak)}`);
+    assert.match(wLeak.note ?? "", /写盘失败/, `写盘失败必须念原因，不得静默: ${JSON.stringify(wLeak)}`);
+    assert.equal(
+      readdirSync(s4CacheDir).filter((f) => f.includes(".tmp-")).length,
+      0,
+      "rename 失败后必须清掉自己的 tmp（不清 ⇒ 缓存目录每次失败留一个半截文件）",
+    );
+
+    // 缓存根解析到仓库内 ⇒ 必须拒写（data/** 是上游逐字语料面）
+    process.env.MC_SKILL_CACHE = join(process.cwd(), "..");
+    const inRepo = upstreamCacheDir();
+    assert.ok(inRepo.rejected, `仓库内缓存根必须被拒: ${JSON.stringify(inRepo)}`);
+    // 差分对照：同一段代码换到仓库外的根就必须放行（否则「守卫」可以是恒拒或恒放）
+    process.env.MC_SKILL_CACHE = s4Root;
+    assert.equal(upstreamCacheDir().rejected, null, "仓库外的合法缓存根被误拒 ⇒ 守卫其实是恒拒，上面那条 ok() 就毫无意义");
+    process.env.MC_SKILL_CACHE = join(process.cwd(), "..");
+    const wRepo = writeUpstreamCache(kA, { ok: true, available: true });
+    assert.equal(wRepo.wrote, false);
+    assert.match(wRepo.note ?? "", /仓库内/);
+
+    // MC_SKILL_UPSTREAM_CACHE=0 ⇒ 整体关掉，读也必须 miss 并念原因
+    process.env.MC_SKILL_CACHE = s4Root;
+    process.env.MC_SKILL_UPSTREAM_CACHE = "0";
+    const off = readUpstreamCache(kA);
+    assert.equal("result" in off, false, "关掉缓存还命中 ⇒ 那个开关是摆设");
+    assert.match(off.note ?? "", /缓存关闭/);
+  } finally {
+    if (s4PrevCache === undefined) delete process.env.MC_SKILL_CACHE;
+    else process.env.MC_SKILL_CACHE = s4PrevCache;
+    if (s4PrevFlag === undefined) delete process.env.MC_SKILL_UPSTREAM_CACHE;
+    else process.env.MC_SKILL_UPSTREAM_CACHE = s4PrevFlag;
+    rmSync(s4Root, { recursive: true, force: true });
+  }
 
   // 兼容工具标记（sweep104，用户裁定）：query_api 每次调用响应都带兼容注释；
   // 1.14.4/1.15.2 的 api-index 为空是设计边界——响应必须显式报告边界并推荐语义搜索。
@@ -4809,6 +5248,62 @@ public class ExampleMod { }
   assert.equal(c1WriteNoConfirm.written, undefined, "write_blocked 必然没有 written");
   assert.ok((c1WriteNoConfirm.errors ?? []).length === 0, "write_blocked 不得混入生成错误（两态不得混淆）");
 
+  // S6-3（2026-09-25 用户裁定 = 方案 B）：generate_lang 的空 entries 是**合法产物**，三态不得动
+  // （仍 ok:true + resultKind:"ok"），但「两个 lang 文件都是 {}」必须在 warnings 里披露。
+  // 旧病实测：--entries={} → success:true + files {"en_us.json":"{}","zh_cn.json":"{}"} + warnings 只有
+  // 「骨架不随 pack_format 变」，调用方看不出自已产出了空东西。
+  const EMPTY_LANG_WARNING = /未产出任何 lang 条目/;
+  const s63Empty = maybeWriteGeneratorResult(generateLang("demo", {}, "1.20.1"));
+  // (a) 三态契约不破：空骨架仍是成功态，既不得升格为 generation_failed，也不得新增第四态。
+  assert.equal(s63Empty.ok, true, `空 entries 必须仍 ok:true → ${JSON.stringify(s63Empty).slice(0, 260)}`);
+  assert.equal(s63Empty.resultKind, "ok", `空 entries 的 resultKind 必须仍是 "ok"`);
+  assert.ok(!s63Empty.writeError, "空 entries 与写盘无关，不得带 writeError");
+  assert.equal(generatorRejected(generateLang("demo", {}, "1.20.1")), false, "空骨架不得被判成生成失败");
+  // 载荷确实为空（这条是披露的**前提**，不是披露本身：门要能看出「文件是 {}」）。
+  assert.equal(s63Empty.files["assets/demo/lang/en_us.json"], "{}", "空 entries 的 en_us 必须是 {}");
+  assert.equal(s63Empty.files["assets/demo/lang/zh_cn.json"], "{}", "空 entries 的 zh_cn 必须是 {}");
+  // (b) 披露：warning 必须存在、点名「空」与出口（entries 参数 / CLI 写法），且不得顶掉原有那条。
+  const s63Warn = (s63Empty.warnings ?? []).find((w) => EMPTY_LANG_WARNING.test(w));
+  assert.ok(s63Warn, `空 entries 必须披露空骨架，实得 warnings=${JSON.stringify(s63Empty.warnings)}`);
+  assert.match(s63Warn, /空对象 \{\}/, "披露须点名产出是空对象 {}");
+  assert.match(s63Warn, /entries/, "披露须给出出口：entries 参数");
+  assert.match(s63Warn, /--entries=/, "披露须给出可直接照抄的 CLI 写法");
+  assert.match(s63Warn, /不是失败/, "披露须说明这是合法产物，不得读成失败（否则调用方会去改判定链）");
+  assert.ok(
+    s63Empty.warnings.some((w) => w === "骨架不随 pack_format 变"),
+    "既有 warning 不得被顶掉（只追加，不替换）",
+  );
+  // (d) 机读面：字段存在且两侧都取到值——恒 true 的 flag 等于没有 flag。
+  assert.equal(s63Empty.emptyEntries, true, "空骨架的 emptyEntries 必须为 true");
+  // (c) 反证 / 正对照：真给一条 entry ⇒ 不得出现该 warning，且键必须真的进了 en_us.json。
+  const s63Filled = maybeWriteGeneratorResult(generateLang("demo", { "demo.hello": "你好" }, "1.20.1"));
+  assert.equal(s63Filled.ok, true, "非空 entries 仍须 ok:true");
+  assert.ok(
+    !(s63Filled.warnings ?? []).some((w) => EMPTY_LANG_WARNING.test(w)),
+    `有真实条目时不得报空骨架 warning → ${JSON.stringify(s63Filled.warnings)}`,
+  );
+  assert.equal(
+    JSON.parse(s63Filled.files["assets/demo/lang/en_us.json"])["demo.hello"],
+    "你好",
+    "真实条目必须真的进了 en_us.json",
+  );
+  assert.notEqual(s63Filled.files["assets/demo/lang/zh_cn.json"], "{}", "非空时 zh_cn 不得仍是 {}");
+  assert.equal(s63Filled.emptyEntries, false, "emptyEntries 必须两侧都有值（恒 true 的 flag 不成立）");
+  // 判据是「落进文件的条数 = 0」而不是「入参条数 = 0」：入参非空但全部键推断失败 ⇒ 文件同样是 {}，
+  // 也必须披露（旧行为只给一条 per-key「已跳过」，看不出最终载荷为空）。
+  const s63AllSkipped = maybeWriteGeneratorResult(generateLang("demo", { ruby: "Ruby" }, "1.20.1"));
+  assert.equal(s63AllSkipped.files["assets/demo/lang/en_us.json"], "{}", "全部键被跳过 ⇒ 载荷仍为 {}");
+  assert.ok(
+    (s63AllSkipped.warnings ?? []).some((w) => EMPTY_LANG_WARNING.test(w)),
+    `全部键推断失败时同样必须披露空骨架 → ${JSON.stringify(s63AllSkipped.warnings)}`,
+  );
+  assert.ok(
+    (s63AllSkipped.warnings ?? []).some((w) => /ruby/.test(w)),
+    "既有的 per-key 跳过 warning 不得被新 warning 顶掉",
+  );
+  assert.equal(s63AllSkipped.emptyEntries, true, "全部跳过 ⇒ emptyEntries 亦为 true");
+  assert.equal(s63AllSkipped.resultKind, "ok", "该态仍不是 generation_failed");
+
   const cfgFab = generateConfig("my_mod", "fabric", "1.21.11");
   assert.ok(cfgFab.code?.includes("clothconfig2"), cfgFab.code);
   assert.ok(cfgFab.warnings?.some((w) => /依赖/.test(w)), JSON.stringify(cfgFab.warnings));
@@ -5166,18 +5661,19 @@ async function testW2MappingDocsFixes() {
   assert.equal(isSafeVersionSegment("1.20.1"), true);
   assert.equal(isSafeVersionSegment("..\\..\\evil"), false);
   assert.equal(isSafeVersionSegment("../../evil"), false);
-  // A-39：非法版本段不得先撞上 _pathCache（先校验、后查缓存）
+  // A-39：非法版本段不得先撞上 _pathCache（先校验、后查缓存）。
+  // 锚点只认「缓存名 + `.has(`」，不钉 key 的参数写法（key 已从 `v` 变成 `cacheKey`）。
   const ysPath = new URL("./dist/mappings/yarn-sqlite.js", import.meta.url);
   const ysSrc = readFileSync(ysPath, "utf8");
   const body = ysSrc.slice(ysSrc.indexOf("function resolveMappingDbPath"));
   const guardAt = body.indexOf("isSafeVersionSegment(v)");
-  const cacheAt = body.indexOf("_pathCache.has(v)");
+  const cacheAt = body.indexOf("_pathCache.has(");
   assert.ok(guardAt >= 0 && cacheAt >= 0, "resolveMappingDbPath 结构变了，A-39 门需同步更新");
   assert.ok(guardAt < cacheAt, "A-39：_pathCache 查询不得先于 isSafeVersionSegment 校验");
   // 同族第二处：_csvPathCache 也必须在校验之后才读（否则非法段可污染缓存 key）
   const csvBody = ysSrc.slice(ysSrc.indexOf("function resolveCsvMappingDbPath"));
   const csvGuardAt = csvBody.indexOf("isSafeVersionSegment(v)");
-  const csvCacheAt = csvBody.indexOf("_csvPathCache.has(v)");
+  const csvCacheAt = csvBody.indexOf("_csvPathCache.has(");
   assert.ok(csvGuardAt >= 0 && csvCacheAt >= 0, "resolveCsvMappingDbPath 结构变了，A-39 门需同步更新");
   assert.ok(csvGuardAt < csvCacheAt, "A-39：_csvPathCache 查询不得先于 isSafeVersionSegment 校验");
   assert.equal(resolveCsvMappingDbPath(".."), null, "`..` 版本不得解析出 CSV 库");
@@ -7999,10 +8495,12 @@ testCommunityIndexSync();
 
 /**
  * §S15 · knowledge/libs 解析规则校验门（2026-09-16 接入）。
- * 机制：`scripts/resolve-lib-skills.mjs` 默认 --validate —— 对 (forge,1.20.1)/(fabric,1.20.1)/
- * (neoforge,1.20.4) 三组合跑解析（组映射 + frontmatter platforms/mcVersions 过滤），
+ * 机制：`scripts/resolve-lib-skills.mjs` 默认 --validate —— 对脚本内 `VALIDATE_COMBOS` 的每个
+ * (platform,version) 跑解析（组映射 + frontmatter platforms/mcVersions/mcVersionsByPlatform 过滤），
  * 结果非空 + 全局 skillId 查重，输出 JSON {ok:true, results:{...}}；失败 exit 1。
  * 守的是「平台/版本解析链」不漂移（组名与实际覆盖、mcVersions 窗口写错都会在这里露）。
+ * S22（2026-09-24）另加一条按名钉的覆盖面断言：quilt 两条腿必须在 results 里 —— 组合清单可以扩，
+ * 但**不许缩**（缩了就是本门静默失去 quilt 覆盖；quilt 侧同答腿见 assert-lib-session-resolve-parity）。
  */
 {
   const { spawnSync } = await import("node:child_process");
@@ -8013,7 +8511,11 @@ testCommunityIndexSync();
   assert.equal(r.status, 0, `resolve-lib-skills --validate 失败（平台/版本解析链漂移）：\n${out}`);
   // 反退化：必须真的输出校验结果 JSON，否则路径失效退化成空跑时在这里接住。
   assert.match(out, /"ok"\s*:\s*true/, `resolve-lib-skills 没有输出 {"ok":true,...}，门可能已退化成空检查：\n${out}`);
-  console.log("S15 lib-skills 解析校验（组映射 + platforms/mcVersions 过滤）：ok");
+  const combos = Object.keys(JSON.parse(out).results ?? {});
+  for (const need of ["quilt/1.21.1", "quilt/1.20.1"]) {
+    assert.ok(combos.includes(need), `--validate 覆盖面里没有 ${need}（VALIDATE_COMBOS 被缩，quilt 库面不再被跑）：现有 ${combos.join(",")}`);
+  }
+  console.log(`S15 lib-skills 解析校验（组映射 + platforms/mcVersions/mcVersionsByPlatform；组合 ${combos.length} 组，含 quilt 两腿）：ok`);
 }
 
 /**
@@ -8071,9 +8573,319 @@ testCommunityIndexSync();
   console.log("S18 CLI 快速档（主要模块 + 零覆盖分支 + 健壮性）：ok");
 }
 
+/**
+ * §S19 · `@minecraft/server-beta` 类级守卫（story S6 / 第 5d 轮，2026-09-23）
+ *
+ * 已有腿：E2E-002 只断言 generateBpEntity 的**产物**里不含该串（本文件上方 `!/@minecraft\/server-beta/`）。
+ * 本块把它从「产物」扩到「**给 AI 读的处方面**」：bedrock 全部 canonical rules（8 宿主，含 `.pi` 扁平 .md）
+ * + `knowledge/libs/bedrock-only/**` + 投影生成器 `scripts/_oneoff/generate-five-platform-trees.mjs`
+ * —— 生成器不改，重跑就会把错名再灌回 8 棵树（回归源头）。
+ *
+ * 判据（行级，负例形状照抄 scripts/assert-skill-yarn-attest.mjs:69 的 NEG 判据）：
+ *   含 `@minecraft/server-beta` 且同行**不含** NEG 词（禁止/不存在/不是/勿/错误/❌/非包名/未核实…）⇒ 违规。
+ *   ⇒ `09-anti-patterns` 的 ❌ 禁令行本身要写这个名字，那是合法提及，不判红（实测 as-of 2026-09-23：真面 18 处提及 / 0 违规 = bedrock 8 宿主 ×2 行 + `mc-script-server/SKILL.md` 1 + 生成器 1）。
+ * 地板：R47 `[FLOOR-COLLECTOR]` 语义 —— 采集 0 或某个**声明过的面**采到 0 ⇒ 立刻红（采集器失效/假覆盖），
+ *   **不做等式棘轮**（正常新增只会抬高计数）。汇总行无条件打印。
+ * 投毒：① 内存夹具走同一判据函数 ② `MC_SKILL_S19_ROOT=<假根>` 走真实文件面（该次 rc 应为 1）。
+ */
+{
+  const BANNED = "@minecraft/server-beta";
+  const NEG_RE = /禁止|不要|不得|别当|勿|不存在|不是|未核实|零命中|0 命中|❌|✗|非包名|错误|作废|已改|更正|旧稿|原先/;
+  const S19_ROOT = process.env.MC_SKILL_S19_ROOT || REPO_ROOT;
+
+  /** 行级判据：true = 该行把不存在的包名当处方用。纯函数，与投毒夹具共用同一条腿。 */
+  const isPrescription = (line) => line.includes(BANNED) && !NEG_RE.test(line);
+
+  function walkFiles(dir, out) {
+    if (!existsSync(dir)) return out;
+    for (const e of readdirSync(dir, { withFileTypes: true })) {
+      const p = join(dir, e.name);
+      if (e.isDirectory()) walkFiles(p, out);
+      else if (e.isFile()) out.push(p);
+    }
+    return out;
+  }
+
+  /** 采集面：每项都是真读到的文件；面名进汇总行 —— 声明了却没采到 = 假覆盖。 */
+  function collectFace(root) {
+    const faces = [];
+    for (const host of [".cursor", ".claude", ".continue", ".trae", ".opencode", ".agents", ".zcode"]) {
+      faces.push({ face: "bedrock-rules/" + host, files: walkFiles(join(root, "bedrock", host, "rules"), []).filter((f) => f.endsWith(".mdc")) });
+    }
+    faces.push({ face: "bedrock-rules/.pi", files: walkFiles(join(root, "bedrock", ".pi", "rules"), []).filter((f) => f.endsWith(".md")) });
+    faces.push({ face: "knowledge/libs/bedrock-only", files: walkFiles(join(root, "knowledge", "libs", "bedrock-only"), []).filter((f) => f.endsWith(".md")) });
+    const gen = join(root, "scripts", "_oneoff", "generate-five-platform-trees.mjs");
+    faces.push({ face: "generator", files: existsSync(gen) ? [gen] : [] });
+    return faces;
+  }
+
+  function evaluateGuard(root) {
+    const faces = collectFace(root);
+    const collected = faces.reduce((n, f) => n + f.files.length, 0);
+    const emptyFaces = faces.filter((f) => f.files.length === 0).map((f) => f.face);
+    const violations = [];
+    let mentions = 0;
+    for (const f of faces) {
+      for (const p of f.files) {
+        const lines = readFileSync(p, "utf8").split(/\r?\n/);
+        for (let i = 0; i < lines.length; i++) {
+          if (!lines[i].includes(BANNED)) continue;
+          mentions += 1;
+          if (isPrescription(lines[i])) {
+            violations.push(relative(root, p).split("\\").join("/") + ":" + (i + 1) + "| " + lines[i].trim().slice(0, 90));
+          }
+        }
+      }
+    }
+    return { faces, collected, emptyFaces, violations, mentions };
+  }
+
+  const real = evaluateGuard(S19_ROOT);
+  console.log(
+    "S19 采集面：面 " + real.faces.length + " / 文件 " + real.collected +
+    " / 提及 " + real.mentions + " / 违规 " + real.violations.length +
+    " / 空面 [" + real.emptyFaces.join(",") + "]",
+  );
+  assert.ok(real.collected > 0, "[FLOOR-COLLECTOR] §S19 采集到 0 个文件 —— 这是采集器失效，不是处方面干净");
+  assert.deepEqual(real.emptyFaces, [], "[FLOOR-COLLECTOR] §S19 声明过的面采到 0 件（假覆盖）：" + real.emptyFaces.join(", "));
+  assert.equal(real.violations.length, 0, "处方面把不存在的包名当真实模块名用：\n" + real.violations.join("\n"));
+
+  const poisonLine = "- pack dependencies 直接写 `" + BANNED + "` 即可";
+  assert.equal(isPrescription(poisonLine), true, "[POISON] 判据失效：处方形行未被判红");
+  assert.equal(isPrescription("- 或把模块名写成不存在的 `" + BANNED + "`"), false, "[POISON] NEG 禁令行被误判红");
+  const deadFaceRoot = join(
+    mkdtempSync(join(tmpdir(), "mc-skill-s19-empty-")),
+    "root",
+  );
+  try {
+    const dead = evaluateGuard(deadFaceRoot);
+    assert.equal(dead.collected, 0, "[POISON] 空根竟采到文件");
+    assert.ok(dead.emptyFaces.length === dead.faces.length, "[POISON] 空根未报满空面");
+    console.log("S19 投毒①（内存夹具 + 空根）：处方形判红 / 禁令行放行 / 采集 0 ⇒ [FLOOR-COLLECTOR] = ok");
+  } finally {
+    rmSync(dirname(deadFaceRoot), { recursive: true, force: true });
+  }
+}
+
 console.log("core regression tests passed");
 
 // queryApi starts a Worker; SQLite handles must close — otherwise Node hangs after pass.
+// ── R66 S8/S9（2026-09-22 第 6 轮）：validate_project 安静腿 + 数据根围栏 + registry allowlist ──
+{
+  const forgeGradleForQuiet = [
+    "buildscript { repositories { maven { url = 'https://maven.minecraftforge.net/' } } }",
+    "apply plugin: 'net.minecraftforge.gradle'",
+  ].join("\n");
+  const quietModsToml = [
+    'modLoader="javafml"',
+    'loaderVersion="[47,)"',
+    'license="MIT"',
+    "[[mods]]",
+    'modId="examplemod"',
+    'version="1.0.0"',
+    'displayName="Example Mod"',
+    "",
+  ].join("\n");
+  // 标准 Forge 1.20.1 写法：DeferredRegister + RegistryObject<Block> 常量 + Builder.of(工厂, BLOCK.get())。
+  const quietContent = [
+    "package com.example.examplemod;",
+    "",
+    "import net.minecraft.world.item.BlockItem;",
+    "import net.minecraft.world.item.Item;",
+    "import net.minecraft.world.level.block.Block;",
+    "import net.minecraft.world.level.block.entity.BlockEntityType;",
+    "import net.minecraftforge.registries.DeferredRegister;",
+    "import net.minecraftforge.registries.ForgeRegistries;",
+    "import net.minecraftforge.registries.RegistryObject;",
+    "",
+    "public class ModContent {",
+    '    public static final String MOD_ID = "examplemod";',
+    "    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);",
+    "    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID);",
+    "    public static final RegistryObject<Block> EXAMPLE_BLOCK = BLOCKS.register(\"example_block\", () -> new Block(Block.Properties.of()));",
+    "    public static final RegistryObject<Item> EXAMPLE_BLOCK_ITEM = ITEMS.register(\"example_block\", () -> new BlockItem(EXAMPLE_BLOCK.get(), new Item.Properties()));",
+    "    public static final RegistryObject<BlockEntityType<ExampleBlockEntity>> EXAMPLE_ENTITY_TYPE = BlockEntityType.Builder.of(ExampleBlockEntity::new, EXAMPLE_BLOCK.get()).build(null);",
+    "}",
+    "",
+  ].join("\n");
+  const quietEntry = [
+    "package com.example.examplemod;",
+    "",
+    "import net.minecraftforge.eventbus.api.IEventBus;",
+    "import net.minecraftforge.fml.common.Mod;",
+    "",
+    '@Mod("examplemod")',
+    "public class ExampleMod {",
+    "    public ExampleMod(IEventBus modEventBus) {",
+    "        ModContent.BLOCKS.register(modEventBus);",
+    "        ModContent.ITEMS.register(modEventBus);",
+    "    }",
+    "}",
+    "",
+  ].join("\n");
+  const quietJavaFiles = [
+    { path: "src/main/java/com/example/examplemod/ModContent.java", content: quietContent },
+    { path: "src/main/java/com/example/examplemod/ExampleMod.java", content: quietEntry },
+  ];
+
+  // S8/T4 主断言：正确代码必须**安静**（0 error + 0 warning）。修前这里必红 ——
+  // C 检查拿 Builder.of 的第一参（工厂 `ExampleBlockEntity::new`）当 Block 名比对，
+  // 且 RegistryObject 收集器把 SCREAMING_SNAKE 常量逐字母下划线化（EXAMPLE_BLOCK →
+  // e_x_a_m_p_l_e__b_l_o_c_k），集合恒空 ⇒ 「未找到 BLOCKS.register」假 warning。
+  const quiet = validateProject({
+    modsToml: quietModsToml,
+    buildGradle: forgeGradleForQuiet,
+    javaFiles: quietJavaFiles,
+  });
+  assert.equal(quiet.passed, true, JSON.stringify(quiet.errors));
+  assert.deepEqual(quiet.errors, [], JSON.stringify(quiet));
+  assert.deepEqual(quiet.warnings, [], "正确的 DeferredRegister 写法必须 0 warning：" + JSON.stringify(quiet.warnings));
+
+  // 反证（防「把检查改成空转」）：真悬空引用仍须报。
+  const dangling = validateProject({
+    modsToml: quietModsToml,
+    buildGradle: forgeGradleForQuiet,
+    javaFiles: [
+      {
+        path: "src/main/java/com/example/examplemod/ModContent.java",
+        content: quietContent.replace("ExampleBlockEntity::new, EXAMPLE_BLOCK.get()", "ExampleBlockEntity::new, MISSING_BLOCK.get()"),
+      },
+      { path: "src/main/java/com/example/examplemod/ExampleMod.java", content: quietEntry },
+    ],
+  });
+  assert.ok(
+    dangling.warnings.some((w) => /BlockEntityType\.Builder\.of.*MISSING_BLOCK/.test(w)),
+    "真缺失的 Block 引用仍必须报 warning：" + JSON.stringify(dangling.warnings),
+  );
+
+  // S8/T2：@ObjectHolder 缺命名空间那条 warning 里的占位符必须被插值（此前双引号 ⇒ 原样出货）。
+  const ohFile = [
+    "package com.example.examplemod;",
+    "",
+    "import net.minecraftforge.eventbus.api.SubscribeEvent;",
+    "import net.minecraftforge.fml.event.registry.RegistryEvent;",
+    "import net.minecraftforge.registries.ObjectHolder;",
+    "",
+    '@ObjectHolder("example_block")',
+    "public class ModHolders {",
+    "    public static void onRegister(RegistryEvent event) {}",
+    "}",
+    "",
+  ].join("\n");
+  const ohResult = validateProject({
+    modsToml: quietModsToml,
+    buildGradle: forgeGradleForQuiet,
+    javaFiles: [{ path: "src/main/java/com/example/examplemod/ModHolders.java", content: ohFile }],
+  });
+  const ohWarning = (ohResult.warnings || []).find((w) => /未指定命名空间/.test(w)) ?? "";
+  assert.ok(ohWarning, "缺命名空间的 @ObjectHolder 仍须出 warning：" + JSON.stringify(ohResult.warnings));
+  assert.ok(
+    ohWarning.includes('@ObjectHolder("examplemod:example_block")'),
+    "modId 必须被插值：" + ohWarning,
+  );
+  assert.ok(!ohWarning.includes("${modsTomlModId}"), "不许把模板占位符原样出货：" + ohWarning);
+}
+
+{
+  // S9/T1 数据根围栏：合法子路径照旧放行；带开头 `/` 的穿越片段必须拒。
+  const legit = resolveDataDir("vanilla_1.20.1", "registries");
+  assert.ok(legit.endsWith(join("vanilla_1.20.1", "registries")), legit);
+  assert.throws(
+    () => resolveDataDir("vanilla_/../../outside", "registries"),
+    (err) => {
+      assert.match(String(err.message), /拒绝/);
+      assert.ok(
+        !/\.\.[\\/]\.\./.test(err.message) && !/[A-Za-z]:[\\/]/.test(err.message),
+        "错误信息不得回显解析后的穿越路径：" + err.message,
+      );
+      return true;
+    },
+    "开头带 / 的片段（vanilla_/../../x）必须被拦下",
+  );
+  assert.throws(() => resolveDataDir("../forge_1.20.1", "extracted"), /拒绝/);
+
+  // S9/T2 registry 版本 allowlist：穿越 token 拒绝且不回显；形状合法但不存在的档位仍走既有路径。
+  const { queryRegistry } = await import("./dist/registry/index.js");
+  const badVer = queryRegistry({ query: "stone", version: "../forge_1.20.1" });
+  assert.equal(badVer.found, false);
+  assert.equal(badVer.version, "", "被拒绝的 token 不得回显进 version 字段");
+  assert.equal(badVer.action?.code, "INVALID_INPUT", JSON.stringify(badVer.action));
+  assert.ok(
+    !JSON.stringify(badVer).includes("../forge_1.20.1"),
+    "整份载荷都不得出现穿越串：" + JSON.stringify(badVer).slice(0, 300),
+  );
+  const nine = queryRegistry({ query: "air", version: "9.9.9" });
+  assert.equal(nine.action?.code, "DATA_UNAVAILABLE", "形状合法但不存在的档位仍走「索引没建」路径");
+  const okVer = queryRegistry({ query: "minecraft:stone", version: "1.20.1" });
+  assert.equal(okVer.found, true, JSON.stringify(okVer.notes));
+  assert.equal(okVer.version, "1.20.1");
+}
+
+// ── S12/T5：STRICT 启动门「processed 有页 + 语义库 0 行 = 真故障」判据（假树夹具，双向钉）──
+// 为什么单独立这条腿：`src/utils/path.ts` 的注释自述「这条能力由 test-core 的假树夹具双向钉住」，
+// 而第 27 轮 grep 实测 `assertDataUsable` 在任何测试文件里 **0 引用** ⇒ 那句自述当时是假的。
+// 判据的两半都得钉：
+//   红例 = 实质语料树（index-l0 是「数组 + 条目带 id」，见 substantiveL0Pages）+ processed/ 有页 + 0 行库；
+//   绿例 = 同形状但 processed/ 0 页的**诚实空档**（`data/fabric_1.20.1` 那类「上游没有 docs 树」的档面），
+//          按既有裁定不得判红 —— 只钉红例会退化成「凡 0 行库即红」的错误判据。
+// 口径：走 `dist/utils/path.js`（本文件所有被测实现都吃 dist；本轮 dist 与 src 的 assertDataUsable
+//       逐字一致，无需 npm run build，故不新增构建步骤）。
+{
+  const mkUsableRoot = ({ tag, pages, rows }) => {
+    const root = mkdtempSync(join(tmpdir(), `mc-skill-usable-${tag}-`));
+    const versionDir = join(root, "fabric_9.9.9", "fabric-docs", "9.9.9");
+    mkdirSync(join(versionDir, "processed"), { recursive: true });
+    for (let i = 0; i < pages; i++) writeFileSync(join(versionDir, "processed", `p${i}.md`), "# 页\n", "utf8");
+    writeFileSync(join(versionDir, "index-l0.json"), JSON.stringify([{ id: "p0", version: "9.9.9" }]), "utf8");
+    const dbPath = semanticDbPath(root, "fabric", "9.9.9", "fabric-docs");
+    mkdirSync(dirname(dbPath), { recursive: true });
+    const db = new DatabaseSync(dbPath);
+    db.exec(SEMANTIC_DDL);
+    if (rows > 0) {
+      db.exec(
+        `INSERT INTO meta (key, value) VALUES ('docs','1'),('chunks','1'),('built_at','2026-09-24T00:00:00.000Z'),('source_fingerprint','fixture')`,
+      );
+    }
+    db.close();
+    return root;
+  };
+  const redRoot = mkUsableRoot({ tag: "red", pages: 1, rows: 0 });
+  const greenRoot = mkUsableRoot({ tag: "green", pages: 0, rows: 0 });
+  try {
+    const red = assertDataUsable(redRoot);
+    assert.equal(
+      red.ok,
+      false,
+      `S12/T5 红例失效：processed/ 有 1 页而语义库 0 行 = 真故障，assertDataUsable 却放行 ⇒ ${JSON.stringify(red)}`,
+    );
+    assert.match(
+      String(red.reason),
+      /fabric_9\.9\.9\/fabric-docs 的 processed\/ 有 1 页/,
+      `红例必须点名「哪棵树几页」，否则红得没法复核：${red.reason}`,
+    );
+    assert.match(String(red.reason), /索引却 0 行 = 真故障/, `红例判据串漂了：${red.reason}`);
+    assert.match(String(red.reason), /build:semantic-index/, `红例必须给出重建指令：${red.reason}`);
+
+    const green = assertDataUsable(greenRoot);
+    assert.equal(
+      green.ok,
+      true,
+      `S12/T5 绿例失效：processed/ 0 页的诚实空档不得判红（上游没有该版 docs 树的档面）：${green.reason}`,
+    );
+    assert.ok(
+      (green.info ?? []).some((s) => /语义库 0 行但 fabric_9\.9\.9\/fabric-docs 无 processed\/ 页/.test(s)),
+      `绿例必须把「按档面跳过」记进 info（不记 = 空档与故障不可区分）：${JSON.stringify(green.info)}`,
+    );
+    console.log(
+      "  S12/T5 assertDataUsable 假树夹具双向钉: 红例（1 页 + 0 行库）判真故障并点名树 · 绿例（0 页 + 0 行库）ok:true 且 info 记账",
+    );
+  } finally {
+    closeSemanticStatusDbs(); // A-38：LRU 持只读句柄，Windows 上不先释放删不掉临时目录
+    rmSync(redRoot, { recursive: true, force: true, maxRetries: 6, retryDelay: 120 });
+    rmSync(greenRoot, { recursive: true, force: true, maxRetries: 6, retryDelay: 120 });
+  }
+}
+
 try {
   const { closeAllYarnDbs } = await import("./dist/mappings/yarn-sqlite.js");
   closeAllYarnDbs();

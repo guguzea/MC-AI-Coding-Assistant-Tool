@@ -17,7 +17,7 @@
 ### 线程约束
 
 - **服务端线程**：游戏逻辑处理、事件订阅（大多数）
-- **客户端线程**：渲染、输入（KeyBinding）、粒子效果
+- **客户端线程**：渲染、输入（KeyMapping）、粒子效果
 - **禁止**在渲染线程中执行服务端逻辑（如修改世界数据）
 - **禁止**在服务端线程中直接调用客户端渲染方法
 
@@ -56,7 +56,7 @@ IF 代码涉及渲染（Model、BakedQuad、RenderType）
   → 放在 client/ 包下
   → 使用 @OnlyIn(Dist.CLIENT)
 
-IF 代码涉及输入（KeyMapping、MouseListener、KeyboardListener）
+IF 代码涉及输入（KeyMapping、MouseListener、KeyboardHandler）
   → 客户端
   → 放在 client/ 包下
   → 使用 @OnlyIn(Dist.CLIENT)
@@ -149,9 +149,9 @@ public class ClientSetup {
 }
 ```
 
-> **KeyBinding 注册方式**：1.17.1 **必须**在 `FMLClientSetupEvent`（`Bus.MOD` + `Dist.CLIENT`）中调用 `net.minecraftforge.fmlclient.registry.ClientRegistry.registerKeyBinding(KeyMapping)`（oracle：`query_loader_api --platform=forge --minecraftVersion=1.17.1 --className=net.minecraftforge.fmlclient.registry.ClientRegistry` → `void registerKeyBinding(KeyMapping)`）。`RegisterKeyMappingsEvent` 是 **1.19+** API，本档**不存在**（1.17.1 摘要命中 0）。
+> **KeyMapping 注册方式**：1.17.1 **必须**在 `FMLClientSetupEvent`（`Bus.MOD` + `Dist.CLIENT`）中调用 `net.minecraftforge.fmlclient.registry.ClientRegistry.registerKeyBinding(KeyMapping)`（oracle：`query_loader_api --platform=forge --minecraftVersion=1.17.1 --className=net.minecraftforge.fmlclient.registry.ClientRegistry` → `void registerKeyBinding(KeyMapping)`）。`RegisterKeyMappingsEvent` 是 **1.19+** API，本档**不存在**（1.17.1 摘要命中 0）。
 
-## 示例：KeyBinding 处理
+## 示例：KeyMapping 处理
 
 ```java
 // client/input/ModKeyBindings.java

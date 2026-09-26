@@ -13,13 +13,13 @@ description: 02 — 方块开发
 ### Block 子类规范
 
 - 方块类必须继承 `Block`（`net.minecraft.block.Block`）
-- 使用 `Block.Properties.of(Material)` 创建属性（Forge 1.16.x 风格）
+- 使用 `AbstractBlock.Properties.of(Material)` 创建属性（Forge 1.16.x 风格）
 - 禁止重写 `use`、`onDestroyedByPlayer` 等与物理交互相关的旧版方法
 
 ### Block.Properties 常用配置
 
 ```java
-Block.Properties.of(Material material)
+AbstractBlock.Properties.of(Material material)
     .strength(float hardness, float resistance)  // 硬度和抗爆性
     .requiresCorrectToolForDrops()                                          // 需要正确工具才能掉落
     .noOcclusion()                                          // 不阻挡光
@@ -126,7 +126,7 @@ IF 只需要静态方块（装饰、完整方块）
 // blocks/MyBlock.java
 public class MyBlock extends Block {
     public MyBlock() {
-        super(Block.Properties.of(Material.STONE)
+        super(AbstractBlock.Properties.of(Material.STONE)
             .strength(1.5f, 6.0f)
             .requiresCorrectToolForDrops()
             .sound(SoundType.STONE)
@@ -167,7 +167,7 @@ event.getRegistry().register(
 // blocks/MyBlockEntityBlock.java
 public class MyBlockEntityBlock extends Block {
     public MyBlockEntityBlock() {
-        super(Block.Properties.of(Material.WOOD).noOcclusion());
+        super(AbstractBlock.Properties.of(Material.WOOD).noOcclusion());
     }
 
     @Override

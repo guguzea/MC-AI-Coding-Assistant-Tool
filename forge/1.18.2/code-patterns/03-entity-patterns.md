@@ -8,9 +8,9 @@
 ## 基础生物实体
 
 ```java
-// 注册（Forge 1.18.2 使用 ENTITYTYPES）
+// 注册（Forge 1.18.2 的字段名是 ForgeRegistries.ENTITIES；1.19 起才叫 ENTITY_TYPES）
 public static final DeferredRegister<EntityType<?>> ENTITY_TYPES =
-    DeferredRegister.create(ForgeRegistries.ENTITYTYPES, MOD_ID);
+    DeferredRegister.create(ForgeRegistries.ENTITIES, MOD_ID);
 
 public static final RegistryObject<EntityType<MyEntity>> MY_ENTITY = ENTITY_TYPES.register("my_entity",
     () -> EntityType.Builder.of(MyEntity::new, MobCategory.CREATURE)

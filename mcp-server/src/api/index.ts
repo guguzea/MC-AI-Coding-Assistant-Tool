@@ -27,6 +27,7 @@ import { ownGet } from "../utils/own-record.js";
 import { readableSignature, returnType as descriptorReturnType } from "../utils/descriptor.js";
 import { ActionCodes, actionable, withAction, versionRequiredAction, missingMcVersion, type ActionEnvelope } from "../utils/actionable.js";
 import { isUnobfuscatedMcVersion, UNOBFUSCATED_MAPPING_HINT } from "../mappings/unobfuscated.js";
+import { mappingsNameProbe, type MappingsNameProbe } from "../mappings/yarn-sqlite.js";
 import { parseJsonUtf8 } from "../utils/json-utf8.js";
 import { isSafeVersionSegment } from "../utils/minecraft-version.js";
 import { editDistanceLimited } from "../utils/edit-distance.js";
@@ -72,6 +73,12 @@ export interface ApiResult {
   /** 调用方传入的原始类名（仅 autoCorrected 时） */
   requestedClassName?: string;
   truncated?: boolean;
+  /**
+   * S1′（2026-09-25）：api-index 未命中时补的**第二档出处** —— 在盘映射索引（各档
+   * `mappings/yarn-mappings.sqlite`）的名字存在性探针。恒不代表签名/用法成立；
+   * `found` 仍只说 api-index 那一档，二者不得互替。
+   */
+  nameIndex?: MappingsNameProbe;
 }
 
 export type ApiPreloadStatus =
@@ -829,6 +836,26 @@ function queryApiCoverageWarning(version: string, classCount?: number): string |
 
 // ── 主查询函数 ─────────────────────────────────────────────────────────────
 
+/**
+ * S1′：映射索引那一档的出处披露 —— 三件事必须念清楚：命中形状、`mappingEra` 决定 named
+ * 是哪套名字（`forge-srg`/`tsrg`/`mcp-csv` 的 named 是 MCP `func_/field_`，不是 Yarn 名）、
+ * 以及「名字存在 ≠ 签名成立」。缺任何一句，读的人就会把存在性当用法。
+ */
+function mappingsTierNotes(probe: MappingsNameProbe | null): string[] {
+  if (!probe) return [];
+  return [
+    `映射索引（第二档出处）：${
+      probe.exists
+        ? probe.named
+          ? `该档有此类 named=${toDot(probe.named)}（${probe.memberCounts.methods} 方法 / ${probe.memberCounts.fields} 字段，样本见 nameIndex.memberSample）`
+          : `该档有同名简名但**歧义**（${probe.candidates.length} 个候选，见 nameIndex.candidates）`
+        : "该档映射里也没有这个类名"
+    }`,
+    `该库 mappingEra=${probe.mappingEra || "未知"} / 来源=${probe.dbKind} ⇒ named 列是这套映射的名字（forge-srg/tsrg/mcp-csv 的 named 是 MCP func_/field_ 名，**不是** Yarn 名）。`,
+    "名字存在 ≠ 会用法：要签名请 search_*_docs 或按需反编译（get_minecraft_source）。",
+  ];
+}
+
 export async function queryApi(query: ApiQuery): Promise<ApiResult> {
   const { className, methodName } = query;
   if (missingMcVersion(query.version)) {
@@ -903,12 +930,19 @@ export async function queryApi(query: ApiQuery): Promise<ApiResult> {
           "确认 MC_SKILL_DATA 指向仓库 data/ 目录",
           "必要时重启 MCP Server",
         ];
+    // S1′：该版本压根没有 Parchment 索引 —— 映射索引是**这里唯一还能给的出处**，
+    // 但仍只证名字存在，不抬 found。
+    const probe = mappingsNameProbe(version, className);
     return withCoverage(withAction(
       {
         found: false,
         className,
         mappings: { mojang: toSlash(className), parchment: toSlash(className) },
-        suggestions: nextSteps,
+        ...(probe ? { nameIndex: probe } : {}),
+        notes: mappingsTierNotes(probe),
+        suggestions: probe?.exists
+          ? [`该版本无 Parchment 索引，但在盘映射索引里有这个类（见 nameIndex；只证名字，不证签名）`, ...nextSteps]
+          : nextSteps,
       },
       actionable(
         ActionCodes.DATA_UNAVAILABLE,
@@ -934,6 +968,10 @@ export async function queryApi(query: ApiQuery): Promise<ApiResult> {
 
   // 2. 未命中：只给 suggestions，不改写 className、不返回 methods
   if (!cls) {
+    // S1′：api-index 未命中时,再问一次在盘映射索引（只证名字存在,不证签名）。
+    // 附在 found:false 里而不是抬成 found:true —— 抬了就等于用「类名存在」冒充「有签名」。
+    const probe = mappingsNameProbe(version, className);
+    const nameIndexNotes = mappingsTierNotes(probe);
     const fuzzy = fuzzyClassSearch(className, vData);
     if (fuzzy.length > 0) {
       const suggestions = fuzzy.map((h) => `你指的是 ${toDot(h.name)} 吗？`);
@@ -941,8 +979,12 @@ export async function queryApi(query: ApiQuery): Promise<ApiResult> {
         found: false,
         className,
         mappings: { mojang: slashName, parchment: slashName },
+        ...(probe ? { nameIndex: probe } : {}),
         suggestions: [`未找到 ${className}。类似类：`, ...suggestions],
-        notes: ["歧义简名 / 子串 / 拼写近似不会当作命中；请改用完整包名或从 suggestions 选一类再查"],
+        notes: [
+          "歧义简名 / 子串 / 拼写近似不会当作命中；请改用完整包名或从 suggestions 选一类再查",
+          ...nameIndexNotes,
+        ],
       });
     }
     const emptyIndex = !vData.classNames || vData.classNames.length === 0;
@@ -967,11 +1009,18 @@ export async function queryApi(query: ApiQuery): Promise<ApiResult> {
           `若你在查 NeoForge/MC ${version}，本工具无对应索引；请改用 search_neoforge_docs / convert_mapping，或换 version=1.20.1/1.20.4 查相近 Vanilla API。`,
       );
     }
+    notes.push(...nameIndexNotes);
     return withCoverage({
       found: false,
       className,
       mappings: { mojang: slashName, parchment: slashName },
-      suggestions: [`未找到类 ${className}，请检查类名是否正确`],
+      ...(probe ? { nameIndex: probe } : {}),
+      suggestions: probe?.exists
+        ? [
+            `api-index 里没有 ${className}，但在盘映射索引里有（见 nameIndex）—— 本工具给不出签名，改走 search_*_docs / get_minecraft_source`,
+            `未找到类 ${className}，请检查类名是否正确`,
+          ]
+        : [`未找到类 ${className}，请检查类名是否正确`],
       notes,
     });
   }

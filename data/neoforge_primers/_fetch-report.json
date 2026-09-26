@@ -1,6 +1,12 @@
 {
   "at": "2026-08-14T18:01:18.338Z",
+  "amendedAt": "2026-09-24",
+  "amendNote": "round-11 S17-T2: appended 26.3 without a fetch run. Evidence on disk: data/neoforge_primers/26.3.md 352118 bytes, frontmatter primerKey=26.3 fetchedAt=2026-09-21T03:40:44.731Z. The 2026-08-14 report could not contain 26.3 because PRIMER_CONFIG in scripts/fetch-neoforge-primers.mjs had no 26.3 entry at that date; config line added 2026-09-24 so a future --write run records it natively. 'at' intentionally unchanged (no run happened).",
   "report": [
+    {
+      "slug": "26.3",
+      "skipped": "exists"
+    },
     {
       "slug": "26.2",
       "skipped": "exists"

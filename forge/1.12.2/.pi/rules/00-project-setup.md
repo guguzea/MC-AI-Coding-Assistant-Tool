@@ -84,7 +84,7 @@ src/main/java/
         └── ClientProxy.java
 
 src/main/resources/
-├── mcmod.info          # Forge 元数据（必需）
+├── mcmod.info          # 元数据（可选，非必需：仅供主菜单 Mods 按钮展示；useMetadata 默认 false ⇒ 不参与 FML 加载。出处：本档语料 gettingstarted_structuring.md:21/:85）
 ├── pack.mcmeta         # 资源包标识（必需）
 └── assets/
     └── {modid}/       # 资源文件
@@ -108,7 +108,7 @@ IF 这是新项目（没有 build.gradle）
 IF 这是已有项目
   → 读取 gradle.properties 获取版本配置
   → 读取 build.gradle 确认 mappings 和插件配置
-  → 读取 mcmod.info 确认 modId
+  → 若有 mcmod.info 则读取它确认 modId；该文件可选（见上文目录树 :83），缺失时以 @Mod(modid=…) 为准
 
 IF 构建失败且报错涉及版本号
   → 检查 gradle.properties 中的版本是否匹配

@@ -18,7 +18,7 @@ sourceKind: authored
 - 传 `memberKind: "field"`（或名称以 `field_` / `f_` 开头）。
 - 1.16+ Yarn：尽量带 `ownerClass`。
 - 1.14–1.15：全局 `fields.csv` 的 searge↔named（勿传 owner）。
-- 若返回 `SCHEMA_FIELDS_UNAVAILABLE`：运行 `npm run build:yarn-sqlite` 重建为 schema **v3**。
+- 若返回 `SCHEMA_FIELDS_UNAVAILABLE`：运行 `npm run build:yarn-sqlite` 重建为 schema **≥v3**（**v3 是运行时可读的下限，不是笔误**：`src/mappings/yarn-sqlite.ts` 头注记「schema v2/v3/v4」皆可读、v3 才加 `fields` / `searge_fields`；**本仓现产 v4** —— 生产侧 `mcp-server/scripts/_lib/build-yarn-sqlite.mjs:27` 钉 `SCHEMA_VERSION = "4"`，v4 另加单列 `name_official` / `name_intermediary` 索引）。
 
 ## 相关
 

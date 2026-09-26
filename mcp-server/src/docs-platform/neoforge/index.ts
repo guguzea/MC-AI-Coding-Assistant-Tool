@@ -30,7 +30,7 @@ import {
   versionNotFoundResult,
 } from "../platform-data.js";
 import { semanticSearch } from "../semantic/search.js";
-import { mergeSemanticResults, semanticAllowedIds, joinSearchWarnings, withDocsFallbackFields, annotateVerbatim } from "../search-utils.js";
+import { mergeSemanticResults, semanticAllowedIds, joinSearchWarnings, withDocsFallbackFields, annotateVerbatim, limitWindowOf, limitClampWarning } from "../search-utils.js";
 import { missingSemanticDbWarning, semanticStaleSearchWarning } from "../semantic/status.js";
 import {
   findPrimer,
@@ -168,6 +168,15 @@ export async function listNeoForgeVersions(): Promise<CallToolResult> {
 
 // ── 工具 1：search_neoforge_docs ────────────────────────────────────────────
 
+/**
+ * A2（2026-09-24）：`search_neoforge_docs` 的按调用窗口常量。
+ * 上界**派生自本面的构造上界**：L0 腿 `enhancedSearch({limit: 20})`（`neoforge/store.ts`）
+ * ∪ 语义腿 `semanticSearch(..., limit = 10)` ⇒ 去重后 ≤ 30（primer 前置插入也走同一窗口）。
+ * 实际可得 ≤ 响应里 `limitWindow.candidates`（每调用现算，请求超池即 clamp + warning）。
+ */
+export const NEOFORGE_SEARCH_DEFAULT_LIMIT = 20;
+export const NEOFORGE_SEARCH_LIMIT_MAX = 30;
+
 export const searchNeoForgeDocsSchema = {
   name: "search_neoforge_docs",
   description:
@@ -183,6 +192,16 @@ export const searchNeoForgeDocsSchema = {
     query: z.string().describe("搜索查询关键词"),
     version: z.string().describe("NeoForge 版本（必填）。请先 list_neoforge_versions"),
     tags: z.array(z.string()).optional().describe("标签过滤（如 [\"deferredregister\", \"networking\"]）"),
+    limit: z
+      .number()
+      .int()
+      .positive()
+      .max(NEOFORGE_SEARCH_LIMIT_MAX)
+      .optional()
+      .describe(
+        `最多返回条数（默认 ${NEOFORGE_SEARCH_DEFAULT_LIMIT}，上界 ${NEOFORGE_SEARCH_LIMIT_MAX}）。` +
+        `不传 = 既有默认窗口（载荷逐字不变）；传了会带 limitWindow{candidates,...}，请求超过本次候选池即按池截断并在 warning 里说破。`,
+      ),
   }),
 } as const;
 
@@ -190,6 +209,8 @@ export async function searchNeoForgeDocs(args: {
   query: string;
   version: string;
   tags?: string[];
+  /** A2：按调用窗口（缺省 = NEOFORGE_SEARCH_DEFAULT_LIMIT；上界 = NEOFORGE_SEARCH_LIMIT_MAX） */
+  limit?: number;
 }): Promise<CallToolResult> {
   try {
     if (!hasPlatformDocData("neoforge", neoDataRoot())) {
@@ -235,11 +256,16 @@ export async function searchNeoForgeDocs(args: {
             "neoforge-docs",
             neoDataRoot(),
           );
+    // A2（2026-09-24）：只放宽不收紧 —— 不传 limit 时建造窗口与截断点与加参数之前逐字相同。
+    const requestedLimit = args.limit;
+    const buildLimit = requestedLimit === undefined
+      ? NEOFORGE_SEARCH_DEFAULT_LIMIT
+      : Math.max(NEOFORGE_SEARCH_DEFAULT_LIMIT, requestedLimit);
     let results = semanticHits === null
       ? detailed.results
       : mergeSemanticResults(detailed.results, semanticHits, {
           tags: args.tags,
-          limit: 20,
+          limit: buildLimit,
           version: detailed.resolvedVersion,
           allowedIds: semanticAllowedIds(s, detailed.resolvedVersion, detailed.results),
         });
@@ -248,8 +274,15 @@ export async function searchNeoForgeDocs(args: {
     const primerHits = searchNeoForgePrimers({ query: args.query, version, dataRoot: neoDataRoot() });
     if (primerHits.length) {
       const seen = new Set(results.map((r) => r.id));
-      results = [...primerHits.filter((p) => !seen.has(p.id)), ...results].slice(0, 20);
+      results = [...primerHits.filter((p) => !seen.has(p.id)), ...results].slice(0, buildLimit);
     }
+    // A2：显式 limit ⇒ 按池截断并把窗口/池写进载荷；不传 ⇒ 一个字段都不加。
+    const limitWindow = limitWindowOf({
+      requested: requestedLimit,
+      candidates: results.length,
+      limitMax: NEOFORGE_SEARCH_LIMIT_MAX,
+    });
+    if (limitWindow) results = results.slice(0, limitWindow.resultLimit);
     // verbatim 逐字支撑位：只事后标注，不改排序 / 召回（primer 行无 processed 正文 → 未判定）
     const vb = annotateVerbatim(results, args.query, (r) =>
       s.pageText(r.id, detailed.resolvedVersion),
@@ -272,6 +305,7 @@ export async function searchNeoForgeDocs(args: {
             primerHits.length ? "结果含 source=primer（迁移 Primer，不是 loader API 全文）" : undefined,
             version === "26.1" ? "NeoForge 26.1 官方无 /docs/26.1/，抓的是未版本化现行 /docs/（unversionedCurrent）。26.2 成为现行后禁止 --force 覆盖本树，也不要克隆成 26.2。" : undefined,
             missingSemanticDbWarning(semanticHits === null && !resolution.mainDocsMissing),
+            limitClampWarning(limitWindow),
             // 补齐 stale 警告（此前仅 forge/search_docs 路径有，neoforge 独立路径缺失）
             semanticStaleSearchWarning(
               neoDataRoot(),
@@ -288,6 +322,7 @@ export async function searchNeoForgeDocs(args: {
             ? "NeoForge 1.20.1 使用 Forge 1.20.1 文档数据（API 语义兼容）"
             : undefined,
           semantic: semanticHits !== null,
+          ...(limitWindow ? { limitWindow } : {}),
           total: results.length,
           ...(vb.term
             ? { verbatim_summary: { term: vb.term, judged: vb.judged, hits: vb.hits } }

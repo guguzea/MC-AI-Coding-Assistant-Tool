@@ -14,6 +14,10 @@ jobs:
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    # CI 语义（README.md §测试 与 mcp-server/README.md 环境变量表所承诺的行为）：
+    # 下载类工具（反编译链）在 CI 里禁止碰网络，诚实失败而非静默下载。
+    env:
+      MC_SKILL_SKIP_DOWNLOAD: "1"
 
     steps:
       - uses: actions/checkout@v4
@@ -35,6 +39,14 @@ jobs:
         working-directory: mcp-server
         run: npm run build
 
+      # 真实 data/ 一致性审计（与 release workflow 的 Data audit 同一步、同判据）：
+      # 改 data/** 的 PR 在合并前就要红，而不是等 tag push 才在 release 里暴露。
+      - name: Data audit (fail on error)
+        working-directory: mcp-server
+        run: npm run audit:data:fail-on-error
+        env:
+          MC_SKILL_DATA: ${{ github.workspace }}/data
+
       - name: Test
         working-directory: mcp-server
         run: npm test
@@ -46,6 +58,8 @@ jobs:
   release-smoke:
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    env:
+      MC_SKILL_SKIP_DOWNLOAD: "1"
     steps:
       - uses: actions/checkout@v4
 
@@ -61,7 +75,7 @@ jobs:
         working-directory: mcp-server
         run: npm run build
 
-      - name: Release smoke (81 tools)
+      - name: Release smoke (82 tools)
         working-directory: mcp-server
         run: npm run smoke:release
         env:

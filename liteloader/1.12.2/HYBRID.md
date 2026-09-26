@@ -26,3 +26,10 @@ minecraft {
 缺映射 → 运行时 `NoSuchMethodError` / `AbstractMethodError`。
 
 聊天命令（E2E-001）：同时有 `@Mod`（Forge 侧）和 `LiteMod` + `OutboundChatListener`（客户端）。
+
+## 元数据：混合工程到底要哪些文件
+
+- **LiteLoader 侧**：`src/main/resources/litemod.json` —— 本档 hybrid scaffold 的 resources 下实测**只有**这一个文件（`scaffold/hybrid/src/main/resources/litemod.json`，键 = `name` / `version` / `mcversion` / `revision`），LiteLoader 靠它发现插件。
+- **Forge 侧**：`@Mod` 注解自带三个属性即可（scaffold 实况 `src/main/java/com/example/examplehybrid/ForgeEntry.java:5` = `@Mod(modid = "examplehybrid", name = "Example Hybrid", version = "1.0.0")`）⇒ **不需要** `mcmod.info` 也能被 FML 发现。`mcmod.info` 按本档语料只服务于主菜单 Mods 按钮的用户向展示，且 `useMetadata` 默认 `false`（`data/forge_1.12.2/forge-docs/1.12.2/processed/gettingstarted_structuring.md:21`、`:85`），要写就写进 `src/main/resources/mcmod.info`。
+- **禁止**为混合工程补 `mods.toml`：那是 1.13+ FML 的语法，1.12.2 不认（本仓 `liteloader/` 全树 `mods.toml` 实测 0 命中）。
+- 上述两条只核实了**静态证据**（scaffold 源码 + 本档语料）；混合 jar 在真机 FML/LiteLoader 双发现的行为本轮**未核实**，要断言请先跑一次 `runClient`。

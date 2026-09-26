@@ -1,19 +1,21 @@
 ---
 id: authored/lib-puzzles-lib
 title: Puzzles Lib 全家桶共享库要点
-tags: [puzzles-lib, fuzs, shared-lib, forge-config-api-port, fabric, forge, neoforge, quilt]
+tags: [puzzles-lib, fuzs, shared-lib, forge-config-api-port, fabric, forge, neoforge]
 summary: Fuzs 全家桶共享库（Modrinth 5630 万下载）。装 Bag of Holding、TrashSlot 等任一 Fuzs 模组自动拉入；与 Forge Config API Port 构成依赖链；面向作者自家模组，非通用 API。
 mcHint: 以 Modrinth/CurseForge 页面为准
 minecraftVersions: "以 Modrinth/CurseForge 页面为准"
 sourceKind: authored
 modIds: [puzzleslib]
-loaders: [fabric, forge, neoforge, quilt]
+loaders: [fabric, forge, neoforge]
 modrinthSlug: puzzles-lib
 role: author_shared
 skillId: mc-author-shared-libs
 ---
 
 # Puzzles Lib 全家桶共享库要点
+
+> **加载器口径（2026-09-25 上游复核）**：`query_upstream_releases --source=modrinth --slug=puzzles-lib`（`ok:true / available:true / total:645`，`limit` 上限 200 ⇒ 降序全量首 200 条覆盖 MC `1.19.4 → 26.3.4`，`loaders` = `fabric 100 / forge 50 / neoforge 50`、**quilt 0**）；另按 MC 分列补采 `1.18.2`（28 条 forge+fabric）/ `1.19.4`（20 条 forge+fabric）/ `1.16.5`、`1.17.1`（`available:false`，该 MC 无发布）⇒ 全量 645/645 条里 **quilt 恒 0**（2026-09-25 本轮 curl 分页读尽 7 页 = 645 builds，窗口 2022-07-08..2026-09-23 ⇒ 第 34 轮记的「残差 309 条」已读尽、无残差），本稿 frontmatter 已摘掉 `quilt`（口径 2026-09-22 裁定④：无构件行即不得声明）。
 
 自写短文（role: author_shared）。数据来自《Minecraft 社区常用库模组全览（2026 版）》第三节：Fuzs 全家桶共享库，Modrinth 5630 万下载。版本与加载器细节以 Modrinth/CurseForge 页面为准。
 
@@ -52,7 +54,7 @@ Decision: 要不要把 Puzzles Lib 作为依赖
 - MCP：check_dependencies、search_community_docs、crash_analyze
 - Skill：mc-author-shared-libs（作者全家桶共享库纪律）
 - 全览：§三 全家桶共享库；相关：authored/library-catalog-2026、authored/library-integration、authored/soft-deps-modlist、authored/lib-forge-config-api-port
-- 官方：https://github.com/Fuzss/PuzzlesLib
+- 官方：https://github.com/Fuzss/puzzles-lib
 - 不清楚时：打开 PuzzlesLib GitHub README；AGENT_USAGE.md 规则先行
 
 ## 核对（2026-08 反编译验证）

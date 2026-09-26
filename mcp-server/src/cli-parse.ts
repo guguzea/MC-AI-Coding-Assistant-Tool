@@ -636,6 +636,14 @@ export function isToolFailure(result: unknown, isError: boolean, failOnError: bo
   if (r.ok === false) return true;
   if (r.status === "skipped") return false;
   if (r.passed === false) return true;
+  // R66-B′（2026-09-22 S8/T1）：顶层 `valid` 是第三类判定键，此前从不被读 ⇒
+  // `validate_datapack_json`（载荷里**没有** `ok` 键，见 src/datapack/index.ts 的返回形状）报
+  // `valid:false` 时 CLI 仍 `success:true` + exit 0，自动化把「配方缺 result」读成「校验通过」。
+  // `&& r.ok !== true` 守卫**不可去掉**：`validate_at` / `validate_aw` 经
+  // src/mixin/deep-validate.ts 的 validateAccessCore 返回 `{ok:true, ...result}` ——
+  // 「工具跑成功但 AT/AW 内容不合法」是该档正确语义（`ok:true + valid:false`），必须保持 exit 0，
+  // 否则本条会把它们抬成传输层故障。口径基准是 `validate_bp_json`（它本就返回 `ok` 为假 + exit 1）。
+  if (r.valid === false && r.ok !== true) return true;
   const nestedErr = r.error;
   const hasErrorCode =
     nestedErr && typeof nestedErr === "object" && nestedErr !== null && "code" in nestedErr;

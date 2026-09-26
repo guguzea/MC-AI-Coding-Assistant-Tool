@@ -2,9 +2,9 @@
 id: authored/lib-yacl
 title: YACL 配置库集成要点
 tags: [yacl, yet-another-config-lib, config, gui, client, modmenu, fabric, forge, neoforge, quilt]
-summary: 新一代配置库（Modrinth API 实测 1.18 亿下载；F/Forge/Neo/Quilt，1.19-26.2 有稳定版，26.3 仅 snapshot）。Builder 式 API、GUI 契合原版风格，因 Cloth Config 功能冻结而生，新项目配置库首选之一。
-mcHint: 1.19-26.2 稳定；26.3 仅 snapshot 构建
-minecraftVersions: "1.19-26.2"
+summary: 新一代配置库（Modrinth API 实测 1.18 亿下载；F/Forge/Neo/Quilt，union 1.19-26.3 有稳定版，Forge 止 1.20.2、Quilt 止 1.20.4）。Builder 式 API、GUI 契合原版风格，因 Cloth Config 功能冻结而生，新项目配置库首选之一。
+mcHint: 1.19-26.3 稳定（26.3 有 fabric/neoforge 正式版；Forge 1.20.2、Quilt 1.20.4 为止）
+minecraftVersions: "1.19-26.3"
 sourceKind: authored
 modIds: [yacl]
 loaders: [fabric, forge, neoforge, quilt]
@@ -19,7 +19,7 @@ skillId: mc-yacl
 
 ## 何时用 / 何时不用
 
-用：新项目需要友好配置屏，且目标为 Fabric / Forge / NeoForge / Quilt。Builder 式 API 生成界面，风格贴近原版。Modrinth API 实测（2026-09-02）：**1.19 → 26.3-snapshot-1 共 294 条构建，其中稳定版上界 26.2**（26.3 只有 snapshot 构建，无正式版）；下载量 1.18 亿。Cloth Config 进入功能冻结后（注意：是功能冻结，不是停更，见 `lib-cloth-config`），YACL 是新配置库的主流替代之一。
+用：新项目需要友好配置屏，且目标为 Fabric / Forge / NeoForge / Quilt。Builder 式 API 生成界面，风格贴近原版。Modrinth API 实测（2026-09-02）：**1.19 → 26.3-snapshot-1 共 294 条构建，其中稳定版上界 26.2**（该读数当时成立）；下载量 1.18 亿。**2026-09-25 更正**：26.3 已有正式版 —— 构件面 `mcp-server/data/lib-manifests/all.json`（as-of 2026-09-25 重抓后的完整面）给 `yacl` 两行 `gameVersion=26.3` 的 release（`3.9.7+26.3-fabric` / `3.9.7+26.3-neoforge`），上游现读同页三行（另含 2026-07-19 的 `3.9.6+26.3-fabric`）⇒ 上面那句「26.3 只有 snapshot 构建，无正式版」**已作废**，逐端窗口以 `knowledge/libs/all-platforms/mc-yacl/SKILL.md` 的 `mcVersionsByPlatform` 为准（fabric 1.19-26.3 / neoforge 1.20-26.3 / forge 1.19.4-1.20.2 / quilt 1.19-1.20.4）。Cloth Config 进入功能冻结后（注意：是功能冻结，不是停更，见 `lib-cloth-config`），YACL 是新配置库的主流替代之一。
 
 不用：仅需服务端配置时，Forge 用 `ForgeConfigSpec`、Neo ≥1.20.4（含 26.x）用 `ModConfigSpec`（patterns `config-spec`）就够；旧项目已用 Cloth 且无新特性需求，不必迁移；目标版本低于 1.19 时 YACL 无对应构建，回退 Cloth。
 
@@ -29,7 +29,7 @@ skillId: mc-yacl
 Decision: 要不要用 YACL
 → 单平台 Forge 且仅服务端配置 → ForgeConfigSpec（patterns config-spec）
 → 单平台 NeoForge（≥1.20.4，含 26.x）且仅服务端配置 → ModConfigSpec
-→ MC 版本在 1.19-26.2 内 → 有稳定版；26.3 只有 snapshot 构建（无正式版），生产包别钉
+→ MC 版本在 1.19-26.3 内（fabric / neoforge）→ 有稳定版；**Forge 工程止 1.20.2、Quilt 工程止 1.20.4**（2026-09-25 构件面复测；旧写法「26.3 只有 snapshot 构建」已作废）
 → 低于 1.19 → 回退 Cloth（实测 1.14-26.2）
 → 新项目 / 长期维护 → YACL 优先，其次评估 Fzzy Config（自动 GUI/校验/同步）
 → 已选 YACL：
@@ -57,7 +57,7 @@ Decision: 要不要用 YACL
 1. `build.gradle`：以官方 README 的仓库与坐标为准（不同加载器 artifact 不同），`compileOnly` + 开发时 `runtimeOnly`
 2. `mods.toml`（26.x 为 `neoforge.mods.toml`）：硬依赖写 `depends`；软依赖用 `ModList.get().isLoaded("yacl")` 门闩（见 `authored/soft-deps-modlist`）
 3. `fabric.mod.json`：`depends` / `suggests` 写 yacl；Mod Menu 入口单独软依赖（modId 为 `modmenu`）
-4. 版本核对：上表为 2026-09-02 实测；26.3 只有 snapshot 构建，选版本线时以该线**最新稳定版**为准（26.x 目前到 26.2），坐标照文件页抄
+4. 版本核对：上表为 2026-09-02 实测（历史读数，不回改数字）；**2026-09-25 复测：26.3 已有正式版**（`3.9.7+26.3-fabric` / `+26.3-neoforge`）⇒ 当时那句「26.3 只有 snapshot 构建」不再成立；选版本线时以该线**最新稳定版**为准，坐标照文件页抄
 
 ## 集成要点（伪代码级）
 
@@ -77,7 +77,7 @@ Decision: 要不要用 YACL
 - Screen 类被公共/服务端代码引用 → 专用服崩溃（Forge/Neo：`Dist.CLIENT` 门闩；Fabric/Quilt：client 源集 + `@Environment(EnvType.CLIENT)`）
 - 只 `compileOnly` 却当硬依赖用，未装 YACL 时 `NoClassDefFoundError`
 - 期待 YACL 支持 1.19 以下版本 → 实测下界 1.19，窗口外无构建，换 Cloth
-- 给 26.3 工程钉「YACL 稳定版」 → 实测 26.3 只有 snapshot 构建（0 条正式版），要么按 snapshot 跟版，要么留在 26.2
+- 给 26.3 工程钉「YACL 稳定版」 → **2026-09-25 已不成立**：fabric / neoforge 两端 26.3 有正式版（`3.9.7+26.3-*`），该钉可以钉；**但 Forge / Quilt 工程的 26.3 没有 YACL 构件**（Forge release 上界 1.20.2、Quilt 1.20.4），照抄 union 才会拿到不存在的坐标。旧写法（本行前版）称「26.3 只有 snapshot 构建（0 条正式版）」是 2026-09-02 的读数
 - 手写配置路径与库冲突，或双份配置（ForgeConfigSpec + YACL 各一份）
 
 ## 自检清单

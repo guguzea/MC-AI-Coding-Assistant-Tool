@@ -4,7 +4,7 @@ description: Minecraft Forge 粒子效果开发。ParticleType 注册、Particle
 platform: forge
 version: "1.20.1"
 dependencies: []
-mappings: mcp
+mappings: parchment
 ---
 
 # 粒子开发（Forge 1.20.1）

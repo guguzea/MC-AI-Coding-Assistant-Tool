@@ -26,22 +26,6 @@
       ]
     },
     {
-      "id": "saved-data",
-      "gitPath": "develop/serialization/saved-data.md",
-      "tried": [
-        "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.21.10/develop/serialization/saved-data.md",
-        "vitepress-skipped-unversioned:https://docs.fabricmc.net/develop/serialization/saved-data"
-      ]
-    },
-    {
-      "id": "codecs",
-      "gitPath": "develop/serialization/codecs.md",
-      "tried": [
-        "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.21.10/develop/serialization/codecs.md",
-        "vitepress-skipped-unversioned:https://docs.fabricmc.net/develop/serialization/codecs"
-      ]
-    },
-    {
       "id": "key-mappings",
       "gitPath": "develop/key-mappings.md",
       "tried": [

@@ -120,20 +120,43 @@ function openDbCached(dbPath: string): MappingDb | null {
   }
 }
 
+/**
+ * 「同一个 MC 版本既有 Fabric 库又有 Forge 库」时该开哪一份（2026-09-26 未做③带出的真缺陷）。
+ * 修前 `resolveMappingDbPath` 恒先取 fabric，只要 fabric 的 methods>0 就定案 ⇒ 问
+ * 「Forge 1.20.4 的 `makeExecutor` 对应哪个 SRG 名」会被 Fabric 的 yarn-tiny 库回答，
+ * 而那份库的 `name_official` 是 notch 短名、根本没有 mojmap 可读名 ⇒ 报 NOT_FOUND 并给出
+ * **Yarn** 相似名（实测 suggestions 里是 `makeIoExecutor`）。这是假阴性，不是「该档没数据」。
+ * 默认（不传）= 旧行为逐字不变，只有显式给了加载器才改判，免得打断按旧形状工作的消费者。
+ */
+export type MappingDbPreference = "fabric" | "forge";
+
 /** Resolve best sqlite path for version (fabric preferred when useful). */
-export function resolveMappingDbPath(version: string): string | null {
+export function resolveMappingDbPath(
+  version: string,
+  prefer?: MappingDbPreference | null,
+): string | null {
   const v = normalizeMcVersion(version);
 
   // A-39：先校验再查缓存 —— 非法版本段（含路径穿越）不允许作为 key 触到 _pathCache，
   // 直接无库可解析，走上层 NOT_FOUND 降级。
   if (!isSafeVersionSegment(v)) return null;
-  if (_pathCache.has(v)) return _pathCache.get(v) ?? null;
+  const cacheKey = `${v}|${prefer ?? "-"}`;
+  if (_pathCache.has(cacheKey)) return _pathCache.get(cacheKey) ?? null;
   const fabric = fabricSqlitePath(v);
   const forge = forgeSqlitePath(v);
   if (!fabric || !forge) return null;
 
   let chosen: string | null = null;
-  if (existsSync(fabric)) {
+  // 显式要 Forge 线：forge 库里有货（有成员行或有 searge 层）就定它，读不到才回落 fabric。
+  if (prefer === "forge" && existsSync(forge)) {
+    try {
+      const usable = withReadOnlyDb(forge, (db) => methodCountOf(db) > 0);
+      if (usable) chosen = forge;
+    } catch {
+      chosen = null;
+    }
+  }
+  if (!chosen && fabric && existsSync(fabric)) {
     try {
       chosen = withReadOnlyDb(fabric, (db) => {
         const era = readMeta(db, "mappingEra") || "";
@@ -147,7 +170,7 @@ export function resolveMappingDbPath(version: string): string | null {
   if (!chosen && existsSync(forge)) {
     chosen = forge;
   }
-  if (chosen === fabric && existsSync(forge)) {
+  if (chosen === fabric && existsSync(forge) && prefer !== "forge") {
     try {
       const fabMc = withReadOnlyDb(fabric, methodCountOf);
       const forgeMc = withReadOnlyDb(forge, methodCountOf);
@@ -157,22 +180,34 @@ export function resolveMappingDbPath(version: string): string | null {
     }
   }
 
-  _pathCache.set(v, chosen);
+  _pathCache.set(cacheKey, chosen);
   return chosen;
 }
 
-/** Forge sqlite with searge_methods for searge↔named (mcp-csv era, or SRG/TSRG + CSV layer). */
-export function resolveCsvMappingDbPath(version: string): string | null {
+/**
+ * Forge sqlite with searge_methods for searge↔named (mcp-csv era, or SRG/TSRG + CSV layer).
+ *
+ * ⚠️ `mcp-config-srg`（1.17+ 从 MCPConfig 灌进来的那份，named 列 = `m_/f_`）**只在调用方显式要
+ * Forge 那份时才算数**：否则一份纯 Forge 的库会去替「没声明平台的 Fabric 查询」回答 `to=mcp`，
+ * 把 test-core:653 钉着的 `YARN_TINY_NO_MCP_LAYER` 契约悄悄改掉；而 1.14.4/1.15.2 的
+ * `mcp-csv` 并存回答 MCP 是既有契约（test-core:1280），不能反向砍掉。
+ */
+export function resolveCsvMappingDbPath(
+  version: string,
+  prefer?: MappingDbPreference | null,
+): string | null {
   const v = normalizeMcVersion(version);
   // A-39 同口径：校验先于缓存读，非法版本段不得作为 _csvPathCache 的 key。
   if (!isSafeVersionSegment(v)) return null;
-  if (_csvPathCache.has(v)) return _csvPathCache.get(v) ?? null;
+  const cacheKey = `${v}|${prefer ?? "-"}`;
+  if (_csvPathCache.has(cacheKey)) return _csvPathCache.get(cacheKey) ?? null;
   const forge = forgeSqlitePath(v);
   let chosen: string | null = null;
   if (forge && existsSync(forge)) {
     try {
       chosen = withReadOnlyDb(forge, (db) => {
         const era = readMeta(db, "mappingEra");
+        if (era === "mcp-config-srg" && prefer !== "forge") return null;
         let seargeCount = 0;
         try {
           seargeCount = (
@@ -187,18 +222,18 @@ export function resolveCsvMappingDbPath(version: string): string | null {
       /* ignore */
     }
   }
-  _csvPathCache.set(v, chosen);
+  _csvPathCache.set(cacheKey, chosen);
   return chosen;
 }
 
-export function getYarnDb(version: string): MappingDb | null {
-  const dbPath = resolveMappingDbPath(version);
+export function getYarnDb(version: string, prefer?: MappingDbPreference | null): MappingDb | null {
+  const dbPath = resolveMappingDbPath(version, prefer);
   if (!dbPath || !existsSync(dbPath)) return null;
   return openDbCached(dbPath);
 }
 
-export function getCsvDb(version: string): MappingDb | null {
-  const dbPath = resolveCsvMappingDbPath(version);
+export function getCsvDb(version: string, prefer?: MappingDbPreference | null): MappingDb | null {
+  const dbPath = resolveCsvMappingDbPath(version, prefer);
   if (!dbPath || !existsSync(dbPath)) return null;
   return openDbCached(dbPath);
 }
@@ -240,8 +275,25 @@ function globLiteral(s: string): string {
   return s.replace(/[*?\[\]]/g, (c) => `[${c}]`);
 }
 
-/** 映射层名：obfuscated = Tiny official 混淆短名（er）；intermediary = method_6032 类。 */
-export type MappingLayer = "mojang" | "mcp" | "yarn" | "parchment" | "obfuscated" | "intermediary";
+/**
+ * 映射层名：obfuscated = Tiny official 混淆短名（er）；intermediary = method_6032 类。
+ * A4d（2026-09-26）：另收 Linkie 侧扩展 namespace 名 —— 它们**不在支持面**，仅让 `convert_mapping`
+ * 入口能「拒绝 + 指路」（`convert.ts` 的 `unsupportedNamespaceResult` 在任何查表逻辑之前 early-return）；
+ * 其余调用方（lookup* / convertYarnMember）对它们永不命中。
+ */
+export type MappingLayer =
+  | "mojang"
+  | "mcp"
+  | "yarn"
+  | "parchment"
+  | "obfuscated"
+  | "intermediary"
+  | "legacy-yarn"
+  | "barn"
+  | "feather"
+  | "plasma"
+  | "yarrn"
+  | "quilt-mappings";
 
 /** 层名 → sqlite 列名（parchment 与 mcp 同层，走 name_named）。 */
 function layerColumn(from: MappingLayer): "name_official" | "name_intermediary" | "name_named" {
@@ -322,14 +374,14 @@ function pickBestCandidate(
   return null;
 }
 
-export function getMappingEra(version: string): string | null {
-  const db = getYarnDb(version);
+export function getMappingEra(version: string, prefer?: MappingDbPreference | null): string | null {
+  const db = getYarnDb(version, prefer);
   if (!db) return null;
   return readMeta(db, "mappingEra");
 }
 
-export function getSchemaVersion(version: string): string | null {
-  const db = getYarnDb(version);
+export function getSchemaVersion(version: string, prefer?: MappingDbPreference | null): string | null {
+  const db = getYarnDb(version, prefer);
   if (!db) return null;
   return readMeta(db, "schemaVersion");
 }
@@ -379,12 +431,14 @@ export function lookupField(
     memberName: string;
     descriptor?: string;
     from: MappingLayer;
+    /** 同版本两侧都有库时该开哪一份（Forge 查询必须显式给 "forge"，见 resolveMappingDbPath 注）。 */
+    preferPlatform?: MappingDbPreference | null;
   },
 ): LookupFieldResult {
-  const db = getYarnDb(version);
+  const db = getYarnDb(version, opts.preferPlatform);
   const era = db ? readMeta(db, "mappingEra") : null;
   const schema = db ? readMeta(db, "schemaVersion") : null;
-  const csvDb = getCsvDb(version);
+  const csvDb = getCsvDb(version, opts.preferPlatform);
   const { memberName, descriptor, from } = opts;
 
   if (!db) {
@@ -489,6 +543,7 @@ export function lookupField(
     version,
     opts.ownerClass,
     from === "parchment" ? "mcp" : from,
+    opts.preferPlatform,
   );
   if (!ownerNamed) {
     return { found: false, mappingEra: era, notes: [`无法解析 ownerClass: ${opts.ownerClass}`] };
@@ -585,12 +640,16 @@ export function lookupField(
   };
 }
 
+/** 查表层原语接受的层名（= A4d 之前的 MappingLayer 值集）；Linkie 扩展名在入口已被拒，永不抵达查表层。 */
+export type LookupLayer = "yarn" | "mojang" | "mcp" | "parchment" | "obfuscated" | "intermediary";
+
 export function lookupYarnClass(
   version: string,
   memberName: string,
-  from: "yarn" | "mojang" | "mcp" | "parchment" | "obfuscated" | "intermediary",
+  from: LookupLayer,
+  prefer?: MappingDbPreference | null,
 ): YarnClassRow | null {
-  const db = getYarnDb(version);
+  const db = getYarnDb(version, prefer);
   if (!db) return null;
 
   const slash = toSlash(memberName);
@@ -641,10 +700,12 @@ export function resolveOwnerClassNamed(
   version: string,
   ownerClass: string,
   from: MappingLayer,
+  prefer?: MappingDbPreference | null,
 ): string | null {
-  const row = lookupYarnClass(version, ownerClass, from === "parchment" ? "mcp" : from);
+  // A4d：Linkie 扩展名已在 convertMapping 入口 early-return；此处 from 必在支持面（cast 收敛到 LookupLayer）。
+  const row = lookupYarnClass(version, ownerClass, (from === "parchment" ? "mcp" : from) as LookupLayer, prefer);
   if (row) return row.named;
-  const db = getYarnDb(version);
+  const db = getYarnDb(version, prefer);
   if (!db) return null;
   const slash = toSlash(ownerClass);
   const hit = db
@@ -755,6 +816,7 @@ function lookupMethodViaCsvOwner(
     memberName: string;
     descriptor?: string;
     from: MappingLayer;
+    preferPlatform?: MappingDbPreference | null;
   },
 ): LookupMethodResult | null {
   if (!dbHasMethods(methodsDb)) return null;
@@ -768,6 +830,7 @@ function lookupMethodViaCsvOwner(
     version,
     opts.ownerClass,
     from === "parchment" ? "mcp" : from,
+    opts.preferPlatform,
   );
   if (!ownerNamed) {
     return {
@@ -907,11 +970,13 @@ export function lookupMethod(
     memberName: string;
     descriptor?: string;
     from: MappingLayer;
+    /** 同版本两侧都有库时该开哪一份（Forge 查询必须显式给 "forge"，见 resolveMappingDbPath 注）。 */
+    preferPlatform?: MappingDbPreference | null;
   },
 ): LookupMethodResult {
-  const db = getYarnDb(version);
+  const db = getYarnDb(version, opts.preferPlatform);
   const era = db ? readMeta(db, "mappingEra") : null;
-  const csvDb = getCsvDb(version);
+  const csvDb = getCsvDb(version, opts.preferPlatform);
   const { memberName, descriptor, from } = opts;
 
   // SRG/TSRG + CSV：带 owner 的 MCP 可读名需经 searge 再查 methods
@@ -921,6 +986,7 @@ export function lookupMethod(
       memberName,
       descriptor,
       from,
+      preferPlatform: opts.preferPlatform,
     });
     if (via) return via;
   }
@@ -1004,6 +1070,7 @@ export function lookupMethod(
     version,
     opts.ownerClass,
     from === "parchment" ? "mcp" : from,
+    opts.preferPlatform,
   );
   if (!ownerNamed) {
     return { found: false, mappingEra: era, notes: [`无法解析 ownerClass: ${opts.ownerClass}`] };
@@ -1112,7 +1179,8 @@ export function convertYarnMember(
     }
   }
 
-  const row = lookupYarnClass(version, memberName, from === "parchment" ? "mcp" : from);
+  // A4d：同上——Linkie 扩展名已 early-return，此处必在支持面。
+  const row = lookupYarnClass(version, memberName, (from === "parchment" ? "mcp" : from) as LookupLayer);
   if (!row) {
     return {
       found: false,
@@ -1280,5 +1348,192 @@ export function lookupByObfuscated(
       intermediary: r.name_intermediary ?? "",
       descriptor: r.descriptor_named ?? "",
     })),
+  };
+}
+
+/**
+ * S1′（2026-09-25 用户裁定：挂在兼容工具 query_api 上，不开新工具）：
+ * 在盘映射索引的「名字存在性 + 成员名单」探针 —— api-index 未命中时的第二档出处。
+ *
+ * 它只回答「这个名字在该档的映射里到底有没有一个类叫它」，**不回答签名/用法**，
+ * 所以返回里恒带 `mappingEra`：`yarn-tiny` 的 named 是 Yarn 名，而 `forge-srg` /
+ * `tsrg` / `mcp-csv` 的 named 是 MCP `func_/field_` 名（AGENTS「文件名里的 yarn 会骗人」）。
+ * 空 classes 表 ⇒ 返回 null（不给空库背书，与 assert-skill-yarn-attest 的双闸同口径）。
+ */
+export interface MappingsNameProbe {
+  exists: boolean;
+  matchKind: "exact" | "simple-unique" | "ambiguous" | "contains" | "none";
+  named: string | null;
+  intermediary: string | null;
+  official: string | null;
+  mappingEra: string;
+  dbKind: "fabric" | "forge";
+  candidates: string[];
+  truncated: boolean;
+  memberCounts: { methods: number; fields: number };
+  memberSample: Array<{ kind: "method" | "field"; name: string; descriptor: string; official: string | null }>;
+}
+
+const PROBE_LIMIT_DEFAULT = 8;
+const MEMBER_SAMPLE_MAX = 12;
+
+function likeEscaped(s: string): string {
+  return s.replace(/[\\%_]/g, (c) => `\\${c}`).toLowerCase();
+}
+
+function namedColumnForms(name: string): [string, string] {
+  return [toSlash(name), toDot(name)];
+}
+
+export function mappingsNameProbe(
+  version: string,
+  className: string,
+  limit = PROBE_LIMIT_DEFAULT,
+): MappingsNameProbe | null {
+  if (!className?.trim()) return null;
+  const db = getYarnDb(version);
+  if (!db) return null;
+
+  let classRows = 0;
+  try {
+    classRows = (db.prepare("SELECT COUNT(*) AS c FROM classes").get() as { c: number }).c;
+  } catch {
+    return null;
+  }
+  if (classRows === 0) return null;
+
+  const era = readMeta(db, "mappingEra") ?? "";
+  const dbKind: "fabric" | "forge" = /[\\/]fabric_/.test(resolveMappingDbPath(version) ?? "")
+    ? "fabric"
+    : "forge";
+  const cap = Math.min(Math.max(1, limit), 40);
+  const base: Omit<MappingsNameProbe, "exists" | "matchKind" | "named" | "intermediary" | "official" | "candidates" | "truncated" | "memberCounts" | "memberSample"> = {
+    mappingEra: era,
+    dbKind,
+  };
+
+  const readRow = (sql: string, params: unknown[]) => {
+    try {
+      return db.prepare(sql).all(...(params as never[])) as unknown as Array<{
+        named: string;
+        intermediary: string | null;
+        official: string | null;
+      }>;
+    } catch {
+      return [];
+    }
+  };
+  const COLS = "named, intermediary, official FROM classes";
+
+  const [slash, dot] = namedColumnForms(className);
+  let matchKind: MappingsNameProbe["matchKind"] = "none";
+  let hits: Array<{ named: string; intermediary: string | null; official: string | null }> = [];
+  let truncated = false;
+
+  hits = readRow(`SELECT ${COLS} WHERE named = ? OR named = ? LIMIT 2`, [slash, dot]);
+  if (hits.length > 0) matchKind = "exact";
+
+  const simple = simpleClassName(className);
+  if (!hits.length && simple) {
+    const bySimple = readRow(`SELECT ${COLS} WHERE named = ? OR named GLOB ? LIMIT ?`, [
+      simple,
+      `*/${globLiteral(simple)}`,
+      cap + 1,
+    ]);
+    if (bySimple.length === 1) {
+      hits = bySimple;
+      matchKind = "simple-unique";
+    } else if (bySimple.length > 1) {
+      return {
+        ...base,
+        exists: true,
+        matchKind: "ambiguous",
+        named: null,
+        intermediary: null,
+        official: null,
+        candidates: bySimple.slice(0, cap).map((r) => r.named),
+        truncated: bySimple.length > cap,
+        memberCounts: { methods: 0, fields: 0 },
+        memberSample: [],
+      };
+    }
+  }
+
+  if (!hits.length) {
+    const needle = `%${likeEscaped(simple || slash)}%`;
+    const byContains = readRow(
+      `SELECT ${COLS} WHERE lower(named) LIKE ? ESCAPE '\\' ORDER BY length(named) LIMIT ?`,
+      [needle, cap + 1],
+    );
+    truncated = byContains.length > cap;
+    hits = byContains.slice(0, cap);
+    if (hits.length) matchKind = "contains";
+  }
+
+  if (!hits.length) {
+    return {
+      ...base,
+      exists: false,
+      matchKind: "none",
+      named: null,
+      intermediary: null,
+      official: null,
+      candidates: [],
+      truncated,
+      memberCounts: { methods: 0, fields: 0 },
+      memberSample: [],
+    };
+  }
+
+  const hit = hits[0];
+  const counts = { methods: 0, fields: 0 };
+  const sample: MappingsNameProbe["memberSample"] = [];
+  const ownerForms = namedColumnForms(hit.named);
+  const countOf = (table: string) => {
+    try {
+      return (
+        db.prepare(`SELECT COUNT(*) AS c FROM ${table} WHERE owner_named = ? OR owner_named = ?`)
+          .get(ownerForms[0], ownerForms[1]) as { c: number }
+      ).c;
+    } catch {
+      return 0;
+    }
+  };
+  const membersOf = (table: string, kind: "method" | "field", max: number) => {
+    try {
+      return db
+        .prepare(
+          `SELECT name_named, descriptor_named, name_official FROM ${table} WHERE owner_named = ? OR owner_named = ? ORDER BY name_named LIMIT ?`,
+        )
+        .all(ownerForms[0], ownerForms[1], max) as unknown as Array<{
+        name_named: string;
+        descriptor_named: string | null;
+        name_official: string | null;
+      }>;
+    } catch {
+      return [];
+    }
+  };
+
+  counts.methods = countOf("methods");
+  counts.fields = dbHasFieldsTable(db) ? countOf("fields") : 0;
+  for (const m of membersOf("methods", "method", MEMBER_SAMPLE_MAX)) {
+    sample.push({ kind: "method", name: m.name_named, descriptor: m.descriptor_named ?? "", official: m.name_official ?? null });
+  }
+  for (const f of membersOf("fields", "field", Math.max(0, MEMBER_SAMPLE_MAX - sample.length))) {
+    sample.push({ kind: "field", name: f.name_named, descriptor: f.descriptor_named ?? "", official: f.name_official ?? null });
+  }
+
+  return {
+    ...base,
+    exists: true,
+    matchKind,
+    named: hit.named,
+    intermediary: hit.intermediary ?? null,
+    official: hit.official ?? null,
+    candidates: hits.slice(1).map((r) => r.named),
+    truncated,
+    memberCounts: counts,
+    memberSample: sample,
   };
 }

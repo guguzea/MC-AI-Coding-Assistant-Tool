@@ -56,7 +56,8 @@
     "priority": "⭐",
     "sectionCount": 1,
     "source": "quilt-docs",
-    "fetchedAt": "2026-08-14T18:32:49.861Z"
+    "fetchedAt": "2026-08-14T18:32:49.861Z",
+    "sha256": "aa9a05b4a739b94bf91e95ee15a32ec289076fb4b15d8aec95fe82067b1e5dd4"
   },
   {
     "id": "1.21.1/wiki-getting-started",

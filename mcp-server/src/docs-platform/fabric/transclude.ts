@@ -19,8 +19,8 @@
  * 这是上游行为，照搬不修（改了就和线上文档对不上）。
  */
 
-import { existsSync, readFileSync } from "fs";
-import { isAbsolute, join, relative, resolve } from "path";
+import { existsSync, readFileSync, readdirSync } from "fs";
+import { basename, dirname, isAbsolute, join, relative, resolve } from "path";
 import { trimOldest } from "../search-utils.js";
 
 /** 上游 `@[code …](…)`：行首（允许前导空格）的 `@[code`。 */
@@ -119,6 +119,35 @@ const refCache = new Map<string, { data: string | null; expiry: number }>();
 function fileNameOf(target: string): string {
   const parts = target.split("/");
   return parts[parts.length - 1] ?? target;
+}
+
+/**
+ * S17-T3（2026-09-24）：盘上没有精确目标时，先做两条机械放宽再判「本地取不到」——
+ * ① 扩展名别名 `.yml` ↔ `.yaml`；② 父目录内大小写无关的 basename 命中。
+ * 动机：上游目标 `@/.github/workflows/build.yml` 在镜像里实为 `build.yaml`
+ * （fabric_1.21.8 / fabric_1.21.10 目前靠 per-pack provenance `aliases` 绕行）；本函数让
+ * 运行时与 G3 门不再依赖逐档别名条目。两条放宽都只换**同目录内的文件名**，越界检查在调用方
+ * 已完成，不改变 C7 边界。取不到时原样返回 abs，由上层走 `Not Found:` 通道。
+ */
+function existingVariant(abs: string): string {
+  if (existsSync(abs)) return abs;
+  const base = basename(abs);
+  const parent = dirname(abs);
+  if (/\.ya?ml$/i.test(base)) {
+    const swap = join(parent, base.replace(/\.ya?ml$/i, (m) => (m.toLowerCase() === ".yml" ? ".yaml" : ".yml")));
+    if (existsSync(swap)) return swap;
+  }
+  try {
+    for (const name of readdirSync(parent)) {
+      if (name.toLowerCase() === base.toLowerCase()) {
+        const cand = join(parent, name);
+        if (existsSync(cand)) return cand;
+      }
+    }
+  } catch {
+    /* 父目录不存在 = 本地确实没有，维持原判 */
+  }
+  return abs;
 }
 
 /**
@@ -389,13 +418,13 @@ function localPathFor(target: string, packRoot: string, provenance: ReferencePro
   if (alias) {
     const abs = resolve(root, alias.realPath);
     const rel = relative(root, abs);
-    if (!rel.startsWith("..") && !isAbsolute(rel)) return abs;
+    if (!rel.startsWith("..") && !isAbsolute(rel)) return existingVariant(abs);
   }
   // C7：回退分支必须与别名分支同形做越界检查 —— join 会把 `../..` 规范化掉，否则
   // `../../../../Windows/win.ini` 能逃出 packRoot 并被内联进交付正文（FullDocResult.content）。
   const abs = join(root, target.replace(/^@/, ""));
   const rel = relative(root, abs);
-  if (!rel.startsWith("..") && !isAbsolute(rel)) return abs;
+  if (!rel.startsWith("..") && !isAbsolute(rel)) return existingVariant(abs);
   return null;
 }
 
@@ -528,6 +557,21 @@ export function hasUnexpandedMarker(content: string): boolean {
     if (!inFence && (/^ *@\[code/.test(line) || ANGLE_RE.test(line))) return true;
   }
   return false;
+}
+
+/**
+ * 短文本（摘要 / 首段）里的裸标记：与 `ANGLE_RE` / `MARKER_RE` 认同同样的两种形态，
+ * 但不要求行首 —— 摘要是按未展开原文截出来的一行，标记夹在句中。
+ */
+const INLINE_ANGLE_RE = /<<< *@\/[^\s]*/g;
+const INLINE_MARKER_RE = /@\[code[^\]]*\]\([^)]*\)/g;
+
+/**
+ * 从一小段文本里剪掉未展开的转引标记。**只给读取侧用**：`data/**` 按上游逐字，不许改
+ * （口径见仓根 AGENTS.md §数据链口径），而摘要位是按未展开原文截出来的，所以在这里剪。
+ */
+export function stripTranscludeMarkers(text: string): string {
+  return text.replace(INLINE_MARKER_RE, " ").replace(INLINE_ANGLE_RE, " ").replace(/ {2,}/g, " ").trim();
 }
 
 /** 标记扫描（gate 用）：返回逐行命中的 {attrs, target}，围栏内与畸形行同样报出。 */

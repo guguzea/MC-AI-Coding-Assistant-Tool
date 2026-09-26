@@ -87,7 +87,8 @@ Decision: 本规则集是否适用？
 
 本规则集强制约束：
 
-- **必须**与 `mcmod.info` 中的 `modid` 完全一致
+- **必须**与 `@Mod(modid = …)` 注解里的值完全一致
+- 工程若有 `src/main/resources/mcmod.info`，其 `modid` 也**必须**与上面两者一致；该文件本身**可选**（`useMetadata` 默认 `false`，只影响主菜单 Mods 按钮的展示，不参与 FML 加载 —— 见 `.cursor/rules/00-project-setup.mdc:83`）
 - 全部**小写**
 - 仅使用字母和下划线（`[a-z0-9_]`）
 - 禁止使用 `-`，否则 Forge 会拒绝加载

@@ -24,9 +24,9 @@ mcHint: 1.16.5–1.21.x, 26.X（已全量核对 73 仓库；无 1.15 及更早�
 | Fabric 1.21.X | [Fabric-Tutorial-1.21.X](https://github.com/Tutorials-By-Kaupenjoe/Fabric-Tutorial-1.21.X) |
 | Forge 1.21.X | [Forge-Tutorial-1.21.X](https://github.com/Tutorials-By-Kaupenjoe/Forge-Tutorial-1.21.X) |
 | NeoForge 1.21 模块课 | [NeoForge-Course-121-Module-1](https://github.com/Tutorials-By-Kaupenjoe/NeoForge-Course-121-Module-1) … Module-9（同模式换 Module-N；Fabric/Forge 同名仓库） |
-| Fabric 1.20 | [Fabric-Course-1.20.X](https://github.com/Tutorials-By-Kaupenjoe/Fabric-Course-1.20.X)（92 分支含 mixin/commands/structures/dimension） |
+| Fabric 1.20 | [Fabric-Course-1.20.X](https://github.com/kaupenjoe/Fabric-Course-1.20.X)（92 分支含 mixin/commands/structures/dimension） |
 | Forge 1.20 | [Forge-Course-1.20.X](https://github.com/kaupenjoe/Forge-Course-1.20.X)（93 分支含 commands/BE/fluids/biomes/dimension/structures） |
-| 1.20 Udemy 课程版 | [Forge-Course-118](https://github.com/Tutorials-By-Kaupenjoe/Forge-Course-118)、[Fabric-Course-118](https://github.com/Tutorials-By-Kaupenjoe/Fabric-Course-118)（1.18 成体系课程） |
+| 1.18 成体系课程 | [Forge-Tutorial-1.18.1](https://github.com/Tutorials-By-Kaupenjoe/Forge-Tutorial-1.18.1)、[Fabric-Tutorial-1.18.1](https://github.com/Tutorials-By-Kaupenjoe/Fabric-Tutorial-1.18.1)（2022 年后未更新；原 Udemy 版 Course-118 仓库已不存在） |
 | Forge/Fabric 1.19–1.19.3 | [Forge-Tutorial-1.19](https://github.com/Tutorials-By-Kaupenjoe/Forge-Tutorial-1.19)、[Fabric-Tutorial-1.19](https://github.com/Tutorials-By-Kaupenjoe/Fabric-Tutorial-1.19)、[Forge-Tutorial-1.19.3](https://github.com/Tutorials-By-Kaupenjoe/Forge-Tutorial-1.19.3)、[Fabric-Tutorial-1.19.3](https://github.com/Tutorials-By-Kaupenjoe/Fabric-Tutorial-1.19.3) |
 | Forge/Fabric 1.18.1 | [Forge-Tutorial-1.18.1](https://github.com/Tutorials-By-Kaupenjoe/Forge-Tutorial-1.18.1)、[Fabric-Tutorial-1.18.1](https://github.com/Tutorials-By-Kaupenjoe/Fabric-Tutorial-1.18.1) |
 | Forge/Fabric 1.17.1 | [Forge-Tutorial-1.17.1](https://github.com/Tutorials-By-Kaupenjoe/Forge-Tutorial-1.17.1)、[Fabric-Tutorial-1.17.1](https://github.com/Tutorials-By-Kaupenjoe/Fabric-Tutorial-1.17.1) |

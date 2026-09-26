@@ -270,6 +270,27 @@ const PS_GATE = fileURLToPath(new URL("./scripts/assert-powershell.mjs", import.
 const SYNC_PS = fileURLToPath(new URL("../scripts/sync-skills.ps1", import.meta.url));
 const GUARD = '$meta.Platform -eq "neoforge" -and -not $meta.Version';
 
+// ── #14a（S16/t9，第 46 轮）：gate 自带 --selftest —— 判据核本身会红吗？──────
+// 下面那个外部块证的是「把真 gate 放到投毒仓库上会红」；它证不了两处「能悄悄绿」的判定核
+// （skip 即 exit 0 / 采集器吐空数组时 0===0）有没有被做没。自检全内存、不 spawn powershell、
+// 不落盘，所以非 Windows 机器同样能跑 —— 放在 psProbe 分支之前。
+{
+  const st = spawnSync(process.execPath, [PS_GATE, "--selftest"], {
+    encoding: "utf8",
+    windowsHide: true,
+  });
+  assert.equal(st.status, 0, `assert-powershell --selftest 未通过：\n${st.stdout}${st.stderr}`);
+  const m = /(\d+) 例（(\d+) 投毒必红 \+ (\d+) 反退化断言 \+ (\d+) 正对照）/.exec(st.stdout || "");
+  assert.ok(m, `--selftest 没打印三桶计数（例数塌陷 = 自检被掏空）：\n${st.stdout}`);
+  const [total, poisonN, assertN, controlN] = m.slice(1).map(Number);
+  assert.ok(poisonN >= 12, `--selftest 投毒例只剩 ${poisonN}（下界 12）—— 腿 2 的 collector-zero 覆盖不许缩`);
+  assert.ok(assertN >= 5, `--selftest 反退化断言只剩 ${assertN}（下界 5）—— 腿 1 的 skip≠pass 覆盖不许缩`);
+  assert.ok(controlN >= 5, `--selftest 正对照只剩 ${controlN}（下界 5）—— 没有对照就无法排除恒红装饰`);
+  console.log(
+    `  assert-powershell --selftest: ${total} 例（投毒 ${poisonN} / 反退化 ${assertN} / 对照 ${controlN}）rc=0`,
+  );
+}
+
 const psProbe = spawnSync("powershell.exe", ["-NoProfile", "-Command", "1"], {
   encoding: "utf8",
   windowsHide: true,
@@ -1597,6 +1618,17 @@ public class ForeignHelper {
       w(jpath(packOf(r), "raw", "bad\u2594name", "page.md"), PAGE);
       w(jpath(packOf(r), "processed", "bad\u2594name", "page.md"), PAGE);
     },
+    // R50 腿一（`L59`-C 具名豁免表的默认腿）：`<<<` 的 blob 不在盘上、又没点名进
+    // MISSING_BLOB_ALLOWLIST ⇒ 必红并点名。旧行为是静默 `continue`，于是「取件链整体退化」
+    // 和「上游真没有这个件」在门里长得一模一样，读者只拿到 Not Found/空围栏。
+    missingBlob: (r) => {
+      tree(r, "page.md", PAGE + "\n<<< @/reference/Ghost.java#seg\n");
+    },
+    // R50 腿二：采集面塌 0 —— 假根建了却一棵树都没有 ⇒ 必须红。假根模式下台账层整层跳过，
+    // 没有这道地板时「夹具没写页」会空跑成绿（同 `L58` 欠账二「跑绿 ≠ 验过」）。
+    collectorZero: (r) => {
+      mkdirSync(r, { recursive: true });
+    },
   };
   const runs = {};
   try {
@@ -1645,6 +1677,16 @@ public class ForeignHelper {
     /目录名含非 ASCII \/ 控制字符/,
     "目录名是字节错解码产物 ⇒ 必须点名并给出码点，禁止只删不查",
   );
+  expect(
+    "missingBlob",
+    /镜像 blob 不在盘上/,
+    "取件缺口被静默放过 ⇒ 读者只拿到 Not Found/空围栏而门全绿（R50 起默认必红，点名进 MISSING_BLOB_ALLOWLIST 才免）",
+  );
+  expect(
+    "collectorZero",
+    /COLLECTOR_RETURNED_ZERO/,
+    "采集面塌 0 还绿 = 判据根本没吃到输入，投毒夹具会从此永久假绿",
+  );
   assert.equal(runs.realRoot.status, 0, `G3 真数据根必须绿（存量台账已钉死）：\n${runs.realRoot.stdout}${runs.realRoot.stderr}`);
   assert.match(
     runs.realRoot.stdout,
@@ -1652,8 +1694,8 @@ public class ForeignHelper {
     `真根少跑了层或台账口径变了：\n${runs.realRoot.stdout}`,
   );
   console.log(
-    "  §S4 G3 语料保真门: 干净假根=0（含围栏内混淆名不报、区段标记齐全不报）/ 真根=0（49 树 · 633 处 <<< · 已取件处数逐档钉在台账 · 11 处正文中介名台账 · 目录层 1185 个目录全合法）；" +
-      "投毒 10 记全红并点名：区段标记缺失·目标形态·重名页·造页·吞页（生产者未重跑）·正文中介名·吃泛型·台账层未登记树·目录空壳·目录名错解码",
+    "  §S4 G3 语料保真门: 干净假根=0（含围栏内混淆名不报、区段标记齐全不报）/ 真根=0（49 树 · 633 处 <<< · 取件缺口 0 · 已取件处数逐档钉在台账 · 11 处正文中介名台账 · 目录层 1185 个目录全合法）；" +
+      "投毒 12 记全红并点名：区段标记缺失·目标形态·重名页·造页·吞页（生产者未重跑）·正文中介名·吃泛型·台账层未登记树·目录空壳·目录名错解码·blob 缺失未具名·采集面塌 0",
   );
 }
 
@@ -1940,48 +1982,10 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
   }
 }
 
-/**
- * §S4 · 门串链：每个 `scripts/assert-*.mjs` 都必须被某个 `test-*.mjs` 或 `package.json` 的 test 链引用。
- *
- * 一道没人跑的门比没有门更糟：它本地手跑绿、CI 也「绿」，但坏数据照样入库。
- * 四门（G1–G4）都是这个形状，所以把「可达性」本身钉成断言。
- */
-{
-  const { readdirSync } = await import("node:fs");
-  const SCRIPTS = jpath(import.meta.dirname, "scripts");
-  const gates = readdirSync(SCRIPTS).filter((f) => /^assert-.*\.mjs$/.test(f)).sort();
-  const tests = readdirSync(import.meta.dirname).filter((f) => /^test-.*\.mjs$/.test(f));
-  const blob = tests.map((t) => readFileSync(jpath(import.meta.dirname, t), "utf8")).join("\n");
-  const pkg = readFileSync(jpath(import.meta.dirname, "package.json"), "utf8");
-  const findOrphans = (needleIn, pkgIn) =>
-    gates.filter((g) => !needleIn.includes(g) && !pkgIn.includes(g));
-  const orphans = findOrphans(blob, pkg);
-  assert.equal(orphans.length, 0, `以下门禁没有任何调用方 ⇒ 手跑绿也不会进 npm test：\n${orphans.join("\n")}`);
-  // 反身自证：抽掉一个门的引用，本条必须红（否则「串链」这句 itself 也是永远绿的）
-  // 2026-09-19（N3/N5/N9c 批次）：换成 split/join 去掉**全部**出现。原用 String.replace 只去首个，
-  // 当一道门在同一宿主里被调用两处（新增的 --selftest + 门模式调用形）时，自证会静默失效 ——
-  // 实测 probe=assert-bedrock-script-api-pin.mjs 时打不红。这是把自证**加强**（去全部 > 去首个），
-  // 不是放宽：主断言（orphans 全清）与探针语义都没变。
-  const probe = gates[0];
-  const strip = (text) => text.split(probe).join("");
-  assert.ok(
-    findOrphans(strip(blob), strip(pkg)).includes(probe),
-    `门串链断言打不红（删掉 ${probe} 的引用后仍然全绿）`,
-  );
-  console.log(
-    `  §S4 门串链: ${gates.length} 道 assert-* 全部可达（${tests.length} 个 test-*.mjs + package.json test 链）；` +
-      `抽掉任一门的引用即红（自证已跑）`,
-  );
-}
-
-/**
- * §S18/S19 · 两道新门的**真跑**（不只是被字符串引用骗过门串链）。
- * 串链断言只保证「有人提到这门」，这里保证「npm test 真的跑过它一次」。
- */
-{
-  const { spawnSync } = await import("node:child_process");
-  const { fileURLToPath } = await import("node:url");
-  for (const gate of [
+// ↓↓ 两条数组的真身提到模块作用域，唯一读者是**下方 §S18/S19 与 W1-2 两个 `for`** 与 §S4 四数普查。
+// 为什么不能留在 `for (const gate of [ … ])` 里：四数普查的 N/M 必须「从数组本身取长度」，
+// 在别处重抄一遍名单 = 第二个真值源，必然随加门漂掉（CONTRIBUTING.md §未排期清单 `L13`/`L18`）。
+const REAL_RUN_GATES = [
     "./scripts/assert-forge-1204-material.mjs",
     // sweep81 C-6：Properties 形态**族 × 版本区间**门（正反两面；补 1.18.2/1.19.4 反向面）。
     "./scripts/assert-forge-blockshape-family.mjs",
@@ -2052,23 +2056,45 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
     // 2026-09-22 裁定③「提交 + 做个门看住它」：forge_javadoc 的孤儿对账/删除留痕记录必须自洽、
     // 未过期、点名的页双边确实不在盘上（报告会被下次抓取覆盖 ⇒ 删除本身另存 _orphan-pruned.json）。
     "./scripts/assert-javadoc-orphan-record.mjs",
-  ]) {
-    const GATE = fileURLToPath(new URL(gate, import.meta.url));
-    const r = spawnSync(process.execPath, [GATE], {
-      encoding: "utf8",
-      windowsHide: true,
-      env: { ...process.env },
-    });
-    assert.equal(
-      r.status,
-      0,
-      `${gate} 真跑失败（rc=${r.status}）：\n${String(r.stdout || "").slice(0, 800)}${String(r.stderr || "").slice(0, 400)}`,
-    );
-  }
-  // W1-2（2026-09-19）：四道自带 --selftest 投毒自证的门，把自证也接进默认链 ——
-  // 上面的「真跑」只证明**数据**绿；「selftest」才证明**判据**活着（改瞎 banned 形态必须当场红）。
-  // 原缺陷：selftest 只能手跑，默认链永远看不见判据死活。
-  for (const gate of [
+    // S22 步1（2026-09-24）：库 Skill 的 resolve ↔ session 双链路同答。判据源是**真跑两条链路**
+    // （resolve 走 scripts/resolve-lib-skills.mjs，session 走 dist/platform-pack/catalog.js），
+    // 立门前真实红证 = (fabric,1.20.1) session 多吐 mc-caelus（见门头注）。
+    "./scripts/assert-lib-session-resolve-parity.mjs",
+    // A8（2026-09-24）：盘上 `*.test.mjs` ↔ `node --test` 链双向覆盖（新加测试文件忘接线即红；
+    // 此前无这道门面，HEAD 版曾漏 `_lib/bedrock-corpus.test.mjs`）。
+    "./scripts/assert-test-chain-coverage.mjs",
+    // 第 36 轮：`CONTRIBUTING.md` §未排期清单**表形**门（该表自称「状态的唯一现行读法」，此前全仓无门判其形状
+    // ⇒ 第 33/34 两轮连续写坏（第三列整列缺失 + L43 插错位置）无人报警）。只判形状，prose 口径仅打印。
+    "./scripts/assert-backlog-table-shape.mjs",
+    // A11 清尾①（2026-09-25）：quilt「未版本化现行页」的拷贝事实（14 topic×6 档除时间戳逐字同）
+    // + 页内警告在册 + 双向登记（新 wiki 页未三分类即红）。出处 = knowledge-coverage-sweep §3.1 的建议门。
+    "./scripts/assert-quilt-unversioned-wiki.mjs",
+    // §6.8 缺口②（2026-09-25）：跨层类名门 —— 覆盖 leg2 判据面**之外**（knowledge / code-patterns /
+    // .cursor/rules / AGENTS / scaffold）。判据 = 「档位类名层」× 四条腿（A yarn 档用 mojmap 名、
+    // B mojmap 档用 yarn 名、C mojmap 档用本档不存在的 MCP 名、D MCP 档用同代 mojmap 名）；
+    // 基线 A/B=130 / C=33 / D=109（首测存量，棘轮只许降；--strict 忽略基线看全量）。
+    "./scripts/assert-cross-layer-names.mjs",
+    // S1′ 残差收口（2026-09-25）：generate_* 拒绝出口的机读码棘轮 —— 59 位点 / 判定 55 /
+    // 兜底 GENERATION_FAILED 地板 4（新加生成器文案不匹配 REJECT_RULES 时兜底计数上升即红）。
+    "./scripts/assert-generator-rejection-codes.mjs",
+    // S5′（2026-09-25）：库坐标 × maven-metadata 的**离线**对账 —— 真值源是本仓快照
+    // `mcp-server/data/lib-coords/maven-metadata-snapshot.json`（抓取要显式跑
+    // `node scripts/check-lib-coords.mjs --write`，本门零联网）。实测：SKILL.md 36 份 /
+    // 坐标主张 23 条（doc 9 + versions.json 槽位 14）/ 唯一坐标 3（Central 候选 0、全 non-central）。
+    // 快照缺失 ⇒ 响红 `SNAPSHOT_MISSING`（不是 skipped：它的三条判据里有两条根本读不到快照，
+    // 静默跳过会把真错洗成绿）。地板现算不写死。
+    "./scripts/assert-lib-coord-snapshot.mjs",
+    // 未做③（2026-09-26）：Forge 1.17+ SRG 成员层入库件的**离线**自洽门。真跑腿 = 夹具全链路
+    // （reducer → importer → build-yarn-sqlite 的 srg-to-official 分支 → convertMappingEx 出 AT 行）
+    // + 在盘三方对账（派生件 sha256 ↔ provenance ↔ 库 meta）。实测 ~120 ms，不联网、只写 OS tmpdir。
+    "./scripts/assert-forge-srg-ingest.mjs",
+  ];
+
+const SELFTEST_GATES = [
+    // S16/T8（第 27 轮）：这两道此前只有「从外面投毒」（yarn-slurp 靠 test-scripts §#16 写盘夹具；
+    // skill-mirrors 连外面投毒都没有）。现在各自带内存 `--selftest`，接进默认链，条数照例不写死。
+    "./scripts/assert-no-yarn-json-slurp.mjs",
+    "./scripts/assert-skill-mirrors.mjs",
     "./scripts/assert-corpus-semantics.mjs",
     "./scripts/assert-forge-blockshape-family.mjs",
     "./scripts/assert-forge-1182-registry-consts.mjs",
@@ -2101,7 +2127,264 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
     // 2026-09-22 裁定③：孤儿记录判据的自证（版本错档 / 记录过期 / 点名的页还在盘上 /
     // 单边删只剩镜像 / 留痕缺时间戳 / 既没对账也没失败记账，各必须当场红）。
     "./scripts/assert-javadoc-orphan-record.mjs",
-  ]) {
+    // S22 步1：双链路同答判据的自证（session 多吐 / resolve 多吐 / 同数不同名 / 采集 0 份 /
+    // mcVersionsByPlatform 零声明 / COMBOS 被砍 / COMBOS 无 quilt，各必须当场红 + 一条正对照须绿）。
+    "./scripts/assert-lib-session-resolve-parity.mjs",
+    "./scripts/assert-community-attribution.mjs",
+    // A8（2026-09-24）：覆盖门的判据自证（①红 / ②红 / 缺 test 脚本红线，共 5 态）。
+    "./scripts/assert-test-chain-coverage.mjs",
+    // 第 36 轮：表形门的判据自证（第三列缺失 / 第三列为空 / 号序乱（现盘真发生过）/ 重号 / 跳号 / 首号≠1 /
+    // 正则采 0 行 ⇒ COLLECTOR_RETURNED_ZERO / 锚改名 ⇒ ANCHOR_MISSING / 截断到地板下，各必须红；
+    // 另三记**不判对照**须绿：合法改词（去掉 as-of）不红、合法加一行不红（地板只 `<`）、现盘逐字副本绿）。
+    "./scripts/assert-backlog-table-shape.mjs",
+    // 清尾①（2026-09-25）：未版本化现行页判据的自证（跨档改写 / 时间戳缺或重 / 警告删 / 未登记页 / 整页缺失 ⇒ 必红）。
+    "./scripts/assert-quilt-unversioned-wiki.mjs",
+    // 清尾③（2026-09-25）：qsl-verified 索引侧 sha256 对账判据的自证（缺失 / 过期 / l1 缺条目 / 解析失败 ⇒ 必红）。
+    "./scripts/assert-qsl-verified-sync.mjs",
+    // §6.8 缺口②（2026-09-25）：跨层名门的自证（15 例：四腿判据 / 层推导 / 代码位抽取 / 端到端先红后绿）。
+    "./scripts/assert-cross-layer-names.mjs",
+    // S16/t9（第 46 轮）：assert-powershell 的 in-gate 自检（25 例：13 投毒必红 + 6 反退化断言 + 6 正对照，
+    // 全内存、不 spawn powershell）。本数组是 selftest 面的唯一真值源 ⇒ 必须登记在此；
+    // 上面 #14a 块另跑一次并**加了三桶计数地板**（本数组的循环只判 rc，掏空例数它看不见），两处不重复。
+    "./scripts/assert-powershell.mjs",
+    // S1′ 残差收口（2026-09-25）：rejection-codes 门的自证（12 例夹具：5 档锚点各归其码 +
+    // 兜底通道活着 + 空 errors 落兜底 + 扫描器位数/未判定；计数现算不写死）。
+    "./scripts/assert-generator-rejection-codes.mjs",
+    // 未做③（2026-09-26）：Forge 1.17+ SRG 成员层的解析器自洽门（夹具 4 类/3 方法行/4 字段行，
+    // 上游件↔入库件逐行同答 + era/形状/消费面/在盘三方对账；11 记投毒含 1 记真输入投毒）。
+    "./scripts/assert-forge-srg-ingest.mjs",
+    // S5′（2026-09-25）：库坐标门的自证（23 例 = 16 投毒必红 + 7 不判红对照 + 真实输入正对照；
+    // 全内存 + 一次性临时根，不联网、不改仓内快照）。实测 rc=0 / 114–195 ms。
+    "./scripts/assert-lib-coord-snapshot.mjs",
+    // S16/t9 最后一条腿（第 47 轮，2026-09-25）：F145 方块 Material 门的 in-gate 自检
+    // （27 例 = 13 投毒必红 + 6 反退化断言 + 8 正对照；全内存、不读档面、不落盘）。
+    // 补它之前该门全文 `--selftest` 命中 0，其五个 MC_SKILL_MAT_* 钩子全仓只有文件自己读
+    // ⇒ 装饰性投毒口。三桶计数地板长在门内（本数组的循环只看 rc，掏空例数它看不见）。
+    "./scripts/assert-forge-1204-material.mjs",
+  ];
+
+/**
+ * §S4 · 门链**四数普查**：把「盘上 K / 可达 P / 真跑 N / selftest M」四把分母算在一起、打印在一起、断言在一起。
+ *
+ * 一道没人跑的门比没有门更糟：它本地手跑绿、CI 也「绿」，但坏数据照样入库。
+ * 四门（G1–G4）都是这个形状，所以把「可达性」本身钉成断言。
+ *
+ * ⚠️ 口径（第 23、25 轮两次把本块旧打印「N 道 assert-* 全部可达」读成「这些门都跑过了」，
+ * 本轮把「靠人读措辞」换成机制）：
+ *  - `K` 盘上 = `readdirSync(scripts)` 全量（沿用原有口径，不另起一摊）。
+ *  - `P` 可达 = 该名字出现在任一 `test-*.mjs` 或 `package.json` 里 ⇒ **被引用**，不是被执行。
+ *  - `N` / `M` = §S18/S19 与 W1-2 两个块**逐道 spawn** 的那两条数组的**去重长度**（数组本身是唯一真值源，
+ *    本块只读它的 `length`，绝不重抄名单——重抄 = 造第二个真值源，必然漂，见 CONTRIBUTING.md `L13`/`L18`）。
+ *  - `Z` = 名字出现在**本文件源码**里、却**不在**那两条数组中的门 ⇒ 它们由本文件的**其它编号块/散块**
+ *    现 spawn（`#16` 的 yarn-slurp、`#20/#21/#22` 的 mixin-shape / ban-vs-example / doc-absence-claims 等），
+ *    所以 **`K − N` 不是「只由 npm test 覆盖」的道数**。第 26 轮的打印就是拿 `K − N` 算这道差，
+ *    把 `Z` 那批说成「本块不跑 ⇒ 只有 npm test 跑」——一个制造过度解读的口径错（本轮改成扫描现算）。
+ *  - `Y` = 盘上 `assert-*.mjs` 里**本文件源码任何位置都没出现其文件名**的道数（子串 presence，天然覆盖
+ *    数组项 / `new URL("./scripts/…")` / 任何 spawn 形 / 注释点名）。`Y` 才是「本文件完全没碰过」那批。
+ *  等式只留真该等的那条：`P === K`。`N` / `M` / `Y` 一律下界（`<` 才红）：等式棘轮（反面教材 =
+ *  `assert-forge-1182-registry-consts.mjs` 的 `now === pinned`）会让下一次**合法**加门/挪门必红。
+ *  `Y` 的下界另配一记**差分对照**（投毒④）证明扫描是活的：往 `selfBlob` 夹具里追加一条 spawn 形引用，
+ *  `Y` 必须 −1 且仍绿；只按下界的话，「扫描恒不命中 ⇒ Y=K」与「扫描恒命中 ⇒ Y=0」都不会自己现形。
+ */
+const FLOOR_REAL_RUN = 30; // 口径 = REAL_RUN_GATES 去重长度；as-of 2026-09-25 实测 37（+assert-quilt-unversioned-wiki / +assert-cross-layer-names / +assert-generator-rejection-codes）；下界（< 才红），非等式
+const FLOOR_SELFTEST = 15; // 口径 = SELFTEST_GATES 去重长度；as-of 2026-09-25 实测 26（+quilt-unversioned-wiki / +qsl-verified-sync / +cross-layer-names / +generator-rejection-codes 四条自证）；下界，非等式
+const FLOOR_UNREF = 8; // 口径 = 盘上 assert-*.mjs 中「本文件源码零出现」的道数；as-of 2026-09-24 实测 10；下界，非等式（合法把某道门挪进本文件 spawn 块会让 Y 降，不该红）
+
+/**
+ * 纯函数：输入（盘上清单 / 全 test-*.mjs+package.json 的引用 blob / **本文件自身源码** / 两条数组）
+ * 与三个地板全部可注入 ⇒ 四记投毒只在内存夹具上做，不碰任何生产文件
+ * （形状同 `assert-community-attribution.mjs` 的 `evaluate(accessor)`）。
+ * @returns {{K:number,P:number,N:number,M:number,Z:number,Y:number,yNames:string[],orphans:string[],errors:string[]}}
+ */
+function censusChain({ diskGates, blob, pkg, selfBlob, realRun, selftest, floorReal, floorSelf, floorUnref }) {
+  const K = diskGates.length;
+  const orphans = diskGates.filter((g) => !blob.includes(g) && !pkg.includes(g));
+  const P = K - orphans.length;
+  const N = new Set(realRun).size;
+  const M = new Set(selftest).size;
+  const yNames = diskGates.filter((g) => !selfBlob.includes(g));
+  const Y = yNames.length;
+  const inArrays = new Set([...realRun, ...selftest].map((p) => String(p).split("/").pop()));
+  const Z = diskGates.filter((g) => selfBlob.includes(g) && !inArrays.has(g)).length;
+  const errors = [];
+  if (orphans.length > 0)
+    errors.push(`可达性: 以下门禁没有任何调用方 ⇒ 手跑绿也不会进 npm test：\n${orphans.join("\n")}`);
+  if (P !== K) errors.push(`可达性: 可达 P=${P} ≠ 盘上 K=${K}`);
+  if (N < floorReal)
+    errors.push(`真跑: §S18/S19 数组 N=${N} < 地板 ${floorReal} ⇒ 有人从默认链上摘门（数组=唯一真值源）`);
+  if (M < floorSelf)
+    errors.push(`selftest: W1-2 数组 M=${M} < 地板 ${floorSelf} ⇒ 判据死活的自证不再被默认链跑到`);
+  if (Y < floorUnref)
+    errors.push(`本文件未引用: Y=${Y} < 地板 ${floorUnref} ⇒ 引用扫描多半失效（selfBlob 读到空数组会退化成「盘上门全被本文件跑」的假话）`);
+  return { K, P, N, M, Z, Y, yNames, orphans, errors };
+}
+{
+  const { readdirSync } = await import("node:fs");
+  const SCRIPTS = jpath(import.meta.dirname, "scripts");
+  const gates = readdirSync(SCRIPTS).filter((f) => /^assert-.*\.mjs$/.test(f)).sort();
+  const tests = readdirSync(import.meta.dirname).filter((f) => /^test-.*\.mjs$/.test(f));
+  const blob = tests.map((t) => readFileSync(jpath(import.meta.dirname, t), "utf8")).join("\n");
+  const pkg = readFileSync(jpath(import.meta.dirname, "package.json"), "utf8");
+  // 本文件**自身**源码：Y/Z 的判据面（第 26 轮没有这一路，只能拿 K−N 猜差额 ⇒ 猜错了）。
+  const selfBlob = readFileSync(import.meta.filename, "utf8");
+  assert.ok(
+    selfBlob.length > 100_000,
+    `selfBlob 只有 ${selfBlob.length} 字符 ⇒ 本文件源码没读到，Y/Z 全是垃圾数（宁可红，不可假绿）`,
+  );
+  const prod = censusChain({
+    diskGates: gates,
+    blob,
+    pkg,
+    selfBlob,
+    realRun: REAL_RUN_GATES,
+    selftest: SELFTEST_GATES,
+    floorReal: FLOOR_REAL_RUN,
+    floorSelf: FLOOR_SELFTEST,
+    floorUnref: FLOOR_UNREF,
+  });
+  assert.equal(prod.errors.length, 0, `§S4 门链四数普查不通过：\n${prod.errors.join("\n")}`);
+
+  // 反身自证（新腿必须能红）。2026-09-19（N3/N5/N9c 批次）留下的口径：去掉某门在 blob/pkg 里的
+  // **全部**出现（原用 String.replace 只去首个，一门在同一宿主被调两处时自证会静默失效）。
+  const probe = gates[0];
+  const strip = (text) => text.split(probe).join("");
+  const base = {
+    diskGates: gates,
+    blob,
+    pkg,
+    selfBlob,
+    realRun: REAL_RUN_GATES,
+    selftest: SELFTEST_GATES,
+    floorReal: FLOOR_REAL_RUN,
+    floorSelf: FLOOR_SELFTEST,
+    floorUnref: FLOOR_UNREF,
+  };
+  // 「红在哪句话」必须印出来：否则「投毒能红」又是一句只有作者自己看得见的自述。
+  const firstRed = (label, c, pred, notRedMsg) => {
+    const m = c.errors.find(pred);
+    assert.ok(m, `${label} 打不红 ⇒ ${notRedMsg}`);
+    return m.replace(/\n/g, " ⏎ ");
+  };
+  // 投毒①（可达腿）：摘掉一道的引用 ⇒ 必须红，且红在该门的名字上。
+  const redReach = firstRed(
+    "投毒① 可达腿",
+    censusChain({ ...base, blob: strip(blob), pkg: strip(pkg) }),
+    (e) => e.includes(probe),
+    `删掉 ${probe} 的引用后仍然全绿`,
+  );
+  // 投毒②（N 地板腿）：把真跑地板抬到数组不可能达到的高度 ⇒ 必须红。
+  const redFloorN = firstRed(
+    "投毒② N 地板腿",
+    censusChain({ ...base, floorReal: prod.K + 1 }),
+    (e) => e.startsWith("真跑:"),
+    `地板抬到 ${prod.K + 1} 仍不报`,
+  );
+  // 投毒③（M 地板腿）：selftest 数组删一项 + 地板取真实 M ⇒ 必须红。
+  // 真实地板留 15（实测值减一点）是**故意的**：单掉一道不会红（下界不脆）；这里把地板抬到实测 M
+  // 只为证明那条 `<` 判据本身活着，不是恒真。
+  const redFloorM = firstRed(
+    "投毒③ M 地板腿",
+    censusChain({ ...base, selftest: SELFTEST_GATES.slice(0, -1), floorSelf: prod.M }),
+    (e) => e.startsWith("selftest:"),
+    "selftest 数组删一项后仍不报",
+  );
+  // 投毒④（L22 新增·N 地板的**数组侧**）：把真跑数组整段截到地板以下 ⇒ 红在同一条 `真跑:` 上。
+  // ⚠️ 口径：写单要的是「摘一项必红」，但 `N ≥ 地板` 是**下界**、地板按实测 32 减了 2 ⇒ 单摘一道
+  // 按设计不该红（等式棘轮反面教材见上）。所以这一记截到 `FLOOR_REAL_RUN - 1` 道，证明的是
+  // 「数组缩水这条路真能红」，与投毒②（抬地板那条路）互补。
+  const redShrink = firstRed(
+    "投毒④ N 数组截断",
+    censusChain({ ...base, realRun: REAL_RUN_GATES.slice(0, FLOOR_REAL_RUN - 1) }),
+    (e) => e.startsWith("真跑:"),
+    `真跑数组截到 ${FLOOR_REAL_RUN - 1} 道仍不报 ⇒ N 根本没在数数组`,
+  );
+  // 投毒⑤（L22 新增·可达**等式**侧）：盘上凭空多一道没人引用的门 ⇒ 必须红在 `P === K`。
+  // 名字运行时拼出来：写成字面量的话它就真出现在本文件源码里 ⇒ 被 blob 认成"有引用"，夹具当场失效。
+  // 只看等式那一行（孤儿清单那一行由投毒① 证），否则 find 会先命中① 同款文案、白证一次。
+  const ghost = "assert-" + "zz-ghost-gate" + "-r27.mjs";
+  const redGhost = firstRed(
+    "投毒⑤ 凭空假门",
+    censusChain({ ...base, diskGates: gates.concat([ghost]) }),
+    (e) => e.startsWith("可达性: 可达 P="),
+    `${ghost} 无人引用却不报 P≠K ⇒ 那条等式是摆设`,
+  );
+  assert.match(redGhost, /P=\d+ ≠ 盘上 K=\d+/, `投毒⑤ 没落在等式上：${redGhost}`);
+  assert.ok(!blob.includes(ghost) && !pkg.includes(ghost), `幽灵门夹具失效：${ghost} 竟被 blob/pkg 引用`);
+  // 不判对照 A（防等式棘轮）：只增不减 —— 模拟合法加一门进真跑数组，必须仍绿。
+  const extra = gates.find((g) => !REAL_RUN_GATES.some((p) => p.endsWith(g)));
+  assert.ok(extra, "找不到「盘上有、真跑数组里没有」的门 ⇒ 对照例失效，本块须重设计");
+  const control = censusChain({ ...base, realRun: REAL_RUN_GATES.concat([`./scripts/${extra}`]) });
+  assert.equal(
+    control.errors.length,
+    0,
+    `合法加一门（${extra}）被判成红 ⇒ 地板退化成了等式：\n${control.errors.join("\n")}`,
+  );
+  // 不判对照 B（L22 新增·证明 Y 是**扫描**来的、不是拿两条数组算的）：把 Y 里的一道门改成
+  // 「本文件某编号块现 spawn」的形状（只动 selfBlob 夹具，两条数组一字未动）⇒
+  // Y 必须 −1、Z 必须 +1、N/M 不变、errors 仍 0（合法挪门不该红）。
+  const y0 = prod.yNames[0];
+  assert.ok(y0, `Y=${prod.Y} 为空 ⇒ 本文件声称 spawn 了全部 ${prod.K} 道门，与 §S18/S19 数组长度矛盾`);
+  const spawnedNow = selfBlob + `\nspawnSync(node, [fileURLToPath(new URL("./scripts/${y0}", import.meta.url))]);\n`;
+  const ctrlY = censusChain({ ...base, selfBlob: spawnedNow });
+  assert.equal(ctrlY.errors.length, 0, `把 ${y0} 挪进本文件 spawn 块被判红 ⇒ Y 退化成了等式：\n${ctrlY.errors.join("\n")}`);
+  assert.equal(ctrlY.Y, prod.Y - 1, `Y 不随引用面变化（${prod.Y}→${ctrlY.Y}）⇒ Y 不是扫本文件源码算的`);
+  assert.equal(ctrlY.Z, prod.Z + 1, `Z 不随引用面变化（${prod.Z}→${ctrlY.Z}）⇒ Z 不是扫本文件源码算的`);
+  assert.equal(ctrlY.N, prod.N, "对照 B 不该动 N");
+  assert.equal(ctrlY.M, prod.M, "对照 B 不该动 M");
+
+  console.log(
+    `  §S4 门链四数: 盘上 ${prod.K} 道 assert-* · 可达 ${prod.P} 道（= 被 ${tests.length} 个 test-*.mjs + package.json 引用，不是被执行）· ` +
+      `两条数组逐道 spawn：§S18/S19 真跑 ${prod.N} 道 · W1-2 selftest ${prod.M} 道`,
+  );
+  console.log(
+    `    口径: N/M = **这两条数组**的去重长度；另有 Z=${prod.Z} 道在本文件其它编号块/散块里现 spawn（不被两条数组计入）；` +
+      `本文件完全未引用 Y=${prod.Y} 道（列名：${prod.yNames.join(", ") || "无"}）`,
+  );
+  console.log(
+    `    断言: P===K（唯一等式）· N≥${FLOOR_REAL_RUN} · M≥${FLOOR_SELFTEST} · Y≥${FLOOR_UNREF}（三条下界，as-of 2026-09-24 实测 N/M/Y=${prod.N}/${prod.M}/${prod.Y}）`,
+  );
+  console.log(`    投毒① 可达腿（摘掉 ${probe} 的全部引用）红在: ${redReach}`);
+  console.log(`    投毒② N 地板腿（地板抬到 K+1=${prod.K + 1}）红在: ${redFloorN}`);
+  console.log(`    投毒③ M 地板腿（selftest 数组删一项、地板取实测 M=${prod.M}）红在: ${redFloorM}`);
+  console.log(
+    `    投毒④ N 数组截断（真跑数组砍到 ${FLOOR_REAL_RUN - 1} 道，证明数组侧能红）红在: ${redShrink}`,
+  );
+  console.log(`    投毒⑤ 凭空假门（盘上加一道 ${ghost}，名字运行时拼出）红在: ${redGhost}`);
+  console.log(
+    `    对照·不判A 只增不减（真跑数组再加 ${extra} ⇒ N=${prod.N + 1}）errors=${control.errors.length} ⇒ 仍绿`,
+  );
+  console.log(
+    `    对照·不判B 引用面挪门（${y0} 追加一条 spawn 形引用）Y=${prod.Y}→${ctrlY.Y} · Z=${prod.Z}→${ctrlY.Z} · N/M 不变 · errors=${ctrlY.errors.length} ⇒ 仍绿`,
+  );
+}
+
+/**
+ * §S18/S19 · 两道新门的**真跑**（不只是被字符串引用骗过门串链）。
+ * 串链断言只保证「有人提到这门」，这里保证「npm test 真的跑过它一次」。
+ */
+{
+  const { spawnSync } = await import("node:child_process");
+  const { fileURLToPath } = await import("node:url");
+  for (const gate of REAL_RUN_GATES) {
+    const GATE = fileURLToPath(new URL(gate, import.meta.url));
+    const r = spawnSync(process.execPath, [GATE], {
+      encoding: "utf8",
+      windowsHide: true,
+      env: { ...process.env },
+    });
+    assert.equal(
+      r.status,
+      0,
+      `${gate} 真跑失败（rc=${r.status}）：\n${String(r.stdout || "").slice(0, 800)}${String(r.stderr || "").slice(0, 400)}`,
+    );
+  }
+  // W1-2（2026-09-19）：以下这些门自带 --selftest 投毒自证，把自证也接进默认链 ——
+  // 条数**不写死**（2026-09-19 接线时是 4 道，此后按轮递增；写死必然过期，见 CONTRIBUTING.md §未排期清单 L18）。
+  // 本块跑几道**不在这里自述**：上面 §S4 的「门链四数」行现算现印（盘上 K / 可达 P / 真跑 N / selftest M），
+  // 那两条数组（`REAL_RUN_GATES` / `SELFTEST_GATES`）是唯一真值源，地板断言也在那一块里。
+  // 上面的「真跑」只证明**数据**绿；「selftest」才证明**判据**活着（改瞎 banned 形态必须当场红）。
+  // 原缺陷：selftest 只能手跑，默认链永远看不见判据死活。
+  for (const gate of SELFTEST_GATES) {
     const GATE = fileURLToPath(new URL(gate, import.meta.url));
     const r = spawnSync(process.execPath, [GATE, "--selftest"], {
       encoding: "utf8",
@@ -2130,6 +2413,8 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
   const { tmpdir } = await import("node:os");
   const { fileURLToPath } = await import("node:url");
   const tmp = mkdtempSync(`${tmpdir()}\\mcp-gate-poison-`);
+  // try/finally 而不是末尾裸 rmSync：六记 expect 任何一记抛错，摊位也得收（下面 finally 里还自证收干净）。
+  try {
   const runGate = (rel, env) =>
     spawnSync(process.execPath, [fileURLToPath(new URL(rel, import.meta.url))], {
       encoding: "utf8",
@@ -2185,6 +2470,13 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
   console.log(
     "  §A5/§idx 投毒自检: 判死符号台账（基线绿 + 少记/多记/锚点挪位 3 记必红）· api-index 通道布局（基线绿 + Mojang 类注入/改名/删锚点 3 记必红）",
   );
+  } finally {
+    // 本块夹具 = 3 份 6.5MB api-index 投毒副本 + 3 份台账副本；此前从不清理 ⇒ 2026-09-25 实测盘上
+    // 积累 226 个 %TEMP%\mcp-gate-poison-* / 4.13GB，每跑一轮 test:scripts 多一个。
+    // maxRetries 是 Windows EBUSY 兜底（与 §S4-G4 收摊同一模式）；后面那记 assert 防「finally 写了但没删掉」悄悄绿。
+    rmSync(tmp, { recursive: true, force: true, maxRetries: 10, retryDelay: 250 });
+    assert.ok(!existsSync(tmp), `§A5/§idx 摊位未收干净，残留：${tmp}`);
+  }
 }
 
 /**
@@ -2398,18 +2690,34 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
   const {
     assertAllowedUpstreamUrl, isSafeSlug, parseMavenVersions, parseMetaJson,
     mcMatchRule, compareVersionDesc, UPSTREAM_ENDPOINTS, UPSTREAM_SOURCES, queryUpstreamReleases,
+    MAVEN_HOST_ALIASES, parseMavenSlug, parseMojangManifest, mavenNotFoundHint, notFoundPayload,
   } = up;
   const fails = [];
   const t = async (name, fn) => { try { await fn(); } catch (e) { fails.push(`${name}: ${e.message}`); } };
 
-  await t("主机白名单：只收 https 与自家 7 个 host", () => {
-    for (const s of UPSTREAM_SOURCES) if (s !== "modrinth") assertAllowedUpstreamUrl(UPSTREAM_ENDPOINTS[s].build("1.20.1", undefined));
+  await t("主机白名单：只收 https 与自家 host（含 A4c 的 maven 别名表）", () => {
+    for (const s of UPSTREAM_SOURCES) {
+      if (s === "modrinth") continue;
+      // maven 的 URL 由 slug 的别名解析（其余源直接 build）。
+      const u = s === "maven"
+        ? UPSTREAM_ENDPOINTS[s].build(undefined, "fabric:net/fabricmc/yarn")
+        : UPSTREAM_ENDPOINTS[s].build("1.20.1", undefined);
+      assertAllowedUpstreamUrl(u);
+    }
+    // A4c：别名表里每个主机都必须在白名单内（否则坐标一合法就撞 URL_REJECTED）
+    for (const [alias, e] of Object.entries(MAVEN_HOST_ALIASES)) {
+      assertAllowedUpstreamUrl(`https://${e.host}/${e.prefix ? e.prefix + "/" : ""}x/y/maven-metadata.xml`);
+      assert.ok(e.host.length > 0, `别名 ${alias} 的主机为空`);
+    }
     assert.throws(() => assertAllowedUpstreamUrl("http://maven.minecraftforge.net/x"), /https/);
     assert.throws(() => assertAllowedUpstreamUrl("https://evil.example.com/x"), /白名单/);
     assert.throws(() => assertAllowedUpstreamUrl("https://maven.minecraftforge.net.evil.com/x"), /白名单/);
     // 重定向落点：parchment 的托管后端已登记；其余主机（含内网回环）一律拒绝，且不因「入口在白名单」而放行
     assertAllowedUpstreamUrl("https://ldtteam.jfrog.io/artifactory/parchmentmc-public/x", true);
     assert.throws(() => assertAllowedUpstreamUrl("https://ldtteam.jfrog.io/x"), /白名单/, "落点白名单不得反向放宽入口白名单");
+    // A4c：legacyfabric 的入口 302 到自家新域名（实测），已显式登记落点；同样不得反向放宽入口。
+    assertAllowedUpstreamUrl("https://repo.legacyfabric.net/legacyfabric/net/legacyfabric/yarn/maven-metadata.xml", true);
+    assert.throws(() => assertAllowedUpstreamUrl("https://repo.legacyfabric.net/legacyfabric/x"), /白名单/, "落点登记不得反向放宽入口白名单");
     assert.throws(() => assertAllowedUpstreamUrl("https://169.254.169.254/latest/meta-data/", true), /白名单/);
     assert.throws(() => assertAllowedUpstreamUrl("https://127.0.0.1:8787/x", true), /白名单/);
   });
@@ -2435,11 +2743,97 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
   await t("meta/modrinth 三种形状各自归一", () => {
     const loader = parseMetaJson("fabric-loader", [{ loader: { version: "0.15.11", maven: "net.fabricmc:fabric-loader:0.15.11", stable: true }, intermappings: {} }, { junk: 1 }]);
     assert.deepEqual(loader, [{ version: "0.15.11", maven: "net.fabricmc:fabric-loader:0.15.11", stable: true }]);
+    // A9：非 modrinth 源上游不提供版本类型 ⇒ 字段必须缺席（缺席 ≠ release，禁止猜）
+    assert.equal(loader[0].versionType, undefined, "fabric-loader 不得凭空产出 versionType");
     const yarn = parseMetaJson("fabric-yarn", [{ version: "1.21.4+build.8", maven: "net.fabricmc:yarn:1.21.4+build.8", stable: false }]);
     assert.equal(yarn[0].stable, false);
-    const mr = parseMetaJson("modrinth", [{ id: "v1", version_number: "0.98.0", game_versions: ["1.20", "1.20.1"], loaders: ["fabric"], filename: "x.jar" }]);
+    assert.equal(yarn[0].versionType, undefined, "fabric-yarn 不得凭空产出 versionType");
+    const mr = parseMetaJson("modrinth", [{ id: "v1", version_number: "0.98.0", version_type: "beta", game_versions: ["1.20", "1.20.1"], loaders: ["fabric"], filename: "x.jar" }]);
     assert.deepEqual(mr[0].gameVersions, ["1.20", "1.20.1"]);
+    // A9（R111④）：modrinth 的 version_type 逐字回显 ⇒ 工具面能判 release/beta
+    assert.equal(mr[0].versionType, "beta", "modrinth version_type 必须逐字回显");
+    const mrNoType = parseMetaJson("modrinth", [{ id: "v2", version_number: "1.0.0" }]);
+    assert.equal(mrNoType[0].versionType, undefined, "上游没给 version_type 就不给字段（不得默认 release）");
     assert.equal(parseMetaJson("modrinth", []).length, 0);
+  });
+
+  // ── A4c（2026-09-24 用户裁定「全补 8+3」）：maven 坐标 / Mojang 清单 / legacyfabric ──
+  await t("A4c：maven 坐标形状与别名表挡在拼 URL 之前", () => {
+    const ok = parseMavenSlug("fabric:net/fabricmc/yarn");
+    assert.ok(ok, "合法坐标被拒");
+    assert.equal(ok.host, "maven.fabricmc.net");
+    assert.equal(parseMavenSlug("quilt:org/quiltmc/quilt-mappings").prefix, "repository/release", "带前缀的主机必须从别名表取前缀");
+    // 坐标段允许驼峰（实测 maven 上真有 ClothConfig / RoughlyEnoughItems 这类 artifact）
+    assert.ok(parseMavenSlug("shedaniel:me/shedaniel/ClothConfig"), "驼峰 artifact 不该被挡");
+    const bad = [
+      "net/fabricmc/yarn", // 无别名
+      "unknown:net/fabricmc/yarn", // 别名不在表里
+      "fabric:", // 无坐标
+      "fabric:net", // 坐标层级不足
+      "fabric:net/../yarn", // 路径穿越
+      "fabric:net//yarn", // 空段
+      "fabric:net/fabricmc/yarn/", // 尾斜杠 = 空段
+      "FABRIC:net/fabricmc/yarn", // 别名大写
+      "fabric:net/fabricmc/yarn?x=1", // 查询串
+    ];
+    for (const s of bad) assert.equal(parseMavenSlug(s), null, `应拒绝 ${JSON.stringify(s)}`);
+    assert.throws(() => UPSTREAM_ENDPOINTS.maven.build(undefined, "evil.example.com/x/y"), /slug|别名/);
+  });
+
+  await t("A4c：Mojang 清单归一（type → versionType 逐字）", () => {
+    const rows = parseMojangManifest({
+      latest: { release: "1.21.1", snapshot: "24w33a" },
+      versions: [
+        { id: "1.21.1", type: "release", releaseTime: "2024-08-08T14:00:00+00:00" },
+        { id: "24w33a", type: "snapshot" },
+        { junk: 1 },
+      ],
+    });
+    assert.deepEqual(rows.map((r) => r.version), ["1.21.1", "24w33a"]);
+    assert.equal(rows[0].versionType, "release");
+    assert.equal(rows[1].versionType, "snapshot");
+    assert.equal(parseMojangManifest({}).length, 0, "没有 versions[] 必须归一成 0 条（交给上层报 UPSTREAM_PARSE）");
+    assert.equal(parseMojangManifest("<html>502</html>").length, 0);
+    assert.equal(mcMatchRule("mojang-manifest", "1.21.1").test({ version: "1.21.1" }), true);
+    assert.equal(mcMatchRule("mojang-manifest", "1.21.1").test({ version: "1.21.2" }), false);
+  });
+
+  await t("A4c：legacyfabric loader 是扁平形状（不是 fabric-loader 的嵌套 loader）", () => {
+    const rows = parseMetaJson("legacyfabric-loader", [
+      { separator: ".", build: 3, maven: "net.fabricmc:fabric-loader:0.19.3", version: "0.19.3", stable: true },
+    ]);
+    assert.equal(rows[0].version, "0.19.3");
+    assert.equal(rows[0].stable, true);
+    assert.equal(
+      parseMetaJson("legacyfabric-loader", [{ loader: { version: "9.9.9" } }]).length,
+      0,
+      "嵌套形状必须解析不出 —— 实测该端点是扁平的，抄 fabric-loader 的解析会全空",
+    );
+  });
+
+  await t("A4c：maven 缺 slug / 坏 slug 不联网也当场拒", async () => {
+    const miss = await queryUpstreamReleases({ source: "maven" });
+    assert.equal(miss.ok, false);
+    assert.equal(miss.error.code, "MISSING_SLUG");
+    const bad = await queryUpstreamReleases({ source: "maven", slug: "unknown:net/x" });
+    assert.equal(bad.ok, false);
+    assert.equal(bad.error.code, "MISSING_SLUG", "别名不在表里必须在拼 URL 之前拒（防 SSRF）");
+  });
+
+  // A4c 口径洞（2026-09-24 用户回报）：`source=maven` 的 404 被三态承诺说过头了 ——
+  // 它真实含义只是「该路径没有 maven-metadata.xml」，分不清「构件不存在」与「坐标写法不对」。
+  await t("A4c 口径洞：maven 的 404 不得替「上游确实没有」背书", () => {
+    const p = notFoundPayload({ source: "maven", url: "https://maven.example/x", slug: "progwml6:mezz/jei", via: "fetch", fetchedAt: "t" });
+    assert.equal(p.ok, true);
+    assert.equal(p.available, false, "404 仍落 available:false（三态形状不变）");
+    assert.match(String(p.hint), /只证明|坐标/, "maven 404 必须带语义边界 hint");
+    assert.ok(!/上游没有该模组|上游确实没有该/.test(String(p.hint)), "hint 不得把「写法不对」说成「上游没有」");
+    assert.match(String(p.hint), /modrinth/, "hint 要给可证的替代出口（按 slug 查的源）");
+    assert.match(mavenNotFoundHint("fabric:net/fabricmc/nope"), /fabric:net\/fabricmc\/nope/, "hint 要点回被查的坐标");
+    // 其余源查的是写死的 artifact，不含此歧义 ⇒ 不加 hint（形状不动）
+    const f = notFoundPayload({ source: "forge", url: "https://x/y", minecraftVersion: "1.20.1", via: "fetch", fetchedAt: "t" });
+    assert.equal(f.hint, undefined, "非 maven 源不得凭空多出 hint");
+    assert.match(String(f.matchRule), /1\.20\.1/, "matchRule 仍要回显");
   });
 
   // 反证腿：MC 1.21.1 的 NeoForge 编号是 21.1.x（实测 maven 上 244 条，scaffold 钉 21.1.248）。
@@ -2507,12 +2901,35 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
     const entry = reg.indexToolSchemas.find((e) => e.name === "query_upstream_releases");
     assert.ok(entry, "indexToolSchemas 缺镜像 ⇒ CLI list-tools 少一个工具");
     assert.ok(reg.queryUpstreamReleasesOutputSchema, "outputSchema 常量被摘掉 ⇒ structuredContent 不再被校验");
-    assert.deepEqual(Object.keys(reg.queryUpstreamReleasesSchema.shape).sort(), ["limit", "minecraftVersion", "slug", "source"]);
+    // S4′（2026-09-25）加了 `refresh`（跳缓存回源）⇒ 名单跟着走；`project` 仍必须在名单外
+    assert.deepEqual(Object.keys(reg.queryUpstreamReleasesSchema.shape).sort(), ["limit", "minecraftVersion", "refresh", "slug", "source"]);
     assert.equal("project" in reg.queryUpstreamReleasesSchema.shape, false, "--project 是 CLI 保留别名，参数名不得回退成 project");
   });
 
+  await t("A4b 棘轮：outputSchema 保持 1/82（铺开须先撤本判据）", async () => {
+    const { readFileSync } = await import("node:fs");
+    const src = readFileSync(jpath(import.meta.dirname, "src", "tool-registry.ts"), "utf8");
+    const n = (src.match(/^\s*outputSchema:/gm) || []).length;
+    assert.equal(n, 1, `outputSchema 注册出现 ${n} 次 ⇒ A4b「暂不铺」（2026-09-24 用户裁定）被突破（基准 1/82）`);
+  });
+
+  await t("A4a 探针落点：clientCapabilities 回显随 build 在场（只许一处）", async () => {
+    const { readFileSync } = await import("node:fs");
+    const dist = readFileSync(jpath(import.meta.dirname, "dist", "tool-registry.js"), "utf8");
+    assert.ok(
+      dist.includes("getClientCapabilities?.() ?? null"),
+      "dist/tool-registry.js 丢了 A4a 探针（clientCapabilities 回显）⇒ 先 npm run build 再测",
+    );
+    const src = readFileSync(jpath(import.meta.dirname, "src", "tool-registry.ts"), "utf8");
+    assert.equal(
+      (src.match(/\bclientCapabilities\s*:/g) || []).length,
+      1,
+      "A4a 探针被复制铺开（基准恰 1 处；要铺开先改本判据与 docs/mcmap-linkie-absorption.md §4）",
+    );
+  });
+
   if (fails.length) assert.fail(`#18 上游可用性判据：\n  - ${fails.join("\n  - ")}`);
-  console.log("  #18 query_upstream_releases: 白名单/slug/解析/版本归属/降序/拒绝路径/注册面 7 组判据 + neoforge 前缀反证钉住");
+  console.log("  #18 query_upstream_releases: 白名单（含 A4c maven 别名表）/slug/解析/版本归属/降序/拒绝路径/注册面 + A4c 五组（maven 坐标 / Mojang 清单 / legacyfabric 扁平 / 缺 slug 拒绝 / **maven-404 语义边界**）+ neoforge 前缀反证钉住");
 }
 // ── #19 基岩 scriptapi 的「大小写碰撞 → 静默覆盖」防腿（A3 收口）───────────────
 // 实测缺陷：@minecraft/server 的 d.ts 里 `System`(class) 与 `system`(const) 成对存在，
@@ -2585,5 +3002,112 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
 
   if (fails.length) assert.fail(`#19 基岩 scriptapi 防覆盖判据：\n  - ${fails.join("\n  - ")}`);
   console.log("  #19 scriptapi 大小写碰撞 / 索引剪枝: 5 组判据（含真实 624 声明的可跑性与后缀确定性）");
+}
+// ── #20 scaffold mixin 注入形状门（assert-scaffold-mixin-shape）：挂载 + 证明它真会红 ──
+// story S1 / 审计 P0-1：三处 scaffold mixin 注入 `)V` 方法却声明 CallbackInfoReturnable —— 编译期合法、
+// 只在 Mixin apply 期抛 InvalidInjectionException，而三档 pack.meta.json 都是 buildVerified:true，
+// 现有构建检查抓不到。判据是**被注入方法的返回类型**（签名取自该档自己的
+// data/fabric_<ver>/mappings/yarn-mappings.sqlite），不是方法名字符串。
+// 挂四件事：门自带夹具自检（投毒必红 + NO_MAPPING_LAYER 独立态）、真树必须绿、自检必须报 N/N、
+// 以及「映射层坏了不许静默放行」由自检的 BAD_MAPPING_LAYER 用例守住。
+{
+  const GATE = fileURLToPath(new URL("./scripts/assert-scaffold-mixin-shape.mjs", import.meta.url));
+  const run = (args) =>
+    spawnSync(process.execPath, [GATE, ...args], {
+      env: { ...process.env },
+      encoding: "utf8",
+      windowsHide: true,
+    });
+
+  const self = run(["--selftest"]);
+  assert.equal(self.status, 0, `scaffold mixin 形状门自检失败（含"投毒必红"用例）：\n${self.stdout}${self.stderr}`);
+  const tally = /selftest: (\d+)\/(\d+)/.exec(self.stdout || "");
+  assert.ok(tally, `自检未打印 selftest: N/M 计数：\n${self.stdout}`);
+  assert.equal(Number(tally[1]), Number(tally[2]), `自检用例未全过（${tally[1]}/${tally[2]}）：\n${self.stdout}`);
+
+  const real = run([]);
+  assert.equal(real.status, 0, `scaffold 里存在注入形状与目标方法返回类型不符的 mixin：\n${real.stdout}${real.stderr}`);
+  const shape = /（scaffold java (\d+) · 含注入 (\d+) · 注入点 (\d+)/.exec(real.stdout || "");
+  assert.ok(shape, `真树扫描未打印分母：\n${real.stdout}`);
+  console.log(
+    `  #20 scaffold mixin 形状门: 自检 ${tally[1]}/${tally[2]} 通过 · 真树 ${shape[1]} 个 scaffold java / ${shape[2]} 个含注入 / ${shape[3]} 个注入点全绿`,
+  );
+}
+// ── #21 同档「禁令 ↔ 活围栏示范」一致性门（assert-rule-ban-vs-example）──
+// story S4 task 4 / 类一：neoforge/26.1 的 01-registry:12 明令禁止裸 `BlockBehaviour.Properties.of()`，
+// 同档 02-block.mdc 与 skills/mc-registry/SKILL.md 的活围栏却正在示范它 —— 现有 assert-rule-java-shapes
+// 的四条判据全是**同文件自洽**、采集面又不含 skills/，抓不到这种跨文件互斥 ⇒ 单开一道表驱动门。
+// 挂四件事（计数全部现取，不硬编码）：自带夹具自检（投毒必红 + 下界地板不误伤）、真树必须绿、
+// 覆盖面三数必须同屏（表内对 / 判档 / 被扫文件）、汇总五数必须同屏（扫文件 / 判行 / 拒 / 采集面 / 地板）且拒=0。
+{
+  const GATE = fileURLToPath(new URL("./scripts/assert-rule-ban-vs-example.mjs", import.meta.url));
+  const run = (args) =>
+    spawnSync(process.execPath, [GATE, ...args], {
+      env: { ...process.env },
+      encoding: "utf8",
+      windowsHide: true,
+    });
+
+  const self = run(["--selftest"]);
+  assert.equal(self.status, 0, `禁令↔示范一致性门自检失败（含"投毒必红"用例）：\n${self.stdout}${self.stderr}`);
+  const tally = /selftest\): (\d+)\/(\d+)/.exec(self.stdout || "");
+  assert.ok(tally, `自检未打印 selftest: N/M 计数：\n${self.stdout}`);
+  assert.equal(Number(tally[1]), Number(tally[2]), `自检用例未全过（${tally[1]}/${tally[2]}）：\n${self.stdout}`);
+
+  const real = run([]);
+  assert.equal(real.status, 0, `存在「同档既列为禁令、又在活围栏代码里示范」的互斥：\n${real.stdout}${real.stderr}`);
+  const face = /覆盖面：表内 (\d+) 对 \/ 判 (\d+) 档 \/ 被扫文件 (\d+)/.exec(real.stdout || "");
+  assert.ok(face, `真跑未打印覆盖面分母（表内对 / 判档 / 被扫文件）：\n${real.stdout}`);
+  const sum = /汇总 扫文件=(\d+) 判行=(\d+) 拒=(\d+) 采集面=活禁令 (\d+)\/登记对 (\d+) 地板=文件≥(\d+) 且 活禁令≥(\d+)/.exec(real.stdout || "");
+  assert.ok(sum, `真跑未打印汇总五数（扫文件 / 判行 / 拒 / 采集面 / 地板）：\n${real.stdout}`);
+  assert.equal(Number(sum[3]), 0, `汇总行拒=${sum[3]} 而 rc 仍为 0（判据与退出码不一致）`);
+  assert.ok(Number(sum[1]) >= Number(sum[6]), `扫文件 ${sum[1]} 低于自报地板 ${sum[6]} 却没红（地板腿失效）`);
+  assert.ok(Number(sum[4]) >= Number(sum[7]), `活禁令 ${sum[4]} 低于自报地板 ${sum[7]} 却没红（地板腿失效）`);
+  console.log(
+    `  #21 禁令↔示范一致性门: 自检 ${tally[1]}/${tally[2]} 通过 · 表内 ${face[1]} 对 / 判 ${face[2]} 档 / 被扫 ${face[3]} 件 · 判行 ${sum[2]} · 拒 ${sum[3]} · 活禁令 ${sum[4]}/${sum[5]}（地板 文件≥${sum[6]} / 禁令≥${sum[7]}，均为下界）`,
+  );
+}
+// ── #22 「文档缺页断言 ↔ 检索实况」一致性门（assert-doc-absence-claims）──
+// story S5 / 第 5c 轮：neoforge/1.20.6 的 AGENTS.md:16/:23 与 1.20.4 的 mc-networking/SKILL.md:16
+// 声称「本档无已核实 payload 页 / 该页 DOC_NOT_FOUND / 本档事件名是抄来的」，而同一份已入库语料
+// 实测能取到该页（ok:true / total:10 / 首选 id networking/payload / versionFallback:false），
+// 且两档 06-networking 早在 09-13 / 09-19 已改对 ⇒ 同树内规则与总纲/skill 互斥。
+// 现有门全部只看代码形状，没有一道钉「文档存在性声称」⇒ 单开一道表驱动门（它同时钉住反证陷阱：
+// 更正行里引用的 DOC_NOT_FOUND 落 citation 桶、不判红，所以验收判据不能是 grep DOC_NOT_FOUND 归零）。
+// 挂四件事（计数全部现取，不硬编码）：夹具自检（投毒必红 + 下界地板不误伤 + 未判定不判红）、
+// 真树必须绿、覆盖面三数同屏、汇总七数同屏且拒=0；另钉本门单次墙钟 < 2000 ms（禁止 spawn CLI 拖慢门链）。
+{
+  const GATE = fileURLToPath(new URL("./scripts/assert-doc-absence-claims.mjs", import.meta.url));
+  const run = (args) =>
+    spawnSync(process.execPath, [GATE, ...args], {
+      env: { ...process.env },
+      encoding: "utf8",
+      windowsHide: true,
+    });
+
+  const self = run(["--selftest"]);
+  assert.equal(self.status, 0, `文档缺页断言门自检失败（含"投毒必红"用例）：\n${self.stdout}${self.stderr}`);
+  const tally = /selftest\): (\d+)\/(\d+)/.exec(self.stdout || "");
+  assert.ok(tally, `自检未打印 selftest: N/M 计数：\n${self.stdout}`);
+  assert.equal(Number(tally[1]), Number(tally[2]), `自检用例未全过（${tally[1]}/${tally[2]}）：\n${self.stdout}`);
+  const poisoned = Number((/（(\d+) 记含红/.exec(self.stdout || "") || [])[1]);
+  assert.ok(poisoned >= 5, `自检投毒例仅 ${poisoned} 记含红（要求 ≥5：声称↔可取互斥必红 + 采集塌 0 + 判据改瞎 + 引用桶 + 未判定桶）：\n${self.stdout}`);
+
+  const t0 = Date.now();
+  const real = run([]);
+  const ms = Date.now() - t0;
+  assert.equal(real.status, 0, `存在「声称本仓没有该文档页 / 该事件名非本档」而检索侧实测可取的互斥：\n${real.stdout}${real.stderr}`);
+  assert.ok(ms < 2000, `本门单次 ${ms}ms ≥ 2000ms —— 拖慢门链，须退回「只跑静态表核对」或去掉子进程`);
+  const face = /覆盖面：表内 (\d+) 条 \/ 判 (\d+) 档 \/ 被扫文件 (\d+)/.exec(real.stdout || "");
+  assert.ok(face, `真跑未打印覆盖面分母（表内条 / 判档 / 被扫文件）：\n${real.stdout}`);
+  const sum = /汇总 扫文件=(\d+) 判条目=(\d+) 未判定=(\d+) 引用=(\d+) 拒=(\d+) 采集面=活声称 (\d+)\/登记 (\d+) 地板=文件≥(\d+) 且 判定条目≥(\d+) 且 活声称≥(\d+)/.exec(real.stdout || "");
+  assert.ok(sum, `真跑未打印汇总七数（扫文件 / 判条目 / 未判定 / 引用 / 拒 / 采集面 / 地板）：\n${real.stdout}`);
+  assert.equal(Number(sum[5]), 0, `汇总行拒=${sum[5]} 而 rc 仍为 0（判据与退出码不一致）`);
+  assert.ok(Number(sum[1]) >= Number(sum[8]), `扫文件 ${sum[1]} 低于自报地板 ${sum[8]} 却没红（地板腿失效）`);
+  assert.ok(Number(sum[2]) >= Number(sum[9]), `判条目 ${sum[2]} 低于自报地板 ${sum[9]} 却没红（地板腿失效）`);
+  assert.ok(Number(sum[6]) >= Number(sum[10]), `活声称 ${sum[6]} 低于自报地板 ${sum[10]} 却没红（地板腿失效）`);
+  console.log(
+    `  #22 文档缺页断言↔检索实况门: 自检 ${tally[1]}/${tally[2]} 通过（含红投毒 ${poisoned} 记）· 真树 ${ms}ms · 表内 ${face[1]} 条 / 判 ${face[2]} 档 / 被扫 ${face[3]} 件 · 判条目 ${sum[2]} · 未判定 ${sum[3]} · 引用 ${sum[4]} · 拒 ${sum[5]} · 活声称 ${sum[6]}/${sum[7]}（地板 文件≥${sum[8]} / 条目≥${sum[9]} / 声称≥${sum[10]}，均为下界）`,
+  );
 }
 console.log("script helper regression tests passed");

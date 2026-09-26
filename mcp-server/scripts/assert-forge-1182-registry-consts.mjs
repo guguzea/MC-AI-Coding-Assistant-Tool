@@ -25,22 +25,87 @@ export const ROOT = path.resolve(__dirname, '..', '..', 'forge', '1.18.2');
 const SOURCE_DIRS = ['.cursor/skills', 'knowledge', 'code-patterns'];
 const PROJECTIONS = ['.agents', '.claude', '.continue', '.opencode', '.pi', '.trae', '.zcode'];
 
-/** 审计的六个常量：from 是本档出现的去下划线形，to 是审计主张的正名。 */
+/** 审计的六个常量：from 是本档出现的去下划线形，to 是审计主张的正名。
+ *  ⚠️ 例外：`FLUIDTYPES` 带 `verdict:'absent'` —— 1.18.2 根本没有那个注册表，它的 `to` 只是「`FLUID_TYPES`
+ *  自 1.19+ 才有」的口径标注、**不是** 1.18.2 答案（`to` 本身不参与任何断言：F1/F4 只过滤 replace 腿）。 */
 export const CONSTS = [
   { from: 'BLOCKENTITIES', to: 'BLOCK_ENTITIES', action: 'replace' },
   { from: 'SOUNDEVENTS', to: 'SOUND_EVENTS', action: 'replace' },
   { from: 'PARTICLETYPES', to: 'PARTICLE_TYPES', action: 'replace' },
-  { from: 'ENTITYTYPES', to: 'ENTITY_TYPES', action: 'hold' },
-  { from: 'FLUIDTYPES', to: 'FLUID_TYPES', action: 'hold' },
+  { from: 'ENTITYTYPES', to: 'ENTITIES', action: 'hold' },
+  // verdict:'absent'（2026-09-24 Ralph 第 24 轮，一手坐实）：**1.18.2 的 ForgeRegistries 没有「流体类型」
+  // 注册表** —— `FLUIDTYPES` 与 `FLUID_TYPES` 两个写法在该版本都不存在，流体注册表叫 `FLUIDS`。
+  // ⇒ 本项的 `to` **不是** 1.18.2 正名，只是「`FLUID_TYPES` 属 1.19+」的口径标注（`to` 不参与任何断言：
+  // F1/F4 只过滤 action==='replace'，F3 只数 `from`），但不得再留一个会被读成答案的裸名字。
+  // 判据仍是 hold（本门不自动替换它；生产侧的改法 = 删/改写那些表行，**不是**改名成 FLUID_TYPES）。
+  { from: 'FLUIDTYPES', to: '(1.18.2 无此注册表；FLUID_TYPES 自 1.19+ 才有)', action: 'hold', verdict: 'absent' },
   { from: 'BLOCKCONTAINERS', to: 'BLOCK_CONTAINERS', action: 'hold' },
 ];
 
 // ── B. 台账层（重算：MC_SKILL_F146_RELEDGER=1 只打印，不自动改写） ───────────
 const LEDGER = {
-  // 2026-09-13 实算并钉值（`MC_SKILL_F146_RELEDGER=1` 打印）：hold 三形的 source 面计数。
-  // 注：这三形按 S20 的裁定**保持不改**（ENTITYTYPES 本档正名是 ForgeRegistries.ENTITIES；
-  //     FLUIDTYPES 命中全在 ❌ 禁令内），故钉值用于防「顺手改」而不是待修数量。
-  holds: { ENTITYTYPES: 15, FLUIDTYPES: 6, BLOCKCONTAINERS: 0 },
+  // 2026-09-13 首次实算钉值 15/6/0。ENTITYTYPES 的 `to` 只作口径说明，hold 形不参与 F1/F4 替换。
+  // **2026-09-23（S25）撤回 2026-09-13 的「保持不改」裁定**（用户批准）：本档处方行统一改落
+  //   `ForgeRegistries.ENTITIES`；1.19 起该字段才改名 `ENTITY_TYPES`；`ENTITYTYPES` 在任何 Forge
+  //   版本都不存在 ⇒ source 面 15 → 5。**本门判据与 holds 钉值不随出处口径改动**（5a 轮只改注释）。
+  //   **2026-09-24（Ralph 第 19 轮，S25 尾）核验并同批重签**：处方腿已落盘兑现（非只改注释）——1.18.2
+  //   源面 `ENTITYTYPES` 处方 **0** 处（正名 `ForgeRegistries.ENTITIES`：canonical 面 **9 份文件 / 11 处**，
+  //   口径 = `grep -o` 逐次计数、排除 7 个宿主镜像目录只留 `.cursor` 与 knowledge/ 等源面，as-of 2026-09-24；
+  //   原写「10 处」为未经核对的数，第 19 轮验收时按现算改并补口径归属），1.19.4 全树 `ENTITYTYPES` **0** 命中（正名 `ENTITY_TYPES`；两档禁止平推）。
+  //   `MC_SKILL_F146_RELEDGER=1` 实算仍 5/6/0 ⇒ **钉值照抄未变**；`sync-skills`（1.18.2 + 1.19.4 两个
+  //   target）后 F6 实测 drift 仍 0 ⇒ `mirrorDrift` 亦未重钉。口径归属：改口由 2026-09-23 S25 裁定
+  //   （用户批准）作出，本轮只做逐名复核与记账，未新增任何口径。证据 = `temp/ralph-20260922/logs/r19-*.log`。
+  // ── 出处档位口径（2026-09-23 第 5a 轮定三档；2026-09-24 第 24 轮按一手证据升到四档）────────────
+  //   ① **语料逐字**（本仓 `data/**` 上游正文可复核）：仍然只有 `BLOCKS` / `ITEMS` ——
+  //      `data/forge_1.18.2/forge-docs/1.18.2/processed/concepts_registries.md:24,96`
+  //      （`ForgeRegistries.BLOCKS` / `ITEMS` 逐字）与
+  //      `data/forge_1.19.4/forge-docs/1.19.4/processed/concepts_registries.md:24,106`。**这条没变。**
+  //   ①b **官方构件逐字（自备 jar 可复核，仓内无副本）**（2026-09-24 新增档）：`ENTITIES` / `BLOCK_ENTITIES` /
+  //      `SOUND_EVENTS` / `PARTICLE_TYPES` / `CONTAINERS` / `PAINTING_TYPES` / **`FLUIDS`**@1.18.2 ——
+  //      由两个独立 build、两种独立机制互证：官方 1.18.2-40.1.80 **源码** `ForgeRegistries.java`（157 行，
+  //      `grep FLUID` 只命中 `:58` 的 `FLUIDS` 字段与 `:104` 的 `Keys.FLUIDS`）＋ 官方 1.18.2-40.3.12
+  //      **universal jar** 的编译类（`javap -p` 输出 41 行、注册表字段共 **32** 个）。档位仍属「外部」：
+  //      jar 在盘、sha 可复核，但构件**不入库** ⇒ 复核者需自备 jar。⚠️ `temp/**` 不入库，故复核命令**原样抄在
+  //      本注释里**（把 `<…>` 换成本地路径，两条各一行）：
+  //        `unzip -p <forge-1.18.2-40.1.80-sources.jar> net/minecraftforge/registries/ForgeRegistries.java`
+  //        `javap -p -classpath <forge-1.18.2-40.3.12-universal.jar> net.minecraftforge.registries.ForgeRegistries`
+  //   ② **处方-only**（本档 rules/skills 自撰、无外部出处）：**本档现为空** —— 旧列的 `SOUND_EVENTS` /
+  //      `PARTICLE_TYPES` / `FLUIDS` 已由 ①b 坐实；旧列的 `FLUID_TYPES`@1.18.2 改判 **证伪**（见 ④）。
+  //      摘要面亦无能力：`mcp-server/data/loader-api-summaries/1.18.2-forge.json` 的 `fields` 恒 0，且
+  //      `ForgeRegistries` 类本身不在 `classes` / `fqcnIndex` ⇒ `query_loader_api` / `ingest_loader_api`
+  //      **答不了字段名**，不要用 ingest 去「复现」本结论。
+  //   ③ **外部-only（仓内不可复核）**：`ENTITY_TYPES`@1.19.4 —— 本次**未取证**，仍停在旧档（1.19.4 侧字段名
+  //      与 1.18.2 不同源，禁止拿 ①b 的结论外推过去）。`MENU_TYPES`（1.20.x 侧）同理未取证、未动。
+  //   ④ **证伪（不是未核实）**：`FLUIDTYPES`@1.18.2 与 `FLUID_TYPES`@1.18.2 —— 两 build 全分母 0 命中
+  //      ⇒ 1.18.2 **没有流体类型注册表**；`FluidType` + `FLUID_TYPES` 自 1.19 才引入。生产侧四张表
+  //      （antipatterns/registry.md、common/glossary.md、version-changes/1.18.x.md、scaffold/README_AI.md）
+  //      与 porting/01-api-cross-loader.md 的旧「正名 + 未核实」写法已删改，冲突判给
+  //      `.cursor/skills/mc-fluid/SKILL.md:22`、`:102` 的 ❌ 禁令侧。
+  //   ⚠️ **禁止把本档规则行当外部出处（那是循环引证）**：本注释旧版曾写「出处
+  //      `forge/1.18.2/.cursor/rules/01-registry.mdc:27`」「`forge/1.19.4/.cursor/rules/01-registry.mdc:27`」——
+  //      那两行**正是 S25 自己改过的处方面**，只能当「改完后的实况」读，不构成名字存在性的证据。
+  //      四档都给不出的名字一律留 `// TODO(未核实)`，禁止凭训练记忆补。
+  // 现钉 5 的构成（无一是漏网处方）：mc-entity/SKILL.md 示例里 DeferredRegister 的**局部变量名**
+  //   ENTITYTYPES（:16 声明、:19/:29 使用）+ 该 Skill 的 ❌ 禁令行 :135（禁令行按 R31 不碰，它引用的
+  //   就是上面那个变量，只改它会指向未声明变量）+ version-changes/1.18.x.md:28 的更正说明「该名不存在」。
+  // ── FLUIDTYPES 于 2026-09-24（Ralph 第 24 轮）重签 **6 → 10**，BLOCKCONTAINERS 仍 0（未取证，按 R53 不动）──
+  //   旧 6 = 2 条 ❌ 禁令 + 4 条**处方表行**（antipatterns/registry.md:130、common/glossary.md:44、
+  //   porting/01-api-cross-loader.md:31、version-changes/1.18.x.md:30）；那 4 条现已全部删改（见 ④ 档），
+  //   计数反而涨到 10 —— 因为「解释为什么这个名字不存在」必须把名字写出来。F3 是**等式棘轮**
+  //   （`now === pinned`，不是上界）⇒ 涨/跌都得逐处点名，防的就是「顺手多写一处」。口径 = source 桶
+  //   （`.cursor/skills` + `knowledge` + `code-patterns`，`grep -o` 逐次计数、7 个宿主镜像目录不计，
+  //   as-of 2026-09-24）。10 处逐点：
+  //     1-2) `.cursor/skills/mc-fluid/SKILL.md:22`、`:102` = ❌ 禁令（本轮一个字没动，它是胜侧）
+  //     3)   `knowledge/antipatterns/registry.md:130` = 表行「`FLUIDTYPES` 与 `FLUID_TYPES` 都不存在」说明
+  //     4-5) 同文件 `:135` ×2 = 引述旧处方「把 FLUIDTYPES 当 1.18.2 正名」＋「既没有 FLUIDTYPES 也没有 FLUID_TYPES」证伪
+  //     6)   同文件 `:136` = 证据行的过滤模式串（按 `FLUIDTYPES|FLUID_TYPES` 在 32 字段全分母上 0 命中）
+  //     7)   `knowledge/common/glossary.md:51` = 表注证伪（该行本身已改成 `FLUIDS`）
+  //     8)   `knowledge/porting/01-api-cross-loader.md:31` = 移植警告「不要给 1.18.2 写流体类型注册表」
+  //     9)   `knowledge/version-changes/1.18.x.md:30` = 表行「1.18.x 没有流体类型注册表」说明
+  //     10)  同文件 `:32` = 表注证伪
+  //   ⇒ **零处**把 `FLUIDTYPES` 当 1.18.2 的正名处方（A6 grep 复核同结论）。另有 4 处在
+  //   `scaffold/README_AI.md`（:211 表行 + :219/:220 注），属**独立的 `scaffold` 桶**、不计入 holds。
+  holds: { ENTITYTYPES: 5, FLUIDTYPES: 10, BLOCKCONTAINERS: 0 },
   mirrorDrift: 0,
 };
 

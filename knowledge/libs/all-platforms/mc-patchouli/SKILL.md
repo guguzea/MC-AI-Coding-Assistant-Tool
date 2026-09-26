@@ -1,14 +1,20 @@
 ---
 name: mc-patchouli
 description: Patchouli 游戏内指南书。book 资源放 data/<modid>/patchouli_books/，JSON 驱动、自定义页面类型才写 Java。触发词：Patchouli、patchouli、指南书、guidebook、book.json、手册
-platforms: [fabric, forge, neoforge]
+platforms: [fabric, forge, neoforge, quilt]
 mcVersions: ["1.12.2-26.1.2"]
+mcVersionsByPlatform: "fabric=1.16.4-1.21.1; forge=1.12.2-1.20.1; neoforge=1.20.4-1.21.1; quilt=1.18.2-1.21.1"
 communityDocId: authored/lib-patchouli
+modrinthSlug: patchouli
 mappings: "Forge ≤1.20.6 用 MCP、NeoForge 1.21+/26.x 用 mojmap；Java 代码只在自定义页面类型时出现"
 ---
 
 > 数据读取日期：2026-09-14（源：Modrinth project/patchouli 版本表 limit=100；本轮 release 上界 fabric=1.21.1 / forge=1.20.1 / neoforge=1.21.1 ⇒ 本文件 mcVersions 上界 26.1.2 高于 release 上界，仅 beta/alpha 支撑）
 > 复核：curl.exe --ssl-no-revoke -sS "https://api.modrinth.com/v2/project/patchouli/version?limit=100" 后按 game_versions + loaders + version_type 取上界
+> release/beta 口径收口（2026-09-24，构件面 = `mcp-server/data/lib-manifests/all.json` 快照 as-of 2026-09-16；窗口终点一律取该 loader 的 release 上界）：
+> - fabric 窗口终点 = release 上界 1.21.1（beta 构件至 26.1.2，无 release 支撑；26.1 / 26.1.1 / 26.1.2 三条均记 beta）
+> - neoforge 窗口终点 = release 上界 1.21.1（beta 构件至 26.1.2，无 release 支撑）
+> - quilt 窗口终点 = release 上界 1.21.1（beta 构件至 26.1.2，无 release 支撑）
 
 # Patchouli 指南书（操作指引）
 
@@ -53,6 +59,8 @@ Decision: 指南书方案
 
 - 硬依赖：`depends` 写 patchouli；软依赖则门闩（卸载 Patchouli 进档不崩，但不能引用其类）
 - 默认页面类型纯 JSON，不写 Java；只有自定义页面类型（独特交互/渲染）才需要引 `:api` 编译
+
+> **Quilt 侧安装口径（2026-09-24 补）**：`platforms` 含 `quilt` 的依据是本仓快照 `mcp-server/data/lib-manifests/all.json` 里 slug `patchouli` 的 **13 条 `loader:"quilt"` 构件行**（本轮现算，as-of 2026-09-24；窗口见 frontmatter `mcVersionsByPlatform`）。13 条的**文件名 0 条带 `quilt` 字样**（形如 `Patchouli-1.18.2-71.1-FABRIC.jar`）⇒ 实况是 **Quilt 按同 MC 版本的 Fabric 构件加载**，上面「操作步骤 1」列的 Neo / Fabric 坐标里，**Fabric 那条**才是 Quilt 工程该抄的方向。⚠️ **Quilt 专属仓库 URL / artifact 坐标未核实**（本仓只核到构件文件名；步骤 1 那两枚 `vazkii.patchouli:*` 串是 Neo/Fabric 侧既有处方，不得外推到 Quilt）⇒ 禁止为 Quilt 新编 `maven { url }` / `modImplementation` 一行。坐实入口：`query_upstream_releases`（`modrinth`，slug=`patchouli`）或 `ingest_loader_api`（自备 jar）。
 
 ## 常见错误
 

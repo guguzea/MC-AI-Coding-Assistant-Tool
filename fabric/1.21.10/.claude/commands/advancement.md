@@ -212,6 +212,10 @@ public class ModCriteria {
 | `CriteriaTriggers` | `Criteria` | 1.16.5–1.21.11 | join（`net.minecraft.advancement.criterion.Criteria`）· 本轮纠正（原写 `Criterion`） |
 | `ContextAwarePredicate` | `LootContextPredicate` | 1.20.1–1.21.11 | join（`net.minecraft.predicate.entity.LootContextPredicate`） |
 | `RegistryLookup` | 未核实 | **禁止猜**：Yarn 侧名字未经本档 sqlite 证实，走 `get_minecraft_source` 或 IDE `genSources` |
+| `AdvancementType` | `AdvancementFrame` | 1.20.4–1.21.11 | join（`net.minecraft.advancement.AdvancementFrame`） |
+| `InventoryChangeTrigger` | `InventoryChangedCriterion` | 1.16.5–1.21.11 | join（`net.minecraft.advancement.criterion.InventoryChangedCriterion`） |
+| `ConsumeItemTrigger` | `ConsumeItemCriterion` | 1.16.5–1.21.11 | join（`net.minecraft.advancement.criterion.ConsumeItemCriterion`） |
+| `SimpleCriterionTrigger` | `AbstractCriterion` | 1.16.5–1.21.11 | join（`net.minecraft.advancement.criterion.AbstractCriterion`） |
 
 - 上表「Yarn 对应名」只由本档 `mappings/yarn-mappings.sqlite` 证实**类名存在与其包路径**，**不证实**方法名、参数与返回值。逐签名以 Yarn 源码为准：`get_minecraft_source`（需 JDK 17+）或 IDE `./gradlew genSources`。
 - 反过来，mojmap 侧这些名在本档 Yarn 映射里 **0 命中** ⇒ 抄进 Yarn 工程必编译失败。

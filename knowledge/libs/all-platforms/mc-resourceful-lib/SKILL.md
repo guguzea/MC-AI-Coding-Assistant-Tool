@@ -4,6 +4,7 @@ description: Resourceful Lib 跨平台工具库（Team Resourceful），跨平�
 platforms: [fabric, forge, neoforge]
 mcVersions: ["1.19.2-26.2"]
 communityDocId: authored/lib-resourceful
+modrinthSlug: resourceful-lib
 ---
 
 > 数据读取日期：2026-09-14（源：Modrinth project/resourceful-lib 版本表 limit=100；本轮 release 上界 fabric=26.2 / forge=1.20.4 / neoforge=26.2）

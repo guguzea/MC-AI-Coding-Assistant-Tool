@@ -4,6 +4,7 @@ description: Impersonate 玩家伪装 API。触发词：Impersonate、伪装、�
 platforms: [fabric, quilt]
 mcVersions: ["1.16.3-1.21.11"]
 communityDocId: authored/lib-impersonate
+modrinthSlug: impersonate
 mappings: hint
 ---
 

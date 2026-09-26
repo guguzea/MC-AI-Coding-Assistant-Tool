@@ -14,7 +14,7 @@ mappings: official
 ```java
 // 注册（参见 mc-registry Skill）
 public static final RegistryObject<Block> MY_BLOCK = BLOCKS.register("my_block",
-    () -> new Block(Block.Properties.of(Material.WOOD)
+    () -> new Block(AbstractBlock.Properties.of(Material.WOOD)
         .strength(1.5f, 6.0f)
         .requiresCorrectToolForDrops()
     )
@@ -37,7 +37,7 @@ IF 需要流体
 ## Block.Properties 常用配置
 
 ```java
-Block.Properties.of(Material.WOOD)
+AbstractBlock.Properties.of(Material.WOOD)
     .strength(1.5f, 6.0f)     // 硬度和抗爆性
     .requiresCorrectToolForDrops()                         // 需要正确工具才能掉落
     .noOcclusion()                         // 不阻挡光影

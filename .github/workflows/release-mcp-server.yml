@@ -13,6 +13,9 @@ permissions:
 jobs:
   build-and-release:
     runs-on: ubuntu-latest
+    # CI 语义：发布链同样禁止下载类工具碰网络（smoke 只点名工具、不真跑反编译，见 scripts/release-smoke.mjs）。
+    env:
+      MC_SKILL_SKIP_DOWNLOAD: "1"
 
     steps:
       - uses: actions/checkout@v4

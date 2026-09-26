@@ -20,7 +20,7 @@ mappings: mojmap-unobfuscated（游戏 jar 已是 Mojang 名）
 ```java
 public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(ExampleMod.MODID);
 public static final DeferredBlock<Block> DRIEDGHAST_BLOCK =
-    BLOCKS.registerSimpleBlock("driedghast_block", BlockBehaviour.Properties.of().mapColor(MapColor.STONE));
+    BLOCKS.registerSimpleBlock("driedghast_block", () -> BlockBehaviour.Properties.of().mapColor(MapColor.STONE));
 public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(ExampleMod.MODID);
 public static final DeferredItem<BlockItem> DRIEDGHAST_BLOCK_ITEM =
     ITEMS.registerSimpleBlockItem("driedghast_block", DRIEDGHAST_BLOCK);

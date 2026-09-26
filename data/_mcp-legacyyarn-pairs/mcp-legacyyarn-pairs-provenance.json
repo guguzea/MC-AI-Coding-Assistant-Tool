@@ -1,0 +1,35 @@
+{
+  "publishedAt": "2026-09-26",
+  "asOf": "2026-09-25T16:14:48.299Z",
+  "generator": "mcp-server/scripts/build-mcp-legacyyarn-pairs.mjs",
+  "producedFrom": {
+    "mcp": "data/forge_<v>/mappings/joined.srg（1.7.10–1.12.2，CL: <obf> <fqcn>）或 joined.tsrg（1.13.2，顶层 <obf> <fqcn>）",
+    "legacyYarn": "maven.legacyfabric.net 的 net/legacyfabric/yarn，取各档最高 build 的 -mergedv2.jar → 内存解 mappings/mappings.tiny（tiny v2，列序 official/intermediary/named，含 obf）",
+    "joinKey": "obf 短名"
+  },
+  "license": "Legacy-Fabric/yarn = CC0-1.0（README 明示「开放、无附加限制」，与 FabricMC/yarn 同许可）；MCP 侧 srg/csv 本仓已入库 ⇒ 两侧均可入库。",
+  "reason": "A4h（2026-09-25 用户裁定「可以用」）：补 1.7.10–1.13.2 老档的「第二体系」缺口——该版本段 Mojang 未发布映射、forge 档 sqlite 实为 MCP 库，legacy yarn 是唯一可 obf-join 的第二体系。缘起证据 = mcp-server/docs/mcmap-linkie-absorption.md §A4g/A4h。",
+  "consumedBy": [
+    "暂无门/工具消费（数据资产：Legacy Fabric 迁移面查询；未来若建门再接）"
+  ],
+  "refreshHint": "重生成：node mcp-server/scripts/build-mcp-legacyyarn-pairs.mjs（落 $MC_SKILL_CACHE/mcp-legacyyarn-pairs；fetch→curl 退避腿，需联网）；发布：把 7 个 mcp-legacyyarn-<v>.json + index.json 复制到本目录并重算 files 哈希。",
+  "totals": {
+    "versions": 7,
+    "pairs": 20789
+  },
+  "checks": {
+    "joinHitRate": "1.12.2 实测 3344/3344 = 100%（obf join）；各档 count = srg/tsrg 类级行数（1.9.4 差 2：legacy 侧 2939 vs srg 2941）",
+    "nameDiff": "1.12.2 两体系名字差异：FQCN 不同 3250/3344（97.2%）、简名不同 3139/3344（93.9%）⇒ 有实质信息量",
+    "counts": "1.7.10=1836 / 1.8.9=2541 / 1.9.4=2939 / 1.10.2=2980 / 1.11.2=3122 / 1.12.2=3344 / 1.13.2=4027"
+  },
+  "files": {
+    "index.json": "c6b6b994221f2fba18a628a952ba08610a9dc7b821b4b08cbb139e9c500af66a",
+    "mcp-legacyyarn-1.7.10.json": "1c6ca68339274b6f6ae1575a1deb12e8e179d1496f1c1e2142eca2eeaaa30472",
+    "mcp-legacyyarn-1.8.9.json": "2f8a934e391011987be033fed60b00d7df3766f46aeafcac92a12fa5ef2ad752",
+    "mcp-legacyyarn-1.9.4.json": "ecb3762b6a8a33b41e1e9dc2a899c0bbc0284939a056c02cb4daac8d524c919f",
+    "mcp-legacyyarn-1.10.2.json": "3586eedec17a885723ab30b1dea9ace9b4c54fde5a4463200b73ef279ec3bef2",
+    "mcp-legacyyarn-1.11.2.json": "5ee11aabbf13d33aa37b7c68ac23fa4d84fb75f773cb675ac04f8a165be43a66",
+    "mcp-legacyyarn-1.12.2.json": "7e3c39fde8a83adad6c4444981de41c929da288b09d1e8e706f9509fdde71421",
+    "mcp-legacyyarn-1.13.2.json": "84469ce57779ba2f8aff7528d1e5606868f019a4894464e2ac1120e9a3abf683"
+  }
+}

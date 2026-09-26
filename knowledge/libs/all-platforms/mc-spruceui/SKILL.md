@@ -10,13 +10,13 @@ communityDocId: authored/lib-spruceui-obsidianui
 
 # SpruceUI / ObsidianUI GUI 抽象（操作指引）
 
-给 AI 的操作指引：需要把 SpruceUI 风格的控件/布局抽象（列表、按钮、文本框等）带到多个加载器时，选 ObsidianUI（Architectury 移植的延续版本）。详细信息用 `search_community_docs` 查 `authored/lib-spruceui-obsidianui`，版本与 API 细节以 [ObsidianUI](https://github.com/architectury/ObsidianUI)（及原版 [SpruceUI](https://github.com/LambdAurora/SpruceUI) 历史仓库）为准。
+给 AI 的操作指引：需要把 SpruceUI 风格的控件/布局抽象（列表、按钮、文本框等）带到多个加载器时，选 ObsidianUI（Architectury 移植的延续版本）。详细信息用 `search_community_docs` 查 `authored/lib-spruceui-obsidianui`，版本与 API 细节以 [ObsidianUI](https://github.com/ThinkingStudios/ObsidianUI)（及原版 [SpruceUI](https://github.com/LambdAurora/SpruceUI) 历史仓库）为准。
 
 ## 定位
 
-- 能力：GUI 控件/布局抽象（列表、按钮、文本框等），跨加载器（Fabric/Forge/NeoForge/Quilt）复用界面代码（245 万下载，1.16.4-1.21.5）
+- 能力：GUI 控件/布局抽象（列表、按钮、文本框等），跨加载器（Fabric/Forge/NeoForge；Quilt 见下条边界）复用界面代码（245 万下载，1.16.4-1.21.5）
 - 生态：SpruceUI 原版（LambdAurora）**已下架**，ObsidianUI 是 Architectury 移植的延续版本
-- 版本 / loader 边界：F/Forge/Neo/Quilt，窗口 **1.16.4-1.21.5**；**版本停在 1.21.5，26.x / 1.22+ 无对应构建**
+- 版本 / loader 边界：窗口 **1.16.4-1.21.5**；**版本停在 1.21.5，26.x / 1.22+ 无对应构建**。⚠️ **Quilt 侧无构建支撑（反向 over-claim，2026-09-24 量）**：构建面 = `mcp-server/data/lib-manifests/all.json` 快照（as-of 2026-09-16，本轮 2026-09-24 现算） 该 slug 只有 **1 条构件行、loader=fabric、gameVersion=1.21.5，quilt 0 条** ⇒ 上面 frontmatter 里的 `quilt` 是**声明型**、当前无构件可核；Quilt 工程引它之前先按 `query_upstream_releases`（source=modrinth，slug `spruceui-obsidianui`）复核，**快照无行 ≠ 上游无构件**（同型缺陷见 `mc-cloth-config`，裁定=改措辞不补抓）
 - 边界：只有客户端 GUI 抽象，服务器侧逻辑（容器/同步）照样自己写
 
 ## Decision Flow
@@ -57,7 +57,7 @@ Decision: 用不用 SpruceUI / ObsidianUI
 
 ## 参考
 
-- 官方：https://github.com/architectury/ObsidianUI ；原版：https://github.com/LambdAurora/SpruceUI
+- 官方：https://github.com/ThinkingStudios/ObsidianUI ；原版：https://github.com/LambdAurora/SpruceUI
 - 社区：`search_community_docs` → `authored/lib-spruceui-obsidianui`；相关：`authored/library-catalog-2026`、`authored/library-integration`
 - 相关 Skill：`mc-gui`、`mc-architectury`（跨加载器）、`mc-modern-ui`、`mc-owo`
 - 不确定时：打开 ObsidianUI README/源码；`search_fabric_docs` / `search_forge_docs` 查 GUI 相关页；未核对前不写死任何类名/方法签名

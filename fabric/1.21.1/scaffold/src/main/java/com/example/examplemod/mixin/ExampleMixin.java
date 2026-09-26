@@ -5,7 +5,7 @@ import net.minecraft.server.world.ServerWorld;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
  * Example Mixin that modifies server-side behavior.
@@ -20,7 +20,7 @@ public class ExampleMixin {
      * This allows you to run code every server tick.
      */
     @Inject(at = @At("HEAD"), method = "tickWorlds")
-    private void onTickWorlds(CallbackInfoReturnable<Integer> cir) {
+    private void onTickWorlds(CallbackInfo ci) {
         // This code will run every server tick
         // Example: MinecraftServer server = (MinecraftServer) (Object) this;
         // Example: for (ServerWorld world : server.getWorlds()) { ... }

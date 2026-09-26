@@ -10,9 +10,9 @@ description: 07 — Script API 与实验开关
 
 ```
 → 未点名 Beta → 只生成 stable；不写 Beta 事件
-→ 点名 @minecraft/server-beta 或 Beta 事件
+→ 点名 "@minecraft/server-beta"（用户可能这么写；**不存在此发布名**，真实形态见下一条）或点名 Beta 事件
     → 允许生成；回复必须写「须在世界设置打开 Beta APIs」
-    → pack：dependencies 声明 beta 模块
+    → pack：dependencies 写 module_name "@minecraft/server" + version "beta"（beta 走版本串，不是包名后缀）
     → 需要 eval → capabilities 写法**未核实**（Learn pack-manifest 无 `script_eval`）
     → 禁止 experimentalGameplay、禁止虚构 worldgen/experimental.json
 → min_engine_version < 约 1.19.80：对照该引擎归档，不要倒灌现行 capabilities

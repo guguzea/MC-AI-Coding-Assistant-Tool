@@ -18,7 +18,7 @@ public static final DeferredRegister<Block> BLOCKS =
     DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);
 
 public static final RegistryObject<Block> MY_BLOCK =
-    BLOCKS.register("my_block", () -> new Block(Block.Properties.of(Material.STONE)));
+    BLOCKS.register("my_block", () -> new Block(AbstractBlock.Properties.of(Material.STONE)));
 ```
 
 ---
@@ -103,7 +103,7 @@ public void load(BlockState state, CompoundNBT nbt) { // 语料 tileentities_til
 
 **正确方案：**
 ```java
-Block.Properties.of(Material.STONE)
+AbstractBlock.Properties.of(Material.STONE)
     .requiresCorrectToolForDrops()    // 需要正确工具才能掉落
     .strength(3.0f, 3.0f)
 ```

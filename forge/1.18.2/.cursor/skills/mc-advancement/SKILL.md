@@ -4,7 +4,7 @@ description: 进度 JSON 与 AdvancementProvider。触发词：advancement、cri
 platform: forge
 version: "1.18.2"
 dependencies: []
-mappings: mcp
+mappings: parchment
 ---
 
 # mc-advancement

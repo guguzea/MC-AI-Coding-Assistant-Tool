@@ -77,11 +77,18 @@ export async function writeWithRetry(filePath, text, delays = [200, 600, 1500]) 
       } catch (e) {
         try {
           writeFileSync(filePath, readFileSync(tmp));
-          try { existsSync(tmp) && writeFileSync(`${tmp}.done`, ""); } catch { /* 清不掉就算了 */ }
           // 兜底路径只把正文挪进终名，.tmp 得自己收掉：rename 被抖动挡下时它带着**整页正文**
           // 留在 processed/ 里（实测一轮 scriptapi 留下 3 个 .tmp + 3 个 .done）。各遍历器只认
           // .md 所以不致错，但语料目录里多出一份可被误当正文的同名副本，不该由下一轮再清。
-          try { rmSync(tmp, { force: true }); } catch { /* 只留 0 字节 .done 记账，不阻断写入 */ }
+          //
+          // S14-T5 裁定（2026-09-22 第 8 轮）：**`.done` 不该出现在 processed/ 里**，所以这里
+          // 不再制造它。三条凭据：① 全仓 `grep -rn '\.done' mcp-server/scripts scripts/` 只命中
+          // 本文件自身（写入点 + 这段注释），**没有任何读者** ⇒ 它是纯死簿记，不换来任何恢复能力；
+          // ② processed/ 是语料目录，索引只认 `.md`，落一个索引不知道的伴生件正是「索引说有、
+          // 正文没有」那类失步的镜像形态；③ 盘上实测 `find data -maxdepth 8 \( -name '*.done'
+          // -o -name '*.tmp' \)` = 0 个残留，删掉写入点不会留下任何需要清理的历史包袱。
+          // 真要留痕，日志里那行 `wrote N 页（跳过 M）` 才是给**人**看的记账，不是语料目录。
+          try { rmSync(tmp, { force: true }); } catch { /* 清不掉就算了，不阻断写入 */ }
         } catch {
           throw e;
         }
@@ -192,7 +199,46 @@ const NOISE_LINES = [
   /^Note$/i,
   /^Edit$/i,
   /^Add$/i,
+  // ── S14-T4（2026-09-22 第 8 轮；页脚 `Yes`/`No` 两条在验收时改为上下文判据，见下）──
+  // 分母 = `data/bedrock_stable` 的 882 个 .md（全在 processed/ 内）；入表判据 = 「trim 后整行逐字相等」。
+  // 实测（temp/ralph-20260922/logs/v8-corpus-measure.log）：`Was this page helpful?` 274 行、
+  // `Need help with this topic?` 274 行、`Suggest a fix?` 274 行，三条 HEAD 版 13 条噪音**一条都不咬** ⇒ 直接进表。
+  // 形态见 data/bedrock_stable/bedrock-docs/stable/processed/behavior-pack.md:113-129。
+  // ⚠️ 页脚的 `Yes` / `No` **不进本表**（第 8 轮把验收代理加的 `/^Yes$/i`、`/^No$/i` 撤了）：整行恰为
+  // Yes(260) / No(513) 共 773 行，其中 762 行是页脚投票、锚点距离（跳过空行的非空步）恰好 1/2/3 各 254
+  // （每档三行，见 logs/v9-far-rows.txt 的头行），剩下 **11 行是真内容**（逐条打在
+  // temp/ralph-20260922/logs/v9-eleven.txt）：6 行在 `documents/animationsvscontrollers.md:30-31/68-69/202-203`
+  // （S14-T1 那条死表格路径把比较表打散成散行后的取值），5 行紧跟在 `- **Required Permission**` /
+  // `- **Description**` 之后（pullresourcepack.md:133/144/180/191、deleteresourcepack.md:75）。
+  // 裸锚定式会把这 11 行一并删掉。
+  // 裸锚定式会连那 11 行一起吃掉，而 `data/**` 是不可回改的上游语料 ⇒ 改走下面的 `isFooterVote`。
+  /^Was this page helpful\?$/i,
+  /^Need help with this topic\?$/i,
+  /^Suggest a fix\?$/i,
 ];
+
+const FOOTER_VOTE_ANCHOR = "Was this page helpful?";
+/** 页脚投票三连 `Yes` / `No` / `No`：只在锚点上方 3 个非空步内才判噪音（窗口 = 实测形态，见上面 NOISE_LINES 注释）。 */
+const FOOTER_VOTE_WINDOW = 3;
+
+/**
+ * 上下文判据而非整行表：`Yes` / `No` 只有紧跟在 `Was this page helpful?` 后面（跳过空行的前
+ * FOOTER_VOTE_WINDOW 个非空行内）才是页脚投票；库内另有 11 行 `No` / `Yes` 属正文（死表格路径
+ * 打散出来的比较表取值，形如 `Contains logic` / `No` / `Yes`）。
+ * 行为回归钉在 mcp-server/scripts/_lib/bedrock-corpus.test.mjs 例 ⑤（页脚三行删、正文 `No` 留）。
+ */
+function isFooterVote(lines, i) {
+  const t = lines[i].trim();
+  if (t !== "Yes" && t !== "No") return false;
+  for (let k = i - 1, seen = 0; k >= 0 && seen < FOOTER_VOTE_WINDOW; k--) {
+    const u = lines[k].trim();
+    if (!u) continue;
+    seen++;
+    if (u === FOOTER_VOTE_ANCHOR) return true;
+  }
+  return false;
+}
+
 
 function decode(s) {
   return String(s)
@@ -241,6 +287,13 @@ export function learnToMarkdown(html, url) {
   const extra = body.search(/<h[23][^>]*>\s*Additional resources\s*<\/h[23]>/i);
   if (extra > 0) body = body.slice(0, extra);
 
+  // 表格**必须**先于下面那条通用剥标签链走（S14-T1，2026-09-22 第 8 轮修复）。
+  // 链尾的 `.replace(/<(\w+)[^>]*>/gi, " ")` 会吃掉 `<table>` / `<td>` 的**开标签**、只留下
+  // `</table>` 等闭标签，于是 `/<table[\s\S]*?<\/table>/` 再也配不上任何东西 ⇒ `tableToMd`
+  // 此前是**死代码**（本行上面那段注释「上面的通用剥标签会把 <table> 打散」就是它自己的供状）。
+  // 反例夹具与顺序断言见 mcp-server/scripts/_lib/bedrock-corpus.test.mjs：改回错序该测试即红。
+  body = body.replace(/<table[\s\S]*?<\/table>/gi, (t) => tableToMd(t));
+
   body = body
     .replace(/<pre[^>]*>([\s\S]*?)<\/pre>/gi, (_m, inner) => {
       const lang = /class="[^"]*lang-([\w-]+)/i.exec(_m)?.[1] ?? "";
@@ -256,13 +309,19 @@ export function learnToMarkdown(html, url) {
     .replace(/<code[^>]*>([\s\S]*?)<\/code>/gi, (_m, t) => `\`${decode(t.replace(/<[^>]+>/g, "")).trim()}\``)
     .replace(/<(\w+)[^>]*>/gi, " ");
 
-  // 表格单独走一遍（上面的通用剥标签会把 <table> 打散）
-  const withTables = body.replace(/<table[\s\S]*?<\/table>/gi, (t) => tableToMd(t));
-
-  const text = decode(withTables.replace(/<[^>]+>/g, " "))
+  // 表格已在链前展开完（见上），这里只剩收尾。
+  // 上下文判据必须跑在**噪音过滤前**的行数组上：锚点行 `Was this page helpful?` 自己会被本趟删掉，
+  // 若先用它过滤再判 Yes/No，锚点已经不在、页脚投票反而漏网。所以先 map 成 mapped，再一趟 filter 里
+  // 同时问两件事（整行表 / 上下文），两个判据共用 mapped 的下标。
+  // 这一趟的输入里已经混着**已解码**的 `<`（表格趟 258 对单元格先剥标签再 decode），
+  // 所以 `/<[^>]+>/g` 会把 `format_version < 1.19.40).</td>` 当成开标签一路吞到下一个 `>`：
+  // 实测 block-components 页 47 个 <tr> 只剩 11 行、32 个 minecraft:* 名只活 1 个。
+  // 要求 `<` 之后必须是标签名字符，正文里的比较号才留得住。
+  const mapped = decode(body.replace(/<\/?[a-zA-Z!][^>]*>/g, " "))
     .split(/\n/)
-    .map((l) => l.replace(/[ \t\u00a0]+/g, " ").trimEnd())
-    .filter((l) => !NOISE_LINES.some((re) => re.test(l.trim())))
+    .map((l) => l.replace(/[ \t\u00a0]+/g, " ").trimEnd());
+  const text = mapped
+    .filter((l, i) => !NOISE_LINES.some((re) => re.test(l.trim())) && !isFooterVote(mapped, i))
     .join("\n")
     .replace(/\n{3,}/g, "\n\n")
     .trim();

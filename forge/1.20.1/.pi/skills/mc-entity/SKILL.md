@@ -4,7 +4,7 @@ description: Minecraft Forge 实体开发。创建生物、实体属性、AI 目
 platform: forge
 version: "1.20.1"
 dependencies: []
-mappings: mcp
+mappings: parchment
 ---
 
 # 实体开发（Forge 1.20.1）

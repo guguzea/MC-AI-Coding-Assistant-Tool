@@ -6,6 +6,7 @@ version: "26.1.2"
 dependencies: []
 mappings: official
 ---
+<!-- cloth-version-inject v=26.1.2 coord=26.1.154+fabric state=active textApi=literal -->
 
 # mc-cloth-config（Fabric 26.1.2）
 

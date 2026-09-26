@@ -4,7 +4,7 @@ description: configured/placed feature、biome modifier。触发词：worldgen�
 platform: forge
 version: "1.19.4"
 dependencies: []
-mappings: mcp
+mappings: parchment
 ---
 
 # mc-worldgen（1.19.4）

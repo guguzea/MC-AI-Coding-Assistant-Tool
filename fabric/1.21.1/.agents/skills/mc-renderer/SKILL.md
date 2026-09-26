@@ -5,6 +5,7 @@ platform: fabric
 version: "1.21.1"
 dependencies: []
 mappings: yarn
+mappings_alt: mojmap
 ---
 
 # mc-renderer（Fabric 1.21.1）
@@ -15,6 +16,15 @@ mappings: yarn
 > - 补充：`develop_rendering_gui-graphics.md`（id `develop-rendering-gui-graphics`）
 > 官方 URL：https://docs.fabricmc.net/develop/rendering/basic-concepts 、https://docs.fabricmc.net/develop/blocks/block-entity-renderer 、https://docs.fabricmc.net/develop/rendering/gui-graphics 。
 > 术语原文多为 Mojang 风格（`PoseStack`/`BufferBuilder`/`GuiGraphics`）；本包 `mappings: yarn`，照抄前用本档 `search_fabric_docs version=1.21.1` 复核，**禁止默写 Yarn 对应名**。
+
+### ⚠️ 映射口径：正文术语多为 mojmap
+
+| mojmap 名 | Yarn 名 | 适用版本（13 档逐档 join 实测） | 依据 |
+| --- | --- | --- | --- |
+| `GuiGraphics` | `DrawContext` | 1.20.1–1.21.11 | join（`net.minecraft.client.gui.DrawContext`） |
+
+- 上表只由本档 `mappings/yarn-mappings.sqlite`（与 mojmap `client.txt` 的 join）证实**类名存在与包路径**，不证实方法名/参数/返回值；逐签名以 Yarn 源码为准。
+- 引用参考文件原文时保留 mojmap 名（考证价值），但落到用户工程必须换上表 Yarn 列。
 
 ## 总原则（页面核实）
 

@@ -110,5 +110,5 @@ Kaupenjoe sethome 教程把家坐标放 `player.getPersistentData()` 并监听 `
 ## 不清楚时
 
 - NeoForge 官方文档 SavedData（新 API）：https://docs.neoforged.net/docs/datastorage/saveddata/
-- 1.20.4 版本存档（旧 API）：https://docs.neoforged.net/1.20.4/docs/datastorage/saveddata/
+- 1.20.4 版本存档（旧 API）：https://docs.neoforged.net/docs/1.20.4/datastorage/saveddata/（2026-09-24 `curl.exe -s -o /dev/null --ssl-no-revoke -w "%{http_code}" -L` 实测 200；原写法 `docs.neoforged.net/1.20.4/docs/…` 实测 **404**）
 - API 细节：`search_neoforge_docs` / `search_forge_docs`（关键词 saveddata, data storage）、`query_api`（Vanilla 类 SavedData/DimensionDataStorage，约 1.16.5–1.20.4 有索引）

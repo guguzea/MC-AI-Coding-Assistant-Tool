@@ -48,7 +48,7 @@ IF 需要在 mod constructor 执行前引用已注册对象
 | 方块 | `ForgeRegistries.BLOCKS` | |
 | 物品 | `ForgeRegistries.ITEMS` | |
 | 方块实体 | `ForgeRegistries.BLOCK_ENTITIES` | |
-| 实体类型 | `ForgeRegistries.ENTITYTYPES` | |
+| 实体类型 | `ForgeRegistries.ENTITIES` | 1.19+ 为 `ENTITY_TYPES` |
 | 生物群系 | `ForgeRegistries.BIOMES` | |
 | 声音事件 | `ForgeRegistries.SOUND_EVENTS` | |
 | 附魔 | `ForgeRegistries.ENCHANTMENTS` | |

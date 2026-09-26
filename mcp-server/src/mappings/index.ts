@@ -17,3 +17,17 @@ export {
   type LookupObfuscatedQuery,
   type LookupObfuscatedResult,
 } from "./lookup-obfuscated.js";
+export {
+  buildAccessLines,
+  type AccessLineEntry,
+  type AccessLineFormat,
+  type AccessLineRequest,
+  type AccessLinesResult,
+  type AccessLoader,
+} from "./access-lines.js";
+export {
+  convertMappingEx,
+  splitMemberNames,
+  BATCH_LIMIT,
+  type ConvertExtrasQuery,
+} from "./convert-extras.js";

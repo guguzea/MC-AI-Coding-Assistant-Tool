@@ -63,7 +63,7 @@ IF build.gradle contains "neoforge"  /* 真实标记：id 'net.neoforged.moddev'
 | `05-events.mdc` | @SubscribeEvent, Bus.FORGE vs Bus.MOD |
 | `06-networking.mdc` | SimpleChannel, IMessage, DistExecutor |
 | `07-datagen.mdc` | GatherDataEvent, RecipeProvider, LootTableProvider |
-| `08-client-server.mdc` | @OnlyIn, DistExecutor, KeyBinding |
+| `08-client-server.mdc` | @OnlyIn, DistExecutor, KeyMapping |
 | `09-anti-patterns.mdc` | Common mistakes and fixes |
 | `10-gui.mdc` | MenuType, AbstractContainerMenu, Screen |
 

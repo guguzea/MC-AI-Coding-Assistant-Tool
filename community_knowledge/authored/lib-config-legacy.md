@@ -21,7 +21,7 @@ skillId: mc-config
 
 用：仅在维护既有模组、需要读懂旧代码里的配置写法时，识别这些库（Auto Config / Fiber / Omega Config / Oro Config / Tweed / Simple Config）的 API 形态。它们多数已停更或生态萎缩。
 
-不用：新项目一律不选。配置需求请用活跃库：YACL（实测稳定版 1.19-26.2，26.3 只有 snapshot 构建）、Cloth（实测 1.14-26.2，功能冻结但仍在按版本线发版）、Fzzy Config（1.20.1-26.2，自动 GUI/校验/同步；本次未实测）。窗口与逐端构建数见各库短文的「分发窗口」表。
+不用：新项目一律不选。配置需求请用活跃库：YACL（union 实测稳定版 1.19-26.3；2026-09-25 复测 26.3 有 fabric/neoforge 正式版，Forge 止 1.20.2、Quilt 止 1.20.4）、Cloth（实测 1.14-26.2，功能冻结但仍在按版本线发版）、Fzzy Config（1.20.1-26.2，自动 GUI/校验/同步；本次未实测）。窗口与逐端构建数见各库短文的「分发窗口」表。
 
 ## Decision Flow
 
@@ -73,7 +73,7 @@ Decision: 遇到历史配置库怎么办
 - MCP：`generate_config`、`check_dependencies`、`search_community_docs`
 - Skill：`mc-config`
 - 全览：§二.1 配置库（历史配置库段）；`authored/library-catalog-2026`、`authored/lib-cloth-config`、`authored/lib-yacl`、`authored/lib-fzzy-config`、`authored/library-integration`
-- 官方：各库页面以全览所指 Fabric Wiki 中文社区库列表为入口；活跃替代：https://github.com/isxander/yet-another-config-lib 、https://github.com/shedaniel/cloth-config 、https://github.com/fzzyhmstrs/fzzy_config
+- 官方：各库页面以全览所指 Fabric Wiki 中文社区库列表为入口；活跃替代：https://github.com/isXander/YetAnotherConfigLib 、https://github.com/shedaniel/cloth-config 、https://github.com/fzzyhmstrs/fconfig
 - 不清楚时：先打开对应库官方页面；AGENT_USAGE.md 规则先行（本条目数据不完整，禁止补造）
 
 ## 核对（2026-08 反编译验证）

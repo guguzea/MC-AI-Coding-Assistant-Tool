@@ -19,6 +19,26 @@ sourceKind: authored
 
 数据基准（《社区常用库模组全览 2026 版》）：JEI 6900 万，F/Forge/Neo，1.8–26.2，最老牌配方 API；EMI 2600 万，F/Forge/Neo/Quilt，1.18.2–1.21.1，零依赖、API 现代，**1.21+ 才活跃**、1.20.4 以下冻结；REI 2420 万，F/Forge/Neo/**Rift**，1.13–26.2，支持 JEI 插件、可与 JEI 同装。
 
+## 构件面逐 slug 实测（2026-09-25：判据⑤ 的「少推荐」欠账点名本档 `quilt`，**结论 = 不点名**）
+
+本档是**三库合并行**（本档 `modrinthSlug: jei, emi, rei` ⇒ 生成物里被生产者按字典序归一成 `"emi,jei,rei"`），判据⑤ 腿 B 按 loader **并集**读构件面，于是把 `quilt` 列成 INFO「少推荐」（不判红）。但并集不能当「本档点名的库族支持 quilt」的证据 ⇒ 逐 slug 实测（数据 = `mcp-server/data/lib-manifests/all.json`，快照 as-of 2026-09-16）：
+
+| slug | 在构件面？ | fabric | forge | neoforge | **quilt** |
+|---|---|---|---|---|---|
+| `emi` | 在（36 行） | 13 行 / 13 release | 6 行 / 6 release | 4 行 / 4 release | **13 行 / 13 release，点分上界 1.21.1** |
+| `jei` | 在（73 行） | 19 行 / **0 release**（17 beta + 2 alpha） | 39 行 / 14 release（上界 1.18.2） | 15 行 / **0 release**（全 beta） | **0 行** |
+| `rei` | **不在构件面**（快照无该 slug） | — | — | — | — |
+
+⇒ 三条结论：
+
+1. **不给本档 `loaders` 补 `quilt`**：那 13 条 quilt 行**全部**来自 `emi` 一家，且 12 个唯一 fileName 与该 slug 的 fabric 行**完全重合**（`emi-*-+fabric.jar`）⇒ 是「EMI 的 Fabric 构件被同时打了 quilt 标签」，不是三家共有；把 quilt 写进这条**合并行**会让 `check_dependencies` 对只装 JEI 或只装 REI 的 Quilt 工程也报「本档覆盖 quilt」。
+2. **反向也要读对**：`jei` 自己那 19 条 fabric 行与 15 条 neoforge 行**一条 release 都没有**（全 beta/alpha），本档之所以能点名 fabric/neoforge 靠的是 `emi` 的 release 行 —— **合并面会让一家替另一家背书**，这是本档 `loaders` 的已知局限（已登记在 `CONTRIBUTING.md` `L45`，不在本轮修）。
+3. `rei` 是「**判面缺失**」不是「REI 无构件」：快照里根本没有 `roughlyenoughitems` / `rei` 这两个 slug ⇒ 禁止据「0 行」断言 REI 不支持某 loader（该欠账 = `L42` ①「构件面重抓」）。
+
+至于 EMI 自身的 quilt 事实：**成立**（13 条 release 到 1.21.1）⇒ 需要给 Quilt 工程写 EMI 依赖时，读本节表内 `emi` 行、并按 1.21.1 及以下取版本；26.x 无 quilt 行。
+
+复核（只读、不落盘）：`node temp/ralph-20260922/_r37-probe-slug-loader.mjs`（逐 slug 逐 loader 行数 + versionType 分解 + 数值序上界）· `node temp/ralph-20260922/_r37-probe-rows.mjs`（逐行 fileName 与跨 loader 交集）。
+
 ## 集成总决策
 
 - 新模组：**JEI + EMI 双插件**；NeoForge 1.21+ 生态 EMI 渗透率上升，EMI 与 JEI 平级对待。  

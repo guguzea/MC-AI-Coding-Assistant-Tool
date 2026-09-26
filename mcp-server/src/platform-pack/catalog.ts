@@ -565,7 +565,33 @@ const LIB_GROUPS: Record<string, string[]> = {
   bedrock: ["bedrock-only"],
 };
 
-/** 库 Skill 索引：组映射 + platforms 二次确认 + mcVersions 窗口。absPath 为知识库绝对路径。 */
+/**
+ * W0-1（2026-09-19）机制在 session 链路的对应实现（S22 步1，2026-09-24）。
+ * 真值语义 = `scripts/resolve-lib-skills.mjs` 的 `parsePlatformVersionMap`（:88）：
+ * `mcVersionsByPlatform: "forge=1.13.2-1.21.1; fabric=1.16.4-1.17.1"` —— 分号分隔
+ * `平台=token[,token…]`，token 与 `mcVersions` 同形（精确 / A-B / X+ / ≤X）；
+ * 命中平台键时**整组替换** mcVersions，未命中的平台沿用 mcVersions。
+ * 差异只有一处必须补偿：`parseFrontmatterMap` 不剥外层引号（resolve 侧剥），故此处先剥。
+ */
+export function parsePlatformVersionMap(value: string): Record<string, string[]> {
+  const out: Record<string, string[]> = {};
+  const s = String(value ?? "").trim().replace(/^["']|["']$/g, "");
+  if (!s) return out;
+  for (const part of s.split(";")) {
+    const seg = part.trim();
+    if (!seg) continue;
+    const m = seg.match(/^([\w-]+)\s*=\s*(.+)$/);
+    if (!m) continue;
+    const tokens = m[2]
+      .split(",")
+      .map((t) => t.trim().replace(/^["']|["']$/g, ""))
+      .filter((t) => t !== "");
+    if (tokens.length > 0) out[m[1]] = tokens; // 与 resolve 侧同：后写的同名平台键覆盖前者
+  }
+  return out;
+}
+
+/** 库 Skill 索引：组映射 + platforms 二次确认 + mcVersionsByPlatform（平台专属，优先）/ mcVersions 窗口。absPath 为知识库绝对路径。 */
 export function listLibSkillIndex(
   platform: string,
   mcVersion: string,
@@ -595,10 +621,16 @@ export function listLibSkillIndex(
       const meta = parseFrontmatterMap(body);
       const platforms = parseYamlList(meta.platforms ?? "");
       if (!platforms.includes(p)) continue;
-      const versionTokens = [
-        ...parseYamlList(meta.mcVersions ?? ""),
-        ...parseYamlList(meta.minecraftVersions ?? ""),
-      ];
+      // W0-1/S22：平台专属窗口优先，未声明该平台的键沿用 union（与 resolve-lib-skills.mjs:217-218 同语义）
+      const byPlatform = parsePlatformVersionMap(meta.mcVersionsByPlatform ?? "");
+      const platformTokens = ownGet(byPlatform, p) ?? [];
+      const versionTokens =
+        platformTokens.length > 0
+          ? platformTokens
+          : [
+              ...parseYamlList(meta.mcVersions ?? ""),
+              ...parseYamlList(meta.minecraftVersions ?? ""),
+            ];
       if (versionTokens.length > 0 && !versionTokens.some((t) => coversMcVersion(t, ver))) continue;
       const fm = frontmatterDescription(body);
       const skillName = fm.name || name;

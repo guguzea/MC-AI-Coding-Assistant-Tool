@@ -4,7 +4,7 @@ description: 资源包格式、pack_format、纹理。触发词：resourcepack�
 platform: forge
 version: "1.18.2"
 dependencies: []
-mappings: mcp
+mappings: parchment
 ---
 
 # mc-resourcepack（1.18.2）

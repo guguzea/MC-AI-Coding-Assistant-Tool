@@ -1,0 +1,42 @@
+{
+  "publishedAt": "2026-09-25",
+  "extendedAt": "2026-09-25T15:47:32.334Z",
+  "asOf": "2026-09-25T15:47:32.334Z",
+  "generator": "mcp-server/scripts/build-yarn-mojmap-pairs.mjs",
+  "producedFrom": {
+    "mojmap": "Mojang client.txt（逐档现拉或 data/forge_<v>/mappings/ 本地件）",
+    "yarn": "data/fabric_<v>/mappings/yarn-mappings.sqlite 的 classes(named, official)；无 fabric 档的版本（1.20.6 / 1.21.5）回落 yarn-<v>-mergedv2.tiny（tiny v2 类行，本文件自解析）",
+    "joinKey": "obf 短名"
+  },
+  "sourceDir": "D:\\mc-skill-temp\\cache\\yarn-mojmap-pairs（即 $MC_SKILL_CACHE 实况落点，生成器默认输出目录）",
+  "reason": "2026-09-25 用户裁定：对照产物复制入库（数据源不再只存在于 $MC_SKILL_CACHE；干净 clone 直接持有 leg2 数据源）。同日扩展发布 13→15 档：新增 1.20.6 / 1.21.5（neoforge 有档、fabric 未建档的版本；生成器加 `--yarn-tiny-dir` 回落，合并前实测两源在 1.20.4 上逐条全等：7782/7782 same、0 diff）。生成器本体仍按设计从不写仓库（写盘守卫豁免以此为锚），本目录是人工发布副本。",
+  "extendedNote": "原 13 档文件 sha256 与首次发布逐字节相同（复算 mismatches=0）；index.json 因新增两档条目与 yarnSource 字段而更新；门复跑读数：leg2 判 483 件、冲突 0（13 档时为判 437 件 / 该档无对照产物 131 件，本次多覆盖 46 件）。",
+  "consumedBy": [
+    "mcp-server/scripts/assert-skill-mappings-key.mjs（leg2；其落点解析仍为 --pairs-dir → $MC_SKILL_CACHE/yarn-mojmap-pairs → os.tmpdir()，尚未默认读本目录）",
+    "mcp-server/scripts/assert-cross-layer-names.mjs（import loadPairs / PAIRS_DIR，同上）"
+  ],
+  "notIncluded": "mojmap/<v>/client.txt：Mojang 官方映射，许可证明文禁止再分发完整件（\"you may not redistribute the mappings complete and unmodified\"）；故本目录只含 join 派生表，不含原始 client.txt。",
+  "refreshHint": "重生成：node mcp-server/scripts/build-yarn-mojmap-pairs.mjs [--yarn-tiny-dir=<dir>]（落 $MC_SKILL_CACHE；缺 client.txt 须联网，或在产物目录已有 mojmap/<v>/client.txt 时免联网）；发布：把 15 个 yarn-mojmap-<v>.json + index.json 复制到本目录并重算 files 哈希。",
+  "totals": {
+    "versions": 15,
+    "pairs": 112971
+  },
+  "files": {
+    "index.json": "86c6449964986807f2fe9f07ec5c6a02c7b239f5534abb0de50281161863e332",
+    "yarn-mojmap-1.14.4.json": "f9248bff81573e54b9898065132eed2964bf52fc2fcf0b43a2d2de655d796685",
+    "yarn-mojmap-1.16.5.json": "53904327241c23bfb2c6e3af6736d3f32d2fcc486c5e9a2d7b0c7e7b3f4f3045",
+    "yarn-mojmap-1.17.1.json": "5fad4bd703e893417dbe98fc431744d1ec5955b320ec5f4b6676ae84c2b5b4eb",
+    "yarn-mojmap-1.18.2.json": "72b5b16f329c6c8f3fe4158c751f76b5d94742f684020b21ef610145c57e70a2",
+    "yarn-mojmap-1.19.4.json": "ba6cc9b3c124d23757e1063b8d48942012ee3c8c5ffe6529eadf17b6a552945f",
+    "yarn-mojmap-1.20.1.json": "e472a08a14fce4e3e8ee017ead94eb31103abddf4ea7b346663070110f080185",
+    "yarn-mojmap-1.20.4.json": "72ef80d76fd1a0132a917dbbd0cc40dadf6d474f113176598c9adb3d5a4217e6",
+    "yarn-mojmap-1.20.6.json": "ad3b5db4761121a316338d66b25da3c63fe3a6179847a831f3abfc7d7b8c1e81",
+    "yarn-mojmap-1.21.1.json": "599091d44563da62a1af4e82ce2d155c7b9d98bc07d74a8962883bfe13e6a52f",
+    "yarn-mojmap-1.21.10.json": "1814d1d628cfbdc8cb395339ea0d498c925b14d1bf1b50d2d1e63948356315ce",
+    "yarn-mojmap-1.21.11.json": "a6982cb61249a05abfc032bae7a312a4816d20ad53c79f0bb8c96eeffcdfb1c4",
+    "yarn-mojmap-1.21.3.json": "2985bcedd6af1d04d559c34cf7d2bd6c38eea6a9abe62e3d8d9fbe7b0e39fb67",
+    "yarn-mojmap-1.21.4.json": "632f530a7ad73a856ba54caf4aea558ba444369ca2dd0db521cc63c1667fa243",
+    "yarn-mojmap-1.21.5.json": "e7254103ee185acefe48a9fb98c4b23e5aafb3fa06ac90d738fd1b5788b1aeab",
+    "yarn-mojmap-1.21.8.json": "138298531cea190c2784197c0f93935230b5d382186d36f07878bd817aee4171"
+  }
+}

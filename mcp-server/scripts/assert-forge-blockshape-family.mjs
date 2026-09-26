@@ -128,9 +128,12 @@ const PACKS = [
   { pack: 'fabric/1.21.3', kind: 'no-fabrictooltags' },
   { pack: 'forge/1.12.2', kind: 'block-noarg-112' },
   { pack: 'fabric/1.14.4', kind: 'gradle6-no-archivesname' },
-  { pack: 'forge/1.16.5', kind: ['gradle6-no-archivesname', 'gui-clientsetup-needs-modbus'] },
+  { pack: 'forge/1.16.5', kind: ['gradle6-no-archivesname', 'gui-clientsetup-needs-modbus', 'props-receiver-1165'] },
   { pack: 'forge/1.17.1', kind: ['networking-decoder-noctor', 'gui-clientsetup-needs-modbus'] },
   { pack: 'forge/1.15.2', kind: 'gui-clientsetup-needs-modbus' },
+  // S3（2026-09-23）：1.13.2 只挂映射通道族 —— 该档方块属性是 `Properties.create(Material)`，
+  // 既非 with-material（1.18.2 区间的 of(Material)）也非 no-material（1.20+ 无参 of()）⇒ 不套那两族。
+  { pack: 'forge/1.13.2', kind: 'mapping-channel-1132' },
 ];
 
 /** 族判据：按 kind 取；`re` 逐行布尔判定（不带 g，避免 lastIndex 残留）。 */
@@ -257,6 +260,62 @@ const RULES = {
       { id: 'busMod', re: /bus = (?:Mod\.)?EventBusSubscriber\.Bus\.MOD/g },
     ],
   },
+  // ── S2（2026-09-23，story S2 task 3 的落点）：1.16.5 方块属性接收类 ─────────────────
+  // R6：`assert-no-invalid-api-shapes.mjs:40-41` 明文拒绝版本区间判据并把这类改判转指本门。
+  // 判据：本档 `of` 的宿主类**只有** `AbstractBlock.Properties`。
+  // oracle（三机制互核，as-of 2026-09-23）：
+  //   ① data/forge_1.16.5/extracted/class-names.json（3922 类全表）：
+  //      `net/minecraft/block/AbstractBlock$Properties` = 在，`net/minecraft/block/Block$Properties` = 不在；
+  //      同法反证 1.13.2 的 class-names.json **有** `Block$Properties` ⇒ 本族只挂 1.16.5，禁止推广。
+  //   ② data/forge_1.16.5/forge-docs/1.16.5/raw/concepts_registries.md:30 逐字
+  //      `new Block(AbstractBlock.Properties.of(Material.STONE))`（processed/:26 同句）；
+  //      整个 data/forge_1.16.5 里裸 `Block.Properties` = 0 命中。
+  //   ③ search_docs platform=forge version=1.16.5 query="AbstractBlock.Properties" ⇒
+  //      verbatim_summary {judged:13, hits:5}，命中页 blocks_blocks / concepts_registries / items_items 均 verbatim=true。
+  // 采集面地板（R47）口径 = 本包「非投影 + 非 knowledge/{version-changes,porting}」被扫文件内
+  // `AbstractBlock.Properties.of(` 的匹配数；2026-09-23 修完 17 处后实扫 = 17 ⇒ 地板 17（**下界** `<`，
+  // 新增合法样例只会抬高计数、不会假红）。
+  'props-receiver-1165': {
+    banned: [
+      {
+        id: 'block-props-receiver-1165',
+        re: /(?<![\w$.])Block\.Properties\s*\.\s*of\s*\(/,
+        why: '1.16.5 无 `Block.Properties` 类（class-names.json 实测 `Block$Properties` 不在 / `AbstractBlock$Properties` 在）；接收类写 `AbstractBlock.Properties.of(Material.X)`，语料逐字见 raw/concepts_registries.md:30',
+      },
+    ],
+    positive: [
+      { id: 'abstractPropsOf', re: /AbstractBlock\.Properties\s*\.\s*of\s*\(/g },
+    ],
+    floors: [
+      { id: 'abstractPropsOf', min: 17, asof: '2026-09-23', what: 'forge/1.16.5 非投影非迁移目录被扫文件内 AbstractBlock.Properties.of( 匹配数（本轮修完 17 处后实扫）' },
+    ],
+  },
+  // ── S3（2026-09-23）：forge/1.13.2 的 gradle.properties 形态不许把 `mcp` 当通道值 ──────
+  // oracle：本包一手裁决 = scaffold/gradle.properties:13-15（:13 注明「Official MDK minecraft
+  //   { mappings channel: 'snapshot', version: '20180921-1.13' }」，:14-15 即真值）
+  //   + scaffold/build.gradle:26（该两属性正是喂 `mappings channel:` 的）
+  //   + pack.meta.json:12（2026-09-11 真机 BUILD SUCCESSFUL 用的就是 snapshot / 20180921-1.13）
+  //   + knowledge/porting/03-real-world-examples.md:23（官方 1.13.2-25.0.223 MDK 同值）。
+  // 边界：`data/forge_1.13.2/forge-docs/**` 对 `mapping_channel` 零命中（本轮实测）⇒ 语料侧不裁决，
+  //   本判据只钉「与本包实证工件一致」，**不断言** `mcp` 字符串在 FG 历史上不存在；
+  //   MCP SRG 作为映射**家族名**的散文（如 00-project-setup.mdc:58）不受本判据约束。
+  // 采集面地板（R47）：同上口径，2026-09-23 实扫 = 3（00-project-setup.mdc:47 + 同文件 :152 的 `mappings channel: 'snapshot'` DSL 行
+  //   + scaffold/README_AI.md:40；`scaffold/gradle.properties:14` 也写 snapshot，但 SCAN_EXT 只收 md/mdc/java/gradle ⇒ 不在采集面）。
+  'mapping-channel-1132': {
+    banned: [
+      {
+        id: 'mapping-channel-mcp-1132',
+        re: /mapping_channel\s*=\s*mcp\b|channel\s*:\s*['"]mcp['"]/,
+        why: '本档 `mapping_channel` 真值 = `snapshot` / `mapping_version=20180921-1.13`（scaffold/gradle.properties:14-15 + build.gradle:26 + pack.meta.json:12 真机构建记录）；`mcp` 是 MCP SRG 映射家族名，不是 ForgeGradle 通道值',
+      },
+    ],
+    positive: [
+      { id: 'channelSnapshot', re: /mapping_channel\s*=\s*snapshot|channel\s*:\s*'snapshot'/g },
+    ],
+    floors: [
+      { id: 'channelSnapshot', min: 2, asof: '2026-09-23', what: 'forge/1.13.2 非投影非迁移目录被扫文件内 snapshot 通道写法匹配数（rules 00 的 properties 围栏 + scaffold/README_AI）' },
+    ],
+  },
 };
 /** `no-material` 的合法同名成员（`ArmorMaterial.IRON` …），不得被上条误伤。 */
 const NO_MATERIAL_EXEMPT = /[A-Za-z0-9_$]Material\s*[.]\s*[A-Za-z_$]/g;
@@ -291,7 +350,7 @@ const fail = (msg) => failures.push(msg);
 /** 纯函数：一组 (rel, text) + kind ⇒ { bannedHits, hits[{rel,line,id}], positives, armorExempt }。 */
 export function scanTexts(entries, kind) {
   const rules = RULES[kind];
-  const out = { bannedHits: 0, hits: [], positives: {}, armorExempt: 0 };
+  const out = { bannedHits: 0, hits: [], positives: {}, armorExempt: 0, judged: 0 };
   for (const pos of rules.positive) out.positives[pos.id] = 0;
   for (const { rel, text } of entries) {
     if (kind === 'no-material') out.armorExempt += (text.match(NO_MATERIAL_EXEMPT) || []).length;
@@ -299,6 +358,7 @@ export function scanTexts(entries, kind) {
       out.positives[pos.id] += (text.match(new RegExp(pos.re.source, 'g')) || []).length;
     }
     const lines = text.split(String.fromCharCode(10));
+    out.judged += lines.length;
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i].replace(/\r$/, '');
       for (const b of rules.banned) {
@@ -345,6 +405,18 @@ function selftest() {
     ['gui-clientsetup-needs-modbus', 'bad', '@Mod.EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT)\npublic class ClientSetup {\n', 'clientsetup-no-modbus'],
     ['gui-clientsetup-needs-modbus', 'bad', '    @Mod.EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT)\n', 'clientsetup-no-modbus'],
     ['gui-clientsetup-needs-modbus', 'good', '@Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)\n', null],
+    // S2（2026-09-23）：1.16.5 裸 Block.Properties.of( 必红（处方位）；AbstractBlock 侧不误伤。
+    // 第 4 例钉「标题里的裸类名不判红」——本族只看 .of( 调用位，禁止把判据扩到类名字符串。
+    ['props-receiver-1165', 'bad', 'BLOCKS.register("rock", () -> new Block(Block.Properties.of(Material.STONE)));\n', 'block-props-receiver-1165'],
+    ['props-receiver-1165', 'bad', '        super(Block.Properties.of(Material.WOOD).noOcclusion());\n', 'block-props-receiver-1165'],
+    ['props-receiver-1165', 'bad', 'Block.Properties.of()\n', 'block-props-receiver-1165'],
+    ['props-receiver-1165', 'good', 'BLOCKS.register("rock", () -> new Block(AbstractBlock.Properties.of(Material.STONE)));\n', null],
+    ['props-receiver-1165', 'good', '### AbstractBlock.Properties 常用配置\n', null],
+    ['props-receiver-1165', 'good', '- 本节讲 Block.Properties 这个名字（无 .of( 调用位）\n', null],
+    // S3：mcp 通道值必红（properties 与 FG DSL 两种写法）；snapshot + 「MCP SRG 家族名」散文不误伤
+    ['mapping-channel-1132', 'bad', 'mapping_channel=mcp\nmapping_version=1.13.2\n', 'mapping-channel-mcp-1132'],
+    ['mapping-channel-1132', 'bad', "    mappings channel: 'mcp', version: '1.13.2'\n", 'mapping-channel-mcp-1132'],
+    ['mapping-channel-1132', 'good', "mapping_channel=snapshot\nmapping_version=20180921-1.13\n    mappings channel: 'snapshot', version: '20180921-1.13'\n- Forge 1.13.2 使用 **MCP SRG** 格式\n", null],
   ];
   let missed = 0;
   for (const [kind, want, text, id] of cases) {
@@ -393,6 +465,24 @@ if (process.argv.includes('--selftest')) {
       census.push({ pack, kind, scanned: entries.length, migrationExempt, ...r });
       for (const [id, n] of Object.entries(r.positives)) {
         if (n === 0) fail(`${pack}: 正解形态 ${id} 计数为 0（示例被删空 / 正则改瞎 ⇒ 本门已瞎）`);
+      }
+      // R47（2026-09-23）：带地板的判据必须自证采集面 —— 采集 0 = 采集器失效（档被搬走 / 正则改瞎 /
+      // 过滤器收窄），**不是**代码干净；低于地板 = 扫描面缩水。地板是下界（`<`）⇒ 正常新增不假红。
+      const fls = RULES[kind].floors || [];
+      for (const fl of fls) {
+        const n = r.positives[fl.id] ?? 0;
+        if (n === 0) {
+          fail(`[FLOOR-COLLECTOR] ${pack} [${kind}]: 采集面 ${fl.id} = 0 —— 这是**采集器失效**，不是代码干净（地板 ${fl.min}；口径 ${fl.what}；as-of ${fl.asof}）`);
+        } else if (n < fl.min) {
+          fail(`[FLOOR-LOW] ${pack} [${kind}]: 采集面 ${fl.id} = ${n} < 地板 ${fl.min}（口径 ${fl.what}；as-of ${fl.asof}）`);
+        }
+      }
+      if (fls.length) {
+        console.log(
+          `  R47 ${pack} [${kind}] 扫文件=${entries.length} 判行=${r.judged} 拒=${r.bannedHits} 采集面=` +
+            fls.map((fl) => `${fl.id}:${r.positives[fl.id]}/地板${fl.min}`).join(' ') +
+            `（口径与 as-of 见族注释）`,
+        );
       }
       allHits.push(...r.hits);
       if (INFO || RELEDGER) {

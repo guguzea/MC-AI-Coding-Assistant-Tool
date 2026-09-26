@@ -507,9 +507,15 @@ export function writePlatformPack(args: WriteArgs) {
     }),
   };
 
-  if (dryRun || !confirmed) {
+  // S10/T1（F1 统一合同）：本函数此前是 `if (dryRun || !confirmed)` 一处吞掉两种情形，
+  // 于是 dryRun=false 而 confirmed 缺失时**静默降级**成 ok:true 的预览 —— isToolFailure
+  // （src/cli-parse.ts:636）只认 ok===false，CLI 出 success:true + rc=0，脚本把「什么都没写」
+  // 读成「已写入」。两态规则：dryRun=true = 成功预览（ok:true）；dryRun=false 且未确认 = 明确拒绝
+  // （ok:false + CONFIRMATION_REQUIRED），与 src/update/index.ts 的 CONFIRMATION_REQUIRED 分支同形。
+  const notConfirmed = !dryRun && !confirmed;
+  if (notConfirmed || dryRun) {
     return {
-      ok: true,
+      ok: !notConfirmed,
       dryRun: true,
       dest: "project",
       resolvedProjectRoot: proj.root,
@@ -526,6 +532,16 @@ export function writePlatformPack(args: WriteArgs) {
       warnings: writeWarningCap.warnings,
       ...(writeWarningCap.truncated !== undefined ? { truncated: writeWarningCap.truncated } : {}),
       howToWrite,
+      ...(notConfirmed
+        ? {
+            action: actionable(
+              "CONFIRMATION_REQUIRED",
+              "dryRun=false 须同时传 confirmed=true；未确认时一个字节都没写（人在环），不是静默成功。",
+              ["先 dryRun=true 预览 planned 清单", "再 dryRun=false confirmed=true + MC_SKILL_ALLOW_WRITE=1"],
+              ["activate_platform_pack"],
+            ),
+          }
+        : {}),
     };
   }
 
@@ -705,9 +721,11 @@ export function deactivatePlatformPack(args: WriteArgs) {
     for (const rel of hf.patched) toUnpatch.add(posixRel(rel));
   }
 
-  if (dryRun || !confirmed) {
+  // S10/T1 同合同：deactivate 会**删文件**，未确认时同样不得报 ok:true。
+  const deactNotConfirmed = !dryRun && !confirmed;
+  if (deactNotConfirmed || dryRun) {
     return {
-      ok: true,
+      ok: !deactNotConfirmed,
       dryRun: true,
       resolvedProjectRoot: proj.root,
       willDelete: [...toDelete],
@@ -717,6 +735,16 @@ export function deactivatePlatformPack(args: WriteArgs) {
         env: { MC_SKILL_ALLOW_WRITE: "1" },
         cli: `node dist/cli.js activate_platform_pack --action=deactivate --hosts=${hosts.join(",")} --project ${proj.root} --dry-run=false --confirm`,
       },
+      ...(deactNotConfirmed
+        ? {
+            action: actionable(
+              "CONFIRMATION_REQUIRED",
+              "dryRun=false 须同时传 confirmed=true；未确认时没有删除/回滚任何文件（人在环）。",
+              ["先 dryRun=true 预览 willDelete / willUnpatch", "再 dryRun=false confirmed=true + MC_SKILL_ALLOW_WRITE=1"],
+              ["activate_platform_pack"],
+            ),
+          }
+        : {}),
     };
   }
 

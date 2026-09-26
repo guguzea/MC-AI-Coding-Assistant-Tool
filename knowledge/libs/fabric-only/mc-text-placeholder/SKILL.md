@@ -4,6 +4,7 @@ description: Text Placeholder API 占位符。触发词：占位符、placeholde
 platforms: [fabric, quilt]
 mcVersions: ["1.17-26.2"]
 communityDocId: authored/lib-text-placeholder-api
+modrinthSlug: placeholder-api
 mappings: hint
 ---
 

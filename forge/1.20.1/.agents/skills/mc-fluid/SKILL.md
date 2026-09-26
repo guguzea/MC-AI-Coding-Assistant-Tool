@@ -4,7 +4,7 @@ description: Minecraft Forge 流体开发。创建流体 Fluid、FluidType、Flo
 platform: forge
 version: "1.20.1"
 dependencies: []
-mappings: mcp
+mappings: parchment
 ---
 
 # 流体开发（Forge 1.20.1）

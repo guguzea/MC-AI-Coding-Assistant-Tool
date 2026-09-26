@@ -37,8 +37,8 @@ minecraft_version=1.13.2
 forge_version=25.0.219
 
 # ---- Mappings（MCP SRG 格式）----
-mapping_channel=mcp
-mapping_version=1.13.2
+mapping_channel=snapshot
+mapping_version=20180921-1.13
 
 # ---- Mod 元数据 ----
 mod_id=examplemod          # 全部小写，禁止含 `-`

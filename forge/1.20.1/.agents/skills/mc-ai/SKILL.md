@@ -4,7 +4,7 @@ description: 实体 AI Goal、Brain。触发词：Goal、targetSelector
 platform: forge
 version: "1.20.1"
 dependencies: []
-mappings: mcp
+mappings: parchment
 ---
 
 # mc-ai（1.20.1）

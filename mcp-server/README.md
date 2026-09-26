@@ -15,7 +15,7 @@ npm run build
 
 ## 能力概览
 
-- 共 **82** 个 MCP 工具：`src/tool-registry.ts` **47** + `src/wave/register.ts` **35**
+- 共 **82** 个 MCP 工具：`src/tool-registry.ts` **46** + `src/wave/register.ts` **36**
 - 依赖仓库根 `data/`（API extracted、parchment/mcp、**yarn-mappings.sqlite**、文档索引、porting 等）
 - 官方文档三级：L0 搜索 → L1 摘要 → L2/L2+ 全文
 - **禁止**运行时全量加载 `yarn-mappings.json`（>1.5GB，易 OOM）
@@ -101,7 +101,7 @@ VS Code 项目级配置顶层键是 `servers`（不是 `mcpServers`）。Continu
 | `MC_SKILL_UPDATE_REMOTE` | 强制 git remote 名；空则扫描匹配 URL | `origin` |
 | `MC_SKILL_UPDATE_CACHE_TTL_SEC` | `get_server_status` updateHint 缓存 TTL | `3600` |
 | `MC_SKILL_CACHE` | 反编译/MDK/loader-jar 缓存根。MCP（`resolveCacheRoot`）与脚本都读此变量。不设则分家：MCP 默认 APPDATA/`~/.config/mc-skill-cache`，脚本默认 `os.tmpdir()/mc-skill-cache`。请设成同一路径。 | `%APPDATA%/mc-skill-cache` |
-| `MC_SKILL_SKIP_DOWNLOAD` | `1` 时反编译工具跳过一切下载并诚实失败（CI 语义） | `1` |
+| `MC_SKILL_SKIP_DOWNLOAD` | `1` 时反编译工具跳过一切下载并诚实失败。**须显式设成逐字 `1`** 才生效（实现 = `src/decompile/java/java-process.ts:168` 的 `=== "1"` 严格比较；不设、或设 `true`/`yes` 一律不生效）。**供 CI/离线环境显式设置；本仓 `.github/workflows/*` 目前未设**（实测 `grep -rn MC_SKILL_SKIP_DOWNLOAD .github` = 0 命中）⇒ 属用户 CI 面，见仓库根 `CONTRIBUTING.md` 未排期清单 `L23` | 未设（默认按需下载） |
 | `MC_SKILL_UPDATE_DOWNLOAD_TIMEOUT_MS` | data zip 下载超时 | `600000` |
 | `MC_SKILL_GITHUB_TIMEOUT_MS` | Release API 超时 | `25000` |
 | `MC_SKILL_GITHUB_API_BASE` | GitHub API 根（可改镜像） | `https://api.github.com` |
@@ -164,7 +164,7 @@ npx @modelcontextprotocol/inspector node dist/index.js
 
 - **社区实务**：`community_knowledge/`（`MC_SKILL_COMMUNITY`）。MCP 四工具见上表「社区」行；**不替代** `search_*_docs`。依据短文写代码前须遵守 [`community_knowledge/AGENT_USAGE.md`](../community_knowledge/AGENT_USAGE.md)。
 - **库模组**：`knowledge/libs/` 下 **36** 份 Skill 源稿（**34** 唯一 skillId，五组含 `bedrock-only`），按仓库根 `AGENTS.md`「库模组 Skill」解析，**不落盘**平台 `.cursor/skills`。路由：`knowledge/libs/all-platforms/mc-lib-catalog/SKILL.md`。计数以 `find knowledge/libs -name SKILL.md | wc -l` 实测为准。
-- **数据链**：`library-catalog.ts`（50 条）+ `data/lib-manifests/all.json`（45 slug）+ `data/lib-api-summaries/`（**48** 库）→ `check_dependencies`。完整说明见仓库根 [`README.md`](../README.md)「社区知识与库模组」与 MCP 工具 §7 / §7.5。
+- **数据链**：`library-catalog.ts`（**50** 条，口径 = 源文件 `{ id: '` 对象字面量计数）+ `data/lib-manifests/all.json`（**49** slug，该文件顶层是数组、`length` = 49；**2026-09-25 现扫更新**，旧值 45→48 都是翻页修复前的首页截断面）+ `data/lib-api-summaries/`（**48** 库，口径 = 该目录 `*.json` 文件数）→ `check_dependencies`。**构件快照那一数随每次重抓失效，引用前现扫**（机械复算口径见下节「数据来源与边界」）。完整说明见仓库根 [`README.md`](../README.md)「社区知识与库模组」与 MCP 工具 §7 / §7.5。
 
 ### 字段映射（`convert_mapping`）
 
@@ -302,7 +302,7 @@ node dist/cli.js list-tools
 
 | 入口 | 说明 |
 |------|------|
-| MCP Prompt | 与 `WORKFLOW_TEMPLATES` 等量注册（当前 **45 个**：`mc-new-block` / `mc-new-entity` / `mc-new-gui` / `mc-crash-triage` / `mc-port-mod` / `mc-build-mod` / `mc-ingame-iterate` / `mc-localize-mod` / `mc-decompile-mod` / `mc-villager` / `mc-multiblock` / `mc-ai` 等；完整清单以 `get_workflow_template` 列表为准） |
+| MCP Prompt | 与 `WORKFLOW_TEMPLATES` 等量注册（当前 **48 个**：`mc-new-block` / `mc-new-entity` / `mc-new-gui` / `mc-crash-triage` / `mc-port-mod` / `mc-build-mod` / `mc-ingame-iterate` / `mc-localize-mod` / `mc-decompile-mod` / `mc-villager` / `mc-multiblock` / `mc-ai` 等；完整清单以 `get_workflow_template` 列表为准） |
 | 工具兜底 | `get_workflow_template`（同名正文） |
 | MCP Resource | `mcskill://…`（见 `listKnowledgeResources`） |
 | 工具兜底 | `list_knowledge_resources` → `read_knowledge_resource` |
@@ -319,7 +319,7 @@ node dist/cli.js list-tools
 | `mcskill://antipatterns/registry` | 注册反模式短文 |
 | `mcskill://patterns/README` | 代码模式库索引（community_knowledge/patterns/） |
 | `mcskill://code-patterns/<平台>[/<版本>]/<文件>.md` | 各档 `code-patterns/` 正文（实测 18 个档目录 / 116 篇）；编号集合按档不同，文件名一律以 `list_knowledge_resources` 返回为准 |
-| `mcskill://workflow/<模板名>` | 与 Prompt 同名的工作流正文（与 `WORKFLOW_TEMPLATES` 等量，当前 45 个；含构建、真机循环、模组汉化、反编译、村民/多方块/实体 AI 等） |
+| `mcskill://workflow/<模板名>` | 与 Prompt 同名的工作流正文（与 `WORKFLOW_TEMPLATES` 等量，当前 48 个；含构建、真机循环、模组汉化、反编译、村民/多方块/实体 AI 等） |
 
 **客户端兼容结论**：Cursor 等仅 tools 客户端主走 `get_workflow_template` / `list_knowledge_resources` / `read_knowledge_resource` 兜底；Claude Desktop 等支持 prompts/resources 的客户端可直接使用注册的 Prompt 与 Resource。
 
@@ -357,6 +357,14 @@ Forge 官方文档：先 `list_forge_versions`，再 `search_forge_docs --versio
 - **查询顺序**：官方先，本地 overlay 后，同 key 本地覆盖官方。
 - LiteLoader / Rift / ModLoader **不是内置全集**；未 ingest 时 `PLATFORM_SKIPPED`。Bedrock 与 Forge 1.7.10–1.11.2 无 Java ingest。空 sidecar 模板见 `mcp-server/data/loader-api-summaries/sidecar-templates/`。手摘极小摘要（如 `1.12.2-liteloader` 6 类、`1.13.2-rift` 8 类、`1.6.4-modloader` 2 类）**不是**完整 loader javadoc。
 - **Fabric loader 摘要**：以 `search_loader_api mode=list` 为准。`1.14.4` / `1.16.5` / `1.17.1` / `1.18.2` / `1.19.4` / `1.20.1` / `1.20.4` / `1.21.1` / `1.21.3` / `1.21.11` / `26.1.2` 均已入库。`skipped-ingest.json` 的 `mavenNotIndexed` 现为空；不要再把这些档写成 `LOADER_API_NOT_INDEXED`。
+- **静态字段名不在摘要能力范围内**：`query_loader_api` / `search_loader_api` 的摘要只收**类 + 方法签名**，`fields` 恒为 0。实测 `mcp-server/data/loader-api-summaries/1.18.2-forge.json`（2026-09-24 复测：node 直接读该 json 累加）：`classCount` 988（`classes` 实数 988）、methods 4950、**fields 0**、`fqcnIndex` 617 条，且 `ForgeRegistries` 在 `classes` 与 `fqcnIndex` 里**都没有条目**——所以加载器/模组 API 的**字段名**（例：`ForgeRegistries.ENTITIES` vs `ENTITY_TYPES`）即便类已入库也核不到。字段名按**四档出处**落笔，四档不得混称（口径真值 = 根 `AGENTS.md`「工具边界」里那条「静态字段名不在 `query_loader_api` 能力内」，两处必须同步改）：**① 语料逐字**（本仓 `data/**` 上游正文可复核）——**仍然只有** `BLOCKS` / `ITEMS`（`data/forge_1.18.2/forge-docs/1.18.2/processed/concepts_registries.md:24,96`、1.19.4 同名页 `:24,106`）；**①b 官方构件逐字**（2026-09-24 新增档；自备 jar 可复核、构件不入库）：1.18.2 的 `ENTITIES` / `BLOCK_ENTITIES` / `SOUND_EVENTS` / `PARTICLE_TYPES` / `CONTAINERS` / `PAINTING_TYPES` / `FLUIDS` 由官方 1.18.2-40.1.80 源码（157 行）＋ 1.18.2-40.3.12 universal jar `javap -p`（41 行 / 注册表字段 32 个）两 build 两机制互证；**② 处方-only**（只有本档 rules/skills 自撰、无外部出处）：forge/1.18.2 面**现已清空**；**③ 外部-only**（仓内不可复核）：`ENTITY_TYPES`@1.19.4 —— **1.19.4 侧字段名与 1.20.x 的 `MENU_TYPES` 本次未取证，禁止拿 ①b 外推**；**④ 证伪（不是未核实）**：`FLUIDTYPES` 与 `FLUID_TYPES`@1.18.2 —— 1.18.2 没有流体类型注册表，流体走 `FLUIDS`（`FluidType` + `FLUID_TYPES` 自 1.19 才有），修法是删/改表行、**不是**改名成 `FLUID_TYPES`。复核入口两条（需自备 jar + JDK 17+，只读不写库）：`unzip -p <forge-1.18.2-40.1.80-sources.jar> net/minecraftforge/registries/ForgeRegistries.java` ＋ `javap -p -classpath <forge-1.18.2-40.3.12-universal.jar> net.minecraftforge.registries.ForgeRegistries`。⚠️ **禁止把本仓规则行当外部出处（那是循环引证）**：`forge/1.18.2/.cursor/rules/01-registry.mdc:27`、`forge/1.19.4/.cursor/rules/01-registry.mdc:27` 属**处方实况**（也正是裁定自己改过的行），只说明「现状长什么样」。四档都给不出的名字留 `// TODO(未核实)`，禁止凭训练记忆补。
+
+- **库模组构件快照 `mcp-server/data/lib-manifests/all.json`（边界与 as-of 口径，2026-09-25 现扫复测）**：本节此前只覆盖 `loader-api-summaries`，**构件快照没有任何边界说明**，本条补上。
+  - **真身路径从仓库根算起带 `mcp-server/` 前缀**：根 `data/lib-manifests` **不存在**（本轮实测：根 `data/` 68 个条目里 0 个匹配 `lib-manifest`），而 `mcp-server/data/lib-manifests/` 目录里**只有 `all.json` 一个文件**（无 `_meta.json` / `fingerprints.json` 之类兄弟件。**2026-09-25 现扫更正**：该目录现有 **2** 个文件 —— `all.json` 与生产者 `--write` 自动留下的 `all.json.bak`（旧面备份，`??` 未纳管 ⇒ 一次 `git add .` 就会把 1.4 MB 旧面提进仓库，已登记在 `CONTRIBUTING.md` 未排期清单 `L52`））。本 README 其他处把它写成相对形态 `data/lib-manifests/all.json` 时，指的都是这个 `mcp-server/` 下的目录，不是仓库根的 `data/`。
+  - **快照形状（2026-09-25 现扫 node 直读；本节数字随每次重抓失效，引用前现扫 —— 机械复算口径 = 顶层数组 `length` 给 slug 数、`Σ entries[].length` 给构件行数，一条命令：`node -e "const j=require('./mcp-server/data/lib-manifests/all.json');console.log(j.length, j.reduce((a,e)=>a+e.entries.length,0))"` ⇒ 现值 `49 3003`）**：1,519,506 B、mtime **2026-09-25T06:21:20Z**、顶层是**裸数组**（`isArray=true`，`length` = 49）；slug 对象的键只有 `slug` 与 `entries`；entry 键 **8** 个 = `gameVersion` · `loader` · `modId` · `fileName` · `url` · `sha512` · `versionType` · `versionNumber`；**49 slug / Σentries 3,003**（含 quilt 行的 slug **25** 个、quilt 行 **513** 条）。**历史值（不回改，只在此归位）**：本 bullet 首版写的是 **1,450,852 B / mtime 2026-09-16T15:00:38Z / 48 slug / Σentries 2,870** —— 那是**翻页修复前被静默截断的首页面**，第 44 轮重抓后已被上面的现值取代（新增的唯一 slug = `rei`；`jei` 撞 `MAX_PAGES=30` 帽、以 slug 级 `captureState=capped` 键继承 73 行）。
+  - **快照不自带 as-of**：全文扫 `generatedAt` / `asOf` / `as_of` / `fetchedAt` = **0 : 0 : 0 : 0** 次命中。⇒ 想知道「这份快照是哪一刻的」只有三个**代理**口径，三者都**不是**快照字段，不得写成 manifest 自带：① 文件 mtime **2026-09-25T06:21:20Z**（2026-09-25 现扫；**旧值 `2026-09-16T15:00:38Z` 属第 44 轮重抓前的截断面**，该值仍写在历史叙述里、不得再当现值抄。⚠️ 现在 mtime **领先**代理 ② 的最后一次提交 —— 工作树里的 `all.json` 是 ` M` 未提交态、`.bak` 是 `??`，所以「mtime = 提交时刻」这条隐含等式在本日不成立）；② 该文件最后一次提交 **`d3d266d2` · 2026-09-17T10:17:13+08:00（sweep76）**（`git ls-files` 确认该件受纳管，口径 = `git log -1 --format=%h %cI %s -- <该路径>`）；③ 同日 `mcp-server/data/lib-api-summaries/*.json` 的 `generatedAt`（48 份全部带该字段；**47 份 = 2026-09-16、1 份 = 2026-08-12）。⚠️ 代理 ③ 的目录是 **`lib-api-summaries`**，**不是**上面那条 bullet 讲的 `loader-api-summaries`——本轮实测后者的 47 份 json 里 `generatedAt` **0 命中**（只有 4 份 `*-qsl.json` 带 `fetchedAt`），两个目录名差一个词、别混。
+  - **「快照无该行」≠「上游无该构件」**：本文件只是生产者脚本在某一刻的一份快照，某 loader / 某版本在快照里 0 行，只说明**这次没抓到或抓到被丢弃**，不构成「Modrinth 上没有该发布」。已知两类静默失配来源：其一，**每个版本只取 `files` 里 `primary` 那一个构件**（无 `primary` 时退回首件，现 `scripts/build-lib-manifest.mjs:265`）⇒ 多构件发布只留一行；**但这条丢的是「同一发布的备用构件」，不是「别的加载器」**（第 43 轮实测：48 个 slug / 13,608 个版本对象里 1,722 个（12.7%）带 >1 个 file，而 Modrinth 给这些 file 对象的 `file_extensions.loaders` **全部为空**（0/13,608），逐 filename 加载器词（forge / neoforge / fabric / quilt）比对 page0 采样的 510 个多构件版本，**0 个**指向不同加载器 —— 多出来的都是 `-sources.jar` / `-api.jar` / `_SOURCE_` 变体；按 (gameVersion × loader × filename) 展开会把 2,927 行放大到 27,853 行（×9.52）而**不增加任何加载器覆盖**）。其二，**要求真 sha512**（`sha512: SHA512_RE.test(hashes.sha512) ? … : ""`，随后 `buildEntries()` 把 `sha512` 为空的条目剔出清单、只 `console.warn`「丢弃 N 个无 sha512 的构件」）⇒ 无校验和的发布不进快照。生产者脚本 = **仓库根 `scripts/build-lib-manifest.mjs`**（`mcp-server/scripts/` 下**没有**同名件）。该脚本**不写任何时间戳**：`:427` 就是落盘那一行 `writeFileSync(OUT_FILE, JSON.stringify(manifest, null, 2))`，全部统计（库数 / 条目数 / 版本数 / 页数 / 逐 slug 明细）只在 `:431-448` 走 `console.log`，跑完即失；`--write` 时另在 `:424` 把旧件复制成 `all.json.bak`（第 43 轮现扫该目录只有 `all.json`，无 `.bak` 残留）。⚠️ 这些行号是**易碎锚点**：本轮加分页前它们分别是 `:339` / `:341-356` / `:336`（第 42 轮记录），改动生产者后必须同步复算。重抓要写 `mcp-server/data/**`，属维护侧授权动作；只想出不碰真面的候选：`node scripts/build-lib-manifest.mjs --out=temp/<x>.json --force`（`--only=slug,slug` 可点名）。
+  - **抓取范围口径（决定「截断」风险）——第 43 轮已现读证实「确被截断」**：旧写法是每个非空 slug 只发一次 `https://api.modrinth.com/v2/project/<slug>/version`（不带 `limit`/`offset`、不翻页，15s 超时），而该端点默认页 = **100 个版本** ⇒ 上游 >100 个版本的 slug 被**静默截断**且不留记号。第 42 轮本条写的是「单 slug 最大不同 `versionNumber` = 86 < 100 ⇒ **未见**越页证据」——**那是错的安全感**：它的分母取自**被截断的件本身**，而截断从快照内部根本看不见。第 43 轮现读 48 个 slug（探针 `temp/ralph-20260922/_v43-truncation-census.mjs` 与 `_v43-census-rerun.mjs`，后者额外逐条打印 HTTP 状态码；as-of 2026-09-25，**要梯子**：`curl.exe --proxy http://127.0.0.1:7897`，两条腿都实测过——Modrinth 本身 200 直连也能通，但探针按梯子传）：**31/48 被截断**（page0 满 100 且 page1 非空；这 31 个 slug **全部**在快照里 ⇒ 快照确实只收了第一页），其中 **21 个 page1 也满 100 ⇒ ≥200 版本**（再读 page2：其中 **17 个 page2 仍满 100 ⇒ ≥300 版本**，另 4 个在 page2 收口：forge-config-api-port 229、pehkui 225、polymer 273、resourceful-lib 237）；14 个不足一页；**3 个 page0 直接 HTTP 404**（`libgui` / `server-translations` / `spruceui-obsidianui`——是 **404 不是 429 限流**，且这三个 slug 已不在今日生产者的 slug 全集里）。被截断的 31 个 slug 占快照 **2052 / 2870** 行。⇒ **判据（不得复发）**：「截断从快照内部不可见，不得用快照自身行数 / 自身最大版本数反证没截断」；要给某个「快照 0 行」的档下「上游没有」的结论，必须翻页重抓或回上游页面人工核。生产者已在本轮改为翻页（`offset += 100` 直到某页 < `PAGE_SIZE=100`；`MAX_PAGES=30` 触顶即**打日志并把该 slug 判为失败**、绝不静默截断；实测 `jei` 就撞在该帽上 ⇒ 本轮候选里没有 `jei`，上游确有 ≥3000 个版本，6 个深 offset 采样 600 个 id 零重复）。翻页带来的行数变化**很小**（两侧都在的 44 个 slug：**2,794 → 2,843 行（+49）**，每 slug 最多 +4；候选总量 45 slug / 2,927 行 vs 快照 48 slug / 2,870 行——差的 3 个 slug 是上面那三个 404、外加 `jei` 撞帽未入，新增的 1 个是 `rei`），因为 `entries` 是 (gameVersion × loader) 去重后的组合数、不是版本数；**但被改写的「哪个构件胜出」很大**：同一 (gameVersion × loader) 组合里 `fileName`/`versionNumber` 换了 **185** 行 ⇒ 按快照读 release 上界/构件坐标的结论，翻页后必须以新面重算。**本条是历史叙述（第 43 轮在截断面上的普查，其 48 slug / 2,870 行 / 31 个截断 slug 都是**当时那份件**的数，按第 41 轮裁定不回改数字）；重抓后的现面见上面「快照形状」bullet（as-of 2026-09-25 = 49 slug / 3,003 行），逐 slug 的上界结论一律按现面重算，不得抄本条的分母。**
 
 ### ingest 实战
 

@@ -82,32 +82,194 @@ function piRuleText(srcText, piName) {
   return ruleText;
 }
 
+/**
+ * 纯判据（第 27 轮 S16/T8 抽出）：一份 canonical 文本 ↔ N 个镜像目标的一致性。
+ * `read(rel)` 返回文本，文件不存在返回 null；`label(rel)` 只负责显示路径。
+ * 比对原语只有一个：`sha()`（含 `normText` 的 BOM/换行归一）⇒ 真跑与本文件的 `--selftest`
+ * 共用同一份判据，不留第二个真值源。
+ */
+function checkMirrorGroup({ targets, read, label }) {
+  const out = [];
+  for (const t of targets) {
+    const text = read(t.rel);
+    if (text === null) {
+      out.push(`missing ${label(t.rel)}`);
+      continue;
+    }
+    if (sha(text) !== sha(t.wantText)) out.push(`hash mismatch ${label(t.rel)}`);
+  }
+  return out;
+}
+
+/** 采集器地板（R47 同形）：一棵档/一次比对都没发生 = 换错根，不是零缺陷。 */
+function collectorFloor({ packs, compared }) {
+  if (packs > 0 && compared > 0) return [];
+  return [
+    `COLLECTOR_RETURNED_ZERO: 扫到档=${packs} 镜像比对=${compared} ⇒ 换错根（repoRoot 指偏 / 平台树被搬走），判不了（拒）`,
+  ];
+}
+
+/* ------------------------------------------------------------------- selftest */
+
+const SKILL_MIRROR_RELS = (skillName) => [
+  `.continue/skills/${skillName}/SKILL.md`,
+  `.opencode/skills/${skillName}/SKILL.md`,
+  `.agents/skills/${skillName}/SKILL.md`,
+  `.zcode/skills/${skillName}/SKILL.md`,
+  `.pi/skills/${skillName}/SKILL.md`,
+  `.trae/skills/${skillName}.md`,
+  `.claude/commands/${skillName.replace(/^mc-/, "")}.md`,
+];
+const RULE_REL_ALL = (name) => [
+  ...RULE_MIRRORS.map(([host, sub]) => `${host}/${sub}/${name}`),
+  `.pi/rules/${name.replace(/\.mdc$/, ".md")}`,
+];
+
+/** 内存假树：Map<rel, text> + 一份 canonical ⇒ 跑判据，返回 failures。 */
+function evaluateMirrors({ name, canonical, tree, isSkill }) {
+  const wantText = isSkill ? normalizePathRefs(canonical, "fabric/9.9.9") : canonical;
+  const rels = isSkill ? SKILL_MIRROR_RELS(name) : RULE_REL_ALL(name);
+  const targets = rels.map((rel) => ({
+    rel,
+    wantText: rel.startsWith(".pi/rules/") ? piRuleText(canonical, name.replace(/\.mdc$/, ".md")) : wantText,
+  }));
+  return checkMirrorGroup({
+    targets,
+    read: (rel) => (tree.has(rel) ? tree.get(rel) : null),
+    label: (rel) => rel,
+  });
+}
+
+const SRC_MDC = "# 规则标题\n\n正文。\n";
+const SRC_SKILL = "---\nname: mc-demo\n---\n\n见 `fabric/9.9.9/.cursor/rules/01-registry.mdc`。\n";
+const treeFor = (name, canonical, isSkill) => {
+  const want = isSkill ? normalizePathRefs(canonical, "fabric/9.9.9") : canonical;
+  const tree = new Map();
+  for (const rel of isSkill ? SKILL_MIRROR_RELS(name) : RULE_REL_ALL(name)) {
+    tree.set(rel, rel.startsWith(".pi/rules/") ? piRuleText(canonical, name.replace(/\.mdc$/, ".md")) : want);
+  }
+  return tree;
+};
+
+function runSelftest() {
+  const cases = [
+    { name: "GREEN 规则面基线（6 镜像 + .pi 变换全一致）", want: "ok", call: () => evaluateMirrors({ name: "01-demo.mdc", canonical: SRC_MDC, tree: treeFor("01-demo.mdc", SRC_MDC, false), isSkill: false }) },
+    { name: "GREEN 技能面基线（7 镜像 + 路径引用规范化全一致）", want: "ok", call: () => evaluateMirrors({ name: "mc-demo", canonical: SRC_SKILL, tree: treeFor("mc-demo", SRC_SKILL, true), isSkill: true }) },
+    {
+      name: "POISON-1BYTE 某个 .claude 镜像比 canonical 多一个字节 ⇒ 必红",
+      wantFail: "hash mismatch .claude/rules/01-demo.mdc",
+      call: () => {
+        const t = treeFor("01-demo.mdc", SRC_MDC, false);
+        t.set(".claude/rules/01-demo.mdc", SRC_MDC + "x");
+        return evaluateMirrors({ name: "01-demo.mdc", canonical: SRC_MDC, tree: t, isSkill: false });
+      },
+    },
+    {
+      name: "POISON-MISSING 删掉一个镜像 ⇒ 红在 missing（不得退化成「没文件即绿」）",
+      wantFail: "missing .trae/skills/mc-demo.md",
+      call: () => {
+        const t = treeFor("mc-demo", SRC_SKILL, true);
+        t.delete(".trae/skills/mc-demo.md");
+        return evaluateMirrors({ name: "mc-demo", canonical: SRC_SKILL, tree: t, isSkill: true });
+      },
+    },
+    {
+      name: "POISON-CANONICAL 只改源稿、镜像不动 ⇒ 全镜像红（证明比的是等式不是「镜像自洽」）",
+      wantFail: "hash mismatch",
+      call: () => evaluateMirrors({ name: "01-demo.mdc", canonical: SRC_MDC + "改了一个字\n", tree: treeFor("01-demo.mdc", SRC_MDC, false), isSkill: false }),
+      count: 7,
+    },
+    {
+      name: "POISON-PI 把 .pi 镜像写成裸源稿（跳过 piRuleText 变换）⇒ 必红",
+      wantFail: "hash mismatch .pi/rules/01-demo.md",
+      call: () => {
+        const t = treeFor("01-demo.mdc", SRC_MDC, false);
+        t.set(".pi/rules/01-demo.md", SRC_MDC);
+        return evaluateMirrors({ name: "01-demo.mdc", canonical: SRC_MDC, tree: t, isSkill: false });
+      },
+    },
+    {
+      name: "CONTROL 不判对照：源稿**已带** description 时 .pi 镜像 = 源稿逐字（变换不得二次注入 frontmatter）",
+      want: "ok",
+      call: () => {
+        const src = "---\ndescription: 已声明\n---\n\n# 规则标题\n\n正文。\n";
+        const t = new Map();
+        for (const rel of RULE_REL_ALL("02-demo.mdc")) t.set(rel, src);
+        return evaluateMirrors({ name: "02-demo.mdc", canonical: src, tree: t, isSkill: false });
+      },
+    },
+    {
+      name: "FLOOR 采集器 0 档 / 0 比对 ⇒ COLLECTOR_RETURNED_ZERO",
+      wantFail: "COLLECTOR_RETURNED_ZERO",
+      call: () => collectorFloor({ packs: 0, compared: 0 }),
+    },
+  ];
+
+  let bad = 0;
+  for (const c of cases) {
+    const problems = c.call();
+    if (c.want === "ok") {
+      if (problems.length) {
+        bad++;
+        console.log(`  ✗ ${c.name} 应当绿，实际红 ${problems.length} 项：${problems[0]}`);
+      } else console.log(`  ✓ ${c.name} → 绿`);
+      continue;
+    }
+    const hit = problems.find((p) => p.includes(c.wantFail));
+    if (!hit) {
+      bad++;
+      console.log(`  ✗ ${c.name} 应红在「${c.wantFail}」，实际失败 ${problems.length} 项（${problems[0] || "无"}）`);
+    } else if (c.count && problems.length !== c.count) {
+      bad++;
+      console.log(`  ✗ ${c.name} 应红 ${c.count} 项，实际 ${problems.length} 项：${hit}`);
+    } else console.log(`  ✓ ${c.name} → 红：${hit.slice(0, 130)}${problems.length > 1 ? ` （共 ${problems.length} 项）` : ""}`);
+  }
+
+  // GAP-L14（**只登记现状，不是覆盖**）：`.cursor/skills/<name>.md` 这种 flat 源稿面在真跑的采集器里
+  // 被 `continue` 掉 ⇒ 排给它的镜像目标数 = 0 ⇒ 漂移 1 字节也照样绿。判据本身没这个洞（上面六记投毒
+  // 都红），洞在采集器。补 sha 比对 = CONTRIBUTING.md §未排期清单 `L14`（as-of 2026-09-24 实测该面 380 份）。
+  const flatDrift = checkMirrorGroup({ targets: [], read: () => null, label: (r) => r });
+  console.log(
+    `  ⚠ GAP-L14 flat .md 源稿面：采集器排给它 ${flatDrift.length === 0 ? "0 个镜像目标" : "?"} ⇒ 该面漂移**判不了**（现状，非本例判红；补判据是 L14 的活）`,
+  );
+
+  if (bad) {
+    console.log(`assert-skill-mirrors --selftest: ${bad}/${cases.length} 例不符 ⇒ 判据已退化`);
+    process.exit(1);
+  }
+  console.log(
+    `assert-skill-mirrors --selftest: ok · ${cases.length} 例全中（${cases.filter((c) => c.wantFail).length} 投毒必红 + 2 基线绿 + 不判对照绿；内存夹具，未写盘）+ 1 记 GAP-L14 现状登记`,
+  );
+}
+
+if (process.argv.includes("--selftest")) {
+  runSelftest();
+  process.exit(0);
+}
+
 const failures = [];
+let packsScanned = 0;
+let mirrorHashChecked = 0;
 
 for (const pack of listVersionDirs()) {
+  packsScanned++;
   const rulesDir = join(pack.base, ".cursor", "rules");
   const rules = readdirSync(rulesDir).filter((n) => n.endsWith(".mdc"));
+  const readInPack = (rel) => {
+    const p = join(pack.base, ...rel.split("/"));
+    return existsSync(p) ? readFileSync(p, "utf8") : null;
+  };
+  const labelInPack = (rel) => relative(repoRoot, join(pack.base, ...rel.split("/")));
   for (const name of rules) {
     const src = readFileSync(join(rulesDir, name), "utf8");
-    const srcHash = sha(src);
-    for (const [host, sub, ext] of RULE_MIRRORS) {
-      const dest = join(pack.base, host, sub, name.replace(/\.mdc$/, ext) === name ? name : name);
-      const destPath = join(pack.base, host, sub, name);
-      if (!existsSync(destPath)) {
-        failures.push(`missing ${relative(repoRoot, destPath)}`);
-        continue;
-      }
-      if (sha(readFileSync(destPath, "utf8")) !== srcHash) {
-        failures.push(`hash mismatch ${relative(repoRoot, destPath)}`);
-      }
-    }
     const piName = name.replace(/\.mdc$/, ".md");
-    const piPath = join(pack.base, ".pi", "rules", piName);
-    if (!existsSync(piPath)) {
-      failures.push(`missing ${relative(repoRoot, piPath)}`);
-    } else if (sha(readFileSync(piPath, "utf8")) !== sha(piRuleText(src, piName))) {
-      failures.push(`hash mismatch ${relative(repoRoot, piPath)}`);
-    }
+    // 6 套 IDE 规则镜像 = 逐字；.pi 规则镜像 = piRuleText(源稿)（无 description 时补一份）。
+    const targets = [
+      ...RULE_MIRRORS.map(([host, sub]) => ({ rel: `${host}/${sub}/${name}`, wantText: src })),
+      { rel: `.pi/rules/${piName}`, wantText: piRuleText(src, piName) },
+    ];
+    mirrorHashChecked += targets.length;
+    failures.push(...checkMirrorGroup({ targets, read: readInPack, label: labelInPack }));
   }
 
   // reverse-list extras in host rule mirrors
@@ -146,25 +308,12 @@ for (const pack of listVersionDirs()) {
         continue;
       }
       const normalized = normalizePathRefs(readFileSync(srcPath, "utf8"), pack.rel);
-      const want = sha(normalized);
-      const skillMirrors = [
-        join(pack.base, ".continue", "skills", skillName, "SKILL.md"),
-        join(pack.base, ".opencode", "skills", skillName, "SKILL.md"),
-        join(pack.base, ".agents", "skills", skillName, "SKILL.md"),
-        join(pack.base, ".zcode", "skills", skillName, "SKILL.md"),
-        join(pack.base, ".pi", "skills", skillName, "SKILL.md"),
-        join(pack.base, ".trae", "skills", `${skillName}.md`),
-        join(pack.base, ".claude", "commands", `${skillName.replace(/^mc-/, "")}.md`),
-      ];
-      for (const dest of skillMirrors) {
-        if (!existsSync(dest)) {
-          failures.push(`missing ${relative(repoRoot, dest)}`);
-          continue;
-        }
-        if (sha(readFileSync(dest, "utf8")) !== want) {
-          failures.push(`hash mismatch ${relative(repoRoot, dest)}`);
-        }
-      }
+      // ⚠️ flat `.md` 源稿面（`.cursor/skills/<name>.md`）在上面 `continue` 掉了：那里排给它
+      // **0 个镜像目标** ⇒ 该面漂移 1 字节也照样绿。洞在采集器不在判据（判据侧的反证见本文件
+      // `--selftest` 的 GAP-L14 现状登记）；补 sha 比对 = CONTRIBUTING.md §未排期清单 `L14`。
+      const skillTargets = SKILL_MIRROR_RELS(skillName).map((rel) => ({ rel, wantText: normalized }));
+      mirrorHashChecked += skillTargets.length;
+      failures.push(...checkMirrorGroup({ targets: skillTargets, read: readInPack, label: labelInPack }));
     }
   }
 
@@ -237,7 +386,13 @@ if (existsSync(join(nfRoot, ".cursor", "rules"))) {
 // (2) `.cursor/agents/`（复数）不是任何生成器的目标：sync-skills.ps1 只写
 //     `.cursor/agent/default.md`（单数）+ `.claude/agents/` + `.trae/agents/`。
 //     复数目录 = 旧时代手改投影留下的孤儿，没人读，也没人覆盖它。
-for (const plat of PLATS) {
+//     S16-5（2026-09-24）：这里原先只走 PLATS ⇒ **bedrock 整棵被跳过**（它是根级单档，
+//     不在 `<plat>/<ver>` 那套清单里）。同一不变式对 7 个 Java 平台成立，对基岩同样成立
+//     ——2026-09-24 实测 `find bedrock -maxdepth 4 -type d -name agents` 只有 `.claude/agents`
+//     与 `.trae/agents`（都是合法投影目标），故补面当天不红。
+const PLURAL_ORPHAN_PLATS = [...PLATS, "bedrock"];
+let pluralOrphanScanned = 0;
+for (const plat of PLURAL_ORPHAN_PLATS) {
   const platDir = join(repoRoot, plat);
   if (!existsSync(platDir)) continue;
   const candidates = [{ base: platDir, rel: plat }];
@@ -245,6 +400,7 @@ for (const plat of PLATS) {
     const dir = join(platDir, name);
     if (statSync(dir).isDirectory()) candidates.push({ base: dir, rel: `${plat}/${name}` });
   }
+  pluralOrphanScanned += candidates.length;
   for (const { base, rel } of candidates) {
     const plural = join(base, ".cursor", "agents");
     if (existsSync(plural) && statSync(plural).isDirectory()) {
@@ -253,6 +409,13 @@ for (const plat of PLATS) {
       );
     }
   }
+}
+
+// R47 地板：判据(2)的采集面。PLURAL_ORPHAN_PLATS 被改空 / 平台目录整体改名 ⇒ 这条腿一格不扫照样绿。
+if (pluralOrphanScanned === 0) {
+  failures.push(
+    "orphan-scan 采集面 = 0（复数 .cursor/agents 一个候选目录都没扫到）⇒ 平台清单被改空，判据在空转（R47）",
+  );
 }
 
 // (2b) scripts/sync-skills.ps1 头部自陈约定：「各版本目录下的 sync-skills.ps1 应为
@@ -455,6 +618,10 @@ for (const pack of listVersionDirs()) {
   }
 }
 
+// 采集器地板（R47 同形，与 --selftest 的 FLOOR 例共用）：一棵档都没扫 / 一次镜像比对都没发生
+// = repoRoot 指偏或平台树被搬走，**不是**「零漂移」。
+failures.push(...collectorFloor({ packs: packsScanned, compared: mirrorHashChecked }));
+
 if (failures.length) {
   console.error(`assert-skill-mirrors: ${failures.length} mismatch(es)`);
   for (const f of failures.slice(0, 40)) console.error(`  ${f}`);
@@ -462,5 +629,6 @@ if (failures.length) {
   process.exit(1);
 }
 console.log(
-  `assert-skill-mirrors: ok (实测 AGENTS 漂移 ${agentsDrift.size} 档 / 台账 ${KNOWN_AGENTS_DRIFT.size} 档，只准缩短 · frontmatter 合法性已查 ${fmRulesChecked} 篇规则 + ${fmSkillsChecked} 个技能正文)`,
+  `assert-skill-mirrors: ok (扫档=${packsScanned} 镜像比对目标=${mirrorHashChecked} · 实测 AGENTS 漂移 ${agentsDrift.size} 档 / 台账 ${KNOWN_AGENTS_DRIFT.size} 档，只准缩短 · frontmatter 合法性已查 ${fmRulesChecked} 篇规则 + ${fmSkillsChecked} 个技能正文 · ` +
+    `R47 复数 agents 孤儿腿：扫候选目录=${pluralOrphanScanned} 平台=${PLURAL_ORPHAN_PLATS.length} 拒=${failures.length})`,
 );

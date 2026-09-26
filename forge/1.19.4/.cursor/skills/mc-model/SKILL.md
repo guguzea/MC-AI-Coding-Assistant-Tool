@@ -4,7 +4,7 @@ description: JSON 模型、blockstate、item model、generate_model。触发词�
 platform: forge
 version: "1.19.4"
 dependencies: []
-mappings: mcp
+mappings: parchment
 ---
 
 # mc-model（1.19.4）

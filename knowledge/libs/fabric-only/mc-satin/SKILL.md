@@ -4,6 +4,7 @@ description: Satin 后期处理着色器。触发词：Satin、shader、后期�
 platforms: [fabric, quilt]
 mcVersions: ["1.18-1.21.4"]
 communityDocId: authored/lib-satin
+modrinthSlug: satin-api
 mappings: hint
 ---
 

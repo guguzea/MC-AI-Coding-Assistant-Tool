@@ -620,6 +620,34 @@ function staleTotalClaims(docs, total) {
   console.log("缺必填参数 → exit 2 + errorKind validation");
 }
 
+// S6-②（2026-09-25）：schema 层拒绝必须给「按字段」的机读位，不能再让消费方解析中文串。
+{
+  const r = run(["generate_datagen", "--platform=forge", "--version=1.20.1", "--providerType=nope"]);
+  const j = parseJson(r, "s6-field-errors");
+  if (r.status !== 2 || j.errorKind !== "validation") {
+    throw new Error(`枚举违规 + 缺必填应 exit 2/validation: ${r.status} ${JSON.stringify(j)}`);
+  }
+  if (!Array.isArray(j.fieldErrors) || j.fieldErrors.length === 0) {
+    throw new Error(`validation 信封必须带 fieldErrors[]（实得键=${Object.keys(j)}）`);
+  }
+  const byField = new Map(j.fieldErrors.map((f) => [f.field, f]));
+  for (const want of ["providerType", "modId", "targetName"]) {
+    if (!byField.has(want)) throw new Error(`fieldErrors 必须点名 ${want}: ${JSON.stringify(j.fieldErrors)}`);
+  }
+  if (byField.get("providerType").code !== "INVALID_ENUM_VALUE") {
+    throw new Error(`枚举违规码错: ${JSON.stringify(byField.get("providerType"))}`);
+  }
+  const ev = byField.get("providerType").enumValues;
+  if (!Array.isArray(ev) || !ev.includes("recipe") || ev.length < 5) {
+    throw new Error(`枚举违规必须把合法值域念出来（否则 agent 还得 --help 一次）: ${JSON.stringify(ev)}`);
+  }
+  if (byField.get("modId").code !== "MISSING_REQUIRED") {
+    throw new Error(`缺必填必须折成 MISSING_REQUIRED，不能留 zod 的 invalid_type: ${JSON.stringify(byField.get("modId"))}`);
+  }
+  if (!String(j.error).includes("参数校验失败")) throw new Error(`散文串不得被机读位挤掉: ${j.error}`);
+  console.log(`schema 拒绝 → fieldErrors ${j.fieldErrors.length} 条（含 enumValues）+ 散文串照旧`);
+}
+
 {
   const r = run(["get_forge_doc_full", "--id", "no-such-page-zz", "--version", "1.20.1"]);
   if (r.status !== 1) throw new Error(`expected exit 1 for tool failure, got ${r.status}:\n${r.stdout}`);
@@ -840,7 +868,52 @@ function staleTotalClaims(docs, total) {
   if (!/cca/i.test(String(capBadJ.result?.errors?.[0] ?? ""))) {
     throw new Error(`C1: capability fabric 改口文案必须点名 CCA → ${JSON.stringify(capBadJ.result?.errors).slice(0, 300)}`);
   }
-  console.log("C1 generate_* 拒绝 → success:false + exit 1；正常产出 → success:true + exit 0；三态 resultKind（ok / generation_failed / write_blocked）已钉；entity_renderer/capability 不支持出口已钉");
+  // A1（2026-09-24）：拒绝出口的**机读码** —— 同一 tool 的不同拒绝必须给互异且非空的
+  // `result.action.code`（此前拒绝只有自由文本 errors[]，模型得靠读中文判原因）。
+  // 投毒：把任一码填 null，或让两个不同原因共码 ⇒ 本段必红。
+  const wgEra = run(["generate_worldgen", "--modId=demo", "--featureName=f", "--platform=fabric", "--version=1.99.9"]);
+  const wgEraJ = parseJson(wgEra, "c1-action-era");
+  // 第二种拒绝（同 tool）：版本形不合法（`version` 是 schema 必填，故「缺失」在 CLI 层就被拒，
+  // 到不了生成器；这里用形不合法的 1.2.3.4 打到生成器的精确版本门）。
+  const wgBadVer = run(["generate_worldgen", "--modId=demo", "--featureName=f", "--platform=fabric", "--version=1.2.3.4"]);
+  const wgBadVerJ = parseJson(wgBadVer, "c1-action-bad-version");
+  const eraCode = wgEraJ.result?.action?.code;
+  const badVerCode = wgBadVerJ.result?.action?.code;
+  if (typeof eraCode !== "string" || !eraCode) {
+    throw new Error(`C1/A1: 未跟进代必须带非空 action.code → ${JSON.stringify(wgEraJ.result?.action ?? null)}`);
+  }
+  if (eraCode !== "VERSION_UNSUPPORTED") {
+    throw new Error(`C1/A1: 未跟进代应回 VERSION_UNSUPPORTED，实得 ${JSON.stringify(eraCode)}`);
+  }
+  if (typeof badVerCode !== "string" || !badVerCode) {
+    throw new Error(`C1/A1: 版本形不合法必须带非空 action.code → ${JSON.stringify(wgBadVerJ.result?.action ?? null)}`);
+  }
+  if (badVerCode !== "INVALID_INPUT") {
+    throw new Error(`C1/A1: 版本形不合法应回 INVALID_INPUT，实得 ${JSON.stringify(badVerCode)}`);
+  }
+  if (eraCode === badVerCode) {
+    throw new Error(`C1/A1: 同 tool 两种拒绝给了同一个码 ${eraCode} ⇒ 机读码没有区分度`);
+  }
+  if (!Array.isArray(wgEraJ.result?.action?.nextSteps) || wgEraJ.result.action.nextSteps.length === 0) {
+    throw new Error(`C1/A1: action.nextSteps 必须非空 → ${JSON.stringify(wgEraJ.result?.action ?? null)}`);
+  }
+  // 第二个工具面：capability 的「平台无原生生成器」与「版本不在覆盖」必须互异（同一 tool 两种原因）
+  const capFab = run(["generate_capability", "--modId=demo", "--name=flight", "--platform=fabric", "--version=1.21.1"]);
+  const capFabJ = parseJson(capFab, "c1-action-cap-fabric");
+  const capNeo = run(["generate_capability", "--modId=demo", "--name=flight", "--platform=neoforge", "--version=1.19.4"]);
+  const capNeoJ = parseJson(capNeo, "c1-action-cap-neo");
+  const fabCode = capFabJ.result?.action?.code;
+  const neoCode = capNeoJ.result?.action?.code;
+  if (fabCode !== "NO_NATIVE_GENERATOR") {
+    throw new Error(`C1/A1: capability/fabric 应回 NO_NATIVE_GENERATOR，实得 ${JSON.stringify(fabCode)}`);
+  }
+  if (neoCode !== "VERSION_UNSUPPORTED") {
+    throw new Error(`C1/A1: capability/neoforge 1.19.4（非 Attachment 代）应回 VERSION_UNSUPPORTED，实得 ${JSON.stringify(neoCode)}`);
+  }
+  if (fabCode === neoCode) {
+    throw new Error(`C1/A1: capability 两种拒绝共码 ${fabCode} ⇒ 分类器没区分「平台没有」与「版本没覆盖」`);
+  }
+  console.log("C1 generate_* 拒绝 → success:false + exit 1；正常产出 → success:true + exit 0；三态 resultKind（ok / generation_failed / write_blocked）已钉；entity_renderer/capability 不支持出口已钉；A1 机读码（同 tool 互异且非空 + nextSteps）已钉");
 }
 
 // ── S4: 与全局 flag 同名的字段归工具；--output-format 是唯一格式开关 ─────────

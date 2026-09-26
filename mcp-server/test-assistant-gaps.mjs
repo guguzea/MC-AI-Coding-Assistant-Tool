@@ -63,6 +63,9 @@ const NEW_WORKFLOWS = [
   "mc-villager",
   "mc-multiblock",
   "mc-ai",
+  "mc-events-forge",
+  "mc-events-neoforge",
+  "mc-events-fabric",
 ];
 
 function skillPath(ver, name) {
@@ -1728,7 +1731,22 @@ description: |
   assert.equal(q26.ok, true, "quilt 26.1.2 检索应回 Fabric 正文（登记面已点名这条不对称）");
   assert.equal(q26.fallback, "fabric");
   assert.equal(q26.sourcePlatform, "fabric");
-  assert.equal(q26.total, 17, "quilt 26.1.2 改口 Fabric 后命中数不是登记面写的「实测 17 条」");
+  // S16-3（2026-09-24）：这里原先钉 `q26.total === 17`（AGENTS 那句「实测 17 条」的镜像）。等式钉在**语料命中数**
+  // 上是双向坏：补抓 Fabric 26.1.2 正文 ⇒ 假红（数字必然涨）；命中塌成零星几条（索引坏了 / topK 传错）⇒ 也只
+  // 报「不等于 17」，不指真因。契约其实是「改口到 Fabric 26.1.2 且确实读到内容」，与命中条数无关 ⇒
+  // 换成 `fallback` / `sourcePlatform` / `source_version` 三件套 + `total` 下界地板（R47：只许 `<`，不做等式棘轮）。
+  // 地板取 5 的理由（as-of 2026-09-24 实测）：同一条 `query=registry` 直接问 fabric 平台口是 **10** 条、
+  // 走 quilt 改口腿是 **17** 条 —— 两条腿命中数本来就不同源（差因未核，不属本轮），所以「拿邻口现算期望值」
+  // 这条路不成立，只能钉下界。
+  assert.equal(
+    q26.source_version,
+    "26.1.2",
+    `quilt 26.1.2 改口后没交代实际读的是哪一档（source_version=${JSON.stringify(q26.source_version)}）⇒ 三件套缺一，调用方没法分辨这不是 quilt 正文`,
+  );
+  assert.ok(
+    q26.total >= 5,
+    `quilt 26.1.2 改口 Fabric 只命中 ${q26.total} 条（2026-09-24 实测 17，地板 5）⇒ Fabric 26.1.2 正文或语义索引塌了`,
+  );
   // W2-3 腿（2026-09-19）：neoforge 刻意回空路径（无主文档树）与通用口键面对齐 ——
   // ok:true + total:0 + warning 点名「无独立主文档树」，且必须同样带 availableVersions 候选
   // （数值序）。没有这一半，根 AGENTS「并同样带 availableVersions」就是无门承诺。

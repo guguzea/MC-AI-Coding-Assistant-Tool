@@ -1,0 +1,49 @@
+{
+ "asOf": "2026-09-25T16:41:13.561Z",
+ "dir": "D:\\mc-skill-temp\\cache\\qm-yarn-pairs",
+ "family": "qm-yarn",
+ "versions": {
+  "1.18.2": {
+   "file": "qm-yarn-1.18.2.json",
+   "count": 6389,
+   "qmBuild": "1.18.2+build.26",
+   "qmUrl": "https://maven.quiltmc.org/repository/release/org/quiltmc/quilt-mappings/1.18.2+build.26/quilt-mappings-1.18.2+build.26-mergedv2.jar",
+   "yarnSource": "data/fabric_1.18.2/mappings/yarn-mappings.sqlite"
+  },
+  "1.19.4": {
+   "file": "qm-yarn-1.19.4.json",
+   "count": 7101,
+   "qmBuild": "1.19.4+build.10",
+   "qmUrl": "https://maven.quiltmc.org/repository/release/org/quiltmc/quilt-mappings/1.19.4+build.10/quilt-mappings-1.19.4+build.10-mergedv2.jar",
+   "yarnSource": "data/fabric_1.19.4/mappings/yarn-mappings.sqlite"
+  },
+  "1.20.1": {
+   "file": "qm-yarn-1.20.1.json",
+   "count": 7250,
+   "qmBuild": "1.20.1+build.23",
+   "qmUrl": "https://maven.quiltmc.org/repository/release/org/quiltmc/quilt-mappings/1.20.1+build.23/quilt-mappings-1.20.1+build.23-mergedv2.jar",
+   "yarnSource": "data/fabric_1.20.1/mappings/yarn-mappings.sqlite"
+  },
+  "1.20.4": {
+   "file": "qm-yarn-1.20.4.json",
+   "count": 7518,
+   "qmBuild": "1.20.4+build.3",
+   "qmUrl": "https://maven.quiltmc.org/repository/release/org/quiltmc/quilt-mappings/1.20.4+build.3/quilt-mappings-1.20.4+build.3-mergedv2.jar",
+   "yarnSource": "data/fabric_1.20.4/mappings/yarn-mappings.sqlite"
+  },
+  "1.21.1": {
+   "file": "qm-yarn-1.21.1.json",
+   "count": 8131,
+   "qmBuild": "1.21.1+build.9",
+   "qmUrl": "https://maven.quiltmc.org/repository/release/org/quiltmc/quilt-mappings/1.21.1+build.9/quilt-mappings-1.21.1+build.9-mergedv2.jar",
+   "yarnSource": "data/fabric_1.21.1/mappings/yarn-mappings.sqlite"
+  },
+  "1.21.11": {
+   "file": "qm-yarn-1.21.11.json",
+   "count": 9934,
+   "qmBuild": "1.21.11+build.2",
+   "qmUrl": "https://maven.quiltmc.org/repository/release/org/quiltmc/quilt-mappings/1.21.11+build.2/quilt-mappings-1.21.11+build.2-mergedv2.jar",
+   "yarnSource": "data/fabric_1.21.11/mappings/yarn-mappings.sqlite"
+  }
+ }
+}

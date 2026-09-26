@@ -1,19 +1,21 @@
 ---
 id: authored/lib-libx
 title: LibX 全家桶共享库要点
-tags: [libx, noeppi-noeppi, shared-lib, forge, neoforge, fabric]
+tags: [libx, noeppi-noeppi, shared-lib, forge, neoforge]
 summary: noeppi_noeppi 全家桶共享库（Modrinth 210 万下载）。其全部模组的共同前置；以服务作者自家生态为主，第三方集成需谨慎。
 mcHint: 以 Modrinth/CurseForge 页面为准
 minecraftVersions: "以 Modrinth/CurseForge 页面为准"
 sourceKind: authored
 modIds: [libx]
-loaders: [forge, neoforge, fabric]
+loaders: [forge, neoforge]
 modrinthSlug: libx
 role: author_shared
 skillId: mc-author-shared-libs
 ---
 
 # LibX 全家桶共享库要点
+
+> **加载器口径（2026-09-25 上游复核）**：`node mcp-server/dist/cli.js query_upstream_releases --source=modrinth --slug=libx --limit=200` ⇒ `ok:true / available:true / total:154 / truncated:false`（即全量），154 条发布的 `loaders` 合计 `forge 133 / neoforge 21`（2026-09-25 本轮 curl 全量分页 154 builds 逐出；原记 `neoforge 2` 与 raw `loaders` 聚合不符，承重结论 **fabric 0 条** 两读一致成立），**fabric 0 条** ⇒ 本稿 frontmatter 已摘掉 `fabric`（判据⑤ 三方一致性；口径 = 2026-09-22 裁定④「声明一律读作该 loader 有发布构件」）。
 
 自写短文（role: author_shared）。数据来自《Minecraft 社区常用库模组全览（2026 版）》第三节：noeppi_noeppi 全家桶共享库，Modrinth 210 万下载。版本与加载器细节以页面为准。
 

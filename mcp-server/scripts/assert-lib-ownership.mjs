@@ -18,7 +18,7 @@
  *     A5 同源：规则不另写一份 —— `normSeg / ROOT_SEGMENTS / ownsPackage / packageRoot / foreignPackages`
  *        从 `scripts/merge-verified-api.mjs` 原文抽出跑，并钉住 `buildRootOwnerIndex` 的凭证登记行。
  *  B. 台账层（只跑真数据根）：把今天的存量债务逐数钉死（385 类 / 5 文件 / 每份 77 / 单一包根 /
- *     6 份 unknown-mod / 1 个共用目录 / 42 个已证实包根 / 1830 组 verifiedApi / 0 处凭证缺失）。
+ *     6 份 unknown-mod / 1 个共用目录 / 42 个已证实包根 / 2632 组 verifiedApi / 0 处凭证缺失）。
  *     S5 联网重建把存量清零时，本层会红并要求显式改台账 —— 数据面收敛必须签字，不许悄悄漂移。
  *
  * 测试假根：MC_SKILL_LIB_OWN_TEST_ROOT 指向含 `data/lib-api-summaries` 的目录（B 层跳过，A 层照咬）。

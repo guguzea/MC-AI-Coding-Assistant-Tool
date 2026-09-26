@@ -14,7 +14,7 @@ public static final DeferredRegister<Block> BLOCKS =
     DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);
 
 public static final RegistryObject<Block> STONE_BLOCK = BLOCKS.register("stone_block",
-    () -> new Block(Block.Properties.of(Material.STONE)
+    () -> new Block(AbstractBlock.Properties.of(Material.STONE)
         .strength(1.5f, 6.0f)
         .requiresCorrectToolForDrops()
     )
@@ -85,7 +85,7 @@ public class MachineTileEntity extends TileEntity {
         super(TYPE);
     }
 
-    public static void tick(Level world, BlockPos pos, BlockState state, MachineTileEntity tile) {
+    public static void tick(World world, BlockPos pos, BlockState state, MachineTileEntity tile) {
         if (world.isClientSide) return;
         // 定时逻辑
     }
@@ -127,7 +127,7 @@ public class MachineTileEntity extends TileEntity {
 
 ```java
 public static final RegistryObject<Block> MY_ORE = BLOCKS.register("my_ore",
-    () -> new Block(Block.Properties.of(Material.STONE)
+    () -> new Block(AbstractBlock.Properties.of(Material.STONE)
         .strength(3.0f, 3.0f)
         .requiresCorrectToolForDrops()
     )

@@ -1,14 +1,21 @@
 ---
 name: mc-playeranimator
 description: playerAnimator 玩家关键帧动画。给玩家加攻击/施法/持握姿态动画，bendy-lib 弯曲增强。触发词：playerAnimator、player-animator、关键帧、玩家动画、bendy、keyframe、animation
-platforms: [fabric, forge, neoforge]
+platforms: [fabric, forge, neoforge, quilt]
 mcVersions: ["1.16.4-1.21.7"]
+mcVersionsByPlatform: "fabric=1.16.4-1.21.4; forge=1.16.4-1.19.4; neoforge=1.20.4-1.21.4; quilt=1.16.4-1.19.4"
 communityDocId: authored/lib-playeranimator
+modrinthSlug: playeranimator
 mappings: "库按各 loader 预重映射；公共代码不直接引用渲染类，映射差异由库隔离"
 ---
 
 > 数据读取日期：2026-09-14（源：Modrinth project/playeranimator 版本表 limit=100；本轮 release 上界 fabric=1.21.4 / forge=1.19.4 / neoforge=1.21.4 ⇒ 本文件 mcVersions 上界 1.21.7 高于 release 上界，仅 beta/alpha 支撑）
 > 复核：curl.exe --ssl-no-revoke -sS "https://api.modrinth.com/v2/project/playeranimator/version?limit=100" 后按 game_versions + loaders + version_type 取上界
+> release/beta 口径收口（2026-09-24，构件面 = `mcp-server/data/lib-manifests/all.json` 快照 as-of 2026-09-16；窗口终点一律取该 loader 的 release 上界）：
+> - fabric 窗口终点 = release 上界 1.21.4（1.21.5–1.21.7 仅 beta 构件，无 release 支撑 ⇒ 本文件 union `mcVersions` 的上界 1.21.7 由 beta 支撑，按 fabric 生成时以 1.21.4 为界）
+> - forge 窗口终点 = release 上界 1.19.4（beta 构件至 1.20.1，无 release 支撑）
+> - neoforge 窗口终点 = release 上界 1.21.4（beta 构件至 1.21.7，无 release 支撑）
+> - quilt 窗口终点 = release 上界 1.19.4（beta 构件至 1.20.1，无 release 支撑；1.19.3-rc3 / 1.19.4-rc2 是 rc 构件，按 release 时间序不算上界）
 
 # playerAnimator 玩家动画（操作指引）
 
@@ -28,7 +35,7 @@ Decision: 玩家动画方案
 → 玩家关键帧动画（攻击/施法/姿态）→ playerAnimator
 → 需要弯曲增强 → 同时引 bendy-lib（以官方说明为准）
 → 已选：
-   ├─ 平台分支：fabric / forge / neoforge 各装对应 artifact（Quilt 另有构建，按短文 loaders）
+   ├─ 平台分支：fabric / forge / neoforge 各装对应 artifact（Quilt 亦有构建，但上界收窄：**Quilt 构件止 1.20.1、release 止 1.19.4，15 条构件行**；构建面 = `mcp-server/data/lib-manifests/all.json` 快照（as-of 2026-09-16，本轮 2026-09-24 现算） Forge 同（12 条），Fabric/NeoForge 到 1.21.7。「快照无该版本行」只证本仓快照没抓到，**不证上游没有**（要核上游用 `query_upstream_releases`））
    ├─ 渲染：客户端渲染侧注册，服务端只同步触发状态
    └─ 版本：与 MC 对齐（Modrinth / CurseForge 文件页）
 ```
@@ -46,6 +53,8 @@ Decision: 玩家动画方案
 
 - 硬依赖：运行时必须有 player-animator；只 `compileOnly` 却当硬依赖用 → `NoClassDefFoundError`
 - bendy-lib 是独立增强，按官方 README 单独引入，不是 playerAnimator 自带
+
+> **Quilt 侧安装口径（2026-09-24 补）**：`platforms` 含 `quilt` 的依据是本仓快照 `mcp-server/data/lib-manifests/all.json` 里 slug `playeranimator` 的 **15 条 `loader:"quilt"` 构件行**（本轮现算，as-of 2026-09-24；窗口见 frontmatter `mcVersionsByPlatform`，release 上界 1.19.4）。15 条的**文件名 0 条带 `quilt` 字样**（形如 `player-animation-lib-fabric-0.4.0+1.16.5.jar`）⇒ 实况是 **Quilt 按同 MC 版本的 Fabric 构件（artifact 名前缀是 `player-animation-lib`，不是 `playeranimator`）加载**。⚠️ **Quilt 专属仓库 URL / Gradle 坐标串未核实**（本仓只核到构件文件名）⇒ 禁止照本文默写 `maven { url }` / `modImplementation`。坐实入口：`query_upstream_releases`（`modrinth`，slug=`playeranimator`）或 `ingest_loader_api`（自备 jar）。
 
 ## 常见错误
 

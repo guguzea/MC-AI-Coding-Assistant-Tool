@@ -36,6 +36,7 @@ import { ownGet } from "../../utils/own-record.js";
 import { PlatformDataMissingError, sortMcVersions, type DocPlatform } from "../platform-data.js";
 import {
   expandTranscludes,
+  stripTranscludeMarkers,
   loadReferenceProvenance,
   referenceAvailable,
   type ExpandTranscludesResult,
@@ -98,6 +99,28 @@ export interface SearchLogEntry {
   version: string;
   results: number;
   timestamp: number;
+}
+
+/**
+ * 载入 index-l*.json 时剪掉摘要位里的裸转引标记。
+ * 这些摘要是**烘焙期按未展开原文**截的首段，`get_fabric_doc_summary` 与按 L2 meta 服务的
+ * `get_*_doc_full` 会原样吐给用户。实测口径（2026-09-25 现扫 data/ 全 63 目录 / 183 个
+ * index-l*.json）：72 处，全部落在 `[].sections[].summary`，只有 fabric_1.21.11（2）与
+ * fabric_26.1.2（70）两档，且剪后 0 条变空 ⇒ 无损。
+ * 语料字节按上游逐字不许改（仓根 AGENTS.md §数据链口径），所以只在读取侧剪；正文不在此列
+ * —— 正文由 `expandTranscludesFor` 展开，取不到镜像时按设计保留标记并用
+ * `meta.unexpandedTranscludes` 披露。
+ */
+function sanitizeBakedSummaries<T>(data: T): T {
+  if (!Array.isArray(data)) return data;
+  for (const e of data as Array<{ firstParagraph?: string; sections?: Array<{ summary?: string }> }>) {
+    if (!e || typeof e !== "object") continue;
+    if (typeof e.firstParagraph === "string") e.firstParagraph = stripTranscludeMarkers(e.firstParagraph);
+    for (const s of e.sections ?? []) {
+      if (s && typeof s.summary === "string") s.summary = stripTranscludeMarkers(s.summary);
+    }
+  }
+  return data;
 }
 
 function platformDocLabel(platform?: string): string {
@@ -286,11 +309,14 @@ export class FabricDocStore {
   }
 
   private firstParagraph(md: string): string {
+    // 先剪标记再挑首段：一条只含 `<<< @/…` 的行剪完为空，会被自然跳过而不是当正文吐出去。
     const lines = md
       .split(/\r?\n/)
       .map((l) => l.trim())
-      .filter((l) => l && !l.startsWith(">") && !l.startsWith("#"));
-    return (lines[0] ?? md.replace(/\s+/g, " ").trim().slice(0, 240)).slice(0, 400);
+      .filter((l) => l && !l.startsWith(">") && !l.startsWith("#"))
+      .map((l) => stripTranscludeMarkers(l))
+      .filter((l) => l.length > 0);
+    return (lines[0] ?? stripTranscludeMarkers(md.replace(/\s+/g, " ")).slice(0, 240)).slice(0, 400);
   }
 
   private readProcessedFile(version: string, processedFile: string, id: string): string {
@@ -777,6 +803,7 @@ export class FabricDocStore {
     } catch {
       throw new IndexCorruptError(version, filepath);
     }
+    data = sanitizeBakedSummaries(data);
     this.indexCache.set(cacheKey, {
       data,
       expiry: Date.now() + FabricDocStore.CACHE_TTL,
@@ -792,7 +819,11 @@ export class FabricDocStore {
     stats?: ExpandTranscludesResult | null,
   ): FullDocResult {
     let outMeta: FullDocResult["meta"] = meta;
-    if (stats && stats.sites > 0) {
+    // S11/T2：`sites` 只统计 `@[code …]`，`<<< @/…` 走 angleSites（transclude.ts:374/467）。
+    // 旧条件 `stats.sites > 0` 让**只含 `<<<`** 的页永不重算 meta —— 实测 26.1.2
+    // develop_blocks_blockstates：正文 20 行 ``` 围栏，meta 仍报 hasCodeBlocks:false / codeBlockCount:0
+    // （index-l2 是按未展开正文统计的，而该页 l2 记的是 0）。
+    if (stats && (stats.sites > 0 || stats.angleSites > 0)) {
       // index-l2.json 的 codeBlockCount 是按**未展开**正文统计的；展开后必须用同一把尺重算，
       // 否则 meta 说 3 块、正文里 12 块。尺子与 l0ToL2 保持一致（数 ``` 出现次数 / 2）。
       const ticks = content.match(/```/g)?.length ?? 0;

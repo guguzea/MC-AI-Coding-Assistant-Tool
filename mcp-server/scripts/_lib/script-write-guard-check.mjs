@@ -50,12 +50,19 @@ export const SCRIPT_WRITE_GUARD_NON_WRITERS = new Map([
   ["scripts/_lib/copy-tree.mjs", /export function copyTree\(/],
   // ── S4 扩面：mcp-server/scripts/**（逐条对活文本复验过依据正则）──────────
   ["mcp-server/scripts/assert-powershell.mjs", /mkdtempSync\(join\(tmpdir\(\), "mcskill-ps-"/], // 全部落笔在 OS tmpdir 的 workDir；仓库根只读（MC_SKILL_PS_TEST_ROOT 可换根）
+  // 未做③（2026-09-26）：SRG 入库门的夹具根（削减件 .tsrg + 建出的 sqlite + 假数据根）全落
+  // OS tmpdir 的 "forge-srg-gate-" 前缀下，finally/exit 前用 removeTmp 收；对 data/** 全程只读
+  // （在盘对账腿用 readOnly 打开真库）。依据正则一断（改落到仓库内）本豁免即失效。
+  ["mcp-server/scripts/assert-forge-srg-ingest.mjs", /mkdtempSync\(path\.join\(os\.tmpdir\(\), "forge-srg-gate-"/],
   ["mcp-server/scripts/assert-parser-availability.mjs", /mkdtempSync\(path\.join\(os\.tmpdir\(\), "mcskill-g2-"/], // 夹具 jar 只落 OS tmpdir；rmSync 收的就是那个目录，仓库源码全程只读
   // 2026-09-19 N3 裁定「补投毒」：--selftest 的 8 例夹具（tiny.gz / upstream *.bak / provenance / 假基线）
   // 全部落 OS tmpdir 下一个一次目录，finally 里 rmSync 收掉；门模式与 --measure-zero-member 全程不写盘。
   // 依据正则咬住那个 mkdtemp 前缀 —— 夹具落点一旦改到仓库内，本豁免即失效（重签或改道 write-guard）。
   ["mcp-server/scripts/assert-yarn-named-integrity.mjs", /mkdtempSync\(path\.join\(os\.tmpdir\(\), "mc-yarn-gate-selftest-"/],
   ["mcp-server/scripts/assert-cli-quick.mjs", /mkdtempSync\(path\.join\(os\.tmpdir\(\), "cli-quick-"/], // R3（NP-10 防回归）：新增夹具（薄壳拷贝 / mdk 树 / 锁根 / 数据根）全部落 OS tmpdir，仓库只读
+  // story S1 的 mixin 形状门：夹具（假根 scaffold 树 + 自建 yarn sqlite）全落 OS tmpdir 的
+  // "mixin-shape-selftest-" 前缀下；仓库 data/** 与 */scaffold/** 全程只读（readOnly:true 打开真库）。
+  ["mcp-server/scripts/assert-scaffold-mixin-shape.mjs", /fs\.mkdtempSync\(path\.join\(os\.tmpdir\(\), "mixin-shape-selftest-"/],
   ["mcp-server/scripts/assert-sync-normalizers.mjs", /mkdtempSync\(join\(tmpdir\(\), "mcskill-norm-"/], // 同上：workDir 在 tmpdir，PS_FILE/JS_FILE 只作输入
   ["mcp-server/scripts/release-smoke.mjs", /mkdtempSync\(join\(tmpdir\(\), "mc-skill-release-smoke-"/], // 装配 staging 在 tmpdir，仓库 dist/package.json 只读
   ["mcp-server/scripts/_lib/build-yarn-mappings.test.mjs", /mkdtempSync\(path\.join\(tmpdir\(\), "yarnpacks-"/], // 测试根全在 tmpdir
@@ -93,7 +100,20 @@ export const SCRIPT_WRITE_GUARD_NON_WRITERS = new Map([
   // 夹具落点一旦改到仓库内，本豁免即失效（重签或改道 write-guard 的 scratch* 出口）。
   ["mcp-server/scripts/assert-skill-yarn-attest.mjs", /fs\.mkdtempSync\(path\.join\(os\.tmpdir\(\), "yarn-attest-selftest-"/], // selftest 的 fabric/forge 假 data 树全在 tmp；门模式（不传 --selftest）全程只读
   ["mcp-server/scripts/assert-skill-mappings-key.mjs", /fs\.mkdtempSync\(path\.join\(os\.tmpdir\(\), "mappings-key-"/], // 10 组 FM/围栏夹具逐例 rmSync+mkdirSync 重建在同一个 tmp 根
+  // §6.8 缺口②（2026-09-25）：跨层名门（覆盖 leg2 之外的面）**全部**写盘只在 --selftest 的
+  // OS tmpdir 合成根（`mkdtempSync(path.join(os.tmpdir(), "xlayer-"))`：假 data/ 映射源 + 假 pairs + 夹具件），
+  // 末尾 rmSync 收掉；门模式与 --dump/--strict 全程零写盘。依据正则咬住那个 mkdtemp 前缀 ——
+  // 夹具落点一旦改到仓库内，本豁免即失效（重签或改道 write-guard）。
+  ["mcp-server/scripts/assert-cross-layer-names.mjs", /fs\.mkdtempSync\(path\.join\(os\.tmpdir\(\), "xlayer-"/],
   ["mcp-server/scripts/assert-upstream-chapters.mjs", /mkdtempSync\(join\(tmpdir\(\), "mc-skill-upstream-"/], // 快照夹具搭假 fabric 树验 checkSnapshotTree 真会红，搭在 tmp
+  // A8（2026-09-24）：盘上 *.test.mjs ↔ node --test 链的覆盖门。门模式（不带 --selftest）全程只读；
+  // --selftest 的假仓库（mcp-server/scripts/_lib/*.test.mjs + package.json）全搭在 OS tmpdir 的一次性目录里。
+  // 依据正则锚定那个 mkdtemp 前缀：夹具落点一旦改到仓库内，本豁免即失效（重签或改道 write-guard）。
+  ["mcp-server/scripts/assert-test-chain-coverage.mjs", /mkdtempSync\(path\.join\(os\.tmpdir\(\), "testchain-"/],
+  // A7（2026-09-24）：Yarn↔Mojmap 对照产物的生产者（台账 `skill-mappings-value-matches-code` 的第二腿数据源）。
+  // 它**从不写仓库**：产物落 `$MC_SKILL_CACHE/yarn-mojmap-pairs`，无该环境变量则落 OS tmpdir 的一次性目录；
+  // 缺 client.txt 时现拉的 mojmap 也只进产物目录。依据正则锚定那个 out 解析 —— 落点若改成仓库内，本豁免即失效。
+  ["mcp-server/scripts/build-yarn-mojmap-pairs.mjs", /process\.env\.MC_SKILL_CACHE[\s\S]{0,200}?path\.join\(os\.tmpdir\(\), "mc-skill-yarn-mojmap-pairs"\)/],
   // fetch-bedrock-script-api.mjs：落笔目标是 gitignore 的 mcp-server/scripts/_temp/（.gitignore:37），
   // 与 snapshot-sha256 的 agent-tools/ 同类（「豁免允许 gitignore 输出目录而非仅 temp」已登记在 S4 销账台账）。
   ["mcp-server/scripts/fetch-bedrock-script-api.mjs", /const TEMP = join\(REPO_ROOT, "mcp-server", "scripts", "_temp"\)/],

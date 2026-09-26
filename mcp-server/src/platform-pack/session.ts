@@ -262,6 +262,9 @@ const TASK_SPECS: Record<string, TaskSpec> = {
     warning:
       "整合包不是单个模组工程：本平台 00–10 规则不自动升级成规范。依赖与冲突面用 check_dependencies / analyze_mod_jar / audit_resources；Agent 不代下载 mod、不代上传发布。",
   },
+  "mc-events-forge": { rules: ["05"], skills: ["mc-events"], nextReads: ["mc-capability"] },
+  "mc-events-neoforge": { rules: ["05"], skills: ["mc-events"], nextReads: ["mc-capability"] },
+  "mc-events-fabric": { rules: ["05"], skills: ["mc-events"], nextReads: ["mc-registry", "mc-networking"] },
 };
 
 function isTaskSpec(v: unknown): v is TaskSpec {

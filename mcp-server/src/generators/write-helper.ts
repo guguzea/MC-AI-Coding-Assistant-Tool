@@ -12,7 +12,8 @@ import {
   ProjectPathError,
   resolveWriteAllowRoot,
 } from "../utils/project-sandbox.js";
-import type { GeneratorResult } from "./common.js";
+import { generatorRejectionAction, type GeneratorResult } from "./common.js";
+import type { ActionEnvelope } from "../utils/actionable.js";
 
 export interface GeneratorWriteOpts {
   write?: boolean;
@@ -51,6 +52,12 @@ export interface GeneratorWriteResult extends GeneratorResult {
   suggestedPaths: string[];
   written?: string[];
   writeError?: { code: string; message: string };
+  /**
+   * A1（2026-09-24）：拒绝（`generation_failed`）时的机读 ActionEnvelope ⇒ `result.action.code`。
+   * 与 `errors[]`（自由文本）并存：errors 保持原文，机读面走 action。写盘被拒（write_blocked）
+   * 不进这里 —— 那条链的机读面是 `writeError.code`。
+   */
+  action?: ActionEnvelope;
 }
 
 /**
@@ -188,7 +195,15 @@ export function attachSuggestedPaths(
   if (pathWarnings.length) {
     merged.warnings = [...(result.warnings ?? []), ...pathWarnings];
   }
-  return { ...merged, ok: !generatorRejected(result), resultKind: generatorRejected(result) ? "generation_failed" : "ok" };
+  // A1（2026-09-24）：拒绝出口在此**单点**附机读码（生成器显式填了 action 就用它的）。
+  const rejected = generatorRejected(result);
+  const action = rejected ? (result.action ?? generatorRejectionAction(result.errors)) : undefined;
+  return {
+    ...merged,
+    ok: !rejected,
+    resultKind: rejected ? "generation_failed" : "ok",
+    ...(action ? { action } : {}),
+  };
 }
 
 /**

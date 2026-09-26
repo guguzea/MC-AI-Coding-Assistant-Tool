@@ -2,6 +2,9 @@
  * cli-parse 单测（不 spawn 全进程）
  */
 import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import * as z from "zod";
 import {
   AmbiguousFlagError,
@@ -231,6 +234,72 @@ import {
   assert.equal(isToolFailure({ error: { code: "UNZIP_TOOL_MISSING" } }, false, false), true);
   assert.equal(isToolFailure({ found: false, action: { code: "NOT_FOUND" } }, false, false), false);
   assert.equal(isToolFailure({ found: false, error: { code: "INDEX_CORRUPT" } }, false, false), true);
+}
+
+// R66-B′（S8/T1）：顶层 `valid` 是第三类判定键 —— 上一组里的
+// `isToolFailure({ errors: ["x"] }, false, false) === false` 与
+// `isToolFailure({ found: false, action: { code: "NOT_FOUND" } }, false, false) === false`
+// 是「载荷里没有判定键就不许判失败」的既有腿；本组补上退出码这一维：
+// 同样没有 ok 的载荷，只要带 `valid:false`（validate_datapack_json 的形状）就必须判失败。
+{
+  assert.equal(
+    isToolFailure({ valid: false, errors: ["缺少必需字段: result"], warnings: [] }, false, false),
+    true,
+    "validate_datapack_json 的载荷无 ok 键 ⇒ valid:false 必须判失败（否则非法配方 exit 0）",
+  );
+  assert.equal(isToolFailure({ valid: true, errors: [], warnings: [] }, false, false), false);
+  // 守卫 `&& r.ok !== true` 由载荷形状决定，不是可选项：validate_at / validate_aw 经
+  // src/mixin/deep-validate.ts 的 validateAccessCore 返回 { ok: true, ...result }，
+  // 「工具跑成功但 AT/AW 内容不合法」= ok:true + valid:false 是正确语义，必须保持 exit 0。
+  assert.equal(
+    isToolFailure({ ok: true, valid: false, errors: ["字段不存在"] }, false, false),
+    false,
+    "无条件全局规则会误伤 validate_at / validate_aw（ok:true + valid:false 必须 rc=0）",
+  );
+  assert.equal(isToolFailure({ ok: true, valid: true }, false, false), false);
+  // status:"skipped" 的豁免排在 valid 之前（validate_project 混合工程路径不得被抬成失败）
+  assert.equal(isToolFailure({ status: "skipped", valid: false, ok: true }, false, false), false);
+}
+
+// 退出码这条腿的端到端半截：判据函数对了不等于 CLI 出口对了，故真跑 dist/cli.js。
+// 口径基准是 validate_bp_json（本就 ok:false + exit 1）；这里钉 validate_datapack_json 与它对齐。
+{
+  const cliPath = join(dirname(fileURLToPath(import.meta.url)), "dist", "cli.js");
+  const recipeBad =
+    '{"type":"minecraft:crafting_shaped","pattern":["#"],"key":{"#":{"item":"minecraft:stone"}}}';
+  const recipeOk =
+    '{"type":"minecraft:crafting_shaped","pattern":["#"],"key":{"#":{"item":"minecraft:stone"}},"result":{"item":"minecraft:stick"}}';
+  const runCli = (args) => {
+    const r = spawnSync(process.execPath, [cliPath, ...args], { encoding: "utf8" });
+    const body = (r.stdout || "")
+      .split("\n")
+      .filter((l) => l.trim() !== "" && !/^running /.test(l))
+      .join("\n");
+    let j = null;
+    try {
+      j = JSON.parse(body);
+    } catch {
+      /* 非 JSON：交给下面的断言报错 */
+    }
+    return { rc: r.status, j };
+  };
+
+  const bad = runCli(["validate_datapack_json", "--kind=recipe", "--version=1.20.1", `--jsonContent=${recipeBad}`]);
+  assert.equal(bad.rc, 1, "非法配方必须 exit 1（S8/T1 前的实测是 0）");
+  assert.equal(bad.j?.success, false, "非法配方信封 success 必须为 false");
+  assert.equal(bad.j?.result?.valid, false, "载荷仍需带 valid:false");
+  assert.equal(bad.j?.errorKind, "tool_failure");
+
+  const good = runCli(["validate_datapack_json", "--kind=recipe", "--version=1.20.1", `--jsonContent=${recipeOk}`]);
+  assert.equal(good.rc, 0, "合法配方不得被判失败");
+  assert.equal(good.j?.success, true);
+
+  // S9/T3 同款出口：26.x 上界哨兵拒绝时必须真的非零。
+  const w26 = runCli(["generate_worldgen", "--platform=neoforge", "--version=26.99.9", "--modId=demo", "--featureName=ore"]);
+  assert.equal(w26.rc, 1, "generate_worldgen 26.99.9 必须 exit 1（与 1.99.9 同形）");
+  assert.equal(w26.j?.result?.resultKind, "generation_failed", "拒绝必须是 generation_failed 而非 write_blocked");
+  const w26ok = runCli(["generate_worldgen", "--platform=neoforge", "--version=26.1", "--modId=demo", "--featureName=ore"]);
+  assert.equal(w26ok.rc, 0, "已核到的 26.1 不得被新哨兵误伤");
 }
 
 {

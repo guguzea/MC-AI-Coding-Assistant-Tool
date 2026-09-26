@@ -4,6 +4,7 @@ description: Kotlin for Forge（KFF）语言加载器（NeoForge）。触发词�
 platforms: [neoforge]
 mcVersions: ["1.19.3-26.2"]
 communityDocId: authored/lib-kotlin-for-forge
+modrinthSlug: kotlin-for-forge
 mappings: hint
 ---
 

@@ -10,7 +10,7 @@ communityDocId: authored/lib-server-translations
 
 # Server Translations API 服务端翻译（操作指引）
 
-给 AI 的操作指引：服务端要向不同语言玩家发送「按各自语言渲染」的可翻译文本（聊天、命令输出、GUI、书等）时，用 Server Translations API。详细信息用 `search_community_docs` 查 `authored/lib-server-translations`，版本、maven 坐标与 API 细节以 [官方仓库](https://github.com/NucleoidMC/server-translations-api) 当前 README 为准。
+给 AI 的操作指引：服务端要向不同语言玩家发送「按各自语言渲染」的可翻译文本（聊天、命令输出、GUI、书等）时，用 Server Translations API。详细信息用 `search_community_docs` 查 `authored/lib-server-translations`，版本、maven 坐标与 API 细节以 [官方仓库](https://github.com/NucleoidMC/Server-Translations) 当前 README 为准。
 
 ## 定位
 
@@ -55,7 +55,7 @@ Decision: 服务端文本要不要按玩家语言渲染
 
 ## 参考
 
-- 官方：https://github.com/NucleoidMC/server-translations-api ；替代品 Server I18n API 见 Nucleoid 生态（以官方仓库说明为准）
+- 官方：https://github.com/NucleoidMC/Server-Translations ；替代品 Server I18n API 见 Nucleoid 生态（以官方仓库说明为准）
 - 社区：`search_community_docs` → `authored/lib-server-translations`；相关：`authored/library-catalog-2026`、`authored/soft-deps-modlist`
 - 相关 Skill：`mc-command`、`mc-networking`、`mc-config`、`mc-text-placeholder`
 - 不确定时：打开 Server Translations API README + 示例；`search_fabric_docs` 查文本/服务端相关页；未核对前不写死任何类名/方法签名

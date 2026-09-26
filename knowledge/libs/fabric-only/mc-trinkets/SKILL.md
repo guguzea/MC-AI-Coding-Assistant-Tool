@@ -4,6 +4,7 @@ description: Fabric/Quilt 饰品槽（Trinkets）集成。触发词：Trinkets�
 platforms: [fabric, quilt]
 mcVersions: ["1.17.1-1.21.1"]
 communityDocId: authored/lib-trinkets
+modrinthSlug: trinkets
 mappings: hint
 ---
 

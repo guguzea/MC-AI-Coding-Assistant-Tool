@@ -197,8 +197,11 @@ export async function mcSkillUpdate(query: McSkillUpdateQuery): Promise<Record<s
   const dryRun = query.dryRun !== false;
   if (!dryRun && query.confirmed !== true) {
     return withAction(
-      // 带内失败（ok:false）而非 ok:true：「未确认、什么都没做」必须让按退出码判断的脚本看到 rc=1，
-      // 与 activate_platform_pack write 的同类拒绝一致（F1）。
+      // 带内失败（ok:false）而非 ok:true：「未确认、什么都没做」必须让按退出码判断的脚本看到 rc=1。
+      // 注释此前就写着「与 activate_platform_pack write 的同类拒绝一致」，但那只写了半年 —— 实况是
+      // src/platform-pack/write.ts 的 `dryRun || !confirmed` 分支把两种情形一起吞成 ok:true 预览，
+      // 声称一致而实际不一致，比不一致更坏。S10/T1（2026-09-22）已把 write/deactivate 两处都改成本形
+      // （ok:false + CONFIRMATION_REQUIRED），此句自本行起才是事实；两态规则见该文件同处注释。
       { ...base, ok: false, dryRun: true, applied: false },
       actionable(
         "CONFIRMATION_REQUIRED",

@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-22T07:18:15.746Z",
+  "built_at": "2026-09-25T12:25:22.134Z",
   "embedMode": "hybrid",
   "entries": [
     {
@@ -7,12 +7,12 @@
       "version": "stable",
       "source": "bedrock-docs",
       "path": "bedrock_stable/bedrock-docs/stable/semantic/db.sqlite",
-      "chunks": 5054,
-      "embedded": 3291,
-      "built_at": "2026-09-22T07:11:52.230Z",
+      "chunks": 5312,
+      "embedded": 3374,
+      "built_at": "2026-09-25T12:07:19.151Z",
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
-      "sha256": "233fa7131207b830a780b1eb2fb7139ccdc748ad0096edd364140fa16bd131d7"
+      "sha256": "baf19724d7865e421f445359e542f8654b106f6e244cdd1882e2100da6b4c8c3"
     },
     {
       "platform": "bedrock",
@@ -21,10 +21,10 @@
       "path": "bedrock_stable/bedrock-scriptapi/stable/semantic/db.sqlite",
       "chunks": 9878,
       "embedded": 1166,
-      "built_at": "2026-09-21T16:32:03.673Z",
+      "built_at": "2026-09-25T12:07:19.272Z",
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
-      "sha256": "7ce72bbdb12bfc147e85c63226a115d3bd7817bacd63219d9c0052b19934eca8"
+      "sha256": "610b824142e4e4ca6221fb70ae11e412bb82473e53176dfb9910b1c2815a3afd"
     },
     {
       "platform": "fabric",

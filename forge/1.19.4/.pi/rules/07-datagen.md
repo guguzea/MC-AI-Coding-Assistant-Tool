@@ -132,7 +132,7 @@ IF 熔炉烧制/烟熏/营火烧制
   → SimpleCookingRecipeBuilder.campfireCooking()
 
 IF 用自定义工作台配方
-  → 需要实现 IRecipe 或扩展现有配方
+  → 需要实现 Recipe 或扩展现有配方
   → 需要自定义 Container 和 Screen
 ```
 
@@ -152,11 +152,11 @@ IF 有条件的掉落（附魔工具挖掘等）
   → MatchTool + enchantment
 
 IF 随机数量掉落
-  → RandomValueRange
+  → NumberProvider
   → LootItemFunction.setCount
 
 IF 掉落多个物品
-  → 多个 LootEntry
+  → 多个 LootPoolEntryContainer
 ```
 
 ---

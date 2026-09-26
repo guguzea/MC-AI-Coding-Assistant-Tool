@@ -8,8 +8,16 @@
  * `forge/1.15.2` 的 `super(null, windowId)` 把 null 当 MenuType 传。这几种「Java 形状」
  * 此前没有任何门能判红（assert-rule-internal-refs 只查文档锚点，不解析 Java）。
  *
- * 扫描范围 = **源稿** `各平台/<ver>/.cursor/rules/*.mdc`（7 宿主镜像由 assert-skill-mirrors
- * 保证与源稿同态，故此处只扫一份，避免 7 倍重复告警）。
+ * 扫描范围 = **源稿两腿**（5 宿主/7 宿主镜像由 assert-skill-mirrors 保证与源稿同态，故此处只扫一份，
+ * 避免 7 倍重复告警）：
+ *   腿 1 `各平台/<版本>/.cursor/rules/*.mdc` —— Java 档（forge / fabric / neoforge / quilt /
+ *        liteloader / rift / modloader）
+ *   腿 2 `各平台/.cursor/rules/*.mdc` —— **平台根档**。bedrock 没有版本号层，它的 11 条规则只住
+ *        在 `bedrock/.cursor/rules/`（实测 2026-09-23：腿 1 采 bedrock = 0 件）。
+ *        本门 2026-09-21 建时只写腿 1，于是 `PLATFORMS` 里声明的 `bedrock` 是**假覆盖**
+ *        （注释自称扫它、采集面采不到）⇒ 腿 2 于 2026-09-23 补上，并由 `evaluateFloor()` 的
+ *        「声明平台采 0 ⇒ [FLOOR-COLLECTOR] 红」反向钉住，不让它再退化成注释假话。
+ *   skills 面（`.cursor/skills/**`）仍**不在**本门采集面，由别的门/人工核（见 scout 报告 B5）。
  *
  * 判据：
  *   A. 围栏内禁止 `super(null, ...)` —— MenuType/Container 构造实参不得为 null。
@@ -20,7 +28,15 @@
  *   C. 围栏内 `new <Cls>(...)` 的实参个数，若同文件定义了 `<Cls>(...)` 构造，必须相等
  *      （覆盖 `forge/1.16.5` 的 4 参 `new MyContainer(id, inv, world, pos)` vs 3 参定义）。
  *
- * 退出码：有任何一条 ⇒ 1；`--selftest` 用内存样例自证（畸形必红 + 真实输入正对照）。
+ * 采集面地板（R47，2026-09-23 补；形状照抄同仓 `assert-forge-blockshape-family.mjs` 的
+ * `[FLOOR-COLLECTOR]` / `[FLOOR-LOW]` + 无条件汇总行）：
+ *   - 采到 0 份 ⇒ `[FLOOR-COLLECTOR]`（**采集器失效**，不是「代码干净」）
+ *   - 声明的 8 个平台里任一处 0 件 ⇒ `[FLOOR-COLLECTOR]`（假覆盖复发即红）
+ *   - 实扫 < `FLOOR_SCANNED` ⇒ `[FLOOR-LOW]`。地板是**下界 `<`，不是等式 `===`** ⇒ 正常新增规则
+ *     只会抬高计数、不会假红；只有删档 / 收窄过滤器才会红。
+ *   - 汇总行**无条件**打印「扫文件 / 判行 / 拒 / 采集面 / 地板」，绿路径也打。
+ *
+ * 退出码：有任何一条 ⇒ 1；`--selftest` 用内存样例 + 真根采集器自证（畸形必红 + 真实输入正对照）。
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -29,7 +45,16 @@ import { fileURLToPath } from "node:url";
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(HERE, "..", "..");
 
+/** 声明采集面。**每一项都必须真采到 > 0**，否则 `evaluateFloor()` 报假覆盖（bedrock 曾是此形）。 */
 const PLATFORMS = ["forge", "fabric", "neoforge", "quilt", "liteloader", "rift", "modloader", "bedrock"];
+
+/**
+ * 地板（下界）= 2026-09-23 两腿实扫 = 腿 1 的 506 份 + 腿 2 的 bedrock 根 11 份 = 517 份
+ * （逐档：forge 125 / fabric 154 / neoforge 110 / quilt 40 / liteloader 33 / rift 11 /
+ *   modloader 33 / bedrock 11；判行 51540）。口径 = `collectRuleFiles()` 实采的
+ * `<平台>[/<版本>]/.cursor/rules/*.mdc` 文件数，不含 skills、不含 7 宿主投影、不含 scaffold。
+ */
+const FLOOR_SCANNED = 517;
 
 /** 抽出围栏块（``` 成对）内容。 */
 export function fencedBlocks(text) {
@@ -167,20 +192,72 @@ export function checkRuleText(rel, text) {
   return errs;
 }
 
-function collectRuleFiles() {
+/**
+ * 采集面两腿（见头注）：腿 1 = `<平台>/<版本>/.cursor/rules`，腿 2 = `<平台>/.cursor/rules`。
+ * 返回 `{ files, perPlatform }`，`perPlatform` 按 `PLATFORMS` 逐平台计**实采文件数**
+ * （= 汇总行「采集面」，也是 `evaluateFloor()` 的假覆盖判据）。
+ */
+export function collectRuleFiles(root = REPO) {
   const files = [];
+  const perPlatform = {};
   for (const plat of PLATFORMS) {
-    const base = path.join(REPO, plat);
+    const base = path.join(root, plat);
     if (!fs.existsSync(base)) continue;
-    for (const ver of fs.readdirSync(base)) {
-      const rulesDir = path.join(base, ver, ".cursor", "rules");
-      if (!fs.existsSync(rulesDir)) continue;
-      for (const f of fs.readdirSync(rulesDir)) {
-        if (f.endsWith(".mdc")) files.push(path.join(rulesDir, f));
+    const dirs = [path.join(base, ".cursor", "rules")]; // 腿 2：平台根档（bedrock 的唯一入口）
+    for (const ver of fs.readdirSync(base)) dirs.push(path.join(base, ver, ".cursor", "rules")); // 腿 1
+    const seen = new Set();
+    for (const d of dirs) {
+      if (!fs.existsSync(d)) continue;
+      if (!fs.statSync(d).isDirectory()) continue;
+      for (const f of fs.readdirSync(d)) {
+        if (!f.endsWith(".mdc")) continue;
+        const p = path.join(d, f);
+        if (seen.has(p)) continue;
+        seen.add(p);
+        files.push(p);
+        perPlatform[plat] = (perPlatform[plat] || 0) + 1;
       }
     }
   }
-  return files;
+  return { files, perPlatform };
+}
+
+/** 采集面地板（R47）。纯函数：`{ scanned, perPlatform, floor }` ⇒ 红码数组（空 = 绿）。 */
+export function evaluateFloor({ scanned, perPlatform, floor }) {
+  const errs = [];
+  const faceSum = PLATFORMS.reduce((s, p) => s + (perPlatform[p] || 0), 0);
+  const stray = Object.keys(perPlatform).filter((k) => !PLATFORMS.includes(k));
+  if (stray.length) errs.push(`[FLOOR-COLLECTOR] 采集面出现未声明平台 ${stray.join(", ")} —— 计数桶与 PLATFORMS 不自洽`);
+  if (faceSum !== scanned) {
+    errs.push(`[FLOOR-COLLECTOR] 分母不自洽：采集面合计 ${faceSum} ≠ 实扫 ${scanned} —— 有文件采到却没记账，计数器不可信`);
+  }
+  if (scanned === 0) {
+    errs.push(
+      `[FLOOR-COLLECTOR] 采到 0 份 —— 这是**采集器失效**（路径形状改坏 / 平台树被搬走 / 后缀过滤器收窄），` +
+        `**不是**代码干净（地板 ${floor}；两腿 = <平台>/<版本>/.cursor/rules/*.mdc + <平台>/.cursor/rules/*.mdc）`,
+    );
+    return errs;
+  }
+  if (scanned < floor) {
+    errs.push(
+      `[FLOOR-LOW] 实扫 ${scanned} 份 < 地板 ${floor} —— 扫描面缩水（删档 / 挪档 / 过滤器收窄）。` +
+        `地板是下界不是等式 ⇒ 正常新增不会红，红了就真是少了一批`,
+    );
+  }
+  const missing = PLATFORMS.filter((p) => (perPlatform[p] || 0) === 0);
+  if (missing.length) {
+    errs.push(
+      `[FLOOR-COLLECTOR] PLATFORMS 声明了 ${PLATFORMS.length} 个平台，但 ${missing.join(", ")} 采到 0 件 —— ` +
+        `注释自称覆盖它、采集面没有它 = **假覆盖**（2026-09-23 前的 bedrock 正是此形；要么补采集腿，要么把它从 PLATFORMS 删掉并说明由谁 policing）`,
+    );
+  }
+  return errs;
+}
+
+/** R47 汇总行（绿/红两条路径都打）。 */
+function summaryLine({ scanned, judged, rejected, perPlatform, floor }) {
+  const face = PLATFORMS.map((p) => `${p}=${perPlatform[p] || 0}`).join(" ");
+  return `扫文件 ${scanned} / 判行 ${judged} / 拒 ${rejected} / 采集面[${face}] / 地板 ${floor}（下界 <）`;
 }
 
 // ── selftest：内存样例（畸形必红 + 正对照） ────────────────────────────────
@@ -211,19 +288,53 @@ function runSelftest() {
     if (!pass) ok = false;
     console.log(`${pass ? "OK  " : "FAIL"} ${name}：期望${want === 0 ? "绿" : "红"}，实得 ${got} 条`);
   }
+
+  // ── 地板（R47）夹具：合成采集面（各平台均 > 0，且合计 == scanned，免得撞「分母不自洽」） ──
+  const face = (total) => {
+    const per = Math.floor(total / PLATFORMS.length);
+    const o = {};
+    PLATFORMS.forEach((p, i) => (o[p] = i === 0 ? total - per * (PLATFORMS.length - 1) : per));
+    return o;
+  };
+  const FLOOR_CASES = [
+    ["地板投毒：采集面塌成 0（改坏路径形状 / 平台树被搬走）⇒ 必红", { scanned: 0, perPlatform: {}, floor: FLOOR_SCANNED }, 1, "[FLOOR-COLLECTOR]"],
+    ["地板投毒：实扫 100 < 地板 ⇒ 必红且是 [FLOOR-LOW]", { scanned: 100, perPlatform: face(100), floor: FLOOR_SCANNED }, 1, "[FLOOR-LOW]"],
+    ["地板正对照：实扫 = 地板 + 50 ⇒ 仍绿（证下界非等式，新增不假红）", { scanned: FLOOR_SCANNED + 50, perPlatform: face(FLOOR_SCANNED + 50), floor: FLOOR_SCANNED }, 0, null],
+    ["假覆盖投毒：bedrock 腿被删（其余 7 台补足份数）⇒ 必红", { scanned: FLOOR_SCANNED, perPlatform: (() => { const o = face(FLOOR_SCANNED); o.forge += o.bedrock; delete o.bedrock; return o; })(), floor: FLOOR_SCANNED }, 1, "[FLOOR-COLLECTOR]"],
+    ["分母不自洽投毒：采集面合计 ≠ 实扫 ⇒ 必红", { scanned: FLOOR_SCANNED, perPlatform: face(FLOOR_SCANNED - 1), floor: FLOOR_SCANNED }, 1, "[FLOOR-COLLECTOR]"],
+  ];
+  for (const [name, input, want, code] of FLOOR_CASES) {
+    const got = evaluateFloor(input);
+    const pass = want === 0 ? got.length === 0 : got.some((m) => m.includes(code));
+    if (!pass) ok = false;
+    console.log(`${pass ? "OK  " : "FAIL"} ${name}：实得 ${got.length} 条${got.length ? "（首条 " + got[0].split("——")[0].trim() + "…）" : ""}`);
+  }
+
+  // ── 采集器活性自证（真磁盘、只读）：头注说的两腿必须真的在采 ──
+  const real = collectRuleFiles(REPO);
+  const bedrock = real.perPlatform.bedrock || 0;
+  const live = real.files.length >= FLOOR_SCANNED && bedrock > 0;
+  if (!live) ok = false;
+  console.log(
+    `${live ? "OK  " : "FAIL"} 采集器活性：真根实采 ${real.files.length} 份 ≥ 地板 ${FLOOR_SCANNED} · ` +
+      `bedrock 根腿（腿 2）${bedrock} 份 > 0（塌成 0 = 采集器失效，不是代码干净）`,
+  );
+
+  const total = SELFTEST_CASES.length + FLOOR_CASES.length + 1;
   if (!ok) {
-    console.error("assert-rule-java-shapes: SELFTEST RED");
+    console.error(`assert-rule-java-shapes: SELFTEST RED`);
     process.exit(1);
   }
-  console.log(`assert-rule-java-shapes: selftest OK（${SELFTEST_CASES.length} 例）`);
+  console.log(`assert-rule-java-shapes: selftest OK（${total} 例 = 形状 ${SELFTEST_CASES.length} + 地板 ${FLOOR_CASES.length} + 采集器活性 1）`);
 }
 
 if (process.argv.includes("--selftest")) {
   runSelftest();
 } else {
-  const files = collectRuleFiles();
-  const failures = [];
+  const { files, perPlatform } = collectRuleFiles(REPO);
+  const shape = [];
   let scanned = 0;
+  let judged = 0;
   for (const f of files) {
     let text;
     try {
@@ -232,15 +343,19 @@ if (process.argv.includes("--selftest")) {
       continue;
     }
     scanned++;
+    judged += text.split(/\r?\n/).length;
     const rel = path.relative(REPO, f).split(path.sep).join("/");
-    failures.push(...checkRuleText(rel, text));
+    shape.push(...checkRuleText(rel, text));
   }
+  // 地板红码与形状红码同屏，但「拒」只计形状违规（地板是采集器健康度，不是代码缺陷）
+  const failures = shape.concat(evaluateFloor({ scanned, perPlatform, floor: FLOOR_SCANNED }));
+  const sum = summaryLine({ scanned, judged, rejected: shape.length, perPlatform, floor: FLOOR_SCANNED });
   if (failures.length) {
-    console.error(`assert-rule-java-shapes: ${failures.length} 条（扫 ${scanned} 份源稿 rules）`);
+    console.error(`assert-rule-java-shapes: ${failures.length} 条不通过（${sum}）`);
     for (const m of failures) console.error(`  ${m}`);
     process.exit(1);
   }
   console.log(
-    `assert-rule-java-shapes: ok（源稿 rules ${scanned} 份：无 super(null,) · 无未声明 MY_*.get() · new/定义实参一致 · create(Cls::new) 第三参合契约）`,
+    `assert-rule-java-shapes: ok（${sum} · 源稿 rules 无 super(null,) · 无未声明 MY_*.get() · new/定义实参一致 · create(Cls::new) 第三参合契约）`,
   );
 }

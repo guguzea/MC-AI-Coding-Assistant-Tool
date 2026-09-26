@@ -8,7 +8,7 @@
 
 | 组 | 适用平台 | 说明 |
 |----|----------|------|
-| `all-platforms/` | forge / fabric / quilt / neoforge | **多平台（组名不承诺全平台）**：实际覆盖以各库 frontmatter `platforms` 为准（实测 2026-09-16：20 份里 17 份不含 quilt、`mc-owo` 不含 forge）；正文 Decision 分平台 |
+| `all-platforms/` | forge / fabric / quilt / neoforge | **多平台（组名不承诺全平台）**：实际覆盖以各库 frontmatter `platforms` 为准（实测 2026-09-24 复算，两机制独立一致：**20 份里 11 份含 quilt / 9 份不含**，且 20 份**全部**带 `platforms:` 键（含 `mc-config: [fabric, forge, neoforge]`）⇒ 那 9 份是**显式排除**、不存在「未声明 = 不限」那一档；`mc-owo` 不含 forge——判据须**按 token 比**，`/forge/i` 会把 `neoforge` 误配成「含 forge」（实测那样得出「不含 forge 的 0 份」）；与 :43 同口径）；三端构建窗口不同的库另写 `mcVersionsByPlatform` 收窄（生效面两条链路同语义：resolve 与 session，一致性由 `mcp-server/scripts/assert-lib-session-resolve-parity.mjs` 钉）；正文 Decision 分平台 |
 | `fabric-only/` | fabric / quilt | 仅 Fabric 系，**永不**用于 forge / neoforge；**only = 本仓维护面，不是库的平台支持面**（见下注） |
 | `neo-only/` | neoforge | Neo 归属稿；与 forge-only **镜像同名**时可并存（如 Curios / KFF）；**only = 本仓维护面，不是库的平台支持面**（见下注） |
 | `forge-only/` | forge | Forge 归属稿；Neo 共用库请在 `neo-only/` 放镜像，**不要**改解析组映射；**only = 本仓维护面，不是库的平台支持面**（见下注） |
@@ -40,7 +40,7 @@
 
 校验脚本：`node scripts/resolve-lib-skills.mjs --validate`
 
-> 注（2026-08 审计补充）：① Quilt 用户按 `fabric → fabric-only + all-platforms` 同组解析（QSL 生态已停更，Fabric-first 库是现实替代）；16/20 all-platforms 库的 platforms 白名单不含 quilt 属既有口径，未覆盖时以 catalog 提示改口，不视为缺陷。② `mc-server-translations`（Nucleoid 出品，Fabric-first）platforms 声明含 forge/neoforge 为其官方跨端支持面，保留。③ 平台 `.cursor/skills` 下的 `mc-compat-jei`（forge/1.20.1、neoforge/26.1）是**平台自有项**：forge/1.20.1 副本已对齐 knowledge/libs 源稿；neoforge/26.1 副本为独立维护的守卫 stub（文内已声明），均非镜像。
+> 注（2026-08 审计补充）：① Quilt 用户按 `fabric → fabric-only + all-platforms` 同组解析（QSL 生态已停更，Fabric-first 库是现实替代）；**9/20** all-platforms 库的 platforms 白名单**显式**不含 quilt（11 份含；2026-09-24 两机制复算：token 严格比 + 逐目录 `grep -m1 '^platforms:'` 原文，首版这里写的 16/20 作废）属既有口径，未覆盖时以 catalog 提示改口，不视为缺陷。② `mc-server-translations`（Nucleoid 出品，Fabric-first）platforms 声明含 forge/neoforge 为其官方跨端支持面，保留。③ 平台 `.cursor/skills` 下的 `mc-compat-jei`（forge/1.20.1、neoforge/26.1）是**平台自有项**：forge/1.20.1 副本已对齐 knowledge/libs 源稿；neoforge/26.1 副本为独立维护的守卫 stub（文内已声明），均非镜像。
 
 ## 禁止 propagate
 
@@ -72,8 +72,8 @@
 
 | 产物 | 位置 | 规模（当前） |
 |------|------|-------------|
-| `library-catalog.ts` | `mcp-server/src/diagnostics/`（生成物） | 50 条 catalog；`verifiedApi` 键 **实算 1830（2026-09-14）**，复核 `grep -cE '"[0-9][^"]*/[a-z]+": \{' mcp-server/src/diagnostics/library-catalog.ts`；同数钉在 `mcp-server/scripts/assert-lib-ownership.mjs` 的 `LEDGER.verifiedApiKeys`（不一致即红）。旧文档写死的 1880 / 1836 均已过期。另有**不同分母**：摘要侧 `lib-api-summaries/*.json` 44 份 / `versions` 组键 320（见根 `README.md` §7.5 计数口径 B），勿与本数混用 |
-| `lib-manifests/all.json` | `mcp-server/data/` | 45 slug / 2867 版本条目 |
+| `library-catalog.ts` | `mcp-server/src/diagnostics/`（生成物） | 50 条 catalog；`verifiedApi` 键 **实算 2632（2026-09-24 复跑该命令）**，复核 `grep -cE '"[0-9][^"]*/[a-z]+": \{' mcp-server/src/diagnostics/library-catalog.ts`；同数钉在 `mcp-server/scripts/assert-lib-ownership.mjs` 的 `LEDGER.verifiedApiKeys`（不一致即红）。旧文档写死的 1880 / 1836 / 1830 均已过期。另有**不同分母**：摘要侧 `lib-api-summaries/*.json` **48 份**（同 :77 的现扫数）/ `versions` 组键 **824**（2026-09-24 现跑口径 B 命令；旧稿写 44 份 / 320 组已过期），见根 `README.md` §7.5 计数口径 B，勿与本数混用 |
+| `lib-manifests/all.json` | `mcp-server/data/` | 49 slug / 3,003 版本条目（口径：顶层是**数组**，`length` = slug 数；版本条目 = 各元素 **`entries`** 数组长度求和，**不是** `versions`——按 `versions` 取会算出 0。复核 `node -e "const j=require('./mcp-server/data/lib-manifests/all.json');console.log(j.length, j.reduce((a,e)=>a+e.entries.length,0))"`，as-of 2026-09-25；旧值 48 / 2,870（as-of 2026-09-16 那次的首页截断面）已被第 44 轮翻页重抓取代） |
 | `lib-api-summaries/*.json` | `mcp-server/data/` | **48** 库 API 摘要（A-43 复计 2026-09-19：目录内 48 个 `.json`，无 meta 文件混入；旧稿写 44 已过期） |
 
 `verifiedApi.<版本/加载器>.packages` 是反编译产物顶层目录的**启发式截取名**（2–3 段），只能用来定位包根，

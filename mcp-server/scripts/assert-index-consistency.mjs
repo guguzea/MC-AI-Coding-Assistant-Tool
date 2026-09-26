@@ -85,11 +85,16 @@ const MANIFEST = path.join(DATA_DIR, "semantic-index-manifest.json");
 //   `data/bedrock_stable/bedrock-scriptapi/stable/`，bedrock-docs 树现 258 页；口径见下面 LEDGER_SUM 的 ⑤ 注。）
 const LEDGER_SUM = {
   // ⑤（2026-09-22 基岩 Script API 拆树）：bedrock 平台从 1 个语义库变 2 个（bedrock-docs 258 页 +
-  // bedrock-scriptapi 624 页），顶层 entries 60→61；**chunks/embedded 完全守恒**
+  // bedrock-scriptapi 624 页），顶层 entries 60→61；**当时 chunks/embedded 完全守恒**
   // （5054+9878=14932、3291+1166=4457，与拆树前的单树逐字相等）⇒ 拆树不动向量总量，只动分母。
-  entries: 61, chunks: 51275, embedded: 31774,
+  // ⑥（2026-09-24 S15-T2 重建 bedrock-docs 单树）：该树 20 篇 curated 页重处理后正文变长，
+  // bedrock-docs chunks 5054→5312（+258）、embedded 3291→3374（+83）；scriptapi 树**未重建**
+  // （实测其盘上 0 页含表分隔行、0 chunk 含页脚噪音，该趟写不进它）⇒ 分面 5312+9878=15190、
+  // 3374+1166=4540，顶层 51275→51533 / 31774→31857。上面 ⑤ 那组数只作拆树当时的历史值读。
+  // 重签路径 = 本门 `MC_SKILL_INDEX_RELEDGER=1`，但该分支**只打印新台账不落盘** ⇒ 数字须按打印值手抄。
+  entries: 61, chunks: 51533, embedded: 31857,
   perPlatform: {
-    "bedrock": { entries: 2, chunks: 14932, embedded: 4457 },
+    "bedrock": { entries: 2, chunks: 15190, embedded: 4540 },
     "fabric": { entries: 27, chunks: 7935, embedded: 5898 },
     "forge": { entries: 10, chunks: 7230, embedded: 5486 },
     "liteloader": { entries: 3, chunks: 464, embedded: 384 },
@@ -154,6 +159,17 @@ const LEDGER_YARN = {
   "forge_1.13.2": { classes: 3993, classesNamed: 0, unresolvedMethods: 0, unresolvedFields: 0, methods: 26024, fields: 14536, seargeMethods: 10770, seargeFields: 11816, classesOfficial: 3993, officialMethods: 26024, officialFields: 14536, schema: 4 },
   "forge_1.14.4": { classes: 0, classesNamed: 0, unresolvedMethods: 0, unresolvedFields: 0, methods: 0, fields: 0, seargeMethods: 11445, seargeFields: 15133, classesOfficial: 0, officialMethods: 0, officialFields: 0, schema: 4 },
   "forge_1.15.2": { classes: 0, classesNamed: 0, unresolvedMethods: 0, unresolvedFields: 0, methods: 0, fields: 0, seargeMethods: 10598, seargeFields: 15756, classesOfficial: 0, officialMethods: 0, officialFields: 0, schema: 4 },
+  // 2026-09-26 未做③（MCPConfig SRG 成员层，era=mcp-config-srg）新增六档：1.16.5（老形 `func_/field_`）
+  // 与 1.17.1–1.20.4（哈希形 `m_/f_`）。⚠️ 这六档**当前未跟踪**（`git status` 为 `??`，是否 `git add`
+  // 由用户拍板，见根 `CONTRIBUTING.md` 的 `L67`）：台账在册而盘上没有 ⇒ 本门判「yarn 库在台账里但盘上
+  // 没有」⇒ 红。撤库必须连这六行一起撤。searge 两列是**塌行后**的实数（同一 SRG 名在多个 owner 下
+  // 各列一行，主键去重）⇒ 恒 ≤ methods/fields。
+  "forge_1.16.5": { classes: 5447, classesNamed: 0, unresolvedMethods: 0, unresolvedFields: 0, methods: 35526, fields: 19841, seargeMethods: 23212, seargeFields: 19841, classesOfficial: 5447, officialMethods: 35526, officialFields: 19841, schema: 4 },
+  "forge_1.17.1": { classes: 6113, classesNamed: 0, unresolvedMethods: 0, unresolvedFields: 0, methods: 40443, fields: 25986, seargeMethods: 26870, seargeFields: 25986, classesOfficial: 6113, officialMethods: 40443, officialFields: 25986, schema: 4 },
+  "forge_1.18.2": { classes: 6399, classesNamed: 0, unresolvedMethods: 0, unresolvedFields: 0, methods: 42102, fields: 27498, seargeMethods: 28190, seargeFields: 27073, classesOfficial: 6399, officialMethods: 42102, officialFields: 27498, schema: 4 },
+  "forge_1.19.4": { classes: 7331, classesNamed: 0, unresolvedMethods: 0, unresolvedFields: 0, methods: 47973, fields: 31695, seargeMethods: 32738, seargeFields: 30721, classesOfficial: 7331, officialMethods: 47973, officialFields: 31695, schema: 4 },
+  "forge_1.20.1": { classes: 7436, classesNamed: 0, unresolvedMethods: 0, unresolvedFields: 0, methods: 48575, fields: 32079, seargeMethods: 33222, seargeFields: 31003, classesOfficial: 7436, officialMethods: 48575, officialFields: 32079, schema: 4 },
+  "forge_1.20.4": { classes: 7787, classesNamed: 0, unresolvedMethods: 0, unresolvedFields: 0, methods: 50945, fields: 34616, seargeMethods: 34990, seargeFields: 32991, classesOfficial: 7787, officialMethods: 50945, officialFields: 34616, schema: 4 },
   "forge_1.7.10": { classes: 1815, classesNamed: 0, unresolvedMethods: 0, unresolvedFields: 0, methods: 13263, fields: 6900, seargeMethods: 0, seargeFields: 0, classesOfficial: 1815, officialMethods: 13263, officialFields: 6900, schema: 4 },
   "forge_1.8.9": { classes: 2507, classesNamed: 0, unresolvedMethods: 0, unresolvedFields: 0, methods: 16426, fields: 8917, seargeMethods: 0, seargeFields: 0, classesOfficial: 2507, officialMethods: 16426, officialFields: 8917, schema: 4 },
   "forge_1.9.4": { classes: 2908, classesNamed: 0, unresolvedMethods: 0, unresolvedFields: 0, methods: 18228, fields: 10634, seargeMethods: 0, seargeFields: 0, classesOfficial: 2908, officialMethods: 18228, officialFields: 10634, schema: 4 },

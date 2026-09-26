@@ -16,7 +16,7 @@ notes: "无 API 摘要（`lib-api-summaries/` 无条目、catalog `verifiedApi` 
 
 # SpruceUI / ObsidianUI GUI 抽象库要点
 
-自写短文。版本与 API 细节以 [ObsidianUI](https://github.com/architectury/ObsidianUI)（及原版 [SpruceUI](https://github.com/LambdAurora/SpruceUI) 历史仓库）为准。
+自写短文。版本与 API 细节以 [ObsidianUI](https://github.com/ThinkingStudios/ObsidianUI)（及原版 [SpruceUI](https://github.com/LambdAurora/SpruceUI) 历史仓库）为准。
 
 ## 何时用 / 何时不用
 
@@ -80,7 +80,7 @@ Decision: 用不用 SpruceUI / ObsidianUI
 - MCP：`check_dependencies`、`search_community_docs`
 - Skill：`mc-spruceui`；相关：`mc-gui`、`mc-architectury`（跨加载器）
 - 全览：§二.6 GUI/UI 库、陷阱 5；`authored/library-catalog-2026`、`authored/library-integration`
-- 官方：https://github.com/architectury/ObsidianUI ；原版：https://github.com/LambdAurora/SpruceUI
+- 官方：https://github.com/ThinkingStudios/ObsidianUI ；原版：https://github.com/LambdAurora/SpruceUI
 - 不清楚时：打开 ObsidianUI README/源码；`search_fabric_docs` / `search_forge_docs` 查 GUI 相关页；AGENT_USAGE.md 规则先行
 
 ## 核对（2026-08 反编译验证）

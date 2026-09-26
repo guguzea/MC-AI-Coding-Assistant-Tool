@@ -25,6 +25,15 @@
  *     A5 尖括号泛型保真：同名 raw/processed 配对里，raw 中的 `Foo<...>` 记号必须都在 processed 存活；
  *        每条丢失都必须按树命中存量台账 `DEBT_ANGLE_LOSS`（2026-09-20 W1-3 打开 javadoc 配对后，
  *        该台账首次非空 = 6 档 javadoc 共 416 处；「台账→实扫」的反向核数只在真根跑）。
+ *     A10 `<<<` 的镜像 blob 不在盘上 ⇒ **默认必红**，只有 `MISSING_BLOB_ALLOWLIST` 逐条具名
+ *        （pack/target/reason/asOf/evidence 五件齐）才放行；条目本轮没被任何站点用上 ⇒ 僵尸豁免红。
+ *        旧行为是静默 `continue`（注释「取件未做：只计台账处数」），于是「取件链整体退化」与
+ *        「上游真没有这个件」在门里同形 —— R50（`L59`-C）换成具名才免。真根现值缺口 0 处，
+ *        故本条是**零行为变更的收紧**；缺口处数由既有两锚 `directiveSites − directiveOnDisk` 隐含，
+ *        不新增台账字段（`_brief-r50.md` §2.3 的「钉 sha」腿按本主题映射到 A3：blob 在盘时区段标记
+ *        必须能解析出正文，内容漂移同样送红）。
+ *     A11 采集面塌 0（`findTrees()` 实扫 0 棵 `{raw,processed}` 树）⇒ `COLLECTOR_RETURNED_ZERO` 红。
+ *        假根模式下台账层整层跳过，没有这道地板时「夹具没写页」会空跑成绿（同 `L58` 欠账二）。
  *  B. 台账层（只跑真数据根；`MC_SKILL_CORPUS_TEST_ROOT` 指到假根时整层跳过）
  *     逐档 `<<<` 处数/文件数、逐树结构类别（raw/proc 篇数 + identical/contentDiff/markerOnly/
  *     fmOnly/noTwin + processed 重名数 + 该树 `<<<` 处数）、中介名行命中数（总/围栏内/行内码）。**精确钉死**：多一处红、少一处也红
@@ -198,6 +207,40 @@ const LEDGER_TOTALS = {
   intermediaryInlineCode: 3,
 };
 
+// ── 具名豁免表（R50 · `L59`-C 裁定 ③ 的落点；**不是** SKIP 开关）────────────────
+/**
+ * 判的是 A3 原先的一条**静默通道**：`<<<` 的镜像 blob 不在盘上时，旧代码 `continue`
+ * （注释写「取件未做：只计台账处数」）。于是「取件链整体退化」与「上游真没有这个件」
+ * 在门里长得一模一样 —— 读者只能给 `Not Found:` 或空围栏，而门恒绿。
+ *
+ * R50 起这条换成**默认必红、点名才免**：豁免必须逐条写死 `pack` + `target` +
+ * `reason` + `asOf` + `evidence` 五件（少一件是自检缺陷，直接红），且每条必须被本轮
+ * 至少一个站点用上，否则判「僵尸豁免」红。
+ *
+ * ⚠️ 主题与派单不同，是取证后的改判：`L59`-C 与 `_brief-r50.md` §2 的前提是
+ * 「`@/.github/workflows/build.yaml#automatic_testing_game_test_3` 这 2 个 marker 的
+ * reference 件不在仓内语料里，要放正文进来」。第 50 轮实测该前提**不成立**：
+ * 该件在 `data/fabric_{26.1.2,1.21.11,1.21.10,1.21.8}/.github/workflows/build.yaml`
+ * 四档都在盘，2908 B，`git hash-object` = `1d55d026c886a0f2f828029f906dc028b51249a0`
+ * = 该档 `reference.provenance.json` 记的 `blobSha`，且与上游 `main` 同一 URL 两通道
+ * （raw.githubusercontent / jsDelivr）取回件逐字节相同（sha256 `38e241fd…4261`）；
+ * 区段标记 `#region/#endregion automatic_testing_game_test_3` 在 `:60/:70/:72/:77` 成对，
+ * 读者展开给出真 YAML（`angleSites=11 / angleMissing=[] / angleRegionMiss=0`）。
+ * ⇒ **没有任何件需要豁免**，故本表现值 0 条。若此处塞进那 2 条，反而是给逐字节忠实的件
+ * 挂一张「允许它不等于上游」的空白票 —— 那才是裁定明令禁止的「整体放松」。
+ * 保留的机制才是裁定要的东西：将来真出现取件缺口时，只能走具名条目，不能走旁路。
+ *
+ * 现盘依据（as-of 2026-09-26 第 50 轮）：`MC_SKILL_CORPUS_RELEDGER=1` 读
+ * `LEDGER_TOTALS.directiveSites = 633` 且 `directiveOnDisk = 633` ⇒ 取件缺口 **0** 处，
+ * 所以「默认必红」在今天的盘上是**零行为变更**的收紧。
+ */
+const MISSING_BLOB_ALLOWLIST = [];
+/** 豁免键：`<pack>::<target 原文>`。只按这两个维度匹配，不做子串、不做大小写放宽。 */
+function missingBlobExemptFor(pack, target) {
+  const key = `${pack}::${target}`;
+  return MISSING_BLOB_ALLOWLIST.find((e) => `${e.pack}::${e.target}` === key) ?? null;
+}
+
 const failures = [];
 const fail = (msg) => failures.push(msg);
 const rel = (p) => path.relative(REPO_ROOT, p).split(path.sep).join("/");
@@ -326,7 +369,7 @@ function findTwin(relIn, rawDir, rawFiles) {
 
 const stat = {
   trees: {},
-  directive: { perPack: {}, sites: 0, files: 0, fenced: 0, onDiskSites: 0 },
+  directive: { perPack: {}, sites: 0, files: 0, fenced: 0, onDiskSites: 0, missingSites: 0, exemptSites: 0 },
   intermediary: { total: 0, code: 0, inline: 0, prose: [] },
   angleLoss: {},
   angleLossSample: {},
@@ -393,7 +436,22 @@ for (const t of TREES) {
         continue;
       }
       const abs = referenceLocalPath(s.target, t.packRoot, prov);
-      if (!fs.existsSync(abs)) continue; // 取件未做：只计台账处数
+      if (abs === null || !fs.existsSync(abs)) {
+        // R50（`L59`-C）：取件缺口从「静默 continue」换成「默认必红、具名才免」。
+        stat.directive.missingSites++;
+        const ex = missingBlobExemptFor(t.pack, s.target);
+        if (ex) {
+          ex.hit = true;
+          stat.directive.exemptSites++;
+          continue;
+        }
+        fail(
+          `${relData(f)}:${s.line}: <<<「${s.target}」的镜像 blob 不在盘上` +
+            `（${abs === null ? "目标越出 packRoot，路径不可解析" : rel(abs)}）⇒ 读者只能给 Not Found/空围栏 · ` +
+            `补取件：node scripts/fetch-fabric-transcludes.mjs --write；或按 MISSING_BLOB_ALLOWLIST 的形状点名进表（五件齐）`,
+        );
+        continue;
+      }
       entry.directiveOnDisk++;
       stat.directive.onDiskSites++;
       // S6 起读者会展开 <<< ⇒ 剩下的静默通道是「blob 在、区段名对不上」：
@@ -594,6 +652,49 @@ const DIR_NAME_BAD_RE = /[^\u0020-\u007E]/;
   stat.dirScanned = scannedDirs;
 }
 
+// ── R50 新增两条结构性地板 ───────────────────────────────────────────────────
+/**
+ * 地板一：采集面塌 0 ⇒ 红。
+ * 旧行为：假根（`MC_SKILL_CORPUS_TEST_ROOT`）下台账层整层跳过，于是「一棵树都没扫到」的
+ * 探针 / 投毒夹具会**空跑成绿**（实测 2026-09-26：指到空目录 ⇒ `0 棵 raw/processed 树` + rc=0）。
+ * 那不是「语料没问题」，那是「判据没吃到输入」——与 `assert-community-attribution` 的
+ * `COLLECTOR_RETURNED_ZERO` 同族，也同 `L58` 欠账二「跑绿 ≠ 验过」。
+ * 分母 = 本门 `findTrees()` 实扫的 `{raw,processed}` 目录对数（真根现值 49）。
+ */
+const scannedTrees = Object.keys(stat.trees).length;
+if (scannedTrees === 0) {
+  fail(
+    `COLLECTOR_RETURNED_ZERO: 采集面塌 0 —— ${rel(DATA_DIR)} 下扫到 0 棵 {raw,processed} 树 ⇒ ` +
+      `本轮没有任何判据吃到输入，绿无意义。查 MC_SKILL_DATA / MC_SKILL_CORPUS_TEST_ROOT 是否指对，` +
+      `夹具是否真写了页（禁止用放宽这道地板来「修绿」）`,
+  );
+}
+
+/**
+ * 地板二：豁免表自检 —— 形状缺件 与 僵尸条目 都判红。
+ * 「僵尸」在本主题上的正确形状与派单字面相反：条目豁免的是「blob **不**在盘上」的站点，
+ * 所以「点了名却没用上」= 那个缺口已经不存在（补过取件、或页/档被删）⇒ 该条目已失去对象，
+ * 留着就会把后来的真缺口顺手放过。判据 = 本轮没有站点命中它（`hit` 未置真）。
+ * 这条同时兜住 §2.4③「少一条就少判一条还全绿」：删一条真缺口条目 ⇒ 那条站点立刻变红。
+ */
+const MISSING_BLOB_REQUIRED_KEYS = ["pack", "target", "reason", "asOf", "evidence"];
+for (const [i, e] of MISSING_BLOB_ALLOWLIST.entries()) {
+  const missing = MISSING_BLOB_REQUIRED_KEYS.filter((k) => typeof e[k] !== "string" || !e[k].trim());
+  if (missing.length) {
+    fail(`MISSING_BLOB_ALLOWLIST 第 ${i + 1} 条缺必填字段 ${missing.join("/")} ⇒ 豁免必须具名可核，不许只写路径`);
+    continue;
+  }
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(e.asOf)) {
+    fail(`MISSING_BLOB_ALLOWLIST 第 ${i + 1} 条（${e.pack}::${e.target}）的 asOf「${e.asOf}」不是 YYYY-MM-DD ⇒ 无法判豁免多久该复看`);
+  }
+  if (!e.hit) {
+    fail(
+      `僵尸豁免：MISSING_BLOB_ALLOWLIST 第 ${i + 1} 条（${e.pack}::${e.target}，asOf ${e.asOf}）本轮没有任何站点用上 ` +
+        `⇒ 该取件缺口已不存在（补过件 / 页或档被挪走），删掉这条；留着会顺手放过后来的真缺口`,
+    );
+  }
+}
+
 // ── B 层：台账对账 ──────────────────────────────────────────────────────────
 if (process.env.MC_SKILL_CORPUS_RELEDGER) {
   console.log(
@@ -698,7 +799,8 @@ const angleLossTotal = Object.values(stat.angleLoss).reduce((s, n) => s + n, 0);
 console.log(
   `  assert-corpus-faithfulness(G3): ${treeCount} 棵 raw/processed 树 · ${modeLabel} · ` +
     `<<< 残留 ${stat.directive.sites} 处/${stat.directive.files} 文件` +
-    `（其中 ${stat.directive.onDiskSites} 处字节已在盘上，区段标记已逐个核实） · ` +
+    `（其中 ${stat.directive.onDiskSites} 处字节已在盘上，区段标记已逐个核实；` +
+    `取件缺口 ${stat.directive.missingSites} 处，具名豁免放行 ${stat.directive.exemptSites} 处） · ` +
     `中介名 ${stat.intermediary.total} 处（围栏 ${stat.intermediary.code} · 行内码 ${stat.intermediary.inline} · ` +
     `正文 ${stat.intermediary.prose.length}，全在存量台账） · 泛型丢失 ${angleLossTotal} · 重名 0 · ` +
     `目录层 ${stat.dirScanned} 个目录（0 条目 0 / 非法名 0）`,

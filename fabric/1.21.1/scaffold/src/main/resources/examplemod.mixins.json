@@ -6,8 +6,8 @@
     "defaultRequire": 1
   },
   "client": [
-    "ExampleMixin"
+    "client.ExampleMixin"
   ],
   "server": [],
-  "mixins": []
+  "mixins": ["ExampleMixin"]
 }

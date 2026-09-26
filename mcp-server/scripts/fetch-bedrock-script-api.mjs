@@ -369,11 +369,21 @@ async function main() {
     const base = fileName.replace(/\.md$/, "");
     const id = `scriptapi/${base}`;
     const md = pageFor(d, meta);
+    // S14-T3：`sectionCount` 改真数（此前 `:386` 硬编码 1）。口径 = 页面里 `## ` 一级的章节数，
+    // 与 pageFor 一致：它只在 decl.members.length 时吐一条 `## Members（N）`（本页无 `###` 之外的
+    // `## `，见 :226-236 的 parts 组装）⇒ **无成员的声明应为 0**，而旧硬编码把 624/624 条全报成 1
+    // （旧硬编码期 index-l0 直方图 = {"1":624}；2026-09-25 P-2 重算后落盘为 {"0":7,"1":617}，
+    //   7 个 0 成员声明实测 = HudElementsCount / HudVisibilityCount / MoonPhaseCount / system~1a327e /
+    //   TicksPerDay / TicksPerSecond / world~e2c9c8；617 个 1 是真数（每页恰一条 `## Members`），不是残留硬编码。）
+    const sectionCount = [...md.matchAll(/^## /gm)].length;
     try {
       await writeWithRetry(join(pageDir, `${base}.md`), md);
       written++;
     } catch (e) {
+      // S14-T3：`skipped` 此前只在 :367 声明、:428 被日志读，全文件没有任何自增 ⇒ 恒印「跳过 0」。
+      // 接上真实失败路径：写了没成 = 这一页被跳过，恒等式 written + skipped === writes.length 成立。
       failures.push({ id, failureClass: e.code ?? "WRITE_FAIL", reason: String(e.message ?? e).slice(0, 200) });
+      skipped++;
       continue;
     }
     index.push({
@@ -383,7 +393,7 @@ async function main() {
       url: `https://www.npmjs.com/package/${PKG}/v/${rv.version}`,
       tags: ["script", "scriptapi", d.kind, "typed"],
       priority: "⭐",
-      sectionCount: 1,
+      sectionCount,
       source: SCRIPTAPI_SOURCE,
       origin: "npm-dts",
       fetchedAt: meta.retrievedAt,

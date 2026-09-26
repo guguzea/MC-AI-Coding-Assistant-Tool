@@ -1504,12 +1504,35 @@ section("java-pipeline argv / remapper classpath / mojmap tiny guard");
   await atest("ensureYarnTiny：jar 比 .tiny 新必须重解，不能复用陈旧副本", () => {
     const jar = jarWith("stale", MERGED);
     const tiny = ensureYarnTiny(jar);
-    const before = statSync(tiny).mtimeMs;
     writeFileSync(join(dirname(jar), "other.txt"), "touch", "utf8");
     const back = new Date(Date.now() - 600_000);
     utimesSync(tiny, back, back); // 模拟 .tiny 早于 jar（重新下载过映射）
+    // L21（第 27 轮）前置断言：本腿测的是「.tiny 比 jar 旧 ⇒ 必须重解」，**夹具没拨旧就没有可测的事**。
+    // 生产侧 `src/decompile/services/java-pipeline.ts` 的判据是 `tiny.mtimeMs >= jar.mtimeMs ⇒ 新鲜`
+    // ——「相等算新鲜」是有意的边界语义（刚解出的 .tiny 与 jar 同戳），本轮不动它。
+    // 所以红必须先落在「设置未生效」上，不得再伪装成产品缺陷。
+    // 两条都要：① 真的拨到了 600s 前（utimes 丢写 ⇒ 现场仍是刚写的戳，此时连「陈旧」这个前提都不成立）；
+    //           ② 拨完之后确实比 jar 旧（jar 也被显式重打一次，不再依赖墙上时钟的先后顺序）。
+    utimesSync(jar, new Date(), new Date());
+    const t0 = statSync(tiny).mtimeMs;
+    const j0 = statSync(jar).mtimeMs;
+    assert.ok(
+      Math.abs(t0 - back.getTime()) < 60_000,
+      `夹具没能把 .tiny 拨旧（环境丢写 utimes / mtime 精度不足）：tiny=${t0} 期望≈${back.getTime()} ` +
+        `实差 ${((t0 - back.getTime()) / 1000).toFixed(1)}s ⇒ 前提「存在一份陈旧的 .tiny」根本不成立，本腿测不到产品`,
+    );
+    assert.ok(t0 < j0, `夹具拨旧后 .tiny 仍不比 jar 旧：tiny=${t0} jar=${j0} 差 ${j0 - t0}ms ⇒ 本腿判不了`);
     assert.equal(ensureYarnTiny(jar), tiny);
-    assert.ok(statSync(tiny).mtimeMs > before, "陈旧 .tiny 被当成命中复用了");
+    // 证据只看「有没有从**盘上实测到的**那个旧戳往前走」，不看「有没有超过上一次解包的时刻」：
+    // 实测第 26 轮 `npm test` 首跑 FAIL 红在旧写法 `> before`（before = 上一次 .tiny 的 mtime，与本轮
+    // 重写只隔几 ms）⇒ 卷上 mtime 精度粗时**真重解了也会假红**。现在基准是被拨回 600s 前的 t0：
+    // 真重解 ⇒ 前进约 600s（远大于任何 tick）；真复用 ⇒ 原地不动（必红）。
+    const after = statSync(tiny).mtimeMs;
+    assert.ok(
+      after > t0,
+      `陈旧 .tiny 被当成命中复用了：mtime=${after} 仍停在夹具拨回的 ${t0}（前进了 ${after - t0}ms，` +
+        `预期约 +600000ms = jar 比 .tiny 新 ⇒ 必须重解）`,
+    );
   });
 
   await atest("ensureYarnTiny：intermediary/named 两列的 -v2.jar 形状必须拒绝（official 列缺失）", () => {

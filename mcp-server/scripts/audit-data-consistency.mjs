@@ -15,7 +15,13 @@
  *   E  raw ↔ processed filename set equality (with platform-aware ext
  *      normalization for fabric-wiki .txt → .md).
  *   F  `processedFile` references in l2 indexes resolve on disk.
- *   G  `_manifest.json` `file:` references resolve in raw/processed.
+ *   G  `_manifest.json` `file:` references resolve in raw/processed, **and** its
+ *      top-level keys are duplicate-free (S17-T1; collector is indentation-agnostic
+ *      since round 33 — depth/string-state scan of the raw text cross-checked
+ *      against JSON.parse's top-level key set; collecting 0 keys is itself an ERROR).
+ *   Z  the run actually scanned ≥1 `<platform>_<version>` index dir (S17-T2:
+ *      a nonexistent `--data-root` or a filter that matches nothing used to print
+ *      an empty report and **exit 0** — that vacuous pass is now an ERROR).
  *   H  empty-index detection (warn).
  *   I  cross-version pollution (raw filenames mentioning another MC version
  *      accidentally placed under a different version dir).
@@ -544,6 +550,102 @@ function checkMappingsArtifacts(platform, versionDir, version, issues) {
   }
 }
 
+const ESCAPE_DECODE = { '"': '"', "\\": "\\", "/": "/", b: "\b", f: "\f", n: "\n", r: "\r", t: "\t" };
+
+/**
+ * S17-T1 采集面（第 33 轮放宽，2026-09-25）：顶层键 occurrence 清单，**与缩进无关**。
+ *
+ * 旧实现是 `/^ {2}"…":/gm` —— 按「行首恰好 2 个空格」抓条目。第 32 轮 P2 投毒
+ * （把 `{2}` 改成 `{9}`）证出该腿对**非 2 空格缩进**的 `_manifest.json` 采集 0 条即
+ * 静默放行 = 「恒真于空」伪守卫（本仓点名的形状：检测器认排版形状，而格式并不保证那个形状；
+ * 同 mixin config 改名成 `mixins.ghost.json` 那一例）。今日 6 份生产 manifest 全为 2 空格
+ * ⇒ 潜伏、非现症，但判据本身站不住。
+ *
+ * 现在按「字符串态 + 括号深度」扫一遍原文，只收**深度 1**（顶层对象成员）的键 ⇒
+ * 缩进几个空格、用 tab、还是整个文件压成一行，都不影响采集。第二机制 = `JSON.parse`
+ * 的顶层唯一键集（见 `manifestKeyCensus`），两机制交叉核；缩进不再参与任何判据。
+ * 纯函数、可投毒（`test-audit-data.mjs :: testManifestDupKeyLeg` 六组形状夹具）。
+ */
+export function collectTopLevelJsonKeys(text) {
+  const keys = [];
+  const s = String(text ?? "");
+  let depth = 0;
+  let inStr = false;
+  let esc = false;
+  let strDepth = 0;
+  let cur = "";
+  for (let i = 0; i < s.length; i++) {
+    const ch = s[i];
+    if (inStr) {
+      if (esc) {
+        esc = false;
+        // 解码转义：JSON 认为 `"a\"b"` 与 `"a\u0022b"` 是**同一个键**，
+        // 保留原文（旧正则的做法）会漏判这种等价重复，也会让第二机制
+        // （`JSON.parse` 的顶层键集，已是解码后的形态）与本采集器对不上号。
+        if (ch === "u") {
+          const hex = s.slice(i + 1, i + 5);
+          if (/^[0-9a-fA-F]{4}$/.test(hex)) { cur += String.fromCharCode(parseInt(hex, 16)); i += 4; continue; }
+          cur += ch;
+          continue;
+        }
+        cur += ESCAPE_DECODE[ch] ?? ch;
+        continue;
+      }
+      if (ch === "\\") { esc = true; continue; }
+      if (ch === '"') {
+        inStr = false;
+        let j = i + 1;
+        while (j < s.length && (s[j] === " " || s[j] === "\t" || s[j] === "\n" || s[j] === "\r")) j++;
+        if (strDepth === 1 && s[j] === ":") keys.push(cur);
+        continue;
+      }
+      cur += ch;
+      continue;
+    }
+    if (ch === '"') { inStr = true; strDepth = depth; cur = ""; continue; }
+    if (ch === "{" || ch === "[") { depth += 1; continue; }
+    if (ch === "}" || ch === "]") { depth -= 1; continue; }
+  }
+  return keys;
+}
+
+/**
+ * 键 census（纯函数，可投毒）。两机制：
+ *   ① 原始扫描 `collectTopLevelJsonKeys` ⇒ occurrence 序列（含重复）；
+ *   ② `JSON.parse` 顶层键 ⇒ 唯一集（last-wins 之后的实况，正是它把重复吞掉的那一步）。
+ * `collectorZero` = ① 采到 0 条 ⇒ 判据无对象，必须由调用方判红（禁止静默绿）。
+ * `parserMismatch` = ① 的唯一集 ≠ ② 的键集 ⇒ 采集器与解析器对「顶层有哪些键」不一致。
+ */
+export function manifestKeyCensus(text) {
+  const occurrences = collectTopLevelJsonKeys(text);
+  const seen = new Set();
+  const dupKeys = [];
+  for (const k of occurrences) {
+    if (seen.has(k)) { if (!dupKeys.includes(k)) dupKeys.push(k); }
+    else seen.add(k);
+  }
+  let parserKeys = null;
+  let parseError = null;
+  try {
+    const obj = JSON.parse(text);
+    parserKeys = obj && typeof obj === "object" ? Object.keys(obj) : null;
+  } catch (e) {
+    parseError = e.message;
+  }
+  const parserKeyCount = Array.isArray(parserKeys) ? parserKeys.length : null;
+  return {
+    occurrences,
+    uniqueKeys: [...seen],
+    dupKeys,
+    parserKeyCount,
+    collectorZero: occurrences.length === 0,
+    parserMismatch:
+      parserKeyCount !== null && parserKeyCount !== seen.size
+      || (Array.isArray(parserKeys) && parserKeys.some((k) => !seen.has(k))),
+    parseError,
+  };
+}
+
 function checkForgeManifest(versionDir, platform, issues) {
   // Forge-specific `_manifest.json` lives in `<version>/<subdir>/_manifest.json`
   if (platform !== "forge") return;
@@ -556,6 +658,40 @@ function checkForgeManifest(versionDir, platform, issues) {
   try { obj = JSON.parse(text); } catch (e) {
     issues.push(rec("G-manifest", "ERROR", manifestPath, "JSON parse", `error: ${e.message}`));
     return;
+  }
+  // S17-T1（第 11 轮立腿，第 33 轮 2026-09-25 放宽采集面）：JSON.parse 对重复键**静默后吃前**
+  // （last-wins），所以 forge_1.20.1 曾以 raw 73 键 / 唯一 71 的状态把两条 recipes 重复条目
+  // 一路带进审计还全绿 —— 写方（历史一次性 fetch 脚本）已不在盘上，无法在写侧去重，
+  // 就在读侧永久判红。仍按**原始文本**数键、不靠 parse 结果当计数；但采集器从「行首 2 空格」
+  // 换成深度/字符串态扫描（`collectTopLevelJsonKeys`），并与 JSON.parse 的顶层唯一键集交叉核。
+  const census = manifestKeyCensus(text);
+  if (census.collectorZero) {
+    issues.push(rec(
+      "G-manifest-collector-zero",
+      "ERROR",
+      manifestPath,
+      "原始扫描至少采到 1 个顶层键",
+      `COLLECTOR_RETURNED_ZERO：缩进无关的顶层键扫描采到 0 条（JSON.parse 侧顶层键 ${census.parserKeyCount ?? "n/a"} 个）⇒ 重复键判据此刻没有任何对象可判，禁止静默绿（第 32 轮 P2 证出的「恒真于空」形状）`,
+    ));
+  }
+  if (census.parserMismatch && !census.collectorZero) {
+    issues.push(rec(
+      "G-manifest-collector-zero",
+      "ERROR",
+      manifestPath,
+      `两机制对顶层键集一致（扫描唯一集 ${census.uniqueKeys.length}）`,
+      `MECHANISM_DISAGREE：原始扫描唯一键 ${census.uniqueKeys.length} 个 vs JSON.parse 顶层键 ${census.parserKeyCount} 个 ⇒ 采集器与本档形状（顶层非 plain object？字符串态漏判？）已失配，判据覆盖面在退化`
+      + (census.parseError ? `（parse error: ${census.parseError}）` : ""),
+    ));
+  }
+  if (census.dupKeys.length > 0) {
+    issues.push(rec(
+      "G-manifest-dup-key",
+      "ERROR",
+      manifestPath,
+      `unique top-level keys (${census.uniqueKeys.length})`,
+      `raw key occurrences ${census.occurrences.length}; duplicated: ${census.dupKeys.join(", ")} —— 写方必须在写出前按键去重（重复键会被 JSON.parse last-wins 静默吞并）`,
+    ));
   }
   for (const [key, entry] of Object.entries(obj)) {
     if (!entry || typeof entry !== "object") continue;
@@ -729,6 +865,20 @@ function main() {
   }
 
   const all = [];
+  // S17-T2（第 33 轮，2026-09-25）：`scanned=0` 必须是红，不是「没什么可查 ⇒ 过」。
+  // 旧行为 = 数据根不存在 / `--platform`+`--version` 拼错 / `MC_SKILL_DATA` 没指对 时，
+  // 本审计什么也不看、`counts.ERROR=0` ⇒ **exit 0**（实测 `--data-root=<不存在>` 与
+  // `--platform=forge --version=9.9.9` 均 rc=0，payload `scanned:[]`）。ERROR→exit(1)
+  // 那条腿本身是真门（投毒夹具 rc=1，见 mcp-server/test-audit-data.mjs），假绿的是这一条空跑腿。
+  if (targets.length === 0) {
+    all.push(rec(
+      "Z-scanned-zero",
+      "ERROR",
+      dataRoot,
+      "至少扫到 1 个 `<platform>_<version>` 索引目录",
+      `COLLECTOR_RETURNED_ZERO：scanned=0（platform=${opts.platform}${opts.version ? ` version=${opts.version}` : ""}）⇒ 数据根缺失或过滤器无命中，本审计对本档 0 覆盖，禁止把它当「查过且干净」`,
+    ));
+  }
   const reports = targets.map((t) => ({ index: t, issues: auditIndex(dataRoot, t) }));
   for (const r of reports) all.push(...r.issues);
 

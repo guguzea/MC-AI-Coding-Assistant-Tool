@@ -483,7 +483,16 @@ if (argv.includes("--selftest")) {
   const all = [];
   let withLeg = 0;
   const legModes = new Map();
+  // B1-a 放行腿（2026-09-25，§6.10③）：`fabric/26.1.2` 该档 **deobfuscated**（official 名、游戏 jar 无混淆），
+  // 按设计**没有** yarn-mappings.sqlite ⇒ 本门的「类名存在性」判据对它不适用。显式放行 + 计数披露，
+  // 而不是像过去那样靠「不在清单里」静默缺席。
+  const PASS_261 = /^fabric\/26\.1\.2\//;
+  let pass261 = 0;
   for (const f of files) {
+    if (PASS_261.test(f.replace(/\\/g, "/"))) {
+      pass261 += 1;
+      continue;
+    }
     const r = attestation(f);
     if (r.missing) all.push(...r.missing);
     if (r.bad) all.push(...r.bad);
@@ -497,7 +506,27 @@ if (argv.includes("--selftest")) {
     if (all.length > 40) console.error(`  … +${all.length - 40} more`);
     process.exit(1);
   }
+  // 覆盖披露（B1-a「先量后改」的「量」：全量扩面实测 532 件 ⇒ rc1、约 1615 处问题行 ⇒ 批量工程，未做）
+  let fabricTotal = 0;
+  {
+    const base = path.join(ROOT, "fabric");
+    const walk = (d) => {
+      for (const e of fs.readdirSync(d, { withFileTypes: true })) {
+        const p = path.join(d, e.name);
+        if (e.isDirectory()) walk(p);
+        else if (e.name.endsWith(".md")) fabricTotal += 1;
+      }
+    };
+    try {
+      for (const v of fs.readdirSync(base, { withFileTypes: true })) {
+        if (!v.isDirectory()) continue;
+        const d = path.join(base, v.name, ".cursor", "skills");
+        if (fs.existsSync(d)) walk(d);
+      }
+    } catch {}
+  }
   console.log(
-    `assert-skill-yarn-attest: ok（${files.length} 个技能正文，${withLeg} 件所在档的 yarn-mappings.sqlite 映射腿可用 [${[...legModes].map(([k, v]) => `${k}:${v}`).join(" · ")}]；全部标识符均有出处）`,
+    `assert-skill-yarn-attest: ok（清单 ${files.length} 件＝判 ${files.length - pass261} + 26.1.2 放行 ${pass261}；${withLeg} 件映射腿可用 [${[...legModes].map(([k, v]) => `${k}:${v}`).join(" · ")}]；` +
+      `fabric 技能源稿共 ${fabricTotal} 件 ⇒ 未入清单 ${fabricTotal - files.length} 件〔扩面实测 = 全量 rc1、约 1615 处问题行，属批量工程，见 docs/knowledge-coverage-sweep-20260924.md §6.10⑥〕；全部标识符均有出处）`,
   );
 }

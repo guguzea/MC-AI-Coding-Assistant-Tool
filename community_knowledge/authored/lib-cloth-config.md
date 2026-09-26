@@ -48,7 +48,7 @@ Decision: 要不要用 Cloth Config
 | 断言 | 数值 | 来源级别 |
 | --- | --- | --- |
 | 分发区间 | 1.14 → 26.2，158 条构建 / 148 条稳定版 | 实测 |
-| 逐端构建数 | fabric 77、forge 50、neoforge 31、**quilt 0** | 实测（按构建 `loaders` 累加） |
+| 逐端构建数 | fabric 79、forge 50、neoforge 32、**quilt 0**（2026-09-25 全量分页重读 = 161 builds；旧值 77/31 系 158-build 窗口） | 实测（按构建 `loaders` 累加） |
 | 末次发布 | 2026-06-18：`[Fabric 26.2] v26.2.155` + `[NeoForge 26.2] v26.2.155` | 实测 |
 | 26.1 版本线 | `[Fabric 26.1] / [NeoForge 26.1] v26.1.154`（2026-03-26，game_versions 26.1、26.1.1、26.1.2） | 实测 |
 | 发版节奏 | 最近 8 个有发布的月份跨 2024-10 → 2026-06，相邻间隔 2-4 个月（非每月） | 实测 |
@@ -79,7 +79,7 @@ Decision: 要不要用 Cloth Config
 - Screen 类被公共/服务端代码引用 → 专用服崩溃（Forge/Neo：`Dist.CLIENT` 门闩；Fabric/Quilt：client 源集 + `@Environment(EnvType.CLIENT)`）
 - 期待 Cloth「加新特性」→ 功能冻结（实测 26.x 仍在按 MC 版本发版，但没有新 API），需求不满足时换 YACL / Fzzy
 - 反过来把「冻结」读成「已死」而拒绝升级到本版构建 → 实测 v26.2.155 就在 26.2，用旧号段/旧版照样是踩坑
-- Quilt 工程按 Fabric 坐标直接引 Cloth → 实测 158 条构建中 quilt 0 条；Quilt 侧走 QSL 配置或按 QSL 文档，不要当 Fabric 工程照抄
+- Quilt 工程按 Fabric 坐标直接引 Cloth → 实测 161 条构建中 quilt 0 条（2026-09-25 全量分页重读）；Quilt 侧走 QSL 配置或按 QSL 文档，不要当 Fabric 工程照抄
 - 手写配置路径与 Cloth 冲突，或双份配置（ForgeConfigSpec + Cloth 各一份）
 - 只 `compileOnly` 却当硬依赖用，未装 Cloth 时 `NoClassDefFoundError`
 

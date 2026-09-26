@@ -4,7 +4,7 @@ description: Forge 1.20.1 事件系统。@SubscribeEvent、事件总线、物理
 platform: forge
 version: "1.20.1"
 dependencies: []
-mappings: mcp
+mappings: parchment
 docsTool: search_forge_docs
 ---
 

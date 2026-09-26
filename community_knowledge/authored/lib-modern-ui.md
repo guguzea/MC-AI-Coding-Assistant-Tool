@@ -1,13 +1,13 @@
 ---
 id: authored/lib-modern-ui
 title: Modern UI 现代文本排版与 GUI 库要点
-tags: [modern-ui, modernui, gui, text-rendering, unicode, fabric, forge, neoforge]
-summary: 现代文本排版引擎（中文/Unicode 渲染友好：SDF 抗锯齿、字体回退、HarfBuzz 整形）+ GUI API，F/Forge/Neo，中文模组圈使用率高。官方仓库 BloCamLimb/ModernUI-MC。
+tags: [modern-ui, modernui, gui, text-rendering, unicode, fabric, forge, neoforge, quilt]
+summary: 现代文本排版引擎（中文/Unicode 渲染友好：SDF 抗锯齿、字体回退、HarfBuzz 整形）+ GUI API，F/Forge/Neo（Quilt 复用 Fabric universal jar，release 止 1.21.3），中文模组圈使用率高。官方仓库 BloCamLimb/ModernUI-MC。
 mcHint: 1.18.2+（以官方 Releases 为准）
 minecraftVersions: "1.18.2+（以官方 Releases 为准）"
 sourceKind: authored
 modIds: [modernui]
-loaders: [fabric, forge, neoforge]
+loaders: [fabric, forge, neoforge, quilt]
 modrinthSlug: modern-ui
 role: api
 skillId: mc-modern-ui
@@ -27,6 +27,25 @@ skillId: mc-modern-ui
 - 原版文本渲染够用 → 不必引，引了会接管/优化原版文本管线，影响面大
 - 只想做配置屏 → Cloth / YACL 更对口（`lib-cloth-config`）
 - 与渲染管线（Sodium/Iris 等）的兼容要逐个版本确认，不能想当然
+
+## 加载器口径（2026-09-25 按构件面逐 loader 实测；本档 `loaders` 由 [fabric, forge, neoforge] 补成含 `quilt`）
+
+口径 = 2026-09-22 裁定④ + 2026-09-24 延伸：**点名某 loader ⇔ 构件面该 loader 有 `versionType=release` 的文件行**；窗口终点取该 loader 的 release 上界，只有 beta/alpha 的必须在正文披露。数据 = `mcp-server/data/lib-manifests/all.json` 的 slug `modern-ui`（快照 as-of 2026-09-16；本轮未重抓，欠账挂 `CONTRIBUTING.md` `L42` ①）。逐 loader 分解（分母 = 该 slug 58 行）：
+
+| loader | 行 | release | 点分 `gameVersion` 上界（数值序，非字典序） | 判定 |
+|---|---|---|---|---|
+| fabric | 15 | 15 | 26.1.2 | 原已点名 |
+| forge | 19 | 19 | 26.1.2 | 原已点名 |
+| neoforge | 16 | 16 | 26.1.2 | 原已点名 |
+| **quilt** | 8 | **8**（0 beta/alpha） | **1.21.3** | ⇒ 补点名，但 release **止于 1.21.3**，见下 |
+
+quilt 的保留（写坐标前必读）：
+
+- 8 行 fileName 全是 `ModernUI-Fabric-*-universal.jar`（与该 slug fabric 行 fileName 交集 6）⇒ Quilt 侧复用同一条 Fabric/universal 构建，**上游没有单独的 Quilt 产物**；
+- **26.x 与 1.21.4+ 无 quilt 行**：`mc-modern-ui/SKILL.md` 的 `mcVersionsByPlatform` 已把窗口写成 `quilt=1.20-1.21.3`（同向、非本轮改），给 Quilt 工程选版本时按该窗口，越界即为「构件面无支撑」；
+- 与 `platforms` 的关系：本条只补 `loaders`（= `check_dependencies` 的 `detectedLibraries[].loaders`），**未动** `knowledge/libs/all-platforms/mc-modern-ui/SKILL.md` 的 `platforms` / 窗口（那条 `platforms` 语义正等裁定）。
+
+复核（只读、不落盘）：`node temp/ralph-20260922/_r37-probe-slug-loader.mjs` · `node temp/ralph-20260922/_r37-probe-rows.mjs` （第 37 轮探针脚本落在 `temp/**`，**不入库** ⇒ 只在本机这一轮可跑；持久口径 = 直接按 `mcp-server/data/lib-manifests/all.json` 里该 slug 的 `entries` 数 `loader` × `versionType`，点分 `gameVersion` 按数值序取上界）。
 
 ## Decision Flow
 

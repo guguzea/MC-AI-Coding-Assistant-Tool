@@ -4,7 +4,7 @@ description: Minecraft Forge 自定义配方开发。RecipeType、RecipeSerializ
 platform: forge
 version: "1.20.1"
 dependencies: []
-mappings: mcp
+mappings: parchment
 ---
 
 # 自定义配方开发（Forge 1.20.1）

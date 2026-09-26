@@ -560,6 +560,14 @@ async function main() {
     meta.meta.platform = "fabric";
     meta.meta.mcVersion = VERSION;
     meta.meta.fetchedAt = new Date().toISOString();
+    // D-6（2026-09-25）：pages 此前整写 = 本轮 provenanceLog。增量跑的 skipped 页不进 log，
+    // 于是每次抓取把台账削成「本次新抓的那几页」——1.21.10 实测盘上 79 页、台账只剩 1 条。
+    // 现按 filename 合并：既有条目保留（其 fetchedAt/sha256 记录的是真实落盘时刻），
+    // 本轮 provenanceLog 覆盖同名项；输出按 filename 排序，与盘面重算回填脚本同一确定性顺序。
+    const prevPages = Array.isArray(meta.meta.docs?.pages) ? meta.meta.docs.pages : [];
+    const pagesByFilename = new Map();
+    for (const pg of prevPages) if (pg && pg.filename) pagesByFilename.set(pg.filename, pg);
+    for (const pg of provenanceLog) if (pg && pg.filename) pagesByFilename.set(pg.filename, pg);
     meta.meta.docs = {
       sourceRepo: `${FABRIC_GH.owner}/${FABRIC_GH.repo}`,
       branch: BRANCH,
@@ -567,7 +575,9 @@ async function main() {
       sourceTreeSha: _mainTreeSha,
       sourceTreeTruncated: _mainTreeTruncated,
       acceptedSources: ["github_raw_versioned", "github_archive"],
-      pages: provenanceLog,
+      pages: [...pagesByFilename.values()].sort((a, b) =>
+        String(a.filename).localeCompare(String(b.filename)),
+      ),
       failures,
     };
     writeMeta(meta);

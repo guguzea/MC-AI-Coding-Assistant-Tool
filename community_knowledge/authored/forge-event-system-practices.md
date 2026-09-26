@@ -3,13 +3,13 @@ id: authored/forge-event-system-practices
 title: Forge 事件系统实务（双总线、订阅方式与常见坑）
 tags: [events, SubscribeEvent, EventBus, EventBusSubscriber, lifecycle, enqueueWork, IMC, forge, neoforge]
 summary: Forge 事件系统实务：双总线分工（Mod 总线管初始化/Forge 总线管运行期）；订阅三式（实例手动注册、@Mod.EventBusSubscriber 自动、bus 参数选总线）；生命周期事件并行与 enqueueWork 回主线程；IMC 跨模组；泛型事件监听父类收全部子类；Event 基类 cancel/phase。
-mcHint: 锚定 Forge 1.18–1.20.x 双总线形态（社区教程 2571 全文核实；该帖未声明协议，本文为自写综述、未复制原文表达）；NeoForge 新版形态有差异，以当档文档为准
+mcHint: 锚定 Forge 1.18–1.20.x 双总线形态（社区教程 post/2571 全文核实；许可为第三态：帖内无逐帖显式声明、站级默认 BY-NC-SA 3.0 适用；本文为自写综述、未复制原文表达）；NeoForge 新版形态有差异，以当档文档为准
 sourceKind: authored
 ---
 
 # Forge 事件系统实务
 
-自写短文。核心内容依据 mcmod 教程《浅谈 Forge 的事件系统和使用》（[post/2571](https://www.mcmod.cn/post/2571.html)，64 段+194 代码块全文通读后综合；**该帖列表与帖页均未声明协议（2026-08-24 复核），本文为自写综述、只取思路不复制原文表达**），跨版本差异部分采用保守表述。事件是模组开发的核心概念之一——本篇是跨版本实务总览，**各版本的准确事件名/签名以对应版本档规则 `05-events` 与 `search_forge_docs` 为准**。
+自写短文。核心内容依据 mcmod 教程《浅谈 Forge 的事件系统和使用》（[post/2571](https://www.mcmod.cn/post/2571.html)，64 段+194 代码块全文通读后综合）。**许可口径 = 第三态（2026-09-24 用户裁定）**：该帖**帖内无逐帖显式声明** ⇒ 按「帖内已明示协议」来读不成立；同时站点页脚写有「MC百科(mcmod.cn) 除另有声明，所有开放公共编辑的内容均使用 BY-NC-SA 3.0 协议。」⇒ **站级默认 BY-NC-SA 3.0 适用**，按「完全没有许可口径」来读同样不成立。本文为自写综述、只取思路不复制原文表达。取证 as-of 2026-09-24（用户直连测量：`.post-content` innerText 7055 字符、页脚之前许可类关键词命中 0、页脚原文位于 innerText 尾部 index 7376 / 总 7428），证据档位 = **外部-only**（该页在仓内无落盘副本，不得写成「语料逐字」；站方内容会变，复核须重新直连）。跨版本差异部分采用保守表述。事件是模组开发的核心概念之一——本篇是跨版本实务总览，**各版本的准确事件名/签名以对应版本档规则 `05-events` 与 `search_forge_docs` 为准**。
 
 ## 心智模型：原版没有事件，这是加载器给的扩展点
 
@@ -84,6 +84,6 @@ public class LifecycleHandler { ... }
 
 ## 不清楚时
 
-- 思路来源（显式 BY-NC-SA，可署名演绎）：https://www.mcmod.cn/post/2571.html
+- 思路来源（许可为第三态：帖内无逐帖显式声明，但站级默认 BY-NC-SA 3.0 适用；as-of 2026-09-24 用户直连取证、外部-only，仓内无该页落盘副本）——自写综述可署名演绎：https://www.mcmod.cn/post/2571.html
 - 各版本事件名/签名：当档规则 `05-events` ＋ `search_forge_docs` / `search_neoforge_docs`（关键词 events）
 - NeoForge 新版的总线与注解形态与经典 Forge 有差异——以当档官方文档为准，勿把本篇的双总线写法直接搬进新版 NeoForge 工程

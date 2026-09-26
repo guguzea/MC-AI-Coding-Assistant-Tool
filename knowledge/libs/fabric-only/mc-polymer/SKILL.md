@@ -4,6 +4,7 @@ description: Polymer 纯服务端内容库。触发词：Polymer、虚拟方块�
 platforms: [fabric, quilt]
 mcVersions: ["1.18-26.2"]
 communityDocId: authored/lib-polymer
+modrinthSlug: polymer
 mappings: hint
 ---
 

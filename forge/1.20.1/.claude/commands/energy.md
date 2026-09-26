@@ -4,7 +4,7 @@ description: FE/能量系统互通概念。触发词：ForgeEnergy、IFNFEnergyS
 platform: forge
 version: "1.20.1"
 dependencies: []
-mappings: mcp
+mappings: parchment
 ---
 
 # mc-energy

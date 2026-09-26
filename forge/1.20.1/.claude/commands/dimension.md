@@ -4,7 +4,7 @@ description: 自定义维度、DimensionType、传送与跨维度逻辑。触发
 platform: forge
 version: "1.20.1"
 dependencies: []
-mappings: mcp
+mappings: parchment
 ---
 
 # mc-dimension

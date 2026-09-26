@@ -18,7 +18,7 @@ mcHint: stable / preview 双线
 | 仓库 | 内容 |
 |------|------|
 | https://github.com/Mojang/bedrock-samples | 官方资源包/行为包样例 + 附加包模板，Script API 示例齐全 |
-| https://github.com/Mojang/minecraft-preview-changelogs 或版本公告 | Script API 版本变更（以 learn 页为准） |
+| https://learn.microsoft.com/minecraft/creator/scriptapi/ | Script API 模块版本与变更（以 learn 页为准；Mojang 侧无对应 GitHub 变更日志仓库） |
 
 ## 用法
 

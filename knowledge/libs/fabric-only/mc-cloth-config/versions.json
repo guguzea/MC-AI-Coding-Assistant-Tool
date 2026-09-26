@@ -56,6 +56,30 @@
       "textApi": "literal",
       "basis": "同线 16.0.131 的 manifest 声明 => 1.21.2-；本档原稿已是 16.0.143，仅补仓库行与依据"
     },
+    "1.21.4": {
+      "coord": "17.0.144+fabric",
+      "state": "active",
+      "textApi": "literal",
+      "basis": "S23（2026-09-24 现拉）：query_upstream_releases source=modrinth slug=cloth-config minecraftVersion=1.21.4 → ok:true available:true total:4，该条原始 release 对象 version=17.0.144+fabric / game_versions=[\"1.21.4\"] / loaders=[\"fabric\"]，matchRule=「game_versions 含 1.21.4」，httpStatus 200 via fetch，fetchedAt 2026-09-24T03:48:14Z（日志 temp/ralph-20260922/logs/r15-02-cloth-1.21.4.json）。同查询另有 17.0.142+fabric（game_versions 同），取 144 为最新。textApi=literal 依据本档语料 data/fabric_1.21.4 正文 Text.literal 25 处（同档另有 new LiteralText 5 处，均出现在移植对照上下文）。本档手稿原为「无 slot」stop-stub，2026-09-24 随本槽落地改写"
+    },
+    "1.21.8": {
+      "coord": "19.0.147+fabric",
+      "state": "active",
+      "textApi": "literal",
+      "basis": "S23（2026-09-24 现拉）：query_upstream_releases source=modrinth slug=cloth-config minecraftVersion=1.21.8 → ok:true available:true total:2，该条原始 release 对象 version=19.0.147+fabric / game_versions=[\"1.21.6\",\"1.21.7\",\"1.21.8\"] / loaders=[\"fabric\"]，fetchedAt 2026-09-24T03:48:16Z（日志 r15-02-cloth-1.21.8.json）—— 该版只有 147 一条 fabric 构件，故 coord 唯一。textApi=literal 依据 data/fabric_1.21.8 正文 Text.literal 25 处。本档手稿原为「无 slot」stop-stub，2026-09-24 随本槽落地改写"
+    },
+    "1.21.10": {
+      "coord": "20.0.149+fabric",
+      "state": "active",
+      "textApi": "literal",
+      "basis": "S23（2026-09-24 现拉）：query_upstream_releases source=modrinth slug=cloth-config minecraftVersion=1.21.10 → ok:true available:true total:4，该条原始 release 对象 version=20.0.149+fabric / game_versions=[\"1.21.9\",\"1.21.10\"] / loaders=[\"fabric\"]，fetchedAt 2026-09-24T03:48:18Z（日志 r15-02-cloth-1.21.10.json）。同查询另有 20.0.148+fabric（game_versions 同），取 149 为最新。textApi=literal 依据 data/fabric_1.21.10 正文 Text.literal 25 处。本档手稿原为「无 slot」stop-stub，2026-09-24 随本槽落地改写"
+    },
+    "26.1.2": {
+      "coord": "26.1.154+fabric",
+      "state": "active",
+      "textApi": "literal",
+      "basis": "S23（2026-09-24 现拉）：query_upstream_releases source=modrinth slug=cloth-config minecraftVersion=26.1.2 → ok:true available:true total:2，该条原始 release 对象 version=26.1.154+fabric / game_versions=[\"26.1\",\"26.1.1\",\"26.1.2\"] / loaders=[\"fabric\"]，fetchedAt 2026-09-24T03:48:20Z（日志 r15-02-cloth-26.1.2.json）—— 该版只有 154 一条 fabric 构件。textApi=literal 取的是 mojmap 静态工厂形：本档语料 data/fabric_26.1.2 正文 Component.literal 68 处、Text.literal / new LiteralText 各 0 处（本档 mappings=official，非 Yarn）。坐标已实证 ≠ 签名已核实：本档正文仍禁止输出方法名/示例代码，签名一律 query_loader_api 或用户自备 jar 走 ingest_loader_api。本档手稿原为 stop-stub，2026-09-24 随本槽落地改写"
+    },
     "1.21.11": {
       "coord": "21.11.153",
       "state": "active",

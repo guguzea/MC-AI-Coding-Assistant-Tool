@@ -4,7 +4,7 @@ description: 数据包布局、pack.mcmeta、validate_datapack_json。触发词�
 platform: forge
 version: "1.19.4"
 dependencies: []
-mappings: mcp
+mappings: parchment
 ---
 
 # mc-datapack（1.19.4）

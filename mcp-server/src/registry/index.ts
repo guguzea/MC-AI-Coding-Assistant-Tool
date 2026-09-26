@@ -1,4 +1,5 @@
 import { actionable, ActionCodes, withAction, versionRequiredAction, missingMcVersion } from "../utils/actionable.js";
+import { isSafeVersionSegment } from "../utils/minecraft-version.js";
 import { searchRegistryEntries, listRegistryNames, registryDataAvailable, registryOpenError } from "./store.js";
 
 export { buildRegistryIndex, vanillaRegistryDir, vanillaRegistrySqlitePath } from "./builder.js";
@@ -37,6 +38,23 @@ function looksLikeJavaIdentifier(q: string): boolean {
   return t.includes(".") || /^[A-Z]/.test(t);
 }
 
+/**
+ * C-3（2026-09-22 S9/T2）：`version` 必须是**纯数字点分形状**的 allowlist token。
+ * 此前这里只做 `trim()`，于是 `--version=../forge_1.20.1` 会被接受，并被原样回显进
+ * `notes[]` / `action.message`（实测出货 `未找到 data/vanilla_../forge_1.20.1/registries/ 索引`）
+ * —— 那是一条「文件系统布局 + 目录存在性探测」的泄漏面（**不是**任意写 / RCE：本工具只读）。
+ * 用黑名单替换（strip `..` / `/`）不算修：漏一个字符就复活。这里改用仓库既有白名单
+ * `isSafeVersionSegment`（`VERSION_SEGMENT_RE`，src/utils/minecraft-version.ts:105）——
+ * 与 `src/api/index.ts:293` / `src/mappings/convert.ts:89` / `yarn-sqlite.ts:33` 同源，不再自带一份正则。
+ * 前导 `v` 先按 `vanillaRegistryDir()` 的 `replace(/^v/i, "")` 同一规则剥掉，免得把该写法判成非法。
+ * 允许 `9.9.9` 这类**不存在但形状合法**的档位（那是「索引没建」路径的既有测试夹具，
+ * 见 test-wave-bcd.mjs 的 9.9.8 / 9.9.9），allowlist 只拦穿越、不代替版本存在性判定。
+ */
+function safeRegistryVersion(version: string): string | null {
+  const v = version.trim().replace(/^v/i, "");
+  return isSafeVersionSegment(v) ? v : null;
+}
+
 export function queryRegistry(input: QueryRegistryInput): QueryRegistryResult {
   if (missingMcVersion(input.version)) {
     return {
@@ -49,7 +67,28 @@ export function queryRegistry(input: QueryRegistryInput): QueryRegistryResult {
       action: versionRequiredAction(),
     };
   }
-  const version = input.version!.trim();
+  const safeVersion = safeRegistryVersion(input.version!);
+  if (safeVersion === null) {
+    // 拒绝且**不回显**该 token（回显就是把穿越串再送出货一次）；不落到 registryDataAvailable。
+    return {
+      found: false,
+      matches: [],
+      nameLayer: "registry_id",
+      version: "",
+      relatedTools: ["convert_mapping", "query_api"],
+      notes: [
+        "version 形状非法：只接受点分数字版本 token（可选前导 v），如 1.20.1 / 1.21.11 / 26.1。",
+        "本工具不回显被拒绝的入参；请先 list_doc_versions 取本仓已入库档位。",
+      ],
+      action: actionable(
+        ActionCodes.INVALID_INPUT,
+        "version 形状非法（疑似路径片段），已拒绝；registry 只接受点分数字 MC 版本 token",
+        ["改传 1.20.1 / 1.21.11 / 26.1 这类点分数字版本", "先 list_doc_versions 看已入库档位"],
+        ["list_doc_versions"],
+      ),
+    };
+  }
+  const version = safeVersion;
   const query = input.query.trim();
   const relatedTools = ["convert_mapping", "query_api"];
   const notes = [

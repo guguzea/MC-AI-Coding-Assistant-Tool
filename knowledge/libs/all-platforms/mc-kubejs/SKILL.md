@@ -1,20 +1,25 @@
 ---
 name: mc-kubejs
 description: KubeJS 整合包脚本引擎。JS 脚本改配方/注册物品方块/改 tag/热重载，开发期配 ProbeJS。触发词：KubeJS、kubejs、脚本、javascript、recipe 脚本、ProbeJS、整合包
-platforms: [fabric, forge, neoforge]
+platforms: [fabric, forge, neoforge, quilt]
 mcVersions: ["1.18.2-26.1.2"]
+mcVersionsByPlatform: "fabric=1.18.2-1.20.1; forge=1.18.2-1.20.1; neoforge=1.20.1-1.21.1; quilt=1.18.2-1.20.1"
 communityDocId: authored/lib-kubejs
-mappings: "脚本层 API 由 KubeJS 封装，与项目 mappings 无关；类名以 docs.kubejs.com 对应版本为准"
+modrinthSlug: kubejs
+mappings: "脚本层 API 由 KubeJS 封装，与项目 mappings 无关；类名以 kubejs.com/wiki/ 对应版本为准"
 ---
 
 > 数据读取日期：2026-09-14（源：Modrinth project/kubejs 版本表 limit=100；本轮 release 上界 fabric=1.20.1 / forge=1.20.1 / neoforge=1.21.1 ⇒ 本文件 mcVersions 上界 26.1.2 高于 release 上界，仅 beta/alpha 支撑）
 > 复核：curl.exe --ssl-no-revoke -sS "https://api.modrinth.com/v2/project/kubejs/version?limit=100" 后按 game_versions + loaders + version_type 取上界
+> release/beta 口径收口（2026-09-24，构件面 = `mcp-server/data/lib-manifests/all.json` 快照 as-of 2026-09-16；窗口终点一律取该 loader 的 release 上界）：
+> - neoforge 窗口终点 = release 上界 1.21.1（beta 构件至 26.1.2，无 release 支撑 —— 2026-09-24 现拉 Modrinth `project/kubejs/version?game_versions=["26.1.2"]&loaders=["neoforge"]`，7 条 `26.1.2-8.0.x+neoforge` 的 `version_type` 全为 beta）
+> - fabric / forge / quilt 窗口终点 1.20.1 = 各自 release 上界（快照另有 1.19 一条非 release，界内，不构成 over-claim）
 
 # KubeJS 整合包脚本（操作指引）
 
 Forge 构建止于 **1.20.1**；1.21+ 只用 Fabric / NeoForge，不要给 Forge 1.21+ 找不存在的构件。
 
-给 AI 的操作指引：用 JS 脚本做整合包内容定制（配方/tag/简单注册/自定义逻辑），免编译免重启。详细信息用 `search_community_docs` 查 `authored/lib-kubejs`，API 细节以 [官方文档 docs.kubejs.com](https://docs.kubejs.com)（对应 MC 版本）与 [官方仓库](https://github.com/KubeJS-Mods/KubeJS) 为准。
+给 AI 的操作指引：用 JS 脚本做整合包内容定制（配方/tag/简单注册/自定义逻辑），免编译免重启。详细信息用 `search_community_docs` 查 `authored/lib-kubejs`，API 细节以 [官方文档 kubejs.com/wiki/](https://kubejs.com/wiki/)（对应 MC 版本）与 [官方仓库](https://github.com/KubeJS-Mods/KubeJS) 为准。
 
 ## 何时用 / 何时不用
 
@@ -28,7 +33,7 @@ Decision: 用不用 KubeJS
 → 需要自定义渲染/复杂注册/性能关键逻辑 → Java mod（mc-registry / mc-renderer）
 → 整合包内容调整（配方/tag/简单注册/脚本逻辑）→ KubeJS
 → 已选：
-   ├─ 平台分支：fabric / forge / neoforge 各装对应构建（Quilt 另有构建，按短文 loaders）
+   ├─ 平台分支：fabric / forge / neoforge 各装对应构建（Quilt 亦有构建，但上界收窄：**Quilt 止于 1.20.1、4 条构件行**；构建面 = `mcp-server/data/lib-manifests/all.json` 快照（as-of 2026-09-16，本轮 2026-09-24 现算） Fabric/Forge 同止 1.20.1，NeoForge release 上界 1.21.1。「快照无该版本行」只证本仓快照没抓到，**不证上游没有**（要核上游用 `query_upstream_releases`））
    ├─ 脚本位置：按平台约定放 scripts 目录（startup / server / client 分场景，以文档为准）
    ├─ 热重载：改脚本后可热重载，生产环境注意边界（以文档为准）
    ├─ ProbeJS：开发期启用，提供补全与文档（可选依赖）
@@ -41,7 +46,7 @@ Decision: 用不用 KubeJS
 2. 声明依赖：`fabric.mod.json` / `mods.toml`（26.x 为 `neoforge.mods.toml`）的 `depends` / `suggests` 写 `kubejs`；软依赖门闩见 `authored/soft-deps-modlist`
 3. 分场景写脚本：startup 脚本注册简单物品/方块（id、属性以文档 API 为准）；server 脚本监听配方/标签相关事件改配方与 tag；客户端逻辑放 client 场景
 4. 热重载验证：改完脚本按文档方式触发重载，验证改动生效且无残留状态
-5. 版本对齐：脚本 API 随 MC 版本大改，事件名、脚本目录与 API 名称以 docs.kubejs.com 对应版本为准，勿照抄旧版本脚本
+5. 版本对齐：脚本 API 随 MC 版本大改，事件名、脚本目录与 API 名称以 kubejs.com/wiki/ 对应版本为准，勿照抄旧版本脚本
 
 ## 软 / 硬依赖
 
@@ -49,9 +54,11 @@ Decision: 用不用 KubeJS
 - 作为开发依赖：可 `compileOnly` + 门闩（软）或 `depends`（硬）；未装时不能加载引用 KubeJS 类的代码
 - ProbeJS 是开发期可选依赖，与 KubeJS 版本需匹配
 
+> **Quilt 侧安装口径（2026-09-24 补）**：`platforms` 含 `quilt` 的依据是本仓快照 `mcp-server/data/lib-manifests/all.json` 里 slug `kubejs` 的 **4 条 `loader:"quilt"` 构件行**（本轮现算，as-of 2026-09-24；窗口见 frontmatter `mcVersionsByPlatform`）。4 条的**文件名 0 条带 `quilt` 字样**（形如 `kubejs-fabric-1802.5.5-build.569.jar`）⇒ 实况是 **Quilt 按同 MC 版本的 Fabric 构件加载**；玩家侧「整合包直接装 KubeJS」这条不受 loader 影响。⚠️ **Quilt 专属仓库 URL / Gradle 坐标串未核实**（本仓只核到构件文件名）⇒ 禁止照本文默写 `maven { url }` / `modImplementation`。坐实入口：`query_upstream_releases`（`modrinth`，slug=`kubejs`）；调 KubeJS API 时另需 `ingest_loader_api`（自备 jar）逐签名核。
+
 ## 常见错误
 
-- 脚本 API 随 MC 版本大改 → 旧脚本失效，先查 docs.kubejs.com 对应版本
+- 脚本 API 随 MC 版本大改 → 旧脚本失效，先查 kubejs.com/wiki/ 对应版本
 - 配方改不动 → 事件名或配方 id 写错，先确认事件与目标配方 id
 - 期待「脚本即全功能 mod」→ 渲染/复杂注册仍需 Java 模组
 - 平台间脚本目录/加载行为有差异 → 换平台时核对文档
@@ -66,7 +73,7 @@ Decision: 用不用 KubeJS
 
 ## 参考
 
-- 官方：https://github.com/KubeJS-Mods/KubeJS 、https://docs.kubejs.com
+- 官方：https://github.com/KubeJS-Mods/KubeJS 、https://kubejs.com/wiki/
 - 社区：`search_community_docs` → `authored/lib-kubejs`
 - 相关 Skill：`mc-recipe`、`mc-registry`、`mc-datapack`
-- 不确定时：打开 docs.kubejs.com（对应 MC 版本）+ 官方示例，未核对前不写死任何 API
+- 不确定时：打开 kubejs.com/wiki/（对应 MC 版本）+ 官方示例，未核对前不写死任何 API

@@ -69,8 +69,32 @@ MCP 负责运行时查询；规则集负责写代码约束。完整注意项见�
   - **注意标志**：`node:sqlite` 在 **22.5–22.12 与 23.0–23.3 需要 `--experimental-sqlite`**（22.13 LTS / 23.4+ 起默认开启）。落在该区间的 Node 须把 `--experimental-sqlite` 写进启动参数或 `NODE_OPTIONS`，否则 MCP/CLI 入口会打印醒目警告并以非零码退出。**建议直接安装 Node 22.13+ / 24 LTS 省心。**
 - 本机已有完整仓库（`mcp-server/` + `data/`）
 - GitHub Release / git clone **不含** `node_modules`，必须本地 `npm ci`
-- JSON/YAML/TOML 里的路径一律用**正斜杠**绝对路径（比如`H:/MC_skill/...`），不要用 Windows 反斜杠，不要用 `~`（部分宿主不展开）
+- JSON/YAML/TOML 里的路径一律用**正斜杠**绝对路径（比如`<仓库根>/mcp-server/dist/index.js`，Windows 写 `D:/dev/MC_skill/...`、POSIX 写 `/home/me/MC_skill/...`），不要用 Windows 反斜杠，不要用 `~`（部分宿主不展开）
 - 本服务冷启动可能超过 5 秒（读 `data/`）。OpenCode 等默认超时偏短，草稿里应把 timeout 提到 **60000** 以上
+
+---
+
+## Step 0-pre — 校验既有宿主配置里的绝对路径仍可解析
+
+**换盘 / 换目录 / 从移动盘（OneDrive、映射盘符）搬走仓库后，旧配置不会报错，只会静默失败**：宿主仍按配置里写死的
+绝对路径去找 `dist/index.js` 与 `MC_SKILL_DATA`，服务起不来时 IDE 一般只显示「server not responding」。
+所以首次配置**之后**、以及每次移动仓库**之后**，跑一次点校验（把宿主配置文件当参数传进去）：
+
+```bash
+node -e '
+const fs = require("fs");
+for (const f of process.argv.slice(1)) {
+  const txt = fs.existsSync(f) ? fs.readFileSync(f, "utf8") : null;
+  if (txt === null) { console.log("SKIP 不存在: " + f); continue; }
+  const paths = [...new Set((txt.match(/"[^"]+"/g) || []).map((s) => s.slice(1, -1)).filter((p) => /^[A-Za-z]:[\\/]/.test(p) || p.startsWith("/")))];
+  for (const p of paths) console.log((fs.existsSync(p) ? "OK   " : "STALE") + "  " + p + "   <- " + f);
+}' "$HOME/.cursor/mcp.json"
+```
+
+- 出现 **STALE** ⇒ 该宿主仍指向旧仓库位置：把配置里所有绝对路径整体换到**当前仓库根**（正斜杠），再重载宿主 MCP；
+  只改 `MC_SKILL_DATA` 不改 `args[0]`（或反之）等于没修——两处都指向仓库内路径。
+- 本机实测（2026-09-24）：`~/.cursor/mcp.json:6` = `"H:/MC_skill/mcp-server/dist/index.js"`、`:9` = `"MC_SKILL_DATA": "H:/MC_skill/data"`，
+  `fs.existsSync("H:/MC_skill")` = **false** ⇒ 两处均 STALE，按本步换路径后恢复。（该文件属用户个人配置面，本仓不代改。）
 
 ---
 
@@ -415,7 +439,7 @@ Cline 常见：`%APPDATA%\Code\User\globalStorage\saoudrizwan.claude-dev\setting
    - forge / fabric / neoforge 至少一侧为 `found`（未下载的平台可以是 `not_found`，要如实告诉用户）。
 3. **`list_doc_versions`**（或当前平台的 `list_*_versions`）应返回版本数组。
 
-可选：工具列表里应能看到本服务，数量 **82**（`tool-registry.ts` 47 + `wave/register.ts` 35）。对不上先 `npm run build`，不要改服务名。
+可选：工具列表里应能看到本服务，数量 **82**（`tool-registry.ts` 46 + `wave/register.ts` 36）。对不上先 `npm run build`，不要改服务名。
 
 **验收失败时的 CLI 对照**（可区分「没连上宿主」还是「data 路径错」）：
 

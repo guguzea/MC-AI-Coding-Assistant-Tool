@@ -10,8 +10,11 @@
  * 1) **带内（in-band）失败：`ok:false` + `action`（本模块）** —— 默认且压倒性多数。
  *    实测口径（**一律排除本文件自身**：合同散文里就写着 `ok: false` 字面量，计入即自指；
  *    `test-wave-bcd.mjs` 的 A-27 门按同一口径当场复算，数字脱节就翻红）：
- *    · `grep -rn "ok: false" src/ --include='*.ts' | grep -v actionable.ts | wc -l` = **312** 行 / **47** 个文件（按行计）；
- *    · 按出现次数计（含 `ok:false` 无空格与同行多次）= **326** 处 / **51** 个文件。
+ *    · `grep -rn "ok: false" src/ --include='*.ts' | grep -v actionable.ts | wc -l` = **314** 行 / **48** 个文件（按行计）；
+ *    · 按出现次数计（含 `ok:false` 无空格与同行多次）= **331** 处 / **52** 个文件。
+ *      （2026-09-25 由 328/51 起：S4′ 新增 `src/upstream/cache.ts`（2 处，含头注里那句「只缓存 `ok:true`」）
+ *       与 `releases.ts` 头注第 4 条（1 处）⇒ 注释也进这个口径，**在 src 里写一句 `ok:false` 就动台账**。）
+ *    （两数 = 2026-09-24 Ralph 第 21 轮当场复算；`src/**` 每加一处带内失败都会挪它们，A-27 只等式钉「处」那一组。）
  *    该口径数的是**字面量位点**，同时涵盖工具带内 envelope 与模块内 helper 判别联合两类
  *    （如 `src/mdk/index.ts` 的 `assertNoZipSlip`、`src/decompile/services/mod-decompile.ts` 的 `resolveModIdSegment`）；两类都不置 isError。
  *    语义 = “工具正常执行完了，但结论是否定/不完整/需要人决策”：
@@ -20,10 +23,19 @@
  *    这类返回 **一律不置 isError**，MCP 层看到的是一次成功调用，模型必须去读 `action.nextSteps`。
  *
  * 2) **协议层失败：`isError: true`** —— 全仓库只有 **1 处**，在 `src/tool-registry.ts`：
- *    · `:516` `get_server_status` 的 `warmup=true` 但没传 version（VERSION_REQUIRED）。
- *      （行号 424→429→444→454→**516**：2026-09-18 Z-2「McpServer version 读 package.json」净 +15 行；
+ *    · `:588` `get_server_status` 的 `warmup=true` 但没传 version（VERSION_REQUIRED）。
+ *      （行号 424→429→444→454→516→518→520→526→527→565→**585**：2026-09-18 Z-2「McpServer version 读 package.json」净 +15 行；
  *       2026-09-21 并行会话先 +10，同日 A2 新增 `query_upstream_releases`（schema 常量 + 注册块）再 +62，
- *       门两次当场点名同步 —— 这条位点是纯行号锚，任何在 tool-registry.ts 上方增行的改动都要跟着改这里。）
+ *       2026-09-24 第 21 轮全量 test 普查发现 516→518：成因 = `src/tool-registry.ts:422-423` 的 `PORT_PROJECT_DESC` 多了两行「两态合同 / REFUSE_KNOWLEDGE_REPO」说明（题面即 S10 ⇒ 归第 7 轮那批写，未逐 commit 复核），
+ *       2026-09-24 A9（`query_upstream_releases` 回 `versionType`）在 outputSchema 与工具描述各 +1 行 ⇒ 518→520（`get_server_status` 注册块之前的行全被推移）；
+ *       同日 A4c（端点表扩源）在 input schema / outputSchema / 工具描述又 +6 行 ⇒ 520→526；
+ *       同日 A4c 口径洞补丁（maven 404 语义收窄）在工具描述 +1 行 ⇒ 526→**527**；
+ *       2026-09-25 S2/S3（`convert_mapping` 的批量名 + `accessLines` 条目行）在 input schema、`CONVERT_MAPPING_DESC` 与 handler 合计净 +38 行 ⇒ 527→565；
+ *       同日 S4′（`query_upstream_releases` 的分档 TTL 缓存）在 `queryUpstreamReleasesSchema` 加 `refresh`、`outputSchema` 加 `cache` 位 ⇒ 565→**585**（净 +20 行；handler 里透传 `refresh` 那一行在 585 之下，不计数）；
+ *       2026-09-26 A4d（`convert_mapping` 的 Linkie 扩展 namespace：schema enum 两处 + `CONVERT_MAPPING_DESC` 新增段）
+ *       净 +3 行 ⇒ 585→**588**（门当场点名同步）；
+ *       门三次当场点名同步 —— 这条位点是纯行号锚，任何在 tool-registry.ts 上方增行的改动都要跟着改这里。
+ *       该脆性已入册（B8 待裁定：改成「代码片段 needle + 行号仅报告」需你批准，本轮不动判据）。）
  *    （2026-09-17 P2-2 收敛：communityDocError 的 2 处 isError 已降级为带内 `ok:false`，
  *    与全部文档工具错误路径同形；CLI 退出码不变——isToolFailure 先看 `ok===false`。）
  *    判据：**结果通道的前置条件在注册层就被拒**，才用 isError。
@@ -93,6 +105,13 @@ export const ActionCodes = {
   PACK_NOT_FOUND: "PACK_NOT_FOUND",
   PICK_PLATFORM: "PICK_PLATFORM",
   VERSION_FALLBACK: "VERSION_FALLBACK",
+  // A4d（2026-09-26）：Linkie 扩展 namespace（legacy-yarn/feather/quilt-mappings/barn/plasma/yarrn）
+  // 不在 convert_mapping 支持面 —— 「拒绝 + 指路」出口码（带 nextSteps/relatedTools）。
+  UNSUPPORTED_NAMESPACE: "UNSUPPORTED_NAMESPACE",
+  // A1（2026-09-24）：`generate_*` 拒绝出口的生成语义码（分类器见 generators/common.ts）。
+  VERSION_UNSUPPORTED: "VERSION_UNSUPPORTED",
+  NO_NATIVE_GENERATOR: "NO_NATIVE_GENERATOR",
+  GENERATION_FAILED: "GENERATION_FAILED",
 } as const;
 
 export function missingMcVersion(version: string | undefined | null): boolean {

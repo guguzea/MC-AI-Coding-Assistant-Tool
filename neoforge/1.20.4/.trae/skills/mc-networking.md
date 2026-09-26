@@ -13,7 +13,7 @@ mappings: mojmap
 
 # 06 — 网络（NeoForge 1.20.4）
 
-**本档不是 Forge SimpleChannel。** 本库 `search_neoforge_docs` 的 `networking/payload` 页为 `DOC_NOT_FOUND`；下列类名与签名以 **官方 NeoForge 1.20.4 API jar 反编译**为准（`loader-api-summaries/1.20.4-neoforge.json`，`query_loader_api`），**不因缺页降级为未核实**。
+**本档不是 Forge SimpleChannel。** 本库 `search_neoforge_docs` 的 `networking/payload` 页**可查**：实测 `--version=1.20.4 --query=networking/payload` → `ok:true` / `total:10` / 首选 id `networking/payload` / `versionFallback:false`（出处 `06-networking:3`）。该页正文逐字用单数 `RegisterPayloadHandlerEvent`（verbatim:true），复数 `RegisterPayloadHandlersEvent` verbatim:false ⇒ 本档事件名 = 单数。下列类名与签名仍以 **官方 NeoForge 1.20.4 API jar 反编译**为准（`loader-api-summaries/1.20.4-neoforge.json`，`query_loader_api`），**不因页面口径改动而降级为未核实**。
 
 ## 核实骨架（jar 反编译）
 

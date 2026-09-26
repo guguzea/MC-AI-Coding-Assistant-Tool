@@ -4,6 +4,7 @@ description: Cardinal Components API（CCA）数据附加。触发词：CCA、Ca
 platforms: [fabric, quilt]
 mcVersions: ["1.18-26.2"]
 communityDocId: authored/lib-cca
+modrinthSlug: cardinal-components-api
 mappings: hint
 ---
 

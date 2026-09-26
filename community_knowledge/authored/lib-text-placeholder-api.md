@@ -15,7 +15,7 @@ skillId: mc-text-placeholder
 
 # Text Placeholder API 占位符库集成要点
 
-自写短文。版本与 API 细节以 [Text Placeholder API](https://github.com/Patbox/text_placeholder_api) 当前 README 与示例为准。
+自写短文。版本与 API 细节以 [Text Placeholder API](https://github.com/Patbox/TextPlaceholderAPI) 当前 README 与示例为准。
 
 ## 何时用 / 何时不用
 
@@ -78,7 +78,7 @@ Decision: 用不用 Text Placeholder API
 - MCP：`check_dependencies`、`search_community_docs`
 - Skill：`mc-text-placeholder`；相关：`mc-command`、`mc-networking`、`mc-gui`
 - 全览：§二.8 服务端/网络/文本；`authored/library-catalog-2026`、`authored/library-integration`
-- 官方：https://github.com/Patbox/text_placeholder_api
+- 官方：https://github.com/Patbox/TextPlaceholderAPI
 - 不清楚时：打开 Text Placeholder API README + 示例；`search_fabric_docs` 查文本/聊天相关页；AGENT_USAGE.md 规则先行
 
 ## 核对（2026-08 反编译验证）

@@ -14,7 +14,7 @@ description: 06 — 网络通信
 
 - **所有网络包只能在物理端分隔的类中使用**
 - 服务端 mod 的网络包发送给客户端时，客户端收到的是**反序列化后的数据对象**，不是完整类
-- 禁止在 `AbstractClientPacket` 等客户端包类中直接访问服务端独有类（如 `ServerWorld`）
+- 禁止在 `AbstractClientPacket` 等客户端包类中直接访问服务端独有类（如 `ServerLevel`）
 - 使用 `DistExecutor` 或 `FMLEnvironment.dist` 判断当前物理端
 - 使用 `level.isClientSide` 判断当前逻辑端
 

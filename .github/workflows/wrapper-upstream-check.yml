@@ -21,6 +21,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     continue-on-error: true
+    # CI 语义（全工作流统一钉）：只约束反编译下载链（src/decompile）。本 job 的「上游可达」
+    # 指 assert-scaffold-wrappers.mjs 自己的 checksum 探针，与本变量无关，照常联网。
+    env:
+      MC_SKILL_SKIP_DOWNLOAD: "1"
 
     steps:
       - uses: actions/checkout@v4

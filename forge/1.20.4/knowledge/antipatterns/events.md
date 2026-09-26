@@ -102,7 +102,7 @@ public static void onClientSetup(FMLClientSetupEvent event) {
 
 **症状**：游戏崩溃或数据不同步。
 
-**正确方案**：`FMLClientSetupEvent` 只用于注册 KeyBinding 和渲染器。
+**正确方案**：`FMLClientSetupEvent` 只用于注册按键绑定（KeyMapping）和渲染器。
 
 ---
 

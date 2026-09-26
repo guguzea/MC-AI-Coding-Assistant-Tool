@@ -100,7 +100,7 @@ public void onLoad() {
 
 ```java
 // ✅ 1.18.2 字段名
-ForgeRegistries.ENTITYTYPES
+ForgeRegistries.ENTITIES
 ForgeRegistries.ATTRIBUTES
 ForgeRegistries.BLOCK_ENTITIES
 ```

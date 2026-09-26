@@ -146,7 +146,7 @@ Forge 1.18.2 引入 Caves & Cliffs 大更新，世界高度发生变化：
 2. **不要用 Mixin 的 `@Inject` 在构造函数里修改 final 字段**：会导致游戏崩溃
 3. **不要在 `server` 包里放 `@OnlyIn(Dist.CLIENT)` 的代码**：客户端类会被服务端打包进 jar，导致混淆问题
 4. **不要忘记 `mods.toml` 中的 `dependencies`**：任何对 Forge API 的依赖必须声明
-5. **不要在 `FMLClientSetupEvent` 里直接执行游戏逻辑**：只用于注册 KeyBinding 和渲染器
+5. **不要在 `FMLClientSetupEvent` 里直接执行游戏逻辑**：只用于注册按键绑定（KeyMapping）和渲染器
 
 ---
 

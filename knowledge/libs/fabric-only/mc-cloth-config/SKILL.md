@@ -1,14 +1,17 @@
 ---
 name: mc-cloth-config
 description: Cloth Config 配置库（Fabric/Quilt）接入。触发词：Cloth Config、cloth-config、ConfigBuilder、ConfigCategory、ConfigEntryBuilder、ConfigScreen、配置界面库、配置屏
-platforms: [fabric, quilt]
+platforms: [fabric]
 mcVersions: ["1.14-26.2"]
 communityDocId: authored/lib-cloth-config
+modrinthSlug: cloth-config
 mappings: hint
 ---
 
 > 数据日期：2026-09-14。本稿是**通用形**（不绑单个 MC 版本）：版本相关的坐标一律走下面的「版本映射表」，逐行标证据等级。
 > 证据等级：`manifest` = `mcp-server/data/lib-manifests/all.json` 里 cloth-config 条目的取件记录（文件名即上游构建名）；`本仓:` = 本仓库某档 scaffold 或 skill 正文的**现状**（是证据，不一定是正解，冲突处已标 ★）；`短文` = `authored/lib-cloth-config`（Modrinth API 实测 2026-09-02）。
+> **`platforms` 不含 quilt 的口径（2026-09-25 定案）**：口径 = 2026-09-22 裁定④「loader 声明一律读作该 loader 有发布构件」。三条独立证据：① 上游全量 `query_upstream_releases --source=modrinth --slug=cloth-config --limit=200` → `ok:true / available:true / total:161 / truncated:false`，161 条发布的 `loaders` = fabric 79 / forge 50 / neoforge 32、**quilt 0 条**；② 本仓构件面 `all.json` cloth-config **115** 行亦 0 条 quilt（第 45 轮按 2026-09-25 重抓后的完整面复算：fabric 58 / forge 35 / neoforge 22 = 115；本行旧值 113 是 09-25 重抓前的快照行数，已被 +2 挪动 ⇒ 探针 `node temp/ralph-20260922/_v45-ceilings.mjs` → `temp/ralph-20260922/logs/r45-ceilings.log`）；③ 本档 `versions.json`（3 keys：note/dataDate/slots）全文 **0 次**出现 quilt ⇒ 从未给过 quilt 坐标。⇒ S22 原文的「未复核前不要直接删」两个前置（查 versions.json + 复核上游）均已做完且同向。**本稿对 Quilt 工程仍可读物**（Quilt 仍按 `fabric-only` + `all-platforms` 读库面源稿），只是不得据此断言「Cloth 有 Quilt 构件」。
+> **为什么本稿不写 `mcVersionsByPlatform`（第 45 轮，选择=正文披露）**：该键的用途是「同一份稿子对**不同加载器**给出不同窗口」，而本稿 `platforms: [fabric]` 只有一个声明面加载器 ⇒ 加键等于把 union 抄一遍，零收益、还有形状风险。构件面实测的逐 loader release 上界是 **fabric 26.3 / neoforge 26.3 / forge 1.21.3**（口径 = `versionType==="release"` 且点分版本号的最大值，探针同上），比 frontmatter `mcVersions: ["1.14-26.2"]` 的 **26.3 > 26.2 是「少推荐」不是「过称」**，但**抬 union 上界不是本改的最小动作**：Cloth 的坐标真值在 `versions.json` 的槽位 + `scripts/project-cloth-skill.mjs` 硬编码的 `VERS` 档清单两处（AGENTS.md「版本标记是坐标唯一真值」+ 记忆「Cloth 版本槽有第二道静默门」），只把 frontmatter 改成 26.3 会造出「窗口说 26.3、坐标表只到 26.2、投影脚本根本不认 26.3」的三面失步 ⇒ **本轮只在此点名 26.3 已有 release 构件，抬槽位另成一单**（要同时扩 `versions.json` 槽、扩 `VERS`、重跑投影）。
 
 # Cloth Config（Fabric / Quilt 视角通用形）
 
@@ -22,7 +25,7 @@ Decision: 配置方案
 → 需要图形配置屏 且 版本在 1.14–26.2 内 → 可用 Cloth
    ├─ 新项目 / 长维护 → 先比 mc-yacl；Cloth 冻结、社区新项目多转 YACL/Fzzy/owo-config
    ├─ 已有 Cloth 依赖（REI/Kiwi 生态）→ 保持 Cloth，别期待新 API
-   └─ 平台 = quilt → 先读 QSL 配置文档；实测 158 条构建里 quilt 0 条，别当 Fabric 工程照抄
+   └─ 平台 = quilt → 先读 QSL 配置文档；实测 161 条构建里 quilt 0 条（2026-09-25 全量分页重读），别当 Fabric 工程照抄（2026-09-25 上游全量复核后本稿 `platforms` 已不再点名 quilt，见下）
 → 平台 = bedrock → 本 skill 不适用
 ```
 

@@ -1,0 +1,35 @@
+{
+  "publishedAt": "2026-09-26",
+  "asOf": "2026-09-25T16:38:05.130Z",
+  "generator": "mcp-server/scripts/build-mcp-feather-pairs.mjs",
+  "producedFrom": {
+    "mcp": "data/forge_<v>/mappings/joined.srg（1.7.10–1.12.2，CL: <obf> <fqcn>）或 joined.tsrg（1.13.2，顶层 <obf> <fqcn>）",
+    "feather": "meta.ornithemc.net/v3/versions/feather 取各档最高 build（net.ornithemc:feather-gen2:<v>+build.N）→ -mergedv2.jar → 内存解 mappings/mappings.tiny（tiny v2，列序 official/intermediary/named，含 obf）",
+    "joinKey": "obf 短名"
+  },
+  "license": "Feather = CC0（OrnitheMC/feather：「open, unencumbered … under the Creative Commons Zero license」）；MCP 侧 srg/csv 本仓已入库 ⇒ 两侧均可入库。",
+  "reason": "A4i（2026-09-26 用户「本仓库没有的可不可以补一下」）：补 1.7.10–1.13.2 老档的**第三体系**（Feather = Ornithe 命名），与 data/_mcp-legacyyarn-pairs/ 并列。缘起证据 = mcp-server/docs/mcmap-linkie-absorption.md §A4g/A4i。",
+  "consumedBy": [
+    "暂无门/工具消费（数据资产：Ornithe 迁移面查询；未来若建门再接）"
+  ],
+  "refreshHint": "重生成：node mcp-server/scripts/build-mcp-feather-pairs.mjs（落 $MC_SKILL_CACHE/mcp-feather-pairs；fetch→curl 退避腿，需联网）；发布：把 7 个 mcp-feather-<v>.json + index.json 复制到本目录并重算 files 哈希。",
+  "totals": {
+    "versions": 7,
+    "pairs": 20789
+  },
+  "checks": {
+    "joinHitRate": "1.12.2 实测 3344/3344 = 100%（obf join）",
+    "nameDiff": "1.12.2 两体系名字差异：FQCN 不同 3278/3344（97.9%）、简名不同 3072/3344（91.9%）⇒ 有实质信息量",
+    "counts": "1.7.10=1836 / 1.8.9=2541 / 1.9.4=2939 / 1.10.2=2980 / 1.11.2=3122 / 1.12.2=3344 / 1.13.2=4027（与 _mcp-legacyyarn-pairs 逐档同数——同覆盖系）"
+  },
+  "files": {
+    "index.json": "853759e07dfa4d5084e6cbc753a38d829b867067e52070dcaa0561bd2c356e31",
+    "mcp-feather-1.7.10.json": "4bf0b4fcbce25a4e6d87905a137d27dde0ac3b587328b8b3cd6a9299c1d6ab25",
+    "mcp-feather-1.8.9.json": "9e880391ad3924b40e2d0c81888f312428399d232c7c58afd684214e9e4fdeea",
+    "mcp-feather-1.9.4.json": "443297def49f0258800f7488b08cff425104d887470ae011b66510024e5a188b",
+    "mcp-feather-1.10.2.json": "f31ec344d74dc9b51992bc6e77738336c7b39cab6748393445fd59446f23f320",
+    "mcp-feather-1.11.2.json": "d238a43998fe4cfc002f582dfba7f5da192bbfc7e5a672baca4a07de9fddedfc",
+    "mcp-feather-1.12.2.json": "ab3b2ee02da3f6aa35c68131f698c0b6998676e990b274ecd770f4caa29bfecf",
+    "mcp-feather-1.13.2.json": "bcfe998baea764128be239dd22fdb960ccc0ed189a3fb813862657ad43a6e76e"
+  }
+}

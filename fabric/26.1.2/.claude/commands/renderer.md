@@ -24,7 +24,7 @@ mappings: official
 
 ## 术语（basic-concepts 页核实）
 
-- `Tesselator`（页面拼写；实际类名 Tessellator）：主渲染类、单例、`getInstance()`。
+- `Tesselator`（本版已去混淆，官方拼写**就是**单 s 的 `Tesselator`；本档语料 processed/raw 页逐字同名，不是页面拼写错误，勿反向「纠正」成双 s）：主渲染类、单例、`getInstance()`。
 - `BufferBuilder`：格式化并上传渲染数据；`Tesselator#begin(VertexFormat, drawMode)` 初始化。
 - 写顶点：`buffer.addVertex(Matrix4f, float, float, float)`；必须按 VertexFormat 顺序补数据；注意 culling。
 - 顶点格式在 **`DefaultVertexFormat`**（页面列举：EMPTY/BLOCK/NEW_ENTITY/PARTICLE/POSITION/POSITION_COLOR/POSITION_COLOR_NORMAL/POSITION_COLOR_LIGHTMAP/POSITION_TEX/POSITION_TEX_COLOR/POSITION_COLOR_TEX_LIGHTMAP/POSITION_TEX_LIGHTMAP_COLOR/POSITION_TEX_COLOR_NORMAL）。

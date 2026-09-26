@@ -93,7 +93,7 @@ _tmp_session.json
 scripts/_scan-*.mjs
 scripts/_temp/*.log.err
 临时文件-*.md
-
+bugfix_list.md
 # Local debug scratch (mcp-server/scripts/_debug* 等)；不要无确认批量删除已跟踪文件
 **/_debug*
 **/_test_*

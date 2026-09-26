@@ -4,7 +4,7 @@ description: 药水与酿造。触发词：Potion、BrewingRecipe
 platform: forge
 version: "1.19.4"
 dependencies: []
-mappings: mcp
+mappings: parchment
 ---
 
 # mc-potion

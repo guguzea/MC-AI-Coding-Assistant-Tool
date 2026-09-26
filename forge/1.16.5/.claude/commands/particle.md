@@ -82,9 +82,9 @@ world.addParticle(
 ### 服务端生成（广播给所有附近客户端）
 
 ```java
-// ServerLevel —— 广播用 sendParticles（本档 api-index 有该重载：
+// ServerWorld —— 广播用 sendParticles（本档 api-index 有该重载：
 //   sendParticles(ParticleOptions, double x, double y, double z, int count, double dx, double dy, double dz, double speed)）
-serverLevel.sendParticles(
+serverWorld.sendParticles(
     ModParticles.MY_PARTICLE.get(),      // IParticleData
     x, y, z,                             // 位置
     16,                                  // 数量
@@ -112,7 +112,7 @@ IF 粒子无纹理（纯数学渲染）
 
 - ❌ 在服务端调用 `clientWorld.addParticle` → 服务端没有 ClientWorld，调用会失败
 - ❌ 粒子不继承正确基类但使用 sprite 相关方法 → 会抛 NPE
-- ❌ 用 `Level#addParticle` 做服务端广播 → 只在本端可见；广播必须走 `ServerLevel#sendParticles`
+- ❌ 用 `World#addParticle` 做服务端广播 → 只在本端可见；广播必须走 `ServerWorld#sendParticles`
 - ❌ 粒子 `maxAge` 设为 0 → 粒子立即消失
 
 ## 参考资料

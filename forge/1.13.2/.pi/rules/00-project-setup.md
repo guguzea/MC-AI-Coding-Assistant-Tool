@@ -48,8 +48,8 @@ description: 00 — 项目结构与构建
   ```properties
   minecraft_version=1.13.2
   forge_version=25.0.219
-  mapping_channel=mcp
-  mapping_version=1.13.2
+  mapping_channel=snapshot
+  mapping_version=20180921-1.13
   loader_version=25.0.219
   ```
   > 注意：
@@ -60,7 +60,7 @@ description: 00 — 项目结构与构建
 ### Mappings 约束
 
 - Forge 1.13.2 使用 **MCP SRG** 格式
-- `gradle.properties` 中的 `mapping_channel` 和 `mapping_version` 对应 MCP 配置
+- `gradle.properties` 中的 `mapping_channel` 和 `mapping_version` 对应 MCP SRG 映射，本档取值 `snapshot` / `20180921-1.13`（与本包 `scaffold/gradle.properties:14-15` 一致；`mcp` 是映射家族名、不是通道值）
 - **禁止**在 `build.gradle` 中切换到 `yarn` 或 `parchment`
 
 ### 项目目录结构（强制规范）

@@ -4,7 +4,7 @@ description: 战利品表 JSON 与 LootTableProvider。触发词：loot_table、
 platform: forge
 version: "1.20.1"
 dependencies: []
-mappings: mcp
+mappings: parchment
 ---
 
 # mc-loottable

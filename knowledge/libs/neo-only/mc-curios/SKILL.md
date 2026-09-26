@@ -4,6 +4,7 @@ description: Curios 饰品槽（NeoForge）。触发词：Curios、饰品槽、a
 platforms: [neoforge]
 mcVersions: ["1.20.1-26.2"]
 communityDocId: authored/lib-curios
+modrinthSlug: curios
 mappings: hint
 ---
 

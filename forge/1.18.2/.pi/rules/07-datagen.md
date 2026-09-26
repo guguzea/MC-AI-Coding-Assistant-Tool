@@ -138,7 +138,7 @@ IF 用自定义工作台配方
 
 ```
 IF 固定掉落某物品
-  → LootItem.lootTableItem(...) + SetCount
+  → LootItem.lootTableItem(...) + SetItemCountFunction
 
 IF 掉落方块本身（方块被破坏时）
   → BlockLoot#dropSelf
@@ -147,10 +147,10 @@ IF 有条件的掉落（附魔工具挖掘等）
   → MatchTool + enchantment 条件
 
 IF 随机数量掉落
-  → SetCount + RandomValueRange / UniformGenerator（以本版 mappings 为准）
+  → SetItemCountFunction + NumberProvider / UniformGenerator
 
 IF 掉落多个物品
-  → 多个 LootPool / LootEntry
+  → 多个 LootPool / LootPoolEntryContainer
 ```
 
 ---

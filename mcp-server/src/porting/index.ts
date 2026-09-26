@@ -1356,13 +1356,21 @@ export async function portProject(args: unknown) {
     throw err;
   }
 
-  if (isKnowledgeRepo(root)) {
+  // S10/T2：这道拒绝此前坐在所有 action 分支**之前**，于是纯静态分析的只读 action
+  // （extract_common 只 import 分析、apply_version_migration 的 dryRun 预览）在本知识库仓内
+  // 也被 REFUSE_KNOWLEDGE_REPO 挡掉 —— 保护目标是「别把脚手架写进知识库树」，不是「别读它」。
+  // 现在只在真的要写盘（doWrite = dryRun===false && confirmed===true）时判；写分支本身
+  // （init_architectury 的 1425 `if (doWrite)`、applyPackageRenames 的 allowRoot）仍在下面。
+  if (doWrite && isKnowledgeRepo(root)) {
     return JSON.stringify({
       ok: false,
       error: {
         code: "REFUSE_KNOWLEDGE_REPO",
         message: "拒绝写入 MC Skill 知识库根。目标必须是用户模组工程。",
-        next: ["port_project 仅用于用户模组工程；知识库规则改动按知识库编辑流程进行"],
+        next: [
+          "port_project 写盘仅用于用户模组工程；知识库规则改动按知识库编辑流程进行",
+          "只读分析在本仓可用：action=extract_common（或 dryRun=true 的 apply_version_migration 预览）",
+        ],
       },
     });
   }

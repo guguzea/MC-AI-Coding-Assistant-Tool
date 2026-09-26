@@ -1,0 +1,111 @@
+{
+ "asOf": "2026-09-25T15:47:32.334Z",
+ "dir": "D:\\mc-skill-temp\\cache\\yarn-mojmap-pairs",
+ "versions": {
+  "1.14.4": {
+   "file": "yarn-mojmap-1.14.4.json",
+   "count": 4860,
+   "crossMapping": 3546,
+   "source": "产物目录已有",
+   "yarnSource": "data/fabric_1.14.4/mappings/yarn-mappings.sqlite"
+  },
+  "1.16.5": {
+   "file": "yarn-mojmap-1.16.5.json",
+   "count": 5429,
+   "crossMapping": 4119,
+   "source": "data/forge_<v> 本地",
+   "yarnSource": "data/fabric_1.16.5/mappings/yarn-mappings.sqlite"
+  },
+  "1.17.1": {
+   "file": "yarn-mojmap-1.17.1.json",
+   "count": 5810,
+   "crossMapping": 4453,
+   "source": "data/forge_<v> 本地",
+   "yarnSource": "data/fabric_1.17.1/mappings/yarn-mappings.sqlite"
+  },
+  "1.18.2": {
+   "file": "yarn-mojmap-1.18.2.json",
+   "count": 6076,
+   "crossMapping": 4704,
+   "source": "data/forge_<v> 本地",
+   "yarnSource": "data/fabric_1.18.2/mappings/yarn-mappings.sqlite"
+  },
+  "1.19.4": {
+   "file": "yarn-mojmap-1.19.4.json",
+   "count": 6973,
+   "crossMapping": 5460,
+   "source": "data/forge_<v> 本地",
+   "yarnSource": "data/fabric_1.19.4/mappings/yarn-mappings.sqlite"
+  },
+  "1.20.1": {
+   "file": "yarn-mojmap-1.20.1.json",
+   "count": 7075,
+   "crossMapping": 5543,
+   "source": "data/forge_<v> 本地",
+   "yarnSource": "data/fabric_1.20.1/mappings/yarn-mappings.sqlite"
+  },
+  "1.20.4": {
+   "file": "yarn-mojmap-1.20.4.json",
+   "count": 7412,
+   "crossMapping": 5831,
+   "source": "data/forge_<v> 本地",
+   "yarnSource": "data/fabric_1.20.4/mappings/yarn-mappings.sqlite"
+  },
+  "1.20.6": {
+   "file": "yarn-mojmap-1.20.6.json",
+   "count": 7817,
+   "crossMapping": 6171,
+   "source": "产物目录已有",
+   "yarnSource": "mergedv2.tiny @ D:\\mc-skill-temp\\mappings\\yarn-1.20.6-mergedv2.tiny"
+  },
+  "1.21.1": {
+   "file": "yarn-mojmap-1.21.1.json",
+   "count": 7878,
+   "crossMapping": 6225,
+   "source": "产物目录已有",
+   "yarnSource": "data/fabric_1.21.1/mappings/yarn-mappings.sqlite"
+  },
+  "1.21.3": {
+   "file": "yarn-mojmap-1.21.3.json",
+   "count": 8320,
+   "crossMapping": 6614,
+   "source": "产物目录已有",
+   "yarnSource": "data/fabric_1.21.3/mappings/yarn-mappings.sqlite"
+  },
+  "1.21.4": {
+   "file": "yarn-mojmap-1.21.4.json",
+   "count": 8442,
+   "crossMapping": 6723,
+   "source": "产物目录已有",
+   "yarnSource": "data/fabric_1.21.4/mappings/yarn-mappings.sqlite"
+  },
+  "1.21.5": {
+   "file": "yarn-mojmap-1.21.5.json",
+   "count": 8697,
+   "crossMapping": 6930,
+   "source": "产物目录已有",
+   "yarnSource": "mergedv2.tiny @ D:\\mc-skill-temp\\mappings\\yarn-1.21.5-mergedv2.tiny"
+  },
+  "1.21.8": {
+   "file": "yarn-mojmap-1.21.8.json",
+   "count": 9020,
+   "crossMapping": 7195,
+   "source": "产物目录已有",
+   "yarnSource": "data/fabric_1.21.8/mappings/yarn-mappings.sqlite"
+  },
+  "1.21.10": {
+   "file": "yarn-mojmap-1.21.10.json",
+   "count": 9476,
+   "crossMapping": 7624,
+   "source": "产物目录已有",
+   "yarnSource": "data/fabric_1.21.10/mappings/yarn-mappings.sqlite"
+  },
+  "1.21.11": {
+   "file": "yarn-mojmap-1.21.11.json",
+   "count": 9686,
+   "crossMapping": 7768,
+   "source": "产物目录已有",
+   "yarnSource": "data/fabric_1.21.11/mappings/yarn-mappings.sqlite"
+  }
+ }
+}

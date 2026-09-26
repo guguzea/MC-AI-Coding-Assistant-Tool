@@ -288,6 +288,17 @@ public class ExampleModEnchantmentTagProvider extends FabricTagProvider<Enchantm
 | `HolderLookup` | `RegistryWrapper` | 1.19.4–1.21.11 | join（`net.minecraft.registry.RegistryWrapper`）· 本轮纠正（原写 `DynamicRegistryManager`） |
 | `EnchantmentTarget` | `EnchantmentEffectTarget` | 1.21.1–1.21.11 | join（`net.minecraft.enchantment.effect.EnchantmentEffectTarget`） |
 | `EquipmentSlotGroup` | `AttributeModifierSlot` | 1.21.1–1.21.11 | join（`net.minecraft.component.type.AttributeModifierSlot`） |
+| `LevelBasedValue` | `EnchantmentLevelBasedValue` | 1.21.1–1.21.11 | join（`net.minecraft.enchantment.EnchantmentLevelBasedValue`） |
+| `EnchantedItemInUse` | `EnchantmentEffectContext` | 1.21.1–1.21.11 | join（`net.minecraft.enchantment.EnchantmentEffectContext`） |
+| `ResourceKey` | `RegistryKey` | 1.16.5–1.21.11 | join（`net.minecraft.registry.RegistryKey`，1.16.5–1.20.x 包路径为 `net.minecraft.util.registry`） |
+| `EnchantmentEffectComponents` | `EnchantmentEffectComponentTypes` | 1.21.1–1.21.11 | join（`net.minecraft.component.EnchantmentEffectComponentTypes`） |
+| `EntitySpawnReason` | `SpawnReason` | 1.21.3–1.21.11 | join（`net.minecraft.entity.SpawnReason`） |
+| `BootstrapContext` | `Registerable` | 1.21.1–1.21.11 | join（`net.minecraft.registry.Registerable`） |
+| `RegistrySetBuilder` | `RegistryBuilder` | 1.19.4–1.21.11 | join（`net.minecraft.registry.RegistryBuilder`） |
+| `ApplyEntityImpulse` | `ApplyImpulseEnchantmentEffect` | 1.21.11（本档起） | join（`net.minecraft.enchantment.effect.entity.ApplyImpulseEnchantmentEffect`） |
+| `PlaySoundEffect` | `PlaySoundEnchantmentEffect` | 1.21.1–1.21.11 | join（`net.minecraft.enchantment.effect.entity.PlaySoundEnchantmentEffect`） |
+| `ConstantFloat` | `ConstantFloatProvider` | 1.17.1–1.21.11 | join（`net.minecraft.util.math.floatprovider.ConstantFloatProvider`） |
+| `LootItemEntityPropertyCondition` | `EntityPropertiesLootCondition` | 1.16.5–1.21.11 | join（`net.minecraft.loot.condition.EntityPropertiesLootCondition`） |
 
 - 上表「Yarn 对应名」只由本档 `mappings/yarn-mappings.sqlite` 证实**类名存在与其包路径**，**不证实**方法名、参数与返回值。逐签名以 Yarn 源码为准：`get_minecraft_source`（需 JDK 17+）或 IDE `./gradlew genSources`。
 - 反过来，mojmap 侧这些名在本档 Yarn 映射里 **0 命中** ⇒ 抄进 Yarn 工程必编译失败。

@@ -4,7 +4,7 @@ description: GameTest 结构测试。触发词：GameTest、@GameTest
 platform: forge
 version: "1.18.2"
 dependencies: []
-mappings: mcp
+mappings: parchment
 ---
 
 # mc-gametest
@@ -90,7 +90,7 @@ public static void exampleConfiguredTest(GameTestHelper helper) {
 public class ExampleGameTests {
   @GameTestGenerator
   public static Collection<TestFunction> exampleTests() {
-    // Return a collection of TestFunctions
+    // Return a collection of TestFunction
   }
 }
 ```

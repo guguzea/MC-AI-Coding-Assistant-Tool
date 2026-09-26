@@ -15,6 +15,7 @@ const OUT = join(ROOT, "data", "neoforge_primers");
 if (!wantWrite()) logDryRunBanner("fetch-neoforge-primers");
 
 const PRIMER_CONFIG = [
+  { version: "26.3", url: "https://docs.neoforged.net/primer/docs/26.3/", from: "26.2", to: "26.3" },
   { version: "26.2", url: "https://docs.neoforged.net/primer/docs/26.2/", from: "26.1", to: "26.2" },
   { version: "26.1", url: "https://docs.neoforged.net/primer/docs/26.1/", from: "1.21.11", to: "26.1" },
   { version: "1.21", url: "https://docs.neoforged.net/primer/docs/1.21/", from: "1.20.6", to: "1.21" },

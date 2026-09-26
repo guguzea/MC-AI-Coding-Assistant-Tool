@@ -4,6 +4,7 @@ description: Kotlin for Forge（KFF）语言加载器（Forge）。触发词：K
 platforms: [forge]
 mcVersions: ["1.14-1.21.11"]
 communityDocId: authored/lib-kotlin-for-forge
+modrinthSlug: kotlin-for-forge
 mappings: hint
 ---
 

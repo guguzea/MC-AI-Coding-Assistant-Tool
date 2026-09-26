@@ -40,13 +40,15 @@
 | `BLOCKS` | 方块 |
 | `ITEMS` | 物品 |
 | `BLOCK_ENTITIES` | 方块实体 |
-| `ENTITYTYPES` | 实体类型 |
-| `FLUIDTYPES` | 流体类型 |
+| `ENTITIES` | 实体类型 |
+| `FLUIDS` | 流体（**注意：1.18.2 没有 `FluidType` / 流体类型注册表，见下表注**） |
 | `SOUND_EVENTS` | 声音事件 |
 | `PARTICLE_TYPES` | 粒子类型 |
 | `CONTAINERS` | 菜单类型 |
 | `ATTRIBUTES` | 属性 |
 | `BIOMES` | 生物群系 |
+
+> **字段名取证状态（2026-09-24 一手坐实，勿删）**：本仓 `data/**` 语料逐字支撑的只有 `BLOCKS` / `ITEMS`（`data/forge_1.18.2/forge-docs/1.18.2/processed/concepts_registries.md:24,96`），`data/**` 是上游逐字语料、本档不动它一个字节；上表其余行过去是「本包 rules/skills 自撰处方」，现已升级为**官方构件逐字**坐实——1.18.2-40.1.80 源码 `ForgeRegistries.java`（157 行）与 1.18.2-40.3.12 universal jar `javap -p`（41 行、注册表字段 32 个）两 build 两机制互证，as-of 2026-09-24，档位「外部-only（官方构件逐字，仓内无副本 ⇒ 复核需自备 jar）」。**旧「流体类型」一行是事实错**（已删改）：`ForgeRegistries` 在 1.18.2 既无 `FLUIDTYPES` 也无 `FLUID_TYPES`——**该版本没有流体类型注册表**，流体走 `FLUIDS`；`FluidType` 配 `FLUID_TYPES` 是 **1.19+** 才有。该旧写法曾与本包 `.cursor/skills/mc-fluid/SKILL.md:22`、`:102` 的 ❌ 禁令**同名并存**（该 Skill 主张 1.18.2 无 `FluidType`，流体走 `FluidAttributes` + `ForgeRegistries.FLUIDS`），当时记为「未裁定」，现**判给禁令侧**。坐实入口（已验证可用，两条各一行）：`unzip -p <40.1.80-sources.jar> net/minecraftforge/registries/ForgeRegistries.java`、`javap -p -classpath <40.3.12-universal.jar> net.minecraftforge.registries.ForgeRegistries`；`query_loader_api` / `ingest_loader_api` 摘要面 `fields` 恒 0 且不含 `ForgeRegistries` 类，取不到字段名。
 
 ---
 

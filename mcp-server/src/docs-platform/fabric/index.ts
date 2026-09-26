@@ -28,7 +28,7 @@ import {
   versionNotFoundResult,
 } from "../platform-data.js";
 import { semanticSearch } from "../semantic/search.js";
-import { mergeSemanticResults, joinSearchWarnings, withDocsFallbackFields, annotateVerbatim } from "../search-utils.js";
+import { mergeSemanticResults, joinSearchWarnings, withDocsFallbackFields, annotateVerbatim, limitWindowOf, limitClampWarning } from "../search-utils.js";
 import { missingSemanticDbWarning, semanticStaleSearchWarning } from "../semantic/status.js";
 import { knowledgeVersion } from "../../platform-pack/catalog.js";
 import {
@@ -360,6 +360,17 @@ export async function listFabricVersions(): Promise<CallToolResult> {
   };
 }
 
+/**
+ * A2（2026-09-24）：`search_fabric_docs` 的按调用窗口常量。
+ * 上界**派生自本面的构造上界**：L0 腿 `enhancedSearch({limit: 10})`（`fabric/store.ts`）
+ * ∪ 语义腿 `semanticSearch(..., limit = 10)` ⇒ ≤ 20。
+ * porting 旁路另行追加到 `FABRIC_SEARCH_PORTING_CAP` 条（默认窗口 10 → 旁路后最多 12）。
+ * 实际可得 ≤ 响应里 `limitWindow.candidates`（每调用现算，请求超池即 clamp + warning）。
+ */
+export const FABRIC_SEARCH_DEFAULT_LIMIT = 10;
+export const FABRIC_SEARCH_PORTING_CAP = 12;
+export const FABRIC_SEARCH_LIMIT_MAX = 20;
+
 export const searchFabricDocsSchema = {
   name: "search_fabric_docs",
   description: `Fabric 官方文档搜索（hybrid：L0 关键词 + 语义检索，RRF 融合；无语义库时回退纯 L0）。
@@ -407,6 +418,16 @@ Fabric 使用 Identifier 作为资源定位符，Registry.register() 注册物�
       .optional()
       .default("fabric-docs")
       .describe("数据源，默认为 fabric-docs；all 合并两个源的结果"),
+    limit: z
+      .number()
+      .int()
+      .positive()
+      .max(FABRIC_SEARCH_LIMIT_MAX)
+      .optional()
+      .describe(
+        `最多返回条数（默认 ${FABRIC_SEARCH_DEFAULT_LIMIT}；porting 旁路追加后默认最多 ${FABRIC_SEARCH_PORTING_CAP}；上界 ${FABRIC_SEARCH_LIMIT_MAX}）。` +
+        `不传 = 既有默认窗口（载荷逐字不变）；传了会带 limitWindow{candidates,...}，请求超过本次候选池即按池截断并在 warning 里说破。`,
+      ),
   }),
 } as const;
 
@@ -419,6 +440,14 @@ export async function searchFabricDocs(
     }
     const { query, tags, source } = args;
     const { requested, resolved: version } = fabricDocsVersion(args.version);
+    // A2（2026-09-24）：只放宽不收紧 —— 不传 limit 时三处建造窗口（10 / 10 / 12）与加参数之前逐字相同。
+    const requestedLimit = args.limit;
+    const buildLimit = requestedLimit === undefined
+      ? FABRIC_SEARCH_DEFAULT_LIMIT
+      : Math.max(FABRIC_SEARCH_DEFAULT_LIMIT, requestedLimit);
+    const portingLimit = requestedLimit === undefined
+      ? FABRIC_SEARCH_PORTING_CAP
+      : Math.max(FABRIC_SEARCH_PORTING_CAP, requestedLimit);
 
     const available = getStore(version, "fabric-docs").getAvailableVersions();
     if (!available.includes(version)) {
@@ -485,7 +514,11 @@ export async function searchFabricDocs(
       ];
       const order: Record<string, number> = { "⭐": 0, "🟡": 1, "🟢": 2 };
       merged.sort((a, b) => (order[a.priority] ?? 3) - (order[b.priority] ?? 3));
-      results = merged.slice(0, 10) as typeof docs.results;
+      // A2：这一刀切的是**融合输入**（L0 候选腿），必须钉在默认窗口上 ——
+      // 放宽它会让 rrfFuseScores 的输入排行变长、语义腿的成员位次跟着挪，
+      // 实测 `--source all` 下默认结果就不再是放宽结果的前缀（前缀判据当场红）。
+      // 放宽只作用在**输出侧**（merge 的 limit 与最后按池截断）。
+      results = merged.slice(0, FABRIC_SEARCH_DEFAULT_LIMIT) as typeof docs.results;
     } else if (resolvedSource === "fabric-docs" && docsEmpty) {
       const wiki = searchSourceOrEmpty(version, "fabric-wiki", query, tags);
       registerSource(wiki.results, "fabric-wiki");
@@ -529,7 +562,7 @@ export async function searchFabricDocs(
       if (membership.size === 0) for (const r of results) membership.add(r.id);
       results = mergeSemanticResults(results, semanticList, {
         tags,
-        limit: 10,
+        limit: buildLimit,
         version,
         allowedIds: membership,
       }) as typeof results;
@@ -563,7 +596,16 @@ export async function searchFabricDocs(
       const seen = new Set(asHits.map((r) => r.id));
       const extras = portingHits.filter((p) => !seen.has(p.id));
       // porting/26.2 不得抢首位：仅追加在树内命中之后（含 develop_porting_index）
-      results = [...asHits, ...extras].slice(0, 12) as typeof results;
+      results = [...asHits, ...extras].slice(0, portingLimit) as typeof results;
+    }
+    // A2：显式 limit ⇒ 按池截断并把窗口/池写进载荷；不传 ⇒ 一个字段都不加。
+    const limitWindow = limitWindowOf({
+      requested: requestedLimit,
+      candidates: (results as unknown as Array<unknown>).length,
+      limitMax: FABRIC_SEARCH_LIMIT_MAX,
+    });
+    if (limitWindow) {
+      results = (results as unknown as Array<unknown>).slice(0, limitWindow.resultLimit) as typeof results;
     }
 
     const extraWarn =
@@ -614,6 +656,7 @@ export async function searchFabricDocs(
               wikiIsCurrentSite: wikiInvolved || undefined,
               tags,
               semantic: semanticRanked,
+              ...(limitWindow ? { limitWindow } : {}),
               warning: joinSearchWarnings(
                 missingSemanticDbWarning(semanticMissing),
                 staleWarn,
@@ -623,6 +666,7 @@ export async function searchFabricDocs(
                 wikiTopicFallback && topic === "networking"
                   ? FABRIC_WIKI_NETWORKING_PAYLOAD_WARNING
                   : undefined,
+                limitClampWarning(limitWindow),
                 (results as unknown as Array<unknown>).length === 0 && /[\u4e00-\u9fff]/.test(String(args.query ?? ""))
                   ? "中文查询命中为空：文档正文为英文，改用英文关键词（如 register item）或按 id 直接取 get_fabric_doc_full。"
                   : undefined,

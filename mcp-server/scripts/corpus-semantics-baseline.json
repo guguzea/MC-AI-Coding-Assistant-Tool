@@ -1,6 +1,6 @@
 {
   "_comment": "sweep81 data/** 全树语义读基线（assert-corpus-semantics.mjs 读）：stub=真·空页（body<40 且无任何 `## ` 小节）；allowedStubs=ratchet（只许降，超即红）；medianFloor 对有 ≥5 篇的树生效；residue[]=允许留下的空页**逐条具名**（有 residue 数组时，每棵树的具名条目数必须等于实测空页数，条目过期即红）。改动须走 MC_SKILL_CORPUS_SEMANTICS_RELEDGER=1 重算并显式提交。",
-  "asOf": "2026-09-18",
+  "asOf": "2026-09-24",
   "totalStubBudget": 1,
   "residue": [
     {
@@ -130,42 +130,42 @@
       "medianFloor": 2202
     },
     "forge_1.13.2/forge-docs/1.13.2": {
-      "files": 43,
+      "files": 57,
       "allowedStubs": 0,
       "medianFloor": 2146
     },
     "forge_1.14.4/forge-docs/1.14.4": {
-      "files": 45,
+      "files": 54,
       "allowedStubs": 0,
       "medianFloor": 2177
     },
     "forge_1.15.2/forge-docs/1.15.2": {
-      "files": 40,
+      "files": 54,
       "allowedStubs": 0,
       "medianFloor": 2075
     },
     "forge_1.16.5/forge-docs/1.16.5": {
-      "files": 41,
+      "files": 54,
       "allowedStubs": 0,
       "medianFloor": 1917
     },
     "forge_1.17.1/forge-docs/1.17.1": {
-      "files": 41,
+      "files": 54,
       "allowedStubs": 0,
       "medianFloor": 1944
     },
     "forge_1.18.2/forge-docs/1.18.2": {
-      "files": 33,
+      "files": 60,
       "allowedStubs": 0,
       "medianFloor": 2147
     },
     "forge_1.19.4/forge-docs/1.19.4": {
-      "files": 39,
+      "files": 71,
       "allowedStubs": 0,
       "medianFloor": 2397
     },
     "forge_1.20.1/forge-docs/1.20.1": {
-      "files": 70,
+      "files": 71,
       "allowedStubs": 0,
       "medianFloor": 2395
     },
@@ -175,47 +175,47 @@
       "medianFloor": 2352
     },
     "forge_javadoc/1.10.2": {
-      "files": 3254,
+      "files": 3182,
       "allowedStubs": 0,
       "medianFloor": 229
     },
     "forge_javadoc/1.11.2": {
-      "files": 3335,
+      "files": 3268,
       "allowedStubs": 0,
       "medianFloor": 230
     },
     "forge_javadoc/1.12.2": {
-      "files": 3653,
+      "files": 3554,
       "allowedStubs": 0,
       "medianFloor": 228
     },
     "forge_javadoc/1.7.10": {
-      "files": 2464,
+      "files": 1879,
       "allowedStubs": 0,
       "medianFloor": 253
     },
     "forge_javadoc/1.8.9": {
-      "files": 2837,
+      "files": 2807,
       "allowedStubs": 0,
       "medianFloor": 233
     },
     "forge_javadoc/1.9.4": {
-      "files": 3111,
+      "files": 3070,
       "allowedStubs": 0,
       "medianFloor": 229
     },
     "liteloader_1.10.2/liteloader-docs/1.10.2": {
-      "files": 30,
+      "files": 34,
       "allowedStubs": 0,
       "medianFloor": 1209
     },
     "liteloader_1.12.2/liteloader-docs/1.12.2": {
-      "files": 31,
+      "files": 35,
       "allowedStubs": 0,
       "medianFloor": 898
     },
     "liteloader_1.8.9/liteloader-docs/1.8.9": {
-      "files": 30,
+      "files": 34,
       "allowedStubs": 0,
       "medianFloor": 1209
     },
@@ -280,32 +280,32 @@
       "medianFloor": 7926
     },
     "quilt_1.18.2/quilt-docs/1.18.2": {
-      "files": 4,
+      "files": 18,
       "allowedStubs": 0,
       "medianFloor": 0
     },
     "quilt_1.19.4/quilt-docs/1.19.4": {
-      "files": 4,
+      "files": 18,
       "allowedStubs": 0,
       "medianFloor": 0
     },
     "quilt_1.20.1/quilt-docs/1.20.1": {
-      "files": 4,
+      "files": 18,
       "allowedStubs": 0,
       "medianFloor": 0
     },
     "quilt_1.20.4/quilt-docs/1.20.4": {
-      "files": 4,
+      "files": 18,
       "allowedStubs": 0,
       "medianFloor": 0
     },
     "quilt_1.21.1/quilt-docs/1.21.1": {
-      "files": 4,
+      "files": 18,
       "allowedStubs": 0,
       "medianFloor": 0
     },
     "quilt_1.21.11/quilt-docs/1.21.11": {
-      "files": 3,
+      "files": 18,
       "allowedStubs": 0,
       "medianFloor": 0
     },

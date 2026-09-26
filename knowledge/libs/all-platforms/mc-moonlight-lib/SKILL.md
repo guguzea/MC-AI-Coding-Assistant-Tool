@@ -4,6 +4,7 @@ description: Moonlight Lib（原 Selene）动态注册/资源库（MehVahdJukaar
 platforms: [fabric, forge, neoforge]
 mcVersions: ["1.16.5-1.21.1"]
 communityDocId: authored/lib-moonlight
+modrinthSlug: moonlight
 ---
 
 > 数据读取日期：2026-09-14（源：Modrinth project/moonlight limit=100：release 上界 1.21.1（1.21.1-3.6.4，2026-09-10，fabric+neoforge），Forge 线 release 止 1.20.1（1.20-2.16.35，2026-09-07）；26.1.2 只有 4.0.x **beta**（4.0.2，2026-09-07）＝预发布，不是 release）

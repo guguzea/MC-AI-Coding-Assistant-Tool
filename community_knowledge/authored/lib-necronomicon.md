@@ -54,8 +54,8 @@ Decision: 要不要把 Necronomicon 作为依赖
 - MCP：check_dependencies、search_community_docs、crash_analyze
 - Skill：mc-author-shared-libs（作者全家桶共享库纪律）
 - 全览：§三 全家桶共享库；相关：authored/library-catalog-2026、authored/library-integration、authored/soft-deps-modlist
-- 官方：https://github.com/ElocinDev/Necronomicon
-- 不清楚时：打开 Necronomicon GitHub README / Wiki；AGENT_USAGE.md 规则先行
+- 官方：https://github.com/nvb-uy/Necronomicon
+- 不清楚时：打开 nvb-uy/Necronomicon 的 README（只列特性与依赖坐标）；API 细节只有发布 jar 自带 javadoc，无独立 Wiki/教程站，需核实就走反编译
 
 ## 核对（2026-08 反编译验证）
 

@@ -1005,17 +1005,18 @@
       "id": "skill-mappings-value-matches-code",
       "claim": "`mappings:` 键值必须与该件正文/围栏代码里**实际使用的类名所属映射**一致（用户裁定③后半句）。本轮只做到「含跨映射名的件在正文给出 mojmap↔Yarn 对照披露块」，键值一致性本身**没有门**。",
       "author": "2026-09-20 用户裁定③ + 本轮 Yarn↔Mojmap 对照表建设",
-      "evidence": "判定需要 mojmap 侧数据：Mojang `client.txt` 被 `.gitignore` 的 `data/**/mappings/client.txt` 排除（其文件头许可证原文「may not redistribute the mappings complete and unmodified」⇒ 不把 9686 行整表提交进仓库），只能在本地按档现拉。本轮用 `client.txt` ⋈ `yarn-mappings.sqlite` 的 obf 短名 join 建成 13 档对照（4860–9686 对，obf 键 0 冲突，跨档改名曲线与已知历史一致：`GuiGraphics`→`DrawContext` 仅 1.20.1+ 有、`MobEffectCategory`→`StatusEffectType`(1.14.4/1.16.5) 后改 `StatusEffectCategory`），据此把逐件对照写进 134 件 Skill 正文，并升级 13 行原「未核实」为具名 Yarn 对应（`RegistryLookup` 2 行对照表无解，保留未核实）。同法可判「键值 vs 正文实名」，但生成器尚未提级进 `mcp-server/scripts/`。",
+      "evidence": "判定需要 mojmap 侧数据：Mojang `client.txt` 被 `.gitignore` 的 `data/**/mappings/client.txt` 排除（其文件头许可证原文「may not redistribute the mappings complete and unmodified」⇒ 不把 9686 行整表提交进仓库），只能在本地按档现拉。本轮用 `client.txt` ⋈ `yarn-mappings.sqlite` 的 obf 短名 join 建成 13 档对照（4860–9686 对，obf 键 0 冲突，跨档改名曲线与已知历史一致：`GuiGraphics`→`DrawContext` 仅 1.20.1+ 有、`MobEffectCategory`→`StatusEffectType`(1.14.4/1.16.5) 后改 `StatusEffectCategory`），据此把逐件对照写进 134 件 Skill 正文，并升级 13 行原「未核实」为具名 Yarn 对应（`RegistryLookup` 2 行对照表无解，保留未核实）。同法可判「键值 vs 正文实名」。**【2026-09-24 A7 收口】**生成器已提级为 `mcp-server/scripts/build-yarn-mojmap-pairs.mjs`（12/13 档出表、合计 91,597 对；产物落 `$MC_SKILL_CACHE/yarn-mojmap-pairs`，缺 `client.txt` 走 `ensureMojangClientMappings` 现拉，**从不写仓库**）；`assert-skill-mappings-key.mjs` 加 leg2（键值 ↔ 围栏实名；`mappings_alt` 件还须在披露块点名实际用到的跨映射名；无产物 ⇒ 打印 `leg2 skipped（…）` 且**不改变退出码**，不静默绿）。判据自证 `--selftest` **16/16**（含 6 组 leg2 夹具 + 缺产物端到端腿）。**存量基线 123 件**（旧 fabric 档声称 `mappings: yarn` 却在围栏里用 `Minecraft`/`CompoundTag`/`Commands` 这类 mojmap 名；口径 = 只取无歧义的跨映射简名 + 只扫围栏代码；as-of 2026-09-24 首测，降噪前 250 件）按**棘轮**登记（新增冲突才红、存量只打印、只许降不许增），清理属 knowledge 面（与 A11 同类）单列。",
       "evidenceRefs": [
         "mcp-server/scripts/assert-skill-yarn-attest.mjs",
         "mcp-server/scripts/_lib/ensure-mojang-mappings.mjs",
         ".gitignore",
         "AGENTS.md"
       ],
-      "status": "open",
-      "gates": [],
-      "whyOpen": "键值一致性腿依赖 mojmap 侧 `client.txt`（gitignored + 许可证不可再分发）⇒ 门只能在本地有该档映射时判，否则必须显式打印 skipped 而不是默默绿。对照表生成器目前是一次性脚本，未入库。",
-      "nextRound": "把 Yarn↔Mojmap 对照生成器提级为 `mcp-server/scripts/build-yarn-mojmap-pairs.mjs`（内部走既有 `ensureMojangClientMappings` 现拉到 gitignored 位置，产物写 `$MC_SKILL_CACHE`），再给 `assert-skill-mappings-key.mjs` 加第二腿：正文实名与 `mappings:` 声称值冲突 → 红；无 `client.txt` 时打印「leg2 skipped」并保持退出码。"
+      "status": "closed",
+      "gates": [
+        "assert-skill-mappings-key.mjs"
+      ],
+      "closedAt": "2026-09-24"
     },
     {
       "id": "search-docs-verbatim-support",
@@ -1388,6 +1389,24 @@
         "test-core.mjs"
       ],
       "closedAt": "2026-09-22"
+    },
+    {
+      "id": "w54-no-external-injection-entry",
+      "claim": "W5-4 判定落账：外部语料里「指令式」句子的来源**未指向任何仓外注入入口**，同机理已实证为主代理 confabulation；因此现行收口取「统一附 EXTERNAL_CONTENT_NOTICE（外部正文不得当指令）」而不是追注入源，护栏 `_anchor-lint.mjs` **存在但未纳管**（纳管与否另按裁定，不在本条内代裁）。",
+      "author": "原审查§0.2（子代理工具结果里的伪造指令）+ 计划 v2 W5-4 + 2026-09-24 side chat 复核后落账（A5）",
+      "evidence": "① 检索面：`data/**/processed` 与 `mcp-server/**/*.md` 对本报告原文那批措辞 0 命中（唯一命中是该报告自身在描述注入），见 external-content-trust-boundary 条目；② 同机理已实证为主代理 confabulation：`temp/ralph-20260922/PLAN-STATE-r2.md` R79 / R87⑤；③ 护栏脚本存在：`temp/ralph-20260922/_anchor-lint.mjs`（`git ls-files | grep -c _anchor-lint` = 0 ⇒ 落在 gitignored `temp/`、零 tracked 引用、不在门链 ⇒ 即 L13；「仓内没有该脚本」的说法已被实测推翻，勿写）；④ 本条只记事实、不改判据，也不改动 EXTERNAL_CONTENT_NOTICE 的既有门（test-core / test-wave-bcd 继续钉注入位）。",
+      "evidenceRefs": [
+        "mcp-server/src/utils/actionable.ts",
+        "mcp-server/src/docs-platform/search-utils.ts",
+        "temp/ralph-20260922/_anchor-lint.mjs",
+        "temp/audit-20260918/REPORT.md"
+      ],
+      "status": "closed",
+      "gates": [
+        "test-core.mjs",
+        "test-wave-bcd.mjs"
+      ],
+      "closedAt": "2026-09-24"
     }
   ]
 }

@@ -8,14 +8,14 @@ communityDocId: authored/bedrock-script-api-primer
 
 # @minecraft/server（基岩 Script API）
 
-默认只用 **stable** `@minecraft/server`。用户明确写 `@minecraft/server-beta`、要「最新实验性」、或点名仍属 Beta 的事件（如 `BlockExplodeAfterEvent`）时才允许 Beta。
+默认只用 **stable** `@minecraft/server`。用户明确写 `@minecraft/server-beta`（**不存在此发布名**：真实形态 = `@minecraft/server` + `version: "beta"`，npm dist-tag 与 Learn 模块页同口径，as-of 2026-09-23）、要「最新实验性」、或点名仍属 Beta 的事件（如 `BlockExplodeAfterEvent`）时才允许 Beta。
 
 ## Decision Flow
 
 ```
 Decision: 生成 Script 模块
 → 未点名 Beta → dependencies 写 stable 版本（对照 data/bedrock-docs-status.json 的 scriptApiStable）
-→ 点名 Beta → 允许；BP manifest dependencies 用 beta 模块；回复必须写：在世界设置打开 Beta APIs
+→ 点名 Beta → 允许；BP manifest dependencies 写 module_name `@minecraft/server` + version `"beta"`；回复必须写：在世界设置打开 Beta APIs
 → 需要 eval → 才写 capabilities: ["script_eval"]
 → 禁止："experimentalGameplay": true、虚构 worldgen/experimental.json
 → 不要用 Java query_api / Yarn / Mixin

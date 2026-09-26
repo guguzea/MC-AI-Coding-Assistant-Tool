@@ -71,7 +71,57 @@ class CliUsageError extends Error {
 }
 
 /** schema 校验失败：仍是 exit 2，但 errorKind 与「敲错 flag 名」区分开 */
-class ValidationCliError extends CliUsageError {}
+class ValidationCliError extends CliUsageError {
+  constructor(
+    tool: string,
+    message: string,
+    /** S6-②：按字段的机读位（散文 `error` 原样保留，给人和旧消费者读）。 */
+    readonly fieldErrors: CliFieldError[] = [],
+  ) {
+    super(tool, message);
+  }
+}
+
+export interface CliFieldError {
+  field: string;
+  code: string;
+  message: string;
+  expected?: string;
+  received?: string;
+  enumValues?: string[];
+}
+
+/**
+ * S6-②：把 zod issue 归成机器可分支的位。
+ * 缺必填在 zod 里是 `invalid_type` + `received:"undefined"`（不是独立码），必须折成 `MISSING_REQUIRED`，
+ * 否则消费方仍要回去解析中文串。
+ */
+export function zodIssueToFieldError(i: {
+  path: (string | number)[];
+  code: string;
+  message: string;
+  expected?: string;
+  received?: string;
+  options?: string[];
+}): CliFieldError {
+  const code =
+    i.received === "undefined"
+      ? "MISSING_REQUIRED"
+      : i.code === "invalid_enum_value"
+        ? "INVALID_ENUM_VALUE"
+        : i.code === "unrecognized_keys"
+          ? "UNRECOGNIZED_KEYS"
+          : i.code.replace(/([a-z0-9])([A-Z])/g, "$1_$2").toUpperCase();
+  const out: CliFieldError = {
+    field: i.path.length > 0 ? i.path.join(".") : "(root)",
+    code,
+    message: i.message,
+  };
+  if (i.expected !== undefined) out.expected = i.expected;
+  if (i.received !== undefined) out.received = i.received;
+  if (Array.isArray(i.options) && i.options.length > 0) out.enumValues = i.options;
+  return out;
+}
 
 function cliVersion(): string {
   try {
@@ -895,7 +945,13 @@ async function main(): Promise<void> {
     const parsed = schema.safeParse(params);
     if (!parsed.success) {
       const issues = parsed.error.issues.map((i) => `${i.path.join(".") || "(root)"}：${i.message}`).join("；");
-      throw new ValidationCliError(userCmd, `参数校验失败：${issues}（可用 list-tools 或 ${userCmd} --help 查看 schema）`);
+      throw new ValidationCliError(
+        userCmd,
+        `参数校验失败：${issues}（可用 list-tools 或 ${userCmd} --help 查看 schema）`,
+        parsed.error.issues.map((i) =>
+          zodIssueToFieldError(i as unknown as Parameters<typeof zodIssueToFieldError>[0]),
+        ),
+      );
     }
 
     await maybeHintDataDir(mappedTool);
@@ -953,6 +1009,9 @@ async function main(): Promise<void> {
     if (err instanceof UnknownFlagError) {
       if (err.nearFlags.length > 0) envelope.nearFlags = err.nearFlags;
       if (err.knownFlags.length > 0) envelope.knownFlags = err.knownFlags;
+    }
+    if (err instanceof ValidationCliError && err.fieldErrors.length > 0) {
+      envelope.fieldErrors = err.fieldErrors;
     }
     process.exitCode = isUsage ? 2 : 1; // NP-2：先置码再写信封（EPIPE 出口据此保持非零）
     printJson(envelope, compact);

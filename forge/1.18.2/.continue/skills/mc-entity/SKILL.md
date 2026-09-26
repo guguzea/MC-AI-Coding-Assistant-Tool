@@ -14,7 +14,7 @@ mappings: parchment
 ```java
 // 注册 EntityType（参见 mc-registry Skill）
 public static final DeferredRegister<EntityType<?>> ENTITYTYPES =
-    DeferredRegister.create(ForgeRegistries.ENTITYTYPES, MOD_ID);
+    DeferredRegister.create(ForgeRegistries.ENTITIES, MOD_ID);
 
 public static final RegistryObject<EntityType<MyEntity>> MY_ENTITY = ENTITYTYPES.register("my_entity",
     () -> EntityType.Builder.of(MyEntity::new, MobCategory.CREATURE)

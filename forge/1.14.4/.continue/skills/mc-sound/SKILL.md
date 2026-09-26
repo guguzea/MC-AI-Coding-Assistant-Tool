@@ -4,7 +4,7 @@ description: Minecraft Forge 声音开发。SoundEvent 注册、sounds.json、So
 platform: forge
 version: "1.14.4"
 dependencies: []
-mappings: parchment
+mappings: mcp
 ---
 
 # 声音开发（Forge 1.14.4）
@@ -77,7 +77,7 @@ Block.Properties.create(Material.ROCK)
 
 ## 播放声音（服务端）
 
-### 最常用：`Level.playSound`
+### 最常用：`World.playSound`
 
 ```java
 // 服务端调用：播放给附近所有玩家（不含 player 参数传入者）

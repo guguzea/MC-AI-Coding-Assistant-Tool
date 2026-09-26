@@ -13,7 +13,7 @@ import {
 } from "./platform-data.js";
 import { resolveDataDir } from "../utils/path.js";
 import { semanticSearch } from "./semantic/search.js";
-import { mergeSemanticResults, semanticAllowedIds, joinSearchWarnings, withDocsFallbackFields, annotateVerbatim, type SearchResultLike } from "./search-utils.js";
+import { mergeSemanticResults, semanticAllowedIds, joinSearchWarnings, withDocsFallbackFields, annotateVerbatim, limitWindowOf, limitClampWarning, type SearchResultLike } from "./search-utils.js";
 import { missingSemanticDbWarning, semanticStaleSearchWarning } from "./semantic/status.js";
 import { filterFabricFallbackHits, isFabricExclusiveContent, isFabricExclusiveHit, isQslSpecificQuery } from "./quilt-fallback-filter.js";
 
@@ -156,13 +156,29 @@ function exclusiveRefusalResult(hit: DocHit): CallToolResult | null {
   return payload ? jsonOk(payload) : null;
 }
 
+/**
+ * A2（2026-09-24）：`search_docs platform=quilt` 透传的按调用窗口常量。
+ * 本面**只能收窄**：池的构造上界 = L0 腿 `enhancedSearch({limit: 10})`（fabric store 口径）
+ * ∪ 语义腿 `semanticSearch(..., limit = 10)` = 20，而既有 merge 窗口本就是 20 ⇒ 默认即上界，不多给。
+ * 实际可得 ≤ 响应里 `limitWindow.candidates`（每调用现算，请求超池即 clamp + warning）。
+ */
+export const QUILT_SEARCH_DEFAULT_LIMIT = 20;
+export const QUILT_SEARCH_LIMIT_MAX = 20;
+
 export async function searchQuiltDocs(args: {
   query: string;
   version: string;
   tags?: string[];
+  /** A2：按调用窗口（缺省 = QUILT_SEARCH_DEFAULT_LIMIT；本面池上界同值 ⇒ 只能收窄） */
+  limit?: number;
 }): Promise<CallToolResult> {
   const dataRoot = resolveDataDir();
   const qsl = isQslSpecificQuery(args.query);
+  // A2：只收窄不放大（不传时建造窗口与截断点与加参数之前逐字相同）。
+  const requestedLimit = args.limit;
+  const buildLimit = requestedLimit === undefined
+    ? QUILT_SEARCH_DEFAULT_LIMIT
+    : Math.max(QUILT_SEARCH_DEFAULT_LIMIT, requestedLimit);
 
   if (!quiltIndexHasPages(args.version, dataRoot)) {
     const registryFb = QUILT_INDEX_FALLBACK[args.version];
@@ -222,11 +238,18 @@ export async function searchQuiltDocs(args: {
       if (semanticHits) {
         results = mergeSemanticResults(results, semanticHits, {
           tags: args.tags,
-          limit: 20,
+          limit: buildLimit,
           version: detailedRes.resolvedVersion,
           allowedIds: semanticAllowedIds(store, detailedRes.resolvedVersion, results),
         });
       }
+      // A2：显式 limit ⇒ 按池截断并把窗口/池写进载荷；不传 ⇒ 一个字段都不加。
+      const limitWindow = limitWindowOf({
+        requested: requestedLimit,
+        candidates: results.length,
+        limitMax: QUILT_SEARCH_LIMIT_MAX,
+      });
+      if (limitWindow) results = results.slice(0, limitWindow.resultLimit);
       // verbatim 逐字支撑位：只事后标注，不改排序 / 召回
       const vb = annotateVerbatim(results, args.query, (r) =>
         store.pageText(r.id, detailedRes.resolvedVersion),
@@ -243,9 +266,11 @@ export async function searchQuiltDocs(args: {
           missingSemanticDbWarning(semanticHits === null),
           semanticStaleSearchWarning(dataRoot, "quilt", detailedRes.resolvedVersion, "quilt-docs"),
           QUILT_CURRENT_SITE_WARNING,
+          limitClampWarning(limitWindow),
           vb.warning,
         ),
         semantic: semanticHits !== null,
+        ...(limitWindow ? { limitWindow } : {}),
         total: results.length,
         ...(vb.term
           ? { verbatim_summary: { term: vb.term, judged: vb.judged, hits: vb.hits } }
@@ -289,14 +314,21 @@ export async function searchQuiltDocs(args: {
     if (semanticHits) {
       results = mergeSemanticResults(results, semanticHits, {
         tags: args.tags,
-        limit: 20,
+        limit: buildLimit,
         version: fabricDetailed.resolvedVersion,
         allowedIds: semanticAllowedIds(fabricStore, fabricDetailed.resolvedVersion, results),
       });
     }
     const filtered = filterFabricFallbackHits(results);
+    // A2：显式 limit ⇒ 按池截断（池 = 过滤后命中）并把窗口/池写进载荷；不传 ⇒ 一个字段都不加。
+    const limitWindow = limitWindowOf({
+      requested: requestedLimit,
+      candidates: filtered.hits.length,
+      limitMax: QUILT_SEARCH_LIMIT_MAX,
+    });
+    const finalHits = limitWindow ? filtered.hits.slice(0, limitWindow.resultLimit) : filtered.hits;
     // verbatim 逐字支撑位：命中正文是 Fabric 的，所以按 Fabric 语料判逐字
-    const vb = annotateVerbatim(filtered.hits, args.query, (r) =>
+    const vb = annotateVerbatim(finalHits, args.query, (r) =>
       fabricStore.pageText(r.id, fabricDetailed.resolvedVersion),
     );
     const quiltDocDataPresent = hasPlatformDocData("quilt", dataRoot);
@@ -316,10 +348,12 @@ export async function searchQuiltDocs(args: {
         filtered.dropped > 0 ? `已丢弃 ${filtered.dropped} 条 Fabric 专属命中` : undefined,
         missingSemanticDbWarning(semanticHits === null),
         semanticStaleSearchWarning(resolveDataDir(), "fabric", fabricDetailed.resolvedVersion, "fabric-docs"),
+        limitClampWarning(limitWindow),
         vb.warning,
       ),
       semantic: semanticHits !== null,
-      total: filtered.hits.length,
+      ...(limitWindow ? { limitWindow } : {}),
+      total: finalHits.length,
       ...(vb.term
         ? { verbatim_summary: { term: vb.term, judged: vb.judged, hits: vb.hits } }
         : {}),

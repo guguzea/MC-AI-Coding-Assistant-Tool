@@ -15,7 +15,7 @@ skillId: mc-config
 
 # Fzzy Config 配置库集成要点
 
-自写短文。版本与 API 细节以 [Fzzy Config](https://github.com/fzzyhmstrs/fzzy_config) 当前 README 与示例为准。
+自写短文。版本与 API 细节以 [Fzzy Config](https://github.com/fzzyhmstrs/fconfig) 当前 README 与示例为准。
 
 ## 何时用 / 何时不用
 
@@ -76,7 +76,7 @@ Decision: 要不要用 Fzzy Config
 - MCP：`generate_config`、`check_dependencies`、`search_community_docs`
 - Skill：`mc-config`；相关：`mc-gui`
 - 全览：§二.1 配置库、§五 陷阱 7；`authored/library-catalog-2026`、`authored/lib-cloth-config`、`authored/lib-yacl`、`authored/library-integration`
-- 官方：https://github.com/fzzyhmstrs/fzzy_config
+- 官方：https://github.com/fzzyhmstrs/fconfig
 - 不清楚时：打开 Fzzy Config README + 示例，或 `search_fabric_docs` / `search_forge_docs`；AGENT_USAGE.md 规则先行
 
 ## 核对（2026-08 反编译验证）

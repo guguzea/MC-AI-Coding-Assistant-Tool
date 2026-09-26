@@ -35,7 +35,7 @@ import {
   type DocPlatform,
 } from "../platform-data.js";
 import { semanticSearch } from "../semantic/search.js";
-import { mergeSemanticResults, semanticAllowedIds, joinSearchWarnings, withDocsFallbackFields, thinLoaderWikiWarning, annotateVerbatim, type SearchResultLike } from "../search-utils.js";
+import { mergeSemanticResults, semanticAllowedIds, joinSearchWarnings, withDocsFallbackFields, thinLoaderWikiWarning, annotateVerbatim, limitWindowOf, limitClampWarning, type SearchResultLike } from "../search-utils.js";
 import { missingSemanticDbWarning, semanticDbAbsent, semanticStaleSearchWarning } from "../semantic/status.js";
 import { SEARCH_DOC_PLATFORMS, PLATFORM_DOC_SUBDIR } from "../platforms.js";
 import { ownGet } from "../../utils/own-record.js";
@@ -201,6 +201,16 @@ export async function listForgeVersions(): Promise<CallToolResult> {
 
 // ── 工具 1：search_forge_docs（L0 搜索）────────────────────────────────
 
+/**
+ * A2（2026-09-24）：`search_forge_docs` 的按调用窗口常量。
+ * 上界**派生自本面的构造上界**，不是拍脑袋的整数：L0 腿是 `enhancedSearch({limit: 10})`
+ * （`forge/store.ts`）∪ 语义腿 `semanticSearch(..., limit = 10)`（`semantic/search.ts` 默认参数）
+ * ⇒ 去重后池 ≤ 20。实际可得 ≤ 响应里 `limitWindow.candidates`（每调用现算，请求超池即 clamp + warning）。
+ * 别照抄基岩的 60 —— 基岩有降权腿，是另一个池。
+ */
+export const FORGE_SEARCH_DEFAULT_LIMIT = 10;
+export const FORGE_SEARCH_LIMIT_MAX = 20;
+
 export const searchForgeDocsSchema = {
   name: "search_forge_docs",
   description: `Forge 官方文档搜索（hybrid：L0 关键词 + 语义检索，RRF 融合；无语义库时回退纯 L0）。
@@ -238,6 +248,16 @@ verbatim 逐字支撑位（2026-09-20）：
       .array(z.string())
       .optional()
       .describe("标签过滤（小写无连字符，如 registry, event, capability）"),
+    limit: z
+      .number()
+      .int()
+      .positive()
+      .max(FORGE_SEARCH_LIMIT_MAX)
+      .optional()
+      .describe(
+        `最多返回条数（默认 ${FORGE_SEARCH_DEFAULT_LIMIT}，上界 ${FORGE_SEARCH_LIMIT_MAX}）。` +
+        `不传 = 既有默认窗口（载荷逐字不变）；传了会带 limitWindow{candidates,...}，请求超过本次候选池即按池截断并在 warning 里说破。`,
+      ),
   }),
 } as const;
 
@@ -261,14 +281,25 @@ export async function searchForgeDocs(
       "forge-docs",
       resolveDataDir(),
     );
-    const results = semanticHits === null
+    // A2（2026-09-24）：只放宽不收紧 —— 不传 limit 时建造窗口与截断点与加参数之前逐字相同。
+    const requestedLimit = args.limit;
+    const buildLimit = requestedLimit === undefined
+      ? FORGE_SEARCH_DEFAULT_LIMIT
+      : Math.max(FORGE_SEARCH_DEFAULT_LIMIT, requestedLimit);
+    const candidates = semanticHits === null
       ? detailed.results
       : mergeSemanticResults(detailed.results, semanticHits, {
           tags: args.tags,
-          limit: 10,
+          limit: buildLimit,
           version: detailed.resolvedVersion,
           allowedIds: semanticAllowedIds(getForgeStore(), detailed.resolvedVersion, detailed.results),
         });
+    const limitWindow = limitWindowOf({
+      requested: requestedLimit,
+      candidates: candidates.length,
+      limitMax: FORGE_SEARCH_LIMIT_MAX,
+    });
+    const results = limitWindow ? candidates.slice(0, limitWindow.resultLimit) : candidates;
     // verbatim 逐字支撑位：只事后标注，不改排序 / 召回
     const vb = annotateVerbatim(results, args.query, (r) =>
       getForgeStore().pageText(r.id, detailed.resolvedVersion),
@@ -295,10 +326,12 @@ export async function searchForgeDocs(
                 missingSemanticDbWarning(
                   semanticDbAbsent(resolveDataDir(), "forge", detailed.resolvedVersion, "forge-docs"),
                 ),
+                limitClampWarning(limitWindow),
                 vb.warning,
               ),
               tags: args.tags,
               semantic: semanticHits !== null,
+              ...(limitWindow ? { limitWindow } : {}),
               total: results.length,
               ...(vb.term
                 ? { verbatim_summary: { term: vb.term, judged: vb.judged, hits: vb.hits } }
@@ -645,6 +678,15 @@ export async function listVersions(
 
 // ── 通用工具 1：search_docs ───────────────────────────────────────────────
 
+/**
+ * A2（2026-09-24）：`search_docs` 的按调用窗口常量。
+ * 上界取**本面各腿里最大的那个**：neoforge 分支 L0 ≤ 20（`neoforge/store.ts` 的 `enhancedSearch({limit: 20})`）
+ * ∪ 语义 ≤ 10 ⇒ ≤ 30；forge 分支（L0 ≤ 10）与 fabric 分支（L0 ≤ 10）都比它小。
+ * quilt 分支按 20 上限（`quilt-search.ts` 的 merge）另算，实际可得 ≤ `limitWindow.candidates`。
+ */
+export const SEARCH_DOCS_DEFAULT_LIMIT = 20;
+export const SEARCH_DOCS_LIMIT_MAX = 30;
+
 export const searchDocsSchema = {
   name: "search_docs",
   description: `通用文档搜索，支持多平台（Forge/NeoForge/Fabric/Quilt/LiteLoader/Rift/ModLoader）。基岩请用 search_bedrock_docs。
@@ -690,6 +732,17 @@ verbatim 逐字支撑位（2026-09-20）：
       .enum(["fabric-docs", "fabric-wiki", "all"])
       .optional()
       .describe("仅 platform=fabric：数据源，默认 fabric-docs"),
+    limit: z
+      .number()
+      .int()
+      .positive()
+      .max(SEARCH_DOCS_LIMIT_MAX)
+      .optional()
+      .describe(
+        `最多返回条数（默认 ${SEARCH_DOCS_DEFAULT_LIMIT}，上界 ${SEARCH_DOCS_LIMIT_MAX}）。` +
+        `不传 = 既有默认窗口（载荷逐字不变）；传了会带 limitWindow{candidates,...}，请求超过本次候选池即按池截断并在 warning 里说破。` +
+        `platform=quilt / fabric 时透传给对应面（其上界更小，按各自面生效）。`,
+      ),
   }),
 } as const;
 
@@ -702,7 +755,7 @@ export async function searchDocs(
     const fabricSource = args.source ?? "fabric-docs";
 
     if (platform === "quilt") {
-      return searchQuiltDocs({ query: args.query, version: args.version, tags: args.tags });
+      return searchQuiltDocs({ query: args.query, version: args.version, tags: args.tags, limit: args.limit });
     }
 
     if (!hasPlatformDocData(platform)) {
@@ -715,6 +768,7 @@ export async function searchDocs(
         version: args.version,
         tags: args.tags,
         source: fabricSource,
+        limit: args.limit,
       });
     }
 
@@ -796,11 +850,16 @@ export async function searchDocs(
             docSource,
             resolveDataDir(),
           );
+    // A2（2026-09-24）：只放宽不收紧 —— 不传 limit 时建造窗口与截断点与加参数之前逐字相同。
+    const requestedLimit = args.limit;
+    const buildLimit = requestedLimit === undefined
+      ? SEARCH_DOCS_DEFAULT_LIMIT
+      : Math.max(SEARCH_DOCS_DEFAULT_LIMIT, requestedLimit);
     const finalResultsBase = semanticHits === null
       ? result
       : mergeSemanticResults(result, semanticHits, {
           tags: args.tags,
-          limit: 20,
+          limit: buildLimit,
           version: resolvedVersion,
           allowedIds: semanticAllowedIds(store, semVersion, result),
         });
@@ -816,10 +875,17 @@ export async function searchDocs(
       });
       if (primerHits.length) {
         const seen = new Set(finalResults.map((r) => r.id));
-        finalResults = [...primerHits.filter((p) => !seen.has(p.id)), ...finalResults].slice(0, 20);
+        finalResults = [...primerHits.filter((p) => !seen.has(p.id)), ...finalResults].slice(0, buildLimit);
         primerNote = "结果含 source=primer（迁移 Primer，不是 loader API 全文）";
       }
     }
+    // A2：显式 limit ⇒ 按池截断并把窗口/池写进载荷；不传 ⇒ 一个字段都不加。
+    const limitWindow = limitWindowOf({
+      requested: requestedLimit,
+      candidates: finalResults.length,
+      limitMax: SEARCH_DOCS_LIMIT_MAX,
+    });
+    if (limitWindow) finalResults = finalResults.slice(0, limitWindow.resultLimit);
     const loaderWikiWarn = thinLoaderWikiWarning(platform, finalResults);
     // verbatim 逐字支撑位：通用口的 store 是鸭子类型联合，没有 pageText 的实现
     // （薄档 / 旁路语料）一律「未判定」，不得报成 false。
@@ -852,10 +918,17 @@ export async function searchDocs(
                   ? "Forge 1.20.4 无独立 /en/1.20.4/ 路由，正文来自 /en/1.20.x/。不要当成独立 1.20.4 全文。"
                   : undefined,
                 primerNote,
+                // S11/T1：这两条此前传的是 `platform` + `resolvedVersion`（**请求**侧），
+                // 而 semanticSearch 在 :792 用的是 semPlatform/semVersion（**实际读库**侧）。
+                // 于是 search_docs platform=neoforge version=1.20.1（Forge 兼容数据）同一份载荷里
+                // 既报 semantic:true + total:10，又去查 data/neoforge_1.20.1/… 是否缺库并报「语义索引缺库」
+                // —— 自相矛盾。stale 那条更隐蔽：它永远查不到不存在的库，所以恒 undefined（静默失效）。
+                // 形状照 src/docs-platform/neoforge/index.ts:276-281（独立路径本就传对了）。
                 missingSemanticDbWarning(
-                  semanticDbAbsent(resolveDataDir(), platform, resolvedVersion, docSource),
+                  semanticDbAbsent(resolveDataDir(), semPlatform, semVersion, docSource),
                 ),
-                semanticStaleSearchWarning(resolveDataDir(), platform, resolvedVersion, docSource),
+                semanticStaleSearchWarning(resolveDataDir(), semPlatform, semVersion, docSource),
+                limitClampWarning(limitWindow),
                 loaderWikiWarn,
                 vb.warning,
                 finalResults.length === 0 && /[\u4e00-\u9fff]/.test(String(args.query ?? ""))
@@ -865,6 +938,7 @@ export async function searchDocs(
               platform,
               tags: args.tags,
               semantic: semanticHits !== null,
+              ...(limitWindow ? { limitWindow } : {}),
               total: finalResults.length,
               ...(vb.term
                 ? { verbatim_summary: { term: vb.term, judged: vb.judged, hits: vb.hits } }

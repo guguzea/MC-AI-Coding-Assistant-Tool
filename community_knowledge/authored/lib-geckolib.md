@@ -15,7 +15,7 @@ skillId: mc-geckolib
 
 # GeckoLib 3D 动画集成要点
 
-自写短文。版本矩阵、依赖坐标与注解名以 [GeckoLib 官方文档](https://docs.geckolib.com/) 当前版本为准，禁止照抄过期 Gist 或旧教程。
+自写短文。版本矩阵、依赖坐标与注解名以 [GeckoLib 官方文档](https://github.com/bernie-g/geckolib/wiki) 当前版本为准，禁止照抄过期 Gist 或旧教程。
 
 ## 何时用 / 何时不用
 
@@ -78,9 +78,9 @@ Decision: 动画方案
 - MCP：`check_dependencies`、`diagnose_gradle`、`audit_resources`、`crash_analyze`
 - Skill：`mc-geckolib`、`mc-entity`、`mc-renderer`
 - 全览：§二.2 动画库、§四；`authored/library-catalog-2026`、`authored/library-integration`
-- 官方：https://docs.geckolib.com/ 、GitHub：https://github.com/bernie-g/geckolib
+- 官方：https://github.com/bernie-g/geckolib/wiki 、GitHub：https://github.com/bernie-g/geckolib
 - 不清楚时：打开官方文档该版本的 Getting Started / Entity 教程；AGENT_USAGE.md 规则先行
 ## 核对
 
 - MC 1.20.1 + Fabric（geckolib-fabric-1.20.1-4.8.4.jar，2026-08 反编译核对：194 个 java 文件，顶层包 software.bernie.geckolib）
-- 细节仍以官方为准：https://docs.geckolib.com/
+- 细节仍以官方为准：https://github.com/bernie-g/geckolib/wiki

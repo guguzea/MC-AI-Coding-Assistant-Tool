@@ -4,7 +4,7 @@ description: 村民交易 VillagerTrades。触发词：villager、trade、POI
 platform: forge
 version: "1.18.2"
 dependencies: []
-mappings: mcp
+mappings: parchment
 ---
 
 # mc-villager

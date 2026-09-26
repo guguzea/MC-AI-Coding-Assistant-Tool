@@ -15,7 +15,7 @@ skillId: mc-kubejs
 
 # KubeJS 整合包脚本引擎集成要点
 
-自写短文。版本与 API 细节以 [KubeJS](https://github.com/KubeJS-Mods/KubeJS) 当前文档（docs.kubejs.com）与示例为准。
+自写短文。版本与 API 细节以 [KubeJS](https://github.com/KubeJS-Mods/KubeJS) 当前文档（kubejs.com/wiki/）与示例为准。
 
 ## 何时用 / 何时不用
 
@@ -54,7 +54,7 @@ Decision: 用不用 KubeJS
 // startup 脚本：注册简单物品/方块（id、属性以文档 API 为准）
 // server 脚本：监听配方相关事件，改/删/加配方；tag 事件改标签
 // 热重载：改完脚本按文档方式触发重载，验证改动
-// 事件名、脚本目录与 API 名称以 docs.kubejs.com 对应 MC 版本为准，勿照抄旧版本脚本
+// 事件名、脚本目录与 API 名称以 kubejs.com/wiki/ 对应 MC 版本为准，勿照抄旧版本脚本
 ```
 
 - 脚本按「启动期 / 服务端 / 客户端」分场景，放对目录
@@ -62,7 +62,7 @@ Decision: 用不用 KubeJS
 
 ## 常见坑
 
-- 脚本 API 随 MC 版本大改 → 以 docs.kubejs.com 对应版本为准，旧脚本可能失效
+- 脚本 API 随 MC 版本大改 → 以 kubejs.com/wiki/ 对应版本为准，旧脚本可能失效
 - 配方改不动 → 事件名或配方 id 写错，先确认事件与目标配方 id
 - 期待"脚本即全功能 mod" → 渲染/复杂注册仍需 Java 模组
 - 平台间脚本目录/加载行为有差异 → 换平台时核对文档
@@ -81,7 +81,7 @@ Decision: 用不用 KubeJS
 - Skill：`mc-kubejs`；相关：`mc-recipe`、`mc-registry`、`mc-datapack`
 - 全览：§二.10 脚本/工具；`authored/library-catalog-2026`、`authored/library-integration`
 - 官方：https://github.com/KubeJS-Mods/KubeJS
-- 不清楚时：打开 docs.kubejs.com（对应 MC 版本）+ 官方示例；AGENT_USAGE.md 规则先行
+- 不清楚时：打开 kubejs.com/wiki/（对应 MC 版本）+ 官方示例；AGENT_USAGE.md 规则先行
 
 ## 核对（2026-08 反编译验证）
 

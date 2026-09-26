@@ -1,0 +1,13 @@
+{
+    "source":  "https://maven.minecraftforge.net/de/oceanlabs/mcp/mcp_snapshot/20210309-1.16.5/mcp_snapshot-20210309-1.16.5.zip",
+    "sha1":  "f6273df8817a92d41cf417a1a5935c08e09035ec",
+    "bytes":  478481,
+    "fetchedAt":  "2026-09-25",
+    "contains":  [
+                     "fields.csv",
+                     "methods.csv",
+                     "params.csv"
+                 ],
+    "why":  "MCP named 琛紙1.16.5 鏈€鍚庝竴涓?snapshot锛汧orge 瀹樻柟 1.16.x 鏂囨。锛歁CP 鍥為€€閫氶亾 channel snapshot version 20210309-1.16.5锛夈€傜敤閫旓細鍒?forge/1.16.5 鍚?skill 澹版槑鐨?mcp/official 涓庢鏂囨垚鍛樺悕鏄惁涓€鑷达紙搂6.9 鈶級",
+    "layout":  "flat（与 1.14.4/1.15.2 的 mappings/*.csv 同形；2026-09-25 审阅修正从 mappings/mcp_snapshot-20210309/ 子目录扁平化——平铺 join 消费方 mcp-csv-extractor.js:223 / build-yarn-sqlite.mjs:429 才能看到）"
+}
