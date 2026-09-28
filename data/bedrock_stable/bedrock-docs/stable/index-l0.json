@@ -9,11 +9,11 @@
       "bp"
     ],
     "priority": "⭐",
-    "sectionCount": 8,
+    "sectionCount": 7,
     "source": "bedrock-docs",
     "origin": "curated",
-    "fetchedAt": "2026-09-24T02:07:29.160Z",
-    "sha256": "68370c05cd25fa63ba2d8a817123d554fa3ece14d7afedcd7be30818dbd3cb68"
+    "fetchedAt": "2026-09-27T06:36:00.408Z",
+    "sha256": "baa8474afcb9ff772751fdc564f2ddda80443563d02b3c5a0e6b0c62f6e3bc56"
   },
   {
     "id": "stable/biomes",
@@ -25,11 +25,11 @@
       "biome"
     ],
     "priority": "⭐",
-    "sectionCount": 1,
+    "sectionCount": 0,
     "source": "bedrock-docs",
     "origin": "curated",
-    "fetchedAt": "2026-09-24T02:07:36.133Z",
-    "sha256": "10ae6cc569478976244882e0354041b005eed3efa6fb571441b86d141f70ef21"
+    "fetchedAt": "2026-09-27T06:36:00.464Z",
+    "sha256": "e59b2cc6e440106ab7d92a59e0202926cf6106d4903bb4e920b21dbcbaaafde6"
   },
   {
     "id": "stable/block-components",
@@ -41,11 +41,11 @@
       "components"
     ],
     "priority": "⭐",
-    "sectionCount": 2,
+    "sectionCount": 1,
     "source": "bedrock-docs",
     "origin": "curated",
-    "fetchedAt": "2026-09-24T03:09:21.619Z",
-    "sha256": "4af3eeecac5958b2e802cb56fb77f78534371466c74f9a12091d8d2fbbe3459d"
+    "fetchedAt": "2026-09-27T06:36:00.437Z",
+    "sha256": "7c7ee2cc74e0274de0366f48614af9f13efd70a73de74a1fe700fbde1bbe960b"
   },
   {
     "id": "stable/custom-block",
@@ -58,11 +58,11 @@
       "rp"
     ],
     "priority": "⭐",
-    "sectionCount": 5,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "curated",
-    "fetchedAt": "2026-09-24T02:07:31.635Z",
-    "sha256": "d20008fdada6186f09b2f4379378b72e4c8a82236215fb8e05e2174c3120aefe"
+    "fetchedAt": "2026-09-27T06:36:00.433Z",
+    "sha256": "6df6869fe6219ea0477c3c0e166fbf7db2363960da0e073e18a3d655d26fa87d"
   },
   {
     "id": "stable/custom-items",
@@ -74,11 +74,11 @@
       "bp"
     ],
     "priority": "⭐",
-    "sectionCount": 10,
+    "sectionCount": 9,
     "source": "bedrock-docs",
     "origin": "curated",
-    "fetchedAt": "2026-09-24T02:07:32.750Z",
-    "sha256": "b2a9c362abf5e5bae94fdee74a9cb44dffaec28b4279a50c582f9f1ea30fa986"
+    "fetchedAt": "2026-09-27T06:36:00.442Z",
+    "sha256": "6243ef72641e35779a622eb0aeb2b668f038b211f037e8e59a5a4f70b510dc53"
   },
   {
     "id": "stable/documents/actorstorage",
@@ -3929,11 +3929,11 @@
       "bp"
     ],
     "priority": "⭐",
-    "sectionCount": 10,
+    "sectionCount": 9,
     "source": "bedrock-docs",
     "origin": "curated",
-    "fetchedAt": "2026-09-24T02:07:30.062Z",
-    "sha256": "3a35f2bc57b01d5afdffc1f5c89295ede3ff6252cf7c4542c9da8a364abbd56b"
+    "fetchedAt": "2026-09-27T06:36:00.420Z",
+    "sha256": "a731a28ea69ee7c2da1c485b33089a41c3aeaba40a79810c667d25052d6ff69f"
   },
   {
     "id": "stable/entity-components",
@@ -3945,11 +3945,11 @@
       "components"
     ],
     "priority": "⭐",
-    "sectionCount": 2,
+    "sectionCount": 1,
     "source": "bedrock-docs",
     "origin": "curated",
-    "fetchedAt": "2026-09-24T02:07:30.735Z",
-    "sha256": "cb80d62222eb2f80175be4ecbc121cae8c10dd1628e8572277d1f035f73becb7"
+    "fetchedAt": "2026-09-27T06:36:00.427Z",
+    "sha256": "f24635aef4d058588859651dbedf54063ae9f97729ed5de6f2b0ef8c45827c66"
   },
   {
     "id": "stable/experimental-features-toggle",
@@ -3961,11 +3961,11 @@
       "beta"
     ],
     "priority": "⭐",
-    "sectionCount": 4,
+    "sectionCount": 3,
     "source": "bedrock-docs",
     "origin": "curated",
-    "fetchedAt": "2026-09-24T02:07:25.632Z",
-    "sha256": "78f5879da6f4ac5e971d081689148d04cc354163ae2036a24106ab4607a14cd9"
+    "fetchedAt": "2026-09-27T06:36:00.332Z",
+    "sha256": "cafb426bfeb5eadadee2efe616cc57727871ebe5019238540cad53ad0056839a"
   },
   {
     "id": "stable/features-intro",
@@ -3977,11 +3977,11 @@
       "features"
     ],
     "priority": "⭐",
-    "sectionCount": 5,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "curated",
-    "fetchedAt": "2026-09-24T02:07:35.554Z",
-    "sha256": "3fb998ab41a7ff352582a15dc704ea6a5acb8f056cfd26e50dff6345e475734f"
+    "fetchedAt": "2026-09-27T06:36:00.459Z",
+    "sha256": "5f672b2948004e843c336a5ff4490865178b1cc38625041e3be18b6495b06b00"
   },
   {
     "id": "stable/getting-started",
@@ -3993,11 +3993,11 @@
       "intro"
     ],
     "priority": "⭐",
-    "sectionCount": 5,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "curated",
-    "fetchedAt": "2026-09-24T02:07:27.929Z",
-    "sha256": "3ca6c5189cc5886afe7c20c6e11b77b5b3993d036c6cea5b2f8b9217706afd6c"
+    "fetchedAt": "2026-09-27T06:36:00.395Z",
+    "sha256": "427f94d17f3039b25462892d99f1d9fa518fe3fbf0b4b2f2bf6ac771b52cc4a1"
   },
   {
     "id": "stable/item-components",
@@ -4009,11 +4009,11 @@
       "components"
     ],
     "priority": "⭐",
-    "sectionCount": 2,
+    "sectionCount": 1,
     "source": "bedrock-docs",
     "origin": "curated",
-    "fetchedAt": "2026-09-24T02:07:33.237Z",
-    "sha256": "6565ac77fabd0314c0fa670d8332d25e7baf1c8dd84ecd25715f1e9a42ce7f3f"
+    "fetchedAt": "2026-09-27T06:36:00.446Z",
+    "sha256": "a05469433cbd1d4682a3980ff5d577878e7073e3dc2a0f380452ea2d3ae8eb4b"
   },
   {
     "id": "stable/molang-intro",
@@ -4024,11 +4024,11 @@
       "molang"
     ],
     "priority": "⭐",
-    "sectionCount": 5,
+    "sectionCount": 4,
     "source": "bedrock-docs",
     "origin": "curated",
-    "fetchedAt": "2026-09-24T02:07:33.874Z",
-    "sha256": "b557ad91c944bed3c6dd0a5b749b44657aeea0b4604f893a7211f6f161bf054f"
+    "fetchedAt": "2026-09-27T06:36:00.450Z",
+    "sha256": "4a820b2827951a93e1dfb4403bfaac906e677afba55d4bfafbed27ababc4d5f6"
   },
   {
     "id": "stable/molang-syntax",
@@ -4039,11 +4039,11 @@
       "molang"
     ],
     "priority": "⭐",
-    "sectionCount": 16,
+    "sectionCount": 15,
     "source": "bedrock-docs",
     "origin": "curated",
-    "fetchedAt": "2026-09-24T02:07:34.902Z",
-    "sha256": "259765fdc6d5fadc89bc61e1c0e788f30baa21f09f6db5d9203ea1a7d23bd338"
+    "fetchedAt": "2026-09-27T06:36:00.454Z",
+    "sha256": "21daeb909bcebec4af55516308add0b8aef333a43ef009ee016a86bdc1bd509d"
   },
   {
     "id": "stable/pack-manifest",
@@ -4055,11 +4055,11 @@
       "pack"
     ],
     "priority": "⭐",
-    "sectionCount": 4,
+    "sectionCount": 3,
     "source": "bedrock-docs",
     "origin": "curated",
-    "fetchedAt": "2026-09-24T02:07:23.286Z",
-    "sha256": "6ffa899d0fff8acd52d3e5c18b3adae7cee6d24764b720641bd6d692001a718c"
+    "fetchedAt": "2026-09-27T06:36:00.326Z",
+    "sha256": "8e691def399e2cef838bef918a931ce2b49f4bb0defe8d0c006f4cffdeca4744"
   },
   {
     "id": "stable/resource-pack",
@@ -4071,11 +4071,11 @@
       "rp"
     ],
     "priority": "⭐",
-    "sectionCount": 6,
+    "sectionCount": 5,
     "source": "bedrock-docs",
     "origin": "curated",
-    "fetchedAt": "2026-09-24T02:07:28.637Z",
-    "sha256": "633310be4d6015965ac4fd8c5ace0de38e7aa015f0a5deac65a808a526fb043a"
+    "fetchedAt": "2026-09-27T06:36:00.404Z",
+    "sha256": "864e6ac0e9d40c99eb67789a26cb16325c831c9d2544daf706afb28aabe16b72"
   },
   {
     "id": "stable/script-api-intro",
@@ -4086,11 +4086,11 @@
       "script"
     ],
     "priority": "⭐",
-    "sectionCount": 8,
+    "sectionCount": 7,
     "source": "bedrock-docs",
     "origin": "curated",
-    "fetchedAt": "2026-09-24T02:07:27.396Z",
-    "sha256": "e6b359ac1521dd511439d90761ac8758cab9bb4ba3fd81cc0c4832c2bc2ba270"
+    "fetchedAt": "2026-09-27T06:36:00.385Z",
+    "sha256": "b85d890b2c5efa8b92ba2832d26236b256574cb5ab1ee8e9047cfe239f58cb01"
   },
   {
     "id": "stable/script-server",
@@ -4102,11 +4102,11 @@
       "server"
     ],
     "priority": "⭐",
-    "sectionCount": 11,
+    "sectionCount": 10,
     "source": "bedrock-docs",
     "origin": "curated",
-    "fetchedAt": "2026-09-24T02:07:26.627Z",
-    "sha256": "6353aadd2b93be1a3493b694d88c3370da0e40d21bfc8339532095858ce8ac29"
+    "fetchedAt": "2026-09-27T06:36:00.342Z",
+    "sha256": "8a81dd18768ddaaeb9f5c0f11a631daf2ca61aab01866b6dc4f59ae6221c00a5"
   },
   {
     "id": "stable/script-server-ui",
@@ -4118,11 +4118,11 @@
       "ui"
     ],
     "priority": "⭐",
-    "sectionCount": 10,
+    "sectionCount": 9,
     "source": "bedrock-docs",
     "origin": "curated",
-    "fetchedAt": "2026-09-24T02:07:37.851Z",
-    "sha256": "510bf97840f7ecfbd2dc3ee0ebbaeba2fd35443629577473d182ba4335bff862"
+    "fetchedAt": "2026-09-27T06:36:00.483Z",
+    "sha256": "84c9319fc98f501ce0775716eeeec98fbe4a93f9a68f29d5177b4279dfb3ff8d"
   },
   {
     "id": "stable/system-after-events",
@@ -4134,11 +4134,11 @@
       "events"
     ],
     "priority": "⭐",
-    "sectionCount": 2,
+    "sectionCount": 1,
     "source": "bedrock-docs",
     "origin": "curated",
-    "fetchedAt": "2026-09-24T02:07:37.403Z",
-    "sha256": "d2869e4e5597c1ea57cb45fc4a8657f970c4189b339d4e5a4d7b16229429891e"
+    "fetchedAt": "2026-09-27T06:36:00.478Z",
+    "sha256": "9447235419855595b042f9bef048c341f6444a63fe787070e676983f377141f5"
   },
   {
     "id": "stable/world-after-events",
@@ -4150,10 +4150,10 @@
       "events"
     ],
     "priority": "⭐",
-    "sectionCount": 2,
+    "sectionCount": 1,
     "source": "bedrock-docs",
     "origin": "curated",
-    "fetchedAt": "2026-09-24T02:07:36.870Z",
-    "sha256": "04a237807cdae78a33b5d0dadc9dee3e3d87370b67d122348b4e1fa05e5f1558"
+    "fetchedAt": "2026-09-27T06:36:00.470Z",
+    "sha256": "2a968eefcfb98d37556bc33fa9fa7bd1b915440d4af4db73dfc546a91b96462b"
   }
 ]

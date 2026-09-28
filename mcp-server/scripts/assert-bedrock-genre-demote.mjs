@@ -269,6 +269,9 @@ function realRun() {
         const callFace = async (fn, args) => {
           try {
             const res = await fn(args);
+            // 平面载荷适配器：社区面（`searchCommunityDocs`）不经 MCP 信封、直接回对象。
+            // 「调用没抛」即 ok:true —— 宁可门侧适配，也不给工具载荷塞一个消费者可见的 `ok` 键。
+            if (res && typeof res === "object" && res.content === undefined) return { ...res, ok: true };
             const text = res?.content?.[0]?.type === "text" ? res.content[0].text : "{}";
             return JSON.parse(text);
           } catch (e) {
@@ -321,6 +324,18 @@ function realRun() {
               { query: "event", version: "1.20.1", platform: "quilt" },
             ],
             narrowOnly: true,
+          },
+          {
+            // L56 甲桶第一面（2026-09-26）：`search_community_docs`。
+            // 常量从内联字面量提出在 `community/store.ts`（截断点所在），经 `community/index.ts` 与
+            // `docs-platform/index.ts` 两级转发到 dist ⇒ 门不抄数字这条规矩现在也管得住这一面。
+            // 本面此前是「静默截断且 `total` 只报截断后的条数」（实测 `query=崩溃` 池 30 / 默认给 20 /
+            // `total` 说 20），现已补 `limitWindow{candidates,…}` + 超池 warning（见 callFace 的平面载荷适配器）。
+            label: "search_community_docs",
+            fn: "searchCommunityDocs", schema: "searchCommunityDocsSchema",
+            dk: "COMMUNITY_SEARCH_DEFAULT_LIMIT", mk: "COMMUNITY_SEARCH_LIMIT_MAX",
+            base: { query: "x" },
+            probes: [{ query: "崩溃" }, { query: "发布" }],
           },
         ];
         const quiltConsts = await loadQuiltConstants();

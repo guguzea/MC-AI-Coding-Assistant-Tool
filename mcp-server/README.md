@@ -148,7 +148,7 @@ npx @modelcontextprotocol/inspector node dist/index.js
 | 社区 | `list_community_sources`、`search_community_docs`、`get_community_doc_*`（索引实测 109 条（authored 94/links 11/permitted 4，带 generatedAt）；含 48 篇 `lib-*` 库集成短文；规则见仓库根 `community_knowledge/AGENT_USAGE.md`） |
 | 移植 / 数据 | `analyze_porting_path`、`port_project`、`diagnose_data_paths` |
 | Wave B | `query_registry`、`mixin_analyze`、`audit_resources`、`validate_datapack_json`（1.21+ recipe `result` 可为对象）、`get_workflow_template`、`list_knowledge_resources`、`read_knowledge_resource` |
-| Wave C 生成 | `generate_model`（kind 默认 block）、`generate_lang`、`generate_network_packet`、`generate_capability`、`generate_config`（Fabric/Quilt 为 Cloth 骨架）、`generate_entity_renderer`、`generate_worldgen`、`localize_mod` |
+| Wave C 生成 | `generate_model`（kind 默认 block）、`generate_lang`、`generate_network_packet`、`generate_capability`、`generate_config`（Fabric/Quilt 为 Cloth 骨架）、`generate_entity_renderer`、`generate_worldgen`、`localize_mod` —— `generate_lang` 的空 `entries` 不静默：响应带披露 warning + 机读字段 `emptyEntries:true`（S6-③） |
 | Wave C 诊断 | `analyze_log`、`get_migration_guide`、`check_dependencies` |
 | T2 反编译（Wave C） | `get_minecraft_source`、`analyze_mod_jar`、`decompile_mod_jar`、`search_mod_code` |
 | MDK | `download_official_mdk` |

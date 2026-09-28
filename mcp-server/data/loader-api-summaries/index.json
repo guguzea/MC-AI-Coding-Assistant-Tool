@@ -51,6 +51,17 @@
       "invalid": false
     },
     {
+      "file": "1.14.4-fabric.jar",
+      "mappingsVersion": "unobfuscated-fabric-loader-0.3.7.111",
+      "mappingsSource": "loader-sources-native-names",
+      "classCount": 79,
+      "fqcnIndexCount": 57,
+      "sourceJarSha256": "6df50bb88025c56fb703c16e2c3ce507d4acafd48ea61068f85ff77a0e34a80a",
+      "source": "official",
+      "fromSourcesJar": true,
+      "invalid": false
+    },
+    {
       "file": "1.14.4-forge.jar",
       "mappingsVersion": "snapshot-20190719-1.14.3",
       "mappingsSource": "mdk-gradle.properties",
@@ -84,6 +95,17 @@
       "invalid": false
     },
     {
+      "file": "1.16.5-fabric.jar",
+      "mappingsVersion": "unobfuscated-fabric-loader-0.11.2",
+      "mappingsSource": "loader-sources-native-names",
+      "classCount": 181,
+      "fqcnIndexCount": 131,
+      "sourceJarSha256": "db7f8214d89e19db4a62c3a99fb7a740b94ebd375a8a749fa45eca7204ebfff3",
+      "source": "official",
+      "fromSourcesJar": true,
+      "invalid": false
+    },
+    {
       "file": "1.16.5-forge.jar",
       "mappingsVersion": "official-1.16.5",
       "mappingsSource": "mdk-gradle.properties",
@@ -106,6 +128,17 @@
       "invalid": false
     },
     {
+      "file": "1.17.1-fabric.jar",
+      "mappingsVersion": "unobfuscated-fabric-loader-0.11.7",
+      "mappingsSource": "loader-sources-native-names",
+      "classCount": 182,
+      "fqcnIndexCount": 132,
+      "sourceJarSha256": "e9a436e6bf8d0c1085d33d867d8332d0871a741bb230ed63624fac1f1abd4e75",
+      "source": "official",
+      "fromSourcesJar": true,
+      "invalid": false
+    },
+    {
       "file": "1.17.1-forge.jar",
       "mappingsVersion": "official-1.17.1",
       "mappingsSource": "mdk-gradle.properties",
@@ -123,6 +156,17 @@
       "classCount": 931,
       "fqcnIndexCount": 739,
       "sourceJarSha256": "5679d8a734267d47e85478486b6b161e74a87a4bdab2c83a39a351b2ad9ed1ee",
+      "source": "official",
+      "fromSourcesJar": true,
+      "invalid": false
+    },
+    {
+      "file": "1.18.2-fabric.jar",
+      "mappingsVersion": "unobfuscated-fabric-loader-0.14.24",
+      "mappingsSource": "loader-sources-native-names",
+      "classCount": 260,
+      "fqcnIndexCount": 179,
+      "sourceJarSha256": "9c785dee31361c9527e03a0020c972926d185dfb61d3a95f4cb828ca23e896ac",
       "source": "official",
       "fromSourcesJar": true,
       "invalid": false
@@ -159,6 +203,17 @@
       "invalid": false
     },
     {
+      "file": "1.19.4-fabric.jar",
+      "mappingsVersion": "unobfuscated-fabric-loader-0.14.21",
+      "mappingsSource": "loader-sources-native-names",
+      "classCount": 260,
+      "fqcnIndexCount": 179,
+      "sourceJarSha256": "0c6c980ce54f2ab72fc30b5dfcf06867393808ca00df5391d290675235293c5d",
+      "source": "official",
+      "fromSourcesJar": true,
+      "invalid": false
+    },
+    {
       "file": "1.19.4-forge.jar",
       "mappingsVersion": "official-1.19.4",
       "mappingsSource": "mdk-gradle.properties",
@@ -185,6 +240,17 @@
       "classCount": 983,
       "fqcnIndexCount": 897,
       "sourceJarSha256": "8a67a54d9b3692228feeb1e1e054161ed9e750e35599eeff09646b99becba2b4",
+      "source": "official",
+      "fromSourcesJar": true,
+      "invalid": false
+    },
+    {
+      "file": "1.20.1-fabric.jar",
+      "mappingsVersion": "unobfuscated-fabric-loader-0.15.11",
+      "mappingsSource": "loader-sources-native-names",
+      "classCount": 262,
+      "fqcnIndexCount": 182,
+      "sourceJarSha256": "bc64c3561ed561dc06574fac8bc01e597b23f07c9f79a624d5c4935c1e1903d2",
       "source": "official",
       "fromSourcesJar": true,
       "invalid": false
@@ -227,6 +293,17 @@
       "classCount": 1085,
       "fqcnIndexCount": 979,
       "sourceJarSha256": "1c6755d5c4b9393899a40927a8b51443295b6f20730475d9a247c2ad593aead8",
+      "source": "official",
+      "fromSourcesJar": true,
+      "invalid": false
+    },
+    {
+      "file": "1.20.4-fabric.jar",
+      "mappingsVersion": "unobfuscated-fabric-loader-0.15.11",
+      "mappingsSource": "loader-sources-native-names",
+      "classCount": 262,
+      "fqcnIndexCount": 182,
+      "sourceJarSha256": "bc64c3561ed561dc06574fac8bc01e597b23f07c9f79a624d5c4935c1e1903d2",
       "source": "official",
       "fromSourcesJar": true,
       "invalid": false
@@ -276,6 +353,17 @@
       "invalid": false
     },
     {
+      "file": "1.21.1-fabric.jar",
+      "mappingsVersion": "unobfuscated-fabric-loader-0.16.9",
+      "mappingsSource": "loader-sources-native-names",
+      "classCount": 261,
+      "fqcnIndexCount": 181,
+      "sourceJarSha256": "3c8cd202b3661e574aa284a5badd274e3f56ff7a748a11c6cfc121a67f83668f",
+      "source": "official",
+      "fromSourcesJar": true,
+      "invalid": false
+    },
+    {
       "file": "1.21.1-neoforge.jar",
       "mappingsVersion": "parchment-1.21.1-2024.11.17",
       "mappingsSource": "gradle.properties-sidecar",
@@ -296,6 +384,17 @@
       "invalid": false
     },
     {
+      "file": "1.21.10-fabric.jar",
+      "mappingsVersion": "unobfuscated-fabric-loader-0.19.5",
+      "mappingsSource": "loader-sources-native-names",
+      "classCount": 265,
+      "fqcnIndexCount": 183,
+      "sourceJarSha256": "b5a6ef0f608b62b362aacd3367fb2dba69915e0081b88c14f99209e5005dbf1d",
+      "source": "official",
+      "fromSourcesJar": true,
+      "invalid": false
+    },
+    {
       "file": "1.21.10-neoforge.jar",
       "mappingsVersion": "parchment-1.21.10-2025.10.12",
       "mappingsSource": "parchment-maven-metadata",
@@ -313,6 +412,17 @@
       "classCount": 1555,
       "fqcnIndexCount": 1436,
       "sourceJarSha256": "cb5a9829b580891d06405f5d5f770fda8e58ea057ff56e41adc5b28e20f7a842",
+      "source": "official",
+      "fromSourcesJar": true,
+      "invalid": false
+    },
+    {
+      "file": "1.21.11-fabric.jar",
+      "mappingsVersion": "unobfuscated-fabric-loader-0.19.3",
+      "mappingsSource": "loader-sources-native-names",
+      "classCount": 265,
+      "fqcnIndexCount": 183,
+      "sourceJarSha256": "be9a8706ec13c886dd1b326fb4d1a5d7987e7883c63e39096f50db3ae8ac9ebc",
       "source": "official",
       "fromSourcesJar": true,
       "invalid": false
@@ -340,6 +450,17 @@
       "invalid": false
     },
     {
+      "file": "1.21.3-fabric.jar",
+      "mappingsVersion": "unobfuscated-fabric-loader-0.16.9",
+      "mappingsSource": "loader-sources-native-names",
+      "classCount": 261,
+      "fqcnIndexCount": 181,
+      "sourceJarSha256": "3c8cd202b3661e574aa284a5badd274e3f56ff7a748a11c6cfc121a67f83668f",
+      "source": "official",
+      "fromSourcesJar": true,
+      "invalid": false
+    },
+    {
       "file": "1.21.3-neoforge.jar",
       "mappingsVersion": "parchment-1.21.3-2024.12.07",
       "mappingsSource": "gradle.properties-sidecar",
@@ -351,12 +472,34 @@
       "invalid": false
     },
     {
+      "file": "1.21.4-fabric.jar",
+      "mappingsVersion": "unobfuscated-fabric-loader-0.19.5",
+      "mappingsSource": "loader-sources-native-names",
+      "classCount": 265,
+      "fqcnIndexCount": 183,
+      "sourceJarSha256": "b5a6ef0f608b62b362aacd3367fb2dba69915e0081b88c14f99209e5005dbf1d",
+      "source": "official",
+      "fromSourcesJar": true,
+      "invalid": false
+    },
+    {
       "file": "1.21.5-neoforge.jar",
       "mappingsVersion": "parchment-1.21.5-2025.06.15",
       "mappingsSource": "parchment-maven-metadata",
       "classCount": 1291,
       "fqcnIndexCount": 1000,
       "sourceJarSha256": "289aab72e501515e8b23b6db882736a6c7a0b04b5eb4136c2bee32661863cd58",
+      "source": "official",
+      "fromSourcesJar": true,
+      "invalid": false
+    },
+    {
+      "file": "1.21.8-fabric.jar",
+      "mappingsVersion": "unobfuscated-fabric-loader-0.19.5",
+      "mappingsSource": "loader-sources-native-names",
+      "classCount": 265,
+      "fqcnIndexCount": 183,
+      "sourceJarSha256": "b5a6ef0f608b62b362aacd3367fb2dba69915e0081b88c14f99209e5005dbf1d",
       "source": "official",
       "fromSourcesJar": true,
       "invalid": false
@@ -398,6 +541,17 @@
       "classCount": 1565,
       "fqcnIndexCount": 1540,
       "sourceJarSha256": "0f0595333e987a61a043d265852fb3211350e5658349815065663b6d302c346c",
+      "source": "official",
+      "fromSourcesJar": true,
+      "invalid": false
+    },
+    {
+      "file": "26.1.2-fabric.jar",
+      "mappingsVersion": "unobfuscated-fabric-loader-0.19.5",
+      "mappingsSource": "loader-sources-native-names",
+      "classCount": 265,
+      "fqcnIndexCount": 183,
+      "sourceJarSha256": "b5a6ef0f608b62b362aacd3367fb2dba69915e0081b88c14f99209e5005dbf1d",
       "source": "official",
       "fromSourcesJar": true,
       "invalid": false

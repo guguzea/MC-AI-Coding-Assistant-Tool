@@ -1,5 +1,10 @@
 export type { MethodInfo, LoaderClassRecord, LoaderApiSummary } from "./types.js";
-export { queryLoaderApi, searchLoaderApi } from "./query.js";
+export {
+  queryLoaderApi,
+  searchLoaderApi,
+  LOADER_API_SEARCH_DEFAULT_LIMIT,
+  LOADER_API_SEARCH_LIMIT_MAX,
+} from "./query.js";
 export { assertCacheFresh, sha256Buffer, sha256File, readSidecar, sidecarSchemaCompatible } from "./sidecar.js";
 export { normalizeMethod, findSummary, listIndexed, invalidateMergedSummariesCache } from "./store.js";
 export { candidateKeys, candidateKeysSafe, howToIngestCli, USER_INGEST_KEYS } from "./keys.js";

@@ -170,6 +170,18 @@ export function initYarnSchema(db) {
   `);
 }
 
+/**
+ * `meta.version` 是消费侧读法之一（现盘 28 档里 22 档有值），而单目录构建的 CLI 形态
+ * （`build-yarn-sqlite.mjs <mappingsDir> --write`）本来就可以不带 `--version=` ⇒ 忘传时
+ * 不得静默产出一批没有版本号的库。按 `<平台>_<版本>/mappings` 这层目录名推。
+ * 推不出仍返回 undefined（由 setMeta 落空串），不猜。
+ */
+export function versionFromMappingsDir(mappingsDir) {
+  const abs = path.resolve(String(mappingsDir ?? ""));
+  const m = /[/\\](?:fabric|forge|quilt|neoforge)_([^/\\]+)[/\\]mappings[/\\]?$/.exec(abs);
+  return m ? m[1] : undefined;
+}
+
 function setMeta(db, entries) {
   const out = {};
   for (const [k, v] of Object.entries(entries)) {
@@ -447,6 +459,21 @@ function listCandidateSources(mappingsDir) {
   return candidates;
 }
 
+/**
+ * `meta.stored*Count` = **表内实数**（`COUNT(*)`），与 `meta.*Count`（源行数，含被按设计跳过的
+ * `<init>`/`<clinit>` 与主键塌行）刻意分开：读侧与 G4 的覆盖数口径都只认前者。
+ * 缺这组键 = 该库只能用「meta ≠ 行数」的债务台账描述自己（`assert-index-consistency` 的
+ * `DEBT_MAPPING_COUNT`），所以每个分支都必须写。
+ */
+function storedCounts(db) {
+  const c = (t) => String(db.prepare(`SELECT COUNT(*) AS c FROM ${t}`).get().c);
+  return {
+    storedClassCount: c("classes"),
+    storedMethodCount: c("methods"),
+    storedFieldCount: c("fields"),
+  };
+}
+
 async function tryImportSource(db, source, opts) {
   if (source.kind === "tiny") {
     return importTinyIntoDb(db, source.path, {
@@ -470,6 +497,7 @@ async function tryImportSource(db, source, opts) {
       classCount: String(r.classCount),
       methodCount: String(r.methodCount),
       fieldCount: String(r.fieldCount ?? 0),
+      ...storedCounts(db),
     });
     return r;
   }
@@ -489,6 +517,7 @@ async function tryImportSource(db, source, opts) {
       classCount: String(r.classCount),
       methodCount: String(r.methodCount),
       fieldCount: String(r.fieldCount ?? 0),
+      ...storedCounts(db),
     });
     return r;
   }
@@ -514,6 +543,7 @@ async function tryImportSource(db, source, opts) {
       classCount: String(r.classCount),
       methodCount: String(r.methodCount),
       fieldCount: String(r.fieldCount),
+      ...storedCounts(db),
       seargeMethodCount: countRows("searge_methods"),
       seargeFieldCount: countRows("searge_fields"),
       srgNameCollisionNote:
@@ -543,6 +573,7 @@ async function tryImportSource(db, source, opts) {
       classCount: "0",
       methodCount: String(r.methodCount),
       fieldCount: String(fieldCount),
+      ...storedCounts(db),
       ...(fs.existsSync(fieldsPath)
         ? { seargeFieldsCsv: fieldsPath, seargeFieldCount: String(fieldCount) }
         : {}),
@@ -558,6 +589,9 @@ async function tryImportSource(db, source, opts) {
 /** Build sqlite for one mappings directory. Returns output path. */
 export async function buildYarnSqliteForDir(mappingsDir, opts = {}) {
   const outPath = opts.outPath ?? path.join(mappingsDir, "yarn-mappings.sqlite");
+  // 显式传的版本优先；没传时按目录名推（见 versionFromMappingsDir）。整条链上只有这一处入口，
+  // 所以在这里归一化一次，tryImportSource 与各层 searge 补挂都读同一个值。
+  const o = { ...opts, version: opts.version ?? versionFromMappingsDir(mappingsDir) };
   // Build on local temp disk first — avoids H:/ network-drive SQLITE_IOERR during bulk insert.
   const tmpPath = path.join(
     os.tmpdir(),
@@ -578,7 +612,7 @@ export async function buildYarnSqliteForDir(mappingsDir, opts = {}) {
       try {
         initYarnSchema(db);
         clearMappingTables(db);
-        result = await tryImportSource(db, source, opts);
+        result = await tryImportSource(db, source, o);
         used = source;
         attempts.push({ source: source.path || source.kind, ok: true, era: result.mappingEra });
         break;
@@ -605,7 +639,7 @@ export async function buildYarnSqliteForDir(mappingsDir, opts = {}) {
     ) {
       try {
         const csv = importMcpCsvMethods(db, path.join(mappingsDir, "methods.csv"), {
-          version: opts.version,
+          version: o.version,
           source: path.join(mappingsDir, "methods.csv"),
         });
         seargeCount = csv.methodCount;
@@ -634,7 +668,7 @@ export async function buildYarnSqliteForDir(mappingsDir, opts = {}) {
     ) {
       try {
         const csv = importMcpCsvFields(db, fieldsCsvPath, {
-          version: opts.version,
+          version: o.version,
           source: fieldsCsvPath,
         });
         seargeFieldCount = csv.fieldCount;

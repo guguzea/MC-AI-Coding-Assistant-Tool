@@ -13,6 +13,15 @@ import { resolveCommunityDir } from "../../utils/path.js";
 
 export type CommunitySourceKind = "permitted" | "authored" | "links" | "unknown";
 
+/**
+ * `search_community_docs` 的窗口常量（2026-09-26 从内联字面量提出来，值逐字未变）。
+ * 放在这里而不是工具面文件：截断点就在下面 `search()` 的 `slice`，门不许抄数字。
+ * 与 forge/fabric 那几面的差别：本面**没有语义检索腿**，池 = 全部 score>0 的条目 ⇒
+ * 上界不派生自池构造（池随查询词变动），50 是「一次别吐太多篇」的人为上限。
+ */
+export const COMMUNITY_SEARCH_DEFAULT_LIMIT = 20;
+export const COMMUNITY_SEARCH_LIMIT_MAX = 50;
+
 export interface CommunityIndexEntry {
   id: string;
   label: string;
@@ -255,9 +264,14 @@ export class CommunityDocStore {
     }
   }
 
-  search(
+  /**
+   * 全部候选（score>0），**不截断** —— 给工具面算 `limitWindow.candidates` 用。
+   * 2026-09-26（`L56` 甲桶第一面）：本面此前把 `slice` 后的条数当 `total` 回给调用方 ⇒
+   * 实测 `query=崩溃` 池 30 条、默认只给 20，而 `total` 说 20 —— 「调大没变多」会被读成丢了页。
+   */
+  searchPool(
     query: string,
-    opts?: { sourceKind?: CommunitySourceKind; tags?: string[]; limit?: number },
+    opts?: { sourceKind?: CommunitySourceKind; tags?: string[] },
   ): CommunitySearchResult[] {
     const q = query.toLowerCase().trim();
     const tokens = tokenizeCommunityQuery(q);
@@ -289,7 +303,14 @@ export class CommunityDocStore {
       if (score > 0) scored.push({ ...e, score });
     }
     scored.sort((a, b) => b.score - a.score || a.id.localeCompare(b.id));
-    return scored.slice(0, opts?.limit ?? 20);
+    return scored;
+  }
+
+  search(
+    query: string,
+    opts?: { sourceKind?: CommunitySourceKind; tags?: string[]; limit?: number },
+  ): CommunitySearchResult[] {
+    return this.searchPool(query, opts).slice(0, opts?.limit ?? COMMUNITY_SEARCH_DEFAULT_LIMIT);
   }
 
   getById(id: string): CommunityIndexEntry | undefined {

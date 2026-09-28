@@ -30,7 +30,7 @@ import {
   versionNotFoundResult,
 } from "../platform-data.js";
 import { semanticSearch } from "../semantic/search.js";
-import { mergeSemanticResults, semanticAllowedIds, joinSearchWarnings, withDocsFallbackFields, annotateVerbatim, limitWindowOf, limitClampWarning } from "../search-utils.js";
+import { mergeSemanticResultsWithPool, poolFieldsOf, semanticAllowedIds, joinSearchWarnings, withDocsFallbackFields, annotateVerbatim, limitWindowOf, limitClampWarning } from "../search-utils.js";
 import { missingSemanticDbWarning, semanticStaleSearchWarning } from "../semantic/status.js";
 import {
   findPrimer,
@@ -186,8 +186,9 @@ export const searchNeoForgeDocsSchema = {
     "另合并 data/neoforge_primers（仅 loader=neoforge，命中带 source:primer）。" +
     "无独立主文档树的版本（如 1.20.5、本仓未入库的 26.2）会 warning，禁止把邻档 API 当本版。" +
     "增强功能：支持标签过滤；自动去除 the/and/of 等停用词；按相关性排序。" +
-    "verbatim 逐字支撑位：query 为单个标识符形态时，每条命中带 verbatim（true=该名字在该页正文逐字出现；false=读到正文且确认没有；无该字段=未判定，不等于语料没有），顶层带 verbatim_summary{term,judged,hits}；" +
-    "hits=0 只说明这些页是模糊相关，不构成该名字存在的证据（该位只事后标注，不改命中集合、顺序与 total）。",
+    "verbatim 逐字支撑位：query 为单个标识符形态时，每条命中带 verbatim（true=该名字在该页正文逐字出现；点号/FQCN 查询按末段类名判这一层，行级 verbatimOn 与顶层 verbatim_summary.matchedOn 给出处（term/tail/mixed），tail=语料可能没有你输入的那串点号全名；false=读到正文且确认没有；无该字段=未判定，不等于语料没有），顶层带 verbatim_summary{term,judged,hits,matchedOn}；" +
+    "hits=0 只说明这些页是模糊相关，不构成该名字存在的证据（该位只事后标注，不改命中集合、顺序与 total）。" +
+    "注意：本面的 total 是本次返回条数，不是语料命中总数，且随 limit 变；进窗前该面手里的候选池看同载荷里的 totalPool，是否被窗口截断看 truncated（= total < totalPool），两者**不传 limit 也在**。该池只到「本面在手可得」这一层，不等于语料全量（limitWindow.candidates 是窗口不是池）。",
   inputSchema: z.object({
     query: z.string().describe("搜索查询关键词"),
     version: z.string().describe("NeoForge 版本（必填）。请先 list_neoforge_versions"),
@@ -261,20 +262,25 @@ export async function searchNeoForgeDocs(args: {
     const buildLimit = requestedLimit === undefined
       ? NEOFORGE_SEARCH_DEFAULT_LIMIT
       : Math.max(NEOFORGE_SEARCH_DEFAULT_LIMIT, requestedLimit);
-    let results = semanticHits === null
-      ? detailed.results
-      : mergeSemanticResults(detailed.results, semanticHits, {
+    const merged = semanticHits === null
+      ? { rows: detailed.results, poolSize: detailed.results.length }
+      : mergeSemanticResultsWithPool(detailed.results, semanticHits, {
           tags: args.tags,
           limit: buildLimit,
           version: detailed.resolvedVersion,
           allowedIds: semanticAllowedIds(s, detailed.resolvedVersion, detailed.results),
         });
+    let results = merged.rows;
+    // `L79` ②：池在任何窗口/默认上限截断之前累计（融合池 + 随后并入的 primer 候选）
+    let poolSize = merged.poolSize;
     // AA 修复（sweep81 A2-S2-2）：searchNeoForgePrimers 内部已加相关性门槛（verHit 不再免检）；
     // 此处「前置」保留为**有意**的迁移优先级 —— 能进来的 primer 都是与查询相关且版本命中的。
     const primerHits = searchNeoForgePrimers({ query: args.query, version, dataRoot: neoDataRoot() });
     if (primerHits.length) {
       const seen = new Set(results.map((r) => r.id));
-      results = [...primerHits.filter((p) => !seen.has(p.id)), ...results].slice(0, buildLimit);
+      const extras = primerHits.filter((p) => !seen.has(p.id));
+      poolSize += extras.length;
+      results = [...extras, ...results].slice(0, buildLimit);
     }
     // A2：显式 limit ⇒ 按池截断并把窗口/池写进载荷；不传 ⇒ 一个字段都不加。
     const limitWindow = limitWindowOf({
@@ -283,6 +289,7 @@ export async function searchNeoForgeDocs(args: {
       limitMax: NEOFORGE_SEARCH_LIMIT_MAX,
     });
     if (limitWindow) results = results.slice(0, limitWindow.resultLimit);
+    const pool = poolFieldsOf(poolSize, results.length);
     // verbatim 逐字支撑位：只事后标注，不改排序 / 召回（primer 行无 processed 正文 → 未判定）
     const vb = annotateVerbatim(results, args.query, (r) =>
       s.pageText(r.id, detailed.resolvedVersion),
@@ -324,8 +331,9 @@ export async function searchNeoForgeDocs(args: {
           semantic: semanticHits !== null,
           ...(limitWindow ? { limitWindow } : {}),
           total: results.length,
+          ...pool,
           ...(vb.term
-            ? { verbatim_summary: { term: vb.term, judged: vb.judged, hits: vb.hits } }
+            ? { verbatim_summary: { term: vb.term, judged: vb.judged, hits: vb.hits, matchedOn: vb.matchedOn } }
             : {}),
           results: vb.rows,
           ...(resolution.mainDocsMissing && neoMissingVersions

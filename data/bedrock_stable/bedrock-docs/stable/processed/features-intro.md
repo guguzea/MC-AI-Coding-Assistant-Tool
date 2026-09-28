@@ -1,8 +1,10 @@
 > 来源：https://learn.microsoft.com/en-us/minecraft/creator/reference/content/featuresreference/examples/featuresintroduction?view=minecraft-bedrock-stable
-> 抓取时间：2026-09-24T02:07:35.552Z
+> 抓取时间：2026-09-27T06:36:00.457Z
 > 警告：此文档可能滞后于当前正式版
 
 # Introduction to Features
+
+ Feedback
 
 Features are decorations scattered throughout the world. Things such as trees, plants, flowers, springs, ore, and coral are all features. Basically, if it isn't the terrain or an entity, it's probably a feature.
 
@@ -294,6 +296,6 @@ All currently listed features as of version 1.20.40 have been combined into a sa
 
 Additionally, check the `feature` and `feature_rules` folders of the latest Minecraft Dedicated Server for examples of Vanilla feature rules.
 
-## Feedback
+ Ask Learn
 
- Want to try using Ask Learn to clarify or guide you through this topic?
+ Ask Learn

@@ -1,8 +1,10 @@
 > 来源：https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/minecraft-server?view=minecraft-bedrock-stable
-> 抓取时间：2026-09-24T02:07:26.624Z
+> 抓取时间：2026-09-27T06:36:00.340Z
 > 警告：此文档可能滞后于当前正式版
 
 # @minecraft/server Module
+
+ Feedback
 
 Contains many types related to manipulating a Minecraft world, including entities, blocks, dimensions, and more.
 
@@ -1583,6 +1585,6 @@ Type: World
 
 - @minecraft/vanilla-data
 
-## Feedback
+ Ask Learn
 
- Want to try using Ask Learn to clarify or guide you through this topic?
+ Ask Learn

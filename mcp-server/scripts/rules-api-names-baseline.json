@@ -1,0 +1,42 @@
+{
+  "_comment": "assert-rules-api-names.mjs 的采集面地板与红条上界（形状照 yarn-named-baseline.json，比较语义照 assert-rule-ban-vs-example.mjs 的 R47）。地板是**下界 <**，不是等式：实扫高于地板仍绿，正常新增只抬高计数；留了余量（约 3–5%），防止合理的内容小改把门变成「不许动正文」的枷锁。红条数与豁免条数是**上界**，只许降：切片 4（2026-09-27）已把唯一那条真红修成正名，renameStaleRedMax 因此回填 0、exemptionsMax 保持 0 ⇒ 今后任何一条 RENAME-STALE 红都是新增缺陷。重算：node scripts/assert-rules-api-names.mjs --measure-floors（只打印建议值，不写盘）⇒ 人工比对后改本文件与 asOf。阈值放宽必须附新证据。",
+  "asOf": "2026-09-27",
+  "floors": {
+    "packsMin": 14,
+    "packsWithLibMin": 13,
+    "classRowsMin": 98000,
+    "rulesFilesMin": 150,
+    "judgedNamesMin": 3800,
+    "bucket1Min": 2150,
+    "equivClassesMin": 12500,
+    "equivNamesMin": 13200,
+    "rosterNamesMin": 260,
+    "corpusPacksMin": 13
+  },
+  "ceilings": {
+    "renameStaleRedMax": 0,
+    "classOrFapiMax": 4,
+    "exemptionsMax": 0,
+    "ambiguousRosterMax": 3,
+    "multiAnchorRedMax": 0,
+    "fenceOddFilesMax": 0
+  },
+  "basis": {
+    "packs": "fabric/ 与 data/fabric_* 两面的并集，且只认 \\\\d+(\\\\.\\\\d+)+ 形态 —— data/fabric_porting 这类非版本目录不算档（selftest T39）；as-of 2026-09-27 实扫 = 14",
+    "packsWithLib": "mappingLeg state=ok 的档数；实扫 13，缺的那档 = fabric_26.1.2（26.1+ 去混淆，按设计无 yarn 库）",
+    "classRows": "各档 classes 表行数之和（state=ok 才计）；实扫 100,985",
+    "rulesFiles": "被扫的 .cursor/rules/*.mdc 件数；实扫 154",
+    "judgedNames": "按 (档, 文件, 名) 去重、围栏内、剔注释行/负例行/自声明/SCREAMING_SNAKE/STOP 表/长度<4 之后的判名数；实扫 3,981（口径 = 现门 idsOf 那份取词规则，比规划稿 §11 探针的 PascalCase-only 宽，故与 2,649 不可互引）",
+    "bucket1": "桶 1 = 本档映射证出（类名 ∪ 成员名，与现门 leg.ids 同口径）；实扫 2,260（切片 4 修完 10-gui 后：BasicInventory 进了桶 1，原桶 3 那条红随之归零）",
+    "equivClasses": "intermediary 等价类数（锚全串）；实扫 12,778",
+    "equivNames": "等价类历史名去重数；实扫 13,517",
+    "rosterNames": "Fabric API 否决位名单：扫 data/fabric_*/** 里的 net/fabricmc/ 串取尾段（排除 mappings/）；实扫 288，多包歧义 3（不消歧，见规划稿 §17）",
+    "corpusPacks": "data/fabric_<v> 里能取到 >0 个 token 的档数（本门口径，不是「有 docs 正文」的 7 档）；实扫 14",
+    "renameStaleRed": "桶 3 ∧ 红腿谓词 R（强类型位 ∧ ¬限定右段 ∧ ¬箭头简写行 ∧ 锚唯一 ∧ 非 FAPI 碰撞名）；实扫 0。曾经唯一的那条 = fabric/1.14.4/.cursor/rules/10-gui.mdc 的 SimpleInventory（锚 class_1277，本档该叫 BasicInventory），切片 4 已修正文。「0 红」不是红腿熄火的证据 ⇒ 由 test-scripts §#23 的活证双臂钉住：同一份真映射（MC_SKILL_RULES_DATA 指仓库 data/）下只换 tmp 规则树里一个标识符，旧名臂必 rc=1 且点名 BasicInventory、正名臂必 rc=0",
+    "classOrFapi": "本档语料逐字有此名、但等价类锚说它该叫别的名（桶 2 ∧ 锚）；实扫 4（3×Screens + 1×ItemTagProvider）⇒ 往上涨说明名单或映射摄入变了，须复查",
+    "exemptions": "rules-api-names.exemptions.txt 的生效行数；当前 0（走修正文，不走豁免）",
+    "ambiguousRoster": "名单里一名多包的数量；实扫 3（LootTableEvents / WorldRenderContext / WorldRenderEvents，均为 FAPI 内部包代际并存，按 §17 不消歧）",
+    "multiAnchorRed": "锚不唯一却仍判红的条数；设计上必须为 0（selftest T06 钉这条否决），>0 即否决腿失效",
+    "fenceOddFiles": "代码围栏（三反引号行）数量为奇数的 .mdc 件数；实扫 0。判红的理由不是格式洁癖而是**采集面塌缩**：fenceIds 从落单的那道围栏起把余下正文全当「块外」丢弃 ⇒ 该文件后半篇永久不被判名，而汇总仍会印一个看起来正常的 文件=154。切片 4 之后补的执法（采集器头注早写着「由调用方判红」却只印了个数）；selftest T43 投毒必红并逐件点名，T44 是配平栏正控必须绿"
+  }
+}

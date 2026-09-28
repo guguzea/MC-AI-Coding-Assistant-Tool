@@ -59,6 +59,15 @@ accessible method net/minecraft/world/entity/player/Player getName ()Lnet/minecr
 
 Loom：`loom { accessWidenerPath = file("src/main/resources/examplemod.accesswidener") }`（以本版 loom 页为准）。
 
+
+### 条目行的名字层必须与工程 mappings 一致：让工具成行
+
+上面按 `named` 头写的那行，成员名用的就是**工程当前映射层**的名字（26.1+ 已去混淆 ⇒ 该层就是 Mojang 可读名）。
+换层时整行的名字与描述符都要跟着换，不能只改文件头。
+26.1+ 不再需要 Yarn / intermediary 转换，`convert_mapping` 对 `to=yarn` 直接拒绝（`UNOBFUSCATED_NO_YARN`）。
+
+该工具产出的行与 `validate_aw` 用的是同一套解析器自检（`selfCheckOk`），
+取不到成员名或描述符时行内留 `<TODO…>` 且 `complete:false`，不要手写凑一行。
 ## Decision Flow
 
 ```

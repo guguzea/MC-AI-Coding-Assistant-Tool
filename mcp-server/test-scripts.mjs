@@ -1,5 +1,30 @@
 import assert from "node:assert/strict";
 
+// ── 未执法腿登记（C3，2026-09-27）───────────────────────────────────────────
+// 现状问题：链上遇到缺依赖（powershell.exe 不在、抓取产物没生成）时只 console.log 一句散文 `skip:`
+// 就继续，收尾又打一句 passed ⇒ 人和 CI 都读不出"这一轮有几道门根本没执法"。skip 保 rc=0 是裁定
+// （缺依赖 ≠ 仓库缺陷），但"不执法"必须留名并可数。子门（scripts/assert-*.mjs）另用同形状的
+// `SKIP(<reason>) gate=<name>` 行，供聚合方 grep。
+const UNENFORCED = [];
+function markSkip(gate, reason) {
+  UNENFORCED.push(`${gate}:${reason}`);
+  console.log(`SKIP(${reason}) gate=${gate} —— 本轮不执法，rc 仍 0`);
+}
+function renderUnenforced(list) {
+  return `本轮未执法腿=${list.length}${list.length ? `（${list.join(" · ")}）` : ""}`;
+}
+{
+  // 反证：tally 若被掏空（打印删掉 / 恒回空串），这两条合成断言立刻红。
+  assert.ok(
+    renderUnenforced(["a:no-powershell"]).includes("未执法腿=1") && renderUnenforced(["a:no-powershell"]).includes("a:no-powershell"),
+    "收尾未执法 tally 失效：合成一条必须数出 1 并点名",
+  );
+  assert.ok(
+    renderUnenforced([]).includes("未执法腿=0"),
+    "收尾未执法 tally 必须显式数 0（缺这一句 ⇒ 全绿与全 skip 不可区分）",
+  );
+}
+
 import { parseCliArgs, compareVersions } from "./scripts/_lib/args.js";
 import { parseCSV } from "./scripts/_lib/csv.js";
 import { resolveLatestKey } from "./scripts/check-porting-updates.js";
@@ -86,7 +111,7 @@ if (existsSync(DEFAULT_DEST_DIR)) {
   assertLinkForge1204(DEFAULT_DEST_DIR);
 } else {
   // 数据未生成不算失败（该目录是抓取产物），但需显式记录
-  console.log("skip: forge_1.20.4 data not present");
+  markSkip("#12 assert-link-forge-1.20.4", "no-forge_1.20.4-data");
 }
 
 // ── #13 NeoForge 生成源 ↔ 产物 manifest 一致性 ─────────────────────────────
@@ -257,7 +282,13 @@ const { spawnSync } = await import("node:child_process");
 const { mkdirSync, rmSync, rmdirSync, writeFileSync } = await import("node:fs");
 const { dirname, join: jpath } = await import("node:path");
 const { fileURLToPath } = await import("node:url");
-const GATE_SCRATCH = jpath(import.meta.dirname, "_debug_gate_selftest");
+// scratch 根按**每一次运行**分叉：本文件 17 处落点（16 个 jpath + 1 个 `${GATE_SCRATCH}/cpsync` 模板串）
+// 共用这一个常量 ⇒ 只在定义处改一次。逐点加 PID 会漏形状（普查时就漏过那枚模板串），而且只治串写、
+// 不治泄漏 —— 实测 §#23 逐点分叉的产物 `_debug_gate_selftest/rules-api-names-26808` 在盘上躺了三小时。
+// 父路径 `_debug_gate_selftest/` 保持不变 ⇒ CONTRIBUTING / CHANGELOG / 各门头注里写这个路径的行文继续为真。
+// MC_SKILL_GATE_SCRATCH 是反证臂的覆盖口：两份链指同一目录就必须撞（撞不红 = 分叉没在挡事）。
+const SCRATCH_ROOT = jpath(import.meta.dirname, "_debug_gate_selftest");
+const GATE_SCRATCH = jpath(SCRATCH_ROOT, process.env.MC_SKILL_GATE_SCRATCH || `run-${process.pid}`);
 /** 收掉空的伞目录：rmdir 对非空目录会失败，所以兄弟自检块还在时什么都不删。 */
 function dropIfEmpty(dir) {
   try {
@@ -266,6 +297,154 @@ function dropIfEmpty(dir) {
     /* 非空或不存在：不碰 */
   }
 }
+const {
+  readdirSync: scReaddir,
+  existsSync: scExists,
+  statSync: scStat,
+  utimesSync: scUtimes,
+  mkdirSync: scMkdir,
+  mkdtempSync: scMkdtemp,
+  rmSync: scRm,
+  writeFileSync: scWrite,
+} = await import("node:fs");
+const { tmpdir: scTmpdir } = await import("node:os");
+
+/** 递归列一个目录里的全部文件。目录不存在 = 已被某个块的 dropIfEmpty 收干净 ⇒ 0 件，不是泄漏。 */
+function scratchFiles(dir) {
+  if (!scExists(dir)) return [];
+  const out = [];
+  for (const e of scReaddir(dir, { withFileTypes: true })) {
+    const p = jpath(dir, e.name);
+    if (e.isDirectory()) out.push(...scratchFiles(p));
+    else out.push(p);
+  }
+  return out;
+}
+
+/**
+ * 清扫陈旧 run-*：只认 `run-<数字>` 形状，且要同时满足三条才删 ——
+ * ① 不是本轮自己的目录；② mtime 老于 maxAgeMs；③ **那个 PID 已经不存在了**。
+ * ③ 是主判据，②只是防"PID 被系统复用后误删别人正在用的目录"的兜底：长跑一轮的链（>1h）光看年龄会被
+ * 后来的链掀掉夹具 —— 那正是本族要防的事故，不能为了扫干净又造一遍。
+ * 分叉**之前**的固定名残留（prune-case / yarn-attest-*.txt / rules-api-names-<pid>）一律不碰 ——
+ * 那可能正被跑旧代码的另一条链读写。
+ */
+function pidAlive(pid) {
+  if (!Number.isInteger(pid) || pid <= 0) return false;
+  try {
+    process.kill(pid, 0);
+    return true;
+  } catch (e) {
+    return e.code !== "ESRCH"; // EPERM = 进程在但不属于我 ⇒ 按"活着"处理
+  }
+}
+function sweepStaleRuns(root, keepDir, maxAgeMs) {
+  if (!scExists(root)) return { deleted: [], kept: 0 };
+  const deleted = [];
+  let kept = 0;
+  for (const e of scReaddir(root, { withFileTypes: true })) {
+    const m = /^run-(\d+)$/.exec(e.name);
+    if (!e.isDirectory() || !m) continue;
+    const dir = jpath(root, e.name);
+    let ageMs = -1;
+    try {
+      ageMs = Date.now() - scStat(dir).mtimeMs;
+    } catch {
+      continue;
+    }
+    if (dir === keepDir || pidAlive(Number(m[1])) || ageMs < maxAgeMs) {
+      kept++;
+      continue;
+    }
+    scRm(dir, { recursive: true, force: true });
+    deleted.push(e.name);
+  }
+  return { deleted, kept };
+}
+
+scMkdir(GATE_SCRATCH, { recursive: true });
+const SCRATCH_BASELINE = scratchFiles(GATE_SCRATCH);
+/** 本轮泄漏 = 起跑快照之外的**新增**文件；不是「目录里有东西」（那会把别人在飞的夹具算到我头上）。 */
+function scratchLeak() {
+  const base = new Set(SCRATCH_BASELINE);
+  return scratchFiles(GATE_SCRATCH).filter((p) => !base.has(p));
+}
+const SCRATCH_SWEEP = (() => {
+  // 清扫的三条保留规则（自己的目录 / 那个 PID 还活着 / 未到龄）必须各自能红，否则「加了清扫」与
+  // 「清扫掀掉并发链在飞的夹具」在 rc 上长得一模一样 —— 后者正是本族要防的事故本身。
+  // ⚠ 五臂跑在**私有镜像根**（OS tmp 下 mkdtemp），不跑在 SCRATCH_ROOT 上：探针故意做成「PID 已死 + 很老」，
+  //   放在真根里就会被同时刻起跑的另一条链当陈旧目录扫掉 ⇒ 本链臂①假红。第一版实测踩中：
+  //   两个实例同时刻各报「扫掉陈旧 1 枚」——那枚正是对方的探针。
+  //   真根上只做两件无竞争的事：照常清扫（结果只用于计数打印），以及事后核「活着 PID 的目录一个没少」。
+  const MAX_AGE = 36e5;
+  const mirror = scMkdtemp(jpath(scTmpdir(), "mc-scratch-arms-"));
+  const livePid = process.ppid;
+  const canProbeLive = pidAlive(livePid) && livePid !== process.pid;
+  let r;
+  try {
+    const liveBefore = scReaddir(SCRATCH_ROOT, { withFileTypes: true })
+      .map((e) => /^run-(\d+)$/.exec(e.name))
+      .filter(Boolean)
+      .map((m) => Number(m[1]))
+      .filter(pidAlive);
+    r = sweepStaleRuns(SCRATCH_ROOT, GATE_SCRATCH, MAX_AGE);
+    for (const pid of liveBefore) {
+      assert.ok(
+        scExists(jpath(SCRATCH_ROOT, `run-${pid}`)),
+        `真根清扫后少了枚**还活着**的 run-${pid} ⇒ 另一条链的夹具被掀（保留规则失效）。本轮 deleted=${r.deleted.join(" ") || "空"}`,
+      );
+    }
+    const self = jpath(mirror, `run-${process.pid}`);
+    const stale = jpath(mirror, "run-99999991");
+    const fresh = jpath(mirror, "run-99999992");
+    const keepProbe = jpath(mirror, "run-99999993");
+    const foreign = jpath(mirror, "zz-mirror-not-a-run");
+    const liveProbe = jpath(mirror, `run-${livePid}`);
+    const backdated = new Date(Date.now() - 9e6);
+    scMkdir(jpath(stale, "a"), { recursive: true });
+    scMkdir(fresh, { recursive: true });
+    scMkdir(foreign, { recursive: true });
+    scMkdir(self, { recursive: true });
+    scWrite(jpath(stale, "a", "junk.txt"), "stale run-* fixture\n", "utf8");
+    scUtimes(stale, backdated, backdated);
+    scUtimes(foreign, backdated, backdated);
+    if (canProbeLive) {
+      scMkdir(liveProbe, { recursive: true });
+      scUtimes(liveProbe, backdated, backdated);
+    }
+    const m = sweepStaleRuns(mirror, self, MAX_AGE);
+    assert.ok(m.deleted.includes("run-99999991"), "臂①红：陈旧 run-* 没被删 ⇒ 分叉只治串写不治泄漏，泄漏会无限攒（`rules-api-names-26808` 就是这么躺了三小时）");
+    assert.equal(scratchFiles(stale).length, 0, "臂①红：deleted 名单里有它，盘上却还在 ⇒ 返回结构与盘上不符");
+    assert.ok(scExists(fresh), "臂②红：**未到龄**的 run-* 被删了 ⇒ 会掀掉同时刻另一条链在飞的夹具");
+    assert.ok(scExists(foreign), "臂③红：非 `run-<数字>` 形状被删了 ⇒ 那是分叉之前的固定名夹具，可能正被跑旧代码的链读写");
+    if (canProbeLive) {
+      assert.ok(scExists(liveProbe), "臂⑤红：PID 还活着的老目录被删了 ⇒ 长跑一轮的链会被下一条链掀夹具（年龄不能当「不在飞」的证据）");
+      assert.equal(m.deleted.includes(`run-${livePid}`), false, "臂⑤红：盘上还在却进了 deleted 名单 ⇒ 计数与事实不符");
+    } else {
+      markSkip("§scratch-臂⑤", `父 PID ${livePid} 不可用作探针（不在活名单里或等于自己）⇒ 证不了「活着就不许删」那条`);
+    }
+    // 臂④：keepDir 规则要能单独咬 —— 自己的目录由「PID 活着」保（臂⑤同一条），所以必须造一枚
+    // 「PID 已死且很老」的目录并把 keepDir 指给它，才把两条规则分开。现场就是 MC_SKILL_GATE_SCRATCH
+    // 覆盖那条路：目录名不等于本 PID 时，只有 keepDir 认得它。
+    scMkdir(keepProbe, { recursive: true });
+    scUtimes(keepProbe, backdated, backdated);
+    const m4 = sweepStaleRuns(mirror, keepProbe, MAX_AGE);
+    assert.ok(scExists(keepProbe), "臂④红：keepDir 指哪儿哪儿被删 ⇒ 用覆盖口起的两条链会互掀目录（keepDir 与「PID 活着」是两条规则）");
+    assert.equal(m4.deleted.includes("run-99999993"), false, "臂④红：盘上还在却进了 deleted 名单");
+    // 计数器双臂（跑在自己的 run 目录里，无竞争）：造一枚必数得出 1、收掉必数得出 0，
+    // 否则链末那条「名单之外的新居民」判据就是装饰。
+    const probe = jpath(GATE_SCRATCH, "__scratch_leak_probe.txt");
+    scWrite(probe, "x", "utf8");
+    const one = scratchLeak();
+    assert.equal(one.length, 1, `计数臂①红：盘上多造一枚夹具却数出 ${one.length} ⇒ 计数腿挂了`);
+    assert.equal(one[0], probe, `计数臂①红：数到的不是我刚造的那枚：${one[0]}`);
+    scRm(probe, { force: true });
+    assert.equal(scratchLeak().length, 0, "计数臂②红：删掉了仍算泄漏 ⇒ 会把 dropIfEmpty 的正常收目录读成缺陷");
+  } finally {
+    scRm(mirror, { recursive: true, force: true });
+  }
+  return r;
+})();
 const PS_GATE = fileURLToPath(new URL("./scripts/assert-powershell.mjs", import.meta.url));
 const SYNC_PS = fileURLToPath(new URL("../scripts/sync-skills.ps1", import.meta.url));
 const GUARD = '$meta.Platform -eq "neoforge" -and -not $meta.Version';
@@ -296,7 +475,7 @@ const psProbe = spawnSync("powershell.exe", ["-NoProfile", "-Command", "1"], {
   windowsHide: true,
 });
 if (psProbe.status !== 0) {
-  console.log("skip: powershell.exe 不可用（assert-powershell 自检依赖 Windows PowerShell）");
+  markSkip("#14 PowerShell 真跑腿腿", "no-powershell");
 } else {
   const syncSrc = readFileSync(SYNC_PS, "utf8");
   assert.ok(syncSrc.includes(GUARD), "sync-skills.ps1 里的 neoforge 根档守卫不见了（R9 回归）");
@@ -712,7 +891,8 @@ if (psProbe.status !== 0) {
     "",
   ].join("\n");
 
-  const buildFakeRoot = ({ dropReference, tamperJson, dropProcessedMarker }) => {
+  const buildFakeRoot = (c) => {
+    const { dropReference, tamperJson, dropProcessedMarker } = c;
     rmSync(FAKE_ROOT, { recursive: true, force: true });
     const packRoot = jpath(FAKE_ROOT, "fabric_1.20.4");
     const wf = (abs, text) => {
@@ -720,12 +900,20 @@ if (psProbe.status !== 0) {
       writeFileSync(abs, text, "utf8");
     };
     const docDir = jpath(packRoot, "fabric-docs", "1.20.4");
+    // D 腿的两枚投毒：注入的标记两棵树都要有（A5 判 raw/processed 计数相同），
+    // 所以拼在 DOC 末尾再一起喂给两侧。
+    const extra = [
+      ...(c.injectAngleMissing ? ["", "Injected angle marker:", "", "<<< @/reference/1.20.4/src/main/java/com/example/docs/item/NopeInjected.java"] : []),
+      ...(c.injectEmptyExpansion ? ["", "Injected empty expansion:", "", `@[code lang=java transcludeWith=:::9](${JAVA_TARGET})`] : []),
+    ].join("\n");
+    const docFull = extra ? `${DOC}\n${extra}\n` : DOC;
     const processedDoc = dropProcessedMarker
-      ? DOC.split("\n")
+      ? docFull
+          .split("\n")
           .filter((l) => !l.startsWith("@[code lang=java transclude={"))
           .join("\n")
-      : DOC;
-    wf(jpath(docDir, "raw", "develop_fixture.md"), DOC);
+      : docFull;
+    wf(jpath(docDir, "raw", "develop_fixture.md"), docFull);
     wf(jpath(docDir, "processed", "develop_fixture.md"), processedDoc);
     if (!dropReference) wf(jpath(packRoot, JAVA_REL), JAVA_TEXT);
     wf(
@@ -763,6 +951,8 @@ if (psProbe.status !== 0) {
     { name: "dropReference", dropReference: true },
     { name: "tamperJson", tamperJson: true },
     { name: "dropProcessedMarker", dropProcessedMarker: true },
+    { name: "angleTargetMissing", injectAngleMissing: true },
+    { name: "emptyExpansionNew", injectEmptyExpansion: true },
   ];
   const runs = [];
   try {
@@ -792,9 +982,32 @@ if (psProbe.status !== 0) {
   assert.match(byName.tamperJson.stderr, /tater\.json/, `字节漂移未被点名：\n${byName.tamperJson.stderr}`);
   assert.notEqual(byName.dropProcessedMarker.status, 0, "gate 漏掉了 processed 相对 raw 少一个占位符（加工吞了标记）");
   assert.match(byName.dropProcessedMarker.stderr, /占位符数不等/, `吞标记未被点名：\n${byName.dropProcessedMarker.stderr}`);
+  // D 腿两枚：必须**逐字**点名被投的那个目标 —— 只断言「非 0」是形状断言，换个桶也能红，
+  // 抓不到「报错了，但报的不是它」（2026-09-26 用户裁定「投毒要逐字」，见 CONTRIBUTING L73(b)）。
+  assert.notEqual(
+    byName.angleTargetMissing.status,
+    0,
+    `D1 漏掉了「<<< 目标没落盘」——模型会读到 Not Found + 本机绝对路径：\n${byName.angleTargetMissing.stdout}${byName.angleTargetMissing.stderr}`,
+  );
+  assert.match(
+    byName.angleTargetMissing.stderr,
+    /NopeInjected\.java/,
+    `D1 红了但没逐字点名缺失目标：\n${byName.angleTargetMissing.stderr}`,
+  );
+  assert.notEqual(
+    byName.emptyExpansionNew.status,
+    0,
+    `D3 漏掉了「基线外的新空展开」——region 被上游改名 / 镜像换件的信号：\n${byName.emptyExpansionNew.stdout}${byName.emptyExpansionNew.stderr}`,
+  );
+  assert.match(
+    byName.emptyExpansionNew.stderr,
+    /transcludeWith=:::9/,
+    `D3 红了但没逐字点名新空展开：\n${byName.emptyExpansionNew.stderr}`,
+  );
   console.log(
     `  assert-fabric-transcludes 自检: 干净=0 / 删镜像=${byName.dropReference.status} / 字节漂移=${byName.tamperJson.status}` +
-      ` / 吞标记=${byName.dropProcessedMarker.status}`,
+      ` / 吞标记=${byName.dropProcessedMarker.status} / 角度目标缺失=${byName.angleTargetMissing.status}` +
+      ` / 新空展开=${byName.emptyExpansionNew.status}`,
   );
 }
 
@@ -1787,6 +2000,15 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
         classCount: String(opt.metaClass ?? classes),
         methodCount: String(opt.metaMethod ?? methods),
         fieldCount: String(opt.metaField ?? fields),
+        // 2026-09-26 判据改形的夹具开关：`stored:true` 才写 stored*Count（默认不写 = 旧库形状，
+        // 走「无 stored 键 ⇒ 拿 *Count 比行数并落台账」那条回落腿）
+        ...(opt.stored
+          ? {
+              storedClassCount: String(opt.storedClass ?? classes),
+              storedMethodCount: String(opt.storedMethod ?? methods),
+              storedFieldCount: String(opt.storedField ?? fields),
+            }
+          : {}),
         // A7-b 的合规默认：来源身份 = 仓库相对 POSIX + 内容哈希（投毒按 opt 改这两项）
         source: opt.absSource ? "H:\\MC_skill\\data\\fabric_1.20.4\\mappings\\yarn-tiny.gz" : `${pack}/mappings/yarn-tiny.gz`,
         ...(opt.dropSourceSha ? {} : { sourceSha256: "a".repeat(64) }),
@@ -1844,6 +2066,19 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
     yarnCountDrift: (r) => {
       writeManifest(r, [makeIndex(r)]);
       makeYarn(r, "fabric_1.20.4", { metaMethod: 999 });
+    },
+    // 2026-09-26 首判改成 `meta.stored*Count == 表内实数` ⇒ 两条新腿各一记投毒 + 一记正控
+    yarnStoredDrift: (r) => {
+      writeManifest(r, [makeIndex(r)]);
+      makeYarn(r, "fabric_1.20.4", { stored: true, storedMethod: 5 }); // 表内 3 行，stored 说 5
+    },
+    yarnSourceBelowStored: (r) => {
+      writeManifest(r, [makeIndex(r)]);
+      makeYarn(r, "fabric_1.20.4", { stored: true, metaMethod: 1 }); // 源行数 < 入库行数 = 不可能
+    },
+    yarnStoredOk: (r) => {
+      writeManifest(r, [makeIndex(r)]);
+      makeYarn(r, "fabric_1.20.4", { stored: true, metaMethod: 39820 }); // ctor 跳行造成的源>表差额：合规
     },
     yarnMissingIndex: (r) => {
       writeManifest(r, [makeIndex(r)]);
@@ -1904,6 +2139,14 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
   expect("residueFile", /索引目录残留/, "半截事务文件留在索引目录");
   expect("pathMismatch", /尾缀不等于规范路径/, "manifest.path 与自身的 platform/version/source 键不自洽");
   expect("yarnCountDrift", /meta\.methodCount .*≠ methods 实际/, "读侧直接信 meta ⇒ 映射覆盖数虚报");
+  expect("yarnStoredDrift", /stored 计数键与表内实数不符/, "库被手改 / 生产者又开始照抄源行数，而 stored 腿没咬住");
+  expect("yarnSourceBelowStored", /源行数不可能少于入库数/, "meta.*Count 与表内实数的方向被写反 ⇒ 台账口径彻底失真");
+  assert.equal(
+    runs.yarnStoredOk.status,
+    0,
+    `正控失守：stored 正确、源行数因按设计跳过 <init> 而偏大 —— 这必须判绿，否则新腿会把合规库一律咬红`
+      + `（也就逼着后人拿「删掉 stored 判据」当变绿路径）：\n${runs.yarnStoredOk.stdout}${runs.yarnStoredOk.stderr}`,
+  );
   expect("yarnMissingIndex", /却缺索引 idx_fields_official/, "schema v3 缺 official 索引 ⇒ convert_mapping 反查只能吐 intermediary");
   expect("yarnAbsSource", /yarn meta 含本机绝对路径/, "tracked 二进制被钉上本机盘符 ⇒ 换机器/换卷就分裂，且 diff 噪声永久化");
   expect("yarnNoSourceSha", /缺 sourceSha256/, "来源折成相对路径后没哈希 ⇒ 「这个库出自哪一份字节」不可核对");
@@ -1928,7 +2171,7 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
   // 直接把门自己那一行原样念出来，口径唯一。
   console.log(
     `  §S4 G4 索引自洽门: 干净假根=0 / 真根=0 —— 门自报「${runs.realRoot.stdout.trim().split("\n")[0]}」；` +
-      `判据层从门源码取台账 entries=${G4_ENTRIES}；投毒 16 记全红并点名：库缺失·未登记·计数漂移·sha 过期·fts 不同源·向量层缺口·向量层不可证明·孤儿 chunk·空库·残留·路径错档·yarn 计数·缺索引·二进制钉本机路径·来源哈希缺失·台账层`,
+      `判据层从门源码取台账 entries=${G4_ENTRIES}；投毒 18 记全红并点名：库缺失·未登记·计数漂移·sha 过期·fts 不同源·向量层缺口·向量层不可证明·孤儿 chunk·空库·残留·路径错档·yarn 计数·yarn stored 不符·yarn 源行数倒挂·缺索引·二进制钉本机路径·来源哈希缺失·台账层（另有一条正控：stored 正确 + 源行数因按设计跳过 <init> 行而偏大 ⇒ 必须绿）`,
   );
 }
 
@@ -2047,6 +2290,22 @@ const REAL_RUN_GATES = [
     // 真跑腿按门内 DEFAULT_CEILING 的「存量脏页只许减不许增」口径放行（错档/锚点垃圾页待用户确认删除）；
     // 判据腿在下方 selftest 数组里，两条都挂默认链 ⇒ 既核数据也核判据死活。
     "./scripts/assert-javadoc-build-provenance.mjs",
+    // `L56` 甲′（2026-09-27）：六个「有 `limit` 但此前无门」的面 —— 5 × `get_*_doc_related` + `search_loader_api`。
+    // 判据 = `limit` 变大只增不减 + 旧集合必为新集合子集（前缀不变）。默认窗口从各面 zod schema 读、
+    // 读不到退到「不传 limit 那一档的实测条数」⇒ 门内零抄数字；`query_registry` 故意不挂（`L76` 实测
+    // 25→100 丢 5 条，连甲′ 都不满足），`query_upstream_releases` 本已合格（`.max(200)` + `truncated`）。
+    "./scripts/assert-limit-monotony.mjs",
+    // `L56` 最后一个可离线挂门的面（2026-09-27）：`query_upstream_releases` 的「有界 + `total`/`truncated`
+    // 披露 + 甲′ 单调」——用假 fetch 让生产函数离线真跑五档（缓存关掉、不写盘），并带两组**真生产坏载荷**
+    // 反证腿（404 / SPA HTML 壳）证明判据咬得住，而不是只吃合成对象。
+    "./scripts/assert-upstream-limit-shape.mjs",
+    // 2026-09-27 用户裁定「L76②」+ 同轮举报（`src/wave/register.ts:57` 的 limit 无 int / 无下界 / 无上界）：
+    // 取件窗改「先 COUNT、不超上限就整批取」，载荷补 totalMatches/truncated，坏 limit 一律入口拒绝。
+    // 判据另带一把独立尺子（门自己 node:sqlite 现算同条件 COUNT），并要求默认档 top-N 与放大档前 N 逐位相同。
+    "./scripts/assert-registry-limit-window.mjs",
+    // 2026-09-27 用户裁定「L77①+② 合并」：歧义候选必带同条件真池数 candidatesTotal，窗口加 ORDER BY
+    // （两次跑逐位相同 + 升序），notes 点名「前 N / 真池 M / 已截断」；仍发不出真池数的发射点按棘轮登记（现 3 条）。
+    "./scripts/assert-mapping-candidate-total.mjs",
     // 2026-09-22 裁定④：基岩「版本更新说明」体裁 —— 真跑核在盘 index-l0 与生产者判据逐条相等，
     // 并核 dist 里确实带着降权（改了 src 不 build ⇒ 运行时没降权，这条会红）。
     "./scripts/assert-bedrock-genre-demote.mjs",
@@ -2088,6 +2347,14 @@ const REAL_RUN_GATES = [
     // （reducer → importer → build-yarn-sqlite 的 srg-to-official 分支 → convertMappingEx 出 AT 行）
     // + 在盘三方对账（派生件 sha256 ↔ provenance ↔ 库 meta）。实测 ~120 ms，不联网、只写 OS tmpdir。
     "./scripts/assert-forge-srg-ingest.mjs",
+    // L72①（2026-09-26）：forge 各档 mc-mixin 的 AT 示例行必须与该档映射库**现产的答案**逐字同答。
+    // 期望值不手抄 ⇒ 库重建 / SRG 名换 / 某档压根给不出（1.14.4·1.15.2 三表 0 行）都会当场把源稿判红。
+    "./scripts/assert-forge-at-example.mjs",
+    // L89 的执法腿补挂（2026-09-27 用户裁定）：「total 语义」这句话必须真的到消费者眼前
+    // （注册面配对 8 + 镜像 4 具名 + CLI 实输出 ≥4 + AGENTS ≥2 + README ≥1）。
+    // 原来只内联在 test-core §S20（= 只挂 npm test），与 S20 写盘 guard 同一个病：改 scripts 的人
+    // 照规矩跑本链永远碰不到 ⇒ 现进两条数组；test-core 侧改为薄 spawn（编号换 §TW，S20 已被占两处）。
+    "./scripts/assert-total-semantics-wording.mjs",
   ];
 
 const SELFTEST_GATES = [
@@ -2118,11 +2385,27 @@ const SELFTEST_GATES = [
     // 2026-09-22 ②：出处/形状判据的自证（缺 source / 锚点垃圾 / 错档 / 混 build / raw 下非 .md 残留 /
     // 整版无正文率超阈 / 天花板参数失效 / 碰撞后缀被误判 ⇒ 各例都必须当场红，且红在该当的原因上）。
     "./scripts/assert-javadoc-build-provenance.mjs",
+    // `L56` 甲′门的自证：尺寸缩 / 前缀丢失 / **全档测不到**（`every()` 在空集上为真 = 装饰性判据，
+    // 我本轮的探针就栽过这个形状）各必须红，另须一条干净放大的正控绿。
+    "./scripts/assert-limit-monotony.mjs",
+    // 上面那道的自证（含「假离线 via=curl 必须红」「全档测不到必须红」），
+    // 与本门自带的两组真生产坏载荷反证腿（404 / HTML 壳）互补：前者判「判据会不会说谎」，后者判「判据咬不咬得住真载荷」。
+    "./scripts/assert-upstream-limit-shape.mjs",
+    // 上面两道新门的自证（2026-09-27 裁定 L76② / L77①+②）——**只列臂名，组数一律不在这里写死**：
+    // registry 门管「坏 limit 被放行必须红」「totalMatches 报成窗口条数必须红」「两档全空 = 判据没跑必须红」，
+    // 另带 argv 白名单两臂（认 `--selftest` 的正控 + `--census` 必须进 unknown 的投毒）；
+    // 候选窗门管「摘掉 candidatesTotal」「真池数小于样本」「豁免清单增长」各必须红，另带判据 6（全局反查腿未跑即红）／
+    // 判据 7（`classes.official` 冒出 >1 组即红并要求删豁免 #2）／判据 8（派生表整张缺席即红）三族臂。
+    // ⚠ 为什么改成不写数：本注释原来抄过两道门当时的组数与正控/投毒拆分，而两门后来各加过臂 ⇒ 抄的那份立刻过期，
+    // 属 `L76–L81` 那条「披露位 ≠ 实测量」家族（`assert-test-harness` 的 R-5 现在会抓这一形状，别再用另一种写法绕过去）。
+    // 分母唯一真值源 = 各门 `--selftest` 末行「自检 N/N 通过（x 正控 + y 投毒，分母现数）」；本链不钉等式（`:2476` 的地板是数组长度下界）。
+    "./scripts/assert-registry-limit-window.mjs",
+    "./scripts/assert-mapping-candidate-total.mjs",
     // 2026-09-22 裁定④：基岩「版本更新说明」= 打标签 + 检索降权（不删页、不拉黑）。真跑腿核
     // 三方 tag 拼写一致（生产者 / src / dist）+ 在盘索引与生产者判据逐条相等 + 降权只重排不过滤。
     "./scripts/assert-bedrock-genre-demote.mjs",
     // 2026-09-22 裁定④（members 接线）：判据⑦的稳定计数源对账 —— 计数掉一条 / label 连不上 /
-    // 成员小节被截断或降级 / 源文件留痕缺失，各必须当场红（17 例夹具 + 干净正对照）。
+    // 成员小节被截断或降级 / 源文件留痕缺失，各必须当场红（夹具 + 干净正对照；例数由该门自印）。
     "./scripts/assert-bedrock-scriptapi-members.mjs",
     // 2026-09-22 裁定③：孤儿记录判据的自证（版本错档 / 记录过期 / 点名的页还在盘上 /
     // 单边删只剩镜像 / 留痕缺时间戳 / 既没对账也没失败记账，各必须当场红）。
@@ -2141,26 +2424,33 @@ const SELFTEST_GATES = [
     "./scripts/assert-quilt-unversioned-wiki.mjs",
     // 清尾③（2026-09-25）：qsl-verified 索引侧 sha256 对账判据的自证（缺失 / 过期 / l1 缺条目 / 解析失败 ⇒ 必红）。
     "./scripts/assert-qsl-verified-sync.mjs",
-    // §6.8 缺口②（2026-09-25）：跨层名门的自证（15 例：四腿判据 / 层推导 / 代码位抽取 / 端到端先红后绿）。
+    // §6.8 缺口②（2026-09-25）：跨层名门的自证（四腿判据 / 层推导 / 代码位抽取 / 端到端先红后绿；例数由该门自印）。
     "./scripts/assert-cross-layer-names.mjs",
-    // S16/t9（第 46 轮）：assert-powershell 的 in-gate 自检（25 例：13 投毒必红 + 6 反退化断言 + 6 正对照，
+    // S16/t9（第 46 轮）：assert-powershell 的 in-gate 自检（三桶：投毒必红 + 反退化断言 + 正对照，各桶例数由该门自印，
     // 全内存、不 spawn powershell）。本数组是 selftest 面的唯一真值源 ⇒ 必须登记在此；
     // 上面 #14a 块另跑一次并**加了三桶计数地板**（本数组的循环只判 rc，掏空例数它看不见），两处不重复。
     "./scripts/assert-powershell.mjs",
-    // S1′ 残差收口（2026-09-25）：rejection-codes 门的自证（12 例夹具：5 档锚点各归其码 +
+    // S1′ 残差收口（2026-09-25）：rejection-codes 门的自证（夹具：各档锚点各归其码 +
     // 兜底通道活着 + 空 errors 落兜底 + 扫描器位数/未判定；计数现算不写死）。
     "./scripts/assert-generator-rejection-codes.mjs",
     // 未做③（2026-09-26）：Forge 1.17+ SRG 成员层的解析器自洽门（夹具 4 类/3 方法行/4 字段行，
     // 上游件↔入库件逐行同答 + era/形状/消费面/在盘三方对账；11 记投毒含 1 记真输入投毒）。
     "./scripts/assert-forge-srg-ingest.mjs",
-    // S5′（2026-09-25）：库坐标门的自证（23 例 = 16 投毒必红 + 7 不判红对照 + 真实输入正对照；
+    // L72①（2026-09-26）：AT 示例行同答门的自证（9 记投毒 + 1 正对照，夹具 8 档/16 行全内存，
+    // 投毒不碰仓库；正对照那条在两臂都必须绿，用来区分「门有牙」和「脚本自己崩了」）。
+    "./scripts/assert-forge-at-example.mjs",
+    // S5′（2026-09-25）：库坐标门的自证（投毒必红 + 不判红对照 + 真实输入正对照三桶，例数由该门自印；
     // 全内存 + 一次性临时根，不联网、不改仓内快照）。实测 rc=0 / 114–195 ms。
     "./scripts/assert-lib-coord-snapshot.mjs",
     // S16/t9 最后一条腿（第 47 轮，2026-09-25）：F145 方块 Material 门的 in-gate 自检
-    // （27 例 = 13 投毒必红 + 6 反退化断言 + 8 正对照；全内存、不读档面、不落盘）。
+    // （三桶：投毒必红 + 反退化断言 + 正对照，例数由该门自印；全内存、不读档面、不落盘）。
     // 补它之前该门全文 `--selftest` 命中 0，其五个 MC_SKILL_MAT_* 钩子全仓只有文件自己读
     // ⇒ 装饰性投毒口。三桶计数地板长在门内（本数组的循环只看 rc，掏空例数它看不见）。
     "./scripts/assert-forge-1204-material.mjs",
+    // L89 执法腿的自证（2026-09-27）：该门带正控 / 投毒 / 反证三桶臂（checkWiring 各一记，例数由该门自印），
+    // 并把「三桶例数地板」长在门内 —— 本数组的循环只看 rc，掏空 cases 它看不见，所以门必须自己判红
+    // （两臂活证：原样 rc=0、砍到只剩 1 条正控 ⇒ rc=1 且点名三桶塌陷）。
+    "./scripts/assert-total-semantics-wording.mjs",
   ];
 
 /**
@@ -2679,7 +2969,43 @@ function censusChain({ diskGates, blob, pkg, selfBlob, realRun, selftest, floorR
   const empty = run([], { MC_SKILL_YARN_ATTEST_LIST: emptyList });
   assert.notEqual(empty.status, 0, "零输入被当通过 ⇒ 清空清单就能让门静默失效");
 
-  console.log("  #17 yarn 名存在性门: 自检 / 真清单绿 / 坏清单红 / 空清单红 四项挂载生效");
+  // 臂（归属名单第三来源 = fabric-loader 摘要件）：拿**仓库真文件**做两臂，只切
+  // MC_SKILL_YARN_ATTEST_LOADER_SUMMARIES 一个 env、载荷逐字相同 ⇒ 红差只能来自那一路来源。
+  // 故意不钉条数（内容一改就假红）：断言形状 = 切掉 ③ 多出 loader 名、且原有红一条没少（单调）。
+  const particleList = jpath(GATE_SCRATCH, "yarn-attest-particle-list.txt");
+  const REPO = jpath(import.meta.dirname, "..");
+  const ldrArm = () => {
+    const particleFiles = readdirSync(jpath(REPO, "fabric"))
+      .filter((d) => /^\d+(\.\d+)+$/.test(d))
+      .map((d) => `fabric/${d}/.cursor/skills/mc-particle.md`)
+      .filter((rel) => existsSync(jpath(REPO, rel)));
+    if (particleFiles.length < 3) {
+      assert.fail(`particle 试挂清单只有 ${particleFiles.length} 件 ⇒ 两臂没有母体，这条证据不成立（清单面变了要同步改这里）`);
+    }
+    writeFileSync(particleList, particleFiles.map((f) => `${f}\n`).join(""), "utf8");
+    const ldrA = run([], { MC_SKILL_YARN_ATTEST_LIST: particleList });
+    const ldrC = run([], { MC_SKILL_YARN_ATTEST_LIST: particleList, MC_SKILL_YARN_ATTEST_LOADER_SUMMARIES: jpath(GATE_SCRATCH, "loader-sums-empty") });
+    const redNames = (s) => new Set(
+      [...String(s.stdout || "").concat("\n", String(s.stderr || "")).matchAll(/^ {2}- \S*\.md:\S+ ([A-Za-z_][A-Za-z0-9_]*)/gm).map((m) => m[1])],
+    );
+    const a = redNames(ldrA);
+    const c = redNames(ldrC);
+    assert.ok(c.has("ClientModInitializer"), `摘掉归属名单③ 之后 ClientModInitializer 仍不红 ⇒ ③ 没接线或该名被别的路挡了（判词：\n${ldrC.stdout}${ldrC.stderr}）`);
+    assert.ok(!a.has("ClientModInitializer"), "③ 在册时 ClientModInitializer 仍红 ⇒ 否决腿是装饰");
+    assert.ok([...a].every((n) => c.has(n)), `切掉③ 反而少红了（${[...a].filter((n) => !c.has(n)).join(",")}）⇒ 两臂不单调，红差不只来自那一路来源`);
+    assert.ok(c.size > a.size, `两臂红名数相同（${a.size}）⇒ ③ 在这批真文件上没吃到任何东西，等于没接`);
+    return { packs: particleFiles.length, withLoader: a.size, withoutLoader: c.size };
+  };
+  // 夹具文件用完即删：SCRATCH_RESIDENTS 那条「名单只许降」的规矩不该被我新增一枚居民钻掉
+  //（抛出路径上也删 ⇒ 用 finally，否则下一次链替我红）。
+  let ldrTally;
+  try {
+    ldrTally = ldrArm();
+  } finally {
+    try { rmSync(particleList, { force: true }); } catch { /* 删不掉由 scratchLeak 那一腿去红 */ }
+  }
+
+  console.log(`  #17 yarn 名存在性门: 自检 / 真清单绿 / 坏清单红 / 空清单红 / loader 摘要件真文件两臂(${ldrTally.packs} 件 ${ldrTally.withLoader}→${ldrTally.withoutLoader} 名) 五项挂载生效`);
 }
 // ── #18 query_upstream_releases（A2 · P0-1 上游可用性 + P0-2 分层输出）──────────
 // 判据分三条腿：① 纯函数（白名单 / slug 形状 / 版本归属规则 / 降序）离线可投毒；
@@ -3110,4 +3436,300 @@ function censusChain({ diskGates, blob, pkg, selfBlob, realRun, selftest, floorR
     `  #22 文档缺页断言↔检索实况门: 自检 ${tally[1]}/${tally[2]} 通过（含红投毒 ${poisoned} 记）· 真树 ${ms}ms · 表内 ${face[1]} 条 / 判 ${face[2]} 档 / 被扫 ${face[3]} 件 · 判条目 ${sum[2]} · 未判定 ${sum[3]} · 引用 ${sum[4]} · 拒 ${sum[5]} · 活声称 ${sum[6]}/${sum[7]}（地板 文件≥${sum[8]} / 条目≥${sum[9]} / 声称≥${sum[10]}，均为下界）`,
   );
 }
+// ── #23 规则树 API 名门（assert-rules-api-names）：挂载 + 证明它真会红 ──────────
+// 2026-09-27 切片 1 建档、切片 4 修真缺陷。判据 = fabric/<ver>/.cursor/rules/*.mdc 围栏内的类名，
+// 本档 yarn 映射查无而 intermediary 等价类给出本档正解 ⇒【RENAME-STALE】红
+// （规划稿 temp/新门问题与建议/规划稿.md）。
+// ⚠ 真树现在 0 红，所以本段最要紧的一条不是「真树绿」，而是下面那组**活证八臂**：同一份真映射
+//   （MC_SKILL_RULES_DATA 仍指仓库 data/）、只把规则树面换成 tmp 里一份单文件夹具 ——
+//   A 旧名必红（点名正解 + 锚）· B 只换标识符必绿 · C 坏 basis 不生效 · D 合形态 basis 真放行 ·
+//   E 奇偶不闭合围栏必红并点名 · F 从键集齐全的基线里删一条地板键必红并按名点出 ·
+//   G FAPI 与 vanilla 同名的类写进真代码位必须被第二否决源挡下（同一载荷只切 MC_SKILL_RULES_FAPI_SUMMARIES：有件必绿／无件必红）·
+//   H --queue 产物跨进程逐字节确定 + 目标落在仓库内即 [QUEUE-IN-REPO] 拒绝。A/B 两臂只差一个标识符 ⇒ rc 差只能是红腿本身。少了这组，
+//   「红=0」与「红腿死了」在链上不可区分（切片 4 之前那条「真树 rc=1」免费提供了这半证据，现在要自己挣）。
+{
+  const GATE = fileURLToPath(new URL("./scripts/assert-rules-api-names.mjs", import.meta.url));
+  const run = (args, env = {}) =>
+    spawnSync(process.execPath, [GATE, ...args], { env: { ...process.env, ...env }, encoding: "utf8", windowsHide: true });
+
+  mkdirSync(GATE_SCRATCH, { recursive: true });
+
+  const self = run(["--selftest"]);
+  assert.equal(self.status, 0, `规则树 API 名门自检失败（夹具含逐条否决投毒 + 现门等价臂）：\n${self.stdout}${self.stderr}`);
+  const tally = /selftest: (\d+)\/(\d+)/.exec(self.stdout || "");
+  assert.ok(tally, `自检未打印 selftest: N/M 计数：\n${self.stdout}`);
+  assert.equal(Number(tally[1]), Number(tally[2]), `自检用例未全过（${tally[1]}/${tally[2]}）：\n${self.stdout}`);
+
+  const real = run([]);
+  const reds = (String(real.stderr).match(/【RENAME-STALE】/g) || []).length;
+  assert.equal(real.status, 0, `真树 rc=${real.status} —— 规则树里冒出了新的 RENAME-STALE 红（或别的腿红了），逐条看 stderr：\n${real.stderr}`);
+  assert.equal(reds, 0, `真树红条数=${reds}（基线 renameStaleRedMax=0 ⇒ 任何一条都算新增缺陷）：\n${real.stderr}`);
+  const sum = /汇总 档=(\d+) 有库=(\d+) 类行=(\d+) 等价类=(\d+)\/(\d+)名 名单=(\d+)\(歧义(\d+)\) 语料档=(\d+) \| 文件=(\d+) 判名=(\d+) 桶1=(\d+) 桶2\.\.5=(\d+)\/(\d+)\/(\d+)\/(\d+) \| 红=(\d+) 豁免=(\d+) CLASS-OR-FAPI=(\d+) 队列=(\d+) 未执法腿=(\d+)/.exec(real.stdout || "");
+  assert.ok(sum, `真跑未打印汇总（档/库/等价类/名单/桶/红/豁免/队列/未执法腿）：\n${real.stdout}`);
+  assert.equal(Number(sum[10]), Number(sum[11]) + Number(sum[12]) + Number(sum[13]) + Number(sum[14]) + Number(sum[15]),
+    `判名 ${sum[10]} ≠ 五桶之和（${sum[11]}+${sum[12]}+${sum[13]}+${sum[14]}+${sum[15]}）⇒ 有名字没进任何桶，分母自述不闭合：\n${real.stdout}`);
+  assert.ok(Number(sum[16]) <= Number(sum[13]), `红=${sum[16]} 大于桶3=${sum[13]} ⇒ 红腿越出了它声称的判据面：\n${real.stdout}`);
+  assert.equal(Number(sum[17]), 0, `真树是靠豁免洗掉 ${sum[17]} 条才做到 0 红 —— 台账 exemptionsMax=0，不许挂账：\n${real.stdout}`);
+  assert.equal(Number(sum[20]), 0, `未执法腿=${sum[20]} 非 0 —— 本门若有腿被 markSkip，不得算绿：\n${real.stdout}`);
+  assert.ok(/围栏奇偶不闭合文件=0\(上界 0/.test(String(real.stdout)), `真树第二行未印「围栏奇偶不闭合文件=0(上界 0」⇒ 采集面完整性这一腿没在盘上跑：\n${real.stdout}`);
+
+  // 活证：规则树面只放一份 tmp 夹具，映射腿与语料仍读仓库真 data/（所以锚、正解、链全是现产的）。
+  // ⚠ scratch 目录名必须带 PID：2026-09-27 两条链并发跑时，固定名 rules-api-names 让对面把我这一臂
+  //   刚写的载荷读成别一臂的载荷 ⇒ 假红（诊断与复跑见 CONTRIBUTING L87；同一路径也可以是假绿）。
+  const LIVE = jpath(GATE_SCRATCH, `rules-api-names-${process.pid}`);
+  const LIVE_DIR = jpath(LIVE, "fabric", "1.14.4", ".cursor", "rules");
+  mkdirSync(LIVE_DIR, { recursive: true });
+  // 清理不得只走在 happy path：本段末尾那句 rmSync(LIVE) 在任一臂 assert 抛出时根本执行不到，
+  // 2026-09-27 实测留过一枚 rules-api-names-<pid>/ 在盘上。'exit' 在断言抛出、进程以非零码终止时
+  // 仍会触发 ⇒ 兜底一枚。force:true 只吞 ENOENT，OneDrive 卷抖动仍会抛 ⇒ catch 里必须打印路径，
+  // 静默 catch 等于把这条清理腿做成装饰。
+  const scratchPaths = [LIVE];
+  process.once("exit", () => {
+    for (const p of scratchPaths) {
+      try {
+        rmSync(p, { recursive: true, force: true });
+      } catch {
+        console.log(`  #23 ⚠ scratch 未清（须人工按名删）：${p}`);
+      }
+    }
+  });
+  const liveFile = jpath(LIVE_DIR, "90-poison.mdc");
+  const bodyOf = (cls) => [
+    "## 活证夹具",
+    "",
+    "```java",
+    "public class MyContainer extends Container {",
+    "    private final Inventory blockInventory;",
+    "",
+    "    public MyContainer(int syncId, PlayerInventory playerInventory) {",
+    `        this(syncId, playerInventory, new ${cls}(9));`,
+    "    }",
+    "}",
+    "```",
+    "",
+  ].join("\n");
+  const liveBl = jpath(LIVE, "permissive-baseline.json");
+  // 主入口现在要求「基线键集齐全」（缺一键 = 那条棘轮被静默删掉 ⇒ [BASELINE-KEY-LOSS] 红），
+  // 所以夹具按导出的必需键生成，地板取 0、上界取宽 —— 键在、数不咬。
+  const { REQUIRED_FLOOR_KEYS, REQUIRED_CEILING_KEYS } = await import("./scripts/_lib/api-name-collector.mjs");
+  // 上界一律取宽**除了两条我们自己要投毒的**：fenceOddFilesMax=0（臂 E 靠它红）、multiAnchorRedMax=0
+  // （设计恒 0）。把它们也放宽到 99 就等于自己把臂 E 熄火 —— 这条注释是本段第二次踩到的（第一次见 L88 的臂 E 假绿）。
+  const ceilOf = (k) => (k === "fenceOddFilesMax" || k === "multiAnchorRedMax" ? 0 : k === "renameStaleRedMax" || k === "exemptionsMax" || k === "ambiguousRosterMax" ? 9 : 99);
+  writeFileSync(
+    liveBl,
+    JSON.stringify({
+      asOf: "fixture",
+      floors: Object.fromEntries(REQUIRED_FLOOR_KEYS.map((k) => [k, 0])),
+      ceilings: Object.fromEntries(REQUIRED_CEILING_KEYS.map((k) => [k, ceilOf(k)])),
+      basis: {},
+    }),
+    "utf8",
+  );
+  const liveEnv = {
+    MC_SKILL_RULES_ROOT: LIVE,
+    MC_SKILL_RULES_DATA: jpath(import.meta.dirname, "..", "data"),
+    MC_SKILL_RULES_BASELINE: liveBl,
+  };
+  const redLines = (r) => String(r.stderr).split(/\r?\n/).filter((l) => l.includes("【RENAME-STALE】"));
+
+  // 臂 A：写本档旧名 ⇒ 必红，且红行必须点名本档正解 + intermediary 锚（两串都由真映射现产，不手抄）。
+  writeFileSync(liveFile, bodyOf("SimpleInventory"), "utf8");
+  const armA = run([], liveEnv);
+  assert.equal(armA.status, 1, "旧名臂放行 ⇒ 红腿在真映射数据上是死的，真树「红=0」就不算证据");
+  assert.equal(redLines(armA).length, 1, `旧名臂红行数=${redLines(armA).length}（须恰好 1）：\n${armA.stderr}`);
+  assert.ok(
+    /RENAME-STALE】fabric\/1\.14\.4\/\.cursor\/rules\/90-poison\.mdc:8 SimpleInventory → 本档该叫 BasicInventory/.test(String(armA.stderr)),
+    `旧名臂红行没点名「复刻位 → BasicInventory」：\n${armA.stderr}`,
+  );
+  assert.ok(/锚 net\/minecraft\/class_1277/.test(String(armA.stderr)), `旧名臂红行没带 intermediary 锚 ⇒ 正解不是从等价类来的：\n${armA.stderr}`);
+
+  // 臂 B：只把那个标识符换成本档正名 ⇒ 必须绿。A/B 只差一个词，所以 B 证明 A 的红来自名字而非夹具形状。
+  writeFileSync(liveFile, bodyOf("BasicInventory"), "utf8");
+  const armB = run([], liveEnv);
+  assert.equal(armB.status, 0, `正名臂仍 rc=${armB.status} ⇒ 判据在跟夹具形状较劲，不是跟名字：\n${armB.stderr}${armB.stdout}`);
+  assert.equal(redLines(armB).length, 0, `正名臂红腿仍响：\n${armB.stderr}`);
+
+  // 豁免两面（都在臂 A 那份红上做）：坏 basis 不得顺手生效；合形态 basis 必须真能放行 ——
+  // 否则「坏 basis 仍红」可以是「豁免腿根本不工作」的假象。
+  writeFileSync(liveFile, bodyOf("SimpleInventory"), "utf8");
+  const exBad = jpath(LIVE, "bad-basis.txt");
+  const exGood = jpath(LIVE, "good-basis.txt");
+  writeFileSync(exBad, "fabric/1.14.4/.cursor/rules/90-poison.mdc\t8\tSimpleInventory\tBasicInventory\tbecause-i-said-so\tR1\n", "utf8");
+  writeFileSync(exGood, "fabric/1.14.4/.cursor/rules/90-poison.mdc\t8\tSimpleInventory\tBasicInventory\tmapping:1.14.4\tR1\n", "utf8");
+  const armC = run([], { ...liveEnv, MC_SKILL_RULES_EXEMPTIONS: exBad });
+  assert.equal(armC.status, 1, "不合形态的 basis 被放行 ⇒ 豁免表可以靠一句白话洗白红点");
+  assert.ok(/EXEMPTION-BAD/.test(String(armC.stderr)), `未点名 EXEMPTION-BAD：\n${armC.stderr}`);
+  assert.equal(redLines(armC).length, 1, "坏 basis 的豁免行虽被报 bad，却同时把那条红消掉了 ⇒ 报 bad ≠ 不生效");
+  const armD = run([], { ...liveEnv, MC_SKILL_RULES_EXEMPTIONS: exGood });
+  assert.equal(
+    armD.status,
+    0,
+    `合形态 basis 没能放行（rc=${armD.status}）⇒ 臂 C 的「红仍在」可能只是因为豁免腿根本不工作：\n${armD.stderr}${armD.stdout}`,
+  );
+  assert.equal(redLines(armD).length, 0, `合形态 basis 下红腿仍响：\n${armD.stderr}`);
+  assert.ok(/豁免=1/.test(String(armD.stdout)), `放行未计入 豁免= 计数（洗红不留痕）：\n${armD.stdout}`);
+
+  // 臂 E：奇偶不闭合的围栏 ⇒ 必须红并点名。理由不是格式洁癖 —— fenceIds 从落单那道围栏起把内外读反，
+  // 该文件后半篇的名字可以整段不进判名面，而汇总里的 文件= 仍是一个看起来正常的数（采集面塌缩）。
+  // 三道围栏 = 奇数（第一道开、第二道其实把上一块关掉、第三道又开 ⇒ b 那行落在块外）。
+  writeFileSync(liveFile, "```java\npublic class C extends Container {\n    Object a = new BasicInventory(9);\n```java\n    Object b = new PlayerInventory();\n```\n", "utf8");
+  const armE = run([], liveEnv);
+  assert.equal(armE.status, 1, "奇偶不闭合围栏被放行 ⇒ 后半篇可以整段不被判名而门仍绿（采集面塌缩无人管）");
+  assert.ok(/\[FENCE-ODD\] fabric\/1\.14\.4\/\.cursor\/rules\/90-poison\.mdc/.test(String(armE.stderr)), `未点名 FENCE-ODD：\n${armE.stderr}`);
+  assert.ok(/围栏奇偶不闭合文件=1\(上界 0/.test(String(armE.stdout)), `第二行未数出不闭合件数与上界：\n${armE.stdout}`);
+  // 臂 F：从**键集齐全**的基线里只删掉一条地板键 ⇒ 必须红，并按名点出那一键。
+  // 对照 = 臂 B（同一份干净载荷 + 键齐全的基线 ⇒ rc=0）：所以这里的红只可能来自被删的键本身。
+  // 为什么要管：compareFloors 是「按基线现有哪些键」循环的 ⇒ 删键比把地板写成 0 更安静，等于静默撤掉一条棘轮。
+  const blStripped = jpath(LIVE, "baseline-stripped.json");
+  writeFileSync(
+    blStripped,
+    JSON.stringify({
+      asOf: "fixture",
+      floors: Object.fromEntries(REQUIRED_FLOOR_KEYS.filter((k) => k !== "bucket1Min").map((k) => [k, 0])),
+      ceilings: Object.fromEntries(REQUIRED_CEILING_KEYS.map((k) => [k, ceilOf(k)])),
+      basis: {},
+    }),
+    "utf8",
+  );
+  writeFileSync(liveFile, bodyOf("BasicInventory"), "utf8");
+  const armF = run([], { ...liveEnv, MC_SKILL_RULES_BASELINE: blStripped });
+  assert.equal(armF.status, 1, "从基线删一条地板键仍然放行 ⇒ 「删键做绿」没被堵（棘轮可以整条静默消失）");
+  assert.ok(/\[BASELINE-KEY-LOSS\] bucket1Min/.test(String(armF.stderr)), `未按名点出被删的那一条键：\n${armF.stderr}`);
+  assert.equal(redLines(armF).length, 0, `删键红顺带把内容判成了 RENAME-STALE ⇒ 两腿混在一起，红因不可归因：\n${armF.stderr}`);
+
+  // 臂 G：FAPI 否决面的**第二来源**（逐档 fabric-api 摘要件）必须真接在线上。
+  // 为什么必须有这条：规划稿 §27 ① 登记的洞 —— 语料正文从不写 FAPI 的限定名（实测 data/fabric_{1.18.2,1.19.4,1.20.1}
+  // 里 net[/.]fabricmc.*TagProvider = 0 串），所以 FabricTagProvider$BlockTagProvider 这类「与 vanilla 历史名同名的
+  // FAPI 嵌套类」进不了语料名单；本轮现扫 12 条桶 3 未决里有 6 条 BlockTagProvider 只靠「非强类型位 + 箭头简写行」挡着。
+  // ⇒ 作者把它写进真代码位就会假红。两臂只差 MC_SKILL_RULES_FAPI_SUMMARIES 一个 env，载荷逐字相同 ⇒ 红因只能来自那个来源。
+  const G_EMPTY = jpath(LIVE, "fapi-empty-dir");
+  mkdirSync(G_EMPTY, { recursive: true });
+  const SUMS_DIR = jpath(import.meta.dirname, "data", "loader-api-summaries");
+  writeFileSync(liveFile, bodyOf("BasicInventory"), "utf8"); // 1.14.4 那面退回干净载荷 ⇒ 红只可能来自 1.19.4 这份新夹具
+  const gRules = jpath(LIVE, "fabric", "1.19.4", ".cursor", "rules");
+  mkdirSync(gRules, { recursive: true });
+  writeFileSync(
+    jpath(gRules, "90-fapi.mdc"),
+    [
+      "## 活证夹具 · FAPI 与 vanilla 同名的类",
+      "",
+      "```java",
+      "public void register(FabricDataOutput output) {",
+      "    pack.addProvider(new BlockTagProvider(output));",
+      "}",
+      "```",
+      "",
+    ].join("\n"),
+    "utf8",
+  );
+  const armG1 = run([], { ...liveEnv, MC_SKILL_RULES_FAPI_SUMMARIES: SUMS_DIR });
+  assert.equal(armG1.status, 0, `摘要件在册时 FAPI 名仍判红 ⇒ 第二否决源没接线（§27 ① 那条洞还开着）：\n${armG1.stderr}`);
+  assert.ok(/FAPI否决源=语料\d+名\+摘要件1[01]\/14档/.test(String(armG1.stdout)), `汇总第二行未印第二来源的在场数 ⇒ 这腿在盘上跑了但没被读到：\n${armG1.stdout}`);
+  // 第三来源（loader 摘要件）在场数必须同形状印出来。真树上它目前否决 0 名（现扫：只有 ③ 能否决、
+  // 又落在等价类锚集里的名字 = 0 个 ⇒ 机制证据在门自己的 T57–T59 合成夹具那边），但**印数**这条要钉住：
+  // 谁把 ③ 接断了，输出上必须看得见（否则「接了但没人查」与「没接」不可区分）。
+  assert.ok(/\+loader摘要件14\/14档\(逐档\d+·并集\d+·缺席0\)/.test(String(armG1.stdout)), `汇总第二行未印第三来源（loader 摘要件）的在场数：\n${armG1.stdout}`);
+  const armG2 = run([], { ...liveEnv, MC_SKILL_RULES_FAPI_SUMMARIES: G_EMPTY });
+  assert.equal(armG2.status, 1, `把第二来源摘掉仍然放行 ⇒ 臂 G1 的绿不是来自那个来源（可能整条红腿就没接线）：\n${armG2.stdout}`);
+  assert.ok(
+    /【RENAME-STALE】fabric\/1\.19\.4\/\.cursor\/rules\/90-fapi\.mdc:\d+ BlockTagProvider → 本档该叫 VanillaBlockTagProvider/.test(String(armG2.stderr)),
+    `摘掉第二来源后没有按本档 vanilla 正解点名 ⇒ 洞的形状与我量到的不一致：\n${armG2.stderr}`,
+  );
+  rmSync(LIVE, { recursive: true, force: true });
+
+  // 臂 H：--queue 的两条腿在链上原本**没有任何执法证据**。
+  // H1 确定性（规划稿 §21 原话是「同一输入跑两次，队列文件逐字节相同」）：selftest 的 T36 是**同进程**跑两遍，
+  //    readdir 顺序必然一致 ⇒ 那一轴结构上抓不到「格式化函数不排序」（T52 钉机制，本臂钉线上真路径 + 真 1,090 行）。
+  //    必须读**真树**（liveEnv 那套 tmp 规则树只有两枚夹具文件，队列接近空，比对两份空文件也「逐字节相同」= 假证）。
+  // H2 写盘禁令：队列被指进仓库面 ⇒ 必须 rc=1 并点名 QUEUE-IN-REPO，且磁盘上不得出现该文件。
+  const { verCmp: vcQ } = await import("./scripts/_lib/api-name-collector.mjs");
+  const TMP_ROOT = process.env.TEMP ?? process.env.TMP ?? "/tmp"; // 队列产物必须在仓库外，否则撞 H2 那条禁令
+  const q1p = jpath(TMP_ROOT, `rules-names-queue-${process.pid}-1.tsv`);
+  const q2p = jpath(TMP_ROOT, `rules-names-queue-${process.pid}-2.tsv`);
+  scratchPaths.push(q1p, q2p); // 抛出路径上也不得留盘（同 §#23 兜底钩子的裁定）
+  const armH1 = run([`--queue=${q1p}`], {});
+  const armH2 = run([`--queue=${q2p}`], {});
+  assert.equal(armH1.status, 0, `真树带 --queue 不放行（rc=${armH1.status}）⇒ 本臂与「真树 rc=0」那条不同源，比较无意义：\n${armH1.stderr}`);
+  const qm = /队列=(\d+)/.exec(String(armH1.stdout));
+  assert.ok(qm, `带 --queue 的跑没印汇总的「队列=N」⇒ 下面的行数对账没有分母：\n${armH1.stdout}`);
+  const bodyOf1 = readFileSync(q1p, "utf8");
+  const bodyOf2 = readFileSync(q2p, "utf8");
+  assert.equal(bodyOf1 === bodyOf2, true, `两次 --queue 产物不逐字节相同（${bodyOf1.length}B vs ${bodyOf2.length}B）⇒ 队列行序仍随目录枚举序变，人工审的 diff 全是噪音`);
+  const qRows = bodyOf1.split(/\r?\n/).slice(1).filter(Boolean).map((l) => l.split("\t"));
+  assert.equal(qRows.length, Number(qm[1]), `队列文件行数=${qRows.length} 与自印「队列=${qm[1]}」不等 ⇒ 表头/行数口径分叉，或 renderQueue 漏了行`);
+  assert.ok(qRows.length >= 500, `队列只有 ${qRows.length} 行 ⇒ 这份「逐字节相同」可能是两份近空文件，不构证据`);
+  let orderBad = null;
+  for (let i = 1; i < qRows.length; i++) {
+    const [a, b] = [qRows[i - 1], qRows[i]];
+    const pc = vcQ(String(a[1]).slice("fabric_".length), String(b[1]).slice("fabric_".length));
+    if (pc > 0) { orderBad = `第 ${i} 行 pack 数值序倒退：${a[1]} 之后出现 ${b[1]}（字典序会把 1.21.10 排到 1.21.8 前面）`; break; }
+    if (pc < 0) continue;
+    if (String(a[2]) > String(b[2])) { orderBad = `第 ${i} 行同档内 relPath 倒退：${a[2]} → ${b[2]}`; break; }
+    if (String(a[2]) !== String(b[2])) continue;
+    if (Number(a[3]) > Number(b[3])) { orderBad = `第 ${i} 行同文件行号倒退：${a[2]}:${a[3]} → ${b[3]}`; break; }
+    if (Number(a[3]) === Number(b[3]) && String(a[4]) > String(b[4])) { orderBad = `第 ${i} 行同行号名序倒退：${a[4]} → ${b[4]}`; break; }
+  }
+  assert.equal(orderBad, null, `队列不是 §21 要求的 pack 数值序 → relPath → line → id：${orderBad}`);
+  const inRepo = jpath(GATE_SCRATCH, `queue-in-repo-${process.pid}.tsv`);
+  try { rmSync(inRepo, { force: true }); } catch {}
+  const armH3 = run([`--queue=${inRepo}`], {});
+  assert.equal(armH3.status, 1, `队列被指进仓库面却放行（rc=${armH3.status}）⇒ 「本门不写仓库」那条禁令在链上没人执法`);
+  assert.ok(/QUEUE-IN-REPO/.test(String(armH3.stderr)), `拒绝写进仓库时没点名 QUEUE-IN-REPO：\n${armH3.stderr}`);
+  let leaked = "gone";
+  try { leaked = readFileSync(inRepo, "utf8").slice(0, 40); } catch {}
+  assert.equal(leaked, "gone", `禁令只印了句话、文件照样落盘（前 40 字：${leaked}）⇒ 写盘禁令是装饰`);
+  for (const p of [q1p, q2p, inRepo]) { try { rmSync(p, { force: true }); } catch {} }
+
+  // 不许静默绿 ①：缺基线 = 棘轮不存在 ⇒ 必须红
+  const noBaseline = run([], { MC_SKILL_RULES_BASELINE: jpath(GATE_SCRATCH, "names-none.json") });
+  assert.equal(noBaseline.status, 1, "缺基线文件却放行 ⇒ 采集面地板可以整张被删掉做绿");
+  assert.ok(/缺基线文件/.test(String(noBaseline.stderr)), `缺基线时未点名「缺基线」：\n${noBaseline.stderr}`);
+
+  // 不许静默绿 ②：地板高于实扫 ⇒ FLOOR-LOW 必须咬住（证明地板腿在链上真跑，不是装饰）
+  const lowFile = jpath(GATE_SCRATCH, `names-low-baseline-${process.pid}.json`);
+  writeFileSync(lowFile, JSON.stringify({ asOf: "fixture", floors: { judgedNamesMin: 999999 }, ceilings: {}, basis: {} }), "utf8");
+  scratchPaths.push(lowFile); // 上面两句与下面三条断言之间若抛出，这枚文件同样不得留盘
+  const low = run([], { MC_SKILL_RULES_BASELINE: lowFile });
+  assert.equal(low.status, 1, "地板 999999 仍放行 ⇒ compareFloors 腿挂了");
+  assert.ok(/FLOOR-LOW/.test(String(low.stderr)), `地板跌破未印 FLOOR-LOW：\n${low.stderr}`);
+  rmSync(lowFile, { force: true }); // 带 PID 的名字每轮都会新增一枚 ⇒ 用完即删，别把 scratch 目录养成堆积场
+
+  // 原「不许静默绿 ③：坏 basis 不生效」那条改在上文臂 C/D —— 它以前是**蹭**真树那条红做的证；
+  // 红被修掉后蹭不到了，所以换成 tmp 夹具上自己造的红（同一份真映射）。EXEMPTION-STALE /
+  // EXEMPTION-FABRICATED 两形由该门 selftest 的 T29 / T30 钉（见 assert-rules-api-names.mjs）。
+
+  console.log(
+    `  #23 规则树 API 名门: 自检 ${tally[1]}/${tally[2]} · 真树 rc=0 红 0（靠豁免洗的 ${sum[17]} 条）· 档=${sum[1]} 有库=${sum[2]} 判名=${sum[10]} 桶1=${sum[11]} 队列=${sum[19]} · 活证 旧名必红/正名必绿/坏 basis 不生效/好 basis 真放行/奇围栏塌缩必红/删基线键必红/FAPI 第二来源必挡（同臂另核第三来源 loader 摘要件的在场数必印）/队列跨进程确定+写进仓库被拒 八臂 · 缺基线红 / 地板跌破红 两项挂载生效`,
+  );
+}
+// ── scratch 分叉的收尾：把「每跑各建目录 = 把垃圾藏进新目录」变成可见 + 可咬 ────────────────
+// 判的是「名单之外的新居民」，不是「居民总数为 0」。原因实测过一次：按 0 判会让整条链替别人欠的账红 ——
+// 首跑就数出 3 枚（写它们的是 :2911 / :2916 / :3222 三块，其中两块从不删夹具）。
+// 名单只许降；三块都清干净后把它降为空集，那时这条就退化成「泄漏必须为 0」。
+// 计数钩子本身在起跑处用双臂自证（造一枚必数得出 1、收掉必数得出 0），所以这里的数是量出来的不是装饰。
+const SCRATCH_RESIDENTS = new Set(["prune-case", "yarn-attest-bad-list.txt", "yarn-attest-empty.txt"]);
+{
+  const leak = scratchLeak();
+  const topOf = (p) => p.slice(GATE_SCRATCH.length + 1).split(/[\\/]/)[0];
+  const unknown = leak.filter((p) => !SCRATCH_RESIDENTS.has(topOf(p)));
+  const quiet = [...SCRATCH_RESIDENTS].filter((n) => !leak.some((p) => topOf(p) === n));
+  // 「共留」只统计 run-<数字> 形状（自己的 / PID 还活 / 未到龄）；非 run-* 在循环里走 continue、根本不进 kept。
+  // 本行原措辞把「非 run-*」写进那一句，读起来像它被数进来了 —— 同一族「披露位 ≠ 实测量」，现按语义分列两个数。
+  const foreign = scExists(SCRATCH_ROOT)
+    ? scReaddir(SCRATCH_ROOT, { withFileTypes: true }).filter((e) => !/^run-\d+$/.test(e.name)).length
+    : 0;
+  console.log(
+    `  §scratch 分叉: 根=${process.env.MC_SKILL_GATE_SCRATCH || `run-${process.pid}`} · ` +
+      `起跑扫掉陈旧 ${SCRATCH_SWEEP.deleted.length} 枚（自己的/PID 还活/未到龄 共留 ${SCRATCH_SWEEP.kept} 枚 · 另有非 run-* 形状 ${foreign} 件按形状规则一律不碰）· ` +
+      `本轮居民 ${leak.length} 枚（名单内 ${leak.length - unknown.length}／名单外 ${unknown.length}）` +
+      (quiet.length ? ` · 名单里 ${quiet.length} 枚本轮没出现（${quiet.join(" ")}）⇒ 可下调` : ""),
+  );
+  assert.equal(
+    unknown.length,
+    0,
+    `出现了名单之外的新夹具 ${unknown.length} 枚 ⇒ 有块新建了 scratch 却不收，每跑各建目录正是把它们藏起来：\n` +
+      unknown.map((p) => `  - ${p.slice(GATE_SCRATCH.length + 1)}`).join("\n"),
+  );
+}
+console.log(renderUnenforced(UNENFORCED));
 console.log("script helper regression tests passed");

@@ -1,8 +1,10 @@
 > 来源：https://learn.microsoft.com/en-us/minecraft/creator/documents/addcustomitems?view=minecraft-bedrock-stable
-> 抓取时间：2026-09-24T02:07:32.749Z
+> 抓取时间：2026-09-27T06:36:00.440Z
 > 警告：此文档可能滞后于当前正式版
 
 # Custom Items
+
+ Feedback
 
 Just like you can create custom blocks and entities, you can create custom items in Minecraft, too! This tutorial shows you how—what types of files different kinds of items need, where they go in resource and behavior packs, and what JSON files to edit or create.
 
@@ -816,6 +818,6 @@ To learn more about the dyeable item component, take a look at the `minecraft:dy
 
 After you create the custom item packs and get them to work, take a look at the item components and try adding some of these to your own custom items! Or, go through the Custom Item Wizard and compare the add-on packs created by the Wizard to the ones you created on your own.
 
-## Feedback
+ Ask Learn
 
- Want to try using Ask Learn to clarify or guide you through this topic?
+ Ask Learn

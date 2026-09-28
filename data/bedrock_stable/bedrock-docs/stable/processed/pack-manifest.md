@@ -1,8 +1,10 @@
 > 来源：https://learn.microsoft.com/en-us/minecraft/creator/reference/content/addonsreference/packmanifest?view=minecraft-bedrock-stable
-> 抓取时间：2026-09-24T02:07:23.283Z
+> 抓取时间：2026-09-27T06:36:00.311Z
 > 警告：此文档可能滞后于当前正式版
 
 # manifest.json for Behavior/Resource/Skin Packs and World Templates
+
+ Feedback
 
 The manifest file contains all the basic information about the pack that Minecraft needs to identify it. The tables below contain all the components of the manifest, their individual properties, and what they mean.
 
@@ -188,6 +190,6 @@ Listed below are two examples showcasing how a manifest.json file can be written
 }
 ```
 
-## Feedback
+ Ask Learn
 
- Want to try using Ask Learn to clarify or guide you through this topic?
+ Ask Learn

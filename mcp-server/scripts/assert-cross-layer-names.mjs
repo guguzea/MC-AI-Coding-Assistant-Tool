@@ -26,15 +26,16 @@
  *   node scripts/assert-cross-layer-names.mjs             # 判红/绿
  *   node scripts/assert-cross-layer-names.mjs --dump      # 只读：打印全部冲突 + 退出 0
  *   node scripts/assert-cross-layer-names.mjs --selftest  # 纯内存 + 端到端夹具
- *   node scripts/assert-cross-layer-names.mjs --require-pairs  # 维护者本地：无对照产物即响亮判红
- *     （或 MC_SKILL_REQUIRE_PAIRS=1；CI 勿开——pairs 按许可不入库，CI 永远没有）
+ *   node scripts/assert-cross-layer-names.mjs --require-pairs  # 维护者复核基线：无对照产物即响亮判红
+ *     （或 MC_SKILL_REQUIRE_PAIRS=1；派生对照表 2026-09-25 已入库 data/_yarn-mojmap-pairs ⇒ 干净 clone
+ *      与 CI 默认就判得了，本开关只是把「leg2 skipped 静默」这一种失效改成立即红，CI 无需开）
  */
 import fs from "node:fs";
 import path from "node:path";
 import os from "node:os";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
-import { loadPairs, PAIRS_DIR } from "./assert-skill-mappings-key.mjs";
+import { loadPairs, PAIRS_DIR, verifyPairsProvenance } from "./assert-skill-mappings-key.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const argv = process.argv.slice(2);
@@ -113,12 +114,13 @@ const BASELINE_D = 97; // as-of 2026-09-25 首测 109（腿 D：MCP 档出现同
 // `porting/**` 的**合法跨版本对照**与通用英文词（`Resource`/`Pack`/`Recipe`/`Player`/`Context`）是主要噪声）。
 // 同日随大写限定判据修正**降钉 109→97**：−12 条全是点号限定成员访问（与 C 腿 15 条 `Phase` 同一豁免，
 // 复测读数 97 见本文件实跑行）。
-const BASELINE_E = 7; // 首测 2（2026-09-25）⇒ **7（2026-09-26 三钉）**，构成必须读全：
-// ① mc-networking(2 处) / mc-renderer(3 处) = §6.8 未决的 1.16.5 混合档判定，15 档成员名表变全后 1→2/1→3（存量位移，待人核）；
-// ② data/forge_{1.17.1..1.20.4}/mappings/mcp_config-*.provenance.json ×5 = **并行车道待补件**（provenance 已放、
-//    对应 methods/fields csv 未纳管 ⇒ 腿 E「已纳管表缺失」）。csv 补齐入库后这 5 行**必须降掉**（只许降），
-//    降不掉 = 车道没收口。
-// 的 `mc-networking`（声明 mcp，只见 `sendToServer`/`readInt` 等 Mojang 侧）与 `mc-renderer`（同）；
+const BASELINE_E = 2; // 首测 2（2026-09-25）⇒ 7（2026-09-26 三钉）⇒ **2（同日判据修正后回落，实测）**：
+// 三钉的 +5 经查全是 **provenanceAudit 判据误报**：mcp_config 发布声明（ingest-forge-srg 的
+// `mcp_config-*.provenance.json` ×5，钉的是 `srg_to_official-<v>.tsrg`，在盘）被旧判据按
+// 「无 contains ⇒ 默认找 methods/fields.csv」读成数据洞。纳管对象已改为「marker 自身声明
+// （contains 优先，否则 derived.file）」，5 行假洞消失且 marker 畸形/对象被删仍会红（provenanceAudit 注释）。
+// 剩余 2 = `mc-networking` / `mc-renderer` 两个声明件各记 1 行（成员名族证据 2/3 处）—— §6.8
+// 未决的 1.16.5 混合档判定存量，待人核（§6.8 老法：逐条人核后再清）。
 // 其余 1.16.5 声明件要么两套并用（真混合，不判）、要么无判别名。1.15.2 档缺 Mojang 成员名源
 // （`client.txt` 不可再分发 ⇒ 不入库）⇒ 该档本腿记「许可桶」（见 judged.noMemberTablesLicense）。
 const MAX_PRINT = 40;
@@ -271,18 +273,35 @@ function provenanceAudit(root) {
     }
   }
   for (const { dir, marker } of markers) {
-    let contains = ["methods.csv", "fields.csv"];
+    // 纳管对象（2026-09-26 修正）：以 **marker 自身的声明**为准——`contains`（显式清单）优先，
+    // 否则 `derived.file`（如 mcp_config 发布声明钉的 `srg_to_official-<v>.tsrg`）。旧判据对无
+    // contains 的 marker 一律按 csv 默认清单查 ⇒ 把 ingest-forge-srg 发布的 tsrg 声明误判成
+    // 「methods/fields.csv 缺失」，制造 5 行假数据洞（BASELINE_E 注释有案）。两种声明都没有
+    // ⇒ marker 畸形照样红（不许「marker 在、声明被抠掉」洗白）。
+    let j = null;
     try {
-      const j = JSON.parse(fs.readFileSync(marker, "utf8"));
-      if (Array.isArray(j.contains) && j.contains.length) contains = j.contains;
+      j = JSON.parse(fs.readFileSync(marker, "utf8"));
     } catch {}
     const relMarker = path.relative(root, marker).replace(/\\/g, "/");
-    const missing = contains.filter((f) => !fs.existsSync(path.join(dir, f)));
-    if (missing.length) {
-      holes.push({ rel: relMarker, leg: "E/已纳管表缺失", tok: missing.join(",") });
+    if (!j || typeof j !== "object") {
+      holes.push({ rel: relMarker, leg: "E/marker 不可读", tok: "(json parse failed)" });
       continue;
     }
-    const csvs = contains.map((f) => path.join(dir, f)).filter((p) => fs.existsSync(p));
+    const owns = Array.isArray(j.contains) && j.contains.length
+      ? j.contains.map((f) => path.join(dir, String(f)))
+      : j.derived && j.derived.file
+        ? [path.isAbsolute(String(j.derived.file)) ? String(j.derived.file) : path.resolve(root, String(j.derived.file))]
+        : null;
+    if (!owns) {
+      holes.push({ rel: relMarker, leg: "E/marker 畸形（无 contains 且无 derived.file）", tok: "(no owned artifact)" });
+      continue;
+    }
+    const missing = owns.filter((f) => !fs.existsSync(f));
+    if (missing.length) {
+      holes.push({ rel: relMarker, leg: "E/已纳管表缺失", tok: missing.map((f) => path.relative(root, f).replace(/\\/g, "/")).join(",") });
+      continue;
+    }
+    const csvs = owns.filter((p) => fs.existsSync(p));
     if (!csvs.length) continue;
     const r = spawnSync("git", ["-C", root, "ls-files", "--", ...csvs.map((p) => path.relative(root, p).replace(/\\/g, "/"))], { encoding: "utf8" });
     if (r.status !== 0) continue; // git 不可用 ⇒ 不误报
@@ -580,6 +599,26 @@ if (SELFTEST) {
   chk("E：无判别名 ⇒ 0", memberFlagsFor({ declared: "mcp", code: "foo.bar();", ...MS }).length, 0);
   chk("E：声明 official 却只见 MCP 名 ⇒ 1", memberFlagsFor({ declared: "official", code: "e.getEntityWorld();", ...MS }).length, 1);
   chk("E：无成员名表（缺表）⇒ 0", memberFlagsFor({ declared: "mcp", code: "x.isRemote();", mcp: null, moj: null }).length, 0);
+  // provenanceAudit 判据（2026-09-26 修正）四记：csv 声明缺 ⇒ 红 / derived.file 在盘 ⇒ 不红 /
+  // 无声明 ⇒ 红（畸形）/ 不可读 ⇒ 红
+  {
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "xlayer-prov-"));
+    const mdir = path.join(tmp, "data", "forge_1.16.5", "mappings");
+    fs.mkdirSync(mdir, { recursive: true });
+    const mk = (name, body) => fs.writeFileSync(path.join(mdir, name), body, "utf8");
+    mk("a-csv-missing.provenance.json", JSON.stringify({ contains: ["methods.csv", "fields.csv"] }));
+    mk("b-tsrg-present.provenance.json", JSON.stringify({ derived: { file: "data/forge_1.16.5/mappings/srg_to_official.tsrg" } }));
+    fs.writeFileSync(path.join(mdir, "srg_to_official.tsrg"), "tsrg2 srg official\n", "utf8");
+    mk("c-no-claim.provenance.json", JSON.stringify({ publishedAt: "2026-09-26" }));
+    mk("d-broken.provenance.json", "{ not json");
+    const audit = provenanceAudit(tmp);
+    const legs = audit.holes.map((h) => h.leg).join("|");
+    chk("provAudit：contains 声明的 csv 缺 ⇒ 红", audit.holes.some((h) => /a-csv-missing/.test(h.rel) && /已纳管表缺失/.test(h.leg)) ? 1 : 0, 1);
+    chk("provAudit：derived.file 在盘 ⇒ 不红", audit.holes.some((h) => /b-tsrg-present/.test(h.rel)) ? 0 : 1, 1);
+    chk("provAudit：无 contains 无 derived ⇒ 红点名畸形", audit.holes.some((h) => /c-no-claim/.test(h.rel) && /marker 畸形/.test(h.leg)) ? 1 : 0, 1);
+    chk("provAudit：不可读 marker ⇒ 红", audit.holes.some((h) => /d-broken/.test(h.rel) && /marker 不可读/.test(h.leg)) ? 1 : 0, 1);
+    fs.rmSync(tmp, { recursive: true, force: true });
+  }
   // 端到端：合成根 + 合成 pairs ⇒ 先红后绿
   {
     const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "xlayer-"));
@@ -638,6 +677,16 @@ if (SELFTEST) {
 // 否则 `pairs?.[ver]` 恒 undefined 而**腿 A/B 静默失效**（首测已踩：pairs 档显示 0）。
 const pairsMap = loadPairs(PAIRS, ROOT);
 const pairs = pairsMap ? Object.fromEntries(pairsMap) : null;
+// 仓库副本 sha 对账（2026-09-26）：provenance 钉与字节不符 ⇒ A/B 判据面的对照产物不可信，响亮红。
+const shaCheck = verifyPairsProvenance(PAIRS);
+if (!shaCheck.ok) {
+  console.error(
+    `assert-cross-layer-names: ${shaCheck.code} —— 对照产物与 provenance 钉不符：${shaCheck.detail}\n` +
+      `  修复：按该 provenance 的 refreshHint 重新发布仓库副本；或 node mcp-server/scripts/build-yarn-mojmap-pairs.mjs ` +
+      `现生到 \$MC_SKILL_CACHE 后用显式 --pairs-dir 指过去。`,
+  );
+  process.exit(1);
+}
 if (REQUIRE_PAIRS && !(pairs && Object.keys(pairs).length)) {
   console.error(
     "assert-cross-layer-names: PAIRS_MISSING —— --require-pairs 开启，但对照产物不在（" +

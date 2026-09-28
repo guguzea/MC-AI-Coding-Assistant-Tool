@@ -13,7 +13,7 @@ import {
 } from "./platform-data.js";
 import { resolveDataDir } from "../utils/path.js";
 import { semanticSearch } from "./semantic/search.js";
-import { mergeSemanticResults, semanticAllowedIds, joinSearchWarnings, withDocsFallbackFields, annotateVerbatim, limitWindowOf, limitClampWarning, type SearchResultLike } from "./search-utils.js";
+import { mergeSemanticResults, mergeSemanticResultsWithPool, poolFieldsOf, semanticAllowedIds, joinSearchWarnings, withDocsFallbackFields, annotateVerbatim, limitWindowOf, limitClampWarning, type SearchResultLike } from "./search-utils.js";
 import { missingSemanticDbWarning, semanticStaleSearchWarning } from "./semantic/status.js";
 import { filterFabricFallbackHits, isFabricExclusiveContent, isFabricExclusiveHit, isQslSpecificQuery } from "./quilt-fallback-filter.js";
 
@@ -235,13 +235,16 @@ export async function searchQuiltDocs(args: {
         "quilt-docs",
         dataRoot,
       );
+      let fusionPool: number | undefined;
       if (semanticHits) {
-        results = mergeSemanticResults(results, semanticHits, {
+        const fused = mergeSemanticResultsWithPool(results, semanticHits, {
           tags: args.tags,
           limit: buildLimit,
           version: detailedRes.resolvedVersion,
           allowedIds: semanticAllowedIds(store, detailedRes.resolvedVersion, results),
         });
+        results = fused.rows;
+        fusionPool = fused.poolSize;
       }
       // A2：显式 limit ⇒ 按池截断并把窗口/池写进载荷；不传 ⇒ 一个字段都不加。
       const limitWindow = limitWindowOf({
@@ -250,6 +253,8 @@ export async function searchQuiltDocs(args: {
         limitMax: QUILT_SEARCH_LIMIT_MAX,
       });
       if (limitWindow) results = results.slice(0, limitWindow.resultLimit);
+      // `L79` ②：截断位 —— 池取融合在手并集，没走语义腿时取截断前的在手条数
+      const pool = poolFieldsOf(fusionPool ?? (limitWindow?.candidates ?? results.length), results.length);
       // verbatim 逐字支撑位：只事后标注，不改排序 / 召回
       const vb = annotateVerbatim(results, args.query, (r) =>
         store.pageText(r.id, detailedRes.resolvedVersion),
@@ -272,8 +277,9 @@ export async function searchQuiltDocs(args: {
         semantic: semanticHits !== null,
         ...(limitWindow ? { limitWindow } : {}),
         total: results.length,
+        ...pool,
         ...(vb.term
-          ? { verbatim_summary: { term: vb.term, judged: vb.judged, hits: vb.hits } }
+          ? { verbatim_summary: { term: vb.term, judged: vb.judged, hits: vb.hits, matchedOn: vb.matchedOn } }
           : {}),
         results: vb.rows,
       });
@@ -327,6 +333,8 @@ export async function searchQuiltDocs(args: {
       limitMax: QUILT_SEARCH_LIMIT_MAX,
     });
     const finalHits = limitWindow ? filtered.hits.slice(0, limitWindow.resultLimit) : filtered.hits;
+    // `L79` ②：本腿的池 = 过滤后、进窗前命数（FAPI 丢弃数另由 warning 里的 `dropped` 表达，不混进池）
+    const pool = poolFieldsOf(filtered.hits.length, finalHits.length);
     // verbatim 逐字支撑位：命中正文是 Fabric 的，所以按 Fabric 语料判逐字
     const vb = annotateVerbatim(finalHits, args.query, (r) =>
       fabricStore.pageText(r.id, fabricDetailed.resolvedVersion),
@@ -354,8 +362,9 @@ export async function searchQuiltDocs(args: {
       semantic: semanticHits !== null,
       ...(limitWindow ? { limitWindow } : {}),
       total: finalHits.length,
+      ...pool,
       ...(vb.term
-        ? { verbatim_summary: { term: vb.term, judged: vb.judged, hits: vb.hits } }
+        ? { verbatim_summary: { term: vb.term, judged: vb.judged, hits: vb.hits, matchedOn: vb.matchedOn } }
         : {}),
       results: vb.rows.map((h) => ({ ...h, sourcePlatform: "fabric" as const })),
     });

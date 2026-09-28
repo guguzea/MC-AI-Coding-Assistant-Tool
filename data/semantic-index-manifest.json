@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-09-25T12:25:22.134Z",
+  "built_at": "2026-09-27T06:39:02.118Z",
   "embedMode": "hybrid",
   "entries": [
     {
@@ -7,12 +7,12 @@
       "version": "stable",
       "source": "bedrock-docs",
       "path": "bedrock_stable/bedrock-docs/stable/semantic/db.sqlite",
-      "chunks": 5312,
-      "embedded": 3374,
-      "built_at": "2026-09-25T12:07:19.151Z",
+      "chunks": 5295,
+      "embedded": 3375,
+      "built_at": "2026-09-27T06:39:01.512Z",
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
-      "sha256": "baf19724d7865e421f445359e542f8654b106f6e244cdd1882e2100da6b4c8c3"
+      "sha256": "0d22990b9be8a08740b19bc8d0068e00b8e31afadfce3b4de61579986a4a9c2f"
     },
     {
       "platform": "bedrock",

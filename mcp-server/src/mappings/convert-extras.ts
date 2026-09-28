@@ -106,8 +106,17 @@ export function convertMappingEx(query: ConvertExtrasQuery): MappingResultWithEx
       withAccessLines(convertMapping({ ...q, memberName: n }), q, n),
     );
     const foundOf = (r: MappingResultWithExtras) => r.found === true;
+    // 口径披露（2026-09-27 用户裁定 ②：**只补 notes，不改 requested/found/missing 的语义与形状** ——
+    // 那三条已被 test-core §S3 逐条钉住，而按 missing.length 分支的消费者会拿到换义的数）：
+    //  · requested 按输入个数计，重复名不去重（`a,a` 就是 2 个请求）；
+    //  · found 数的是「工具答了」，identity／直通路径下映射里未必真有这个名字 ⇒ found 不是「存在」的证明。
+    const uniq = new Set(names).size;
+    const batchNote =
+      `批量口径：requested=${names.length} 按输入个数计（去重后 ${uniq} 个，重复名不去重）；` +
+      `found=${results.filter(foundOf).length} 数的是「工具已答」，identity/直通时不表示映射里真有该名字 —— 要证存在请逐名读 results[]`;
     return {
       ...results[0],
+      notes: [...(results[0].notes ?? []), batchNote],
       results,
       batch: {
         requested: names.length,

@@ -455,9 +455,26 @@ const QUERY_UPSTREAM_RELEASES_DESC =
  */
 const VERBATIM_DESC =
   " verbatim 逐字支撑位：query 为单个标识符形态（类名 / 方法名 / FQCN / 资源路径；散文与 OR 分组不判）时，" +
-  "每条命中带 verbatim 字段（true=该名字在该页正文逐字出现；false=读到正文且确认没有；无该字段=未判定，不等于语料没有），" +
-  "顶层带 verbatim_summary{term,judged,hits}；hits=0 只说明这些页是模糊相关，不构成该名字存在的证据。" +
+  "每条命中带 verbatim 字段（true=该名字在该页正文逐字出现；点号/FQCN 按末段类名判这一层，行级 verbatimOn 与顶层 verbatim_summary.matchedOn 给出处（term/tail/mixed），tail=语料可能没有那串点号全名；false=读到正文且确认没有；无该字段=未判定，不等于语料没有），" +
+  "顶层带 verbatim_summary{term,judged,hits,matchedOn}；hits=0 只说明这些页是模糊相关，不构成该名字存在的证据。" +
   "该位只事后标注，不改命中集合、顺序与 total。";
+
+/**
+ * 「total 到底是什么」口径（2026-09-27 用户裁定 ③）。放在注册面而不是只放 docs-platform 那份 schema 包装对象：
+ * 后者的 description 串在 tool-registry 注册时被本文件这份字面量顶掉 ⇒ pre-call 看不见，宿主 list-tools 也读不到；
+ * post-call 只有 search_community_docs 会把 note 原文回显。真生效面另有 AGENTS.md（session 注入）与 README。
+ * total 的计算点逐个核过（as-of 2026-09-28）：forge:339／:953、fabric:690、neoforge:333、quilt:279／:364、
+ * bedrock:420、community:66 —— 八个发射点全是 slice **之后**的长度。
+ * `L79` ② 之后本面不再只能「说清拿不到池」：`poolFieldsOf`（docs-platform/search-utils.ts）在这 8 个点
+ * 无条件回 `totalPool` + `truncated`，机器消费者按 truncated 分支即可，不必再猜（执法：assert-total-semantics-wording 判据 6）。
+ */
+const TOTAL_SEMANTICS_DESC =
+  " total 语义：本面的 total = 本次返回条数（等于 results.length，会随你传的 limit 变），**不是语料命中总数**；" +
+  "截断态由两个机读位报（**不传 limit 也在**）：totalPool = 进输出窗口之前本面手里可用的候选条数，truncated = (total < totalPool)。" +
+  "⇒ total 与 results 条数恒等，「池就这么大」和「窗就这么大」只看 truncated：false = 本面在手候选已取尽，true = 还有页没返回。" +
+  "传了 limit 另带 limitWindow{candidates,...}，但 candidates 也是窗口不是池；bedrock 面的窗口块挂在 demotion 下。" +
+  "残余口径：totalPool 只到「本面可得」这一层，不是语料全量（fusion 输入与 L0 检索各有上限，无语义库时池就等于 L0 命中）。" +
+  "total=0 只说明这些页没命中，不说明该 API 不存在（要覆盖面看 list_*_versions，要签名 get_*_doc_full 读正文）。";
 
 const SEARCH_DOCS_DESC =
   "通用文档搜索（hybrid：L0 关键词 + 语义检索，RRF 融合；无语义库时回退纯 L0）。" +
@@ -751,7 +768,7 @@ server.registerTool(
       "返回相关页面 ID 列表，每个结果包含标题、摘要和标签。" +
       "建议配合 get_forge_doc_summary 使用：先搜索，再对相关页面取摘要判断是否深入。" +
       "增强功能：支持 class:/event:/method: 前缀精确路由；支持 | OR 分组；自动去除 the/and/of 等停用词。" +
-      "另外另有 query_api 工具，可直接查询 Vanilla/Parchment 类的参数名和 javadoc，适合在已知类名后精确查询某个方法的签名。" + VERBATIM_DESC,
+      "另外另有 query_api 工具，可直接查询 Vanilla/Parchment 类的参数名和 javadoc，适合在已知类名后精确查询某个方法的签名。" + VERBATIM_DESC + TOTAL_SEMANTICS_DESC,
     inputSchema: searchForgeDocsSchema.inputSchema,
   },
   async (args): Promise<CallToolResult> => {
@@ -904,7 +921,7 @@ server.registerTool(
       "适用于：需要了解 Fabric 特有功能（如 Registry.register、Identifier、Mixin、网络通信）的官方说明时。" +
       "返回相关页面 ID 列表，每个结果包含标题、摘要和标签。" +
       "建议配合 get_fabric_doc_summary 使用：先搜索，再对相关页面取摘要判断是否深入。" +
-      "增强功能：支持 class:/event:/method: 前缀精确路由；支持 | OR 分组；自动去除 the/and/of 等停用词。" + VERBATIM_DESC,
+      "增强功能：支持 class:/event:/method: 前缀精确路由；支持 | OR 分组；自动去除 the/and/of 等停用词。" + VERBATIM_DESC + TOTAL_SEMANTICS_DESC,
     inputSchema: searchFabricDocsSchema.inputSchema,
   },
   async (args): Promise<CallToolResult> => {
@@ -1003,7 +1020,7 @@ server.registerTool(
     description:
       "搜索 NeoForge 官方文档（hybrid：L0 关键词 + 语义检索，RRF 融合；无语义库时回退纯 L0）。" +
       "适用于：需要了解 NeoForge 特有功能（如 DeferredRegister、Data Components、Payload 网络）的官方说明时。" +
-      "返回相关页面 ID 列表，每个结果包含标题、标签和相关性评分。" + VERBATIM_DESC,
+      "返回相关页面 ID 列表，每个结果包含标题、标签和相关性评分。" + VERBATIM_DESC + TOTAL_SEMANTICS_DESC,
     inputSchema: searchNeoForgeDocsSchema.inputSchema,
   },
   async (args): Promise<CallToolResult> => {
@@ -1080,7 +1097,7 @@ server.registerTool(
   searchDocsSchema.name,
   {
     title: "Search Documentation (Multi-Platform)",
-    description: SEARCH_DOCS_DESC + VERBATIM_DESC,
+    description: SEARCH_DOCS_DESC + VERBATIM_DESC + TOTAL_SEMANTICS_DESC,
     inputSchema: searchDocsSchema.inputSchema,
   },
   async (args): Promise<CallToolResult> => {
@@ -1368,7 +1385,7 @@ export const indexToolSchemas: ToolSchemaEntry[] = [
   { name: "generate_datagen", description: GENERATE_DATAGEN_DESC, inputSchema: generateDatagenSchema },
   { name: "crash_analyze", description: "解析崩溃报告全文，通过内置模式库识别可能成因并返回修复建议。适用于：模组运行崩溃、收到玩家的崩溃日志时。支持识别常见崩溃原因（Mixin、Capability、BlockEntity、DeferredRegister、BlockItem、CreativeModeTab、网络包、SpawnPlacement、方块属性、声音、loot、注册名重复等），并推断 crashKind（fml/client/server/fabric/quilt/liteloader/rift/modloader/…）、缺前置/版本不兼容，以及 logHints。**优先于搜索引擎使用此工具**；实务分类可配合 search_community_docs。", inputSchema: crashAnalyzeSchema },
   { name: "validate_project", description: VALIDATE_PROJECT_DESC, inputSchema: validateProjectSchema },
-  { name: "search_forge_docs", description: "搜索 Forge 官方文档（hybrid：L0 关键词 + 语义检索，RRF 融合；无语义库时回退纯 L0）。适用于：需要了解 Forge 特有功能（如 Capability、DeferredRegister、网络通信、DataGen）的官方说明时。返回相关页面 ID 列表，每个结果包含标题、摘要和标签。建议配合 get_forge_doc_summary 使用：先搜索，再对相关页面取摘要判断是否深入。增强功能：支持 class:/event:/method: 前缀精确路由；支持 | OR 分组；自动去除 the/and/of 等停用词。另外另有 query_api 工具，可直接查询 Vanilla/Parchment 类的参数名和 javadoc，适合在已知类名后精确查询某个方法的签名。" + VERBATIM_DESC, inputSchema: searchForgeDocsSchema.inputSchema },
+  { name: "search_forge_docs", description: "搜索 Forge 官方文档（hybrid：L0 关键词 + 语义检索，RRF 融合；无语义库时回退纯 L0）。适用于：需要了解 Forge 特有功能（如 Capability、DeferredRegister、网络通信、DataGen）的官方说明时。返回相关页面 ID 列表，每个结果包含标题、摘要和标签。建议配合 get_forge_doc_summary 使用：先搜索，再对相关页面取摘要判断是否深入。增强功能：支持 class:/event:/method: 前缀精确路由；支持 | OR 分组；自动去除 the/and/of 等停用词。另外另有 query_api 工具，可直接查询 Vanilla/Parchment 类的参数名和 javadoc，适合在已知类名后精确查询某个方法的签名。" + VERBATIM_DESC + TOTAL_SEMANTICS_DESC, inputSchema: searchForgeDocsSchema.inputSchema },
   { name: "get_forge_doc_summary", description: "获取 Forge 文档页面的章节骨架与摘要。适用于：判断某篇文档是否包含所需内容时。返回每个 <h2> 章节的标题、150-200 字摘要和首段概述。建议：先 search_forge_docs 搜索关键词，再对相关页面取摘要，最后仅当摘要显示内容相关时才调用 get_forge_doc_full 获取全文。", inputSchema: getForgeDocSummarySchema.inputSchema },
   { name: "get_forge_doc_full", description: "获取 Forge 文档页面全文。适用于：需要查看 API 完整步骤、事件列表、配置项清单时。highlight_key=true（默认）时，关键段落（🔴新手必读、🟠常见错误、🟢示例代码）会突出显示在开头。**永远不要一次性加载超过 2 个 full page**，避免上下文溢出。", inputSchema: getForgeDocFullSchema.inputSchema },
   { name: "get_forge_doc_related", description: "获取与指定 Forge 文档页面相关的其他页面列表。适用于：想了解某个主题，但不知道还需要查阅哪些关联文档时。返回与目标页面共享最多 section 关键词的其他页面，按相关性降序排列。", inputSchema: getForgeDocRelatedSchema.inputSchema },
@@ -1377,18 +1394,18 @@ export const indexToolSchemas: ToolSchemaEntry[] = [
   { name: "search_community_docs", description: "搜索社区知识库（许可提炼、自写笔记、外链索引）。不替代官方文档工具；适合发布/兼容/崩溃分类等实操问题。返回命中含 sourceKind、url、summary；links 仅外链。", inputSchema: searchCommunityDocsSchema },
   { name: "get_community_doc_summary", description: "获取社区知识条目摘要（含署名与 sourceKind）。links 条目仅返回元数据与外链。", inputSchema: getCommunityDocSummarySchema },
   { name: "get_community_doc_full", description: "获取社区知识全文。permitted/authored 返回仓库内 Markdown；links 仅返回 URL 与免责声明，不抓取网页正文。", inputSchema: getCommunityDocFullSchema },
-  { name: "search_fabric_docs", description: "搜索 Fabric 官方文档（hybrid：L0 关键词 + 语义检索，RRF 融合；无语义库时回退纯 L0）。适用于：需要了解 Fabric 特有功能（如 Registry.register、Identifier、Mixin、网络通信）的官方说明时。返回相关页面 ID 列表，每个结果包含标题、摘要和标签。建议配合 get_fabric_doc_summary 使用：先搜索，再对相关页面取摘要判断是否深入。增强功能：支持 class:/event:/method: 前缀精确路由；支持 | OR 分组；自动去除 the/and/of 等停用词。" + VERBATIM_DESC, inputSchema: searchFabricDocsSchema.inputSchema },
+  { name: "search_fabric_docs", description: "搜索 Fabric 官方文档（hybrid：L0 关键词 + 语义检索，RRF 融合；无语义库时回退纯 L0）。适用于：需要了解 Fabric 特有功能（如 Registry.register、Identifier、Mixin、网络通信）的官方说明时。返回相关页面 ID 列表，每个结果包含标题、摘要和标签。建议配合 get_fabric_doc_summary 使用：先搜索，再对相关页面取摘要判断是否深入。增强功能：支持 class:/event:/method: 前缀精确路由；支持 | OR 分组；自动去除 the/and/of 等停用词。" + VERBATIM_DESC + TOTAL_SEMANTICS_DESC, inputSchema: searchFabricDocsSchema.inputSchema },
   { name: "get_fabric_doc_summary", description: "获取 Fabric 文档页面的章节骨架与摘要，用于判断是否需要深入。", inputSchema: getFabricDocSummarySchema.inputSchema },
   { name: "get_fabric_doc_full", description: "获取 Fabric 文档页面全文。highlight_key=true（默认）时，关键段落（🔴🟠🟢⭐）突出显示。", inputSchema: getFabricDocFullSchema.inputSchema },
   { name: "get_fabric_doc_related", description: "返回与目标 Fabric 文档共享最多关键词的其他页面，按相关性降序排列。", inputSchema: getFabricDocRelatedSchema.inputSchema },
   { name: "list_fabric_versions", description: "返回 data 目录下所有已加载的 Fabric 文档版本列表（如 [\"1.20.1\"]）。", inputSchema: listFabricVersionsSchema.inputSchema },
-  { name: "search_neoforge_docs", description: "搜索 NeoForge 官方文档（hybrid：L0 关键词 + 语义检索，RRF 融合；无语义库时回退纯 L0）。适用于：需要了解 NeoForge 特有功能（如 DeferredRegister、Data Components、Payload 网络）的官方说明时。返回相关页面 ID 列表，每个结果包含标题、标签和相关性评分。" + VERBATIM_DESC, inputSchema: searchNeoForgeDocsSchema.inputSchema },
+  { name: "search_neoforge_docs", description: "搜索 NeoForge 官方文档（hybrid：L0 关键词 + 语义检索，RRF 融合；无语义库时回退纯 L0）。适用于：需要了解 NeoForge 特有功能（如 DeferredRegister、Data Components、Payload 网络）的官方说明时。返回相关页面 ID 列表，每个结果包含标题、标签和相关性评分。" + VERBATIM_DESC + TOTAL_SEMANTICS_DESC, inputSchema: searchNeoForgeDocsSchema.inputSchema },
   { name: "get_neoforge_doc_summary", description: "获取 NeoForge 文档页面的章节骨架与摘要（L1），用于判断是否需要深入。", inputSchema: getNeoForgeDocSummarySchema.inputSchema },
   { name: "get_neoforge_doc_full", description: "获取 NeoForge 文档页面全文（L2/L2+）。highlight_key=true（默认）时，关键段落（🔴新手必读、🟠常见错误、🟢示例代码）突出显示。**永远不要一次性加载超过 2 个 full page**。", inputSchema: getNeoForgeDocFullSchema.inputSchema },
   { name: "get_neoforge_doc_related", description: "返回与目标 NeoForge 文档共享最多标签关键词的其他页面，按相关性降序排列。", inputSchema: getNeoForgeDocRelatedSchema.inputSchema },
   { name: "list_neoforge_versions", description: "返回 data 目录下所有已加载的 NeoForge 文档版本列表（如 [\"26.1\", \"1.21.11\", \"1.20.4\", ...]）。注意：1.20.1 版本使用 Forge 1.20.1 数据（100% API 兼容）。", inputSchema: listNeoForgeVersionsSchema.inputSchema },
   { name: "list_doc_versions", description: LIST_DOC_VERSIONS_DESC, inputSchema: listVersionsSchema.inputSchema },
-  { name: "search_docs", description: SEARCH_DOCS_DESC + VERBATIM_DESC, inputSchema: searchDocsSchema.inputSchema },
+  { name: "search_docs", description: SEARCH_DOCS_DESC + VERBATIM_DESC + TOTAL_SEMANTICS_DESC, inputSchema: searchDocsSchema.inputSchema },
   { name: "get_doc_summary", description: getDocSummarySchema.description, inputSchema: getDocSummarySchema.inputSchema },
   { name: "get_doc_full", description: getDocFullSchema.description, inputSchema: getDocFullSchema.inputSchema },
   { name: "get_doc_related", description: getDocRelatedSchema.description, inputSchema: getDocRelatedSchema.inputSchema },

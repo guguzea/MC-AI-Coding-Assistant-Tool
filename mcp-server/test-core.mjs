@@ -9,7 +9,13 @@ import { DatabaseSync } from "node:sqlite";
 
 import { listVersions, searchForgeDocs, searchDocs, getDocFull, getDocSummary, getDocRelated, getForgeDocSummary, getForgeDocFull } from "./dist/docs-platform/forge/index.js";
 import { analyzePortingPath, portProject, javaForMcVersion } from "./dist/porting/index.js";
-import { convertYarnMember, closeAllYarnDbs, resolveMappingDbPath, resolveCsvMappingDbPath } from "./dist/mappings/yarn-sqlite.js";
+import {
+  convertYarnMember,
+  closeAllYarnDbs,
+  resolveMappingDbPath,
+  resolveCsvMappingDbPath,
+  mappingsNameProbe,
+} from "./dist/mappings/yarn-sqlite.js";
 import { convertMapping, suggestSimilarMethods, convertMappingEx, buildAccessLines } from "./dist/mappings/index.js";
 import { parseAccessWidener, splitWidenerFiles } from "./dist/mixin/access-widener.js";
 import {
@@ -1667,6 +1673,57 @@ async function testDatagenAndMappingGates() {
       "era 披露必须在 notes 里（否则读的人会把 MCP 名当 Yarn 名）");
   }
 
+  // ── C3（2026-09-26）：第二档出处必须**按加载器**选库 ──────────────────────────
+  // 实况：`query_api` 的 api-index 只读 `data/forge_<ver>/extracted`（src/api/index.ts:301），
+  // 但修前 nameIndex 探针不带 prefer ⇒ 「两棵树都有库」的 1.16.5–1.20.4 由 fabric 的 yarn-tiny
+  // 代答。给出的类名连**包名**都是错的：`RenderCall` 在 Yarn 是 `blaze3d/systems/`、在
+  // mojmap+SRG 是 `blaze3d/pipeline/` —— 前者在 Forge 工程里根本不存在，等于给一个假坐标。
+  const probeNoPrefer = mappingsNameProbe("1.20.1", "RenderCall");
+  assert.equal(
+    probeNoPrefer?.mappingEra,
+    "yarn-tiny",
+    `不传 prefer 必须保持旧行为（fabric 优先），实得 ${probeNoPrefer?.mappingEra}`,
+  );
+  assert.equal(
+    probeNoPrefer?.named,
+    "com/mojang/blaze3d/systems/RenderCall",
+    `旧行为给的是 Yarn 包名（这条钉住「prefer 真的改了选库」，实得 ${probeNoPrefer?.named}）`,
+  );
+  const probeForgePrefer = mappingsNameProbe("1.20.1", "RenderCall", undefined, "forge");
+  assert.equal(probeForgePrefer?.mappingEra, "mcp-config-srg", `实得 ${probeForgePrefer?.mappingEra}`);
+  assert.equal(probeForgePrefer?.dbKind, "forge", `实得 ${probeForgePrefer?.dbKind}`);
+  assert.equal(
+    probeForgePrefer?.named,
+    "com/mojang/blaze3d/pipeline/RenderCall",
+    `按 forge 选库必须给本档 SRG/mojmap 包名，实得 ${probeForgePrefer?.named}`,
+  );
+  assert.ok(
+    (probeForgePrefer?.memberSample ?? []).length > 0 &&
+      probeForgePrefer.memberSample.every((s) => /^[mf]_\d+_$/.test(s.name)),
+    `成员样本必须是 SRG 形状（m_N_/f_N_），实得 ${JSON.stringify(probeForgePrefer?.memberSample)}`,
+  );
+  // 端到端：工具面必须吃到这个 prefer，不再吐出邻树的名字
+  const tierWire1201 = await queryApi({ className: "RenderCall", version: "1.20.1" });
+  assert.equal(tierWire1201.found, false, "映射索引命中仍不得冒充 api-index 命中（found 恒 false）");
+  assert.equal(tierWire1201.nameIndex?.dbKind, "forge", `工具面选库错树: ${JSON.stringify(tierWire1201.nameIndex?.dbKind)}`);
+  assert.equal(
+    tierWire1201.nameIndex?.named,
+    "com/mojang/blaze3d/pipeline/RenderCall",
+    `工具面吐出了邻树包名: ${tierWire1201.nameIndex?.named}`,
+  );
+  assert.ok(
+    (tierWire1201.notes ?? []).some((n) => /m_N_\/f_N_/.test(n)),
+    `era=mcp-config-srg 时披露必须点名 SRG 形状（实得 notes=${JSON.stringify(tierWire1201.notes)}）`,
+  );
+  // 回落腿：该档没有 forge 库时照旧由 fabric 代答（不许因为传了 prefer 就把这一档整个丢掉）
+  const tierFallbackFabric = mappingsNameProbe("1.21.1", "StatusEffect", undefined, "forge");
+  assert.equal(
+    tierFallbackFabric?.mappingEra,
+    "yarn-tiny",
+    `forge 无库时必须回落 fabric，实得 ${tierFallbackFabric?.mappingEra}`,
+  );
+  assert.equal(tierFallbackFabric?.dbKind, "fabric", `实得 ${tierFallbackFabric?.dbKind}`);
+
   // ── S2 / S3（2026-09-25）：convert_mapping 的 AT·AW 条目行 + 批量名 ─────────────
   // 走 convertMappingEx —— 与 MCP/CLI handler 同一条路径，不测副本。名字层判据全部有语料出处。
   const s2AwClass = convertMappingEx({
@@ -1791,6 +1848,10 @@ async function testDatagenAndMappingGates() {
   assert.equal(s3Batch.batch?.found, 1, `命中数要真数得出来: ${JSON.stringify(s3Batch.batch)}`);
   assert.deepEqual(s3Batch.batch?.missing, ["ZzzNope"], "没命中的名字必须点名");
   assert.equal(s3Batch.results?.length, 2);
+  // ②（2026-09-27 裁定：只补披露、不改形状）—— 这两条钉的是「口径必须随载荷走」，删掉 note 即红
+  const s3Note = String((s3Batch.notes ?? []).at(-1) ?? "");
+  assert.match(s3Note, /requested=2 按输入个数计（去重后 2 个/, "批量 requested 的不去重口径未随载荷披露");
+  assert.match(s3Note, /数的是「工具已答」/, "found 只表示已答、不表示映射里真有 —— 该披露没进载荷");
 
   const s3Over = convertMappingEx({
     from: "yarn", to: "yarn", memberName: Array.from({ length: 51 }, (_, i) => `n${i}`).join(","),
@@ -7336,7 +7397,10 @@ async function testLoaderApiRepoDataHygiene() {
   const dir = join(REPO_ROOT, "mcp-server", "data", "loader-api-summaries");
   const clean = scanLoaderApiData(dir);
   // 36 → 38：S5c/QSL 分支补出 1.18.2-qsl 与 1.20.1-qsl 两份官方摘要（各走本版精确 tag）。
-  assert.equal(clean.count, 38, `官方摘要应为 38 份，实际 ${clean.count}`);
+  // 38 → 52：2026-09-28 补出 fabric **loader 本体**摘要 14 份（`<档>-fabric.json`，fabric 全档齐）——
+  // 由 scripts/decompile-loader-apis.mjs 从各档 scaffold 自钉的 loader_version 生成，
+  // 供两道名门的「归属名单第三来源」按档否决（ClientModInitializer / Environment / EnvType 这类 loader 类）。
+  assert.equal(clean.count, 52, `官方摘要应为 52 份，实际 ${clean.count}`);
   assert.deepEqual(clean.problems, [], `loader-api 数据卫生门禁:\n  ${clean.problems.join("\n  ")}`);
 
   const readJson = (p) => JSON.parse(readFileSync(p, "utf8"));
@@ -8208,10 +8272,20 @@ function testResidueDirsReport() {
   const scopes = RESIDUE_SCAN_SCOPES.map((s) => join(REPO_ROOT, s));
   for (const must of ["", "temp", "mcp-server", "data"]) {
     assert.ok(RESIDUE_SCAN_SCOPES.includes(must), `扫描作用域少了 ${must || "仓库根"}（清单被悄悄收窄 ⇒ 报告恒为 0）`);
-    assert.ok(existsSync(join(REPO_ROOT, must)), `扫描作用域 ${must || "仓库根"} 不存在`);
   }
+  // 存在性**不进断言**（C2，2026-09-27）：`temp/` 是 .gitignore 的 scratch 根，干净 clone 里本来就没有
+  // 那个目录 ⇒ 旧写法 `assert.ok(existsSync(…))` 让 S21 在新克隆上必红，报的是"套件坏了"而不是"没有残留"。
+  // 真正要防的是作用域被悄悄收窄或扫描器对缺失作用域装瞎，所以缺失只登记 + 由下面那条下界断言兜住
+  // （缺失数 ⇒ 必须至少这么多条 unreadable；上面的 fixture 已单独证明"不可读作用域会进清单"）。
+  const missingScopes = ["", "temp", "mcp-server", "data"].filter((s) => !existsSync(join(REPO_ROOT, s)));
   const { hits, unreadable } = findResidueDirs(scopes, REPO_ROOT);
-  console.log(`  [residue] 作用域=${scopes.length} ${RESIDUE_DIR_PREFIX} 形态目录命中=${hits.length}（报告型，不阻断）`);
+  assert.ok(
+    unreadable.length >= missingScopes.length,
+    `盘上缺 ${missingScopes.length} 个作用域（${missingScopes.join(",") || "无"}）却只记录 ${unreadable.length} 条不可读 ⇒ 扫描器对缺失作用域静默`,
+  );
+  console.log(
+    `  [residue] 作用域=${scopes.length}（盘上缺失=${missingScopes.length ? missingScopes.join(",") : "无"}）${RESIDUE_DIR_PREFIX} 形态目录命中=${hits.length}（报告型，不阻断）`,
+  );
   for (const h of hits) console.log(`    ${h.rel}  文件=${h.files}  ${h.mib} MiB  (位于 ${h.scope}/)`);
   for (const u of unreadable) console.log(`    作用域不可读: ${u}`);
   console.log(
@@ -8581,7 +8655,7 @@ testCommunityIndexSync();
  * + `knowledge/libs/bedrock-only/**` + 投影生成器 `scripts/_oneoff/generate-five-platform-trees.mjs`
  * —— 生成器不改，重跑就会把错名再灌回 8 棵树（回归源头）。
  *
- * 判据（行级，负例形状照抄 scripts/assert-skill-yarn-attest.mjs:69 的 NEG 判据）：
+ * 判据（行级，负例形状照抄 `scripts/assert-skill-yarn-attest.mjs` 的 `NEG` 常量）：
  *   含 `@minecraft/server-beta` 且同行**不含** NEG 词（禁止/不存在/不是/勿/错误/❌/非包名/未核实…）⇒ 违规。
  *   ⇒ `09-anti-patterns` 的 ❌ 禁令行本身要写这个名字，那是合法提及，不判红（实测 as-of 2026-09-23：真面 18 处提及 / 0 违规 = bedrock 8 宿主 ×2 行 + `mc-script-server/SKILL.md` 1 + 生成器 1）。
  * 地板：R47 `[FLOOR-COLLECTOR]` 语义 —— 采集 0 或某个**声明过的面**采到 0 ⇒ 立刻红（采集器失效/假覆盖），
@@ -8884,6 +8958,29 @@ console.log("core regression tests passed");
     rmSync(redRoot, { recursive: true, force: true, maxRetries: 6, retryDelay: 120 });
     rmSync(greenRoot, { recursive: true, force: true, maxRetries: 6, retryDelay: 120 });
   }
+}
+
+/**
+ * §TW · 「total 语义」这句话必须到达消费者面（2026-09-27 用户裁定 ③ → 同批抽门）。
+ * 判据本体在 `mcp-server/scripts/assert-total-semantics-wording.mjs`（五断 + 两条地板 + 自带 --selftest
+ * 的三桶例数地板），本块只剩薄薄一发 spawn —— 措辞落地那天是**零执法**（删掉不会红），抽出门才进默认链。
+ * ⚠️ 编号刻意不叫 S20：那个号在本仓 harness 里已有两处各义（本文件 :7926 的写盘 guard 说明、
+ * test-scripts.mjs :2129 与 :2086 的语境），不能再造第四个。
+ */
+{
+  const { spawnSync } = await import("node:child_process");
+  const { fileURLToPath } = await import("node:url");
+  const GATE = fileURLToPath(new URL("./scripts/assert-total-semantics-wording.mjs", import.meta.url));
+  const r = spawnSync(process.execPath, [GATE], { encoding: "utf8", windowsHide: true });
+  const out = `${r.stdout ?? ""}${r.stderr ?? ""}`;
+  assert.equal(r.status, 0, `assert-total-semantics-wording 失败（措辞没到消费者面，或 dist 是旧的）：\n${out}`);
+  // 只看 rc 会把「门退化成空检查」读成绿 ⇒ 必须核它自己印的结论串。
+  assert.match(out, /assert-total-semantics-wording: ok/, `门没有输出 ok 结论，可能已退化成空检查：\n${out}`);
+  const st = spawnSync(process.execPath, [GATE, "--selftest"], { encoding: "utf8", windowsHide: true });
+  const stOut = `${st.stdout ?? ""}${st.stderr ?? ""}`;
+  assert.equal(st.status, 0, `该门 --selftest 未通过（判据本身的死活没人自证）：\n${stOut}`);
+  assert.match(stOut, /三桶地板齐/, `selftest 没打印三桶计数（例数塌陷 = 自检被掏空）：\n${stOut}`);
+  console.log("TW total 语义到达面（判据在门内，本块一发 spawn 真跑 + 自证）：ok");
 }
 
 try {

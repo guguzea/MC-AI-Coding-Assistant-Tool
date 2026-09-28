@@ -19,7 +19,8 @@ import { resolveDataDir } from "../utils/path.js";
 import { semanticSearch } from "../docs-platform/semantic/search.js";
 import {
   joinSearchWarnings,
-  mergeSemanticResults,
+  mergeSemanticResultsWithPool,
+  poolFieldsOf,
   normalizeTag,
   RELATED_CACHE_TTL_MS,
   ttlCacheGet,
@@ -227,7 +228,9 @@ export const searchBedrockDocsSchema = z.object({
     .describe(
       `对外结果条数，默认 ${BEDROCK_RESULT_LIMIT}（与未传该参数时逐字相同）；范围 1-${BEDROCK_RESULT_LIMIT_MAX}。` +
         "只放宽窗口：排序与 release-notes 降权不变，被降权的页仍在尾部。要专门看更新说明优先用 " +
-        'tags=["release-notes"]（那是过滤，不是放宽窗口）。',
+        'tags=["release-notes"]（那是过滤，不是放宽窗口）。' +
+        "注意：本面的 total 是本次返回条数，不是语料命中总数；截断态看无条件在载荷里的 totalPool（进窗前候选）与 truncated（= total < totalPool），" +
+        "窗口明细在 demotion.candidates / resultLimit / candidateLimit（顶层没有 limitWindow 键）。",
     ),
 });
 
@@ -374,6 +377,7 @@ export async function searchBedrockDocs(
   const resultLimit = args.limit ?? BEDROCK_RESULT_LIMIT;
   const candidateLimit = Math.max(BEDROCK_MERGE_CANDIDATE_LIMIT, resultLimit);
   let candidates = results;
+  let fusionPool: number | undefined;
   if (semanticAvailable) {
     const semanticHits = semanticLists.filter(
       (h): h is NonNullable<typeof h> => h !== null,
@@ -389,17 +393,21 @@ export async function searchBedrockDocs(
     }
     // 候选池放宽到 candidateLimit（≥ 窗口），降权后再截回窗口 ——
     // 截断点必须在降权之后，否则「被降权」等于「被挤出结果」，与用户裁定的不删不拉黑冲突。
-    candidates = mergeSemanticResults(results, semanticHits, {
+    const fusedBedrock = mergeSemanticResultsWithPool(results, semanticHits, {
       tags: args.tags,
       limit: candidateLimit,
       version: resolvedVersion,
       allowedIds,
     });
+    candidates = fusedBedrock.rows;
+    fusionPool = fusedBedrock.poolSize;
   }
   const tagIndex = bedrockGenreTagIndex(resolvedVersion, sources, dataRoot);
   const demotedInCandidates = candidates.filter((r) => isBedrockReleaseNotesRow(r, tagIndex)).length;
   const demotedRows = applyBedrockGenreDemotion(candidates, tagIndex, resultLimit);
   results = demotedRows;
+  // `L79` ②：池 = 进窗前候选（语义腿在跑时取融合并集，否则取在手候选）；降权只重排不过滤，不影响池
+  const pool = poolFieldsOf(fusionPool ?? candidates.length, results.length);
   const demotedInResults = demotedRows.filter((r) => r.demoted === true).length;
   const demotionDropped = Math.max(0, demotedInCandidates - demotedInResults);
   return jsonOk(
@@ -411,6 +419,7 @@ export async function searchBedrockDocs(
       platform: "bedrock",
       semantic: semanticAvailable,
       total: results.length,
+      ...pool,
       results,
       /** 可选附加字段（降权未触发时也在，便于核对排序）；已有字段类型与含义未变 */
       demotion: {

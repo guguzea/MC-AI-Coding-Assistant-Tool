@@ -76,16 +76,34 @@ function rankRegistryMatch(id: string, q: string): number {
   return 4;
 }
 
+export interface RegistrySearchResult {
+  rows: RegistryMatch[];
+  /** L76②：同一 WHERE（exact ∪ like，按行去重前）的**真命中条数**；载荷里以 `totalMatches` 回显 */
+  totalMatches: number;
+  /** 排序实际看得见多少条（= 取件窗）。`fetchLimit >= totalMatches` ⇒ 排序看的是全池 */
+  fetchLimit: number;
+}
+
+/**
+ * L76②：先 `COUNT(*)` 命中数，命中数不超过本上限就**整批取**（让相关性排序看见全池，
+ * 消除「`ORDER BY registry,id LIMIT 窗` 先截、JS 再排序」劫持前 N 名的缺陷）；
+ * 只有超过上限才退回放大窗，并由载荷的 `truncated` 点名。
+ * 实测 1.20.1 `entries` 全表 **3963** 行（sound_events 1474 / items 1255 / blocks 1003 / …）⇒ 本仓库任何单档查询都落在上限内。
+ */
+export const REGISTRY_FULL_POOL_CAP = 20_000;
+
 export function searchRegistryEntries(
   version: string,
   registry: string | undefined,
   query: string,
   limit = 25,
-): RegistryMatch[] {
+): RegistrySearchResult {
+  /** 实现层钳制：小数向下取整、非正数按 1（schema 侧另有 .int().min(1).max() 第一道） */
+  const take = Math.max(1, Math.floor(limit));
   const db = openRegistryDb(version);
-  if (!db) return [];
+  if (!db) return { rows: [], totalMatches: 0, fetchLimit: 0 };
   const q = query.trim().toLowerCase();
-  if (!q) return [];
+  if (!q) return { rows: [], totalMatches: 0, fetchLimit: 0 };
 
   // 剥掉 % LIKE 通配符；保留 `_` 并转义为字面量（P3-094）
   const like = `%${q.replace(/%/g, "").replace(/_/g, "\\_")}%`;
@@ -101,7 +119,19 @@ export function searchRegistryEntries(
       : (db.prepare(exactSql).all(q, exactNs) as unknown as RegistryMatch[])
   );
 
-  const fetchLimit = Math.max(limit * 8, 200);
+  // L76②：真命中数 = 同一条 WHERE 的 union 计数（exact ∪ like），与下面 merged 的集合同义
+  const regClause = registry ? "registry = ? AND " : "";
+  const regParams: string[] = registry ? [registry] : [];
+  const totalMatches = (
+    db
+      .prepare(
+        `SELECT COUNT(*) AS c FROM entries
+         WHERE ${regClause}((LOWER(id) = ? OR LOWER(id) = ?)
+            OR (LOWER(id) LIKE ? ESCAPE '\\' OR LOWER(COALESCE(translation_key,'')) LIKE ? ESCAPE '\\'))`,
+      )
+      .get(...regParams, q, exactNs, like, like) as unknown as { c: number }
+  ).c;
+  const fetchLimit = totalMatches <= REGISTRY_FULL_POOL_CAP ? totalMatches : Math.max(take * 8, 200);
   const likeRows = registry
     ? (db
         .prepare(
@@ -129,15 +159,19 @@ export function searchRegistryEntries(
     merged.push(r);
   }
 
-  return merged
-    .sort((a, b) => {
-      const ra = rankRegistryMatch(a.id, q);
-      const rb = rankRegistryMatch(b.id, q);
-      if (ra !== rb) return ra - rb;
-      if (a.id.length !== b.id.length) return a.id.length - b.id.length;
-      return a.registry.localeCompare(b.registry) || a.id.localeCompare(b.id);
-    })
-    .slice(0, limit);
+  return {
+    rows: merged
+      .sort((a, b) => {
+        const ra = rankRegistryMatch(a.id, q);
+        const rb = rankRegistryMatch(b.id, q);
+        if (ra !== rb) return ra - rb;
+        if (a.id.length !== b.id.length) return a.id.length - b.id.length;
+        return a.registry.localeCompare(b.registry) || a.id.localeCompare(b.id);
+      })
+      .slice(0, take),
+    totalMatches,
+    fetchLimit,
+  };
 }
 
 export function listRegistryNames(version: string): string[] {

@@ -963,6 +963,42 @@ testAsync("S11/T2: 只含 <<< 转引的页也要重算 meta.codeBlockCount（26.
   }
 });
 
+// ── C4（2026-09-27）：真语料排序断言 ────────────────────────────────────────
+// 本文件此前**全部**跑在内存夹具上（三行手搓 chunk 的假库）。假库能证明"检索核会算"，
+// 证不了"真语料上的 BM25 排序还是那个顺序" —— 排序被改坏（换分词、改 limit、改 ORDER BY）
+// 时假库照样绿，而用户拿到的第一条结果已经换页。这里补一条真档断言 + 一条比较核反证。
+// 数值来源：本轮实测 fts5TopDocsSync(q, semanticDbPath(...), 5)，as-of 2026-09-27；
+// 命中**数**只作下界（补抓语料必然涨，钉等式会假红），top-1 才钉死。
+testAsync("真语料 FTS5 排序：top-1 钉死，且比较核本身可投毒", async () => {
+  const expectTop = (hits, want, ctx) => {
+    if (typeof hits[0] !== "string") throw new Error(`${ctx}: 行形状不是 docId 字符串，实得 ${JSON.stringify(hits[0])?.slice(0, 80)}`);
+    if (hits[0] !== want) throw new Error(`${ctx}: top-1 应为 ${want}，实得 ${hits[0]}`);
+    return true;
+  };
+  // 反证：比较核若被改成恒真，这条立刻红。
+  assert.throws(() => expectTop(["wrong/page"], "right/page", "poison"), /top-1 应为 right\/page/);
+  assert.throws(() => expectTop([{ docId: "x" }], "x", "poison"), /行形状/);
+
+  const pins = [
+    ["forge", "1.20.1", "forge-docs", "DeferredRegister", "1.20.1/concepts_registries", 2],
+    ["fabric", "1.21.11", "fabric-docs", "datagen", "1.21.11/develop_data-generation_tags", 4],
+    ["neoforge", "1.21.1", "neoforge-docs", "attachments", "datastorage/attachments", 2],
+  ];
+  for (const [platform, version, source, q, wantTop1, floor] of pins) {
+    const dbPath = semanticDbPath(S11_DATA, platform, version, source);
+    if (!existsSync(dbPath)) {
+      console.log(`  SKIP C4: 无 ${platform}_${version} 语义库（${dbPath}）`);
+      continue;
+    }
+    const hits = fts5TopDocsSync(q, dbPath, 5);
+    assert.ok(Array.isArray(hits), `${platform}_${version} q="${q}" 未返回数组`);
+    assert.ok(hits.length >= floor, `${platform}_${version} q="${q}" 命中 ${hits.length} 低于本轮实测下界 ${floor}`);
+    expectTop(hits, wantTop1, `${platform}_${version} q="${q}"`);
+    assert.ok(new Set(hits).size === hits.length, `${platform}_${version} q="${q}" 同一 docId 重复出现 ⇒ 去重腿失效：${hits.join(" | ")}`);
+  }
+  closeSemanticDbs();
+});
+
 await Promise.all(asyncTasks);
 
 if (failures > 0) {

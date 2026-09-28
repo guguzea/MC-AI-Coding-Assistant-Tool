@@ -27,7 +27,7 @@ import { ownGet } from "../utils/own-record.js";
 import { readableSignature, returnType as descriptorReturnType } from "../utils/descriptor.js";
 import { ActionCodes, actionable, withAction, versionRequiredAction, missingMcVersion, type ActionEnvelope } from "../utils/actionable.js";
 import { isUnobfuscatedMcVersion, UNOBFUSCATED_MAPPING_HINT } from "../mappings/unobfuscated.js";
-import { mappingsNameProbe, type MappingsNameProbe } from "../mappings/yarn-sqlite.js";
+import { mappingsNameProbe, type MappingDbPreference, type MappingsNameProbe } from "../mappings/yarn-sqlite.js";
 import { parseJsonUtf8 } from "../utils/json-utf8.js";
 import { isSafeVersionSegment } from "../utils/minecraft-version.js";
 import { editDistanceLimited } from "../utils/edit-distance.js";
@@ -838,7 +838,8 @@ function queryApiCoverageWarning(version: string, classCount?: number): string |
 
 /**
  * S1′：映射索引那一档的出处披露 —— 三件事必须念清楚：命中形状、`mappingEra` 决定 named
- * 是哪套名字（`forge-srg`/`tsrg`/`mcp-csv` 的 named 是 MCP `func_/field_`，不是 Yarn 名）、
+ * 是哪套名字（`forge-srg`/`tsrg`/`mcp-csv` 的 named 是 MCP `func_/field_`，`mcp-config-srg` 的是
+ * SRG 成员名 `m_N_/f_N_`，都不是 Yarn 名）、
  * 以及「名字存在 ≠ 签名成立」。缺任何一句，读的人就会把存在性当用法。
  */
 function mappingsTierNotes(probe: MappingsNameProbe | null): string[] {
@@ -851,10 +852,17 @@ function mappingsTierNotes(probe: MappingsNameProbe | null): string[] {
           : `该档有同名简名但**歧义**（${probe.candidates.length} 个候选，见 nameIndex.candidates）`
         : "该档映射里也没有这个类名"
     }`,
-    `该库 mappingEra=${probe.mappingEra || "未知"} / 来源=${probe.dbKind} ⇒ named 列是这套映射的名字（forge-srg/tsrg/mcp-csv 的 named 是 MCP func_/field_ 名，**不是** Yarn 名）。`,
+    `该库 mappingEra=${probe.mappingEra || "未知"} / 来源=${probe.dbKind} ⇒ named 列是这套映射的名字（yarn-tiny 是 Yarn 名；forge-srg/tsrg/mcp-csv 是 MCP func_/field_ 名；mcp-config-srg 是 SRG 成员名 m_N_/f_N_，1.16.5 那档为老形 func_/field_，三档都**不是** Yarn 名）。`,
     "名字存在 ≠ 会用法：要签名请 search_*_docs 或按需反编译（get_minecraft_source）。",
   ];
 }
+
+/**
+ * `query_api` 的 api-index 只从 `data/forge_<ver>/extracted` 取（本文件 :301），所以它的第二档
+ * 出处也必须按 Forge 线选库：修前 1.16.5–1.20.4 这六个「两棵树都有库」的版本由 fabric 的
+ * yarn-tiny 代答 ⇒ 报的是 **Yarn** 类名（同一个类两条线连包名都不同），与本工具的口径相反。
+ */
+const NAME_INDEX_PREFER: MappingDbPreference = "forge";
 
 export async function queryApi(query: ApiQuery): Promise<ApiResult> {
   const { className, methodName } = query;
@@ -932,7 +940,7 @@ export async function queryApi(query: ApiQuery): Promise<ApiResult> {
         ];
     // S1′：该版本压根没有 Parchment 索引 —— 映射索引是**这里唯一还能给的出处**，
     // 但仍只证名字存在，不抬 found。
-    const probe = mappingsNameProbe(version, className);
+    const probe = mappingsNameProbe(version, className, undefined, NAME_INDEX_PREFER);
     return withCoverage(withAction(
       {
         found: false,
@@ -970,7 +978,7 @@ export async function queryApi(query: ApiQuery): Promise<ApiResult> {
   if (!cls) {
     // S1′：api-index 未命中时,再问一次在盘映射索引（只证名字存在,不证签名）。
     // 附在 found:false 里而不是抬成 found:true —— 抬了就等于用「类名存在」冒充「有签名」。
-    const probe = mappingsNameProbe(version, className);
+    const probe = mappingsNameProbe(version, className, undefined, NAME_INDEX_PREFER);
     const nameIndexNotes = mappingsTierNotes(probe);
     const fuzzy = fuzzyClassSearch(className, vData);
     if (fuzzy.length > 0) {

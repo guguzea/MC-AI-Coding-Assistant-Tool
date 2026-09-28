@@ -43,6 +43,7 @@ import fs from "node:fs";
 import path from "node:path";
 import os from "node:os";
 import zlib from "node:zlib";
+import { createHash } from "node:crypto";
 import { spawnSync } from "node:child_process";
 
 const argv = process.argv.slice(2);
@@ -401,6 +402,45 @@ function loadPairs(pairsDir, root) {
 }
 
 /**
+ * 仓库副本 sha 对账（2026-09-26）：`yarn-mojmap-pairs-provenance.json` 的 `files` 逐件 sha256。
+ * 为什么必须有门消费：仓库副本现在是 A/B 判据的唯一真值源（AGENTS.md「逐件 sha 钉在后者」），
+ * 此前**没有任何门读这枚钉**——改一个字节不会有任何红，属「钉了没人验」的伪守卫。
+ * leg2 与 cross-layer 的主流程都在 loadPairs 之后调本函数，失配即响亮红。
+ * 目录里没有 provenance（`$MC_SKILL_CACHE` / tmpdir 现生产物 / 合成夹具）⇒ skipped（无钉即无校验义务）；
+ * 有 provenance 但 `files` 缺或空 ⇒ 畸形判红（不许「钉了个空壳」洗白）。
+ */
+export function verifyPairsProvenance(pairsDir) {
+  const provPath = path.join(pairsDir, "yarn-mojmap-pairs-provenance.json");
+  if (!fs.existsSync(provPath)) return { ok: true, skipped: true };
+  let prov = null;
+  try {
+    prov = JSON.parse(fs.readFileSync(provPath, "utf8"));
+  } catch {
+    return { ok: false, code: "PAIRS_SHA_MISMATCH", detail: `provenance 不可读：${provPath}` };
+  }
+  const files = prov && prov.files && typeof prov.files === "object" ? prov.files : null;
+  if (!files || !Object.keys(files).length) {
+    return { ok: false, code: "PAIRS_SHA_MISMATCH", detail: `provenance 的 files 钉缺失或为空：${provPath}` };
+  }
+  for (const [name, expected] of Object.entries(files)) {
+    let actual = null;
+    try {
+      actual = createHash("sha256").update(fs.readFileSync(path.join(pairsDir, name))).digest("hex");
+    } catch {
+      return { ok: false, code: "PAIRS_SHA_MISMATCH", detail: `钉内文件缺失：${name}（钉 = ${provPath}）` };
+    }
+    if (String(actual) !== String(expected)) {
+      return {
+        ok: false,
+        code: "PAIRS_SHA_MISMATCH",
+        detail: `sha 失配：${name} 现算 ${String(actual).slice(0, 12)}… / 钉 ${String(expected).slice(0, 12)}…`,
+      };
+    }
+  }
+  return { ok: true, checked: Object.keys(files).length };
+}
+
+/**
  * leg2：`mappings:` 键值 ↔ 正文实名一致性。
  * 判法：把文件切成标识符 token 集合（一次扫描，避免 9000+ 名字逐个跑正则），
  * 与「另一侧映射」的名字集合求交 —— 交集非空即「正文用了与声称不符的映射名」。
@@ -756,6 +796,54 @@ if (SELFTEST && isMain) {
     console.log(`${okOut ? "PASS" : "FAIL"}  require-pairs：产物缺 ⇒ PAIRS_MISSING 响亮红  rc=${rOut.status} missing=${missing}`);
     if (!okOut) console.log("      " + String(rOut.stderr || rOut.stdout || "").slice(0, 200));
   }
+  // ③（2026-09-26）：仓库副本 sha 对账两记 —— 钉与字节符 ⇒ 正常（不误伤）；钉改一字 ⇒ PAIRS_SHA_MISMATCH 响亮红
+  {
+    const mk = (dir, tamper) => {
+      fs.mkdirSync(dir, { recursive: true });
+      fs.writeFileSync(
+        path.join(dir, "yarn-mojmap-1.20.1.json"),
+        JSON.stringify({ version: "1.20.1", count: 1, pairs: [{ obf: "a", mojmap: "Level", yarn: "ServerWorld" }] }),
+        "utf8",
+      );
+      fs.writeFileSync(
+        path.join(dir, "index.json"),
+        JSON.stringify({ versions: { "1.20.1": { file: "yarn-mojmap-1.20.1.json", count: 1 } } }),
+        "utf8",
+      );
+      const sha = (p) => createHash("sha256").update(fs.readFileSync(p)).digest("hex");
+      const pin = {
+        "index.json": sha(path.join(dir, "index.json")),
+        "yarn-mojmap-1.20.1.json": sha(path.join(dir, "yarn-mojmap-1.20.1.json")),
+      };
+      if (tamper) pin["yarn-mojmap-1.20.1.json"] = pin["yarn-mojmap-1.20.1.json"].slice(0, -1) + (pin["yarn-mojmap-1.20.1.json"].endsWith("0") ? "1" : "0");
+      fs.writeFileSync(path.join(dir, "yarn-mojmap-pairs-provenance.json"), JSON.stringify({ files: pin }), "utf8");
+      return dir;
+    };
+    const pdOk = mk(path.join(tmp, "prov-ok"), false);
+    const rOk = spawnSync(
+      process.execPath,
+      [fileURLToPath(import.meta.url), `--root=${leg2Root}`, `--pairs-dir=${pdOk}`],
+      { encoding: "utf8", windowsHide: true },
+    );
+    const outOk = String(rOk.stderr || "") + String(rOk.stdout || "");
+    const okSha = rOk.status === 0 && !/PAIRS_SHA_MISMATCH/.test(outOk);
+    if (!okSha) fails += 1;
+    cases.push({ name: "sha 对账：钉与字节符 ⇒ 正常判（不误伤）" });
+    console.log(`${okSha ? "PASS" : "FAIL"}  sha 对账：钉与字节符 ⇒ 正常判（不误伤）  rc=${rOk.status}`);
+    if (!okSha) console.log("      " + outOk.slice(0, 200));
+    const pdBad = mk(path.join(tmp, "prov-bad"), true);
+    const rBad = spawnSync(
+      process.execPath,
+      [fileURLToPath(import.meta.url), `--root=${leg2Root}`, `--pairs-dir=${pdBad}`],
+      { encoding: "utf8", windowsHide: true },
+    );
+    const outBad = String(rBad.stderr || "") + String(rBad.stdout || "");
+    const badSha = rBad.status === 1 && /PAIRS_SHA_MISMATCH/.test(outBad);
+    if (!badSha) fails += 1;
+    cases.push({ name: "sha 对账：钉改一字 ⇒ PAIRS_SHA_MISMATCH 响亮红" });
+    console.log(`${badSha ? "PASS" : "FAIL"}  sha 对账：钉改一字 ⇒ PAIRS_SHA_MISMATCH 响亮红  rc=${rBad.status}`);
+    if (!badSha) console.log("      " + outBad.slice(0, 200));
+  }
   fs.rmSync(tmp, { recursive: true, force: true });
   console.log(fails ? `selftest FAILED（${fails}/${cases.length}）` : `selftest OK（${cases.length}/${cases.length}）`);
   process.exit(fails ? 1 : 0);
@@ -765,12 +853,23 @@ function main() {
 const res = scan(ROOT);
 // ── leg2（A7）：键值 ↔ 正文实名一致性；无对照产物 ⇒ 打印 skipped 并**保持 leg1 的退出码** ──
 const pairs = loadPairs(PAIRS_DIR, ROOT);
+// 仓库副本 sha 对账（2026-09-26）：provenance 钉与字节不符 ⇒ 判据面的对照产物不可信，响亮红。
+const shaCheck = verifyPairsProvenance(PAIRS_DIR);
+if (!shaCheck.ok) {
+  console.error(
+    `  ${shaCheck.code} —— 对照产物与 provenance 钉不符：${shaCheck.detail}\n` +
+      `  修复：按该 provenance 的 refreshHint 重新发布仓库副本；或 node scripts/build-yarn-mojmap-pairs.mjs ` +
+      `现生到 \$MC_SKILL_CACHE 后用显式 --pairs-dir 指过去。`,
+  );
+  process.exit(1);
+}
 // ②（2026-09-26）：--require-pairs ⇒ skipped 不许静默：产物缺席即响亮红（默认关，见常量处注释）
 if (REQUIRE_PAIRS && (!pairs || pairs.size === 0)) {
   console.error(
     `PAIRS_MISSING —— 按序试过的目录 = ${PAIRS_CANDIDATES.map((d) => path.relative(ROOT, d).replace(/\\/g, "/") || d).join(" · ")}；` +
       `当前取 = ${PAIRS_DIR}。再生命令：node scripts/build-yarn-mojmap-pairs.mjs [--offline] [--out=<dir>]` +
-      `（产物按许可不入库；仓库发布副本 data/_yarn-mojmap-pairs 在库时本开关无需开——CI 勿开）`,
+      `（派生对照表已按 2026-09-25 裁定入库 data/_yarn-mojmap-pairs ⇒ 仓库副本在库时本开关无需开；` +
+      `原始 client.txt 仍 gitignored、不入库，被排除的是它不是派生件）`,
   );
   process.exit(1);
 }

@@ -1,8 +1,10 @@
 > 来源：https://learn.microsoft.com/en-us/minecraft/creator/documents/scripting/introduction?view=minecraft-bedrock-stable
-> 抓取时间：2026-09-24T02:07:27.394Z
+> 抓取时间：2026-09-27T06:36:00.376Z
 > 警告：此文档可能滞后于当前正式版
 
 # Introduction to Scripting in Minecraft
+
+ Feedback
 
 Add-Ons in Minecraft: Bedrock Edition let you do a lot of customization through changing properties and textures, from new behaviors to entire new entities. With scripting, you can take customization to a whole new level. A script is essentially a program, a set of instructions for Minecraft to perform at certain times or in response to events and actions. Scripts can control entities, blocks, and items, manipulate the world, and even create entirely new game mechanics!
 
@@ -458,6 +460,6 @@ You'll also learn how to take advantage of all of the goodness of TypeScript and
 
 These may just sound like abstract coding terms, but trust me, the benefits of going through our TypeScript setup will make your scripting experience go much more smoothly once you begin to expand your knowledge and write more complex scripts. Also, all of our samples are written in TypeScript, so you will have lots of examples to test out! Please give it a go once you feel you've gotten the basics down from this tutorial—you won't regret it!
 
-## Feedback
+ Ask Learn
 
- Want to try using Ask Learn to clarify or guide you through this topic?
+ Ask Learn

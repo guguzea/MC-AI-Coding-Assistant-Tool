@@ -90,9 +90,9 @@ Access Transformer 开放 `private`/`protected` 成员为 `public`。
 文件：`src/main/resources/META-INF/accesstransformer.cfg`
 ```
 # 开放 private 方法为 public
-public net.minecraft.world.entity.Entity getHealth()V
+public net.minecraft.world.entity.LivingEntity m_21223_()F #getHealth
 # 开放 protected 字段为 public
-public net.minecraft.world.entity.Entity health F
+public net.minecraft.world.entity.LivingEntity f_20919_ #deathTime
 ```
 
 build.gradle 中启用：
@@ -102,6 +102,26 @@ minecraft {
 }
 ```
 
+
+### 成员行必须用 SRG 名：让工具成行，不要手写
+
+上游原文（本档语料 `data/forge_1.18.2/forge-docs/1.18.2/processed/advanced_accesstransformers.md`）逐字：
+「When using Access Transformers on Minecraft classes, the SRG name must be used for fields and methods.」
+⇒ 类名写可读名，**方法名 / 字段名必须换成该档的 SRG 名**。上面示例里的可读成员名照抄进
+`accesstransformer.cfg` 不会生效；同一个可读名在多个 owner 下对应不同 SRG 名，凭记忆拼必错。
+
+用 `convert_mapping` 直接产出可粘贴的条目行：
+
+```bash
+node mcp-server/dist/cli.js convert_mapping --from=mojang --to=mcp --platform=forge \
+  --version=1.18.2 --ownerClass=net.minecraft.world.entity.Entity \
+  --memberName=getHealth --memberKind=method --accessLines=true
+```
+
+返回的 `accessLines.entries[].line` 就是可粘贴行；取不到 SRG 名时行内留 `<TODO…>` 且
+`complete:false` —— **禁止**拿可读名顶替 SRG 名。
+成员库覆盖只有 Forge **1.16.5 / 1.17.1 / 1.18.2 / 1.19.4 / 1.20.1 / 1.20.4** 六档（`mappingEra=mcp-config-srg`）；本档在其中，成员行出实名。
+写完可用 `validate_at` 复核（它读的是字节码，不是文件名）。
 ## 常见错误
 
 - ❌ Mixin 注入到构造函数：`@Inject` 不能用于构造函数

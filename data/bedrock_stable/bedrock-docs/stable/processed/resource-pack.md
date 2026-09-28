@@ -1,8 +1,10 @@
 > 来源：https://learn.microsoft.com/en-us/minecraft/creator/documents/resourcepack?view=minecraft-bedrock-stable
-> 抓取时间：2026-09-24T02:07:28.636Z
+> 抓取时间：2026-09-27T06:36:00.402Z
 > 警告：此文档可能滞后于当前正式版
 
 # Introduction to Resource Packs
+
+ Feedback
 
 Before building your first Add-On for Minecraft: Bedrock Edition, you'll need to create a pack to hold your custom content. There are two types of packs that a creator can make: resource packs and behavior packs. A resource pack is a folder structure that contains all of your custom models, sounds, textures, and other custom content.
 
@@ -209,6 +211,6 @@ If you haven't checked out Behavior Packs yet, follow this simple tutorial to ad
 
 To see examples of unchanged resource and behavior files, check out the Minecraft Vanilla Resource Pack and Vanilla Behavior Pack .
 
-## Feedback
+ Ask Learn
 
- Want to try using Ask Learn to clarify or guide you through this topic?
+ Ask Learn

@@ -157,6 +157,21 @@ loom {
 }
 ```
 
+
+### 条目行的名字层必须与工程 mappings 一致：让工具成行
+
+上面按 `named` 头写的那行，成员名用的就是**工程当前映射层**的名字（Yarn 工程 ⇒ Yarn 名）。
+换层时整行的名字与描述符都要跟着换，不能只改文件头。
+条目的名字与描述符要跟工程层一致，跨层转换走 `convert_mapping`：
+
+```bash
+node mcp-server/dist/cli.js convert_mapping --from=yarn --to=intermediary --platform=fabric \
+  --version=1.21.1 --ownerClass=net/minecraft/entity/LivingEntity \
+  --memberName=getHealth --memberKind=method --accessLines=true
+```
+
+该工具产出的行与 `validate_aw` 用的是同一套解析器自检（`selfCheckOk`），
+取不到成员名或描述符时行内留 `<TODO…>` 且 `complete:false`，不要手写凑一行。
 ## 与 Forge Mixin 的区别
 
 | 维度 | Forge | Fabric |

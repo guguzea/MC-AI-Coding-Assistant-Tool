@@ -1,8 +1,10 @@
 > 来源：https://learn.microsoft.com/en-us/minecraft/creator/reference/content/entityreference/examples/componentlist?view=minecraft-bedrock-stable
-> 抓取时间：2026-09-24T02:07:30.731Z
+> 抓取时间：2026-09-27T06:36:00.424Z
 > 警告：此文档可能滞后于当前正式版
 
 # Entity Components Documentation
+
+ Feedback
 
 | Entity Components | Description |
 | --- | --- |
@@ -219,6 +221,6 @@ These components are either deprecated or internal to Minecraft and not usable i
 | --- | --- |
 | scaffolding_climber | Allows the player to detect and manuever on the scaffolding block. |
 
-## Feedback
+ Ask Learn
 
- Want to try using Ask Learn to clarify or guide you through this topic?
+ Ask Learn

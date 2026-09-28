@@ -28,7 +28,7 @@ import {
   versionNotFoundResult,
 } from "../platform-data.js";
 import { semanticSearch } from "../semantic/search.js";
-import { mergeSemanticResults, joinSearchWarnings, withDocsFallbackFields, annotateVerbatim, limitWindowOf, limitClampWarning } from "../search-utils.js";
+import { mergeSemanticResultsWithPool, poolFieldsOf, joinSearchWarnings, withDocsFallbackFields, annotateVerbatim, limitWindowOf, limitClampWarning } from "../search-utils.js";
 import { missingSemanticDbWarning, semanticStaleSearchWarning } from "../semantic/status.js";
 import { knowledgeVersion } from "../../platform-pack/catalog.js";
 import {
@@ -401,9 +401,10 @@ export const searchFabricDocsSchema = {
 
 verbatim 逐字支撑位（2026-09-20）：
   - query 为**单个标识符形态**（类名 / 方法名 / FQCN / 资源路径；散文与 OR 分组不判）时，
-    每条命中带 verbatim 字段：true = 该名字在该页正文逐字出现；false = 读到正文且确认没有；**没有该字段 = 未判定**（薄档 / primer / porting 旁路 / 取不到正文），未判定不等于「语料没有」。
-  - 顶层 verbatim_summary{term,judged,hits}；hits=0 时结果仍可能相关，但**不构成该名字存在的证据**，需要签名请 get_*_doc_full 读正文，或留 // TODO(未核实)。
+    每条命中带 verbatim 字段：true = 该名字在该页正文逐字出现（**点号 / FQCN 查询按末段类名判这一层**，逐行的层写在 verbatimOn、整体构成写在 verbatim_summary.matchedOn：term／tail／mixed；tail 表示语料可能压根没出现你输入的那串点号全名）；false = 读到正文且确认没有；**没有该字段 = 未判定**（薄档 / primer / porting 旁路 / 取不到正文），未判定不等于「语料没有」。
+  - 顶层 verbatim_summary{term,judged,hits,matchedOn}；hits=0 时结果仍可能相关，但**不构成该名字存在的证据**，需要签名请 get_*_doc_full 读正文，或留 // TODO(未核实)。
   - 该位只做事后标注：命中集合、顺序与 total 与加它之前逐字相同，检索顺序（先语义搜索）不变。
+注意：本面的 total 是本次返回条数，不是语料命中总数，且随 limit 变；进窗前该面手里的候选池看同载荷里的 totalPool，是否被窗口截断看 truncated（= total < totalPool），两者**不传 limit 也在**。该池只到「本面在手可得」这一层，不等于语料全量（limitWindow.candidates 是窗口不是池）。
 Fabric 使用 Identifier 作为资源定位符，Registry.register() 注册物品/方块等，
 与 Forge 的 DeferredRegister 完全不同。`,
   inputSchema: z.object({
@@ -493,6 +494,9 @@ export async function searchFabricDocs(
     }
 
     let results: ReturnType<typeof getStore.prototype.searchIndex>;
+    // `L79` ②：池的两个来源 —— 语义融合池（在手并集，进窗前）与 porting 旁路追加数
+    let fusionPool: number | undefined;
+    let portingAdds = 0;
     const resolvedSource = source ?? "fabric-docs";
     const docsEmpty = fabricDocsIndexEmpty(version);
     let usedWikiFallback = false;
@@ -560,12 +564,15 @@ export async function searchFabricDocs(
         }
       }
       if (membership.size === 0) for (const r of results) membership.add(r.id);
-      results = mergeSemanticResults(results, semanticList, {
+      const fused = mergeSemanticResultsWithPool(results, semanticList, {
         tags,
         limit: buildLimit,
         version,
         allowedIds: membership,
-      }) as typeof results;
+      });
+      results = fused.rows as unknown as typeof results;
+      // `L79` ②：池 = 融合去重后的在手候选（进输出窗前），不是返回条数
+      fusionPool = fused.poolSize;
     }
     // 补齐 stale 警告（此前 fabric 独立路径未接入，仅 quilt 回退路径有）
     const staleWarn = joinSearchWarnings(
@@ -595,6 +602,7 @@ export async function searchFabricDocs(
       const asHits = results as Array<{ id: string }>;
       const seen = new Set(asHits.map((r) => r.id));
       const extras = portingHits.filter((p) => !seen.has(p.id));
+      portingAdds = extras.length;
       // porting/26.2 不得抢首位：仅追加在树内命中之后（含 develop_porting_index）
       results = [...asHits, ...extras].slice(0, portingLimit) as typeof results;
     }
@@ -607,6 +615,13 @@ export async function searchFabricDocs(
     if (limitWindow) {
       results = (results as unknown as Array<unknown>).slice(0, limitWindow.resultLimit) as typeof results;
     }
+    // `L79` ②：池的两种来源不能重复计数 —— 走语义腿时用「融合池 + porting 追加」，
+    // 没走语义腿时 `limitWindow.candidates` 本身已是截断前的在手条数（extras 已在里面）。
+    const returnedCount = (results as unknown as Array<unknown>).length;
+    const pool = poolFieldsOf(
+      fusionPool === undefined ? (limitWindow?.candidates ?? returnedCount) : fusionPool + portingAdds,
+      returnedCount,
+    );
 
     const extraWarn =
       requested === "26.2"
@@ -673,8 +688,9 @@ export async function searchFabricDocs(
                 vb.warning,
               ),
               total: (results as unknown as Array<unknown>).length,
+              ...pool,
               ...(vb.term
-                ? { verbatim_summary: { term: vb.term, judged: vb.judged, hits: vb.hits } }
+                ? { verbatim_summary: { term: vb.term, judged: vb.judged, hits: vb.hits, matchedOn: vb.matchedOn } }
                 : {}),
               results: (vb.rows as Array<Record<string, unknown>>).map((r) =>
                 publishResultSource(

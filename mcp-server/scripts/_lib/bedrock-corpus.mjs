@@ -193,8 +193,17 @@ const NOISE_LINES = [
   /^Copy Markdown$/i,
   /^Add to Plans$/i,
   /^Summarize this article for me$/i,
-  /^Ask Learn/i,
-  /^Feedback$/i,
+  // ── 2026-09-26 L62 收口：上面两条 `/^Ask Learn/i` 与 `/^Feedback$/i` **从未咬合过**（形同虚设）⇒ 换成盘上实形。
+  // 分母（现扫 `data/bedrock_stable/bedrock-docs/stable/processed/`，258 篇 .md，按 trim 后整行逐字计）：
+  //   `Want to try using Ask Learn to clarify or guide you through this topic?` = **254 行 / 254 篇**（盘上带一个前导空格，
+  //   旧式子要求行首是 `Ask Learn` ⇒ 永不匹配）；
+  //   `## Feedback` = **254 行 / 254 篇**（旧式子要求整行恰为 `Feedback` ⇒ 永不匹配）。
+  // 两形的文档集与 `CONTRIBUTING.md` `L62` 记的 254 个语义 chunk 同一批（85–172 字符、全在 minContentChars=200 以下，
+  // 所以只进 chunks/chunks_fts，没进 chunk_embeddings）。
+  // ⚠️ 只改转换器 **不等于**语料被洗净：`data/**` 是不可回改的上游逐字面，已落盘的 254 篇要等一次
+  //   `--reprocess`（默认只覆盖顶部 20 个 curated id）+ 索引重建才消失 ⇒ 见 `L62` 的「过滤与重建同批」。
+  /^Want to try using Ask Learn/i,
+  /^#{1,6} +Feedback$/i,
   /^Print$/i,
   /^Note$/i,
   /^Edit$/i,

@@ -1,8 +1,10 @@
 > 来源：https://learn.microsoft.com/en-us/minecraft/creator/documents/customblock?view=minecraft-bedrock-stable
-> 抓取时间：2026-09-24T02:07:31.632Z
+> 抓取时间：2026-09-27T06:36:00.430Z
 > 警告：此文档可能滞后于当前正式版
 
 # Custom Blocks Part 1: The Simplest Block
+
+ Feedback
 
 Minecraft's Behavior Packs and Resource Packs allow you to create amazing custom content for the game. Custom blocks are an excellent way for creators to start adding interactive content. Through this tutorial, you will build a custom die block (don't be scared, that just means a singular dice!) that has different textures and can be placed in the world by a player.
 
@@ -415,6 +417,6 @@ Now place your block anywhere you'd like. The die is red in hand and in the hotb
 
 Good luck!
 
-## Feedback
+ Ask Learn
 
- Want to try using Ask Learn to clarify or guide you through this topic?
+ Ask Learn

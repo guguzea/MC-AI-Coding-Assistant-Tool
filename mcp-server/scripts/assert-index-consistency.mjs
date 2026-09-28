@@ -9,8 +9,8 @@
  * - `chunks_fts` 有行但 `docs` 没有对应 doc_id ⇒ 命中能返回、`get_doc_full` 取不到正文；
  * - 嵌入层整段为 0（F107 的 8 个 fabric-wiki 库）⇒ 语义检索静默退成纯 FTS，排名和「有向量」时不一样，
  *     没有任何字段告诉调用方；
- * - yarn-mappings.sqlite 的 meta 计数与实际行数不符 ⇒ `methodCountOf` 优先读 meta，
- *     于是覆盖率、命中率与「本版无该成员」的判断全按过期数字说话。
+ * - yarn-mappings.sqlite 的 meta 计数与表内实数不符 ⇒ 读侧 `methodCountOf`（2026-09-26 起优先读
+ *     `meta.storedMethodCount`）与「本版无该成员」的判断全按过期数字说话；
  *
  * 两层结构（与 G1/G2/G3 同形态）：
  *  A. 内容层（任何数据根都跑，纯规则；`MC_SKILL_INDEX_TEST_ROOT` 指假根时只跑这层）
@@ -26,11 +26,15 @@
  *     A5 `embedded==0 && chunks>0` 与 `chunks==0` 两类降级只许逐条躺在存量台账里；
  *     A6 索引目录旁不得残留 `db.sqlite.tmp-*` / `*-journal`（半截事务文件会被下一次构建当旧库读）；
  *        残留只许登记在 `DEBT_RESIDUE`，本门**不删**（删除是数据拥有者的动作）；
- *     A7 每个 yarn-mappings.sqlite：meta.classCount / methodCount / fieldCount 必须等于表内实际行数，
- *        成员数按读侧口径「methods 有行用它，否则 searge_*」算（mcp-csv-era 全在 searge_*，
- *        forge-srg/tsrg 的 searge_* 又是另一批行 ⇒ 相加会虚高，只能二选一）；
- *        仍不符的只许逐条躺在 `DEBT_MAPPING_COUNT`（键 pack|kind|meta|实际），因为读侧 `methodCountOf`
- *        直接信 meta，虚报的覆盖数没有任何地方会发现；schemaVersion>=3 还必须有 idx_*_official 索引。
+ *     A7 每个 yarn-mappings.sqlite 的覆盖数口径 = **表内实数**（2026-09-26 改判据）：
+ *        ① 首判 `meta.stored{Class,Method,Field}Count == 表内行数`（tolerance 0）；
+ *        ② `meta.{class,method,field}Count` 是**源行数**（含按设计不入库的 `<init>`/`<clinit>` 与主键塌行），
+ *           只许 ≥ 表内实数，方向写反即红；
+ *        ③ 只有**没有 stored 键的旧库**才回落「拿 *Count 比行数」，那种不符必须逐条躺 `DEBT_MAPPING_COUNT`
+ *           （现 0 条：最后一档 `forge_1.13.2` 已于 2026-09-26 用 `--write` 重建、补上 stored 键）；
+ *           表空的档（mcp-csv-era 成员全在 searge_*）
+ *           按 searge 行数比，读侧 `methodCountOf` 已改为优先读 stored ⇒ 虚报的覆盖数没有下游；
+ *        schemaVersion>=3 还必须有 idx_*_official 索引。
  *  B. 台账层（只跑真数据根）
  *     条目数、Σchunks、Σembedded、逐平台 {条目, chunks, embedded}、降级清单、残留清单、
  *     逐档 yarn 行数与「有 named 名」计数。**精确钉死**，多一条少一条都红。
@@ -91,10 +95,15 @@ const LEDGER_SUM = {
   // bedrock-docs chunks 5054→5312（+258）、embedded 3291→3374（+83）；scriptapi 树**未重建**
   // （实测其盘上 0 页含表分隔行、0 chunk 含页脚噪音，该趟写不进它）⇒ 分面 5312+9878=15190、
   // 3374+1166=4540，顶层 51275→51533 / 31774→31857。上面 ⑤ 那组数只作拆树当时的历史值读。
+  // ⑦（2026-09-27 L62 页脚 chrome 收口，用户授权写批次）：20 篇 curated 页按修好的 NOISE_LINES 重处理
+  // （逐页净 −52 B 页脚，20/20 全中）+ 重建 bedrock-docs **单树**（不带 --force ⇒ scriptapi 624 篇/9878 chunks
+  // 守恒未动）⇒ 该树 chunks 5312→5295、embedded 3374→3375；分面 bedrock 15190→15173 / 4540→4541，
+  // 顶层 51533→51516 / 31857→31858。**含页脚签名（`Additional resources`）的 chunk 254→1**；净 chunk 只减 17
+  // 是因为其余 chrome 原本附着在正文 chunk 上（内容被清掉、chunk 本体还在）⇒ 「254」是污染面读数，不是待删块数。
   // 重签路径 = 本门 `MC_SKILL_INDEX_RELEDGER=1`，但该分支**只打印新台账不落盘** ⇒ 数字须按打印值手抄。
-  entries: 61, chunks: 51533, embedded: 31857,
+  entries: 61, chunks: 51516, embedded: 31858,
   perPlatform: {
-    "bedrock": { entries: 2, chunks: 15190, embedded: 4540 },
+    "bedrock": { entries: 2, chunks: 15173, embedded: 4541 },
     "fabric": { entries: 27, chunks: 7935, embedded: 5898 },
     "forge": { entries: 10, chunks: 7230, embedded: 5486 },
     "liteloader": { entries: 3, chunks: 464, embedded: 384 },
@@ -129,13 +138,18 @@ const DEBT_EMPTY_INDEX = [
 // 本门 drain check 逐条点名后按纪律处理 —— 「债务清单**清空而不删除**：留空数组 = 零容忍，复发才响亮」。
 const DEBT_RESIDUE = [];
 // A7 存量债务：yarn 库 meta 计数 ≠ 表内实际行数（键 pack|kind|meta|实际；读侧直接信 meta ⇒ 覆盖数虚报）
-const DEBT_MAPPING_COUNT = [
-  "fabric_1.19.4|methodCount|39820|36036",
-  "fabric_1.20.1|methodCount|40911|36992",
-  "fabric_1.20.4|methodCount|43440|39370",
-  "forge_1.13.2|fieldCount|14542|14536",
-  "forge_1.13.2|methodCount|26093|26024",
-];
+// **2026-09-26 改判据后 5 条 → 2 条 → 0 条**，数组刻意保留：旧判据拿 `meta.*Count`（源行数）比表内实数，把那 5 条
+// 记成债务，其中 3 条 fabric 的差额 3,784 / 3,919 / 4,070 正是 `_lib/build-yarn-sqlite.mjs` 插入循环里
+// 按设计跳过的 `<init>`/`<clinit>` 行，另 2 条 `forge_1.13.2` 缺 `meta.stored*Count` 键（tsrg 分支当时没写）。
+// 现判据改成首判 `meta.stored*Count == 行数`（生产者各分支都写这组键）、`meta.*Count` 只许 ≥ 行数，
+// 读侧 `methodCountOf` 也优先读 stored ⇒ 六类形状都不再需要台账。
+// 最后 2 条的清法已执行（2026-09-26，用户点头写 `data/**`）：
+// `node mcp-server/scripts/_lib/build-yarn-sqlite.mjs <仓库绝对路径>/data/forge_1.13.2/mappings --write`
+// 重建该库 ⇒ meta 新增 `storedClassCount:3993 / storedMethodCount:26024 / storedFieldCount:14536`，
+// 与表内行数逐一把子相等；行数、`sourceSha256`、`schemaVersion` 与重建前**逐项相同**（只有 builtAt 与
+// 新增三键变了），B 层 `LEDGER_YARN` 因此无需重算。保留空数组的意义：**没有 stored 键的旧库**
+// 若又出现 `*Count ≠ 行数`，仍必须显式登记在这里，不许静默绿。
+const DEBT_MAPPING_COUNT = [];
 // B 层：逐档 yarn-mappings.sqlite 实际行数 + official（mojmap）覆盖行数 + schemaVersion
 // 2026-09-19 重算（MC_SKILL_INDEX_RELEDGER=1）：N-11.2 v2 named 修复落库后 unresolved 大幅回落
 // （fields 全 13 档 ↓，methods 10 档 ↓，1.14.4/1.16.5/1.17.1 的 methods 本就无 v1 有损）；其余键逐字未变。
@@ -420,19 +434,39 @@ for (const abs of yarnFiles.sort()) {
   const seargeFields = countOf(db, "searge_fields");
   db.close();
   const pos = (n) => (n > 0 ? n : 0);
-  const effM = pos(methods) > 0 ? pos(methods) : pos(seargeMethods);
-  const effF = pos(fields) > 0 ? pos(fields) : pos(seargeFields);
-  const trio = (kind, want, got, where) => {
-    if (want === undefined || Number(want) === got) return;
+  // 口径（2026-09-26 改判据）：**覆盖数 = 表内实数**，所以首判 `meta.stored*Count == 行数`（tolerance 0）。
+  // `meta.*Count` 是**源行数**：yarn tiny 在 1.19.4/1.20.1/1.20.4 分别带 3,784/3,919/4,070 行
+  // `<init>`/`<clinit>`，按设计不入库（`_lib/build-yarn-sqlite.mjs` 插入循环的注释），tsrg/srg 侧同理
+  // ⇒ 它只许 ≥ 表内实数，不得反过来当覆盖数读（读侧 `methodCountOf` 已改为优先读 stored）。
+  // 只有**没有 stored 键的旧库**才退回「拿 *Count 比行数」，那种不符仍必须逐条躺 DEBT_MAPPING_COUNT。
+  const pushDebt = (kind, want, got, where) => {
     const key = `${pack}|${kind}|${want}|${got}`;
     stat.mappingDebt.push(key);
     if (!DEBT_MAPPING_COUNT.includes(key)) {
       fail(`${pack}: meta.${kind} ${want} ≠ ${where} 实际 ${got} ⇒ 覆盖数虚报（读侧直接信 meta）；不在存量台账`);
     }
   };
-  trio("classCount", meta.classCount, pos(classes), "classes");
-  trio("methodCount", meta.methodCount, effM, pos(methods) > 0 ? "methods" : "searge_methods");
-  trio("fieldCount", meta.fieldCount, effF, pos(fields) > 0 ? "fields" : "searge_fields");
+  const trio = (kind, storedKind, want, rows, seargeRows, where) => {
+    if (!(rows > 0)) {
+      // 表空 = mcp-csv 那批（成员全在 searge_*）⇒ 按原口径比 searge 行数
+      if (want !== undefined && Number(want) !== seargeRows) pushDebt(kind, want, seargeRows, `${where}（表空，比 searge_*）`);
+      return;
+    }
+    const s = meta[storedKind] === undefined || meta[storedKind] === null ? undefined : Number(meta[storedKind]);
+    if (s === undefined) {
+      if (want !== undefined && Number(want) !== rows) pushDebt(kind, want, rows, where);
+      return;
+    }
+    if (s !== rows) {
+      fail(`${pack}: meta.${storedKind} ${s} ≠ ${where} 实际行数 ${rows} ⇒ stored 计数键与表内实数不符（要么库被手改，要么生产者又开始照抄源行数）`);
+    }
+    if (want !== undefined && Number(want) < rows) {
+      fail(`${pack}: meta.${kind}（源行数 ${want}）< 表内 ${rows} ⇒ 源行数不可能少于入库数`);
+    }
+  };
+  trio("classCount", "storedClassCount", meta.classCount, pos(classes), 0, "classes");
+  trio("methodCount", "storedMethodCount", meta.methodCount, pos(methods), pos(seargeMethods), pos(methods) > 0 ? "methods" : "searge_methods");
+  trio("fieldCount", "storedFieldCount", meta.fieldCount, pos(fields), pos(seargeFields), pos(fields) > 0 ? "fields" : "searge_fields");
   if (Number(meta.schemaVersion ?? 0) >= 3) {
     for (const want of ["idx_methods_official", "idx_fields_official"]) {
       if (!idx.has(want)) fail(`${pack}: schema v${meta.schemaVersion} 却缺索引 ${want} ⇒ convert_mapping 反查只能吐 intermediary`);
@@ -546,6 +580,7 @@ console.log(
   `  assert-index-consistency(G4): ${entries.length} 库 · Σchunks ${stat.sum.chunks} · Σembedded ${stat.sum.embedded} · ` +
     `sha256 全对账 · 孤儿 chunk 0 · 降级 ${stat.ftsOnly.length} 纯FTS + ${stat.empty.length} 空库（全在存量台账） · ` +
     `残留 ${disk.residue.length}（台账登记，门不删） · yarn ${Object.keys(stat.yarn).length} 档 · ` +
-    `meta≠实际计数 ${[...new Set(stat.mappingDebt)].length} 条（全在存量台账，S22 映射重建时清空）` +
+    `meta≠实际计数 ${[...new Set(stat.mappingDebt)].length} 条` +
+    ([...new Set(stat.mappingDebt)].length ? "（须逐条躺在存量台账里）" : "（台账已清空 ⇒ 该形状零容忍）") +
     (LEDGER_MODE ? " · 台账层已跑" : " · 内容层（假根）"),
 );

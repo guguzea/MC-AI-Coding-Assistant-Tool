@@ -68,6 +68,8 @@ export type ObfuscatedThreeWayHit =
       ambiguous: true;
       kind: "method" | "field";
       rows: ObfuscatedMemberRow[];
+      /** L77 续趟：上游 lookupByObfuscated 的窗口是 LIMIT 20 ⇒ 同条件真池条数必须跟着透传 */
+      rowsTotal?: number;
       mappingEra?: string | null;
       notes?: string[];
     }
@@ -125,6 +127,7 @@ export function resolveObfuscatedThreeWay(version: string, token: string): Obfus
       ambiguous: true,
       kind: "method",
       rows: methodHits.rows,
+      rowsTotal: methodHits.rowsTotal,
       mappingEra: methodHits.mappingEra,
       notes: methodHits.notes,
     };
@@ -146,6 +149,7 @@ export function resolveObfuscatedThreeWay(version: string, token: string): Obfus
       ambiguous: true,
       kind: "field",
       rows: fieldHits.rows,
+      rowsTotal: fieldHits.rowsTotal,
       mappingEra: fieldHits.mappingEra,
       notes: fieldHits.notes,
     };

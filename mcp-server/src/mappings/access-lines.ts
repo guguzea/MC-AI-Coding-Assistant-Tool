@@ -97,7 +97,7 @@ function toDottedInner(name: string): string {
   return name.trim().replace(/\//g, ".");
 }
 
-function isSrgName(name: string | null | undefined): boolean {
+export function isSrgName(name: string | null | undefined): boolean {
   return Boolean(name && SRG_SHAPE_RE.test(name.trim()));
 }
 
@@ -308,6 +308,11 @@ export function buildAccessLines(req: AccessLineRequest): AccessLinesResult {
       );
     }
     headers.aw = `${awHeader}（或 Loader 0.18.0+ / Loom 1.12+ 的 classTweaker v1 named，见 index.md:16,26）`;
+    notes.push(
+      "生成面收窄：本工具只出 `accessible` 条目；`validate_aw` 认的 `extendable` / `mutable` / "
+        + "`transitive-*` 并列形与两操作数指令 `inject-interface` / `extend-enum` 不代生成，需手写"
+        + "（校验 ⊃ 生成，见 src/mixin/access-widener.ts:42,45,113）。",
+    );
     if (req.memberKind === "class") {
       const line = `accessible    class    ${slashed}`;
       const sc = selfCheckAw(awHeader, line);

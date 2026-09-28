@@ -35,7 +35,9 @@ const psProbe = spawnSync(
   { encoding: "utf8", windowsHide: true },
 );
 if (psProbe.status !== 0 || !/\d+\.\d+/.test(psProbe.stdout || "")) {
-  console.log("assert-sync-normalizers: skip（未找到 powershell.exe —— 本 gate 依赖 Windows PowerShell）");
+  // 统一 skip 标记（C3，2026-09-27）：缺依赖 ⇒ rc 仍 0（裁定：skip ≠ fail），但必须打成可 grep 的形状，
+  // 否则一句散文式 "skip" 混在满屏绿里，门链收尾读不出"本轮有几道门根本没执法"。
+  console.log("SKIP(no-powershell) gate=assert-sync-normalizers —— 本轮不执法，rc 仍 0（本 gate 依赖 Windows PowerShell 跑 scripts/sync-skills.ps1）");
   process.exit(0);
 }
 const psVersion = (psProbe.stdout.match(/\d+\.\d+/) || ["?"])[0];

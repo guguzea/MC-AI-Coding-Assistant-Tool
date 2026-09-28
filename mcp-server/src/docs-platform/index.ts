@@ -70,6 +70,8 @@ export {
   getCommunityDocSummarySchema,
   getCommunityDocFull,
   getCommunityDocFullSchema,
+  COMMUNITY_SEARCH_DEFAULT_LIMIT,
+  COMMUNITY_SEARCH_LIMIT_MAX,
 } from "./community/index.js";
 
 export { CommunityDocNotFoundError } from "./community/store.js";

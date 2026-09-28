@@ -26,6 +26,10 @@ export interface QueryRegistryResult {
   availableRegistries?: string[];
   relatedTools: string[];
   notes: string[];
+  /** L76②：同一 WHERE（exact ∪ like）的真命中条数。命名与 doc 面的 `total`（= 本次返回条数）刻意不同，见 `L79` */
+  totalMatches?: number;
+  /** L76②：`matches.length < totalMatches` ⇒ 本次被 `limit` 截了（排序仍看的是全池） */
+  truncated?: boolean;
   action?: ReturnType<typeof actionable>;
   /** 查询串像 Java 类/成员名（`registry` 工具仍按 registry id 匹配了一次）。 */
   looksLikeJavaIdentifier?: boolean;
@@ -162,7 +166,8 @@ export function queryRegistry(input: QueryRegistryInput): QueryRegistryResult {
   }
 
   if (looksLikeJavaIdentifier(query)) {
-    const matches = searchRegistryEntries(version, input.registry, query, input.limit ?? 25);
+    const hit = searchRegistryEntries(version, input.registry, query, input.limit ?? 25);
+    const matches = hit.rows;
     const hint = actionable(
       ActionCodes.INVALID_INPUT,
       "查询看起来像 Java 类/成员名，而非 registry id",
@@ -176,6 +181,8 @@ export function queryRegistry(input: QueryRegistryInput): QueryRegistryResult {
     const payload: QueryRegistryResult = {
       found: matches.length > 0,
       matches,
+      totalMatches: hit.totalMatches,
+      truncated: matches.length < hit.totalMatches,
       nameLayer: "registry_id",
       version,
       relatedTools,
@@ -188,10 +195,13 @@ export function queryRegistry(input: QueryRegistryInput): QueryRegistryResult {
     return withAction(payload, hint);
   }
 
-  const matches = searchRegistryEntries(version, input.registry, query, input.limit ?? 25);
+  const hit = searchRegistryEntries(version, input.registry, query, input.limit ?? 25);
+  const matches = hit.rows;
   return {
     found: matches.length > 0,
     matches,
+    totalMatches: hit.totalMatches,
+    truncated: matches.length < hit.totalMatches,
     nameLayer: "registry_id",
     version,
     relatedTools,

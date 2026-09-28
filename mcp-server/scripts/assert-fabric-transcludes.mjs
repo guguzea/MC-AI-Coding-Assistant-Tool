@@ -22,9 +22,21 @@
  *     截的首段，会把裸标记当正文交给模型。本腿造真 store 调 `loadSummary` / `loadFullDoc`，
  *     判服务出的响应（读文件比对字符串看不见「清洗调用被摘掉」这种变异）；另配两条合成串
  *     单元腿，语料哪天重烘焙（靶子归 0）也不失去判据。
+ *  D. 展开痕迹（2026-09-26 补，给「transclude 残留」一个可复算的载体）：把每处展开的**块体**分类：
+ *     D1 `Not Found:` 行 = 取件目标没落盘（运行时把本机绝对路径 + Not Found 交给模型）⇒ **零容忍**；
+ *     D2 「展开后仍有裸 `<<< @/` 标记」**不在本腿实现**：A1 已经在 processed 侧调运行时的
+ *        `hasUnexpandedMarker`（走它自己的 `ANGLE_RE`、含围栏判定），门里再写一份只会两边漂移。
+ *        实测：把读者的 angle 分支摘掉（生产侧投毒，2026-09-26）⇒ 红的是 A1 那条，不是新腿。
+ *     D3 空展开（块体逐字 = `NO_LINES_MATCHED`）= 上游 VitePress 同形，语料永不改动 ⇒ **不判红，
+ *        但逐字钉在 `LEDGER_EMPTY`**：region 被上游改名 / 镜像换件，多一处少一处都要从这里响。
+ *        基线只由 `MC_SKILL_TRANSCLUDE_RELEDGER=1` 现扫打印后整块粘回，禁止手抄（抄错一次就已经是漂移）。
+ *     实测口径（2026-09-26 现扫全部 15 档 / 1023 个 .md / raw+processed 两棵树，全部走生产解析器）：
+ *     `@[code]` 站点 3344、展开 3344、missing 0、malformed 0；`<<< @/` 站点 1266；D1 0 处；
+ *     D3 20 处 = 10 个逐字来源 × 2 棵树。
  *
- * 投毒自检在 `test-scripts.mjs`：假根里删一个 reference 文件 / 改一个字节 / 删一行 processed 标记，
- * 本 gate 必须立刻红并且点名该目标。
+ * 投毒自检在 `test-scripts.mjs`：假根里删一个 reference 文件 / 改一个字节 / 删一行 processed 标记 /
+ * 注入一个取不到的 `<<< @/…` 目标 / 造一处不在基线里的空展开，本 gate 必须立刻红并且**逐字点名该目标**
+ * （断言按 target 串匹配，不按「红了就算」的形状匹配 —— 形状断言换个桶也能红，抓不到「报错了但报错的不是它」）。
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -48,6 +60,7 @@ const {
   referenceAvailable,
   scanTranscludeSites,
   stripTranscludeMarkers,
+  NO_LINES_MATCHED,
   upstreamRelPathFor,
   referenceLocalPath,
 } = runtime;
@@ -72,6 +85,22 @@ const EXPECTED_PROCESSED_SITES = {
 const EXPECTED_TOTAL_SITES = 3344;
 const EXPECTED_PROCESSED_TOTAL = 1672;
 const EXPECTED_UNIQUE_TARGETS = 669;
+
+// D3 台账：键 = `fabric_<ver>|<source 注释里的 target + attrs>`，值 = 出现次数（raw+processed 两棵树合计）。
+// 只由本门 `MC_SKILL_TRANSCLUDE_RELEDGER=1` 现扫打印后整块粘回，禁止手改数字（抄错 = 漂移）。
+// 现签（2026-09-26T16:30:58Z 现扫，10 键 · Σ20 处 · Not Found 0 · 裸角度标记 0）。粘回后已复跑：rc=0。
+const LEDGER_EMPTY = {
+  "fabric_1.20.4|@/reference/1.20.4/src/client/java/com/example/docs/client/command/ExampleModClientCommands.java lang=java transcludeWith=:::12": 2,
+  "fabric_1.21.10|@/.github/workflows/build.yml transcludeWith=:::automatic-testing:game-test:3": 2,
+  "fabric_1.21.10|@/reference/latest/src/client/java/com/example/docs/ExampleModClient.java lang=java transcludeWith=#tooltip_provider_client": 2,
+  "fabric_1.21.10|@/reference/latest/src/main/java/com/example/docs/component/ComponentWithTooltip.java transcludeWith=::1": 2,
+  "fabric_1.21.10|@/reference/latest/src/main/java/com/example/docs/ExampleMod.java lang=java transcludeWith=#tooltip_provider": 2,
+  "fabric_1.21.11|@/.github/workflows/build.yaml transcludeWith=:::automatic-testing:game-test:3": 2,
+  "fabric_1.21.8|@/.github/workflows/build.yml lang=yaml transcludeWith=:::automatic-testing:game-test:3": 2,
+  "fabric_1.21.8|@/reference/latest/src/client/java/com/example/docs/ExampleModClient.java lang=java transcludeWith=#tooltip_provider_client": 2,
+  "fabric_1.21.8|@/reference/latest/src/main/java/com/example/docs/component/ComponentWithTooltip.java transcludeWith=::1": 2,
+  "fabric_1.21.8|@/reference/latest/src/main/java/com/example/docs/ExampleMod.java lang=java transcludeWith=#tooltip_provider": 2,
+};
 
 const failures = [];
 const sha256 = (buf) => crypto.createHash("sha256").update(buf).digest("hex");
@@ -450,6 +479,71 @@ if (storeRuntime) {
   }
 }
 
+// ── D. 展开痕迹（D1 Not Found 零容忍 / D3 空展开基线）─────────────────────────
+// 两类都从**同一份生产展开结果**里读，不另写解析器：门自己再实现一遍「区段名在不在」就会出现
+// 「门绿着、模型读到空围栏」（`assert-corpus-faithfulness.mjs:457-469` 对 `<<<` 一家已经这么说过，
+// 本腿补的是 `@[code … transcludeWith=…]` 一家 —— A3 在 `:297` 对 `No lines matched.` 是直接 continue 的）。
+const emptySwept = {};
+let notFoundLines = 0;
+for (const { version, packRoot } of packs) {
+  const pack = `fabric_${version}`;
+  const provenance = loadReferenceProvenance(packRoot);
+  for (const { dir } of findTrees(packRoot)) {
+    for (const file of listMarkdown(dir)) {
+      const text = fs.readFileSync(file, "utf8");
+      const res = expandTranscludes(text, packRoot, provenance);
+      // D1：运行时把取不到的目标渲染成「围栏里一行 `Not Found: <绝对路径>`」，模型读到的是本机路径 +
+      // 一句 Not Found。A1 的 `res.missing` 只收 `@[code]` 一家（`<<<` 另计 angleMissing，
+      // 见 src/docs-platform/fabric/transclude.ts 的 angle 字段），所以这条通道此前无人看 ⇒ 零容忍。
+      for (const line of res.content.split("\n")) {
+        if (/^Not Found:/.test(line)) {
+          notFoundLines++;
+          fail(
+            `${rel(file)}: 展开结果里有「${line}」⇒ 取件目标没落盘，` +
+              `运行时把本机绝对路径 + Not Found 直接交给模型（跑 scripts/fetch-fabric-transcludes.mjs --write 补件）`,
+          );
+        }
+      }
+      for (const b of parseExpandedBlocks(res.content)) {
+        if (b.body !== NO_LINES_MATCHED) continue;
+        const key = `${pack}|${b.target}${b.attrs ? ` ${b.attrs}` : ""}`;
+        emptySwept[key] = (emptySwept[key] ?? 0) + 1;
+      }
+    }
+  }
+}
+for (const [k, n] of Object.entries(emptySwept).sort()) {
+  if (!(k in LEDGER_EMPTY)) {
+    fail(
+      `空展开新冒出来（不在基线里）${k} ×${n} ⇒ 上游把区段名改了 / 镜像换件了。` +
+        `先核那一处展开该不该是空的，再 \`MC_SKILL_TRANSCLUDE_RELEDGER=1 node scripts/${path.basename(fileURLToPath(import.meta.url))}\` 重签`,
+    );
+  } else if (LEDGER_EMPTY[k] !== n) {
+    fail(`空展开计数漂移 ${k}: 基线 ${LEDGER_EMPTY[k]}，实扫 ${n} ⇒ 同上，重签前先想清楚为什么变了`);
+  }
+}
+// 反向腿只在真数据根跑：假根只有一个档，拿全量基线比必然假红。
+if (!TEST_ROOT) {
+  for (const k of Object.keys(LEDGER_EMPTY).sort()) {
+    if (!emptySwept[k]) fail(`基线里的空展开 ${k} 已不在实扫里 ⇒ 显式重签基线，别留幽灵条目`);
+  }
+}
+if (process.env.MC_SKILL_TRANSCLUDE_RELEDGER) {
+  if (TEST_ROOT) {
+    console.error("MC_SKILL_TRANSCLUDE_RELEDGER 不许配 MC_SKILL_TRANSCLUDE_TEST_ROOT —— 假根算出来的台账不能签进仓库");
+    process.exit(1);
+  }
+  const lit = Object.entries(emptySwept)
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([k, n]) => `  ${JSON.stringify(k)}: ${n},`)
+    .join("\n");
+  console.log(
+    `// MC_SKILL_TRANSCLUDE_RELEDGER=1 现扫（${new Date().toISOString()}）：${Object.keys(emptySwept).length} 键 · ` +
+      `Σ${Object.values(emptySwept).reduce((a, b) => a + b, 0)} 处 · Not Found ${notFoundLines}\n` +
+      `const LEDGER_EMPTY = {\n${lit}\n};`,
+  );
+}
+
 const summary = {
   dataDir: rel(DATA_DIR),
   packs: packs.length,
@@ -461,6 +555,9 @@ const summary = {
   summaryTargets: summaryTargets.length,
   summarySwept,
   summaryLeaks,
+  notFoundLines,
+  emptySweptTotal: Object.values(emptySwept).reduce((a, b) => a + b, 0),
+  emptyLedgerKeys: Object.keys(LEDGER_EMPTY).length,
 };
 
 if (failures.length > 0) {
@@ -473,5 +570,6 @@ if (failures.length > 0) {
 console.log(
   `  assert-fabric-transcludes: ${packs.length} 档 · processed 占位符 ${census.processedSites} 处全部展开 · ` +
     `唯一目标 ${census.uniqueTargets.size} · 台账 ${summary.ledger} · ` +
-    `摘要位 靶子 ${summary.summaryTargets} 页 / 扫出字段 ${summary.summarySwept} 条 / 残留 ${summary.summaryLeaks} 条`,
+    `摘要位 靶子 ${summary.summaryTargets} 页 / 扫出字段 ${summary.summarySwept} 条 / 残留 ${summary.summaryLeaks} 条 · ` +
+    `展开痕迹 Not Found ${summary.notFoundLines} / 空展开 ${summary.emptySweptTotal} 处（基线 ${summary.emptyLedgerKeys} 键）`,
 );

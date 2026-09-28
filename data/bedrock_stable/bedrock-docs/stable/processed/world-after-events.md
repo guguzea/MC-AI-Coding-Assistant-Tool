@@ -1,8 +1,10 @@
 > 来源：https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/worldafterevents?view=minecraft-bedrock-stable
-> 抓取时间：2026-09-24T02:07:36.868Z
+> 抓取时间：2026-09-27T06:36:00.468Z
 > 警告：此文档可能滞后于当前正式版
 
 # WorldAfterEvents Class
+
+ Feedback
 
 Contains a set of events that are available across the scope of the World.
 
@@ -872,6 +874,6 @@ Notes:
 
 - This property can be read in early-execution mode.
 
-## Feedback
+ Ask Learn
 
- Want to try using Ask Learn to clarify or guide you through this topic?
+ Ask Learn

@@ -1,8 +1,10 @@
 > 来源：https://learn.microsoft.com/en-us/minecraft/creator/documents/molang/introduction?view=minecraft-bedrock-stable
-> 抓取时间：2026-09-24T02:07:33.871Z
+> 抓取时间：2026-09-27T06:36:00.448Z
 > 警告：此文档可能滞后于当前正式版
 
 # An Introduction to Molang
+
+ Feedback
 
 When you're developing add-ons for Minecraft, sometimes you need something that's more powerful than just setting properties and keys to specific values in JSON files, but you don't need the power of full-fledged JavaScript. You want something in-between that lets you add a little math, or query the state of a specific entity. That's where Molang, a Minecraft-specific scripting language, comes in. You can use Molang in just about any JSON file that goes in an add-on, usually Behavior and Resource Packs. Typically, it is just used one or two lines at a time, although some creators have written pages and pages of it to do incredible things. (Of course they did!)
 
@@ -184,6 +186,6 @@ Now you've learned one way to use Molang to harness the power of math and logica
 
 - Molang Query Functions
 
-## Feedback
+ Ask Learn
 
- Want to try using Ask Learn to clarify or guide you through this topic?
+ Ask Learn

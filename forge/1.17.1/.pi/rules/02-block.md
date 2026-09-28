@@ -140,7 +140,7 @@ public class MyBlock extends Block {
     }
 
     @Override
-    public void wasExploded(BlockState state, Level level, BlockPos pos, Explosion explosion) {
+    public void wasExploded(Level level, BlockPos pos, Explosion explosion) {
         // 方块被爆炸破坏时的逻辑
     }
 }

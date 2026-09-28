@@ -24,6 +24,7 @@ import { isUnobfuscatedMcVersion, UNOBFUSCATED_MAPPING_HINT } from "./unobfuscat
 import { ownGet } from "../utils/own-record.js";
 import { isSafeVersionSegment } from "../utils/minecraft-version.js";
 import { parseJsonUtf8 } from "../utils/json-utf8.js";
+import { lookupMojmapClassPair } from "./mojmap-pairs.js";
 
 export interface MappingQuery {
   from: MappingLayer;
@@ -66,6 +67,8 @@ export interface MappingResult {
     intermediary?: string | null;
     owner?: string;
   }>;
+  /** L77 ①（透传自查询层）：同条件真池条数；缺位 = 该发射点还发不出真数（见 assert-mapping-candidate-total 的豁免清单） */
+  candidatesTotal?: number;
   mappingEra?: string | null;
   resultKind?: string;
   fallbackUsed?: boolean;
@@ -685,7 +688,13 @@ export function convertMapping(query: MappingQuery): MappingResult {
         })),
         mappingEra: hit.mappingEra ?? era,
         mappingType: hit.kind,
-        notes: hit.notes,
+        // L77 续趟（2026-09-27 裁定「② 补腿」）：上游 lookupByObfuscated 的窗是 LIMIT 20，
+        // 不透传 rowsTotal 的话这份 candidates 会被读成全量清单。
+        candidatesTotal: hit.rowsTotal,
+        notes:
+          (hit.rowsTotal ?? 0) > hit.rows.length
+            ? [...(hit.notes ?? []), `清单已按窗口截断：本条只列 ${hit.rows.length} 条，同条件真池 ${hit.rowsTotal} 条`]
+            : hit.notes,
         schemaVersion,
       });
     }
@@ -736,7 +745,11 @@ export function convertMapping(query: MappingQuery): MappingResult {
           })),
           mappingEra: hit.mappingEra ?? era,
           mappingType: "field",
-          notes: hit.notes,
+          candidatesTotal: hit.rowsTotal,
+          notes:
+            (hit.rowsTotal ?? 0) > hit.rows.length
+              ? [...(hit.notes ?? []), `清单已按窗口截断：本条只列 ${hit.rows.length} 条，同条件真池 ${hit.rowsTotal} 条`]
+              : hit.notes,
           schemaVersion,
         });
       }
@@ -761,6 +774,7 @@ export function convertMapping(query: MappingQuery): MappingResult {
       return fail(query, {
         ambiguous: true,
         candidates: looked.candidates,
+        candidatesTotal: looked.candidatesTotal,
         mappingEra: looked.mappingEra ?? era,
         mappingType: "field",
         notes: looked.notes,
@@ -882,7 +896,11 @@ export function convertMapping(query: MappingQuery): MappingResult {
           })),
           mappingEra: hit.mappingEra ?? era,
           mappingType: "method",
-          notes: hit.notes,
+          candidatesTotal: hit.rowsTotal,
+          notes:
+            (hit.rowsTotal ?? 0) > hit.rows.length
+              ? [...(hit.notes ?? []), `清单已按窗口截断：本条只列 ${hit.rows.length} 条，同条件真池 ${hit.rowsTotal} 条`]
+              : hit.notes,
           schemaVersion,
         });
       }
@@ -898,6 +916,7 @@ export function convertMapping(query: MappingQuery): MappingResult {
       return fail(query, {
         ambiguous: true,
         candidates: looked.candidates,
+        candidatesTotal: looked.candidatesTotal,
         mappingEra: looked.mappingEra ?? era,
         mappingType: "method",
         notes: looked.notes,
@@ -1023,6 +1042,56 @@ export function convertMapping(query: MappingQuery): MappingResult {
         notes: mojangHint.length ? [...yarn.notes, ...mojangHint] : yarn.notes,
         schemaVersion,
       };
+    }
+    if (from === "mojang") {
+      // 第二档出处（2026-09-27 裁定 乙）：SQLite 那条路已经查过且没命中，才点派生对照表。
+      // 现有成功路径一字不改 ⇒ 零回归；表只有类名三列，故 to 只认 yarn／obfuscated。
+      const p = lookupMojmapClassPair(version, memberName, to);
+      const layerNote = (total: number) =>
+        `第二档出处 = 派生对照表 data/_yarn-mojmap-pairs/（类名级 obf／mojmap／yarn + 两侧 FQCN，该表 ${total} 条，` +
+        `由 Mojang client.txt ⋈ yarn-mappings.sqlite 的 obf 短名 join 得出，逐件 sha 钉在 yarn-mojmap-pairs-provenance.json；无 intermediary 列）`;
+      if (p.status === "hit") {
+        return {
+          found: true,
+          original: memberName,
+          converted: to === "yarn" ? p.row.yarnFqcn.replace(/\//g, ".") : p.row.obf,
+          direction: `${from}→${to}`,
+          confidence: "high",
+          mappingType: "class",
+          memberKind: "class",
+          fallbackUsed: true,
+          mappingEra: era,
+          official: p.row.obf,
+          named: p.row.yarnFqcn,
+          notes: [...(yarn.notes ?? []), `${layerNote(p.total)}：${p.table} 命中 ${p.row.mojFqcn} → ${to === "yarn" ? p.row.yarnFqcn.replace(/\//g, ".") : p.row.obf}`],
+          schemaVersion,
+        };
+      }
+      if (p.status === "ambiguous") {
+        return fail(query, {
+          mappingType: "class",
+          mappingEra: era,
+          ambiguous: true,
+          candidatesTotal: p.rows.length,
+          candidates: p.rows.map((r) => ({ name: r.yarnFqcn.replace(/\//g, "."), descriptor: r.mojFqcn, official: r.obf })),
+          notes: [
+            ...(yarn.notes ?? []),
+            `${layerNote(p.total)}：mojmap 短名 ${memberName} 在该表里对应 ${p.rows.length} 个类（全部列出、未截断）⇒ 请改传点分 FQCN，禁止从中挑一条`,
+          ],
+          schemaVersion,
+        });
+      }
+      return fail(query, {
+        mappingType: "class",
+        mappingEra: era,
+        notes: [
+          ...(yarn.notes ?? []),
+          p.status === "no-table"
+            ? `第二档也无能为力：${p.reason}`
+            : `${layerNote(p.total)}：该表里同样没有 ${memberName} ⇒ 两张表都查过，才可以说「本档拿不到这个 mojmap 名」`,
+        ],
+        schemaVersion,
+      });
     }
     return fail(query, {
       mappingType: "class",

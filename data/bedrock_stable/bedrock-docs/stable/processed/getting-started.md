@@ -1,8 +1,10 @@
 > 来源：https://learn.microsoft.com/en-us/minecraft/creator/documents/gettingstarted?view=minecraft-bedrock-stable
-> 抓取时间：2026-09-24T02:07:27.928Z
+> 抓取时间：2026-09-27T06:36:00.392Z
 > 警告：此文档可能滞后于当前正式版
 
 # Getting Started with Add-On Development for Bedrock Edition
+
+ Feedback
 
 Whether you create them yourself or get them from another creator, Add-Ons are the first step on the journey of bringing greater levels of customization to Minecraft: Bedrock Edition. Add-ons allow players to transform the look of their worlds and even change the behavior of entities. For example, you can change the blast radius of a creeper and the texture it's wearing.
 
@@ -164,6 +166,6 @@ Alternatively, if you'd like to learn how to use commands, head on over to Getti
 
  Getting Started with Command Blocks
 
-## Feedback
+ Ask Learn
 
- Want to try using Ask Learn to clarify or guide you through this topic?
+ Ask Learn

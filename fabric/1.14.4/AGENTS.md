@@ -31,7 +31,7 @@
     - 继续加载本规则集（Fabric 1.14.4）
   - ELSE -> fabric.mod.json schema 版本不匹配，跳转根目录 AGENTS.md
 - ELSE IF 项目中存在 src/main/resources/META-INF/mods.toml
-  - 这是 Forge 项目，跳转到 ../forge/1.14.4/AGENTS.md
+  - 先别按文件名定 Forge ⇒ 回根目录 AGENTS.md 重判平台与精确版本（NeoForge 1.20.4 及更早的元数据也叫 `mods.toml`，要用 `modId="neoforge"` 条目 + `net.neoforged.*` 包名区分）
 - ELSE -> 无法判断，询问用户确认平台和版本
 
 ### 本规则集的 IDE 加载优先级

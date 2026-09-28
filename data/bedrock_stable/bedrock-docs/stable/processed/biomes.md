@@ -1,8 +1,10 @@
 > 来源：https://learn.microsoft.com/en-us/minecraft/creator/reference/content/biomesreference/examples/componentlist?view=minecraft-bedrock-stable
-> 抓取时间：2026-09-24T02:07:36.130Z
+> 抓取时间：2026-09-27T06:36:00.461Z
 > 警告：此文档可能滞后于当前正式版
 
 # Biomes Documentation
+
+ Feedback
 
 | Biomes | Description |
 | --- | --- |
@@ -23,6 +25,6 @@
 | minecraft:tags | Attach arbitrary string tags to this biome. Most biome tags are referenced by JSON settings, but some meanings of tags are directly implemented in the game's code. |
 | minecraft:village_type | Determines the type of village for the Biome |
 
-## Feedback
+ Ask Learn
 
- Want to try using Ask Learn to clarify or guide you through this topic?
+ Ask Learn

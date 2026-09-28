@@ -1,8 +1,10 @@
 > 来源：https://learn.microsoft.com/en-us/minecraft/creator/documents/experimentalfeaturestoggle?view=minecraft-bedrock-stable
-> 抓取时间：2026-09-24T02:07:25.629Z
+> 抓取时间：2026-09-27T06:36:00.329Z
 > 警告：此文档可能滞后于当前正式版
 
 # Experimental Features in Minecraft: Bedrock Edition
+
+ Feedback
 
 To see full documentation about experimental features and APIs, select the Minecraft Bedrock Experimental APIs version on the sidebar, or switch using this link .
 
@@ -100,6 +102,6 @@ If you like experimenting and testing things in Minecraft, you could learn more 
 
  Introduction to the GameTest Framework
 
-## Feedback
+ Ask Learn
 
- Want to try using Ask Learn to clarify or guide you through this topic?
+ Ask Learn

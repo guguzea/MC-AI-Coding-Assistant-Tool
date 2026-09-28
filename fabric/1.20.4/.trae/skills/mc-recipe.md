@@ -22,7 +22,7 @@ public class MyRecipeProvider extends FabricRecipeProvider {
     }
 
     @Override
-    public void generate(Consumer<RecipeJsonProvider> exporter) {
+    public void generate(RecipeExporter exporter) {
         ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, MY_ITEM)
             .pattern("AAA")
             .pattern("A A")

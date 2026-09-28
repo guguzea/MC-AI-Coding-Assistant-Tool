@@ -8,6 +8,7 @@ import {
   importTinyStream,
   openYarnDb,
   initYarnSchema,
+  versionFromMappingsDir,
 } from "./build-yarn-sqlite.mjs";
 import { Readable } from "node:stream";
 
@@ -53,6 +54,50 @@ test("buildYarnSqliteForDir from tiny file", async () => {
   } finally {
     db.close();
     fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("versionFromMappingsDir 只认 <平台>_<版本>/mappings，认不出就不猜", () => {
+  assert.equal(versionFromMappingsDir(path.join("t", "forge_1.20.1", "mappings")), "1.20.1");
+  assert.equal(versionFromMappingsDir(path.join("t", "fabric_1.21.11", "mappings")), "1.21.11");
+  assert.equal(versionFromMappingsDir(path.join("t", "mappings")), undefined);
+  assert.equal(versionFromMappingsDir(undefined), undefined);
+});
+
+// 实况：单目录 CLI 形态（`build-yarn-sqlite.mjs <dir> --write`）不带 --version= 时，
+// 六档曾整批建成 meta.version="" —— 而 28 档里另 22 档都有值，读侧按它认档。
+test("不带 opts.version 的单目录构建必须自己兜出版本号", async () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "yarn-sqlite-ver-"));
+  const mappingsDir = path.join(root, "fabric_1.90.0", "mappings");
+  fs.mkdirSync(mappingsDir, { recursive: true });
+  fs.writeFileSync(path.join(mappingsDir, "mappings.tiny"), SAMPLE_TINY);
+  let r;
+  try {
+    r = await buildYarnSqliteForDir(mappingsDir);
+    const ro = openYarnDb(r.outPath, { readonly: true });
+    let meta;
+    try {
+      meta = Object.fromEntries(ro.prepare("SELECT key,value FROM meta").all().map((x) => [x.key, x.value]));
+    } finally {
+      ro.close();
+    }
+    assert.equal(meta.version, "1.90.0", `meta.version=${JSON.stringify(meta.version)}`);
+    // 显式传的版本仍优先（不得被兜底悄悄改掉）。另起一个 outPath：同名 sqlite 上刚开过读句柄，
+    // 原子替换在 Windows 卷上会撞 EBUSY。
+    const r2 = await buildYarnSqliteForDir(mappingsDir, {
+      version: "1.20.4",
+      outPath: path.join(root, "explicit.sqlite"),
+    });
+    const rw = openYarnDb(r2.outPath, { readonly: true });
+    let v2;
+    try {
+      v2 = rw.prepare("SELECT value FROM meta WHERE key='version'").get().value;
+    } finally {
+      rw.close();
+    }
+    assert.equal(v2, "1.20.4");
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true, maxRetries: 10, retryDelay: 250 });
   }
 });
 

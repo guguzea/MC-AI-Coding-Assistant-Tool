@@ -203,6 +203,15 @@ function queryLoaderApiImpl(args: QueryLoaderApiArgs) {
   };
 }
 
+/**
+ * `search_loader_api` 的窗口常量（2026-09-26 从 `searchLoaderApi` 里的内联字面量提出，值逐字未变）。
+ * ⚠️ 现状是**静默 clamp**（`limit=999` 会被改成 50 后照办，不报错也不披露），而 schema 侧
+ * （`src/wave/register.ts:402`）根本不带 `.max()` ⇒ 「封顶 50」只活在描述串与本行代码里。
+ * 要不要改成 schema 拒答 / 加 `limitWindow` 披露 = 门挂这条腿的前置，见根 `CONTRIBUTING.md` `L56`。
+ */
+export const LOADER_API_SEARCH_DEFAULT_LIMIT = 20;
+export const LOADER_API_SEARCH_LIMIT_MAX = 50;
+
 export function searchLoaderApi(args: SearchLoaderApiArgs) {
   const mode = args.mode === "list" ? "list" : "search";
   if (mode === "list") {
@@ -257,7 +266,10 @@ export function searchLoaderApi(args: SearchLoaderApiArgs) {
   const hit = findSummary(platform, minecraftVersion);
   if (!hit) return missingIndexPayload(platform, minecraftVersion);
 
-  const limit = Math.min(Math.max(Number(args.limit ?? 20) || 20, 1), 50);
+  const limit = Math.min(
+    Math.max(Number(args.limit ?? LOADER_API_SEARCH_DEFAULT_LIMIT) || LOADER_API_SEARCH_DEFAULT_LIMIT, 1),
+    LOADER_API_SEARCH_LIMIT_MAX,
+  );
   const offset = Math.max(Number(args.offset ?? 0) || 0, 0);
   const index = [
     ...(hit.summary.fqcnIndex ?? []),

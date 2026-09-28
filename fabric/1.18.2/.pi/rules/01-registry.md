@@ -71,7 +71,7 @@ IF 注册 Mixin
   → 在 fabric.mixins.json 中声明，不需要在 onInitialize() 中注册
 
 IF 平台 = Forge
-  → 跳转 ../forge/1.18.2/AGENTS.md（Forge 使用 DeferredRegister）
+  → 回根目录 AGENTS.md 重判平台与精确版本（NeoForge ≤1.20.4 的元数据也叫 mods.toml，别按文件名判成 Forge）
 ```
 
 ### Decision: 注册顺序（依赖关系）

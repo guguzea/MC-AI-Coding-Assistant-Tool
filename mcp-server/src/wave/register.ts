@@ -36,7 +36,13 @@ import {
   decompileModJarHandler,
   searchModCodeHandler,
 } from "../decompile/index.js";
-import { queryLoaderApi, searchLoaderApi, ingestLoaderApi } from "../loader-api/index.js";
+import {
+  queryLoaderApi,
+  searchLoaderApi,
+  ingestLoaderApi,
+  LOADER_API_SEARCH_DEFAULT_LIMIT,
+  LOADER_API_SEARCH_LIMIT_MAX,
+} from "../loader-api/index.js";
 import { PACK_PLATFORMS } from "../platform-pack/catalog.js";
 import { detectModProject } from "../platform-pack/detect.js";
 import { activatePlatformPack } from "../platform-pack/index.js";
@@ -48,7 +54,19 @@ export const queryRegistrySchema = z.object({
   query: z.string().describe("资源 ID 或子串，如 stone、minecraft:diamond"),
   registry: z.string().optional().describe("限定注册表名，如 blocks、items"),
   version: z.string().optional().describe("MC 版本，强烈建议传入精确版本，禁止默认 1.20.1"),
-  limit: z.number().optional(),
+  limit: z
+    .number()
+    .int()
+    .min(1)
+    .max(200)
+    .optional()
+    .describe(
+      "最多回几条（按相关性排序后取前 N），默认 25，上界 200。" +
+        "**上界是面拒不是档位**：超过 200 不会被截到 200，而是整条查询被 schema 拒（`errorKind:\"validation\"` + `fieldErrors[].code=TOO_BIG`）。" +
+        "想知道池有多大看响应里的 `totalMatches` 与 `truncated`，别靠抬上界一次拿全 —— 用 `registry=` 收窄更省。" +
+        "此前无 int/无下界/无上界：limit=0 会把「池里有 N 条」报成 found:false（假否定），" +
+        "负数走 slice(0,负) 反而比默认档多回，小数被静默截 —— 现在一律在入口拒绝。",
+    ),
 });
 export const mixinAnalyzeSchema = z.object({
   javaFiles: z
@@ -399,7 +417,12 @@ export const searchLoaderApiSchema = z.object({
   minecraftVersion: z.string().optional().describe("search 与 list 均必填"),
   query: z.string().optional().describe("fqcnIndex 子串（mode=search 必填）"),
   mode: z.enum(["search", "list"]).optional().describe("默认 search；list 列出已索引/skipped/overlay"),
-  limit: z.number().optional().describe("默认 20，封顶 50"),
+  limit: z
+    .number()
+    .optional()
+    .describe(
+      `默认 ${LOADER_API_SEARCH_DEFAULT_LIMIT}，封顶 ${LOADER_API_SEARCH_LIMIT_MAX}（超封顶按现实现**静默截到上界**，不报错）`,
+    ),
   offset: z.number().optional(),
 });
 const loaderApiKeyPattern = /^(?!\.)(?!.*\.\.)[A-Za-z0-9_.-]+$/;
@@ -413,6 +436,13 @@ export const ingestLoaderApiSchema = z.object({
   jarPath: z.string().describe("自备 jar 绝对路径（不要用 --file）"),
   mappingsVersion: z.string().describe("必填，禁止猜 Yarn/MCP"),
   mappingsSource: z.string().optional(),
+  library: z
+    .string()
+    .regex(loaderApiKeyPattern, "library 仅允许字母数字 . _ -（如 fabric-api / fabric / qsl / quilt）")
+    .optional()
+    .describe(
+      "同平台多套构件时用来选键位：值必须是该 platform 候选键的后缀（fabric ⇒ fabric-api｜fabric，quilt ⇒ qsl｜quilt；其中 <ver>-fabric / <ver>-quilt 槽位装的是**加载器本体**的摘要，不是 API 库）。缺省不传即写候选键第一个。传了候选里没有的后缀 ⇒ INVALID_INPUT，不新造键名",
+    ),
   dryRun: z.boolean().optional().default(true),
   confirmed: z.boolean().optional(),
   force: z.boolean().optional().describe("CACHE_STALE 时覆盖 overlay 摘要"),
@@ -971,7 +1001,7 @@ export const waveToolSchemas: Array<{ name: string; description: string; inputSc
   { name: "validate_aw", description: VALIDATE_AW_DESCRIPTION, inputSchema: validateAwSchema },
   { name: "query_loader_api", description: "查询 Forge/NeoForge/Fabric-API/QSL 等 loader 摘要中的类与 MethodInfo。必填 platform+minecraftVersion，无默认 1.20.1。不是 query_api（Parchment Vanilla）。found:false 不代表游戏里没有该类。LiteLoader/Rift/ModLoader 无摘要时 PLATFORM_SKIPPED（可 ingest）。", inputSchema: queryLoaderApiSchema },
   { name: "search_loader_api", description: "在 loader-api-summaries 的 fqcnIndex 上子串搜索（limit 默认 20 封顶 50）。mode=list 列出已索引档、skipped、cache overlay。platform 与 minecraftVersion 必填（list 也不再默默全量）。", inputSchema: searchLoaderApiSchema },
-  { name: "ingest_loader_api", description: "把用户自备的 LiteLoader/Rift/ModLoader（等官方不代下）jar 抽成摘要，只写 $MC_SKILL_CACHE/loader-api-summaries overlay，禁止写仓库 data/。jarPath 绝对路径 + mappingsVersion 必填。默认 dryRun。", inputSchema: ingestLoaderApiSchema },
+  { name: "ingest_loader_api", description: "把用户自备的 LiteLoader/Rift/ModLoader（等官方不代下）jar 抽成摘要，只写 $MC_SKILL_CACHE/loader-api-summaries overlay，禁止写仓库 data/。jarPath 绝对路径 + mappingsVersion 必填。默认 dryRun。同一平台有多套构件时用 library 选后缀（fabric 的 loader jar 传 library=fabric ⇒ 写 <ver>-fabric 槽位；不传则固定写第一个候选键 <ver>-fabric-api ⇒ 拿 loader jar 不传 library 会覆盖 API 摘要）。", inputSchema: ingestLoaderApiSchema },
   { name: "detect_mod_project", description: DETECT_MOD_PROJECT_DESCRIPTION, inputSchema: detectModProjectSchema },
   { name: "activate_platform_pack", description: ACTIVATE_PLATFORM_PACK_DESCRIPTION, inputSchema: activatePlatformPackSchema },
   { name: "check_publish_ready", description: "发布前机器检查：硬检查 license/version 字段与 build/libs 是否像正式 jar；并读 community_knowledge/authored/publishing.md 的发布前清单，缺项只给 warning。默认不写盘、不上传、不调 Curse/Modrinth 发布 API。", inputSchema: checkPublishReadySchema },

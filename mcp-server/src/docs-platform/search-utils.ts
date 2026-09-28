@@ -641,24 +641,44 @@ function resPathLike(term: string): boolean {
  * 边界只认字母数字下划线，所以 `Outer$Inner` 的两半各自都算逐字命中
  * （本仓语料大量写成 `ForgeAdvancementProvider$AdvancementGenerator` 这种嵌套类名）。
  */
+/**
+ * 该标识符在正文里**按哪一层**逐字出现（L78 ②）：
+ * - `"term"` = 你查的那整串逐字出现（简名查询与点号全名逐字命中都算这层）
+ * - `"tail"` = 只有末段类名逐字出现（点号查询的**刻意宽松**降级；语料几乎不写 FQCN，实测这是常态）
+ * - `null`   = 没逐字出现
+ * 边界只认字母数字下划线，所以 `Outer$Inner` 的两半各自都算逐字命中
+ * （本仓语料大量写成 `ForgeAdvancementProvider$AdvancementGenerator` 这种嵌套类名）。
+ */
+export function verbatimMatch(text: string, term: string): "term" | "tail" | null {
+  if (!text || !term) return null;
+  const on = (c: string) => new RegExp(`(?<!\\w)${escapeRegExp(c)}(?!\\w)`).test(text);
+  if (resPathLike(term)) return on(term) ? "term" : null;
+  if (term.includes(".")) {
+    if (on(term)) return "term";
+    return on(term.slice(term.lastIndexOf(".") + 1)) ? "tail" : null;
+  }
+  return on(term) ? "term" : null;
+}
+
+/** 布尔包装（既有调用方契约不变；要区分「末段降级」请读 verbatimMatch）。 */
 export function verbatimInText(text: string, term: string): boolean {
-  if (!text || !term) return false;
-  const candidates = resPathLike(term)
-    ? [term]
-    : term.includes(".")
-      ? [term, term.slice(term.lastIndexOf(".") + 1)]
-      : [term];
-  return candidates.some((c) => new RegExp(`(?<!\\w)${escapeRegExp(c)}(?!\\w)`).test(text));
+  return verbatimMatch(text, term) !== null;
 }
 
 export interface VerbatimAudit<T> {
-  /** 原行 + 可能的 `verbatim` 标注（未判定的行不带该键） */
-  rows: Array<T & { verbatim?: boolean }>;
+  /** 原行 + 可能的 `verbatim` 标注（未判定的行不带该键）；`verbatimOn` = 该行按哪一层命中（L78 ②） */
+  rows: Array<T & { verbatim?: boolean; verbatimOn?: "term" | "tail" }>;
   /** null = 本次查询形态不适用逐字判定 */
   term: string | null;
   /** 真正读到正文并给出 true/false 的页数（分母） */
   judged: number;
   hits: number;
+  /**
+   * L78 ②：hits 里命中层的构成 —— `term` 全按你查的那串逐字、`tail` 全按末段类名、
+   * `mixed` 两者都有、`null` 本次无命中。**读 `hits` 之前先读这一位**：
+   * `tail`/`mixed` 意味着语料可能压根没写过你输入的那串点号全名。
+   */
+  matchedOn: "term" | "tail" | "mixed" | null;
   /** 仅在「判过且全为 false」时出现 */
   warning?: string;
 }
@@ -674,10 +694,12 @@ export function annotateVerbatim<T extends { id: string }>(
 ): VerbatimAudit<T> {
   const term = identifierTermOf(query);
   if (!term || !Array.isArray(rows) || rows.length === 0) {
-    return { rows: rows ?? [], term, judged: 0, hits: 0 };
+    return { rows: rows ?? [], term, judged: 0, hits: 0, matchedOn: null };
   }
   let judged = 0;
   let hits = 0;
+  let sawTerm = false;
+  let sawTail = false;
   const out = rows.map((row) => {
     let text: string | undefined | null;
     try {
@@ -687,15 +709,21 @@ export function annotateVerbatim<T extends { id: string }>(
     }
     if (typeof text !== "string" || text.length === 0) return { ...row };
     judged++;
-    const ok = verbatimInText(text, term);
-    if (ok) hits++;
-    return { ...row, verbatim: ok };
+    const on = verbatimMatch(text, term);
+    if (on) {
+      hits++;
+      if (on === "term") sawTerm = true;
+      else sawTail = true;
+    }
+    return on ? { ...row, verbatim: true, verbatimOn: on } : { ...row, verbatim: false };
   });
+  const matchedOn: "term" | "tail" | "mixed" | null = hits === 0 ? null : sawTerm && sawTail ? "mixed" : sawTail ? "tail" : "term";
   return {
     rows: out,
     term,
     judged,
     hits,
+    matchedOn,
     warning:
       judged > 0 && hits === 0
         ? `逐字支撑位：\`${term}\` 在本次判定的 ${judged} 个命中页正文中均未逐字出现——这些页是按词干 / 标签 / 路径模糊匹配回来的，不构成该名字存在的证据。要确认请 get_*_doc_full 读正文；确认不了就留 // TODO(未核实)，禁止把它当本档实名 API。`
@@ -792,10 +820,27 @@ export function limitWindowOf(args: {
   };
 }
 
+/**
+ * 截断位（CONTRIBUTING `L79` ②）：把「池就这么大」与「窗就这么大」分开。
+ * `totalPool` = 本面进入输出窗口**之前**的候选条数；`truncated` = 返回条数比池小。
+ * ⚠️ 两个数必须来自截断前的测量（`mergeSemanticResultsWithPool` 的 `poolSize` / 各面融合输入长度）——
+ * 拿截断后的长度当池 ⇒ `truncated` 恒 false，等于没加这一位。
+ */
+export function poolFieldsOf(
+  poolSize: number,
+  returnedCount: number,
+): { totalPool: number; truncated: boolean } {
+  const pool = Math.trunc(poolSize);
+  return { totalPool: pool, truncated: returnedCount < pool };
+}
+
 /** 要的比池宽必须披露（否则「调大没变多」会被读成丢了页）。 */
-export function limitClampWarning(w: SearchLimitWindow | undefined): string | undefined {
+export function limitClampWarning(
+  w: SearchLimitWindow | undefined,
+  poolNote = "池 = L0 命中 ∪ 语义命中",
+): string | undefined {
   if (!w || !w.clamped) return undefined;
-  return `请求 limit=${w.requestedLimit} 比本次候选池（${w.candidates} 条）还宽 ⇒ 已按池截断返回 ${w.resultLimit} 条（不是丢了页；池 = L0 命中 ∪ 语义命中）。`;
+  return `请求 limit=${w.requestedLimit} 比本次候选池（${w.candidates} 条）还宽 ⇒ 已按池截断返回 ${w.resultLimit} 条（不是丢了页；${poolNote}）。`;
 }
 
 /** LiteLoader / Rift 官方 wiki 挂在薄档 L0 上时的现行站警告（不触发 fabric-docs fallback 文案）。 */
@@ -982,6 +1027,23 @@ export function mergeSemanticResults(
   semanticHits: SemanticHitLike[],
   opts: { tags?: string[]; limit?: number; version?: string; allowedIds?: ReadonlySet<string> },
 ): SearchResultLike[] {
+  return mergeSemanticResultsWithPool(results, semanticHits, opts).rows;
+}
+
+/**
+ * 同上，但额外报**池**：`poolSize` = 融合输入去重后的候选条数（L0 腿 ∪ 过了成员/标签校验的语义腿），
+ * 也就是 `.slice(limit)` 之前的那个数。加它是因为 `total` 在本族各面报的是「本次返回条数」，
+ * 而 `n === total` 时消费者分不清「池就这么大」还是「窗就这么大」（CONTRIBUTING `L79` ②）。
+ * ⚠️ 口径边界（写进工具描述，不当隐含承诺）：`poolSize` 的上界受**融合输入侧已有的截断**约束 ——
+ * forge 族的 L0 腿在 store 内按 10 截、fabric 面的融合输入按默认窗截（放宽会挪语义位次，
+ * 前缀判据当场红，见 `fabric/index.ts:519-522` 的注释）。所以它是「本面在手可得的池」，
+ * **不等于语料全量**。
+ */
+export function mergeSemanticResultsWithPool(
+  results: SearchResultLike[],
+  semanticHits: SemanticHitLike[],
+  opts: { tags?: string[]; limit?: number; version?: string; allowedIds?: ReadonlySet<string> },
+): { rows: SearchResultLike[]; poolSize: number } {
   const limit = opts.limit ?? 10;
   const normalizedTags = (opts.tags ?? []).map(normalizeTag);
   const allowedIds = opts.allowedIds;
@@ -996,10 +1058,14 @@ export function mergeSemanticResults(
   });
 
   if (filteredHits.length === 0) {
-    return results.slice(0, limit).map((r) => ({
-      ...r,
-      ...(r.score !== undefined ? { l0Score: r.l0Score ?? r.score } : {}),
-    }));
+    // 语义腿空 ⇒ 池就是 L0 腿的条数（本面没有第二条腿可加）
+    return {
+      poolSize: results.length,
+      rows: results.slice(0, limit).map((r) => ({
+        ...r,
+        ...(r.score !== undefined ? { l0Score: r.l0Score ?? r.score } : {}),
+      })),
+    };
   }
 
   const l0ScoreById = new Map<string, number>();
@@ -1051,5 +1117,6 @@ export function mergeSemanticResults(
       ...(semanticScore !== undefined ? { semanticScore } : {}),
     });
   }
-  return out;
+  // 池 = 融合输入去重后的并集条数（在 `.slice(limit)` 之前测得），不是返回条数
+  return { rows: out, poolSize: byId.size };
 }

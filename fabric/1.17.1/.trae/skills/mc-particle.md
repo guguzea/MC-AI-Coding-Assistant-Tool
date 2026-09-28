@@ -1,6 +1,6 @@
 ---
 name: mc-particle
-description: Fabric 粒子系统。ParticleType、ParticleHandler、DefaultParticleType。触发词：粒子、Particle、ParticleType
+description: Fabric 粒子系统。ParticleType、ParticleManager、DefaultParticleType。触发词：粒子、Particle、ParticleType
 platform: fabric
 version: "1.17.1"
 dependencies: []

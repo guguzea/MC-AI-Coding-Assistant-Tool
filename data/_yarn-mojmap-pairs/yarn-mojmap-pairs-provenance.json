@@ -12,7 +12,7 @@
   "reason": "2026-09-25 用户裁定：对照产物复制入库（数据源不再只存在于 $MC_SKILL_CACHE；干净 clone 直接持有 leg2 数据源）。同日扩展发布 13→15 档：新增 1.20.6 / 1.21.5（neoforge 有档、fabric 未建档的版本；生成器加 `--yarn-tiny-dir` 回落，合并前实测两源在 1.20.4 上逐条全等：7782/7782 same、0 diff）。生成器本体仍按设计从不写仓库（写盘守卫豁免以此为锚），本目录是人工发布副本。",
   "extendedNote": "原 13 档文件 sha256 与首次发布逐字节相同（复算 mismatches=0）；index.json 因新增两档条目与 yarnSource 字段而更新；门复跑读数：leg2 判 483 件、冲突 0（13 档时为判 437 件 / 该档无对照产物 131 件，本次多覆盖 46 件）。",
   "consumedBy": [
-    "mcp-server/scripts/assert-skill-mappings-key.mjs（leg2；其落点解析仍为 --pairs-dir → $MC_SKILL_CACHE/yarn-mojmap-pairs → os.tmpdir()，尚未默认读本目录）",
+    "mcp-server/scripts/assert-skill-mappings-key.mjs（leg2；落点解析自 2026-09-26 起按「仓库副本 → $MC_SKILL_CACHE/yarn-mojmap-pairs → os.tmpdir()」取第一个真有 index.json 的落点，默认即本目录；显式 --pairs-dir 一律照办）",
     "mcp-server/scripts/assert-cross-layer-names.mjs（import loadPairs / PAIRS_DIR，同上）"
   ],
   "notIncluded": "mojmap/<v>/client.txt：Mojang 官方映射，许可证明文禁止再分发完整件（\"you may not redistribute the mappings complete and unmodified\"）；故本目录只含 join 派生表，不含原始 client.txt。",

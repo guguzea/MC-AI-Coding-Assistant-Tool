@@ -177,6 +177,9 @@ function judge(obs) {
   // ② 库形状
   want("库 meta.mappingEra", obs.built.era, "mcp-config-srg");
   want("库 meta.format", obs.built.format, "mcpconfig-srg-to-official");
+  // 版本号必须由**目录名**推出来：28 档里另 22 档都有值，只有这批曾因为「单目录 CLI 不带
+  // --version=」静默落成空串 ⇒ collect() 故意不传 opts.version，让这条判据替生产者守门。
+  want("库 meta.version", obs.built.version, FIX_VER);
   want("库 methods 行", obs.built.methodRows, EXPECT.methods);
   want("库 fields 行", obs.built.fieldRows, EXPECT.fields);
   want("库 searge_methods 行", obs.built.seargeMethodRows, EXPECT.seargeMethodRows);
@@ -228,7 +231,9 @@ async function collect(tmpRoot) {
   const mappingsDir = path.join(tmpRoot, `forge_${FIX_VER}`, "mappings");
   fs.mkdirSync(mappingsDir, { recursive: true });
   fs.writeFileSync(path.join(mappingsDir, `srg_to_official-${FIX_VER}.tsrg`), reduce_.body, "utf8");
-  await buildYarnSqliteForDir(mappingsDir, { version: FIX_VER });
+  // 故意**不传 opts.version** —— 这一步要证的就是「调用方忘了带 --version=，生产者也必须从
+  // 目录名把版本号推出来」。曾实况：六档全建成 version=""，因为单目录 CLI 形态没有默认值。
+  await buildYarnSqliteForDir(mappingsDir);
   const dbPath = path.join(mappingsDir, "yarn-mappings.sqlite");
   const db = openYarnDb(dbPath, { readonly: true });
   const meta = Object.fromEntries(db.prepare("SELECT key,value FROM meta").all().map((r) => [r.key, r.value]));
@@ -236,6 +241,7 @@ async function collect(tmpRoot) {
   const built = {
     era: meta.mappingEra,
     format: meta.format,
+    version: meta.version,
     classRows: count("classes"),
     methodRows: count("methods"),
     fieldRows: count("fields"),
@@ -372,6 +378,13 @@ function onDiskProblems() {
           problems.push(`[ON-DISK] ${dir}: meta.${mk}=${meta[mk]} ≠ 表 ${t} 实扫 ${rows[t]} ⇒ 覆盖数虚报`);
         }
       }
+      // meta.version 必须等于目录里的档位号：28 档里另 22 档都有值，而这批曾整批建成空串
+      // （单目录 CLI 不带 --version= 时没有兜底）⇒ 空串/串档都算派生件与库不同源。
+      if (meta.version !== version) {
+        problems.push(
+          `[ON-DISK] ${dir}: 库 meta.version=${JSON.stringify(meta.version)} ≠ 派生件档位号 ${version}（读侧按 meta.version 认档）`,
+        );
+      }
       if (meta.mappingEra !== "mcp-config-srg") {
         problems.push(`[ON-DISK] ${dir}: 库 mappingEra=${meta.mappingEra}，不是该派生件应产出的 mcp-config-srg`);
       }
@@ -451,6 +464,13 @@ if (process.argv.includes("--selftest")) {
         o.built.era = "yarn-tiny";
       },
       want: /\[COUNT\] 库 meta\.mappingEra/,
+    },
+    {
+      name: "库 meta.version 落成空串（复刻实况那批六档）⇒ 版本号腿必红",
+      run: (o) => {
+        o.built.version = "";
+      },
+      want: /\[COUNT\] 库 meta\.version/,
     },
     {
       name: "searge 表没行（resolveCsvMappingDbPath 认不出该库）⇒ 必红",
@@ -550,7 +570,7 @@ try {
   if (!process.argv.includes("--no-onDisk")) onDisk = onDiskProblems();
   problems = judge({ ...obs, onDisk: onDisk.problems });
   console.log(
-    `  夹具：类 ${obs.built.classRows} · methods ${obs.built.methodRows} · fields ${obs.built.fieldRows} · searge ${obs.built.seargeMethodRows}/${obs.built.seargeFieldRows} · era=${obs.built.era}`,
+    `  夹具：类 ${obs.built.classRows} · methods ${obs.built.methodRows} · fields ${obs.built.fieldRows} · searge ${obs.built.seargeMethodRows}/${obs.built.seargeFieldRows} · era=${obs.built.era} · version=${obs.built.version}（不传 opts.version，由目录名推出）`,
   );
   console.log(
     `  AT 行：${obs.consumer.line}（complete=${obs.consumer.complete} selfCheck=${obs.consumer.selfCheckOk}）`,

@@ -1,8 +1,10 @@
 > 来源：https://learn.microsoft.com/en-us/minecraft/creator/reference/content/itemreference/examples/itemcomponentlist?view=minecraft-bedrock-stable
-> 抓取时间：2026-09-24T02:07:33.234Z
+> 抓取时间：2026-09-27T06:36:00.444Z
 > 警告：此文档可能滞后于当前正式版
 
 # Item Components Documentation
+
+ Feedback
 
 | Item Components | Description |
 | --- | --- |
@@ -69,6 +71,6 @@ These components are either deprecated or internal to Minecraft and not usable i
 | use_duration | This component determines how long the item takes to use when used in combination with components like "shooter", "throwable", or "food". |
 | weapon | Deprecated weapon item component. |
 
-## Feedback
+ Ask Learn
 
- Want to try using Ask Learn to clarify or guide you through this topic?
+ Ask Learn

@@ -21,7 +21,7 @@
  *
  * 判据（三条，全部行级）：
  *   ① 禁令侧 = 锚点文件里「同时含 NEG 负例词 + `banHint` 串」的那一行；NEG 正则照抄
- *      `assert-skill-yarn-attest.mjs:69`（同行带 未核实/禁止/不得/零命中/… ⇒ 那是「告诉读者别写」）。
+ *      `assert-skill-yarn-attest.mjs 的 NEG 常量`（同行带 未核实/禁止/不得/零命中/… ⇒ 那是「告诉读者别写」）。
  *      锚点行不再含 NEG 或不再含 hint ⇒ 该对判为 `lifted`（禁令已改准 / 已挪走），**不判红**，
  *      但会计入采集面地板（见 R47），静默删禁令会撞地板。
  *   ② 示范侧 = 对面文件集内**围栏代码块（``` 成对块）里的行**，命中 `shape` 且不含 `shapeOk`
@@ -53,7 +53,7 @@ const TEST_ROOT = process.env.MC_SKILL_BVE_TEST_ROOT;
 const ROOT = TEST_ROOT ? path.resolve(TEST_ROOT) : REPO_ROOT;
 const INFO = process.env.MC_SKILL_BVE_GATE_INFO === '1';
 
-/** 行级负例正则 —— 照抄 mcp-server/scripts/assert-skill-yarn-attest.mjs:69，勿改口径。 */
+/** 行级负例正则 —— 照抄 mcp-server/scripts/assert-skill-yarn-attest.mjs 的 NEG 常量，勿改口径。 */
 export const NEG = /未核实|禁止|不得|零命中|没有|无源|不写|另一套|别的版本|勿抄/;
 
 /**

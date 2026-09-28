@@ -200,3 +200,35 @@ test("learnToMarkdown: 单元格里的 &lt; 不得把后续表格行吞掉（收
   assert.ok(rows.length >= 4, `管道表行数塌了（实得 ${rows.length}）：${JSON.stringify(rows)}`);
 });
 
+test("learnToMarkdown: L62 页脚两形必须删（旧式子从未咬合），正文里的 Feedback / Ask Learn 必须活", () => {
+  // 盘上实形（现扫 data/bedrock_stable/bedrock-docs/stable/processed/，258 篇 .md）：
+  //   `## Feedback` 254 行 / 254 篇；` Want to try using Ask Learn to clarify or guide you through this topic?`
+  //   同样 254 / 254（**带一个前导空格**）。旧的 `/^Feedback$/i` 与 `/^Ask Learn/i` 两条一条都不咬 ⇒ 式子形同虚设。
+  const CHROME_HTML =
+    `<main><h2>Component inventory</h2><p>Real prose about block components.</p>` +
+    `<h2>Feedback</h2><p> Want to try using Ask Learn to clarify or guide you through this topic?</p></main>`;
+  const md = learnToMarkdown(
+    CHROME_HTML,
+    "https://learn.microsoft.com/en-us/minecraft/creator/reference/content/blockreference/examples/blockcomponents",
+  );
+  assert.ok(!/^ {0,3}#{1,6} +Feedback$/m.test(md), `页脚标题没删：${JSON.stringify(md.slice(-200))}`);
+  assert.ok(!/Want to try using Ask Learn/i.test(md), `Ask Learn 引导行没删：${JSON.stringify(md.slice(-200))}`);
+  assert.ok(/Real prose about block components/.test(md), `正文被连带删了：${JSON.stringify(md)}`);
+
+  // 反证「为什么旧的两条是死的」——按旧式子内联复现（与例②「手工复现旧序」同一手法）。
+  // 若哪天这两条断言反过来红了，说明盘上形态变了 ⇒ 上面的 254/254 分母要重测，不许顺手改断言。
+  assert.equal(/^Ask Learn/i.test("Want to try using Ask Learn to clarify or guide you through this topic?"), false,
+    "旧 `/^Ask Learn/i` 现在能咬住了 ⇒ 盘上形态已变，本反证与分母都要重测");
+  assert.equal(/^Feedback$/i.test("## Feedback"), false,
+    "旧 `/^Feedback$/i` 现在能咬住了 ⇒ 同上");
+
+  // 过宽反证：新式子只吃页脚那一形，正文里的同名单词/标题不许连带掉。
+  const BODY_HTML =
+    `<main><h2>Feedback components</h2><p>Feedback loops matter for server tick handling.</p>` +
+    `<p>Ask Learn is not a verb in this sentence.</p></main>`;
+  const md2 = learnToMarkdown(BODY_HTML, "https://learn.microsoft.com/en-us/minecraft/creator/design/feedback");
+  assert.ok(/^ {0,3}#{1,6} +Feedback components$/m.test(md2), `正文标题被过宽式子吃了：${JSON.stringify(md2)}`);
+  assert.ok(/Feedback loops matter/.test(md2), `正文句被吃：${JSON.stringify(md2)}`);
+  assert.ok(/Ask Learn is not a verb/.test(md2), `非页脚的 Ask Learn 句被吃：${JSON.stringify(md2)}`);
+});
+

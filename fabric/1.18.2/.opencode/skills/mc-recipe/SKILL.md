@@ -23,7 +23,7 @@ public class MyRecipeProvider extends FabricRecipeProvider {
 
     @Override
     protected void generateRecipes(Consumer<RecipeJsonProvider> exporter) {
-        ShapedRecipeJsonFactory.create(MY_ITEM)
+        ShapedRecipeJsonFactory.create(MY_ITEM) // TODO(未核实)：该重载的实参形状未在本档语料逐字核实
             .pattern("AAA")
             .pattern("A A")
             .pattern(" A ")

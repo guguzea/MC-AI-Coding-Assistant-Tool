@@ -84,10 +84,20 @@ export function resolveLibSkills(args: { platform?: unknown; mcVersion?: unknown
       encoding: "utf8",
       maxBuffer: 16 * 1024 * 1024,
       windowsHide: true,
+      // C5a（2026-09-27）：这是 **同步** 调用，跑在 MCP 的事件循环上；从前没有 timeout ⇒
+      // 子进程一挂（脚本自身死锁、或它在等网络/大目录扫描）整个 server 就冻住，且没有任何线索。
+      // 兄弟模块（src/mdk/index.ts）的 spawnSync 一律带 timeout，这里按同一口径补，取值给本地
+      // 只读解析脚本的宽松上界。超时与真失败分开报，因为两者的修法完全不同。
+      timeout: 60_000,
     });
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
-    return bad(`解析执行失败：${msg.slice(0, 300)}`);
+    const timedOut = (e as { signal?: unknown })?.signal === "SIGTERM" || /\bETIMEDOUT\b/.test(msg);
+    return bad(
+      timedOut
+        ? `解析超时（>60s 被杀，signal=SIGTERM）：${SCRIPT} 未在时限内返回 —— 该调用是同步的，已用 timeout 挡住事件循环冻结`
+        : `解析执行失败：${msg.slice(0, 300)}`,
+    );
   }
   let arr: Array<Omit<LibSkillHit, "versionsJson">> = [];
   try {

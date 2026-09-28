@@ -1,8 +1,10 @@
 > 来源：https://learn.microsoft.com/en-us/minecraft/creator/documents/behaviorpack?view=minecraft-bedrock-stable
-> 抓取时间：2026-09-24T02:07:29.158Z
+> 抓取时间：2026-09-27T06:36:00.406Z
 > 警告：此文档可能滞后于当前正式版
 
 # Introduction to Behavior Packs
+
+ Feedback
 
 Before building your first Add-On for Minecraft: Bedrock Edition, you'll need to create a pack to hold your custom content. There are two types of packs that a creator can make: resource packs and behavior packs. A behavior pack is a folder structure that contains files that drive entity behaviors, loot drops, spawn rules, items, recipes, and trade tables.
 
@@ -144,6 +146,6 @@ Now that you have seen a behavior pack in action, you can learn more about how t
 
 To see examples of unchanged resource and behavior files, check out the Minecraft Vanilla resource pack and Vanilla behavior Pack .
 
-## Feedback
+ Ask Learn
 
- Want to try using Ask Learn to clarify or guide you through this topic?
+ Ask Learn

@@ -1,8 +1,10 @@
 > 来源：https://learn.microsoft.com/en-us/minecraft/creator/documents/molang/syntax-guide?view=minecraft-bedrock-stable
-> 抓取时间：2026-09-24T02:07:34.899Z
+> 抓取时间：2026-09-27T06:36:00.452Z
 > 警告：此文档可能滞后于当前正式版
 
 # Molang Syntax Guide
+
+ Feedback
 
 If you haven't read An Introduction to Molang , start there first!
 
@@ -52,7 +54,7 @@ Some operators are under `Experimental Molang Features` at the moment in the lis
 | Keyword | Description |
 | --- | --- |
 | 1.23 | Numerical constant value |
-| ! \|\| && = > == != | Logical operators |
+| ! \|\| && < <= >= > == != | Logical operators |
 | * / + - | Basic math operators |
 | ( ) | Parentheses for expression term evaluation control |
 | { } | Braces for execution scope |
@@ -352,6 +354,6 @@ This is a list of the versioned changes that have been added, along with the cor
 | 1.20.50 | block_property is no longer supported, as that logic is done in the animation. Additionally, is_scenting is_rising and is_feelingHappy queries are no longer available; timer_flag_1 , timer_flag_2 , and timer_flag_3 can be used instead. |
 | 1.20.70 | Queries surface_particle_texture_size, surface_particle_texture_coordinate, and surface_particle_texture_size now register leaf blocks as supporting for step particles |
 
-## Feedback
+ Ask Learn
 
- Want to try using Ask Learn to clarify or guide you through this topic?
+ Ask Learn

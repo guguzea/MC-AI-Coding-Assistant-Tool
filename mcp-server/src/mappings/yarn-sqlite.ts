@@ -47,6 +47,11 @@ function readMeta(db: MappingDb, key: string): string | null {
 }
 
 function methodCountOf(db: MappingDb): number {
+  // 覆盖数口径只认**表内实数**：`meta.methodCount` 是源行数，1.19.4/1.20.1/1.20.4 的 yarn tiny 里
+  // 有 3,784/3,919/4,070 行 `<init>`/`<clinit>` 按设计不入库（见 scripts/_lib/build-yarn-sqlite.mjs
+  // 的插入循环注释）⇒ 直接信 meta 就是把「查得到多少成员」虚报成「源里有多少行」。
+  const fromStored = Number(readMeta(db, "storedMethodCount") || "0");
+  if (fromStored > 0) return fromStored;
   const fromMeta = Number(readMeta(db, "methodCount") || "0");
   if (fromMeta > 0) return fromMeta;
   try {
@@ -61,6 +66,18 @@ function methodCountOf(db: MappingDb): number {
   } catch {
     return 0;
   }
+}
+
+/**
+ * L77 ①：歧义候选清单必须同时给出「同条件的真池条数」，否则 ≤窗口 的 `candidates` 会被读成全量清单
+ * （实测 fabric 1.21.11 `ClientPlayPacketListener` 的混淆短名 `a` 真池 122、窗口只回 20）。
+ * `table` / `where` 一律是调用点的字面量，成员名仍走绑定参数。
+ */
+function countWhere(db: MappingDb, table: string, where: string, params: unknown[]): number {
+  const row = db
+    .prepare(`SELECT COUNT(*) AS c FROM ${table} WHERE ${where}`)
+    .get(...(params as never[])) as { c: number } | undefined;
+  return typeof row?.c === "number" ? row.c : 0;
 }
 
 function dbCacheKey(dbPath: string): string {
@@ -330,6 +347,8 @@ export interface LookupMethodResult {
   ambiguous?: boolean;
   row?: MethodRow;
   candidates?: MethodCandidate[];
+  /** L77 ①：同条件真池条数；`candidates.length < candidatesTotal` ⇒ 样本被窗口截断 */
+  candidatesTotal?: number;
   mappingEra?: string | null;
   resultKind?: string;
   notes?: string[];
@@ -418,6 +437,8 @@ export interface LookupFieldResult {
   ambiguous?: boolean;
   row?: FieldRow;
   candidates?: MethodCandidate[];
+  /** L77 ①：同条件真池条数；`candidates.length < candidatesTotal` ⇒ 样本被窗口截断 */
+  candidatesTotal?: number;
   mappingEra?: string | null;
   resultKind?: string;
   notes?: string[];
@@ -487,7 +508,7 @@ export function lookupField(
     if (!isSearge) {
       const rows = csvDb
         .prepare(
-          "SELECT searge, name_named, descriptor_named FROM searge_fields WHERE name_named = ? LIMIT 20",
+          "SELECT searge, name_named, descriptor_named FROM searge_fields WHERE name_named = ? ORDER BY searge LIMIT 20",
         )
         .all(memberName) as Array<{ searge: string; name_named: string; descriptor_named: string }>;
       if (rows.length === 1) {
@@ -507,6 +528,7 @@ export function lookupField(
         };
       }
       if (rows.length > 1) {
+        const candidatesTotal = countWhere(csvDb, "searge_fields", "name_named = ?", [memberName]);
         return {
           found: false,
           ambiguous: true,
@@ -516,7 +538,12 @@ export function lookupField(
             descriptor: r.descriptor_named || "",
             official: r.searge,
           })),
-          notes: ["CSV 同名字段多条 searge，请改用 field_ 主键或传入 ownerClass"],
+          candidatesTotal,
+          notes: [
+            `CSV 同名字段多条 searge，请改用 field_ 主键或传入 ownerClass（本条列出按 searge 排序的前 ${rows.length} 条，同条件真池 ${candidatesTotal} 条${
+              candidatesTotal > rows.length ? "，已截断" : ""
+            }）`,
+          ],
         };
       }
     }
@@ -553,7 +580,7 @@ export function lookupField(
   if (csvDb && dbHasSeargeFields(csvDb) && from !== "mojang" && !/^field_/.test(memberName)) {
     const csvRows = csvDb
       .prepare(
-        "SELECT searge, name_named, descriptor_named FROM searge_fields WHERE name_named = ? LIMIT 40",
+        "SELECT searge, name_named, descriptor_named FROM searge_fields WHERE name_named = ? ORDER BY searge LIMIT 40",
       )
       .all(memberName) as Array<{ searge: string; name_named: string; descriptor_named: string }>;
     if (csvRows.length > 0) {
@@ -586,10 +613,26 @@ export function lookupField(
         return { found: true, source: "csv", row: hits[0], mappingEra: era };
       }
       if (hits.length > 1) {
+        // L77 续趟：这份清单来自「CSV 同名的前 40 条 searge × 本 owner 的 fields 行」两层聚合，
+        // 真池 = 同一条件下 fields 的行数（把 CSV 的 name_named 条件折成子查询，口径不变）。
+        const pool = countWhere(
+          db,
+          "fields",
+          descriptor
+            ? "owner_named = ? AND descriptor_named = ? AND name_named IN (SELECT searge FROM searge_fields WHERE name_named = ?)"
+            : "owner_named = ? AND name_named IN (SELECT searge FROM searge_fields WHERE name_named = ?)",
+          descriptor ? [ownerNamed, descriptor, memberName] : [ownerNamed, memberName],
+        );
         return {
           found: false,
           ambiguous: true,
           mappingEra: era,
+          candidatesTotal: pool,
+          notes: [
+            `同名字段对应多条 searge，请传入 descriptor（本条列出 ${hits.length} 条，同条件真池 ${pool} 条${
+              pool > hits.length ? "，已截断" : ""
+            }）`,
+          ],
           candidates: hits.map((r) => ({
             name: r.name_named,
             descriptor: r.descriptor_named,
@@ -619,12 +662,13 @@ export function lookupField(
   const rows = db
     .prepare(
       `SELECT owner_named, name_named, descriptor_named, name_official, descriptor_official, name_intermediary
-       FROM fields WHERE owner_named = ? AND ${col} = ? LIMIT 20`,
+       FROM fields WHERE owner_named = ? AND ${col} = ? ORDER BY descriptor_named LIMIT 20`,
     )
     .all(ownerNamed, memberName) as unknown as FieldRow[];
 
   if (rows.length === 0) return { found: false, mappingEra: era };
   if (rows.length === 1) return { found: true, source: "yarn-tiny", row: rows[0], mappingEra: era };
+  const candidatesTotal = countWhere(db, "fields", `owner_named = ? AND ${col} = ?`, [ownerNamed, memberName]);
   return {
     found: false,
     ambiguous: true,
@@ -636,7 +680,12 @@ export function lookupField(
       intermediary: r.name_intermediary,
       owner: r.owner_named,
     })),
-    notes: ["同名字段多条，请传入 descriptor"],
+    candidatesTotal,
+    notes: [
+      `同名字段多条，请传入 descriptor（本条列出按 descriptor 排序的前 ${rows.length} 条，同条件真池 ${candidatesTotal} 条${
+        candidatesTotal > rows.length ? "，已截断" : ""
+      }）`,
+    ],
   };
 }
 
@@ -729,10 +778,11 @@ function dbHasMethods(db: MappingDb): boolean {
 }
 
 function methodsBySearge(db: MappingDb, searge: string): MethodRow[] {
+  // L77 续趟：窗口必须有确定序，否则同一 searge 两次跑可以给出不同的 40 条
   return db
     .prepare(
       `SELECT owner_named, name_named, descriptor_named, name_official, descriptor_official, name_intermediary
-       FROM methods WHERE name_named = ? LIMIT 40`,
+       FROM methods WHERE name_named = ? ORDER BY owner_named, descriptor_named LIMIT 40`,
     )
     .all(searge) as unknown as MethodRow[];
 }
@@ -771,10 +821,18 @@ function methodRowFromCsv(
 
   const uniqueObf = [...new Set(hits.map((h) => h.name_official))];
   if (uniqueObf.length > 1) {
+    // L77 续趟（照已上线配方）：hits 来自 methodsBySearge 的 LIMIT 40 窗 ⇒ 同条件真池单独 COUNT
+    const candidatesTotal = countWhere(methodsDb, "methods", "name_named = ?", [csv.searge]);
     return {
       found: false,
       ambiguous: true,
       mappingEra: readMeta(methodsDb, "mappingEra"),
+      candidatesTotal,
+      notes: [
+        `同一 searge 对应多个混淆名，请传入 ownerClass（本条按 owner 排序列出 ${hits.length} 条，同条件真池 ${candidatesTotal} 条${
+          candidatesTotal > hits.length ? "，已截断" : ""
+        }）`,
+      ],
       candidates: hits.map((r) => ({
         name: mcpNamed,
         descriptor: r.descriptor_named,
@@ -782,7 +840,6 @@ function methodRowFromCsv(
         intermediary: r.name_intermediary,
         owner: r.owner_named,
       })),
-      notes: ["同一 searge 对应多个混淆名，请传入 ownerClass"],
     };
   }
 
@@ -842,7 +899,7 @@ function lookupMethodViaCsvOwner(
 
   const csvRows = csvDb
     .prepare(
-      "SELECT searge, name_named, descriptor_named FROM searge_methods WHERE name_named = ? LIMIT 40",
+      "SELECT searge, name_named, descriptor_named FROM searge_methods WHERE name_named = ? ORDER BY searge LIMIT 40",
     )
     .all(memberName) as SeargeCsvRow[];
   if (csvRows.length === 0) return null;
@@ -861,10 +918,14 @@ function lookupMethodViaCsvOwner(
       const rows = methodsDb
         .prepare(
           `SELECT owner_named, name_named, descriptor_named, name_official, descriptor_official, name_intermediary
-           FROM methods WHERE owner_named = ? AND name_named = ? LIMIT 20`,
+           FROM methods WHERE owner_named = ? AND name_named = ? ORDER BY descriptor_named LIMIT 20`,
         )
         .all(ownerNamed, csv.searge) as unknown as MethodRow[];
       if (rows.length > 1) {
+        const candidatesTotal = countWhere(methodsDb, "methods", "owner_named = ? AND name_named = ?", [
+          ownerNamed,
+          csv.searge,
+        ]);
         return {
           found: false,
           ambiguous: true,
@@ -876,7 +937,12 @@ function lookupMethodViaCsvOwner(
             intermediary: r.name_intermediary,
             owner: r.owner_named,
           })),
-          notes: ["存在多个重载，请传入 descriptor"],
+          candidatesTotal,
+          notes: [
+            `存在多个重载，请传入 descriptor（本条列出按 descriptor 排序的前 ${rows.length} 条，同条件真池 ${candidatesTotal} 条${
+              candidatesTotal > rows.length ? "，已截断" : ""
+            }）`,
+          ],
         };
       }
       row = rows[0];
@@ -905,10 +971,14 @@ function lookupMethodViaCsvOwner(
       const namedRows = methodsDb
         .prepare(
           `SELECT owner_named, name_named, descriptor_named, name_official, descriptor_official, name_intermediary
-           FROM methods WHERE owner_named = ? AND name_named = ? LIMIT 20`,
+           FROM methods WHERE owner_named = ? AND name_named = ? ORDER BY descriptor_named LIMIT 20`,
         )
         .all(ownerNamed, memberName) as unknown as MethodRow[];
       if (namedRows.length > 1) {
+        const candidatesTotal = countWhere(methodsDb, "methods", "owner_named = ? AND name_named = ?", [
+          ownerNamed,
+          memberName,
+        ]);
         return {
           found: false,
           ambiguous: true,
@@ -921,7 +991,12 @@ function lookupMethodViaCsvOwner(
             intermediary: r.name_intermediary,
             owner: r.owner_named,
           })),
-          notes: ["存在多个重载，请传入 descriptor"],
+          candidatesTotal,
+          notes: [
+            `存在多个重载，请传入 descriptor（本条列出按 descriptor 排序的前 ${namedRows.length} 条，同条件真池 ${candidatesTotal} 条${
+              candidatesTotal > namedRows.length ? "，已截断" : ""
+            }）`,
+          ],
         };
       }
       namedRow = namedRows[0];
@@ -948,10 +1023,21 @@ function lookupMethodViaCsvOwner(
       notes: descriptor ? undefined : ["CSV+methods 联合命中（MCP named→searge→obf）"],
     };
   }
+  // L77 续趟：本清单由「CSV 同名的前 40 条 searge × 本 owner 的 methods 行」聚合而成，
+  // 真池按同一条件（owner + 该 MCP 名折成的 searge 集合）单独 COUNT。
+  const csvPool = countWhere(
+    methodsDb,
+    "methods",
+    descriptor
+      ? "owner_named = ? AND descriptor_named = ? AND name_named IN (SELECT searge FROM searge_methods WHERE name_named = ?)"
+      : "owner_named = ? AND name_named IN (SELECT searge FROM searge_methods WHERE name_named = ?)",
+    descriptor ? [ownerNamed, descriptor, memberName] : [ownerNamed, memberName],
+  );
   return {
     found: false,
     ambiguous: true,
     mappingEra: era,
+    candidatesTotal: csvPool,
     candidates: hits.map((r) => ({
       name: r.name_named,
       descriptor: r.descriptor_named,
@@ -959,7 +1045,11 @@ function lookupMethodViaCsvOwner(
       intermediary: r.name_intermediary,
       owner: r.owner_named,
     })),
-    notes: ["同名 MCP 在该类下对应多条 searge/方法，请传入 descriptor 或改用 searge"],
+    notes: [
+      `同名 MCP 在该类下对应多条 searge/方法，请传入 descriptor 或改用 searge（本条列出 ${hits.length} 条，同条件真池 ${csvPool} 条${
+        csvPool > hits.length ? "，已截断" : ""
+      }）`,
+    ],
   };
 }
 
@@ -1007,13 +1097,14 @@ export function lookupMethod(
     if (!isSearge) {
       const rows = csvDb
         .prepare(
-          "SELECT searge, name_named, descriptor_named FROM searge_methods WHERE name_named = ? LIMIT 20",
+          "SELECT searge, name_named, descriptor_named FROM searge_methods WHERE name_named = ? ORDER BY searge LIMIT 20",
         )
         .all(memberName) as SeargeCsvRow[];
       if (rows.length === 1) {
         return methodRowFromCsv(csvDb, rows[0], methodsDb);
       }
       if (rows.length > 1) {
+        const candidatesTotal = countWhere(csvDb, "searge_methods", "name_named = ?", [memberName]);
         return {
           found: false,
           ambiguous: true,
@@ -1023,7 +1114,12 @@ export function lookupMethod(
             descriptor: r.descriptor_named || "",
             official: r.searge,
           })),
-          notes: ["CSV 同名多条 searge，请改用 searge 主键或传入 ownerClass"],
+          candidatesTotal,
+          notes: [
+            `CSV 同名多条 searge，请改用 searge 主键或传入 ownerClass（本条列出按 searge 排序的前 ${rows.length} 条，同条件真池 ${candidatesTotal} 条${
+              candidatesTotal > rows.length ? "，已截断" : ""
+            }）`,
+          ],
         };
       }
     }
@@ -1100,7 +1196,7 @@ export function lookupMethod(
   const rows = db
     .prepare(
       `SELECT owner_named, name_named, descriptor_named, name_official, descriptor_official, name_intermediary
-       FROM methods WHERE owner_named = ? AND ${col} = ? LIMIT 20`,
+       FROM methods WHERE owner_named = ? AND ${col} = ? ORDER BY descriptor_named LIMIT 20`,
     )
     .all(ownerNamed, memberName) as unknown as MethodRow[];
 
@@ -1120,6 +1216,7 @@ export function lookupMethod(
       notes: ["唯一重载，未提供 descriptor"],
     };
   }
+  const candidatesTotal = countWhere(db, "methods", `owner_named = ? AND ${col} = ?`, [ownerNamed, memberName]);
   return {
     found: false,
     ambiguous: true,
@@ -1131,7 +1228,12 @@ export function lookupMethod(
       intermediary: r.name_intermediary,
       owner: r.owner_named,
     })),
-    notes: ["存在多个重载，请传入 descriptor"],
+    candidatesTotal,
+    notes: [
+      `存在多个重载，请传入 descriptor（本条列出按 descriptor 排序的前 ${rows.length} 条，同条件真池 ${candidatesTotal} 条${
+        candidatesTotal > rows.length ? "，已截断" : ""
+      }）`,
+    ],
   };
 }
 
@@ -1147,6 +1249,8 @@ export function convertYarnMember(
   notes: string[];
   row?: YarnClassRow;
   ambiguous?: boolean;
+  /** L77 ①：classes.official 同条件真池条数 */
+  candidatesTotal?: number;
 } {
   const dbPath = resolveMappingDbPath(version);
   if (!dbPath) {
@@ -1165,15 +1269,21 @@ export function convertYarnMember(
     const db = getYarnDb(version);
     if (db) {
       const officialHits = db
-        .prepare("SELECT named, intermediary, official FROM classes WHERE official = ? LIMIT 2")
+        .prepare("SELECT named, intermediary, official FROM classes WHERE official = ? ORDER BY named LIMIT 2")
         .all(memberName) as unknown as YarnClassRow[];
       if (officialHits.length > 1) {
+        const candidatesTotal = countWhere(db, "classes", "official = ?", [memberName]);
         return {
           found: false,
           converted: null,
           mappingType: "class",
           ambiguous: true,
-          notes: [`classes.official 命中 ${officialHits.length} 条，拒绝静默取第一条`],
+          candidatesTotal,
+          notes: [
+            // 原写「本条只取按 named 排序的前 N 条作样本」是谎报：convert.ts 只透传 notes + action，
+            // 这两行 officialHits 既没进返回值也没进 candidates ⇒ 按实况改口（2026-09-27 用户裁定）。
+            `classes.official 同条件真池 ${candidatesTotal} 条（真样本未随本条返回，本腿只回计数与指引），拒绝静默取第一条`,
+          ],
         };
       }
     }
@@ -1186,7 +1296,12 @@ export function convertYarnMember(
       found: false,
       converted: null,
       mappingType: "class",
-      notes: [`已在 mapping SQLite（${version}）中查询，未找到类: ${memberName}`],
+      notes: [
+        `已在 mapping SQLite（${version}）中查询，未找到类: ${memberName}` +
+          (from === "mojang"
+            ? "（层披露：本表 official 列对**被混淆的类**存的是 Tiny 混淆短名（a／fac／ccv 这种），只有本来不混淆的少数类带可读全路径（13 档 100 985 行实测：短名 100 310 ／含斜杠可读路径 675 = 0.67%，如 com/mojang/blaze3d/…）⇒ 拿 mojmap 可读名（`Container`／`Level`）点查这一列必然未命中，这属预期，**禁止**据此断言「该版本没有这个类」；可读名 ↔ Yarn 名的派生对照表在 data/_yarn-mojmap-pairs/）"
+            : ""),
+      ],
     };
   }
 
@@ -1249,6 +1364,8 @@ export interface ObfuscatedHitRow {
 export interface LookupByObfuscatedResult {
   found: boolean;
   rows?: ObfuscatedHitRow[];
+  /** L77 续趟：全局反查两条腿都带 LIMIT 20 窗口 ⇒ 这里回同条件真池条数，缺位即「未判定」 */
+  rowsTotal?: number;
   mappingEra?: string | null;
   notes?: string[];
 }
@@ -1271,13 +1388,29 @@ export function lookupByObfuscated(
     if (csvDb) {
       const table = kind === "method" ? "searge_methods" : "searge_fields";
       try {
+        // L77 续趟（2026-09-27 裁定「② 补腿」）：与已上线三处 SQL 同配方 —— ORDER BY 让窗口可复现，
+        // 同条件 COUNT 发真池位。缺了这两件，被 LIMIT 20 截断的 rows 在载荷里读起来就像全量清单。
+        const srgTotal = (csvDb
+          .prepare(`SELECT COUNT(*) AS c FROM ${table} WHERE searge = ?`)
+          .get(token) as unknown as { c: number }).c;
         const rows = csvDb
-          .prepare(`SELECT searge, name_named, descriptor_named FROM ${table} WHERE searge = ? LIMIT 20`)
+          .prepare(
+            `SELECT searge, name_named, descriptor_named FROM ${table} WHERE searge = ?
+             ORDER BY name_named, descriptor_named LIMIT 20`,
+          )
           .all(token) as Array<{ searge: string; name_named: string; descriptor_named: string | null }>;
         if (rows.length > 0) {
           return {
             found: true,
             mappingEra: era ?? "mcp-csv",
+            rowsTotal: srgTotal,
+            ...(srgTotal > rows.length
+              ? {
+                  notes: [
+                    `存在多条同名条目，本条按 name_named 排序列出前 ${rows.length} 条，同条件真池 ${srgTotal} 条（已截断）`,
+                  ],
+                }
+              : {}),
             rows: rows.map((r) => ({
               kind,
               ownerClass: "",
@@ -1304,6 +1437,7 @@ export function lookupByObfuscated(
   }
 
   const table = kind === "method" ? "methods" : "fields";
+  let unionTotal = 0;
   let rows: Array<{
     owner_named: string;
     name_named: string;
@@ -1312,14 +1446,22 @@ export function lookupByObfuscated(
     name_intermediary: string | null;
   }>;
   try {
+    // L77 续趟（2026-09-27 裁定「② 补腿」）：UNION 两分支原来直接挂 LIMIT 20 —— 既没有 ORDER BY
+    // （同一查询两次跑可以给出不同 20 条），也没有真池位（被截的 rows 看起来像全量清单）。
+    // 改法与已上线三处同配方：把复合查询包进子查询后排序取窗，另用同条件 COUNT 发条数。
+    const unionSql =
+      `SELECT owner_named, name_named, descriptor_named, name_official, name_intermediary
+         FROM ${table} WHERE name_intermediary = ?
+       UNION
+       SELECT owner_named, name_named, descriptor_named, name_official, name_intermediary
+         FROM ${table} WHERE name_official = ?`;
+    unionTotal = (db
+      .prepare(`SELECT COUNT(*) AS c FROM (${unionSql})`)
+      .get(token, token) as unknown as { c: number }).c;
     rows = db
       .prepare(
-        `SELECT owner_named, name_named, descriptor_named, name_official, name_intermediary
-         FROM ${table} WHERE name_intermediary = ?
-         UNION
-         SELECT owner_named, name_named, descriptor_named, name_official, name_intermediary
-         FROM ${table} WHERE name_official = ?
-         LIMIT 20`,
+        `SELECT * FROM (${unionSql})
+         ORDER BY owner_named, name_named, descriptor_named LIMIT 20`,
       )
       .all(token, token) as unknown as Array<{
       owner_named: string;
@@ -1340,6 +1482,14 @@ export function lookupByObfuscated(
   return {
     found: true,
     mappingEra: era,
+    rowsTotal: unionTotal,
+    ...(unionTotal > rows.length
+      ? {
+          notes: [
+            `存在多条同名条目，本条按 owner_named 排序列出前 ${rows.length} 条，同条件真池 ${unionTotal} 条（已截断）`,
+          ],
+        }
+      : {}),
     rows: rows.map((r) => ({
       kind,
       ownerClass: r.owner_named,
@@ -1357,7 +1507,8 @@ export function lookupByObfuscated(
  *
  * 它只回答「这个名字在该档的映射里到底有没有一个类叫它」，**不回答签名/用法**，
  * 所以返回里恒带 `mappingEra`：`yarn-tiny` 的 named 是 Yarn 名，而 `forge-srg` /
- * `tsrg` / `mcp-csv` 的 named 是 MCP `func_/field_` 名（AGENTS「文件名里的 yarn 会骗人」）。
+ * `tsrg` / `mcp-csv` / `mcp-config-srg` 的 named 是 MCP `func_/field_` 或 SRG `m_/f_` 名
+ * （AGENTS「文件名里的 yarn 会骗人」）。
  * 空 classes 表 ⇒ 返回 null（不给空库背书，与 assert-skill-yarn-attest 的双闸同口径）。
  */
 export interface MappingsNameProbe {
@@ -1385,13 +1536,18 @@ function namedColumnForms(name: string): [string, string] {
   return [toSlash(name), toDot(name)];
 }
 
+/**
+ * `prefer` 决定「同一 MC 版本两棵树都有库」时念哪一棵的名字。缺省 = 旧行为（fabric 优先），
+ * 因为「只证名字存在」这一档按加载器读法完全不同：fabric 给 Yarn 名，forge 给 SRG / MCP 名。
+ */
 export function mappingsNameProbe(
   version: string,
   className: string,
   limit = PROBE_LIMIT_DEFAULT,
+  prefer?: MappingDbPreference | null,
 ): MappingsNameProbe | null {
   if (!className?.trim()) return null;
-  const db = getYarnDb(version);
+  const db = getYarnDb(version, prefer);
   if (!db) return null;
 
   let classRows = 0;
@@ -1403,7 +1559,7 @@ export function mappingsNameProbe(
   if (classRows === 0) return null;
 
   const era = readMeta(db, "mappingEra") ?? "";
-  const dbKind: "fabric" | "forge" = /[\\/]fabric_/.test(resolveMappingDbPath(version) ?? "")
+  const dbKind: "fabric" | "forge" = /[\\/]fabric_/.test(resolveMappingDbPath(version, prefer) ?? "")
     ? "fabric"
     : "forge";
   const cap = Math.min(Math.max(1, limit), 40);

@@ -76,6 +76,24 @@ function pureLegs() {
     "嵌套类名的外层也算逐字命中（$ 不是词字符）",
   );
 
+  // L78②：命中必须说得出「按哪一层逐字」——点号查询降级成末段是刻意宽松，但不可再静默
+  const { verbatimMatch } = su;
+  assert.equal(verbatimMatch("text mentions net.minecraft.block.Block here", "net.minecraft.block.Block"), "term", "全串逐字在场 ⇒ 必须判 term");
+  assert.equal(verbatimMatch("text mentions Block here", "net.minecraft.block.Block"), "tail", "只有末段在场 ⇒ 必须判 tail，不得算 term");
+  assert.equal(verbatimMatch("nothing relevant", "net.minecraft.block.Block"), null, "两层都不在场 ⇒ null");
+  assert.equal(verbatimMatch("a Block", "Block"), "term", "简名查询两层同串 ⇒ term");
+  assert.equal(verbatimMatch("minecraft:stone", "minecraft:stone"), "term", "资源路径不降级");
+  const dottedAudit = annotateVerbatim([{ id: "a" }, { id: "b" }], "net.minecraft.block.Block", (r) =>
+    r.id === "a" ? "mentions Block" : "mentions net.minecraft.block.Block",
+  );
+  assert.deepEqual([dottedAudit.rows[0].verbatim, dottedAudit.rows[0].verbatimOn], [true, "tail"], "行级 verbatimOn 必须与降级层一致");
+  assert.equal(dottedAudit.rows[1].verbatimOn, "term");
+  assert.equal(dottedAudit.matchedOn, "mixed", "term+tail 同现 ⇒ matchedOn=mixed");
+  assert.equal(annotateVerbatim([{ id: "a" }], "net.minecraft.block.Block", () => "Block alone").matchedOn, "tail");
+  assert.equal(annotateVerbatim([{ id: "a" }], "GatherDataEvent", () => "GatherDataEvent here").matchedOn, "term");
+  assert.equal(annotateVerbatim([{ id: "a" }], "GatherDataEvent", () => "nothing").matchedOn, null, "无命中不得编造 matchedOn");
+  assert.equal(annotateVerbatim([{ id: "a" }], "register an item", () => "x").matchedOn, null, "散文不判 ⇒ matchedOn 必须缺位为 null");
+
   // 事后标注：保序、保长、未判定的行不给字段
   const rows = [{ id: "a" }, { id: "b" }, { id: "c" }];
   const audit = annotateVerbatim(rows, "GatherDataEvent", (r) =>
@@ -283,6 +301,33 @@ function cliLegs() {
       `${c.label}: total=${body.total} judged=${vs.judged} hits=${vs.hits}`,
     );
   }
+  // L78②：点号查询必须自己说出「按哪一层逐字」——顶层 matchedOn 与行级 verbatimOn 必须自洽（独立重算）
+  for (const [tool, args, label] of [
+    ["search_fabric_docs", { query: "net.minecraft.block.Block", version: "1.21.11" }, "fabric FQCN"],
+    ["search_forge_docs", { query: "net.minecraftforge.registries.ForgeRegistries", version: "1.20.1" }, "forge FQCN"],
+  ]) {
+    const body = runCli(tool, args);
+    const vs = body.verbatim_summary;
+    assert.ok(vs, `${label}：标识符形态必须带 verbatim_summary`);
+    const trueRows = (body.results ?? []).filter((r) => r.verbatim === true);
+    for (const r of trueRows) {
+      assert.ok(r.verbatimOn === "term" || r.verbatimOn === "tail", `${label}：true 行缺 verbatimOn（${r.id}）`);
+    }
+    const recomputed =
+      trueRows.length === 0
+        ? null
+        : trueRows.some((r) => r.verbatimOn === "term") && trueRows.some((r) => r.verbatimOn === "tail")
+          ? "mixed"
+          : trueRows.every((r) => r.verbatimOn === "tail")
+            ? "tail"
+            : "term";
+    assert.equal(vs.matchedOn, recomputed, `${label}：matchedOn=${vs.matchedOn} 与按行独立重算 ${recomputed} 不符`);
+    assert.equal(vs.hits, trueRows.length, `${label}：hits=${vs.hits} 与 true 行数 ${trueRows.length} 不符`);
+    notes.push(
+      `${label}: hits=${vs.hits} matchedOn=${vs.matchedOn}${vs.matchedOn === "tail" ? "（⇒ 语料只有末段类名，不得断言点号全名在场）" : ""}`,
+    );
+  }
+
   // 散文查询不得带 verbatim_summary（不得对散文谎称「查过了」）
   const prose = runCli("search_forge_docs", { query: "register an item", version: "1.20.1" });
   assert.equal(prose.verbatim_summary, undefined, "散文查询必须不判：实得 " + JSON.stringify(prose.verbatim_summary));
@@ -364,6 +409,26 @@ function selfTest() {
     }],
     ["嵌套类名外层判成查无", () => {
       assert.equal(verbatimInText("ForgeAdvancementProvider$AdvancementGenerator", "ForgeAdvancementProvider"), false);
+    }],
+    // L78②：matchedOn / verbatimOn 三层判据改瞎必须当场红
+    ["末段降级被报成 term", () => {
+      assert.equal(su.verbatimMatch("only Block here", "net.minecraft.block.Block"), "term");
+    }],
+    ["全串在场却只报 tail", () => {
+      assert.equal(su.verbatimMatch("net.minecraft.block.Block here", "net.minecraft.block.Block"), "tail");
+    }],
+    ["资源路径被降级", () => {
+      assert.equal(su.verbatimMatch("textures/block/stone.png", "minecraft:textures/block/stone.png"), "tail");
+    }],
+    ["有 tail 命中却发 matchedOn=term", () => {
+      assert.equal(annotateVerbatim([{ id: "a" }], "net.minecraft.block.Block", () => "Block alone").matchedOn, "term");
+    }],
+    ["无命中却编造 matchedOn", () => {
+      assert.notEqual(annotateVerbatim([{ id: "a" }], "GatherDataEvent", () => "nothing here").matchedOn, null);
+    }],
+    ["true 行不带层位（verbatimOn 缺位）", () => {
+      const a = annotateVerbatim([{ id: "a" }], "GatherDataEvent", () => "GatherDataEvent here");
+      assert.equal(a.rows[0].verbatimOn, undefined);
     }],
   ];
   let caught = 0;

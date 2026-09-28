@@ -88,7 +88,7 @@ let ROOT = process.env.MC_SKILL_MIXIN_SHAPE_ROOT
   ? path.resolve(process.env.MC_SKILL_MIXIN_SHAPE_ROOT)
   : REPO_ROOT;
 
-/** 只有这两个时代的名字才是 Yarn 名（抄 assert-skill-yarn-attest.mjs:168）。 */
+/** 只有这两个时代的名字才是 Yarn 名（抄 assert-skill-yarn-attest.mjs 的 YARN_ERAS 常量）。 */
 const YARN_ERAS = new Set(["yarn-tiny", "yarn"]);
 /** 有 yarn 映射层的平台；其余平台的 scaffold 注入点无法用本门判定。 */
 const YARN_PLATFORMS = new Set(["fabric", "quilt"]);

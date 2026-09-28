@@ -54,6 +54,11 @@ export const SCRIPT_WRITE_GUARD_NON_WRITERS = new Map([
   // OS tmpdir 的 "forge-srg-gate-" 前缀下，finally/exit 前用 removeTmp 收；对 data/** 全程只读
   // （在盘对账腿用 readOnly 打开真库）。依据正则一断（改落到仓库内）本豁免即失效。
   ["mcp-server/scripts/assert-forge-srg-ingest.mjs", /mkdtempSync\(path\.join\(os\.tmpdir\(\), "forge-srg-gate-"/],
+  // 规则树 API 名门（2026-09-27 切片 1）：全部落笔都在 OS tmpdir 的 "rules-names-" 前缀下
+  // （selftest 的合成 pack/.mdc/基线/豁免表），夹具结束 rmSync 收；对 `data/**` 与 `fabric/**` 全程只读。
+  // 队列产物按设计不得进仓库面 —— main() 在写盘前先拒 `--queue` 指向 REPO_ROOT 下的路径（【QUEUE-IN-REPO】
+  // + rc=1，由该门 selftest 的 T40 钉），所以这里不存在「半截仓库文件」的口子。依据正则一断即再红。
+  ["mcp-server/scripts/assert-rules-api-names.mjs", /mkdtempSync\(path\.join\(os\.tmpdir\(\), "rules-names-"/],
   ["mcp-server/scripts/assert-parser-availability.mjs", /mkdtempSync\(path\.join\(os\.tmpdir\(\), "mcskill-g2-"/], // 夹具 jar 只落 OS tmpdir；rmSync 收的就是那个目录，仓库源码全程只读
   // 2026-09-19 N3 裁定「补投毒」：--selftest 的 8 例夹具（tiny.gz / upstream *.bak / provenance / 假基线）
   // 全部落 OS tmpdir 下一个一次目录，finally 里 rmSync 收掉；门模式与 --measure-zero-member 全程不写盘。

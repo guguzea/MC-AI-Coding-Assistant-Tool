@@ -398,22 +398,69 @@ function pruneEmptyParents(fileAbs: string, projectRoot: string): void {
   }
 }
 
+/**
+ * OneDrive 卷的写抖动（C5b，2026-09-27）：本仓库常驻 `~/OneDrive/桌面`，同步写盘偶发
+ * `EBUSY` / `EPERM` / `UNKNOWN(-4094)`（占位符文件被云端换入换出时抛，非权限也非磁盘错）。
+ * 只对这些**瞬时**码做有限次退避；`ENOENT` / 路径越界 / 真正的权限问题照旧第一次就抛，
+ * 免得把配置错误洗成"重试三次后成功"的假象。
+ */
+const JITTER_CODES = new Set(["EBUSY", "EPERM", "EACCES", "ENOTEMPTY", "UNKNOWN"]);
+function isWriteJitter(err: unknown): boolean {
+  const e = err as NodeJS.ErrnoException;
+  if (!e?.code || !JITTER_CODES.has(e.code)) return false;
+  if (e.code === "EACCES") return false; // 真权限问题不靠重试解决
+  if (e.code === "UNKNOWN") return /-4094|placeholder/i.test(String(e.message ?? ""));
+  return true;
+}
+
+function jitterWait(ms: number): void {
+  Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
+}
+
+/** 同步写文本，带瞬时抖动退避；最后一次仍失败就把原始错误抛出去（不吞码）。 */
+function writeText(fileAbs: string, text: string, encoding: BufferEncoding = "utf8"): void {
+  const target = winLongPath(fileAbs);
+  for (let attempt = 0; ; attempt++) {
+    try {
+      writeFileSync(target, text, encoding);
+      return;
+    } catch (err) {
+      if (attempt >= 2 || !isWriteJitter(err)) throw err;
+      jitterWait(80 << attempt);
+    }
+  }
+}
+
+/** 同步建目录，同一套退避（OneDrive 也会在 mkdir 上抖）。 */
+function mkdirJitter(dirAbs: string): void {
+  const target = winLongPath(dirAbs);
+  for (let attempt = 0; ; attempt++) {
+    try {
+      mkdirSync(target, { recursive: true });
+      return;
+    } catch (err) {
+      if (attempt >= 2 || !isWriteJitter(err)) throw err;
+      jitterWait(80 << attempt);
+    }
+  }
+}
+
 function mkdirForFile(abs: string, allowRoot?: string): void {
   const dir = dirname(abs);
   if (existsSync(dir)) return;
   if (allowRoot) assertCreatableDir(dir, allowRoot);
-  mkdirSync(winLongPath(dir), { recursive: true });
+  mkdirJitter(dir);
 }
 
 function writeManifestAtomic(projectRoot: string, manifest: Manifest, allowRoot: string) {
   const dir = join(projectRoot, ".mc-skill");
   assertCreatableDir(dir, allowRoot);
-  mkdirSync(winLongPath(dir), { recursive: true });
+  mkdirJitter(dir);
   const dest = join(dir, "pack-manifest.json");
   const tmp = `${dest}.tmp`;
   assertWritablePath(tmp, allowRoot);
   try {
-    writeFileSync(winLongPath(tmp), JSON.stringify(manifest, null, 2), "utf8");
+    writeText(tmp, JSON.stringify(manifest, null, 2));
     renameSync(tmp, dest); // Windows 下 rename 可覆盖目标（MoveFileEx REPLACE），避免先 unlink 的崩溃窗口
   } catch (err) {
     rmSync(tmp, { force: true });
@@ -594,7 +641,7 @@ export function writePlatformPack(args: WriteArgs) {
         if (prev === null) {
           if (existsSync(abs)) unlinkSync(winLongPath(abs));
         } else {
-          writeFileSync(winLongPath(abs), prev, "utf8");
+          writeText(abs, prev);
         }
       } catch {
         /* ignore */
@@ -615,7 +662,7 @@ export function writePlatformPack(args: WriteArgs) {
         if (existed && !backups.has(op.rel)) {
           backups.set(op.rel, readFileSync(abs, "utf8"));
         }
-        writeFileSync(winLongPath(abs), op.content, "utf8");
+        writeText(abs, op.content);
         if (existed) {
           patched.push(op.rel);
           hostFiles[op.host].patched.push(op.rel);
@@ -633,7 +680,7 @@ export function writePlatformPack(args: WriteArgs) {
         if (!backups.has(op.rel)) backups.set(op.rel, existed ? prev : null);
         mkdirForFile(abs, allowRoot);
         assertWritablePath(abs, allowRoot);
-        writeFileSync(winLongPath(abs), next, "utf8");
+        writeText(abs, next);
         if (!existed) {
           created.push(op.rel);
           newlyCreated.add(op.rel);
@@ -788,8 +835,8 @@ export function deactivatePlatformPack(args: WriteArgs) {
       const original = readFileSync(abs, "utf8");
       let text = original;
       for (const h of hosts) text = removeHostMarker(text, h);
-      writeFileSync(winLongPath(abs), text, "utf8");
-      undo.push(() => writeFileSync(winLongPath(abs), original, "utf8"));
+      writeText(abs, text);
+      undo.push(() => writeText(abs, original));
       unpatched.push(rel);
     }
     const remainHosts = man.hosts.filter((h) => !hosts.includes(h as PackHost));
@@ -810,7 +857,7 @@ export function deactivatePlatformPack(args: WriteArgs) {
       const original = readFileSync(abs, "utf8");
       unlinkSync(winLongPath(abs));
       pruneEmptyParents(abs, proj.root);
-      undo.push(() => writeFileSync(winLongPath(abs), original, "utf8"));
+      undo.push(() => writeText(abs, original));
       deleted.push(rel);
     }
 
@@ -821,7 +868,7 @@ export function deactivatePlatformPack(args: WriteArgs) {
         const originalManifest = readFileSync(manPath, "utf8");
         unlinkSync(winLongPath(manPath));
         pruneEmptyParents(manPath, proj.root);
-        undo.push(() => writeFileSync(winLongPath(manPath), originalManifest, "utf8"));
+        undo.push(() => writeText(manPath, originalManifest));
       }
     } else {
       const next: Manifest = {
@@ -835,7 +882,7 @@ export function deactivatePlatformPack(args: WriteArgs) {
       const manPath = join(proj.root, ".mc-skill", "pack-manifest.json");
       const originalManifest = existsSync(manPath) ? readFileSync(manPath, "utf8") : null;
       writeManifestAtomic(proj.root, next, allowRoot);
-      if (originalManifest !== null) undo.push(() => writeFileSync(winLongPath(manPath), originalManifest, "utf8"));
+      if (originalManifest !== null) undo.push(() => writeText(manPath, originalManifest));
     }
   } catch (err) {
     for (const fn of undo.reverse()) {

@@ -85,13 +85,15 @@ public class ExampleModClient implements ClientModInitializer {
 
 ## Container（服务端数据）
 
+`BasicInventory` 是本档（1.14.4 Yarn）的正确类名：由该档映射证出 `class_1277` → `net/minecraft/inventory/BasicInventory`，且该包下没有 `SimpleInventory`（后者是 1.16.5+ 才有的名字）。构造子形状未核实：该档映射库 `methods` 表没有任何 `<init>` 行、语料里也没有 `new BasicInventory(...)` 原文，所以下面 `new BasicInventory(9)` 的参数个数与语义请对照你手上的 1.14.4 Yarn 源码复核后再用（`Inventory` 接口本身在本档映射里有类）。
+
 ```java
 public class MyContainer extends Container {
     private final Inventory playerInventory;
     private final Inventory blockInventory;
 
     public MyContainer(int syncId, PlayerInventory playerInventory) {
-        this(syncId, playerInventory, new SimpleInventory(9));
+        this(syncId, playerInventory, new BasicInventory(9));
     }
 
     public MyContainer(int syncId, PlayerInventory playerInventory, Inventory blockInventory) {

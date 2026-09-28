@@ -1,0 +1,5400 @@
+{
+  "file": "1.14.4-fabric.jar",
+  "mappingsVersion": "unobfuscated-fabric-loader-0.3.7.111",
+  "mappingsSource": "loader-sources-native-names",
+  "mapping": "yarn",
+  "version": "1.14.4",
+  "sourceJarSha256": "6df50bb88025c56fb703c16e2c3ce507d4acafd48ea61068f85ff77a0e34a80a",
+  "sourceTreeMtime": 1790578063058.144,
+  "source": "official",
+  "loaders": [
+    "fabric"
+  ],
+  "decompile": {
+    "found": true,
+    "fromSourcesJar": true,
+    "javaFileCount": 57,
+    "outputDirHint": "$MC_SKILL_CACHE/loader-api-src/1.14.4-fabric",
+    "slim": false,
+    "priorityClassCount": 0
+  },
+  "classCount": 79,
+  "fqcnIndexCount": 57,
+  "fqcnIndex": [
+    "net.fabricmc.api.ClientModInitializer",
+    "net.fabricmc.api.DedicatedServerModInitializer",
+    "net.fabricmc.api.ModInitializer",
+    "net.fabricmc.api.loader.Loader",
+    "net.fabricmc.api.Environment",
+    "net.fabricmc.api.EnvironmentInterfaces",
+    "net.fabricmc.api.EnvironmentInterface",
+    "net.fabricmc.api.EnvType",
+    "net.fabricmc.loader.server.ServerSidedHandler",
+    "net.fabricmc.loader.language.LanguageAdapter",
+    "net.fabricmc.loader.language.JavaLanguageAdapter",
+    "net.fabricmc.loader.language.LanguageAdapterException",
+    "net.fabricmc.loader.FabricLoader",
+    "net.fabricmc.loader.ModInfo",
+    "net.fabricmc.loader.EnvironmentHandler",
+    "net.fabricmc.loader.launch.FabricClassTransformer",
+    "net.fabricmc.loader.launch.server.FabricServerLauncher",
+    "net.fabricmc.loader.launch.server.stagetwo.FabricServerLauncherStageTwo",
+    "net.fabricmc.loader.launch.server.InjectingURLClassLoader",
+    "net.fabricmc.loader.launch.common.FabricLauncher",
+    "net.fabricmc.loader.launch.common.FabricMixinBootstrap",
+    "net.fabricmc.loader.launch.common.MixinLoader",
+    "net.fabricmc.loader.launch.common.FabricLauncherBase",
+    "net.fabricmc.loader.launch.FabricClientTweaker",
+    "net.fabricmc.loader.launch.knot.FabricGlobalPropertyService",
+    "net.fabricmc.loader.launch.knot.KnotServer",
+    "net.fabricmc.loader.launch.knot.Knot",
+    "net.fabricmc.loader.launch.knot.KnotClient",
+    "net.fabricmc.loader.launch.knot.MixinServiceKnot",
+    "net.fabricmc.loader.launch.knot.MixinServiceKnotBootstrap",
+    "net.fabricmc.loader.launch.FabricTweaker",
+    "net.fabricmc.loader.launch.FabricServerTweaker",
+    "net.fabricmc.loader.InstanceStorage",
+    "net.fabricmc.loader.api.metadata.ModMetadata",
+    "net.fabricmc.loader.api.FabricLoader",
+    "net.fabricmc.loader.api.Version",
+    "net.fabricmc.loader.api.ModContainer",
+    "net.fabricmc.loader.mixin.server.MixinDedicatedServer",
+    "net.fabricmc.loader.mixin.server.MixinMinecraftServer",
+    "net.fabricmc.loader.mixin.common.server.MixinMinecraftServerBrand",
+    "net.fabricmc.loader.mixin.client.MixinClientBrandRetriever",
+    "net.fabricmc.loader.mixin.client.MixinMinecraftClient",
+    "net.fabricmc.loader.mixin.hooks.FabricServerFileGetProxy",
+    "net.fabricmc.loader.util.UrlUtil",
+    "net.fabricmc.loader.util.UrlConversionException",
+    "net.fabricmc.loader.util.BrandingUtil",
+    "net.fabricmc.loader.util.FileSystemUtil",
+    "net.fabricmc.loader.util.json.SideDeserializer",
+    "net.fabricmc.loader.util.TinyRemapperMappingsHelper",
+    "net.fabricmc.loader.util.MixinIntermediaryDevRemapper",
+    "net.fabricmc.loader.transformer.ClassStripper",
+    "net.fabricmc.loader.transformer.FabricTransformer",
+    "net.fabricmc.loader.transformer.EnvironmentStrippingData",
+    "net.fabricmc.loader.transformer.PackageAccessFixer",
+    "net.fabricmc.loader.DependencyException",
+    "net.fabricmc.loader.ModContainer",
+    "net.fabricmc.loader.client.ClientSidedHandler"
+  ],
+  "classes": [
+    {
+      "fqcn": "net.fabricmc.api.ClientModInitializer",
+      "simpleName": "ClientModInitializer",
+      "pkg": "net.fabricmc.api",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": true,
+      "methods": [
+        {
+          "name": "onInitializeClient",
+          "returnType": "void",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "void onInitializeClient()"
+        }
+      ],
+      "file": "net/fabricmc/api/ClientModInitializer.java"
+    },
+    {
+      "fqcn": "net.fabricmc.api.DedicatedServerModInitializer",
+      "simpleName": "DedicatedServerModInitializer",
+      "pkg": "net.fabricmc.api",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": true,
+      "methods": [
+        {
+          "name": "onInitializeServer",
+          "returnType": "void",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "void onInitializeServer()"
+        }
+      ],
+      "file": "net/fabricmc/api/DedicatedServerModInitializer.java"
+    },
+    {
+      "fqcn": "net.fabricmc.api.Environment",
+      "simpleName": "Environment",
+      "pkg": "net.fabricmc.api",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "value",
+          "returnType": "EnvType",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "EnvType value()"
+        }
+      ],
+      "file": "net/fabricmc/api/Environment.java"
+    },
+    {
+      "fqcn": "net.fabricmc.api.EnvironmentInterface",
+      "simpleName": "EnvironmentInterface",
+      "pkg": "net.fabricmc.api",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "value",
+          "returnType": "EnvType",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "EnvType value()"
+        },
+        {
+          "name": "itf",
+          "returnType": "Class<?>",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "Class<?> itf()"
+        }
+      ],
+      "file": "net/fabricmc/api/EnvironmentInterface.java"
+    },
+    {
+      "fqcn": "net.fabricmc.api.EnvironmentInterfaces",
+      "simpleName": "EnvironmentInterfaces",
+      "pkg": "net.fabricmc.api",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "value",
+          "returnType": "EnvironmentInterface[]",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "EnvironmentInterface[] value()"
+        }
+      ],
+      "file": "net/fabricmc/api/EnvironmentInterfaces.java"
+    },
+    {
+      "fqcn": "net.fabricmc.api.EnvType",
+      "simpleName": "EnvType",
+      "pkg": "net.fabricmc.api",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [],
+      "file": "net/fabricmc/api/EnvType.java"
+    },
+    {
+      "fqcn": "net.fabricmc.api.loader.Loader",
+      "simpleName": "Loader",
+      "pkg": "net.fabricmc.api.loader",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "getInstance",
+          "returnType": "Loader",
+          "parameters": [],
+          "modifiers": [
+            "static"
+          ],
+          "signature": "Loader getInstance()"
+        },
+        {
+          "name": "isModLoaded",
+          "returnType": "boolean",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "id"
+            }
+          ],
+          "modifiers": [],
+          "signature": "boolean isModLoaded(String)"
+        }
+      ],
+      "file": "net/fabricmc/api/loader/Loader.java"
+    },
+    {
+      "fqcn": "net.fabricmc.api.ModInitializer",
+      "simpleName": "ModInitializer",
+      "pkg": "net.fabricmc.api",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "onInitialize",
+          "returnType": "void",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "void onInitialize()"
+        }
+      ],
+      "file": "net/fabricmc/api/ModInitializer.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.api.FabricLoader",
+      "simpleName": "FabricLoader",
+      "pkg": "net.fabricmc.loader.api",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "getInstance",
+          "returnType": "FabricLoader",
+          "parameters": [],
+          "modifiers": [
+            "static"
+          ],
+          "signature": "FabricLoader getInstance()"
+        },
+        {
+          "name": "getModContainer",
+          "returnType": "Optional<ModContainer>",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "id"
+            }
+          ],
+          "modifiers": [],
+          "signature": "Optional<ModContainer> getModContainer(String)"
+        },
+        {
+          "name": "getAllMods",
+          "returnType": "Collection<ModContainer>",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "Collection<ModContainer> getAllMods()"
+        },
+        {
+          "name": "isModLoaded",
+          "returnType": "boolean",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "id"
+            }
+          ],
+          "modifiers": [],
+          "signature": "boolean isModLoaded(String)"
+        },
+        {
+          "name": "isDevelopmentEnvironment",
+          "returnType": "boolean",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "boolean isDevelopmentEnvironment()"
+        },
+        {
+          "name": "getEnvironmentType",
+          "returnType": "EnvType",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "EnvType getEnvironmentType()"
+        },
+        {
+          "name": "getGameInstance",
+          "returnType": "Object",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "Object getGameInstance()"
+        },
+        {
+          "name": "getGameDirectory",
+          "returnType": "File",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "File getGameDirectory()"
+        },
+        {
+          "name": "getConfigDirectory",
+          "returnType": "File",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "File getConfigDirectory()"
+        }
+      ],
+      "file": "net/fabricmc/loader/api/FabricLoader.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.api.metadata.ModMetadata",
+      "simpleName": "ModMetadata",
+      "pkg": "net.fabricmc.loader.api.metadata",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "getId",
+          "returnType": "String",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "String getId()"
+        },
+        {
+          "name": "getVersion",
+          "returnType": "Version",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "Version getVersion()"
+        },
+        {
+          "name": "getName",
+          "returnType": "String",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "String getName()"
+        },
+        {
+          "name": "getDescription",
+          "returnType": "String",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "String getDescription()"
+        }
+      ],
+      "file": "net/fabricmc/loader/api/metadata/ModMetadata.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.api.ModContainer",
+      "simpleName": "ModContainer",
+      "pkg": "net.fabricmc.loader.api",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "getMetadata",
+          "returnType": "ModMetadata",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "ModMetadata getMetadata()"
+        },
+        {
+          "name": "getRoot",
+          "returnType": "Path",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "Path getRoot()"
+        }
+      ],
+      "file": "net/fabricmc/loader/api/ModContainer.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.api.Version",
+      "simpleName": "Version",
+      "pkg": "net.fabricmc.loader.api",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "getFriendlyString",
+          "returnType": "String",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "String getFriendlyString()"
+        }
+      ],
+      "file": "net/fabricmc/loader/api/Version.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.client.ClientSidedHandler",
+      "simpleName": "ClientSidedHandler",
+      "pkg": "net.fabricmc.loader.client",
+      "modifiers": [
+        "public",
+        "final"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "getEnvironmentType",
+          "returnType": "EnvType",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "EnvType getEnvironmentType()"
+        },
+        {
+          "name": "getClientPlayer",
+          "returnType": "class_1657",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "class_1657 getClientPlayer()"
+        },
+        {
+          "name": "runOnMainThread",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "Runnable",
+              "name": "runnable"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "void runOnMainThread(Runnable)"
+        },
+        {
+          "name": "getServerInstance",
+          "returnType": "MinecraftServer",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "MinecraftServer getServerInstance()"
+        }
+      ],
+      "file": "net/fabricmc/loader/client/ClientSidedHandler.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.DependencyException",
+      "simpleName": "DependencyException",
+      "pkg": "net.fabricmc.loader",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "DependencyException",
+          "returnType": "DependencyException",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "DependencyException()"
+        },
+        {
+          "name": "DependencyException",
+          "returnType": "DependencyException",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "message"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "DependencyException(String)"
+        },
+        {
+          "name": "DependencyException",
+          "returnType": "DependencyException",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "message"
+            },
+            {
+              "type": "Throwable",
+              "name": "cause"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "DependencyException(String, Throwable)"
+        },
+        {
+          "name": "DependencyException",
+          "returnType": "DependencyException",
+          "parameters": [
+            {
+              "type": "Throwable",
+              "name": "cause"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "DependencyException(Throwable)"
+        },
+        {
+          "name": "DependencyException",
+          "returnType": "DependencyException",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "message"
+            },
+            {
+              "type": "Throwable",
+              "name": "cause"
+            },
+            {
+              "type": "boolean",
+              "name": "enableSuppression"
+            },
+            {
+              "type": "boolean",
+              "name": "writableStackTrace"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "DependencyException(String, Throwable, boolean, boolean)"
+        }
+      ],
+      "file": "net/fabricmc/loader/DependencyException.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.EnvironmentHandler",
+      "simpleName": "EnvironmentHandler",
+      "pkg": "net.fabricmc.loader",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "getEnvironmentType",
+          "returnType": "EnvType",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "EnvType getEnvironmentType()"
+        },
+        {
+          "name": "getClientPlayer",
+          "returnType": "class_1657",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "class_1657 getClientPlayer()"
+        },
+        {
+          "name": "runOnMainThread",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "Runnable",
+              "name": "runnable"
+            }
+          ],
+          "modifiers": [],
+          "signature": "void runOnMainThread(Runnable)"
+        },
+        {
+          "name": "getServerInstance",
+          "returnType": "MinecraftServer",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "MinecraftServer getServerInstance()"
+        }
+      ],
+      "file": "net/fabricmc/loader/EnvironmentHandler.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.FabricLoader",
+      "simpleName": "FabricLoader",
+      "pkg": "net.fabricmc.loader",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "getInitializers",
+          "returnType": "Collection<T>",
+          "parameters": [
+            {
+              "type": "Class<T>",
+              "name": "type"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "Collection<T> getInitializers(Class<T>)"
+        },
+        {
+          "name": "FabricLoader",
+          "returnType": "FabricLoader",
+          "parameters": [],
+          "modifiers": [
+            "protected"
+          ],
+          "signature": "FabricLoader()"
+        },
+        {
+          "name": "freeze",
+          "returnType": "void",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "void freeze()"
+        },
+        {
+          "name": "initialize",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "File",
+              "name": "gameDir"
+            },
+            {
+              "type": "Object",
+              "name": "gameInstance"
+            },
+            {
+              "type": "EnvironmentHandler",
+              "name": "sidedHandler"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "void initialize(File, Object, EnvironmentHandler)"
+        },
+        {
+          "name": "getEnvironmentHandler",
+          "returnType": "EnvironmentHandler",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "EnvironmentHandler getEnvironmentHandler()"
+        },
+        {
+          "name": "getGameInstance",
+          "returnType": "Object",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "Object getGameInstance()"
+        },
+        {
+          "name": "getEnvironmentType",
+          "returnType": "EnvType",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "EnvType getEnvironmentType()"
+        },
+        {
+          "name": "getGameDirectory",
+          "returnType": "File",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "File getGameDirectory()"
+        },
+        {
+          "name": "getConfigDirectory",
+          "returnType": "File",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "File getConfigDirectory()"
+        },
+        {
+          "name": "getModsDirectory",
+          "returnType": "File",
+          "parameters": [],
+          "modifiers": [
+            "protected"
+          ],
+          "signature": "File getModsDirectory()"
+        },
+        {
+          "name": "load",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "File",
+              "name": "modsDir"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "void load(File)"
+        },
+        {
+          "name": "join",
+          "returnType": "String",
+          "parameters": [
+            {
+              "type": "Stream<String>",
+              "name": "strings"
+            },
+            {
+              "type": "String",
+              "name": "joiner"
+            }
+          ],
+          "modifiers": [
+            "private"
+          ],
+          "signature": "String join(Stream<String>, String)"
+        },
+        {
+          "name": "load",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "Collection<File>",
+              "name": "modFiles"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "void load(Collection<File>)"
+        },
+        {
+          "name": "onModsPopulated",
+          "returnType": "void",
+          "parameters": [],
+          "modifiers": [
+            "protected"
+          ],
+          "signature": "void onModsPopulated()"
+        },
+        {
+          "name": "getModContainer",
+          "returnType": "Optional<net.fabricmc.loader.api.ModContainer>",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "id"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "Optional<net.fabricmc.loader.api.ModContainer> getModContainer(String)"
+        },
+        {
+          "name": "getAllMods",
+          "returnType": "Collection<net.fabricmc.loader.api.ModContainer>",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "Collection<net.fabricmc.loader.api.ModContainer> getAllMods()"
+        },
+        {
+          "name": "isModLoaded",
+          "returnType": "boolean",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "id"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "boolean isModLoaded(String)"
+        },
+        {
+          "name": "isDevelopmentEnvironment",
+          "returnType": "boolean",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "boolean isDevelopmentEnvironment()"
+        },
+        {
+          "name": "getModContainers",
+          "returnType": "Collection<ModContainer>",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "Collection<ModContainer> getModContainers()"
+        },
+        {
+          "name": "getMods",
+          "returnType": "List<ModContainer>",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "List<ModContainer> getMods()"
+        },
+        {
+          "name": "getClasspathMods",
+          "returnType": "List<ModEntry>",
+          "parameters": [
+            {
+              "type": "Stream<URL>",
+              "name": "urls"
+            }
+          ],
+          "modifiers": [
+            "protected"
+          ],
+          "signature": "List<ModEntry> getClasspathMods(Stream<URL>)"
+        },
+        {
+          "name": "loaderInitializesMods",
+          "returnType": "boolean",
+          "parameters": [],
+          "modifiers": [
+            "protected"
+          ],
+          "signature": "boolean loaderInitializesMods()"
+        },
+        {
+          "name": "addMod",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "ModInfo",
+              "name": "info"
+            },
+            {
+              "type": "File",
+              "name": "originFile"
+            },
+            {
+              "type": "boolean",
+              "name": "initialize"
+            }
+          ],
+          "modifiers": [
+            "protected"
+          ],
+          "signature": "void addMod(ModInfo, File, boolean)"
+        },
+        {
+          "name": "checkDependencies",
+          "returnType": "void",
+          "parameters": [],
+          "modifiers": [
+            "protected"
+          ],
+          "signature": "void checkDependencies()"
+        },
+        {
+          "name": "validateMods",
+          "returnType": "void",
+          "parameters": [],
+          "modifiers": [
+            "protected"
+          ],
+          "signature": "void validateMods()"
+        },
+        {
+          "name": "sortMods",
+          "returnType": "void",
+          "parameters": [],
+          "modifiers": [
+            "private"
+          ],
+          "signature": "void sortMods()"
+        },
+        {
+          "name": "initializeMods",
+          "returnType": "void",
+          "parameters": [],
+          "modifiers": [
+            "private"
+          ],
+          "signature": "void initializeMods()"
+        },
+        {
+          "name": "getFilesInDirectory",
+          "returnType": "List<File>",
+          "parameters": [
+            {
+              "type": "File",
+              "name": "modsDir"
+            }
+          ],
+          "modifiers": [
+            "protected",
+            "static"
+          ],
+          "signature": "List<File> getFilesInDirectory(File)"
+        },
+        {
+          "name": "getJarMods",
+          "returnType": "ModInfo[]",
+          "parameters": [
+            {
+              "type": "File",
+              "name": "f"
+            }
+          ],
+          "modifiers": [
+            "protected",
+            "static"
+          ],
+          "signature": "ModInfo[] getJarMods(File)"
+        },
+        {
+          "name": "getMods",
+          "returnType": "ModInfo[]",
+          "parameters": [
+            {
+              "type": "InputStream",
+              "name": "in"
+            }
+          ],
+          "modifiers": [
+            "protected",
+            "static"
+          ],
+          "signature": "ModInfo[] getMods(InputStream)"
+        }
+      ],
+      "file": "net/fabricmc/loader/FabricLoader.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.FabricLoader$ModEntry",
+      "simpleName": "ModEntry",
+      "pkg": "net.fabricmc.loader",
+      "modifiers": [
+        "private"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "ModEntry",
+          "returnType": "ModEntry",
+          "parameters": [
+            {
+              "type": "ModInfo",
+              "name": "info"
+            },
+            {
+              "type": "File",
+              "name": "file"
+            }
+          ],
+          "modifiers": [],
+          "signature": "ModEntry(ModInfo, File)"
+        }
+      ],
+      "file": "net/fabricmc/loader/FabricLoader.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.InstanceStorage",
+      "simpleName": "InstanceStorage",
+      "pkg": "net.fabricmc.loader",
+      "modifiers": [],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "getInitializers",
+          "returnType": "Collection<T>",
+          "parameters": [
+            {
+              "type": "Class<T>",
+              "name": "type"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "Collection<T> getInitializers(Class<T>)"
+        },
+        {
+          "name": "instantiate",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "name"
+            },
+            {
+              "type": "LanguageAdapter",
+              "name": "adapter"
+            }
+          ],
+          "modifiers": [
+            "protected"
+          ],
+          "signature": "void instantiate(String, LanguageAdapter)"
+        },
+        {
+          "name": "add",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "Object",
+              "name": "o"
+            }
+          ],
+          "modifiers": [
+            "protected",
+            "final"
+          ],
+          "signature": "void add(Object)"
+        },
+        {
+          "name": "add",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "Object",
+              "name": "o"
+            },
+            {
+              "type": "Class",
+              "name": "c"
+            }
+          ],
+          "modifiers": [
+            "protected"
+          ],
+          "signature": "void add(Object, Class)"
+        }
+      ],
+      "file": "net/fabricmc/loader/InstanceStorage.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.language.JavaLanguageAdapter",
+      "simpleName": "JavaLanguageAdapter",
+      "pkg": "net.fabricmc.loader.language",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "canApplyInterface",
+          "returnType": "boolean",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "itfString"
+            }
+          ],
+          "modifiers": [
+            "private",
+            "static"
+          ],
+          "signature": "boolean canApplyInterface(String)"
+        },
+        {
+          "name": "getClass",
+          "returnType": "Class<?>",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "classString"
+            },
+            {
+              "type": "Options",
+              "name": "options"
+            }
+          ],
+          "modifiers": [
+            "public",
+            "static"
+          ],
+          "signature": "Class<?> getClass(String, Options)"
+        },
+        {
+          "name": "createInstance",
+          "returnType": "Object",
+          "parameters": [
+            {
+              "type": "Class<?>",
+              "name": "modClass"
+            },
+            {
+              "type": "Options",
+              "name": "options"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "Object createInstance(Class<?>, Options)"
+        }
+      ],
+      "file": "net/fabricmc/loader/language/JavaLanguageAdapter.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.language.LanguageAdapter",
+      "simpleName": "LanguageAdapter",
+      "pkg": "net.fabricmc.loader.language",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "createInstance",
+          "returnType": "Object",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "classString"
+            },
+            {
+              "type": "Options",
+              "name": "options"
+            }
+          ],
+          "modifiers": [
+            "default"
+          ],
+          "signature": "Object createInstance(String, Options)"
+        },
+        {
+          "name": "createInstance",
+          "returnType": "Object",
+          "parameters": [
+            {
+              "type": "Class<?>",
+              "name": "baseClass"
+            },
+            {
+              "type": "Options",
+              "name": "options"
+            }
+          ],
+          "modifiers": [],
+          "signature": "Object createInstance(Class<?>, Options)"
+        }
+      ],
+      "file": "net/fabricmc/loader/language/LanguageAdapter.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.language.LanguageAdapter$MissingSuperclassBehavior",
+      "simpleName": "MissingSuperclassBehavior",
+      "pkg": "net.fabricmc.loader.language",
+      "modifiers": [],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [],
+      "file": "net/fabricmc/loader/language/LanguageAdapter.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.language.LanguageAdapter$Options",
+      "simpleName": "Options",
+      "pkg": "net.fabricmc.loader.language",
+      "modifiers": [
+        "public",
+        "static"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "getMissingSuperclassBehavior",
+          "returnType": "MissingSuperclassBehavior",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "MissingSuperclassBehavior getMissingSuperclassBehavior()"
+        }
+      ],
+      "file": "net/fabricmc/loader/language/LanguageAdapter.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.language.LanguageAdapter$Options$Builder",
+      "simpleName": "Builder",
+      "pkg": "net.fabricmc.loader.language",
+      "modifiers": [
+        "public",
+        "static"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "Builder",
+          "returnType": "Builder",
+          "parameters": [],
+          "modifiers": [
+            "private"
+          ],
+          "signature": "Builder()"
+        },
+        {
+          "name": "create",
+          "returnType": "Builder",
+          "parameters": [],
+          "modifiers": [
+            "public",
+            "static"
+          ],
+          "signature": "Builder create()"
+        },
+        {
+          "name": "missingSuperclassBehaviour",
+          "returnType": "Builder",
+          "parameters": [
+            {
+              "type": "MissingSuperclassBehavior",
+              "name": "value"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "Builder missingSuperclassBehaviour(MissingSuperclassBehavior)"
+        },
+        {
+          "name": "build",
+          "returnType": "Options",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "Options build()"
+        }
+      ],
+      "file": "net/fabricmc/loader/language/LanguageAdapter.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.language.LanguageAdapterException",
+      "simpleName": "LanguageAdapterException",
+      "pkg": "net.fabricmc.loader.language",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "LanguageAdapterException",
+          "returnType": "LanguageAdapterException",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "s"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "LanguageAdapterException(String)"
+        },
+        {
+          "name": "LanguageAdapterException",
+          "returnType": "LanguageAdapterException",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "s"
+            },
+            {
+              "type": "Throwable",
+              "name": "t"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "LanguageAdapterException(String, Throwable)"
+        }
+      ],
+      "file": "net/fabricmc/loader/language/LanguageAdapterException.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.launch.common.FabricLauncher",
+      "simpleName": "FabricLauncher",
+      "pkg": "net.fabricmc.loader.launch.common",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "getMappings",
+          "returnType": "Mappings",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "Mappings getMappings()"
+        },
+        {
+          "name": "propose",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "URL",
+              "name": "url"
+            }
+          ],
+          "modifiers": [],
+          "signature": "void propose(URL)"
+        },
+        {
+          "name": "getClasspathURLs",
+          "returnType": "Collection<URL>",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "Collection<URL> getClasspathURLs()"
+        },
+        {
+          "name": "getEnvironmentType",
+          "returnType": "EnvType",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "EnvType getEnvironmentType()"
+        },
+        {
+          "name": "isClassLoaded",
+          "returnType": "boolean",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "name"
+            }
+          ],
+          "modifiers": [],
+          "signature": "boolean isClassLoaded(String)"
+        },
+        {
+          "name": "getResourceAsStream",
+          "returnType": "InputStream",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "name"
+            }
+          ],
+          "modifiers": [],
+          "signature": "InputStream getResourceAsStream(String)"
+        },
+        {
+          "name": "getTargetClassLoader",
+          "returnType": "ClassLoader",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "ClassLoader getTargetClassLoader()"
+        },
+        {
+          "name": "getClassByteArray",
+          "returnType": "byte[]",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "name"
+            }
+          ],
+          "modifiers": [],
+          "signature": "byte[] getClassByteArray(String)"
+        },
+        {
+          "name": "isDevelopment",
+          "returnType": "boolean",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "boolean isDevelopment()"
+        }
+      ],
+      "file": "net/fabricmc/loader/launch/common/FabricLauncher.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.launch.common.FabricLauncherBase",
+      "simpleName": "FabricLauncherBase",
+      "pkg": "net.fabricmc.loader.launch.common",
+      "modifiers": [
+        "public",
+        "abstract"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "FabricLauncherBase",
+          "returnType": "FabricLauncherBase",
+          "parameters": [],
+          "modifiers": [
+            "protected"
+          ],
+          "signature": "FabricLauncherBase()"
+        },
+        {
+          "name": "getLaunchDirectory",
+          "returnType": "File",
+          "parameters": [
+            {
+              "type": "Map<String,String>",
+              "name": "argMap"
+            }
+          ],
+          "modifiers": [
+            "protected",
+            "static"
+          ],
+          "signature": "File getLaunchDirectory(Map<String,String>)"
+        },
+        {
+          "name": "getMappings",
+          "returnType": "Mappings",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "Mappings getMappings()"
+        },
+        {
+          "name": "deobfuscate",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "File",
+              "name": "gameDir"
+            },
+            {
+              "type": "File",
+              "name": "jarFile"
+            },
+            {
+              "type": "FabricLauncher",
+              "name": "launcher"
+            }
+          ],
+          "modifiers": [
+            "protected",
+            "static"
+          ],
+          "signature": "void deobfuscate(File, File, FabricLauncher)"
+        },
+        {
+          "name": "processArgumentMap",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "Map<String,String>",
+              "name": "argMap"
+            },
+            {
+              "type": "EnvType",
+              "name": "envType"
+            }
+          ],
+          "modifiers": [
+            "protected",
+            "static"
+          ],
+          "signature": "void processArgumentMap(Map<String,String>, EnvType)"
+        },
+        {
+          "name": "asStringArray",
+          "returnType": "String[]",
+          "parameters": [
+            {
+              "type": "Map<String,String>",
+              "name": "argMap"
+            }
+          ],
+          "modifiers": [
+            "protected",
+            "static"
+          ],
+          "signature": "String[] asStringArray(Map<String,String>)"
+        },
+        {
+          "name": "asStringArray",
+          "returnType": "String[]",
+          "parameters": [
+            {
+              "type": "Map<String,String>",
+              "name": "argMap"
+            },
+            {
+              "type": "List<String>",
+              "name": "extraArgs"
+            }
+          ],
+          "modifiers": [
+            "protected",
+            "static"
+          ],
+          "signature": "String[] asStringArray(Map<String,String>, List<String>)"
+        },
+        {
+          "name": "setProperties",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "Map<String,Object>",
+              "name": "propertiesA"
+            }
+          ],
+          "modifiers": [
+            "protected",
+            "static"
+          ],
+          "signature": "void setProperties(Map<String,Object>)"
+        },
+        {
+          "name": "setLauncher",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "FabricLauncher",
+              "name": "launcherA"
+            }
+          ],
+          "modifiers": [
+            "private",
+            "static"
+          ],
+          "signature": "void setLauncher(FabricLauncher)"
+        },
+        {
+          "name": "getLauncher",
+          "returnType": "FabricLauncher",
+          "parameters": [],
+          "modifiers": [
+            "public",
+            "static"
+          ],
+          "signature": "FabricLauncher getLauncher()"
+        },
+        {
+          "name": "getProperties",
+          "returnType": "Map<String,Object>",
+          "parameters": [],
+          "modifiers": [
+            "public",
+            "static"
+          ],
+          "signature": "Map<String,Object> getProperties()"
+        },
+        {
+          "name": "pretendMixinPhases",
+          "returnType": "void",
+          "parameters": [],
+          "modifiers": [
+            "protected",
+            "static"
+          ],
+          "signature": "void pretendMixinPhases()"
+        }
+      ],
+      "file": "net/fabricmc/loader/launch/common/FabricLauncherBase.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.launch.common.FabricMixinBootstrap",
+      "simpleName": "FabricMixinBootstrap",
+      "pkg": "net.fabricmc.loader.launch.common",
+      "modifiers": [
+        "public",
+        "final"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "FabricMixinBootstrap",
+          "returnType": "FabricMixinBootstrap",
+          "parameters": [],
+          "modifiers": [
+            "private"
+          ],
+          "signature": "FabricMixinBootstrap()"
+        },
+        {
+          "name": "addConfiguration",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "configuration"
+            }
+          ],
+          "modifiers": [
+            "static"
+          ],
+          "signature": "void addConfiguration(String)"
+        },
+        {
+          "name": "getClientMixinConfigs",
+          "returnType": "Set<String>",
+          "parameters": [
+            {
+              "type": "FabricLoader",
+              "name": "loader"
+            }
+          ],
+          "modifiers": [
+            "static"
+          ],
+          "signature": "Set<String> getClientMixinConfigs(FabricLoader)"
+        },
+        {
+          "name": "getCommonMixinConfigs",
+          "returnType": "Set<String>",
+          "parameters": [
+            {
+              "type": "FabricLoader",
+              "name": "loader"
+            }
+          ],
+          "modifiers": [
+            "static"
+          ],
+          "signature": "Set<String> getCommonMixinConfigs(FabricLoader)"
+        },
+        {
+          "name": "getServerMixinConfigs",
+          "returnType": "Set<String>",
+          "parameters": [
+            {
+              "type": "FabricLoader",
+              "name": "loader"
+            }
+          ],
+          "modifiers": [
+            "static"
+          ],
+          "signature": "Set<String> getServerMixinConfigs(FabricLoader)"
+        },
+        {
+          "name": "init",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "EnvType",
+              "name": "side"
+            },
+            {
+              "type": "Map<String,String>",
+              "name": "args"
+            },
+            {
+              "type": "FabricLoader",
+              "name": "loader"
+            }
+          ],
+          "modifiers": [
+            "public",
+            "static"
+          ],
+          "signature": "void init(EnvType, Map<String,String>, FabricLoader)"
+        }
+      ],
+      "file": "net/fabricmc/loader/launch/common/FabricMixinBootstrap.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.launch.common.MixinLoader",
+      "simpleName": "MixinLoader",
+      "pkg": "net.fabricmc.loader.launch.common",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "loaderInitializesMods",
+          "returnType": "boolean",
+          "parameters": [],
+          "modifiers": [
+            "protected"
+          ],
+          "signature": "boolean loaderInitializesMods()"
+        },
+        {
+          "name": "addMod",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "ModInfo",
+              "name": "info"
+            },
+            {
+              "type": "File",
+              "name": "originFile"
+            },
+            {
+              "type": "boolean",
+              "name": "initialize"
+            }
+          ],
+          "modifiers": [
+            "protected"
+          ],
+          "signature": "void addMod(ModInfo, File, boolean)"
+        }
+      ],
+      "file": "net/fabricmc/loader/launch/common/MixinLoader.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.launch.FabricClassTransformer",
+      "simpleName": "FabricClassTransformer",
+      "pkg": "net.fabricmc.loader.launch",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "transform",
+          "returnType": "byte[]",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "name"
+            },
+            {
+              "type": "String",
+              "name": "transformedName"
+            },
+            {
+              "type": "byte[]",
+              "name": "basicClass"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "byte[] transform(String, String, byte[])"
+        }
+      ],
+      "file": "net/fabricmc/loader/launch/FabricClassTransformer.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.launch.FabricClientTweaker",
+      "simpleName": "FabricClientTweaker",
+      "pkg": "net.fabricmc.loader.launch",
+      "modifiers": [
+        "public",
+        "final"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "getEnvironmentType",
+          "returnType": "EnvType",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "EnvType getEnvironmentType()"
+        },
+        {
+          "name": "getLaunchTarget",
+          "returnType": "String",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "String getLaunchTarget()"
+        }
+      ],
+      "file": "net/fabricmc/loader/launch/FabricClientTweaker.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.launch.FabricServerTweaker",
+      "simpleName": "FabricServerTweaker",
+      "pkg": "net.fabricmc.loader.launch",
+      "modifiers": [
+        "public",
+        "final"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "getLaunchTarget",
+          "returnType": "String",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "String getLaunchTarget()"
+        },
+        {
+          "name": "getEnvironmentType",
+          "returnType": "EnvType",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "EnvType getEnvironmentType()"
+        }
+      ],
+      "file": "net/fabricmc/loader/launch/FabricServerTweaker.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.launch.FabricTweaker",
+      "simpleName": "FabricTweaker",
+      "pkg": "net.fabricmc.loader.launch",
+      "modifiers": [
+        "public",
+        "abstract"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "acceptOptions",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "List<String>",
+              "name": "localArgs"
+            },
+            {
+              "type": "File",
+              "name": "gameDir"
+            },
+            {
+              "type": "File",
+              "name": "assetsDir"
+            },
+            {
+              "type": "String",
+              "name": "profile"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "void acceptOptions(List<String>, File, File, String)"
+        },
+        {
+          "name": "injectIntoClassLoader",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "LaunchClassLoader",
+              "name": "launchClassLoader"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "void injectIntoClassLoader(LaunchClassLoader)"
+        },
+        {
+          "name": "getLaunchArguments",
+          "returnType": "String[]",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "String[] getLaunchArguments()"
+        },
+        {
+          "name": "propose",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "URL",
+              "name": "url"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "void propose(URL)"
+        },
+        {
+          "name": "getClasspathURLs",
+          "returnType": "Collection<URL>",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "Collection<URL> getClasspathURLs()"
+        },
+        {
+          "name": "getEnvironmentType",
+          "returnType": "EnvType",
+          "parameters": [],
+          "modifiers": [
+            "public",
+            "abstract"
+          ],
+          "signature": "EnvType getEnvironmentType()"
+        },
+        {
+          "name": "isClassLoaded",
+          "returnType": "boolean",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "name"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "boolean isClassLoaded(String)"
+        },
+        {
+          "name": "getResourceAsStream",
+          "returnType": "InputStream",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "name"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "InputStream getResourceAsStream(String)"
+        },
+        {
+          "name": "getTargetClassLoader",
+          "returnType": "ClassLoader",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "ClassLoader getTargetClassLoader()"
+        },
+        {
+          "name": "getClassByteArray",
+          "returnType": "byte[]",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "name"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "byte[] getClassByteArray(String)"
+        },
+        {
+          "name": "isDevelopment",
+          "returnType": "boolean",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "boolean isDevelopment()"
+        }
+      ],
+      "file": "net/fabricmc/loader/launch/FabricTweaker.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.launch.knot.FabricGlobalPropertyService",
+      "simpleName": "FabricGlobalPropertyService",
+      "pkg": "net.fabricmc.loader.launch.knot",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "getProperty",
+          "returnType": "T",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "key"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "T getProperty(String)"
+        },
+        {
+          "name": "setProperty",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "key"
+            },
+            {
+              "type": "Object",
+              "name": "value"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "void setProperty(String, Object)"
+        },
+        {
+          "name": "getProperty",
+          "returnType": "T",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "key"
+            },
+            {
+              "type": "T",
+              "name": "defaultValue"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "T getProperty(String, T)"
+        },
+        {
+          "name": "getPropertyString",
+          "returnType": "String",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "key"
+            },
+            {
+              "type": "String",
+              "name": "defaultValue"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "String getPropertyString(String, String)"
+        }
+      ],
+      "file": "net/fabricmc/loader/launch/knot/FabricGlobalPropertyService.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.launch.knot.Knot",
+      "simpleName": "Knot",
+      "pkg": "net.fabricmc.loader.launch.knot",
+      "modifiers": [
+        "public",
+        "final"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "Knot",
+          "returnType": "Knot",
+          "parameters": [
+            {
+              "type": "EnvType",
+              "name": "type"
+            },
+            {
+              "type": "File",
+              "name": "gameJarFile"
+            }
+          ],
+          "modifiers": [
+            "protected"
+          ],
+          "signature": "Knot(EnvType, File)"
+        },
+        {
+          "name": "init",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "String[]",
+              "name": "args"
+            }
+          ],
+          "modifiers": [
+            "protected"
+          ],
+          "signature": "void init(String[])"
+        },
+        {
+          "name": "populateClasspath",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "Map<String,String>",
+              "name": "argMap"
+            },
+            {
+              "type": "Collection<String>",
+              "name": "classpathStrings"
+            }
+          ],
+          "modifiers": [
+            "private"
+          ],
+          "signature": "void populateClasspath(Map<String,String>, Collection<String>)"
+        },
+        {
+          "name": "propose",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "URL",
+              "name": "url"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "void propose(URL)"
+        },
+        {
+          "name": "getClasspathURLs",
+          "returnType": "Collection<URL>",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "Collection<URL> getClasspathURLs()"
+        },
+        {
+          "name": "getEnvironmentType",
+          "returnType": "EnvType",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "EnvType getEnvironmentType()"
+        },
+        {
+          "name": "isClassLoaded",
+          "returnType": "boolean",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "name"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "boolean isClassLoaded(String)"
+        },
+        {
+          "name": "getResourceAsStream",
+          "returnType": "InputStream",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "name"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "InputStream getResourceAsStream(String)"
+        },
+        {
+          "name": "getTargetClassLoader",
+          "returnType": "ClassLoader",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "ClassLoader getTargetClassLoader()"
+        },
+        {
+          "name": "getClassByteArray",
+          "returnType": "byte[]",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "name"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "byte[] getClassByteArray(String)"
+        },
+        {
+          "name": "isDevelopment",
+          "returnType": "boolean",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "boolean isDevelopment()"
+        },
+        {
+          "name": "main",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "String[]",
+              "name": "args"
+            }
+          ],
+          "modifiers": [
+            "public",
+            "static"
+          ],
+          "signature": "void main(String[])"
+        }
+      ],
+      "file": "net/fabricmc/loader/launch/knot/Knot.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.launch.knot.Knot$NullClassLoader",
+      "simpleName": "NullClassLoader",
+      "pkg": "net.fabricmc.loader.launch.knot",
+      "modifiers": [
+        "private",
+        "static"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "hasMoreElements",
+          "returnType": "boolean",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "boolean hasMoreElements()"
+        },
+        {
+          "name": "nextElement",
+          "returnType": "URL",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "URL nextElement()"
+        },
+        {
+          "name": "loadClass",
+          "returnType": "Class<?>",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "name"
+            },
+            {
+              "type": "boolean",
+              "name": "resolve"
+            }
+          ],
+          "modifiers": [
+            "protected"
+          ],
+          "signature": "Class<?> loadClass(String, boolean)"
+        },
+        {
+          "name": "getResource",
+          "returnType": "URL",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "name"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "URL getResource(String)"
+        },
+        {
+          "name": "getResources",
+          "returnType": "Enumeration<URL>",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "var1"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "Enumeration<URL> getResources(String)"
+        }
+      ],
+      "file": "net/fabricmc/loader/launch/knot/Knot.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.launch.knot.Knot$DynamicURLClassLoader",
+      "simpleName": "DynamicURLClassLoader",
+      "pkg": "net.fabricmc.loader.launch.knot",
+      "modifiers": [
+        "private",
+        "static"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "DynamicURLClassLoader",
+          "returnType": "DynamicURLClassLoader",
+          "parameters": [
+            {
+              "type": "URL[]",
+              "name": "urls"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "DynamicURLClassLoader(URL[])"
+        },
+        {
+          "name": "addURL",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "URL",
+              "name": "url"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "void addURL(URL)"
+        }
+      ],
+      "file": "net/fabricmc/loader/launch/knot/Knot.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.launch.knot.Knot$PatchingClassLoader",
+      "simpleName": "PatchingClassLoader",
+      "pkg": "net.fabricmc.loader.launch.knot",
+      "modifiers": [
+        "private",
+        "static"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "PatchingClassLoader",
+          "returnType": "PatchingClassLoader",
+          "parameters": [
+            {
+              "type": "boolean",
+              "name": "isDevelopment"
+            },
+            {
+              "type": "EnvType",
+              "name": "envType"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "PatchingClassLoader(boolean, EnvType)"
+        },
+        {
+          "name": "isClassLoaded",
+          "returnType": "boolean",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "name"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "boolean isClassLoaded(String)"
+        },
+        {
+          "name": "getResource",
+          "returnType": "URL",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "name"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "URL getResource(String)"
+        },
+        {
+          "name": "getResourceAsStream",
+          "returnType": "InputStream",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "var1"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "InputStream getResourceAsStream(String)"
+        },
+        {
+          "name": "getResources",
+          "returnType": "Enumeration<URL>",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "name"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "Enumeration<URL> getResources(String)"
+        },
+        {
+          "name": "getMixinTransformer",
+          "returnType": "MixinTransformer",
+          "parameters": [],
+          "modifiers": [
+            "private"
+          ],
+          "signature": "MixinTransformer getMixinTransformer()"
+        },
+        {
+          "name": "loadClass",
+          "returnType": "Class<?>",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "name"
+            },
+            {
+              "type": "boolean",
+              "name": "resolve"
+            }
+          ],
+          "modifiers": [
+            "protected"
+          ],
+          "signature": "Class<?> loadClass(String, boolean)"
+        },
+        {
+          "name": "addURL",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "URL",
+              "name": "url"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "void addURL(URL)"
+        },
+        {
+          "name": "getClassByteArray",
+          "returnType": "byte[]",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "name"
+            },
+            {
+              "type": "boolean",
+              "name": "skipOriginalLoader"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "byte[] getClassByteArray(String, boolean)"
+        }
+      ],
+      "file": "net/fabricmc/loader/launch/knot/Knot.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.launch.knot.KnotClient",
+      "simpleName": "KnotClient",
+      "pkg": "net.fabricmc.loader.launch.knot",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "main",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "String[]",
+              "name": "args"
+            }
+          ],
+          "modifiers": [
+            "public",
+            "static"
+          ],
+          "signature": "void main(String[])"
+        }
+      ],
+      "file": "net/fabricmc/loader/launch/knot/KnotClient.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.launch.knot.KnotServer",
+      "simpleName": "KnotServer",
+      "pkg": "net.fabricmc.loader.launch.knot",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "main",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "String[]",
+              "name": "args"
+            }
+          ],
+          "modifiers": [
+            "public",
+            "static"
+          ],
+          "signature": "void main(String[])"
+        }
+      ],
+      "file": "net/fabricmc/loader/launch/knot/KnotServer.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.launch.knot.MixinServiceKnot",
+      "simpleName": "MixinServiceKnot",
+      "pkg": "net.fabricmc.loader.launch.knot",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "MixinServiceKnot",
+          "returnType": "MixinServiceKnot",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "MixinServiceKnot()"
+        },
+        {
+          "name": "getClassBytes",
+          "returnType": "byte[]",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "name"
+            },
+            {
+              "type": "String",
+              "name": "transformedName"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "byte[] getClassBytes(String, String)"
+        },
+        {
+          "name": "getClassBytes",
+          "returnType": "byte[]",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "name"
+            },
+            {
+              "type": "boolean",
+              "name": "runTransformers"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "byte[] getClassBytes(String, boolean)"
+        },
+        {
+          "name": "getClassNode",
+          "returnType": "ClassNode",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "name"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "ClassNode getClassNode(String)"
+        },
+        {
+          "name": "getClassPath",
+          "returnType": "URL[]",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "URL[] getClassPath()"
+        },
+        {
+          "name": "findClass",
+          "returnType": "Class<?>",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "name"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "Class<?> findClass(String)"
+        },
+        {
+          "name": "findClass",
+          "returnType": "Class<?>",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "name"
+            },
+            {
+              "type": "boolean",
+              "name": "initialize"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "Class<?> findClass(String, boolean)"
+        },
+        {
+          "name": "findAgentClass",
+          "returnType": "Class<?>",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "name"
+            },
+            {
+              "type": "boolean",
+              "name": "initialize"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "Class<?> findAgentClass(String, boolean)"
+        },
+        {
+          "name": "getName",
+          "returnType": "String",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "String getName()"
+        },
+        {
+          "name": "isValid",
+          "returnType": "boolean",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "boolean isValid()"
+        },
+        {
+          "name": "prepare",
+          "returnType": "void",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "void prepare()"
+        },
+        {
+          "name": "getInitialPhase",
+          "returnType": "MixinEnvironment.Phase",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "MixinEnvironment.Phase getInitialPhase()"
+        },
+        {
+          "name": "init",
+          "returnType": "void",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "void init()"
+        },
+        {
+          "name": "beginPhase",
+          "returnType": "void",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "void beginPhase()"
+        },
+        {
+          "name": "checkEnv",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "Object",
+              "name": "bootSource"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "void checkEnv(Object)"
+        },
+        {
+          "name": "getReEntranceLock",
+          "returnType": "ReEntranceLock",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "ReEntranceLock getReEntranceLock()"
+        },
+        {
+          "name": "getClassProvider",
+          "returnType": "IClassProvider",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "IClassProvider getClassProvider()"
+        },
+        {
+          "name": "getBytecodeProvider",
+          "returnType": "IClassBytecodeProvider",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "IClassBytecodeProvider getBytecodeProvider()"
+        },
+        {
+          "name": "getPlatformAgents",
+          "returnType": "Collection<String>",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "Collection<String> getPlatformAgents()"
+        },
+        {
+          "name": "getResourceAsStream",
+          "returnType": "InputStream",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "name"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "InputStream getResourceAsStream(String)"
+        },
+        {
+          "name": "registerInvalidClass",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "className"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "void registerInvalidClass(String)"
+        },
+        {
+          "name": "isClassLoaded",
+          "returnType": "boolean",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "className"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "boolean isClassLoaded(String)"
+        },
+        {
+          "name": "getClassRestrictions",
+          "returnType": "String",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "className"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "String getClassRestrictions(String)"
+        },
+        {
+          "name": "getTransformers",
+          "returnType": "Collection<ITransformer>",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "Collection<ITransformer> getTransformers()"
+        },
+        {
+          "name": "getSideName",
+          "returnType": "String",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "String getSideName()"
+        }
+      ],
+      "file": "net/fabricmc/loader/launch/knot/MixinServiceKnot.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.launch.knot.MixinServiceKnotBootstrap",
+      "simpleName": "MixinServiceKnotBootstrap",
+      "pkg": "net.fabricmc.loader.launch.knot",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "getName",
+          "returnType": "String",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "String getName()"
+        },
+        {
+          "name": "getServiceClassName",
+          "returnType": "String",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "String getServiceClassName()"
+        },
+        {
+          "name": "bootstrap",
+          "returnType": "void",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "void bootstrap()"
+        }
+      ],
+      "file": "net/fabricmc/loader/launch/knot/MixinServiceKnotBootstrap.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.launch.server.FabricServerLauncher",
+      "simpleName": "FabricServerLauncher",
+      "pkg": "net.fabricmc.loader.launch.server",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "main",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "String[]",
+              "name": "args"
+            }
+          ],
+          "modifiers": [
+            "public",
+            "static"
+          ],
+          "signature": "void main(String[])"
+        },
+        {
+          "name": "launch",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "mainClass"
+            },
+            {
+              "type": "String[]",
+              "name": "args"
+            }
+          ],
+          "modifiers": [
+            "private",
+            "static"
+          ],
+          "signature": "void launch(String, String[])"
+        },
+        {
+          "name": "setup",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "File",
+              "name": "serverJar"
+            },
+            {
+              "type": "List<String>",
+              "name": "runArguments"
+            }
+          ],
+          "modifiers": [
+            "private",
+            "static"
+          ],
+          "signature": "void setup(File, List<String>)"
+        }
+      ],
+      "file": "net/fabricmc/loader/launch/server/FabricServerLauncher.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.launch.server.InjectingURLClassLoader",
+      "simpleName": "InjectingURLClassLoader",
+      "pkg": "net.fabricmc.loader.launch.server",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "InjectingURLClassLoader",
+          "returnType": "InjectingURLClassLoader",
+          "parameters": [
+            {
+              "type": "URL[]",
+              "name": "urls"
+            },
+            {
+              "type": "ClassLoader",
+              "name": "classLoader"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "InjectingURLClassLoader(URL[], ClassLoader)"
+        },
+        {
+          "name": "loadClass",
+          "returnType": "Class<?>",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "name"
+            },
+            {
+              "type": "boolean",
+              "name": "resolve"
+            }
+          ],
+          "modifiers": [
+            "protected"
+          ],
+          "signature": "Class<?> loadClass(String, boolean)"
+        }
+      ],
+      "file": "net/fabricmc/loader/launch/server/InjectingURLClassLoader.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.launch.server.stagetwo.FabricServerLauncherStageTwo",
+      "simpleName": "FabricServerLauncherStageTwo",
+      "pkg": "net.fabricmc.loader.launch.server.stagetwo",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "stageTwo",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "List<String>",
+              "name": "runArguments"
+            }
+          ],
+          "modifiers": [
+            "public",
+            "static"
+          ],
+          "signature": "void stageTwo(List<String>)"
+        },
+        {
+          "name": "setupFabricEnvironment",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "List<String>",
+              "name": "runArguments"
+            }
+          ],
+          "modifiers": [
+            "private",
+            "static"
+          ],
+          "signature": "void setupFabricEnvironment(List<String>)"
+        },
+        {
+          "name": "setupLibrary",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "Library",
+              "name": "library"
+            }
+          ],
+          "modifiers": [
+            "private",
+            "static"
+          ],
+          "signature": "void setupLibrary(Library)"
+        },
+        {
+          "name": "setupMappings",
+          "returnType": "void",
+          "parameters": [],
+          "modifiers": [
+            "private",
+            "static"
+          ],
+          "signature": "void setupMappings()"
+        },
+        {
+          "name": "findMappingVersionsMaven",
+          "returnType": "List<String>",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "mcVersion"
+            },
+            {
+              "type": "String",
+              "name": "mavenMetadataUrl"
+            }
+          ],
+          "modifiers": [
+            "private",
+            "static"
+          ],
+          "signature": "List<String> findMappingVersionsMaven(String, String)"
+        },
+        {
+          "name": "launch",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "mainClass"
+            },
+            {
+              "type": "String[]",
+              "name": "args"
+            }
+          ],
+          "modifiers": [
+            "private",
+            "static"
+          ],
+          "signature": "void launch(String, String[])"
+        },
+        {
+          "name": "readJson",
+          "returnType": "JsonObject",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "file"
+            }
+          ],
+          "modifiers": [
+            "private",
+            "static"
+          ],
+          "signature": "JsonObject readJson(String)"
+        }
+      ],
+      "file": "net/fabricmc/loader/launch/server/stagetwo/FabricServerLauncherStageTwo.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.launch.server.stagetwo.FabricServerLauncherStageTwo$Mode",
+      "simpleName": "Mode",
+      "pkg": "net.fabricmc.loader.launch.server.stagetwo",
+      "modifiers": [
+        "private"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "Mode",
+          "returnType": "Mode",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "name"
+            }
+          ],
+          "modifiers": [],
+          "signature": "Mode(String)"
+        },
+        {
+          "name": "getJsonFilename",
+          "returnType": "String",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "String getJsonFilename()"
+        }
+      ],
+      "file": "net/fabricmc/loader/launch/server/stagetwo/FabricServerLauncherStageTwo.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.launch.server.stagetwo.FabricServerLauncherStageTwo$Library",
+      "simpleName": "Library",
+      "pkg": "net.fabricmc.loader.launch.server.stagetwo",
+      "modifiers": [
+        "private",
+        "static"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "Library",
+          "returnType": "Library",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "name"
+            },
+            {
+              "type": "String",
+              "name": "url"
+            }
+          ],
+          "modifiers": [
+            "private"
+          ],
+          "signature": "Library(String, String)"
+        },
+        {
+          "name": "Library",
+          "returnType": "Library",
+          "parameters": [
+            {
+              "type": "JsonElement",
+              "name": "jsonElement"
+            }
+          ],
+          "modifiers": [
+            "private"
+          ],
+          "signature": "Library(JsonElement)"
+        },
+        {
+          "name": "getFile",
+          "returnType": "File",
+          "parameters": [],
+          "modifiers": [
+            "private"
+          ],
+          "signature": "File getFile()"
+        },
+        {
+          "name": "getURL",
+          "returnType": "String",
+          "parameters": [],
+          "modifiers": [
+            "private"
+          ],
+          "signature": "String getURL()"
+        }
+      ],
+      "file": "net/fabricmc/loader/launch/server/stagetwo/FabricServerLauncherStageTwo.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.mixin.client.MixinClientBrandRetriever",
+      "simpleName": "MixinClientBrandRetriever",
+      "pkg": "net.fabricmc.loader.mixin.client",
+      "modifiers": [
+        "public",
+        "abstract"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "getClientModName",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "CallbackInfoReturnable<String>",
+              "name": "cir"
+            }
+          ],
+          "modifiers": [
+            "private",
+            "static"
+          ],
+          "signature": "void getClientModName(CallbackInfoReturnable<String>)"
+        }
+      ],
+      "file": "net/fabricmc/loader/mixin/client/MixinClientBrandRetriever.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.mixin.client.MixinMinecraftClient",
+      "simpleName": "MixinMinecraftClient",
+      "pkg": "net.fabricmc.loader.mixin.client",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "init",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "CallbackInfo",
+              "name": "info"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "void init(CallbackInfo)"
+        }
+      ],
+      "file": "net/fabricmc/loader/mixin/client/MixinMinecraftClient.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.mixin.common.server.MixinMinecraftServerBrand",
+      "simpleName": "MixinMinecraftServerBrand",
+      "pkg": "net.fabricmc.loader.mixin.common.server",
+      "modifiers": [
+        "public",
+        "abstract"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "getServerModName",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "CallbackInfoReturnable<String>",
+              "name": "cir"
+            }
+          ],
+          "modifiers": [
+            "private"
+          ],
+          "signature": "void getServerModName(CallbackInfoReturnable<String>)"
+        }
+      ],
+      "file": "net/fabricmc/loader/mixin/common/server/MixinMinecraftServerBrand.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.mixin.hooks.FabricServerFileGetProxy",
+      "simpleName": "FabricServerFileGetProxy",
+      "pkg": "net.fabricmc.loader.mixin.hooks",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "fabricHookGetFile",
+          "returnType": "File",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "s"
+            }
+          ],
+          "modifiers": [],
+          "signature": "File fabricHookGetFile(String)"
+        }
+      ],
+      "file": "net/fabricmc/loader/mixin/hooks/FabricServerFileGetProxy.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.mixin.server.MixinDedicatedServer",
+      "simpleName": "MixinDedicatedServer",
+      "pkg": "net.fabricmc.loader.mixin.server",
+      "modifiers": [
+        "public",
+        "abstract"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "setupServer",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "CallbackInfoReturnable<Boolean>",
+              "name": "info"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "void setupServer(CallbackInfoReturnable<Boolean>)"
+        }
+      ],
+      "file": "net/fabricmc/loader/mixin/server/MixinDedicatedServer.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.mixin.server.MixinMinecraftServer",
+      "simpleName": "MixinMinecraftServer",
+      "pkg": "net.fabricmc.loader.mixin.server",
+      "modifiers": [
+        "public",
+        "abstract"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "getFile",
+          "returnType": "File",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "s"
+            }
+          ],
+          "modifiers": [
+            "public",
+            "abstract"
+          ],
+          "signature": "File getFile(String)"
+        },
+        {
+          "name": "fabricHookGetFile",
+          "returnType": "File",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "s"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "File fabricHookGetFile(String)"
+        }
+      ],
+      "file": "net/fabricmc/loader/mixin/server/MixinMinecraftServer.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.ModContainer",
+      "simpleName": "ModContainer",
+      "pkg": "net.fabricmc.loader",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "ModContainer",
+          "returnType": "ModContainer",
+          "parameters": [
+            {
+              "type": "ModInfo",
+              "name": "info"
+            },
+            {
+              "type": "File",
+              "name": "originFile"
+            },
+            {
+              "type": "boolean",
+              "name": "instantiate"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "ModContainer(ModInfo, File, boolean)"
+        },
+        {
+          "name": "getInfo",
+          "returnType": "ModInfo",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "ModInfo getInfo()"
+        },
+        {
+          "name": "getOriginFile",
+          "returnType": "File",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "File getOriginFile()"
+        },
+        {
+          "name": "getAdapter",
+          "returnType": "LanguageAdapter",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "LanguageAdapter getAdapter()"
+        },
+        {
+          "name": "createAdapter",
+          "returnType": "LanguageAdapter",
+          "parameters": [],
+          "modifiers": [
+            "private"
+          ],
+          "signature": "LanguageAdapter createAdapter()"
+        },
+        {
+          "name": "getMetadata",
+          "returnType": "ModMetadata",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "ModMetadata getMetadata()"
+        },
+        {
+          "name": "findRoot",
+          "returnType": "Path",
+          "parameters": [],
+          "modifiers": [
+            "private"
+          ],
+          "signature": "Path findRoot()"
+        },
+        {
+          "name": "getRoot",
+          "returnType": "Path",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "Path getRoot()"
+        }
+      ],
+      "file": "net/fabricmc/loader/ModContainer.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.ModInfo",
+      "simpleName": "ModInfo",
+      "pkg": "net.fabricmc.loader",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "getInitializers",
+          "returnType": "List<String>",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "List<String> getInitializers()"
+        },
+        {
+          "name": "getId",
+          "returnType": "String",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "String getId()"
+        },
+        {
+          "name": "getVersion",
+          "returnType": "Version",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "Version getVersion()"
+        },
+        {
+          "name": "getName",
+          "returnType": "String",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "String getName()"
+        },
+        {
+          "name": "getVersionString",
+          "returnType": "String",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "String getVersionString()"
+        },
+        {
+          "name": "getLanguageAdapter",
+          "returnType": "String",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "String getLanguageAdapter()"
+        },
+        {
+          "name": "getMixins",
+          "returnType": "Mixins",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "Mixins getMixins()"
+        },
+        {
+          "name": "getSide",
+          "returnType": "Side",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "Side getSide()"
+        },
+        {
+          "name": "isLazilyLoaded",
+          "returnType": "boolean",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "boolean isLazilyLoaded()"
+        },
+        {
+          "name": "getDescription",
+          "returnType": "String",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "String getDescription()"
+        },
+        {
+          "name": "getLinks",
+          "returnType": "Links",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "Links getLinks()"
+        },
+        {
+          "name": "getRequires",
+          "returnType": "DependencyMap",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "DependencyMap getRequires()"
+        },
+        {
+          "name": "getRecommends",
+          "returnType": "DependencyMap",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "DependencyMap getRecommends()"
+        },
+        {
+          "name": "getConflicts",
+          "returnType": "DependencyMap",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "DependencyMap getConflicts()"
+        },
+        {
+          "name": "getAuthors",
+          "returnType": "List<Person>",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "List<Person> getAuthors()"
+        },
+        {
+          "name": "getContributors",
+          "returnType": "List<Person>",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "List<Person> getContributors()"
+        },
+        {
+          "name": "getLicense",
+          "returnType": "String",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "String getLicense()"
+        }
+      ],
+      "file": "net/fabricmc/loader/ModInfo.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.ModInfo$Mixins",
+      "simpleName": "Mixins",
+      "pkg": "net.fabricmc.loader",
+      "modifiers": [
+        "public",
+        "static"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "getClient",
+          "returnType": "String[]",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "String[] getClient()"
+        },
+        {
+          "name": "getCommon",
+          "returnType": "String[]",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "String[] getCommon()"
+        },
+        {
+          "name": "getServer",
+          "returnType": "String[]",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "String[] getServer()"
+        }
+      ],
+      "file": "net/fabricmc/loader/ModInfo.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.ModInfo$Mixins$Deserializer",
+      "simpleName": "Deserializer",
+      "pkg": "net.fabricmc.loader",
+      "modifiers": [
+        "public",
+        "static"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "deserialize",
+          "returnType": "Mixins",
+          "parameters": [
+            {
+              "type": "JsonElement",
+              "name": "element"
+            },
+            {
+              "type": "Type",
+              "name": "typeOfT"
+            },
+            {
+              "type": "JsonDeserializationContext",
+              "name": "context"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "Mixins deserialize(JsonElement, Type, JsonDeserializationContext)"
+        },
+        {
+          "name": "getStringArray",
+          "returnType": "String[]",
+          "parameters": [
+            {
+              "type": "JsonObject",
+              "name": "object"
+            },
+            {
+              "type": "String",
+              "name": "name"
+            }
+          ],
+          "modifiers": [
+            "private"
+          ],
+          "signature": "String[] getStringArray(JsonObject, String)"
+        }
+      ],
+      "file": "net/fabricmc/loader/ModInfo.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.ModInfo$Links",
+      "simpleName": "Links",
+      "pkg": "net.fabricmc.loader",
+      "modifiers": [
+        "public",
+        "static"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "getHomepage",
+          "returnType": "String",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "String getHomepage()"
+        },
+        {
+          "name": "getIssues",
+          "returnType": "String",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "String getIssues()"
+        },
+        {
+          "name": "getSources",
+          "returnType": "String",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "String getSources()"
+        }
+      ],
+      "file": "net/fabricmc/loader/ModInfo.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.ModInfo$Links$Deserializer",
+      "simpleName": "Deserializer",
+      "pkg": "net.fabricmc.loader",
+      "modifiers": [
+        "public",
+        "static"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "deserialize",
+          "returnType": "Links",
+          "parameters": [
+            {
+              "type": "JsonElement",
+              "name": "element"
+            },
+            {
+              "type": "Type",
+              "name": "resultType"
+            },
+            {
+              "type": "JsonDeserializationContext",
+              "name": "context"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "Links deserialize(JsonElement, Type, JsonDeserializationContext)"
+        }
+      ],
+      "file": "net/fabricmc/loader/ModInfo.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.ModInfo$DependencyMap",
+      "simpleName": "DependencyMap",
+      "pkg": "net.fabricmc.loader",
+      "modifiers": [
+        "public",
+        "static"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [],
+      "file": "net/fabricmc/loader/ModInfo.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.ModInfo$Dependency",
+      "simpleName": "Dependency",
+      "pkg": "net.fabricmc.loader",
+      "modifiers": [
+        "public",
+        "static"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "Dependency",
+          "returnType": "Dependency",
+          "parameters": [
+            {
+              "type": "String[]",
+              "name": "versionMatchers"
+            },
+            {
+              "type": "Side",
+              "name": "side"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "Dependency(String[], Side)"
+        },
+        {
+          "name": "getVersionMatchers",
+          "returnType": "String[]",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "String[] getVersionMatchers()"
+        },
+        {
+          "name": "getSide",
+          "returnType": "Side",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "Side getSide()"
+        },
+        {
+          "name": "satisfiedBy",
+          "returnType": "boolean",
+          "parameters": [
+            {
+              "type": "ModInfo",
+              "name": "info"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "boolean satisfiedBy(ModInfo)"
+        }
+      ],
+      "file": "net/fabricmc/loader/ModInfo.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.ModInfo$Dependency$Deserializer",
+      "simpleName": "Deserializer",
+      "pkg": "net.fabricmc.loader",
+      "modifiers": [
+        "public",
+        "static"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "deserializeVersionMatchers",
+          "returnType": "String[]",
+          "parameters": [
+            {
+              "type": "JsonElement",
+              "name": "versionEl"
+            }
+          ],
+          "modifiers": [
+            "private"
+          ],
+          "signature": "String[] deserializeVersionMatchers(JsonElement)"
+        },
+        {
+          "name": "deserialize",
+          "returnType": "Dependency",
+          "parameters": [
+            {
+              "type": "JsonElement",
+              "name": "element"
+            },
+            {
+              "type": "Type",
+              "name": "resultType"
+            },
+            {
+              "type": "JsonDeserializationContext",
+              "name": "context"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "Dependency deserialize(JsonElement, Type, JsonDeserializationContext)"
+        }
+      ],
+      "file": "net/fabricmc/loader/ModInfo.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.ModInfo$Person",
+      "simpleName": "Person",
+      "pkg": "net.fabricmc.loader",
+      "modifiers": [
+        "public",
+        "static"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "Person",
+          "returnType": "Person",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "name"
+            },
+            {
+              "type": "String",
+              "name": "email"
+            },
+            {
+              "type": "String",
+              "name": "website"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "Person(String, String, String)"
+        },
+        {
+          "name": "getName",
+          "returnType": "String",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "String getName()"
+        },
+        {
+          "name": "getEmail",
+          "returnType": "String",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "String getEmail()"
+        },
+        {
+          "name": "getWebsite",
+          "returnType": "String",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "String getWebsite()"
+        }
+      ],
+      "file": "net/fabricmc/loader/ModInfo.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.ModInfo$Person$Deserializer",
+      "simpleName": "Deserializer",
+      "pkg": "net.fabricmc.loader",
+      "modifiers": [
+        "public",
+        "static"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "deserialize",
+          "returnType": "Person",
+          "parameters": [
+            {
+              "type": "JsonElement",
+              "name": "element"
+            },
+            {
+              "type": "Type",
+              "name": "type"
+            },
+            {
+              "type": "JsonDeserializationContext",
+              "name": "jsonDeserializationContext"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "Person deserialize(JsonElement, Type, JsonDeserializationContext)"
+        }
+      ],
+      "file": "net/fabricmc/loader/ModInfo.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.ModInfo$Side",
+      "simpleName": "Side",
+      "pkg": "net.fabricmc.loader",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "hasClient",
+          "returnType": "boolean",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "boolean hasClient()"
+        },
+        {
+          "name": "hasServer",
+          "returnType": "boolean",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "boolean hasServer()"
+        },
+        {
+          "name": "isClient",
+          "returnType": "boolean",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "boolean isClient()"
+        },
+        {
+          "name": "isServer",
+          "returnType": "boolean",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "boolean isServer()"
+        }
+      ],
+      "file": "net/fabricmc/loader/ModInfo.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.server.ServerSidedHandler",
+      "simpleName": "ServerSidedHandler",
+      "pkg": "net.fabricmc.loader.server",
+      "modifiers": [
+        "public",
+        "final"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "ServerSidedHandler",
+          "returnType": "ServerSidedHandler",
+          "parameters": [
+            {
+              "type": "MinecraftServer",
+              "name": "server"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "ServerSidedHandler(MinecraftServer)"
+        },
+        {
+          "name": "getEnvironmentType",
+          "returnType": "EnvType",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "EnvType getEnvironmentType()"
+        },
+        {
+          "name": "getClientPlayer",
+          "returnType": "class_1657",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "class_1657 getClientPlayer()"
+        },
+        {
+          "name": "runOnMainThread",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "Runnable",
+              "name": "runnable"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "void runOnMainThread(Runnable)"
+        },
+        {
+          "name": "getServerInstance",
+          "returnType": "MinecraftServer",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "MinecraftServer getServerInstance()"
+        }
+      ],
+      "file": "net/fabricmc/loader/server/ServerSidedHandler.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.transformer.ClassStripper",
+      "simpleName": "ClassStripper",
+      "pkg": "net.fabricmc.loader.transformer",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "ClassStripper",
+          "returnType": "ClassStripper",
+          "parameters": [
+            {
+              "type": "int",
+              "name": "api"
+            },
+            {
+              "type": "ClassVisitor",
+              "name": "classVisitor"
+            },
+            {
+              "type": "Collection<String>",
+              "name": "stripInterfaces"
+            },
+            {
+              "type": "Collection<String>",
+              "name": "stripFields"
+            },
+            {
+              "type": "Collection<String>",
+              "name": "stripMethods"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "ClassStripper(int, ClassVisitor, Collection<String>, Collection<String>, Collection<String>)"
+        },
+        {
+          "name": "visit",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "int",
+              "name": "version"
+            },
+            {
+              "type": "int",
+              "name": "access"
+            },
+            {
+              "type": "String",
+              "name": "name"
+            },
+            {
+              "type": "String",
+              "name": "signature"
+            },
+            {
+              "type": "String",
+              "name": "superName"
+            },
+            {
+              "type": "String[]",
+              "name": "interfaces"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "void visit(int, int, String, String, String, String[])"
+        },
+        {
+          "name": "visitField",
+          "returnType": "FieldVisitor",
+          "parameters": [
+            {
+              "type": "int",
+              "name": "access"
+            },
+            {
+              "type": "String",
+              "name": "name"
+            },
+            {
+              "type": "String",
+              "name": "descriptor"
+            },
+            {
+              "type": "String",
+              "name": "signature"
+            },
+            {
+              "type": "Object",
+              "name": "value"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "FieldVisitor visitField(int, String, String, String, Object)"
+        },
+        {
+          "name": "visitMethod",
+          "returnType": "MethodVisitor",
+          "parameters": [
+            {
+              "type": "int",
+              "name": "access"
+            },
+            {
+              "type": "String",
+              "name": "name"
+            },
+            {
+              "type": "String",
+              "name": "descriptor"
+            },
+            {
+              "type": "String",
+              "name": "signature"
+            },
+            {
+              "type": "String[]",
+              "name": "exceptions"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "MethodVisitor visitMethod(int, String, String, String, String[])"
+        }
+      ],
+      "file": "net/fabricmc/loader/transformer/ClassStripper.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.transformer.EnvironmentStrippingData",
+      "simpleName": "EnvironmentStrippingData",
+      "pkg": "net.fabricmc.loader.transformer",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "visitMemberAnnotation",
+          "returnType": "AnnotationVisitor",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "descriptor"
+            },
+            {
+              "type": "boolean",
+              "name": "visible"
+            },
+            {
+              "type": "Runnable",
+              "name": "onEnvMismatch"
+            }
+          ],
+          "modifiers": [
+            "private"
+          ],
+          "signature": "AnnotationVisitor visitMemberAnnotation(String, boolean, Runnable)"
+        },
+        {
+          "name": "EnvironmentStrippingData",
+          "returnType": "EnvironmentStrippingData",
+          "parameters": [
+            {
+              "type": "int",
+              "name": "api"
+            },
+            {
+              "type": "String",
+              "name": "envType"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "EnvironmentStrippingData(int, String)"
+        },
+        {
+          "name": "visitAnnotation",
+          "returnType": "AnnotationVisitor",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "descriptor"
+            },
+            {
+              "type": "boolean",
+              "name": "visible"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "AnnotationVisitor visitAnnotation(String, boolean)"
+        },
+        {
+          "name": "visitField",
+          "returnType": "FieldVisitor",
+          "parameters": [
+            {
+              "type": "int",
+              "name": "access"
+            },
+            {
+              "type": "String",
+              "name": "name"
+            },
+            {
+              "type": "String",
+              "name": "descriptor"
+            },
+            {
+              "type": "String",
+              "name": "signature"
+            },
+            {
+              "type": "Object",
+              "name": "value"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "FieldVisitor visitField(int, String, String, String, Object)"
+        },
+        {
+          "name": "visitMethod",
+          "returnType": "MethodVisitor",
+          "parameters": [
+            {
+              "type": "int",
+              "name": "access"
+            },
+            {
+              "type": "String",
+              "name": "name"
+            },
+            {
+              "type": "String",
+              "name": "descriptor"
+            },
+            {
+              "type": "String",
+              "name": "signature"
+            },
+            {
+              "type": "String[]",
+              "name": "exceptions"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "MethodVisitor visitMethod(int, String, String, String, String[])"
+        },
+        {
+          "name": "stripEntireClass",
+          "returnType": "boolean",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "boolean stripEntireClass()"
+        },
+        {
+          "name": "getStripInterfaces",
+          "returnType": "Collection<String>",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "Collection<String> getStripInterfaces()"
+        },
+        {
+          "name": "getStripFields",
+          "returnType": "Collection<String>",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "Collection<String> getStripFields()"
+        },
+        {
+          "name": "getStripMethods",
+          "returnType": "Collection<String>",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "Collection<String> getStripMethods()"
+        },
+        {
+          "name": "isEmpty",
+          "returnType": "boolean",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "boolean isEmpty()"
+        }
+      ],
+      "file": "net/fabricmc/loader/transformer/EnvironmentStrippingData.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.transformer.EnvironmentStrippingData$EnvironmentAnnotationVisitor",
+      "simpleName": "EnvironmentAnnotationVisitor",
+      "pkg": "net.fabricmc.loader.transformer",
+      "modifiers": [
+        "private"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "EnvironmentAnnotationVisitor",
+          "returnType": "EnvironmentAnnotationVisitor",
+          "parameters": [
+            {
+              "type": "int",
+              "name": "api"
+            },
+            {
+              "type": "Runnable",
+              "name": "onEnvMismatch"
+            }
+          ],
+          "modifiers": [
+            "private"
+          ],
+          "signature": "EnvironmentAnnotationVisitor(int, Runnable)"
+        },
+        {
+          "name": "visitEnum",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "name"
+            },
+            {
+              "type": "String",
+              "name": "descriptor"
+            },
+            {
+              "type": "String",
+              "name": "value"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "void visitEnum(String, String, String)"
+        }
+      ],
+      "file": "net/fabricmc/loader/transformer/EnvironmentStrippingData.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.transformer.EnvironmentStrippingData$EnvironmentInterfaceAnnotationVisitor",
+      "simpleName": "EnvironmentInterfaceAnnotationVisitor",
+      "pkg": "net.fabricmc.loader.transformer",
+      "modifiers": [
+        "private"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "EnvironmentInterfaceAnnotationVisitor",
+          "returnType": "EnvironmentInterfaceAnnotationVisitor",
+          "parameters": [
+            {
+              "type": "int",
+              "name": "api"
+            }
+          ],
+          "modifiers": [
+            "private"
+          ],
+          "signature": "EnvironmentInterfaceAnnotationVisitor(int)"
+        },
+        {
+          "name": "visitEnum",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "name"
+            },
+            {
+              "type": "String",
+              "name": "descriptor"
+            },
+            {
+              "type": "String",
+              "name": "value"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "void visitEnum(String, String, String)"
+        },
+        {
+          "name": "visit",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "name"
+            },
+            {
+              "type": "Object",
+              "name": "value"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "void visit(String, Object)"
+        },
+        {
+          "name": "visitEnd",
+          "returnType": "void",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "void visitEnd()"
+        }
+      ],
+      "file": "net/fabricmc/loader/transformer/EnvironmentStrippingData.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.transformer.FabricTransformer",
+      "simpleName": "FabricTransformer",
+      "pkg": "net.fabricmc.loader.transformer",
+      "modifiers": [
+        "public",
+        "final"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "transform",
+          "returnType": "byte[]",
+          "parameters": [
+            {
+              "type": "boolean",
+              "name": "isDevelopment"
+            },
+            {
+              "type": "EnvType",
+              "name": "envType"
+            },
+            {
+              "type": "String",
+              "name": "name"
+            },
+            {
+              "type": "byte[]",
+              "name": "bytes"
+            }
+          ],
+          "modifiers": [
+            "public",
+            "static"
+          ],
+          "signature": "byte[] transform(boolean, EnvType, String, byte[])"
+        }
+      ],
+      "file": "net/fabricmc/loader/transformer/FabricTransformer.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.transformer.PackageAccessFixer",
+      "simpleName": "PackageAccessFixer",
+      "pkg": "net.fabricmc.loader.transformer",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "modAccess",
+          "returnType": "int",
+          "parameters": [
+            {
+              "type": "int",
+              "name": "access"
+            }
+          ],
+          "modifiers": [
+            "private",
+            "static",
+            "final"
+          ],
+          "signature": "int modAccess(int)"
+        },
+        {
+          "name": "PackageAccessFixer",
+          "returnType": "PackageAccessFixer",
+          "parameters": [
+            {
+              "type": "int",
+              "name": "api"
+            },
+            {
+              "type": "ClassVisitor",
+              "name": "classVisitor"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "PackageAccessFixer(int, ClassVisitor)"
+        },
+        {
+          "name": "visit",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "int",
+              "name": "version"
+            },
+            {
+              "type": "int",
+              "name": "access"
+            },
+            {
+              "type": "String",
+              "name": "name"
+            },
+            {
+              "type": "String",
+              "name": "signature"
+            },
+            {
+              "type": "String",
+              "name": "superName"
+            },
+            {
+              "type": "String[]",
+              "name": "interfaces"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "void visit(int, int, String, String, String, String[])"
+        },
+        {
+          "name": "visitInnerClass",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "name"
+            },
+            {
+              "type": "String",
+              "name": "outerName"
+            },
+            {
+              "type": "String",
+              "name": "innerName"
+            },
+            {
+              "type": "int",
+              "name": "access"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "void visitInnerClass(String, String, String, int)"
+        },
+        {
+          "name": "visitField",
+          "returnType": "FieldVisitor",
+          "parameters": [
+            {
+              "type": "int",
+              "name": "access"
+            },
+            {
+              "type": "String",
+              "name": "name"
+            },
+            {
+              "type": "String",
+              "name": "descriptor"
+            },
+            {
+              "type": "String",
+              "name": "signature"
+            },
+            {
+              "type": "Object",
+              "name": "value"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "FieldVisitor visitField(int, String, String, String, Object)"
+        },
+        {
+          "name": "visitMethod",
+          "returnType": "MethodVisitor",
+          "parameters": [
+            {
+              "type": "int",
+              "name": "access"
+            },
+            {
+              "type": "String",
+              "name": "name"
+            },
+            {
+              "type": "String",
+              "name": "descriptor"
+            },
+            {
+              "type": "String",
+              "name": "signature"
+            },
+            {
+              "type": "String[]",
+              "name": "exceptions"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "MethodVisitor visitMethod(int, String, String, String, String[])"
+        }
+      ],
+      "file": "net/fabricmc/loader/transformer/PackageAccessFixer.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.util.BrandingUtil",
+      "simpleName": "BrandingUtil",
+      "pkg": "net.fabricmc.loader.util",
+      "modifiers": [
+        "public",
+        "final"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "BrandingUtil",
+          "returnType": "BrandingUtil",
+          "parameters": [],
+          "modifiers": [
+            "private"
+          ],
+          "signature": "BrandingUtil()"
+        },
+        {
+          "name": "brand",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "CallbackInfoReturnable<String>",
+              "name": "cir"
+            }
+          ],
+          "modifiers": [
+            "public",
+            "static"
+          ],
+          "signature": "void brand(CallbackInfoReturnable<String>)"
+        }
+      ],
+      "file": "net/fabricmc/loader/util/BrandingUtil.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.util.FileSystemUtil",
+      "simpleName": "FileSystemUtil",
+      "pkg": "net.fabricmc.loader.util",
+      "modifiers": [
+        "public",
+        "final"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "FileSystemUtil",
+          "returnType": "FileSystemUtil",
+          "parameters": [],
+          "modifiers": [
+            "private"
+          ],
+          "signature": "FileSystemUtil()"
+        },
+        {
+          "name": "getJarFileSystem",
+          "returnType": "FileSystemDelegate",
+          "parameters": [
+            {
+              "type": "File",
+              "name": "file"
+            },
+            {
+              "type": "boolean",
+              "name": "create"
+            }
+          ],
+          "modifiers": [
+            "public",
+            "static"
+          ],
+          "signature": "FileSystemDelegate getJarFileSystem(File, boolean)"
+        },
+        {
+          "name": "getJarFileSystem",
+          "returnType": "FileSystemDelegate",
+          "parameters": [
+            {
+              "type": "Path",
+              "name": "path"
+            },
+            {
+              "type": "boolean",
+              "name": "create"
+            }
+          ],
+          "modifiers": [
+            "public",
+            "static"
+          ],
+          "signature": "FileSystemDelegate getJarFileSystem(Path, boolean)"
+        },
+        {
+          "name": "getJarFileSystem",
+          "returnType": "FileSystemDelegate",
+          "parameters": [
+            {
+              "type": "URI",
+              "name": "uri"
+            },
+            {
+              "type": "boolean",
+              "name": "create"
+            }
+          ],
+          "modifiers": [
+            "public",
+            "static"
+          ],
+          "signature": "FileSystemDelegate getJarFileSystem(URI, boolean)"
+        }
+      ],
+      "file": "net/fabricmc/loader/util/FileSystemUtil.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.util.FileSystemUtil$FileSystemDelegate",
+      "simpleName": "FileSystemDelegate",
+      "pkg": "net.fabricmc.loader.util",
+      "modifiers": [
+        "public",
+        "static"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "FileSystemDelegate",
+          "returnType": "FileSystemDelegate",
+          "parameters": [
+            {
+              "type": "FileSystem",
+              "name": "fileSystem"
+            },
+            {
+              "type": "boolean",
+              "name": "owner"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "FileSystemDelegate(FileSystem, boolean)"
+        },
+        {
+          "name": "get",
+          "returnType": "FileSystem",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "FileSystem get()"
+        },
+        {
+          "name": "close",
+          "returnType": "void",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "void close()"
+        }
+      ],
+      "file": "net/fabricmc/loader/util/FileSystemUtil.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.util.json.SideDeserializer",
+      "simpleName": "SideDeserializer",
+      "pkg": "net.fabricmc.loader.util.json",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "deserialize",
+          "returnType": "ModInfo.Side",
+          "parameters": [
+            {
+              "type": "JsonElement",
+              "name": "element"
+            },
+            {
+              "type": "Type",
+              "name": "type"
+            },
+            {
+              "type": "JsonDeserializationContext",
+              "name": "jsonDeserializationContext"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "ModInfo.Side deserialize(JsonElement, Type, JsonDeserializationContext)"
+        }
+      ],
+      "file": "net/fabricmc/loader/util/json/SideDeserializer.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.util.MixinIntermediaryDevRemapper",
+      "simpleName": "MixinIntermediaryDevRemapper",
+      "pkg": "net.fabricmc.loader.util",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "MixinIntermediaryDevRemapper",
+          "returnType": "MixinIntermediaryDevRemapper",
+          "parameters": [
+            {
+              "type": "Mappings",
+              "name": "mappings"
+            },
+            {
+              "type": "String",
+              "name": "from"
+            },
+            {
+              "type": "String",
+              "name": "to"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "MixinIntermediaryDevRemapper(Mappings, String, String)"
+        },
+        {
+          "name": "mapMethodName",
+          "returnType": "String",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "owner"
+            },
+            {
+              "type": "String",
+              "name": "name"
+            },
+            {
+              "type": "String",
+              "name": "desc"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "String mapMethodName(String, String, String)"
+        },
+        {
+          "name": "mapFieldName",
+          "returnType": "String",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "owner"
+            },
+            {
+              "type": "String",
+              "name": "name"
+            },
+            {
+              "type": "String",
+              "name": "desc"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "String mapFieldName(String, String, String)"
+        }
+      ],
+      "file": "net/fabricmc/loader/util/MixinIntermediaryDevRemapper.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.util.TinyRemapperMappingsHelper",
+      "simpleName": "TinyRemapperMappingsHelper",
+      "pkg": "net.fabricmc.loader.util",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "TinyRemapperMappingsHelper",
+          "returnType": "TinyRemapperMappingsHelper",
+          "parameters": [],
+          "modifiers": [
+            "private"
+          ],
+          "signature": "TinyRemapperMappingsHelper()"
+        },
+        {
+          "name": "entryToValueString",
+          "returnType": "String",
+          "parameters": [
+            {
+              "type": "EntryTriple",
+              "name": "triple"
+            }
+          ],
+          "modifiers": [
+            "private",
+            "static"
+          ],
+          "signature": "String entryToValueString(EntryTriple)"
+        },
+        {
+          "name": "fieldToString",
+          "returnType": "String",
+          "parameters": [
+            {
+              "type": "EntryTriple",
+              "name": "triple"
+            }
+          ],
+          "modifiers": [
+            "private",
+            "static"
+          ],
+          "signature": "String fieldToString(EntryTriple)"
+        },
+        {
+          "name": "methodToString",
+          "returnType": "String",
+          "parameters": [
+            {
+              "type": "EntryTriple",
+              "name": "triple"
+            }
+          ],
+          "modifiers": [
+            "private",
+            "static"
+          ],
+          "signature": "String methodToString(EntryTriple)"
+        },
+        {
+          "name": "create",
+          "returnType": "IMappingProvider",
+          "parameters": [
+            {
+              "type": "Mappings",
+              "name": "mappings"
+            },
+            {
+              "type": "String",
+              "name": "from"
+            },
+            {
+              "type": "String",
+              "name": "to"
+            }
+          ],
+          "modifiers": [
+            "public",
+            "static"
+          ],
+          "signature": "IMappingProvider create(Mappings, String, String)"
+        }
+      ],
+      "file": "net/fabricmc/loader/util/TinyRemapperMappingsHelper.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.util.UrlConversionException",
+      "simpleName": "UrlConversionException",
+      "pkg": "net.fabricmc.loader.util",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "UrlConversionException",
+          "returnType": "UrlConversionException",
+          "parameters": [],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "UrlConversionException()"
+        },
+        {
+          "name": "UrlConversionException",
+          "returnType": "UrlConversionException",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "s"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "UrlConversionException(String)"
+        },
+        {
+          "name": "UrlConversionException",
+          "returnType": "UrlConversionException",
+          "parameters": [
+            {
+              "type": "Throwable",
+              "name": "t"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "UrlConversionException(Throwable)"
+        },
+        {
+          "name": "UrlConversionException",
+          "returnType": "UrlConversionException",
+          "parameters": [
+            {
+              "type": "String",
+              "name": "s"
+            },
+            {
+              "type": "Throwable",
+              "name": "t"
+            }
+          ],
+          "modifiers": [
+            "public"
+          ],
+          "signature": "UrlConversionException(String, Throwable)"
+        }
+      ],
+      "file": "net/fabricmc/loader/util/UrlConversionException.java"
+    },
+    {
+      "fqcn": "net.fabricmc.loader.util.UrlUtil",
+      "simpleName": "UrlUtil",
+      "pkg": "net.fabricmc.loader.util",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "UrlUtil",
+          "returnType": "UrlUtil",
+          "parameters": [],
+          "modifiers": [
+            "private"
+          ],
+          "signature": "UrlUtil()"
+        },
+        {
+          "name": "asFile",
+          "returnType": "File",
+          "parameters": [
+            {
+              "type": "URL",
+              "name": "url"
+            }
+          ],
+          "modifiers": [
+            "public",
+            "static"
+          ],
+          "signature": "File asFile(URL)"
+        },
+        {
+          "name": "asPath",
+          "returnType": "Path",
+          "parameters": [
+            {
+              "type": "URL",
+              "name": "url"
+            }
+          ],
+          "modifiers": [
+            "public",
+            "static"
+          ],
+          "signature": "Path asPath(URL)"
+        },
+        {
+          "name": "asUrl",
+          "returnType": "URL",
+          "parameters": [
+            {
+              "type": "File",
+              "name": "file"
+            }
+          ],
+          "modifiers": [
+            "public",
+            "static"
+          ],
+          "signature": "URL asUrl(File)"
+        }
+      ],
+      "file": "net/fabricmc/loader/util/UrlUtil.java"
+    }
+  ]
+}

@@ -1,8 +1,10 @@
 > 来源：https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server-ui/minecraft-server-ui?view=minecraft-bedrock-stable
-> 抓取时间：2026-09-24T02:07:37.850Z
+> 抓取时间：2026-09-27T06:36:00.480Z
 > 警告：此文档可能滞后于当前正式版
 
 # @minecraft/server-ui Module
+
+ Feedback
 
 The `@minecraft/server-ui` module contains types for expressing simple dialog-based user experiences.
 
@@ -169,6 +171,6 @@ Type: UIManager
 
 - @minecraft/server
 
-## Feedback
+ Ask Learn
 
- Want to try using Ask Learn to clarify or guide you through this topic?
+ Ask Learn

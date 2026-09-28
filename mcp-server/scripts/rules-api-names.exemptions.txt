@@ -1,0 +1,10 @@
+# assert-rules-api-names.mjs 的豁免表（台账）。一行一个「已点名放行的旧名位置」，六列 TAB 分隔。
+# 列：relPath <TAB> line <TAB> simpleName <TAB> newName <TAB> basis <TAB> addedRound
+# 规则（规划稿 §16，全部由门执法）：
+#   1) 只许点名到 (文件, 行, 旧名) 三元组 —— 禁止整文件豁免、禁止前缀豁免；
+#   2) 该行现须仍含该简单名，否则 EXEMPTION-STALE 红（正文改完了就要把行删掉）；
+#   3) newName 须在本档 yarn 映射里真存在，否则 EXEMPTION-FABRICATED 红（不许编造正解）；
+#   4) basis 只许四形：corpus:<仓内路径>:<行> / mapping:<档> / fapi-roster / user-approved:<CONTRIBUTING L 号>；
+#   5) 条数受基线 ceilings.exemptionsMax 约束，只许降不许升。
+# 当前 0 行：唯一那条真红（fabric/1.14.4/.cursor/rules/10-gui.mdc 的 SimpleInventory）已在切片 4 修成正名
+# BasicInventory（类名由该档映射证出：class_1277 → net/minecraft/inventory/BasicInventory），走的是修正文而不是豁免。

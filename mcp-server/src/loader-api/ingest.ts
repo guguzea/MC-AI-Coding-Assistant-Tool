@@ -15,6 +15,7 @@ export type IngestLoaderApiArgs = {
   jarPath: string;
   mappingsVersion: string;
   mappingsSource?: string;
+  library?: string;
   dryRun?: boolean;
   confirmed?: boolean;
   force?: boolean;
@@ -25,6 +26,7 @@ export function ingestLoaderApi(args: IngestLoaderApiArgs) {
   const minecraftVersion = String(args.minecraftVersion ?? "").trim();
   const jarPath = String(args.jarPath ?? "").trim();
   const mappingsVersion = String(args.mappingsVersion ?? "").trim();
+  const library = String(args.library ?? "").trim().toLowerCase();
   const dryRun = args.dryRun !== false;
   const confirmed = args.confirmed === true;
   const force = args.force === true;
@@ -60,7 +62,24 @@ export function ingestLoaderApi(args: IngestLoaderApiArgs) {
     };
   }
 
-  const key = keys.keys[0];
+  // 同一 platform 下可能有多套构件（Fabric API vs fabric-loader）。`candidateKeys` 已经列出全部
+  // 键位（读侧就按它找件），但**写侧从前固定取 keys[0]** ⇒ 拿 loader jar 跑 ingest 会去覆盖
+  // `-fabric-api` 摘要。传 library 时按后缀在候选键里选，选不到就拒（不猜、不新造键名）。
+  let key = keys.keys[0];
+  if (library) {
+    const want = `${minecraftVersion}-${library}`;
+    if (!keys.keys.includes(want)) {
+      return {
+        ok: false,
+        action: actionable(
+          "INVALID_INPUT",
+          `library=${library} 在 platform=${platform} 下没有键位（候选：${keys.keys.join(", ")}；library 就是候选键去掉 "${minecraftVersion}-" 前缀后的那一段）`,
+          ["只传候选键里出现过的后缀（fabric 的 loader jar 传 fabric，API 库传 fabric-api）", "缺省不传即沿用现状口径（写第一个候选键）"],
+        ),
+      };
+    }
+    key = want;
+  }
   const overlayDir = overlaySummariesDir();
   const destJson = join(overlayDir, `${key}.json`);
   const cacheJar = join(resolveCacheRoot(), "loader-jars", `${key}.jar`);

@@ -1,8 +1,10 @@
 > 来源：https://learn.microsoft.com/en-us/minecraft/creator/reference/content/blockreference/examples/blockcomponents/blockcomponentslist?view=minecraft-bedrock-stable
-> 抓取时间：2026-09-24T03:09:21.595Z
+> 抓取时间：2026-09-27T06:36:00.435Z
 > 警告：此文档可能滞后于当前正式版
 
 # Block Components Documentation
+
+ Feedback
 
 | Block Components | Description |
 | --- | --- |
@@ -59,6 +61,6 @@ These components are either deprecated or internal to Minecraft and not usable i
 | random_ticking | Triggers the specified event randomly based on the random tick speed gamerule. |
 | unit_cube | Specifies that a unit cube is to be used with tessellation. |
 
-## Feedback
+ Ask Learn
 
- Want to try using Ask Learn to clarify or guide you through this topic?
+ Ask Learn
