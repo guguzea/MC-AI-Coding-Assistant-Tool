@@ -19,6 +19,10 @@
  * 豁免与棘轮（§16/§22）：六列点名表 + 基线下界 < 与上界只许降；依据一断即红，例外不许静默扩张。
  *   基线**键集**由 collector 的 REQUIRED_FLOOR_KEYS / REQUIRED_CEILING_KEYS 钉死：真跑（含 --pack）少任一键
  *   ⇒ [BASELINE-KEY-LOSS] 红。理由 = compareFloors 按基线现有键循环，「删键」比「把地板写成 0」更安静。
+ *   桶5（UNKNOWN-ALL-PACKS；2026-09-29 实扫 1 066 个「档 × 文件 × 名」位点）**不收编进豁免**：抽样全是 Gradle
+ *   任务名／IDE 名／散文词，收编要么造上千条假红，要么给「豁免条数上界 0 且只许降」开一个永久口子。
+ *   这里只印一个三分类读数（classifyBucket5 + --selftest 的 T60/T61/T62，四族之和必须等于桶5 的位数），
+ *   它**不进 rc、不进基线、不作判据** —— 是切词器人群的健康读数，不是欠账。
  * I/O 四态（§4）：absent / NO-LIB-BY-DESIGN / era / zero-rows / unreadable —— **读失败不得塌成「查无此名」**。
  *
  * 档位面 = 规则树目录 ∪ 数据目录（有库没正文、有正文没库都真实存在，各按状态打印）。
@@ -83,6 +87,25 @@ function setRoots(root, data) {
   DATA = data ? path.resolve(data) : path.join(ROOT, "data");
 }
 
+// 桶5（UNKNOWN-ALL-PACKS = 全档映射与语料皆查无）的**三分类读数**。这 1 066 条不收编进豁免：
+// 要么造上千条假红，要么给「豁免条数上界 0 且只许降」开永久口子 —— 后者更坏（用户 2026-09-29 裁定）。
+// 所以这里**只印数、当切词器健康读数**：判据是行级形状（不引词表、不引名单），四类互斥且必闭合
+// （ide → gradle → prose → other 按序取第一个命中），闭合等式由 selftest T58 在合成输入上钉。
+const B5_IDE = /(IntelliJ|IDEA|Eclipse|VS ?Code|Cursor|Qoder|编辑器|\bIDE\b)/;
+const B5_GRADLE = /gradlew|build\.gradle|settings\.gradle|gradle\.properties|\.gradle\b|loom|repositor|dependenc|sourceSets|filesMatching|processResources|genSources|mavenCentral|archivesBaseName|\btasks?\b|runClient|runServer|\.jar\b|remap|mapping|SNAPSHOT/i;
+/** 行尾注释段（`#` 或 `//` 之后）；IDE 名实测总与 gradlew 命令同一行，所以判序必须先 ide 后 gradle。 */
+function b5CommentTail(line) {
+  const m = /(?:#|\/\/)([\s\S]*)$/.exec(String(line ?? ""));
+  return m ? m[1] : "";
+}
+function classifyBucket5(id, line) {
+  const t = b5CommentTail(line);
+  if (t && B5_IDE.test(t) && new RegExp(`(^|[^A-Za-z0-9_])${id}([^A-Za-z0-9_]|$)`).test(t)) return "ide";
+  if (/^[a-z]/.test(id) || B5_GRADLE.test(line ?? "")) return "gradle";
+  if (/^[A-Z][a-z0-9]+$/.test(id)) return "prose";
+  return "other";
+}
+
 /** 核心：扫一遍，返回全部判定与计数。opts.onlyPack 只扫单档（探针/定位用，地板按整面签）。 */
 export function analyze(opts = {}) {
   const root = opts.root ? path.resolve(opts.root) : ROOT;
@@ -135,6 +158,7 @@ export function analyze(opts = {}) {
   // ④ 规则树面
   const reds = [], queue = [], waived = [], exemptBad = [], conflicts = [];
   const bucketCount = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 0: 0 };
+  const b5 = { ide: 0, gradle: 0, prose: 0, other: 0 }; // 桶5 三分类读数（只打印，见 classifyBucket5 头注）
   let rulesFiles = 0, judgedNames = 0, fenceOddFiles = 0, classOrFapi = 0, multiAnchorRed = 0, arrowSites = 0;
   const fenceOddList = [];
   let corpusPacks = 0;
@@ -171,6 +195,8 @@ export function analyze(opts = {}) {
         const r = classify(site, { leg, eq, roster, fapiSum, loaderSum, tokens: toks, presentElsewhere: presentElsewhere(id) });
         r.occFlags = [...a.flags].sort().join(",");
         bucketCount[r.bucket] = (bucketCount[r.bucket] ?? 0) + 1;
+        // 口径与 bucketCount 逐字同分母：一个「档 × 文件 × 名」位点计一次，行文本取该位点首现行（同 a.at）。
+        if (r.bucket === 5) b5[classifyBucket5(id, a.line)]++;
         if (r.verdict === "CLASS-OR-FAPI") classOrFapi++;
         if (r.verdict === "BUCKET-CONFLICT") conflicts.push({ ...r, ...site, ver: v }); // 冲突哨兵单独一面：不占 renameStaleRed 的数，也不许被豁免表洗
         else if (r.red) {
@@ -267,7 +293,7 @@ export function analyze(opts = {}) {
   // 而它把 fs.readdirSync 的序「洗成了看起来有序」，所以上一轮我只看见「没排」没看见「排错」。两份实现留一份。
   queue.sort(queueCmp);
   return {
-    reds: keptReds.sort(siteCmp), waived, exemptBad, conflicts: conflicts.sort(siteCmp), queue, trips, io, measured, bucketCount,
+    reds: keptReds.sort(siteCmp), waived, exemptBad, conflicts: conflicts.sort(siteCmp), queue, trips, io, measured, bucketCount, b5,
     legModes: countBy([...legOf.values()].map((l) => l.state)),
     partial, unenforced: partial ? 1 : 0,
     fenceOddFiles, fenceOddList, fenceOddMax, arrowSites, rosterMs, corpusMs, legMs: Date.now() - t0 - rosterMs - corpusMs,
@@ -356,7 +382,9 @@ function main(argv) {
   console.log(
     `汇总 档=${r.vers.length} 有库=${m.packsWithLib} 类行=${m.classRows} 等价类=${m.equivClasses}/${m.equivNames}名 名单=${m.rosterNames}(歧义${m.ambiguousRoster}) 语料档=${m.corpusPacks}` +
     ` | 文件=${m.rulesFiles} 判名=${m.judgedNames} 桶1=${m.bucket1} 桶2..5=${r.bucketCount[2]}/${r.bucketCount[3]}/${r.bucketCount[4]}/${r.bucketCount[5]}` +
-    ` | 红=${m.renameStaleRed} 豁免=${m.exemptions} CLASS-OR-FAPI=${m.classOrFapi} 队列=${r.queue.length} 未执法腿=${r.unenforced}${r.partial ? "（--pack 单档跑 ⇒ 整面地板本轮不执法，不是绿）" : ""}`,
+    ` | 红=${m.renameStaleRed} 豁免=${m.exemptions} CLASS-OR-FAPI=${m.classOrFapi} 队列=${r.queue.length} 未执法腿=${r.unenforced}` +
+    ` | 桶5三分类=Gradle ${r.b5.gradle}／IDE ${r.b5.ide}／散文 ${r.b5.prose}／未证类名 ${r.b5.other}（合计 ${r.b5.ide + r.b5.gradle + r.b5.prose + r.b5.other}／桶5 ${r.bucketCount[5]}；只打印不判红、不收编进豁免）` +
+    `${r.partial ? "（--pack 单档跑 ⇒ 整面地板本轮不执法，不是绿）" : ""}`,
   );
   console.log(
     `  腿态=${JSON.stringify(r.legModes)} docs正文档=${docsBodyPacks(DATA, r.vers)}/${r.vers.length}档(其余档只有 fabric-wiki/reference ⇒ 桶2 弱支撑，计数不判红) 镜像同态=本门只扫 .cursor 源稿，7 面镜像由 assert-skill-mirrors 执法 围栏奇偶不闭合文件=${r.fenceOddFiles}(上界 ${r.fenceOddMax}，超出即红并逐件点名) FAPI否决源=语料${m.rosterNames}名+摘要件${m.fapiSumPacks}/${r.vers.length}档(逐档${m.fapiSumNames}·并集${m.fapiSumUnion}·缺席${m.fapiSumAbsent})+loader摘要件${m.loaderSumPacks}/${r.vers.length}档(逐档${m.loaderSumNames}·并集${m.loaderSumUnion}·缺席${m.loaderSumAbsent}) 箭头位=${r.arrowSites} | 计时 wall=${r.ms}ms leg=${r.legMs}ms corpus=${r.corpusMs}ms roster=${r.rosterMs}ms（时间不进 rc）`,
@@ -1047,6 +1075,73 @@ function selftest() {
     const located = (line.match(/\.mdc:\d+ /g) || []).length;
     if (located !== 2) return `逐条文里带定位符的条目=${located}（应 2）｜该行=${line}`;
     if (/@\s/.test(line)) return `仍是旧形「@ + 行文本」⇒ 定位符没落到打印上｜该行=${line}`;
+    return null;
+  });
+  // 60 桶5 三分类的判据本身（合成输入、不经盘）：四类各归其对 + 「ide 先于 gradle」这条判序 + 不吞行
+  arm("T60 桶5 分类器：Gradle 任务名／IDE 名（实测与 gradlew 同一行）／散文词／未证类名各归其对，判序必须 ide 在前", () => {
+    const cases = [
+      ["processResources", "./gradlew processResources", "gradle"],
+      ["genSources", "./gradlew genSources", "gradle"],
+      ["mavenCentral", "repositories { mavenCentral() }", "gradle"],
+      ["IntelliJ", "./gradlew idea   # IntelliJ IDEA", "ide"], // 同一行也命中 gradlew ⇒ 归 ide 才算判序对
+      ["Eclipse", "./gradlew eclipse # Eclipse", "ide"],
+      ["Could", 'IF 报错包含 "Could not resolve net.fabricmc"', "prose"],
+      ["Vendor", '"Implementation-Vendor": project.maven_group', "prose"],
+      ["ModBlocks", "new BlockItem(ModBlocks.MY_BLOCK, new Item.Settings())", "other"],
+    ];
+    const wrong = cases.filter(([id, line, want]) => classifyBucket5(id, line) !== want)
+      .map(([id, , want]) => `${id}→${classifyBucket5(id, cases.find((c) => c[0] === id)[1])}(应 ${want})`);
+    if (wrong.length) return `分类不符：${wrong.join(" ｜ ")}`;
+    const keys = {};
+    for (const [id, line] of cases) { const k = classifyBucket5(id, line); keys[k] = (keys[k] ?? 0) + 1; }
+    const sum = Object.values(keys).reduce((a, x) => a + x, 0);
+    const legal = Object.keys(keys).every((k) => ["ide", "gradle", "prose", "other"].includes(k));
+    return sum === cases.length && legal ? null : `闭合不符：${JSON.stringify(keys)} 例数=${cases.length}`;
+  });
+  // 61 接线：b5 必须由扫描循环喂（摘掉 `if (r.bucket === 5) b5[...]++` 那行 ⇒ 本臂红），并核合计 = 桶5
+  arm("T61 接线：analyze().b5 真被扫描循环喂到（gradle 与 ide 两族各 ≥1，且四族合计 = 桶5 位点数）", () => {
+    cleanTree();
+    writePack(P1, [["net/minecraft/particle/DefaultParticleType", "net/minecraft/class_2400"]]);
+    writePack(P2, [["net/minecraft/particle/SimpleParticleType", "net/minecraft/class_2400"]]);
+    // 这几行里的名字在合成映射与语料里都查无 ⇒ 全落桶5；分类必须跟着动（Object/IDEA 这类是被切词器收进来的散文与产品名）
+    writeRules(P1, "```java\nObject o = new DefaultParticleType();\n```\n```gradle\ntasks.register(\"genSources\") { }\n./gradlew processResources   # IntelliJ IDEA 里也能跑\n```\n");
+    const r = analyze({ root: tmp, dataRoot: path.join(tmp, "data"), baseline: base, exemptionsText: "" });
+    const sum = r.b5.ide + r.b5.gradle + r.b5.prose + r.b5.other;
+    if (r.bucketCount[5] < 3) return `夹具没造出桶5 人群（桶5=${r.bucketCount[5]}）⇒ 本臂没有对象，不能算证`;
+    if (sum !== r.bucketCount[5]) return `四族合计 ${sum} ≠ 桶5 ${r.bucketCount[5]} ⇒ 分类器吞行或漏行（JSON ${JSON.stringify(r.b5)}）`;
+    if (r.b5.gradle < 1) return `gradle 族 = 0（JSON ${JSON.stringify(r.b5)}）⇒ 计数没接线，或 genSources/processResources 没进桶5`;
+    if (r.b5.ide < 1) return `ide 族 = 0（JSON ${JSON.stringify(r.b5)}）⇒ IntelliJ 在 gradlew 同行被 gradle 判据抢走 ⇒ 判序漂了`;
+    return null;
+  });
+  // 62 渲染面：主入口必须把三分类印出来并自带闭合分母（摘掉打印那半截 ⇒ 本臂红；T61 只管 analyze() 侧）
+  arm("T62 主入口打印：汇总必须带「桶5三分类=…（合计 N／桶5 M）」且 N=M、Gradle+IDE 两族 ≥1", () => {
+    cleanTree();
+    const sub = path.join(tmp, "print-b5");
+    fs.mkdirSync(sub, { recursive: true });
+    writePack(P1, [["net/minecraft/particle/DefaultParticleType", "net/minecraft/class_2400"]]);
+    writePack(P2, [["net/minecraft/particle/SimpleParticleType", "net/minecraft/class_2400"]]);
+    writeRules(P1, "```gradle\ntasks.register(\"genSources\") { }\n./gradlew processResources   # IntelliJ IDEA\n```\n");
+    const blFile = path.join(sub, "bl.json");
+    fs.writeFileSync(blFile, JSON.stringify({
+      asOf: "fixture",
+      floors: Object.fromEntries(REQUIRED_FLOOR_KEYS.map((k) => [k, 0])),
+      ceilings: Object.fromEntries(REQUIRED_CEILING_KEYS.map((k) => [k, 99])),
+      basis: {},
+    }), "utf8");
+    const exFile = path.join(sub, "ex.txt");
+    fs.writeFileSync(exFile, "", "utf8");
+    const sp = spawnSync(process.execPath, [path.join(HERE, "assert-rules-api-names.mjs")], {
+      encoding: "utf8", windowsHide: true,
+      env: { ...process.env, MC_SKILL_RULES_ROOT: tmp, MC_SKILL_RULES_DATA: path.join(tmp, "data"), MC_SKILL_RULES_BASELINE: blFile, MC_SKILL_RULES_EXEMPTIONS: exFile },
+    });
+    const line = String(sp.stdout).split(/\r?\n/).find((l) => l.includes("桶5三分类"));
+    if (!line) return `stdout 无桶5三分类段（rc=${sp.status}）：\n${String(sp.stdout).slice(0, 300)}`;
+    const g = /桶5三分类=Gradle (\d+)／IDE (\d+)／散文 (\d+)／未证类名 (\d+)（合计 (\d+)／桶5 (\d+)/.exec(line);
+    if (!g) return `三分类段的形状不符（四族 + 合计 + 桶5 六枚数都得在）｜该行=${line.slice(0, 220)}`;
+    const [gg, gi, gp, go, sum, b5] = g.slice(1).map(Number);
+    if (gg + gi + gp + go !== sum) return `四族之和 ${gg + gi + gp + go} ≠ 自印合计 ${sum} ⇒ 打印侧自己也算不平（该行=${line.slice(0, 200)}）`;
+    if (sum !== b5) return `合计 ${sum} ≠ 桶5 ${b5} ⇒ 分类吞行，或桶5 那枚数与分类不同源`;
+    if (gg + gi < 1) return `Gradle 与 IDE 两族皆 0（${line.slice(0, 200)}）⇒ 夹具里那两行没被分到族，判据或接线漂了`;
     return null;
   });
   // 37 现门等价臂：同一棵合成 pack，现门 CLI 的映射✓/· 必须与本门 legs 一致

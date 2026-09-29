@@ -2,7 +2,7 @@
   "file": "1.21.3-fabric.jar",
   "mappingsVersion": "unobfuscated-fabric-loader-0.16.9",
   "mappingsSource": "loader-sources-native-names",
-  "mapping": "yarn",
+  "mapping": "unobfuscated",
   "version": "1.21.3",
   "sourceJarSha256": "3c8cd202b3661e574aa284a5badd274e3f56ff7a748a11c6cfc121a67f83668f",
   "sourceTreeMtime": 1790578068110.8767,

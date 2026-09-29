@@ -884,7 +884,8 @@ export function registerWaveExtensions(server: McpServer): void {
       title: "Ingest a user-provided loader jar into cache overlay",
       description:
         "把用户自备的 LiteLoader/Rift/ModLoader（等官方不代下）jar 抽成摘要，只写 $MC_SKILL_CACHE/loader-api-summaries overlay，禁止写仓库 data/。" +
-        "jarPath 绝对路径 + mappingsVersion 必填。默认 dryRun。",
+        "jarPath 绝对路径 + mappingsVersion 必填。默认 dryRun。" +
+        "同一平台有多套构件时用 library 选后缀（fabric 的 loader jar 传 library=fabric ⇒ 写 <ver>-fabric 槽位；不传则固定写第一个候选键 <ver>-fabric-api ⇒ 拿 loader jar 不传 library 会覆盖 API 摘要）。",
       inputSchema: ingestLoaderApiSchema,
     },
     async (args): Promise<CallToolResult> => jsonResult(await ingestLoaderApi(args)),

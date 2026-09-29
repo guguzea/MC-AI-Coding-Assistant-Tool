@@ -2229,6 +2229,9 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
 // 为什么不能留在 `for (const gate of [ … ])` 里：四数普查的 N/M 必须「从数组本身取长度」，
 // 在别处重抄一遍名单 = 第二个真值源，必然随加门漂掉（CONTRIBUTING.md §未排期清单 `L13`/`L18`）。
 const REAL_RUN_GATES = [
+    // 2026-09-28：镜像面今天真漂过一次（`fabric/1.17.1/.cursor/skills/mc-particle.md` 改了源稿、7 面没跟），
+    // 而它从前只由 `npm test` 覆盖 ⇒ 收口跑 test-scripts 的那一轮看不见。挂进默认链（实测整道门 1.8 s）。
+    "./scripts/assert-skill-mirrors.mjs",
     "./scripts/assert-forge-1204-material.mjs",
     // sweep81 C-6：Properties 形态**族 × 版本区间**门（正反两面；补 1.18.2/1.19.4 反向面）。
     "./scripts/assert-forge-blockshape-family.mjs",
@@ -2451,6 +2454,12 @@ const SELFTEST_GATES = [
     // 并把「三桶例数地板」长在门内 —— 本数组的循环只看 rc，掏空 cases 它看不见，所以门必须自己判红
     // （两臂活证：原样 rc=0、砍到只剩 1 条正控 ⇒ rc=1 且点名三桶塌陷）。
     "./scripts/assert-total-semantics-wording.mjs",
+    // 2026-09-28 切片 22（用户点名「pins 的『每条必须有 basis+asOf』挂入形状类门」）：这道门的**真跑**腿
+    // 本来就在上面 §S18/S19 数组里，但它的内存投毒臂（pins 缺 basis / 缺 asOf / 日期形坏 / 借邻版 /
+    // 档不存在 / 非 JSON / 文件缺席 / 零条目 / 消费者锚点消失 / 调用方未接线）以前只有人手跑 `--selftest`
+    // 才响 ⇒ 在默认链上等于装饰。臂数一律不在这里抄（分母唯一真值源 = 该门 `--selftest` 末行，属 `L76–L81`
+    // 那条「披露位 ≠ 实测量」家族，`assert-test-harness` R-5 现在会抓这一形状）。
+    "./scripts/assert-bedrock-script-api-pin.mjs",
   ];
 
 /**
@@ -3624,11 +3633,23 @@ function censusChain({ diskGates, blob, pkg, selfBlob, realRun, selftest, floorR
   );
   const armG1 = run([], { ...liveEnv, MC_SKILL_RULES_FAPI_SUMMARIES: SUMS_DIR });
   assert.equal(armG1.status, 0, `摘要件在册时 FAPI 名仍判红 ⇒ 第二否决源没接线（§27 ① 那条洞还开着）：\n${armG1.stderr}`);
-  assert.ok(/FAPI否决源=语料\d+名\+摘要件1[01]\/14档/.test(String(armG1.stdout)), `汇总第二行未印第二来源的在场数 ⇒ 这腿在盘上跑了但没被读到：\n${armG1.stdout}`);
+  // 印数只钉**形状 + 算术不变式**，不钉分子：上一版这里写死 `摘要件1[01]\/14档`（把「11 档在场」当契约），
+  // 于是 2026-09-28 补满 14/14 之后本臂假红 —— 合法扩容把断言打红，正是本页反复登记的「门自印分母别写死」。
+  // 现在要求：该来源至少有一档在场（0 = 没接），且「在场 + 缺席 = 档数」这条算术必须闭合。
+  const printedSums = (re) => {
+    const mm = re.exec(String(armG1.stdout));
+    if (!mm) return null;
+    return { present: Number(mm[1]), packs: Number(mm[2]), absent: Number(mm[3]) };
+  };
+  const s2 = printedSums(/FAPI否决源=语料\d+名\+摘要件(\d+)\/(\d+)档\(逐档\d+·并集\d+·缺席(\d+)\)/);
+  assert.ok(s2 && s2.present >= 1 && s2.present + s2.absent === s2.packs && s2.packs >= 1,
+    `汇总第二行没把第二来源（fabric-api 摘要件）的在场数按形状印出来（在场≥1 ∧ 在场+缺席=档数）⇒ 这腿在盘上跑了但没被读到：\n${armG1.stdout}`);
   // 第三来源（loader 摘要件）在场数必须同形状印出来。真树上它目前否决 0 名（现扫：只有 ③ 能否决、
   // 又落在等价类锚集里的名字 = 0 个 ⇒ 机制证据在门自己的 T57–T59 合成夹具那边），但**印数**这条要钉住：
-  // 谁把 ③ 接断了，输出上必须看得见（否则「接了但没人查」与「没接」不可区分）。
-  assert.ok(/\+loader摘要件14\/14档\(逐档\d+·并集\d+·缺席0\)/.test(String(armG1.stdout)), `汇总第二行未印第三来源（loader 摘要件）的在场数：\n${armG1.stdout}`);
+  // 谁把 ③ 接断了，输出上必须看得见（否则「接了但没人查」与「没接」不可区分）。同样不钉分子。
+  const s3 = printedSums(/\+loader摘要件(\d+)\/(\d+)档\(逐档\d+·并集\d+·缺席(\d+)\)/);
+  assert.ok(s3 && s3.present >= 1 && s3.present + s3.absent === s3.packs && s3.packs >= 1,
+    `汇总第二行没把第三来源（loader 摘要件）的在场数按形状印出来（在场≥1 ∧ 在场+缺席=档数）：\n${armG1.stdout}`);
   const armG2 = run([], { ...liveEnv, MC_SKILL_RULES_FAPI_SUMMARIES: G_EMPTY });
   assert.equal(armG2.status, 1, `把第二来源摘掉仍然放行 ⇒ 臂 G1 的绿不是来自那个来源（可能整条红腿就没接线）：\n${armG2.stdout}`);
   assert.ok(

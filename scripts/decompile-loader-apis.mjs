@@ -99,7 +99,7 @@ function mappingsFromManifest(mf) {
   return null;
 }
 
-async function resolveMappings(name, jarPath) {
+async function resolveMappingsRaw(name, jarPath) {
   const jsonSide = `${jarPath}.sidecar`;
   if (existsSync(jsonSide)) {
     try {
@@ -145,6 +145,21 @@ async function resolveMappings(name, jarPath) {
   }
   if (inferred.mappingsVersion) return { ...inferred, mappingsSource: "inferMappings(filename)" };
   return { ...inferred, mappingsVersion: null, mappingsSource: "missing" };
+}
+
+/**
+ * `mapping` 必须跟 `mappingsVersion` 自陈的层一致（2026-09-28 补）。
+ * 起因：`inferMappings` 按文件名推层（名字含 fabric ⇒ yarn），而 fabric-**loader** 的
+ * `-sources.jar` 根本不经 remap —— sidecar 写的是 `unobfuscated-fabric-loader-<loader 版>`，
+ * 摘要里的 `mapping` 却还是 `yarn`（26.1.2 那件是 `mojmap`）。那一个字段会让下一个读摘要的人
+ * 以为这些类名来自某套 yarn build。规则只认已经确定的 `mappingsVersion` 前缀，不猜文件名。
+ */
+async function resolveMappings(name, jarPath) {
+  const r = await resolveMappingsRaw(name, jarPath);
+  if (typeof r.mappingsVersion === "string" && /^unobfuscated-/.test(r.mappingsVersion) && r.mapping !== "unobfuscated") {
+    return { ...r, mapping: "unobfuscated" };
+  }
+  return r;
 }
 
 function extractClasses(javaText, fileHint) {
@@ -529,6 +544,10 @@ for (const name of readdirSync(JAR_DIR).filter((f) => f.endsWith(".jar") && !f.s
         const kept = sanitizeSummary(
           {
             ...prev,
+            // `mapping` 是派生标签，不是产物内容 ⇒ 跟着解析器走，不从旧摘要冻结。
+            // 不加这一行的话，loader 族那 14 件要等一次真重抽才会改口（重抽要 JDK + 反编译）。
+            // `mappingsVersion` 已在上面逐字比过，这里不可能把它改坏。
+            mapping: inferred.mapping,
             sourceJarSha256: prev.sourceJarSha256 || jarSha,
             source: prev.source || "official",
           },

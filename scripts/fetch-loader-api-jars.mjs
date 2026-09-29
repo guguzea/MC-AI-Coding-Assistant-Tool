@@ -119,6 +119,12 @@ const WANTED_KEYS = new Set([
   "1.20.4-fabric-api",
   "1.21.1-fabric-api",
   "1.21.3-fabric-api",
+  // 2026-09-28：这三档本仓有规则树 + fabric-docs 正文，但 scaffold 不钉 Gradle 版、文档正文里唯一的
+  // fabric-api 行是上游示例（`0.46.2+1.18`，fabricVerBelongsToMc 正确地判它不属于本档）⇒ 坐标走
+  // scripts/fabric-api-version-pins.json 的逐档 pin（第三来源，只在前两路都读不到时生效）。
+  "1.21.4-fabric-api",
+  "1.21.8-fabric-api",
+  "1.21.10-fabric-api",
   "1.21.11-fabric-api",
   "26.1.2-fabric-api",
 ]);
@@ -299,6 +305,35 @@ function fabricApiVersionsInTree(dir, mcVer) {
   return versions;
 }
 
+/**
+ * 第三坐标来源（2026-09-28）：`scripts/fabric-api-version-pins.json` 的逐档 pin。
+ * 只在「该档 scaffold 与 00-project-setup 都没写明坐标」时才生效 ⇒ 现有 11 档的取数路径逐字不变。
+ * 三道拒绝都留痕：件读不动 / 条目缺 basis 或缺 asOf / 版本不归本档（按生产同一条 `fabricVerBelongsToMc`
+ * 复核，所以「借邻版凑一条」在这道门上就断，而不是靠注释里写禁止）。
+ */
+const FABRIC_API_PINS_PATH = join(ROOT, "scripts", "fabric-api-version-pins.json");
+function fabricApiPinFor(ver, key, log) {
+  if (!existsSync(FABRIC_API_PINS_PATH)) return null;
+  let j;
+  try {
+    j = JSON.parse(readFileSync(FABRIC_API_PINS_PATH, "utf8"));
+  } catch (e) {
+    log.push({ key, skipped: `fabric-api-version-pins.json 读不动 ⇒ 不采纳：${String(e?.message ?? e).slice(0, 140)}` });
+    return null;
+  }
+  const pin = j[ver];
+  if (!pin || !pin.version) return null;
+  if (!pin.basis || !pin.asOf) {
+    log.push({ key, skipped: `pin ${ver} 缺 basis/asOf ⇒ 拒绝（无出处的坐标不进取数链）` });
+    return null;
+  }
+  if (!fabricVerBelongsToMc(String(pin.version), ver)) {
+    log.push({ key, skipped: `pin ${ver}=${pin.version} 不归本档 ⇒ 拒绝（禁止借邻版）` });
+    return null;
+  }
+  return pin;
+}
+
 /** 无 example-mod MDK 时，只读该档 scaffold / 00-project-setup 写明的 fabric-api 坐标。 */
 function collectRepoFabricPins(best, log) {
   const fabricRoot = join(ROOT, "fabric");
@@ -333,10 +368,18 @@ function collectRepoFabricPins(best, log) {
       from = setup;
       props = parseProps(txt);
     }
-    const apiVer = props.fabric_api_version || props.fabric_version || alts[0];
+    let apiVer = props.fabric_api_version || props.fabric_version || alts[0];
+    let coordFrom = from;
+    let coordNote = null;
     if (!apiVer || apiVer.includes("$")) {
-      log.push({ root: dir, key, skipped: "该档文档未写明 fabric-api 坐标，禁止借邻版" });
-      continue;
+      const pin = fabricApiPinFor(ver, key, log);
+      if (!pin) {
+        log.push({ root: dir, key, skipped: "该档文档未写明 fabric-api 坐标，且 version-pins 没有合格条目 ⇒ 禁止借邻版" });
+        continue;
+      }
+      apiVer = String(pin.version);
+      coordFrom = `${FABRIC_API_PINS_PATH}#${ver}`;
+      coordNote = `pin(basis=${pin.basis}; asOf=${pin.asOf})`;
     }
     const yarn = props.yarn_mappings;
     const cand = {
@@ -346,13 +389,13 @@ function collectRepoFabricPins(best, log) {
         group: "net.fabricmc.fabric-api",
         artifact: "fabric-api",
         version: apiVer,
-        from: from,
+        from: coordFrom,
       },
       key,
       mappingsHint: yarn ? `yarn-${yarn}` : null,
       altVersions: alts,
     };
-    log.push({ root: dir, key, pinned: apiVer, alts, from: "repo-docs" });
+    log.push({ root: dir, key, pinned: apiVer, alts, from: coordNote || "repo-docs" });
     considerCandidate(best, log, cand);
   }
 }
@@ -486,7 +529,18 @@ async function main() {
         : existsSync(join(root, "scaffold", "build.gradle"))
           ? readFileSync(join(root, "scaffold", "build.gradle"), "utf8")
           : "";
-    const mv = cand.mappingsHint || mappingsFromProps(props, cand.bgText || bgText);
+    let mv = cand.mappingsHint || mappingsFromProps(props, cand.bgText || bgText);
+    let mvSource = mv ? "mdk-gradle.properties" : "missing";
+    // fabric-api 这一族：maven 的 sources jar 本身就是 Yarn 名（FAPI 工程按 Yarn 编译），与 example-mod
+    // 用哪套映射无关 —— 仓内既有 11 件的 sidecar 就是这么标的（现读 `1.21.1-fabric-api.jar.sidecar`：
+    // `yarn-1.21.1` / `fabric-api-sources-yarn` + 同一条 note）。本档 scaffold 不钉 yarn_mappings 时
+    // （1.21.4 / 1.21.8 / 1.21.10 三档如此）前两条都读不到 ⇒ 按坐标补 `yarn-<MC 版>`，
+    // 否则生成器会因「摘要必须含 mappingsVersion」直接判无效、这三档永远补不进否决源②。
+    // 只在 mv 为 null 时生效 ⇒ 现有 11 档的取值路径逐字不变。
+    if (!mv && key.endsWith("-fabric-api")) {
+      mv = `yarn-${key.replace(/-fabric-api$/, "")}`;
+      mvSource = "fabric-api-sources-yarn";
+    }
     const destBuf = existsSync(dest) ? readFileSync(dest) : null;
     const hasJava = destBuf && destBuf.includes(Buffer.from(".java"));
     const userdevOnly = destBuf && destBuf.includes(Buffer.from("joined.lzma")) && !hasJava;
@@ -527,7 +581,15 @@ async function main() {
       continue;
     }
     writeFileSync(dest, got.buf);
-    const side = { mappingsVersion: mv ?? null, mappingsSource: mv ? "mdk-gradle.properties" : "missing", coord, url: got.url };
+    const side = {
+      mappingsVersion: mv ?? null,
+      mappingsSource: mvSource,
+      ...(mvSource === "fabric-api-sources-yarn"
+        ? { note: "fabric-api maven sources use Yarn names even when example-mod uses official Mojang mappings" }
+        : {}),
+      coord,
+      url: got.url,
+    };
     writeFileSync(`${dest}.mappings.json`, JSON.stringify({ ...side, from: side.mappingsSource }, null, 2));
     writeFileSync(`${dest}.sidecar`, JSON.stringify(side, null, 2));
     if (!got.buf.includes(Buffer.from(".java"))) {

@@ -59,6 +59,10 @@ export const SCRIPT_WRITE_GUARD_NON_WRITERS = new Map([
   // 队列产物按设计不得进仓库面 —— main() 在写盘前先拒 `--queue` 指向 REPO_ROOT 下的路径（【QUEUE-IN-REPO】
   // + rc=1，由该门 selftest 的 T40 钉），所以这里不存在「半截仓库文件」的口子。依据正则一断即再红。
   ["mcp-server/scripts/assert-rules-api-names.mjs", /mkdtempSync\(path\.join\(os\.tmpdir\(\), "rules-names-"/],
+  // 镜像门（2026-09-28 补 L14 三臂时新增写盘）：`--selftest` 的真采集器臂要造一棵假 pack 让门自己 spawn，
+  // 夹具根 = OS tmpdir 的 "mirrors-l14-" 前缀（buildMirrorFixture 只在它下面 mkdir/writeFile，finally rmSync 收）；
+  // 门模式与仓库面全程只读 —— 仓库真树只被 readFileSync 扫。依据正则一断（夹具落点改到仓库内）本豁免即失效。
+  ["mcp-server/scripts/assert-skill-mirrors.mjs", /mkdtempSync\(join\(tmpdir\(\), "mirrors-l14-"/],
   ["mcp-server/scripts/assert-parser-availability.mjs", /mkdtempSync\(path\.join\(os\.tmpdir\(\), "mcskill-g2-"/], // 夹具 jar 只落 OS tmpdir；rmSync 收的就是那个目录，仓库源码全程只读
   // 2026-09-19 N3 裁定「补投毒」：--selftest 的 8 例夹具（tiny.gz / upstream *.bak / provenance / 假基线）
   // 全部落 OS tmpdir 下一个一次目录，finally 里 rmSync 收掉；门模式与 --measure-zero-member 全程不写盘。

@@ -17,7 +17,7 @@ sourceKind: authored
 |--------|--------|--------|
 | 纯逻辑（配方计算、NBT 组装、数据类、数学） | **JUnit**（`src/test/java`） | 不需要启动游戏，秒级反馈，可进 CI |
 | 注册表联动 / 世界交互 / 方块实体行为 | **GameTest**（游戏内集成） | 只有真实注册表与世界能验证 |
-| 渲染 / GUI 视觉 | 手动清单 + 可选截图对比；无官方自动化框架 | vanilla 无渲染测试钩子，见下文 |
+| 渲染 / GUI 视觉 | 像素级视觉断言无官方框架（手动清单 + 截图对比）；**功能面有官方 GameTest**（Fabric 1.21.10/1.21.11/26.1.2 等档另有客户端 gametest + `runClientGameTest`） | vanilla 无渲染测试钩子，见下文与文末更正记录 |
 | 网络包序列化 | JUnit（对 `FriendlyByteBuf`/`RegistryFriendlyByteBuf` 的读写往返） | 只需 buf 与注册表参数，不必启动客户端 |
 
 ## JUnit：能测的只有「干净逻辑」
@@ -56,3 +56,7 @@ sourceKind: authored
 
 - `mc-gametest` Skill（GameTest 语法与本档入口）；`mc-ci-publish-extra` 工作流与 `patterns/examples/mod-ci-github-actions.md`（把 `gradlew test` 加进 CI）。
 - JUnit 5：<https://junit.org/junit5/>；各 loader 测试口径以本档 `search_*_docs` 命中页为准。
+
+## 更正记录
+
+- **2026-09-29**：本表 `:20` 原写「渲染 / GUI 视觉：手动清单 + 可选截图对比；无官方自动化框架」——把"像素级视觉无框架"扩大成了"功能面没有自动化"。**已就地更正**（上表同行为新版）：服务端/客户端功能面有官方 GameTest；Fabric 1.21.10/1.21.11/26.1.2 等档另有客户端 gametest（`runClientGameTest`，`fabric/1.21.11/.cursor/skills/mc-gametest.md:46`；Fabric 1.21.1 档页面未覆盖 GameTest，见该档技能 `:57`）。CI 无头：Loom `ClientProductionRunTask.useXVFB` 默认真仅在 **Linux + CI 环境变量**下（`data/fabric_1.21.11/fabric-docs/1.21.11/processed/develop_loom_production-run-tasks.md:72-75`）。本说明追加在文件末尾，**不移动上文行号锚**（`templates.ts:474` 仍引 `:14/:23/:29/:36/:43`）。

@@ -34,7 +34,7 @@ IF 打开时要同步额外数据（坐标、流体量等）
   → 额外数据：ExtendedScreenHandlerFactory（不要编造 TypedScreenHandlerFactory）
 
 IF 给原版 Screen 加控件
-  → ScreenEvents.AFTER_INIT + Screens.getButtons
+  → net.fabricmc.fabric.api.client.screen.v1.ScreenEvents.AFTER_INIT + net.fabricmc.fabric.api.client.screen.v1.Screens.getButtons
 ```
 
 ---

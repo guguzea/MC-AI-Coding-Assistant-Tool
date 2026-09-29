@@ -5,6 +5,8 @@
  * 末尾另有 pack-tree 不变式（同一份「源稿 ↔ 派生树」契约）：
  *   - neoforge/ 根档 = legacy trap：只留 .cursor 源稿，7 套投影树必须为空。
  *   - 任何档不得有 `.cursor/agents/`（复数）——sync 只写 `.cursor/agent/`（单数）。
+ *   - 反之任何投影树根（`.claude/agent/` 等）不得有**单数** `agent/`——sync 写的是 `<host>/agents/default.md`
+ *     （复数），单数挂在 .cursor 以外 = 旧版脚本残留（2026-09-29 判据 2d）。
  *   - 有 `.cursor/rules` 的档必须有薄包装 `sync-skills.ps1`（转发仓库脚本）。
  *   - 投影树根（`.claude/` 等 7 套）里不得出现游离 `AGENTS.md`——sync 不写该路径。
  *   - AGENTS.md → .cursor/agent + .claude/agents + .trae/agents 三镜像：
@@ -15,12 +17,16 @@
  *     没有 frontmatter 的 450 篇规则 / 94 个技能按裁定不查、不补。
  */
 import { createHash } from "node:crypto";
-import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
-import { dirname, join, relative } from "node:path";
+import { spawnSync } from "node:child_process";
+import { existsSync, readdirSync, readFileSync, statSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { dirname, join, relative, resolve } from "node:path";
+import { tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
 
 const here = dirname(fileURLToPath(import.meta.url));
-const repoRoot = join(here, "..", "..");
+// MC_SKILL_MIRROR_ROOT = 只给 --selftest 的「真采集器两臂」用（tmp 假树），默认口径逐字不变。
+// 没有这个旋钮的话，采集器侧的洞没法证：判据侧的夹具（evaluateMirrors）根本不经采集器。
+const repoRoot = process.env.MC_SKILL_MIRROR_ROOT ? resolve(process.env.MC_SKILL_MIRROR_ROOT) : join(here, "..", "..");
 const PLATS = ["forge", "fabric", "quilt", "liteloader", "rift", "modloader", "neoforge"];
 const RULE_MIRRORS = [
   [".claude", "rules", ".mdc"],
@@ -151,6 +157,141 @@ const treeFor = (name, canonical, isSkill) => {
   return tree;
 };
 
+/* ---------------------------------------------------------------- L14 真采集器三臂 */
+// 判据侧的夹具（上面的 evaluateMirrors）不经采集器 ⇒ 堵上 L14 之后，「这一面真的有人在比」只能由
+// 自己 spawn 一份、把 MC_SKILL_MIRROR_ROOT 指到 tmp 假树来证。三臂各是一件事：
+//   A 基线绿 + ok 行必须印出 flat 面计数（谁把这一面接断，输出上就看不见）
+//   B 只改 flat 源稿、7 面镜像不动 ⇒ 必红 7 条（= 2026-09-28 真发生过的那一形）
+//   C 删掉 flat 源稿、目录型还在 ⇒ 必红并点名 FLAT-SKILL-NOT-COLLECTED（采集器复发病灶）
+// 臂数只由这张名单决定（自印分母禁止在别处写死，见 runSelftest 的 totalCases）。
+const L14_ARMS = [
+  "A 基线绿且 ok 行印出 flat 面计数",
+  "B 只改 flat 源稿必红 7 条且逐条落在 flat 面",
+  "C 摘掉这一面必点名 FLAT-SKILL-NOT-COLLECTED",
+];
+const FLAT_RULE_SRC = "# 演示规则\n\n正文。\n";
+const FLAT_SKILL_SRC = "---\nname: mc-flat\ndescription: 扁平技能源稿\n---\n\n正文。\n";
+const FLAT_DIR_SRC = "---\nname: mc-dir\ndescription: 目录型技能源稿\n---\n\n正文。\n";
+
+function buildMirrorFixture(root) {
+  const base = join(root, "fabric", "9.9.9");
+  const w = (rel, text) => {
+    const p = join(base, ...rel.split("/"));
+    mkdirSync(dirname(p), { recursive: true });
+    writeFileSync(p, text, "utf8");
+  };
+  // 规则面也得齐：否则 collectorFloor 先红，把三臂的判词淹掉。
+  w(".cursor/rules/00-demo.mdc", FLAT_RULE_SRC);
+  for (const [host, sub] of RULE_MIRRORS) w(`${host}/${sub}/00-demo.mdc`, FLAT_RULE_SRC);
+  w(".pi/rules/00-demo.md", piRuleText(FLAT_RULE_SRC, "00-demo.md"));
+  w("sync-skills.ps1", "& (Join-Path $PSScriptRoot '..\\..\\scripts\\sync-skills.ps1') -TargetDir $here\n");
+  w(".cursor/skills/mc-dir/SKILL.md", FLAT_DIR_SRC);
+  for (const rel of SKILL_MIRROR_RELS("mc-dir")) w(rel, normalizePathRefs(FLAT_DIR_SRC, "fabric/9.9.9"));
+  w(".cursor/skills/mc-flat.md", FLAT_SKILL_SRC);
+  for (const rel of SKILL_MIRROR_RELS("mc-flat")) w(rel, normalizePathRefs(FLAT_SKILL_SRC, "fabric/9.9.9"));
+  return base;
+}
+
+function runMirrorGateOn(root) {
+  const out = spawnSync(process.execPath, [join(here, "assert-skill-mirrors.mjs")], {
+    encoding: "utf8",
+    env: { ...process.env, MC_SKILL_MIRROR_ROOT: root },
+  });
+  return { rc: out.status, text: `${out.stdout || ""}${out.stderr || ""}` };
+}
+
+function flatCollectorArms() {
+  const tmp = mkdtempSync(join(tmpdir(), "mirrors-l14-"));
+  const problems = [];
+  try {
+    const base = buildMirrorFixture(tmp);
+    const green = runMirrorGateOn(tmp);
+    if (green.rc !== 0) {
+      problems.push(`臂 A 基线绿：期望 rc=0，实得 rc=${green.rc} ⇒ ${green.text.split(/\r?\n/).find((l) => l.trim()) || "(无输出)"}`);
+    }
+    if (!/L14 flat \.md 面已进比对：源稿=1 件／排给它=7 个镜像目标（目录型=1 件）/.test(green.text)) {
+      problems.push("臂 A：ok 行没印出 flat 面计数（源稿=1／排给它=7／目录型=1）⇒ 这一面在输出上不可见，接断了也看不出来");
+    }
+    writeFileSync(join(base, ".cursor", "skills", "mc-flat.md"), FLAT_SKILL_SRC.replace("正文。", "正文改了两个字。"), "utf8");
+    const poison = runMirrorGateOn(tmp);
+    // 分两条腿数：总数必须 = 7（flat 面 7 个镜像，目录型与规则面都不该被牵连），
+    // 再逐条确认这 7 条**全落在 flat 面上**（形状见下面三种，别只认一种）。
+    const all = poison.text.match(/hash mismatch[^\n]*/g) || [];
+    // label 的形状有三种，都得认（第一发按 `.md` 一种写死，数出 2/7；第二发按 `/` 分隔符，数出 0/7）：
+    //   `.trae/skills/mc-flat.md`、`.agents|.continue|.opencode|.pi|.zcode/skills/mc-flat/SKILL.md`、
+    //   `.claude/commands/flat.md`（mc- 前缀被剥）。分隔符 = relative() 给的反斜杠。
+    const flatSet = all.filter((l) => /mc-flat/.test(l) || /commands[\\/]flat\.md/.test(l));
+    if (poison.rc === 0) problems.push("臂 B 只改 flat 源稿、7 面镜像不动 ⇒ 必须红（L14 复发那一形，今天真发生过）");
+    else if (all.length !== 7) problems.push(`臂 B 应只有 7 条 hash mismatch（flat 的 7 面镜像），实得 ${all.length} 条：${all.slice(0, 3).join(" | ")}`);
+    else if (flatSet.length !== 7) problems.push(`臂 B 的 7 条红点必须全落在 flat 面上，实得 ${flatSet.length}/7（另 ${7 - flatSet.length} 条落在别处 = 夹具没隔离干净）`);
+    writeFileSync(join(base, ".cursor", "skills", "mc-flat.md"), FLAT_SKILL_SRC, "utf8");
+    rmSync(join(base, ".cursor", "skills", "mc-flat.md"), { force: true });
+    const cut = runMirrorGateOn(tmp);
+    if (cut.rc === 0 || !/FLAT-SKILL-NOT-COLLECTED/.test(cut.text)) {
+      problems.push(`臂 C flat 源稿被删而目录型还在 ⇒ 必须红并点名 FLAT-SKILL-NOT-COLLECTED，实得 rc=${cut.rc}`);
+    }
+  } finally {
+    try {
+      rmSync(tmp, { recursive: true, force: true });
+    } catch {
+      /* 删不掉由调用方的残留腿去红 */
+    }
+  }
+  return problems;
+}
+
+/* ------------------------------------------- 单数 agent/ 面真采集器三臂（判据 2d） */
+// 与 L14 同一族：这类腿管的是「目录形状存不存在」，只有经采集器（门自己 spawn 一棵 tmp 假树）才算证据，
+// 内存夹具 evaluateMirrors 看不见它。三臂各一件事：
+//   A 基线（fixture 只有合法的 .cursor/agent/）⇒ 绿，且 ok 行必须印出这一面的扫描数（接断了输出上就看得见）
+//   B 造一件 `.claude/agent/default.md` ⇒ 必红、按路径点名，且**只有这一条**孤儿红（不误伤别面）
+//   C 把这一面整片摘掉（删掉唯一平台目录 ⇒ 候选塌成 0）⇒ 必红并点名 SINGULAR-AGENT-SCAN-EMPTY
+const SING_ARMS = [
+  "A 基线绿且 ok 行印出单数 agent/ 扫描数",
+  "B 造 .claude/agent/default.md 必红并按路径点名",
+  "C 候选塌成 0 必红并点名 SINGULAR-AGENT-SCAN-EMPTY",
+];
+function singularOrphanArms() {
+  const problems = [];
+  const fresh = () => {
+    const tmp = mkdtempSync(join(tmpdir(), "mirrors-l14-sing-")); // 前缀沿用 guard 依据（script-write-guard-check:65）
+    buildMirrorFixture(tmp);
+    return tmp;
+  };
+  const cleanup = [];
+  try {
+    const t1 = fresh(); cleanup.push(t1);
+    const green = runMirrorGateOn(t1);
+    if (green.rc !== 0) {
+      problems.push(`臂 A 基线：期望 rc=0，实得 ${green.rc} ⇒ ${(green.text.split(/\r?\n/).find((l) => l.trim()) || "(无输出)")}`);
+    }
+    if (!/单数 agent\/ 面扫 \d+ 组合／孤儿 0 个/.test(green.text)) {
+      problems.push(`臂 A：ok 行没印出单数 agent/ 面的扫描数 ⇒ 这一面被接断也看不出来。实得片段：${green.text.slice(0, 200)}`);
+    }
+    const t2 = fresh(); cleanup.push(t2);
+    const stray = join(t2, "fabric", "9.9.9", ".claude", "agent");
+    mkdirSync(stray, { recursive: true });
+    writeFileSync(join(stray, "default.md"), "# 旧版脚本残留\n", "utf8");
+    const poison = runMirrorGateOn(t2);
+    const named = (poison.text.match(/orphan [^\n(]*\/\.claude\/agent\//g) || []);
+    const anyAgentOrphan = (poison.text.match(/orphan [^\n(]*\/agent\//g) || []);
+    if (poison.rc === 0) problems.push("臂 B：造了 .claude/agent/default.md 却 rc=0 ⇒ 这一面没人执法");
+    else if (named.length !== 1) problems.push(`臂 B：应恰 1 条点名 fabric/9.9.9/.claude/agent/ 的红，实得 ${named.length} 条：${named.slice(0, 3).join(" | ")}`);
+    else if (anyAgentOrphan.length !== 1) problems.push(`臂 B：其余宿主不该被牵连（单数孤儿红共 ${anyAgentOrphan.length} 条，应 1）：${anyAgentOrphan.join(" | ")}`);
+    const t3 = fresh(); cleanup.push(t3);
+    rmSync(join(t3, "fabric"), { recursive: true, force: true });
+    const cut = runMirrorGateOn(t3);
+    if (cut.rc === 0 || !/SINGULAR-AGENT-SCAN-EMPTY/.test(cut.text)) {
+      problems.push(`臂 C：候选面塌成 0 时必红并点名 SINGULAR-AGENT-SCAN-EMPTY，实得 rc=${cut.rc}`);
+    }
+  } finally {
+    for (const d of cleanup) {
+      try { rmSync(d, { recursive: true, force: true }); } catch { /* 删不掉由调用方的残留腿去红 */ }
+    }
+  }
+  return { problems, n: SING_ARMS.length };
+}
+
 function runSelftest() {
   const cases = [
     { name: "GREEN 规则面基线（6 镜像 + .pi 变换全一致）", want: "ok", call: () => evaluateMirrors({ name: "01-demo.mdc", canonical: SRC_MDC, tree: treeFor("01-demo.mdc", SRC_MDC, false), isSkill: false }) },
@@ -225,20 +366,34 @@ function runSelftest() {
     } else console.log(`  ✓ ${c.name} → 红：${hit.slice(0, 130)}${problems.length > 1 ? ` （共 ${problems.length} 项）` : ""}`);
   }
 
-  // GAP-L14（**只登记现状，不是覆盖**）：`.cursor/skills/<name>.md` 这种 flat 源稿面在真跑的采集器里
-  // 被 `continue` 掉 ⇒ 排给它的镜像目标数 = 0 ⇒ 漂移 1 字节也照样绿。判据本身没这个洞（上面六记投毒
-  // 都红），洞在采集器。补 sha 比对 = CONTRIBUTING.md §未排期清单 `L14`（as-of 2026-09-24 实测该面 380 份）。
-  const flatDrift = checkMirrorGroup({ targets: [], read: () => null, label: (r) => r });
-  console.log(
-    `  ⚠ GAP-L14 flat .md 源稿面：采集器排给它 ${flatDrift.length === 0 ? "0 个镜像目标" : "?"} ⇒ 该面漂移**判不了**（现状，非本例判红；补判据是 L14 的活）`,
-  );
+  // L14（2026-09-28 闭）：`.cursor/skills/<name>.md` 这面从前被采集器 `continue` 掉 ⇒ 排给它 0 个
+  // 镜像目标、漂移 1 字节也绿。现在它进比对，并由三记**真采集器**臂钉住（自己 spawn、tmp 假树）。
+  const collectorProblems = flatCollectorArms();
+  if (collectorProblems.length) {
+    for (const p of collectorProblems) console.log(`  ✗ L14 采集器臂：${p}`);
+    bad += collectorProblems.length;
+  } else {
+    console.log(`  ✓ L14 采集器${L14_ARMS.length}臂 → 基线绿且印出 flat 计数 / 只改 flat 源稿必红 7 条 / 摘掉这一面必点名 FLAT-SKILL-NOT-COLLECTED`);
+  }
 
+  // 判据 2d（2026-09-29）：单数 `<host>/agent/` 残留面。同一族（只有经采集器才算证据），
+  // 三臂同形：基线绿且印数 / 造一件必红且只红那一条 / 候选塌成 0 必点名地板。
+  const sing = singularOrphanArms();
+  if (sing.problems.length) {
+    for (const p of sing.problems) console.log(`  ✗ 单数 agent/ 臂：${p}`);
+    bad += sing.problems.length;
+  } else {
+    console.log(`  ✓ 单数 agent/ 采集器${sing.n}臂 → 基线绿且印出扫描数 / 造 .claude/agent/default.md 必红并点名 / 候选塌成 0 必点名 SINGULAR-AGENT-SCAN-EMPTY`);
+  }
+
+  // 分母由三处名单现推（cases / L14_ARMS / SING_ARMS），禁止在别处重抄「11 例」这种会烂的数。
+  const totalCases = cases.length + L14_ARMS.length + sing.n;
   if (bad) {
-    console.log(`assert-skill-mirrors --selftest: ${bad}/${cases.length} 例不符 ⇒ 判据已退化`);
+    console.log(`assert-skill-mirrors --selftest: ${bad}/${totalCases} 例不符 ⇒ 判据已退化`);
     process.exit(1);
   }
   console.log(
-    `assert-skill-mirrors --selftest: ok · ${cases.length} 例全中（${cases.filter((c) => c.wantFail).length} 投毒必红 + 2 基线绿 + 不判对照绿；内存夹具，未写盘）+ 1 记 GAP-L14 现状登记`,
+    `assert-skill-mirrors --selftest: ok · ${totalCases} 例全中（${cases.filter((c) => c.wantFail).length} 投毒必红 + 2 基线绿 + 不判对照绿 + L14 真采集器 ${L14_ARMS.length} 臂 + 单数 agent/ 真采集器 ${sing.n} 臂；内存夹具 + tmp 假树，未碰仓库）`,
   );
 }
 
@@ -250,6 +405,11 @@ if (process.argv.includes("--selftest")) {
 const failures = [];
 let packsScanned = 0;
 let mirrorHashChecked = 0;
+// L14 已闭（2026-09-28）：flat `.cursor/skills/<name>.md` 这一面从前被采集器 `continue` 掉 ⇒
+// 排给它的镜像目标 = 0。下面三个计数就是「这一面到底有没有人排目标」的可见位，臂 E/F/G 钉它。
+let flatSkillSources = 0;
+let flatSkillTargets = 0;
+let dirSkillSources = 0;
 
 for (const pack of listVersionDirs()) {
   packsScanned++;
@@ -296,23 +456,30 @@ for (const pack of listVersionDirs()) {
   const skillsDir = join(pack.base, ".cursor", "skills");
   const cursorSkillNames = new Set();
   if (existsSync(skillsDir)) {
-    for (const skillName of readdirSync(skillsDir)) {
-      const srcPath = join(skillsDir, skillName, "SKILL.md");
-      const flat = join(skillsDir, skillName);
-      if (existsSync(srcPath)) {
-        cursorSkillNames.add(skillName);
-      } else if (statSync(flat).isFile() && skillName.endsWith(".md")) {
-        cursorSkillNames.add(skillName.replace(/\.md$/, ""));
-        continue;
+    for (const entry of readdirSync(skillsDir)) {
+      const inDirSrc = join(skillsDir, entry, "SKILL.md");
+      const flatSrc = join(skillsDir, entry);
+      let bare = entry;
+      let srcFile = inDirSrc;
+      let isFlat = false;
+      if (existsSync(inDirSrc)) {
+        cursorSkillNames.add(entry);
+        dirSkillSources++;
+      } else if (statSync(flatSrc).isFile() && entry.endsWith(".md")) {
+        // L14（2026-09-28 闭）：这里从前 `continue` —— 名字登记了、sha 比对没做 ⇒ 该面漂移 1 字节也绿。
+        // 现与目录型同一条腿：normalized 后比 7 面镜像（`.trae`/`.claude` 的形状差异由 SKILL_MIRROR_RELS 给）。
+        bare = entry.replace(/\.md$/, "");
+        cursorSkillNames.add(bare);
+        srcFile = flatSrc;
+        isFlat = true;
+        flatSkillSources++;
       } else {
         continue;
       }
-      const normalized = normalizePathRefs(readFileSync(srcPath, "utf8"), pack.rel);
-      // ⚠️ flat `.md` 源稿面（`.cursor/skills/<name>.md`）在上面 `continue` 掉了：那里排给它
-      // **0 个镜像目标** ⇒ 该面漂移 1 字节也照样绿。洞在采集器不在判据（判据侧的反证见本文件
-      // `--selftest` 的 GAP-L14 现状登记）；补 sha 比对 = CONTRIBUTING.md §未排期清单 `L14`。
-      const skillTargets = SKILL_MIRROR_RELS(skillName).map((rel) => ({ rel, wantText: normalized }));
+      const normalized = normalizePathRefs(readFileSync(srcFile, "utf8"), pack.rel);
+      const skillTargets = SKILL_MIRROR_RELS(bare).map((rel) => ({ rel, wantText: normalized }));
       mirrorHashChecked += skillTargets.length;
+      if (isFlat) flatSkillTargets += skillTargets.length;
       failures.push(...checkMirrorGroup({ targets: skillTargets, read: readInPack, label: labelInPack }));
     }
   }
@@ -451,6 +618,51 @@ for (const pack of listVersionDirs()) {
       );
     }
   }
+}
+
+// (2d) 单数 `<host>/agent/`（host ≠ .cursor）与 (2) 是同一个病的镜像方向：sync 只写
+//     `.cursor/agent/default.md`（单数，合法）+ `.claude/agents/` + `.trae/agents/`（复数，合法），
+//     所以 `.claude/agent/`、`.trae/agent/` 这类目录既没人读、也没人覆盖。
+//     2026-09-29 现扫（四把尺：`git ls-tree -r --name-only HEAD` = 2 ／ `git ls-files` = 2 ／
+//     `git status --porcelain` = 2 条 ` D` ／ `find <8 平台根> -maxdepth 3 -type d -name agent` = 57 个目录
+//     全部在 `.cursor/agent`、非 .cursor 宿主 0）：这类单数孤儿文件只有 2 件 ——
+//     `fabric/1.21.1/.claude/agent/default.md` 与 `fabric/1.21.1/.trae/agent/default.md`，
+//     且两者是**同一枚 blob**（`06d8bc3e5b6c8b87d69fe560e72d3d8a2a727e06`，1 291 B），
+//     同档三个合法镜像现盘各 10 554 B ⇒ 内容是旧版脚本的残留，不是「漂移待同步」。
+//     ⇒ 判据不能拿 sha 去比这两件（那是恒红一条腿，真值形状是「不该存在」），照抄 (2) 的形状：
+//     出现即红 + 点名，删目录即清账。工作树已删（2 条 ` D`），所以本腿在现盘 0 红，
+//     机制证据只由 --selftest 的 singularOrphanArms() 三臂承担。
+let singularAgentScanned = 0;
+let singularAgentOrphans = 0;
+for (const plat of PLURAL_ORPHAN_PLATS) {
+  const platDir = join(repoRoot, plat);
+  if (!existsSync(platDir)) continue;
+  const candidates = [{ base: platDir, rel: plat }];
+  for (const name of readdirSync(platDir)) {
+    const dir = join(platDir, name);
+    if (statSync(dir).isDirectory()) candidates.push({ base: dir, rel: `${plat}/${name}` });
+  }
+  for (const { base, rel } of candidates) {
+    // PROJECTION_DIRS 天然不含 .cursor ⇒ 那里合法的单数 agent/ 不会被牵连。
+    for (const host of PROJECTION_DIRS) {
+      singularAgentScanned++;
+      const stray = join(base, host, "agent");
+      if (existsSync(stray) && statSync(stray).isDirectory()) {
+        singularAgentOrphans++;
+        failures.push(
+          `orphan ${rel}/${host}/agent/ (单数 agent/ 只许挂在 .cursor 下；sync 写的是 ${host}/agents/default.md ⇒ 删掉这个目录，别去补内容)`,
+        );
+      }
+    }
+  }
+}
+
+// R47 地板（与判据 (2) 的 pluralOrphanScanned 同形）：这一面一格都没扫 = 平台清单被改空 / 根指偏，
+// 不是「零孤儿」。没有这条，把 PLURAL_ORPHAN_PLATS 改空就能让 (2d) 静默熄火。
+if (singularAgentScanned === 0) {
+  failures.push(
+    "SINGULAR-AGENT-SCAN-EMPTY：单数 agent/ 面 0 个候选组合（平台 × 7 投影根）⇒ 采集面塌了（平台清单被改空 / MC_SKILL_MIRROR_ROOT 指偏），判据在空转（R47）",
+  );
 }
 
 // (3) AGENTS.md 是权威源稿，sync 把它覆盖到三处镜像。台账原本是 sweep47 留下的存量漂移
@@ -618,6 +830,15 @@ for (const pack of listVersionDirs()) {
   }
 }
 
+// L14 复发病灶（R47 同形）：flat `.md` 面**又**没人排目标 = 采集器被改回 `continue` / 该面被搬走。
+// 只在「目录型有人在比、flat 一件都没排」时红 ⇒ 仓库真没有 flat 源稿的那天它不会假红（那两面都 0）。
+if (flatSkillSources === 0 && dirSkillSources > 0) {
+  failures.push(
+    `FLAT-SKILL-NOT-COLLECTED: 目录型 SKILL.md 在比 ${dirSkillSources} 件，而 flat \`.cursor/skills/<name>.md\` 排到 sha 比对的 = 0 件 ` +
+      "⇒ 采集器这一面又断了（L14 的病复发；判据在 checkMirrorGroup 没问题，洞在喂它的循环）",
+  );
+}
+
 // 采集器地板（R47 同形，与 --selftest 的 FLOOR 例共用）：一棵档都没扫 / 一次镜像比对都没发生
 // = repoRoot 指偏或平台树被搬走，**不是**「零漂移」。
 failures.push(...collectorFloor({ packs: packsScanned, compared: mirrorHashChecked }));
@@ -629,6 +850,7 @@ if (failures.length) {
   process.exit(1);
 }
 console.log(
-  `assert-skill-mirrors: ok (扫档=${packsScanned} 镜像比对目标=${mirrorHashChecked} · 实测 AGENTS 漂移 ${agentsDrift.size} 档 / 台账 ${KNOWN_AGENTS_DRIFT.size} 档，只准缩短 · frontmatter 合法性已查 ${fmRulesChecked} 篇规则 + ${fmSkillsChecked} 个技能正文 · ` +
-    `R47 复数 agents 孤儿腿：扫候选目录=${pluralOrphanScanned} 平台=${PLURAL_ORPHAN_PLATS.length} 拒=${failures.length})`,
+  `assert-skill-mirrors: ok (扫档=${packsScanned} 镜像比对目标=${mirrorHashChecked} · L14 flat .md 面已进比对：源稿=${flatSkillSources} 件／排给它=${flatSkillTargets} 个镜像目标（目录型=${dirSkillSources} 件）· 实测 AGENTS 漂移 ${agentsDrift.size} 档 / 台账 ${KNOWN_AGENTS_DRIFT.size} 档，只准缩短 · frontmatter 合法性已查 ${fmRulesChecked} 篇规则 + ${fmSkillsChecked} 个技能正文 · ` +
+    `R47 复数 agents 孤儿腿：扫候选目录=${pluralOrphanScanned} 平台=${PLURAL_ORPHAN_PLATS.length} · ` +
+    `单数 agent/ 面扫 ${singularAgentScanned} 组合／孤儿 ${singularAgentOrphans} 个 · 拒=${failures.length})`,
 );

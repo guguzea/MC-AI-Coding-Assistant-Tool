@@ -63,6 +63,14 @@ async function main() {
   const { validateAtHandler, validateAwHandler } = await import("../dist/mixin/deep-validate.js");
 
   const proto = ["constructor", "toString", "__proto__"];
+  // resolvePackFormat 的对照臂：原型键**应当**与任意同形未知串走同一条「未知 ⇒ 不猜测」的路，
+  // 所以判据是「与未知串行为一致」，不是「packFormat 必须是 number」。
+  const UNKNOWN_PROBE = "unknown-xyz";
+  const unknownRef = resolvePackFormat(UNKNOWN_PROBE);
+  const unknownRefJson = JSON.stringify(unknownRef);
+  if (unknownRef.packFormat !== null || unknownRef.unknownVersion !== true) {
+    note("error", "resolvePackFormat", "对照臂自身未走未知分支 ⇒ 「同行为」判据失去分辨力", clip(unknownRef));
+  }
 
   for (const k of proto) {
     for (const [name, fn] of [
@@ -87,7 +95,15 @@ async function main() {
     if (vi.forgeVersion !== "unknown") note("error", "get_version_info", k, clip(vi));
     if (getMigrationGuide(k).found) note("error", "get_migration_guide", k);
     if (getWorkflowTemplate(k).found) note("error", "get_workflow_template", k);
-    if (typeof resolvePackFormat(k).packFormat !== "number") note("error", "resolvePackFormat", k);
+    // 旧腿 `typeof packFormat !== "number"` 与本循环其余四条（期望 unknown / found:false）方向相反：
+    // 它要求对垃圾键**猜出**一个 pack_format，于是把「按未知正确回答」印成 error（2026-09-28 实测 3/3 原型键全红、真缺陷 0）。
+    const gotPack = resolvePackFormat(k);
+    const wantPackJson = unknownRefJson.replaceAll(UNKNOWN_PROBE, k);
+    if (JSON.stringify(gotPack) !== wantPackJson) {
+      note("error", "resolvePackFormat", `${k} 与同形未知串行为不一致`, clip({ got: gotPack, want: wantPackJson }));
+    } else {
+      note("info", "resolvePackFormat", `${k} 同未知串`, clip(gotPack));
+    }
     if (mapShortCommand(k).tool !== k) note("error", "mapShortCommand", k);
   }
 

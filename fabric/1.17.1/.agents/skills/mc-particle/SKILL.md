@@ -29,7 +29,7 @@ private static final ParticleType<?> MY_PARTICLE =
 public class ExampleModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        ParticleFactoryManager.INSTANCE.register(
+        MinecraftClient.getInstance().particleManager.registerFactory(
             (ParticleType<MyParticle>) MY_PARTICLE,
             MyParticle.Factory::new
         );

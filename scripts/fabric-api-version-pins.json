@@ -1,0 +1,19 @@
+{
+  "_note": "fabric-api 的第三坐标来源。只有当该档 scaffold/gradle.properties 与 .cursor/rules/00-project-setup.mdc 都没写明坐标、且该档文档正文里的 fabric-api 行都不属于本版（fabricVerBelongsToMc 判否）时，fetch-loader-api-jars.mjs 才来读这里。逐档一条、禁止借邻版；缺 basis 或 asOf 的条目一律不采纳；version 不归本档的条目由 fetcher 按 fabricVerBelongsToMc 拒绝。",
+  "_source": "query_upstream_releases --source=modrinth --slug=fabric-api --minecraftVersion=<档>（走 mcp-server/dist/cli.js 的生产上游客户端；gameVersions 字面含该档）",
+  "1.21.4": {
+    "version": "0.119.4+1.21.4",
+    "basis": "modrinth slug=fabric-api 的 gameVersions 含 1.21.4，available:true、latest=0.119.4+1.21.4",
+    "asOf": "2026-09-28"
+  },
+  "1.21.8": {
+    "version": "0.136.1+1.21.8",
+    "basis": "modrinth slug=fabric-api 的 gameVersions 含 1.21.8，available:true、latest=0.136.1+1.21.8",
+    "asOf": "2026-09-28"
+  },
+  "1.21.10": {
+    "version": "0.138.4+1.21.10",
+    "basis": "modrinth slug=fabric-api 的 gameVersions 含 1.21.10，available:true、latest=0.138.4+1.21.10",
+    "asOf": "2026-09-28"
+  }
+}

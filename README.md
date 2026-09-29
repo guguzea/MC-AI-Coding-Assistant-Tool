@@ -39,7 +39,7 @@ MC_skill/
 │   ├── permitted/               # 许可入库的社区帖提炼（如 mcmod 3993）
 │   ├── links/                   # 仅标题 / 摘要 / 外链（如 mcmod 6071）
 │   ├── patterns/                # 代码模式示范（mcskill://patterns/README）
-│   ├── indexes/index-l0.json    # L0 索引（实测 109 条：authored 94 / links 11 / permitted 4；含 generatedAt 构建时间戳）
+│   ├── indexes/index-l0.json    # L0 索引（实测 110 条：authored 95 / links 11 / permitted 4；含 generatedAt 构建时间戳）
 │   ├── AGENT_USAGE.md           # Agent 用法规则（短文不能当 API 规范）
 │   └── README.md                # 主题 id 速查
 │
@@ -214,7 +214,7 @@ MC_skill/
 | `permitted/` | 作者许可入库的社区帖提炼 | 仍不确定时打开原文 URL |
 | `links/` | 仅标题 / 摘要 / 外链 | **禁止**把网页正文当已入库全文 |
 
-索引：`indexes/index-l0.json`（约 **109** 条）。MCP：`list_community_sources` → `search_community_docs` → `get_community_doc_summary` / `get_community_doc_full`。环境变量 `MC_SKILL_COMMUNITY` 可改根路径。
+索引：`indexes/index-l0.json`（约 **110** 条）。MCP：`list_community_sources` → `search_community_docs` → `get_community_doc_summary` / `get_community_doc_full`。环境变量 `MC_SKILL_COMMUNITY` 可改根路径。
 
 **主题速查**（完整表见 [`community_knowledge/README.md`](./community_knowledge/README.md)）：发布 / 崩溃 / 软依赖 / 机器 GUI / 本地化 / 代码模式（`patterns/`）等。**库集成**另有 48 篇 `authored/lib-*.md` + 总览 `library-catalog-2026`、陷阱 `lib-traps-2026`、配方集成 `library-integration` / `library-integration-jei-emi`。
 

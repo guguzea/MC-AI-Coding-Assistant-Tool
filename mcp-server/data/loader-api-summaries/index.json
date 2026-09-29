@@ -384,6 +384,17 @@
       "invalid": false
     },
     {
+      "file": "1.21.10-fabric-api.jar",
+      "mappingsVersion": "yarn-1.21.10",
+      "mappingsSource": "fabric-api-sources-yarn",
+      "classCount": 1531,
+      "fqcnIndexCount": 1353,
+      "sourceJarSha256": "9eb774a3ad2599601aeb52f50eb821ebceda9791d4b8aa739dff5a3d9f9ed529",
+      "source": "official",
+      "fromSourcesJar": true,
+      "invalid": false
+    },
+    {
       "file": "1.21.10-fabric.jar",
       "mappingsVersion": "unobfuscated-fabric-loader-0.19.5",
       "mappingsSource": "loader-sources-native-names",
@@ -472,6 +483,17 @@
       "invalid": false
     },
     {
+      "file": "1.21.4-fabric-api.jar",
+      "mappingsVersion": "yarn-1.21.4",
+      "mappingsSource": "fabric-api-sources-yarn",
+      "classCount": 1309,
+      "fqcnIndexCount": 1144,
+      "sourceJarSha256": "0bf482d78cdfcbc4abcc6cb5d7015bf4abb9044a52738e9c9413f345e9c9e5fa",
+      "source": "official",
+      "fromSourcesJar": true,
+      "invalid": false
+    },
+    {
       "file": "1.21.4-fabric.jar",
       "mappingsVersion": "unobfuscated-fabric-loader-0.19.5",
       "mappingsSource": "loader-sources-native-names",
@@ -489,6 +511,17 @@
       "classCount": 1291,
       "fqcnIndexCount": 1000,
       "sourceJarSha256": "289aab72e501515e8b23b6db882736a6c7a0b04b5eb4136c2bee32661863cd58",
+      "source": "official",
+      "fromSourcesJar": true,
+      "invalid": false
+    },
+    {
+      "file": "1.21.8-fabric-api.jar",
+      "mappingsVersion": "yarn-1.21.8",
+      "mappingsSource": "fabric-api-sources-yarn",
+      "classCount": 1453,
+      "fqcnIndexCount": 1269,
+      "sourceJarSha256": "a1b4e5af6c6ec2fe62f00a352dc14dcd2eb7f97b9adf21c823730bcfd2e63b20",
       "source": "official",
       "fromSourcesJar": true,
       "invalid": false

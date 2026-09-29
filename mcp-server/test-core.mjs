@@ -7400,7 +7400,10 @@ async function testLoaderApiRepoDataHygiene() {
   // 38 → 52：2026-09-28 补出 fabric **loader 本体**摘要 14 份（`<档>-fabric.json`，fabric 全档齐）——
   // 由 scripts/decompile-loader-apis.mjs 从各档 scaffold 自钉的 loader_version 生成，
   // 供两道名门的「归属名单第三来源」按档否决（ClientModInitializer / Environment / EnvType 这类 loader 类）。
-  assert.equal(clean.count, 52, `官方摘要应为 52 份，实际 ${clean.count}`);
+  // 52 → 55：同日补出 fabric-api 缺的三档 `1.21.4` / `1.21.8` / `1.21.10` ⇒ 否决源② 在场数 11/14 → **14/14**；
+  // 坐标来自 scripts/fabric-api-version-pins.json 的逐档 pin（modrinth gameVersions 实测，非借邻版），
+  // mappingsVersion 按仓内既有 11 件同串约定写 `yarn-<MC 版>` / `fabric-api-sources-yarn`。
+  assert.equal(clean.count, 55, `官方摘要应为 55 份，实际 ${clean.count}`);
   assert.deepEqual(clean.problems, [], `loader-api 数据卫生门禁:\n  ${clean.problems.join("\n  ")}`);
 
   const readJson = (p) => JSON.parse(readFileSync(p, "utf8"));

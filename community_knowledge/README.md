@@ -14,7 +14,7 @@
 | `links/` | 无全文许可：仅标题、摘要、外链 URL |
 | `authored/` | 本仓库自写短文（可自由修改） |
 
-索引：`indexes/index-l0.json`（可由 `mcp-server/scripts/build-community-index.mjs` 重建；当前 **109** 条：authored 94 / links 11 / permitted 4）。
+索引：`indexes/index-l0.json`（可由 `mcp-server/scripts/build-community-index.mjs` 重建；当前 **110** 条：authored 95 / links 11 / permitted 4）。
 
 ## `authored/` 主题速查
 
@@ -23,6 +23,7 @@
 | 发布 | `authored/publishing` |
 | 崩溃日志 | `authored/crash-reports` |
 | 测试（JUnit / GameTest 选型） | `authored/testing-automation` |
+| 游戏内自动游玩测试（agent 驱动/观察、补 mc-ingame-iterate 缺口） | `authored/ingame-playtest-automation` |
 | 性能 / profiler（spark、/debug tick、内存） | `authored/profiling-performance` |
 | 软依赖 / CurseMaven | `authored/soft-deps-modlist`、`authored/cursemaven-optional-deps` |
 | 主类 / 注册 helper / 创造页签 | `authored/mod-entry-init-structure`、`authored/register-helpers`、`authored/creative-tabs-1.20` |
@@ -81,7 +82,7 @@
 | 停更模组修补 | `legacy-mod-patching`（Recaf 字节码流，1.12 老版更常用） | 同左（第 1–3 级优先，MixinBooter 见 Mixin 行） | 同左 | 同左 |
 | 维度 / 群系 | — | ⚠️ `custom-dimension-and-biomes`（26.x 核对，1.20.x 字段差异已标注） | `custom-dimension-and-biomes` | ⚠️ wiki 指针（dimensionconcepts / custom_portals） |
 | Mixin | `mixin-practices-crossplatform`（全版本通用；MixinExtras 需 Loader 0.15+，三列同） | ← | ← | ← |
-| 发布 / 崩溃 / 性能 / 测试 | `publishing`、`crash-reports`、`profiling-performance`、`testing-automation`（跨版本通用，四列同） | ← | ← | ← |
+| 发布 / 崩溃 / 性能 / 测试 | `publishing`、`crash-reports`、`profiling-performance`、`testing-automation`、`ingame-playtest-automation`（跨版本通用，四列同） | ← | ← | ← |
 
 基岩版不在这套 Java 版本轴里：Script API 见 `authored/bedrock-script-api-primer`（stable 线，模块版本随游戏走）。老加载器（LiteLoader / Rift / ModLoader）走仓库版本档规则树，社区层只有 `authored/modloader-1.6.4`。
 | 主题 | 条目 |

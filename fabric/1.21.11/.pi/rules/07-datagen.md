@@ -44,7 +44,7 @@ IF 生成方块掉落
   → FabricBlockLootTableProvider
 
 IF 生成标签
-  → FabricTagProvider.ItemTagProvider / BlockTagProvider
+  → net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider.ItemTagProvider / net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider.BlockTagProvider
 
 IF 生成自定义附魔定义
   → `FabricDynamicRegistryProvider`，在生成器 **`bootstrap()`** 里 `register()`
