@@ -66,6 +66,7 @@ const NEW_WORKFLOWS = [
   "mc-events-forge",
   "mc-events-neoforge",
   "mc-events-fabric",
+  "mc-ingame-playtest",
 ];
 
 function skillPath(ver, name) {

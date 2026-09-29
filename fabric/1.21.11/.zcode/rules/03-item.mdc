@@ -28,7 +28,8 @@ IF 是工具（剑/镐）
   → 1.21.11 Yarn 没有 `SwordItem` / `PickaxeItem` / `MiningToolItem` / `DiggerItem` / `ToolItem` 这些类；`AxeItem` / `HoeItem` / `ShovelItem` 仍在原版，但不是你自己工具的父类。不要编造 DurableToolItem
 
 IF 是盔甲
-  → 使用 ArmorItem + ArmorMaterial
+  → new Item(new Item.Settings().armor(ArmorMaterial 实例, EquipmentType.HELMET / .CHESTPLATE / .LEGGINGS / .BOOTS))
+  → 1.21.11 没有 ArmorItem 类（本仓 14 档里最后一档还有它的是 1.21.4）；`ArmorMaterial` 与 `EquipmentType` 在 `net/minecraft/item/equipment/`
 
 IF 是食物
   → Item.Settings.food(FoodComponent)

@@ -7743,9 +7743,9 @@ async function testDocsToolTablesMatchRegistry() {
   const poisoned = [
     ["README 少一行工具", { ...base, readme: readme.replace(/^\|[ \t]*`check_dependencies`[ \t]*\|.*\n/m, "") }, /缺 `check_dependencies`/],
     ["README 总数标错", { ...base, readme: readme.replace(`## MCP Server 工具（${registered.length} 个）`, `## MCP Server 工具（${registered.length - 1} 个）`) }, new RegExp(`标题声明 ${registered.length - 1}`)],
-    ["README 分节计数标错", { ...base, readme: readme.replace("### 10. 代码生成模板（8）", "### 10. 代码生成模板（7）") }, /§10 声明 7 个/],
-    ["README 出现未注册名", { ...base, readme: readme.replace("### 11. 日志与依赖诊断（4）", "### 11. 日志与依赖诊断（4）\n\n| 工具 | 作用 |\n|------|------|\n| `not_a_real_tool` | x |") }, /未注册的工具名 `not_a_real_tool`/],
-    ["README 跨节重复", { ...base, readme: readme.replace("### 11. 日志与依赖诊断（4）", "### 11. 日志与依赖诊断（4）\n\n| 工具 | 作用 |\n|------|------|\n| `validate_at` | x |") }, /同时出现在 §/],
+    ["README 分节计数标错", { ...base, readme: readme.replace("### 10. 代码生成模板（9）", "### 10. 代码生成模板（8）") }, /§10 声明 8 个/],
+    ["README 出现未注册名", { ...base, readme: readme.replace("### 11. 日志与依赖诊断（6）", "### 11. 日志与依赖诊断（6）\n\n| 工具 | 作用 |\n|------|------|\n| `not_a_real_tool` | x |") }, /未注册的工具名 `not_a_real_tool`/],
+    ["README 跨节重复", { ...base, readme: readme.replace("### 11. 日志与依赖诊断（6）", "### 11. 日志与依赖诊断（6）\n\n| 工具 | 作用 |\n|------|------|\n| `validate_at` | x |") }, /同时出现在 §/],
     ["AGENTS 漏一个工具", { ...base, agents: agents.replace(" / `download_official_mdk`", "") }, /AGENTS\.md 工具表缺 `download_official_mdk`/],
     ["AGENTS 名字写错", { ...base, agents: agents.replace("`analyze_bedrock_log`", "`analyze_bedrock_logs`") }, /AGENTS\.md 出现未注册的工具名/],
     ["AGENTS 表锚点被改", { ...base, agents: agents.replace("## MCP Server 工具（可选）", "## MCP 工具（可选）") }, /AGENTS\.md 找不到/],

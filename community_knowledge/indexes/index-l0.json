@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-09-28T16:07:03.115Z",
+  "generatedAt": "2026-09-29T03:53:57.232Z",
   "entries": [
     {
       "id": "authored/addon-dev-workflow",
@@ -392,6 +392,7 @@
         "testing",
         "playtest",
         "agent",
+        "bridge",
         "driver",
         "screenshot",
         "gametest",
@@ -406,7 +407,7 @@
       ],
       "sourceKind": "authored",
       "priority": "⭐",
-      "summary": "补 mc-ingame-iterate 缺的\"进世界→驱动→观察→回灌\"段。调研候选仓库与许可（as-of 2026-09-28）、进程内 driver 规范与坑位清单、全平台降级矩阵、受控启动治理；实现清单留待下一轮，本文不落代码。",
+      "summary": "补 mc-ingame-iterate 缺的\"进世界→驱动→观察→回灌\"段。候选仓库与许可、driver 规范与坑位、全平台降级矩阵、受控启动治理；路线已定 = 借现成桥（BlackBoxPro，MIT，HTTP 直驱）为默认、进程内 driver 为备用（as-of 2026-09-29）。",
       "mcHint": "全平台口径；现代 Java 档（Forge 1.17.1+ / NeoForge / Fabric / Quilt）可做进程内驱动，老加载器与基岩按矩阵降级；概念部分与版本无关"
     },
     {

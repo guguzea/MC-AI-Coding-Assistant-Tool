@@ -10,11 +10,12 @@
  * 1) **带内（in-band）失败：`ok:false` + `action`（本模块）** —— 默认且压倒性多数。
  *    实测口径（**一律排除本文件自身**：合同散文里就写着 `ok: false` 字面量，计入即自指；
  *    `test-wave-bcd.mjs` 的 A-27 门按同一口径当场复算，数字脱节就翻红）：
- *    · `grep -rn "ok: false" src/ --include='*.ts' | grep -v actionable.ts | wc -l` = **314** 行 / **48** 个文件（按行计）；
- *    · 按出现次数计（含 `ok:false` 无空格与同行多次）= **331** 处 / **52** 个文件。
+ *    · `grep -rn "ok: false" src/ --include='*.ts' | grep -v actionable.ts | wc -l` = **339** 行 / **50** 个文件（按行计）；
+ *    · 按出现次数计（含 `ok:false` 无空格与同行多次）= **356** 处 / **54** 个文件。
  *      （2026-09-25 由 328/51 起：S4′ 新增 `src/upstream/cache.ts`（2 处，含头注里那句「只缓存 `ok:true`」）
  *       与 `releases.ts` 头注第 4 条（1 处）⇒ 注释也进这个口径，**在 src 里写一句 `ok:false` 就动台账**。）
  *    （两数 = 2026-09-24 Ralph 第 21 轮当场复算；`src/**` 每加一处带内失败都会挪它们，A-27 只等式钉「处」那一组。）
+ *    （2026-09-29：本轮 playtest 三件 —— `src/generators/playtest-driver.ts` / `src/playtest-evidence/index.ts` / `src/playtest-bridge/index.ts` —— 净 +25 ⇒ 314→339 行、331→356 处；四数由 `test-wave-bcd.mjs` 的 A-27 门当场复算对齐。）
  *    该口径数的是**字面量位点**，同时涵盖工具带内 envelope 与模块内 helper 判别联合两类
  *    （如 `src/mdk/index.ts` 的 `assertNoZipSlip`、`src/decompile/services/mod-decompile.ts` 的 `resolveModIdSegment`）；两类都不置 isError。
  *    语义 = “工具正常执行完了，但结论是否定/不完整/需要人决策”：
@@ -23,7 +24,7 @@
  *    这类返回 **一律不置 isError**，MCP 层看到的是一次成功调用，模型必须去读 `action.nextSteps`。
  *
  * 2) **协议层失败：`isError: true`** —— 全仓库只有 **1 处**，在 `src/tool-registry.ts`：
- *    · `:588` `get_server_status` 的 `warmup=true` 但没传 version（VERSION_REQUIRED）。
+ *    · `:605` `get_server_status` 的 `warmup=true` 但没传 version（VERSION_REQUIRED）。
  *      （行号 424→429→444→454→516→518→520→526→527→565→**585**：2026-09-18 Z-2「McpServer version 读 package.json」净 +15 行；
  *       2026-09-21 并行会话先 +10，同日 A2 新增 `query_upstream_releases`（schema 常量 + 注册块）再 +62，
  *       2026-09-24 第 21 轮全量 test 普查发现 516→518：成因 = `src/tool-registry.ts:422-423` 的 `PORT_PROJECT_DESC` 多了两行「两态合同 / REFUSE_KNOWLEDGE_REPO」说明（题面即 S10 ⇒ 归第 7 轮那批写，未逐 commit 复核），
@@ -34,6 +35,7 @@
  *       同日 S4′（`query_upstream_releases` 的分档 TTL 缓存）在 `queryUpstreamReleasesSchema` 加 `refresh`、`outputSchema` 加 `cache` 位 ⇒ 565→**585**（净 +20 行；handler 里透传 `refresh` 那一行在 585 之下，不计数）；
  *       2026-09-26 A4d（`convert_mapping` 的 Linkie 扩展 namespace：schema enum 两处 + `CONVERT_MAPPING_DESC` 新增段）
  *       净 +3 行 ⇒ 585→**588**（门当场点名同步）；
+ *       2026-09-29：HEAD 的 `tool-registry.ts` 已净 +17 行 ⇒ 588→**605**（本批只动 `wave/register.ts` 与新增 playtest 模块，**未触** tool-registry.ts；成因非本批、未逐行复核；门当场点名同步）。
  *       门三次当场点名同步 —— 这条位点是纯行号锚，任何在 tool-registry.ts 上方增行的改动都要跟着改这里。
  *       该脆性已入册（B8 待裁定：改成「代码片段 needle + 行号仅报告」需你批准，本轮不动判据）。）
  *    （2026-09-17 P2-2 收敛：communityDocError 的 2 处 isError 已降级为带内 `ok:false`，

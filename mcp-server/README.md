@@ -15,7 +15,7 @@ npm run build
 
 ## 能力概览
 
-- 共 **82** 个 MCP 工具：`src/tool-registry.ts` **46** + `src/wave/register.ts` **36**
+- 共 **85** 个 MCP 工具：`src/tool-registry.ts` **46** + `src/wave/register.ts` **39**
 - 依赖仓库根 `data/`（API extracted、parchment/mcp、**yarn-mappings.sqlite**、文档索引、porting 等）
 - 官方文档三级：L0 搜索 → L1 摘要 → L2/L2+ 全文
 - **禁止**运行时全量加载 `yarn-mappings.json`（>1.5GB，易 OOM）
@@ -141,6 +141,7 @@ npx @modelcontextprotocol/inspector node dist/index.js
 |------|------|
 | API / 映射 / 状态 | `query_api`、`get_method_params`、`convert_mapping`、`lookup_obfuscated`、`get_server_status`、`get_version_info` |
 | 工程 | `diagnose_gradle`、`generate_datagen`、`crash_analyze`、`validate_project`、`check_publish_ready`、`inspect_runtime` |
+| 游玩自测 | `generate_playtest_driver`（默认 `external_bridge` 骨架）、`inspect_playtest_evidence`（三态证据）、`playtest_bridge`（`127.0.0.1:38081`，`status`/`execute`/`await`，超时映射 `PLAYTEST_TIMEOUT`） |
 | Forge 文档 | `list_forge_versions`、`search_forge_docs`、`get_forge_doc_*` |
 | Fabric 文档 | `list_fabric_versions`、`search_fabric_docs`、`get_fabric_doc_*` |
 | NeoForge 文档 | `list_neoforge_versions`、`search_neoforge_docs`、`get_neoforge_doc_*`（默认 **26.1**；请求 26.2 可 fallback 到 26.1，不克隆假树；`1.20.1` 可回退 Forge） |
@@ -302,7 +303,7 @@ node dist/cli.js list-tools
 
 | 入口 | 说明 |
 |------|------|
-| MCP Prompt | 与 `WORKFLOW_TEMPLATES` 等量注册（当前 **48 个**：`mc-new-block` / `mc-new-entity` / `mc-new-gui` / `mc-crash-triage` / `mc-port-mod` / `mc-build-mod` / `mc-ingame-iterate` / `mc-localize-mod` / `mc-decompile-mod` / `mc-villager` / `mc-multiblock` / `mc-ai` 等；完整清单以 `get_workflow_template` 列表为准） |
+| MCP Prompt | 与 `WORKFLOW_TEMPLATES` 等量注册（当前 **49 个**：`mc-new-block` / `mc-new-entity` / `mc-new-gui` / `mc-crash-triage` / `mc-port-mod` / `mc-build-mod` / `mc-ingame-iterate` / `mc-ingame-playtest` / `mc-localize-mod` / `mc-decompile-mod` / `mc-villager` / `mc-multiblock` / `mc-ai` 等；完整清单以 `get_workflow_template` 列表为准） |
 | 工具兜底 | `get_workflow_template`（同名正文） |
 | MCP Resource | `mcskill://…`（见 `listKnowledgeResources`） |
 | 工具兜底 | `list_knowledge_resources` → `read_knowledge_resource` |
@@ -319,7 +320,7 @@ node dist/cli.js list-tools
 | `mcskill://antipatterns/registry` | 注册反模式短文 |
 | `mcskill://patterns/README` | 代码模式库索引（community_knowledge/patterns/） |
 | `mcskill://code-patterns/<平台>[/<版本>]/<文件>.md` | 各档 `code-patterns/` 正文（实测 18 个档目录 / 116 篇）；编号集合按档不同，文件名一律以 `list_knowledge_resources` 返回为准 |
-| `mcskill://workflow/<模板名>` | 与 Prompt 同名的工作流正文（与 `WORKFLOW_TEMPLATES` 等量，当前 48 个；含构建、真机循环、模组汉化、反编译、村民/多方块/实体 AI 等） |
+| `mcskill://workflow/<模板名>` | 与 Prompt 同名的工作流正文（与 `WORKFLOW_TEMPLATES` 等量，当前 49 个；含构建、真机循环、游玩自测、模组汉化、反编译、村民/多方块/实体 AI 等） |
 
 **客户端兼容结论**：Cursor 等仅 tools 客户端主走 `get_workflow_template` / `list_knowledge_resources` / `read_knowledge_resource` 兜底；Claude Desktop 等支持 prompts/resources 的客户端可直接使用注册的 Prompt 与 Resource。
 

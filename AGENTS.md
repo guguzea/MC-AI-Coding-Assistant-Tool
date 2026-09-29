@@ -30,6 +30,21 @@
 
 `get_workflow_template` 是**人在环清单**（步骤、检索顺序、确认点），不是无人值守流水线。Agent **不得**代跑用户工程的 Gradle、**不得**把 jar 拷进游戏目录、**不得**代上传发布。工作流模板只告诉你先问什么、再查什么、何时停下来等人确认。
 
+### 人在环例外：游玩自测（三通道）
+
+「写码 → 构建 → 起游戏 → 桥驱动真实玩家游玩 → 读证据 → 回灌修复」这一段的**执行权**按三通道有界放开。**未落在授权根内的操作仍按上文铁律**（不代跑 Gradle、不拷 jar、不上传）——沙箱 / 授权实例只是把"停下等人"换成"人已一次性授权"。
+
+- **通道 A（仓库自有沙箱）**：`generate_playtest_driver` 生成、且**只落** `$MC_SKILL_CACHE/playtest-demo/<runId>/`（本机亦可 `D:\mc-skill-temp\playtest-demo\<runId>\`）的临时工程 ⇒ agent 可自行跑其 Gradle 任务。
+- **通道 B（用户 dev 实例）**：**一次授权一路径**；授权原文 + realpath + 时间戳写 `$MC_SKILL_CACHE/playtest-authorizations.json`（仓库外 ⇒ 不动 `.gitignore`）。
+- **通道 C（第三方桥）**：仅在已授权根内允许安装桥 mod 及其依赖；条件 = **宽松许可**（MIT / CC0 / Apache 等；无 license 的只可参考形态、不得抄代码）+ **记账**（来源 URL + 版本 + sha256）写进同一份授权记录。
+
+**载体（双变量形状，镜像 `src/utils/project-sandbox.ts:66-94`）**：`MC_SKILL_PLAYTEST_ALLOW=1` + `MC_SKILL_PLAYTEST_ROOT=<绝对路径>`；工具侧须带 `authorization:"sandbox"|"dev_instance"` + `confirmed:true`；目标 realpath 必须落在授权根内（Windows Junction 由 native realpath 解）。
+
+**允许**：启停授权实例、跑授权根内 Gradle 任务、写该根 evidence 目录、读 logs / crash-reports、装桥及其依赖。
+**永久禁止**：上传发布；jar 进未授权目录；动正式实例（如 `D:\Minecraft\.minecraft`）；**代用户接受 EULA**（仅 `eula.txt` 已 `eula=true` 才运行）；改系统网络栈 / 证书库 / 防火墙。
+
+> 证据按模式固定：driver 模式 = 截图 + `[QA]` 段 + 状态 json；桥模式 = 截图 + `calls.jsonl` + query 响应 + 日志。口径与坑位见 `community_knowledge/authored/ingame-playtest-automation.md`。
+
 交付格式见文末「§交付汇报」：默认走**主档四块**（模组开发）；改动落在仓库知识库 / 工具面才走**维护档六块**。
 
 ## 第一步：判断项目使用的平台和版本
@@ -351,6 +366,9 @@ Decision: 选择注册方式
 | `validate_project` | 校验模组项目结构。Forge / Fabric / Quilt / NeoForge 真检查；LiteLoader/Rift/ModLoader/基岩 skipped。坏 recipe 只 warning。 |
 | `check_publish_ready` | 发布前清单（license/version/`build/libs` + `community_knowledge` publishing.md 清单，缺项只 warning）。不上传、不调外网发布 API。 |
 | `inspect_runtime` | 日志型 inspector。优先 `logsDir`；否则有界探测 `run/logs`。禁止全盘 / JVM attach。 |
+| `generate_playtest_driver` | 游玩自测骨架（只吐文本）：默认 `external_bridge`（桥动作序列 + 后置条件 + 证据约定）；`in_jvm_player_agent` 仅结构壳。 |
+| `inspect_playtest_evidence` | 读游玩自测证据（exit-code / state.json / `[QA]` / calls.jsonl / 截图），三态 `present\|absent\|unreadable`；须 `MC_SKILL_PLAYTEST_ALLOW=1` + `MC_SKILL_PLAYTEST_ROOT`。 |
+| `playtest_bridge` | 调 BlackBoxPro 桥（`127.0.0.1:38081`）：`status` / `execute` / `await`；超时映射 `PLAYTEST_TIMEOUT`；`execute`/`await` 须 `confirmed=true` + 授权；桥无鉴权，只在本机用。 |
 | `detect_mod_project` / `activate_platform_pack` | 探测工程；`session` 加载规则/Skill 索引（默认 00/01/09），`write` 写入用户工程（见根 README「规则包加载」） |
 | `query_loader_api` / `search_loader_api` / `ingest_loader_api` | **`query_loader_api` 是兼容工具（每次调用响应带兼容警告，优先用语义搜索）**：加载器/模组 API 逐签名摘要（必填 platform+minecraftVersion；覆盖以已 ingest 的档为界）。**不是** `query_api`。ingest 把用户自备 jar 抽成摘要，只写 `$MC_SKILL_CACHE/loader-api-summaries` overlay，禁止写仓库 `data/`。**同一平台多套构件时 `library` 选键位（2026-09-28）**：`platform=fabric` 的候选键是 `<ver>-fabric-api`（API 库）与 `<ver>-fabric`（**加载器本体**），写侧从前固定取第一个候选键 ⇒ 拿 fabric-loader jar 不传 `library=fabric` 会**覆盖掉 API 摘要**；现在传 `library` 按后缀选，后缀不在候选里 ⇒ `INVALID_INPUT` 并列出候选（不新造键名、不猜）。仓库 `data/loader-api-summaries/` 现有 14 份 `<ver>-fabric.json`（fabric 全档），`query_loader_api platform=fabric` 在该档没有 API 摘要时会读到它（`candidateKeys` 顺序：API 优先） |
 | `search_forge_docs` / `get_forge_doc_*` / `list_forge_versions` | Forge 文档。先 `list_forge_versions`；**1.12.2 用这套**，不要用 `query_api`。与 `search_docs({platform:"forge"})` 等价 （`list_*_versions` 列的是**本仓库已入库**档位，不在清单 ≠ 上游没有文档） |
@@ -405,7 +423,7 @@ Decision: 选择注册方式
   cd mcp-server && npm ci && npm run build
   ```
   （Node 需 >= 22.5；Yarn 映射可再 `npm run build:yarn-sqlite`。配置宿主见 `AUTO_SETUP.md`：先识别 IDE/CLI，再按该宿主的文件与顶层键合并草稿，不要默认写 Cursor 的 `mcp.json`。）
-- **无 MCP 客户端时**：可用独立 CLI 调用任意工具——`node mcp-server/dist/cli.js <工具名> --参数=值`（通用 dispatch，82 工具全可用；如 `search_docs` / `check_dependencies` / `analyze_mod_jar` / `resolve_lib_skills`）。工程类工具可加 `--project <dir>`（映射到 `projectPath`）。工具输出始终为 JSON；`--json` 不改变工具输出，仅为兼容保留；它只在交互式终端下影响 `--help` 的呈现（人读摘要 → 机器可读 schema），表达格式意图用 `--output-format json`（当前唯一合法值）。
+- **无 MCP 客户端时**：可用独立 CLI 调用任意工具——`node mcp-server/dist/cli.js <工具名> --参数=值`（通用 dispatch，85 工具全可用；如 `search_docs` / `check_dependencies` / `analyze_mod_jar` / `resolve_lib_skills`）。工程类工具可加 `--project <dir>`（映射到 `projectPath`）。工具输出始终为 JSON；`--json` 不改变工具输出，仅为兼容保留；它只在交互式终端下影响 `--help` 的呈现（人读摘要 → 机器可读 schema），表达格式意图用 `--output-format json`（当前唯一合法值）。
 - **CLI 双入口（2026-09-17 提级）**：**工具线** = 上面的 `dist/cli.js`（与 MCP 同一份 `toolHandlers`）；**仓库线** = `node mcp-server/bin/mc-skill-scripts.mjs <lib|corpus|cloth|gate> <命令>`（薄壳转发 `scripts/` 与 `mcp-server/scripts/` 的既有脚本）。仓库线属**维护侧**作业（批量反编译、摘要重建、G1 门、注入标记回填），MCP 工具面不暴露；两者互不分叉；冒烟门 `assert-cli-smoke`（test-core §S16）。安装/链接 mcp-server 包后，两入口的 bin 名分别为 mc-skill 与 mc-skill-scripts。
 - **`get_server_status` 返回 `buildStatus.buildRequired=true`**：src 有比 dist 更新的修改，需重新 `npm run build`，然后**重载宿主 MCP**（只编 dist 不够， AI IDE 进程仍跑旧代码）。
 - **反编译工具报 `TOOLCHAIN_MISSING`**：需要 Java 17+（VineFlower/tiny-remapper）；安装 Temurin 17+ 后重启 MCP，或按返回指引操作。

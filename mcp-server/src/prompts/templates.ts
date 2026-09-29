@@ -121,6 +121,17 @@ export const WORKFLOW_TEMPLATES: Record<string, { title: string; body: string }>
 7. 可选兼容性测试：同实例或第二实例；基线（目标 mod + 硬依赖）→ 逐步加入其它 mod；记录冲突与加载顺序
    （HMCL 切换版本场景可参考「隐藏启动器并在游戏结束后重新打开」）`,
   },
+  "mc-ingame-playtest": {
+    title: "游戏内游玩测试（桥驱动 → 观察 → 回灌）",
+    body: `${WORKFLOW_HITL}
+【适用】agent 写完模组代码后的"进游戏真跑"闭环：桥驱动真实玩家 → 观察（截图 / 查询）→ 判读 → 回灌修复。构建与装 jar 沿用 mc-ingame-iterate 1–3；执行权按根 AGENTS.md「人在环例外：游玩自测（三通道）」。
+1. 前置：确认平台 / 精确 MC 版本 / 授权实例路径；先跑 preflight（桥 jar + 依赖记账 sha256、端口、绑定地址、EULA）。
+2. 驱动：playtest_bridge 只连 127.0.0.1（桥无鉴权 + 通配绑定，勿外网暴露）；用 /status 的 ready 等"已进世界"；动作序列由 generate_playtest_driver（driverMode=external_bridge）产出；复合动作用 batch + delay；"等条件成立"用 action=await（桥无 wait_until；超时映射 PLAYTEST_TIMEOUT，不得塌成"没失败"）。
+3. 观察：screenshot 落 screenshots/blackboxpro/<player>/<testId>/ + query_* 快照 + calls.jsonl；判读用"两遍法"（先看改动方向，再整帧像玩家一样读）；跨查询非原子 ⇒ 断言只认条件，不认两条读数相等。
+4. 回灌：inspect_playtest_evidence 读证据（driver 自产 / 桥模式），三态 present|absent|unreadable；失败 → 改码 → mc-build-mod 重建 → 重跑本工作流。
+5. 第二腿（桥不可用或要 CI 复现时）：GameTest 跑法见 forge/1.20.4/.cursor/skills/mc-gametest/SKILL.md、neoforge/1.21.1/.cursor/skills/mc-gametest/SKILL.md；客户端腿见 fabric/1.21.11/.cursor/skills/mc-gametest.md、fabric/1.21.10/.cursor/skills/mc-gametest/SKILL.md、fabric/26.1.2/.cursor/skills/mc-gametest/SKILL.md。
+6. 安全：不上传发布；jar 只进授权根；不改系统网络栈 / 证书；驱动与证据代码不入正式实例。`,
+  },
   "mc-localize-mod": {
     title: "模组汉化工作流",
     body: `${WORKFLOW_HITL}

@@ -20,6 +20,7 @@ import {
   generateWorldgen,
 } from "../generators/index.js";
 import { maybeWriteGeneratorResult } from "../generators/write-helper.js";
+import { generatePlaytestDriver } from "../generators/playtest-driver.js";
 import { analyzeBuildLog, analyzeBuildLogSchema } from "../build-log/index.js";
 import { analyzeLog, getMigrationGuide, checkDependencies } from "../diagnostics/index.js";
 import { resolveLibSkills, resolveLibSkillsSchema, RESOLVE_LIB_SKILLS_DESCRIPTION } from "../lib-skills/index.js";
@@ -48,6 +49,8 @@ import { detectModProject } from "../platform-pack/detect.js";
 import { activatePlatformPack } from "../platform-pack/index.js";
 import { checkPublishReady } from "../publish/index.js";
 import { inspectRuntime } from "../runtime-inspect/index.js";
+import { inspectPlaytestEvidence } from "../playtest-evidence/index.js";
+import { callPlaytestBridge } from "../playtest-bridge/index.js";
 
 // ── Wave 工具 inputSchema（导出供 CLI list-tools / schema 驱动解析复用）────────
 export const queryRegistrySchema = z.object({
@@ -120,6 +123,7 @@ export const getWorkflowTemplateSchema = z.object({
     "mc-port-mod",
     "mc-build-mod",
     "mc-ingame-iterate",
+    "mc-ingame-playtest",
     "mc-localize-mod",
     "mc-decompile-mod",
     "mc-new-item",
@@ -163,6 +167,62 @@ export const getWorkflowTemplateSchema = z.object({
     "mc-events-fabric",
   ]),
 });
+// ── 游玩自测（playtest）工具面：schema + 描述常量（registerTool 与 waveToolSchemas 共用同串）──
+export const generatePlaytestDriverSchema = z.object({
+  platform: z.enum(["forge", "neoforge", "fabric", "quilt"]).describe("目标加载器（必填）"),
+  version: z.string().min(1).describe("精确 Minecraft 版本，必填，禁止默认 1.20.1"),
+  modId: z.string().optional().describe("被测模组 id（缺省 examplemod）"),
+  driverMode: z
+    .enum(["external_bridge", "in_jvm_player_agent", "temporary_client_tick_driver"])
+    .optional()
+    .describe("默认 external_bridge（桥驱动动作序列）；其余模式只出结构壳（TODO(未核实)）"),
+  capabilityProfile: z.enum(["strict_survival", "operator", "creative"]).optional().describe("默认 strict_survival（fail-closed）"),
+  goal: z.string().optional().describe("本次游玩测试目标（一句话）"),
+  postconditions: z
+    .array(z.enum(["block_state", "entity_count", "inventory_contains", "marker_log", "screen_present"]))
+    .optional()
+    .describe("后置条件断言清单；缺省 inventory_contains + marker_log"),
+  useGameTestSourceSet: z.boolean().optional().describe("fabric/quilt：骨架路径按 src/gametest/java 给"),
+  evidenceDir: z.string().optional().describe("证据目录（相对授权根/工程根）"),
+  ...generateWriteFields,
+});
+export const inspectPlaytestEvidenceSchema = z.object({
+  evidenceDir: z.string().optional().describe("证据目录（绝对路径；须在 MC_SKILL_PLAYTEST_ROOT 内）"),
+  projectPath: z.string().optional().describe("工程根；缺省取 <projectPath>/playtest-evidence"),
+  authorization: z.enum(["sandbox", "dev_instance"]).optional(),
+  runId: z.string().optional().describe("子目录（每次跑一个 runId）"),
+  maxEntries: z.number().int().positive().optional().describe("calls.jsonl 展示上限，默认 50，硬顶 500"),
+  version: z.string().optional().describe("MC 版本（委派日志面时用；缺省则不解析日志）"),
+  logsDir: z.string().optional().describe("可选：委派 inspect_runtime 读日志"),
+  crashReportsDir: z.string().optional(),
+  screenshotsDir: z.string().optional().describe("截图根目录（默认 <evidenceDir>/screenshots；桥模式下截图在 <gameDir>/screenshots，须显式指定；仍须在授权根内）"),
+});
+export const playtestBridgeSchema = z.object({
+  action: z.enum(["status", "execute", "await"]).describe("status=GET /status；execute=POST /execute；await=条件轮询"),
+  command: z
+    .object({
+      action: z.string().describe("桥动作名（如 query_player_state / screenshot / chat_command）"),
+      params: z.record(z.unknown()).optional(),
+      delay: z.number().int().nonnegative().optional().describe("桥侧延迟（ticks）"),
+    })
+    .optional(),
+  condition: z
+    .enum(["ready", "inventory_contains", "health_below", "health_above", "entity_nearby", "chat_message_matches"])
+    .optional(),
+  params: z.record(z.unknown()).optional().describe("await 条件参数（itemId/slot/health/type/radius/pattern/count）"),
+  timeoutMs: z.number().int().positive().optional().describe("await 超时，默认 30000，硬顶 120000"),
+  pollIntervalMs: z.number().int().positive().optional().describe("轮询间隔，默认 250ms"),
+  evidenceDir: z.string().optional().describe("calls.jsonl 落点（须在授权根内；不在根内则忽略）"),
+  port: z.number().int().min(1).max(65535).optional().describe("默认 38081；host 恒为 127.0.0.1"),
+  authorization: z.enum(["sandbox", "dev_instance"]).optional(),
+  confirmed: z.boolean().optional().describe("execute/await 必填 true"),
+});
+export const GENERATE_PLAYTEST_DRIVER_DESCRIPTION =
+  "Generate playtest driver skeleton（只吐文本，默认不写盘）。platform 与 version 必填（精确 MC 版本）。driverMode 默认 external_bridge（桥 HTTP 动作序列 + 后置条件 + 证据约定）；in_jvm_player_agent / temporary_client_tick_driver 只出结构壳（玩家挂接 API 为 // TODO(未核实)，须先取证）。不装桥、不跑游戏；桥契约与坑位见社区短文 authored/ingame-playtest-automation。";
+export const INSPECT_PLAYTEST_EVIDENCE_DESCRIPTION =
+  "读游玩自测证据目录（exit-code.txt / state.json / [QA] 段 / calls.jsonl / 截图），每件三态 present|absent|unreadable —— 缺件不得读成「没有失败」。须 MC_SKILL_PLAYTEST_ALLOW=1 + MC_SKILL_PLAYTEST_ROOT（目标 realpath 必须在根内）。可选 logsDir 委派 inspect_runtime；不并入 inspect_runtime 的只读禁令面。";
+export const PLAYTEST_BRIDGE_DESCRIPTION =
+  "调用 BlackBoxPro 桥（HTTP 恒 200；host 恒 127.0.0.1，端口默认 38081）。status 看 /status.ready（已进世界）；execute 发 /execute（桥原生超时是 failure +「Timeout after Nms」⇒ 本工具映射 PLAYTEST_TIMEOUT，不塌成空结果）；await 轮询 query_* 等条件成立（桥无 wait_until）。execute/await 须 confirmed=true + 授权（allow/root）。桥无鉴权且通配绑定 —— 只在本机使用。";
 export const localizeModSchema = z.object({
   mode: z.enum(["own", "third_party"]),
   action: z.enum(["diff", "draft_zh", "extract", "pack_draft"]),
@@ -946,6 +1006,57 @@ export function registerWaveExtensions(server: McpServer): void {
     );
   }
 
+  // ── 游玩自测（playtest）──────────────────────────────────────────────────
+
+  server.registerTool(
+    "generate_playtest_driver",
+    {
+      title: "Generate playtest driver skeleton (bridge-first)",
+      description: GENERATE_PLAYTEST_DRIVER_DESCRIPTION,
+      inputSchema: generatePlaytestDriverSchema,
+    },
+    async (a): Promise<CallToolResult> =>
+      jsonResult(
+        maybeWriteGeneratorResult(
+          generatePlaytestDriver({
+            platform: a.platform,
+            version: a.version,
+            modId: a.modId,
+            driverMode: a.driverMode,
+            capabilityProfile: a.capabilityProfile,
+            goal: a.goal,
+            postconditions: a.postconditions,
+            useGameTestSourceSet: a.useGameTestSourceSet,
+            evidenceDir: a.evidenceDir,
+          }),
+          { write: a.write, confirmed: a.confirmed, projectPath: a.projectPath },
+          a.platform === "fabric" || a.platform === "quilt"
+            ? { javaPrefix: a.useGameTestSourceSet ? "src/gametest/java" : "src/main/java" }
+            : { javaPrefix: "src/main/java" },
+        ),
+      ),
+  );
+
+  server.registerTool(
+    "inspect_playtest_evidence",
+    {
+      title: "Inspect playtest evidence (three-state)",
+      description: INSPECT_PLAYTEST_EVIDENCE_DESCRIPTION,
+      inputSchema: inspectPlaytestEvidenceSchema,
+    },
+    async (a): Promise<CallToolResult> => jsonResult(inspectPlaytestEvidence(a)),
+  );
+
+  server.registerTool(
+    "playtest_bridge",
+    {
+      title: "Call BlackBoxPro playtest bridge",
+      description: PLAYTEST_BRIDGE_DESCRIPTION,
+      inputSchema: playtestBridgeSchema,
+    },
+    async (a): Promise<CallToolResult> => jsonResult(await callPlaytestBridge(a)),
+  );
+
   for (const res of listKnowledgeResources()) {
     if (res.uri.startsWith("mcskill://workflow/")) continue;
     if (res.uri.startsWith("mcskill://community/")) continue;
@@ -1007,4 +1118,7 @@ export const waveToolSchemas: Array<{ name: string; description: string; inputSc
   { name: "activate_platform_pack", description: ACTIVATE_PLATFORM_PACK_DESCRIPTION, inputSchema: activatePlatformPackSchema },
   { name: "check_publish_ready", description: "发布前机器检查：硬检查 license/version 字段与 build/libs 是否像正式 jar；并读 community_knowledge/authored/publishing.md 的发布前清单，缺项只给 warning。默认不写盘、不上传、不调 Curse/Modrinth 发布 API。", inputSchema: checkPublishReadySchema },
   { name: "inspect_runtime", description: "日志型 runtime inspector。优先只读用户确认的 logsDir/crashReportsDir；否则在 projectPath 下有界探测 run/logs、runs/client/logs、build/run/logs。禁止向上走到盘符根、禁止全盘。默认只读文件尾部 N 行并设字节上限。复用 analyze_log / crash_analyze。不做 JDWP attach。", inputSchema: inspectRuntimeSchema },
+  { name: "generate_playtest_driver", description: GENERATE_PLAYTEST_DRIVER_DESCRIPTION, inputSchema: generatePlaytestDriverSchema },
+  { name: "inspect_playtest_evidence", description: INSPECT_PLAYTEST_EVIDENCE_DESCRIPTION, inputSchema: inspectPlaytestEvidenceSchema },
+  { name: "playtest_bridge", description: PLAYTEST_BRIDGE_DESCRIPTION, inputSchema: playtestBridgeSchema },
 ];

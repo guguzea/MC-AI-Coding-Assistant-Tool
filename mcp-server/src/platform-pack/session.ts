@@ -180,6 +180,7 @@ const TASK_SPECS: Record<string, TaskSpec> = {
   "mc-port-mod": { rules: ["00"], skills: [], nextReads: [] },
   "mc-build-mod": { rules: ["00"], skills: [], nextReads: [] },
   "mc-ingame-iterate": { rules: ["00"], skills: [], nextReads: [] },
+  "mc-ingame-playtest": { rules: ["00"], skills: [], nextReads: [] },
   "mc-localize-mod": { rules: ["00"], skills: [], nextReads: [] },
   "mc-decompile-mod": { rules: ["00"], skills: [], nextReads: [] },
   "mc-config": { rules: ["00"], skills: ["mc-config"], nextReads: [] },
