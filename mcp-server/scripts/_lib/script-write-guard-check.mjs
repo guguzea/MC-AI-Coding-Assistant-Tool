@@ -88,8 +88,10 @@ export const SCRIPT_WRITE_GUARD_NON_WRITERS = new Map([
   ["mcp-server/scripts/_lib/thin-docs-wiki.mjs", /export function writeWikiProcessed\(processedDir, filename, markdown/], // indexPath/processedDir 都是函数参数
   ["mcp-server/scripts/_lib/build-yarn-mappings.mjs", /fs\.writeFileSync\(out, renderYarnMappingJson/], // out = CLI 位置参数（build <tiny.gz> <outJson>）
   ["mcp-server/scripts/_lib/repair-yarn-named.mjs", /process\.env\.TEMP \?\? "\/tmp", "yarn-v2-cache"/], // N-11.2 纯库：唯一 fs 落笔是 fetchV2Tiny 的 OS tmpdir jar 缓存；对仓库的写盘全在 CLI 侧（build-yarn-mappings repairNamedCli）走 write-guard
-  ["mcp-server/scripts/_debug_article.mjs", /_debug_raw\.html/], // 只写 scripts/_debug*（gitignore）；该文件本身未入库
-  ["mcp-server/scripts/_test_fetch.mjs", /_test_curl_output\.txt/], // 只写 scripts/_test_*（gitignore）；该文件本身未入库，url 由 argv 给
+  // 2026-09-30 删两条：`_debug_article.mjs` / `_test_fetch.mjs` —— 它们是 .gitignore 忽略的**未入库探针**，
+  // 只在个别开发机上存在 ⇒ **干净 clone 里必成僵尸条目、`test-core` 必红**（真克隆冒烟实测抓到）。
+  // 本机同轮已把两个探针挪出 `scripts/`（去 `mcp-server/temp/_probes-moved-2026-09-30/`），故豁免一并删；
+  // 以后要重挂探针，请先入库（或先让门能扫到它）再加豁免。
   // ── B1 转换器（2026-09-15 用户裁定登记豁免，不 adopt）─────────────────────
   // 缺省只写 gitignore 的 temp/verified-api-from-summaries.jsonl，不碰跟踪文件；
   // --out 由调用方给（同 batch-decompile 的 destPath 先例）。未来若改成写跟踪文件 ⇒ 必须改道 emit 并撤本条。
@@ -171,9 +173,9 @@ export const SCRIPT_WRITE_GUARD_DEBT = new Map([
   ["mcp-server/scripts/process-neoforge-docs.js", /const force = args\.includes\("--force"/],
   // ── S4 扩面 ③：完全无闸门（F96/F139/F140 的实身位）。依据 = 仓库出口常量：
   //     出口一改（改道 cache / write-guard）或文件一删，本豁免即失效，逼重新签字。
-  ["mcp-server/scripts/_debug_fetch_full.mjs", /OUT_DIR = join\(__dirname, "\.\.", "\.\.", "data"/], // 未入库探针脚本，建议删除而非收口
-  ["mcp-server/scripts/_debug_final.mjs", /OUT_DIR = join\(__dirname, "\.\.", "\.\.", "data"/], // 同上
-  ["mcp-server/scripts/_repair-broken-italic.mjs", /writeFileSync\(p, next, "utf8"/], // 未入库，就地改写 data/**/*.md
+  // 2026-09-30 删三条：`_debug_fetch_full.mjs` / `_debug_final.mjs` / `_repair-broken-italic.mjs` ——
+  // 同因（未入库探针 ⇒ 干净 clone 里必成僵尸条目）；本机已把它们挪出 `scripts/`（同上备份目录）。
+  // 注：原注释就写着「未入库探针脚本，建议删除而非收口」——本轮的修法正是照这句做的。
   ["mcp-server/scripts/_lib/build-yarn-sqlite.mjs", /const reportPath = path\.join\(__dirname, "mapping-sqlite-build-report\.json"/], // outPath=data/**/yarn-mappings.sqlite + 报告落在 scripts/ 且已入库
   ["mcp-server/scripts/_lib/ensure-mojang-mappings.mjs", /const dest = join\(versionDir, "client\.txt"/],
   ["mcp-server/scripts/build-library-catalog-from-authored.mjs", /const OUT_FILE = join\(__dirname, "\.\.", "src", "diagnostics", "library-catalog\.ts"/], // 覆盖的是 TS 源码而非 data/；S5 重生成 catalog 走的就是它
