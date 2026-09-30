@@ -127,6 +127,8 @@ sourceKind: authored
     ② 把官方 asset index 放到 Loom 期望的位：`<loomAssets>/indexes/<mcVersion>-<assetIndexId>.json`（index 本身就是官方的 `assetIndex.url` 那个文件）；
     ③ 按 index 逐对象比对 `<loomAssets>/objects/<xx>/<hash>` 的**大小**，缺的从 `https://resources.download.minecraft.net/<xx>/<hash>` 补（实测 1.21.1 缺 **143 件，全是 `minecraft/lang/*.json`**，补完 `missing=0 mismatch=0`）。
 
+25. **fabric 1.21.1：驱动**不要**自己进世界（2026-09-30 实测）** —— 该档的 `enterWorld`（驱动内部调 `IntegratedServerLoader.start(levelName, onCancel)`，与 1.21.11 同形）会把**客户端冻在世界载入里**：现象是**心跳与后续步骤全停**、`run/logs/latest.log` 停在世界载入后那几行、游戏 JVM **CPU≈0**，但**桥的 `/status` 仍答 `ready=true`**（因为 player/world 已非空）⇒ 极具误导性；桥侧动作（screenshot / query_* / create_world）一律超时或回 `Player not available` **同一时刻** status 还是 ready=true（❌实测）。**修法**：把 `enterWorld` **留空**，改用桥 `join_world` / `create_world`（或人工）把客户端送进世界 —— 驱动的"需要世界"步骤会自动等世界。**同轮实测该组合 17/17 步通过**：`assert moved PASS delta=27.13` → `gui CreativeInventoryScreen clicked/closed` → `cmd locate` → **`goto x=-1280 z=-1520` → 中途 `goto unstick`（40 tick 位移 0.00 ⇒ 抬升翻越）→ `arrived dist=23.57`**（飞了 2000+ 格）→ `scan entities 9 村民 / blocks 44 命中` → `assert scan_blocks PASS` → 两张截图（459,369 B / 228,961 B）→ `[QA] DONE`，`exit-code=0`。⇒ **1.21.1 的推荐组合 = 桥负责"进世界"，driver 负责"玩 + 断言 + 取证"**（两者可同进程共存，实测通过）。
+
 ### NeoForge 1.20.1 的 MDK：兼容层替代（用户裁定 2026-09-29）
 NeoForge 1.20.1 无官方 MDK pin（原返回 `MDK_NOT_PINNED`）⇒ 按**兼容层**口径借用 forge 1.20.1 的 MDK：`mcp-server/data/mdk-checksums.json` 的条目 `neoforge-1.20.1-compat-forge`（**`aliasOf=forge-1.20.1-forgegradle`**，`archiveUrl`+`sha256` 与 forge 条目同源同值），`notes` 明写**不冒充** NeoForge 官方 MDK。依据：NeoForge 1.20.1 仍用 `net.minecraftforge` 包名（`net.neoforged` 自 1.20.2 起）⇒ **按 forge 档生成的 driver 源码可直接用于 NeoForge 1.20.1**（同版本 / 同事件总线 / 同映射）。
 
@@ -157,6 +159,12 @@ NeoForge 1.20.1 无官方 MDK pin（原返回 `MDK_NOT_PINNED`）⇒ 按**兼容
 5. **生成驱动**：`generate_playtest_driver{platform:"forge", version:"1.20.1", …}`（计划里 `newworld name=playtest_demo` 可以留着 —— `level.dat` 在时会**自动跳过**；`enterWorld:"playtest_demo"` 走自动进世界）。
 6. **跑与判读**：同 A-7（证据/截图路径换成 forge 工程）。
 7. **最小断言组合**（两档通用，实测有效）：`assert moved`（真游玩：按前键 + 最小水平位移）→ `cmd locate structure minecraft:village_plains` → `goto parsed tol=24 fly=1 max=9000`（驱动内建**巡航高度 140 + 防卡抬升 + 到位落地**）→ `scan radius=160 blocks=…` → `assert scan_blocks` → `shot` ⇒ 结尾 `[QA] DONE`、`exit-code=0`。
+
+### C. fabric 1.21.1（**桥进世界 + driver 驱动**；2026-09-30 实测 17/17）
+与 A 的差别只有一处：**该档不要让 driver 自己进世界**（`enterWorld` 留空）——`IntegratedServerLoader.start(...)` 这条在 1.21.1 会把客户端**冻在世界载入里**（详见坑位 25）。改成：
+1. 装桥（`BlackBoxPro-fabric-1.21.1-2.2.4.jar`，sha256 `E4CBA8F5…3827`）+ FLK `1.14.1`；起客户端（`runClient`）；
+2. `playtest_bridge status` 确认 `platform=fabric`、`ready`、`actions`（该档实测 **114**）；用 `execute create_world`（或 `join_world`）把客户端送进世界 —— 建世界要几十秒，**响应超时 ≠ 失败**（实测 `BRIDGE_UNREACHABLE` 之后世界里其实已经建好了）；
+3. driver 的"需要世界"步骤会自动等世界 ⇒ 之后按 A 的第 7 步跑（实测读数：`assert moved PASS delta=27.13` → `goto unstick` 自救一次 → `arrived dist=23.57` → `scan 9 村民 / 44 方块` → `assert scan_blocks PASS` → 两截图 → `[QA] DONE`）。
 
 ### 五个"一定会撞"的坑 → 处置（↔ 坑位编号）
 | 现象 | 处置 | 坑位 |

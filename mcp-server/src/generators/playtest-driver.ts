@@ -261,6 +261,28 @@ export function javadocSafe(java: string): string {
     .join("\n");
 }
 
+/**
+ * fabric 1.21.1 档改写表：与 1.21.11 只差**一处**（javap 实测 2026-09-30，yarn 1.21.1+build.2）：
+ *   1.21.1 没有 `net.minecraft.client.gui.Click` / `net.minecraft.client.input.MouseInput`（1.21.2 才引入），
+ *   `Element.mouseClicked` 是老的 `(double,double,int)`；`Screen` 侧有 `close()`。
+ * ⚠ 与 1.20.1 档的差别：1.21.1 的 `IntegratedServerLoader.start(String, Runnable)` **与 1.21.11 同形**
+ *   ⇒ **不要**套用 `rewriteForFabric1201` 里的 `start(Screen, String)` 那段（那是 1.20.1 专属）。
+ * 其余实测与 1.21.11 一致：ScreenshotRecorder.saveScreenshot(File,Framebuffer,Consumer<Text>) /
+ *   PlayerInventory.getStack(int)（`selectedSlot` 是公开字段，本驱动不用）/ KeyBinding.setPressed /
+ *   Window.getScaledWidth·getScaledHeight / PlayerEntity.getInventory·sendAbilitiesUpdate /
+ *   ClientWorld.getEntities() / Registry.getId(T) / Entity.setPitch·setYaw·isOnGround·getBlockPos /
+ *   InventoryScreen(PlayerEntity)。
+ */
+export function rewriteForFabric1211(java: string): string {
+  let s = java;
+  s = s.replaceAll(".mouseClicked(new Click(", ".mouseClicked(");
+  s = s.replaceAll("new Click(", "");
+  s = s.replaceAll(", new MouseInput(0, 0)), false)", ", 0)");
+  s = s.replaceAll("import net.minecraft.client.gui.Click;\n", "");
+  s = s.replaceAll("import net.minecraft.client.input.MouseInput;\n", "");
+  return s;
+}
+
 const FORGE_KEYS: Record<string, string> = {
   forwardKey: "keyUp",
   backKey: "keyDown",
@@ -420,6 +442,12 @@ const PLAYTEST_VERIFIED_TIER: ReadonlyArray<{ platform: string; version: string;
     version: "1.20.1",
     mappings: "yarn 1.20.1+build.10（与 1.21.11 差异只有 GUI 点击一处，见 rewriteForFabric1201）",
     asOf: "2026-09-29",
+  },
+  {
+    platform: "fabric",
+    version: "1.21.1",
+    mappings: "yarn 1.21.1+build.2（与 1.21.11 只差 GUI 点击一处；自动进世界与 1.21.11 同形，见 rewriteForFabric1211）",
+    asOf: "2026-09-30",
   },
 ];
 const isVerifiedTier = (platform: string, version: string) =>
@@ -1636,11 +1664,14 @@ public final class PlaytestQaDriver {
 `;
     const useForgeTable = platform === "forge" || platform === "neoforge";
     const useFabric1201Table = platform === "fabric" && version === "1.20.1";
+    const useFabric1211Table = platform === "fabric" && version === "1.21.1";
     const emittedJava = useForgeTable
       ? rewriteForForge(javaSource)
       : useFabric1201Table
         ? rewriteForFabric1201(javaSource)
-        : javaSource;
+        : useFabric1211Table
+          ? rewriteForFabric1211(javaSource)
+          : javaSource;
     files["playtest/PlaytestQaDriver.java"] = javadocSafe(emittedJava);
     if (useForgeTable) {
       warnings.push(
@@ -1649,6 +1680,17 @@ public final class PlaytestQaDriver {
     } else if (useFabric1201Table) {
       warnings.push(
         `platform=fabric version=1.20.1 档由 1.21.11 模板经改写表派生（GUI 点击一处差异，javap 实测：1.20.1 无 Click/MouseInput，mouseClicked 为 (double,double,int)）——**尚未真机验证**。`,
+      );
+    } else if (useFabric1211Table) {
+      warnings.push(
+        `platform=fabric version=1.21.1 档由 1.21.11 模板经改写表派生（**只差 GUI 点击一处**：1.21.1 无 Click/MouseInput；注意自动进世界与 1.21.11 同形，别套 1.20.1 的改写）——真机验证状态见 CHANGELOG。`,
+      );
+    }
+    if (platform === "fabric" && version === "1.21.1" && (input.enterWorld ?? "").trim()) {
+      warnings.push(
+        `⚠ fabric 1.21.1 档**不要**用 enterWorld 让驱动自己进世界：实测（2026-09-30）该调用会把客户端**冻在世界载入里**——` +
+          `心跳停、桥侧 action 也超时（status 仍答 ready=true，极具误导性）。请把 enterWorld **留空**，改用桥 join_world / create_world（或人工）把客户端送进世界；` +
+          `驱动的"需要世界"步骤会自动等世界——同轮实测 **17/17 步通过**（含 2000+ 格飞掠、防卡自救抬升、村庄方块 44 命中、两张截图）。`,
       );
     }
     files["playtest/REVERT.md"] = `# 驱动代码撤除清单（${mode} / ${platform} ${version}）
