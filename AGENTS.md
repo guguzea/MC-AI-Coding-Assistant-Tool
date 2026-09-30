@@ -45,6 +45,20 @@
 
 > 证据按模式固定：driver 模式 = 截图 + `[QA]` 段 + 状态 json；桥模式 = 截图 + `calls.jsonl` + query 响应 + 日志。口径与坑位见 `community_knowledge/authored/ingame-playtest-automation.md`。
 
+### 游玩自测作业规则（长驻会话 + 剧本热载；2026-09-29 起）
+
+适用范围：`mc-ingame-playtest` 工作流的**执行面**（桥路线与无桥 driver 路线都适用）。
+
+1. **常驻会话，不许"改一次动作就重启"**：无桥 driver（`generate_playtest_driver` 的 `driverMode=temporary_client_tick_driver`）是**长驻解释器**——进世界后守候 `<evidenceDir>/plan.txt`，**文件一变就在同一游戏进程内开新一轮**（日志 `[QA] ROUND n START`，历史记 `rounds.jsonl`）。
+   - **只有两类改动允许重启游戏**：① driver 生成物 / 被测 mod 的 **Java 源码**变了（JVM 不能热换类）；② 会话崩了，或世界被 `session.lock` 占住。
+   - **动作、断言、目标坐标、等待时长、场景编排一律改 `plan.txt`（热载），不得为此重启**。一批代码改动应**攒起来一次重启**，之后在同一次会话里连做多轮。
+   - 桥路线同理：能用 `await` / `execute` 解决的，不要重启实例。
+2. **fail-closed + 证据三件**：每轮必落 `state.json` / `exit-code.txt`（0 绿 / 1 红）/ `qa.log`（**只含本轮** `[QA]` 段，历史在 `rounds.jsonl`）＋ 截图（`<gameDir>/screenshots/`）。超预算、断言不成立、坐标解析不到、目标找不到**一律判红**；缺件在 `inspect_playtest_evidence` 里读作 `absent`，**不得**读成"没有失败"或 0。
+3. **关游戏要先问用户**：要关就精确杀真身 JVM（命令行含 `-Dfabric.dli.config`）——**别只杀 `gradlew` wrapper**，残留客户端会占住世界 `session.lock`，下一轮进世界报「另一个程序已锁定文件的一部分」。
+4. **撤除纪律**：驱动文件 + `PlaytestQaDriver.register();` 调用行测完**必须删**（绝不提交）；证据只留授权根；驱动代码不进正式实例 / 正式分支。
+
+已核实边界（引用前先核，别外推）：driver **真代码**只覆盖 `fabric/quilt 1.21.11`（签名逐条 javap 实测），其余平台 / 版本是结构壳；`/locate` 实测 ≈2.5 秒且结果落 `<gameDir>/logs/latest.log` 的 `[CHAT]` 行；客户端**实体只在追踪范围（≈48 格）内可见** ⇒ 实体断言要靠近目标，方块证据不受此限。
+
 交付格式见文末「§交付汇报」：默认走**主档四块**（模组开发）；改动落在仓库知识库 / 工具面才走**维护档六块**。
 
 ## 第一步：判断项目使用的平台和版本
@@ -366,7 +380,7 @@ Decision: 选择注册方式
 | `validate_project` | 校验模组项目结构。Forge / Fabric / Quilt / NeoForge 真检查；LiteLoader/Rift/ModLoader/基岩 skipped。坏 recipe 只 warning。 |
 | `check_publish_ready` | 发布前清单（license/version/`build/libs` + `community_knowledge` publishing.md 清单，缺项只 warning）。不上传、不调外网发布 API。 |
 | `inspect_runtime` | 日志型 inspector。优先 `logsDir`；否则有界探测 `run/logs`。禁止全盘 / JVM attach。 |
-| `generate_playtest_driver` | 游玩自测骨架（只吐文本）：默认 `external_bridge`（桥动作序列 + 后置条件 + 证据约定）；`in_jvm_player_agent` 仅结构壳。 |
+| `generate_playtest_driver` | 游玩自测 driver（只吐文本）：默认 `external_bridge`（桥动作序列）；`temporary_client_tick_driver` 在 fabric/quilt 1.21.11 档出**可编译长驻解释器**（`scenario=smoke\|village` 或自定义 `plan` DSL；热载 `plan.txt`、多轮 `rounds.jsonl`、撤除清单）；其余档与 `in_jvm_player_agent` 为结构壳。 |
 | `inspect_playtest_evidence` | 读游玩自测证据（exit-code / state.json / `[QA]` / calls.jsonl / 截图），三态 `present\|absent\|unreadable`；须 `MC_SKILL_PLAYTEST_ALLOW=1` + `MC_SKILL_PLAYTEST_ROOT`。 |
 | `playtest_bridge` | 调 BlackBoxPro 桥（`127.0.0.1:38081`）：`status` / `execute` / `await`；超时映射 `PLAYTEST_TIMEOUT`；`execute`/`await` 须 `confirmed=true` + 授权；桥无鉴权，只在本机用。 |
 | `detect_mod_project` / `activate_platform_pack` | 探测工程；`session` 加载规则/Skill 索引（默认 00/01/09），`write` 写入用户工程（见根 README「规则包加载」） |
@@ -389,7 +403,7 @@ Decision: 选择注册方式
 | `localize_mod` | 模组汉化：diff/draft_zh / jar extract/pack_draft（无机器翻译） |
 | `analyze_log` / `analyze_build_log` / `get_migration_guide` / `check_dependencies` | 游戏日志、Gradle/javac 构建日志、迁移与依赖提示 |
 | `lookup_obfuscated` | 崩溃短名反查 |
-| `get_minecraft_source` / `decompile_mod_jar` / `search_mod_code` / `analyze_mod_jar` / `download_official_mdk` | 按需反编译与 jar 元数据；`download_official_mdk` 拉官方 MDK 到 `$MC_SKILL_CACHE`（**默认 dryRun**，校验和钉在 `mcp-server/data/mdk-checksums.json`）；必填参数只有 `platform` + `minecraftVersion`，其余（`buildPlugin` / `destPath` / `allowUnpinned` 等）可选。`search_mod_code` 源码未生成时 `NOT_DECOMPILED`（不是 `NOT_FOUND`），先调反编译。 |
+| `get_minecraft_source` / `decompile_mod_jar` / `search_mod_code` / `analyze_mod_jar` / `download_official_mdk` | 按需反编译与 jar 元数据；`download_official_mdk` 拉官方 MDK 到 `$MC_SKILL_CACHE`（**默认 dryRun**，校验和钉在 `mcp-server/data/mdk-checksums.json`）；必填参数只有 `platform` + `minecraftVersion`，其余（`buildPlugin` / `destPath` / `allowUnpinned` 等）可选。**无 pin 的档走 `aliasOf` 兼容层别名**（2026-09-29 用户裁定：`neoforge 1.20.1` → 借用 `forge 1.20.1` 的 MDK；条目 `neoforge-1.20.1-compat-forge` 的 `archiveUrl`+`sha256` 与 forge 同源同值，**不冒充**该平台官方 MDK）。`search_mod_code` 源码未生成时 `NOT_DECOMPILED`（不是 `NOT_FOUND`），先调反编译。 |
 | `validate_at` / `validate_aw` | AT / AW 字节码校验 |
 | `resolve_lib_skills` | 库 skill 解析（平台 + 精确 MC 版本；与 CLI `lib resolve` 同一 core；只解析不返回正文 —— AI 仍直接读 `knowledge/libs` 源稿；带 `versionsJson` 的库写坐标前先读该文件 slot） |
 

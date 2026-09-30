@@ -65,6 +65,16 @@ Decision: Fabric 用不用 Kotlin
 - 自引 kotlin-stdlib / coroutines 版本与 FLK 打包版本冲突 → 以 FLK 提供为准
 - 平台混淆：Forge 模组用了 FLK，或 Fabric 模组用了 KFF
 - 照抄旧版本教程的入口写法 → FLK 随 MC 版本演进，以当前 README + 官方示例为准
+- **loader 钉低于 FLK 地板** → 启动即 `Incompatible mods found!`（**加载期错误，无崩溃报告**）；见下节「启动依赖地板」
+
+## 启动依赖地板：loader 版本（2026-09-29 真机实证）
+
+- **FLK 全 MC 线只发一个 jar**：as-of 2026-09-07 最新件 `1.14.1+kotlin.2.4.20`（8,142,858 B，sha256 `620C2709…FEE7A5`，Modrinth `game_versions` 覆盖 1.14–26.2）。实测该件 `fabric.mod.json` 声明 **`fabricloader >=0.19.5`**；上一档 `1.13.4+kotlin.2.2.0`（7,387,359 B，sha256 `2A3C56FC…F50B`）声明 **`>=0.16.9`**。
+- ⇒ **开发工程的 loader 钉（`gradle.properties` 的 `loader_version`，即 Loom 的 `net.fabricmc:fabric-loader` 版本）必须 ≥ 所用 FLK 的地板**。低于地板时 `runClient` 在依赖解析阶段直接拒启，日志为 `Incompatible mods found!` + 「模组 'Fabric Language Kotlin' … 需要 模组 'Fabric Loader' 的 0.19.5 及以上版本」。**这是加载期错误、不产出崩溃报告**（与物品注册那类运行期 NPE 不同），判读要读启动日志的 loader 解析段。
+- 现场记录（fabric/1.21.11 档）：钉 `0.19.3` + FLK 1.14.1 ⇒ 拒启；提到 `0.19.5` 后**同一载荷**启动通过并跑通游戏内闭环（证据见 `mcp-server/CHANGELOG.md` 第三十一批）。
+- 逐档地板对照（本仓脚手架钉值，2026-09-29 现扫）：**`0.19.5` 档** = `1.21.11`（本轮已修）/ `26.1.2`，以及无钉薄档 `1.21.4` / `1.21.8` / `1.21.10`（上游 latest 即 0.19.5）⇒ 装最新 FLK 即通过；**`0.16.9` 档** = `1.21.1` / `1.21.3` ⇒ 最新 FLK 不通过、`1.13.4` 通过；**其余七档**（1.14.4 = 0.3.7.111、1.16.5 = 0.11.2、1.17.1 = 0.11.7、1.18.2 = 0.14.24、1.19.4 = 0.14.21、1.20.1 = 0.15.11、1.20.4 = 0.15.11）**连 1.13.4 的地板也不满足** ⇒ 要上 FLK 必须先提钉。
+- 老档提钉的两难：脚手架里 `loader_version` 同时被 `fabric.mod.json` 的 `"fabricloader": ">=${loader_version}"` 引用 ⇒ 提钉会**同步抬高发布件声明的最低 loader**，可能挡住仍用旧 loader 的老版本玩家。「dev 侧提钉、发布下限不动」需要把两处拆成两个属性（当前是单属性）或发布前回落。**本仓未擅自批改上述七档钉值**，批改与否见 `CONTRIBUTING.md` 台账。
+  - **拆两属性样张（用户裁定后落地，2026-09-30，`fabric/1.20.1`）**：新增 `loader_version_dev`（可选）＋ Loom 依赖行改 `fabric-loader:${project.hasProperty('loader_version_dev') ? project.loader_version_dev : project.loader_version}` ⇒ **开发期** loader 可单独提到 FLK 地板，而 `fabric.mod.json` 的 `>=${loader_version}` **保持不动**。真机实测（该档 dev 工程）：`loader_version=0.15.11`（发布下限）+ `loader_version_dev=0.16.9`（Loom）+ 装入 FLK `1.13.4+kotlin.2.2.0` ⇒ 客户端正常启动（**无 `Incompatible mods found`**、模组列表含 `fabric-language-kotlin`）、构建产物 `fabric.mod.json` 仍声明 **`"fabricloader": ">=0.15.11"`**、驱动整轮 **17/17 `ok:true`**（含村庄扫描与两张截图）。⇒ 「老档要 FLK 又不抬玩家门槛」这条路线**已证明可行**；其余 fabric 档是否照做见台账。
 
 ## 自检清单
 

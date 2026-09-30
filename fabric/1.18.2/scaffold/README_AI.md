@@ -226,3 +226,10 @@ public class ExampleModClient implements ClientModInitializer {
 > **AI 注意**：`fabric.mod.json` 中的 `${mod_id}` 会在 Gradle 构建时替换为 `gradle.properties` 中的值。不要手动修改 `fabric.mod.json` 中的 `id`，修改 `gradle.properties` 即可。
 
 > **`fabric.mod.json` 的 `environment` 字段**：Fabric 侧 `environment` 自 schemaVersion 1 起即支持（同档 `AGENTS.md:80`），本 scaffold 未写该字段 = 省略声明，不是「1.19+ 才有」。旧稿「1.18.x vs 1.18.x 差异 / 该字段从 1.19+ 开始支持」为误记，已改。
+
+## 兼容声明（钉值）
+
+- 本目录 `gradle.properties` / `build.gradle` 里的版本钉值随 modloader 与工具链演进，**可能过期或与最新构建不兼容**。实测例：`fabric-language-kotlin` 1.14.1 要求 `fabricloader >=0.19.5`，而某档钉 0.19.3 时 `runClient` 在依赖解析阶段直接拒启（`Incompatible mods found!`，无崩溃报告）。
+- **钉值仅供参考，一律以实际解析结果与该 loader / 库的官方发布为准**；引用前按当前 maven / Modrinth 事实核对。
+- 发现钉值过期或有误，请提 issue：<https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/issues>
+

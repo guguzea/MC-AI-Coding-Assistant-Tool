@@ -226,3 +226,10 @@ MinecraftClient client = MinecraftClient.getInstance();
 - `java` 是 `>=8`，与 `build.gradle` 的 `release = 8` 和 `mixins.json` 的 `JAVA_8` 对齐。
 - `${...}` 由 `build.gradle:46-64` 的 `processResources { filesMatching(...) { expand ... } }` 在构建期替换；该 glob 现含 `fabric.mod.json`、`pack.mcmeta`、**`examplemod.mixins.json`** 三件 —— 少了第三件的话 `examplemod.mixins.json:4` 的 `"package": "${maven_group}.${mod_id}.mixin"` 不会被展开，Mixin 运行期按字面量找包，两个 mixin 全部失效。
 - 手工预览展开结果：`./gradlew processResources` 后读 `build/resources/main/` 下同名文件，而不是直接改展开后的产物。
+
+## 兼容声明（钉值）
+
+- 本目录 `gradle.properties` / `build.gradle` 里的版本钉值随 modloader 与工具链演进，**可能过期或与最新构建不兼容**。实测例：`fabric-language-kotlin` 1.14.1 要求 `fabricloader >=0.19.5`，而某档钉 0.19.3 时 `runClient` 在依赖解析阶段直接拒启（`Incompatible mods found!`，无崩溃报告）。
+- **钉值仅供参考，一律以实际解析结果与该 loader / 库的官方发布为准**；引用前按当前 maven / Modrinth 事实核对。
+- 发现钉值过期或有误，请提 issue：<https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/issues>
+

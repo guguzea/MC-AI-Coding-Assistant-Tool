@@ -2358,6 +2358,10 @@ const REAL_RUN_GATES = [
     // 原来只内联在 test-core §S20（= 只挂 npm test），与 S20 写盘 guard 同一个病：改 scripts 的人
     // 照规矩跑本链永远碰不到 ⇒ 现进两条数组；test-core 侧改为薄 spawn（编号换 §TW，S20 已被占两处）。
     "./scripts/assert-total-semantics-wording.mjs",
+    // 台账 `L3` / 待裁定 B8 的落地（2026-09-30 用户批准「按你的建议完成」）：把全仓唯一
+    // `isError: true` 位点的**行号锚**换成「needle + 处数」，行号只报告不判红 —— 此前该行号漂移 13 跳
+    // （424→…→605）全靠人手改注释，且**无门提醒**；现在红只留给"处数≠1 / 语义漂走"这两件真事。
+    "./scripts/assert-iserror-anchor.mjs",
   ];
 
 const SELFTEST_GATES = [

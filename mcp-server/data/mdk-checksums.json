@@ -452,6 +452,22 @@
       "notes": "钉值 = promotions_slim.json 的 1.20.1-recommended 47.4.10（本条 sha256 已对该 MDK 逐字节核）；1.20.1-latest = 47.4.23（2026-09-07 实查，其 MDK 未核 → 不上钉）。与 forge/1.20.1/AGENTS.md「Gradle」行同口径"
     },
     {
+      "id": "neoforge-1.20.1-compat-forge",
+      "platform": "neoforge",
+      "minecraftVersion": "1.20.1",
+      "buildPlugin": "forgegradle",
+      "repo": "https://files.minecraftforge.net/",
+      "ref": "",
+      "source": "official",
+      "archiveUrl": "https://maven.minecraftforge.net/net/minecraftforge/forge/1.20.1-47.4.10/forge-1.20.1-47.4.10-mdk.zip",
+      "sha256": "73e0122becd05e39b47eced54e030380d66411850ed86786a2d58ecd886b0451",
+      "license": "LGPL (Forge MDK template)",
+      "gitPolicy": "submodule_ok",
+      "mappings": "mcp",
+      "aliasOf": "forge-1.20.1-forgegradle",
+      "notes": "用户裁定（2026-09-29）：NeoForge 1.20.1 **无官方 MDK pin**（原返回 MDK_NOT_PINNED）⇒ 按**兼容层**口径借用 forge 1.20.1 的 MDK：NeoForge 1.20.1 仍用 net.minecraftforge 包名（net.neoforged 自 1.20.2 起），toolchain 也是 ForgeGradle。archiveUrl/sha256 与 forge-1.20.1-forgegradle **同源同校验值**；本条目**不冒充** NeoForge 官方 MDK。同口径见 README「NeoForge 1.20.1 回退 Forge 文档（兼容层）」与 PLAYTEST_VERIFIED_TIER 的 neoforge 1.20.1 条目"
+    },
+    {
       "id": "forge-1.19.4-forgegradle",
       "platform": "forge",
       "minecraftVersion": "1.19.4",

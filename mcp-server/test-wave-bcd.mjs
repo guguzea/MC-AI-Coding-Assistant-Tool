@@ -907,10 +907,16 @@ async function w4A8Gates() {
       `A-27：散文声明的 isError 处数须等于实测 ${isErrorLines.length}`,
     );
     for (const n of isErrorLines) {
-      assert.ok(
-        doc.includes(`:\`${n}\``) || doc.includes(`\`${n}\``) || doc.includes(`:${n}`),
-        `A-27：isError 位点 :${n} 必须在散文里点名（当前行号：${isErrorLines.join("/")}）`,
-      );
+      // B8 落地（2026-09-30 用户批准「按你的建议完成」）：锚从**行号**换成 **needle**。
+      // 旧口径（行号必须被散文点名 `:${n}`）实测漂移 13 跳（424→…→605）全靠人手追着改散文；
+      // 新口径 = ① 处数（上面已断言 =1）② 位点 ±14 行窗口内 needle 在位 ③ 散文以 needle 点名；
+      // **行号只打印、不判红**（同口径的独立门见 scripts/assert-iserror-anchor.mjs，已挂默认链）。
+      const win = trLines.slice(Math.max(0, n - 1 - 14), Math.min(trLines.length, n - 1 + 14)).join("\n");
+      for (const needle of ["versionRequiredAction", "warmupApi"]) {
+        assert.ok(win.includes(needle), `A-27：isError 位点 :${n} 的 ±14 行窗口缺 needle \`${needle}\``);
+        assert.ok(doc.includes(needle), `A-27：合同散文须以 needle 点名 \`${needle}\`（行号锚已按 B8 废止）`);
+      }
+      console.log(`  [A-27] isError 位点当前位置 :${n}（仅报告；行号锚已换 needle，见 scripts/assert-iserror-anchor.mjs）`);
     }
     // 消费点定位防腐：cli.ts / cli-parse.ts 由并行 CLI 会话在改，散文只准按符号引用。
     // （实测：他们 S1–S5 一轮提交就把 unwrapHandlerResult 从 319 行推走，写死的行号门当场红。）

@@ -23,21 +23,14 @@
  *    VERSION_REQUIRED、PACK_INCOMPLETE、VERSION_FALLBACK…（见下方 ActionCodes）。
  *    这类返回 **一律不置 isError**，MCP 层看到的是一次成功调用，模型必须去读 `action.nextSteps`。
  *
- * 2) **协议层失败：`isError: true`** —— 全仓库只有 **1 处**，在 `src/tool-registry.ts`：
- *    · `:605` `get_server_status` 的 `warmup=true` 但没传 version（VERSION_REQUIRED）。
- *      （行号 424→429→444→454→516→518→520→526→527→565→**585**：2026-09-18 Z-2「McpServer version 读 package.json」净 +15 行；
- *       2026-09-21 并行会话先 +10，同日 A2 新增 `query_upstream_releases`（schema 常量 + 注册块）再 +62，
- *       2026-09-24 第 21 轮全量 test 普查发现 516→518：成因 = `src/tool-registry.ts:422-423` 的 `PORT_PROJECT_DESC` 多了两行「两态合同 / REFUSE_KNOWLEDGE_REPO」说明（题面即 S10 ⇒ 归第 7 轮那批写，未逐 commit 复核），
- *       2026-09-24 A9（`query_upstream_releases` 回 `versionType`）在 outputSchema 与工具描述各 +1 行 ⇒ 518→520（`get_server_status` 注册块之前的行全被推移）；
- *       同日 A4c（端点表扩源）在 input schema / outputSchema / 工具描述又 +6 行 ⇒ 520→526；
- *       同日 A4c 口径洞补丁（maven 404 语义收窄）在工具描述 +1 行 ⇒ 526→**527**；
- *       2026-09-25 S2/S3（`convert_mapping` 的批量名 + `accessLines` 条目行）在 input schema、`CONVERT_MAPPING_DESC` 与 handler 合计净 +38 行 ⇒ 527→565；
- *       同日 S4′（`query_upstream_releases` 的分档 TTL 缓存）在 `queryUpstreamReleasesSchema` 加 `refresh`、`outputSchema` 加 `cache` 位 ⇒ 565→**585**（净 +20 行；handler 里透传 `refresh` 那一行在 585 之下，不计数）；
- *       2026-09-26 A4d（`convert_mapping` 的 Linkie 扩展 namespace：schema enum 两处 + `CONVERT_MAPPING_DESC` 新增段）
- *       净 +3 行 ⇒ 585→**588**（门当场点名同步）；
- *       2026-09-29：HEAD 的 `tool-registry.ts` 已净 +17 行 ⇒ 588→**605**（本批只动 `wave/register.ts` 与新增 playtest 模块，**未触** tool-registry.ts；成因非本批、未逐行复核；门当场点名同步）。
- *       门三次当场点名同步 —— 这条位点是纯行号锚，任何在 tool-registry.ts 上方增行的改动都要跟着改这里。
- *       该脆性已入册（B8 待裁定：改成「代码片段 needle + 行号仅报告」需你批准，本轮不动判据）。）
+ * 2) **协议层失败：`isError: true`** —— 全仓库只有 **1 处**，在 `src/tool-registry.ts` 的
+ *    `get_server_status`「`warmup=true` 但没传 version（VERSION_REQUIRED）」那条注册层前置拒绝分支里。
+ *    · **锚的形式（2026-09-30 落地，台账 `L3`/B8）**：锚 = **needle 片段**，**不再写死行号** ——
+ *      `versionRequiredAction()` ＋ `warmupApi(` ＋ `ok: false`（同处邻近窗口内三者齐）。
+ *      为什么换：这条位点曾漂移 13 跳（424→…→605），每跳都得人手改本注释，而且**没有任何门会提醒**。
+ *    · 现在由 `scripts/assert-iserror-anchor.mjs` 守两条真判据 —— ① 处数必须**恰好 1**；② needle 必须在位；
+ *      **行号只作为信息打印**（`node scripts/assert-iserror-anchor.mjs --verbose` 看当前位点）。
+ *      ⇒ 在 `tool-registry.ts` 上方增/删行**不再需要**动本注释；只有"处数变了 / 语义漂走"才判红。
  *    （2026-09-17 P2-2 收敛：communityDocError 的 2 处 isError 已降级为带内 `ok:false`，
  *    与全部文档工具错误路径同形；CLI 退出码不变——isToolFailure 先看 `ok===false`。）
  *    判据：**结果通道的前置条件在注册层就被拒**，才用 isError。

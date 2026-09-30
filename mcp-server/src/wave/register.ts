@@ -178,6 +178,13 @@ export const generatePlaytestDriverSchema = z.object({
     .describe("默认 external_bridge（桥驱动动作序列）；其余模式只出结构壳（TODO(未核实)）"),
   capabilityProfile: z.enum(["strict_survival", "operator", "creative"]).optional().describe("默认 strict_survival（fail-closed）"),
   goal: z.string().optional().describe("本次游玩测试目标（一句话）"),
+  expectItem: z.string().optional().describe("driverMode=temporary_client_tick_driver 且本档签名已核实时的期望物品 id（如 examplemod:playtest_token）；缺省留占位（编译前须替换）"),
+  enterWorld: z.string().optional().describe("自动进世界的本地存档目录名（如 playtest_demo）；缺省不进世界（由人或桥进入）。实测：Loom 的 --quickPlaySingleplayer programArgs 不生效，故用 IntegratedServerLoader.start"),
+  scenario: z.enum(["smoke", "village"]).optional().describe("内置剧本：smoke（移动/破坏/GUI/背包 冒烟，默认）| village（找村庄：定位→键盘飞过去→扫描→断言→截图）"),
+  plan: z.array(z.string()).optional().describe("自定义动作序列（DSL，每行一步，如 \"goto parsed tol=24 fly=1\"）；给了就覆盖 scenario。语法见生成物 README / plan.json"),
+  budgetTicks: z.number().int().min(200).optional().describe("硬预算（tick，20/s）；缺省 smoke=3600 / village=24000；超预算 fail-closed 判红"),
+  watchPlan: z.boolean().optional().describe("默认 true = 长驻热重载：游戏起一次不关，改 <evidenceDir>/plan.txt 就在同一进程内开新一轮（轮次记 rounds.jsonl）；false = 一次性跑完即停"),
+  expectSlot: z.number().int().min(0).max(40).optional().describe("期望槽位（0–40；缺省 0 = 热键栏第一格）"),
   postconditions: z
     .array(z.enum(["block_state", "entity_count", "inventory_contains", "marker_log", "screen_present"]))
     .optional()
@@ -218,7 +225,7 @@ export const playtestBridgeSchema = z.object({
   confirmed: z.boolean().optional().describe("execute/await 必填 true"),
 });
 export const GENERATE_PLAYTEST_DRIVER_DESCRIPTION =
-  "Generate playtest driver skeleton（只吐文本，默认不写盘）。platform 与 version 必填（精确 MC 版本）。driverMode 默认 external_bridge（桥 HTTP 动作序列 + 后置条件 + 证据约定）；in_jvm_player_agent / temporary_client_tick_driver 只出结构壳（玩家挂接 API 为 // TODO(未核实)，须先取证）。不装桥、不跑游戏；桥契约与坑位见社区短文 authored/ingame-playtest-automation。";
+  "Generate playtest driver（只吐文本，默认不写盘）。platform 与 version 必填（精确 MC 版本）。driverMode 默认 external_bridge（桥 HTTP 动作序列 + 后置条件 + 证据约定）；temporary_client_tick_driver 在**已 javap 实测签名的档**（fabric/quilt 1.21.11）产出**可编译的真 driver**——**解释器引擎**：动作序列是数据（scenario=smoke|village 或自定义 plan DSL：wait/look/fly/move/cmd/goto/scan/assert/shot/break/gui/mark），换场景只改剧本不改 Java；产物含 driver + plan.json + REVERT.md + README + actions.json；其余档仍为结构壳并点名已核实档；in_jvm_player_agent 全档结构壳（// TODO(未核实)）。不装桥、不跑游戏；无桥路线与坑位见社区短文 authored/ingame-playtest-automation。";
 export const INSPECT_PLAYTEST_EVIDENCE_DESCRIPTION =
   "读游玩自测证据目录（exit-code.txt / state.json / [QA] 段 / calls.jsonl / 截图），每件三态 present|absent|unreadable —— 缺件不得读成「没有失败」。须 MC_SKILL_PLAYTEST_ALLOW=1 + MC_SKILL_PLAYTEST_ROOT（目标 realpath 必须在根内）。可选 logsDir 委派 inspect_runtime；不并入 inspect_runtime 的只读禁令面。";
 export const PLAYTEST_BRIDGE_DESCRIPTION =
@@ -1028,6 +1035,13 @@ export function registerWaveExtensions(server: McpServer): void {
             postconditions: a.postconditions,
             useGameTestSourceSet: a.useGameTestSourceSet,
             evidenceDir: a.evidenceDir,
+            expectItem: a.expectItem,
+            expectSlot: a.expectSlot,
+            enterWorld: a.enterWorld,
+            scenario: a.scenario,
+            plan: a.plan,
+            budgetTicks: a.budgetTicks,
+            watchPlan: a.watchPlan,
           }),
           { write: a.write, confirmed: a.confirmed, projectPath: a.projectPath },
           a.platform === "fabric" || a.platform === "quilt"

@@ -86,7 +86,7 @@ yarn_mappings=1.21.11+build.6
 # ✅ 与 build.gradle 中的 minecraft 依赖一致；下列四行与本档 scaffold/gradle.properties:10-13 同值（钉值以 scaffold 为准）
 minecraft_version=1.21.11
 yarn_mappings=1.21.11+build.6
-loader_version=0.19.3
+loader_version=0.19.5
 loom_version=1.17-SNAPSHOT
 ```
 

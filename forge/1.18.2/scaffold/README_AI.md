@@ -219,3 +219,10 @@ minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 > - **流体那一行已裁定，冲突判给禁令侧**：本表旧写法把 `FLUIDTYPES` 当 1.18.2 正名，而 `.cursor/skills/mc-fluid/SKILL.md:22`、`:102` 把**同一个写法**列为 ❌ 禁令（该 Skill 主张 1.18.2 无 `FluidType`，流体按 `ForgeRegistries.FLUIDS` + `FluidAttributes.builder` 注册，本文件「自定义流体」示例走的也是 `FLUIDS` 那条）。**禁令侧被证实**：1.18.2 的 `ForgeRegistries` 既无 `FLUIDTYPES`、也无 `FLUID_TYPES`——**该版本根本没有流体类型注册表**，所以正确修法是删/改写该行，**不是**改名成 `FLUID_TYPES`（那只是把一个错名换成另一个错名）；`FluidType` + `FLUID_TYPES` 是 **1.19+** 才引入的。
 > - 证据（两 build 两机制互证，as-of 2026-09-24）：官方 1.18.2-40.1.80 源码 `net/minecraftforge/registries/ForgeRegistries.java` 全文 157 行，`grep FLUID` 只有 `:58` 的 `FLUIDS` 字段与 `:104` 的 `Keys.FLUIDS`；官方 1.18.2-40.3.12 universal jar `javap -p net.minecraftforge.registries.ForgeRegistries` 输出 41 行、注册表字段共 **32** 个，按 `FLUIDTYPES|FLUID_TYPES` 过滤 = **0**（在全分母上测得，非抽查）。顺带钉死：`BLOCK_ENTITIES` / `ENTITIES` / `SOUND_EVENTS` / `PARTICLE_TYPES` / `CONTAINERS` / `PAINTING_TYPES` **都带下划线**，`ENTITYTYPES` 从不存在。
 > - 想自己核：坐实入口（**已验证可用**，需 JDK 17+）`unzip -p <forge-1.18.2-40.1.80-sources.jar> net/minecraftforge/registries/ForgeRegistries.java` 与 `javap -p -classpath <forge-1.18.2-40.3.12-universal.jar> net.minecraftforge.registries.ForgeRegistries`；也可用你自己工程的 jar 反编译（`decompile_mod_jar` / `get_minecraft_source`）。⚠️ `query_loader_api` / `ingest_loader_api` 的摘要面**查不到字段名**（其 `fields` 恒 0，且 `ForgeRegistries` 类本身不在摘要里），不是可核入口，别拿 ingest 当「复现」手段。
+
+## 兼容声明（钉值）
+
+- 本目录 `gradle.properties` / `build.gradle` 里的版本钉值随 modloader 与工具链演进，**可能过期或与最新构建不兼容**。实测例：`fabric-language-kotlin` 1.14.1 要求 `fabricloader >=0.19.5`，而某档钉 0.19.3 时 `runClient` 在依赖解析阶段直接拒启（`Incompatible mods found!`，无崩溃报告）。
+- **钉值仅供参考，一律以实际解析结果与该 loader / 库的官方发布为准**；引用前按当前 maven / Modrinth 事实核对。
+- 发现钉值过期或有误，请提 issue：<https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/issues>
+

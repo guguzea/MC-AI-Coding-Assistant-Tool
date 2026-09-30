@@ -24,7 +24,10 @@ loom {
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    // 开发期 loader：优先用 `loader_version_dev`（若有），否则回落到发布件声明下限 `loader_version`。
+    // 拆开的原因：老档要加 Fabric Language Kotlin 时需把**开发期** loader 提到 FLK 地板（1.13.4 → >=0.16.9、
+    // 1.14.1 → >=0.19.5），但不该同时抬高发布件 `fabric.mod.json` 里 `depends.fabricloader` 的最低门槛。
+    modImplementation "net.fabricmc:fabric-loader:${project.hasProperty('loader_version_dev') ? project.loader_version_dev : project.loader_version}"
 
     // Fabric API
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
@@ -46,7 +49,7 @@ processResources {
     inputs.property "mod_authors", project.mod_authors
     inputs.property "mod_license", project.mod_license
 
-    filesMatching(["fabric.mod.json", "pack.mcmeta"]) {
+    filesMatching(["fabric.mod.json", "pack.mcmeta", "examplemod.mixins.json"]) {
         expand "version": project.version,
             "minecraft_version": project.minecraft_version,
             "yarn_mappings": project.yarn_mappings,

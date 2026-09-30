@@ -41,7 +41,7 @@ processResources {
     inputs.property "yarn_mappings", project.yarn_mappings
     inputs.property "loader_version", project.loader_version
 
-    filesMatching(["fabric.mod.json", "pack.mcmeta"]) {
+    filesMatching(["fabric.mod.json", "pack.mcmeta", "examplemod.mixins.json"]) {
         expand "version": project.version,
             "minecraft_version": project.minecraft_version,
             "yarn_mappings": project.yarn_mappings,

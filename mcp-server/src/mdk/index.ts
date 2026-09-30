@@ -51,6 +51,8 @@ export interface MdkChecksumEntry {
   mappingsVersion?: string;
   notes?: string;
   source?: MdkSource;
+  /** 兼容层别名：本条目按用户裁定借用另一条目的官方 MDK（不冒充该平台官方 MDK；如 neoforge 1.20.1 → forge 1.20.1）。 */
+  aliasOf?: string;
 }
 
 export interface DownloadOfficialMdkArgs {

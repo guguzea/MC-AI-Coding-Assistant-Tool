@@ -159,7 +159,7 @@ fabric-mod/
 ### Minecraft 版本兼容性
 
 - Fabric 1.21.11 支持 Minecraft 1.21.11
-- Fabric Loader **0.19.3**（scaffold 钉的官方 example-mod 版本；maven 最新 0.19.5）
+- Fabric Loader **0.19.5**（2026-09-29 由 0.19.3 修正：既是 maven 最新，也是 Fabric Language Kotlin 现行构建的下限要求；0.19.3 是上游 example-mod 分支当时的钉值，与本仓 fabric/26.1.2 档已钉的 0.19.5 不一致）
 - Fabric API **0.141.6+1.21.11**（与 Loader 是不同制品，版本号互不相关）
 - Java 21+
 
