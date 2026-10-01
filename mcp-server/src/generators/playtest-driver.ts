@@ -489,6 +489,14 @@ export const PLAYTEST_VERIFIED_TIER: ReadonlyArray<{ platform: string; version: 
       "yarn 1.21.10+build.3（**与 1.21.11 同形，无改写**；javap 实测 2026-10-01：`net.minecraft.client.gui.Click(double,double,MouseInput)` ✓、`MouseInput(int,int)` ✓、`Element.mouseClicked(Click,boolean)` ✓，其余面与 1.21.11 一致）",
     asOf: "2026-10-01",
   },
+  // quilt 档走 quilt-loom + 同一 yarn 命名层（quilt-1.21.11 已真机验证同形）；下方映射名与 fabric 同版本共享 javap 证据。
+  { platform: "quilt", version: "1.20.1", mappings: "yarn 1.20.1+build.10（同 fabric 1.20.1；quilt-loader 0.31 兼容面）", asOf: "2026-10-01" },
+  { platform: "quilt", version: "1.20.4", mappings: "yarn 1.20.4+build.3（同 fabric 1.20.4）", asOf: "2026-10-01" },
+  { platform: "quilt", version: "1.21.1", mappings: "yarn 1.21.1+build.3（quilt 脚手架钉值；与 fabric build.2 同名层）", asOf: "2026-10-01" },
+  { platform: "quilt", version: "1.21.3", mappings: "yarn 1.21.3+build.2（同 fabric 1.21.3）", asOf: "2026-10-01" },
+  { platform: "quilt", version: "1.21.4", mappings: "yarn 1.21.4+build.8（同 fabric 1.21.4）", asOf: "2026-10-01" },
+  { platform: "quilt", version: "1.21.8", mappings: "yarn 1.21.8+build.1（同 fabric 1.21.8）", asOf: "2026-10-01" },
+  { platform: "quilt", version: "1.21.10", mappings: "yarn 1.21.10+build.3（同 fabric 1.21.10）", asOf: "2026-10-01" },
 ];
 /**
  * 意图空间定稿 v2（2026-10-01 用户审改）—— 口径单源见
@@ -2798,10 +2806,11 @@ public final class PlaytestQaDriver {
 }
 `;
     const useForgeTable = platform === "forge" || platform === "neoforge";
-    // 1.20.1 是唯一 `IntegratedServerLoader.start(Screen,String)` 形的档
-    const useFabric1201Table = platform === "fabric" && version === "1.20.1";
+    // 1.20.1 是唯一 `IntegratedServerLoader.start(Screen,String)` 形的档（fabric/quilt 共用 yarn 命名层）
+    const useFabric1201Table = (platform === "fabric" || platform === "quilt") && version === "1.20.1";
     // javap 实测同为「只差 GUI 点击一处」的档：1.21.1（2026-09-30）、1.21.3 与 1.20.4（2026-10-01）、1.21.4 与 1.21.8（2026-10-01）
-    const useFabric1211Table = platform === "fabric" && ["1.21.1", "1.21.3", "1.20.4", "1.21.4", "1.21.8"].includes(version);
+    const useFabric1211Table =
+      (platform === "fabric" || platform === "quilt") && ["1.21.1", "1.21.3", "1.20.4", "1.21.4", "1.21.8"].includes(version);
     const emittedJava = useForgeTable
       ? rewriteForForge(javaSource)
       : useFabric1201Table

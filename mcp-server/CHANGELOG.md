@@ -73,6 +73,16 @@
   - **收口链 rc**：见当轮汇报（同族边界见 `L116` ⑥(iv)）。
 
 
+- **第四十五批 · 文档批：游玩自测「后半 loop 教程」三路线逐步化 + 意图会话专节 + 运维散件集中（用户裁定"详细补一下"；不引用仓外交接件）**
+  - **根 `README.md`**：`## 模组测试流程 loop：两段` 之下新增两节 —— 「后半 loop 教程：三条路线，逐步跑通」（路线 ① 有桥 / 路线 ② 无桥剧本 driver / **路线 ③ 无桥意图会话（`in_jvm_player_agent`）** 逐步 + 会话循环 + 观测面 + 失败语义 + 预算与协议 + v1 落地面与已知限制 + 四会话真机读数）＋「后半 loop 运维散件」（JDK 分线 / 授权 / 失焦暂停 / 世界供给含 `allowCommands` NBT 改写 / 冻结族 quick play / 资源卡住三段修法 / mixins 展开漏项 / 精确杀 JVM 与世界锁 / 独立实例与截图覆盖 / 证据判读（三态 · JSONL 单行 · 截图 `ageMs` · `.log` 约定）/ 撤除纪律）。
+  - **`mcp-server/README.md`**：工具索引「游玩自测」行补 `playtest_intent`；新增「游玩自测：意图会话（`playtest_intent`）」小节（read/write 语义 · 六段校验 · 失败语义 · 生效档位），指向根 README 教程与口径单源「意图空间」。
+  - **工作流 `mc-ingame-playtest`**（`src/prompts/templates.ts`）：标题扩为「桥 / 无桥 driver / 意图会话」；正文新增 2b 步（无桥两形态：确定性剧本 + `plan.txt` 热载 / 意图会话 + `playtest_intent` 邮箱 + 失败按 `nextSteps` 换意图）并指向根 README 教程。
+  - **口径单源**（`community_knowledge/authored/ingame-playtest-automation.md`）：「最小复现路径」标题由"两档"改"三路线（A/B/C + D）"、引言同步；新增 **`### D. in_jvm 意图会话`** 七步（前置/进世界/生成/跑/会话循环/验收/本路线专属坑），读数与「意图空间·执行器落地面」互指不重复。
+  - **`AGENTS.md`**：游玩自测作业规则「适用范围」补第三条路线与教程入口。
+  - **不引用仓外交接件**：`mcp-server/docs/handoff-playtest-next.md` 已由 `.gitignore:120` 忽略（不入库）；本轮新增文档一律不指向它（CHANGELOG 第四十批与 CONTRIBUTING `L123` 里的历史提及按"历史行永不改"保留）。
+  - **收口链 rc**：见当轮汇报（同族边界见 `L116` ⑥(iv)）。
+
+
 - **第四十四批 · 质量批（另一 agent 9 条发现逐条复核后落 6 条：F1/F2/F3/F4/F5/F6；F7/F8/F9 按用户裁定不动）——执行器证据面与 fail-closed 加固 + 门新族 B′ + 真机负例复验**
   - **F1a spec↔impl kind 漂移（补声明，实现不动）**：`PLAYTEST_INTENTS` 的 find_and_goto `postcondition.kind` 由单值 `reached_parsed_tol` 改为按形态三值 `reached_parsed_tol | block_found_and_reached | entity_found_and_reached`（note 写明三形态判据）；菜单与生成物 README 同步。此前 spec 声明与实现发射（:2038/:2045/:2052 三种）对不上，两道旧对账（菜单契约、菜单↔真源）都看不见。
   - **F1b 失败拆字段**：证据条目与 `state.json.lastIntent` 改为 `{…, ok, postcondition|failure, detail}` —— `ok:true ⇒ postcondition 非空 ∧ failure 空`；`ok:false ⇒ 二者恰一非空`（判过后置条件没过 = postcondition 非空；步级失败 = failure，如 `goto_timeout` / `param_not_number`）。此前 `failIntent` 的 18 种失败原因挤进 `postcondition` 字段（LLM 观测面语义混）。

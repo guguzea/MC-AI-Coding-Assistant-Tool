@@ -112,6 +112,117 @@ MC_skill/
 查询本机已建档列表：`node mcp-server/dist/cli.js activate_platform_pack --action=list`；文档档：`list_forge_versions` / `list_fabric_versions` / `list_neoforge_versions` / `list_doc_versions`。
 
 
+## 模组测试流程 loop：两段（2026-10-01 起）
+
+真机测试拆成两段 loop，**覆盖面不同**：
+
+| 段 | loop 内容 | 覆盖面 | 承载 |
+| --- | --- | --- | --- |
+| **前半** | agent 写码 → 构建 → **自动起游戏** → 看崩溃 → 改码 → 再测试 | **所有平台**（Forge / Fabric / NeoForge / Quilt / LiteLoader / Rift / ModLoader / 基岩） | `mc-build-mod`、`mc-ingame-iterate`（步骤清单，人在环）；构建/启动报错与崩溃由 `inspect_runtime` / `analyze_log` / `crash_analyze` 读 `<gameDir>/logs/latest.log` + `crash-reports/`；基岩侧读 content log（`analyze_bedrock_log`） |
+| **后半** | 自动起游戏 → **进游戏自己操作、测试** → 拿证据回传 → 改码 → 再测试 | **MC 1.20.1 及以上（含 1.20.1）** 的 Java 平台：Fabric / Quilt / Forge / NeoForge | `generate_playtest_driver`（无桥：进程内临时 driver；有桥：BlackBoxPro 动作序列）+ `playtest_bridge` / `playtest_intent` / `inspect_playtest_evidence`；工作流 `mc-ingame-playtest` |
+
+**两条路线**：
+
+- **无桥（进程内 driver）**：`generate_playtest_driver driverMode=temporary_client_tick_driver`（或 `in_jvm_player_agent`：LLM 通过 `<evidenceDir>/intent.json` 邮箱逐步下意图）。driver 编进被测工程，进游戏后按剧本（`smoke` / `village` / 自定义 `plan` DSL）自己操作、断言、取证；**长驻 + 剧本热载**（改 `<evidenceDir>/plan.txt` 即在同一进程开新一轮，不重启游戏）。证据 = `state.json` / `exit-code.txt` / `qa.log` / `rounds.jsonl` + 截图。
+- **有桥（第三方桥 mod）**：预编译桥 mod（当前 = BlackBoxPro，MIT）装进游戏实例，经 `127.0.0.1:38081` 用 `playtest_bridge` 发动作/查询/截图；证据 = `calls.jsonl` + 截图 + query 响应。桥件的 MC 覆盖由第三方发布决定（BlackBoxPro 现行件覆盖 **fabric/neoforge 1.21.1 与 1.21.11**、forge 1.12.2）。
+
+**证据判读统一入口**：`inspect_playtest_evidence`（三态 `present|absent|unreadable`，缺件不得读成“没有失败”）；执行权与授权见根 `AGENTS.md`「人在环例外：游玩自测（三通道）」。
+
+### 后半 loop 真机矩阵（村庄测试：`locate` 定位 → 飞抵/寻路 → 扫描/查询 → 断言 → 截图；as-of 2026-10-01）
+
+> 单元格 = 该 combo 的村庄测试真机结果；`—` = 该档没有对应路线的可用件（不是失败）。
+
+| 平台 | 版本 | 无桥 driver | 有桥 BlackBoxPro |
+| --- | --- | --- | --- |
+| Fabric | 1.20.1 / 1.20.4 / 1.21.1 / 1.21.3 / 1.21.11 | ✅ 村庄测试整轮通过（`exit-code=0`） | 1.21.1 / 1.21.11 ✅（桥村测见 `calls.jsonl`）；其余 — |
+| Fabric | 1.21.4 / 1.21.8 / 1.21.10 / 26.1.2 | 1.21.4 / 1.21.8 / 1.21.10 已 javap 取证 + 生成真 driver；26.1.2 走 mojmap 面（见 `PLAYTEST_VERIFIED_TIER`） | — |
+| Quilt | 1.20.1 / 1.20.4 / 1.21.1 / 1.21.3 / 1.21.4 / 1.21.8 / 1.21.10 / 1.21.11 | 1.21.11 ✅；其余档按同版 yarn 命名层出真 driver（真机读数见 CHANGELOG 各批） | 1.21.11 ✅（fabric 桥件走 quilt-loader 兼容面） |
+| Forge | 1.20.1 ✅；1.20.4 / 1.21.1（draft）待扩 | ✅ 1.20.1（村庄测试整轮通过）；1.20.4/1.21.1 见 `PLAYTEST_VERIFIED_TIER` | — |
+| NeoForge | 1.20.1 起（含 1.20.4 / 1.20.6 / 1.21.1 / 1.21.3 / 1.21.5 / 1.21.8 / 1.21.10 / 1.21.11 / 26.1） | 1.20.1 与 forge 1.20.1 同形（兼容层）；其余档驱动面见 `PLAYTEST_VERIFIED_TIER` | 1.21.1 / 1.21.11 桥件可用（与 fabric 同版） |
+
+**已核实边界（写清不吹）**：
+
+- **有桥**只覆盖 BlackBoxPro 有预编译件的档；其余档一律走**无桥**（进程内 driver）。桥**无鉴权**且通配绑定 ⇒ 只在可信网络、短会话；`playtest_bridge` 只连 `127.0.0.1`。
+- **无桥 driver 的“真代码”档**以 `generate_playtest_driver` 的 `PLAYTEST_VERIFIED_TIER`（生成器内表）为准；不在表里的档只出结构壳（`// TODO(未核实)`），**不会**静默编成假 driver。
+- **自动进世界**用 vanilla quick play（Loom/ForgeGradle 的 runClient `programArgs "--quickPlaySingleplayer"`）；1.20.4 / 1.21.1 / 1.21.3 等档**不要**让 driver 自己调 `IntegratedServerLoader.start`（会把客户端冻在“等服务器载入”循环，jstack 已验证）。
+- **世界供给**：单机存档需 `allowCommands=1`（`/locate` 需要）；跨加载器可复用**同 MC 版本**的 `run/saves/<name>`（客户端会按需升级旧版存档）。
+- **关客户端**要按命令行精确杀真身 JVM（含 `-Dfabric.dli.config` / `-Dneoforge...` 的那个 java 进程），只杀 `gradlew` wrapper 会残留客户端并锁住存档（`session.lock`）。
+- 游玩自测的**驱动文件测完必须撤除**（`playtest/REVERT.md`），证据只留授权根，不入正式实例 / 正式分支。
+
+[[详细口径单源：`community_knowledge/authored/ingame-playtest-automation.md`（桥契约、坑位清单、意图空间定稿）]]
+
+
+### 后半 loop 教程：三条路线，逐步跑通
+
+> 本节回答"**从零怎么把游戏跑起来、让 agent 在里面自己玩并留下证据**"。逐档取证与坑位编号以 `community_knowledge/authored/ingame-playtest-automation.md` 为准（其「最小复现路径」是 A/B/C 三档的完整命令序列，「意图空间」是意图表单一真源）；本节把散在各处的步骤与运维要点集中成可照抄的教程。
+
+**三条路线怎么选**：
+
+| 路线 | driverMode / 工具 | 覆盖 | 适合 | 主要代价 |
+| --- | --- | --- | --- | --- |
+| ① 有桥 | 桥 mod + `playtest_bridge` | 只 BlackBoxPro 有预编译件的档（fabric/neoforge 1.21.1+1.21.11、forge 1.12.2） | 到手最快、动作集大 | 版本覆盖窄；桥无鉴权 ⇒ 只本机短会话 |
+| ② 无桥剧本 | `generate_playtest_driver driverMode=temporary_client_tick_driver` | 已验证档出真 driver；其余档结构壳 | 确定性回归 / CI 复现 | 要装驱动 + 供世界 |
+| ③ 无桥意图会话 | `driverMode=in_jvm_player_agent` + `playtest_intent` | 真执行器 = `fabric`/`quilt` `1.21.11` | agent 实时决策、"选错→判红→换意图" | 观测粒度 = 每条意图一次；v1 `goto` 无寻路 |
+
+#### 路线 ① 有桥（最快）
+
+1. **授权**：`MC_SKILL_PLAYTEST_ALLOW=1` + `MC_SKILL_PLAYTEST_ROOT=<绝对路径>`（三通道与禁令见根 `AGENTS.md`「人在环例外：游玩自测」）。
+2. **装桥**：BlackBoxPro 对应端 jar + 依赖（fabric 端需 fabric-api 与 FLK）；**来源/版本/sha256 记账**，jar 只进授权根。
+3. **起游戏 → 探活**：`playtest_bridge action=status` ⇒ `ready=true` 才算"已进世界"（`actions` 每档不同：1.21.1 实测 114、1.21.11 116）。
+4. **进世界**：`execute create_world` / `join_world` —— 建世界要几十秒，**响应超时 ≠ 失败**（实测超时后世界里其实已建好）。
+5. **驱动**：动作序列由 `generate_playtest_driver driverMode=external_bridge` 出（`playtest/actions.json` + 后置条件 + 证据约定）；单步 `execute`，复合动作 `batch` + `delay`，"等条件"用 `await`（桥没有 `wait_until`；超时映射 `PLAYTEST_TIMEOUT`，**不得塌成"没失败"**）。
+6. **判读**：`inspect_playtest_evidence`（三态 `present|absent|unreadable`）+ `calls.jsonl` + 截图；失败 → 改码 → `mc-build-mod` 重建 → 重跑。
+
+#### 路线 ② 无桥剧本 driver（面最广）
+
+1. **建工程**：把对应档 scaffold 拷到 `<ROOT>/<平台>-<版本>` —— **工程目录即游戏根**（`run/` 就是 gameDir，不改 runDir DSL）。JDK 分线：1.20.1 线 JDK 17、1.21.x 线 JDK 21。
+2. **关失焦暂停（必做）**：`<gameDir>/options.txt` 写 `pauseOnLostFocus:false` —— 否则按键位移恒 `0.00`（强杀进程时 MC 不会自己写这份文件，得手建）。
+3. **生成驱动**：`generate_playtest_driver{platform, version, driverMode:"temporary_client_tick_driver", enterWorld:"<存档名>" 或留空, evidenceDir:"<授权根内绝对路径>", plan:[…] 或 scenario:"smoke"|"village"}` ⇒ `PlaytestQaDriver.java` 放进 `src/main/java/<pkg>/playtest/`，客户端入口加一行 `PlaytestQaDriver.register();`。
+4. **供世界**：`<gameDir>/saves/<存档名>/level.dat` 必须存在 + `allowCommands=1`（`/locate` 等 `cmd` 类步骤需要）—— 做法见下面「运维散件」。
+5. **跑**：`gradlew build` → `gradlew runClient`；日志里程碑 `[QA] driver registered` → `[QA] open world requested` → `[QA] ROUND 1 START` → `[QA] DONE ::` / `[QA] ERROR:`。
+6. **热载**：改动作/断言/坐标只改 `<evidenceDir>/plan.txt`（同一进程内开新一轮，**不重启游戏**）；只有 driver/被测 mod 的 Java 源码变了才重建重启。
+7. **判读 + 撤除**：同路线 ① 的判读；收工按 `playtest/REVERT.md` 删驱动与调用行（**绝不提交**）。
+
+#### 路线 ③ 无桥意图会话（agent 实时下意图；详细）
+
+> 与路线 ② 的关系（**别读成两条并行线**）：同一个驱动、同一个解释器；意图只是"展开成原语子计划"的步骤，外层剧本退化成一条 `waitintent` 守候环。同一 tick 只有一个计划在跑。
+
+1. **前置**：同路线 ② 的 1–2 步 ＋ **已验证档**（真执行器只覆盖 `fabric`/`quilt` `1.21.11`；其余档只出菜单契约 + 结构壳，不会假装能跑）。
+2. **进世界**：按该档配方 —— 冻结族（`fabric 1.20.4 / 1.21.1 / 1.21.3`）用 vanilla quick play（`build.gradle` 的 loom runs 加 `programArgs "--quickPlaySingleplayer", "<存档名>"`）且 `enterWorld` **留空**；`1.21.11` 线可直接 `enterWorld:"<存档名>"`。
+3. **生成**：`generate_playtest_driver{platform:"quilt", version:"1.21.11", driverMode:"in_jvm_player_agent", capabilityProfile:"operator"|"creative"|"strict_survival", evidenceDir:"<授权根内绝对路径>", budgetTicks:36000}` ⇒ 出五件产物 ＋ **`playtest/intent-menu.json`**（菜单契约）；默认剧本 = `mark in_jvm:intent-session` ＋ `waitintent max=6000`。
+4. **装 + 跑**：同路线 ②；到 `[QA] ROUND 1 START` 后，进世界的第一条 `waitintent` tick 会把 `state.json`（观测面）补种出来。
+5. **观测（read）**：`playtest_intent{action:"read", evidenceDir}` ⇒ 观测面：`intentState`（档位/菜单/邮箱/剩余预算/当前意图）、`intents[]`、`lastIntent`、`scan.nearest{found,id,x,y,z}`、`goto{x,z,arrived,arrivedDist}`，外加 `menu`、`mailbox` 状态与 **`nextSteps`**（上一条失败时 = 该意图菜单里的 fallback）。
+6. **下意图（write）**：`playtest_intent{action:"write", evidenceDir, intent:"walk_to", params:{x:10,z:-20,tol:3}, confirmed:true}` ⇒ 写 `<evidenceDir>/intent.json`（扁平 JSON）。**写侧六段校验**：confirmed → 禁列（`kill`/`tnt`/`fill`）→ 13 意图菜单 → 参数白名单 → 必填 → 邮箱占用（占用回 `MAILBOX_BUSY`，除非 `overwrite=true`）；非法**在写侧就拒**，不进执行器。
+7. **会话循环**：`read` 看观测 → 选意图（失败就按 `nextSteps` 换）→ `write` → driver 消费（`intent.json` 改名 `intent.done.json`）→ 展开原语执行 → 判**唯一一条**类型化后置条件 → 写 `intents[]` + 刷新 `state.json` → 回守候。**失败不得自动重试**（一次性意图重试会重复消耗方块/触发副作用），只许换意图。
+8. **收尾**：`write {"intent":"stop"}` ⇒ 收尾本轮（**不关游戏**）；之后按 `playtest/REVERT.md` 撤除。
+
+**失败语义（三条线里最要紧的差别）**：邮箱形态失败 = **数据**（`intents[]` 记 `ok:false` ＋ `failure` 字段）并**继续守候**（会话不死）；协议违规（禁列/不在菜单/档位不符）在写侧就被工具拒；脚本形态（`plan.txt` 里的 `intent` 步骤）失败 = **判红停轮**。
+
+**预算与协议**：单意图上限 = 菜单 `budgetTicks` 列（`walk_to` 1200 / `find_and_goto` 9000 / 其余 60–600）；单次守候 5 min（`waitintent max=6000`）；整轮默认 30 min（`budgetTicks=36000`）；邮箱**单槽**（一条在跑时新写的只在邮箱等，再写会被拒）。参数写错（如 `x=abc`）判红 `param_not_number`，**不会**静默用默认值。
+
+**v1 落地面与已知限制**：已实现 = `walk_to` / `look_at`(yaw|pos) / `find_and_goto`(structure|block|entity) / `observe` / `open_gui` / `inventory` / `screenshot` / `wait`(ticks) / `tp`(op/creative) / `stop`；`mine`/`place`/`interact` 与 `wait until=` 未实现（命中即判红，不静默）。`goto` **无寻路**（直线 + `fly` + 巡航 140/防卡；复杂地形超时 → 换意图）；`structure` 形态需该世界开作弊；`block` 形态垂直采样只有 `-4..+8` 薄层（先在目标高度附近）；`entity` 只覆盖追踪范围 ≈48 格；村内扫不到村民先怀疑废弃村（换个村再扫）。
+
+**真机读数（as-of 2026-10-01，`quilt 1.21.11` / `operator`）**：四会话全 `exit-code=0` —— 含"`find_and_goto{diamond_ore}` miss 判红 → 换 `structure` PASS"的换意图链、`entity:villager found=true dist=0.62`、`block:hay_block onGround=true`、截图 `ageMs` 新鲜度判据、`walk_to{x:abc}` 负例判红。逐条读数见口径单源「意图空间」的「执行器落地面」。
+
+#### 后半 loop 运维散件（散在各处，集中在这里）
+
+| 事项 | 做法 |
+| --- | --- |
+| JDK 分线 | 1.20.1 线 **JDK 17**；1.21.x 线 **JDK 21**（`JAVA_HOME` 指到对应版本；旧线可加 `-Porg.gradle.java.installations.paths=<jdk17>`） |
+| 授权 | `MC_SKILL_PLAYTEST_ALLOW=1` + `MC_SKILL_PLAYTEST_ROOT=<绝对路径>`；证据与驱动只留该根 |
+| 失焦暂停 | `<gameDir>/options.txt` 写 `pauseOnLostFocus:false`（强杀后 MC 不会自己写；只有这一行也能跑） |
+| 世界供给 | 用**同 MC 版本**的 vanilla 服务端造一次世界（`eula=true` + `server.properties` 指定 `level-name` / `gamemode=creative` / `online-mode=false`）→ 到 `Done (…)` 后 `stop` → 把 `saves/<名字>/` 复制进各档 `<gameDir>/saves/`（同版本跨加载器互通）；**开作弊** = `level.dat`（gzip NBT）把 `allowCommands` 载荷字节 `0→1`（等长改写；定位按"名字前 3 字节是 tag 类型、前 2 字节是长度"）；改完**先确认没有客户端持有该世界**（否则旧客户端退出时会把值写回 0） |
+| 进世界（冻结族） | `fabric 1.20.4 / 1.21.1 / 1.21.3` **不要**让 driver 调 `IntegratedServerLoader.start`（会把 Render thread 冻在等服务器载入的 `Thread.sleep`，jstack 实证）⇒ vanilla quick play（`--quickPlaySingleplayer "<存档名>"`）+ `enterWorld` 留空；`1.21.11` 线可用 `enterWorld` |
+| 资源卡住 | 首跑 `:downloadAssets` 失败/长时间无输出：ForgeGradle 与 Loom 的 assets 缓存**可互借**；缺件按官方 manifest → `assetIndex.id` → `indexes/<id>.json` 定位对象 → 比大小补件；坏件（截断）用真实例 `assets/objects/xx/<hash>`（内容寻址、同路径）覆盖 |
+| 首跑死在 mixin prepare | `fabric 1.20.1 / 1.20.4 / 1.21.1` 的老 clone：scaffold 的 `filesMatching` 补 `examplemod.mixins.json`（已在库修） |
+| 关客户端 | 精确杀真身 JVM（命令行含 `-Dfabric.dli.config` 的那个 `java`）；**别只杀 `gradlew` wrapper** —— 残留客户端会占存档 `session.lock`，下一轮进世界报"另一个程序已锁定文件的一部分" |
+| 独立实例 | 每次运行用独立 runId / 独立实例（共用 runDir 会静默互相覆盖截图） |
+| 证据判读 | `inspect_playtest_evidence`（三态；**缺件不得读成"没有失败"**）；`rounds.jsonl` **每行一条合法 JSON**（条目 `{intent,params,ok,postcondition|failure,detail}`）；截图看新鲜度 `ageMs`（负值属时钟抖动）；`qa.log` 必须是 `.log`（判读器按"目录内任意 `.log` 尾部"抽 `[QA]` 段） |
+| 撤除 | 删驱动文件 + `register()` 调用行，证据只留授权根；`git status` 自检零命中 —— **绝不提交** |
+
+> 三条路线的**详细规程、坑位编号与每次真机读数**：`community_knowledge/authored/ingame-playtest-automation.md`；历史台账：`mcp-server/CHANGELOG.md` 各批。
+
+
 ## 多 IDE 支持
 
 以各平台版本目录下的 `.cursor/` 为源，同步到其他 IDE（**各版本均应具备完整 8 IDE 目录**）：

@@ -141,7 +141,7 @@ npx @modelcontextprotocol/inspector node dist/index.js
 |------|------|
 | API / 映射 / 状态 | `query_api`、`get_method_params`、`convert_mapping`、`lookup_obfuscated`、`get_server_status`、`get_version_info` |
 | 工程 | `diagnose_gradle`、`generate_datagen`、`crash_analyze`、`validate_project`、`check_publish_ready`、`inspect_runtime` |
-| 游玩自测 | `generate_playtest_driver`（默认 `external_bridge` 骨架）、`inspect_playtest_evidence`（三态证据）、`playtest_bridge`（`127.0.0.1:38081`，`status`/`execute`/`await`，超时映射 `PLAYTEST_TIMEOUT`） |
+| 游玩自测 | `generate_playtest_driver`（三种 `driverMode`；默认 `external_bridge` 骨架）、`inspect_playtest_evidence`（三态证据）、`playtest_bridge`（`127.0.0.1:38081`，`status`/`execute`/`await`，超时映射 `PLAYTEST_TIMEOUT`）、`playtest_intent`（意图邮箱 `read`/`write`；写侧六段校验与 `nextSteps` 回灌） |
 | Forge 文档 | `list_forge_versions`、`search_forge_docs`、`get_forge_doc_*` |
 | Fabric 文档 | `list_fabric_versions`、`search_fabric_docs`、`get_fabric_doc_*` |
 | NeoForge 文档 | `list_neoforge_versions`、`search_neoforge_docs`、`get_neoforge_doc_*`（默认 **26.1**；请求 26.2 可 fallback 到 26.1，不克隆假树；`1.20.1` 可回退 Forge） |
@@ -160,6 +160,15 @@ npx @modelcontextprotocol/inspector node dist/index.js
 | 自我更新 | `mc_skill_update` |
 
 补充文档：`docs/vanilla-registries.md`、`docs/registry-data-source.md`、`docs/prompts-client-compat.md`、`docs/mc-skill-update.md`、`docs/query-api-classname-case.md`（`query_api` suggestions 大小写还原的维护注意）。
+
+### 游玩自测：意图会话（`playtest_intent`）
+
+`driverMode=in_jvm_player_agent` 的 LLM 侧接线：driver 停在 `waitintent` 步守候 `<evidenceDir>/intent.json`，agent 用 `playtest_intent` 逐条下意图并读观测面。**逐步教程见仓库根 `README.md`「后半 loop 教程」；意图表单一真源见 `community_knowledge/authored/ingame-playtest-automation.md`「意图空间」。**
+
+- `action=read` → 观测面：`state.json` 的 `intentState` / `intents[]` / `lastIntent` / `scan.nearest` / `goto.arrived`，外加 `menu`（`playtest/intent-menu.json`）、`mailbox` 状态与 **`nextSteps`**（上一条失败 = 该意图菜单的 fallback）。
+- `action=write` → 写 `<evidenceDir>/intent.json`（扁平 `{"intent":"walk_to","x":10,"z":-20}`）；写前六段校验（confirmed → 禁列 → 菜单 → 参数白名单 → 必填 → 邮箱占用 `MAILBOX_BUSY`/`overwrite`），非法不进执行器。
+- 失败语义：邮箱形态失败 = 记 `intents[]`（`ok:false` + `failure` 字段）并**继续守候**（不自动重试，按 `nextSteps` 换意图）；协议违规判红停轮；脚本形态（plan 里 `intent` 步骤）失败判红停轮。
+- 真执行器只覆盖已验证档（`fabric`/`quilt` `1.21.11`）；其余档只发 `playtest/intent-menu.json` 契约 + 结构壳。
 
 ### 社区知识与库模组（与官方文档分离）
 

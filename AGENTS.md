@@ -47,7 +47,7 @@
 
 ### 游玩自测作业规则（长驻会话 + 剧本热载；2026-09-29 起）
 
-适用范围：`mc-ingame-playtest` 工作流的**执行面**（桥路线与无桥 driver 路线都适用）。
+适用范围：`mc-ingame-playtest` 工作流的**执行面**（桥路线 / 无桥剧本 driver / 意图会话三条都适用；逐步教程见仓库根 `README.md`「后半 loop 教程」）。
 
 1. **常驻会话，不许"改一次动作就重启"**：无桥 driver（`generate_playtest_driver` 的 `driverMode=temporary_client_tick_driver`）是**长驻解释器**——进世界后守候 `<evidenceDir>/plan.txt`，**文件一变就在同一游戏进程内开新一轮**（日志 `[QA] ROUND n START`，历史记 `rounds.jsonl`）。
    - **只有两类改动允许重启游戏**：① driver 生成物 / 被测 mod 的 **Java 源码**变了（JVM 不能热换类）；② 会话崩了，或世界被 `session.lock` 占住。

@@ -140,9 +140,9 @@ NeoForge 1.20.1 无官方 MDK pin（原返回 `MDK_NOT_PINNED`）⇒ 按**兼容
 3. **QSL 没有 1.21.11 版本**：`https://maven.quiltmc.org/repository/release/org/quiltmc/qsl/maven-metadata.xml` 的 `<release>` / `<latest>` 至今 = **`10.0.0-alpha.5+1.21.1`**（匹配 1.21.11 的版本 **0 个**）⇒ 别在 1.21.11 档写"QSL 按模块引入"的教程。
 4. **quilt-loader 0.31.0-beta.4 已删 `org.quiltmc.loader.api.entrypoint.ModInitializer`**：该 jar 的 `org/quiltmc/loader/api/entrypoint/` 只剩 `EntrypointContainer` / `EntrypointException` / `EntrypointUtil` / `GameEntrypoint` / `PreLaunchEntrypoint`；`net.fabricmc.api.ModInitializer`（`void onInitialize()`，标 `@Deprecated`，注释写着"Please migrate to using QSL entrypoints, or use your own mixins"）在。⇒ 本仓 quilt 脚手架那两行（`import org.quiltmc.loader.api.entrypoint.ModInitializer` ＋ `onInitialize(ModContainer)`）**编译不过**（实测 `找不到符号: 类 ModInitializer`）。**本轮通关写法**：工程改用 `fabric.mod.json` 的 `entrypoints.main` / `entrypoints.client` ＋ `net.fabricmc.api.*`（quilt-loader 的 Fabric 兼容层负责派发），并加 **dev-only** `net.fabricmc.fabric-api:fabric-api:0.141.6+1.21.11`（driver 的 tick/chat 钩子要用它）；测完按 `REVERT.md` 一并撤除。
 
-## 最小复现路径（两档，2026-09-30 本机实测走通；命令按"干净 clone"写，不含任何本机私有路径）
+## 最小复现路径（三路线：A/B/C 三档 + D 意图会话，2026-09-30～10-01 本机实测走通；命令按"干净 clone"写，不含任何本机私有路径）
 
-> 目标：**从零把一个档跑到"AI 在游戏里自己玩 + 有断言 + 有截图 + 有证据"**。两档各 ~7 步；先跑 A（1.20.1，最快），再跑 B（1.21.1，要拉资源）。
+> 目标：**从零把一个档跑到"AI 在游戏里自己玩 + 有断言 + 有截图 + 有证据"**。A/B/C 各 ~7 步；先跑 A（1.20.1，最快），再跑 B（1.21.1，要拉资源）；**D 是意图会话**（LLM 实时下意图，前置同 C 的已验证档，2026-10-01 已跑通）——逐步教程的"人话版"见仓库根 `README.md`「后半 loop 教程」。
 > 实现侧的改动清单另见下文「最小补法」一节；本节的每个坑都对应上文坑位编号。
 
 ### 共同前置（两档都要）
@@ -173,6 +173,15 @@ NeoForge 1.20.1 无官方 MDK pin（原返回 `MDK_NOT_PINNED`）⇒ 按**兼容
 1. 装桥（`BlackBoxPro-fabric-1.21.1-2.2.4.jar`，sha256 `E4CBA8F5…3827`）+ FLK `1.14.1`；起客户端（`runClient`）；
 2. `playtest_bridge status` 确认 `platform=fabric`、`ready`、`actions`（该档实测 **114**）；用 `execute create_world`（或 `join_world`）把客户端送进世界 —— 建世界要几十秒，**响应超时 ≠ 失败**（实测 `BRIDGE_UNREACHABLE` 之后世界里其实已经建好了）；
 3. driver 的"需要世界"步骤会自动等世界 ⇒ 之后按 A 的第 7 步跑（实测读数：`assert moved PASS delta=27.13` → `goto unstick` 自救一次 → `arrived dist=23.57` → `scan 9 村民 / 44 方块` → `assert scan_blocks PASS` → 两截图 → `[QA] DONE`）。
+
+### D. in_jvm 意图会话（LLM 实时下意图；2026-10-01 `quilt 1.21.11` 四会话已跑通）
+1. **工程/钉值/失焦暂停**：同 A-1～A-4（1.21.11 线用 JDK 21）；进世界按坑位 25/26 的配方 —— 冻结族（`fabric 1.20.4 / 1.21.1 / 1.21.3`）用 vanilla quick play 且 `enterWorld` 留空，1.21.11 线可直接 `enterWorld:"<存档名>"`。
+2. **生成驱动**：`generate_playtest_driver{driverMode:"in_jvm_player_agent", platform:"quilt", version:"1.21.11", capabilityProfile:"operator", evidenceDir:"<授权根内绝对路径>", budgetTicks:36000}` ⇒ 与 A 相同的五件产物 ＋ **`playtest/intent-menu.json`**（菜单契约）；默认剧本 = `mark in_jvm:intent-session` ＋ `waitintent max=6000`（守候环）。**非已验证档只出菜单契约 + 结构壳**（不假装能跑）。
+3. **装 + 跑**：同 A-5；日志里程碑 `[QA] driver registered` → `[QA] client ready（尚未进世界）—— 剧本开跑` → `[QA] ROUND 1 START（steps=2）`；进世界后第一条 `waitintent` tick 补种 `state.json`（观测面）。
+4. **会话循环**（一条意图一轮）：`playtest_intent action=read`（观测面 + `nextSteps`）→ `action=write`（扁平 `{"intent":…, 参数…}`；写侧六段校验，非法在写侧拒）→ driver 消费（`intent.json` → `intent.done.json`）→ 展开原语子计划 → 判唯一一条类型化后置条件 → `intents[]` + `state.json` 刷新 → 回守候；**失败不得自动重试**，按 `nextSteps` 换意图；收尾 `{"intent":"stop"}`（不关游戏）。
+5. **验收**：`exit-code=0`；`rounds.jsonl` **每行一条合法 JSON**、`intents[]` 条目形状 `{intent,params,ok,postcondition|failure,detail}`（`ok:true` 只带 `postcondition`、失败带 `failure`）；截图判据带新鲜度 `ageMs`；`inspect_playtest_evidence` 三态 `present`。
+6. **本路线专属坑**：邮箱**单槽**（未消费时再写被拒 `MAILBOX_BUSY`，除非 `overwrite=true`）；单次守候 5 min（`waitintent max=6000`）、整轮默认 30 min（`budgetTicks=36000`）；`goto` 无寻路（直线 + `fly` + 巡航 140/防卡；复杂地形超时 ⇒ 换意图）；`structure` 形态需开作弊（`allowCommands=1`）；`block` 形态垂直薄层 `-4..+8`（先落到目标高度附近）；`entity` 只覆盖追踪 ≈48 格；村内扫不到村民先怀疑废弃村；`x=abc` 这类参数判红 `param_not_number`（不静默）。
+7. **读数口径**：四会话真机读数见上文「意图空间 · 执行器落地面」（换意图链 / `entity:villager dist=0.62` / `block:hay_block onGround=true` / `ageMs` / `walk_to{x:abc}` 负例）；逐步教程见仓库根 `README.md`「后半 loop 教程」。
 
 ### 五个"一定会撞"的坑 → 处置（↔ 坑位编号）
 | 现象 | 处置 | 坑位 |
