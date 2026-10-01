@@ -128,6 +128,12 @@ export const SCRIPT_WRITE_GUARD_NON_WRITERS = new Map([
   // fetch-bedrock-script-api.mjs：落笔目标是 gitignore 的 mcp-server/scripts/_temp/（.gitignore:37），
   // 与 snapshot-sha256 的 agent-tools/ 同类（「豁免允许 gitignore 输出目录而非仅 temp」已登记在 S4 销账台账）。
   ["mcp-server/scripts/fetch-bedrock-script-api.mjs", /const TEMP = join\(REPO_ROOT, "mcp-server", "scripts", "_temp"\)/],
+  // 任务 B ⑷（2026-10-01）：playtest_intent 门（in_jvm_player_agent 意图执行器执法面）。
+  // 门模式把全部夹具（假工程/菜单/邮箱/证据）铺在 OS tmpdir 的 "mc-skill-intent-gate-" 一次性根里，
+  // finally 里连根 rmSync 收掉；--selftest 另用 "mc-skill-intent-selftest-" 与 "mc-skill-intent-ev-"
+  // 两个前缀，同样只在 tmpdir；对仓库全程只读（生成器与 playtest_intent 均 in-process 真调）。
+  // 依据正则咬住这三个 mkdtemp 前缀 —— 夹具落点一旦改到仓库内，本豁免即失效（重签或改道 write-guard）。
+  ["mcp-server/scripts/assert-playtest-intent-gate.mjs", /mkdtempSync\(join\(tmpdir\(\), "mc-skill-intent-/],
 ]);
 /**
  * 会写仓库但本轮不收口的债务（并发代理 owns / 自带显式 --write 闸门未改道 / 新文件只靠 --force）。

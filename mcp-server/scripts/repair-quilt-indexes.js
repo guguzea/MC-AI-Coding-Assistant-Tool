@@ -8,6 +8,9 @@
  * 真缺口 = 6 档 qsl-verified 条目全缺，同档其它 17 条目都有）。`--audit` 现在同时判
  * 「processed↔index 双向差」与「sha256 缺口」，任一非空即 rc=1。
  * fetchedAt **不修**：qsl-verified 无「> 抓取时间」行，其 fetchedAt 语义 = 派生件建立时间（历史真值）。
+ * 2026-10-01 扩围：`repairVersion` / `--audit` 同时判**派生视图 l1/l2**（条目缺失或 sha256 与 l0 不一致）——
+ * 实测形状：`scripts/index-qsl-verified.mjs` 曾只刷 l0 ⇒ l0 正确而 l1/l2 陈旧，旧版工具因 l0 无缺口而
+ * 跳过重写、修不到它（`assert-qsl-verified-sync` 判据④ 会红）。
  *
  *   node scripts/repair-quilt-indexes.js [--version=1.21.11|all] [--dry-run]
  *   node scripts/repair-quilt-indexes.js --audit
@@ -190,9 +193,32 @@ function repairVersion(ver, dry) {
     }
   }
 
-  if (added.length === 0 && backfilled.length === 0) {
-    console.log(`${ver}: OK (no missing index entries, sha256 全对)`);
-    return { ver, added, backfilled, ok: true };
+  // 派生视图一致性（2026-10-01 扩围）：l1/l2 条目缺失或 sha256 与 l0 不一致 ⇒ 同样要求重写三件。
+  const derived = [];
+  for (const f of ["index-l1.json", "index-l2.json"]) {
+    const p = join(outDir, f);
+    let arr = null;
+    try {
+      arr = JSON.parse(readFileSync(p, "utf8"));
+    } catch {
+      derived.push(`${f}(不可读)`);
+      continue;
+    }
+    if (!Array.isArray(arr)) {
+      derived.push(`${f}(非数组)`);
+      continue;
+    }
+    for (const e of index) {
+      const stem = String(e.id).split("/").pop();
+      const d = arr.find((x) => x.id === e.id);
+      if (!d) derived.push(`${f}:${stem}(缺)`);
+      else if (e.sha256 && d.sha256 !== e.sha256) derived.push(`${f}:${stem}(sha)`);
+    }
+  }
+
+  if (added.length === 0 && backfilled.length === 0 && derived.length === 0) {
+    console.log(`${ver}: OK (no missing index entries, sha256 全对，派生件一致)`);
+    return { ver, added, backfilled, derived, ok: true };
   }
 
   if (added.length > 0) {
@@ -207,19 +233,19 @@ function repairVersion(ver, dry) {
   if (!dry) {
     writeIndexes(outDir, index);
     console.log(
-      `${ver}: repaired index (+${added.join(", ") || "无新增"}；sha 补 ${backfilled.length} 条: ${backfilled.join(", ") || "-"}) → ${index.length} pages`,
+      `${ver}: repaired index (+${added.join(", ") || "无新增"}；sha 补 ${backfilled.length} 条: ${backfilled.join(", ") || "-"}；派生件补 ${derived.length} 条: ${derived.join(", ") || "-"}) → ${index.length} pages`,
     );
   } else {
-    console.log(`${ver}: would add [${added.join(", ")}]；sha 补 ${backfilled.length} 条: ${backfilled.join(", ")}`);
+    console.log(`${ver}: would add [${added.join(", ")}]；sha 补 ${backfilled.length} 条: ${backfilled.join(", ")}；派生件补 ${derived.length} 条: ${derived.join(", ")}`);
   }
-  return { ver, added, backfilled, ok: true };
+  return { ver, added, backfilled, derived, ok: true };
 }
 
 function auditVersion(ver) {
   const outDir = join(DATA, `quilt_${ver}`, "quilt-docs", ver);
   const processedDir = join(outDir, "processed");
   const l0Path = join(outDir, "index-l0.json");
-  if (!existsSync(processedDir) || !existsSync(l0Path)) return { ver, missing: [], orphan: [], shaBad: [] };
+  if (!existsSync(processedDir) || !existsSync(l0Path)) return { ver, missing: [], orphan: [], shaBad: [], derivedBad: [] };
   const index = JSON.parse(readFileSync(l0Path, "utf8"));
   const indexed = new Set(index.map((e) => e.id.split("/").pop()));
   const stems = readdirSync(processedDir)
@@ -233,11 +259,34 @@ function auditVersion(ver) {
     if (!existsSync(p)) continue;
     if (e.sha256 !== sha(readFileSync(p, "utf8"))) shaBad.push(stem);
   }
+  // 派生视图 l1/l2 与 l0 不一致（2026-10-01 扩围；同 repairVersion 的判法）
+  const derivedBad = [];
+  for (const f of ["index-l1.json", "index-l2.json"]) {
+    const p = join(outDir, f);
+    let arr = null;
+    try {
+      arr = JSON.parse(readFileSync(p, "utf8"));
+    } catch {
+      derivedBad.push(`${f}(不可读)`);
+      continue;
+    }
+    if (!Array.isArray(arr)) {
+      derivedBad.push(`${f}(非数组)`);
+      continue;
+    }
+    for (const e of index) {
+      const stem = String(e.id).split("/").pop();
+      const d = arr.find((x) => x.id === e.id);
+      if (!d) derivedBad.push(`${f}:${stem}(缺)`);
+      else if (e.sha256 && d.sha256 !== e.sha256) derivedBad.push(`${f}:${stem}(sha)`);
+    }
+  }
   return {
     ver,
     missing: stems.filter((s) => !indexed.has(s)),
     orphan: [...indexed].filter((s) => !stems.includes(s)),
     shaBad,
+    derivedBad,
   };
 }
 
@@ -254,13 +303,13 @@ async function main() {
     let bad = false;
     for (const ver of versions) {
       const r = auditVersion(ver);
-      if (r.missing.length || r.orphan.length || r.shaBad.length) {
+      if (r.missing.length || r.orphan.length || r.shaBad.length || r.derivedBad.length) {
         bad = true;
         console.log(
-          `${ver}: missing-from-l0=[${r.missing.join(", ")}] l0-without-processed=[${r.orphan.join(", ")}] sha256-缺口=[${r.shaBad.join(", ")}]`,
+          `${ver}: missing-from-l0=[${r.missing.join(", ")}] l0-without-processed=[${r.orphan.join(", ")}] sha256-缺口=[${r.shaBad.join(", ")}] 派生件不平=[${r.derivedBad.join(", ")}]`,
         );
       } else {
-        console.log(`${ver}: OK (processed↔index 双向齐、sha256 全对)`);
+        console.log(`${ver}: OK (processed↔index 双向齐、sha256 全对、派生件一致)`);
       }
     }
     process.exit(bad ? 1 : 0);

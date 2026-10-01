@@ -2362,6 +2362,10 @@ const REAL_RUN_GATES = [
     // `isError: true` 位点的**行号锚**换成「needle + 处数」，行号只报告不判红 —— 此前该行号漂移 13 跳
     // （424→…→605）全靠人手改注释，且**无门提醒**；现在红只留给"处数≠1 / 语义漂走"这两件真事。
     "./scripts/assert-iserror-anchor.mjs",
+    // 任务 B ⑷（2026-10-01 用户裁定 4B）：in_jvm_player_agent 意图执行器 + playtest_intent 邮箱的执法门。
+    // 默认只跑三族离线判据（菜单契约 ×2 profile、执行器 Java 形状、工具 14 例矩阵）；真机 E2E 是 opt-in
+    // （MC_SKILL_PLAYTEST_INTENT_E2E=1 + …_EVIDENCE=<abs>），不设即跳过且不静默通过。
+    "./scripts/assert-playtest-intent-gate.mjs",
   ];
 
 const SELFTEST_GATES = [
@@ -2464,6 +2468,11 @@ const SELFTEST_GATES = [
     // 才响 ⇒ 在默认链上等于装饰。臂数一律不在这里抄（分母唯一真值源 = 该门 `--selftest` 末行，属 `L76–L81`
     // 那条「披露位 ≠ 实测量」家族，`assert-test-harness` R-5 现在会抓这一形状）。
     "./scripts/assert-bedrock-script-api-pin.mjs",
+    // 任务 B ⑷（2026-10-01）：playtest_intent 门的判据活性自证（21 记投毒 + 4 正对照，例数由该门自印）：
+    // 菜单禁列被掏空 / strict 混入 tp / 预算负数 / 真源漂移 / 执行器摘 FORBIDDEN、摘 fail-closed、摘预算判红、
+    // 摘 waitintent 步、mine 长出成功分支 / 假实现全 ok 必被矩阵咬住 / 证据 11 项 invariant 逐条投毒 ——
+    // 各必须当场红，另四条正对照须绿（分母唯一真值源 = 该门 `--selftest` 末行）。
+    "./scripts/assert-playtest-intent-gate.mjs",
   ];
 
 /**

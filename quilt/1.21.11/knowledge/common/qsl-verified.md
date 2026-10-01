@@ -8,7 +8,7 @@
 
 | API | 说明 |
 |-----|------|
-| `org.quiltmc.loader.api.entrypoint.ModInitializer#onInitialize(ModContainer)` | `quilt.mod.json` → `entrypoints.init`。禁止 Fabric 无参 `onInitialize()` 冒充 QSL |
+| `net.fabricmc.api.ModInitializer#onInitialize()` | `quilt.mod.json` → `entrypoints.main`（quilt-loader 自带 Fabric 兼容接口，`@Deprecated`）。⚠️ 旧行的 `org.quiltmc.loader.api.entrypoint.ModInitializer` 在 quilt-loader 0.31.0-beta.4 **已删除**（javap 实测 2026-10-01）；QSL 替代 = `org.quiltmc.qsl.base.api.entrypoint.ModInitializer#onInitialize(ModContainer)`（构件 `org.quiltmc.qsl.core:qsl_base`，javap 实测；本档 MC 版本 maven 上无构件（+1.21.11 后缀 0 命中，2026-10-01 实测）） |
 
 ## 注册
 

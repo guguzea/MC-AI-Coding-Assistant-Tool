@@ -19,7 +19,7 @@ description: 01 — Quilt 注册（QSL ≠ FAPI Registry）
 
 ```
 Decision: 注册方式
-→ 简单 Item/Block/BlockEntity → Vanilla Registry.register（在 org.quiltmc.loader.api.entrypoint.ModInitializer#onInitialize(ModContainer) 中）
+→ 简单 Item/Block/BlockEntity → Vanilla Registry.register（在 net.fabricmc.api.ModInitializer#onInitialize() 中——quilt.mod.json entrypoints.main；QSL 入口写法见 00-project-setup）
 → 事件/生命周期 → 同版 Fabric API（fabric/1.21.1 overlay 的 05-events.mdc）
 → QSL 专属 API → 本版本不存在可用构件：拒绝生成，向用户说明本版本无可用构件（maven 实证）
 → 禁止：把 Fabric Registry 教程改名交差

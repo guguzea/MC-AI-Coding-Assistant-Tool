@@ -16,7 +16,7 @@ description: 05 — Quilt 事件差异
 
 ## QSL 符号考据表（⚠️ 源码树考据，非可编译 API，禁止生成）
 
-入口：`org.quiltmc.loader.api.entrypoint.ModInitializer#onInitialize(ModContainer)`（`quilt.mod.json` → `entrypoints.init`）。禁止用 Fabric 无参 `onInitialize()` 记忆冒充。
+入口：`quilt.mod.json` → `entrypoints.main`，实现 `net.fabricmc.api.ModInitializer#onInitialize()`（quilt-loader 自带兼容接口）。⚠️ Quilt 原生 `org.quiltmc.loader.api.entrypoint.ModInitializer` 在 quilt-loader 0.31 已删除（javap 实测 2026-10-01）；QSL 替代 `org.quiltmc.qsl.base.api.entrypoint.ModInitializer#onInitialize(ModContainer)` 需 `org.quiltmc.qsl.core:qsl_base` 构件（本档只有 alpha，未采用）。
 
 简单 Item/Block 用 Vanilla `Registry.register(Registries.*, id, value)`（不是 FAPI 专属）；事件用同版 Fabric API。
 

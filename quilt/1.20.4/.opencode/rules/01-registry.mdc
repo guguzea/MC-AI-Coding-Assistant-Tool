@@ -15,7 +15,7 @@
 
 ```
 Decision: 注册方式
-→ 简单 Item/Block/BlockEntity → Vanilla Registry.register（在 org.quiltmc.loader.api.entrypoint.ModInitializer#onInitialize(ModContainer) 中）
+→ 简单 Item/Block/BlockEntity → Vanilla Registry.register（在 net.fabricmc.api.ModInitializer#onInitialize() 中——quilt.mod.json entrypoints.main；QSL 入口写法见 00-project-setup）
 → 需要注册表同步/条目附件/QSL 专属 → 只使用 org.quiltmc.qsl.* 已核实 API；不清楚就拒绝臆造
 → 禁止：把 Fabric Registry 教程改名交差
 ```

@@ -5,14 +5,17 @@
   "minecraftVersion": "1.19.4",
   "overlay": "fabric/1.19.4",
   "scaffold": {
-    "mode": "reference",
-    "buildVerified": false,
+    "mode": "gradle",
+    "gradle": "9.5.1",
+    "buildVerified": true,
     "gaps": [
-      "无 wrapper 三件套：scaffold/gradle/wrapper/gradle-wrapper.jar、gradlew、gradlew.bat 实测均不在盘上 ⇒ 本档 scaffold 按参照件读，不能直接 ./gradlew build。要构建须自行按 build.gradle 的 loom 版本挑兼容的 Gradle 发行版跑一次 gradle wrapper（本仓不为该档钉 Gradle 版：gradle.properties 内无任何 Gradle 版本键，空洞登记见 mcp-server/data/wrapper-jars.json 的 gaps.wrapperVersionUndeclared）",
-      "gradle.properties 仅含 org.gradle.jvmargs / minecraft_version，没有 distributionUrl 可依据",
       "plugins 钉 id 'org.quiltmc.loom' version '1.15.1'（钉值出处 = build.gradle :2-3 注释：maven.quiltmc.org 的 org/quiltmc/loom/maven-metadata 最新 release，核对日期 2026-09-02）",
       "java toolchain = JavaLanguageVersion.of(17)（见 build.gradle）",
-      "本档 scaffold 无 README_AI.md（fabric 侧 4 档有）⇒ 构建步骤只在本声明里，未写进该档 AGENTS.md（实测 wrapper / gradlew 二词各 0 处）"
-    ]
+      "本档 scaffold 无 README_AI.md（fabric 侧 4 档有）⇒ 构建步骤只在 pack.meta.json 本声明里，没写进该档 AGENTS.md"
+    ],
+    "provenance": {
+      "wrapper": "gradle-wrapper-task",
+      "build": "2026-10-01 零改动副本（Copy-Item quilt/1.19.4/scaffold → D:/mc-skill-temp/qs_build/1.19.4，9 文件逐个 sha256 与仓内一致 0 差异）gradlew.bat build --no-daemon -Porg.gradle.java.installations.paths=G:/JAVA17/jdk-17.0.12_windows-x64_bin/jdk-17.0.12 → BUILD SUCCESSFUL；构建 JVM = JDK 21（G:/graalvm-jdk-21_windows-x64_bin/graalvm-jdk-21.0.12+7.1，quilt-loom 1.15.1 插件元数据要求构建 JVM ≥21）+ Gradle 9.5.1 wrapper + quilt-loom 1.15.1 + MC 1.19.4；产物 build/libs/examplemod-1.0.0.jar（1634 B，zip 内可扫到 quilt.mod.json，entrypoints.main=com.example.examplemod.ExampleMod）；日志 D:/mc-skill-temp/qs_build/build3-1.19.4.log。wrapper 四件套 2026-10-01 按 fabric/1.21.11 同字节补齐（此前无 wrapper 属空洞登记，mcp-server/data/wrapper-jars.json 的 usedBy/gaps 已同步）。边界：只覆盖 :build 任务链（含 remapJar），未跑 runClient / runServer / runData，也没有真机启动证据。"
+    }
   }
 }

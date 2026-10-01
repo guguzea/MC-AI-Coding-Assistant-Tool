@@ -31,6 +31,39 @@ const VERSIONS = [
   "1.21.11",
 ];
 
+/**
+ * l1/l2 是 l0 的派生视图：条目的 sha256 必须跟 l0 同步。
+ * 2026-10-01 实测缺陷：本脚本原来只刷 index-l0 ⇒ processed 改了、l0 刷了，l1/l2 还停旧值
+ * ⇒ `assert-qsl-verified-sync` 判据④ 红在 l1/l2（该门正是为此立的）。写回格式与盘上一致（无尾随换行）。
+ */
+function syncDerivedShas(verDir, id, next, write) {
+  const notes = [];
+  for (const f of ["index-l1.json", "index-l2.json"]) {
+    const p = join(verDir, f);
+    if (!existsSync(p)) {
+      notes.push(`${f} 缺`);
+      continue;
+    }
+    let arr;
+    try {
+      arr = JSON.parse(readFileSync(p, "utf8"));
+    } catch {
+      notes.push(`${f} 解析失败`);
+      continue;
+    }
+    const e = Array.isArray(arr) ? arr.find((x) => x.id === id) : undefined;
+    if (!e) {
+      notes.push(`${f} 无该条目（跑 repair-quilt-indexes.js）`);
+      continue;
+    }
+    if (e.sha256 === next) continue;
+    e.sha256 = next;
+    if (write) emit(p, JSON.stringify(arr, null, 2));
+    notes.push(`${f} sha ${write ? "已刷" : "待刷"}`);
+  }
+  return notes.join("，");
+}
+
 for (const ver of VERSIONS) {
   const src = join(ROOT, "quilt", ver, "knowledge", "common", "qsl-verified.md");
   const verDir = join(ROOT, "data", `quilt_${ver}`, "quilt-docs", ver);
@@ -63,8 +96,11 @@ for (const ver of VERSIONS) {
     const changed = existing.sha256 !== next;
     if (changed) existing.sha256 = next;
     const rewritten = changed ? emit(indexPath, JSON.stringify(index, null, 2) + "\n") : false;
+    // 无条件对账派生视图（幂等）：l0 已正确而 l1/l2 陈旧时上面 changed=false 不会再写 l0，
+    // 但 l1/l2 的漂移必须在这里补掉 —— 否则判据④仍红（2026-10-01 实测形状）。
+    const derived = syncDerivedShas(verDir, id, next, wantWrite());
     console.log(
-      `${ver}: ${copied ? "processed 已写" : "processed 待写"}，L0 已有 ${id}（sha ${changed ? "已刷新" : "未变"}${rewritten ? "；index 已写" : ""}）`,
+      `${ver}: ${copied ? "processed 已写" : "processed 待写"}，L0 已有 ${id}（sha ${changed ? "已刷新" : "未变"}${rewritten ? "；index 已写" : ""}${derived ? "；" + derived : ""}）`,
     );
     continue;
   }
@@ -81,5 +117,6 @@ for (const ver of VERSIONS) {
     sha256: sha(srcText),
   });
   const written = emit(indexPath, JSON.stringify(index, null, 2) + "\n");
-  console.log(`${ver}: ${written ? "已写入" : "预览"} ${id}（${index.length} 页）`);
+  const derivedNew = syncDerivedShas(verDir, id, sha(srcText), wantWrite());
+  console.log(`${ver}: ${written ? "已写入" : "预览"} ${id}（${index.length} 页）${derivedNew ? "；" + derivedNew : ""}`);
 }

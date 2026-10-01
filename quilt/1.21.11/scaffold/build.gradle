@@ -1,6 +1,8 @@
 plugins {
     // loom 版本取 maven.quiltmc.org/repository/release/org/quiltmc/loom/maven-metadata.xml
     //   最新 release = 1.15.1（lastUpdated 20260123082830，核对日期 2026-09-02）
+    // ⚠️ 构建 JVM（跑 Gradle 的那个）必须是 **JDK 21+**：loom 1.15.1 的插件元数据声明 "requires at least JVM runtime
+    //   version 21"（实测 2026-10-01）。本档 toolchain 也是 21 ⇒ 直接 JAVA_HOME=<jdk21> 即可，无需额外 toolchain 指路。
     id 'org.quiltmc.loom' version '1.15.1'
     id 'maven-publish'
 }
@@ -15,5 +17,10 @@ dependencies {
     // quilt-loader 取 maven.quiltmc.org/repository/release/org/quiltmc/quilt-loader/maven-metadata.xml
     //   最新 = 0.31.0-beta.4（lastUpdated 20260904212919，核对日期 2026-09-19）
     modImplementation "org.quiltmc:quilt-loader:0.31.0-beta.4"
-    // QSL：按模块引入 org.quiltmc.qsl.*，不要把 fabric-api 整包当 QSL
+    // 入口点（quilt.mod.json 的 entrypoints.main）用 quilt-loader 自带的 net.fabricmc.api.ModInitializer
+    //   （@Deprecated 兼容接口，本进程内自带，无需额外依赖）。
+    // ⚠️ quilt-loader 0.31 起 Quilt 原生 org.quiltmc.loader.api.entrypoint.ModInitializer 已删除（javap 实测 2026-10-01）；
+    //   官方替代是 QSL 的 org.quiltmc.qsl.base.api.entrypoint.ModInitializer#onInitialize(ModContainer)，构件
+    //   org.quiltmc.qsl.core:qsl_base（javap 实测签名）；QSL 构件只出到 MC 1.21.1，故本档默认不引 QSL 依赖。
+    //   注册仍用 Vanilla Registry.register；不要把 fabric-api 整包当 QSL。
 }

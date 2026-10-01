@@ -50,6 +50,7 @@ import { activatePlatformPack } from "../platform-pack/index.js";
 import { checkPublishReady } from "../publish/index.js";
 import { inspectRuntime } from "../runtime-inspect/index.js";
 import { inspectPlaytestEvidence } from "../playtest-evidence/index.js";
+import { playtestIntent } from "../playtest-intent/index.js";
 import { callPlaytestBridge } from "../playtest-bridge/index.js";
 
 // ── Wave 工具 inputSchema（导出供 CLI list-tools / schema 驱动解析复用）────────
@@ -224,6 +225,21 @@ export const playtestBridgeSchema = z.object({
   authorization: z.enum(["sandbox", "dev_instance"]).optional(),
   confirmed: z.boolean().optional().describe("execute/await 必填 true"),
 });
+export const playtestIntentSchema = z.object({
+  action: z.enum(["read", "write"]).describe("read=读观测面（state.json/菜单/邮箱）；write=写意图到 <evidenceDir>/intent.json"),
+  evidenceDir: z.string().describe("证据目录（绝对路径；须在 MC_SKILL_PLAYTEST_ROOT 内）。driver 的 EVIDENCE_DIR 同一路径"),
+  menuPath: z.string().optional().describe("意图菜单路径；缺省按 <evidenceDir>/intent-menu.json → <evidenceDir>/../playtest/intent-menu.json 顺序找"),
+  intent: z.string().optional().describe("write：意图名（必须出现在菜单 intents[] 里；禁列 kill/tnt/fill 直接拒）"),
+  params: z
+    .union([z.record(z.union([z.string(), z.number(), z.boolean()])), z.string()])
+    .optional()
+    .describe("write：意图参数（扁平键值；CLI 可传 JSON 字符串。只许该意图在菜单里声明的参数名，未知键拒写）"),
+  overwrite: z.boolean().optional().describe("write：邮箱里已有未消费的 intent.json 时是否覆盖（默认 false = 拒写）"),
+  confirmed: z.boolean().optional().describe("write 必填 true（显式确认）"),
+  authorization: z.enum(["sandbox", "dev_instance"]).optional(),
+});
+export const PLAYTEST_INTENT_DESCRIPTION =
+  "in_jvm_player_agent 的 LLM 接线面（2026-10-01 裁定 3A：独立工具，不复用桥）：action=read 读 <evidenceDir>/state.json（intentState / intents[] / lastIntent / scan.nearest / goto.arrived）+ 菜单 + 邮箱状态；action=write 把 {intent, ...params} 落到 <evidenceDir>/intent.json（driver 的 waitintent 步消费）。写前校验 fail-closed：意图名在菜单里 / 不在禁列 / 参数 ⊆ 声明 / 必填齐 / 不覆盖未消费件（除非 overwrite=true）。须 MC_SKILL_PLAYTEST_ALLOW=1 + MC_SKILL_PLAYTEST_ROOT（realpath 在根内）；不装桥、不跑游戏。";
 export const GENERATE_PLAYTEST_DRIVER_DESCRIPTION =
   "Generate playtest driver（只吐文本，默认不写盘）。platform 与 version 必填（精确 MC 版本）。driverMode 默认 external_bridge（桥 HTTP 动作序列 + 后置条件 + 证据约定）；temporary_client_tick_driver 在**已 javap 实测签名的档**（fabric/quilt 1.21.11）产出**可编译的真 driver**——**解释器引擎**：动作序列是数据（scenario=smoke|village 或自定义 plan DSL：wait/look/fly/move/cmd/goto/scan/assert/shot/break/gui/mark），换场景只改剧本不改 Java；产物含 driver + plan.json + REVERT.md + README + actions.json；其余档仍为结构壳并点名已核实档；in_jvm_player_agent 全档结构壳（// TODO(未核实)）。不装桥、不跑游戏；无桥路线与坑位见社区短文 authored/ingame-playtest-automation。";
 export const INSPECT_PLAYTEST_EVIDENCE_DESCRIPTION =
@@ -1062,6 +1078,16 @@ export function registerWaveExtensions(server: McpServer): void {
   );
 
   server.registerTool(
+    "playtest_intent",
+    {
+      title: "Playtest intent (read observation / write intent mailbox)",
+      description: PLAYTEST_INTENT_DESCRIPTION,
+      inputSchema: playtestIntentSchema,
+    },
+    async (a): Promise<CallToolResult> => jsonResult(playtestIntent(a)),
+  );
+
+  server.registerTool(
     "playtest_bridge",
     {
       title: "Call BlackBoxPro playtest bridge",
@@ -1134,5 +1160,6 @@ export const waveToolSchemas: Array<{ name: string; description: string; inputSc
   { name: "inspect_runtime", description: "日志型 runtime inspector。优先只读用户确认的 logsDir/crashReportsDir；否则在 projectPath 下有界探测 run/logs、runs/client/logs、build/run/logs。禁止向上走到盘符根、禁止全盘。默认只读文件尾部 N 行并设字节上限。复用 analyze_log / crash_analyze。不做 JDWP attach。", inputSchema: inspectRuntimeSchema },
   { name: "generate_playtest_driver", description: GENERATE_PLAYTEST_DRIVER_DESCRIPTION, inputSchema: generatePlaytestDriverSchema },
   { name: "inspect_playtest_evidence", description: INSPECT_PLAYTEST_EVIDENCE_DESCRIPTION, inputSchema: inspectPlaytestEvidenceSchema },
+  { name: "playtest_intent", description: PLAYTEST_INTENT_DESCRIPTION, inputSchema: playtestIntentSchema },
   { name: "playtest_bridge", description: PLAYTEST_BRIDGE_DESCRIPTION, inputSchema: playtestBridgeSchema },
 ];

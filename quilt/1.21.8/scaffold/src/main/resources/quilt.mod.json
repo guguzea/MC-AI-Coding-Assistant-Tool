@@ -10,7 +10,7 @@
     },
     "intermediate_mappings": "net.fabricmc:intermediary",
     "entrypoints": {
-      "init": ["com.example.examplemod.ExampleMod"]
+      "main": ["com.example.examplemod.ExampleMod"]
     },
     "depends": [
       { "id": "quilt_loader", "versions": "*" },

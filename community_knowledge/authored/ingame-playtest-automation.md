@@ -132,6 +132,14 @@ sourceKind: authored
 ### NeoForge 1.20.1 的 MDK：兼容层替代（用户裁定 2026-09-29）
 NeoForge 1.20.1 无官方 MDK pin（原返回 `MDK_NOT_PINNED`）⇒ 按**兼容层**口径借用 forge 1.20.1 的 MDK：`mcp-server/data/mdk-checksums.json` 的条目 `neoforge-1.20.1-compat-forge`（**`aliasOf=forge-1.20.1-forgegradle`**，`archiveUrl`+`sha256` 与 forge 条目同源同值），`notes` 明写**不冒充** NeoForge 官方 MDK。依据：NeoForge 1.20.1 仍用 `net.minecraftforge` 包名（`net.neoforged` 自 1.20.2 起）⇒ **按 forge 档生成的 driver 源码可直接用于 NeoForge 1.20.1**（同版本 / 同事件总线 / 同映射）。
 
+26. **fabric 1.20.4 / 1.21.1 / 1.21.3：驱动**不要**自己进世界（2026-10-01 jstack 定因；三档同形）** —— 坑位 25 的同一现象，这次有根因与正解：`enterWorld` 会调 `IntegratedServerLoader.start(String, Runnable)`，而它是在 **`END_CLIENT_TICK` 回调里被内联执行**的 ⇒ Render thread 停在 `MinecraftClient.startIntegratedServer` 的 `Thread.sleep`（等整合服务器载入的循环；`Preparing spawn area` 打完 `latest.log` 即静默、心跳停、CPU≈0），**而桥 `/status` 仍答 `ready=true`**（坑位 25 那条误导性同理）。**`client.execute` 委托排队修不了** —— `ThreadExecutor.execute` 从渲染线程是 **inline** 执行（`shouldExecuteAsync()` 为 false ⇒ 直接 `task.run()`），实测排队后停在 `runTask → startIntegratedServer` 同一行。**正解 = vanilla quick play**：工程 `build.gradle` 里 `loom { runs { client { programArgs "--quickPlaySingleplayer", "<存档目录名>" } } }` ＋ **`enterWorld` 留空**，由游戏自己进世界（驱动的"需要世界"步骤会自动等世界）。**实测 17/17**：`fabric 1.20.4`（312,488 B + 525,194 B 两张截图）· `fabric 1.21.3`（268,684 B + 376,074 B）· `quilt 1.21.11`（330,792 B + 405,431 B），三档 `exit-code=0`、`rounds.jsonl {"ok":true,"done":17}`。（生成器对这三档的 `enterWorld` 已带告警。）
+
+### quilt 1.21.11 档的四个硬约束（2026-10-01 实测）
+1. **quilt 脚手架都不带 Gradle wrapper**：10 个 quilt 树实测 **0 个** `gradlew.bat`（fabric 树都带）⇒ 需要时从同代 fabric 脚手架借 `gradlew` / `gradlew.bat` / `gradle/wrapper/`。
+2. **借 wrapper 要挑版本**：`org.quiltmc.loom:1.15.1` 声明 `org.gradle.plugin.api-version=9.2.0` ⇒ Gradle 8.8 / 8.10 直接 `No matching variant of org.quiltmc:loom:1.15.1`；实测 **Gradle 9.5.1** 可用（本机 `.gradle/wrapper/dists/gradle-9.5.1-bin` 已缓存，开箱即用；本机 `gradle-9.2.1-bin` 缓存是 0 MB 半成品，别信它的目录名）。
+3. **QSL 没有 1.21.11 版本**：`https://maven.quiltmc.org/repository/release/org/quiltmc/qsl/maven-metadata.xml` 的 `<release>` / `<latest>` 至今 = **`10.0.0-alpha.5+1.21.1`**（匹配 1.21.11 的版本 **0 个**）⇒ 别在 1.21.11 档写"QSL 按模块引入"的教程。
+4. **quilt-loader 0.31.0-beta.4 已删 `org.quiltmc.loader.api.entrypoint.ModInitializer`**：该 jar 的 `org/quiltmc/loader/api/entrypoint/` 只剩 `EntrypointContainer` / `EntrypointException` / `EntrypointUtil` / `GameEntrypoint` / `PreLaunchEntrypoint`；`net.fabricmc.api.ModInitializer`（`void onInitialize()`，标 `@Deprecated`，注释写着"Please migrate to using QSL entrypoints, or use your own mixins"）在。⇒ 本仓 quilt 脚手架那两行（`import org.quiltmc.loader.api.entrypoint.ModInitializer` ＋ `onInitialize(ModContainer)`）**编译不过**（实测 `找不到符号: 类 ModInitializer`）。**本轮通关写法**：工程改用 `fabric.mod.json` 的 `entrypoints.main` / `entrypoints.client` ＋ `net.fabricmc.api.*`（quilt-loader 的 Fabric 兼容层负责派发），并加 **dev-only** `net.fabricmc.fabric-api:fabric-api:0.141.6+1.21.11`（driver 的 tick/chat 钩子要用它）；测完按 `REVERT.md` 一并撤除。
+
 ## 最小复现路径（两档，2026-09-30 本机实测走通；命令按"干净 clone"写，不含任何本机私有路径）
 
 > 目标：**从零把一个档跑到"AI 在游戏里自己玩 + 有断言 + 有截图 + 有证据"**。两档各 ~7 步；先跑 A（1.20.1，最快），再跑 B（1.21.1，要拉资源）。
@@ -180,6 +188,51 @@ NeoForge 1.20.1 无官方 MDK pin（原返回 `MDK_NOT_PINNED`）⇒ 按**兼容
 - **fabric loader**：本仓各档 `loader_version`（发布下限）与可选 `loader_version_dev`（仅 Loom）——要 FLK 就把 dev 提到地板，别抬发布下限。
 - **FLK 地板**：`1.13.4+kotlin.2.2.0` → `fabricloader >=0.16.9`；`1.14.1+kotlin.2.4.20` → `>=0.19.5`（**全 MC 线只发一个 jar**）。
 - **桥（有桥路线）**：BlackBoxPro `v2.2.4-dev` 有预编译件的组合 = fabric/neoforge **1.21.11 + 1.21.1**、forge **1.12.2**；其余组合走本节的无桥路线。
+
+## 意图空间（任务 B 设计定稿 v2，2026-10-01 用户审改）
+
+> 适用：`generate_playtest_driver` 的 `in_jvm_player_agent` 真件（LLM 只选意图，执行确定）。
+> 粒度守则：**一条意图 = 3–30 秒内可完成、可断言的状态变迁**；失败一律 fail-closed 判红。
+> 预算列为**单意图 tick 上限**（超限判红），全局预算仍由驱动的 `budgetTicks`（tick + 意图数 + 总时长）兜底。
+> 幂等列里的「一次性」= 重试会重复消耗方块/触发副作用 ⇒ 失败后**不得自动重试**，只许换意图。
+
+| 意图 | 参数 | 前置 | 类型化后置条件（只判这一条，fail-closed） | 危险级 | 预算(tick) | 幂等 | 失败 → 建议替代意图 |
+|---|---|---|---|---|---|---|---|
+| `walk_to` | `x,z,tol=3`（默认 3–4，目标里显式给）,`max=1200` | 有世界 + 玩家 | 水平距离 ≤ tol **∧** 移动量 ≥ (起点→目标距离 − tol)（后半条防「本来就在那」假绿） | 低 | 1200 | 可重试 | `find_and_goto{fly=1}` ／ `look_at{target}` 换向后重试 |
+| `look_at` | `{yaw,pitch}` 或 `{target=pos\|block\|entity,tol=2}` | 有玩家；`target` 形态需目标可解析 | `{yaw,pitch}` 形态 = 两轴误差 ≤ 2°（绝对值设置 ⇒ 几乎必成、信息量低）；`{target}` 形态 = 目标可解析 **∧** 朝向到目标的角误差 ≤ tol **∧** 目标在视距内(≤128) | 低 | 60 | 可重试 | `observe{radius}` 确认目标是否存在 |
+| `find_and_goto` | `what=structure\|block\|entity`,`id`,`radius`,`tol=24`,`fly=1`,`max=9000` | 有世界；`structure` 形态需**该世界开作弊**（单机 = `level.dat.allowCommands=1`；服务端 = op。没开时服务器回 `Unknown or incomplete command` ⇒ fail-closed 判红）；`block`/`entity` 形态**无需 op** | 按形态三选一：`structure` → 到达解析坐标 tol 内（复用 `goto parsed` 的 arrived 判定，kind=`reached_parsed_tol`）；`block` → 最近命中 ∧ 到位 ∧ onGround ∧ 目标位仍是该方块（kind=`block_found_and_reached`）；`entity` → 最近命中 ∧ 到位（kind=`entity_found_and_reached`）——**三形态落地状态见下** | 中（structure 需作弊） | 9000（实测 2000+ 格飞掠 ≈90 s） | 可重试（每轮重新解析最近目标） | `tp{x,z}`（仅 op/creative）／ `look_at{target}` + 重试 |
+| `mine` | `blockId`,`count=1`,`radius`,`pos`? | 有世界；**目标选择 = 最近匹配优先且限 radius**；**执行前快照**（同 id 命中数，scan 计数） | ① `block_at(目标pos) != blockId`（**单点**）**∧** ② 同 id 命中数较执行前**减少 count**（**集合**，scan 计数） | 中 | 600/个 | 一次性 | 找不到目标 → `find_and_goto{block}`；工具缺失 → `inventory{contains}` |
+| `place` | `blockId`,`pos` | 背包含该方块 **∧** 目标位置可替换（空气/水） | `block_at(pos) == blockId` | 中 | 200 | 一次性 | 没方块 → `inventory{contains:id}`；位置不可替换 → `stop` |
+| `interact` | `target`,`pos`,**`expect=screen_present:Class\|entity_gone:id\|block_changed:pos,id`（必填）** | 目标在范围内 | **只判 expect 指的那一条**（必填 ⇒ 无「什么都没发生也算过」的松口） | 中 | 200 | 一次性 | `observe{radius}` 看目标当前状态后换意图 |
+| `open_gui` | `how=inventory`（自定 GUI 名 ⇒ **待实现**） | 有世界 | `screen_present` **∧** `clicked=true` **∧** `closed=true`（与 `state.json` 的 `gui.{opened,class,clicked,closed}` 字字对应） | 低 | 100 | 可重试 | `screenshot{testId}` 取证后 `stop`／换 `how` |
+| `inventory` | `slot=n` **或** `contains:id`（**二选一必填**，都不给 = 无意义断言） | 有世界 | 断言成立（slot 的 `itemId` 匹配 / contains 命中） | 低 | 60 | 可重试 | `screenshot{testId}` 取证，交 LLM 换意图 |
+| `observe` | `radius`,`entities`,`blocks` | 有世界 | 结果写进证据 `scan.entities` / `scan.blocks`（**类型化读数**）；既是 LLM 的感知入口，也是 `find_and_goto{block\|entity}` 的实现底座（复用现有 `scan`） | 低 | 60 | 可重试 | 缩小 `radius` 重试 |
+| `screenshot` | `testId` | 有世界 | 文件落在 `<gameDir>/screenshots` **∧** >0 B（**大小门只防空文件**；视觉判据另列，标「待选」= 像素非单调检查） | 低 | 60 | 可重试 | 无（本身是取证手段） |
+| `wait` | `ticks` 或 `until=chunk\|daylight` | `until` 形态需有世界 | 经过指定 tick ／ 条件成立（区块就绪 / 白天） | 低 | ticks+60 | 可重试 | `stop` |
+| `tp` | `x,z,tol=4` | 有世界 + **仅 `capabilityProfile=operator/creative` 列出；`strict_survival` 禁列** | 到达 x,z tol 内（dist ≤ tol） | 中（作弊类） | 200 | 可重试 | `find_and_goto` |
+| `stop` | — | — | 驱动器停接新轮（**不关游戏**，与长驻热重载设计一致） | 低 | 0 | — | — |
+
+**`find_and_goto` 三形态的落地状态（以现有 driver 代码为准，2026-10-01 实装 + 真机核）**：三形态**均已接线**（`structure` → `goto parsed`；`block` / `entity` → `scan` **最近命中** → `goto nearest` → `land`），未命中一律 `failIntent(goto_target_missing)` 判红不静默。
+- `structure` → **已实现**：`cmd locate structure …` → `goto parsed`（解析聊天回执坐标）。前置 = 该世界开作弊（单机 `level.dat.allowCommands=1` / 服务端 op）。真机正例（quilt 1.21.11 两会话各一次）：`village_plains` `arrived=true dist=23.38 tol=24`。
+- `block` → **已实现**：`scan blocks=` → **最近命中**（已由「扫描序 `first`」改为最近优先）→ `goto nearest` → 到位落地。实测 miss 路径：`diamond_ore radius=48` → `goto_target_missing` 判红 → nextSteps 给替代；正例（村 #2，2026-10-01）：`hay_block radius=48` → `block_found_and_reached`（`found=true` / `onGround=true` / `dist=22.73`）。已知限制：垂直采样只有 `-4..+8` 薄层（要先落到目标方块高度附近）；`stride` 默认粗采，小目标（按钮/告示牌）可能漏。
+- `entity` → **已实现**：`scan entities=` → 最近命中（客户端实体只在**追踪范围 ≈48 格**内可见；`radius>48` 会打提示）→ `goto nearest`。实测 miss 路径：`ender_dragon` 判红；`villager` 首次 miss 属**废弃村**所致（出生点旁村 #1 到达后 `radius=48` 空扫、无村民无钟），`tp` 到 3126 格外的村 #2 后命中，正例 `entity_found_and_reached`（`found=true` / `dist=0.62`）。⇒ 村内扫不到村民**先怀疑废弃村**，换个村再扫，别把 miss 读成「实体形态不可用」。边角：扫 `minecraft:player` 会**把自己数进去**（循环未排除本地玩家，未修）。
+- **三形态共通（已落地）**：命中坐标落 **`state.json` 结构化字段** —— `scan.nearest{found,id,x,y,z}` 与 `goto{x,z,arrived,arrivedDist}`；缺命中时 `goto_target_missing` 的 detail 带「先 scan entities= / blocks=」提示（LLM 可直接据此换意图）。
+
+**执行器落地面（v1 实况，2026-10-01 实装 + `quilt 1.21.11` 三会话真机核）**：
+- **已实现意图**（有 `name.equals` 分支）：`walk_to` / `look_at`(yaw|target) / `find_and_goto`(structure|block|entity) / `observe` / `open_gui` / `inventory` / `screenshot` / `wait`(ticks) / `tp`(op/creative) / `stop`；**`mine` / `place` / `interact` 不在 v1**：命中即 `intent 未实现（v1 白名单外）` 判红（不静默）；`wait until=` 同属未实现（`wait_until_unimplemented` fail-closed）。
+- **失败语义（邮箱 = 记数据续守候；脚本 = 判红停轮）**：步级失败（goto/land/assert/gui 失败、参数缺、形态不满足、单意图预算耗尽）统一走 `failIntent` —— **邮箱形态** = 记 `intentLog{ok:false}` + 刷新观测 + **继续守候下一条**（会话不死，「选错→判红→换意图→成功」链的底座）；**脚本形态**（`intent` 作为剧本步骤）= `finish(false)` 判红停轮。协议违规（禁列/不在菜单/档位不符）在**写入侧**就被 `playtest_intent` 拒（工具错误码），不进执行器。
+- **邮箱协议**：写 `<evidenceDir>/intent.json`（扁平 JSON `{"intent":…, 参数…}`）→ 驱动消费后**改名** `intent.done.json`；`stop` = 收尾（写 rounds + exit-code，**不关游戏**）。写侧六段校验：confirmed → 禁列 → 菜单（13 意图）→ 参数白名单 → 必填 → 邮箱占用（`MAILBOX_BUSY` / `overwrite`）。参数键白名单必须覆盖菜单声明的全集（实测踩过：`observe` 的 `blocks`/`entities` 缺键被静默滤掉 ⇒ 误判「空扫无判据」；现按菜单驱动对账）。
+- **证据面**：`rounds.jsonl` **每行一条合法 JSON** —— intentLog 条目**不得**用换行拼接（实测踩过：`"," + nl()` 会把一行拆成多行、判读器整行解析挂）；条目 = `{intent,params,ok,postcondition|failure,detail}`（2026-10-01 质量批拆字段：`ok:true` ⇒ `postcondition` 非空且 `failure` 空；`ok:false` ⇒ 二者恰一非空 —— 判过后置条件没过 = `postcondition` 非空；步级失败 = `failure` 非空，如 `goto_timeout` / `param_not_number`。失败原因**不再挤占** `postcondition`；`state.json.lastIntent` 同形状）。所有进证据的字符串过统一 `jsonEsc`（`\` `"` `\n` `\r` `\t` —— 不转 `\n` 会把 JSONL 一行劈成两半）；邮箱读取用容错解码（`readAllBytes`，非 UTF-8 的 GBK/BOM 变体不再 `MalformedInputException` 断协议，实测 GBK 字节邮箱被正常消费）。截图后置条件带**新鲜度**：只认本条意图起点后落盘的新图（`newestShotMillis` 助手 + shot 步等落盘 ≤60 tick + 判据 `newest ≥ intentStartMillis − 1500`，detail 落 `ageMs`；实测踩过：目录里有 3 小时旧图也会 PASS。真机 `ageMs` 读数为小负值属时钟抖动，按 `-?\d+` 读）。
+- **观测契约的刷新三时刻**：会话起步 / 进世界**晚补种**（起步可能早于世界载入，坐标恒 0）/ **每条意图跑完（成败都刷）** —— 缺任一时刻 LLM 会读到陈旧坐标。
+- **已验证档**：真执行器只覆盖 `fabric / quilt 1.21.11`（`PLAYTEST_VERIFIED_TIER`），其余档为结构壳。真机读数（as-of 2026-10-01）：会话 1 八意图 —— diamond miss FAIL → 村庄结构 PASS（换意图链）/ `walk_to` 复杂地形 `goto_timeout`（还差 8.31 格，v1 goto 无寻路，nextSteps 给 `find_and_goto{fly=1}`）/ 两张新图 `ageMs=-126/-542`；会话 2 观察反应链八意图 —— `observe{entities}` 空命中判红（参数形态真机走通）/ `ender_dragon`+`villager` miss 判红 / 结构形态 PASS / `look_at{yaw}` PASS（dYaw=0.00）/ `wait{ticks}` PASS / 新图 `ageMs=-1239`；**会话 3（村中寻人，`entity`/`block` 正例补取）** 九意图全 PASS —— 村 #1 到达后 `observe{entities:villager,…}` 空扫（**废弃村**）→ `tp` 3126 格（dist=0.71）→ 村 #2 结构 PASS（dist=22.44）→ `observe` 命中 → `find_and_goto{entity:villager}` PASS（`found=true dist=0.62`）→ `find_and_goto{block:hay_block}` PASS（`onGround=true dist=22.73`）→ 新图 `ageMs=-911` → `stop`；**会话 4（质量批复验：负例 + 证据形状 + GBK 邮箱）** 五意图 —— `walk_to{x:abc}` **FAIL**（`failure=param_not_number`，旧版会静默塌成当前位置判 PASS）→ GBK 字节邮箱 `wait` **被正常消费** → 合法 `walk_to` PASS → `screenshot` PASS（`ageMs=-1870`）→ `stop`；证据双类形状（成功带 `postcondition` / 失败带 `failure`）与 `rounds.jsonl` 单行全验，`exit-code=0`；四会话 `exit-code=0` 且 `rounds.jsonl` 单行可 parse。
+- **v1 已知限制**：`goto` 是直线行走 + `fly` 选项，**无寻路** —— 复杂地形可能 1200 tick 超时判红（上面 `walk_to` 实测即此形），靠 nextSteps 换意图兜底；`walk_to` 的「移动量 ≥ 起点→目标距离 − tol」防假绿照旧。
+
+**禁列（不提供）**：`kill` / `tnt` / `fill` 等破坏性动作；`strict_survival` 下不列出 `tp` 与任何 creative-only 意图。
+
+**每轮喂给 LLM 的观测契约（与意图表同等重要；输入封闭 ⇒ 可复现）**：
+`player{pos,yaw,pitch,health,food,gameMode,selectedSlot,mainHand}` ＋ `inventory`（摘要 + 命中）＋ **最近一次 `scan`** ＋ **上一步** `{intent,ok,postcondition,detail}` ＋ **剩余预算** ＋ **可用意图列表（按 capabilityProfile 过滤）**。
+
+**实现次序（任务 B）**：⑴ 本表 → ⑵ Java 意图执行器（`intent` 步骤族，复用 `move/goto/scan/gui/shot/assert` 原语；每个意图 = `preflight → 执行 → 后置条件判定 → 写证据`）→ ⑶ `playtest_intent` 工具 + 文件邮箱（`state.json` 观测段 / `intent-menu.json` / `intent.json`，与 `plan.txt` 同形态）→ ⑷ 白名单 + 预算（本表预算列即落点）+ 危险动作禁列 → ⑸ 真机验证（`operator` 档跑「找房子 / 清地 / 试 GUI」+ 一条「选错→判红→换意图」回灌链）→ opt-in 门（默认跳过）。
 
 ## 平台降级矩阵（全平台口径）
 

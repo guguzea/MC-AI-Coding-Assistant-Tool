@@ -6,10 +6,13 @@
  *   POST /execute  CommandMessage{id,action,params,delay,target?} → ResponseMessage{id,status,message,data}（HTTP 恒 200）
  *   GET  /status   {status,version,platform,httpPort,actions,ready}；ready = player!=null && world!=null
  *   超时：服务端 responseTimeoutMs 默认 10000ms ⇒ status:"failure" + "Timeout after Nms"（无专用码 ⇒ 调用侧映射 PLAYTEST_TIMEOUT）
- * 诚实边界（2026-09-29 起）：
+ * 诚实边界（2026-10-01 起）：
  *   - `temporary_client_tick_driver` × fabric/quilt **1.21.11** = **可编译的真 driver**（全部签名 javap 实测，见 PLAYTEST_VERIFIED_TIER）；
  *   - 其余平台/版本该模式仍为结构壳（`// TODO(未核实)`，须先按该档取证）；
- *   - `in_jvm_player_agent` 全档结构壳（玩家行为 AI 挂接 API 未取证）。
+ *   - `in_jvm_player_agent` = **已验证档上的真执行器**（intent / waitintent 步骤族：菜单校验 → 复用原语展开 →
+ *     类型化后置条件 → 证据；菜单真源 = PLAYTEST_INTENTS）；非已验证档只发 `playtest/intent-menu.json` 契约 + 结构壳。
+ *   - ⚠ opt-in 门（用户裁定 4B）：该模式**默认不在任何自动化链里跑** —— 真机验收由 `MC_SKILL_PLAYTEST_INTENT_E2E=1` 显式开
+ *     （见 mcp-server/scripts/assert-playtest-intent-gate.mjs）；不设该变量时一切按"未验证档"处理，不静默通过。
  */
 import { eraUpperBoundError, exactMcVersion, toPascalCase, type GeneratorResult } from "./common.js";
 
@@ -262,9 +265,11 @@ export function javadocSafe(java: string): string {
 }
 
 /**
- * fabric 1.21.1 档改写表：与 1.21.11 只差**一处**（javap 实测 2026-09-30，yarn 1.21.1+build.2）：
- *   1.21.1 没有 `net.minecraft.client.gui.Click` / `net.minecraft.client.input.MouseInput`（1.21.2 才引入），
- *   `Element.mouseClicked` 是老的 `(double,double,int)`；`Screen` 侧有 `close()`。
+ * fabric 1.21.1 / 1.21.3 / 1.20.4 三档改写表（三档 javap 实测同形）：与 1.21.11 只差**两处**：
+ *   ① GUI 点击：该档没有 `net.minecraft.client.gui.Click` / `net.minecraft.client.input.MouseInput`
+ *      （这三档 javap 实测都没有；**不是**「1.21.2 引入」——1.21.3 也还是没有），
+ *      `Element.mouseClicked` 是老的 `(double,double,int)`；`Screen` 侧有 `close()`。
+ *   ② 自动进世界必须排队执行（见函数体内注释；1.20.4 jstack 定因）。
  * ⚠ 与 1.20.1 档的差别：1.21.1 的 `IntegratedServerLoader.start(String, Runnable)` **与 1.21.11 同形**
  *   ⇒ **不要**套用 `rewriteForFabric1201` 里的 `start(Screen, String)` 那段（那是 1.20.1 专属）。
  * 其余实测与 1.21.11 一致：ScreenshotRecorder.saveScreenshot(File,Framebuffer,Consumer<Text>) /
@@ -422,7 +427,7 @@ export function rewriteForForge(java: string): string {
 }
 
 /** javap 实测过签名的档（temporary_client_tick_driver 可出真代码）；其余档一律结构壳。 */
-const PLAYTEST_VERIFIED_TIER: ReadonlyArray<{ platform: string; version: string; mappings: string; asOf: string }> = [
+export const PLAYTEST_VERIFIED_TIER: ReadonlyArray<{ platform: string; version: string; mappings: string; asOf: string }> = [
   { platform: "fabric", version: "1.21.11", mappings: "yarn 1.21.11+build.6", asOf: "2026-09-29" },
   { platform: "quilt", version: "1.21.11", mappings: "yarn 1.21.11+build.6（QSL 差异面见 quilt/1.21.11）", asOf: "2026-09-29" },
   {
@@ -449,7 +454,295 @@ const PLAYTEST_VERIFIED_TIER: ReadonlyArray<{ platform: string; version: string;
     mappings: "yarn 1.21.1+build.2（与 1.21.11 只差 GUI 点击一处；自动进世界与 1.21.11 同形，见 rewriteForFabric1211）",
     asOf: "2026-09-30",
   },
+  {
+    platform: "fabric",
+    version: "1.21.3",
+    mappings:
+      "yarn 1.21.3+build.2（与 1.21.11 只差 GUI 点击一处，见 rewriteForFabric1211；javap 实测 2026-10-01：`net.minecraft.client.gui.Click` / `net.minecraft.client.input.MouseInput` 在 1.21.3 **仍不存在**，`Element.mouseClicked(double,double,int)`，`IntegratedServerLoader.start(String,Runnable)` 与 1.21.x 同形）",
+    asOf: "2026-10-01",
+  },
+  {
+    platform: "fabric",
+    version: "1.20.4",
+    mappings:
+      "yarn 1.20.4+build.3（与 1.21.11 只差 GUI 点击一处，见 rewriteForFabric1211；javap 实测 2026-10-01：无 Click/MouseInput，`Element.mouseClicked(double,double,int)`；⚠ `IntegratedServerLoader.start(String,Runnable)` 是 **1.21.x 形态**，**不要**套 1.20.1 的 `start(Screen,String)`）",
+    asOf: "2026-10-01",
+  },
+  {
+    platform: "fabric",
+    version: "1.21.4",
+    mappings:
+      "yarn 1.21.4+build.8（与 1.21.11 只差 GUI 点击一处，见 rewriteForFabric1211；javap 实测 2026-10-01：无 Click/MouseInput，`Element.mouseClicked(double,double,int)`；`IntegratedServerLoader.start(String,Runnable)` ✓；`Vec3i.toShortString` ✓；ScreenshotRecorder/setPressed/sendAbilitiesUpdate/getScaledWidth/sendChatCommand/ClientWorld.getEntities/Registries 全部 ✓）",
+    asOf: "2026-10-01",
+  },
+  {
+    platform: "fabric",
+    version: "1.21.8",
+    mappings:
+      "yarn 1.21.8+build.1（与 1.21.11 只差 GUI 点击一处，见 rewriteForFabric1211；javap 实测 2026-10-01：无 Click/MouseInput，`Element.mouseClicked(double,double,int)`；`IntegratedServerLoader.start(String,Runnable)` ✓）",
+    asOf: "2026-10-01",
+  },
+  {
+    platform: "fabric",
+    version: "1.21.10",
+    mappings:
+      "yarn 1.21.10+build.3（**与 1.21.11 同形，无改写**；javap 实测 2026-10-01：`net.minecraft.client.gui.Click(double,double,MouseInput)` ✓、`MouseInput(int,int)` ✓、`Element.mouseClicked(Click,boolean)` ✓，其余面与 1.21.11 一致）",
+    asOf: "2026-10-01",
+  },
 ];
+/**
+ * 意图空间定稿 v2（2026-10-01 用户审改）—— 口径单源见
+ * `community_knowledge/authored/ingame-playtest-automation.md` §意图空间。
+ * 这是 `in_jvm_player_agent` 模式发给 LLM 的**封闭意图菜单**（也是后续 Java 执行器的单一真源）：
+ *   - `postcondition.kind` 是执行器要判的**唯一**一条（fail-closed；interact 的 expect 必填，杜绝"什么都没发生也算过"）；
+ *   - `budgetTicks` 是**单意图** tick 上限（超限判红），全局预算仍由 `budgetTicks` 输入兜底；
+ *   - `idempotent=false`（一次性）⇒ 失败**不得自动重试**，只许按 `fallback` 换意图；
+ *   - `profiles` 缺省 = 所有档都列出；`tp` 只在 operator/creative 列出（strict_survival 禁列）。
+ */
+type PlaytestIntentSpec = {
+  name: string;
+  params: Array<{ name: string; type: string; required?: boolean; note?: string }>;
+  pre: string[];
+  postcondition: { kind: string; note: string };
+  danger: "low" | "medium";
+  budgetTicks: number;
+  idempotent: boolean;
+  fallback: string[];
+  profiles?: Array<"strict_survival" | "operator" | "creative">;
+};
+
+export const PLAYTEST_INTENTS: readonly PlaytestIntentSpec[] = [
+  {
+    name: "walk_to",
+    params: [
+      { name: "x", type: "number", required: true },
+      { name: "z", type: "number", required: true },
+      { name: "tol", type: "number", note: "默认 3（走进房子场景建议 3–4；目标里显式给）" },
+      { name: "max", type: "number", note: "默认 1200 tick；不给也会用预算列兜底" },
+    ],
+    pre: ["有世界 + 玩家"],
+    postcondition: { kind: "distance_le_tol_and_moved_ge_min", note: "水平距离 ≤ tol ∧ 移动量 ≥ (起点→目标距离 − tol)（后半条防「本来就在那」假绿）" },
+    danger: "low",
+    budgetTicks: 1200,
+    idempotent: true,
+    fallback: ["find_and_goto{fly=1}", "look_at{target=pos} 换向后重试"],
+  },
+  {
+    name: "look_at",
+    params: [
+      { name: "yaw", type: "number", note: "与 target 二选一" },
+      { name: "pitch", type: "number", note: "与 target 二选一" },
+      { name: "target", type: "string", required: false, note: "pos|x,y,z / block|id / entity|id；更实用形态" },
+      { name: "tol", type: "number", note: "仅 target 形态，默认 2°" },
+    ],
+    pre: ["有玩家；target 形态需目标可解析"],
+    postcondition: {
+      kind: "angle_le_tol",
+      note: "yaw/pitch 形态 = 两轴误差 ≤ 2°（绝对值设置 ⇒ 几乎必成、信息量低）；target 形态 = 目标可解析 ∧ 朝向角误差 ≤ tol ∧ 目标在视距内(≤128)",
+    },
+    danger: "low",
+    budgetTicks: 60,
+    idempotent: true,
+    fallback: ["observe{radius} 确认目标是否存在"],
+  },
+  {
+    name: "find_and_goto",
+    params: [
+      { name: "structure", type: "string", note: "structure|minecraft:village_plains 形式的三种形态之一" },
+      { name: "block", type: "string" },
+      { name: "entity", type: "string" },
+      { name: "tol", type: "number", note: "默认 24" },
+      { name: "fly", type: "number", note: "默认 1" },
+      { name: "radius", type: "number", note: "block/entity 形态的最近匹配半径" },
+      { name: "max", type: "number", note: "默认 9000 tick" },
+    ],
+    pre: ["有世界", "structure 形态允许 cmd（需 op）；block/entity 形态走 scan 最近匹配（限 radius，无需 op）"],
+    postcondition: {
+      kind: "reached_parsed_tol | block_found_and_reached | entity_found_and_reached",
+      note: "按形态三选一：structure → reached_parsed_tol（到达解析坐标 tol 内，复用 goto parsed 的 arrived 判定）；block → block_found_and_reached（最近命中 ∧ 到位 ∧ onGround ∧ 目标位仍是该方块）；entity → entity_found_and_reached（最近命中 ∧ 到位）",
+    },
+    danger: "medium",
+    budgetTicks: 9000,
+    idempotent: true,
+    fallback: ["tp{x,z}（仅 operator/creative）", "look_at{target} + 重试"],
+  },
+  {
+    name: "mine",
+    params: [
+      { name: "blockId", type: "string", required: true },
+      { name: "count", type: "number", note: "默认 1" },
+      { name: "radius", type: "number", note: "目标选择半径（最近匹配优先）" },
+      { name: "pos", type: "string", note: "可选：指定坐标" },
+    ],
+    pre: ["有世界", "目标选择 = 最近匹配优先且限 radius", "执行前快照（同 id 命中数，scan 计数）"],
+    postcondition: {
+      kind: "block_at_changed_and_count_decreased",
+      note: "① block_at(目标pos) != blockId（单点）∧ ② 同 id 命中数较执行前减少 count（集合，scan 计数）",
+    },
+    danger: "medium",
+    budgetTicks: 600,
+    idempotent: false,
+    fallback: ["找不到目标 → find_and_goto{block}", "工具缺失 → inventory{contains}"],
+  },
+  {
+    name: "place",
+    params: [
+      { name: "blockId", type: "string", required: true },
+      { name: "pos", type: "string", required: true },
+    ],
+    pre: ["背包含该方块", "目标位置可替换（空气/水）"],
+    postcondition: { kind: "block_at_equals", note: "block_at(pos) == blockId" },
+    danger: "medium",
+    budgetTicks: 200,
+    idempotent: false,
+    fallback: ["没方块 → inventory{contains:id}", "位置不可替换 → stop"],
+  },
+  {
+    name: "interact",
+    params: [
+      { name: "target", type: "string", required: true },
+      { name: "pos", type: "string", required: true },
+      { name: "expect", type: "string", required: true, note: "screen_present:Class | entity_gone:id | block_changed:pos,id（**必填**）" },
+    ],
+    pre: ["目标在范围内"],
+    postcondition: { kind: "expect_only", note: "**只判 expect 指的那一条**（必填 ⇒ 无「什么都没发生也算过」的松口）" },
+    danger: "medium",
+    budgetTicks: 200,
+    idempotent: false,
+    fallback: ["observe{radius} 看目标当前状态后换意图"],
+  },
+  {
+    name: "open_gui",
+    params: [{ name: "how", type: "string", note: "inventory（自定 GUI 名 ⇒ 待实现）" }],
+    pre: ["有世界"],
+    postcondition: { kind: "screen_present_and_closed", note: "screen_present ∧ clicked=true ∧ closed=true（与 state.json 的 gui.{opened,class,clicked,closed} 字字对应）" },
+    danger: "low",
+    budgetTicks: 100,
+    idempotent: true,
+    fallback: ["screenshot{testId} 取证后 stop", "换 how"],
+  },
+  {
+    name: "inventory",
+    params: [
+      { name: "slot", type: "number", note: "与 contains 二选一必填（都不给 = 无意义断言）" },
+      { name: "contains", type: "string" },
+    ],
+    pre: ["有世界", "slot 与 contains 二选一必填"],
+    postcondition: { kind: "inventory_assert", note: "断言成立（slot 的 itemId 匹配 / contains 命中）" },
+    danger: "low",
+    budgetTicks: 60,
+    idempotent: true,
+    fallback: ["screenshot{testId} 取证，交 LLM 换意图"],
+  },
+  {
+    name: "observe",
+    params: [
+      { name: "radius", type: "number", note: "默认 64" },
+      { name: "entities", type: "string" },
+      { name: "blocks", type: "string" },
+    ],
+    pre: ["有世界"],
+    postcondition: { kind: "scan_written", note: "结果写进证据 scan.entities / scan.blocks（类型化读数）；既是 LLM 感知入口，也是 find_and_goto{block|entity} 的实现底座（复用 scan）" },
+    danger: "low",
+    budgetTicks: 60,
+    idempotent: true,
+    fallback: ["缩小 radius 重试"],
+  },
+  {
+    name: "screenshot",
+    params: [{ name: "testId", type: "string", required: true }],
+    pre: ["有世界"],
+    postcondition: { kind: "screenshot_file_nonempty", note: "文件落在 <gameDir>/screenshots ∧ >0 B（大小门只防空文件；视觉判据另列=待选）" },
+    danger: "low",
+    budgetTicks: 60,
+    idempotent: true,
+    fallback: [],
+  },
+  {
+    name: "wait",
+    params: [
+      { name: "ticks", type: "number", note: "与 until 二选一" },
+      { name: "until", type: "string", note: "chunk | daylight" },
+    ],
+    pre: ["until 形态需有世界"],
+    postcondition: { kind: "ticks_elapsed_or_cond", note: "经过指定 tick ／ 条件成立（区块就绪 / 白天）" },
+    danger: "low",
+    budgetTicks: 60,
+    idempotent: true,
+    fallback: ["stop"],
+  },
+  {
+    name: "tp",
+    params: [
+      { name: "x", type: "number", required: true },
+      { name: "z", type: "number", required: true },
+      { name: "tol", type: "number", note: "默认 4" },
+    ],
+    pre: ["有世界 + 仅 capabilityProfile=operator/creative"],
+    postcondition: { kind: "distance_le_tol_tp", note: "到达 x,z tol 内（dist ≤ tol）" },
+    danger: "medium",
+    budgetTicks: 200,
+    idempotent: true,
+    fallback: ["find_and_goto"],
+    profiles: ["operator", "creative"],
+  },
+  {
+    name: "stop",
+    params: [],
+    pre: [],
+    postcondition: { kind: "driver_stops", note: "驱动器停接新轮（不关游戏，与长驻热重载一致）" },
+    danger: "low",
+    budgetTicks: 0,
+    idempotent: true,
+    fallback: [],
+  },
+];
+
+/** 每轮喂给 LLM 的观测契约（封闭输入 ⇒ 可复现）。 */
+const PLAYTEST_OBSERVATION_CONTRACT = {
+  player: ["pos", "yaw", "pitch", "health", "food", "gameMode", "selectedSlot", "mainHand"],
+  inventory: "摘要 + 命中",
+  lastScan: "最近一次 scan（entities/blocks 命中表）",
+  lastStep: { intent: "string", ok: "boolean", postcondition: "string（判过后置条件时 = 该 kind）", failure: "string（步级失败原因，如 goto_timeout / param_not_number）", detail: "string" },
+  lastStepNote: "ok:true ⇒ postcondition 非空、failure 空；ok:false ⇒ 二者恰一非空（判了后置条件没过 = postcondition 非空；步级失败 = failure 非空）",
+  remainingBudget: "tick + 意图数 + 总时长",
+  availableIntents: "按 capabilityProfile 过滤后的意图名列表",
+} as const;
+
+const intentsForProfile = (profile: string): PlaytestIntentSpec[] =>
+  PLAYTEST_INTENTS.filter((i) => !i.profiles || (i.profiles as readonly string[]).includes(profile));
+
+/** in_jvm_player_agent 的封闭菜单契约（两条分支——真 driver / 结构壳——共用，防漂移）。 */
+function buildIntentMenu(input: PlaytestDriverInput, profile: PlaytestCapabilityProfile) {
+  const totalBudgetTicks = Number.isInteger(input.budgetTicks)
+    ? Math.max(200, input.budgetTicks as number)
+    : 36000; // 与真 driver 分支的 in_jvm 默认一致（LLM 会话 30 min）
+  return {
+    schema: "mc-skill/playtest-intent-menu@1",
+    asOf: "2026-10-01",
+    sourceOfTruth: "community_knowledge/authored/ingame-playtest-automation.md §意图空间（任务 B 设计定稿 v2）",
+    capabilityProfile: profile,
+    totalBudgetTicks,
+    perIntentBudgetTicks: Object.fromEntries(PLAYTEST_INTENTS.map((i) => [i.name, i.budgetTicks])),
+    forbidden: ["kill", "tnt", "fill"],
+    observationContract: PLAYTEST_OBSERVATION_CONTRACT,
+    intents: intentsForProfile(profile),
+    mailbox: {
+      request: "<evidenceDir>/intent.json",
+      consumed: "<evidenceDir>/intent.done.json",
+      shape: '{"intent": "<name>", "<param>": <value>, ...}（扁平一层；参数键白名单 = driver 的 INTENT_PARAM_KEYS）',
+      observe: "<evidenceDir>/state.json → intentState / intents[] / lastIntent / scan.nearest / goto.arrived",
+      endSession: '{"intent": "stop"}',
+    },
+    executionNote:
+      "driver 侧执行器：菜单校验（不在菜单/禁列/档位不符一律判红）→ 复用原语展开（goto/scan/gui/assert/shot/wait/cmd）" +
+      "→ 类型化后置条件 → 证据（{intent,params,ok,postcondition|failure,detail} 进 state.json 的 intents[] 与 rounds.jsonl 的 intentLog[]；" +
+      "ok:true 只带 postcondition、ok:false 时失败原因进 failure 字段——不再挤占 postcondition）。" +
+      "邮箱形态下**后置条件失败 = 记入 intentLog 并继续守候下一条**（失败不得自动重试，只许按本表 fallback 换意图；" +
+      "协议违规与预算耗尽才停轮）；脚本形态（plan 里的 `intent` 步骤）失败仍一律判红停轮。",
+  };
+}
+
 const isVerifiedTier = (platform: string, version: string) =>
   PLAYTEST_VERIFIED_TIER.some((t) => t.platform === platform && t.version === version);
 
@@ -549,7 +842,7 @@ export function generatePlaytestDriver(input: PlaytestDriverInput): GeneratorRes
     "playtest/README.playtest.md": readme,
   };
 
-  if (mode === "temporary_client_tick_driver" && isVerifiedTier(platform, version)) {
+  if ((mode === "temporary_client_tick_driver" || mode === "in_jvm_player_agent") && isVerifiedTier(platform, version)) {
     // ── 真 driver（本档全部签名 javap 实测，见 PLAYTEST_VERIFIED_TIER）──
     const tier = PLAYTEST_VERIFIED_TIER.find((t) => t.platform === platform && t.version === version)!;
     const expectItem = (input.expectItem ?? "").trim() || `${modId}:<item>`;
@@ -600,10 +893,23 @@ export function generatePlaytestDriver(input: PlaytestDriverInput): GeneratorRes
       `assert inv slot=${slot} item=${expectItem}`,
     ];
     const planSteps = input.plan?.length ? input.plan : scenario === "village" ? villagePlan : smokePlan;
-    if (!input.plan?.length && scenario !== "smoke" && scenario !== "village") {
+    if (!input.plan?.length && mode === "in_jvm_player_agent") {
+      // in_jvm：默认剧本 = 一条 waitintent 长驻守候（LLM 每写一条 <evidenceDir>/intent.json 就执行一条，
+      // 执行器停在同一步继续守候；LLM 发 {"intent":"stop"} 收本轮）。
+      planSteps.length = 0;
+      planSteps.push("mark in_jvm:intent-session", "waitintent max=6000");
+    }
+    if (!input.plan?.length && scenario !== "smoke" && scenario !== "village" && mode === "temporary_client_tick_driver") {
       warnings.push(`未知 scenario "${scenario}"：已回退 smoke。可选 smoke | village，或直接给 plan。`);
     }
     const planJava = planSteps.map((s) => JSON.stringify(s)).join(", ");
+    /**
+     * 意图菜单落成 Java 常量（单一真源 = PLAYTEST_INTENTS，按 capabilityProfile 过滤）。
+     * 一行 = `name|budgetTicks|profiles`；Java 侧 menuLine/menuBudget/menuAllowsProfile 直接读它。
+     */
+    const intentMenuJava = intentsForProfile(profile)
+      .map((i) => JSON.stringify(`${i.name}|${i.budgetTicks}|${(i.profiles ?? []).join(",")}`))
+      .join(", ");
     /** 引擎选择：解释器（数据驱动，③-a）为默认；置 false 可切回内置 playproof 相位机。 */
     const useInterpreter = true;
     /** 长驻 + 热重载剧本：游戏只起一次，改 plan.txt 即在同一进程内开新一轮（默认开）。 */
@@ -612,9 +918,11 @@ export function generatePlaytestDriver(input: PlaytestDriverInput): GeneratorRes
     const javaPlanFile = planFileDisplay.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
     const budgetTicks = Number.isInteger(input.budgetTicks)
       ? Math.max(200, input.budgetTicks as number)
-      : scenario === "village"
-        ? 24000
-        : 3600;
+      : mode === "in_jvm_player_agent"
+        ? 36000 // LLM 会话：一轮 30 min（36000 tick @20tps）；要短会话请显式传 budgetTicks
+        : scenario === "village"
+          ? 24000
+          : 3600;
     if (!(input.expectItem ?? "").trim()) {
       warnings.push(
         `expectItem 未传 ⇒ 生成物里是占位 \`${modId}:<item>\`：编译前必须替换，否则后置条件按 fail-closed 判红（这是设计，不是缺陷）。`,
@@ -750,6 +1058,68 @@ public final class PlaytestQaDriver {
     private static double moveStartX;
     private static double moveStartZ;
     private static final StringBuilder QA = new StringBuilder();
+
+    // ─────────────── 意图引擎（in_jvm_player_agent：菜单校验 + 原语展开 + 类型化后置条件） ───────────────
+    /** 意图菜单（生成器从 PLAYTEST_INTENTS 落成；一行 = name|budgetTicks|profiles，profiles 空 = 全档）。 */
+    private static final String[] INTENT_MENU = { ${intentMenuJava} };
+    /** 危险动作禁列（命中即判红，不静默忽略；真源见口径单源 §意图空间）。 */
+    private static final String[] FORBIDDEN_INTENTS = { "kill", "tnt", "fill" };
+    /** 能力档（strict_survival | operator | creative）——tp 等意图按档过滤。 */
+    private static final String CAPABILITY_PROFILE = "${profile}";
+    /** LLM 邮箱：<evidenceDir>/intent.json（扁平 JSON：{\"intent\":\"walk_to\",\"x\":1,\"z\":2}）；消费后改名 intent.done.json。 */
+    private static final String INTENT_MAILBOX = EVIDENCE_DIR + "/intent.json";
+    private static final String INTENT_MAILBOX_DONE = EVIDENCE_DIR + "/intent.done.json";
+    /** 邮箱 JSON 里允许被当作意图参数的键（白名单：其余键一律忽略，防止 LLM 顺手塞进未声明参数）。
+     *  必须覆盖**菜单里所有意图声明的参数名**，否则 driver 会把该参数静默丢掉（实测 2026-10-01：
+     *  observe 的 blocks 参数因缺键被滤成空 opts ⇒ 误判「空扫无判据」）。门禁按菜单逐名对账。 */
+    private static final String[] INTENT_PARAM_KEYS = { "x", "y", "z", "tol", "max", "radius", "fly", "stride",
+        "contains", "slot", "ticks", "testId", "structure", "block", "entity", "target", "yaw", "pitch",
+        "blocks", "entities", "blockId", "count", "pos", "expect", "how", "until" };
+
+    private static String activeIntent = "";
+    private static String activeIntentOpts = "";
+    private static boolean intentFromMailbox;
+    /** 本条意图**启动时**是否来自邮箱（startIntent 捕获；failIntent 靠它决定「记数据续守候」还是「判红停轮」）。 */
+    private static boolean activeIntentFromMailbox;
+    /** 意图起点墙钟（ms；截图后置条件只认 mtime ≥ 它的新图 —— 防拿旧图充新证据）。 */
+    private static long intentStartMillis;
+    /** 截图请求时刻（ms；异步落盘，0 = 无待落盘请求）。 */
+    private static long shotRequestMillis;
+    /** 观测面刷新闩：会话起步时玩家可能还在标题屏（player==null）⇒ 进世界后的第一条 waitintent tick 再补种一次。 */
+    private static boolean stateSeeded;
+    private static String[] savedPlan;
+    private static int savedStepIdx;
+    private static int intentBudget;
+    private static String intentPostMode = "";
+    private static String intentPostKind = "";
+    private static double intentStartX;
+    private static double intentStartZ;
+    private static double intentTargetX;
+    private static double intentTargetZ;
+    private static double intentTol;
+    private static float intentWantYaw;
+    private static float intentWantPitch;
+    private static String intentTargetBlockId = "";
+    private static BlockPos intentTargetBlockPos;
+    private static boolean intentScanWantedEntity;
+    private static boolean intentScanWantedBlock;
+    private static String intentShotTestId = "";
+    private static double scanNearestX;
+    private static double scanNearestY;
+    private static double scanNearestZ;
+    private static String scanNearestId = "";
+    private static boolean scanNearestFound;
+    private static boolean gotoArrived;
+    private static double gotoArrivedDist;
+    private static boolean lastInvOk;
+    private static String lastInvDetail = "";
+    private static final StringBuilder INTENT_LOG = new StringBuilder();
+    private static int intentsThisRound;
+    private static String lastIntentName = "";
+    private static boolean lastIntentOk;
+    private static String lastIntentPost = "";
+    private static String lastIntentFailure = "";
+    private static String lastIntentDetail = "";
 
     private PlaytestQaDriver() {
     }
@@ -962,6 +1332,21 @@ public final class PlaytestQaDriver {
 
     // ─────────────────────────────── 解释器：主循环 ───────────────────────────────
     private static void onInterpTick(MinecraftClient client) {
+        // 兜底边界（2026-10-01 质量批）：步骤级 try 只包住 switch；预算 / 自动进世界 / 热重载 / completeIntent
+        // 都在它外面 —— 任一处抛异常会打穿 END_CLIENT_TICK ⇒ 客户端崩、本轮无证据（NPE 崩过一先例）。
+        // 整段包一层 fail-closed：意外只判红收轮，绝不打穿 tick。
+        try {
+            interpTickBody(client);
+        } catch (Throwable t) {
+            try {
+                finish(false, "onInterpTick 未捕获异常（fail-closed 兜底）：" + t);
+            } catch (Throwable t2) {
+                System.out.println("[QA] ERROR: tick 兜底再异常：" + t2);
+            }
+        }
+    }
+
+    private static void interpTickBody(MinecraftClient client) {
         if (done) {
             return;
         }
@@ -970,6 +1355,11 @@ public final class PlaytestQaDriver {
         // （实测：卡在世界外的旧版驱动刷出 800+ 条 round 0 budget exhausted 与 82KB rounds.jsonl）。
         if (roundActive && ticks > BUDGET_TICKS) {
             finish(false, "budget exhausted (" + BUDGET_TICKS + " ticks)");
+            return;
+        }
+        // 单意图预算（菜单 budgetTicks 列）：超限判红。与全局预算分开 ⇒ 一个意图卡死不会吃掉整轮判据。
+        if (roundActive && !activeIntent.isEmpty() && intentBudget > 0 && stepTicks > intentBudget) {
+            failIntent(client, client.player, "budget_exhausted", "intent 预算耗尽（" + activeIntent + " 超过 " + intentBudget + " tick）");
             return;
         }
         ClientPlayerEntity player = client.player;
@@ -1015,6 +1405,7 @@ public final class PlaytestQaDriver {
                 loadPlan();
             }
             startRound();
+            writeState(client, player); // 会话起步即发布观测面（player 坐标 / intentState / 菜单）—— LLM 写第一条意图前要读它
             return;
         }
         if (!roundActive) {
@@ -1022,10 +1413,16 @@ public final class PlaytestQaDriver {
             if (WATCH_PLAN && ticks % WATCH_EVERY_TICKS == 0 && planFileChanged()) {
                 loadPlan();
                 startRound();
+                writeState(client, player);
             }
             return;
         }
         if (stepIdx >= plan.length) {
+            if (!activeIntent.isEmpty()) {
+                // 子计划（意图展开）跑完 ⇒ 判类型化后置条件并回到外层计划
+                completeIntent(client, player);
+                return;
+            }
             finish(true, "PLAN 全部 " + plan.length + " 步完成");
             return;
         }
@@ -1103,7 +1500,7 @@ public final class PlaytestQaDriver {
                             if (xz == null) {
                                 int waitFor = optI(rest, "wait", 400);
                                 if (stepTicks > waitFor) {
-                                    finish(false, "goto parsed 失败：等 " + waitFor + " tick 仍未拿到坐标（事件原文：" + shorten(lastGameMessage) + "；日志兜底也没命中）");
+                                    failIntent(client, player, "goto_parse_failed", "goto parsed 失败：等 " + waitFor + " tick 仍未拿到坐标（事件原文：" + shorten(lastGameMessage) + "；日志兜底也没命中）");
                                     return;
                                 }
                                 if (stepTicks % 20 == 1) {
@@ -1113,11 +1510,21 @@ public final class PlaytestQaDriver {
                             }
                             gotoX = xz[0];
                             gotoZ = xz[1];
+                        } else if (rest.startsWith("nearest")) {
+                            // find_and_goto 的 block/entity 形态接线：用最近一次 scan 的结构化坐标（缺命中判红，不静默）
+                            if (!scanNearestFound) {
+                                failIntent(client, player, "goto_target_missing", "goto nearest：最近一次 scan 没有命中（先 scan entities= / blocks=）");
+                                return;
+                            }
+                            gotoX = scanNearestX;
+                            gotoZ = scanNearestZ;
                         } else {
                             gotoX = optF(rest, "x", player.getX());
                             gotoZ = optF(rest, "z", player.getZ());
                         }
                         gotoTargetSet = true;
+                        gotoArrived = false;
+                        gotoArrivedDist = -1;
                         if (gotoFly) {
                             player.getAbilities().flying = true;
                             player.sendAbilitiesUpdate();
@@ -1146,12 +1553,14 @@ public final class PlaytestQaDriver {
                             player.sendAbilitiesUpdate();
                         }
                         log("[QA] goto arrived dist=" + fmt(dist) + " @ " + fmt(player.getX()) + "," + fmt(player.getY()) + "," + fmt(player.getZ()));
+                        gotoArrived = true;
+                        gotoArrivedDist = dist;
                         next();
                         break;
                     }
                     if (stepTicks > gotoMax) {
                         client.options.forwardKey.setPressed(false);
-                        finish(false, "goto 超时：还差 " + fmt(dist) + " 格（max=" + gotoMax + "）");
+                        failIntent(client, player, "goto_timeout", "goto 超时：还差 " + fmt(dist) + " 格（max=" + gotoMax + "）");
                         return;
                     }
                     // 巡航高度 + 防卡：**地形会把低空飞行撞停**（实测 9000 tick 只前进 ~550 格、差 200 格判红）。
@@ -1187,6 +1596,8 @@ public final class PlaytestQaDriver {
                     scanBlockFound = false;
                     scanEntityText = "";
                     scanBlockText = "";
+                    scanNearestFound = false;
+                    scanNearestId = "";
                     if (!ents.isEmpty()) {
                         if (radius > 48) {
                             // 实测：客户端实体只在追踪范围（≈48 格）内可见 ⇒ 大 radius 扫实体必 0 命中，别读成"这里没有"
@@ -1206,6 +1617,11 @@ public final class PlaytestQaDriver {
                             if (d < nd) {
                                 nd = d;
                                 nearest = id + "@" + fmt(e.getX()) + "," + fmt(e.getY()) + "," + fmt(e.getZ()) + " d=" + fmt(d);
+                                scanNearestX = e.getX();
+                                scanNearestY = e.getY();
+                                scanNearestZ = e.getZ();
+                                scanNearestId = id;
+                                scanNearestFound = true;
                             }
                         }
                         scanEntityText = "entities hits=" + hits + (nearest.isEmpty() ? "" : " nearest=" + nearest);
@@ -1215,6 +1631,8 @@ public final class PlaytestQaDriver {
                         String[] want = blks.split(",");
                         int hits = 0;
                         String first = "";
+                        String nearest = "";
+                        double nd = Double.MAX_VALUE;
                         BlockPos c = player.getBlockPos();
                         for (int ax = -radius; ax <= radius; ax += stride) {
                             for (int az = -radius; az <= radius; az += stride) {
@@ -1226,11 +1644,24 @@ public final class PlaytestQaDriver {
                                         if (first.isEmpty()) {
                                             first = bp.toShortString() + "=" + id;
                                         }
+                                        // 最近优先（旧版只有 scan 序 first ⇒ 不是最近；find_and_goto{block} 要的是最近可走的那个）
+                                        double d = Math.sqrt(Math.pow(bp.getX() + 0.5 - player.getX(), 2)
+                                            + Math.pow(bp.getY() + 0.5 - player.getY(), 2) + Math.pow(bp.getZ() + 0.5 - player.getZ(), 2));
+                                        if (d < nd) {
+                                            nd = d;
+                                            nearest = id + "@" + bp.toShortString() + " d=" + fmt(d);
+                                            scanNearestX = bp.getX() + 0.5;
+                                            scanNearestY = bp.getY();
+                                            scanNearestZ = bp.getZ() + 0.5;
+                                            scanNearestId = id;
+                                            scanNearestFound = true;
+                                            intentTargetBlockPos = bp.toImmutable();
+                                        }
                                     }
                                 }
                             }
                         }
-                        scanBlockText = "blocks hits=" + hits + (first.isEmpty() ? "" : " first=" + first);
+                        scanBlockText = "blocks hits=" + hits + (nearest.isEmpty() ? "" : " nearest=" + nearest) + (first.isEmpty() ? "" : " first=" + first);
                         scanBlockFound = hits > 0;
                     }
                     log("[QA] scan: " + scanEntityText + (scanBlockText.isEmpty() ? "" : " | " + scanBlockText));
@@ -1265,6 +1696,17 @@ public final class PlaytestQaDriver {
                         observedItem = st.isEmpty() ? "" : Registries.ITEM.getId(st.getItem()).toString();
                         ok = want.equals(observedItem);
                         detail = "slot " + slot + " expect=" + want + " got=" + (observedItem.isEmpty() ? "(empty)" : observedItem);
+                        lastInvOk = ok;
+                        lastInvDetail = detail;
+                    } else if (kind.equals("inv_nonempty")) {
+                        // inventory{slot} 形态：只断言槽位非空（与 inv{contains} 的 item 相等判据分开，避免"期望硬编码"）
+                        int slot = optI(opts, "slot", EXPECT_SLOT);
+                        ItemStack st = player.getInventory().getStack(slot);
+                        observedItem = st.isEmpty() ? "" : Registries.ITEM.getId(st.getItem()).toString();
+                        ok = !st.isEmpty();
+                        detail = "slot " + slot + " got=" + (observedItem.isEmpty() ? "(empty)" : observedItem);
+                        lastInvOk = ok;
+                        lastInvDetail = detail;
                     } else if (kind.equals("pos")) {
                         double tol = optF(opts, "tol", 8);
                         double tx = optF(opts, "x", player.getX());
@@ -1279,7 +1721,7 @@ public final class PlaytestQaDriver {
                     log("[QA] assert " + kind + " -> " + (ok ? "PASS" : "FAIL") + " :: " + detail);
                     if (!ok) {
                         writeState(client, player);
-                        finish(false, "断言失败 " + kind + " :: " + detail);
+                        failIntent(client, player, "assert_failed", "断言失败 " + kind + " :: " + detail);
                         return;
                     }
                     next();
@@ -1287,9 +1729,23 @@ public final class PlaytestQaDriver {
                 }
                 case "shot": {
                     client.setScreen(null);
-                    ScreenshotRecorder.saveScreenshot(client.runDirectory, client.getFramebuffer(), t -> { });
-                    log("[QA] shot testId=" + optS(rest, "testId", "main") + " → " + new File(client.runDirectory, "screenshots"));
-                    next();
+                    if (shotRequestMillis == 0) {
+                        shotRequestMillis = System.currentTimeMillis();
+                        ScreenshotRecorder.saveScreenshot(client.runDirectory, client.getFramebuffer(), t -> { });
+                        log("[QA] shot testId=" + optS(rest, "testId", "main") + " → " + new File(client.runDirectory, "screenshots") + "（等落盘）");
+                    }
+                    // 截图是**异步落盘**：等到出现 mtime ≥ 请求时刻的 .png 再放行（最多 60 tick）——
+                    // 否则后置条件会读到上一条旧图当新证据（实测 2026-10-01：intent-e2e-a 读到 3 小时前的图仍 PASS）。
+                    if (newestShotMillis(client) >= shotRequestMillis) {
+                        shotRequestMillis = 0;
+                        next();
+                        break;
+                    }
+                    if (stepTicks > 60) {
+                        shotRequestMillis = 0;
+                        failIntent(client, player, "screenshot_timeout", "shot：60 tick 内未见新截图落盘");
+                        return;
+                    }
                     break;
                 }
                 case "break": {
@@ -1300,7 +1756,7 @@ public final class PlaytestQaDriver {
                     }
                     if (!player.isOnGround()) {
                         if (stepTicks > 200) {
-                            finish(false, "break：200 tick 内未落地");
+                            failIntent(client, player, "break_not_grounded", "break：200 tick 内未落地");
                             return;
                         }
                         break;
@@ -1317,7 +1773,7 @@ public final class PlaytestQaDriver {
                         blockAfter = blockId(client, targetPos);
                         log("[QA] break after=" + blockAfter + "（同坐标 " + blockPosText + " 复读）");
                         if (blockBefore.isEmpty() || blockAfter.equals(blockBefore)) {
-                            finish(false, "破坏证明失败：" + blockPosText + " 仍为 " + blockBefore);
+                            failIntent(client, player, "break_unchanged", "破坏证明失败：" + blockPosText + " 仍为 " + blockBefore);
                             return;
                         }
                         next();
@@ -1343,7 +1799,7 @@ public final class PlaytestQaDriver {
                             log("[QA] gui class=" + guiClass + " clicked=" + guiClicked + " closed=" + guiClosed);
                         }
                         if (!guiOpened) {
-                            finish(false, "GUI 证明失败：InventoryScreen 未能打开");
+                            failIntent(client, player, "gui_failed", "GUI 证明失败：InventoryScreen 未能打开");
                             return;
                         }
                         next();
@@ -1372,11 +1828,75 @@ public final class PlaytestQaDriver {
                     roundActive = false;
                     done = true;
                     break;
+                case "intent": {
+                    String nm = rest;
+                    String opts = "";
+                    int sp3 = rest.indexOf(' ');
+                    if (sp3 > 0) {
+                        nm = rest.substring(0, sp3);
+                        opts = rest.substring(sp3 + 1).trim();
+                    }
+                    intentFromMailbox = false;
+                    startIntent(client, player, nm, opts);
+                    if (activeIntent.isEmpty()) {
+                        return; // startIntent 已判红
+                    }
+                    break;
+                }
+                case "waitintent": {
+                    if (activeIntent.isEmpty() && !stateSeeded && player != null) {
+                        // 起步补种：round start 那次刷新可能早于世界载入（player==null，坐标全是 0）。
+                        // LLM 写第一条意图前要拿到真实 player 坐标 ⇒ 进世界后的第一条 waitintent tick 补种。
+                        stateSeeded = true;
+                        writeState(client, player);
+                    }
+                    if (activeIntent.isEmpty() && Files.exists(Path.of(INTENT_MAILBOX))) {
+                        try {
+                            // 容错读法（与 readLastChatLine 同纪律）：严格解码（readString）遇非 UTF-8
+                            // （GBK / BOM 变体）会抛 MalformedInputException ⇒ 整轮判红、协议断。按字节读再宽松解码。
+                            String body = new String(Files.readAllBytes(Path.of(INTENT_MAILBOX)), StandardCharsets.UTF_8);
+                            String nm = flatGet(body, "intent");
+                            if (nm.isEmpty()) {
+                                finish(false, "intent.json 缺 intent 字段：" + shorten(body));
+                                return;
+                            }
+                            String opts = mailboxOpts(body);
+                            Files.move(Path.of(INTENT_MAILBOX), Path.of(INTENT_MAILBOX_DONE), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                            log("[QA] waitintent 收到 " + nm + " :: " + opts);
+                            intentFromMailbox = true;
+                            startIntent(client, player, nm, opts);
+                            if (activeIntent.isEmpty()) {
+                                return;
+                            }
+                        } catch (Exception e) {
+                            finish(false, "waitintent 读取失败（intent.json 须为 UTF-8 文本）：" + e);
+                            return;
+                        }
+                        break;
+                    }
+                    if (stepTicks > optI(rest, "max", 6000)) {
+                        finish(false, "waitintent：max tick 内没等到 intent.json（邮箱 " + INTENT_MAILBOX + "）");
+                        return;
+                    }
+                    break;
+                }
+                case "land": {
+                    if (player.isOnGround()) {
+                        log("[QA] land y=" + fmt(player.getY()));
+                        next();
+                        break;
+                    }
+                    if (stepTicks > optI(rest, "max", 200)) {
+                        failIntent(client, player, "land_timeout", "land：200 tick 内未落地（y=" + fmt(player.getY()) + "）");
+                        return;
+                    }
+                    break;
+                }
                 default:
                     finish(false, "未知步骤：" + line);
             }
         } catch (Throwable t) {
-            finish(false, "步骤异常（" + line + "）：" + t);
+            failIntent(client, player, "step_exception", "步骤异常（" + line + "）：" + t);
         }
     }
 
@@ -1384,6 +1904,542 @@ public final class PlaytestQaDriver {
         stepIdx++;
         stepTicks = 0;
         gotoTargetSet = false;
+    }
+
+    // ─────────────────────────────── 意图引擎：校验 / 展开 / 判定 / 证据 ───────────────────────────────
+    private static final class Verdict {
+        boolean ok;
+        String kind = "";
+        String detail = "";
+    }
+
+    /** 菜单行查一层；查不到返回 null（= 未核实/拼错，判红）。 */
+    private static String menuLine(String name) {
+        for (String row : INTENT_MENU) {
+            int p = row.indexOf('|');
+            if (p > 0 && row.substring(0, p).equals(name)) {
+                return row;
+            }
+        }
+        return null;
+    }
+
+    private static int menuBudget(String name) {
+        String row = menuLine(name);
+        if (row == null) {
+            return 0;
+        }
+        String[] parts = row.split("\\|");
+        return parts.length > 1 ? intOf(parts[1], 0) : 0;
+    }
+
+    private static boolean menuAllowsProfile(String name) {
+        String row = menuLine(name);
+        if (row == null) {
+            return false;
+        }
+        String[] parts = row.split("\\|");
+        String profiles = parts.length > 2 ? parts[2] : "";
+        if (profiles.isEmpty()) {
+            return true;
+        }
+        for (String p : profiles.split(",")) {
+            if (p.equals(CAPABILITY_PROFILE)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** 菜单里的意图名（逗号分隔；给 state.json 的 intentState 当 LLM 的观测面）。 */
+    private static String menuNames() {
+        StringBuilder sb = new StringBuilder();
+        for (String row : INTENT_MENU) {
+            int p = row.indexOf('|');
+            if (p > 0) {
+                if (sb.length() > 0) {
+                    sb.append(",");
+                }
+                sb.append(row, 0, p);
+            }
+        }
+        return sb.toString();
+    }
+
+    private static boolean isForbiddenIntent(String name) {        for (String f : FORBIDDEN_INTENTS) {
+            if (f.equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static double dist2(double ax, double az, double bx, double bz) {
+        return Math.sqrt((ax - bx) * (ax - bx) + (az - bz) * (az - bz));
+    }
+
+    private static boolean hasParam(String opts, String key) {
+        return !optS(opts, key, "").isEmpty();
+    }
+
+    /** 启动一个意图：禁列/菜单/档位校验 → 快照 → 展开为原语步骤；任一校验失败一律 finish(false)。 */
+    private static void startIntent(MinecraftClient client, ClientPlayerEntity player, String name, String opts) {
+        if (isForbiddenIntent(name)) {
+            finish(false, "intent 命中禁列动作：" + name);
+            return;
+        }
+        if (menuLine(name) == null) {
+            finish(false, "intent 不在菜单（拼错或未核实）：" + name);
+            return;
+        }
+        if (!menuAllowsProfile(name)) {
+            finish(false, "intent " + name + " 不在能力档 " + CAPABILITY_PROFILE + " 的菜单内");
+            return;
+        }
+        intentBudget = menuBudget(name);
+        intentStartX = player.getX();
+        intentStartZ = player.getZ();
+        intentTargetBlockId = "";
+        intentTargetBlockPos = null;
+        intentPostMode = "";
+        intentPostKind = "";
+        // 先登记身份再展开：expandIntent 里的失败（参数缺 / v1 未实现）也要能按「邮箱 vs 脚本」分流，
+        // 并且 failIntent 记账时 activeIntent 必须已是本意图名（否则记成空名）。
+        activeIntent = name;
+        activeIntentOpts = opts;
+        activeIntentFromMailbox = intentFromMailbox;
+        intentStartMillis = System.currentTimeMillis();
+        shotRequestMillis = 0;
+        String[] steps = expandIntent(client, player, name, opts);
+        if (steps == null) {
+            activeIntent = "";
+            activeIntentOpts = "";
+            activeIntentFromMailbox = false;
+            return; // expandIntent 里已走 failIntent（邮箱：记账续守候；脚本：判红停轮）
+        }
+        savedPlan = plan;
+        savedStepIdx = stepIdx;
+        plan = steps;
+        stepIdx = 0;
+        stepTicks = 0;
+        log("[QA] intent " + name + " START :: " + opts + "（展开 " + steps.length + " 步；预算 " + intentBudget + " tick；后置条件 " + intentPostKind + "）");
+    }
+
+    /**
+     * 意图 = 原语展开表（复用 goto/scan/gui/assert/shot/wait/cmd 既有实现）。
+     * 返回 null = 已判红（未实现或参数缺失）；**不返回** 空数组（空计划会静默通过）。
+     */
+    private static String[] expandIntent(MinecraftClient client, ClientPlayerEntity player, String name, String o) {
+        if (name.equals("walk_to")) {
+            if (!hasParam(o, "x") || !hasParam(o, "z")) {
+                failIntent(client, player, "walk_to_need_xz", "walk_to 需要 x= 与 z=");
+                return null;
+            }
+            String badNum = firstBadNum(o, "x", "z", "tol", "max");
+            if (!badNum.isEmpty()) {
+                failIntent(client, player, "param_not_number", "walk_to 参数不是数字：" + badNum);
+                return null;
+            }
+            intentPostMode = "pos";
+            intentTol = optF(o, "tol", 3);
+            intentTargetX = optF(o, "x", player.getX());
+            intentTargetZ = optF(o, "z", player.getZ());
+            intentPostKind = "distance_le_tol_and_moved_ge_min";
+            return new String[] { "goto x=" + fmt(intentTargetX) + " z=" + fmt(intentTargetZ) + " tol=" + fmt(intentTol)
+                + " fly=0 max=" + optI(o, "max", 1200) };
+        }
+        if (name.equals("look_at")) {
+            String badNum = firstBadNum(o, "yaw", "pitch", "tol");
+            if (!badNum.isEmpty()) {
+                failIntent(client, player, "param_not_number", "look_at 参数不是数字：" + badNum);
+                return null;
+            }
+            intentTol = optF(o, "tol", 2);
+            intentPostKind = "angle_le_tol";
+            String target = optS(o, "target", "");
+            if (!target.isEmpty()) {
+                String body = target.startsWith("pos|") ? target.substring(4) : target;
+                String[] xyz = body.split(",");
+                if (xyz.length < 3) {
+                    failIntent(client, player, "look_at_form_unimplemented", "look_at target 只实现 pos|x,y,z（block| / entity| 形态未实现，v1）：" + target);
+                    return null;
+                }
+                double tx = Double.parseDouble(xyz[0].trim());
+                double ty = Double.parseDouble(xyz[1].trim());
+                double tz = Double.parseDouble(xyz[2].trim());
+                intentPostMode = "look_pos";
+                intentTargetX = tx;
+                intentTargetZ = tz;
+                intentWantYaw = lookYaw(player, tx, tz);
+                intentWantPitch = lookPitch(player, tx, ty, tz);
+                return new String[] { "look yaw=" + fmt(intentWantYaw) + " pitch=" + fmt(intentWantPitch) };
+            }
+            intentPostMode = "look_yaw";
+            intentWantYaw = (float) optF(o, "yaw", player.getYaw());
+            intentWantPitch = (float) optF(o, "pitch", player.getPitch());
+            return new String[] { "look yaw=" + fmt(intentWantYaw) + " pitch=" + fmt(intentWantPitch) };
+        }
+        if (name.equals("find_and_goto")) {
+            String badNum = firstBadNum(o, "tol", "fly", "max", "radius");
+            if (!badNum.isEmpty()) {
+                failIntent(client, player, "param_not_number", "find_and_goto 参数不是数字：" + badNum);
+                return null;
+            }
+            intentTol = optF(o, "tol", 24);
+            int fly = optI(o, "fly", 1);
+            int max = optI(o, "max", 9000);
+            int radius = optI(o, "radius", 64);
+            String st = optS(o, "structure", "");
+            String bl = optS(o, "block", "");
+            String en = optS(o, "entity", "");
+            if (!st.isEmpty()) {
+                intentPostMode = "locate";
+                intentPostKind = "reached_parsed_tol";
+                gotoArrived = false;
+                return new String[] { "cmd locate structure " + st,
+                    "goto parsed tol=" + fmt(intentTol) + " fly=" + fly + " max=" + max };
+            }
+            if (!bl.isEmpty()) {
+                intentPostMode = "scan_block";
+                intentPostKind = "block_found_and_reached";
+                intentTargetBlockId = bl;
+                return new String[] { "scan blocks=" + bl + " radius=" + radius + " stride=1",
+                    "goto nearest tol=" + fmt(intentTol) + " fly=" + fly + " max=" + max, "land" };
+            }
+            if (!en.isEmpty()) {
+                intentPostMode = "scan_entity";
+                intentPostKind = "entity_found_and_reached";
+                return new String[] { "scan entities=" + en + " radius=" + radius,
+                    "goto nearest tol=" + fmt(intentTol) + " fly=" + fly + " max=" + max, "land" };
+            }
+            failIntent(client, player, "find_and_goto_need_form", "find_and_goto 需要 structure=|block=|entity= 之一");
+            return null;
+        }
+        if (name.equals("observe")) {
+            String badNum = firstBadNum(o, "radius", "stride");
+            if (!badNum.isEmpty()) {
+                failIntent(client, player, "param_not_number", "observe 参数不是数字：" + badNum);
+                return null;
+            }
+            String en = optS(o, "entities", "");
+            String bl = optS(o, "blocks", "");
+            int radius = optI(o, "radius", 64);
+            if (en.isEmpty() && bl.isEmpty()) {
+                failIntent(client, player, "observe_need_scan", "observe 需要 entities= 或 blocks=（v1：空扫无判据）");
+                return null;
+            }
+            intentPostMode = "scan";
+            intentPostKind = "scan_written";
+            intentScanWantedEntity = !en.isEmpty();
+            intentScanWantedBlock = !bl.isEmpty();
+            StringBuilder sb = new StringBuilder("scan radius=" + radius);
+            if (!en.isEmpty()) {
+                sb.append(" entities=").append(en);
+            }
+            if (!bl.isEmpty()) {
+                sb.append(" blocks=").append(bl).append(" stride=").append(optI(o, "stride", 4));
+            }
+            return new String[] { sb.toString() };
+        }
+        if (name.equals("open_gui")) {
+            intentPostMode = "gui";
+            intentPostKind = "screen_present_and_closed";
+            guiOpened = false;
+            guiClicked = false;
+            guiClosed = false;
+            return new String[] { "gui" };
+        }
+        if (name.equals("inventory")) {
+            String badNum = firstBadNum(o, "slot");
+            if (!badNum.isEmpty()) {
+                failIntent(client, player, "param_not_number", "inventory 参数不是数字：" + badNum);
+                return null;
+            }
+            String contains = optS(o, "contains", "");
+            intentPostMode = "inv";
+            intentPostKind = "inventory_assert";
+            if (!contains.isEmpty()) {
+                return new String[] { "assert inv slot=" + optI(o, "slot", EXPECT_SLOT) + " item=" + contains };
+            }
+            if (!optS(o, "slot", "").isEmpty()) {
+                return new String[] { "assert inv_nonempty slot=" + optI(o, "slot", EXPECT_SLOT) };
+            }
+            failIntent(client, player, "inventory_need_query", "inventory 需要 contains= 或 slot= 之一");
+            return null;
+        }
+        if (name.equals("screenshot")) {
+            intentPostMode = "shot";
+            intentPostKind = "screenshot_file_nonempty";
+            intentShotTestId = optS(o, "testId", "intent");
+            return new String[] { "shot testId=" + intentShotTestId };
+        }
+        if (name.equals("wait")) {
+            String badNum = firstBadNum(o, "ticks");
+            if (!badNum.isEmpty()) {
+                failIntent(client, player, "param_not_number", "wait 参数不是数字：" + badNum);
+                return null;
+            }
+            intentPostMode = "wait";
+            intentPostKind = "ticks_elapsed_or_cond";
+            if (!optS(o, "until", "").isEmpty()) {
+                failIntent(client, player, "wait_until_unimplemented", "wait until= 形态（chunk/daylight）未实现（v1 只支持 ticks=）—— 换 wait{ticks} / observe");
+                return null;
+            }
+            return new String[] { "wait " + optI(o, "ticks", 20) };
+        }
+        if (name.equals("tp")) {
+            if (!CAPABILITY_PROFILE.equals("operator") && !CAPABILITY_PROFILE.equals("creative")) {
+                finish(false, "tp 只在 operator/creative 档（当前 " + CAPABILITY_PROFILE + "）");
+                return null;
+            }
+            if (!hasParam(o, "x") || !hasParam(o, "z")) {
+                failIntent(client, player, "tp_need_xz", "tp 需要 x= 与 z=");
+                return null;
+            }
+            String badNum = firstBadNum(o, "x", "z", "tol");
+            if (!badNum.isEmpty()) {
+                failIntent(client, player, "param_not_number", "tp 参数不是数字：" + badNum);
+                return null;
+            }
+            intentPostMode = "tp";
+            intentTol = optF(o, "tol", 4);
+            intentTargetX = optF(o, "x", player.getX());
+            intentTargetZ = optF(o, "z", player.getZ());
+            intentPostKind = "distance_le_tol_tp";
+            return new String[] { "cmd tp @s " + (int) Math.floor(intentTargetX) + " 140 " + (int) Math.floor(intentTargetZ), "land" };
+        }
+        if (name.equals("stop")) {
+            intentPostMode = "stop";
+            intentPostKind = "driver_stops";
+            // 展开成 no-op 步：真正收尾在 completeIntent 里做 —— 展开成 stop 步会把 done 置位，
+            // 让"子计划跑完 → 判后置条件"这条路永远进不去（判据与证据就丢了）。
+            return new String[] { "mark intent:stop" };
+        }
+        failIntent(client, player, "unimplemented_v1", "intent 未实现（v1 白名单外）：" + name + " —— 落地面见 README.playtest.md 的意图表");
+        return null;
+    }
+
+    /**
+     * 意图**步级**失败的统一出口（goto/land/assert/gui 等原语在子计划里失败、参数/形态不满足、单意图预算耗尽）。
+     * 邮箱来源 ⇒ 记一条 ok=false 进 intentLog 并回到 waitintent 守候（「选错→判红→换意图→成功」链要求会话可续）；
+     * 脚本来源（plan 里的 intent 步骤）⇒ 照旧判红停轮。协议违规（禁列/不在菜单/档位不符）不经过这里 ——
+     * 它们在 startIntent 里直接 finish(false)。
+     */
+    private static void failIntent(MinecraftClient client, ClientPlayerEntity player, String kind, String detail) {
+        if (!activeIntentFromMailbox) {
+            // activeIntent 为空 = 非意图步骤（脚本里的普通步骤）抛异常走到这里 —— 文案别写成 "intent  失败"
+            String who = activeIntent.isEmpty() ? "脚本步骤" : ("intent " + activeIntent);
+            finish(false, who + " 失败 :: " + kind + " :: " + detail);
+            return;
+        }
+        INTENT_LOG.append(INTENT_LOG.length() > 0 ? "," : "").append("    {\"intent\": \"").append(jsonEsc(activeIntent))
+            .append("\", \"params\": \"").append(jsonEsc(activeIntentOpts))
+            .append("\", \"postcondition\": \"\", \"failure\": \"").append(jsonEsc(kind))
+            .append("\", \"ok\": false")
+            .append(", \"detail\": \"").append(jsonEsc(detail)).append("\"}");
+        intentsThisRound++;
+        lastIntentName = activeIntent;
+        lastIntentOk = false;
+        lastIntentPost = "";
+        lastIntentFailure = kind;
+        lastIntentDetail = detail;
+        if (savedPlan != null) {
+            plan = savedPlan;
+            stepIdx = savedStepIdx;
+            savedPlan = null;
+        } // savedPlan == null = 失败发生在 expandIntent 期（子计划还没换入）⇒ 原地留在外层 waitintent
+        activeIntentFromMailbox = false;
+        activeIntent = "";
+        activeIntentOpts = "";
+        stepTicks = 0;
+        writeState(client, player);
+        log("[QA] intent FAIL 已记入 intentLog -> 继续守候下一条 intent.json（换意图见菜单 fallback / 工具 nextSteps）");
+    }
+
+    /** 子计划跑完：判类型化后置条件 → 写证据 → 回外层（失败判红，**不自动重试** non-idempotent）。 */
+    private static void completeIntent(MinecraftClient client, ClientPlayerEntity player) {
+        String name = activeIntent;
+        String opts = activeIntentOpts;
+        Verdict v = verdictFor(client, player);
+        log("[QA] intent " + name + " -> " + (v.ok ? "PASS" : "FAIL") + " :: " + v.kind + " :: " + v.detail);
+        INTENT_LOG.append(INTENT_LOG.length() > 0 ? "," : "").append("    {\"intent\": \"").append(jsonEsc(name))
+            .append("\", \"params\": \"").append(jsonEsc(opts))
+            .append("\", \"postcondition\": \"").append(jsonEsc(v.kind)).append("\", \"failure\": \"\"")
+            .append(", \"ok\": ").append(v.ok)
+            .append(", \"detail\": \"").append(jsonEsc(v.detail)).append("\"}");
+        intentsThisRound++;
+        lastIntentName = name;
+        lastIntentOk = v.ok;
+        lastIntentPost = v.kind;
+        lastIntentFailure = "";
+        lastIntentDetail = v.detail;
+        plan = savedPlan;
+        stepIdx = savedStepIdx;
+        savedPlan = null;
+        activeIntent = "";
+        activeIntentOpts = "";
+        stepTicks = 0;
+        writeState(client, player); // 每条意图跑完都刷新观测面（成功 / 失败都要）—— 口径单源「每轮喂给 LLM 的观测契约」
+        if (!v.ok) {
+            if (activeIntentFromMailbox) {
+                // 邮箱形态（LLM 驱动）：后置条件失败是**数据**（已在 intentLog 里，ok=false）——
+                // 设计口径「失败不得自动重试，只许换意图」（口径单源 §意图空间）要求 LLM 能在同一会话里
+                // 按 fallback 换意图，并把「选错→判红→换意图→成功」记成一条链 ⇒ 会话继续守候下一条。
+                // 协议违规（禁列 / 不在菜单 / 档位不符）与脚本形态（intent 步骤）仍一律判红停轮。
+                activeIntentFromMailbox = false;
+                log("[QA] intent FAIL 已记入 intentLog -> 继续守候下一条 intent.json（换意图见菜单 fallback / 工具 nextSteps）");
+                return;
+            }
+            finish(false, "intent 后置条件失败 " + name + " :: " + v.kind + " :: " + v.detail);
+            return;
+        }
+        if (name.equals("stop")) {
+            finish(true, "intent stop：收尾本轮（驱动器回到守候，游戏进程不关）");
+            return;
+        }
+        if (activeIntentFromMailbox) {
+            activeIntentFromMailbox = false;
+            log("[QA] waitintent：继续守候下一条 intent.json");
+            return; // 邮箱形态：停在 waitintent 这一步，等 LLM 下一条
+        }
+        next();
+    }
+
+    /** 类型化后置条件判定（每种意图一条，判据与菜单 postcondition.kind 字字对应）。 */
+    private static Verdict verdictFor(MinecraftClient client, ClientPlayerEntity player) {
+        Verdict v = new Verdict();
+        v.kind = intentPostKind;
+        if (intentPostMode.equals("pos")) {
+            double d = dist2(player.getX(), player.getZ(), intentTargetX, intentTargetZ);
+            double traveled = dist2(intentStartX, intentStartZ, player.getX(), player.getZ());
+            double need = Math.max(0.0, dist2(intentStartX, intentStartZ, intentTargetX, intentTargetZ) - intentTol);
+            v.ok = d <= intentTol + 0.01 && traveled >= need - 0.01;
+            v.detail = "dist=" + fmt(d) + " tol=" + fmt(intentTol) + " traveled=" + fmt(traveled) + " min=" + fmt(need);
+        } else if (intentPostMode.equals("look_yaw")) {
+            double dy = angDiff(player.getYaw(), intentWantYaw);
+            double dp = angDiff(player.getPitch(), intentWantPitch);
+            v.ok = dy <= intentTol && dp <= intentTol;
+            v.detail = "dYaw=" + fmt(dy) + " dPitch=" + fmt(dp) + " tol=" + fmt(intentTol);
+        } else if (intentPostMode.equals("look_pos")) {
+            double dy = angDiff(player.getYaw(), lookYaw(player, intentTargetX, intentTargetZ));
+            double dd = dist2(player.getX(), player.getZ(), intentTargetX, intentTargetZ);
+            v.ok = dy <= intentTol && dd <= 128.0;
+            v.detail = "dYaw=" + fmt(dy) + " dist=" + fmt(dd) + " tol=" + fmt(intentTol);
+        } else if (intentPostMode.equals("locate")) {
+            double d = dist2(player.getX(), player.getZ(), gotoX, gotoZ);
+            v.ok = gotoArrived && d <= intentTol + 1.0;
+            v.detail = "arrived=" + gotoArrived + " dist=" + fmt(d) + " tol=" + fmt(intentTol);
+        } else if (intentPostMode.equals("scan_block")) {
+            double d = dist2(player.getX(), player.getZ(), scanNearestX, scanNearestZ);
+            String at = intentTargetBlockPos == null ? "(null)" : blockId(client, intentTargetBlockPos);
+            v.ok = scanNearestFound && intentTargetBlockPos != null && intentTargetBlockId.equals(at)
+                && d <= intentTol + 1.0 && player.isOnGround();
+            v.detail = "found=" + scanNearestFound + " at=" + at + " dist=" + fmt(d) + " onGround=" + player.isOnGround();
+        } else if (intentPostMode.equals("scan_entity")) {
+            double d = dist2(player.getX(), player.getZ(), scanNearestX, scanNearestZ);
+            v.ok = scanNearestFound && d <= intentTol + 1.0;
+            v.detail = "found=" + scanNearestFound + " dist=" + fmt(d) + " tol=" + fmt(intentTol);
+        } else if (intentPostMode.equals("scan")) {
+            boolean okE = !intentScanWantedEntity || scanEntityFound;
+            boolean okB = !intentScanWantedBlock || scanBlockFound;
+            v.ok = okE && okB;
+            v.detail = "entities=" + (intentScanWantedEntity ? (scanEntityFound ? "hit" : "miss") : "n/a")
+                + " blocks=" + (intentScanWantedBlock ? (scanBlockFound ? "hit" : "miss") : "n/a");
+        } else if (intentPostMode.equals("gui")) {
+            v.ok = guiOpened && guiClicked && guiClosed;
+            v.detail = "opened=" + guiOpened + " clicked=" + guiClicked + " closed=" + guiClosed + " class=" + guiClass;
+        } else if (intentPostMode.equals("inv")) {
+            v.ok = lastInvOk;
+            v.detail = lastInvDetail;
+        } else if (intentPostMode.equals("shot")) {
+            File dir = new File(client.runDirectory, "screenshots");
+            File[] files = dir.listFiles();
+            String fn = "";
+            long sz = 0;
+            long newest = -1;
+            if (files != null) {
+                for (File f : files) {
+                    if (f.getName().endsWith(".png") && f.length() > 0 && f.lastModified() > newest) {
+                        newest = f.lastModified();
+                        fn = f.getName();
+                        sz = f.length();
+                    }
+                }
+            }
+            // 新鲜度判据：最新图的 mtime 必须 ≥ 本条意图起点（留 1.5s 容差）——「目录里有 png」会拿旧图充新证据
+            v.ok = !fn.isEmpty() && newest >= intentStartMillis - 1500;
+            v.detail = "file=" + fn + " bytes=" + sz + " ageMs=" + (System.currentTimeMillis() - newest) + " testId=" + intentShotTestId;
+        } else if (intentPostMode.equals("wait")) {
+            v.ok = true;
+            v.detail = "ticks=" + stepTicks;
+        } else if (intentPostMode.equals("tp")) {
+            double d = dist2(player.getX(), player.getZ(), intentTargetX, intentTargetZ);
+            v.ok = d <= intentTol + 1.0;
+            v.detail = "dist=" + fmt(d) + " tol=" + fmt(intentTol);
+        } else if (intentPostMode.equals("stop")) {
+            v.ok = true;
+            v.detail = "stop requested";
+        } else {
+            v.ok = false;
+            v.detail = "未知后置条件 mode=" + intentPostMode;
+        }
+        return v;
+    }
+
+    /** screenshots 目录里最新非空 .png 的 mtime（无文件返回 -1）。 */
+    private static long newestShotMillis(MinecraftClient client) {
+        File dir = new File(client.runDirectory, "screenshots");
+        File[] files = dir.listFiles();
+        long newest = -1;
+        if (files != null) {
+            for (File f : files) {
+                if (f.getName().endsWith(".png") && f.length() > 0 && f.lastModified() > newest) {
+                    newest = f.lastModified();
+                }
+            }
+        }
+        return newest;
+    }
+
+    private static double angDiff(float a, float b) {
+        double d = Math.abs(a - b) % 360.0;
+        return d > 180.0 ? 360.0 - d : d;
+    }
+
+    private static float lookYaw(ClientPlayerEntity p, double tx, double tz) {
+        return (float) Math.toDegrees(Math.atan2(-(tx - p.getX()), tz - p.getZ()));
+    }
+
+    private static float lookPitch(ClientPlayerEntity p, double tx, double ty, double tz) {
+        double dx = tx - p.getX();
+        double dz = tz - p.getZ();
+        double dy = ty - (p.getY() + 1.62);
+        return (float) Math.toDegrees(-Math.atan2(dy, Math.sqrt(dx * dx + dz * dz)));
+    }
+
+    /** 极简扁平 JSON 取值（邮箱文件由本仓 playtest_intent 工具写，形状固定一层）。 */
+    private static String flatGet(String json, String key) {
+        java.util.regex.Matcher m = java.util.regex.Pattern
+            .compile("\"" + key + "\"\\s*:\\s*(\"([^\"]*)\"|[^,}\\s]+)").matcher(json);
+        if (!m.find()) {
+            return "";
+        }
+        return m.group(2) != null ? m.group(2) : m.group(1);
+    }
+
+    /** 邮箱 JSON → 意图参数（只认白名单键；intent 键由调用侧单独取）。 */
+    private static String mailboxOpts(String json) {
+        StringBuilder sb = new StringBuilder();
+        for (String k : INTENT_PARAM_KEYS) {
+            String val = flatGet(json, k);
+            if (!val.isEmpty()) {
+                if (sb.length() > 0) {
+                    sb.append(" ");
+                }
+                sb.append(k).append("=").append(val);
+            }
+        }
+        return sb.toString();
     }
 
     /** 兜底读法：<runDir>/logs/latest.log 的最后一条含 [CHAT] 的行（实测 /locate 的结果就落在这里）。 */
@@ -1416,6 +2472,20 @@ public final class PlaytestQaDriver {
         roundActive = true;
         ticks = 0;
         QA.setLength(0); // qa.log 只留本轮（历史轮次在 rounds.jsonl；判读器按 *.log 计数，混轮会污染 done/error）
+        INTENT_LOG.setLength(0);
+        intentsThisRound = 0;
+        activeIntent = "";
+        activeIntentOpts = "";
+        savedPlan = null;
+        savedStepIdx = 0;
+        intentFromMailbox = false;
+        activeIntentFromMailbox = false;
+        stateSeeded = false;
+        lastIntentName = "";
+        lastIntentOk = false;
+        lastIntentPost = "";
+        lastIntentFailure = "";
+        lastIntentDetail = "";
         log("[QA] ROUND " + roundNo + " START（steps=" + plan.length + "）");
     }
 
@@ -1540,6 +2610,35 @@ public final class PlaytestQaDriver {
         }
     }
 
+    /** 数值参数格式检查（2026-10-01 质量批）：键**存在**但解析失败 ⇒ 返回该 "key=value"（调用方判红）；
+     *  键缺席或可解析 ⇒ ""。此前解析失败静默回默认 ⇒ walk_to x=abc 目标塌成当前位置、
+     *  后置条件「防本来就在那」半条自动失效 ⇒ 假绿。 */
+    private static String firstBadNum(String opts, String... keys) {
+        for (String tok : opts.split("\\s+")) {
+            int eq = tok.indexOf('=');
+            if (eq <= 0) {
+                continue;
+            }
+            String k = tok.substring(0, eq);
+            boolean wanted = false;
+            for (String key : keys) {
+                if (key.equals(k)) {
+                    wanted = true;
+                    break;
+                }
+            }
+            if (!wanted) {
+                continue;
+            }
+            try {
+                Double.parseDouble(tok.substring(eq + 1));
+            } catch (Exception e) {
+                return tok;
+            }
+        }
+        return "";
+    }
+
     private static String optS(String opts, String key, String dflt) {
         for (String tok : opts.split("\\s+")) {
             int eq = tok.indexOf('=');
@@ -1563,6 +2662,14 @@ public final class PlaytestQaDriver {
     }
 
     private static void writeState(MinecraftClient client, ClientPlayerEntity player) {
+        // 观测面必须反映**当下**：player 非空就快照坐标 —— 起步那次刷新常发生在标题屏（player==null），
+        // 若不在这里刷新，state.json 的 x/y/z 会永远停在 0（实测 2026-10-01：会话跑了 5 分钟全是 0,0,0）。
+        if (player != null) {
+            playerName = player.getName().getString();
+            px = player.getX();
+            py = player.getY();
+            pz = player.getZ();
+        }
         try {
             Files.createDirectories(Path.of(EVIDENCE_DIR));
             Files.writeString(Path.of(EVIDENCE_DIR, "state.json"), stateJson(), StandardCharsets.UTF_8);
@@ -1590,8 +2697,12 @@ public final class PlaytestQaDriver {
             // 文件名必须是 .log：inspect_playtest_evidence 的 [QA] 段约定 =「证据目录内任意 .log 尾部」（首版写 qa.txt ⇒ 判读报 absent，实测 2026-09-29）
             // 内容只含**本轮**（QA 缓冲在 startRound 清空）⇒ 判读器的 done/error 计数不会被历史轮次污染；历史看 rounds.jsonl
             Files.writeString(Path.of(EVIDENCE_DIR, "qa.log"), QA.toString(), StandardCharsets.UTF_8);
+            // steps/done 记「外层计划」的进度（意图子计划跑一半时判红也要能读懂整轮进度）
+            int outerSteps = activeIntent.isEmpty() ? plan.length : (savedPlan == null ? plan.length : savedPlan.length);
+            int outerDone = activeIntent.isEmpty() ? stepIdx : savedStepIdx;
             Files.writeString(Path.of(EVIDENCE_DIR, "rounds.jsonl"),
-                "{\"round\":" + roundNo + ",\"ok\":" + ok + ",\"steps\":" + plan.length + ",\"done\":" + stepIdx + ",\"detail\":\"" + detail.replace("\"", "'") + "\"}" + nl(),
+                "{\"round\":" + roundNo + ",\"ok\":" + ok + ",\"steps\":" + outerSteps + ",\"done\":" + outerDone
+                    + ",\"intents\":" + intentsThisRound + ",\"intentLog\":[" + INTENT_LOG + "],\"detail\":\"" + jsonEsc(detail) + "\"}" + nl(),
                 StandardCharsets.UTF_8, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.APPEND);
         } catch (IOException e) {
             System.out.println("[QA] ERROR: 证据写入失败：" + e);
@@ -1616,22 +2727,35 @@ public final class PlaytestQaDriver {
         }
     }
 
-    /** 手写 JSON（值只含玩家名 / 物品 id / 数字 / 时间戳，不含引号与反斜杠）。 */
+    /** 手写 JSON。**所有字符串值一律过 jsonEsc**（手拼 + 只替引号漏 \n 的历史事故：state.json 不可解析 / JSONL 被劈行）。 */
     private static String stateJson() {
         String q = "\"";
         return "{" + nl()
             + "  " + q + "at" + q + ": " + q + Instant.now() + q + "," + nl()
-            + "  " + q + "player" + q + ": " + q + playerName + q + "," + nl()
+            + "  " + q + "player" + q + ": " + q + jsonEsc(playerName) + q + "," + nl()
             + "  " + q + "x" + q + ": " + px + ", " + q + "y" + q + ": " + py + ", " + q + "z" + q + ": " + pz + "," + nl()
             + "  " + q + "slot" + q + ": " + EXPECT_SLOT + "," + nl()
-            + "  " + q + "itemId" + q + ": " + q + observedItem + q + "," + nl()
-            + "  " + q + "expect" + q + ": " + q + EXPECT_ITEM + q + "," + nl()
+            + "  " + q + "itemId" + q + ": " + q + jsonEsc(observedItem) + q + "," + nl()
+            + "  " + q + "expect" + q + ": " + q + jsonEsc(EXPECT_ITEM) + q + "," + nl()
             + "  " + q + "move" + q + ": {" + q + "delta" + q + ": " + moveDelta + ", " + q + "min" + q + ": " + MOVE_MIN_HORIZONTAL + ", " + q + "dir" + q + ": " + q + DIR_NAMES[Math.min(dirIdx, DIR_NAMES.length - 1)] + q + "}," + nl()
-            + "  " + q + "block" + q + ": {" + q + "pos" + q + ": " + q + blockPosText + q + ", " + q + "before" + q + ": " + q + blockBefore + q + ", " + q + "after" + q + ": " + q + blockAfter + q + "}," + nl()
-            + "  " + q + "gui" + q + ": {" + q + "opened" + q + ": " + guiOpened + ", " + q + "class" + q + ": " + q + guiClass + q + ", " + q + "clicked" + q + ": " + guiClicked + ", " + q + "closed" + q + ": " + guiClosed + "}," + nl()
+            + "  " + q + "block" + q + ": {" + q + "pos" + q + ": " + q + jsonEsc(blockPosText) + q + ", " + q + "before" + q + ": " + q + jsonEsc(blockBefore) + q + ", " + q + "after" + q + ": " + q + jsonEsc(blockAfter) + q + "}," + nl()
+            + "  " + q + "gui" + q + ": {" + q + "opened" + q + ": " + guiOpened + ", " + q + "class" + q + ": " + q + jsonEsc(guiClass) + q + ", " + q + "clicked" + q + ": " + guiClicked + ", " + q + "closed" + q + ": " + guiClosed + "}," + nl()
             + "  " + q + "plan" + q + ": {" + q + "steps" + q + ": " + PLAN.length + ", " + q + "done" + q + ": " + stepIdx + "}," + nl()
-            + "  " + q + "scan" + q + ": {" + q + "entities" + q + ": " + q + scanEntityText + q + ", " + q + "blocks" + q + ": " + q + scanBlockText + q + "}," + nl()
-            + "  " + q + "goto" + q + ": {" + q + "x" + q + ": " + gotoX + ", " + q + "z" + q + ": " + gotoZ + "}" + nl()
+            + "  " + q + "scan" + q + ": {" + q + "entities" + q + ": " + q + jsonEsc(scanEntityText) + q + ", " + q + "blocks" + q + ": " + q + jsonEsc(scanBlockText) + q
+            + ", " + q + "nearest" + q + ": {" + q + "found" + q + ": " + scanNearestFound + ", " + q + "id" + q + ": " + q + jsonEsc(scanNearestId) + q
+            + ", " + q + "x" + q + ": " + scanNearestX + ", " + q + "y" + q + ": " + scanNearestY + ", " + q + "z" + q + ": " + scanNearestZ + "}}," + nl()
+            + "  " + q + "goto" + q + ": {" + q + "x" + q + ": " + gotoX + ", " + q + "z" + q + ": " + gotoZ
+            + ", " + q + "arrived" + q + ": " + gotoArrived + ", " + q + "arrivedDist" + q + ": " + gotoArrivedDist + "}," + nl()
+            + "  " + q + "intentState" + q + ": {" + q + "profile" + q + ": " + q + CAPABILITY_PROFILE + q
+            + ", " + q + "menu" + q + ": " + q + menuNames() + q
+            + ", " + q + "mailbox" + q + ": " + q + jsonEsc(INTENT_MAILBOX) + q
+            + ", " + q + "remainingTicks" + q + ": " + (BUDGET_TICKS - ticks)
+            + ", " + q + "active" + q + ": " + q + jsonEsc(activeIntent) + q + "}," + nl()
+            + "  " + q + "intents" + q + ": [" + nl() + INTENT_LOG + nl() + "  ]," + nl()
+            + "  " + q + "lastIntent" + q + ": {" + q + "name" + q + ": " + q + jsonEsc(lastIntentName) + q
+            + ", " + q + "ok" + q + ": " + lastIntentOk + ", " + q + "postcondition" + q + ": " + q + jsonEsc(lastIntentPost) + q
+            + ", " + q + "failure" + q + ": " + q + jsonEsc(lastIntentFailure) + q
+            + ", " + q + "detail" + q + ": " + q + jsonEsc(lastIntentDetail) + q + "}" + nl()
             + "}" + nl();
     }
 
@@ -1642,6 +2766,17 @@ public final class PlaytestQaDriver {
 
     private static String nl() {
         return System.lineSeparator();
+    }
+
+    /** 把字符串安全嵌进 JSON 字面量。**顺序要紧**：先翻反斜杠（否则会把它自己新插入的 \r \n \t 再翻一遍），
+     *  引号按既有约定收成单引号；控制字符必须转义 —— 不转 \n 会把手拼的 JSONL 一行劈成两半、判读器整行解析挂
+     *  （实测：Windows 路径的 \m \p 曾让 state.json 整体不可解析；异常消息带换行会劈 rounds.jsonl）。 */
+    private static String jsonEsc(String s) {
+        if (s == null) {
+            return "";
+        }
+        return s.replace("\\", "\\\\").replace("\"", "'")
+            .replace("\r", "\\r").replace("\n", "\\n").replace("\t", "\\t");
     }
 
     private static String fmt(double v) {
@@ -1663,8 +2798,10 @@ public final class PlaytestQaDriver {
 }
 `;
     const useForgeTable = platform === "forge" || platform === "neoforge";
+    // 1.20.1 是唯一 `IntegratedServerLoader.start(Screen,String)` 形的档
     const useFabric1201Table = platform === "fabric" && version === "1.20.1";
-    const useFabric1211Table = platform === "fabric" && version === "1.21.1";
+    // javap 实测同为「只差 GUI 点击一处」的档：1.21.1（2026-09-30）、1.21.3 与 1.20.4（2026-10-01）、1.21.4 与 1.21.8（2026-10-01）
+    const useFabric1211Table = platform === "fabric" && ["1.21.1", "1.21.3", "1.20.4", "1.21.4", "1.21.8"].includes(version);
     const emittedJava = useForgeTable
       ? rewriteForForge(javaSource)
       : useFabric1201Table
@@ -1683,14 +2820,35 @@ public final class PlaytestQaDriver {
       );
     } else if (useFabric1211Table) {
       warnings.push(
-        `platform=fabric version=1.21.1 档由 1.21.11 模板经改写表派生（**只差 GUI 点击一处**：1.21.1 无 Click/MouseInput；注意自动进世界与 1.21.11 同形，别套 1.20.1 的改写）——真机验证状态见 CHANGELOG。`,
+        `platform=fabric version=${version} 档由 1.21.11 模板经改写表派生（**只差 GUI 点击一处**：该档无 Click/MouseInput，` +
+          `mouseClicked 为 (double,double,int)；自动进世界与 1.21.11 同形，别套 1.20.1 的 start(Screen,String) 改写）` +
+          `——javap 依据见 PLAYTEST_VERIFIED_TIER，真机验证状态见 CHANGELOG。`,
       );
     }
-    if (platform === "fabric" && version === "1.21.1" && (input.enterWorld ?? "").trim()) {
+    // fabric 1.20.4 / 1.21.1 / 1.21.3 的 `IntegratedServerLoader.start(String,Runnable)` 会把客户端冻死 ——
+    // 1.20.4 于 2026-10-01 jstack 定因，1.21.1 于 2026-09-30 实测同形。
+    const freezeFamily = platform === "fabric" && ["1.20.4", "1.21.1", "1.21.3"].includes(version);
+    if (freezeFamily && (input.enterWorld ?? "").trim()) {
       warnings.push(
-        `⚠ fabric 1.21.1 档**不要**用 enterWorld 让驱动自己进世界：实测（2026-09-30）该调用会把客户端**冻在世界载入里**——` +
-          `心跳停、桥侧 action 也超时（status 仍答 ready=true，极具误导性）。请把 enterWorld **留空**，改用桥 join_world / create_world（或人工）把客户端送进世界；` +
-          `驱动的"需要世界"步骤会自动等世界——同轮实测 **17/17 步通过**（含 2000+ 格飞掠、防卡自救抬升、村庄方块 44 命中、两张截图）。`,
+        `⚠ fabric ${version} 档**不要**用 enterWorld 让驱动自己进世界：实测该调用会让世界载入流程内联跑在 tick 栈上并死等` +
+          `服务器线程 —— Render thread 停在 MinecraftClient.startIntegratedServer 的 Thread.sleep（jstack 实证），` +
+          `客户端整只冻住、心跳停，而桥 /status 仍答 ready=true（极具误导性）。` +
+          `委托给 client.execute 排队**不能**修（ThreadExecutor.execute 从渲染线程是 inline 执行）。` +
+          `推荐做法：enterWorld **留空**，在工程 build.gradle 的 loom runs 里加 ` +
+          `programArgs "--quickPlaySingleplayer", "<存档目录名>"（vanilla quick play；实测 1.20.4 与 1.21.3 各 17/17 步通过），` +
+          `或（仅桥覆盖的档）用桥 join_world / create_world 进世界；驱动的"需要世界"步骤会自动等世界。`,
+      );
+    }
+    if (mode === "in_jvm_player_agent") {
+      // 意图空间定稿 v2（2026-10-01 用户审改）：菜单 + **真执行器**（见 PlaytestQaDriver 的 intent 步骤族）。
+      files["playtest/intent-menu.json"] = JSON.stringify(buildIntentMenu(input, profile), null, 2) + "\n";
+      warnings.push(
+        `driverMode=in_jvm_player_agent 已产出**真执行器**（PlaytestQaDriver 的 intent/waitintent 步骤族）+ playtest/intent-menu.json：` +
+          `${PLAYTEST_INTENTS.length} 条意图，按 capabilityProfile=${profile} 过滤后列出 ${intentsForProfile(profile).length} 条（strict_survival 不含 tp）。` +
+          `LLM 侧写 \`<evidenceDir>/intent.json\`（扁平 JSON，如 {"intent":"walk_to","x":10,"z":-20,"tol":3}），驱动停在 waitintent 上逐条消费；` +
+          `观测读 \`state.json\` 的 intentState / intents[] / lastIntent / scan.nearest；收尾写 {"intent":"stop"}。` +
+          `**v1 落地面**：walk_to / look_at(pos|yaw) / find_and_goto(structure|block|entity) / observe / open_gui / inventory / screenshot / wait / tp(op/creative) / stop；` +
+          `mine / place / interact 未实现 —— 命中即判红（不静默），见 README.playtest.md 的意图表。`,
       );
     }
     files["playtest/REVERT.md"] = `# 驱动代码撤除清单（${mode} / ${platform} ${version}）
@@ -1755,7 +2913,7 @@ public final class PlaytestQaDriver {
             "强杀 gradle wrapper **不结束子 JVM**（真身命令行含 -Dfabric.dli.config=<工程>/.gradle/loom-cache）；残留客户端会持有世界 session.lock ⇒ 下一次进世界报『另一个程序已锁定文件的一部分』⇒ 关客户端要按命令行精确清理（实测 2026-09-29）",
             "证据文件名必须 .log（判读器按『证据目录内任意 .log 尾部』抽 [QA] 段；首版写 qa.txt ⇒ qa 判 absent，实测 2026-09-29）",
           ],
-          notCovered: { modes: ["in_jvm_player_agent"], postconditions: PLAYTEST_POSTCONDITIONS.filter((p) => p !== "inventory_contains" && p !== "marker_log") },
+          notCovered: { modes: [], postconditions: PLAYTEST_POSTCONDITIONS.filter((p) => p !== "inventory_contains" && p !== "marker_log") },
         },
         null,
         2,
@@ -1798,13 +2956,25 @@ public final class PlaytestQaDriver {
 | \`move key=<forward\|back\|left\|right\|jump\|sneak\|attack\|use> ticks=<n>\` | 按住某键 N tick（每 tick 重按，防失焦 unpressAll） |
 | \`cmd <命令>\` | 发聊天命令（**命令面，显式记录**，不算纯游玩） |
 | \`goto x= z= tol= fly= max=\` / \`goto parsed …\` | 走到/飞到目标（\`parsed\` = 坐标取自上一 \`cmd\` 返回，正则抽 \`[x, ~, z]\`） |
-| \`scan radius= entities=<id,id> blocks=<id,id> stride=\` | 扫描周围实体/方块（村庄证据 = 村民 / 钟 / 干草块 / 堆肥桶） |
-| \`assert scan_entities \\| scan_blocks \\| inv slot= item= \\| moved min= \\| pos tol= x= z=\` | 后置条件；失败即判红并落 state.json |
+| \`scan radius= entities=<id,id> blocks=<id,id> stride=\` | 扫描周围实体/方块（村庄证据 = 村民 / 钟 / 干草块 / 堆肥桶）；\`scan.nearest\` 记**最近命中**的结构化坐标（find_and_goto 的底座） |
+| \`assert scan_entities \\| scan_blocks \\| inv slot= item= \\| inv_nonempty slot= \\| moved min= \\| pos tol= x= z=\` | 后置条件；失败即判红并落 state.json |
 | \`shot testId=<name>\` | 截图（先 \`setScreen(null)\`） |
 | \`break ticks=<n>\` | 俯视破脚下方块（断言**同坐标** id 变化） |
 | \`gui\` | 开背包 → 真实 \`mouseClicked(Click,boolean)\` → 关闭 |
+| \`land max=<n>\` | 等到落地（\`isOnGround\`；失败判红）——飞行到达后的落地面 |
+| \`goto nearest …\` | 走向最近一次 scan 的命中坐标（与 \`goto parsed\` 并列的第三种坐标来源） |
+| \`intent <name> k=v…\` | **意图**：菜单校验 → 复用原语展开 → 类型化后置条件 → 证据；不在菜单/禁列/档位不符一律判红 |
+| \`waitintent max=<n>\` | **LLM 邮箱**：守候 \`<evidenceDir>/intent.json\`（扁平 JSON），每条执行完**停在本步继续守候** |
 | \`mark <text>\` | 往 qa.log 打自定义标记 |
 
+${mode === "in_jvm_player_agent" ? `## 意图（in_jvm_player_agent 的玩法）
+
+- **菜单**：\`playtest/intent-menu.json\`（按 capabilityProfile=${profile} 过滤；禁列 kill/tnt/fill 永不出现）。driver 里同一份菜单落成 \`INTENT_MENU\` 常量 —— 不在菜单的意图名一律判红（防止 LLM 造词）。
+- **LLM 邮箱循环**：LLM 写 \`<evidenceDir>/intent.json\`（扁平一层：\`{"intent":"walk_to","x":10,"z":-20,"tol":3}\`）→ driver 消费（改名 \`intent.done.json\`）→ 执行 → 判后置条件 → 回写证据 → 继续守候。收尾写 \`{"intent":"stop"}\`（收本轮，不关游戏）。
+- **失败语义（2026-10-01 与交接验收对齐）**：邮箱形态下**后置条件失败不改会话状态**——记进 \`intents[]\` / \`intentLog\`（\`ok:false\`）后继续守候下一条；失败不得自动重试，只许按菜单 \`fallback\` 换意图（\`playtest_intent read\` 会把它落成 \`nextSteps\`）。协议违规（禁列 / 不在菜单 / 档位不符）与预算耗尽才判红停轮；脚本形态（plan 里的 \`intent\` 步骤）失败仍判红停轮。
+- **观测面**（LLM 每轮读 \`state.json\`）：\`intentState\`（profile / menu / mailbox / remainingTicks / active）、\`intents[]\`（本轮已执行意图的 {intent,params,ok,postcondition|failure,detail}；ok:true 只带 postcondition、ok:false 时失败原因在 \`failure\` 字段）、\`lastIntent\`、\`scan.nearest\`（结构化坐标）、\`goto.arrived\`、\`player\` 读数。
+- **类型化后置条件**（每意图一条，见菜单 \`postcondition.kind\`；find_and_goto 按形态发 \`reached_parsed_tol\` / \`block_found_and_reached\` / \`entity_found_and_reached\`）：walk_to = 距离 ≤ tol ∧ 位移 ≥ 起点→目标距离 − tol（防"本来就在那"假绿）；find_and_goto block = 最近命中 ∧ 到位 ∧ onGround ∧ 目标位仍是该方块；entity = 最近命中 ∧ 到位；interact = \`expect\` 必填……（未实现的 mine/place/interact 命中即判红，见菜单 executionNote）。
+- **单意图预算**：菜单 \`perIntentBudgetTicks\` 列即 driver 的判据（超限判红）；全局预算仍由 \`budgetTicks\` 兜底。` : ""}
 **内置剧本**（\`generate_playtest_driver scenario=\`）：
 - \`smoke\`（默认）：移动 → 破坏 → GUI → 截图 → 背包断言（冒烟用）。
 - \`village\`（**功能测试：找一个村庄**）：起步移动 → 先扫一遍起始区（记录"这里没有"）→ \`cmd locate structure minecraft:village_plains\` → \`goto parsed fly=1\` **用键盘飞过去** → 到了再 \`scan\` → \`assert scan_entities\`（找到村民）→ \`shot testId=village\`（视觉证据）。
@@ -1840,6 +3010,15 @@ public final class PlaytestQaDriver {
     }
 }
 `;
+    if (mode === "in_jvm_player_agent") {
+      // 本档不是已验证档（PLAYTEST_VERIFIED_TIER 之外）⇒ 只能发**契约**：执行器源码必须先按该档取证。
+      files["playtest/intent-menu.json"] = JSON.stringify(buildIntentMenu(input, profile), null, 2) + "\n";
+      warnings.push(
+        `driverMode=in_jvm_player_agent 在本档（${platform} ${version}）**未 javap 取证** ⇒ 只产出意图菜单契约（playtest/intent-menu.json），` +
+          `Java 执行器仍是结构壳；要真执行器请换已验证档（fabric 1.20.4 / 1.21.1 / 1.21.3 / 1.21.11 / quilt 1.21.11）或先取证。` +
+          `菜单按 capabilityProfile=${profile} 过滤后列出 ${intentsForProfile(profile).length} 条。`,
+      );
+    }
     files["playtest/REVERT.md"] = `# 驱动代码撤除清单（${mode}）
 
 - 本模式测完必须把驱动代码从工程里撤掉（绝不提交）：

@@ -9,15 +9,15 @@ docsTool: search_docs
 
 # mc-registry（Quilt 1.21.4）
 
-> ⚠️ **QSL 已于 2025-12 停更（`// TODO(未核实)`：`quiltmc.org/en/faq/` 已 404，无法复核），本版本无任何可用 QSL/QFAPI 构件**；本档内容仅为考据/stub，禁止当可编译 API。注册/事件走 Vanilla Registry.register 或同版 Fabric API。
+> ⚠️ **QSL 构件只出到 MC 1.21.1（maven 实测 2026-10-01：+1.21.3 起 0 命中）；「2025-12 停更」原引页 404 属 `// TODO(未核实)`，不作依据。本档无可用 QSL/QFAPI 构件**；本档内容仅为考据/stub，禁止当可编译 API。注册/事件走 Vanilla Registry.register 或同版 Fabric API。
 
 
 核实表：knowledge/common/qsl-verified.md。
 必须 search_docs({platform:"quilt"}) 且 version=1.21.4。02–10 仍读 fabric/1.21.4 overlay。
 
-禁止把 1.21.1 RegistryEvents 冒充本档。Loader 入口仍是 ModInitializer#onInitialize(ModContainer)。
+禁止把 1.21.1 RegistryEvents 冒充本档。入口点见下（quilt-loader 自带 Fabric 兼容接口；Quilt 原生 ModInitializer 在 loader 0.31 已删除）。
 
-入口：org.quiltmc.loader.api.entrypoint.ModInitializer#onInitialize(ModContainer)。quilt.mod.json entrypoints.init。
+入口：net.fabricmc.api.ModInitializer#onInitialize()（quilt.mod.json entrypoints.main；quilt-loader 自带 @Deprecated 兼容接口，无需额外依赖）。QSL 写法（有该档构件时）：org.quiltmc.qsl.base.api.entrypoint.ModInitializer#onInitialize(ModContainer) + entrypoints.init + 依赖 org.quiltmc.qsl.core:qsl_base。
 
 禁止 QuiltRegistry.register()。禁止把 net.fabricmc.fabric.api.event.registry 当 QSL。
 简单物品/方块可用 Vanilla Registry.register（不是 FAPI 专属）。

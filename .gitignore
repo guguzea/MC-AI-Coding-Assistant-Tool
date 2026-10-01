@@ -116,4 +116,5 @@ temp/audit-report.json
 # 故不在此重复登记；`%TEMP%\mcp-gate-poison-*` 在仓库外（.gitignore 管不到）；
 # `data/forge_javadoc/1.12.2/processed/` 的 914 份孤儿混在 3,653 份有效文件里，无法用模式表达
 # （只删 processed 会破坏 raw==processed 的 A1 口径，须与 raw 侧重名件成对删 —— 见 CLEANUP-list §1.5）。
-
+# 交接文件
+mcp-server/docs/handoff-playtest-next.md

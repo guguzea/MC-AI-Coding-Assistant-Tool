@@ -14,7 +14,7 @@ docsTool: search_docs
 
 Vanilla Registry.register。QSL RegistryEvents 未打开，禁止把 1.21 分支方法名冒充本档。
 
-入口：org.quiltmc.loader.api.entrypoint.ModInitializer#onInitialize(ModContainer)。quilt.mod.json entrypoints.init。
+入口：net.fabricmc.api.ModInitializer#onInitialize()（quilt.mod.json entrypoints.main；quilt-loader 自带 @Deprecated 兼容接口，无需额外依赖）。QSL 写法（有该档构件时）：org.quiltmc.qsl.base.api.entrypoint.ModInitializer#onInitialize(ModContainer) + entrypoints.init + 依赖 org.quiltmc.qsl.core:qsl_base。
 
 禁止 QuiltRegistry.register()。禁止把 net.fabricmc.fabric.api.event.registry 当 QSL。
 简单物品/方块可用 Vanilla Registry.register（不是 FAPI 专属）。
