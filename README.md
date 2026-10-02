@@ -1,5 +1,10 @@
+[English](README.en.md) | **简体中文**
+
 # MC AI Coding Assistant Tool
-#### 写在前面的
+
+> **本文数据截至 2026-10-02**（各节另有更细的 as-of 标注）。文中计数、版本清单、页数等均为标注日期实跑核对；引用前请按小节给出的复算命令自行重跑，不要按字面信任旧值。
+
+## 写在前面的
 ### 如果你是agent,这个readme文件是整个项目的说明,帮助用户安装和配置mcp请看AUTO_SETUP.md,这个文件也有一部分帮助配置的内容,但这是为了避免你不看AUTO_SETUP.md
 ### 如果你是人类,你可以直接跳过这篇说明,这是AI时代,只需把这个链接粘贴到ClaudeCODE/CURSOR/ZCODE/OPENCODE里，然后让AGENT讲讲就可以了解大部分内容
 
@@ -13,6 +18,7 @@
 Agent 负责版本门禁、文档检索、规则/反模式、骨架草稿、校验与崩溃分诊等。
 
 下列高风险操作默认停在清单或 `dryRun`，**必须有人在环**（先展示、经用户确认后再做）：写盘、运行 Gradle、拷贝 jar 到游戏目录、上传发布。
+
 ## 项目结构
 
 ```
@@ -128,23 +134,33 @@ MC_skill/
 
 **证据判读统一入口**：`inspect_playtest_evidence`（三态 `present|absent|unreadable`，缺件不得读成“没有失败”）；执行权与授权见根 `AGENTS.md`「人在环例外：游玩自测（三通道）」。
 
-### 后半 loop 真机矩阵（村庄测试：`locate` 定位 → 飞抵/寻路 → 扫描/查询 → 断言 → 截图；as-of 2026-10-01）
+### 后半 loop 真机矩阵（村庄测试：`locate` 定位 → 飞抵 → `land` 落地 → 扫描 → 断言 → 截图；as-of 2026-10-02，读数由各实例 `evidence/` 直读）
 
-> 单元格 = 该 combo 的村庄测试真机结果；`—` = 该档没有对应路线的可用件（不是失败）。
+> 单元格 = 该 combo 的村庄测试**真机**结果：✅ = 整轮通过（`exit-code=0`；证据在授权根 `E:\MC_GAME\instances\<tag>\evidence{,-bridge}/`）；❌ = 未通过（原因随行注明）；⏳ = 修复/重跑中；⚠️ = 该档或实例未建；`—` = 该档没有对应路线的可用件（**不是失败**）。
 
-| 平台 | 版本 | 无桥 driver | 有桥 BlackBoxPro |
+| 平台 | 版本 | 无桥 driver（村庄整轮） | 有桥 BlackBoxPro |
 | --- | --- | --- | --- |
-| Fabric | 1.20.1 / 1.20.4 / 1.21.1 / 1.21.3 / 1.21.11 | ✅ 村庄测试整轮通过（`exit-code=0`） | 1.21.1 / 1.21.11 ✅（桥村测见 `calls.jsonl`）；其余 — |
-| Fabric | 1.21.4 / 1.21.8 / 1.21.10 / 26.1.2 | 1.21.4 / 1.21.8 / 1.21.10 已 javap 取证 + 生成真 driver；26.1.2 走 mojmap 面（见 `PLAYTEST_VERIFIED_TIER`） | — |
-| Quilt | 1.20.1 / 1.20.4 / 1.21.1 / 1.21.3 / 1.21.4 / 1.21.8 / 1.21.10 / 1.21.11 | 1.21.11 ✅；其余档按同版 yarn 命名层出真 driver（真机读数见 CHANGELOG 各批） | 1.21.11 ✅（fabric 桥件走 quilt-loader 兼容面） |
-| Forge | 1.20.1 ✅；1.20.4 / 1.21.1（draft）待扩 | ✅ 1.20.1（村庄测试整轮通过）；1.20.4/1.21.1 见 `PLAYTEST_VERIFIED_TIER` | — |
-| NeoForge | 1.20.1 起（含 1.20.4 / 1.20.6 / 1.21.1 / 1.21.3 / 1.21.5 / 1.21.8 / 1.21.10 / 1.21.11 / 26.1） | 1.20.1 与 forge 1.20.1 同形（兼容层）；其余档驱动面见 `PLAYTEST_VERIFIED_TIER` | 1.21.1 / 1.21.11 桥件可用（与 fabric 同版） |
+| Fabric | 1.20.1 / 1.20.4 / 1.21.1 / 1.21.3 / 1.21.4 / 1.21.8 / 1.21.11 | ✅ 各整轮（`exit-code=0` + 村庄 `blocks hits` + 截图；1.21.4 / 1.21.11 经 retry 轮） | **1.21.1 ✅ + 1.21.11 ✅ 各整轮**（纯桥路线：`locate` → `tp` → `land` → 自适应列探针定地面层 → 方块网格；1.21.1 证据 `oak_log`+`dirt_path`+`farmland`+`beetroots`+4×`cobblestone`；1.21.11 证据 `oak_planks`+`cobblestone_stairs`+`mossy_cobblestone`+`white_terracotta`+`dirt_path`，`groundY=97`，`await` `matched:true`）；其余 —（未装桥件） |
+| Fabric | 1.21.10 | ✅ 整轮（第 1 轮 17/17，`blocks hits=2125`，`nearest=oak_log@-1281,68,-1522` / `first=cobblestone@-1344,64,-1491`；此前的“坠虚空”靠 `forceload` + 长等待计划解掉） | — |
+| Fabric | 26.1.2 | ⚠️ 未建实例（mojmap 面；驱动档见 `PLAYTEST_VERIFIED_TIER`） | — |
+| Quilt | 1.20.1 / 1.20.4 / 1.21.1 / 1.21.3 / 1.21.4 / 1.21.8 / 1.21.10 / 1.21.11 | ✅ 各整轮（1.21.3 / 1.21.4 / 1.21.8 经 retry 轮；1.21.4 = `oak_planks@-1281,68,-1524` 7 hits；1.21.10 `land y=63` 后 19 hits） | —（实例 `run/mods` 无桥 jar，本轮未装测） |
+| Forge | 1.20.1 | ✅ 整轮（18/18 `ok:true`） | —（BlackBoxPro 无 forge ≥1.20.1 件；发布件只有 forge 1.12.2） |
+| Forge | 1.20.4 | ✅ 整轮（修好两个真缺陷：FML 49 dev 合并块 + Forge 49 loot ISE；第 2 轮 17/17，`blocks hits=2162`，`nearest=dirt_path@48,74,751` / `first=oak_log@-13,79,808`） | — |
+| Forge | 1.21.1 | ⚠️ 无规则树（draft 档），未建实例 | — |
+| NeoForge | 1.20.4 / 1.20.6 / 1.21.1 | ✅ 各整轮（1.20.4 18/18；1.20.6 / 1.21.1 = 1206+ 新表首跑，经 retry 轮） | —（发布件有 neoforge 1.21.1 / 1.21.11，需 KotlinForForge，本轮未装测） |
+| NeoForge | 1.20.1 | ⚠️ 未建实例（该档 scaffold 无构建插件，待研究） | — |
+| NeoForge | 1.21.3 / 1.21.5 / 1.21.8 / 1.21.10 / 1.21.11 / 26.1 | ⚠️ 未建实例 | — |
 
 **已核实边界（写清不吹）**：
 
 - **有桥**只覆盖 BlackBoxPro 有预编译件的档；其余档一律走**无桥**（进程内 driver）。桥**无鉴权**且通配绑定 ⇒ 只在可信网络、短会话；`playtest_bridge` 只连 `127.0.0.1`。
+- **桥的 `/status.ready` 不可信**（2026-10-02 实测）：主菜单下它也报 `ready:true`；判「在不在世界」只能看 `query_player_state` —— 成功带 `data` = 在；`ok:false` + `"Player not available"` = 不在。**一次超时不能当「不在世界」**，否则会像本轮一样误触发全量世界重载，慢盘上 ~28 分钟不回来。
+- **CLI 对 `status` / `execute` 的 HTTP 超时写死 10s**（`playtest-bridge` 的 `DEFAULT_TIMEOUT_MS`；`timeoutMs` 只作用于 `await`）：慢盘上 `join_world` 触发的整合服世界加载期间，**每一次** 调用都会 10s 超时（游戏侧逐条 `Failed to write HTTP response`）。桥路线在这种盘上要么**先把世界进好再驱动**，要么把等待预算按分钟计 —— 别读成「桥坏了」。
+- **CLI envelope 是 `{success, tool, result:{…}}`**：读字段一律先解 `result`（`st.ok` 恒 `undefined`；`status` 的 `ready` 在 `result.ready`）。驱动脚本的 CLI 路径若含非 ASCII 目录名，**用 `String.fromCharCode` 拼**，别让文件编码把它变成 U+FFFD（那会让每次 `node <path>` 都 MODULE_NOT_FOUND，看起来像「CLI 退化」）。
 - **无桥 driver 的“真代码”档**以 `generate_playtest_driver` 的 `PLAYTEST_VERIFIED_TIER`（生成器内表）为准；不在表里的档只出结构壳（`// TODO(未核实)`），**不会**静默编成假 driver。
 - **自动进世界**用 vanilla quick play（Loom/ForgeGradle 的 runClient `programArgs "--quickPlaySingleplayer"`）；1.20.4 / 1.21.1 / 1.21.3 等档**不要**让 driver 自己调 `IntegratedServerLoader.start`（会把客户端冻在“等服务器载入”循环，jstack 已验证）。
+- **`scan` 的方块采样是「玩家脚边 −4..+8 格的薄层」**（默认 `stride=4`）：村庄在地面 ⇒ 计划必须在 `goto` 之后、`scan` 之前写 **`land max=<n>`**（等 `isOnGround`）再扫；让角色悬停在空中扫地面**必然 0 命中**（实测 quilt-1.21.10：hover 在 y≈140 → `blocks hits=0`；同点落地后 13–17 命中）。`land` 超时（区块缺失、角色一直坠落）判红——这是**故障信号不是假红**。
+- **重活互斥纪律**：同一实例同时只允许一件重活（起游戏 / 构建 / 替换存档）。并发会在 U 盘级 I/O 上互相饿死，症状 = 服务器 `Can't keep up! … ticks behind` + 抵达点区块未就绪 + 角色坠入虚空 → `scan=0`（**不是**驱动缺陷）。替换 `run/saves/<世界>` 必须在确认该实例无 java 进程后进行。
 - **世界供给**：单机存档需 `allowCommands=1`（`/locate` 需要）；跨加载器可复用**同 MC 版本**的 `run/saves/<name>`（客户端会按需升级旧版存档）。
 - **关客户端**要按命令行精确杀真身 JVM（含 `-Dfabric.dli.config` / `-Dneoforge...` 的那个 java 进程），只杀 `gradlew` wrapper 会残留客户端并锁住存档（`session.lock`）。
 - 游玩自测的**驱动文件测完必须撤除**（`playtest/REVERT.md`），证据只留授权根，不入正式实例 / 正式分支。
@@ -269,7 +285,7 @@ MC_skill/
 
 > 按根目录 `AGENTS.md` 判断平台与**精确**版本，然后调用 `activate_platform_pack action=session` 加载该档规则 / Skill 索引（不要直接读邻版 `平台/<ver>/.cursor`）。官方文档先 `list_*_versions`，再把 `version` 写死成工程版本去 `search_*_docs` / `search_docs`。创意设计由用户拍板；兼容取舍 / API 选择默认也由用户决定，用户不想或没能力决定时可代劳，但必须按下方「解释模板」说明（模板已同步写入根 `AGENTS.md`「人在环」节，对 Agent 强制生效）；写盘 / Gradle / 拷 jar / 上传须确认后再做（人在环，不是无人值守流水线）。
 
-#### 解释模板（代劳决策时的强制说明格式）
+### 解释模板（代劳决策时的强制说明格式）
 
 1. **决策透明**
 
@@ -346,15 +362,46 @@ MC_skill/
 
 | 变量                      | 说明                                     | 示例                                |
 | ----------------------- | -------------------------------------- | --------------------------------- |
+**常设（多数用户会碰到的）**
+
+| 变量                      | 说明                                     | 示例                                |
+| ----------------------- | -------------------------------------- | --------------------------------- |
 | `MC_SKILL_DATA`         | 数据目录根路径（指向 `data/`，不含版本子目录）            | `<仓库根>/data`                |
 | `MC_SKILL_COMMUNITY`    | 社区知识库根路径（默认仓库根 `community_knowledge/`） | `<仓库根>/community_knowledge` |
 | `MC_SKILL_ALLOW_WRITE`  | `1` 时允许 `port_project` 写盘              | `1`                               |
 | `MC_SKILL_PROJECT_ROOT` | 写盘允许的项目根（绝对路径）                         | `<你的模组工程绝对路径>`                  |
 | `MC_SKILL_STRICT`       | `1` 时数据无效则 MCP 启动失败                    | `1`                               |
-| `MC_SKILL_DEBUG_PATHS`  | `1` 打印路径解析过程                           | `1`                               |
+| `MC_SKILL_DEBUG_PATHS`  | `1` 打印路径解析过程（诊断“找不到 data/”时先开它）        | `1`                               |
 | `MC_SKILL_CACHE`        | 反编译/MDK/loader-jar 缓存根。MCP 与脚本都读此变量；不设则 MCP 默认 APPDATA、脚本默认 `os.tmpdir()/mc-skill-cache`，会分家 | `%APPDATA%/mc-skill-cache`（脚本回退 `os.tmpdir()/mc-skill-cache`） |
-| `MC_SKILL_SKIP_DOWNLOAD` | `1` 时反编译工具跳过一切下载并诚实失败。**须显式设成逐字 `1`** 才生效（实现是严格比较 `=== "1"`，见 `mcp-server/src/decompile/java/java-process.ts:168`；不设或设 `true` 均不生效）。**供 CI/离线环境显式设置；本仓 `.github/workflows/*` 目前未设** ⇒ 属用户 CI 面，见 [`CONTRIBUTING.md`](./CONTRIBUTING.md) 未排期清单 `L23` | 未设（默认按需下载）      |
-| `MCP_TIMEOUT_MS`        | 测试脚本超时毫秒数                              | `30000`                           |
+| `JAVA_HOME`             | 反编译 / remap 用的 JDK（需 17+；缺失 ⇒ 工具回 `TOOLCHAIN_MISSING`） | `<Temurin 17+ 安装目录>`           |
+| `MC_SKILL_PLAYTEST_ALLOW` | `1` 时放开游玩自测三通道的授权闸（须与 `MC_SKILL_PLAYTEST_ROOT` 成对出现） | `1`                               |
+| `MC_SKILL_PLAYTEST_ROOT` | 游玩自测授权根（绝对路径；目标 realpath 必须落在其内）         | `<授权实例存档根>`                     |
+| `MC_SKILL_SKIP_DOWNLOAD` | `1` 时反编译工具跳过一切下载并诚实失败。**须显式设成逐字 `1`** 才生效（实现是严格比较 `=== "1"`，见 `mcp-server/src/decompile/java/java-process.ts:168`；不设或设 `true` 均不生效）。本仓 `.github/workflows/` **四支工作流均已设该变量**（as-of 2026-10-02 实测） | 未设（默认按需下载）      |
+
+**进阶 / 排障（按需；多数场景不必设）**
+
+| 变量                      | 说明                                     | 默认 / 示例                                |
+| ----------------------- | -------------------------------------- | --------------------------------- |
+| `MC_SKILL_JAVA_SCAN_MAX_FILES` | `validate_project` 等 Java 源码扫描的文件上限 | `300`                        |
+| `MC_SKILL_JAVA_TIMEOUT_MS` | 反编译子进程超时毫秒数（非法值忽略并下沉）             | 内建回落值                        |
+| `MC_SKILL_SCRIPT_TIMEOUT_MS` | **CLI 侧**脚本子进程超时毫秒数（不设 = 不设超时，长跑不被误杀） | 未设                   |
+| `MC_SKILL_MAX_ENTRY_BYTES` | 解压时单条目未压缩大小上限（防 zip 炸弹）             | `268435456`（256 MB）            |
+| `MC_SKILL_MDK_CHECKSUMS` | MDK 校验和 pin 文件路径覆盖                      | `mcp-server/data/mdk-checksums.json` |
+| `MC_SKILL_BEDROCK_API_PIN` | 基岩 Script API pin 文件路径覆盖                  | `mcp-server/data/bedrock-script-api-pin.json` |
+| `MC_SKILL_FETCH_BACKEND` | 设 `curl` 时 GitHub 抓取改走系统 `curl.exe`（Node TLS 失败时的逃生口） | 未设（先试 Node，失败回落 curl） |
+| `MC_SKILL_GITHUB_API_BASE` | GitHub API 镜像基址（同时被加入抓取 host 白名单）     | 未设（`api.github.com`）           |
+| `MC_SKILL_GITHUB_TIMEOUT_MS` | GitHub 请求超时毫秒数                        | 内建回落值                        |
+| `MC_SKILL_GITHUB_TOKEN` / `GITHUB_TOKEN` | 自更新 / 上游查询的 GitHub token（提速率、免匿名限流） | 未设                   |
+| `MC_SKILL_UPDATE_REPO` / `MC_SKILL_UPDATE_REMOTE` | 自更新仓库 slug / 强制 git remote 名     | `guguzea/MC-AI-Coding-Assistant-Tool` |
+| `MC_SKILL_UPDATE_CACHE_TTL_SEC` | 自更新检查缓存 TTL（秒）                    | `3600`                            |
+| `MC_SKILL_UPDATE_DOWNLOAD_TIMEOUT_MS` | 自更新下载超时毫秒数                   | `600000`                          |
+| `MC_SKILL_UPSTREAM_CACHE` | 设 `0` 整体关掉 `query_upstream_releases` 磁盘缓存  | 未设（按档 TTL）                    |
+| `HTTP_PROXY` / `HTTPS_PROXY` / `ALL_PROXY`（含全小写） | 抓取的代理                         | 未设                              |
+| `APPDATA`               | Windows 下缓存根默认基址（`MC_SKILL_CACHE` 未设时） | 系统值                          |
+| `NODE_OPTIONS`          | Node 22.5–22.12 / 23.0–23.3 需含 `--experimental-sqlite` | 未设（22.13+ / 23.4+ 无需）      |
+| `MCP_TIMEOUT_MS`        | **测试/CI 侧**超时毫秒数（`test-mcp.mjs` / `release-smoke.mjs` / 四支 CI 工作流读它；**MCP 服务进程本身不读**） | `30000`            |
+
+> 上表覆盖对用户有行为影响的面，非穷尽：服务端源码实际读取 **37** 个环境变量名（as-of 2026-10-02），其余为内部调试开关。要拿全量清单，扫 `mcp-server/src/**` 的 `process.env.*` 即可（`MC_SKILL_STRICT` / `MC_SKILL_DEBUG_PATHS` 属本表已列；`ComSpec` / `COMSPEC` 等为 spawn 细节，无需配置）。
 
 
 
@@ -364,6 +411,46 @@ MC_skill/
 本地 MCP 服务名：`MC-AI-Coding-Assistant-Tool`（**86** 个工具）。配置时请使用 **绝对路径** + `MC_SKILL_DATA` 指向本仓库 `data/`。要求 **Node.js >= 22.5**（Yarn 映射使用内置 `node:sqlite`；**22.5–22.12 与 23.0–23.3 需在 NODE_OPTIONS 或启动参数加 `--experimental-sqlite`，22.13+ / 23.4+ 无需**）。仓库 / Release **不含** `node_modules`，需自行 `npm ci && npm run build`（建议再跑 `npm run build:yarn-sqlite`）。
 
 **测试**：`cd mcp-server && npm test`（构建 + 全部单测：核心 / 脚本 / 数据审计 / Wave BCD / localize / update / CLI / 反编译 / 深 mixin / MCP 协议）。CI 语义：`.github/workflows/` 四支工作流的 job env 统一设 `MC_SKILL_SKIP_DOWNLOAD=1`，下载类工具在 CI 里诚实失败而非静默拉网络（该变量须在 mcp-server 内跑 `node test-decompile.mjs` 实测绿后方可依赖此语义）。CLI 另有两档独立门：`npm run test:cli:quick`（`mcp-server/scripts/assert-cli-quick.mjs`，快档，已进默认门链）与 `npm run test:cli:full`（`mcp-server/scripts/assert-cli-full.mjs`，全量档（权威名单跑时现取）：入口契约探针 + 真实调用 + 逐条豁免原因，**不默认跑**）。
+
+### 安装后验收与 npm 脚本速查
+
+装完（或首次 clone）后，跑下面四条确认环境是对的；**全绿再往下走**：
+
+```bash
+cd mcp-server && npm ci && npm run build     # dist/ 不入库，必须自建
+node dist/cli.js --version                    # 应打印版本号（当前 package.json = 1.0.4）
+node dist/cli.js list-tools --names-only      # 应回 86 个工具名
+node dist/cli.js activate_platform_pack --action=list   # 应回本机已建档的平台 / 版本
+node dist/cli.js diagnose_data_paths          # 各平台应为 found；empty / not_found = MC_SKILL_DATA 没指对
+```
+
+MCP 宿主里工具全不可调 ⇒ 多半是 `dist/` 未编译或宿主未重载（装了新 `dist/` 也要**重载 MCP**）。详见 `AUTO_SETUP.md` 与本文「工具不可用排查」。
+
+`cd mcp-server` 后的常用脚本（完整 33 条以 `mcp-server/package.json` 为准）：
+
+| 脚本 | 用途 | 何时跑 |
+|---|---|---|
+| `npm run build` | `tsc` 编译到 `dist/` | 改源码后；跑 MCP/CLI 前 |
+| `npm ci` | 安装依赖 | 首次 clone（仓库/Release 不含 `node_modules`） |
+| `npm test` | 全量门链（构建 + 单测 + 各 `assert-*.mjs` 门） | 提交前 |
+| `npm run test:core` | 核心单测（含规则加载 / 兼容注释钉子） | 改了 core / 规则加载 |
+| `npm run test:cli` | CLI 契约单测（参数解析 + 信封 + 退出码） | 改了 CLI 入口 / 信封 / 退出码 |
+| `npm run test:cli:quick` / `test:cli:full` | CLI 快档（已进默认门链）/ 全量档（不默认跑，权威名单跑时现取） | 改了 CLI |
+| `npm run test:scripts` | `mcp-server/scripts/**` 门链 | 改了脚本 / 门（**收口必跑**） |
+| `npm run test:audit` | 数据审计单测 | 改了 `data/` 或审计器 |
+| `npm run test:semantic` | 语义索引单测 | 重建语义库后 |
+| `npm run test:decompile` / `test:deep-mixin` | 反编译 / deep mixin（需 JDK 17+） | 改了反编译 / 字节码校验 |
+| `npm run test:update` | 自更新单测 | 改了 `src/update/` |
+| `npm run build:yarn-sqlite` | 重建 Yarn 映射 SQLite（`--all`） | 首次 / 换档后；用 `convert_mapping` 前 |
+| `npm run fetch:embedding-model` | 下载本地嵌入模型 | 首次建语义索引前 |
+| `npm run build:semantic-index` | 重建语义索引（`npm run … -- --all`） | 要离线 / 语义检索时 |
+| `npm run build:vanilla-registries` | 重建 Vanilla Registry 数据（`-- --version=<v>`） | 改了 `query_registry` 数据 |
+| `npm run audit:data` | 全平台数据一致性审计（任何 ERROR = 不宜发布） | 发布数据包前 |
+| `npm run audit:data:forge` / `:fabric` / `:neoforge` / `:fail-on-error` | 单平台 / 全平台失败即错 | 只改了一个平台时 |
+| `npm run community:index` | 重建社区 L0 索引（`--write`） | 增删 `community_knowledge/` 条目后 |
+| `npm run smoke:release` | 发布冒烟 | 打包前 |
+
+> 其余脚本（`test:w3` / `assert:no-yarn-slurp` / `build:yarn-named` / `repair:quilt-indexes` / `audit:quilt-indexes` / `fetch:quilt-docs` / `fetch:bedrock-docs` / `fetch:vanilla-registries` 等）按需直查 `mcp-server/package.json`。
 
 ### 两个一等公民入口：MCP 与 CLI（2026-09-17 提级）
 
@@ -713,7 +800,7 @@ Cursor 主路径是 **tools**；协议层仍注册 Prompt/Resource，工具兜�
 | 渲染 / 模型      | `mc-renderer`、`mc-model`                                                                                                           |
 | 世界 / 数据包     | `mc-worldgen`、`mc-structure`、`mc-advancement`、`mc-loottable`、`mc-datapack`、`mc-resourcepack`、`mc-dimension`、`mc-weather`         |
 | 配置 / 测试 / 能源 | `mc-gametest`、`mc-energy`、`mc-multiblock`                                                                                          |
-| 兼容 / 文档库     | `mc-compat-jei`（knowledge/libs 源稿 + forge/1.20.1、neoforge/26.1 平台自有副本，非镜像）；库类（`mc-config` / `mc-cloth-config` / `mc-yacl` / `mc-geckolib` / `mc-architectury` / `mc-terrablender` / `mc-playeranimator` / `mc-pehkui` / `mc-kubejs` / `mc-balm` / `mc-modern-ui` / `mc-patchouli` / `mc-owo` / `mc-curios` / `mc-kotlin-for-forge` / `mc-trinkets` / `mc-cca` / `mc-polymer` / `mc-text-placeholder` / `mc-satin` / `mc-fabric-language-kotlin` / `mc-libgui` / `mc-lib-catalog` / `mc-author-shared-libs` / `mc-resourceful-lib` / `mc-moonlight-lib` / `mc-caelus` / `mc-spruceui` / `mc-player-ability-lib` / `mc-server-translations` / `mc-impersonate` / `mc-script-ui` / `mc-script-server` = 33 库类 + `mc-compat-jei` = **34 唯一 skillId**（**36** 份源稿；2026-09-25 现扫 `find knowledge/libs -name SKILL.md` = 36、目录名去重 = 34，份数差 = `mc-curios` / `mc-kotlin-for-forge` 在 forge-only 与 neo-only 各一份镜像 ⇒ 唯一 skillId 只多数一次。口径与本文 :47 / :579 / :768 及 `knowledge/libs/README.md` §当前规模一致；本行上一版写「32 库类 + `mc-compat-jei` = 33 唯一（35 份源稿）」，漏举的正是 `mc-cloth-config`）→ `knowledge/libs`） |
+| 兼容 / 文档库     | `mc-compat-jei`（knowledge/libs 源稿 + forge/1.20.1、neoforge/26.1 平台自有副本，非镜像）；库类（`mc-config` / `mc-cloth-config` / `mc-yacl` / `mc-geckolib` / `mc-architectury` / `mc-terrablender` / `mc-playeranimator` / `mc-pehkui` / `mc-kubejs` / `mc-balm` / `mc-modern-ui` / `mc-patchouli` / `mc-owo` / `mc-curios` / `mc-kotlin-for-forge` / `mc-trinkets` / `mc-cca` / `mc-polymer` / `mc-text-placeholder` / `mc-satin` / `mc-fabric-language-kotlin` / `mc-libgui` / `mc-lib-catalog` / `mc-author-shared-libs` / `mc-resourceful-lib` / `mc-moonlight-lib` / `mc-caelus` / `mc-spruceui` / `mc-player-ability-lib` / `mc-server-translations` / `mc-impersonate` / `mc-script-ui` / `mc-script-server` = 33 库类 + `mc-compat-jei` = **34 唯一 skillId**（**36** 份源稿；2026-09-25 现扫 `find knowledge/libs -name SKILL.md` = 36、目录名去重 = 34，份数差 = `mc-curios` / `mc-kotlin-for-forge` 在 forge-only 与 neo-only 各一份镜像 ⇒ 唯一 skillId 只多数一次。口径与本文 :49 / :581 / :770 及 `knowledge/libs/README.md` §当前规模一致；本行上一版写「32 库类 + `mc-compat-jei` = 33 唯一（35 份源稿）」，漏举的正是 `mc-cloth-config`）→ `knowledge/libs`） |
 
 Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；Forge 1.12.2–1.20.4 与 Fabric 主档均含 `mc-events`（2026-08 D-1 补齐，经 `FABRIC_SKILL_DONORS` 回填的薄档带 DONOR_SKILL 横幅）。代码模式示范见 `community_knowledge/patterns/`（也可经 `mcskill://patterns/README` 读取）。
 
@@ -855,7 +942,7 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；Forge 1.12.2�
 
 ### 7. 社区知识库（4）
 
-与官方文档分离；**不替代** `search_*_docs`。适合发布、崩溃分类、软依赖、机器 GUI、库选型等实务。索引约 **109** 条（`authored` 94 / `links` 11 / `permitted` 4）；库集成占其中 **48** 篇 `lib-*.md`。用法规则见 [`community_knowledge/AGENT_USAGE.md`](./community_knowledge/AGENT_USAGE.md)；主题 id 速查见 [`community_knowledge/README.md`](./community_knowledge/README.md)。
+与官方文档分离；**不替代** `search_*_docs`。适合发布、崩溃分类、软依赖、机器 GUI、库选型等实务。索引 **110** 条（`authored` 95 / `links` 11 / `permitted` 4，as-of 2026-10-02 直读 `community_knowledge/indexes/index-l0.json`）；库集成占其中 **48** 篇 `lib-*.md`。用法规则见 [`community_knowledge/AGENT_USAGE.md`](./community_knowledge/AGENT_USAGE.md)；主题 id 速查见 [`community_knowledge/README.md`](./community_knowledge/README.md)。
 
 
 | 工具                          | 作用                                                              |
@@ -889,7 +976,7 @@ authored/lib-*.md frontmatter（+ library-integration / library-integration-jei-
   → scripts/build-lib-manifest.mjs（Modrinth API）→ lib-manifests/all.json（49 slug / 3,003 版本条目；as-of 2026-09-25 现算）
   → scripts/batch-decompile.mjs（分批反编译，源码按需生成到 $MC_SKILL_CACHE，不入库）
   → scripts/merge-verified-api.mjs → 回填 verifiedApi
-  → scripts/build-api-summaries.mjs → lib-api-summaries/（44 库 API 摘要）
+  → scripts/build-api-summaries.mjs → lib-api-summaries/（48 份库 API 摘要）
   → check_dependencies 消费 catalog + manifest（库识别 / 版本摘要）
 ```
 
@@ -1013,7 +1100,7 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 | 数据 | 位置 | 内容 |
 |---|---|---|
 | `library-catalog.ts` | `mcp-server/src/diagnostics/` | **50** 条 catalog（48 篇 `lib-*` + 集成导航专篇）/ **2632 个 verifiedApi 键**（`gameVersion/loader → packages/entrypoints`）+ **`supportedVersions` 版本窗口**（Modrinth 实测受支持 MC 版本列表，反编译验证）+ `officialUrls` |
-| `lib-api-summaries/*.json` | `mcp-server/data/` | 44 库 / 12,225 个 public 类 / 49,040 方法签名摘要（轻量 javadoc，约 4MB） |
+| `lib-api-summaries/*.json` | `mcp-server/data/` | **48 份**库摘要 / **824** 个版本组（as-of 2026-10-02 现算；旧值 44 库 / 12,225 类 / 49,040 方法 / 约 4MB 已过期）；按库累计 public 类 114,708 / 方法签名 545,127，磁盘约 **38 MB**。复核：`node -e "const fs=require('fs'),p='mcp-server/data/lib-api-summaries';…"`（见本表下方计数口径 B） |
 | `lib-manifests/all.json` | `mcp-server/data/` | **49** slug / **3,003** 版本条目（版本号/URL/hash/loader 矩阵，Modrinth API 生成）。复核（as-of 2026-09-25 现算）：`node -e "const j=require('./mcp-server/data/lib-manifests/all.json');console.log(j.length, j.reduce((a,e)=>a+e.entries.length,0))"` ⇒ `49 3003`（旧值 `48 2870` = 第 44 轮翻页修复前的首页截断面）；嵌套键是 `entries`，按 `versions` 取会算出 0 |
 
 > **`packages` 是启发式产物，不可当 import 依据**：`verifiedApi.<版本/加载器>.packages` 由 `scripts/batch-decompile.mjs`
@@ -1031,7 +1118,7 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 另：`registerPrompt` / `registerResource`（工作流与知识 URI）供支持 prompts/resources 的客户端使用；详见 `mcp-server/docs/prompts-client-compat.md`。
 ### 工作流模板（MCP Prompts）
 
-工作流模板通过 `registerPrompt` 注册（支持 prompts 的客户端可用）；数量以 `get_workflow_template` 列表为准。Cursor 等仅 tools 客户端用该工具获取同款全文。
+工作流模板通过 `registerPrompt` 注册（支持 prompts 的客户端可用）；Cursor 等仅 tools 客户端用该工具（`get_workflow_template`）获取同款全文。**共 49 个**（as-of 2026-10-02 由 `get_workflow_template` 的枚举实测；本表已列全）。
 
 这些模板是 **Agent 步骤清单**（人在环）：对齐创意与版本取舍后给出检索/草稿/校验顺序。**没有** Gradle / 拷 jar 进游戏目录 / 上传发布的 MCP 工具；`mc-build-mod` / `mc-ingame-iterate` 只列步骤，须用户确认后在本机执行。不代跑 Gradle、不自动拷 mods、不上传商店——高风险步骤写明「用户确认后执行」，这是设计。
 
@@ -1078,21 +1165,35 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 | `mc-events-forge` | Forge 事件系统清单 | session task=mc-events-forge → 05-events / mc-events；注册期 vs 运行期订阅分叉逐版取该档 05-events.mdc（≤1.17 起）；类名核 search_forge_docs |
 | `mc-events-neoforge` | NeoForge 事件系统清单 | session task=mc-events-neoforge → 05-events / mc-events；mod bus（注册期）vs 游戏总线（运行期）逐档取该档 05-events.mdc；类名核 search_neoforge_docs |
 | `mc-events-fabric` | Fabric / Quilt 事件系统清单 | session task=mc-events-fabric → 05-events / mc-events；「初始化里 register 回调 vs 回调内运行期逻辑」逐档取该档 05-events.mdc（薄档 1.21.4/1.21.8/1.21.10 只有指路句）；Quilt 分支只走 quilt/<ver>/05-events（QSL 无正式版构件，禁止把 Fabric 回调当 QSL）；类名核 search_fabric_docs |
+| `mc-rendering` | 渲染工作流（BER / 自定义模型加载器 / 着色器） | 渲染注册入口按平台 + 版本分叉，禁止一条 API 名覆盖全档；先确认平台与精确版本 → session（可 task=mc-new-blockentity / mc-new-entity）；表现层接 `mc-audio-vfx` |
+| `mc-profiling` | 性能剖析工作流 | 卡顿 / 内存 / 耗时的独立剖析面；原则「先测量后优化」。是 `mc-crash-triage` 第 5 步与 `mc-build-mod` 第 7 步的完整版 |
+| `mc-save-migration` | 存档数据结构迁移工作流 | **强制第一步**：改存档 schema 前必须先让用户整份备份世界目录并回报路径。覆盖 SavedData `.dat`、方块实体 / 实体 / 区块读写格式、跨版本旧世界兼容 |
+| `mc-server-multiplayer-test` | 服务端与多人联机测试工作流 | 联机侧验证：专用服务端、多客户端同房、状态同步、权限与延迟下行为。构建走 `mc-build-mod`，单机真机走 `mc-ingame-iterate` |
+| `mc-combat-attribute` | 伤害 / 属性 / 战斗工作流 | 伤害种类、实体属性与加成、战斗数值。附魔 / 药水 / 效果走 `mc-enchant-potion`，战利品走 `mc-recipe-data` |
+| `mc-multi-loader` | 多加载器（Architectury）工作流 | 一份源码产出 Fabric / NeoForge（或 Forge）多加载器构建；构建与调试成本翻倍属取舍，先与用户确认。已有工程改代码走对应平台 session |
+| `mc-modpack` | 整合包集成工作流 | 把第三方 mod 装成可跑的包：依赖闭包、加载顺序、冲突分诊。不做自动发布，不代下载 / 代上传 mod 文件 |
+| `mc-datapack-standalone` | 独立数据包工作流（无 Java 代码） | 纯数据包：世界 `datapacks/` 目录或独立 zip，无 `build.gradle`、无 Java 源码。模组附带的配方 / 战利品走 `mc-recipe-data` 与对应平台 session |
+| `mc-resourcepack-standalone` | 独立资源包工作流 | 纯资源包：`resourcepacks/` 或独立 zip（模型 / 方块状态 / 纹理 / lang / 音效 / GUI 贴图）。模组内资源走对应平台 session 与该档规则 |
 
 
 ### 知识暴露（MCP Resources）
 
 通过 `registerResource` 注册 `mcskill://` URI（支持 resources 的客户端）；`list_knowledge_resources` / `read_knowledge_resource` 工具兜底。
 
+**实测共 269 条**（as-of 2026-10-02 由 `list_knowledge_resources` 枚举；复核：`node mcp-server/dist/cli.js list_knowledge_resources`）。按 URI 族：
 
-| URI                                     | 内容                                                         |
-| --------------------------------------- | ---------------------------------------------------------- |
-| `mcskill://matrix/mixin-support`        | mixin_analyze 支持矩阵（SRG/Yarn/Mojang/readable/descriptor 形态） |
-| `mcskill://schema/sqlite`               | yarn-mappings.sqlite v2/v3 字段说明                            |
-| `mcskill://version-changes/1.21`        | 1.21 变更专章（知识库）                                             |
-| `mcskill://antipatterns/registry`       | 注册反模式短文                                                    |
-| `mcskill://patterns/README`             | 代码模式库索引（community_knowledge/patterns/）                     |
-| `mcskill://workflow/mc-new-block` 等 | 与 Prompt 同名的工作流正文（以 `get_workflow_template` 列表为准） |
+| URI 族 | 条数 | 内容 |
+| --- | --- | --- |
+| `mcskill://code-patterns/<平台>/<版本>/NN-<主题>-patterns.md` | **116**（forge 61 / fabric 49 / neoforge 6） | 代码模式库正文，按平台 + 版本分档；供 agent 直接 Read 的片段级范式 |
+| `mcskill://community/<sourceKind>/<id>` | **99** | `community_knowledge/` 可读条目（authored / permitted / links，见「社区实务知识」一节） |
+| `mcskill://workflow/<模板名>` | **49** | 与 Prompt 同名的工作流正文（与 `get_workflow_template` 同一集合） |
+| `mcskill://matrix/mixin-support` | 1 | mixin_analyze 支持矩阵（SRG/Yarn/Mojang/readable/descriptor 形态） |
+| `mcskill://schema/sqlite` | 1 | yarn-mappings.sqlite v2/v3 字段说明（**须带 `?version=<精确 MC>`**，裸 URI 会被拒） |
+| `mcskill://version-changes/1.21` | 1 | 1.21 变更专章（知识库） |
+| `mcskill://antipatterns/registry` | 1 | 注册反模式短文 |
+| `mcskill://patterns/README` | 1 | 代码模式库索引（`community_knowledge/patterns/`） |
+
+> `code-patterns` 只覆盖 forge / fabric / neoforge 三树（quilt / liteloader / rift / modloader / bedrock 无 `code-patterns/` → 该族 0 条）；其中 6 条是 `archived` 旧档，注册在册但 `read_knowledge_resource` 会回 `found:false` + 存档说明，不再给正文。
 
 
 ### 独立 CLI（`node mcp-server/dist/cli.js`，86 工具全可用）
@@ -1125,6 +1226,64 @@ node mcp-server/dist/cli.js get_community_doc_summary --id authored/lib-curios
 
 
 
+## 排障与常见问题（FAQ）
+
+本文没有单独的 FAQ 表——排障数据本来就散在几张专表里，这里只做**索引**，避免你翻 1200 行。
+
+**四类高频症状**
+
+| 症状 | 先查什么 | 去哪 |
+| --- | --- | --- |
+| MCP 宿主里工具全不可调 | `dist/` 编译了没有？宿主**重载**了没有？ | 下节「工具不可用排查」；`AUTO_SETUP.md` |
+| `PLATFORM_DATA_MISSING` / 某平台数据为空 | `MC_SKILL_DATA` 是否指向本仓库 `data/` | `diagnose_data_paths`，或开 `MC_SKILL_DEBUG_PATHS=1` |
+| 查不到某个 API / 类 | 索引覆盖外或简名歧义，**≠** 游戏里没有该类 | 本文「工具边界」的误判对照表 |
+| 真机起了游戏但驱动没动作 | 授权双开关 / 失焦暂停 / 存档 `session.lock` 被占 | 本文「后半 loop 运维散件」 |
+
+**按症状跳到本文对应专表**
+
+- 工具返回怪结果、崩溃、参数被误解 → 「工具陷阱（实测，同类问题）」
+- 拿不准 `found:false` / `CACHE_MISS` / 空 methods 意味着什么 → 「工具边界」误判对照
+- 抓取 / 上游查询失败（TLS、超时、404、代理）→ 「工具与网络边界」
+- 装了更新却没生效 → `mc_skill_update` 的 `updateHint`（TTL 1h）+ `get_server_status.buildStatus`（`buildRequired`）
+- CLI 输出乱码 / `MODULE_NOT_FOUND`（非 ASCII 路径）→ 「独立 CLI」节的 PowerShell 5.1 坑
+- 游玩自测：桥超时 / `scan=0` / 世界不加载 / 关不掉客户端 → 「后半 loop 真机矩阵」的「已核实边界」+「运维散件」
+
+**历史台账**：跨轮未收敛问题记在仓库根 `bugfix_list.md`；逐批变更史在 `mcp-server/CHANGELOG.md`。
+
+### 工具不可用排查（clone 后必读）
+
+- **MCP 工具全部调用失败（服务未启动）**：`mcp-server/dist/` 未编译（dist 不入库）。执行 `cd mcp-server && npm ci && npm run build`（Node 需 ≥ 22.5；Yarn 映射可再 `npm run build:yarn-sqlite`）。
+- **`get_server_status` 报 `buildStatus.buildRequired=true`**：`src` 比 `dist` 新，需重新 `npm run build`，然后**在宿主里重载 MCP**（只编 dist 不够，宿主进程仍跑旧代码）。
+- **反编译类工具报 `TOOLCHAIN_MISSING`**：需 Java 17+（VineFlower / tiny-remapper）；装 Temurin 17+ 后重启 MCP，或按返回指引设置 `JAVA_HOME`。
+- **`search_mod_code` 报 `NOT_DECOMPILED`**：源码尚未反编译（按设计不入库）；先按返回指引调 `decompile_mod_jar` / `get_minecraft_source`。
+- **无 MCP 客户端**：用独立 CLI `node mcp-server/dist/cli.js <工具名> --参数=值`（86 工具全可用）。
+
+## 术语表
+
+| 词 | 含义 |
+| --- | --- |
+| 人在环（HITL） | 高风险步骤停在清单 / `dryRun` 等用户确认；见「定位」一节 |
+| `dryRun` / 写盘三态 | 预览（不传 `write`）/ 真写（`write+confirmed`+环境变量齐）/ 被拒（`write_blocked`） |
+| 证据三态 | `present` / `absent` / `unreadable`；缺件**不得**读成「没有失败」 |
+| `resultKind` | 生成类工具的机读结果：`ok` / `generation_failed` / `write_blocked`（两种失败不得混读） |
+| `total` | **本次返回条数**，随传的 `limit` 变；**不是**语料命中总数 |
+| `totalPool` / `truncated` | 进输出窗口前本面可用的候选数 / 是否还有页没返回 |
+| `semantic` | 本次检索是否走了语义索引；`false` = 退化为关键词（`stale` = 索引过期） |
+| `verbatim` | 命中是否为「该标识符在页面正文逐字出现」；缺该字段 = 未判定 |
+| `sourceKind` | 社区条目来源：`authored` / `permitted` / `links` |
+| `verifiedApi` | 库 catalog 里逐条目核过的 API 键（`gameVersion/loader`） |
+| `fallback` / `source_version` | 文档回退时：结果实际来自哪一版 / 是否发生回退 |
+| 前半 / 后半 loop | 前半 = 写码→构建→自动起游戏→分诊；后半 = 进游戏游玩→取证→回灌 |
+| 三通道 | 游玩自测执行权的授权通道（A 仓库沙箱 / B 用户 dev 实例 / C 第三方桥） |
+
+## 卸载与回退
+
+- **撤除写进用户工程的规则 / Skill**：`activate_platform_pack action=deactivate`（按写入清单撤写）；先跑 `action=write` 的 `dryRun` 预览看 `planned` / `willDelete`。
+- **撤除游玩自测驱动**：按 `generate_playtest_driver` 生成的 `playtest/REVERT.md` 删驱动文件 + 被测工程里的 `PlaytestQaDriver.register();` 调用行；`git status` 自查应零命中（驱动**绝不**提交）。
+- **撤除 CLI / MCP 安装**：`npm uninstall -g mc-skill`（或删对应 bin 链接）；仓库 `mcp-server/` 与 `data/` 可直接删（都在仓库内，不影响用户模组工程）。
+- **回退自更新**：`mc_skill_update` 只做 git `ff-only` 合并，回退用 `git reset --hard <上一个 commit>`（tooling）或换回上一版 data zip；更新前有未提交改动会被拒（可选 `allowDirty` / `stashDirty`）。
+- **缓存与临时产物**：反编译 / MDK / 语义模型产物在 `$MC_SKILL_CACHE`（默认 `%APPDATA%/mc-skill-cache`）；删它不影响仓库与用户工程。
+
 ## 阶段里程碑
 
 
@@ -1135,7 +1294,7 @@ node mcp-server/dist/cli.js get_community_doc_summary --id authored/lib-curios
 | Phase 2   | ✅ 完成  | Agent Skills + 代码模式库                                  |
 | Phase 3   | ✅ 完成  | MCP Server（文档 + 映射 + 移植 + 社区 + Wave B/C/D 扩展 + 五平台；工具数以 `list-tools` 为准） |
 | Phase 4   | ✅ 完成  | 知识库 / 反模式 / 数据审计与 Release 分发 |
-| Phase 4.5 | ✅ 完成  | **库模组全覆盖**：48 篇 `lib-*` 短文 + 33 唯一库 Skill（`knowledge/libs` 35 份源稿）+ check_dependencies 增强 + 全量反编译（jar 数**待核**，产物按需生成到 `$MC_SKILL_CACHE` 不入库；→ 1836 verifiedApi 键）+ API 摘要 + manifest + 通用 CLI dispatch **（本行是 Phase 4.5 完成当时的实况登记 ⇒ 数字一律不回改；现行数另扫：库 Skill = 34 唯一 / 36 份源稿，见本文 :47 / :579 / :603 / :768 与 `knowledge/libs/README.md` §当前规模，as-of 2026-09-25；`verifiedApi` 键现行值 = 2632（2026-09-24 复跑，见 `knowledge/libs/README.md:75`），本行的 1836 同为当时实况）** |
+| Phase 4.5 | ✅ 完成  | **库模组全覆盖**：48 篇 `lib-*` 短文 + 33 唯一库 Skill（`knowledge/libs` 35 份源稿）+ check_dependencies 增强 + 全量反编译（jar 数**待核**，产物按需生成到 `$MC_SKILL_CACHE` 不入库；→ 1836 verifiedApi 键）+ API 摘要 + manifest + 通用 CLI dispatch **（本行是 Phase 4.5 完成当时的实况登记 ⇒ 数字一律不回改；现行数另扫：库 Skill = 34 唯一 / 36 份源稿（见本文「项目结构」树、下文「库模组知识体系」的「五组」计数行，以及 `knowledge/libs/README.md` §当前规模；as-of 2026-10-02 现扫 `find knowledge/libs -name SKILL.md` = 36 份 / 34 唯一 skillId）；`verifiedApi` 键现行值 = 2632（2026-09-24 复跑，见 `knowledge/libs/README.md:75`），本行的 1836 同为当时实况）** |
 | Phase 5   | 📋 部分  | `inspect_runtime` = 日志型 inspector（非 JVM attach）；微调数据集仍暂缓 |
 
 

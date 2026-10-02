@@ -29,6 +29,17 @@ repositories {
 
 loom {
     // accessWidenerPath = file("src/main/resources/examplemod.accesswidener")
+
+    // 游玩自测（可选；正常开发不需要）：本档属 `fabric 1.20.4 / 1.21.1 / 1.21.3` 同族，
+    // 进程内驱动**不能**靠 IntegratedServerLoader.start 自己进世界 —— 该调用会把 Render thread
+    // 冻在 MinecraftClient.startIntegratedServer 的 Thread.sleep（jstack 实测 2026-10-01），
+    // 客户端整只停住、心跳停，而桥 /status 仍答 ready=true（极具误导）。
+    // 改用 vanilla quick play：取消下面注释，并把存档目录名换成你自己的（存档须已存在）：
+    // runs {
+    //     client {
+    //         programArgs "--quickPlaySingleplayer", "playtest_demo"
+    //     }
+    // }
 }
 
 dependencies {

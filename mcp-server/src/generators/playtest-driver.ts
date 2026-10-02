@@ -306,7 +306,7 @@ const FORGE_KEYS: Record<string, string> = {
  * 每条改写都对应上面 `platformProfile('forge')` 里 javap 实测的签名；fabric 路径**不改一字**（已真机验证）。
  * NeoForge 1.20.1 同此表（包名仍是 `net.minecraftforge`）。
  */
-export function rewriteForForge(java: string): string {
+export function rewriteForForge(java: string, version = "1.20.1"): string {
   // 注意：一律用 replaceAll / 全局正则 —— 同一调用在文件里出现多次（解释器 + 相位机两份），
   // 用 String.replace(string, string) 只会改**第一处**（实测：44 个编译错误里大半是这个原因，2026-09-29）。
   let s = java;
@@ -372,6 +372,9 @@ export function rewriteForForge(java: string): string {
   s = s.replaceAll("Registries.BLOCK.getId(", "BuiltInRegistries.BLOCK.getKey(");
   s = s.replaceAll("Registries.ITEM.getId(", "BuiltInRegistries.ITEM.getKey(");
   s = s.replaceAll("player.getInventory().getStack(", "player.getInventory().getItem(");
+  // mojmap 的 BlockPos 不可变副本是 `immutable()`（yarn 才叫 toImmutable）——实测 neoforge 20.4.251 merged jar
+  // 与 forge 1.20.1 mapped_official jar 两处 javap 均为 `public BlockPos immutable()`（2026-10-01）。
+  s = s.replaceAll(".toImmutable()", ".immutable()");
   s = s.replaceAll("client.runDirectory", "client.gameDirectory");
   s = s.replaceAll("client.getFramebuffer()", "client.getMainRenderTarget()");
   s = s.replaceAll("ScreenshotRecorder.saveScreenshot(", "Screenshot.grab(");
@@ -423,6 +426,94 @@ export function rewriteForForge(java: string): string {
             log("[QA] newworld 失败：" + t);
         }`,
   );
+  if (version === "1.20.4") {
+    s = applyWorldOpenFlows1204Plus(s);
+  } else if (version !== "1.20.1") {
+    s = applyWorldOpenFlows1206Plus(s);
+  }
+  return s;
+}
+
+/**
+ * MC 1.20.4 起 `WorldOpenFlows` 面改写（javap 实测 2026-10-01；**forge 1.20.4 与 neoforge 1.20.4 同 MC ⇒ 共用**）：
+ *   ① `loadLevel(Screen,String)` **已删** ⇒ 现成入口 `checkForBackupAndLoad(String, Runnable)`（public；Runnable = 读档失败/取消回调）。
+ *   ② `createFreshLevel(String,LevelSettings,WorldOptions,Function,Screen)` 多一个尾参 Screen ⇒ 补 `, null`。
+ * forge 1.20.4 依据：`forge-1.20.4-49.2.0-universal.jar` javap（MinecraftForge.EVENT_BUS / TickEvent.phase /
+ *   ClientChatReceivedEvent.getMessage ✓，与 1.20.1 同形）+ neoforge 20.4.251 merged jar 的 vanilla 侧同名（同 MC 1.20.4）。
+ */
+export function applyWorldOpenFlows1204Plus(s: string): string {
+  let t = s;
+  t = t.replaceAll(
+    "client.createWorldOpenFlows().loadLevel(null, WORLD)",
+    'client.createWorldOpenFlows().checkForBackupAndLoad(WORLD, () -> log("[QA] open world failed"))',
+  );
+  t = t.replaceAll(
+    "ra.registryOrThrow(net.minecraft.core.registries.Registries.LEVEL_STEM)));",
+    "ra.registryOrThrow(net.minecraft.core.registries.Registries.LEVEL_STEM)), null);",
+  );
+  return t;
+}
+
+/**
+ * MC 1.20.5+ 的 `WorldOpenFlows` 面改写（javap 实测 2026-10-01，neoforge 20.6.139 merged jar 的 vanilla 侧）：
+ *   ① `loadLevel(Screen,String)` 与 `checkForBackupAndLoad(String,Runnable)` **都没了** ⇒ 入口改名 `openWorld(String, Runnable)`
+ *      （public；Runnable = 读档失败/取消回调）。
+ *   ② `createFreshLevel(String,LevelSettings,WorldOptions,Function,Screen)` 尾参 Screen 与 1.20.4 同形 ⇒ 补 `, null`。
+ * 用于 neoforge 1.20.6+（rewriteForForge 的 version > 1.20.4 分支同用；当前仓库 forge 最小档 1.20.4 ⇒ 实际由 neoforge 走）。
+ */
+export function applyWorldOpenFlows1206Plus(s: string): string {
+  let t = s;
+  t = t.replaceAll(
+    "client.createWorldOpenFlows().loadLevel(null, WORLD)",
+    'client.createWorldOpenFlows().openWorld(WORLD, () -> log("[QA] open world failed"))',
+  );
+  t = t.replaceAll(
+    "ra.registryOrThrow(net.minecraft.core.registries.Registries.LEVEL_STEM)));",
+    "ra.registryOrThrow(net.minecraft.core.registries.Registries.LEVEL_STEM)), null);",
+  );
+  return t;
+}
+
+/**
+ * neoforge（1.20.2+ 的 `net.neoforged` 命名层）改写表：**= forge 表 + 事件栈换包**。
+ * 其余（mojmap 名、FML/注册面）与 forge 1.20.1 表逐条相同 —— vanilla 侧全套名已对 neoforge 20.4.251 的
+ * merged jar 逐条 javap 实测（2026-10-01）：`Minecraft.getMainRenderTarget()`/`gameDirectory`(public final File)/
+ * `createWorldOpenFlows()`/`screen`(public)/`Screenshot.grab(File,RenderTarget,Consumer<Component>)`/
+ * `ClientLevel.entitiesForRendering()`/`BuiltInRegistries.ENTITY_TYPE`/`BlockPos.offset(int,int,int)`·`below()`/
+ * `LocalPlayer.onUpdateAbilities()`·`onGround()`/`ClientPacketListener.sendCommand(String)`/
+ * `Window.getGuiScaledWidth()`/`Inventory.getItem(int)`/`KeyMapping.setDown(boolean)`/`Screen.onClose()`/
+ * `GuiEventListener.mouseClicked(double,double,int)`（default）/`InventoryScreen(Player)` 构造 —— 全部 ✓。
+ * 事件栈差异（neoforge 20.4.251 + bus 7.2.0 实测）：
+ *   - `net.neoforged.neoforge.common.NeoForge.EVENT_BUS`（public static final IEventBus；`IEventBus.register(Object)` ✓）
+ *   - `net.neoforged.neoforge.client.event.ClientChatReceivedEvent#getMessage() -> Component` ✓
+ *   - `net.neoforged.neoforge.event.TickEvent$ClientTickEvent` **带 `public final Phase phase`**（与 forge 同形，
+ *     `phase != TickEvent.Phase.END` 判据照用；`Phase.START/END` 实测存在）——**注意**：该类在 `neoforge.event`
+ *     包，**不在** `neoforge.client.event`（后者无 TickEvent；1.21.x 才改成 `client.event.ClientTickEvent$Post`）
+ *   - `net.neoforged.bus.api.SubscribeEvent`（注解）/`net.neoforged.bus.api.Event`
+ * ⚠ 尚未真机验证（首跑把编译/运行报错回灌）。
+ */
+export function rewriteForNeoForge(java: string, version = "1.20.4"): string {
+  let s = rewriteForForge(java, version);
+  s = s.replaceAll(
+    "import net.minecraftforge.client.event.ClientChatReceivedEvent;",
+    "import net.neoforged.neoforge.client.event.ClientChatReceivedEvent;",
+  );
+  s = s.replaceAll("import net.minecraftforge.common.MinecraftForge;", "import net.neoforged.neoforge.common.NeoForge;");
+  s = s.replaceAll("import net.minecraftforge.event.TickEvent;", "import net.neoforged.neoforge.event.TickEvent;");
+  s = s.replaceAll("import net.minecraftforge.eventbus.api.SubscribeEvent;", "import net.neoforged.bus.api.SubscribeEvent;");
+  s = s.replaceAll("MinecraftForge.EVENT_BUS", "NeoForge.EVENT_BUS");
+  // 1.20.6+（javap 实测 neoforge 20.6.139 merged jar 2026-10-01）：`neoforge.event.TickEvent` 类**已不存在**，
+  // 客户端 tick 事件迁到 `neoforge.client.event.ClientTickEvent$Pre/$Post`（**无 phase 字段**）⇒ 勾 $Post、去掉 phase 判据。
+  if (version !== "1.20.1" && version !== "1.20.4") {
+    s = s.replaceAll(
+      "import net.neoforged.neoforge.event.TickEvent;",
+      "import net.neoforged.neoforge.client.event.ClientTickEvent;",
+    );
+    s = s.replace(
+      /public void onClientTick\(TickEvent\.ClientTickEvent event\) \{\n\s*if \(event\.phase != TickEvent\.Phase\.END\) \{\n\s*return;\n\s*\}/,
+      "public void onClientTick(ClientTickEvent.Post event) {",
+    );
+  }
   return s;
 }
 
@@ -437,10 +528,55 @@ export const PLAYTEST_VERIFIED_TIER: ReadonlyArray<{ platform: string; version: 
     asOf: "2026-09-29",
   },
   {
+    platform: "forge",
+    version: "1.20.4",
+    mappings:
+      "forge-1.20.4-49.2.0（parchment 2024.02.25-1.20.4；方法/字段名 = official）。" +
+      "改写表 = forge 表 + **1.20.4 WorldOpenFlows 面**（见 applyWorldOpenFlows1204Plus：`loadLevel(Screen,String)` 已删 ⇒ `checkForBackupAndLoad(String,Runnable)`；`createFreshLevel` 多尾参 Screen）。" +
+      "javap 实测 2026-10-01：`forge-1.20.4-49.2.0-universal.jar` 的 `MinecraftForge.EVENT_BUS`（public static final IEventBus）✓、" +
+      "`TickEvent` 带 `public final Phase phase` + `TickEvent$ClientTickEvent(Phase)` ✓、`ClientChatReceivedEvent#getMessage()->Component` ✓（Forge 侧与 1.20.1 同形）；" +
+      "vanilla 侧（同 MC 1.20.4）逐条见 neoforge 20.4.251 merged jar 的实测备注。",
+    asOf: "2026-10-01",
+  },
+  {
     platform: "neoforge",
     version: "1.20.1",
     mappings: "同 forge 1.20.1（NeoForge 1.20.1 仍用 net.minecraftforge 包名；net.neoforged 自 1.20.2 起）",
     asOf: "2026-09-29",
+  },
+  {
+    platform: "neoforge",
+    version: "1.20.4",
+    mappings:
+      "neoforge 20.4.251 官方 merged jar + bus 7.2.0（javap 实测 2026-10-01；改写表 = forge 表 + 事件栈换包，见 rewriteForNeoForge）。" +
+      "事件栈：`net.neoforged.neoforge.common.NeoForge.EVENT_BUS` ✓、`net.neoforged.bus.api.IEventBus.register(Object)` ✓、" +
+      "`net.neoforged.neoforge.client.event.ClientChatReceivedEvent#getMessage()` ✓、" +
+      "`net.neoforged.neoforge.event.TickEvent$ClientTickEvent`（**带 `Phase phase`**，`Phase.START/END` ✓；该类**不在** client.event 包——1.21.x 才改成 `client.event.ClientTickEvent$Post`）" +
+      "、`net.neoforged.bus.api.SubscribeEvent` ✓。vanilla 侧（mojmap）全套与 forge 表一致（见 rewriteForNeoForge 注释逐条）。" +
+      "入口：`net.neoforged.fml.common.Mod` **只有 `String value()`（无 dist 参数）**、`FMLEnvironment.dist` 存在 ⇒ 注册行放 @Mod 构造器内用 `FMLEnvironment.dist == Dist.CLIENT` 守。",
+    asOf: "2026-10-01",
+  },
+  {
+    platform: "neoforge",
+    version: "1.20.6",
+    mappings:
+      "neoforge 20.6.139 merged jar（javap 实测 2026-10-01；改写表 = forge 表 + 事件栈换包，见 rewriteForNeoForge）。" +
+      "事件栈：`net.neoforged.neoforge.common.NeoForge.EVENT_BUS` ✓、`net.neoforged.neoforge.client.event.ClientChatReceivedEvent#getMessage()->Component` ✓、" +
+      "**`neoforge.event.TickEvent` 类已不存在**（javap 找不到）⇒ 客户端 tick 迁到 `net.neoforged.neoforge.client.event.ClientTickEvent$Pre/$Post`（**无 phase 字段**，勾 `$Post`）、" +
+      "`net.neoforged.bus.api.SubscribeEvent` ✓。vanilla 侧（mojmap）与 forge 表一致，唯一 WorldOpenFlows 面差异见 applyWorldOpenFlows1206Plus：" +
+      "`checkForBackupAndLoad(String,Runnable)` 也没了 ⇒ `openWorld(String,Runnable)`（javap：`public void openWorld(String, Runnable)`）；`createFreshLevel(...,Screen)` 尾参同 1.20.4 补 null。" +
+      "入口：`net.neoforged.fml.loading.FMLEnvironment.dist == net.neoforged.api.distmarker.Dist.CLIENT` 守注册行（工程 build 编译通过，2026-10-01）。",
+    asOf: "2026-10-01",
+  },
+  {
+    platform: "neoforge",
+    version: "1.21.1",
+    mappings:
+      "neoforge 21.1.248 merged jar（javap 实测 2026-10-01；与 1.20.6 同形，走 rewriteForNeoForge 的 1206+ 分支）。" +
+      "事件栈：`net.neoforged.neoforge.event.TickEvent` 类**不存在**（javap 找不到）⇒ `net.neoforged.neoforge.client.event.ClientTickEvent$Pre/$Post`（**无 phase**，勾 `$Post`）、" +
+      "`net.neoforged.neoforge.client.event.ClientChatReceivedEvent#getMessage()->Component` ✓、`net.neoforged.neoforge.common.NeoForge.EVENT_BUS` ✓、`net.neoforged.bus.api.SubscribeEvent` ✓。" +
+      "WorldOpenFlows：`openWorld(String,Runnable)` ✓、`createFreshLevel(...,Screen)` 尾参 ✓（见 applyWorldOpenFlows1206Plus）。",
+    asOf: "2026-10-01",
   },
   {
     platform: "fabric",
@@ -1165,7 +1301,8 @@ public final class PlaytestQaDriver {
             return;
         }
         switch (phase) {
-            case 0: // 自动进世界（无桥路线；Loom 的 --quickPlaySingleplayer programArgs 实测不生效 ⇒ 用 IntegratedServerLoader）
+            case 0: // 自动进世界（无桥路线，默认走 IntegratedServerLoader）。fabric 1.20.4/1.21.1/1.21.3 档**不可**走此路：
+                   //  该调用把 Render thread 冻在 startIntegratedServer 的 Thread.sleep（jstack 实证），那三档改用 build.gradle 的 vanilla quick play。
                 if (ticks < 20) {
                     return; // 让客户端先过启动期
                 }
@@ -1574,6 +1711,14 @@ public final class PlaytestQaDriver {
                     // 巡航高度 + 防卡：**地形会把低空飞行撞停**（实测 9000 tick 只前进 ~550 格、差 200 格判红）。
                     // 策略：先爬到 cruiseY（默认 140）以上再横掠；每 40 tick 量一次水平位移，几乎没动就抬升 60 tick 翻越。
                     double cruiseY = optF(rest, "cruiseY", 140);
+                    // 每 tick 重申飞行权：创意/op 档由开局设置，但服务端会在 mayfly 不成立时把 flying 复位
+                    //（实测：单机 integrated server 下 abilities 被回滚会让 goto 半途掉到地面、撞地形卡死）。
+                    // 只在被复位时才 sendAbilitiesUpdate，避免每 tick 刷包。
+                    if (gotoFly && !player.getAbilities().flying) {
+                        player.getAbilities().flying = true;
+                        player.sendAbilitiesUpdate();
+                        log("[QA] goto: flying 被复位 → 重申 fly=true @ y=" + fmt(player.getY()));
+                    }
                     player.setYaw((float) Math.toDegrees(Math.atan2(-dx, dz))); // yaw0=+Z、90=-X（MC 约定）
                     client.options.forwardKey.setPressed(true);
                     client.options.sprintKey.setPressed(gotoFly); // 飞掠：冲刺 ≈21 b/s（步行 4.3 / 飞行 10.9）
@@ -1644,7 +1789,17 @@ public final class PlaytestQaDriver {
                         BlockPos c = player.getBlockPos();
                         for (int ax = -radius; ax <= radius; ax += stride) {
                             for (int az = -radius; az <= radius; az += stride) {
-                                for (int ay = -4; ay <= 8; ay += stride) {
+                                // 自适应地面层：结构（村庄等）常落在山坡上，固定 ±8 薄层会整列取样到空气
+                                //（实测 2026-09-29 fabric-1.21.11：玩家 y≈100.5 站山坡，采样 y=96..108 全 air，
+                                // 实际地面在 y=97）⇒ 先逐列向下探出第一个非空气方块当参考层，再取该层 -2..+5。
+                                // 每列只多一次向下探测，cost 与列数同阶；全空列跳过（未加载/超界）。
+                                int surfaceAy = Integer.MIN_VALUE;
+                                for (int probeAy = 16; probeAy >= -48; probeAy--) {
+                                    String pid = Registries.BLOCK.getId(client.world.getBlockState(c.add(ax, probeAy, az)).getBlock()).toString();
+                                    if (!pid.equals("minecraft:air") && !pid.equals("minecraft:cave_air") && !pid.equals("minecraft:void_air")) { surfaceAy = probeAy; break; }
+                                }
+                                if (surfaceAy == Integer.MIN_VALUE) { continue; }
+                                for (int ay = surfaceAy - 2; ay <= surfaceAy + 5; ay++) {
                                     BlockPos bp = c.add(ax, ay, az);
                                     String id = Registries.BLOCK.getId(client.world.getBlockState(bp).getBlock()).toString();
                                     if (contains(want, id)) {
@@ -2805,31 +2960,45 @@ public final class PlaytestQaDriver {
     }
 }
 `;
-    const useForgeTable = platform === "forge" || platform === "neoforge";
+    // neoforge 1.20.1 仍用 net.minecraftforge 包名（Forge 兼容层）⇒ 共用 forge 表；
+    // neoforge 1.20.2+ 起是 net.neoforged 命名层 ⇒ 走 rewriteForNeoForge（= forge 表 + 事件栈换包，javap 实测）。
+    const useForgeTable = platform === "forge" || (platform === "neoforge" && version === "1.20.1");
+    const useNeoForgeTable = platform === "neoforge" && version !== "1.20.1";
     // 1.20.1 是唯一 `IntegratedServerLoader.start(Screen,String)` 形的档（fabric/quilt 共用 yarn 命名层）
     const useFabric1201Table = (platform === "fabric" || platform === "quilt") && version === "1.20.1";
     // javap 实测同为「只差 GUI 点击一处」的档：1.21.1（2026-09-30）、1.21.3 与 1.20.4（2026-10-01）、1.21.4 与 1.21.8（2026-10-01）
     const useFabric1211Table =
       (platform === "fabric" || platform === "quilt") && ["1.21.1", "1.21.3", "1.20.4", "1.21.4", "1.21.8"].includes(version);
     const emittedJava = useForgeTable
-      ? rewriteForForge(javaSource)
-      : useFabric1201Table
-        ? rewriteForFabric1201(javaSource)
-        : useFabric1211Table
-          ? rewriteForFabric1211(javaSource)
-          : javaSource;
+      ? rewriteForForge(javaSource, version)
+      : useNeoForgeTable
+        ? rewriteForNeoForge(javaSource, version)
+        : useFabric1201Table
+          ? rewriteForFabric1201(javaSource)
+          : useFabric1211Table
+            ? rewriteForFabric1211(javaSource)
+            : javaSource;
     files["playtest/PlaytestQaDriver.java"] = javadocSafe(emittedJava);
     if (useForgeTable) {
       warnings.push(
         `platform=${platform} 档由 fabric 模板经改写表派生（8 类平台差异，签名逐条 javap 实测）——**尚未真机验证**，首次运行请把编译/启动报错回灌。`,
       );
+    } else if (useNeoForgeTable) {
+      const neoCaveat =
+        version === "1.20.4"
+          ? `事件/总线按 neoforge 20.4.251 merged jar + bus 7.2.0 javap 实测）——**尚未真机验证**，` +
+            `⚠ 若该档是 1.20.6+（TickEvent 已迁到 \`client.event.ClientTickEvent$Post\`、WorldOpenFlows 入口改名 \`openWorld\`）需走本表的 1206+ 分支，别沿用 1.20.4 的形。`
+          : `事件/总线按 neoforge 20.6.139 merged jar javap 实测（1.20.6+ 分支：\`client.event.ClientTickEvent$Post\` **无 phase**、WorldOpenFlows \`openWorld(String,Runnable)\`；该形在 20.6 实测，其余 1.21.x 档首跑前仍需逐档 javap 复核后用）。`;
+      warnings.push(
+        `platform=neoforge version=${version} 档由 fabric 模板经 forge 表 + 事件栈换包派生（见 rewriteForNeoForge；${neoCaveat}`,
+      );
     } else if (useFabric1201Table) {
       warnings.push(
-        `platform=fabric version=1.20.1 档由 1.21.11 模板经改写表派生（GUI 点击一处差异，javap 实测：1.20.1 无 Click/MouseInput，mouseClicked 为 (double,double,int)）——**尚未真机验证**。`,
+        `platform=${platform} version=1.20.1 档由 1.21.11 模板经改写表派生（GUI 点击一处差异，javap 实测：1.20.1 无 Click/MouseInput，mouseClicked 为 (double,double,int)）——**尚未真机验证**。`,
       );
     } else if (useFabric1211Table) {
       warnings.push(
-        `platform=fabric version=${version} 档由 1.21.11 模板经改写表派生（**只差 GUI 点击一处**：该档无 Click/MouseInput，` +
+        `platform=${platform} version=${version} 档由 1.21.11 模板经改写表派生（**只差 GUI 点击一处**：该档无 Click/MouseInput，` +
           `mouseClicked 为 (double,double,int)；自动进世界与 1.21.11 同形，别套 1.20.1 的 start(Screen,String) 改写）` +
           `——javap 依据见 PLAYTEST_VERIFIED_TIER，真机验证状态见 CHANGELOG。`,
       );
@@ -2837,14 +3006,27 @@ public final class PlaytestQaDriver {
     // fabric 1.20.4 / 1.21.1 / 1.21.3 的 `IntegratedServerLoader.start(String,Runnable)` 会把客户端冻死 ——
     // 1.20.4 于 2026-10-01 jstack 定因，1.21.1 于 2026-09-30 实测同形。
     const freezeFamily = platform === "fabric" && ["1.20.4", "1.21.1", "1.21.3"].includes(version);
+    // quilt 同版本走的是**同一段原版客户端代码**（IntegratedServerLoader 是 Minecraft 类，与加载器无关），
+    // 冻结同源；但本仓矩阵的 quilt 实例**全部**用 quick play 进的（8/8），从未实测过 quilt 侧的冻结路径 ⇒ 只报警不改码。
+    const quiltFreezeSuspect = platform === "quilt" && ["1.20.4", "1.21.1", "1.21.3"].includes(version);
+    if (quiltFreezeSuspect && (input.enterWorld ?? "").trim()) {
+      warnings.push(
+        `⚠ quilt ${version} 档启用 enterWorld 有**未实测的冻结风险**：它与 fabric 同版本共享同一段原版客户端代码` +
+          `（IntegratedServerLoader 是 Minecraft 类，与加载器无关），而该代码已被 jstack 证实会把 Render thread` +
+          `冻在 MinecraftClient.startIntegratedServer 的 Thread.sleep（2026-10-01，fabric 1.20.4 定性；1.21.1 于 2026-09-30 同形）。` +
+          `**但 quilt 侧从未实测**（本仓矩阵的 quilt 实例 8/8 都用 quick play 进的，没走过这条路）。保守做法：` +
+          `enterWorld 留空 + 在工程 build.gradle 里用 vanilla quick play（quilt loom programArgs）——与实测通过的 quilt 矩阵同形。`,
+      );
+    }
     if (freezeFamily && (input.enterWorld ?? "").trim()) {
       warnings.push(
         `⚠ fabric ${version} 档**不要**用 enterWorld 让驱动自己进世界：实测该调用会让世界载入流程内联跑在 tick 栈上并死等` +
           `服务器线程 —— Render thread 停在 MinecraftClient.startIntegratedServer 的 Thread.sleep（jstack 实证），` +
           `客户端整只冻住、心跳停，而桥 /status 仍答 ready=true（极具误导性）。` +
           `委托给 client.execute 排队**不能**修（ThreadExecutor.execute 从渲染线程是 inline 执行）。` +
-          `推荐做法：enterWorld **留空**，在工程 build.gradle 的 loom runs 里加 ` +
-          `programArgs "--quickPlaySingleplayer", "<存档目录名>"（vanilla quick play；实测 1.20.4 与 1.21.3 各 17/17 步通过），` +
+          `推荐做法：enterWorld **留空**，在工程 build.gradle 里用 vanilla quick play（` +
+          `fabric: loom { runs { client { programArgs "--quickPlaySingleplayer", "<存档目录名>" } } }；` +
+          `其余档同理换成 loom programArgs）——实测 1.20.4 与 1.21.3 各 17/17 步通过；` +
           `或（仅桥覆盖的档）用桥 join_world / create_world 进世界；驱动的"需要世界"步骤会自动等世界。`,
       );
     }
@@ -2879,7 +3061,7 @@ public final class PlaytestQaDriver {
           goal,
           signatureBasis: { mappings: tier.mappings, asOf: tier.asOf, method: "javap on yarn-named jar（仓外 demo 工程 loom-cache）" },
           phases: [
-            "auto-enter world（仅当 enterWorld 非空；实测 Loom 的 --quickPlaySingleplayer programArgs 不生效 ⇒ 用 IntegratedServerLoader.start）",
+            "auto-enter world（仅当 enterWorld 非空；默认 IntegratedServerLoader.start —— 但 fabric 1.20.4/1.21.1/1.21.3 档必须改用 build.gradle 的 --quickPlaySingleplayer，见 warnings 与 README.playtest.md）",
             "wait world+player",
             "settle 40 ticks",
             "observe → state.json（背包槽位）",
@@ -2918,7 +3100,7 @@ public final class PlaytestQaDriver {
             "驱动杀死玩家会写进存档 ⇒ 用独立 dev 世界或幂等化",
             "驱动代码测完必须 revert（绝不提交）",
             "自动进世界相必须在 player/world 为空时也跑：null 检查只对后续相位生效（否则日志里连 open world requested 都没有，实测 2026-09-29）",
-            "Loom 的 --quickPlaySingleplayer programArgs **不生效**（客户端日志零 quick 命中）⇒ 自动进世界用 IntegratedServerLoader.start（实测 2026-09-29）",
+            "自动进世界两条路都可用：① 驱动内 `IntegratedServerLoader.start(世界目录名, onCancel)`（默认）；② build.gradle 的 vanilla quick play（fabric `programArgs` / forge `args` / neoforge `programArguments.addAll`，值 `'--quickPlaySingleplayer', '<存档目录名>'`）。**fabric 1.20.4/1.21.1/1.21.3 三档只能用 ②**：实测 ① 会把 Render thread 冻在 startIntegratedServer 的 Thread.sleep（jstack 实证），且桥 /status 仍答 ready=true（极具误导）。早期注记『Loom 的 --quickPlaySingleplayer 根本不生效（零 quick 命中）』是 2026-09-29 的误判（当次参数未真接进 run 配置），已被 2026-10-01 矩阵推翻——那三档 17/17 步通过即靠 ②。",
             "强杀 gradle wrapper **不结束子 JVM**（真身命令行含 -Dfabric.dli.config=<工程>/.gradle/loom-cache）；残留客户端会持有世界 session.lock ⇒ 下一次进世界报『另一个程序已锁定文件的一部分』⇒ 关客户端要按命令行精确清理（实测 2026-09-29）",
             "证据文件名必须 .log（判读器按『证据目录内任意 .log 尾部』抽 [QA] 段；首版写 qa.txt ⇒ qa 判 absent，实测 2026-09-29）",
           ],
@@ -2940,7 +3122,7 @@ public final class PlaytestQaDriver {
 
 ## 判读
 - 日志序列：\`[QA] driver registered\` → （\`enterWorld\` 非空时 \`[QA] open world requested: …\`）→ \`[QA] entered world as …\` → \`[QA] observe slot …\` → \`[QA] DONE :: …\` 或 \`[QA] ERROR: …\`。
-- **自动进世界**：本驱动用 \`IntegratedServerLoader.start(世界目录名, onCancel)\`。*不要*改用 Loom 的 \`--quickPlaySingleplayer\` programArgs——2026-09-29 实测该参数**根本没进到游戏进程**（客户端日志里零 \`quick\` 命中，驱动只能走预算耗尽判红）。世界不存在时看 \`[QA] open world cancelled\`。
+- **自动进世界（两条路）**：默认用驱动内 \`IntegratedServerLoader.start(世界目录名, onCancel)\`（\`enterWorld\` 非空时生效；世界不存在看 \`[QA] open world cancelled\`）。**fabric 1.20.4 / 1.21.1 / 1.21.3 三档必须改用 build.gradle 的 vanilla quick play**（fabric \`programArgs\` / forge \`args\` / neoforge \`programArguments.addAll\`，值 \`'--quickPlaySingleplayer', '<存档目录名>'\`）——那三档走驱动内路径会把 Render thread 冻死（jstack 实证）。早期注记「Loom 的 quickPlay 不生效（零 quick 命中）」是 2026-09-29 的误判，2026-10-01 矩阵已推翻（那三档靠 quickPlay 17/17 步通过）。
 - 证据：\`${evidenceDir}/state.json\`、\`exit-code.txt\`、\`qa.log\`（必须是 .log —— 判读器按「证据目录内任意 .log 尾部」抽 \`[QA]\` 段）；截图在 \`<runDirectory>/screenshots/\`。
 - 汇总：\`inspect_playtest_evidence evidenceDir=${evidenceDir} screenshotsDir=<runDirectory>/screenshots\`（三态 present|absent|unreadable，缺件不得读成"没有失败"）。
 - 断言 fail-closed：超预算 / 条件不成立一律 \`[QA] ERROR\`，不静默通过。

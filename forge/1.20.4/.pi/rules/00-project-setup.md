@@ -21,6 +21,10 @@ description: 00 — 项目结构与构建
 > 保留理由：本档 scaffold 钉值已在本仓真机 build 记过账（`pack.meta.json` → `buildVerified: true`，覆盖 `:compileJava` + `:reobfJar`；进游戏后的行为未验），改值会使既有构建账失效。
 > 需要新版工具链：自行调用 `download_official_mdk`（默认 dryRun，只落到 `$MC_SKILL_CACHE`，不写仓库），再把返回值填进**你自己的工程**。
 
+> **⚠️ Forge 1.20.4 dev 运行要求输出目录自包含（classes + resources 合并到同一目录）—— 自写 `build.gradle` 时必带。**
+> 原因（实测）：Forge 49 / FML 49 的 dev 启动**不再**从 `MOD_CLASSES` 环境变量取 mod 源码目录（1.20.1 / FML 47 走那套）；FML 49 只按 classpath 上的 `META-INF/mods.toml` 定位 dev mod 文件。classes 与 resources 分处两个目录时，它只把 `build/resources/main` 当 mod 文件（里面没有 `@Mod` 类），`runClient` 崩在 `The Mod File … has mods that were not found`。
+> 本档 `scaffold/build.gradle:139-143` 已带该合并块（`sourceSets.each { it.output.resourcesDir = it.java.destinationDirectory = layout.buildDirectory.dir("sourcesSets/$it.name") }`）；**复制 scaffold 即已具备**，不要删。自写构建脚本时照抄这一块。
+
 > **工具边界（防误用）**：`mcp-server/data/mdk-checksums.json` 的 forge 条目只有
 > `id / platform / minecraftVersion / buildPlugin / source / repo / ref / archiveUrl / sha256 / license / gitPolicy / mappings / notes`
 > —— **没有** `gradle` / `forgeGradle` / `distributionUrl` / `forge_version` 任何字段
@@ -30,7 +34,7 @@ description: 00 — 项目结构与构建
 > `gradle-wrapper.properties` 与 `build.gradle`。
 
 > - Gradle Wrapper：本档 `scaffold/gradle/wrapper/gradle-wrapper.properties:3` → `gradle-8.5-bin` ↔ 官方 MDK `gradle-8.12.1-bin`
-> - ForgeGradle：本档 `scaffold/build.gradle:5` → `[6.0,6.2)` ↔ 官方 MDK `build.gradle:5` → `[6.0.16,6.2)`
+> - ForgeGradle：本档 `scaffold/build.gradle:5` → `[6.0.16,6.2)` ↔ 官方 MDK `build.gradle:5` → `[6.0.16,6.2)`（同）
 > - Parchment librarian 插件：本档 `scaffold/build.gradle:6` → `org.parchmentmc.librarian.forgegradle` `1.+` ↔ 官方 MDK 无此插件（未装 librarian）
 > - Forge：本档 `scaffold/gradle.properties:9` → `49.2.0` ↔ 官方 MDK `gradle.properties:16` → `49.2.0`（同）
 > - forge / loader version range：本档 `scaffold/gradle.properties:10-11` → `[49,)` / `[49,)` ↔ 官方 MDK `gradle.properties:18,20` → `[0,)` / `[0,)`
@@ -66,11 +70,15 @@ description: 00 — 项目结构与构建
 - `gradle.properties` 必须包含：
   ```properties
   minecraft_version=1.20.4
-  forge_version=49.0.30
-  mappings_version=20241130
-  loader_version=49.0.30
+  minecraft_version_range=[1.20.4,1.21)
+  forge_version=49.2.0
+  forge_version_range=[49,)
+  loader_version_range=[49,)
+  mapping_channel=parchment
+  mapping_version=2024.02.25-1.20.4
   ```
   > 注意：
+  > - 以上是本档 `scaffold/gradle.properties` 的实钉键值与顺序（另含 `mod_*` 元数据块）；**不要**照抄旧写法 `mappings_version=20241130` 或 `forge_version=49.0.30`，那是 ≤1.20.1 期模板的残留，本版不适用
   > - `build.gradle` 中引用时用 `mapping_version`（不带 s），属性名必须与 `build.gradle` 中的 `${property名}` 完全一致
   > - `loader_version` 填 Forge 版本号，与 mods.toml 中的 `loaderVersion` 字段对应
 - **禁止在 `build.gradle` 中直接写版本号**，必须引用 `${minecraft_version}` 等属性

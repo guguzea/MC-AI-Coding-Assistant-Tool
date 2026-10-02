@@ -2,7 +2,7 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id 'net.minecraftforge.gradle' version '[6.0.16,6.2)'
     id 'org.parchmentmc.librarian.forgegradle' version '1.+'
 }
 
@@ -124,4 +124,20 @@ publishing {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
+}
+
+// Merge the resources and classes into the same directory.
+// This is done because java expects modules to be in a single directory.
+// And if we have it in multiple we have to do performance intensive hacks like having the UnionFileSystem
+// This will eventually be migrated to ForgeGradle so modders don't need to manually do it. But that is later.
+//
+// 为什么 1.20.4 必须合并（实测）：Forge 49 / FML 49 的 dev 启动**不再**从 `MOD_CLASSES` 环境变量
+// 取 mod 源码目录（1.20.1/FML 47 走那套，见 `CommonLaunchHandler: Got mod coordinates … from env`）；
+// FML 49 只按 classpath 上的 `META-INF/mods.toml` 定位 dev mod 文件。classes 与 resources 分在两个
+// 目录时，它只把 `build/resources/main` 当成 mod 文件（里面没有 @Mod 类），runClient 崩在
+// "The Mod File … has mods that were not found"。合并进同一目录后 mod 文件自洽，dev 启动正常。
+sourceSets.each {
+    def dir = layout.buildDirectory.dir("sourcesSets/$it.name")
+    it.output.resourcesDir = dir
+    it.java.destinationDirectory = dir
 }

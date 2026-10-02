@@ -158,10 +158,23 @@ npm run build:yarn-sqlite
 
 验证 `mcp-server/dist/index.js` 存在。
 
+### 编译后自检（四步，全绿再往下走）
+
+```bash
+cd mcp-server
+node dist/cli.js --version                      # 应打印版本号（当前 package.json = 1.0.4）
+node dist/cli.js list-tools --names-only        # 应回 86 个工具名
+node dist/cli.js activate_platform_pack --action=list   # 应回本机已建档的平台 / 版本
+node dist/cli.js diagnose_data_paths            # 各平台应为 found；empty / not_found = MC_SKILL_DATA 没指对
+```
+
+任一步失败先修 `dist`、Node、或 `MC_SKILL_DATA`，**不要**带着坏编译去配宿主（否则宿主里工具全不可调，却看不出是编译问题）。这一步是**编译期**自检；宿主重载后的**运行期**验收走 Step 5「验收」。
+
 - 报错 → 升级到 **Node.js 22.5+**，不要建议 18。
 - Yarn 查询依赖 `data/fabric_*/mappings/yarn-mappings.sqlite`（由 `build:yarn-sqlite` 生成）。
 - 运行时 **禁止** 全量加载 `yarn-mappings.json`（体积过大，易 OOM）。
 - 可选：`set MC_SKILL_DATA=<data 绝对路径>` 后 `npm run audit:data`。有 `ERROR` 时不要宣称数据包可用。
+- 常用脚本速查（33 条全表见 `mcp-server/package.json`，逐条说明见根 `README.md`「安装后验收与 npm 脚本速查」）：`npm test`（全量门链）/ `test:core` / `test:cli` / `test:cli:quick` / `test:cli:full` / `test:scripts` / `test:audit` / `test:semantic` / `test:decompile` / `test:update` / `build:yarn-sqlite` / `build:semantic-index` / `build:vanilla-registries`（`-- --version=<v>`）/ `audit:data`（`:forge` / `:fabric` / `:neoforge` / `:fail-on-error`）/ `community:index` / `smoke:release`。
 
 Windows PowerShell 没有 `&&` 时用 `;`，或 `cmd /c "..."`。环境变量：cmd 用 `set MC_SKILL_DATA=...`，PowerShell 用 `$env:MC_SKILL_DATA="..."`，Unix 用 `export`。
 
@@ -439,7 +452,7 @@ Cline 常见：`%APPDATA%\Code\User\globalStorage\saoudrizwan.claude-dev\setting
    - forge / fabric / neoforge 至少一侧为 `found`（未下载的平台可以是 `not_found`，要如实告诉用户）。
 3. **`list_doc_versions`**（或当前平台的 `list_*_versions`）应返回版本数组。
 
-可选：工具列表里应能看到本服务，数量 **86**（`tool-registry.ts` 47 + `wave/register.ts` 39）。对不上先 `npm run build`，不要改服务名。
+可选：工具列表里应能看到本服务，数量 **86**（`indexToolSchemas` 47 条 + `wave/register.ts` 40 条注册，其中 `resolve_lib_skills` 两处都有 ⇒ 47 + 40 − 1 = 86；as-of 2026-10-02 实测 `list-tools` = 86）。对不上先 `npm run build`，不要改服务名。
 
 **验收失败时的 CLI 对照**（可区分「没连上宿主」还是「data 路径错」）：
 
@@ -629,6 +642,10 @@ node dist/cli.js <工具名> --key=value
 | Skill 面板没有条目 | 预期。走 Step 6，不要在本仓库根建 `.cursor/skills` |
 | 斜杠命令里 Skill 平台混杂 | 同名 `mc-block` 被折叠。全局安装用 `forge-1-20-1-mc-block` |
 | CLI 正常、IDE 没有工具 | 配置写错文件或未重载，不是编译问题 |
+| 想撤除已写入工程的规则 / Skill | `activate_platform_pack action=deactivate`（按写入清单撤写）；先跑 `action=write` 的 `dryRun` 预览 `planned` / `willDelete`。撤除游玩自测驱动见生成的 `playtest/REVERT.md` |
+| 想撤除 CLI / MCP 安装 | `npm uninstall -g mc-skill`（或删 bin 链接）；仓库 `mcp-server/` 与 `data/` 可直接删，不影响用户模组工程。缓存产物在 `$MC_SKILL_CACHE`（默认 `%APPDATA%/mc-skill-cache`），删它不影响仓库 |
+
+更全的排障索引、术语表与卸载 / 回退见根 `README.md`「排障与常见问题（FAQ）」「术语表」「卸载与回退」三节。
 
 ---
 

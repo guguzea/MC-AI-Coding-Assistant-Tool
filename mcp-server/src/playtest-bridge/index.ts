@@ -252,8 +252,13 @@ export async function callPlaytestBridge(query: PlaytestBridgeQuery): Promise<Re
         const count = Number(data.count);
         const want = params.type ? String(params.type) : null;
         const list = Array.isArray(data.entities) ? (data.entities as Array<Record<string, unknown>>) : [];
-        const hit = want ? list.some((e) => String(e.type ?? "") === want) : Number.isFinite(count) && count > 0;
-        return { matched: hit, detail: { count: Number.isFinite(count) ? count : null } };
+        // 实体条目里 id 字段名按桥版本分叉：实测 BlackBoxPro 2.2.4 的 query_nearby_entities 用
+        // entityId（fabric-1.21.1 的 `"blockId"` 同款风格），旧写法只认 `type` ⇒ 带 type 的 await
+        // 永不成立（matched:false 而 count>0）。两个键都读，别只认一个。
+        const idOf = (e: Record<string, unknown>) => String(e.type ?? e.entityId ?? e.id ?? "");
+        const hit = want ? list.some((e) => idOf(e) === want) : Number.isFinite(count) && count > 0;
+        const typeCount = want ? list.filter((e) => idOf(e) === want).length : null;
+        return { matched: hit, detail: { count: Number.isFinite(count) ? count : null, typeCount } };
       }
       if (condition === "chat_message_matches") {
         const pattern = String(params.pattern ?? "");
@@ -266,7 +271,9 @@ export async function callPlaytestBridge(query: PlaytestBridgeQuery): Promise<Re
 
     if (condition === "inventory_contains") return exec("query_inventory_slot", { slot: params.slot ?? 36 });
     if (condition === "health_below" || condition === "health_above") return exec("query_player_state", {});
-    if (condition === "entity_nearby") return exec("query_nearby_entities", { radius: params.radius ?? 10 });
+    // 把 type 一起透传：此前只传 radius，await 的 matched 便只能拿「区内任意实体」去比对
+    // params.type ⇒ 带 type 的 await entity_nearby 永不成立（实测 fabric-1.21.11：count=20 仍 matched:false）。
+    if (condition === "entity_nearby") return exec("query_nearby_entities", { radius: params.radius ?? 10, ...(params.type ? { type: params.type } : {}) });
     return exec("query_chat_history", { count: params.count ?? 20 });
   };
 

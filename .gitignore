@@ -118,3 +118,4 @@ temp/audit-report.json
 # （只删 processed 会破坏 raw==processed 的 A1 口径，须与 raw 侧重名件成对删 —— 见 CLEANUP-list §1.5）。
 # 交接文件
 mcp-server/docs/handoff-playtest-next.md
+R147-1379.verdicts.tsv
