@@ -716,7 +716,7 @@ export function unionSelfCases() {
  *      拆开后 `emi`（fabric/quilt/forge/neoforge 4 个 loader）与 `jei`（forge/fabric/neoforge 3 个）
  *      都是构件面真 slug ⇒ 该份的 fabric/forge/neoforge 三组自本轮起**真被判**（腿 B 85 → 88 组）。
  *      给 36 份 SKILL.md 新增 `modrinthSlug` 键这条欠账仍在（那要动库面 frontmatter + 7 个宿主镜像树，
- *      `sync-skills.ps1` 要重跑），登记在 `CONTRIBUTING.md` 未排期清单 L41/L43，不在本门代裁。
+ *      `sync-skills.ps1` 要重跑），登记在 `CONTRIBUTING_LIST.md` 未排期清单 L41/L43，不在本门代裁。
  *   ⚠️ 2°/3° 会**分叉**：`authored/lib-cloth-config` 那行的 `skillId` 是 `mc-config`，
  *      而真正写 `platforms: [fabric, quilt]` 的是 `fabric-only/mc-cloth-config` ⇒ 两档桥
  *      命中同一生成物行。本门按「两档都判」处理（判面更宽），并把这类歧义行进 INFO 计数。
@@ -790,7 +790,7 @@ export const BRIDGE_BLINDSPOTS = [
 export const TRIAD_OVERCLAIM_DEBT = [
   {
     skill: "mc-libgui", loader: "quilt",
-    basis: "第 35 轮桥补通（4° 构件面正名 slug `libgui`）后本腿首次判到：`platforms`=[fabric,quilt] 而构件面 `libgui` 仅 **1 行 fabric**（`LibGui-18.0.1+26.3-rc-2.jar`，快照 as-of 2026-09-16）。⚠️ 该 slug 的**判面天然残缺**：SKILL.md 正文自述「Modrinth 已下架（slug 空），分发走 Cotton maven / GitHub Releases」⇒ 快照里那 1 行只是抓到的一个 GitHub release 文件，不是全量发布史。**禁止**据「快照 0 行 quilt」断言 LibGui 无 Quilt 构建（`CONTRIBUTING.md` L42 已记「欠一次 all.json 构件面重抓」）。修法 = 重抓非 Modrinth 源后复跑本腿，或拿到 Cotton 发布清单原文；本轮 `data/**` 零写、未动 platforms ⇒ 留账。as-of 2026-09-25",
+    basis: "第 35 轮桥补通（4° 构件面正名 slug `libgui`）后本腿首次判到：`platforms`=[fabric,quilt] 而构件面 `libgui` 仅 **1 行 fabric**（`LibGui-18.0.1+26.3-rc-2.jar`，快照 as-of 2026-09-16）。⚠️ 该 slug 的**判面天然残缺**：SKILL.md 正文自述「Modrinth 已下架（slug 空），分发走 Cotton maven / GitHub Releases」⇒ 快照里那 1 行只是抓到的一个 GitHub release 文件，不是全量发布史。**禁止**据「快照 0 行 quilt」断言 LibGui 无 Quilt 构建（`CONTRIBUTING_LIST.md` L42 已记「欠一次 all.json 构件面重抓」）。修法 = 重抓非 Modrinth 源后复跑本腿，或拿到 Cotton 发布清单原文；本轮 `data/**` 零写、未动 platforms ⇒ 留账。as-of 2026-09-25",
   },
   {
     skill: "mc-server-translations", loader: "forge",
@@ -819,7 +819,7 @@ export const TRIAD_OVERCLAIM_DEBT = [
  *
  * 为什么要有它：「少推荐」欠账（构件面有行、`catalog.loaders` 没点名）按 2026-09-22 裁定④**不判红**，
  * 只以 INFO 长印。第 37 轮把 6 条定性后剩 2 条**已定案「不补」**，但那 2 条仍会永久打印 ——
- * 一条永远有噪音的清单，下一个人会整片跳过（同 `CONTRIBUTING.md` `L13` 那条「靠人读打印语句」的教训）。
+ * 一条永远有噪音的清单，下一个人会整片跳过（同 `CONTRIBUTING_LIST.md` `L13` 那条「靠人读打印语句」的教训）。
  * 本表给「已定案」一条通道：命中 ⇒ 措辞改打「已定案（见 basis）」，并与未定案**分开计数**；未命中 ⇒ 仍打未定案。
  *
  * 三条铁律（形状沿用 `TRIAD_OVERCLAIM_DEBT` / `BRIDGE_BLINDSPOTS` 的「豁免不是免检牌」）：

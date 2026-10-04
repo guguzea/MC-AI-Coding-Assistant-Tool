@@ -15,7 +15,7 @@
   },
   "boot": {
     "measuredOn": "2026-09-16",
-    "note": "29 档全 rc=0：29 个有 props 的 scaffold 各自用自己的 props + 三件套离线引导成功。13 个钉值版本 → 10 个不同 jar 字节类（7.2≡7.3.3、7.6≡7.6.1），10 类全部被至少一行覆盖，故无「钉了字节却没引导过」的版本。门禁 diffWrapperPins 校三件事：boot.rows 存在、每个钉值版本都有 rc=0 行、每行的档在该版本 usedBy 内。（2026-09-16 更新：fabric/1.21.3 随升 Gradle 8.10 重测 boot rc=0（banner=8.10）；8.6 表项因无档声明已撤，其 jar 字节类由 8.5 代表。）（2026-10-01 更新：quilt ×10 补 wrapper 四件套后各自 gradlew build rc=0（D:/mc-skill-temp/qs_build/results3.txt，Gradle 9.5.1 + JDK21 构建 JVM），该 10 档已并入 9.5.1 usedBy；boot.rows 未逐档补行——门禁只要求每个钉值版本至少一条 rc=0 引导行（9.5.1 由 fabric/1.21.11 承担），此处按事实登记不补造行。）",
+    "note": "29 档全 rc=0：29 个有 props 的 scaffold 各自用自己的 props + 三件套离线引导成功。13 个钉值版本 → 10 个不同 jar 字节类（7.2≡7.3.3、7.6≡7.6.1），10 类全部被至少一行覆盖，故无「钉了字节却没引导过」的版本。门禁 diffWrapperPins 校三件事：boot.rows 存在、每个钉值版本都有 rc=0 行、每行的档在该版本 usedBy 内。（2026-09-16 更新：fabric/1.21.3 随升 Gradle 8.10 重测 boot rc=0（banner=8.10）；8.6 表项因无档声明已撤，其 jar 字节类由 8.5 代表。）（2026-10-01 更新：quilt ×10 补 wrapper 四件套后各自 gradlew build rc=0（D:/mc-skill-temp/qs_build/results3.txt，Gradle 9.5.1 + JDK21 构建 JVM），该 10 档已并入 9.5.1 usedBy；boot.rows 未逐档补行——门禁只要求每个钉值版本至少一条 rc=0 引导行（9.5.1 由 fabric/1.21.11 承担），此处按事实登记不补造行。）（2026-10-03 更新：**新增钉值版本 9.7.1（fabric/26.1.2）** —— 该档按上游 fabric-example-mod 分支 26.1 实读的 Gradle 9.7.1 补 wrapper；boot 实测 `gradlew.bat --version --offline` rc=0 / banner=9.7.1（JAVA_HOME=JDK 25，发行包按 base36(MD5(distributionUrl)) = 1w1c7tv4s851m17nbqdsro2tv seed 进 GRADLE_USER_HOME），故本轮**本行由 fabric/26.1.2 自身承担**（非借用他档）。）",
     "rows": [
       {
         "pack": "fabric/1.14.4",
@@ -248,6 +248,14 @@
         "rc": 0,
         "jarSha8": "d3b261c2",
         "gradleBanner": "8.5"
+      },
+      {
+        "pack": "fabric/26.1.2",
+        "gradle": "9.7.1",
+        "jvm": 25,
+        "rc": 0,
+        "jarSha8": "7a9ce74c",
+        "gradleBanner": "9.7.1"
       }
     ]
   },
@@ -360,6 +368,17 @@
         "zipStorePath"
       ],
       "9.5.1": [
+        "distributionBase",
+        "distributionPath",
+        "distributionUrl",
+        "networkTimeout",
+        "retries",
+        "retryBackOffMs",
+        "validateDistributionUrl",
+        "zipStoreBase",
+        "zipStorePath"
+      ],
+      "9.7.1": [
         "distributionBase",
         "distributionPath",
         "distributionUrl",
@@ -651,7 +670,8 @@
         "neoforge/1.21.5",
         "neoforge/1.21.8",
         "neoforge/1.21.10",
-        "neoforge/1.21.11"
+        "neoforge/1.21.11",
+        "neoforge/26.1"
       ],
       "measuredOn": "2026-09-04"
     },
@@ -682,6 +702,24 @@
       "jarByteCompareWithZipEntry": true,
       "jarEntry": "gradle-9.5.1/lib/plugins/gradle-wrapper-main-9.5.1.jar!gradle-wrapper.jar",
       "zipSha256": "bafc141b619ad6350fd975fc903156dd5c151998cc8b058e8c1044ab5f7b031f"
+    },
+    "9.7.1": {
+      "verified": "official-distribution",
+      "distributionUrl": "https://services.gradle.org/distributions/gradle-9.7.1-bin.zip",
+      "jarSha256": "7a9ce74cff467ca1bf60a4fcd9f05185acceda4d0f382434d393e17864262c5d",
+      "jarSize": 47505,
+      "gradlewSize": 8656,
+      "gradlewBatSize": 2848,
+      "usedBy": [
+        "fabric/26.1.2"
+      ],
+      "caveat": "2026-10-03 取证：gradle-9.7.1-bin.zip 经 mirrors.cloud.tencent.com 取得（151 433 392 B），sha256 == https://services.gradle.org/distributions/gradle-9.7.1-bin.zip.sha256（acd53f1e…）；发行包内层 lib/plugins/gradle-wrapper-main-9.7.1.jar!gradle-wrapper.jar 与仓内 jar 逐字节相同（7a9ce74c / 47505 B）；三件套由该发行包自己跑 wrapper 任务生成（jar/gradlew 与上游 fabric-example-mod 分支 26.1 的副本全等；**gradlew.bat 是 CRLF 产物 2848 B，与上游仓库里 LF 归一化的 2766 B 不同** —— 后者是 git 行尾归一化，不是 wrapper 任务产物，S13 门禁要求纯 CRLF）。该版本由上游 fabric-example-mod 分支 26.1 的 gradle-wrapper.properties 实读得到（2026-10-03），与 loom 1.18-SNAPSHOT 配对。",
+      "gradlewSha256": "a5a5c199ba02189ae8c46a334223371a20599d9c298ef65e7540ede4a3f72d59",
+      "gradlewBatSha256": "d539676c48b596afda64c963ec8f7ee56c7b3fe7e3b81d1dbe2d1a1e3dd9e9f8",
+      "measuredOn": "2026-10-03",
+      "jarByteCompareWithZipEntry": true,
+      "jarEntry": "gradle-9.7.1/lib/plugins/gradle-wrapper-main-9.7.1.jar!gradle-wrapper.jar",
+      "zipSha256": "acd53f1edaf02f1a8ff99879f8a34b302661a057d9b063ae9e35b552f804d20a"
     }
   },
   "gaps": {
@@ -689,15 +727,13 @@
       "fabric/1.21.4",
       "fabric/1.21.8",
       "fabric/1.21.10",
-      "fabric/26.1.2",
       "liteloader/1.12.2",
       "modloader/1.6.4",
       "neoforge/1.20.1",
-      "neoforge/26.1",
       "rift/1.13.2"
     ],
-    "why": "这些 scaffold 没有 gradle/wrapper/gradle-wrapper.properties，按「禁止无证据臆造版本」登记为空洞，补齐后必须从这里删掉（S13 双向对账：登记了但盘上已有 props = 登记过期；盘上有 props 却没登记 = 漏登记）。分类：fabric/1.21.4·1.21.8·1.21.10·26.1.2 = 全仓 grep 在规则树 / README_AI.md / build.gradle / data/fabric_<ver> 里都没有任何 Gradle 版本字符串；neoforge/1.20.1 · neoforge/26.1 · rift/1.13.2 = pack.meta.json 显式 scaffold.mode=reference 的对照骨架（CLI: download_official_mdk → MDK_NOT_PINNED，禁止邻版 MDK 冒充）；liteloader/1.12.2 · modloader/1.6.4 = 该加载器无 Gradle 工程形态（Eclipse / MCP），给它造 gradlew 属造假。（quilt ×10 原登记于此，2026-10-01 已补齐 wrapper 四件套（与 fabric/1.21.11 同字节，Gradle 9.5.1）并从空洞表删除。）",
-    "measuredOn": "2026-10-01"
+    "why": "这些 scaffold 没有 gradle/wrapper/gradle-wrapper.properties，按「禁止无证据臆造版本」登记为空洞，补齐后必须从这里删掉（S13 双向对账：登记了但盘上已有 props = 登记过期；盘上有 props 却没登记 = 漏登记）。分类：fabric/1.21.4·1.21.8·1.21.10 = 全仓 grep 在规则树 / README_AI.md / build.gradle / data/fabric_<ver> 里都没有任何 Gradle 版本字符串；neoforge/1.20.1 · rift/1.13.2 = pack.meta.json 显式 scaffold.mode=reference 的对照骨架（CLI: download_official_mdk → MDK_NOT_PINNED，禁止邻版 MDK 冒充）；liteloader/1.12.2 · modloader/1.6.4 = 该加载器无 Gradle 工程形态（Eclipse / MCP），给它造 gradlew 属造假。（quilt ×10 原登记于此，2026-10-01 已补齐 wrapper 四件套（与 fabric/1.21.11 同字节，Gradle 9.5.1）并从空洞表删除。）（2026-10-03 更新：neoforge/26.1 已补 wrapper 四件套（与 neoforge/1.21.11 同字节，Gradle 9.2.1，mode reference→gradle）并从空洞表删除，其版本锚点 26.1.2.114 为当日逐坐标实测。）（2026-10-03 再更新：**fabric/26.1.2 已补 wrapper 四件套（Gradle 9.7.1，与上游 fabric-example-mod 分支 26.1 的 gradle-wrapper.properties 实读值一致）并从空洞表删除** —— 该档原先的阻塞「无 Gradle 版本出处」由上游分支实测值解除。）",
+    "measuredOn": "2026-10-03"
   },
   "resolvedWrapper": [
     {

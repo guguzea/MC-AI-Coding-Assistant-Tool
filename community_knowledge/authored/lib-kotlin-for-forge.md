@@ -65,9 +65,12 @@ Decision: Forge 系用不用 Kotlin
 ## 常见坑
 
 - 玩家未装 KFF → 启动报"缺语言加载器/缺依赖"，`depends` 声明必须写
+- **手动把 KFF 装进 `run/mods` 时，maven 坐标给的**不是** mod 件（2026-10-02 实测定因，最易踩）**：`thedarkcolour:kotlinforforge-neoforge:<ver>` 与 `thedarkcolour:kotlinforforge:<ver>` **逐字节相同**（实测 5.8.0 两坐标同为 `sha256 A5024435…` / 6 269 705 B），包内**只有** `META-INF/jarjar/*.jar`（kotlin stdlib / reflect / coroutines / serialization）＋ `metadata.json`，`MANIFEST.MF` 只写 `FMLModType: LIBRARY`，**没有任何 `META-INF/services/`** ⇒ 它提供不了 `kotlinforforge` 语言加载器，装上后 FML 直接拒启：`Missing language loader kotlinforforge wanted by jar(mods/<某 Kotlin 模组>.jar)` → `Failed to start FML`。**真正给玩家的分发件在 Modrinth，命名 `<artifact>-<ver>-all.jar`**（实测 `kotlinforforge-6.3.0-all.jar`，7 279 413 B，`sha256 263D24B2…`；Modrinth 文件元数据的 `sha512` 前 24 位 `0092fc7b4db1e35e53e7ddb5` 可逐字核对），包内含 `META-INF/jarjar/thedarkcolour.kfflang-<ver>.jar`（**语言加载器就在这个嵌套件里**）＋ `kffmod` ＋ `kfflib`。载入成功后日志出现 `Found language provider kotlinforforge, version <ver>`。Modrinth slug 是 **`kotlin-for-forge`**（不是 `kotlinforforge` —— 按后者查项目 API 会得 `available:false / total:0`）。
+- **判「这个 jar 是不是 mod 件」看包内，不看文件名**：名称里带 `neoforge` / 平台词**不代表**是可加载 mod。两条硬判据 —— ① 有没有 `META-INF/services/`（语言加载器靠它注册）；② 有没有 `META-INF/<loader>.mods.toml`（NeoForge 1.20.6+ 叫 `neoforge.mods.toml`，且通常伴随 `<modid>.mixins.json`）。两个都没有 ⇒ 它只是把运行时 jar 套了一层的库件。PowerShell 免解压核对：`Add-Type -A System.IO.Compression.FileSystem; $z=[IO.Compression.ZipFile]::OpenRead('<jar>'); $z.Entries | % { $_.FullName }; $z.Dispose()`（注意：同一台机器上 `tar -tf` 对这种含嵌套 jar 的包会给 `Damaged Zip archive` 或漏列，别拿它当权威）。
 - 自引 kotlin-stdlib / coroutines 版本与 KFF 打包版本冲突 → 以 KFF 提供为准
 - 平台混淆：Fabric 模组用了 KFF，或 Forge 模组用了 FLK
 - 照抄旧版本教程的初始化写法 → KFF 随 MC 版本演进，以当前 README + 示例为准
+- **版本线要分对**：同一 slug 下 **6.x 起是纯 NeoForge 构建**（`loaders=neoforge`，覆盖 1.21.9–26.2），**5.x 才带 forge 线**（6.0.0 是最后仍声明 `forge` 的构建）⇒ 给 MC ≥1.21.9 的 NeoForge 档取件时别去 5.x 里找（本仓实测 `5.8.0` 那件正是上文那条库件的来源）。
 
 ## 自检清单
 

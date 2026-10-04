@@ -51,7 +51,7 @@ export const NON_CONSTANT_CEILING = 5;
  * approval 语义字样（② 的判据）。
  * ⚠️ **刻意不含裸 `确认`**（第 30 轮收紧）：`确认平台与精确 MC 版本` 是「让用户核对信息」的 *verify*，
  * 与「写盘 / 跑 Gradle / 上传前先停下等用户点头」的 *approval* 是两件事；旧判据 `/人在环|确认/` 被前者喂饱，
- * 于是 7 个没有任何 approval 条款的模板一直判绿（台账 `CONTRIBUTING.md` L36）。
+ * 于是 7 个没有任何 approval 条款的模板一直判绿（台账 `CONTRIBUTING_LIST.md` L36）。
  */
 const SEMANTIC_RE = /人在环|用户确认|确认后|须经用户|等待用户|不代跑|不得代跑|dryRun|dry-run/;
 

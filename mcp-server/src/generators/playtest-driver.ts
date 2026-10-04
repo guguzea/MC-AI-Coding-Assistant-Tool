@@ -6,11 +6,12 @@
  *   POST /execute  CommandMessage{id,action,params,delay,target?} → ResponseMessage{id,status,message,data}（HTTP 恒 200）
  *   GET  /status   {status,version,platform,httpPort,actions,ready}；ready = player!=null && world!=null
  *   超时：服务端 responseTimeoutMs 默认 10000ms ⇒ status:"failure" + "Timeout after Nms"（无专用码 ⇒ 调用侧映射 PLAYTEST_TIMEOUT）
- * 诚实边界（2026-10-01 起）：
- *   - `temporary_client_tick_driver` × fabric/quilt **1.21.11** = **可编译的真 driver**（全部签名 javap 实测，见 PLAYTEST_VERIFIED_TIER）；
- *   - 其余平台/版本该模式仍为结构壳（`// TODO(未核实)`，须先按该档取证）；
- *   - `in_jvm_player_agent` = **已验证档上的真执行器**（intent / waitintent 步骤族：菜单校验 → 复用原语展开 →
- *     类型化后置条件 → 证据；菜单真源 = PLAYTEST_INTENTS）；非已验证档只发 `playtest/intent-menu.json` 契约 + 结构壳。
+ * 诚实边界：
+ *   - `temporary_client_tick_driver` / `in_jvm_player_agent` 的**真代码覆盖 = `PLAYTEST_VERIFIED_TIER` 列出的档**
+ *     （唯一真源，只随逐档 javap 取证扩面；**别在正文/注释里数档位**——数组才是权威）；
+ *   - 表外平台/版本该模式仍为结构壳（`// TODO(未核实)`，须先按该档取证）；
+ *   - `in_jvm_player_agent` 在已验证档上是**真执行器**（intent / waitintent 步骤族：菜单校验 → 复用原语展开 →
+ *     类型化后置条件 → 证据；菜单真源 = PLAYTEST_INTENTS）；表外档只发 `playtest/intent-menu.json` 契约 + 结构壳。
  *   - ⚠ opt-in 门（用户裁定 4B）：该模式**默认不在任何自动化链里跑** —— 真机验收由 `MC_SKILL_PLAYTEST_INTENT_E2E=1` 显式开
  *     （见 mcp-server/scripts/assert-playtest-intent-gate.mjs）；不设该变量时一切按"未验证档"处理，不静默通过。
  */
@@ -288,6 +289,549 @@ export function rewriteForFabric1211(java: string): string {
   return s;
 }
 
+/**
+ * **运行期 JVM = Java 8 的档**（MC 1.16.5 及以下只支持 Java 8）。这几个档的驱动必须守 Java 8 库面：
+ * 基线模板用了两个 **Java 11** 才有的 `java.nio.file` 方法，而 `-source 8` **拦不住**它们
+ * （用 JDK 17 编译能过、运行到 Java 8 上才 `NoSuchMethodError`）⇒ 见 `applyJava8LibSwaps`。
+ */
+export const JAVA8_RUNTIME_VERSIONS: readonly string[] = ["1.12.2", "1.13.2", "1.14.4", "1.15.2", "1.16.5"];
+
+/**
+ * Java 8 运行期库面收敛（2026-10-03，`fabric 1.14.4` 补档时发现并**回溯修 1.16.5 及 forge 四档**）：
+ * 基线模板（fabric 1.21.11）用了两个 Java 11 的库 API，而 `-source 8` **不会**报错：
+ *   - `Path.of(...)`（Java 11）⇒ `Paths.get(...)`（Java 7，`Paths.get(String,String...)`，实参全是 String，逐个 javap 核过）
+ *   - `Files.writeString(Path, CharSequence, Charset)`（Java 11）⇒ `Files.write(Path, byte[])`（Java 7）+ `getBytes(StandardCharsets.UTF_8)`
+ * 判据：**用 JDK 8 的 javac 编译**（`-source 8` 之外还要真库面 ⇒ 只有 JDK 8 的 rt.jar 能拦住）。
+ * `Files.writeString` 的实参里含括号/逗号（如 `Path.of(A, B)`、`(ok ? "0" : "1") + nl()`、**字符串字面量里的逗号**
+ * 如 `",\"intents\":"`）⇒ 不能用正则切参：用一层**跳过字符串字面量**的配对括号扫描，按顶层逗号切；
+ * 之后按 `StandardCharsets.X` 那一参定位（它后面可能还有 `StandardOpenOption.CREATE/APPEND`，共 6 处实测 3–5 参）。
+ */
+export function applyJava8LibSwaps(s: string): string {
+  let out = s.replaceAll("Path.of(", "Paths.get(");
+  if (out.includes("Paths.get(") && !out.includes("import java.nio.file.Paths;")) {
+    out = out.replace("import java.nio.file.Path;", "import java.nio.file.Path;\nimport java.nio.file.Paths;");
+  }
+  const needle = "Files.writeString(";
+  let idx = 0;
+  while (true) {
+    const at = out.indexOf(needle, idx);
+    if (at < 0) {
+      break;
+    }
+    let depth = 0;
+    let i = at + needle.length;
+    let argStart = i;
+    const args: string[] = [];
+    let inStr: string | null = null;
+    for (; i < out.length; i++) {
+      const ch = out[i];
+      if (inStr !== null) {
+        if (ch === "\\") {
+          i++;
+        } else if (ch === inStr) {
+          inStr = null;
+        }
+        continue;
+      }
+      if (ch === '"' || ch === "'") {
+        inStr = ch;
+      } else if (ch === "(") {
+        depth++;
+      } else if (ch === ")") {
+        if (depth === 0) {
+          break;
+        }
+        depth--;
+      } else if (ch === "," && depth === 0) {
+        args.push(out.slice(argStart, i));
+        argStart = i + 1;
+      }
+    }
+    args.push(out.slice(argStart, i));
+    const encIdx = args.findIndex((a) => /^StandardCharsets\.\w+$/.test(a.trim()));
+    if (encIdx < 1) {
+      // 形状不符（不该发生）⇒ 不猜，原样留下交给编译报错
+      idx = at + needle.length;
+      continue;
+    }
+    const target = args[0].trim();
+    const body = args.slice(1, encIdx).join(",").trim();
+    const enc = args[encIdx].trim();
+    const opts = args
+      .slice(encIdx + 1)
+      .map((a) => a.trim())
+      .filter(Boolean);
+    const repl = `Files.write(${target}, (${body}).getBytes(${enc})${opts.length ? ", " + opts.join(", ") : ""})`;
+    out = out.slice(0, at) + repl + out.slice(i + 1);
+    idx = at + repl.length;
+  }
+  return out;
+}
+
+/**
+ * fabric/quilt **1.14.4 / 1.16.5 / 1.17.1 / 1.18.2** 档改写表（Yarn 层，逐条 javap 实测 2026-10-03，jar 取自
+ * `~/.gradle/caches/fabric-loom/<v>/<yarn>/minecraft-mapped.jar`（1.14.4/1.16.5/1.17.1）与
+ * `minecraft-merged-named.jar`（1.18.2）—— 均为本机缓存，免下载；1.14.4 的 named jar 由
+ * `fabric/1.14.4/scaffold` 的 Gradle 构建重新落盘（`minecraft-1.14.4-mapped-net.fabricmc.yarn-1.14.4+build.18-v2.jar`））。
+ *
+ * 与 1.21.11 模板的差异（按档递增）：
+ *  - 四档共同：① GUI 点击 = `Element.mouseClicked(double,double,int)`（**无** `Click`/`MouseInput`，与 1.21.1/1.21.8 行同形）；
+ *    ② 注册表 = `net.minecraft.util.registry.Registry`（**无** `net.minecraft.registry.Registries` 持有类）⇒ import 换 + `Registries.X.` → `Registry.X.`；
+ *    ③ 自动进世界**没有** `IntegratedServerLoader`（1.19.4 才有）⇒ `MinecraftClient.startIntegratedServer(...)`；
+ *    ④ 命令发送**无** `ClientPlayNetworkHandler.sendChatCommand`（1.19.4 才有）⇒ `ClientPlayerEntity.sendChatMessage(String)`（四档 javap 均实测该法）。
+ *  - 1.17.1 / 1.16.5 / 1.14.4 另：`GameOptions` 键名是 `keyForward/keyJump/keyAttack/keySprint/keyBack/keyLeft/keyRight/keySneak/keyUse`
+ *    （1.18.2 起才改名 `forwardKey…`，javap 实测）；`Screen` **无** `close()`（1.18.2 才有）⇒ 关屏走 `client.setScreen(null)`。
+ *  - 1.16.5 / 1.14.4 另：截图类 = `ScreenshotUtils`（比 1.17+ 的 `ScreenshotRecorder.saveScreenshot(File,Framebuffer,Consumer)`
+ *    **多 width/height 两参**，javap 实测）；`MinecraftClient` **无** `setScreen`（改用 `openScreen`）；`Entity` 的 yaw/pitch 是**公开字段**
+ *    （**无** `setPitch/getYaw()`，javap 实测）⇒ 赋值/直读；背包/能力是**公开字段** `inventory`/`abilities`。
+ *  - 1.14.4 另（2026-10-03 补档，逐条 javap 实测）：
+ *    ① 截图方法名**仍是混淆形** `ScreenshotUtils.method_1659(File,int,int,Framebuffer,Consumer)`（1.16 才改名 `saveScreenshot`）；
+ *    ② `MinecraftClient` **无** `getWindow()`（`public final Window window` **字段**）；
+ *    ③ `Entity` 的 `x/y/z` 是**公开字段**（**无** `getX()/getY()/getZ()`，1.15 才有）+ **无** `isOnGround()`（公开字段 `onGround`）；
+ *    ④ `PlayerEntity` **无** `getInventory()`（公开字段 `inventory`）+ `PlayerInventory.getInvStack(int)`（**不是** `getStack`）；
+ *    ⑤ 自动进世界是 `startIntegratedServer(String,String,LevelInfo)`（**三参**；`LevelInfo(long,GameMode,boolean,boolean,LevelGeneratorType)`）；
+ *    ⑥ `KeyBinding` **无** `setPressed`（`pressed` 是私有字段）⇒ 静态 `KeyBinding.setKeyPressed(InputUtil$KeyCode,boolean)`；
+ *    ⑦ `Vec3i`/`BlockPos` **无** `toShortString()`（1.15.2 才有）⇒ `toString()`；
+ *    ⑧ Fabric API 0.28.5+1.14 **没有**客户端消息事件（`fabric-message-api-v1` 不存在）⇒ 摘掉聊天注册行，
+ *       `goto parsed` 走 `readLastChatLine`（`<runDir>/logs/latest.log` 的 `[CHAT]` 行）兜底；
+ *    ⑨ 运行期 JVM = Java 8 ⇒ 过 `applyJava8LibSwaps`（`Path.of`/`Files.writeString` → Java 7 形）。
+ */
+export function rewriteForFabricLegacy(java: string, version: string): string {
+  let s = java;
+  // Java 8 运行期档：先收敛库面（1.14.4 / 1.16.5）
+  if (JAVA8_RUNTIME_VERSIONS.includes(version)) {
+    s = applyJava8LibSwaps(s);
+  }
+  // ① GUI 点击（三档同形）
+  s = s.replaceAll(".mouseClicked(new Click(", ".mouseClicked(");
+  s = s.replaceAll("new Click(", "");
+  s = s.replaceAll(", new MouseInput(0, 0)), false)", ", 0)");
+  s = s.replaceAll("import net.minecraft.client.gui.Click;\n", "");
+  s = s.replaceAll("import net.minecraft.client.input.MouseInput;\n", "");
+  // ② 注册表旧包
+  s = s.replaceAll("import net.minecraft.registry.Registries;", "import net.minecraft.util.registry.Registry;");
+  s = s.replaceAll("Registries.ENTITY_TYPE.getId(", "Registry.ENTITY_TYPE.getId(");
+  s = s.replaceAll("Registries.BLOCK.getId(", "Registry.BLOCK.getId(");
+  s = s.replaceAll("Registries.ITEM.getId(", "Registry.ITEM.getId(");
+  // ③ 自动进世界：1.19.4 以下无 IntegratedServerLoader
+  s = s.replaceAll(
+    'client.createIntegratedServerLoader().start(WORLD, () -> log("[QA] open world cancelled"))',
+    "client.startIntegratedServer(WORLD)",
+  );
+  // ④ 命令/聊天发送：1.19.4 以下无 sendChatCommand；`sendChatMessage` 靠**前导 `/`** 区分命令 ⇒ 整句换（不能沿用模板的去斜杠写法）
+  s = s.replaceAll(
+    'client.getNetworkHandler().sendChatCommand(command.startsWith("/") ? command.substring(1) : command)',
+    'client.player.sendChatMessage(command.startsWith("/") ? command : "/" + command)',
+  );
+  s = s.replaceAll("client.getNetworkHandler().sendChatCommand(", "client.player.sendChatMessage(");
+  // ⑤ **本族（1.14.4–1.18.2）没有客户端消息事件**：`ClientReceiveMessageEvents` 属 `fabric-message-api-v1`，
+  //    该模块在本仓这几档钉的 Fabric API 里**都不存在**（实测 2026-10-03：`fabric-api:0.28.5+1.14` / `0.42.0+1.16` /
+  //    `0.46.1+1.17` / `0.77.0+1.18.2` 的 POM 依赖表里都没有 message 模块；最早带它的是 `0.87.2+1.19.4`；
+  //    且 1.14.4 / 1.16.5 的 **loom remapped_mods 真实模块 jar** 里 0 个 `*ReceiveMessage*` 类）⇒ 留着就是**编译不过**。
+  //    摘掉注册行，`goto parsed` 走 `readLastChatLine`（`<runDir>/logs/latest.log` 的 `[CHAT]` 行）兜底。
+  s = s.replaceAll("import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;\n", "");
+  s = s.replaceAll(
+    "            ClientReceiveMessageEvents.GAME.register((message, overlay) -> lastGameMessage = message.getString());\n",
+    `            // 本档 Fabric API 无客户端消息事件（fabric-message-api-v1 不在依赖里）⇒ lastGameMessage 恒空，goto parsed 靠 latest.log 兜底\n`,
+  );
+  if (version === "1.17.1" || version === "1.16.5" || version === "1.14.4") {
+    s = s.replaceAll(/client\.options\.forwardKey\.setPressed\(/g, "client.options.keyForward.setPressed(");
+    s = s.replaceAll(/client\.options\.jumpKey\.setPressed\(/g, "client.options.keyJump.setPressed(");
+    s = s.replaceAll(/client\.options\.attackKey\.setPressed\(/g, "client.options.keyAttack.setPressed(");
+    s = s.replaceAll(/client\.options\.sprintKey\.setPressed\(/g, "client.options.keySprint.setPressed(");
+    s = s.replaceAll(/client\.options\.backKey\.setPressed\(/g, "client.options.keyBack.setPressed(");
+    s = s.replaceAll(/client\.options\.leftKey\.setPressed\(/g, "client.options.keyLeft.setPressed(");
+    s = s.replaceAll(/client\.options\.rightKey\.setPressed\(/g, "client.options.keyRight.setPressed(");
+    s = s.replaceAll(/client\.options\.sneakKey\.setPressed\(/g, "client.options.keySneak.setPressed(");
+    s = s.replaceAll(/client\.options\.useKey\.setPressed\(/g, "client.options.keyUse.setPressed(");
+    s = s.replaceAll("client.currentScreen.close()", "client.setScreen(null)"); // 1.18.2 才有 Screen.close()
+  }
+  if (version === "1.16.5" || version === "1.14.4") {
+    // 截图：类与签名都不同（多 width/height 两参）
+    s = s.replaceAll("import net.minecraft.client.util.ScreenshotRecorder;", "import net.minecraft.client.util.ScreenshotUtils;");
+    s = s.replaceAll(
+      "ScreenshotRecorder.saveScreenshot(client.runDirectory, client.getFramebuffer(), ",
+      "ScreenshotUtils.saveScreenshot(client.runDirectory, client.getWindow().getFramebufferWidth(), client.getWindow().getFramebufferHeight(), client.getFramebuffer(), ",
+    );
+    // 开/关屏：1.16.5 无 setScreen
+    s = s.replaceAll("client.setScreen(", "client.openScreen(");
+    s = s.replaceAll("mc.setScreen(", "mc.openScreen(");
+    s = s.replaceAll("client.currentScreen.close()", "client.openScreen(null)");
+    // 朝向：公开字段
+    s = s.replaceAll(/player\.setYaw\(([^;]*)\);/g, "player.yaw = $1;");
+    s = s.replaceAll(/player\.setPitch\(([^;]*)\);/g, "player.pitch = $1;");
+    s = s.replaceAll(/player\.getYaw\(\)/g, "player.yaw");
+    s = s.replaceAll(/player\.getPitch\(\)/g, "player.pitch");
+    // 背包 / 能力：1.16.5 是公开字段（javap 实测 `public final PlayerInventory inventory` / `PlayerAbilities abilities`），
+    // 1.17.1 起才有 `getInventory()`/`getAbilities()`。
+    s = s.replaceAll("player.getInventory()", "player.inventory");
+    s = s.replaceAll("player.getAbilities()", "player.abilities");
+  }
+  if (version === "1.14.4") {
+    // ── 与 1.16.5 的剩余差异（逐条 javap 实测 2026-10-03，见 PLAYTEST_VERIFIED_TIER 的 fabric 1.14.4 条目）──
+    // ① 截图方法名仍是混淆形（1.16 才改名 saveScreenshot）
+    s = s.replaceAll("ScreenshotUtils.saveScreenshot(", "ScreenshotUtils.method_1659(");
+    // ② MinecraftClient 无 getWindow()：`public final Window window` 字段
+    s = s.replaceAll("client.getWindow()", "client.window");
+    // ③ Entity 的 x/y/z 是公开字段（1.15 才有 getX/getY/getZ）；BlockPos/Vec3i 仍用 getX() ⇒ 必须按接收者限定
+    for (const r of ["player", "e", "p"]) {
+      s = s.replaceAll(new RegExp(String.raw`(?<![\w$])${r}\.getX\(\)`, "g"), `${r}.x`);
+      s = s.replaceAll(new RegExp(String.raw`(?<![\w$])${r}\.getY\(\)`, "g"), `${r}.y`);
+      s = s.replaceAll(new RegExp(String.raw`(?<![\w$])${r}\.getZ\(\)`, "g"), `${r}.z`);
+    }
+    // ④ 落地：公开字段（1.14.4 无 isOnGround()）
+    s = s.replaceAll("player.isOnGround()", "player.onGround");
+    // ⑤ 背包：无 PlayerEntity.getInventory()（公开字段 inventory）+ PlayerInventory.getInvStack(int)（不是 getStack）
+    s = s.replaceAll("PlayerEntity.getInventory()", "PlayerEntity.inventory");
+    s = s.replaceAll(".getStack(", ".getInvStack(");
+    // ⑥ Vec3i/BlockPos 无 toShortString()（1.15.2 才有）
+    s = s.replaceAll(".toShortString()", ".toString()");
+    // ⑦ 自动进世界是 startIntegratedServer(String,String,LevelInfo)（三参）
+    s = s.replaceAll(
+      "client.startIntegratedServer(WORLD)",
+      "client.startIntegratedServer(WORLD, WORLD, new LevelInfo(0L, GameMode.CREATIVE, false, false, LevelGeneratorType.DEFAULT))",
+    );
+    // ⑧ KeyBinding 无 setPressed（pressed 私有）⇒ 静态 setKeyPressed(getDefaultKeyCode(), down)
+    s = s.replaceAll(
+      /client\.options\.(\w+)\.setPressed\(/g,
+      "KeyBinding.setKeyPressed(client.options.$1.getDefaultKeyCode(), ",
+    );
+    // ⑨ import 增补
+    s = s.replace(
+      "import net.minecraft.client.MinecraftClient;",
+      "import net.minecraft.client.MinecraftClient;\n" +
+        "import net.minecraft.client.options.KeyBinding;\n" +
+        "import net.minecraft.world.GameMode;\n" +
+        "import net.minecraft.world.level.LevelGeneratorType;\n" +
+        "import net.minecraft.world.level.LevelInfo;",
+    );
+    // ⑪ 文件头「签名出处」逐行校正（模板那几行是 1.21.11 面）
+    s = s.replaceAll(
+      " *   ScreenshotRecorder.saveScreenshot(File, Framebuffer, Consumer<Text>)",
+      " *   ScreenshotUtils.method_1659(File, int, int, Framebuffer, Consumer<Text>)（1.14.4 方法名仍是混淆形）",
+    );
+    s = s.replaceAll(
+      " *   Registry.getId(T) : Identifier（Registries.ITEM） ；Entity.getName() / getX() / getY() / getZ()",
+      " *   Registry.getId(T) : Identifier（Registry.ITEM） ；Entity.getName() / x / y / z（位置是公开字段）",
+    );
+    s = s.replaceAll(
+      " *   【真游玩证明】MinecraftClient.options(forwardKey / attackKey) + KeyBinding.setPressed(boolean)",
+      " *   【真游玩证明】MinecraftClient.options(keyForward / keyAttack) + 静态 KeyBinding.setKeyPressed(KeyCode, boolean)",
+    );
+    s = s.replaceAll(
+      " *                    MinecraftClient.interactionManager / getWindow()（Window.getScaledWidth/Height）/ currentScreen",
+      " *                    MinecraftClient.interactionManager / window（Window.getScaledWidth/Height）/ currentScreen",
+    );
+    s = s.replaceAll(
+      " *                    Entity.setPitch(float) / setYaw(float) ；World.getBlockState(BlockPos)",
+      " *                    Entity.pitch / yaw（公开字段） ；World.getBlockState(BlockPos)",
+    );
+    s = s.replaceAll(
+      " *                    BlockState.getBlock() / isAir() ；Registries.BLOCK ；BlockPos.down() / toShortString()",
+      " *                    BlockState.getBlock() / isAir() ；Registry.BLOCK ；BlockPos.down() / toString()",
+    );
+    s = s.replaceAll(
+      " *                    Screen.mouseClicked(Click, boolean) ；Click(double, double, MouseInput) ；InventoryScreen(PlayerEntity)",
+      " *                    Screen.mouseClicked(double, double, int) ；InventoryScreen(PlayerEntity)",
+    );
+  }
+  // 文件头自述
+  return s.replace(
+    " * 进程内临时 QA 驱动（temporary_client_tick_driver / fabric 1.21.11）",
+    ` * 进程内临时 QA 驱动（temporary_client_tick_driver / ${s.includes("quilt") ? "quilt" : "fabric"} ${version}）`,
+  );
+}
+
+/**
+ * playtest 生成器**自己**的 26.x 上界（本文件逐档 javap 取证 = 5 个正式版 26.1 / 26.1.1 / 26.1.2 / 26.2 / 26.3）。
+ * 与全局 `MC_MAX_MINOR_26X`（=1，服务于 model/lang/config 等**未**核 26.2/26.3 的生成器）分开 ——
+ * 「playtest 核过 26.3」不等于「所有生成器都跟进到 26.3」。见 common.ts 的 `eraUpperBoundError(version, max26x)`。
+ */
+export const PLAYTEST_MAX_MINOR_26X = 3;
+
+/** 取 26.<minor> 的 minor；非 26.x 返回 -1。 */
+function m26(v: string): number {
+  const mm = String(v).trim().match(/^26\.(\d+)/);
+  return mm ? Number(mm[1]) : -1;
+}
+
+/**
+ * 26.x **跨版本**共享差异（`rewriteForFabric26xx` / `rewriteForNeoForge26xx` 都调用）。
+ *
+ * 26.2+ 的**两处**面变了（javap 实测，`client-26.2.jar` / `client-26.3.jar`）：
+ *   ① 截图：`Minecraft.getMainRenderTarget()` **已删**（26.1.x 还在），取而代之是
+ *   `Screenshot.grab(Minecraft, boolean)` —— `javap -c` 读出 `boolean` = `panoramic`：
+ *   为真且 `SharedConstants.DEBUG_PANORAMA_SCREENSHOT` 时走 `grabPanoramixScreenshot`，
+ *   否则内部取 `mc.gameRenderer.mainRenderTarget()` 再走老的 `grab(File,RenderTarget,Consumer)`。
+ *   ⇒ 我们要普通截图，传 `false`。
+ *   ② 界面状态：`Minecraft.screen` **字段**与 `Minecraft.setScreen(Screen)` **都已删除**，
+ *   移到 `net.minecraft.client.gui.Gui`（经 `Minecraft.gui` 访问）：
+ *   `Gui.screen() -> Screen` / `Gui.setScreen(Screen)`（26.1.x 的 `Gui` 没有这两个成员，
+ *   那时还在 `Minecraft` 上）。⇒ 本表把 `client.screen` → `client.gui.screen()`、
+ *   `client.setScreen(x)` → `client.gui.setScreen(x)`（`mc.` 同理）。
+ * 其余面在 26.1→26.3 间稳定（本轮对五个 jar 逐条 javap 比对：`mouseClicked(MouseButtonEvent,boolean)` /
+ *   `WorldOpenFlows.openWorld(String,Runnable)` / `KeyMapping.setDown` / `Inventory.getItem(int)` /
+ *   `BuiltInRegistries.ENTITY_TYPE|BLOCK|ITEM` / `Entity.onGround|getYRot|getXRot|setXRot` /
+ *   `ClientPacketListener.sendCommand` / `Options.keyUp|keyJump|keyAttack` / `MouseButtonEvent|MouseButtonInfo` 构造全同）。
+ * 注：26.3 的 `BuiltInRegistries` 里 `BLOCKSTATE_PROVIDER_TYPE` 等有改名/删除，但**本驱动不用**，不受影响。
+ */
+function apply26xxShared(s: string, version: string): string {
+  let t = s;
+  // ① GUI 点击签名：26.x = `mouseClicked(MouseButtonEvent, boolean)`（两种缩进形态）。
+  //    **必须早于 26.2+ 的 screen→gui.screen() 换形**——本步的匹配字面量里带 `client.screen.`。
+  t = t.replaceAll(
+    "client.screen.mouseClicked(\n" +
+      "                                client.getWindow().getGuiScaledWidth() / 2.0, client.getWindow().getGuiScaledHeight() / 2.0, 0)",
+    "client.screen.mouseClicked(new MouseButtonEvent(\n" +
+      "                                client.getWindow().getGuiScaledWidth() / 2.0, client.getWindow().getGuiScaledHeight() / 2.0, new MouseButtonInfo(0, 0)), false)",
+  ).replaceAll(
+    "client.screen.mouseClicked(\n" +
+      "                                    client.getWindow().getGuiScaledWidth() / 2.0, client.getWindow().getGuiScaledHeight() / 2.0, 0)",
+    "client.screen.mouseClicked(new MouseButtonEvent(\n" +
+      "                                    client.getWindow().getGuiScaledWidth() / 2.0, client.getWindow().getGuiScaledHeight() / 2.0, new MouseButtonInfo(0, 0)), false)",
+  );
+  if (m26(version) >= 2) {
+    // ② 截图：`Minecraft.getMainRenderTarget()` 已删（两种 lambda 形态一次盖住）
+    t = t.replaceAll(
+      /Screenshot\.grab\(client\.gameDirectory, client\.getMainRenderTarget\(\), t -> \{\s*\}\);/g,
+      "Screenshot.grab(client, false);",
+    );
+    // ③ 界面状态：26.2 起 `Minecraft.screen` 字段与 `Minecraft.setScreen(...)` **都已删除**，
+    //    移到 `net.minecraft.client.gui.Gui`（`Minecraft.gui`）——javap 实测：
+    //    `Gui.screen() -> Screen` / `Gui.setScreen(Screen)`（26.1.x 的 Gui 无此二成员）。
+    //    先换 setter（`client.setScreen(` 的右圆括号保证不误伤 `client.screen`），再换 getter。
+    t = t.replaceAll("client.setScreen(", "client.gui.setScreen(");
+    t = t.replaceAll("mc.setScreen(", "mc.gui.setScreen(");
+    t = t.replaceAll("client.screen", "client.gui.screen()");
+    t = t.replaceAll("mc.screen", "mc.gui.screen()");
+  }
+  // 造世界：26.x 的 `LevelSettings` 构造面与 forge 表插的那份**不同**（见 applyNewworld26xx），换成本档实测版
+  t = applyNewworld26xx(t);
+  // 文件头自述：别让它继续自称 1.21.11
+  const plat = t.includes("net.neoforged") ? "neoforge" : "fabric";
+  return t.replace(
+    " * 进程内临时 QA 驱动（temporary_client_tick_driver / fabric 1.21.11）",
+    ` * 进程内临时 QA 驱动（temporary_client_tick_driver / ${plat} ${version}，去混淆 mojmap）`,
+  );
+}
+
+/**
+ * MC 26.1+ 去混淆档改写表（**fabric**）——保留 Fabric API 事件、只换 vanilla 名到 mojmap。
+ *
+ * 与 forge 表的关系：26.1+ 的 vanilla 侧名与 forge/neoforge 表一致（同为 mojmap），所以本表**先走
+ * `rewriteForForge`**（版本 > 1.20.4 ⇒ 自动接 `applyWorldOpenFlows1206Plus`，其 `openWorld(String,Runnable)`
+ * 与 javap 实测的 26.x 一致），再把 3 处 forge 专属件换回 fabric：
+ *   ① 事件挂接 = Fabric API（`ClientTickEvents.END_CLIENT_TICK` / `ClientReceiveMessageEvents.GAME`），
+ *      不是 Forge 事件总线（26.x 是 fabric 工程，Forge 类根本不在 classpath）；
+ *   ② 退掉 forge 表插进类体的 `INSTANCE` 字段与两个 `@SubscribeEvent` 方法；
+ *   ③ `mouseClicked` 换 26.x 新签名（见下）。
+ *
+ * 本表全部签名以**官方客户端 jar（已去混淆，免 remap）+ 对应 fabric-api** javap 实测：
+ *   26.1.2（2026-10-03，38 113 927 B / sha1 `4e618f09…`）+ fabric-api 0.155.3+26.1.2；
+ *   26.1 / 26.1.1 / 26.2 / 26.3 的差异面逐条比对（2026-10-03；26.2/26.3 见 `apply26xxShared`）。
+ * `Minecraft.getInstance/getMainRenderTarget(≤26.1.x)/gameDirectory/screen/setScreen/getConnection/getWindow/
+ * createWorldOpenFlows`、`LocalPlayer`(=net.minecraft.client.player.LocalPlayer)、
+ * `Screenshot.grab(File,RenderTarget,Consumer<Component>)`、`Options.keyUp|keyJump|keyAttack`、
+ * `KeyMapping.setDown(boolean)`、`Inventory.getItem(int)`、`BuiltInRegistries.ENTITY_TYPE|BLOCK|ITEM`、
+ * `ClientLevel.entitiesForRendering()`、`Player.getInventory()/getAbilities()/onUpdateAbilities()`、
+ * `Abilities.flying|mayfly`、`Entity.getYRot/setYRot/getXRot/setXRot/onGround/getName/blockPosition/getType`、
+ * `ClientPacketListener.sendCommand(String)`、`Component.getString()`、`Window.getGuiScaledWidth/Height`、
+ * `Screen.onClose()`、`InventoryScreen(Player)`、`WorldOpenFlows.openWorld(String,Runnable)`。
+ *
+ * ③ GUI 点击签名差异（**26.x 新形态，与 ≤1.21.11 和 forge 1.20.1 都不同**）：
+ *   `GuiEventListener.mouseClicked(MouseButtonEvent, boolean)`，
+ *   `MouseButtonEvent(double, double, MouseButtonInfo)`、`MouseButtonInfo(int, int)`（javap 实测）。
+ *   ⇒ 不能沿用 forge 表的 `(double,double,int)` 形态。
+ *
+ * `newworld`（造世界）步骤本表**已取证**（2026-10-03）：forge 表插的 7 参 `LevelSettings` 是 1.20.1 形态、26.x 编译不过，
+ *   故由 `applyNewworld26xx` 整体换成 26.x 版（5 参 record + `LevelSettings$DifficultySettings` + `WorldPresets::createNormalWorldDimensions`）。
+ *   javap 依据见该函数注释；五档（26.1/26.1.1/26.1.2/26.2/26.3）逐条同形。
+ */
+export function rewriteForFabric26xx(java: string, version: string): string {
+  // 先套 forge 表（vanilla 名 → mojmap；版本 >1.20.4 ⇒ 自动接 openWorld 面）
+  let s = rewriteForForge(java, version);
+  s = apply26xxShared(s, version);
+  return deForgeToFabric26xx(s, version);
+}
+
+/**
+ * MC 26.1+ 去混淆档改写表（**neoforge**）—— = forge 表换 mojmap 名 + **NeoForge 26.x 事件栈**。
+ *
+ * NeoForge 26.x 事件栈（javap 实测 `neoforge-26.1.2.114-universal.jar` + `bus-8.0.5.jar`，2026-10-03）：
+ *   - `net.neoforged.neoforge.common.NeoForge.EVENT_BUS`（`public static final IEventBus`）✓
+ *   - `net.neoforged.bus.api.IEventBus.register(Object)` ✓ / `@net.neoforged.bus.api.SubscribeEvent` ✓
+ *   - `net.neoforged.neoforge.client.event.ClientTickEvent$Post`（`public class … extends ClientTickEvent`，
+ *     **无 phase 字段、无 phase 判据**；`ClientTickEvent` 是 abstract 父类）⇒ 订阅形 `onClientTick(ClientTickEvent.Post)`，
+ *     **不要**沿用 1.20.4/1.20.6 表的 `TickEvent.ClientTickEvent` + `event.phase != END` 判据。
+ *   - `net.neoforged.neoforge.client.event.ClientChatReceivedEvent#getMessage() -> Component` ✓（与 1.20.x 同形）
+ * ⚠ 与 `rewriteForNeoForge`（1.20.4/1.20.6/1.21.x 表）**不是**同一张：那张用带 phase 的 `TickEvent.ClientTickEvent`。
+ */
+export function rewriteForNeoForge26xx(java: string, version: string): string {
+  let s = rewriteForForge(java, version);
+  s = apply26xxShared(s, version);
+  s = deForgeToNeoForge26xx(s, version);
+  return s;
+}
+
+/** 把 forge 表产出改回 **fabric（Fabric API 事件）** 的 26.1+ 形态。 */
+function deForgeToFabric26xx(s: string, version: string): string {
+  let t = s;
+  // ① imports：去掉 forge 四个，换回 Fabric API 两个 + 26.x 的点击输入类
+  t = t.replace(
+    "import net.minecraft.core.registries.BuiltInRegistries;\n" +
+      "import net.minecraftforge.client.event.ClientChatReceivedEvent;\n" +
+      "import net.minecraftforge.common.MinecraftForge;\n" +
+      "import net.minecraftforge.event.TickEvent;\n" +
+      "import net.minecraftforge.eventbus.api.SubscribeEvent;\n",
+    "import net.minecraft.core.registries.BuiltInRegistries;\n" +
+      "import net.minecraft.client.input.MouseButtonEvent;\n" +
+      "import net.minecraft.client.input.MouseButtonInfo;\n" +
+      "import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;\n" +
+      "import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;\n",
+  );
+  // ② 退掉 forge 表插进类体的 INSTANCE 字段与两个 @SubscribeEvent 方法
+  t = t.replace(FORGE_CLASS_BODY_INSERT, "public final class PlaytestQaDriver {\n");
+  // ③ 事件挂接：解释器路径（12 空格缩进）
+  t = t.replace(
+    "            INSTANCE = new PlaytestQaDriver();\n            MinecraftForge.EVENT_BUS.register(INSTANCE);",
+    "            ClientTickEvents.END_CLIENT_TICK.register(PlaytestQaDriver::onInterpTick);\n" +
+      "            ClientReceiveMessageEvents.GAME.register((message, overlay) -> lastGameMessage = message.getString());",
+  );
+  // ③b 事件挂接：相位机路径（8 空格缩进）
+  t = t.replace(
+    "        INSTANCE = new PlaytestQaDriver();\n        MinecraftForge.EVENT_BUS.register(INSTANCE);",
+    "        ClientTickEvents.END_CLIENT_TICK.register(PlaytestQaDriver::onEndTick);",
+  );
+  return t;
+}
+
+/** 把 forge 表产出换成 **NeoForge 26.x 事件栈**。 */
+function deForgeToNeoForge26xx(s: string, version: string): string {
+  let t = s;
+  // 26.x 的点击输入类（forge 表不引入；neoforge 侧同 fabric 侧都需要）
+  t = t.replace(
+    "import net.minecraft.core.registries.BuiltInRegistries;\n",
+    "import net.minecraft.core.registries.BuiltInRegistries;\n" +
+      "import net.minecraft.client.input.MouseButtonEvent;\n" +
+      "import net.minecraft.client.input.MouseButtonInfo;\n",
+  );
+  t = t.replaceAll(
+    "import net.minecraftforge.client.event.ClientChatReceivedEvent;",
+    "import net.neoforged.neoforge.client.event.ClientChatReceivedEvent;",
+  );
+  t = t.replaceAll("import net.minecraftforge.common.MinecraftForge;", "import net.neoforged.neoforge.common.NeoForge;");
+  t = t.replaceAll(
+    "import net.minecraftforge.event.TickEvent;",
+    "import net.neoforged.neoforge.client.event.ClientTickEvent;",
+  );
+  t = t.replaceAll(
+    "import net.minecraftforge.eventbus.api.SubscribeEvent;",
+    "import net.neoforged.bus.api.SubscribeEvent;",
+  );
+  // 订阅形：26.x 用 `ClientTickEvent.Post`，**无** phase 判据
+  t = t.replace(
+    "    @SubscribeEvent\n" +
+      "    public void onClientTick(TickEvent.ClientTickEvent event) {\n" +
+      "        if (event.phase != TickEvent.Phase.END) {\n" +
+      "            return;\n" +
+      "        }\n" +
+      "        onInterpTick(Minecraft.getInstance());\n" +
+      "    }\n",
+    "    @SubscribeEvent\n" +
+      "    public void onClientTick(ClientTickEvent.Post event) {\n" +
+      "        onInterpTick(Minecraft.getInstance());\n" +
+      "    }\n",
+  );
+  t = t.replaceAll("MinecraftForge.EVENT_BUS.register(INSTANCE);", "NeoForge.EVENT_BUS.register(INSTANCE);");
+  return t;
+}
+
+/** forge 表插进类体的那段（`deForgeTo*` 用来把它整段摘掉）；与 `rewriteForForge` 里的字面量必须逐字一致。 */
+const FORGE_CLASS_BODY_INSERT =
+  "public final class PlaytestQaDriver {\n" +
+  "\n" +
+  "    private static PlaytestQaDriver INSTANCE;\n" +
+  "\n" +
+  "    @SubscribeEvent\n" +
+  "    public void onClientTick(TickEvent.ClientTickEvent event) {\n" +
+  "        if (event.phase != TickEvent.Phase.END) {\n" +
+  "            return;\n" +
+  "        }\n" +
+  "        onInterpTick(Minecraft.getInstance());\n" +
+  "    }\n" +
+  "\n" +
+  "    @SubscribeEvent\n" +
+  "    public void onChat(ClientChatReceivedEvent event) {\n" +
+  "        lastGameMessage = event.getMessage().getString();\n" +
+  "    }\n";
+
+/**
+ * `newworld`（造世界）的 **26.1+ 实现**：把 forge 表植入的 `createFreshLevel` 块换成按 26.x 实测签名写的那份。
+ *
+ * **26.x 的 `LevelSettings` 是 5 参 record，不是 forge/1.20.1 的 7 参**（2026-10-03 javap 三源互证）：
+ *   `LevelSettings(String levelName, GameType, LevelSettings$DifficultySettings, boolean allowCommands, WorldDataConfiguration)`
+ *   ＋ 嵌套 `LevelSettings$DifficultySettings(Difficulty, boolean hardcore, boolean locked)`
+ *   另有一个 6 参重载 `(…, WorldDataConfiguration, com.mojang.serialization.Lifecycle)`。
+ *   **取证三源**：① vanilla 官方客户端 jar（`client-26.1 / 26.1.1 / 26.1.2 / 26.2 / 26.3.jar` 五档）；
+ *   ② NeoForge 打过补丁的 jar（`minecraft-patched-26.1.2.114{,-merged}.jar`、`minecraft-patched-26.2.0.88{,-merged}.jar`）；
+ *   ③ MDG 的 neoformruntime 客户端缓存（`minecraft_26.{1,1.1,1.2,2,3}_client.jar`）。
+ *   **三源都只有上面那两个构造器，7 参 `(String,GameType,boolean,Difficulty,boolean,GameRules,WorldDataConfiguration)` 一处都没有。**
+ *   编译期实证同向：按 7 参写会得到
+ *   `需要: String,GameType,DifficultySettings,boolean,WorldDataConfiguration / 找到: String,GameType,boolean,Difficulty,boolean,GameRules,WorldDataConfiguration`。
+ *   而 forge 表那份正是 1.20.1 的 7 参形态（`new net.minecraft.world.level.GameRules()` 无参）⇒ 直接留给 26.x 编译不过。
+ *   `WorldDataConfiguration.DEFAULT` 五档都在（static field ✓）。
+ *
+ * ⚠ **本函数此前被改坏过**：一段「26.x 仍是 7 参、`DifficultySettings` 已实测证伪」的注释与实现（`gamerules.GameRules(FeatureFlags.VANILLA_SET)`）
+ * 曾把替换体本身写成 7 参 —— 于是**替换「成功」但结果是编译不过的代码**（且 `newworld` 一跑就编译失败）。
+ * 上面那三源取证就是为堵这个：**改这里之前先 javap `client-26.x.jar` 的 `LevelSettings` / `LevelSettings$DifficultySettings`**。
+ *
+ * 另两处一并定稿：
+ *   ① 第 4 参 `Function<HolderLookup$Provider, WorldDimensions>` 用 **`WorldPresets::createNormalWorldDimensions`**
+ *      —— javap 实测该方法签名逐字就是 `static WorldDimensions createNormalWorldDimensions(HolderLookup$Provider)`，
+ *      比手搓 `ra -> new WorldDimensions(ra.registryOrThrow(LEVEL_STEM))` 少一串未核构造面；
+ *   ② `client.execute(Runnable)` 是**继承**来的（`Minecraft extends ReentrantBlockableEventLoop` → `BlockableEventLoop.execute(Runnable)`，
+ *      javap 实测）⇒ `Minecraft` 自己的成员表里看不到，但调用合法。createFreshLevel 内部同步阻塞渲染线程，必须丢到下一 tick。
+ * 末参 `Screen` 传 `null`（与 1.20.4+ 同形）。
+ */
+function applyNewworld26xx(s: string): string {
+  const start = s.indexOf("        try {\n            // 必须丢到渲染线程的下一 tick：createFreshLevel 内部走 loadWorldDataBlocking");
+  if (start < 0) return s; // 形态变了就别乱动（宁可留 forge 实现也不要切错位置）
+  const endMark = "        } catch (Throwable t) {\n            log(\"[QA] newworld 失败：\" + t);\n        }";
+  const end = s.indexOf(endMark, start);
+  if (end < 0) return s;
+  return (
+    s.slice(0, start) +
+    [
+      "        try {",
+      "            // createFreshLevel 内部走 loadWorldDataBlocking（同步阻塞渲染线程）⇒ 必须丢到渲染线程的下一 tick。",
+      "            client.execute(() -> {",
+      "                try {",
+      "                    client.createWorldOpenFlows().createFreshLevel(",
+      "                        name,",
+      "                        new net.minecraft.world.level.LevelSettings(",
+      "                            name,",
+      "                            net.minecraft.world.level.GameType.CREATIVE,",
+      "                            new net.minecraft.world.level.LevelSettings.DifficultySettings(net.minecraft.world.Difficulty.NORMAL, false, false),",
+      "                            true,",
+      "                            net.minecraft.world.level.WorldDataConfiguration.DEFAULT),",
+      "                        net.minecraft.world.level.levelgen.WorldOptions.defaultWithRandomSeed(),",
+      "                        net.minecraft.world.level.levelgen.presets.WorldPresets::createNormalWorldDimensions,",
+      "                        null);",
+      '                    log("[QA] newworld: createFreshLevel 已执行（渲染线程下一 tick）");',
+      "                } catch (Throwable t) {",
+      '                    log("[QA] newworld 失败：" + t);',
+      "                }",
+      "            });",
+      '            log("[QA] newworld: 已排队创建 " + name + "（渲染线程下一 tick 执行；后续步骤留 wait 即可）");',
+      '        } catch (Throwable t) {',
+      '            log("[QA] newworld 失败：" + t);',
+      "        }",
+    ].join("\n") +
+    s.slice(end + endMark.length)
+  );
+}
+
+
 const FORGE_KEYS: Record<string, string> = {
   forwardKey: "keyUp",
   backKey: "keyDown",
@@ -302,8 +846,334 @@ const FORGE_KEYS: Record<string, string> = {
 };
 
 /**
+ * forge 早期档（javap 实测；jar 均取自本机 `.gradle/caches/forge_gradle` 缓存，免下载）：
+ *   - `1.13.2` = **MCP 命名层**（与 1.14+ 的 mojmap 完全不同源，整表分派给 `applyForgeMCP132`）：
+ *     `net.minecraft.block.state.IBlockState`（`getBlockState()` 返接口）/ `net.minecraft.item.ItemStack`
+ *     / `net.minecraft.client.gui.GuiScreen` / `net.minecraft.client.gui.inventory.GuiInventory`
+ *     / `net.minecraft.client.entity.EntityPlayerSP` / `net.minecraft.client.multiplayer.WorldClient`
+ *     / `ForgeRegistries.BLOCKS|ITEMS|ENTITIES`（`getKey(V)`）/ `Minecraft.world/player/currentScreen/gameSettings/gameDir/mainWindow`
+ *     / `GuiScreen.onGuiClosed()` / `KeyBinding.setKeyBindState(Input,boolean)` / `ScreenShotHelper.saveScreenshot(File,int,int,Framebuffer,Consumer)`
+ *     / `EntityPlayerSP.sendChatMessage(String)` / `WorldClient.loadedEntityList` / BlockPos `add(int,int,int)·down()·toImmutable()`。
+ *   - `1.14.4` / `1.15.2` / `1.16.5` = **旧 mojmap** 族（1.17 大批改名之前），逐档差异见 `applyForgeOldMojmapLegacy` 与两档的 tier 备注。
+ *   - `1.17.1` / `1.18.2` = 现代 mojmap 名，但自动进世界是 `Minecraft.loadLevel(String)`（无 `WorldOpenFlows`）、
+ *     命令走 `LocalPlayer.chat(String)`（`ClientPacketListener.sendCommand` 1.19 才有）、注册表是 `core.Registry` 静态字段。
+ *   - `1.19.4` = 与 1.20.1 基本同形（`createWorldOpenFlows().loadLevel`、`BuiltInRegistries`、`sendCommand`、7 参 LevelSettings 均在），
+ *     仅 `Entity.isOnGround()`（`onGround()` 是 1.20 才改的名）差一处。
+ * 全部 7 档的 javac 编译验证（本机 `.gradle/caches` 的 mapped jar 做 classpath）**逐档 COMPILE_OK**，as-of 2026-10-03。
+ */
+export const FORGE_LEGACY_VERSIONS: readonly string[] = ["1.12.2", "1.13.2", "1.14.4", "1.15.2", "1.16.5", "1.17.1", "1.18.2", "1.19.4"];
+/** 其中 `createFreshLevel` 造世界面**未取证**（LevelSettings/WorldDimensions 构造面不同）⇒ 保留 fail-closed 桩。 */
+export const FORGE_NO_NEWWORLD_VERSIONS: readonly string[] = ["1.12.2", "1.13.2", "1.14.4", "1.15.2", "1.16.5", "1.17.1", "1.18.2"];
+/** 旧 mojmap 族（1.14.4–1.16.5）：命名层同源，自动进世界与 `onGround` 形态逐档不同。 */
+export const FORGE_OLD_MOJMAP_VERSIONS: readonly string[] = ["1.14.4", "1.15.2", "1.16.5"];
+
+/**
+ * forge 1.14.4 / 1.15.2 改写项（javap 实测；与 1.16.5 同属**旧 mojmap 命名族**，只差三处）：
+ *   - 自动进世界**没有** `loadLevel(String)`：
+ *       1.14.4 `Minecraft.launchIntegratedServer(String levelId, String levelName, WorldSettings)`；
+ *       1.15.2 `Minecraft.selectLevel(String levelId, String levelName, WorldSettings)`；
+ *     `WorldSettings` 构造面两档同形（javap）：`WorldSettings(long seed, GameType, boolean generatingBonusChest, boolean mapFeatures, WorldType)`
+ *     —— 末参 `WorldType` **不在**改写的调用形态里构造（`WorldType.DEFAULT` 是 static field，javap 实测两档都在），
+ *     `levelId==levelName` 时相当于「打开该目录的存档」，与 1.16.5 的 `loadLevel(id)` 语义近似。
+ *   - `Minecraft` 的**世界/玩家/屏幕字段名**两档都换了：1.14.4 `world` / `currentScreen` / `gameSettings`（1.15.2 才改 `level`/`screen`/`options`）。
+ *   - `Entity` 的 yaw/pitch 在两档是**公开字段 `rotationYaw`/`rotationPitch`**（1.15.2/1.16.5 才改 `yRot`/`xRot`）。
+ *   - `Entity.onGround` 是**公开字段**（1.16.5 才是 `isOnGround()`）。
+ *   - 取物器：1.15.2 `PlayerInventory.getItem(int)`（同 1.16.5）；**1.14.4 是 `getStackInSlot(int)`**。
+ *   - 1.15.2 的 `Screen` **无** `onClose()`（那是 1.16.5 才加的）⇒ 关屏 `client.screen = null`；`getGuiScaledWidth/Height` 两档都在。
+ *   - `ClientWorld` 取实体：1.15.2 `entitiesForRendering()`（同 1.16.5）；**1.14.4 是 `getAllEntities()`**。
+ *   - `Minecraft` 取窗口：两档都是 **public 字段 `mainWindow`**（`getWindow()` 是 1.16.5 才有的）。
+ *   `newworld` 造世界面**未取证**（`createFreshLevel` 不存在，旧造世界入口 `launchIntegratedServer`/`selectLevel` 需另取证）⇒ fail-closed。
+ */
+export function applyForgeOldMojmapLegacy(s: string, version: string): string {
+  let t = s;
+  // ① 朝向：1.14.4 是**公开字段** rotationYaw / rotationPitch；1.15.2 已是 `yRot`/`xRot`（javap 实测）
+  //    —— 上面共享块已把 `getYRot()/getXRot()` 换成 yRot/xRot，这里只对 1.14.4 再换一层。
+  if (version === "1.14.4") {
+    t = t.replaceAll(/(\w+)\.yRot\b/g, "$1.rotationYaw").replaceAll(/(\w+)\.xRot\b/g, "$1.rotationPitch");
+  }
+  // ② 落地：**公开字段** onGround（1.16.5 才是 isOnGround()）—— 走到这里时 forge 表已把 `isOnGround()`
+  //    换成了 `onGround()`（同一份改写表两档都要接），故两式都换。
+  t = t.replaceAll("player.onGround()", "player.onGround").replaceAll("player.isOnGround()", "player.onGround");
+  // ③ 位置：两档都无 `blockPosition()`（1.16 才加）。
+  if (version === "1.15.2") {
+    // 1.15.2 的 Entity **没有** `getPosition()`（javap 实测；只有 protected getOnPos / Vec3d position()）⇒ 现造 BlockPos。
+    t = t.replaceAll(
+      "player.blockPosition()",
+      "new net.minecraft.util.math.BlockPos(player.getX(), player.getY(), player.getZ())",
+    );
+  } else {
+    // 1.14.4 有 `Entity.getPosition()`（javap 实测；返 BlockPos）。
+    t = t.replaceAll("player.blockPosition()", "player.getPosition()");
+  }
+  // ④ 1.14.4 专属旧面（**1.15.2 已改成新名，不得套用** —— 走错一次实测会红，2026-10-03）
+  if (version === "1.14.4") {
+    // 4a Entity 只有公开字段 posX/posY/posZ（javap：无 getX/getY/getZ）。用 lookbehind 防 `bp.getX()`（BlockPos）被吃。
+    for (const r of ["player", "e", "p"]) {
+      t = t
+        .replaceAll(new RegExp(`(?<![\\w$])${r}\\.getX\\(\\)`, "g"), `${r}.posX`)
+        .replaceAll(new RegExp(`(?<![\\w$])${r}\\.getY\\(\\)`, "g"), `${r}.posY`)
+        .replaceAll(new RegExp(`(?<![\\w$])${r}\\.getZ\\(\\)`, "g"), `${r}.posZ`);
+    }
+    // 4b BlockPos 旧面：只有 up()/down() + toImmutable() + add(int,int,int)（1.15.2 才是 below()/immutable()/offset）—— javap 两档互证。
+    t = t.replaceAll(".below()", ".down()").replaceAll(".immutable()", ".toImmutable()");
+    t = t.replaceAll(".toShortString()", ".toString()");
+    t = t.replaceAll(".offset(ax, ay, az)", ".add(ax, ay, az)");
+    // 4c MainWindow 只有 getScaledWidth/Height（getGuiScaled* 是 1.15.2 才加的）。
+    t = t.replaceAll("getGuiScaledWidth()", "getScaledWidth()").replaceAll("getGuiScaledHeight()", "getScaledHeight()");
+    // 4d 能力：1.14.4 的 PlayerAbilities 字段叫 isFlying（1.15.2 才改 flying）；刷新叫 sendPlayerAbilities。
+    t = t.replaceAll("player.abilities.flying", "player.abilities.isFlying");
+    t = t.replaceAll("player.onUpdateAbilities()", "player.sendPlayerAbilities()");
+    // 4e 命令：1.14.4 的 ClientPlayerEntity **没有** chat（1.15.2/1.16.5 才有）⇒ sendChatMessage(String)。
+    t = t.replaceAll("client.player.chat(", "client.player.sendChatMessage(");
+  }
+  // ⑤ 自动进世界：两档都没有 loadLevel(String)；WorldType 常量名两档不同（1.15.2 = NORMAL，1.14.4 = DEFAULT）。
+  const wt = version === "1.15.2" ? "NORMAL" : "DEFAULT";
+  const call =
+    version === "1.15.2"
+      ? `client.selectLevel(WORLD, WORLD, new net.minecraft.world.WorldSettings(0L, net.minecraft.world.GameType.CREATIVE, false, true, net.minecraft.world.WorldType.${wt}))`
+      : `client.launchIntegratedServer(WORLD, WORLD, new net.minecraft.world.WorldSettings(0L, net.minecraft.world.GameType.CREATIVE, false, true, net.minecraft.world.WorldType.${wt}))`;
+  t = t.replaceAll("client.loadLevel(WORLD)", call);
+  if (version === "1.14.4") {
+    // ⑤ 1.14.4 的字段名与 1.15.2/1.16.5 不同（1.15 才改 level/screen/options/gameDirectory）
+    t = t.replaceAll("client.level", "client.world").replaceAll("client.screen", "client.currentScreen");
+    t = t.replaceAll("client.options.", "client.gameSettings.");
+    t = t.replaceAll("client.gameDirectory", "client.gameDir");
+    t = t.replaceAll("client.getWindow()", "client.mainWindow");
+    t = t.replaceAll("client.getMainRenderTarget()", "client.getFramebuffer()");
+    t = t.replaceAll("client.setScreen(", "client.displayGuiScreen(");
+    t = t.replaceAll("client.world.entitiesForRendering()", "client.world.getAllEntities()");
+    t = t.replaceAll(/mc\.world\.entitiesForRendering\(\)/g, "mc.world.getAllEntities()");
+    // 相位机里的 `mc` 别名同样要换名（javap：1.14.4 是 currentScreen / displayGuiScreen）
+    t = t.replaceAll("mc.screen", "mc.currentScreen");
+    t = t.replaceAll("mc.setScreen(", "mc.displayGuiScreen(");
+    t = t.replaceAll("player.inventory.getItem(", "player.inventory.getStackInSlot(");
+    // 截图：1.14.4/1.13.2 的方法名是 saveScreenshot（grab 是 1.15.2 才有的名）—— javap 实测。
+    t = t.replaceAll("ScreenShotHelper.grab(", "ScreenShotHelper.saveScreenshot(");
+    const K14: Record<string, string> = {
+      keyUp: "keyBindForward", keyDown: "keyBindBack", keyLeft: "keyBindLeft", keyRight: "keyBindRight",
+      keyJump: "keyBindJump", keyShift: "keyBindSneak", keySprint: "keyBindSprint",
+      keyAttack: "keyBindAttack", keyUse: "keyBindUseItem", keyInventory: "keyBindInventory",
+    };
+    t = t.replaceAll(/client\.gameSettings\.(\w+)\.setDown\(/g, (_m, k: string) => `client.gameSettings.${K14[k] ?? k}.setDown(`);
+    // 1.14.4 的 KeyBinding **没有** `setDown(boolean)`（javap 实测）⇒ 用静态 `setKeyBindState(Input, boolean)`。
+    t = t.replaceAll(
+      /client\.gameSettings\.(keyBind\w+)\.setDown\(/g,
+      (_m, k: string) => `net.minecraft.client.settings.KeyBinding.setKeyBindState(client.gameSettings.${k}.getKey(), `,
+    );
+  }
+  return t;
+}
+
+/**
+ * forge 1.13.2 改写（**MCP 命名层**，与 1.14+ 的 mojmap 完全不同源）——由 rewriteForForgeLegacy 单独分派。
+ * 逐条 javap 实测（`forge-1.13.2-25.0.223_mapped_snapshot_20180921-1.13.jar`，本机缓存）：
+ *   - 包名：`net.minecraft.block.BlockState`（无 `world.level.block.state`）/ `net.minecraft.item.ItemStack`
+ *     / `net.minecraft.util.math.BlockPos` / `net.minecraft.entity.Entity` / `net.minecraft.client.gui.GuiScreen`
+ *     / `net.minecraft.client.gui.inventory.GuiInventory` / `net.minecraft.client.entity.EntityPlayerSP`
+ *     / `net.minecraft.client.network.NetHandlerPlayClient` / `net.minecraft.client.world.WorldClient`。
+ *   - 注册表：**没有** `util.registry.Registry` 持有类；用 `net.minecraftforge.registries.ForgeRegistries` 的
+ *     `BLOCKS`/`ITEMS`/`ENTITIES`（IForgeRegistry，**取值方法叫 `getKey(V)`**，javap 实测）。
+ *   - `Minecraft`：`world`（字段）/ `player`（字段）/ `currentScreen`（字段 `/ `gameSettings`（字段）/ `gameDir`（字段）/
+ *     `mainWindow`（字段）/ `getFramebuffer()` / `displayGuiScreen(GuiScreen)` / `launchIntegratedServer(String,String,WorldSettings)`。
+ *   - 玩家：`EntityPlayerSP.sendChatMessage(String)`（发命令，带前导 `/`）/ `sendPlayerAbilities()`（刷新飞行，**不叫 onUpdateAbilities**）/
+ *     公开字段 `inventory`（`InventoryPlayer.getStackInSlot(int)`）与 `abilities`（`PlayerCapabilities`）。
+ *   - `Entity`：公开字段 `rotationYaw`/`rotationPitch`/`onGround`；位置 `getPosition()`（BlockPos）。
+ *   - `GameSettings` 键名**旧形** `keyBindForward/keyBindJump/keyBindAttack/keyBindUseItem/keyBindSprint/keyBindSneak/keyBindInventory…`。
+ *   - `GuiScreen`：关屏 `onGuiClosed()`（**不叫 onClose**）/ `mouseClicked(double,double,int)`；`GuiInventory(EntityPlayer)`。
+ *   - 截图：`net.minecraft.util.ScreenShotHelper.grab(File,int,int,Framebuffer,Consumer<ITextComponent>)`（javap 实测）。
+ *   `newworld` 造世界面未取证 ⇒ fail-closed。
+ */
+export function applyForgeMCP132(s: string): string {
+  let t = s;
+  // Forge 事件包（1.13.2 仍在 `fml.common.gameevent`，1.14 才搬到 `net.minecraftforge.event`）——javap 实测。
+  t = t.replaceAll(
+    "import net.minecraftforge.event.TickEvent;",
+    "import net.minecraftforge.fml.common.gameevent.TickEvent;",
+  );
+  // 全限定名先于短名规则（否则 `\bScreen\b` 会把 FQN 尾巴改掉，产生 `gui.screens.GuiScreen` 这种不存在的类）。
+  t = t.replaceAll("net.minecraft.client.gui.screens.Screen", "net.minecraft.client.gui.GuiScreen");
+  // 包名（MCP）
+  t = t.replaceAll("import net.minecraft.world.level.block.state.BlockState;", "import net.minecraft.block.state.BlockState;");
+  t = t.replaceAll("import net.minecraft.client.gui.screens.inventory.InventoryScreen;", "import net.minecraft.client.gui.inventory.GuiInventory;");
+  t = t.replaceAll("import net.minecraft.client.player.LocalPlayer;", "import net.minecraft.client.entity.EntityPlayerSP;");
+  t = t.replaceAll("import net.minecraft.client.Screenshot;", "import net.minecraft.util.ScreenShotHelper;");
+  t = t.replaceAll("import net.minecraft.client.gui.screens.Screen;", "import net.minecraft.client.gui.GuiScreen;");
+  t = t.replaceAll("import net.minecraft.world.item.ItemStack;", "import net.minecraft.item.ItemStack;");
+  t = t.replaceAll("import net.minecraft.core.registries.BuiltInRegistries;", "import net.minecraftforge.registries.ForgeRegistries;");
+  t = t.replaceAll("import net.minecraft.core.BlockPos;", "import net.minecraft.util.math.BlockPos;");
+  // 类型名（先长后短，避免 `InventoryScreen` 被 `Screen` 规则吃掉）
+  t = t.replaceAll(/\bLocalPlayer\b/g, "EntityPlayerSP");
+  t = t.replaceAll(/\bInventoryScreen\b/g, "GuiInventory");
+  t = t.replaceAll(/\bScreen\b/g, "GuiScreen");
+  // 字段名（MCP：world / currentScreen / gameSettings / gameDir / mainWindow）
+  t = t.replaceAll("client.level", "client.world").replaceAll("client.screen", "client.currentScreen");
+  t = t.replaceAll("client.options.", "client.gameSettings.");
+  t = t.replaceAll("client.gameDirectory", "client.gameDir");
+  t = t.replaceAll("client.getWindow()", "client.mainWindow");
+  t = t.replaceAll("client.getMainRenderTarget()", "client.getFramebuffer()");
+  // 注册表：ForgeRegistries + getKey（javap：IForgeRegistry.getKey(V)）
+  t = t.replaceAll("BuiltInRegistries.ENTITY_TYPE.getKey(", "ForgeRegistries.ENTITIES.getKey(");
+  t = t.replaceAll("BuiltInRegistries.BLOCK.getKey(", "ForgeRegistries.BLOCKS.getKey(");
+  t = t.replaceAll("BuiltInRegistries.ITEM.getKey(", "ForgeRegistries.ITEMS.getKey(");
+  // 世界取实体
+  t = t.replaceAll("client.world.entitiesForRendering()", "client.world.getAllEntities()");
+  // 玩家面
+  t = t.replaceAll("player.inventory.getItem(", "player.inventory.getStackInSlot(");
+  t = t.replaceAll("player.onUpdateAbilities()", "player.sendPlayerAbilities()");
+  t = t.replaceAll("client.player.chat(", "client.player.sendChatMessage(");
+  // 朝向 / 落地 / 位置（公开字段 + getPosition）
+  t = t.replaceAll(/(\w+)\.getYRot\(\)/g, "$1.rotationYaw").replaceAll(/(\w+)\.getXRot\(\)/g, "$1.rotationPitch");
+  t = t.replaceAll(/player\.setYRot\(([^;\n]*)\);/g, "player.rotationYaw = $1;");
+  t = t.replaceAll(/player\.setXRot\(([^;\n]*)\);/g, "player.rotationPitch = $1;");
+  t = t.replaceAll(/(\w+)\.yRot\b/g, "$1.rotationYaw").replaceAll(/(\w+)\.xRot\b/g, "$1.rotationPitch");
+  t = t.replaceAll("player.onGround()", "player.onGround").replaceAll("player.isOnGround()", "player.onGround");
+  t = t.replaceAll("player.blockPosition()", "player.getPosition()");
+  // Entity 在 1.13.2 只有公开字段 posX/posY/posZ（javap 实测，与 1.14.4 同形）⇒ 逐接收者换名；lookbehind 挡 `bp.getX()`。
+  for (const r of ["player", "e", "p"]) {
+    t = t
+      .replaceAll(new RegExp(`(?<![\\w$])${r}\\.getX\\(\\)`, "g"), `${r}.posX`)
+      .replaceAll(new RegExp(`(?<![\\w$])${r}\\.getY\\(\\)`, "g"), `${r}.posY`)
+      .replaceAll(new RegExp(`(?<![\\w$])${r}\\.getZ\\(\\)`, "g"), `${r}.posZ`);
+  }
+  // BlockPos 旧面（javap：只有 add(int,int,int)/up()/down()/toImmutable()；MainWindow 只有 getScaledWidth/Height）。
+  t = t.replaceAll(".offset(ax, ay, az)", ".add(ax, ay, az)");
+  t = t.replaceAll(".below()", ".down()").replaceAll(".immutable()", ".toImmutable()").replaceAll(".toShortString()", ".toString()");
+  t = t.replaceAll("getGuiScaledWidth()", "getScaledWidth()").replaceAll("getGuiScaledHeight()", "getScaledHeight()");
+  // 玩家面（MCP）：`inventory`/`abilities` 是**公开字段**（EntityPlayer 上），能力字段叫 isFlying。
+  t = t.replaceAll("player.getInventory().getItem(", "player.inventory.getStackInSlot(");
+  t = t.replaceAll("player.getInventory()", "player.inventory");
+  t = t.replaceAll("player.getAbilities()", "player.abilities");
+  t = t.replaceAll("player.abilities.flying", "player.abilities.isFlying");
+  // 世界取实体：1.13.2 WorldClient **没有** getAllEntities（javap 实测）⇒ 公开字段 loadedEntityList（List<Entity>）。
+  t = t.replaceAll("client.world.getAllEntities()", "client.world.loadedEntityList");
+  // 角度 FQN / 实体 FQN
+  t = t.replaceAll("net.minecraft.world.entity.Entity", "net.minecraft.entity.Entity");
+  // BlockState：1.13.2 的 World.getBlockState() 返 **IBlockState**（javap 实测）⇒ 只用 IBlockState 接。
+  t = t.replaceAll("import net.minecraft.block.state.BlockState;", "import net.minecraft.block.state.IBlockState;");
+  t = t.replaceAll("BlockState st = ", "IBlockState st = ");
+  // 相位机 `mc` 别名
+  t = t.replaceAll("mc.screen", "mc.currentScreen");
+  t = t.replaceAll("mc.setScreen(", "mc.displayGuiScreen(");
+  // 命令：1.13.2 的 NetHandlerPlayClient 没有 1.19 才有的 sendCommand ⇒ 走 EntityPlayerSP.sendChatMessage(String)。
+  t = t.replaceAll(
+    'client.getConnection().sendCommand(command.startsWith("/") ? command.substring(1) : command)',
+    'client.player.sendChatMessage(command.startsWith("/") ? command : "/" + command)',
+  );
+  // 截图：1.13.2 只有 saveScreenshot(File,int,int,Framebuffer,Consumer)（javap 实测；grab 是 1.15.2 才有的名）。
+  t = t.replaceAll(
+    "Screenshot.grab(client.gameDir, client.getFramebuffer(), ",
+    "ScreenShotHelper.saveScreenshot(client.gameDir, client.mainWindow.getWidth(), client.mainWindow.getHeight(), client.getFramebuffer(), ",
+  );
+  // 自动进世界
+  t = t.replaceAll(
+    "client.createWorldOpenFlows().loadLevel(null, WORLD)",
+    "client.launchIntegratedServer(WORLD, WORLD, new net.minecraft.world.WorldSettings(0L, net.minecraft.world.GameType.CREATIVE, false, true, net.minecraft.world.WorldType.DEFAULT))",
+  );
+  // 屏幕：GuiScreen 关屏 = onGuiClosed；开屏 = displayGuiScreen
+  t = t.replaceAll("client.currentScreen.onClose()", "client.currentScreen.onGuiClosed()");
+  t = t.replaceAll("client.setScreen(", "client.displayGuiScreen(");
+  // 键名（MCP 旧形）
+  const MCP_KEYS: Record<string, string> = {
+    keyUp: "keyBindForward", keyDown: "keyBindBack", keyLeft: "keyBindLeft", keyRight: "keyBindRight",
+    keyJump: "keyBindJump", keyShift: "keyBindSneak", keySprint: "keyBindSprint",
+    keyAttack: "keyBindAttack", keyUse: "keyBindUseItem", keyInventory: "keyBindInventory",
+  };
+  t = t.replaceAll(/client\.gameSettings\.(\w+)\.setDown\(/g, (_m, k: string) => `client.gameSettings.${MCP_KEYS[k] ?? k}.setDown(`);
+  // 1.13.2 的 KeyBinding 同样**没有** `setDown(boolean)`（javap 实测）⇒ 静态 `setKeyBindState(Input, boolean)`。
+  t = t.replaceAll(
+    /client\.gameSettings\.(keyBind\w+)\.setDown\(/g,
+    (_m, k: string) => `net.minecraft.client.settings.KeyBinding.setKeyBindState(client.gameSettings.${k}.getKey(), `,
+  );
+  return t;
+}
+
+
+/**
+ * forge **1.12.2** 改写表 = `applyForgeMCP132` 之上再退一层（javap 实测，JDK 8 `javap -p`，
+ * 构件 = 本机 `.gradle/caches/minecraft/net/minecraftforge/forge/1.12.2-14.23.5.2847/stable/39/forgeBin-1.12.2-14.23.5.2847.jar`
+ * —— FG2.3 的 **MCP 命名 + Forge 合并件**，vanilla 与 Forge 类都在这一只 jar 里，免下载）。
+ *
+ * 八处与 1.13.2 的分叉（逐条都有 javap 行）：
+ *  ① **Forge 自身三个包在 1.12.2 是旧位置**：`fml.common.registry.ForgeRegistries`（1.13 才搬 `net.minecraftforge.registries`）、
+ *     `fml.common.eventhandler.SubscribeEvent`（1.13 才搬 `eventbus.api`）、`fml.common.gameevent.TickEvent`（同 1.13.2）。
+ *  ② **没有 `Minecraft.getInstance()`** ⇒ 静态 `Minecraft.getMinecraft()`（javap：只有 `public static Minecraft getMinecraft()`）。
+ *  ③ **没有 `mainWindow`**：窗口尺寸是公开 int 字段 `displayWidth`/`displayHeight`；GUI 缩放尺寸取 `GuiScreen.width`/`height`
+ *     （javap：Minecraft 有 `public int displayWidth/displayHeight`，**无** mainWindow；GuiScreen 有 `public int width/height`）。
+ *  ④ **截图无 Consumer 变体**：`ScreenShotHelper.saveScreenshot(File,int,int,Framebuffer)`（javap 返 `ITextComponent`）
+ *     ⇒ 模板那条 `..., t -> {...});` 的 lambda 尾巴必须整个摘掉（1.13.2 起才有 5 参 Consumer 版）。
+ *  ⑤ **`ITextComponent` 无 `getString()`**（javap 只有 `getUnformattedText/getUnformattedComponentText/getFormattedText`）
+ *     ⇒ 聊天回包取文本换 `getUnformattedText()`。
+ *  ⑥ **`Entity.getName()` 返 `String`**（1.13 起改返 ITextComponent）⇒ `player.getName().getString()` 收敛成 `player.getName()`。
+ *  ⑦ **实体 id**：`Entity` 无 `getType()`（1.13+）⇒ `net.minecraft.entity.EntityList.getKey(Entity)`（javap 实测存在）。
+ *  ⑧ **`EntityPlayer.capabilities`**（1.13 才改叫 `abilities`）；`KeyBinding` 取键码是 **`getKeyCode()`**（1.13.2 已叫 `getKey()`）；
+ *     `GuiScreen.mouseClicked(int,int,int)`（1.13.2 起是 `(double,double,int)`）。
+ *
+ * 未取证面（与 1.13.2 同）：`newworld` 造世界仍 fail-closed；真机未跑。
+ */
+export function applyForgeMCP1122(s: string): string {
+  let t = s;
+  // ① Forge 三包的 1.12.2 位置（MCP132 已把 TickEvent 换到 fml.common.gameevent，这里补另两个 + 兜底一次）
+  t = t.replaceAll("import net.minecraftforge.registries.ForgeRegistries;", "import net.minecraftforge.fml.common.registry.ForgeRegistries;");
+  t = t.replaceAll("import net.minecraftforge.eventbus.api.SubscribeEvent;", "import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;");
+  t = t.replaceAll("import net.minecraftforge.event.TickEvent;", "import net.minecraftforge.fml.common.gameevent.TickEvent;");
+  t = t.replaceAll("import net.minecraftforge.eventbus.api.EventBus;", "import net.minecraftforge.fml.common.eventhandler.EventBus;");
+  // ② 单例入口
+  t = t.replaceAll("Minecraft.getInstance()", "Minecraft.getMinecraft()");
+  // ④ 截图：无 Consumer 变体 ⇒ 先把 lambda 尾巴整个摘掉（两处：`t -> {\n});` 与 `t -> { });`）
+  t = t.replace(
+    /ScreenShotHelper\.saveScreenshot\(client\.gameDir, client\.mainWindow\.getWidth\(\), client\.mainWindow\.getHeight\(\), client\.getFramebuffer\(\), t -> \{\s*\}\);/g,
+    "ScreenShotHelper.saveScreenshot(client.gameDir, client.displayWidth, client.displayHeight, client.getFramebuffer());",
+  );
+  // ③ 窗口尺寸（无 mainWindow）：GUI 缩放尺寸 → 当前 GuiScreen 的 width/height；像素尺寸 → displayWidth/displayHeight
+  t = t.replaceAll("client.mainWindow.getScaledWidth()", "client.currentScreen.width");
+  t = t.replaceAll("client.mainWindow.getScaledHeight()", "client.currentScreen.height");
+  t = t.replaceAll("client.mainWindow.getWidth()", "client.displayWidth");
+  t = t.replaceAll("client.mainWindow.getHeight()", "client.displayHeight");
+  // ⑧c `mouseClicked` 在 1.12.2 收 int（1.13.2 起是 double）⇒ 缩放尺寸那两处分母去掉 `.0`（否则 "possible lossy conversion from double to int"，实测）
+  t = t.replaceAll("client.currentScreen.width / 2.0", "client.currentScreen.width / 2");
+  t = t.replaceAll("client.currentScreen.height / 2.0", "client.currentScreen.height / 2");
+  // ⑧d 点击证明：1.12.2 的 `GuiScreen.mouseClicked(int,int,int)` 是 **protected + void**（1.13 起才 `public boolean`）
+  //   ⇒ 进程内**无法**合成点击。改走「真实点击的后端」`PlayerControllerMP.windowClick(...)`（javap：public），
+  //   它正是 `GuiContainer.mouseClicked` 里一次真实点击最终调用的容器交互入口 ⇒ 等价证明真实 UI 事件路径可达。
+  //   两处调用点（相位机 case 6 与 `gui` 意图）缩进不同，用行首缩进回填。
+  t = t.replace(
+    /^([ \t]*)guiClicked = client\.currentScreen\.mouseClicked\(\n[ \t]*client\.currentScreen\.width \/ 2, client\.currentScreen\.height \/ 2, 0\);[ \t]*$/gm,
+    (_m, ind: string) =>
+      `${ind}// 1.12.2：` + "`GuiScreen.mouseClicked(int,int,int)`" + ` 是 **protected + void**（1.13 起才 public boolean）\n` +
+      `${ind}//   ⇒ 进程内无法合成点击，改走真实点击的**后端** PlayerControllerMP.windowClick(public)。\n` +
+      `${ind}client.playerController.windowClick(player.openContainer.windowId, 0, 0, net.minecraft.inventory.ClickType.PICKUP, player);\n` +
+      `${ind}guiClicked = true;`,
+  );
+  // ⑤ 聊天回包：ITextComponent 无 getString()
+  t = t.replaceAll("event.getMessage().getString()", "event.getMessage().getUnformattedText()");
+  // ⑥ Entity.getName() 在 1.12.2 直接返 String
+  t = t.replaceAll("player.getName().getString()", "player.getName()");
+  // ⑦ 实体 id：Entity 无 getType()
+  t = t.replaceAll("ForgeRegistries.ENTITIES.getKey(e.getType())", "net.minecraft.entity.EntityList.getKey(e)");
+  // ⑧ 能力字段名 / 键码取值名
+  t = t.replaceAll("player.abilities", "player.capabilities");
+  t = t.replaceAll(/client\.gameSettings\.(keyBind\w+)\.getKey\(\)/g, "client.gameSettings.$1.getKeyCode()");
+  // 文件头：把「签名出处」那一行整行换成 1.12.2 的口径（否则产物会谎称自己的证据来自 1.13.2）
+  t = t.replace(
+    /签名出处 = javap 实测（forge-1\.13\.2[^\n]*/,
+    "签名出处 = javap 实测（`forgeBin-1.12.2-14.23.5.2847.jar`（**FG2.3 的 MCP 命名 + Forge 合并件**，本机 `.gradle/caches/minecraft/net/minecraftforge/forge/1.12.2-14.23.5.2847/stable/39/`））。" +
+      "改写表 = rewriteForForgeLegacy → **applyForgeMCP132 + applyForgeMCP1122**（**MCP 命名层**，与 1.14+ 的 mojmap 完全不同源；1.12.2 在 132 之上再退一层）。" +
+      "本档八处 javap 分叉：① `net.minecraftforge.fml.common.registry.ForgeRegistries`（**1.13 才搬 `net.minecraftforge.registries`**）；" +
+      "② `net.minecraftforge.fml.common.eventhandler.SubscribeEvent`（**1.13 才搬 `eventbus.api`**）；" +
+      "③ **无 `Minecraft.getInstance()`** ⇒ `Minecraft.getMinecraft()`；" +
+      "④ **无 `mainWindow`** ⇒ 像素尺寸 `Minecraft.displayWidth/displayHeight` 公开字段、GUI 缩放尺寸 `GuiScreen.width/height`；" +
+      "⑤ **截图无 Consumer 变体**：`net.minecraft.util.ScreenShotHelper.saveScreenshot(File,int,int,Framebuffer)`（返 `ITextComponent`）；" +
+      "⑥ **`ITextComponent` 无 `getString()`** ⇒ 聊天回包 `getUnformattedText()`；`Entity.getName()` **返 `String`**；" +
+      "⑦ 实体 id 走 `net.minecraft.entity.EntityList.getKey(Entity)`（**`Entity` 无 `getType()`**）；" +
+      "⑧ `EntityPlayer.capabilities`（**1.13 才改叫 `abilities`**）、`KeyBinding.getKeyCode()`、`GuiScreen.mouseClicked(int,int,int)`。" +
+      "其余与 1.13.2 同（IBlockState / getStackInSlot / setKeyBindState / launchIntegratedServer(String,String,WorldSettings) / loadedEntityList / posX 公开字段）。",
+  );
+  return t;
+}
+
+/**
  * forge 档改写表：把 fabric（yarn 名 + fabric-api 事件）模板**机械改写**为 forge（mojmap/parchment 名 + Forge 事件总线）。
- * 每条改写都对应上面 `platformProfile('forge')` 里 javap 实测的签名；fabric 路径**不改一字**（已真机验证）。
+ * 每条都对应上面 `platformProfile('forge')` 里 javap 实测的签名；fabric 路径**不改一字**（已真机验证）。
  * NeoForge 1.20.1 同此表（包名仍是 `net.minecraftforge`）。
  */
 export function rewriteForForge(java: string, version = "1.20.1"): string {
@@ -400,10 +1270,13 @@ export function rewriteForForge(java: string, version = "1.20.1"): string {
   s = s.replaceAll("net.minecraft.entity.Entity", "net.minecraft.world.entity.Entity");
   s = s.replaceAll("net.minecraft.client.gui.screen.Screen", "net.minecraft.client.gui.screens.Screen");
   s = s.replaceAll("net.minecraft.client.gui.screen.ingame.InventoryScreen", "net.minecraft.client.gui.screens.inventory.InventoryScreen");
-  // newworld：把 fabric 档的 fail-closed 占位换成 forge 的 createFreshLevel 实现（签名逐条 javap 实测 2026-09-29）
-  s = s.replace(
-    '        finish(false, "newworld：本档（fabric）未取证造世界 API（createAndStart / LevelInfo / GeneratorOptions 构造面）——请先在客户端建一次世界再复用，或先取证后补本钩子");',
-    `        try {
+  // newworld：把 fabric 档的 fail-closed 占位换成 forge 的 createFreshLevel 实现（签名逐条 javap 实测 2026-09-29）。
+  // ⚠ 搜索串必须与 `javaSource` 模板里 `createWorldPlatform` 的实际文案**逐字**一致；1.16.5–1.18.2 的
+  //   createFreshLevel 面未取证（LevelSettings/WorldDimensions 构造面不同）⇒ 保留 fail-closed 桩。
+  if (!FORGE_NO_NEWWORLD_VERSIONS.includes(version)) {
+    s = s.replaceAll(
+      '        finish(false, "newworld：本档（fabric 基表，≤1.21.x）未取证造世界 API（createAndStart / LevelInfo / GeneratorOptions 构造面）——请先在客户端建一次世界再复用（用 --quickPlaySingleplayer / enterWorld），或先取证后补本钩子");',
+      `        try {
             // 必须丢到渲染线程的下一 tick：createFreshLevel 内部走 loadWorldDataBlocking（同步阻塞渲染线程）
             // + minecraft.doWorldLoad —— 直接在事件处理器里调会把渲染线程锁死（实测：此后日志静默、世界只剩 session.lock）。
             client.execute(() -> {
@@ -425,11 +1298,135 @@ export function rewriteForForge(java: string, version = "1.20.1"): string {
         } catch (Throwable t) {
             log("[QA] newworld 失败：" + t);
         }`,
-  );
+    );
+  }
   if (version === "1.20.4") {
     s = applyWorldOpenFlows1204Plus(s);
-  } else if (version !== "1.20.1") {
+  } else if (version !== "1.20.1" && !FORGE_LEGACY_VERSIONS.includes(version)) {
     s = applyWorldOpenFlows1206Plus(s);
+  }
+  return s;
+}
+
+/**
+ * forge 早期档（1.16.5 / 1.17.1 / 1.18.2 / 1.19.4）改写表：**= forge 表 + 逐档旧 API 面**。
+ * 每条都对应 `PLAYTEST_VERIFIED_TIER` 里该档 javap 实测的签名（jar 取自本机 `.gradle/caches/forge_gradle`）。
+ */
+/**
+ * forge 早期档（1.13.2 / 1.14.4 / 1.15.2 / 1.16.5 / 1.17.1 / 1.18.2 / 1.19.4）改写表：
+ * **= forge 表 + 逐档旧 API 面**。每条都对应 `PLAYTEST_VERIFIED_TIER` 里该档 javap 实测的签名
+ * （jar 取自本机 `.gradle/caches/forge_gradle` 缓存）。
+ */
+export function rewriteForForgeLegacy(java: string, version: string): string {
+  let s = rewriteForForge(java, version);
+  // Java 8 运行期档（1.13.2 / 1.14.4 / 1.15.2 / 1.16.5）：库面收敛（模板用了 Java 11 的 Path.of / Files.writeString）
+  if (JAVA8_RUNTIME_VERSIONS.includes(version)) {
+    s = applyJava8LibSwaps(s);
+  }
+
+  // ═ 1.12.2：MCP 命名层 + 更老一层（applyForgeMCP1122；Forge 三包的 1.12.2 位置 / 无 getInstance / 无 mainWindow / 截图无 Consumer …）══
+  if (version === "1.12.2") {
+    s = applyForgeMCP132(s);
+    s = applyForgeMCP1122(s);
+    if (FORGE_NO_NEWWORLD_VERSIONS.includes(version)) {
+      s = s.replaceAll("本档（fabric 基表，≤1.21.x）未取证造世界 API", `本档（forge ${version}）未取证造世界 API`);
+    }
+    return s;
+  }
+
+  // ═ 1.13.2：整套 MCP 命名层，独立分派（其余分支不适用）══
+  if (version === "1.13.2") {
+    s = applyForgeMCP132(s);
+    if (FORGE_NO_NEWWORLD_VERSIONS.includes(version)) {
+      s = s.replaceAll("本档（fabric 基表，≤1.21.x）未取证造世界 API", `本档（forge ${version}）未取证造世界 API`);
+    }
+    return s;
+  }
+
+  // ═ 1.19.4：与 1.20.1 基本同形，唯一差异是 onGround 名 ══
+  if (version === "1.19.4") {
+    s = s.replaceAll("player.onGround()", "player.isOnGround()");
+    return s;
+  }
+
+  // ═ 1.17.1 / 1.18.2：现代 mojmap 名 + 旧注册表/进世界/命令面 ══
+  if (version === "1.17.1" || version === "1.18.2") {
+    s = s.replaceAll(
+      'client.getConnection().sendCommand(command.startsWith("/") ? command.substring(1) : command)',
+      'client.player.chat(command.startsWith("/") ? command : "/" + command)',
+    );
+    s = s.replaceAll("client.createWorldOpenFlows().loadLevel(null, WORLD)", "client.loadLevel(WORLD)");
+    s = s.replaceAll("import net.minecraft.core.registries.BuiltInRegistries;", "import net.minecraft.core.Registry;");
+    s = s.replaceAll("BuiltInRegistries.ENTITY_TYPE.getKey(", "Registry.ENTITY_TYPE.getKey(");
+    s = s.replaceAll("BuiltInRegistries.BLOCK.getKey(", "Registry.BLOCK.getKey(");
+    s = s.replaceAll("BuiltInRegistries.ITEM.getKey(", "Registry.ITEM.getKey(");
+    s = s.replaceAll("player.onGround()", "player.isOnGround()");
+    return s;
+  }
+
+  // ═ 1.14.4 / 1.15.2 / 1.16.5：旧 mojmap 命名族（共用包名面）══
+  // 包名（1.17 大批改名之前）
+  s = s.replaceAll("import net.minecraft.world.level.block.state.BlockState;", "import net.minecraft.block.BlockState;");
+  s = s.replaceAll(
+    "import net.minecraft.client.gui.screens.inventory.InventoryScreen;",
+    "import net.minecraft.client.gui.screen.inventory.InventoryScreen;",
+  );
+  s = s.replaceAll("import net.minecraft.client.player.LocalPlayer;", "import net.minecraft.client.entity.player.ClientPlayerEntity;");
+  s = s.replaceAll("import net.minecraft.client.Screenshot;", "import net.minecraft.util.ScreenShotHelper;");
+  s = s.replaceAll("import net.minecraft.client.gui.screens.Screen;", "import net.minecraft.client.gui.screen.Screen;");
+  s = s.replaceAll("import net.minecraft.world.item.ItemStack;", "import net.minecraft.item.ItemStack;");
+  s = s.replaceAll("import net.minecraft.core.registries.BuiltInRegistries;", "import net.minecraft.util.registry.Registry;");
+  s = s.replaceAll("import net.minecraft.core.BlockPos;", "import net.minecraft.util.math.BlockPos;");
+  s = s.replaceAll(/\bLocalPlayer\b/g, "ClientPlayerEntity");
+  s = s.replaceAll("BuiltInRegistries.ENTITY_TYPE.getKey(", "Registry.ENTITY_TYPE.getKey(");
+  s = s.replaceAll("BuiltInRegistries.BLOCK.getKey(", "Registry.BLOCK.getKey(");
+  s = s.replaceAll("BuiltInRegistries.ITEM.getKey(", "Registry.ITEM.getKey(");
+  s = s.replaceAll("net.minecraft.client.gui.screens.Screen", "net.minecraft.client.gui.screen.Screen");
+  s = s.replaceAll("net.minecraft.world.entity.Entity", "net.minecraft.entity.Entity");
+  // 命令 / 自动进世界：1.14.4–1.16.5 **都没有** `ClientPacketListener#sendCommand`（1.19 才有）与 `WorldOpenFlows`（1.19+）
+  //   ⇒ 命令走 `LocalPlayer.chat("/…")`；进世界先落成 1.16.5 的 `loadLevel(WORLD)`，1.14.4/1.15.2 再由 applyForgeOldMojmapLegacy 换名。
+  s = s.replaceAll(
+    'client.getConnection().sendCommand(command.startsWith("/") ? command.substring(1) : command)',
+    'client.player.chat(command.startsWith("/") ? command : "/" + command)',
+  );
+  s = s.replaceAll("client.createWorldOpenFlows().loadLevel(null, WORLD)", "client.loadLevel(WORLD)");
+
+  if (version === "1.14.4" || version === "1.15.2") {
+    // 截图：ScreenShotHelper.grab(File,int,int,Framebuffer,Consumer)；窗口尺寸取 MainWindow
+    s = s.replaceAll("client.getWindow().getFramebufferWidth()", "client.getWindow().getWidth()");
+    s = s.replaceAll("client.getWindow().getFramebufferHeight()", "client.getWindow().getHeight()");
+    s = s.replaceAll(
+      "Screenshot.grab(client.gameDirectory, client.getMainRenderTarget(), ",
+      "ScreenShotHelper.grab(client.gameDirectory, client.getWindow().getWidth(), client.getWindow().getHeight(), client.getMainRenderTarget(), ",
+    );
+    s = s.replaceAll("player.getInventory().getItem(", "player.inventory.getItem(");
+    s = s.replaceAll("player.getAbilities()", "player.abilities");
+    s = s.replaceAll(/(\w+)\.getYRot\(\)/g, "$1.yRot");
+    s = s.replaceAll(/(\w+)\.getXRot\(\)/g, "$1.xRot");
+    s = s.replaceAll(/(\w+)\.setYRot\(([^;]*)\);/g, "$1.yRot = $2;");
+    s = s.replaceAll(/(\w+)\.setXRot\(([^;]*)\);/g, "$1.xRot = $2;");
+    // 1.14.4 / 1.15.2：朝向/落地/位置/窗口/进世界等（1.14.4 另换 world/currentScreen/gameSettings/gameDir/mainWindow）
+    s = applyForgeOldMojmapLegacy(s, version);
+  } else {
+    // 1.16.5
+    s = s.replaceAll("client.getWindow().getFramebufferWidth()", "client.getWindow().getWidth()");
+    s = s.replaceAll("client.getWindow().getFramebufferHeight()", "client.getWindow().getHeight()");
+    s = s.replaceAll(
+      "Screenshot.grab(client.gameDirectory, client.getMainRenderTarget(), ",
+      "ScreenShotHelper.grab(client.gameDirectory, client.getWindow().getWidth(), client.getWindow().getHeight(), client.getMainRenderTarget(), ",
+    );
+    s = s.replaceAll("player.getInventory().getItem(", "player.inventory.getItem(");
+    s = s.replaceAll("player.getAbilities()", "player.abilities");
+    s = s.replaceAll(/(\w+)\.getYRot\(\)/g, "$1.yRot");
+    s = s.replaceAll(/(\w+)\.getXRot\(\)/g, "$1.xRot");
+    s = s.replaceAll(/(\w+)\.setYRot\(([^;]*)\);/g, "$1.yRot = $2;");
+    s = s.replaceAll(/(\w+)\.setXRot\(([^;]*)\);/g, "$1.xRot = $2;");
+    s = s.replaceAll("player.onGround()", "player.isOnGround()");
+  }
+
+  // 未取证造世界的档：把 fail-closed 桩里的档位标签从 "fabric 基表" 改成 "forge <ver>"（不改机制，只改披露）。
+  if (FORGE_NO_NEWWORLD_VERSIONS.includes(version)) {
+    s = s.replaceAll("本档（fabric 基表，≤1.21.x）未取证造世界 API", `本档（forge ${version}）未取证造世界 API`);
   }
   return s;
 }
@@ -490,7 +1487,7 @@ export function applyWorldOpenFlows1206Plus(s: string): string {
  *     `phase != TickEvent.Phase.END` 判据照用；`Phase.START/END` 实测存在）——**注意**：该类在 `neoforge.event`
  *     包，**不在** `neoforge.client.event`（后者无 TickEvent；1.21.x 才改成 `client.event.ClientTickEvent$Post`）
  *   - `net.neoforged.bus.api.SubscribeEvent`（注解）/`net.neoforged.bus.api.Event`
- * ⚠ 尚未真机验证（首跑把编译/运行报错回灌）。
+ * ⚠ 本表产出的是**派生态**（由 forge 表 + 事件栈换包而来，非原生档）；各档真机验证状态见 `mcp-server/CHANGELOG.md`，首跑若报错请回灌。
  */
 export function rewriteForNeoForge(java: string, version = "1.20.4"): string {
   let s = rewriteForForge(java, version);
@@ -512,6 +1509,27 @@ export function rewriteForNeoForge(java: string, version = "1.20.4"): string {
     s = s.replace(
       /public void onClientTick\(TickEvent\.ClientTickEvent event\) \{\n\s*if \(event\.phase != TickEvent\.Phase\.END\) \{\n\s*return;\n\s*\}/,
       "public void onClientTick(ClientTickEvent.Post event) {",
+    );
+  }
+  // 1.21.9+（javap 实测：`minecraft_1.21.11_client.jar` 的 `gzc`/`gzd` = mojmap `MouseButtonEvent(double,double,MouseButtonInfo)` /
+  //   `MouseButtonInfo(int,int)`；`_yarn-mojmap-pairs/yarn-mojmap-1.21.11.json` 实测 yarn `Click`→mojmap `MouseButtonEvent`、
+  //   yarn `MouseInput`→mojmap `MouseButtonInfo`）：GUI 点击从 `(double,double,int)` 改成 `mouseClicked(MouseButtonEvent,boolean)`。
+  //   forge 表已把 `new Click(…)` 拆成 `(x, y, 0)` ⇒ 这里再拼回 MouseButtonEvent 形态（与 26.x 的 apply26xxShared ① 同法，但**不**走 26.x 的截图/界面/造世界面）。
+  if (version === "1.21.10" || version === "1.21.11") {
+    s = s.replaceAll(
+      "client.screen.mouseClicked(\n" +
+        "                                client.getWindow().getGuiScaledWidth() / 2.0, client.getWindow().getGuiScaledHeight() / 2.0, 0)",
+      "client.screen.mouseClicked(new MouseButtonEvent(\n" +
+        "                                client.getWindow().getGuiScaledWidth() / 2.0, client.getWindow().getGuiScaledHeight() / 2.0, new MouseButtonInfo(0, 0)), false)",
+    ).replaceAll(
+      "client.screen.mouseClicked(\n" +
+        "                                    client.getWindow().getGuiScaledWidth() / 2.0, client.getWindow().getGuiScaledHeight() / 2.0, 0)",
+      "client.screen.mouseClicked(new MouseButtonEvent(\n" +
+        "                                    client.getWindow().getGuiScaledWidth() / 2.0, client.getWindow().getGuiScaledHeight() / 2.0, new MouseButtonInfo(0, 0)), false)",
+    );
+    s = s.replace(
+      "import net.minecraft.client.Minecraft;",
+      "import net.minecraft.client.Minecraft;\nimport net.minecraft.client.input.MouseButtonEvent;\nimport net.minecraft.client.input.MouseButtonInfo;",
     );
   }
   return s;
@@ -633,6 +1651,367 @@ export const PLAYTEST_VERIFIED_TIER: ReadonlyArray<{ platform: string; version: 
   { platform: "quilt", version: "1.21.4", mappings: "yarn 1.21.4+build.8（同 fabric 1.21.4）", asOf: "2026-10-01" },
   { platform: "quilt", version: "1.21.8", mappings: "yarn 1.21.8+build.1（同 fabric 1.21.8）", asOf: "2026-10-01" },
   { platform: "quilt", version: "1.21.10", mappings: "yarn 1.21.10+build.3（同 fabric 1.21.10）", asOf: "2026-10-01" },
+  {
+    platform: "fabric",
+    version: "26.1.2",
+    mappings:
+      "**去混淆档**（26.1+ 官方客户端 jar 已是 Mojang 名，免 yarn/intermediary remap）+ fabric-api 0.155.3+26.1.2。" +
+      "改写表 = rewriteForFabric26xx（= forge 表把 vanilla 名换到 mojmap，**保留 Fabric API 事件**）。" +
+      "javap 实测 2026-10-03（client-26.1.2.jar 38 MB / sha1 4e618f09a0c649dde3fdf829df443ce0b8831e65）：" +
+      "`Minecraft.getInstance/getMainRenderTarget/gameDirectory/screen/setScreen/getConnection/getWindow/createWorldOpenFlows` ✓、" +
+      "`LocalPlayer` = `net.minecraft.client.player.LocalPlayer` ✓、`Screenshot.grab(File,RenderTarget,Consumer<Component>)` ✓、" +
+      "`Options.keyUp/keyJump/keyAttack` + `KeyMapping.setDown(boolean)` ✓、`Inventory.getItem(int)` ✓、" +
+      "`BuiltInRegistries.ENTITY_TYPE/BLOCK/ITEM` ✓、`ClientLevel.entitiesForRendering()` ✓、" +
+      "`Player.getInventory/getAbilities/onUpdateAbilities` + `Abilities.flying/mayfly` ✓、" +
+      "`Entity.getYRot/setYRot/getXRot/setXRot/onGround/getName/blockPosition/getType` ✓、" +
+      "`ClientPacketListener.sendCommand(String)` ✓、`Component.getString()` ✓、`Window.getGuiScaledWidth/Height` ✓、" +
+      "`Screen.onClose()` ✓、`InventoryScreen(Player)` ✓、`WorldOpenFlows.openWorld(String,Runnable)` ✓；" +
+      "**26.1+ 特有**：`GuiEventListener.mouseClicked(MouseButtonEvent, boolean)` / `MouseButtonEvent(double,double,MouseButtonInfo)` / `MouseButtonInfo(int,int)` ✓；" +
+      "Fabric API：`ClientTickEvents.END_CLIENT_TICK`(Event<EndTick>, `onEndTick(Minecraft)`) / `ClientReceiveMessageEvents.GAME`(`onReceiveGameMessage(Component,boolean)`) ✓。" +
+      "**已取证（2026-10-03）**：`newworld` 造世界面 —— `createFreshLevel(String,LevelSettings,WorldOptions,Function<HolderLookup$Provider,WorldDimensions>,Screen)`、" +
+      "`LevelSettings(String,GameType,LevelSettings$DifficultySettings,boolean,WorldDataConfiguration)`、`LevelSettings$DifficultySettings(Difficulty,boolean,boolean)`、" +
+      "`WorldDataConfiguration.DEFAULT`、`WorldPresets.createNormalWorldDimensions(HolderLookup$Provider)`、`Minecraft.execute(Runnable)`（继承自 `BlockableEventLoop`）✓。" +
+      "**前置**：被测工程须有 fabric-api（本仓 fabric/26.1.2 scaffold 未带）。",
+    asOf: "2026-10-03",
+  },
+  {
+    platform: "fabric",
+    version: "26.1",
+    mappings:
+      "**去混淆档**（26.1+ 官方客户端 jar 已是 Mojang 名，免 yarn/intermediary remap）。" +
+      "javap 实测 2026-10-03（client-26.1.jar 38 113 398 B / sha1 191771837687b766537a8c4607cb6fad79c533a1）：" +
+      "与 26.1.2 的**本驱动用到的成员逐条同形**（`GuiEventListener.mouseClicked(MouseButtonEvent,boolean)`、" +
+      "`WorldOpenFlows.openWorld(String,Runnable)`、`KeyMapping.setDown(boolean)`、" +
+      "`Minecraft.getMainRenderTarget/gameDirectory/createWorldOpenFlows`、`Screenshot.grab(File,RenderTarget,Consumer)`、" +
+      "`BuiltInRegistries.ENTITY_TYPE/BLOCK/ITEM`、`MouseButtonEvent/MouseButtonInfo` …… 均 ✓；未出现 26.2+ 的 `getMainRenderTarget` 删除）。" +
+      "⇒ 与 26.1.2 共用 rewriteForFabric26xx。**前置**：被测工程须有 fabric-api（26.1.x 线；0.155.3+26.1.2 已在 26.1.2 实测）。**newworld 造世界面已取证**（同 26.1.2；`createFreshLevel`/`openWorld` 五档逐条同形）。",
+    asOf: "2026-10-03",
+  },
+  {
+    platform: "fabric",
+    version: "26.1.1",
+    mappings:
+      "**去混淆档**。javap 实测 2026-10-03（client-26.1.1.jar 38 113 231 B / sha1 377031a9e733ba8ab4d355959a8f6fb8eb707556）：" +
+      "本驱动用到的成员与 26.1 / 26.1.2 **逐条同形**（patch 级差异，无 API 面变化）⇒ 共用 rewriteForFabric26xx。前置/未取证同 26.1。",
+    asOf: "2026-10-03",
+  },
+  {
+    platform: "fabric",
+    version: "26.2",
+    mappings:
+      "**去混淆档 + 26.2 截图/界面 API 变更**。javap 实测 2026-10-03（client-26.2.jar 39 193 383 B / sha1 2dc72797acbc1b63fc16a11c4ac393605f453754）：" +
+      "**`Minecraft.getMainRenderTarget()` 已删除** ⇒ 截图必须走 `Screenshot.grab(Minecraft, boolean)`（boolean = panoramic，传 `false`；**26.1.x 无此重载**）；" +
+      "**`Minecraft.screen` 字段与 `Minecraft.setScreen(Screen)` 也已删除** ⇒ 界面状态移到 `net.minecraft.client.gui.Gui`（经 `Minecraft.gui`）：" +
+      "`Gui.screen() -> Screen` / `Gui.setScreen(Screen)`（26.1.x 无此二成员）⇒ 驱动把 `client.screen`→`client.gui.screen()`、`client.setScreen(x)`→`client.gui.setScreen(x)`。" +
+      "3 参 `Screenshot.grab(File,RenderTarget,Consumer)` 仍在但没法拿到 RenderTarget。其余面（mouseClicked(MouseButtonEvent,boolean) / openWorld / " +
+      "`BuiltInRegistries.ENTITY_TYPE/BLOCK/ITEM` / MouseButtonEvent / MouseButtonInfo / KeyMapping.setDown）与 26.1 同形。" +
+      "⇒ 走 rewriteForFabric26xx，其中 `m26(version) >= 2` 分支做上述两处换形。**前置**：被测工程须有 fabric-api。**newworld 造世界面已取证**（同 26.1.2）。",
+    asOf: "2026-10-03",
+  },
+  {
+    platform: "fabric",
+    version: "26.3",
+    mappings:
+      "**去混淆档 + 26.2 截图/界面变更（26.3 沿用）**。javap 实测 2026-10-03（client-26.3.jar 41 483 720 B / sha1 e877b6a07acd633fb3bb475002175cec036e7b87）：" +
+      "`getMainRenderTarget()` 仍不存在、`Screenshot.grab(Minecraft,boolean)` 在、`Minecraft.screen/setScreen` 仍不存在（界面状态在 `Gui.screen()/setScreen`）" +
+      " ⇒ 同 26.2 分支。本驱动用到的注册表常量 `ENTITY_TYPE/BLOCK/ITEM` 仍在" +
+      "（⚠ 26.3 把 `BLOCKSTATE_PROVIDER_TYPE` 改名 `BLOCK_STATE_PROVIDER_TYPE`、删了 `BLOCK_TYPE/DECORATED_POT_PATTERN`，**本驱动不用这些**）；" +
+      "`GuiEventListener.mouseClicked(MouseButtonEvent,boolean)` / `openWorld` / `MouseButtonEvent` / `MouseButtonInfo` 同形。" +
+      "⇒ 走 rewriteForFabric26xx（m26=3 ≥ 2 走截图 + 界面换形）。**前置**：被测工程须有 fabric-api。**newworld 造世界面已取证**（同 26.1.2）。",
+    asOf: "2026-10-03",
+  },
+  {
+    platform: "neoforge",
+    version: "26.1",
+    mappings:
+      "**去混淆档**（NeoForge 26.1 工程无 mappings 配置；依赖 `implementation` 而非 `modImplementation`）。" +
+      "改写表 = rewriteForNeoForge26xx（= forge 表换 vanilla 名到 mojmap + 换 NeoForge 26.x 事件栈）。" +
+      "javap 实测 2026-10-03（neoforge-26.1.2.114-universal.jar + bus-8.0.5.jar + client-26.1.jar）：" +
+      "`net.neoforged.neoforge.common.NeoForge.EVENT_BUS`(IEventBus) ✓、`net.neoforged.bus.api.IEventBus.register(Object)` ✓、" +
+      "`net.neoforged.neoforge.client.event.ClientTickEvent$Post`（**无 phase 字段**）✓、" +
+      "`net.neoforged.neoforge.client.event.ClientChatReceivedEvent.getMessage()->Component` ✓、`net.neoforged.bus.api.SubscribeEvent` ✓；" +
+      "vanilla 侧（mojmap）与 fabric 26.1 表同形、26.1.x 无 `getMainRenderTarget` 删除。**newworld 造世界面已取证**（26.x 五档逐条同形）。",
+    asOf: "2026-10-03",
+  },
+  {
+    platform: "neoforge",
+    version: "26.1.1",
+    mappings:
+      "**去混淆档**。javap 实测 2026-10-03：NeoForge 26.1 线（26.1.2.114 universal）事件栈与 vanilla（client-26.1.x，patch 级同形）均同 26.1 ⇒ 共用 rewriteForNeoForge26xx。未取证同 26.1。",
+    asOf: "2026-10-03",
+  },
+  {
+    platform: "neoforge",
+    version: "26.1.2",
+    mappings:
+      "**去混淆档**（本仓 `neoforge/26.1` 规则树即此线）。javap 实测 2026-10-03（neoforge-26.1.2.114-universal.jar）：事件栈 = `NeoForge.EVENT_BUS` + " +
+      "`ClientTickEvent$Post`（无 phase）+ `ClientChatReceivedEvent.getMessage()` + bus 8.0.5 的 `SubscribeEvent`；vanilla = client-26.1.2.jar（免 remap）。共用 rewriteForNeoForge26xx。未取证同 26.1。",
+    asOf: "2026-10-03",
+  },
+  {
+    platform: "neoforge",
+    version: "26.2",
+    mappings:
+      "**去混淆档 + 26.2 截图/界面 API 变更**。javap 实测 2026-10-03（neoforge-26.2.0.88-universal.jar + bus-8.0.5.jar + client-26.2.jar）：" +
+      "事件栈 `NeoForge.EVENT_BUS` ✓、`ClientTickEvent$Post`（无 phase，public 无参构造）✓、`ClientChatReceivedEvent.getMessage()->Component` ✓、" +
+      "`IEventBus.register(Object)` ✓、`SubscribeEvent` ✓（与 26.1 同形）；vanilla 侧 = client-26.2（**无 `getMainRenderTarget`** ⇒ 截图走 `Screenshot.grab(client,false)`；" +
+      "**无 `Minecraft.screen`/`setScreen`** ⇒ 界面状态走 `client.gui.screen()`/`client.gui.setScreen(x)`）。" +
+      "⇒ rewriteForNeoForge26xx 的 m26≥2 分支生效。**newworld 造世界面已取证**（同 26.1.2）。",
+    asOf: "2026-10-03",
+  },
+  {
+    platform: "neoforge",
+    version: "26.3",
+    mappings:
+      "**去混淆档 + 26.2 截图变更（26.3 沿用）**。javap 实测 2026-10-03（neoforge-**26.3.0.1-beta**-universal.jar + bus-8.0.5.jar + client-26.3.jar）：" +
+      "⚠ **NeoForge 26.3 上游只有 beta 件**（26.3.0.0-beta / 26.3.0.1-beta；无 release 版）；事件栈 `NeoForge.EVENT_BUS` ✓、`ClientTickEvent$Post` ✓、" +
+      "`ClientChatReceivedEvent.getMessage()` ✓、`IEventBus.register(Object)` ✓、`SubscribeEvent` ✓；vanilla = client-26.3（无 `getMainRenderTarget`、`Screenshot.grab(Minecraft,boolean)` 在、`ENTITY_TYPE/BLOCK/ITEM` 仍在）" +
+      "⇒ rewriteForNeoForge26xx（m26=3≥2 截图换形）。**newworld 造世界面已取证**（同 26.1.2）。",
+    asOf: "2026-10-03",
+  },
+  // ── 低版本补档（2026-10-03，逐条 javap 实测；jar 均取自本机缓存，免下载）──────────────────────────
+  {
+    platform: "fabric",
+    version: "1.19.4",
+    mappings:
+      "yarn 1.19.4+build.2（本机缓存 ~/.gradle/caches/fabric-loom/1.19.4/.../minecraft-merged-named.jar）。" +
+      "改写表 = fabric/1.20.1 表（rewriteForFabric1201）：① 无 Click/MouseInput，`Element.mouseClicked(double,double,int)` ✓；" +
+      "② `IntegratedServerLoader.start(Screen,String)` ✓（javap 实测，与 1.20.1 同签名）；③ `net.minecraft.registry.Registries` ✓（1.19.3 起）；" +
+      "④ `ScreenshotRecorder.saveScreenshot(File,Framebuffer,Consumer<Text>)` ✓；⑤ `GameOptions.forwardKey` ✓；`Screen.close()` ✓；" +
+      "⑥ `ClientPlayNetworkHandler.sendChatCommand(String)` ✓（javap 实测）。",
+    asOf: "2026-10-03",
+  },
+  {
+    platform: "fabric",
+    version: "1.18.2",
+    mappings:
+      "yarn 1.18.2+build.4（minecraft-merged-named.jar）。改写表 = rewriteForFabricLegacy：① 点击 `(double,double,int)`；" +
+      "② 注册表**旧包** `net.minecraft.util.registry.Registry`（**无** `registry.Registries` 持有类）⇒ `Registry.X.getId(`；" +
+      "③ 无 `IntegratedServerLoader` ⇒ `MinecraftClient.startIntegratedServer(String)`；④ 无 `sendChatCommand` ⇒ `ClientPlayerEntity.sendChatMessage(String)`；" +
+      "⑤ `GameOptions.forwardKey` ✓（1.18.2 起改名）、`Screen.close()` ✓；`ScreenshotRecorder.saveScreenshot` ✓。" +
+      "⑥ **无客户端消息事件**（`ClientReceiveMessageEvents` 属 `fabric-message-api-v1`，该模块在 FAPI 0.77.0+1.18.2 的依赖表里**不存在**，" +
+      "最早带它的是 0.87.2+1.19.4）⇒ 摘掉聊天注册行，`goto parsed` 靠 `<runDir>/logs/latest.log` 的 `[CHAT]` 行兜底。" +
+      "**编译验证 = JDK 17 javac（`--release 17`）对 1.18.2 named jar + FAPI 替身（`Event`/`ClientTickEvents`，形状取自真 1.14.4/1.16.5 模块 jar 的 javap）通过**。",
+    asOf: "2026-10-03",
+  },
+  {
+    platform: "fabric",
+    version: "1.17.1",
+    mappings:
+      "yarn 1.17.1+build.65（minecraft-mapped.jar）。= 1.18.2 表 + ⑤ `GameOptions` 键名为**旧形** `keyForward/keyJump/keyAttack/keySprint/…`（javap 实测）" +
+      "+ `Screen` **无** `close()` ⇒ 关屏 `client.setScreen(null)`；`Entity.setYaw/setPitch/getYaw()/getPitch()` ✓（1.17.1 起）。" +
+      "**同 1.18.2 第 ⑥ 条**：无客户端消息事件（FAPI 0.46.1+1.17 依赖表里无 `fabric-message-api-v1`）⇒ 聊天注册已摘。" +
+      "**编译验证 = JDK 17 javac（`--release 16`）对 1.17.1 named jar + FAPI 替身（`Event`/`ClientTickEvents`）通过**。",
+    asOf: "2026-10-03",
+  },
+  {
+    platform: "fabric",
+    version: "1.16.5",
+    mappings:
+      "yarn 1.16.5+build.10（minecraft-mapped.jar）。= 1.17.1 表 + ① 截图类 `net.minecraft.client.util.ScreenshotUtils.saveScreenshot(File,int,int,Framebuffer,Consumer)`" +
+      "（**多 width/height 两参**，取 `Window.getFramebufferWidth/Height()`）；② `MinecraftClient` **无** `setScreen` ⇒ `openScreen`；" +
+      "③ `Entity` yaw/pitch 是**公开字段**（无 setYaw/setPitch/getYaw()）⇒ 赋值/直读。`Registry.BLOCK/ITEM/ENTITY_TYPE`（DefaultedRegistry）✓。" +
+      "④ 运行期 JVM = Java 8 ⇒ `applyJava8LibSwaps`（`Path.of`→`Paths.get`、`Files.writeString`→`Files.write`）；" +
+      "**编译验证 = JDK 8 javac 对 1.16.5 named jar + **真 yarn-remapped Fabric API 模块 jar** 通过**。" +
+      "⑤ **无客户端消息事件**：FAPI 0.42.0+1.16 的依赖表里没有 `fabric-message-api-v1`（最早带它的是 0.87.2+1.19.4），" +
+      "且该档的 remapped FAPI 模块 jar 里 0 个 `*ReceiveMessage*` 类 ⇒ 摘掉聊天注册行，`goto parsed` 靠 latest.log 的 `[CHAT]` 行兜底" +
+      "（**旧记「1.16.5 走 `ClientReceiveMessageEvents.GAME`」是错的** —— 那是拿替身当出处验出来的，真模块里没有这个类）。",
+    asOf: "2026-10-03",
+  },
+  {
+    platform: "fabric",
+    version: "1.14.4",
+    mappings:
+      "yarn 1.14.4+build.18（本机由 `fabric/1.14.4/scaffold` 的 Gradle 构建落盘：" +
+      "`minecraft-1.14.4-mapped-net.fabricmc.yarn-1.14.4+build.18-v2.jar`）+ Fabric API 0.28.5+1.14（`fabric-lifecycle-events-v1` 1.2.1 / " +
+      "`fabric-networking-api-v1` 1.0.1 / `fabric-api-base` 0.1.2 —— 模块 jar 由同一构建经 loom 重映射落盘）。改写表 = rewriteForFabricLegacy。" +
+      "javap 实测 2026-10-03（逐条核过）：" +
+      "**事件**：`net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents.END_CLIENT_TICK`（`Event<EndTick>`，`EndTick.onEndTick(MinecraftClient)`）✓ " +
+      "—— 1.14.4 的 0.28.5 里**已有**该模块（**先前记的「只有 legacy `ClientTickCallback`」已证伪**）；" +
+      "**无** `ClientReceiveMessageEvents`（`fabric-message-api-v1` 该版本不存在，实测该模块 jar 不在依赖里）⇒ 摘掉聊天注册行，`goto parsed` 靠 latest.log 兜底；" +
+      "`MinecraftClient`：`getInstance/getFramebuffer/openScreen(Screen)/startIntegratedServer(String,String,LevelInfo)/getNetworkHandler` ✓、" +
+      "**字段** `window`（无 `getWindow()`）/`currentScreen`/`player`/`world`/`options`/`runDirectory`/`inGameHud`/`interactionManager`，**无** `setScreen`；" +
+      "`LevelInfo(long,GameMode,boolean,boolean,LevelGeneratorType)` + `GameMode.CREATIVE` + `LevelGeneratorType.DEFAULT` ✓；" +
+      "`Entity`：**公开字段** `x/y/z/yaw/pitch/onGround`（**无** `getX/getY/getZ`，1.15 才有；**无** `isOnGround()`）、`getBlockPos()`/`getPos()`/`getName()`/`getType()` ✓；" +
+      "`PlayerEntity`：**公开字段** `inventory`（**无** `getInventory()`）/`abilities` + `sendAbilitiesUpdate()` ✓；" +
+      "`PlayerInventory.getInvStack(int)`（**不是** `getStack`）+ `selectedSlot` 公开 ✓；" +
+      "`KeyBinding`：`setPressed` **不存在**（`pressed` 私有）⇒ 静态 `setKeyPressed(InputUtil$KeyCode,boolean)` + `getDefaultKeyCode()` ✓、" +
+      "`GameOptions` 键名 = 旧形 `keyForward/keyBack/keyLeft/keyRight/keyJump/keySneak/keySprint/keyAttack/keyUse`；" +
+      "`Registry.BLOCK/ITEM/ENTITY_TYPE.getId(T)`（`net.minecraft.util.registry.Registry`）✓；`ClientWorld.getEntities()` ✓；" +
+      "`ScreenshotUtils.method_1659(File,int,int,Framebuffer,Consumer<Text>)`（**方法名仍是混淆形**）+ `Window.getFramebufferWidth/Height()`/`getScaledWidth/Height()` ✓；" +
+      "`BlockPos.up()/down()/add(int,int,int)/toImmutable()`（**无** `below()/above()/immutable()`），`Vec3i` **无** `toShortString()` ⇒ `toString()`；" +
+      "`Text.getString()` ✓；`ClientPlayerEntity.sendChatMessage(String)` ✓；`Screen.mouseClicked(double,double,int)`（**无** Click/MouseInput）+ `onClose()` ✓。" +
+      "**运行期 JVM = Java 8** ⇒ 过 `applyJava8LibSwaps`。**编译验证 = JDK 8 javac 对上述真 jar 编译通过**（本档不用桩）。",
+    asOf: "2026-10-03",
+  },
+  {
+    platform: "quilt",
+    version: "1.19.4",
+    mappings: "yarn 1.19.4+build.2（quilt-loom 缓存同名 jar）；同 fabric 1.19.4（rewriteForFabric1201，Fabric API 事件面）。",
+    asOf: "2026-10-03",
+  },
+  {
+    platform: "quilt",
+    version: "1.18.2",
+    mappings: "yarn 1.18.2+build.4（quilt-loom 缓存同名 jar）；同 fabric 1.18.2（rewriteForFabricLegacy）。",
+    asOf: "2026-10-03",
+  },
+  {
+    platform: "forge",
+    version: "1.19.4",
+    mappings:
+      "forge-1.19.4-45.4.0（parchment 2023.06.26；方法/字段名 = official）。改写表 = rewriteForForgeLegacy。" +
+      "javap 实测（本机缓存 `1.19.4-45.4.0_mapped_parchment_2023.06.26-1.19.4`）：与 1.20.1 基本同形 —— " +
+      "`Minecraft.getMainRenderTarget()`/`gameDirectory` ✓、`createWorldOpenFlows().loadLevel(Screen,String)` ✓、" +
+      "`WorldOpenFlows.createFreshLevel(String,LevelSettings,WorldOptions,Function<RegistryAccess,WorldDimensions>)` 4 参（无尾 Screen）✓、" +
+      "`LevelSettings(String,GameType,boolean,Difficulty,boolean,GameRules,WorldDataConfiguration)` 7 参 ✓、" +
+      "`BuiltInRegistries.ITEM/BLOCK/ENTITY_TYPE.getKey(...)` ✓、`ClientPacketListener.sendCommand(String)` ✓、`Screenshot.grab(File,RenderTarget,Consumer<Component>)` ✓、" +
+      "`LocalPlayer.chat/onUpdateAbilities/getInventory/getAbilities/getYRot/setYRot` ✓。**唯一差异**：`Entity.onGround()` → `isOnGround()`（`onGround()` 是 1.20 才改的名）。",
+    asOf: "2026-10-03",
+  },
+  {
+    platform: "forge",
+    version: "1.18.2",
+    mappings:
+      "forge-1.18.2-40.1.80（parchment 2022.08.21；方法/字段名 = official）。改写表 = rewriteForForgeLegacy。" +
+      "javap 实测（本机缓存 `1.18.2-40.1.80_mapped_parchment_2022.08.21-1.18.2`）：① 无 `WorldOpenFlows` ⇒ `Minecraft.loadLevel(String)` ✓；" +
+      "② 无 `ClientPacketListener.sendCommand` ⇒ `LocalPlayer.chat(String)` ✓；③ 注册表 = `net.minecraft.core.Registry` 静态字段（`BLOCK/ITEM/ENTITY_TYPE`，DefaultedRegistry，`getKey(T)`）✓；" +
+      "④ `Entity.isOnGround()`（无 `onGround()`）✓；⑤ `Screenshot.grab(File,RenderTarget,Consumer<Component>)` ✓；`Minecraft.gameDirectory`/`getMainRenderTarget()` ✓。" +
+      "**`newworld` 未取证**（LevelSettings/WorldDimensions 构造面不同）⇒ fail-closed。",
+    asOf: "2026-10-03",
+  },
+  {
+    platform: "forge",
+    version: "1.17.1",
+    mappings:
+      "forge-1.17.1-37.1.1（mapped official；方法/字段名 = official）。改写表 = rewriteForForgeLegacy。与 1.18.2 **逐条同形**（javap 两档互证）：" +
+      "`Minecraft.loadLevel(String)` ✓、`LocalPlayer.chat(String)` ✓、`net.minecraft.core.Registry` 静态字段 ✓、`Entity.isOnGround()` ✓、" +
+      "`Screenshot.grab(File,RenderTarget,Consumer<Component>)` ✓。**`newworld` 未取证**⇒ fail-closed。",
+    asOf: "2026-10-03",
+  },
+  {
+    platform: "forge",
+    version: "1.16.5",
+    mappings:
+      "forge-1.16.5-36.2.34（mapped official；**旧 mojmap**，1.17 大批改名之前）。改写表 = rewriteForForgeLegacy。" +
+      "javap 实测（本机缓存 `1.16.5-36.2.34_mapped_official_1.16.5`）：① `net.minecraft.client.gui.screen.Screen`（**单数**）、`net.minecraft.client.gui.screen.inventory.InventoryScreen`；" +
+      "② `net.minecraft.client.entity.player.ClientPlayerEntity`（`chat(String)` ✓）；③ `net.minecraft.client.network.play.ClientPlayNetHandler`；" +
+      "④ `net.minecraft.util.registry.Registry`（`BLOCK/ITEM/ENTITY_TYPE` + `getKey(T)`）；⑤ 截图 `net.minecraft.util.ScreenShotHelper.grab(File,int,int,Framebuffer,Consumer)`（方法名同 grab，多 width/height 两参）；" +
+      "⑥ `Minecraft.options`（类型 `net.minecraft.client.GameSettings`）+ `net.minecraft.client.settings.KeyBinding.setDown(boolean)`，键名仍 `keyUp/…`；" +
+      "⑦ `Minecraft.loadLevel(String)`/`gameDirectory`/`getMainRenderTarget()`（返回 `shader.Framebuffer`）✓；" +
+      "⑧ `Entity.yRot·xRot` **公开字段**（无 setYRot/getYRot()）+ `isOnGround()`；`PlayerEntity.inventory`/`abilities` **公开字段**（`inventory.getItem(int)`）✓。" +
+      "**`newworld` 未取证**⇒ fail-closed。",
+    asOf: "2026-10-03",
+  },
+  {
+    platform: "forge",
+    version: "1.15.2",
+    mappings:
+      "forge-1.15.2-31.2.50（**mapped official**，本机缓存 `1.15.2-31.2.50_mapped_official_1.15.2`）。改写表 = rewriteForForgeLegacy（旧 mojmap 族 + applyForgeOldMojmapLegacy）。" +
+      "与 1.16.5 **同命名族**，只差三处（javap 实测）：① 自动进世界无 `loadLevel` ⇒ `Minecraft.selectLevel(String levelId, String levelName, WorldSettings)`；" +
+      "`WorldSettings(long, GameType, boolean, boolean, WorldType)`，`WorldType.NORMAL`（**1.15.2 叫 NORMAL，1.14.4/1.13.2 叫 DEFAULT**）；" +
+      "② `Entity.onGround` 是**公开字段**（1.16.5 才是 `isOnGround()`）；③ 无 `Entity.blockPosition()`（1.16 才加），且**也没有 `Entity.getPosition()`** ⇒ 现造 `new BlockPos(getX(),getY(),getZ())`。" +
+      "其余同名同形：`util.registry.Registry` + `getKey(T)`、`util.ScreenShotHelper.grab(File,int,int,Framebuffer,Consumer)`（**grab 这个名字只有 1.15.2/1.16.5 有**）、" +
+      "`Minecraft.level/screen/player/options/getWindow()/getMainRenderTarget()/gameDirectory` ✓、`ClientPlayerEntity.chat(String)/onUpdateAbilities()` ✓、" +
+      "`ClientWorld.entitiesForRendering()` ✓、`GameSettings.keyUp…` + `KeyBinding.setDown(boolean)` ✓、`Entity.yRot·xRot` 公开字段 ✓、" +
+      "`PlayerEntity.inventory`(`getItem(int)`)/`abilities` 公开字段（`PlayerAbilities.flying`）✓、`Screen.onClose()` ✓、" +
+      "**BlockPos 是新面**：`below()/above()/immutable()/offset(int,int,int)`，`MainWindow.getGuiScaledWidth/Height()` ✓。**`newworld` 未取证**⇒ fail-closed。",
+    asOf: "2026-10-03",
+  },
+  {
+    platform: "forge",
+    version: "1.14.4",
+    mappings:
+      "forge-1.14.4-28.2.26（**mapped_snapshot_20190719-1.14.3**，本机缓存；方法/字段名仍可读）。改写表 = rewriteForForgeLegacy（applyForgeOldMojmapLegacy 的 1.14.4 支）。" +
+      "与 1.15.2 同族但**字段名整批更旧**（javap 实测）：`Minecraft.world`（非 level）/ `currentScreen`（非 screen）/ `gameSettings`（非 options）/ `gameDir`（非 gameDirectory）/" +
+      "`mainWindow`（**public 字段，无 getWindow()**）/ `getFramebuffer()`（非 getMainRenderTarget()）/ `displayGuiScreen(GuiScreen)`（非 setScreen）/" +
+      "`launchIntegratedServer(String,String,WorldSettings)`；`ClientWorld.getAllEntities()`（非 entitiesForRendering()）；`PlayerInventory.getStackInSlot(int)`（非 getItem(int)）；" +
+      "`Entity.rotationYaw/rotationPitch/onGround` 公开字段 + `getPosition()` + **位置字段 `posX/posY/posZ`（无 getX/getY/getZ）**；" +
+      "`GameSettings.keyBindForward…` + **`KeyBinding` 无 `setDown`** ⇒ 静态 `KeyBinding.setKeyBindState(Input,boolean)`（javap 实测）；" +
+      "`PlayerAbilities.isFlying`（1.15.2 才改 flying）+ `EntityPlayerSP.sendPlayerAbilities()`（**1.14.4 无 onUpdateAbilities**）。" +
+      "`util.registry.Registry`+`getKey`、**`util.ScreenShotHelper.saveScreenshot(File,int,int,Framebuffer,Consumer)`（不是 grab）**、" +
+      "**`EntityPlayerSP.sendChatMessage(String)`（不是 chat）**、`Screen.onClose()`/`mouseClicked(double,double,int)` 均在。" +
+      "**BlockPos 是旧面**：`up()/down()/toImmutable()/add(int,int,int)`（1.15.2 才改 below/immutable/offset）；`MainWindow.getScaledWidth/Height()`（无 getGuiScaled*）。" +
+      "**`newworld` 未取证**⇒ fail-closed。",
+    asOf: "2026-10-03",
+  },
+  {
+    platform: "forge",
+    version: "1.12.2",
+    mappings:
+      "`forgeBin-1.12.2-14.23.5.2847.jar`（**FG2.3 的 MCP 命名 + Forge 合并件**，本机 `.gradle/caches/minecraft/net/minecraftforge/forge/1.12.2-14.23.5.2847/stable/39/`，**免下载**）。" +
+      "改写表 = rewriteForForgeLegacy → **applyForgeMCP132 + applyForgeMCP1122**（**MCP 命名层**，与 1.14+ 的 mojmap 完全不同源；1.12.2 在 132 之上再退一层）。" +
+      "**八处 javap 分叉**（JDK 8 `javap -p`，as-of 2026-10-04）：" +
+      "① **Forge 三包的 1.12.2 位置**：`net.minecraftforge.fml.common.registry.ForgeRegistries`（1.13 才搬 `net.minecraftforge.registries`；`BLOCKS/ITEMS/ENTITIES` + `IForgeRegistry.getKey(V)` 同在）、" +
+      "`net.minecraftforge.fml.common.eventhandler.SubscribeEvent`（1.13 才搬 `eventbus.api`；总线 `MinecraftForge.EVENT_BUS` 类型是 `fml.common.eventhandler.EventBus`）、`fml.common.gameevent.TickEvent`（同 1.13.2，有 `phase` 字段）；" +
+      "② **无 `Minecraft.getInstance()`** ⇒ 静态 `Minecraft.getMinecraft()`（javap 只有 `public static Minecraft getMinecraft()`）；" +
+      "③ **无 `mainWindow`**：窗口尺寸是公开 int 字段 `Minecraft.displayWidth/displayHeight`，GUI 缩放尺寸取 `GuiScreen.width/height`（`Minecraft` javap **无** mainWindow）；" +
+      "④ **截图无 Consumer 变体**：`net.minecraft.util.ScreenShotHelper.saveScreenshot(File,int,int,Framebuffer)`（javap 返 `ITextComponent`；5 参 Consumer 版 1.13.2 才有）⇒ 模板那条 `t -> {...});` 尾巴整个摘掉；" +
+      "⑤ **`ITextComponent` 无 `getString()`**（只有 `getUnformattedText/getUnformattedComponentText/getFormattedText`）⇒ 聊天回包 `getUnformattedText()`；" +
+      "⑥ **`Entity.getName()` 返 `String`**（1.13 起改返 ITextComponent）⇒ `player.getName().getString()` 收敛成 `player.getName()`；" +
+      "⑦ 实体 id 走 `net.minecraft.entity.EntityList.getKey(Entity)`（**`Entity` 无 `getType()`**，1.13+ 才有）；" +
+      "⑧ **`EntityPlayer.capabilities`**（`PlayerCapabilities.isFlying`，1.13 才改叫 `abilities`）、`KeyBinding.getKeyCode()`（1.13.2 已叫 `getKey()`）、`GuiScreen.mouseClicked(int,int,int)`（1.13.2 起是 `(double,double,int)`）。" +
+      "**与 1.13.2 相同、无需再改的面**：`net.minecraft.block.state.IBlockState`（`World.getBlockState()` 返接口）、`net.minecraft.item.ItemStack`、`net.minecraft.util.math.BlockPos`（旧面 `add(int,int,int)/up()/down()/toImmutable()`）、`net.minecraft.client.gui.inventory.GuiInventory(EntityPlayer)`、`net.minecraft.client.entity.EntityPlayerSP`（`sendChatMessage(String)`/`sendPlayerAbilities()`）、" +
+      "`World.loadedEntityList`（**无 getAllEntities()**）、`Entity.rotationYaw/rotationPitch/onGround` 公开字段 + 位置字段 `posX/posY/posZ`（**无 getX/getY/getZ**）、`getPosition()`、`InventoryPlayer.getStackInSlot(int)`、`Minecraft.getFramebuffer()/displayGuiScreen(GuiScreen)/launchIntegratedServer(String,String,WorldSettings)`、`WorldSettings(long,GameType,boolean,boolean,WorldType)`（**5 参**，`WorldType.DEFAULT`）。" +
+      "**`newworld` 未取证**⇒ fail-closed（`FORGE_NO_NEWWORLD_VERSIONS`）。" +
+      "**编译验证 = JDK 8 `javac` 对上面这只真构件 COMPILE_OK**（as-of 2026-10-04）；**真机未跑**。",
+    asOf: "2026-10-04",
+  },
+  {
+    platform: "forge",
+    version: "1.13.2",
+    mappings:
+      "forge-1.13.2-25.0.223（**mapped_snapshot_20180921-1.13**，本机缓存）。改写表 = rewriteForForgeLegacy → **applyForgeMCP132**（**MCP 命名层**，与 1.14+ 的 mojmap 完全不同源）。" +
+      "javap 实测：包名 `net.minecraft.block.state.IBlockState`（**`World.getBlockState()` 返的是接口 IBlockState，不是 BlockState 类**）/" +
+      "`net.minecraft.item.ItemStack`/`net.minecraft.util.math.BlockPos`/`net.minecraft.entity.Entity`/" +
+      "`net.minecraft.client.gui.GuiScreen`/`net.minecraft.client.gui.inventory.GuiInventory`/`net.minecraft.client.entity.EntityPlayerSP`/" +
+      "`net.minecraft.client.network.NetHandlerPlayClient`/`net.minecraft.client.multiplayer.WorldClient`；" +
+      "注册表用 `net.minecraftforge.registries.ForgeRegistries` 的 `BLOCKS/ITEMS/ENTITIES`（IForgeRegistry，**取值 `getKey(V)`**）；" +
+      "`Minecraft.world/player/currentScreen/gameSettings/gameDir/mainWindow`（全公开字段，**无 getWindow()**）+ `getFramebuffer()` + `displayGuiScreen(GuiScreen)` + `launchIntegratedServer(String,String,WorldSettings)`；" +
+      "`EntityPlayerSP.sendChatMessage(String)`（发命令，带前导 `/`）/ `sendPlayerAbilities()`（**不叫 onUpdateAbilities**）/ 公开字段 `inventory`(`InventoryPlayer.getStackInSlot(int)`)/`abilities`(`PlayerCapabilities.isFlying`)；" +
+      "`Entity.rotationYaw/rotationPitch/onGround` 公开字段 + `getPosition()` + **位置字段 `posX/posY/posZ`（无 getX/getY/getZ）**；`GameSettings.keyBindForward…` + 静态 `KeyBinding.setKeyBindState(Input,boolean)`；" +
+      "`GuiScreen.onGuiClosed()`（**不叫 onClose**）/`mouseClicked(double,double,int)`；**`util.ScreenShotHelper.saveScreenshot(File,int,int,Framebuffer,Consumer)`（不是 grab）**；" +
+      "**BlockPos 旧面**：`add(int,int,int)/up()/down()/toImmutable()`；`MainWindow.getScaledWidth/Height()`；`WorldClient` 取实体用公开字段 `loadedEntityList`（**无 getAllEntities()**）。" +
+      "**`newworld` 未取证**⇒ fail-closed。",
+    asOf: "2026-10-03",
+  },
+  {
+    platform: "neoforge",
+    version: "1.21.3",
+    mappings:
+      "rewriteForNeoForge（1.20.6+ 分支）。事件栈 javap 实测（`neoforge-21.1.248-universal.jar`，并 21.11.45/26.1.2 互证）：" +
+      "`NeoForge.EVENT_BUS` ✓、`client.event.ClientTickEvent$Post` ✓（无 phase）、`client.event.ClientChatReceivedEvent.getMessage()` ✓；" +
+      "vanilla（mojmap，同 MC 1.21.3）= 1.21.1 线（无 Click ⇒ `mouseClicked(double,double,int)`；`openWorld(String,Runnable)`）。",
+    asOf: "2026-10-03",
+  },
+  {
+    platform: "neoforge",
+    version: "1.21.5",
+    mappings: "同上（1.21.5 与 1.21.3/1.21.8 对 driver 用到的成员同形；事件栈由 21.1.248/21.11.45 两端夹住）。",
+    asOf: "2026-10-03",
+  },
+  {
+    platform: "neoforge",
+    version: "1.21.8",
+    mappings: "同 1.21.3（mc 1.21.8 线，无 Click）。",
+    asOf: "2026-10-03",
+  },
+  {
+    platform: "neoforge",
+    version: "1.21.10",
+    mappings:
+      "rewriteForNeoForge + **1.21.9+ GUI 点击换形**：`mouseClicked(MouseButtonEvent,boolean)`（yarn `Click`→mojmap `MouseButtonEvent`、" +
+      "`MouseInput`→`MouseButtonInfo`，见 `_yarn-mojmap-pairs/yarn-mojmap-1.21.11.json`；构造面 javap 实测 `gzc(double,double,gzd)` / `gzd(int,int)`）。" +
+      "vanilla 1.21.10 = 1.21.11 线（`Minecraft.screen` 字段仍在、`getMainRenderTarget` 在）。",
+    asOf: "2026-10-03",
+  },
+  {
+    platform: "neoforge",
+    version: "1.21.11",
+    mappings:
+      "同 1.21.10（`minecraft_1.21.11_client.jar` javap + `neoforge-21.11.45-universal.jar` 事件栈实测）。",
+    asOf: "2026-10-03",
+  },
 ];
 /**
  * 意图空间定稿 v2（2026-10-01 用户审改）—— 口径单源见
@@ -909,7 +2288,7 @@ export function generatePlaytestDriver(input: PlaytestDriverInput): GeneratorRes
   if (!version) errors.push("version 必填：传精确 Minecraft 版本（如 1.21.11），禁止默认 1.20.1。");
   else if (!exactMcVersion(version)) errors.push(`必须是精确 MC 版本（x.y.z / 26.x.y），收到 ${version}。`);
   else {
-    const era = eraUpperBoundError(version);
+    const era = eraUpperBoundError(version, PLAYTEST_MAX_MINOR_26X);
     if (era) errors.push(era);
   }
   if (errors.length > 0) return { code: null, errors, warnings };
@@ -1126,6 +2505,9 @@ public final class PlaytestQaDriver {
     private static final int SETTLE_TICKS = 40;
     /** 静置后到截图之间的 tick 数（截图前先 setScreen(null)）。 */
     private static final int SCREENSHOT_AFTER = 60;
+    /** 解释器 shot 步「等新截图落盘」的最长 tick 数：截图是**异步写盘**的，慢盘 / U 盘上 3 s 不够
+     * （实测 2026-10-03 fabric-26.1.2 的 E: 盘：请求到落盘 4 s+ ⇒ 60 tick 预算直接判红，而 PNG 其实已写出）⇒ 给到 10 s。 */
+    private static final int SHOT_WAIT_TICKS = 200;
     /** 硬预算：超时判红，绝不静默（含世界加载与启动期，180s @20tps）。 */
     private static final int BUDGET_TICKS = ${budgetTicks};
     /** 真游玩证明①：按前进键的 tick 数 + 最小水平位移（格）；出生点可能被地形卡住 ⇒ 4 向轮试。 */
@@ -1793,10 +3175,13 @@ public final class PlaytestQaDriver {
                                 //（实测 2026-09-29 fabric-1.21.11：玩家 y≈100.5 站山坡，采样 y=96..108 全 air，
                                 // 实际地面在 y=97）⇒ 先逐列向下探出第一个非空气方块当参考层，再取该层 -2..+5。
                                 // 每列只多一次向下探测，cost 与列数同阶；全空列跳过（未加载/超界）。
+                                // 注意：循环变量必须叫 ay 且写成 c.add(ax, ay, az) —— mojmap 改写表
+                                // （rewriteForForge 的 .add(ax, ay, az) → .offset(...)）按这个字面形状匹配；
+                                // 换名（如 probeAy）会漏改 ⇒ forge/neoforge/26.x 档编译报「找不到符号 方法 add(int,int,int)」（实测 2026-10-03）。
                                 int surfaceAy = Integer.MIN_VALUE;
-                                for (int probeAy = 16; probeAy >= -48; probeAy--) {
-                                    String pid = Registries.BLOCK.getId(client.world.getBlockState(c.add(ax, probeAy, az)).getBlock()).toString();
-                                    if (!pid.equals("minecraft:air") && !pid.equals("minecraft:cave_air") && !pid.equals("minecraft:void_air")) { surfaceAy = probeAy; break; }
+                                for (int ay = 16; ay >= -48; ay--) {
+                                    String pid = Registries.BLOCK.getId(client.world.getBlockState(c.add(ax, ay, az)).getBlock()).toString();
+                                    if (!pid.equals("minecraft:air") && !pid.equals("minecraft:cave_air") && !pid.equals("minecraft:void_air")) { surfaceAy = ay; break; }
                                 }
                                 if (surfaceAy == Integer.MIN_VALUE) { continue; }
                                 for (int ay = surfaceAy - 2; ay <= surfaceAy + 5; ay++) {
@@ -1897,16 +3282,16 @@ public final class PlaytestQaDriver {
                         ScreenshotRecorder.saveScreenshot(client.runDirectory, client.getFramebuffer(), t -> { });
                         log("[QA] shot testId=" + optS(rest, "testId", "main") + " → " + new File(client.runDirectory, "screenshots") + "（等落盘）");
                     }
-                    // 截图是**异步落盘**：等到出现 mtime ≥ 请求时刻的 .png 再放行（最多 60 tick）——
+                    // 截图是**异步落盘**：等到出现 mtime ≥ 请求时刻的 .png 再放行（最多 SHOT_WAIT_TICKS）——
                     // 否则后置条件会读到上一条旧图当新证据（实测 2026-10-01：intent-e2e-a 读到 3 小时前的图仍 PASS）。
                     if (newestShotMillis(client) >= shotRequestMillis) {
                         shotRequestMillis = 0;
                         next();
                         break;
                     }
-                    if (stepTicks > 60) {
+                    if (stepTicks > SHOT_WAIT_TICKS) {
                         shotRequestMillis = 0;
-                        failIntent(client, player, "screenshot_timeout", "shot：60 tick 内未见新截图落盘");
+                        failIntent(client, player, "screenshot_timeout", "shot：" + SHOT_WAIT_TICKS + " tick 内未见新截图落盘");
                         return;
                     }
                     break;
@@ -2050,7 +3435,7 @@ public final class PlaytestQaDriver {
                         break;
                     }
                     if (stepTicks > optI(rest, "max", 200)) {
-                        failIntent(client, player, "land_timeout", "land：200 tick 内未落地（y=" + fmt(player.getY()) + "）");
+                        failIntent(client, player, "land_timeout", "land：" + optI(rest, "max", 200) + " tick 内未落地（y=" + fmt(player.getY()) + "）");
                         return;
                     }
                     break;
@@ -2699,10 +4084,12 @@ public final class PlaytestQaDriver {
     /** 松掉所有被按下的键（每轮结束必做，避免"卡着一直走"）。 */
     /**
      * 造世界钩子（newworld 步骤用）。
-     * fabric 档**未取证** createAndStart 面 ⇒ fail-closed 判红（不静默）；forge 档由改写表注入 createFreshLevel 实现。
+     * **本桩只对被改写表跳过的档生效**：forge 档由改写表注入 7 参 createFreshLevel；26.x 档由 applyNewworld26xx
+     * 换成按实测签名写的那份。仍停在本桩的（fabric ≤1.21.x / quilt / neoforge ≤1.21.x 的 fabric 基表）**确实未取证**
+     * createAndStart 面 ⇒ fail-closed 判红（不静默）。
      */
     private static void createWorldPlatform(MinecraftClient client, String name) {
-        finish(false, "newworld：本档（fabric）未取证造世界 API（createAndStart / LevelInfo / GeneratorOptions 构造面）——请先在客户端建一次世界再复用，或先取证后补本钩子");
+        finish(false, "newworld：本档（fabric 基表，≤1.21.x）未取证造世界 API（createAndStart / LevelInfo / GeneratorOptions 构造面）——请先在客户端建一次世界再复用（用 --quickPlaySingleplayer / enterWorld），或先取证后补本钩子");
     }
 
     private static void releaseAll() {
@@ -2962,31 +4349,75 @@ public final class PlaytestQaDriver {
 `;
     // neoforge 1.20.1 仍用 net.minecraftforge 包名（Forge 兼容层）⇒ 共用 forge 表；
     // neoforge 1.20.2+ 起是 net.neoforged 命名层 ⇒ 走 rewriteForNeoForge（= forge 表 + 事件栈换包，javap 实测）。
-    const useForgeTable = platform === "forge" || (platform === "neoforge" && version === "1.20.1");
-    const useNeoForgeTable = platform === "neoforge" && version !== "1.20.1";
-    // 1.20.1 是唯一 `IntegratedServerLoader.start(Screen,String)` 形的档（fabric/quilt 共用 yarn 命名层）
-    const useFabric1201Table = (platform === "fabric" || platform === "quilt") && version === "1.20.1";
+    // forge 1.16.5–1.19.4（旧 mojmap 面）⇒ 独立 legacy 表；其余 forge 走 forge 表。
+    const useForgeLegacyTable = platform === "forge" && FORGE_LEGACY_VERSIONS.includes(version);
+    const useForgeTable = (platform === "forge" && !useForgeLegacyTable) || (platform === "neoforge" && version === "1.20.1");
+    // neoforge 26.1+ = 去混淆层 + **NeoForge 26.x 事件栈**（ClientTickEvent.Post，无 phase）⇒ 独立表
+    const useNeoForge26Table = platform === "neoforge" && /^26\./.test(version);
+    const useNeoForgeTable = platform === "neoforge" && version !== "1.20.1" && !useNeoForge26Table;
+    // `IntegratedServerLoader.start(Screen,String)` 形（1.20.1 与 1.19.4；javap 实测 1.19.4 同签名）——fabric/quilt 共用 yarn 命名层
+    const useFabric1201Table = (platform === "fabric" || platform === "quilt") && (version === "1.20.1" || version === "1.19.4");
+    // fabric/quilt 1.14.4（Java 8 运行期；无消息事件模块；旧背包/截图/朝向面）与 1.16.5–1.18.2（同为旧 Registry/进世界/命令面、
+    // 无 IntegratedServerLoader、无消息事件模块）⇒ 独立 legacy 表
+    const useFabricLegacyTable =
+      (platform === "fabric" || platform === "quilt") && ["1.14.4", "1.16.5", "1.17.1", "1.18.2"].includes(version);
     // javap 实测同为「只差 GUI 点击一处」的档：1.21.1（2026-09-30）、1.21.3 与 1.20.4（2026-10-01）、1.21.4 与 1.21.8（2026-10-01）
     const useFabric1211Table =
       (platform === "fabric" || platform === "quilt") && ["1.21.1", "1.21.3", "1.20.4", "1.21.4", "1.21.8"].includes(version);
-    const emittedJava = useForgeTable
+    // MC 26.1+ = 去混淆层（jackpot：vanilla 名 = mojmap，免 remap）+ Fabric API 事件 ⇒ 独立表。
+    // 只覆盖 fabric（本仓 quilt 无 26.x 档，quilt 26.x 仍走结构壳，别越界借 fabric 表）。
+    const useFabric26Table = platform === "fabric" && /^26\./.test(version);
+    const emittedJava = useForgeLegacyTable
+      ? rewriteForForgeLegacy(javaSource, version)
+      : useForgeTable
       ? rewriteForForge(javaSource, version)
-      : useNeoForgeTable
-        ? rewriteForNeoForge(javaSource, version)
-        : useFabric1201Table
-          ? rewriteForFabric1201(javaSource)
-          : useFabric1211Table
-            ? rewriteForFabric1211(javaSource)
-            : javaSource;
+      : useNeoForge26Table
+        ? rewriteForNeoForge26xx(javaSource, version)
+        : useNeoForgeTable
+          ? rewriteForNeoForge(javaSource, version)
+          : useFabric26Table
+            ? rewriteForFabric26xx(javaSource, version)
+            : useFabric1201Table
+              ? rewriteForFabric1201(javaSource)
+              : useFabricLegacyTable
+                ? rewriteForFabricLegacy(javaSource, version)
+                : useFabric1211Table
+                  ? rewriteForFabric1211(javaSource)
+                  : javaSource;
     files["playtest/PlaytestQaDriver.java"] = javadocSafe(emittedJava);
-    if (useForgeTable) {
+    if (useForgeLegacyTable) {
       warnings.push(
-        `platform=${platform} 档由 fabric 模板经改写表派生（8 类平台差异，签名逐条 javap 实测）——**尚未真机验证**，首次运行请把编译/启动报错回灌。`,
+        `platform=forge version=${version} 档由 fabric 模板经 **forge legacy 表**（rewriteForForgeLegacy = forge 表 + 该档旧 API 面）派生——**本档是派生态**（由 1.21.11 模板改写而来，非原生档）。` +
+          `javap 依据（本机 \`.gradle/caches/forge_gradle\` 缓存 jar）：1.16.5 = 旧 mojmap 包名（\`GUI screen\` 单数 / \`ClientPlayerEntity\` / \`ClientPlayNetHandler\` / \`util.registry.Registry\` / \`ScreenShotHelper.grab(File,int,int,Framebuffer,Consumer)\` / \`options\`=GameSettings / \`yRot·xRot\` 公开字段）；` +
+          `1.17.1/1.18.2 = \`Minecraft.loadLevel(String)\` + \`LocalPlayer.chat(String)\`（无 \`WorldOpenFlows\`/\`sendCommand\`）+ \`core.Registry\` 静态字段；1.19.4 = 与 1.20.1 同形，仅 \`Entity.isOnGround()\` 一处差。` +
+          `**\`1.12.2\` = MCP 命名层 + \`applyForgeMCP1122\` 再退一层**（\`fml.common.registry.ForgeRegistries\` / \`fml.common.eventhandler.SubscribeEvent\` / **无 \`Minecraft.getInstance()\`**⇒\`getMinecraft()\` / **无 \`mainWindow\`**⇒\`displayWidth·displayHeight\`+` +
+          `\`GuiScreen.width·height\` / **截图无 Consumer 变体**（\`ScreenShotHelper.saveScreenshot(File,int,int,Framebuffer)\` 返 \`ITextComponent\`）/ \`ITextComponent\` 无 \`getString()\`⇒\`getUnformattedText()\` / \`Entity.getName()\` 返 \`String\` / 实体 id 走 \`EntityList.getKey(Entity)\` / \`EntityPlayer.capabilities\`（非 \`abilities\`）/ \`KeyBinding.getKeyCode()\` / \`mouseClicked(int,int,int)\`；` +
+          `构件 = 本机 \`forgeBin-1.12.2-14.23.5.2847.jar\`（FG2.3 的 MCP 命名 + Forge 合并件，**免下载**），**编译验证 = JDK 8 \`javac\` 通过**）。` +
+          `**\`newworld\`（造世界）在 1.16.5–1.18.2 与 1.12.2 未取证 ⇒ 保持 fail-closed**；1.19.4 已实现。真机验证状态见 \`mcp-server/CHANGELOG.md\`。`,
+      );
+    } else if (useForgeTable) {
+      warnings.push(
+        `platform=${platform} 档由 fabric 模板经改写表派生（8 类平台差异，签名逐条 javap 实测）——**本档是派生态**（由 1.21.11 模板改写而来，非原生档）；真机验证状态见 \`mcp-server/CHANGELOG.md\` 的逐档授信，首次运行若报错请回灌。`,
+      );
+    } else if (useNeoForge26Table) {
+      warnings.push(
+        `platform=neoforge version=${version} 档由 1.21.11 模板经 **26.1+ 去混淆表 + NeoForge 26.x 事件栈**（rewriteForNeoForge26xx）派生。` +
+          `已核面（javap 实测 2026-10-03，neoforge-26.1.2.114-universal.jar + bus-8.0.5.jar + 26.1.2 官方客户端 jar（已去混淆，免 remap））：` +
+          `vanilla 名 = forge 表 + 26.x 三处差异（同 fabric 26 表：mouseClicked 新签名 / openWorld 入口 / ` +
+          `**26.2+ 另有截图与界面两处**—— \`getMainRenderTarget()\` 删⇒\`Screenshot.grab(client,false)\`、` +
+          `\`Minecraft.screen\`/\`setScreen\` 删⇒\`client.gui.screen()\`/\`client.gui.setScreen(x)\`）；NeoForge 侧差异 —— ` +
+          `① 总线 \`NeoForge.EVENT_BUS\`（\`net.neoforged.neoforge.common.NeoForge\`）；` +
+          `② tick 事件 = \`net.neoforged.neoforge.client.event.ClientTickEvent.Post\`（**无 phase 字段**，不再是 Forge 的 Phase 判定）；` +
+          `③ 聊天事件 = \`net.neoforged.neoforge.client.event.ClientChatReceivedEvent\`（\`getMessage()\`）；` +
+          `\`@SubscribeEvent\` 走 \`net.neoforged.bus.api.SubscribeEvent\`。` +
+          `**前置：NeoForge 26.1 工程无 mappings 配置**（去混淆）⇒ 不需要 Parchment/官方映射叠加。` +
+          `**\`newworld\`（造世界）已实现**（applyNewworld26xx）（同 fabric 26 表）。` +
+          `真机验证状态见 \`mcp-server/CHANGELOG.md\`。`,
       );
     } else if (useNeoForgeTable) {
       const neoCaveat =
         version === "1.20.4"
-          ? `事件/总线按 neoforge 20.4.251 merged jar + bus 7.2.0 javap 实测）——**尚未真机验证**，` +
+          ? `事件/总线按 neoforge 20.4.251 merged jar + bus 7.2.0 javap 实测）——**本档是派生态**（真机验证状态见 \`mcp-server/CHANGELOG.md\`），` +
             `⚠ 若该档是 1.20.6+（TickEvent 已迁到 \`client.event.ClientTickEvent$Post\`、WorldOpenFlows 入口改名 \`openWorld\`）需走本表的 1206+ 分支，别沿用 1.20.4 的形。`
           : `事件/总线按 neoforge 20.6.139 merged jar javap 实测（1.20.6+ 分支：\`client.event.ClientTickEvent$Post\` **无 phase**、WorldOpenFlows \`openWorld(String,Runnable)\`；该形在 20.6 实测，其余 1.21.x 档首跑前仍需逐档 javap 复核后用）。`;
       warnings.push(
@@ -2994,13 +4425,57 @@ public final class PlaytestQaDriver {
       );
     } else if (useFabric1201Table) {
       warnings.push(
-        `platform=${platform} version=1.20.1 档由 1.21.11 模板经改写表派生（GUI 点击一处差异，javap 实测：1.20.1 无 Click/MouseInput，mouseClicked 为 (double,double,int)）——**尚未真机验证**。`,
+        `platform=${platform} version=1.20.1 档由 1.21.11 模板经改写表派生（GUI 点击一处差异，javap 实测：1.20.1 无 Click/MouseInput，mouseClicked 为 (double,double,int)）——**本档是派生态**（真机验证状态见 \`mcp-server/CHANGELOG.md\`）。`,
+      );
+    } else if (useFabricLegacyTable) {
+      warnings.push(
+        `platform=${platform} version=${version} 档由 1.21.11 模板经 **fabric legacy 表**（rewriteForFabricLegacy = 旧 Registry 包 / 无 IntegratedServerLoader / 无 sendChatCommand / 旧键名）派生` +
+          `——**本档是派生态**（由 1.21.11 模板改写而来，非原生档）。javap 依据见 PLAYTEST_VERIFIED_TIER 的该档条目。**两条本族共同项**：` +
+          `① **没有客户端消息事件**——\`ClientReceiveMessageEvents\` 属 \`fabric-message-api-v1\`，该模块在 1.14.4–1.18.2 这几档钉的 Fabric API 依赖表里**都不存在**` +
+          `（最早带它的是 \`0.87.2+1.19.4\`）⇒ 聊天注册行已摘，\`goto parsed\` 靠 \`<runDir>/logs/latest.log\` 的 \`[CHAT]\` 行兜底；` +
+          `② 事件挂接只有 \`ClientTickEvents.END_CLIENT_TICK\`。` +
+          (version === "1.14.4"
+            ? `\`1.14.4\` 另有 9 处：截图仍是混淆名 \`ScreenshotUtils.method_1659\`、\`window\` 是字段、\`Entity.x/y/z/onGround\` 公开字段、` +
+              `\`inventory\` 公开字段 + \`getInvStack\`、三参 \`startIntegratedServer\`、静态 \`KeyBinding.setKeyPressed\`、无 \`toShortString\`、` +
+              `**运行期 JVM = Java 8**（\`Path.of\`/\`Files.writeString\` 已换 Java 7 形）。` +
+              `**编译验证 = JDK 8 javac 对真 jar（named MC jar + **真 yarn-remapped Fabric API 模块 jar**）通过**。`
+            : version === "1.16.5"
+              ? `**运行期 JVM = Java 8** ⇒ \`Path.of\`/\`Files.writeString\` 已换 Java 7 形（\`applyJava8LibSwaps\`）。` +
+                `**编译验证 = JDK 8 javac 对真 jar（named MC jar + 真 yarn-remapped Fabric API 模块 jar）通过**。` +
+                `**\`newworld\`（造世界）未取证** ⇒ 保持 fail-closed。`
+              : `**编译验证 = JDK 17 javac（该档 release 级）对 named MC jar + FAPI 替身（\`Event\`/\`ClientTickEvents\`）通过**` +
+                `（本机无这两档的 yarn-remapped FAPI 模块 jar）。**\`newworld\`（造世界）未取证** ⇒ 保持 fail-closed。`) +
+          `真机验证状态见 \`mcp-server/CHANGELOG.md\`。`,
       );
     } else if (useFabric1211Table) {
       warnings.push(
         `platform=${platform} version=${version} 档由 1.21.11 模板经改写表派生（**只差 GUI 点击一处**：该档无 Click/MouseInput，` +
           `mouseClicked 为 (double,double,int)；自动进世界与 1.21.11 同形，别套 1.20.1 的 start(Screen,String) 改写）` +
           `——javap 依据见 PLAYTEST_VERIFIED_TIER，真机验证状态见 CHANGELOG。`,
+      );
+    } else if (useFabric26Table) {
+      warnings.push(
+        `platform=fabric version=${version} 档由 1.21.11 模板经 **26.1+ 去混淆表**（rewriteForFabric26xx = forge 表换 vanilla 名到 mojmap，` +
+          `保留 Fabric API 事件）派生。已核面（javap 实测 2026-10-03，26.1.2 官方客户端 jar（已去混淆，免 remap）+ fabric-api 0.155.3+26.1.2）：` +
+          `vanilla 名与 forge 表一致；差异 3 处 —— ① \`mouseClicked(MouseButtonEvent, boolean)\`（\`MouseButtonEvent(double,double,MouseButtonInfo)\`）；` +
+          `② 自动进世界 = \`createWorldOpenFlows().openWorld(String,Runnable)\`（**不是** loadLevel）；③ 事件挂接仍是 Fabric API` +
+          `（\`ClientTickEvents.END_CLIENT_TICK\` / \`ClientReceiveMessageEvents.GAME\`）。` +
+          `**26.2+ 另有两处**（javap 实测 client-26.2/26.3）：④ \`Minecraft.getMainRenderTarget()\` 已删 ⇒ 截图走 \`Screenshot.grab(client,false)\`；` +
+          `⑤ \`Minecraft.screen\`/\`setScreen\` 已删 ⇒ 界面状态走 \`client.gui.screen()\`/\`client.gui.setScreen(x)\`（26.1.x 无此二成员）。` +
+          `**前置：被测工程必须有 fabric-api**（本仓 fabric/26.1.2 scaffold 目前没带，需自行加）。` +
+          `**\`newworld\`（造世界）已取证**（applyNewworld26xx；\`createFreshLevel\` 的 LevelSettings/WorldDataConfiguration/WorldDimensions 构造面五档逐条同形，2026-10-03 javap）；` +
+          `村庄剧本直接以它造世界（本仓 scaffold 未带存档）。真机验证状态见 \`mcp-server/CHANGELOG.md\`。`,
+      );
+    }
+    // quilt 全族前置：quilt-loader **不含 Fabric API**（实测 quilt-loader 0.31.0-beta.4 的 jar 里
+    // `net/fabricmc/fabric/api/` 类数 = 0，只 bundle 了 mixinextras-fabric），而本驱动的事件挂接走
+    // Fabric API（`ClientTickEvents` / 1.19.4+ 还有 `ClientReceiveMessageEvents`）⇒ 工程必须自备 dev-only fabric-api。
+    if (platform === "quilt" && isVerifiedTier(platform, version)) {
+      warnings.push(
+        `quilt 档前置：**quilt-loader 不含 Fabric API**（javap/jar 实测 quilt-loader 0.31.0-beta.4：` +
+          `\`net/fabricmc/fabric/api/\` 类数 = 0，只 bundle \`mixinextras-fabric\`），而本驱动的 tick/chat 钩子走 Fabric API ⇒ ` +
+          `**被测工程须自备 dev-only \`net.fabricmc.fabric-api:fabric-api:<该档版本>\`**（测完按 REVERT.md 撤除）。` +
+          `同款前置的口径见 \`community_knowledge/authored/ingame-playtest-automation.md\` 的 quilt 1.21.11 硬约束条。`,
       );
     }
     // fabric 1.20.4 / 1.21.1 / 1.21.3 的 `IntegratedServerLoader.start(String,Runnable)` 会把客户端冻死 ——
@@ -3153,6 +4628,7 @@ public final class PlaytestQaDriver {
 | \`break ticks=<n>\` | 俯视破脚下方块（断言**同坐标** id 变化） |
 | \`gui\` | 开背包 → 真实 \`mouseClicked(Click,boolean)\` → 关闭 |
 | \`land max=<n>\` | 等到落地（\`isOnGround\`；失败判红）——飞行到达后的落地面 |
+| \`newworld name=<存档目录名>\` | **造世界**（标题屏即可跑）：\`run/saves/<name>/level.dat\` 已在就跳过；否则走 \`createFreshLevel\`（26.x/forge 已取证）或 fail-closed 判红（未取证档）。**注意是 \`name=\` 具名参数**，不是位置参数 |
 | \`goto nearest …\` | 走向最近一次 scan 的命中坐标（与 \`goto parsed\` 并列的第三种坐标来源） |
 | \`intent <name> k=v…\` | **意图**：菜单校验 → 复用原语展开 → 类型化后置条件 → 证据；不在菜单/禁列/档位不符一律判红 |
 | \`waitintent max=<n>\` | **LLM 邮箱**：守候 \`<evidenceDir>/intent.json\`（扁平 JSON），每条执行完**停在本步继续守候** |

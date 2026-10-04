@@ -57,7 +57,7 @@
 3. **关游戏要先问用户**：要关就精确杀真身 JVM（命令行含 `-Dfabric.dli.config`）——**别只杀 `gradlew` wrapper**，残留客户端会占住世界 `session.lock`，下一轮进世界报「另一个程序已锁定文件的一部分」。
 4. **撤除纪律**：驱动文件 + `PlaytestQaDriver.register();` 调用行测完**必须删**（绝不提交）；证据只留授权根；驱动代码不进正式实例 / 正式分支。
 
-已核实边界（引用前先核，别外推）：driver **真代码**只覆盖 `fabric/quilt 1.21.11`（签名逐条 javap 实测），其余平台 / 版本是结构壳；`/locate` 实测 ≈2.5 秒且结果落 `<gameDir>/logs/latest.log` 的 `[CHAT]` 行；客户端**实体只在追踪范围（≈48 格）内可见** ⇒ 实体断言要靠近目标，方块证据不受此限。
+已核实边界（引用前先核，别外推）：driver **真代码**覆盖 = `PLAYTEST_VERIFIED_TIER`（`mcp-server/src/generators/playtest-driver.ts`，**唯一真源、随逐档 javap 取证扩面 —— 正文不数档**；as-of 2026-10-04 共 **52** 项，按平台 `fabric` 18 / `neoforge` 14 / `quilt` 10 / `forge` 10 —— 逐版本清单请直接读生成器那张表，正文只记要点：`fabric` 含 **去混淆档 `26.1` / `26.1.1` / `26.1.2` / `26.2` / `26.3`（需 fabric-api）** 与低版本 `1.14.4` / `1.16.5` / `1.17.1` / `1.18.2` / `1.19.4`；`forge` 含早期 8 档 `1.12.2` / `1.13.2` / `1.14.4` / `1.15.2` / `1.16.5` / `1.17.1` / `1.18.2` / `1.19.4`（**逐档改写表都不同**：1.12.2 = MCP 命名层**再退一层**（Forge 三包在 `fml.common.*` 旧位置 / 无 `Minecraft.getInstance()` / 无 `mainWindow` / 截图无 Consumer 变体 / `ITextComponent` 无 `getString()` / `Entity.getName()` 返 String / `EntityList.getKey(Entity)` / `capabilities` / `GuiScreen.mouseClicked` 是 **protected+void**⇒点击证明改走 `PlayerControllerMP.windowClick` 后端），1.13.2 是 MCP 命名层，1.14.4/1.15.2/1.16.5 属旧 mojmap 族但字段名各异，1.19.4 仅 `isOnGround` 差一处）；`neoforge` 含 **去混淆档 `26.1` / `26.1.1` / `26.1.2` / `26.2` / `26.3`**）。**验证强度分三等，引用前看清**：① **真机跑通** = 26.x 十档（fabric 5 + neoforge 5）；② **真构件编译验证**（javap 取证 + `javac` 对**真** jar：JDK 8 腿含 `fabric 1.14.4` / `1.16.5` 与 `forge 1.12.2` / `1.13.2` / `1.14.4` / `1.15.2` / `1.16.5`）——**编译验证 ≠ 真机验证**；③ **替身腿** = `fabric 1.17.1` / `1.18.2`（真 named jar + 两类 FAPI 替身，本机没有这两档的 yarn-remapped 模块件）。**`quilt` 全族只有 javap/派生面、无编译验证**（本机没有 quilt 的 yarn-remapped 模块件），且 quilt 工程须自备 dev-only `fabric-api`（quilt-loader 不含 FAPI）。**「替身只证签名形状，不证类存在」** —— 判某类在该版存不存在必须拿真构件；`fabric` 全族 1.19.4 以下**没有客户端消息事件**（`fabric-message-api-v1` 该版本段不存在）⇒ `goto parsed` 只走 latest.log 兜底、解析不到 fail-closed 判红。表外平台 / 版本一律结构壳（须先取证）；**26.2+ 的两处 API 变化**（`getMainRenderTarget()` 删⇒`Screenshot.grab(client,false)`；`Minecraft.screen`/`setScreen` 删⇒`client.gui.screen()`/`client.gui.setScreen(x)`）由 `apply26xxShared` 按 `m26(version)>=2` 分支处理；`/locate` 实测 ≈2.5 秒且结果落 `<gameDir>/logs/latest.log` 的 `[CHAT]` 行；客户端**实体只在追踪范围（≈48 格）内可见** ⇒ 实体断言要靠近目标，方块证据不受此限。
 
 交付格式见文末「§交付汇报」：默认走**主档四块**（模组开发）；改动落在仓库知识库 / 工具面才走**维护档六块**。
 
@@ -271,7 +271,7 @@ id 'net.minecraftforge.gradle'
 - **判据**：围栏内类名在**本档** yarn 映射查无 ∧ intermediary 等价类给出本档正解 ∧ 处强类型位 ∧ ¬限定名右段 ∧ ¬箭头简写行 ∧ 锚唯一 ∧ 非 Fabric API 碰撞名 ⇒ 红【RENAME-STALE】，红行自带「本档该叫 X ｜ 锚 class_N ｜ 跨档版本链」。真树现 0 红。否决面里的「Fabric API 碰撞名」有**三个来源**：① 语料正文的 `net/fabricmc/…` 限定名串（现 288 名）；② 逐档 `mcp-server/data/loader-api-summaries/<档>-fabric-api.json` 的类末段（含 `FabricTagProvider$BlockTagProvider` 这类嵌套名，**2026-09-28 切片 21 起 14/14 档在件**——补进了 `1.21.4` / `1.21.8` / `1.21.10`，坐标来自 `scripts/fabric-api-version-pins.json` 的逐档 pin（`basis`+`asOf` 必填，fetcher 仍按 `fabricVerBelongsToMc` 复核 ⇒ 借邻版会被拒；**这条形状约束自 2026-09-28 起由门守着** —— `mcp-server/scripts/assert-bedrock-script-api-pin.mjs` 判据④ = 逐条 `basis`／`asOf`（YYYY-MM-DD）／`+` 后段归本档／键指向本仓真有的 `data/fabric_<档>` 树／条目地板 ≥1，判据⑤ = 抓取器三个锚点仍在（否则④守的是没人读的文件），该门自此是**仓内 pins 类文件的形状门**而不只 bedrock，且它的内存自证臂已同时挂进 §S18/S19 真跑与 selftest 两条数组），旧读数「11/14 档、可否决名 2,455 个末段中与等价类历史名相交 27 个 ⇒ 新增否决面只有 24 名」是 **11 档面上的数，14 档面未重测，引用前重跑**）；③ 逐档 `<档>-fabric.json` = **fabric-loader 本体**的类末段（2026-09-28 入仓库 14/14 档、逐档 3,071 名·并集 290 名，由 `scripts/decompile-loader-apis.mjs` 从各档 `scaffold/gradle.properties` 自钉的 `loader_version` 生成）。**为什么非要第二来源**：语料从不写 FAPI 限定名，所以 `BlockTagProvider` / `ItemTagProvider` 进不了 ①，规则树一旦把它们写进真代码位就会假红。**为什么还要第三来源**：`ClientModInitializer` / `Environment` / `EnvType` 是 **loader** 类，①② 都不含（实测 ② 的 11 件里 Environment / EnvType 0 命中）⇒ 没有 ③ 的话「实现加载器入口点」这一最标准写法在技能源稿面必红（兄弟门的 10 件 particle 实测里 7 处就是它）。**③ 在规则树面上目前否决 0 名**（现扫：既在 ③、又落在等价类锚集、且 ①② 都没有的名字 = **0 个**，脚本 `D:/mc-skill-temp/scripts-main/loader-veto-candidates.mjs`）⇒ 对规则门它是**防御性**接线，机制证据只由合成夹具 T57–T59 承担，真树两臂按构造不可能翻红（不要为它补一条永不响的臂）；它真正承重是在兄弟门（技能面，两臂实测 1 处 vs 8 处）。
 - **与上面那道门的分工**：`assert-skill-yarn-attest` 管**技能源稿**的「名字有没有出处」，本门管**规则树**的「名字跟没跟丢版本」；两门的映射腿共用 `mcp-server/scripts/_lib/api-name-collector.mjs`，四态读法（`absent` / `era` / `zero-rows` / `unreadable` / `ok`）与「读失败不得塌成查无此名」同口径。**Forge 档不走本门**（那里没有 Yarn 名可查）。**quilt 档同样不走本门，且别为它先补归属来源（2026-09-28 现扫）**：本门 `:94` 写死 `path.join(root, "fabric")`、全文 0 处 `quilt`，兄弟门的清单 53 行也 0 处 quilt ⇒ 两条名门对 quilt 树的判名**人群 = 0**；而 `org.quiltmc.loader.*` 根本没有出处（`data/quilt_*/` 六档只有 `quilt_1.21.1` 的 2 件提到 `org/quiltmc/`，其一还是本仓自撰的 `qsl-verified.md` = 循环引证；4 份 `-qsl.json` 摘要全属 `org.quiltmc.qsl.*`、loader 类 0 名；10 档 quilt `scaffold/gradle.properties` 无一处 loader 版本钉，对照 fabric 侧 10/14 档自钉）。⇒ **要接 quilt 面，前置是先建出处**（quilt-loader 的 sources jar ＋ 一个不借邻版的坐标源，形状同上面那套 pins），不是先扩门。
 - **执法面**：挂在 `mcp-server/test-scripts.mjs` §#23。除真树 rc=0 外另有**八臂活证**（tmp 规则夹具 + 仓库真映射：旧名必红 / 只换标识符必绿 / 坏 basis 豁免不生效 / 合形态 basis 真放行 / **奇偶不闭合围栏必红并逐件点名**——落单围栏会把后半篇内外读反，属采集面塌缩而非格式问题 / **从键集齐全的基线里删一条地板键必红并按名点出** / **FAPI 与 vanilla 同名的类写进真代码位必须被第二否决源挡下：同一份载荷只切 `MC_SKILL_RULES_FAPI_SUMMARIES`，有件必绿、无件必红并按本档 vanilla 正解点名** / **`--queue` 的 TSV 跨进程逐字节确定，且目标路径落在仓库内即 `[QUEUE-IN-REPO]` 拒绝并点名**），所以「红=0」不等于红腿熄火；缺基线、地板跌破同样判红，摘要件**在盘但解析不动** ⇒ 按来源分别点名 `[FAPI-SUMMARY-UNREADABLE]`（②）与 `[LOADER-SUMMARY-UNREADABLE]`（③）逐档判红（不得塌成「该档没有 FAPI 名」）；臂 G 的绿那一侧另核「汇总行必须印出 ②／③ 的在场数」——**判的是形状 + 算术不变式（在场 ≥ 1 ∧ 在场 + 缺席 = 档数），不钉分子**（2026-09-28：上一版写死 `摘要件1[01]/14档`，同日把 ② 补到 14/14 之后本臂假红，合法扩容打红断言 ⇒ 已改成不钉数）⇒ ②／③ 被接断时输出上必须看得见。门自己带 `--selftest`（组数以门自印为准，2026-09-29 现印 62/62；含 T57–T59 三例合成 loader 夹具，与 T60–T62 三例桶5 三分类读数）与 `--measure-floors`（只打印建议值，**绝不自动写基线**；它自证打印键集 ⊇ `REQUIRED_FLOOR_KEYS/REQUIRED_CEILING_KEYS`，量具缺键即红）。
-- **改 `.cursor/rules` 正文后必须刷 7 面镜像**：`powershell -NoProfile -ExecutionPolicy Bypass -File scripts/sync-skills.ps1 -TargetDir <平台>/<档>`（该脚本只写不删）。不刷 ⇒ `assert-skill-mirrors` 真跑档红。**（2026-09-28 切片 21 两条口径更新）**① 这道门的**真跑**已挂进 `mcp-server/test-scripts.mjs` 的 `REAL_RUN_GATES`（此前只有 `--selftest` 在链里，真跑只在 `npm test`）⇒ 收口跑 `node test-scripts.mjs` 就能看见镜像漂移；② 从前它**只比目录型 `.cursor/skills/<name>/SKILL.md`，flat `<name>.md` 源稿被采集器跳过**（`CONTRIBUTING.md` 的 `L14`）——现在 flat 面也进比对（380 件 × 7 面 = 2,660 个目标，实跑 1.9 s），并带 `FLAT-SKILL-NOT-COLLECTED` 地板 + 三记真采集器臂。⚠️ 所以旧口径「flat `.md` 面 0 漂移」是**盲区自己的读数**，不是证据：2026-09-28 就演过一次真漂移（`fabric/1.17.1/.cursor/skills/mc-particle.md:32` 改了源稿、6 面没跟，门当时照样报 0）。**给规则树新增类名前先跑本门**；桶 4 / 桶 5（本版没有的名字与切词器噪音）不判红，走 `--queue=<绝对路径>` 出 TSV 人工审。**桶5 不收编进豁免**（2026-09-29 裁定）：现扫 1 066 个位点抽样全是 Gradle 任务名／IDE 名／散文词，收编要么造上千条假红，要么给「豁免条数上界 0 且只许降」开永久口子。门改为自印一个**三分类读数**（`桶5三分类=Gradle N／IDE M／散文 K／未证类名 R`，四族之和必须等于桶5 位点数，由 T60–T62 钉），它**不进 rc、不进基线、不作判据**，只当切词器健康度看；下面这几个数都是 **as-of 2026-09-29 的现扫读数，引用前重跑本门**（桶5 1 066 个位点，分族 Gradle 407／IDE 3／散文 131／未证类名 525，其中「未证类名」= 88 个唯一名，例：`AttackBlockCallback`、`ClientPlayNetworking`、`ModBlocks`）——那一族才是未来值得逐档审的候选。
+- **改 `.cursor/rules` 正文后必须刷 7 面镜像**：`powershell -NoProfile -ExecutionPolicy Bypass -File scripts/sync-skills.ps1 -TargetDir <平台>/<档>`（该脚本只写不删）。不刷 ⇒ `assert-skill-mirrors` 真跑档红。**（2026-09-28 切片 21 两条口径更新）**① 这道门的**真跑**已挂进 `mcp-server/test-scripts.mjs` 的 `REAL_RUN_GATES`（此前只有 `--selftest` 在链里，真跑只在 `npm test`）⇒ 收口跑 `node test-scripts.mjs` 就能看见镜像漂移；② 从前它**只比目录型 `.cursor/skills/<name>/SKILL.md`，flat `<name>.md` 源稿被采集器跳过**（`CONTRIBUTING_LIST.md` 的 `L14`）——现在 flat 面也进比对（380 件 × 7 面 = 2,660 个目标，实跑 1.9 s），并带 `FLAT-SKILL-NOT-COLLECTED` 地板 + 三记真采集器臂。⚠️ 所以旧口径「flat `.md` 面 0 漂移」是**盲区自己的读数**，不是证据：2026-09-28 就演过一次真漂移（`fabric/1.17.1/.cursor/skills/mc-particle.md:32` 改了源稿、6 面没跟，门当时照样报 0）。**给规则树新增类名前先跑本门**；桶 4 / 桶 5（本版没有的名字与切词器噪音）不判红，走 `--queue=<绝对路径>` 出 TSV 人工审。**桶5 不收编进豁免**（2026-09-29 裁定）：现扫 1 066 个位点抽样全是 Gradle 任务名／IDE 名／散文词，收编要么造上千条假红，要么给「豁免条数上界 0 且只许降」开永久口子。门改为自印一个**三分类读数**（`桶5三分类=Gradle N／IDE M／散文 K／未证类名 R`，四族之和必须等于桶5 位点数，由 T60–T62 钉），它**不进 rc、不进基线、不作判据**，只当切词器健康度看；下面这几个数都是 **as-of 2026-09-29 的现扫读数，引用前重跑本门**（桶5 1 066 个位点，分族 Gradle 407／IDE 3／散文 131／未证类名 525，其中「未证类名」= 88 个唯一名，例：`AttackBlockCallback`、`ClientPlayNetworking`、`ModBlocks`）——那一族才是未来值得逐档审的候选。
 
 ### 物理端约束
 
@@ -380,7 +380,7 @@ Decision: 选择注册方式
 | `validate_project` | 校验模组项目结构。Forge / Fabric / Quilt / NeoForge 真检查；LiteLoader/Rift/ModLoader/基岩 skipped。坏 recipe 只 warning。 |
 | `check_publish_ready` | 发布前清单（license/version/`build/libs` + `community_knowledge` publishing.md 清单，缺项只 warning）。不上传、不调外网发布 API。 |
 | `inspect_runtime` | 日志型 inspector。优先 `logsDir`；否则有界探测 `run/logs`。禁止全盘 / JVM attach。 |
-| `generate_playtest_driver` | 游玩自测 driver（只吐文本）：默认 `external_bridge`（桥动作序列）；`temporary_client_tick_driver` 在 fabric/quilt 1.21.11 档出**可编译长驻解释器**（`scenario=smoke\|village` 或自定义 `plan` DSL；热载 `plan.txt`、多轮 `rounds.jsonl`、撤除清单）；`in_jvm_player_agent` 在已取证档（fabric/quilt 1.21.11）为**真执行器**（意图菜单 `INTENT_MENU` + `intent`/`waitintent` 邮箱步族 + 13 意图类型化后置条件 + 逐意图预算；设计见口径单源 §意图空间），其余档与实测未取证面只出契约 + 结构壳。 |
+| `generate_playtest_driver` | 游玩自测 driver（只吐文本）：默认 `external_bridge`（桥动作序列）；`temporary_client_tick_driver` 在 **`PLAYTEST_VERIFIED_TIER` 列出的档**（唯一真源；as-of 2026-10-04 为 **52** 项 = `fabric` 18 / `neoforge` 14 / `quilt` 10 / `forge` 10，含去混淆档 `fabric`/`neoforge` 的 `26.1`/`26.1.1`/`26.1.2`/`26.2`/`26.3` 与 forge 早期 8 档，见「人在环例外：游玩自测」的已核实边界）出**可编译长驻解释器**（`scenario=smoke\|village` 或自定义 `plan` DSL；热载 `plan.txt`、多轮 `rounds.jsonl`、撤除清单）；`in_jvm_player_agent` 在**同一批已验证档**为**真执行器**（意图菜单 `INTENT_MENU` + `intent`/`waitintent` 邮箱步族 + 13 意图类型化后置条件 + 逐意图预算；设计见口径单源 §意图空间）。**表外档与实测未取证面只出契约 + 结构壳**（`// TODO(未核实)`）。 |
 | `inspect_playtest_evidence` | 读游玩自测证据（exit-code / state.json / `[QA]` / calls.jsonl / 截图），三态 `present\|absent\|unreadable`；须 `MC_SKILL_PLAYTEST_ALLOW=1` + `MC_SKILL_PLAYTEST_ROOT`。 |
 | `playtest_intent` | 游玩自测**意图邮箱**（`in_jvm_player_agent` 真执行器的 LLM 侧接线）：`action=read\|write`；write 写 `<evidenceDir>/intent.json`（driver 的 `waitintent` 步消费并改名 `intent.done.json`）。校验顺序：confirmed → 禁列（kill/tnt/fill）→ 菜单（`intent-menu.json`）→ 参数白名单 → 必填 → 邮箱占用（overwrite）。须 `MC_SKILL_PLAYTEST_ALLOW=1` + `MC_SKILL_PLAYTEST_ROOT`。失败码：`CONFIRMATION_REQUIRED` / `INTENT_FORBIDDEN` / `INTENT_NOT_IN_MENU` / `PARAM_NOT_DECLARED` / `MISSING_REQUIRED_PARAM` / `MAILBOX_BUSY` / `MENU_NOT_FOUND`。 |
 | `playtest_bridge` | 调 BlackBoxPro 桥（`127.0.0.1:38081`）：`status` / `execute` / `await`；超时映射 `PLAYTEST_TIMEOUT`；`execute`/`await` 须 `confirmed=true` + 授权；桥无鉴权，只在本机用。 |
@@ -445,6 +445,48 @@ Decision: 选择注册方式
 - **`search_mod_code` 报 `NOT_DECOMPILED`**：反编译源码尚未生成（按设计不入库），按返回指引先调 `decompile_mod_jar` / `get_minecraft_source` 按需生成。（此前本行误写 `NOT_FOUND`；`src/decompile/index.ts` 发的是 `NOT_DECOMPILED`。）
 - **`PLATFORM_DATA_MISSING`**：对应平台文档数据缺失，先调 `diagnose_data_paths` 确认 `MC_SKILL_DATA` 指向本仓库 `data/`。
 
+## 游玩测试要求（交付门槛，每轮强制）
+
+模组是给用户玩的产品，不是编译过就完事的代码。**任何功能改动，先按下面的阶梯测到与改动面相称的层级，再把证据写进「交付汇报 · 怎么验」。** 没测就说没测：**不得**把「编译通过」写成「功能可用」，也不得把「没有崩溃」写成「测试通过」。
+你添加的任何物品,实体,机制必须全面的以玩家角度使用并测试,覆盖使用的可能的玩家行为
+### 阶梯：逐层向上，低层红不许跳高层
+
+| 层 | 测什么 | 用什么测 | 红会长什么样 |
+| --- | --- | --- | --- |
+| **L0 构建** | 编译产出 jar | `gradlew build`；构建配置问题走 `diagnose_gradle` | 编译错 / `BUILD FAILED` |
+| **L1 结构与静态** | 工程骨架、平台元数据、依赖、Mixin、AT/AW、资源引用 | `validate_project`、`check_dependencies`、`mixin_analyze`、`validate_at` / `validate_aw`、`audit_resources` | `mods.toml` 的 id 与代码不符、引用不存在的类、模型指向缺失纹理 |
+| **L2 数据面** | 配方 / 战利品 / 标签 / 进度 / 方块状态 / lang 键 | `validate_datapack_json`；基岩 `validate_bp_json` / `validate_addon_manifest` | JSON 被拒、普通合成缺 `result`、lang 缺键 |
+| **L3 自动化功能** | 注册、逻辑、副作用（不必真人玩） | GameTest（工作流 `mc-gametest`） | 断言失败，或测试根本没注册 |
+| **L4 真机冒烟** | 进得去世界，能移动 / 破坏 / 开 GUI / 翻背包 | `generate_playtest_driver scenario=smoke`（已验证档出真 driver）；桥路线 `playtest_bridge` | `exit-code.txt` = `1`；截图停在菜单 |
+| **L5 场景验收** | **本次改动**那个玩家可见行为 | 自定义 `plan` DSL 或意图会话；后置条件 `block_state` / `entity_count` / `inventory_contains` / `marker_log` / `screen_present` | 断言不成立 / 超预算判红 |
+| **L6 服务端与多人(日常可选,由用户判断做不做)** | 专用服起得来、客户端连得上、状态同步 | 工作流 `mc-server-multiplayer-test`；`runServer` | 服务端启动崩溃、两侧状态不一致、权限报错 |
+| **L7 回归与共存(日常可选,由用户判断做不做)** | 改动前的功能不劣化；与其他 mod 同装 | 同一次会话连做多轮（改 `plan.txt` 热载，不重启）；工作流 `mc-modpack` | 旧断言转红、注册名 / 事件冲突 |
+| **收口** | 发布前清单 | `check_publish_ready`；工作流 `mc-publish` | license / version 缺项，`build/libs` 不像正式 jar |
+
+**最低测到哪层，按改动面取最大者**：改逻辑 → 至少 L3。改玩家可见行为（方块 / 物品 / 实体 / GUI / 配方效果 / 世界生成）→ 至少 L4 + L5。改网络、存档或服务端侧 → 必须 L6。升 loader 或 MC 版本 → L0–L7 全跑。纯注释 / 文档改动 → 到 L0 即可。
+
+### 「全面」= 把维度铺开，不是同一条路径多跑几遍
+
+- **改动面**：代码、资源、数据（datagen 产物）、配置、`build.gradle`、平台元数据 —— 动了哪块测哪块，别只测代码。
+- **平台 × 版本**：用户实际那一档必须真跑过。跨平台移植或跨版本升级，每个目标档各测一遍，**不许**拿邻版的绿顶替。
+- **客户端 / 服务端 / 双侧**：side-aware 代码（`@OnlyIn`、`Dist` 分支）两侧都要起过；只跑 `runClient` 不算测过服务端。
+- **存档状态**：新世界（首次进）与旧存档（升级 / 迁移）都要进过，见工作流 `mc-save-migration`。
+- **权限档**：生存（`capabilityProfile=strict_survival`，fail-closed）与创造 / 授权（`operator` / `creative`）按功能实际用到的各覆盖一次。
+- **边界与异常**：空 / 满背包、目标方块不存在、区块未加载（先 `forceload`）、玩家死亡与重连、非房主加入。
+- **表现面**：模型 / 纹理 / 光照、GUI 文字溢出与界面缩放、本地化（每个 lang 键在 `en_us` 与 `zh_cn` 都有值）。
+- **日志面**：`latest.log` 无新增 `ERROR` / 异常栈（`inspect_runtime` / `analyze_log`），`crash-reports/` 为空；基岩看 content log（`analyze_bedrock_log`）。
+
+### 判红规则（fail-closed）
+
+- **缺证据 = 没通过**。`inspect_playtest_evidence` 读出 `absent` **不得**当「没有失败」；`exit-code.txt` 非 `0` 或不在盘上 ⇒ 红。
+- **每轮证据三件齐**：`state.json` / `exit-code.txt` / `qa.log`（只含本轮 `[QA]` 段）+ 截图；历史轮次在 `rounds.jsonl`。
+- **表外版本不等于免测**：真 driver 的覆盖 = `generate_playtest_driver` 内 `PLAYTEST_VERIFIED_TIER`（唯一真源，**正文不数档**）。不在表里的档走桥路线或人工游玩，并如实写「人工验过 / 未验」。
+- **意图会话门**：`MC_SKILL_PLAYTEST_INTENT_E2E` 未设 ⇒ 一律按未验证处理，不静默通过。
+
+### 与人在环的关系（本要求不豁免「谁去跑」）
+
+跑 Gradle、起游戏、写 evidence 仍受「人在环例外：游玩自测（三通道）」约束。**授权没拿到时**，交付里必须写明「本轮未真机验证」，并给出用户可照着跑的清单（对上表的层级），不得替用户宣布通过。
+
 ## 交付汇报（每轮交付强制）
 
 **先判档：看本轮改动落在哪张面**（目录面可核对，不靠 agent 自称「这是哪种会话」）
@@ -459,7 +501,7 @@ Decision: 选择注册方式
 ### 主档 · 模组开发交付（默认。用户要的是：能不能跑、怎么验、有没有坑）
 
 1. **改了哪些文件 / 给了什么**：路径 + 每处一句「为什么」；只输出未写盘的明说「未写盘」。写盘前先给清单 / `dryRun` 预览并经确认（「人在环」）。
-2. **怎么验**：用户在自己工程里怎么跑、看到什么算过 —— 构建命令、`runClient` / `runServer`、进游戏后的操作（`/give`、GameTest、基岩 content log）、该看哪条日志、失败长什么样。用用户能照着做的说法写。
+2. **怎么验（先报已测证据，再给续跑清单）**：本块头一句必须是**本轮实际测到了哪一层、证据在哪**（`exit-code.txt` / `state.json` / 截图 / GameTest 输出 / `latest.log`）；红、或根本没测，照实写，不得用「应该没问题」代替。之后再写用户在自己工程里接着怎么跑、看到什么算过 —— 构建命令、`runClient` / `runServer`、进游戏后的操作（`/give`、GameTest、基岩 content log）、该看哪条日志、失败长什么样。层级与最低必测线见「游玩测试要求（交付门槛）」。用用户能照着做的说法写。
 3. **未核实项与影响面**：留了 `// TODO(未核实)` 的位置 + 原因（缺哪份文档 / 哪个 jar）；本轮动过的影响面 —— `build.gradle`、平台元数据（`mods.toml` / `fabric.mod.json` / `manifest.json` …）、mappings、新增依赖、loader 或 MC 版本，以及用户无需跟着改什么。
 4. **需要你拍板 + 风险与回退**：待你定的选择（创意设计 / 版本取舍 / API 选型）；改前是什么、怎么退回。
 

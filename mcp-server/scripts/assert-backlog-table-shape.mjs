@@ -1,5 +1,9 @@
 /**
- * assert-backlog-table-shape.mjs —— 给 `CONTRIBUTING.md` §未排期清单**这张表的形状**立一道受纳管的门（第 36 轮）。
+ * assert-backlog-table-shape.mjs —— 给 `CONTRIBUTING_LIST.md` 顶层的 §未排期清单**这张表的形状**立一道受纳管的门（第 36 轮）。
+ *
+ * 2026-10-04：该表已从 `CONTRIBUTING.md` 拆到 `CONTRIBUTING_LIST.md`（台账是维护态记录，不是贡献步骤）。
+ * **判据一律未动**（cell 数 / 第三列空 / 号序 / 首号 / 地板 / 锚 / 采 0 行）：`L<n>` 是**条目编号**而非文件行号，
+ * 所以拆文件后号序天然连续，跨门引用只需改路径。
  *
  * 为什么立：该表前言自写「台账历史行不回改，故本表是状态的**唯一现行读法**」，而此前**全仓没有任何门判它的形状** ——
  * `grep -rln CONTRIBUTING mcp-server/scripts/*.mjs` 的命中全是把它当**权威正文引用**，不是判据；
@@ -9,7 +13,7 @@
  *   - **第三列「需要谁拍板」丢失** = 「这条欠谁一个决定」没了 ⇒ 下一轮把它当「无人欠做」跳过；
  *   - **号序错乱** = 按号扫的人以为表到 `L42` 就结束（`L43` 夹在中间）。
  *
- * 判据口径（**只判形状**，全部从 `CONTRIBUTING.md` 现扫，禁止硬钉行号）：
+ * 判据口径（**只判形状**，全部从 `CONTRIBUTING_LIST.md` 现扫，禁止硬钉行号）：
  *   ① 某行 cell 数 ≠ 3  ⇒ `BAD_CELL_COUNT`
  *   ② 第三列存在但为空/只含空白 ⇒ `EMPTY_DECIDER`
  *   ③ 号序不是逐行 +1（重号 / 跳号 / 乱序）⇒ `NUM_ORDER`
@@ -20,9 +24,9 @@
  *
  * **只打印不判红**（防把散文口径做成棘轮）：`现状` 列含 `as-of` / `未复核` / `已闭环` 的**份数**、
  * 单元格数分布。该表规矩要求「带分母 + 口径 + as-of」是 **prose 口径**，做成红腿会让一次**合法的改词**
- * 把无关门判红 —— 同 `CONTRIBUTING.md` `L18` 那条教训的形状。
+ * 把无关门判红 —— 同 `CONTRIBUTING_LIST.md` `L18` 那条教训的形状。
  *
- * 本门**只读**：不改 `CONTRIBUTING.md`、不碰 `data/**`、不 spawn CLI（墙钟须在 `test-scripts.mjs` 的预算内）。
+ * 本门**只读**：不改 `CONTRIBUTING_LIST.md`、不碰 `data/**`、不 spawn CLI（墙钟须在 `test-scripts.mjs` 的预算内）。
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -30,7 +34,13 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, "..", "..");
-export const CONTRIBUTING = path.join(ROOT, "CONTRIBUTING.md");
+/**
+ * 2026-10-04：未排期清单已从 `CONTRIBUTING.md` 拆到 `CONTRIBUTING_LIST.md`（台账属维护态记录，不是贡献步骤）。
+ * 判据与号序口径**一律未变**；旧导出名保留为兼容别名，避免打断既有 import。
+ */
+export const CONTRIBUTING_LIST = path.join(ROOT, "CONTRIBUTING_LIST.md");
+/** @deprecated 兼容别名（指向清单文件）。 */
+export const CONTRIBUTING = CONTRIBUTING_LIST;
 
 /** 区间锚：按**标题文本**定位（本仓行号漂移是 `L3`/`R119` 反复点名的病，禁止用 `:383` 这类行号锚）。 */
 export const SECTION_HEADING = "## 未排期清单";

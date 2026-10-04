@@ -1,7 +1,9 @@
-// 钉值出处：上游 FabricMC/fabric-example-mod 分支 26.1 的 gradle.properties（2026-09-14 实测 loom 1.17-SNAPSHOT、loader 0.19.5）。
-// SNAPSHOT 是移动分支，构建若报取不到请在下次复核日 2026-12-14 重新取该分支现值。
+// 钉值出处：上游 FabricMC/fabric-example-mod 分支 26.1（2026-10-03 实读 gradle.properties：loom_version=1.18-SNAPSHOT、
+// loader_version=0.19.5、Gradle 9.7.1 —— 后者见 gradle/wrapper/gradle-wrapper.properties 与 https://fabricmc.net/develop）。
+// loom_version **是 SNAPSHOT（上游自己就这么钉）**：移动分支，构建若报取不到请在下一次复核日 2026-12-14 重读该分支现值。
+// maven 同线另有稳定发布（net/fabricmc/fabric-loom/maven-metadata.xml 的 <release> = 1.18.2），复核时可考虑换稳定版。
 plugins {
-    id "net.fabricmc.fabric-loom" version "1.17-SNAPSHOT"
+    id "net.fabricmc.fabric-loom" version "${loom_version}"
 }
 
 version = project.mod_version

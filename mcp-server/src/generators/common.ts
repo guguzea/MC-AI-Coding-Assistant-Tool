@@ -19,8 +19,14 @@ export { matchesExactMcVersion };
 export const MC_MAX_MINOR_1X = 21;
 export const MC_MAX_MINOR_26X = 1;
 
-/** 通过则返回 null；否则返回可直接拼进 errors 的说明。 */
-export function eraUpperBoundError(version: string): string | null {
+/**
+ * 通过则返回 null；否则返回可直接拼进 errors 的说明。
+ *
+ * `max26x` 可选：**按调用方分别放行** 26.x 上界。默认取全局 `MC_MAX_MINOR_26X`（=1）。
+ * 只有逐档 javap 取证过 26.x 新代的生成器才该传更大的值 —— 否则「某生成器取证了 26.3」会被
+ * 误当成「所有生成器都跟进到 26.3」（`generate_model`/`_lang`/`_config` 的模板面并未核 26.2/26.3）。
+ */
+export function eraUpperBoundError(version: string, max26x: number = MC_MAX_MINOR_26X): string | null {
   const v = version.trim();
   if (/^1\./.test(v)) {
     const mm = v.match(/^1\.(\d+)(?:\.(\d+))?$/);
@@ -33,8 +39,8 @@ export function eraUpperBoundError(version: string): string | null {
   if (/^26\./.test(v)) {
     const mm = v.match(/^26\.(\d+)/);
     const minor = mm ? Number(mm[1]) : 0;
-    if (minor > MC_MAX_MINOR_26X) {
-      return `未跟进 26.${minor}.x（本仓 as-of 2026-09-21 只核到 26.${MC_MAX_MINOR_26X}.x）—— 禁止默默生成；先按 search_*_docs 核该代格式，再抬 MC_MAX_MINOR_26X。`;
+    if (minor > max26x) {
+      return `未跟进 26.${minor}.x（本仓只核到 26.${max26x}.x）—— 禁止默默生成；先按 search_*_docs 核该代格式，再抬上界。`;
     }
     return null;
   }

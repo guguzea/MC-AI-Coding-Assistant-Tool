@@ -67,7 +67,7 @@
 ### 3.2 口径冲突：**子代理报的 G1 不成立（我已复核）**
 
 - 子代理称 `CONTRIBUTING.md:412` 写「14 篇 wiki + 4 篇非 wiki」⇒ 与 `AGENTS.md:59` 的「15 篇英文页」冲突。
-- **复核**：`CONTRIBUTING.md` 里 `14 篇|14篇|wiki-\*|英文页` 只有 1 处命中（`:412`），而那条讲的是 `L28`
+- **复核**：`CONTRIBUTING_LIST.md` 里 `14 篇|14篇|wiki-\*|英文页` 只有 1 处命中（`:412`），而那条讲的是 `L28`
   （「quilt 每档只有 4 篇自写页 / fabric-wiki 同名 7 页 | 明确不做 + 原因」）——**不是**「14 篇 wiki」。
   ⇒ G1 降级为**未核实**（AGENTS 的「15 篇」是否对，需上游仓库比对，本仓无从判）。
 
@@ -314,7 +314,7 @@ node -e "const fs=require('fs');const t=fs.readFileSync('data/forge_1.13.2/mappi
 - **「缺成员名表」分桶**：原 `noMemberTables` 把两种原因混在一起——① `client.txt` 不可再分发（**许可**，合法跳过）② 已纳管的 MCP named csv 缺失/未 add（**数据洞**）。clone 上两者都让腿 E 静默失效且会被读成许可原因。现拆 `noMemberTablesLicense` / `noMemberTablesData`，**数据洞计 rc**；摘要行分桶打印（本机实测：许可 140 · 数据洞 0）。
 - **纳管表完整性审计**（`provenanceAudit`）：`*provenance*.json` 视为「这批表应存在且应入库」的标记——① 标记在而 `contains` 列的 csv 缺 ⇒ 数据洞（红，与 client.txt 有无无关）；② csv 在盘却未被 git 跟踪 ⇒ **每次可见的 WARN**（不计 rc：整树未提交是本仓常态，由 L10 收口）。本机实测 WARN 正确点名 4 件。
 - **扁平化**：`data/forge_1.16.5/mappings/mcp_snapshot-20210309/{3 csv}` → `mappings/` 顶层（与 1.14.4/1.15.2 同形），provenance 改名 `mcp_snapshot-20210309.provenance.json` 同目录。**消费者审计结论**：平铺 join 消费方（`mcp-csv-extractor.js:223`、`build-yarn-sqlite.mjs:429/:485`）此前看不到子目录形；扁平化后 ① `mcp-csv-extractor.js --version=1.16.5` 由不可用变可用（手动 CLI，不在门链）；② `build-yarn-sqlite --all` 的源候选链（tiny→joined.tsrg→joined.srg→**methods.csv**→json）使 1.16.5 **有资格**建 `mcp-csv` era 的 sqlite（同 1.15.2；现状无 sqlite ⇒ 下次 `--all --write` 会新建，属预期收益，本轮未执行）；③ `import-mcp-csv.mjs` 是纯库（路径参数）不受影响；④ 本门 `mcpMembersOf` 平铺+子目录双读 ✓。`audit-data-consistency` / 全链复跑 rc=0。
-- **L10（`CONTRIBUTING.md:393`）已补第二遍现扫**：**14 路径 / 17 文件**（第 40 轮 10 件之外：2 道新门 + 1 份 evidence doc + 4 件数据），并标注「不 add 则 clean clone 上腿 E 静默失效」。
+- **L10（`CONTRIBUTING_LIST.md:393`）已补第二遍现扫**：**14 路径 / 17 文件**（第 40 轮 10 件之外：2 道新门 + 1 份 evidence doc + 4 件数据），并标注「不 add 则 clean clone 上腿 E 静默失效」。
 
 **⑥ N0/N1/N2/N3 对盘（2026-09-25 同日；外部推荐单四条，逐条对盘后只做真开放的）**
 - **N1（A4c 两处口径 + 17 host）＝已在盘，不做**：`src/upstream/releases.ts:288 mavenNotFoundHint` / `:297 notFoundPayload` / `:317` 接线 / `:506-508`；台账 `mcmap-linkie-absorption.md:86/:99`「白名单在册、正值未证 ⇒ available:false 只证伪该坐标」、§3② 17 host。重做会覆盖。

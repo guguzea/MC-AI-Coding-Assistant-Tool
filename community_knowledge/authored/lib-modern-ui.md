@@ -30,7 +30,7 @@ skillId: mc-modern-ui
 
 ## 加载器口径（2026-09-25 按构件面逐 loader 实测；本档 `loaders` 由 [fabric, forge, neoforge] 补成含 `quilt`）
 
-口径 = 2026-09-22 裁定④ + 2026-09-24 延伸：**点名某 loader ⇔ 构件面该 loader 有 `versionType=release` 的文件行**；窗口终点取该 loader 的 release 上界，只有 beta/alpha 的必须在正文披露。数据 = `mcp-server/data/lib-manifests/all.json` 的 slug `modern-ui`（快照 as-of 2026-09-16；本轮未重抓，欠账挂 `CONTRIBUTING.md` `L42` ①）。逐 loader 分解（分母 = 该 slug 58 行）：
+口径 = 2026-09-22 裁定④ + 2026-09-24 延伸：**点名某 loader ⇔ 构件面该 loader 有 `versionType=release` 的文件行**；窗口终点取该 loader 的 release 上界，只有 beta/alpha 的必须在正文披露。数据 = `mcp-server/data/lib-manifests/all.json` 的 slug `modern-ui`（快照 as-of 2026-09-16；本轮未重抓，欠账挂 `CONTRIBUTING_LIST.md` `L42` ①）。逐 loader 分解（分母 = 该 slug 58 行）：
 
 | loader | 行 | release | 点分 `gameVersion` 上界（数值序，非字典序） | 判定 |
 |---|---|---|---|---|

@@ -1,7 +1,7 @@
 /**
  * assert-forge-at-example —— Forge 各档 `mc-mixin` 源稿里的 AT 示例行，必须与**该档映射库现产的答案**逐字同答。
  *
- * 立案出处：`CONTRIBUTING.md` `L72`（第 53 轮把 `accessLines` 露进源稿时挖出的存量缺陷：
+ * 立案出处：`CONTRIBUTING_LIST.md` `L72`（第 53 轮把 `accessLines` 露进源稿时挖出的存量缺陷：
  * 8 档示例行用**可读成员名**写 AT，而本档语料逐字规定「the SRG name must be used for fields and
  * methods」（`data/forge_<v>/forge-docs/<v>/processed/advanced_accesstransformers.md:55`）⇒ 照抄即无效）。
  * 那条债当时只登记未回改，原因写在 L72：改了没有判据 = 下一轮又漂回来。本门就是那条判据。

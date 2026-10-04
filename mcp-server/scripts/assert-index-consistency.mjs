@@ -175,7 +175,7 @@ const LEDGER_YARN = {
   "forge_1.15.2": { classes: 0, classesNamed: 0, unresolvedMethods: 0, unresolvedFields: 0, methods: 0, fields: 0, seargeMethods: 10598, seargeFields: 15756, classesOfficial: 0, officialMethods: 0, officialFields: 0, schema: 4 },
   // 2026-09-26 未做③（MCPConfig SRG 成员层，era=mcp-config-srg）新增六档：1.16.5（老形 `func_/field_`）
   // 与 1.17.1–1.20.4（哈希形 `m_/f_`）。⚠️ 这六档**当前未跟踪**（`git status` 为 `??`，是否 `git add`
-  // 由用户拍板，见根 `CONTRIBUTING.md` 的 `L67`）：台账在册而盘上没有 ⇒ 本门判「yarn 库在台账里但盘上
+  // 由用户拍板，见根 `CONTRIBUTING_LIST.md` 的 `L67`）：台账在册而盘上没有 ⇒ 本门判「yarn 库在台账里但盘上
   // 没有」⇒ 红。撤库必须连这六行一起撤。searge 两列是**塌行后**的实数（同一 SRG 名在多个 owner 下
   // 各列一行，主键去重）⇒ 恒 ≤ methods/fields。
   "forge_1.16.5": { classes: 5447, classesNamed: 0, unresolvedMethods: 0, unresolvedFields: 0, methods: 35526, fields: 19841, seargeMethods: 23212, seargeFields: 19841, classesOfficial: 5447, officialMethods: 35526, officialFields: 19841, schema: 4 },

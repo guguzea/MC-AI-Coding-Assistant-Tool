@@ -32,7 +32,7 @@ sourceKind: authored
 ⇒ 三条结论：
 
 1. **不给本档 `loaders` 补 `quilt`**：那 13 条 quilt 行**全部**来自 `emi` 一家，且 12 个唯一 fileName 与该 slug 的 fabric 行**完全重合**（`emi-*-+fabric.jar`）⇒ 是「EMI 的 Fabric 构件被同时打了 quilt 标签」，不是三家共有；把 quilt 写进这条**合并行**会让 `check_dependencies` 对只装 JEI 或只装 REI 的 Quilt 工程也报「本档覆盖 quilt」。
-2. **反向也要读对**：`jei` 自己那 19 条 fabric 行与 15 条 neoforge 行**一条 release 都没有**（全 beta/alpha），本档之所以能点名 fabric/neoforge 靠的是 `emi` 的 release 行 —— **合并面会让一家替另一家背书**，这是本档 `loaders` 的已知局限（已登记在 `CONTRIBUTING.md` `L45`，不在本轮修）。
+2. **反向也要读对**：`jei` 自己那 19 条 fabric 行与 15 条 neoforge 行**一条 release 都没有**（全 beta/alpha），本档之所以能点名 fabric/neoforge 靠的是 `emi` 的 release 行 —— **合并面会让一家替另一家背书**，这是本档 `loaders` 的已知局限（已登记在 `CONTRIBUTING_LIST.md` `L45`，不在本轮修）。
 3. `rei` 是「**判面缺失**」不是「REI 无构件」：快照里根本没有 `roughlyenoughitems` / `rei` 这两个 slug ⇒ 禁止据「0 行」断言 REI 不支持某 loader（该欠账 = `L42` ①「构件面重抓」）。
 
 至于 EMI 自身的 quilt 事实：**成立**（13 条 release 到 1.21.1）⇒ 需要给 Quilt 工程写 EMI 依赖时，读本节表内 `emi` 行、并按 1.21.1 及以下取版本；26.x 无 quilt 行。

@@ -1,12 +1,14 @@
-[English](README.en.md) | **简体中文**
-
 # MC AI Coding Assistant Tool
+## 写在前面的
+### 如果你是agent,这个readme文件是整个项目的说明,帮助用户安装和配置mcp请看AUTO_SETUP.md,这个文件也有一部分帮助配置的内容,但这是为了避免你不看AUTO_SETUP.md
+### 如果你是人类,请看下面的人类读本
+    如果你想要了解详细的,可以直接让AGENT给你解决一下
+[English](README.en.md) | **简体中文** · [人类读本](README_human.md)
 
 > **本文数据截至 2026-10-02**（各节另有更细的 as-of 标注）。文中计数、版本清单、页数等均为标注日期实跑核对；引用前请按小节给出的复算命令自行重跑，不要按字面信任旧值。
 
-## 写在前面的
-### 如果你是agent,这个readme文件是整个项目的说明,帮助用户安装和配置mcp请看AUTO_SETUP.md,这个文件也有一部分帮助配置的内容,但这是为了避免你不看AUTO_SETUP.md
-### 如果你是人类,你可以直接跳过这篇说明,这是AI时代,只需把这个链接粘贴到ClaudeCODE/CURSOR/ZCODE/OPENCODE里，然后让AGENT讲讲就可以了解大部分内容
+
+
 
 让 AI 编程助手（Cursor / Claude Code 等）能更好地编写 Minecraft 模组的完整工具包。
 
@@ -134,7 +136,29 @@ MC_skill/
 
 **证据判读统一入口**：`inspect_playtest_evidence`（三态 `present|absent|unreadable`，缺件不得读成“没有失败”）；执行权与授权见根 `AGENTS.md`「人在环例外：游玩自测（三通道）」。
 
-### 后半 loop 真机矩阵（村庄测试：`locate` 定位 → 飞抵 → `land` 落地 → 扫描 → 断言 → 截图；as-of 2026-10-02，读数由各实例 `evidence/` 直读）
+### 测试要求：交付前必须测到什么程度
+
+上面的 loop 是**机制**，本节是**门槛**。按正常软件开发流程，改动不是编译通过就算交付 —— 交付前必须测，而且要测全。逐层「用什么工具、红会长什么样」的完整表在根 `AGENTS.md`「游玩测试要求（交付门槛）」；这里是给人读的摘要。
+
+**阶梯（低层红不许跳高层）**：L0 构建 → L1 结构与静态校验 → L2 数据面（配方 / 战利品 / 标签 / 方块状态 / lang）→ L3 GameTest 自动化 → L4 真机冒烟 → L5 场景验收（**本次改动**那个玩家可见行为）→ L6 服务端与多人 → L7 回归与共存 → 发布前收口。
+
+**最低线按改动面取最大者**：
+
+| 改动 | 最低测到 |
+| --- | --- |
+| 逻辑 / 注册 | L3（GameTest） |
+| 玩家可见行为（方块 / 物品 / 实体 / GUI / 配方效果 / 世界生成） | L4 + L5 |
+| 网络 / 存档 / 服务端侧 | L6 |
+| 升 loader 或 MC 版本 | L0–L7 全跑 |
+| 纯文档 / 注释 | L0 |
+
+**「全面」= 把维度铺开，不是同一条路径多跑几遍**：改动面（代码 / 资源 / 数据 / 配置 / 平台元数据）、平台 × 版本（每个目标档各测一遍，不许拿邻版的绿顶替）、客户端与服务端**双侧**、新世界与旧存档升级、权限档（生存 / 创造 / 授权）、边界与异常（空满背包、目标方块不存在、区块未加载、死亡与重连、非房主加入）、表现面（模型与纹理、GUI 溢出与缩放、`en_us` 与 `zh_cn` 每个键都有值）、日志面（`latest.log` 无新增 `ERROR`、`crash-reports/` 为空；基岩看 content log）。
+
+**判红（fail-closed）**：缺证据 = 没通过。`absent` 不等于「没有失败」；`exit-code.txt` 非 `0` 或不在盘上 ⇒ 红。真 driver 覆盖 = 生成器内 `PLAYTEST_VERIFIED_TIER`（唯一真源，正文不数档），**表外版本不等于免测** —— 走桥路线或人工游玩，并如实写「人工验过 / 未验」。`MC_SKILL_PLAYTEST_INTENT_E2E` 未设 ⇒ 按未验证处理，不静默通过。
+
+**与人在环不冲突**：门槛规定「必须测」，不改变「谁去跑」—— 跑 Gradle、起游戏仍受三通道授权约束。没拿到授权就在交付里写明「本轮未真机验证」，并把上面这张清单交给用户照着跑，**不得**替用户宣布通过。
+
+### 后半 loop 真机矩阵（村庄测试：`newworld` 造世界 → `locate` 定位 → 飞抵 → `land` 落地 → 扫描 → 断言 → 截图；as-of 2026-10-04，读数由各实例 `evidence/` 直读）
 
 > 单元格 = 该 combo 的村庄测试**真机**结果：✅ = 整轮通过（`exit-code=0`；证据在授权根 `E:\MC_GAME\instances\<tag>\evidence{,-bridge}/`）；❌ = 未通过（原因随行注明）；⏳ = 修复/重跑中；⚠️ = 该档或实例未建；`—` = 该档没有对应路线的可用件（**不是失败**）。
 
@@ -142,14 +166,20 @@ MC_skill/
 | --- | --- | --- | --- |
 | Fabric | 1.20.1 / 1.20.4 / 1.21.1 / 1.21.3 / 1.21.4 / 1.21.8 / 1.21.11 | ✅ 各整轮（`exit-code=0` + 村庄 `blocks hits` + 截图；1.21.4 / 1.21.11 经 retry 轮） | **1.21.1 ✅ + 1.21.11 ✅ 各整轮**（纯桥路线：`locate` → `tp` → `land` → 自适应列探针定地面层 → 方块网格；1.21.1 证据 `oak_log`+`dirt_path`+`farmland`+`beetroots`+4×`cobblestone`；1.21.11 证据 `oak_planks`+`cobblestone_stairs`+`mossy_cobblestone`+`white_terracotta`+`dirt_path`，`groundY=97`，`await` `matched:true`）；其余 —（未装桥件） |
 | Fabric | 1.21.10 | ✅ 整轮（第 1 轮 17/17，`blocks hits=2125`，`nearest=oak_log@-1281,68,-1522` / `first=cobblestone@-1344,64,-1491`；此前的“坠虚空”靠 `forceload` + 长等待计划解掉） | — |
-| Fabric | 26.1.2 | ⚠️ 未建实例（mojmap 面；驱动档见 `PLAYTEST_VERIFIED_TIER`） | — |
-| Quilt | 1.20.1 / 1.20.4 / 1.21.1 / 1.21.3 / 1.21.4 / 1.21.8 / 1.21.10 / 1.21.11 | ✅ 各整轮（1.21.3 / 1.21.4 / 1.21.8 经 retry 轮；1.21.4 = `oak_planks@-1281,68,-1524` 7 hits；1.21.10 `land y=63` 后 19 hits） | —（实例 `run/mods` 无桥 jar，本轮未装测） |
+| Fabric | 26.1 / 26.1.1 / 26.1.2 / 26.2 / 26.3 | ✅ **五档各整轮通过（2026-10-03）**：统一走**无桥进程内 driver**（26.1+ 已进 `PLAYTEST_VERIFIED_TIER`），剧本 19 步「**`newworld name=qa_<tag>` 造世界** → `gamemode creative` → `/locate` → 飞抵 → `forceload` → `land` → `scan` → `assert scan_blocks` → 截图」**四档第 1 轮即绿**（`exit-code=0`）。逐档读数：`26.1` → `land y=62`、`entities hits=6`（`nearest=villager@1955.48,51.00,-1269.32 d=14.75`）、`blocks hits=1574`（`nearest=dirt_path@1969,61,-1264`）；`26.1.1` → `land y=85.50`、`entities hits=5`、`blocks hits=1970`（`nearest=oak_log@-207,82,-176`）；`26.2` → `land y=77`、`entities hits=5`、`blocks hits=2151`（`first=dirt_path@289,82,58`）；`26.3` → `land y=63`、`entities hits=10`（`nearest=villager@-255.94,62.94,-252.24 d=4.30`）、`blocks hits=1939`（`first=oak_planks@-320,62,-246`）。**`26.1.2`**（本档最早跑通、经多轮热载迭代的那条）—— 证据目录 `rounds.jsonl` 共 8 轮（`ok` 序列 `false×5, true, false, true`），**最后一轮绿** = 22 步变体：「冒烟移动 → `/locate` → `forceload` → 飞抵 → `land` → `scan` → 断言 → 截图」，`land y=90.00`、`blocks hits=27`（`nearest=oak_planks@-347,83,561`，`first=-411,69,533=oak_planks`）、`[QA] DONE :: PLAN 全部 22 步完成`；同实例另用 `newworld` 建出 `qa_newworld`（12 个 region 文件 + `level.dat`，`saves` 由 `{playtest_demo}` 变 `{playtest_demo, qa_newworld}`）⇒ `newworld` 造世界面首证（**注：该代码路径在 2026-10-03 被查出「注入失效」，现已修复，此读数按「待复跑确认」对待** —— 见下方边界条「`newworld` 注入曾整段失效」）。证据 `E:\MC_GAME\instances\fabric-26.x\evidence\`（各含游戏内截图）。**前置三项**：工程带 fabric-api（26.1.x 线用 `0.155.3+26.1.2`，26.2 用 `0.161.0+26.2`，26.3 用 `0.161.0+26.3`；`implementation` 不是 `modImplementation`）、`run/options.txt` 的 `onboardAccessibility:false`、`pauseOnLostFocus:false` | —（无 26.x 桥件：BlackBoxPro 只覆盖 1.12.2 / 1.21.1 / 1.21.11） |
+| Fabric | **1.14.4 / 1.16.5 / 1.17.1 / 1.18.2 / 1.19.4** | ✅ **五档真机整轮全绿（2026-10-04，各 `exit-code=0` + 15/15 + `qa.log`/`rounds.jsonl` + 游戏内截图）**——`blocks hits` 逐档：`1.14.4`=`farmland` 672 ｜ `1.16.5`=`oak_log` 872 ｜ `1.17.1`=`dirt_path` 1501 ｜ `1.18.2`=`cobblestone` 2390 ｜ `1.19.4`=`oak_planks` 2067（`nearest@47,79,739 d=0.79`）。**跑通前置**：前三档 loom 无 DLI ⇒ 官方 `gradlew runClient`；后两档自建启动器 ⇒ **必须** `gradlew configureLaunch` 生成 `launch.cfg`（否则 DLI pass-through ⇒ 生产模式 ⇒ 无 `PackageAccessFixer` ⇒ Bootstrap `IllegalAccessError`，见社区短文坑 64）＋ `extractNatives`/natives 检查（坑 65）；实例侧另修依赖钉子两处（1.17.1 `fabric-api`→`fabric`、1.14.4 删 `java`+`fabricloader>=0.10.5`，坑 67）。**编译验证口径（保留）**：`1.14.4` / `1.16.5` = **JDK 8 `javac` 对真 named jar + 真 yarn-remapped Fabric API 模块 jar ⇒ COMPILE_OK**；`1.17.1` / `1.18.2` = JDK 17 `javac --release 16/17` 对真 named jar + FAPI 替身（2 类）⇒ COMPILE_OK；`1.19.4` = 与 1.20.1 同表（`rewriteForFabric1201`）。**本族两条共同点**：① 无 `IntegratedServerLoader`（进世界走 `MinecraftClient.startIntegratedServer`）、无 `sendChatCommand`（走 `ClientPlayerEntity.sendChatMessage`）、注册表是旧包 `util.registry.Registry`；② **无客户端消息事件**（`fabric-message-api-v1` 这几档都没有）⇒ `goto parsed` 只走 `<runDir>/logs/latest.log` 的 `[CHAT]` 行兜底、**解析不到 fail-closed 判红**；`newworld` 在该族全部 fail-closed。**`1.14.4` 另有 9 条**（截图混淆名 `method_1659` / `window` 字段 / `Entity.x/y/z·onGround` 公开字段 + `BlockPos` 仍 `getX()` / `inventory` 公开字段 + `getInvStack` / 三参 `startIntegratedServer` / 静态 `KeyBinding.setKeyPressed` / 无 `toShortString` / 运行期 Java 8） | —（无 1.14.4–1.19.4 桥件） |
+| Quilt | 1.20.1 / 1.20.4 / 1.21.1 / 1.21.3 / 1.21.4 / 1.21.8 / 1.21.10 / 1.21.11 | ✅ 各整轮（1.21.3 / 1.21.4 / 1.21.8 经 retry 轮；1.21.4 = `oak_planks@-1281,68,-1524` 7 hits；1.21.10 `land y=63` 后 19 hits） | —（**桥无 quilt 构件**：BlackBoxPro 源码 `mod/` 只有 `1.12.2` / `1.21.1` / `1.21.11`，各含 `fabric`+`neoforge`（1.12.2 为 `forge`），grep `quilt` 0 命中；发布件 10 个也只有 fabric/neoforge/forge；README 自述「五平台支持」不含 Quilt ⇒ 桥路线在 quilt 上**结构上不可用**） |
+| Quilt | **1.18.2 / 1.19.4** | ✅ **两档真机整轮全绿（2026-10-04，各 `exit-code=0` + 15/15 + `qa.log`/`rounds.jsonl` + 截图）**：`1.18.2` → `land y=79`、`blocks hits=2416`（`nearest=cobblestone@47,77,739 d=1.52` / `first=-9,80,803=oak_log`）；`1.19.4` → `blocks hits=2063`（`nearest=oak_planks@47,79,739 d=0.64`）；`/locate` 按档语法（1.18.2 `village_plains` / 1.19.4 `structure minecraft:village_plains`，社区短文坑 72）。**前置**：quilt-loom 同为自建启动器 ⇒ 必须 `gradlew configureLaunch` 生成 `launch.cfg`（DLI pass-through 坑 64 在 quilt 侧同形；quilt-loom 任务名与 loom 相同）＋工程 dev-only `fabric-api`（quilt-loader 不含 FAPI）；Gradle/JVM 走 **JDK 21**（quilt-loom 1.15.1 要求）。**边界**：quilt 全族仍**无 javac 编译验证**（本机无 quilt 的 yarn-remapped 模块件）——真机通过是实测证据，不冒充编译验证 | —（桥无 quilt 构件，同上行） |
 | Forge | 1.20.1 | ✅ 整轮（18/18 `ok:true`） | —（BlackBoxPro 无 forge ≥1.20.1 件；发布件只有 forge 1.12.2） |
 | Forge | 1.20.4 | ✅ 整轮（修好两个真缺陷：FML 49 dev 合并块 + Forge 49 loot ISE；第 2 轮 17/17，`blocks hits=2162`，`nearest=dirt_path@48,74,751` / `first=oak_log@-13,79,808`） | — |
-| Forge | 1.21.1 | ⚠️ 无规则树（draft 档），未建实例 | — |
-| NeoForge | 1.20.4 / 1.20.6 / 1.21.1 | ✅ 各整轮（1.20.4 18/18；1.20.6 / 1.21.1 = 1206+ 新表首跑，经 retry 轮） | —（发布件有 neoforge 1.21.1 / 1.21.11，需 KotlinForForge，本轮未装测） |
+| Forge | 1.21.1 | ⚠️ **draft 档，无规则树**：该目录只有 `AGENTS.md` + `pack.meta.json`（自述「仅改口，不是完整 00–10」），**没有 `.cursor/rules/`**；`data/forge_1.21.1` 也不存在 ⇒ session `PACK_NOT_FOUND`、`list_forge_versions` 不含该档。未建实例 | — |
+| Forge | **1.13.2 / 1.14.4 / 1.15.2 / 1.16.5 / 1.17.1 / 1.18.2 / 1.19.4** | ✅ **七档真机整轮全绿（2026-10-04，各 `exit-code=0` + 15/15 + 截图；统一 `gradlew runClient`）**——`blocks hits` 逐档：1.13.2=1728 ｜ 1.14.4=674 ｜ 1.15.2=731 ｜ 1.16.5=876 ｜ 1.17.1=1501 ｜ 1.18.2=2424 ｜ 1.19.4=2067（`nearest`/`first` 见各实例 `evidence/qa.log`）。**编译验证（9/9 COMPILE_OK，2026-10-03）**（七档改写表**各不相同**：1.13.2 走整套 MCP 命名表，1.14.4/1.15.2/1.16.5 是旧 mojmap 族但字段名逐档不同，1.17.1/1.18.2 现代名，1.19.4 与 1.20.1 同形；`newworld` 只在 1.19.4 已实现，1.13.2–1.18.2 保持 fail-closed） | — |
+| Forge | **1.12.2** | ⚠️ 未建实例（**编译验证 ✅**：JDK 8 `javac` 对真构件 `forgeBin-1.12.2-14.23.5.2847.jar`，`temporary_client_tick_driver` + `in_jvm_player_agent` 两模式各 COMPILE_OK；tier 52）。**该档 API 面与 1.13.2 不同源**：Forge 三包在 `fml.common.*` 旧位置、无 `Minecraft.getInstance()`、无 `mainWindow`、截图无 Consumer 变体、`ITextComponent` 无 `getString()`、`GuiScreen.mouseClicked` 是 **protected+void**（点击证明降级走 `PlayerControllerMP.windowClick` 后端）；`newworld` fail-closed | ⚠️（**该档有桥件**：BlackBoxPro 发布件含 forge 1.12.2 —— 见本表 1.20.1 行注；**本轮未实跑**） |
+| NeoForge | 1.20.4 / 1.20.6 / 1.21.1 | ✅ 各整轮（1.20.4 18/18；1.20.6 / 1.21.1 = 1206+ 新表首跑，经 retry 轮） | —（**1.21.1 不可用**：发布件 `BlackBoxPro-neoforge-1.21.1-2.2.4.jar` 实测**不是 mod jar** —— 包内只有 `META-INF/MANIFEST.MF` + `*.kotlin_module`，无 `neoforge.mods.toml` / `mixins.json`） |
 | NeoForge | 1.20.1 | ⚠️ 未建实例（该档 scaffold 无构建插件，待研究） | — |
-| NeoForge | 1.21.3 / 1.21.5 / 1.21.8 / 1.21.10 / 1.21.11 / 26.1 | ⚠️ 未建实例 | — |
+| NeoForge | **1.21.11** | ⚠️ 未建实例（**桥路线 ✅ 已跑通，见右列**） | **✅ 村庄整轮通过**（2026-10-02）：桥 mod + `kotlinforforge-6.3.0-all.jar` 装进 `run/mods` → 客户端起 → 桥 `join_world{worldName=playtest_demo}` 进世界（`state=in_world`，`creative`）→ `locate` 命中 `-352,576` → 飞行抵达 `arrived/onGround=true`、`groundY=97` → 方块证据 `dirt_path`+`cobblestone_stairs`+`mossy_cobblestone`+`oak_planks`（struct 2 / path 2 / block 4）+ 村民 1 + 截图 `001_bridge.png`；证据 `E:\MC_GAME\instances\neoforge-1.21.11\evidence-bridge\` |
+| NeoForge | 1.21.3 / 1.21.5 / 1.21.8 / 1.21.10 | ⚠️ 未建实例（**规则树齐备**：这 4 档各有 11 条 `00–10` + `data/neoforge_<ver>` 语料 + `search_neoforge_docs` 可用；「未建实例」指没起过客户端，不是缺档） | — |
+| NeoForge | **26.1 / 26.1.1 / 26.1.2 / 26.2 / 26.3** | ✅ **五档各整轮通过（2026-10-03）**：走**无桥进程内 driver**，与 fabric 26.x 共用 `apply26xxShared`（事件栈换 NeoForge 26.x：`NeoForge.EVENT_BUS` + `ClientTickEvent$Post` 无 phase + `ClientChatReceivedEvent.getMessage()`），剧本同 19 步（`newworld name=…` 造世界 → `/locate` → 飞抵 → `forceload` → `land` → `scan` → `assert scan_blocks` → 截图），**全部第 1 轮即绿**（`exit-code=0`，各带 1 张游戏内截图）。逐档读数（`land y` / `entities hits` / `blocks hits`）：`26.1` 96 / **12** / **2616**（`nearest=dirt_path@-223,95,272`，`first=oak_log@-253,104,293`）；`26.1.1` 68 / 5 / 2234（`first=oak_log@-11,84,-1032`）；`26.1.2` 102 / 13 / 1567；`26.2` 107 / 12 / 1430（`nearest=cobblestone@560,110,-1971`）；`26.3` 108 / 4 / 1691（`nearest=oak_planks@1926,104,1407`）。证据 `E:\MC_GAME\instances\neoforge-26.x\evidence\`。**跑这五档的两条前置**：① 上游构件锚点 —— `26.1.2 → 26.1.2.114`、`26.2 → 26.2.0.88` 有正式版，**`26.1 → 26.1.0.19-beta`、`26.1.1 → 26.1.1.15-beta`、`26.3 → 26.3.0.43-beta` 上游只有 beta**（按 pom 的 `net.neoforged:neoform:<MC 三段>-<n>` 依赖逐条核出）；② **26.2 / 26.3 要把 ModDevGradle 升到 ≥ 2.0.148**（本仓 scaffold 钉的 2.0.144 在这两档上 `recompile` 必失败，见下方边界条） | —（无 26.x 桥件） |
 
 **已核实边界（写清不吹）**：
 
@@ -158,9 +188,40 @@ MC_skill/
 - **CLI 对 `status` / `execute` 的 HTTP 超时写死 10s**（`playtest-bridge` 的 `DEFAULT_TIMEOUT_MS`；`timeoutMs` 只作用于 `await`）：慢盘上 `join_world` 触发的整合服世界加载期间，**每一次** 调用都会 10s 超时（游戏侧逐条 `Failed to write HTTP response`）。桥路线在这种盘上要么**先把世界进好再驱动**，要么把等待预算按分钟计 —— 别读成「桥坏了」。
 - **CLI envelope 是 `{success, tool, result:{…}}`**：读字段一律先解 `result`（`st.ok` 恒 `undefined`；`status` 的 `ready` 在 `result.ready`）。驱动脚本的 CLI 路径若含非 ASCII 目录名，**用 `String.fromCharCode` 拼**，别让文件编码把它变成 U+FFFD（那会让每次 `node <path>` 都 MODULE_NOT_FOUND，看起来像「CLI 退化」）。
 - **无桥 driver 的“真代码”档**以 `generate_playtest_driver` 的 `PLAYTEST_VERIFIED_TIER`（生成器内表）为准；不在表里的档只出结构壳（`// TODO(未核实)`），**不会**静默编成假 driver。
+- **forge 1.16.5 / 1.17.1 / 1.18.2 / 1.19.4 四档已进 `PLAYTEST_VERIFIED_TIER`（2026-10-03，javac 编译验证；真机未跑）**：jar 全部取自本机 `.gradle/caches/forge_gradle`（免下载）。四条边界各不相同——① **1.16.5 是“旧 mojmap”**（1.17 大批改名之前）：`net.minecraft.client.gui.screen.Screen`（单数）/ `client.entity.player.ClientPlayerEntity` / `client.network.play.ClientPlayNetHandler` / `util.registry.Registry` / `util.ScreenShotHelper.grab(File,int,int,Framebuffer,Consumer)` / `Minecraft.options` 类型是 `GameSettings` / `Entity.yRot·xRot` 与 `PlayerEntity.inventory·abilities` 都是**公开字段**；② **1.17.1 / 1.18.2** 无 `WorldOpenFlows` ⇒ 自动进世界走 `Minecraft.loadLevel(String)`，命令走 `LocalPlayer.chat(String)`（`ClientPacketListener.sendCommand` 1.19 才有），注册表是 `core.Registry` 静态字段；③ **1.19.4 与 1.20.1 基本同形**（`createWorldOpenFlows().loadLevel` / `BuiltInRegistries` / `sendCommand` / 7 参 `LevelSettings` 都在），仅 `Entity.isOnGround()`（`onGround()` 是 1.20 才改的名）；④ `newworld`（造世界）只在 **1.19.4** 已实现，1.16.5–1.18.2 保持 fail-closed。
+- **forge 1.13.2 / 1.14.4 / 1.15.2 三档已进 `PLAYTEST_VERIFIED_TIER`（2026-10-03，JDK 8 `javac` 编译验证；真机未跑，tier 47 → 50）**：jar 全部取自本机 `.gradle/caches/forge_gradle`（免下载）。三条边界互不相同——① **1.13.2 = MCP 命名层**（与 1.14+ 的 mojmap **完全不同源**，整表分派 `applyForgeMCP132()`）：`net.minecraft.block.state.IBlockState`（`World.getBlockState()` 返的是**接口**，不是 `BlockState` 类）/ `client.gui.GuiScreen` / `client.gui.inventory.GuiInventory` / `client.entity.EntityPlayerSP` / `client.multiplayer.WorldClient`；`Minecraft.world/player/currentScreen/gameSettings/gameDir/mainWindow` 全是**公开字段**（**无 `getWindow()`**）；`GuiScreen` 关屏是 `onGuiClosed()`；`KeyBinding` **无 `setDown`** ⇒ 静态 `setKeyBindState(Input,boolean)`；截图 `ScreenShotHelper.saveScreenshot(File,int,int,Framebuffer,Consumer)`；命令走 `EntityPlayerSP.sendChatMessage(String)`；`WorldClient` 取实体用公开字段 `loadedEntityList`（无 `getAllEntities()`）；**`TickEvent` 在 `net.minecraftforge.fml.common.gameevent`**（1.14 才搬到 `net.minecraftforge.event`）。② **1.14.4 = 旧 mojmap 且字段名整批更旧**：`world`/`currentScreen`/`gameSettings`/`gameDir`/**`mainWindow` 字段**/`getFramebuffer()`/`displayGuiScreen`；`ClientWorld.getAllEntities()`；`PlayerInventory.getStackInSlot(int)`；`Entity.rotationYaw·rotationPitch·onGround` 与 **`posX/posY/posZ` 位置字段**（**无 `getX/getY/getZ`**）；`PlayerAbilities.isFlying` + `sendPlayerAbilities()` + **`sendChatMessage(String)`（无 `chat`）** + `saveScreenshot`（**不是 grab**）；`MainWindow.getScaledWidth/Height()`（无 getGuiScaled*）；BlockPos **`up()/down()/toImmutable()/add(int,int,int)`**。③ **1.15.2 = 与 1.16.5 同族，只差三处**：`Minecraft.selectLevel(String,String,WorldSettings)`（无 `loadLevel`）；`Entity.onGround` 公开字段；**`Entity` 既无 `blockPosition()` 也无 `getPosition()`** ⇒ 现造 `new BlockPos(getX(),getY(),getZ())`（其余：`yRot/xRot`、`PlayerInventory.getItem(int)`、`KeyBinding.setDown(boolean)`、`BlockPos.below()/immutable()/offset(int,int,int)`、`MainWindow.getGuiScaledWidth/Height()`、`WorldType.NORMAL`——1.14.4/1.13.2 才叫 `DEFAULT`）。**重构出的两个自证缺陷**：① 把 `createWorldOpenFlows().loadLevel(null,WORLD)`→`loadLevel(WORLD)` 与 `sendCommand`→`chat` 两条搬进了只服务 1.17.1/1.18.2 的分支，1.16.5 立刻回红 ⇒ 改为挂在旧 mojmap 族共享块（**共享语句要挂最内层公共祖先**）；② `player.getX()`→`player.posX` 的朴素替换把 `bp.getX()`（BlockPos 仍叫 `getX()`）一起吃掉 ⇒ 改负向 lookbehind。
+- **`fabric 1.14.4` 已实现并进 `PLAYTEST_VERIFIED_TIER`（2026-10-03，**推翻**上一轮「不实现」的判定；tier 50 → 51）**：证据 jar 由 **本仓 `fabric/1.14.4/scaffold` 自己的 Gradle 构建**落盘（JDK 8 + Gradle 6.9.4 + loom 0.6.60，`BUILD SUCCESSFUL in 4m 19s`）——**没有绕过任何校验门**（`MAPPINGS_CHECKSUM_MISSING` 只守 `get_minecraft_source` 自己的下载+校验路径）。实现 = `rewriteForFabricLegacy` 加 `1.14.4` 支（**9 条**差异，逐条 javap 实测）：① 截图**方法名仍是混淆形** `ScreenshotUtils.method_1659(File,int,int,Framebuffer,Consumer)`；② `MinecraftClient` **无 `getWindow()`**（`window` 是公开字段）；③ `Entity` 的 `x/y/z` 是**公开字段**（**无 `getX/getY/getZ`**）且**无 `isOnGround()`**（公开字段 `onGround`）—— 而 `BlockPos`/`Vec3i` **仍叫 `getX()`** ⇒ 必须按接收者负向 lookbehind 限定；④ `PlayerEntity` **无 `getInventory()`**（公开字段 `inventory`）+ `PlayerInventory.getInvStack(int)`（**不是 `getStack`**）；⑤ 自动进世界 `startIntegratedServer(String,String,LevelInfo)`（**三参**）；⑥ `KeyBinding` **无 `setPressed`** ⇒ 静态 `KeyBinding.setKeyPressed(getDefaultKeyCode(),bool)`；⑦ `Vec3i` **无 `toShortString()`** ⇒ `toString()`；⑧ **无客户端消息事件**（见下条）；⑨ 运行期 JVM = Java 8（见下条）。**编译验证 = JDK 8 `javac` 对真 named jar + 真 yarn-remapped Fabric API 模块 jar（45 项 classpath）⇒ COMPILE_OK**；同族 `1.16.5` 用**真模块 jar**（JDK 8）也是 COMPILE_OK，`1.17.1` / `1.18.2` 是「真 named jar + 两类替身」腿（本机没有那两档的 yarn-remapped FAPI）。
+- **两条**跨档**编译缺陷，被 `fabric 1.14.4` 的取证顺手照出来、并回溯修掉 5 个档（2026-10-03）**：
+  - **① J11 库 API（`Path.of` / `Files.writeString`）**：基线模板用了两个 **Java 11** 的 `java.nio.file` API，而 `-source 8` **拦不住**。**真会炸的档**：`forge 1.15.2` / `1.16.5` scaffold 钉 `java.toolchain.languageVersion = 8`（**真用 JDK 8 javac**）、`fabric 1.16.5` 钉 `options.release = 8`（ct.sym 里没这两个方法）⇒ **编译期就红**；`forge 1.13.2` / `1.14.4` 钉 `sourceCompatibility='1.8'` ⇒ JDK 8 构建直接红、新 JDK 构建则**运行期** `NoSuchMethodError`（1.16.5 及以下只支持 Java 8）。修法 = 新增 `applyJava8LibSwaps`（`Paths.get(...)` + `Files.write(p, (s).getBytes(StandardCharsets.UTF_8)[, opts])`），宿主 `JAVA8_RUNTIME_VERSIONS = ["1.13.2","1.14.4","1.15.2","1.16.5"]`。**判据**：**改任何「Java 8 运行期的档」之后必须用 JDK 8 的 `javac` 复跑** —— `-source 8` / `--release 8` 只拦语言特性与 ct.sym 里的 API，**JDK 8 的 rt.jar 才是唯一真闸**。
+  - **② `ClientReceiveMessageEvents` 在整个 fabric legacy 族（1.14.4–1.18.2）都不存在**：该类属 `fabric-message-api-v1`，而该模块在 `fabric-api` 的 **`0.28.5+1.14` / `0.42.0+1.16` / `0.46.1+1.17` / `0.77.0+1.18.2` 四档 POM 依赖表里都没有**（最早带它的是 `0.87.2+1.19.4`），且 1.14.4 / 1.16.5 的 **loom remapped 真模块 jar** 里 `*ReceiveMessage*` 类数 = 0 ⇒ **留着就是编译不过**。修法 = 本族统一摘掉 `import` + 注册行，`goto parsed` 走 `readLastChatLine`（`<runDir>/logs/latest.log` 的 `[CHAT]` 行）兜底（解析不到 fail-closed 判红，不静默）。1.19.4+ **不动**（那些 FAPI 有该模块）。**教训**：**替身只能证「签名形状」，证不了「类存在」** —— 1.16.5 当年那条「走 `ClientReceiveMessageEvents.GAME`」的结论就是拿手写替身验出来的，替身自己写了那个类，把「本版到底有没有这个类」吞掉了；判存在必须拿真构件（POM 依赖表 / 真 jar 类名扫描 / javap 真 classpath）。
+- **`quilt` 前置（不是缺陷，是口径）**：**quilt-loader 不含 Fabric API**（实测 `quilt-loader-0.31.0-beta.4.jar` 里 `net/fabricmc/fabric/api/` 类数 = **0**，只 bundle `mixinextras-fabric`），而 driver 的 tick/chat 钩子走 Fabric API ⇒ **quilt 档必须让工程自备 dev-only `fabric-api`**；生成端本轮补了一条 **quilt 专用前置警告**（原先只有 26.x 警告提到该前置）。**quilt 全族仍无编译验证**（本机没有 quilt 的 yarn-remapped 模块件）—— 如实标注，不假装验过。
+- **`forge 1.12.2` 已实现并进 `PLAYTEST_VERIFIED_TIER`（2026-10-04，tier 51 → 52，把坑 63 的「唯一划算」判定兑现）**：证据件 = 本机 `~/.gradle/caches/minecraft/net/minecraftforge/forge/1.12.2-14.23.5.2847/stable/39/forgeBin-1.12.2-14.23.5.2847.jar`（FG2.3 的 **MCP 命名 + Forge 合并件**，**免下载**）。实现 = `rewriteForForgeLegacy` 加 `1.12.2` 支 = `applyForgeMCP132` + 新增 **`applyForgeMCP1122`**（在 MCP 层之上再退一层，**8 处** javap 实测差异）：① **Forge 三包在 1.12.2 是旧位置** —— `net.minecraftforge.fml.common.registry.ForgeRegistries`（1.13 才搬 `net.minecraftforge.registries`）、`fml.common.eventhandler.SubscribeEvent`（1.13 才搬 `eventbus.api`）、`fml.common.gameevent.TickEvent`（同 1.13.2，有 `phase` 字段）；② **无 `Minecraft.getInstance()`** ⇒ 静态 `Minecraft.getMinecraft()`；③ **无 `mainWindow`** ⇒ 像素尺寸走公开 int 字段 `Minecraft.displayWidth/displayHeight`、GUI 缩放尺寸走 `GuiScreen.width/height`；④ **截图无 Consumer 变体**：`ScreenShotHelper.saveScreenshot(File,int,int,Framebuffer)`（返 `ITextComponent`）⇒ 模板那条 `t -> {...});` lambda 尾巴整个摘掉（5 参版 1.13.2 才有）；⑤ **`ITextComponent` 无 `getString()`**（只有 `getUnformattedText/getFormattedComponentText/getFormattedText`）⇒ 聊天回包换 `getUnformattedText()`；⑥ **`Entity.getName()` 返 `String`**（1.13 起才返 ITextComponent）⇒ `player.getName().getString()` 收敛成 `player.getName()`；⑦ **实体 id 走 `net.minecraft.entity.EntityList.getKey(Entity)`**（`Entity` 无 `getType()`，1.13+ 才有）；⑧ **`EntityPlayer.capabilities`**（非 `abilities`）、`KeyBinding.getKeyCode()`（非 `getKey()`）、`GuiScreen.mouseClicked(int,int,int)`（非 `double,double,int`）⇒ 分母 `.0` 也去掉。**额外一条结构性降级**：1.12.2 的 `GuiScreen.mouseClicked(int,int,int)` 是 **`protected` + `void`**（1.13 起才 `public boolean`）⇒ 进程内**无法合成点击**，`guiClicked` 改由**真实点击的后端** `PlayerControllerMP.windowClick(windowId,0,0,ClickType.PICKUP,player)`（**public**，正是 `GuiContainer` 里一次真实点击最终调用的容器入口）置位 —— **不是伪造，语义如实写在产物注释里**。**编译验证 = JDK 8 `javac` 对上面那只真构件、两种模式（`temporary_client_tick_driver` + `in_jvm_player_agent`）各 COMPILE_OK**；`newworld` 与 1.13.2–1.18.2 一样保持 **fail-closed**（`FORGE_NO_NEWWORLD_VERSIONS`）。**真机未跑**；另注：**该档有桥件**（BlackBoxPro 发布件含 forge 1.12.2，本仓他处已记），桥路线未在本轮实跑。
+- **`forge 1.7.10–1.11.2` / `modloader` 全档仍不补（2026-10-04 复核维持）**：本机 `forge_gradle` 缓存**从 1.13.2 起**（`~/.gradle/caches/minecraft` 只有 1.12.2 那一份），且 1.7.10 **没有 `BlockPos`**（1.8 才加）⇒ 事件/GUI/渲染面差两代，等于**另写一套 driver**，不是再写一张改写表；那五档规则树本身是故意的 3 条薄档、无 scaffold。**`modloader 1.6.4 / 1.2.5 / 1.5.2` 结构上不可能**：该平台**没有 Gradle 工程形态**（MCP + Eclipse），而 driver 整条链路建立在 `gradlew runClient` 上。逐档口径见社区短文坑 63。**「老平台另起一套游玩方式」的调研结论见社区短文坑 74**（与现有 driver/桥链隔离）。
+- **远古档 scaffold 的现状是「设计如此」，不是漏建（2026-10-03 实扫，与各档 `pack.meta.json` 自述一致）**：forge `1.7.10 / 1.8.9 / 1.9.4 / 1.10.2 / 1.11.2` **无 scaffold**（各档 `status:"ready"` 但无 `scaffold` 字段，note 写明「薄档：javadoc + `search_forge_docs`；仅 00/01/09；禁止邻档 API」）；liteloader `1.8.9 / 1.10.2` 与 modloader `1.2.5 / 1.5.2` 是 `status:"draft"` + `scaffold.mode:"source-only"` + `buildVerified:false`，gaps 逐字写着「**无 Gradle 工程形态（MCP + Eclipse），给它造 gradlew 属造假**」「规则文件为未核实占位 ⇒ 降 draft」「`download_official_mdk` → `MDK_NOT_PINNED`（LiteLoader 禁止再分发 / 工具链无 ModLoader MDK 通道）」⇒ **不可补**；能补的两档已补 —— liteloader `1.12.2`（`scaffold/hybrid` = `apply plugin: 'net.minecraftforge.gradle.liteloader'` 的真 Gradle 工程，因为 FG2.3 仍支持 1.12.2）与 modloader `1.6.4`（source-only 样本）；rift `1.13.2` 是 `mode:"reference"` **半套**（`build.gradle` 无 `buildscript{}`、无 wrapper/settings、`libs/` 需用户自备 rift dev jar，`MDK_NOT_PINNED`）⇒ 只有拿到插件坐标的用户能补完，本仓不替它猜。
+- **`newworld` 注入曾整段失效（2026-10-03 发现并修复）**：`rewriteForForge()` 里那段 `s.replace(<fabric fail-closed 文案>, <forge createFreshLevel>)` 的**搜索串与 `javaSource` 模板逐字不符**（模板已改成 `本档（fabric 基表，≤1.21.x）…`）⇒ forge 1.20.x / neoforge 1.20.x–1.21.x / fabric·neoforge 26.x 的 `newworld` **都退回了 fail-closed 桩**。修复搜索串后，26.x 那份替换块（`applyNewworld26xx`）才第一次真正被执行并**当场编译不过**——它假设的 `LevelSettings(String,GameType,LevelSettings$DifficultySettings,boolean,WorldDataConfiguration)` **不存在**（javap 实测 26.1.2 仍是 7 参 `(String,GameType,boolean,Difficulty,boolean,gamerules.GameRules,WorldDataConfiguration)`，且 `gamerules.GameRules` **无无参构造** ⇒ 需传 `FeatureFlags.VANILLA_SET`）。两者都已按实测签名改正并 javac 复验（fabric 26.1.2 / neoforge 1.20.6 / 1.21.1 / 26.1.2 全绿）。
 - **自动进世界**用 vanilla quick play（Loom/ForgeGradle 的 runClient `programArgs "--quickPlaySingleplayer"`）；1.20.4 / 1.21.1 / 1.21.3 等档**不要**让 driver 自己调 `IntegratedServerLoader.start`（会把客户端冻在“等服务器载入”循环，jstack 已验证）。
+- **26.1.2 的 quickPlay「看起来失效」= 两道模态屏挡路，不是参数没被消费（2026-10-03 定因，**推翻**本条旧结论）**：命令行确实带上了 `--quickPlaySingleplayer playtest_demo`（`-Dfabric.dli.config` 那一行的 java 命令行逐字读到），`Main.getQuickPlayVariant` 也把它解析成 `GameConfig$QuickPlaySinglePlayerData`（javap 实测 `net/minecraft/client/main/Main.class`）。真正卡住的是**先于回调出现的两张屏**：① **首次启动的 `AccessibilityOnboardingScreen`（“Welcome to Minecraft! … Narrator”）** —— `Minecraft.addInitialScreens` 先跑它，`buildInitialScreens`（内含 `QuickPlay.connect` 回调）要等它被关掉才轮得到 ⇒ 只要 `run/options.txt` 是 `onboardAccessibility:true`（新实例默认）或**根本没有这个键**，**任何** quickPlay 参数都不会有反应（这正是当时 `--quickPlayMultiplayer` 阳性对照也零反应的原因）；置 `onboardAccessibility:false` 后 quickPlay 立刻生效。② 关掉引导屏后冒出 **“Create a backup before upgrading this world?”**（`WorldOpenFlows.openWorld` 对**旧 DataVersion 存档**发的确认框）—— 它与引导屏一样**等输入**，quickPlay 就停在这一屏；点一次 “I know what I'm doing!”（存档就地升级，日志 `Starting upgrade for world "…"` → `Upgrade done`）后该存档版本与游戏一致，**之后每次都是无人干预直进世界**（实测 `Starting integrated minecraft server version 26.1.2` → `Player744 joined the game`）。⇒ 26.1.2 的 quickPlay **可用**；「参数没被消费」作废。跨版本复用存档时，首次进世界要么预先把存档升到目标版本，要么接受一次人工确认。
+- **26.1+ 走无桥 driver 的前置 = 工程自带 fabric-api**（2026-10-03 实测）：`fabric/26.1.2` scaffold 没带，driver 用的 `ClientTickEvents` / `ClientReceiveMessageEvents` 编译不过；加 `implementation "net.fabricmc.fabric-api:fabric-api:0.155.3+26.1.2"` 即可（26.1 是去混淆档，Modrinth 上 `fabric-api` 的 `+26.1.2` 构建在，实测 latest = `0.155.3+26.1.2`；**用 `implementation` 不是 `modImplementation`**）。
+- **“Gradle requires JVM 17 or later … configured to use JVM 8”也可能是 JDK 装坏了，不是 JAVA_HOME 没设**（2026-10-03 实测）：`…\jdk25\…` 的 `lib/` 只剩一个 `modules`（`jvm.cfg` 缺失）⇒ `java.exe` 直接报 `could not open …\lib\jvm.cfg`，Gradle 于是回落到 JVM 8。判据 = **先单独跑 `%JAVA_HOME%\bin\java.exe -version`**，能打出 `openjdk version "25…"` 再谈 Gradle；重解压即愈（本次从留存 zip 重解压修复）。
+- **桥路线进世界用桥自己的动作，别依赖程序参数**：BlackBoxPro 提供 `create_world(worldName, gameMode, difficulty, allowCommands, generateStructures, bonusChest, seed)` 与 `join_world(worldName)`（`ActionCatalog.kt` 的 `register(...)` 逐字）。neoforge 1.21.11 实测：改用 `join_world{worldName:"playtest_demo"}` 立刻返回 `state=in_world` 并正常游玩 ⇒ **桥路线的推荐进世界姿势是 `join_world` / `create_world`**（当时读到的「quickPlay 参数传到了但没用」是上面 ① 那条遮挡造成的假象，**已作废**：该实例同样受首次启动引导屏影响）。
+- **NeoForge 桥的 KotlinForForge 必须取 Modrinth 的 `-all.jar`（2026-10-02 实测，易踩）**：maven 坐标 `thedarkcolour:kotlinforforge-neoforge:5.8.0` 与 `thedarkcolour:kotlinforforge:5.8.0` **逐字节相同**（同 `sha256 A5024435…`, 6 269 705 B），且**都不是 mod jar** —— 包内 12 条目全是 `META-INF/jarjar/*.jar`，`MANIFEST.MF` 只写 `FMLModType: LIBRARY`，**无 `services/` 语言加载器**；装上去 FML 直接拒启：`Missing language loader kotlinforforge wanted by jar(mods/BlackBoxPro-neoforge-1.21.11-2.2.4.jar)`。真正的分发件在 Modrinth（slug **`kotlin-for-forge`**，注意不是 `kotlinforforge`），命名 `kotlinforforge-<ver>-all.jar`，内含 `META-INF/jarjar/thedarkcolour.kfflang-*.jar`（即语言加载器）；装 `kotlinforforge-6.3.0-all.jar` 后日志出现 `Found language provider kotlinforforge, version 6.3.0` + `KotlinModContainer … BlackBoxProNeoForge` + 全量 action 注册，桥 HTTP 200 `platform=neoforge, actions=116`。
+- **`await entity_nearby` 的 `type` 语义要在靠近目标处用（2026-10-02 复测）**：`type` 已确实透传（neoforge 桥实例实测：带 `type` → `Found 0 entities`、不带 → `Found 20 entities`，`lastDetail.typeCount` 逐字反映）。但**客户端实体只在追踪范围（≈48 格）内可见** ⇒ 目标不在附近时带 `type` 会**正确地**超时（`PLAYTEST_TIMEOUT` + `typeCount:0`），别读成「type 又丢了」。
+- **fabric 26.1.2 的构建工具链是另一套（2026-10-02 实测通过；2026-10-03 补 wrapper）**：`Loom 1.17.21` 的 `runtimeElements` 声明 `org.gradle.plugin.api-version=9.5.0` ⇒ **Gradle 9.2.1 会报 no matching variant**，必须 **Gradle ≥ 9.5**；`java.toolchain` 要 **JDK 25**（`develop_porting_index` 的 1.21.11→26.1 同款要求）。三者齐后 `gradlew build` `BUILD SUCCESSFUL in 2m52s`。**本仓 `fabric/26.1.2/scaffold` 现自带 wrapper 四件套（Gradle 9.7.1，2026-10-03 按上游 `fabric-example-mod` 分支 26.1 实读值补入）** ⇒ 复制 scaffold 即可直接 `./gradlew build`，不必再借 wrapper；loom 钉值同步刷新为上流现值 `1.18-SNAPSHOT`。
 - **`scan` 的方块采样是「玩家脚边 −4..+8 格的薄层」**（默认 `stride=4`）：村庄在地面 ⇒ 计划必须在 `goto` 之后、`scan` 之前写 **`land max=<n>`**（等 `isOnGround`）再扫；让角色悬停在空中扫地面**必然 0 命中**（实测 quilt-1.21.10：hover 在 y≈140 → `blocks hits=0`；同点落地后 13–17 命中）。`land` 超时（区块缺失、角色一直坠落）判红——这是**故障信号不是假红**。
 - **重活互斥纪律**：同一实例同时只允许一件重活（起游戏 / 构建 / 替换存档）。并发会在 U 盘级 I/O 上互相饿死，症状 = 服务器 `Can't keep up! … ticks behind` + 抵达点区块未就绪 + 角色坠入虚空 → `scan=0`（**不是**驱动缺陷）。替换 `run/saves/<世界>` 必须在确认该实例无 java 进程后进行。
+- **`newworld`（造世界）已取证并取代「先手建存档」**（2026-10-03 实测，fabric + neoforge 26.x 五档共用）：step 语法是 **`newworld name=<存档目录名>`**（**具名参数**；写成 `newworld <名>` 会得到 `[QA] ERROR: newworld：既未给 name= 且 WORLD 也为空`）。实现 = `client.execute(() -> createWorldOpenFlows().createFreshLevel(name, new LevelSettings(name, GameType.CREATIVE, new LevelSettings.DifficultySettings(Difficulty.NORMAL,false,false), true, WorldDataConfiguration.DEFAULT), WorldOptions.defaultWithRandomSeed(), WorldPresets::createNormalWorldDimensions, null))` —— **必须 `client.execute` 丢到渲染线程下一 tick**（`createFreshLevel` 内部走 `loadWorldDataBlocking`，同步阻塞渲染线程）。它让**空实例**（没有 `run/saves`）也能一枪跑通村庄剧本；仍 fail-closed 的是 **fabric ≤1.21.x / quilt / neoforge ≤1.21.x 的 fabric 基表**（缺 `createAndStart` 的 `LevelInfo`/`GeneratorOptions` 构造面），那些档请照旧 `enterWorld=<名>` 或 `--quickPlaySingleplayer`。⚠ **跨 MC 版本别搬存档**：旧 `DataVersion` 的存档会被 `WorldOpenFlows.openWorld` 弹「Create a backup before upgrading this world?」挡住 quickPlay（本档第一轮就踩过，见坑位 41）。
+- **driver 生成物的两个 `<runId>` 占位符必须都替换（2026-10-03 实测，坑一次）**：除 `EVIDENCE_DIR` 外还有**独立**的 `PLAN_FILE`（并**不**由前者拼出）。只替一处 ⇒ 驱动能进世界、`state.json` 也落对，但热载剧本读的是字面量 `playtest-evidence/<runId>/plan.txt` ⇒ `Path.of` 在 Windows 抛 `InvalidPathException: Illegal char < at index 18`，然后**静默回落到内置 `PLAN`**（症状：你写的 19 步一行没跑，日志里却是 `mark: village:fly-and-probe`）。正规做法是给 `generate_playtest_driver` 传 **`evidenceDir=`**（生成器两处同源），别事后替换。
+- **NeoForge 26.x 的 `FMLEnvironment` 只有 `getDist()` 方法**（2026-10-03 javap 实测 `fancymodloader:loader:10.0.36.jar`：全部成员就是 `public static Dist getDist()` + `public static boolean isProduction()`）：写 `FMLEnvironment.dist` **编译不过**；正解 `FMLEnvironment.getDist().isClient()`（`net.neoforged.api.distmarker.Dist` 的 `CLIENT`/`DEDICATED_SERVER` 与 `isClient()`/`isDedicatedServer()` 均已核）。另注：`FMLEnvironment` / `Dist` / `Mod` **不在** `neoforge-<ver>-universal.jar` 里，`SubscribeEvent` / `IEventBus` 也**不在**那儿（在 `bus-<ver>.jar`）—— `javap` 找不到 ≠ 该版本没有该类。
+- **NeoForge 26.1 / 26.1.1 / 26.3 上游只有 beta 件（2026-10-03 实测）**：`https://maven.neoforged.net/releases/net/neoforged/neoforge/maven-metadata.xml` **可达**（1 771 个版本；旧注释称其 404 是错的）。按 pom 的 `net.neoforged:neoform:<MC 三段>-<n>` 依赖逐条核出：`26.1.2 → 26.1.2.114`（release）、`26.2 → 26.2.0.88`（release）、`26.1 → 26.1.0.19-beta`、`26.1.1 → 26.1.1.15-beta`、`26.3 → 26.3.0.43-beta`。⇒ 这三档只能用 beta，**不是本仓漏抓**。
+- **「上游缺件」的判据必须单独 curl 一次那个 URL（2026-10-03 实测，差点误判）**：fabric 26.2/26.3 的 `fabric-api` 子模块（`fabric-particles-v1` / `fabric-object-builder-api-v1` / `fabric-client-gametest-api-v1` / `fabric-sound-api-v1` …）构建时报 `Could not GET …pom`，逐个复验却**都是 HTTP 200** —— 那是**瞬时网络错误**（本机实测：与正在跑的游戏客户端抢带宽时必现，重跑即过）。同类还有 `libraries.minecraft.net` 的 `Remote host terminated the handshake`（TLS 瞬时失败）。**别把瞬时失败写进结论**。
+- **MC 26.2 / 26.3 需要 ModDevGradle ≥ 2.0.148（2026-10-03 实测）**：本仓 `neoforge/26.1/scaffold` 钉的 **2.0.144** 在 MC 26.2 / 26.3 上 `gradlew build` **稳定失败**（`Node action for recompile failed` → `java.io.IOException: Compilation failed`，往上翻是编译 MC 自身源码的可见性错 `HolderSet$1.contents()`），重试 5 次全红；换 **2.0.148**（`https://maven.neoforged.net/releases/net/neoforged/moddev-gradle/maven-metadata.xml` 的 `<release>`）后**一次通过**（`BUILD SUCCESSFUL in 5m 50s`）。`26.1 / 26.1.1 / 26.1.2` 在 2.0.144 下正常。⇒ 跑 26.2/26.3 请自行升 MDG（该 scaffold 是 26.1 档，本仓未改它的钉值）。
+- **NeoForge 建实例报 configuration-cache 序列化错时，真因在 `Caused by`（2026-10-03 实测）**：日志只有 4 行就 `BUILD FAILED`（18 s），首句像 `Configuration cache state could not be cached: field artifactManifestEntries of task :createMinecraftArtifacts …`，**真因**是紧随其后的 `Caused by: Could not resolve all artifacts for configuration ':neoFormRuntimeDependenciesCompileClasspath'` → `Could not download loader-11.0.5.jar` / `sponge-mixin-0.17.0+mixin.0.8.7.jar` / `jtracy-1.14.38.jar`（`Could not GET` / `Could not HEAD`）。⇒ **判 MDG 构建失败先看 `Caused by:` 的下载项**。26.1 / 26.1.1 / 26.3 走 beta 线，依赖 `fancymodloader:loader:11.0.5`（已缓存的 26.1.2 线是 `10.0.36`）⇒ 这三档要多下一批先前没碰过的 jar，本机网络上就容易翻车；**构建重试 3–5 次即过**。另外 MDG 的 `:createMinecraftArtifacts` 单步 800+ 秒是正常的（实测 `downloadServer` 805 s），别据「很久没输出」就判挂。
+- **强杀构建会在 `fabric-loom` 缓存留下「已弃主」锁，下一次构建的 daemon 会永久停在锁条件上（2026-10-03 jstack 定因）**：症状 = 构建日志卡在 `FOUND existing cache lock file (ACQUIRED_PREVIOUS_OWNER_DISOWNED), rebuilding loom cache` 之后**一小时无输出**，而 `jstack` 显示 daemon 主线程 park 在 `AbstractQueuedSynchronizer$ConditionObject`、wrapper 停在 `DaemonClient.monitorBuild → SocketConnection.receive`（两边都在等，没人干活）。**处置**：起构建前删掉 `C:\Users\<u>\.gradle\caches\fabric-loom\*.lock`（及实例 `.gradle` 下的 `*.lock`）即可立即恢复 —— 本轮 fabric-26.3 就是这么从「卡 2 小时」变「6 分钟 BUILD SUCCESSFUL」的。⇒ 结论：**别在构建中途杀 JVM**；真杀了就先清锁。
+- **26.1 Loom 要 Gradle ≥ 9.7**（2026-10-03 实测）：`net.fabricmc.fabric-loom:1.18.2` 的 `runtimeElements` 声明 `org.gradle.plugin.api-version=9.7.0` ⇒ 用缓存的 Gradle **9.5.1** 会报 `No matching variant … consumer needed '9.5.1'`；换 **9.7.1**（本机已缓存）即过。⤴ 与「Gradle ≥9.5 + JDK 25」那条并列：**9.5 够跑 1.17.x loom，9.7 才够跑 1.18.x loom**。
+- **fabric-api 的 26.1.x 线共用一个件**（2026-10-03 实测）：Modrinth 上 `0.155.3+26.1.2` 的 `game_versions` **同时**声明 `26.1` / `26.1.1` / `26.1.2` ⇒ 三档填同一坐标；`26.2` 用 `0.161.0+26.2`、`26.3` 用 `0.161.0+26.3`（逐档在 `maven.fabricmc.net` 复核过 `<version>+26.2` / `+26.3` 线各 35 个）。
+- **driver 的 `shot` 预算与证据落盘都有时序陷阱（2026-10-03 实测，两处都修了）**：① 截图是**异步写盘**，原 `shot` 步只等 **60 tick（3 s）**，U 盘级 gameDir 上「请求 → 落盘」要 4 s+ ⇒ 报 `screenshot_timeout` 而 PNG 其实已写出（本档实测）——生成器已把预算提为常量 **`SHOT_WAIT_TICKS = 200`（10 s）**。② 驱动在 `finish()` 里**先打 `[QA] DONE/ERROR`、再写 `exit-code.txt` / `state.json` / `qa.log` / `rounds.jsonl`** ⇒ 编排脚本一看到 DONE 就杀 JVM 会把写盘**打断**，读回的证据还停在上一次失败轮（本轮踩过）；**杀进程前留 ~10 s** 让证据落盘。③ 另外 `latest.log` 只在新客户端启动时才被截断 ⇒ 轮询判轮次前先清空该文件，否则会读到上一轮的 `[QA] ERROR`。
+- **`cmd` 步会覆盖「最近一条游戏消息」，用它的顺序要小心（2026-10-03 实测）**：`goto parsed` 靠「最近一条 `/locate` 回执」拿坐标，而驱动只保留**一条** `lastGameMessage` ⇒ 在 `cmd locate …` 与 `goto parsed` **之间插任何 `cmd`**（本轮插了 `forceload`，回执变成 `Marked 35 chunks … to be force loaded`）都会让解析等到超时（`goto_parse_failed`）。**处方：把 `forceload` / `time set day` 这类 `cmd` 全部排在 `cmd locate` 之前。**
+- **飞抵后落不落地取决于区块是否就绪：加 `forceload` + `land`（2026-10-03 实测）**：`goto` 用飞行抵达后若目标区块**尚未加载**（慢盘 + 整合服追帧），角色会**直接坠入虚空**（实测 `y` 落到 `-233`，`state.json` 读回 `y=-851`），随后 `scan blocks hits=0` 假红。处方（本档跑绿的那份剧本）= `cmd forceload add <x1> <z1> <x2> <z2>` → `wait 800` → `cmd locate` → `goto parsed …` → **`land max=1200`** → `wait 200` → `look` → `scan`。注意 `land` 步超时文案原先**硬编码写「200 tick」**，即使传了 `max=` 也照写（生成器已改成回显实际值）。
 - **世界供给**：单机存档需 `allowCommands=1`（`/locate` 需要）；跨加载器可复用**同 MC 版本**的 `run/saves/<name>`（客户端会按需升级旧版存档）。
 - **关客户端**要按命令行精确杀真身 JVM（含 `-Dfabric.dli.config` / `-Dneoforge...` 的那个 java 进程），只杀 `gradlew` wrapper 会残留客户端并锁住存档（`session.lock`）。
 - 游玩自测的**驱动文件测完必须撤除**（`playtest/REVERT.md`），证据只留授权根，不入正式实例 / 正式分支。
@@ -178,7 +239,7 @@ MC_skill/
 | --- | --- | --- | --- | --- |
 | ① 有桥 | 桥 mod + `playtest_bridge` | 只 BlackBoxPro 有预编译件的档（fabric/neoforge 1.21.1+1.21.11、forge 1.12.2） | 到手最快、动作集大 | 版本覆盖窄；桥无鉴权 ⇒ 只本机短会话 |
 | ② 无桥剧本 | `generate_playtest_driver driverMode=temporary_client_tick_driver` | 已验证档出真 driver；其余档结构壳 | 确定性回归 / CI 复现 | 要装驱动 + 供世界 |
-| ③ 无桥意图会话 | `driverMode=in_jvm_player_agent` + `playtest_intent` | 真执行器 = `fabric`/`quilt` `1.21.11` | agent 实时决策、"选错→判红→换意图" | 观测粒度 = 每条意图一次；v1 `goto` 无寻路 |
+| ③ 无桥意图会话 | `driverMode=in_jvm_player_agent` + `playtest_intent` | 真执行器覆盖 = `PLAYTEST_VERIFIED_TIER`（生成器内表，随取证扩面，**正文不数档**；表外档只出菜单契约 + 结构壳） | agent 实时决策、"选错→判红→换意图" | 观测粒度 = 每条意图一次；v1 `goto` 无寻路 |
 
 #### 路线 ① 有桥（最快）
 
@@ -203,14 +264,16 @@ MC_skill/
 
 > 与路线 ② 的关系（**别读成两条并行线**）：同一个驱动、同一个解释器；意图只是"展开成原语子计划"的步骤，外层剧本退化成一条 `waitintent` 守候环。同一 tick 只有一个计划在跑。
 
-1. **前置**：同路线 ② 的 1–2 步 ＋ **已验证档**（真执行器只覆盖 `fabric`/`quilt` `1.21.11`；其余档只出菜单契约 + 结构壳，不会假装能跑）。
+1. **前置**：同路线 ② 的 1–2 步 ＋ **已验证档**（真执行器覆盖 = `PLAYTEST_VERIFIED_TIER`，唯一真源、随取证扩面——正文不数档；表外档只出菜单契约 + 结构壳，不会假装能跑）。
 2. **进世界**：按该档配方 —— 冻结族（`fabric 1.20.4 / 1.21.1 / 1.21.3`）用 vanilla quick play（`build.gradle` 的 loom runs 加 `programArgs "--quickPlaySingleplayer", "<存档名>"`）且 `enterWorld` **留空**；`1.21.11` 线可直接 `enterWorld:"<存档名>"`。
 3. **生成**：`generate_playtest_driver{platform:"quilt", version:"1.21.11", driverMode:"in_jvm_player_agent", capabilityProfile:"operator"|"creative"|"strict_survival", evidenceDir:"<授权根内绝对路径>", budgetTicks:36000}` ⇒ 出五件产物 ＋ **`playtest/intent-menu.json`**（菜单契约）；默认剧本 = `mark in_jvm:intent-session` ＋ `waitintent max=6000`。
 4. **装 + 跑**：同路线 ②；到 `[QA] ROUND 1 START` 后，进世界的第一条 `waitintent` tick 会把 `state.json`（观测面）补种出来。
 5. **观测（read）**：`playtest_intent{action:"read", evidenceDir}` ⇒ 观测面：`intentState`（档位/菜单/邮箱/剩余预算/当前意图）、`intents[]`、`lastIntent`、`scan.nearest{found,id,x,y,z}`、`goto{x,z,arrived,arrivedDist}`，外加 `menu`、`mailbox` 状态与 **`nextSteps`**（上一条失败时 = 该意图菜单里的 fallback）。
-6. **下意图（write）**：`playtest_intent{action:"write", evidenceDir, intent:"walk_to", params:{x:10,z:-20,tol:3}, confirmed:true}` ⇒ 写 `<evidenceDir>/intent.json`（扁平 JSON）。**写侧六段校验**：confirmed → 禁列（`kill`/`tnt`/`fill`）→ 13 意图菜单 → 参数白名单 → 必填 → 邮箱占用（占用回 `MAILBOX_BUSY`，除非 `overwrite=true`）；非法**在写侧就拒**，不进执行器。
+6. **下意图（write）**：`playtest_intent{action:"write", evidenceDir, intent:"walk_to", params:{x:10,z:-20,tol:3}, confirmed:true}` ⇒ 写 `<evidenceDir>/intent.json`（扁平 JSON）。**写侧六段校验**：confirmed → 禁列（`kill`/`tnt`/`fill`）→ 13 意图菜单 → 参数白名单 → 必填 → 邮箱占用（占用回 `MAILBOX_BUSY`，除非 `overwrite=true`）；非法**在写侧就拒**，不进执行器。**首次真机实测（fabric 26.1.2，2026-10-03）暴露的两条易用性边界**：① **菜单默认查找会落空** —— 生成器把 `playtest/intent-menu.json` 写在**工程根**，而工具默认按 `<evidenceDir>/intent-menu.json` → `<evidenceDir>/../playtest/intent-menu.json` 两级找；`evidenceDir` 推荐放在工程之外（`<授权根>/instances/<tag>/evidence-intent`）时两级同时不中 ⇒ **必须显式传 `menuPath=<工程根>/playtest/intent-menu.json`**，否则 `MENU_NOT_FOUND`。② **`observe` 必须给 `entities=` 或 `blocks=`** —— 只给 `radius=` 会被判红 `observe_need_scan`（v1：空扫无判据），这是 fail-closed 设计、不是 bug。
 7. **会话循环**：`read` 看观测 → 选意图（失败就按 `nextSteps` 换）→ `write` → driver 消费（`intent.json` 改名 `intent.done.json`）→ 展开原语执行 → 判**唯一一条**类型化后置条件 → 写 `intents[]` + 刷新 `state.json` → 回守候。**失败不得自动重试**（一次性意图重试会重复消耗方块/触发副作用），只许换意图。
 8. **收尾**：`write {"intent":"stop"}` ⇒ 收尾本轮（**不关游戏**）；之后按 `playtest/REVERT.md` 撤除。
+
+**实测链（去混淆档 fabric 26.1.2，2026-10-03 首次真机）**：`observe`(先被 `observe_need_scan` 拒 → 补 `blocks=` 后 `scan_written`，`scan.nearest=oak_log@-34.5,71,-2.5`) → `walk_to{x:-34,z:-2,tol:3}` → `distance_le_tol_and_moved_ge_min`(`dist=2.75 traveled=6.28`) → `screenshot` → `screenshot_file_nonempty`(`2026-10-03_20.22.16.png bytes=351378`) → `stop` → `driver_stops`；`exit-code=0`、`rounds.jsonl` 第 2 轮 `ok:true intents:5`。**两条运维口径**：`state.json` 的 `at` 是**最后一条意图的时间**（不是文件写入时间）⇒ 判驱动是否在跑要看**进程 + 文件 mtime + `intent.done.json`**，别拿 `at` 判活；`screenshot` 的 PNG 落 **`<gameDir>/screenshots/`**（`runClient` 的 gameDir = `run/`），不是工程根。默认剧本 `waitintent max=6000`（5 min）可能在你发首条意图前过期（整轮判红）——**驱动不退出**、回到守候 `plan.txt` 的 idle 态，**重写一次 `plan.txt` 即在同一进程开新一轮**（`max=30000` 更稳）。
 
 **失败语义（三条线里最要紧的差别）**：邮箱形态失败 = **数据**（`intents[]` 记 `ok:false` ＋ `failure` 字段）并**继续守候**（会话不死）；协议违规（禁列/不在菜单/档位不符）在写侧就被工具拒；脚本形态（`plan.txt` 里的 `intent` 步骤）失败 = **判红停轮**。
 
@@ -237,47 +300,6 @@ MC_skill/
 | 撤除 | 删驱动文件 + `register()` 调用行，证据只留授权根；`git status` 自检零命中 —— **绝不提交** |
 
 > 三条路线的**详细规程、坑位编号与每次真机读数**：`community_knowledge/authored/ingame-playtest-automation.md`；历史台账：`mcp-server/CHANGELOG.md` 各批。
-
-
-## 多 IDE 支持
-
-以各平台版本目录下的 `.cursor/` 为源，同步到其他 IDE（**各版本均应具备完整 8 IDE 目录**）：
-
-```
-平台/版本/
-├── .cursor/     → Cursor AI（源）
-├── .claude/     → Claude Desktop
-├── .continue/   → Continue.dev
-├── .trae/       → Trae AI
-├── .opencode/   → OpenCode（skills；规则读 AGENTS.md）
-├── .agents/     → Codex（skills；规则读 AGENTS.md）
-├── .zcode/      → ZCode（skills；规则读 AGENTS.md）
-└── .pi/         → Pi（rules/*.md）
-```
-
-修改 `.cursor/` 后，在版本目录执行 `./sync-skills.ps1`（薄包装）。批量同步：
-
-```powershell
-# 仓库根目录
-.\scripts\sync-skills.ps1 -All
-# 或指定版本
-.\scripts\sync-skills.ps1 -TargetDir .\forge\1.19.4
-```
-
-
-| IDE            | Rules                   | Skills / Commands   | Agent             |
-| -------------- | ----------------------- | ------------------- | ----------------- |
-| Cursor         | `.cursor/rules/*.mdc`   | `.cursor/skills/`   | `.cursor/agent/default.md` |
-| Claude Desktop | `.claude/rules/*.mdc`   | `.claude/commands/` | `.claude/agents/` |
-| Continue.dev   | `.continue/rules/*.mdc` | `.continue/skills/` | —                 |
-| Trae           | `.trae/rules/*.mdc`     | `.trae/skills/`     | `.trae/agents/`   |
-| OpenCode       | `AGENTS.md`             | `.opencode/skills/` | —                 |
-| Codex          | `AGENTS.md`             | `.agents/skills/`   | —                 |
-| ZCode          | `AGENTS.md`             | `.zcode/skills/`    | —                 |
-| Pi             | `.pi/rules/*.md`        | （主靠 AGENTS + rules） | —                 |
-
-
-
 
 ## 快速开始
 
@@ -322,12 +344,14 @@ MC_skill/
 
 **多 IDE 同步：**
 
-> 修改 `.cursor/` 后，在该版本目录运行 `sync-skills.ps1`。
+> 修改 `.cursor/` 后，在该版本目录运行 `sync-skills.ps1`。IDE 目录清单与批量同步命令见 [人类读本](README_human.md#多-ide-支持)。
 
 **配置本地 MCP Server：**
 
 > 将 [AUTO_SETUP.md](./AUTO_SETUP.md) 拖入当前 AI IDE / CLI。Agent 应识别宿主（Cursor / Claude Code / VS Code / Continue / Trae / OpenCode / Codex 等），编译 `mcp-server`，按该宿主格式生成配置草稿，**经你确认后合并**（不会静默覆盖）。  
 > 要求 **Node.js >= 22.5**（**22.5–22.12 与 23.0–23.3 必须加 `--experimental-sqlite` 启动**——内置 `node:sqlite` 在 22.13 / 23.4 起才默认开启；MCP/CLI 入口会在**任何 sqlite 使用之前**检测该窗口，命中即打印醒目指引并以非零码退出）；服务名 `MC-AI-Coding-Assistant-Tool`（stdio，86 个工具）。无 MCP 客户端时用 `node mcp-server/dist/cli.js`。
+>
+> **完整安装步骤不放在本文** —— [AUTO_SETUP.md](./AUTO_SETUP.md) 是唯一的安装说明书，按它的 Step 走：Step 0-pre 校验既有配置里的绝对路径 → Step 1 识别宿主 → Step 2 检查 Node 并 `npm ci && npm run build`（含**编译后自检四步**）→ Step 3 算出路径与规范 stdio 载荷 → Step 4 按宿主生成配置草稿 → Step 5 合并 + 重载 + **用工具验收**（Agent 自己调工具，不要只让用户看 UI）→ Step 6（可选）装 Skill。该文另有「常见错误」「CLI 兜底」两节；开头「Agent 必读：执行顺序」是对 Agent 的硬约束。
 
 ## 社区知识与库模组
 
@@ -598,6 +622,47 @@ node mcp-server/dist/cli.js search_forge_docs --version=1.14.4 --query="entity g
 
 同类查找一律走 `ownGet`（`mcp-server/src/utils/own-record.ts`），不要写 `record[userString]`。
 
+### 实跑取证：常见错误码与「什么时候别用」（as-of 2026-10-04）
+
+下表每个 `code` 都来自本机 CLI 的**最小失败调用**实跑，不是文档推导：
+
+| 工具（调用形态） | 实测 `code` | 什么时候别用 / 该怎么读 |
+|---|---|---|
+| `activate_platform_pack action=session`（未建档版本） | `PACK_NOT_FOUND` | 别拿邻档顶替；换已建档版本，或先 `action=list` |
+| `search_forge_docs` / `search_*`（未建档版本） | `VERSION_NOT_FOUND` | 先 `list_*_versions`；**不在清单 ≠ 上游没有**（查上游用 `query_upstream_releases`） |
+| `query_api`（该版本无 extracted 索引） | `DATA_UNAVAILABLE`（`found:false`） | 26.1+ / 1.14.4 / 1.15.2 无索引；改语义搜索，或 `get_minecraft_source` |
+| `diagnose_gradle`（缺 `--project`） | `INVALID_INPUT` | 必须给工程路径；Rift / BaseMod / 基岩仍早退 |
+| `generate_lang` / `get_minecraft_source`（缺必填项） | `MISSING_REQUIRED` | 先补齐必填；这不是"工具坏了" |
+| `check_dependencies`（无工程 / 无已知依赖） | `ok:false` + `detectedLibraries: []` | **空数组 ≠ 没有依赖** —— 未收录的库会漏（启发式，不是完整 Gradle 解析） |
+| `crash_analyze`（缺 version） | `VERSION_REQUIRED` | 传版本；它只覆盖你贴进来的那一段日志 |
+| `detect_mod_project`（无 `projectPath` 且未设 env） | `PROJECT_ROOT_REQUIRED` | 先设 `MC_SKILL_PROJECT_ROOT` 或传 `--project`；指向知识库根会判 `KNOWLEDGE_REPO_NOT_MOD` |
+| `generate_worldgen`（编造版本 `1.99.9`） | `INVALID_INPUT`（`errorKind: usage`） | 两端版本哨兵直接拒绝，不默默生成；文档称此时点名 `WORLDGEN_MAX_MINOR_1X` |
+| `localize_mod` / `port_project` / `query_loader_api` / `generate_lang` / `analyze_mod_jar` / `resolve_lib_skills` / `get_method_params` / `get_version_info` / `search_fabric_docs` / `list_doc_versions` / `search_docs` / `query_registry`（缺必填） | `MISSING_REQUIRED` | 先补齐必填参数；这不是"工具坏了"。**实测 12 个工具的缺参形态统一收敛到这一个码** |
+| `search_mod_code`（未给 `jarPath` / `decompiledDir`） | `INVALID_INPUT` | 必须先 `decompile_mod_jar`（或已有反编译目录），否则 `NOT_FOUND` |
+| `get_workflow_template`（未知名的模板） | `INVALID_ENUM_VALUE` | 工作流名是 enum，Zod 直接拒；模板名以该工具列表为准，别猜 |
+| `convert_mapping`（该版本无目标层） | `DATA_UNAVAILABLE`（`converted: null`） | 失败默认 `converted:null`；只有 `allow_fallback` 才回传原名并带 `fallbackUsed`（禁止假成功） |
+
+> 取证方式：`node mcp-server/dist/cli.js <工具> <最小失败参数>`，读响应里的 `ok` / `code` / `errorKind`。**没实跑取证到的工具一律不写码** —— 见 §6b / §9 / §11 表下「`—` = 本仓库未记载」的口径。
+
+### 86 个工具的错误码覆盖清单（as-of 2026-10-04，工具数与顺序以 `list-tools` 为准）
+
+证据三档：**实测** = 本机 `node mcp-server/dist/cli.js <工具> <最小失败参数>` 读到；**文档** = 本文件该工具行已具名；**未记载** = 仓库文档与实测都没有专属码（失败细节以响应 `errors[]` / `error.code` 为准）。
+
+| 组 | 工具 | 错误码 | 证据 |
+|---|---|---|---|
+| 版本 / 索引类 | `activate_platform_pack` · `search_forge_docs` · `query_api` · `detect_mod_project` · `convert_mapping` · `generate_worldgen` | `PACK_NOT_FOUND`（+`PACK_INCOMPLETE`）· `VERSION_NOT_FOUND` · `DATA_UNAVAILABLE` · `PROJECT_ROOT_REQUIRED`（+`KNOWLEDGE_REPO_NOT_MOD`）· `DATA_UNAVAILABLE`（`converted:null`）· `INVALID_INPUT` | 实测 |
+| 必填校验类 | `get_method_params` · `get_version_info` · `search_fabric_docs` · `list_doc_versions` · `search_docs` · `query_registry` · `localize_mod` · `generate_lang` · `analyze_mod_jar` · `resolve_lib_skills` · `get_workflow_template` | `MISSING_REQUIRED`（11 个）；`get_workflow_template` 为 `INVALID_ENUM_VALUE`（工作流名是 enum） | 实测（缺参形态收敛于 `MISSING_REQUIRED`） |
+| 诊断类 | `diagnose_gradle` · `inspect_runtime` · `crash_analyze` | `INVALID_INPUT` · `INVALID_INPUT` · `VERSION_REQUIRED` | 实测 |
+| 索引 / 反查类 | `list_forge_versions` · `list_fabric_versions` · `list_neoforge_versions` · `mixin_analyze` · `lookup_obfuscated` · `query_loader_api` · `search_loader_api` · `ingest_loader_api` | `PLATFORM_DATA_MISSING` · `CACHE_MISS` · `UNOBFUSCATED_NO_YARN` · `PLATFORM_SKIPPED` · `LOADER_API_NOT_INDEXED` · `INVALID_INPUT` | 文档 |
+| 移植 / 写盘类 | `analyze_porting_path` · `port_project` | `NOT_A_MOD_PROJECT` · `UNSUPPORTED_PORT` · `INVALID_INPUT` · `PROJECT_ROOT_REQUIRED` · `PATH_OUTSIDE_ALLOWLIST` | 文档 |
+| 上游查询类 | `query_upstream_releases` | `URL_REJECTED`（另有 `ok:false` / `available:false` 两态，语义不同） | 文档 |
+| 游玩自测类 | `playtest_intent` · `playtest_bridge` · `inspect_playtest_evidence` | `CONFIRMATION_REQUIRED` · `INTENT_FORBIDDEN` · `INTENT_NOT_IN_MENU` · `PARAM_NOT_DECLARED` · `MISSING_REQUIRED_PARAM` · `MAILBOX_BUSY` · `MENU_NOT_FOUND` · `PLAYTEST_TIMEOUT` · 三态 `present\|absent\|unreadable` | 文档 |
+| 反编译类 | `get_minecraft_source` · `decompile_mod_jar` · `download_official_mdk` · `search_mod_code` | `TOOLCHAIN_MISSING` · `NOT_FOUND` · `MDK_NOT_PINNED` · `NOT_FOUND` | 文档 |
+| 生成类 | `generate_datagen` · `generate_model` · `generate_network_packet` · `generate_capability` · `generate_config` · `generate_entity_renderer` · `generate_addon_manifest` · `generate_bp_entity` · `generate_playtest_driver` | 三态 `resultKind`：`ok` / `generation_failed` / `write_blocked`；写盘未完成时 `writeError.code` ∈ `CONFIRMATION_REQUIRED` / `PROJECT_ROOT_REQUIRED` / `PATH_OUTSIDE_ALLOWLIST` / `NOTHING_TO_WRITE` / `WRITE_FAILED` | 文档 |
+| **无专属码（39 个）** | `get_server_status` · `validate_project` · `check_dependencies` · `mc_skill_update` · `check_publish_ready` · `list_community_sources` · `search_community_docs` · `get_community_doc_summary` · `get_community_doc_full` · `get_forge_doc_summary` · `get_forge_doc_full` · `get_forge_doc_related` · `get_fabric_doc_summary` · `get_fabric_doc_full` · `get_fabric_doc_related` · `get_neoforge_doc_summary` · `get_neoforge_doc_full` · `get_neoforge_doc_related` · `search_neoforge_docs` · `get_doc_summary` · `get_doc_full` · `get_doc_related` · `diagnose_data_paths` · `search_bedrock_docs` · `get_bedrock_doc_summary` · `get_bedrock_doc_full` · `get_bedrock_doc_related` · `analyze_bedrock_log` · `validate_addon_manifest` · `validate_bp_json` · `audit_resources` · `validate_datapack_json` · `validate_at` · `validate_aw` · `list_knowledge_resources` · `read_knowledge_resource` · `analyze_log` · `analyze_build_log` · `get_migration_guide` | **未记载专属码** ⇒ 失败时读响应的 `errors[]` / `error.code`；**禁止凭记忆补码**。其中 `get_*_doc_*`、`list_*`、`audit_*`、`validate_*`、`analyze_*`、`read_*` 属"有结果 / 空结果 / 工具失败"三态，**空结果 ≠ 目标不存在** | 未取证 |
+
+> 覆盖口径：本清单点名全部 **86** 个工具（组内合计 6+11+3+8+2+1+3+4+9+39 = 86）。「未记载」不是缺陷结论，而是**证据不足的如实标注** —— 要补齐这些码，需要为每个工具设计一个"参数合法但语义失败"的调用并实跑（例：`get_*_doc_full` 传一个格式合法但不存在的 `id`），属独立一轮工程。
+
 ### 规则包加载（`activate_platform_pack`）
 
 知识库里的 `forge/<ver>/.cursor` **不会**被用户模组工程的 IDE 扫到。编码期用 MCP 把该档送进**当前对话**，不要把规则拷进 `MC_skill` 仓库根。
@@ -800,11 +865,11 @@ Cursor 主路径是 **tools**；协议层仍注册 Prompt/Resource，工具兜�
 | 渲染 / 模型      | `mc-renderer`、`mc-model`                                                                                                           |
 | 世界 / 数据包     | `mc-worldgen`、`mc-structure`、`mc-advancement`、`mc-loottable`、`mc-datapack`、`mc-resourcepack`、`mc-dimension`、`mc-weather`         |
 | 配置 / 测试 / 能源 | `mc-gametest`、`mc-energy`、`mc-multiblock`                                                                                          |
-| 兼容 / 文档库     | `mc-compat-jei`（knowledge/libs 源稿 + forge/1.20.1、neoforge/26.1 平台自有副本，非镜像）；库类（`mc-config` / `mc-cloth-config` / `mc-yacl` / `mc-geckolib` / `mc-architectury` / `mc-terrablender` / `mc-playeranimator` / `mc-pehkui` / `mc-kubejs` / `mc-balm` / `mc-modern-ui` / `mc-patchouli` / `mc-owo` / `mc-curios` / `mc-kotlin-for-forge` / `mc-trinkets` / `mc-cca` / `mc-polymer` / `mc-text-placeholder` / `mc-satin` / `mc-fabric-language-kotlin` / `mc-libgui` / `mc-lib-catalog` / `mc-author-shared-libs` / `mc-resourceful-lib` / `mc-moonlight-lib` / `mc-caelus` / `mc-spruceui` / `mc-player-ability-lib` / `mc-server-translations` / `mc-impersonate` / `mc-script-ui` / `mc-script-server` = 33 库类 + `mc-compat-jei` = **34 唯一 skillId**（**36** 份源稿；2026-09-25 现扫 `find knowledge/libs -name SKILL.md` = 36、目录名去重 = 34，份数差 = `mc-curios` / `mc-kotlin-for-forge` 在 forge-only 与 neo-only 各一份镜像 ⇒ 唯一 skillId 只多数一次。口径与本文 :49 / :581 / :770 及 `knowledge/libs/README.md` §当前规模一致；本行上一版写「32 库类 + `mc-compat-jei` = 33 唯一（35 份源稿）」，漏举的正是 `mc-cloth-config`）→ `knowledge/libs`） |
+| 兼容 / 文档库     | `mc-compat-jei`（knowledge/libs 源稿 + forge/1.20.1、neoforge/26.1 平台自有副本，非镜像）；库类（`mc-config` / `mc-cloth-config` / `mc-yacl` / `mc-geckolib` / `mc-architectury` / `mc-terrablender` / `mc-playeranimator` / `mc-pehkui` / `mc-kubejs` / `mc-balm` / `mc-modern-ui` / `mc-patchouli` / `mc-owo` / `mc-curios` / `mc-kotlin-for-forge` / `mc-trinkets` / `mc-cca` / `mc-polymer` / `mc-text-placeholder` / `mc-satin` / `mc-fabric-language-kotlin` / `mc-libgui` / `mc-lib-catalog` / `mc-author-shared-libs` / `mc-resourceful-lib` / `mc-moonlight-lib` / `mc-caelus` / `mc-spruceui` / `mc-player-ability-lib` / `mc-server-translations` / `mc-impersonate` / `mc-script-ui` / `mc-script-server` = 33 库类 + `mc-compat-jei` = **34 唯一 skillId**（**36** 份源稿；2026-09-25 现扫 `find knowledge/libs -name SKILL.md` = 36、目录名去重 = 34，份数差 = `mc-curios` / `mc-kotlin-for-forge` 在 forge-only 与 neo-only 各一份镜像 ⇒ 唯一 skillId 只多数一次。口径与本文「项目结构」的库 Skill 源稿行、「工具陷阱」表的 validate_datapack_json 行、「工具参考 §1b」的 query_loader_api 行，及 `knowledge/libs/README.md` §当前规模一致；本行上一版写「32 库类 + `mc-compat-jei` = 33 唯一（35 份源稿）」，漏举的正是 `mc-cloth-config`）→ `knowledge/libs`） |
 
 Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；Forge 1.12.2–1.20.4 与 Fabric 主档均含 `mc-events`（2026-08 D-1 补齐，经 `FABRIC_SKILL_DONORS` 回填的薄档带 DONOR_SKILL 横幅）。代码模式示范见 `community_knowledge/patterns/`（也可经 `mcskill://patterns/README` 读取）。
 
-## MCP Server 工具（86 个）
+## MCP/CLI TOOLS:86
 
 服务名：`MC-AI-Coding-Assistant-Tool`。安装与配置见 [AUTO_SETUP.md](./AUTO_SETUP.md)、[mcp-server/README.md](./mcp-server/README.md)。
 
@@ -927,17 +992,20 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；Forge 1.12.2�
 
 与 Java `search_*_docs` / `validate_project` 分开。基岩用 Learn 文档与 pack JSON，不要用 Yarn / Mixin / `query_api`。
 
-| 工具 | 作用 |
-|------|------|
-| `search_bedrock_docs` | 检索 Microsoft Learn 基岩文档（带滞后 `docsStatus`）。可按调用放宽 `limit`（默认口径不变；只加宽窗口，不改排序与 release-notes 降权，池大小与放宽后的差额会在 `demotion` / `warning` 里说破）。 |
-| `get_bedrock_doc_summary` | 基岩页 L1 摘要。 |
-| `get_bedrock_doc_full` | 基岩页全文。 |
-| `get_bedrock_doc_related` | 基岩相关页。 |
-| `validate_addon_manifest` | 校验 Add-On `manifest.json`（header/modules uuid 与 version）。不是 `validate_project`。 |
-| `validate_bp_json` | 校验行为包实体等 JSON。 |
-| `generate_addon_manifest` | 只吐 manifest JSON 文本，不写盘。 |
-| `generate_bp_entity` | 只吐行为包实体 JSON 文本，不写盘。 |
-| `analyze_bedrock_log` | 基岩 content-log（`content_log.txt`）分诊。**不是** Java `crash_analyze`。 |
+| 工具 | 作用 | 判读（三态） | 错误码 |
+|------|------|------|------|
+| `search_bedrock_docs` | 检索 Microsoft Learn 基岩文档（带滞后 `docsStatus`）。可按调用放宽 `limit`（默认口径不变；只加宽窗口，不改排序与 release-notes 降权，池大小与放宽后的差额会在 `demotion` / `warning` 里说破）。 | 命中类：`ok` + `results[]`；**空 ≠ 没有该文档** —— 先看 `docsStatus` / `demotion` / `warning` | — |
+| `get_bedrock_doc_summary` | 基岩页 L1 摘要。 | 命中类：`ok` + 摘要；缺页走 `ok:false` + `error` | — |
+| `get_bedrock_doc_full` | 基岩页全文。 | 命中类：`ok` + 全文；**一次不超过 2 页** | — |
+| `get_bedrock_doc_related` | 基岩相关页。 | 命中类：`ok` + 数组；空数组 ≠ 失败 | — |
+| `validate_addon_manifest` | 校验 Add-On `manifest.json`（header/modules uuid 与 version）。不是 `validate_project`。 | 校验类：结论在 `errors[]`；本档未记载其专属三态名，以响应 `ok` / `error` 为准 | — |
+| `validate_bp_json` | 校验行为包实体等 JSON。 | 校验类：同上 | — |
+| `generate_addon_manifest` | 只吐 manifest JSON 文本，不写盘。 | 生成类：`resultKind` 三态同 §10（`ok` / `generation_failed` / `write_blocked`） | — |
+| `generate_bp_entity` | 只吐行为包实体 JSON 文本，不写盘。 | 生成类：同上 | — |
+| `analyze_bedrock_log` | 基岩 content-log（`content_log.txt`）分诊。**不是** Java `crash_analyze`。 | 读取类：无匹配 ⇒ 空结果 ≠ 无问题 | — |
+
+> 判读列口径：`ok:true` = 有结果；`ok:false` = 工具失败（原因在 `errors[]` / `error`）。**命中类工具的空结果不等于目标不存在**（索引缺失、语义降级、工具边界都会写明）。生成类另有 `resultKind` 三态，见 §10。
+> 错误码列的 `—` = 本仓库文档未记载该工具的专属错误码；实际错误以响应里的 `errors[]` / `error.code` 为准，**禁止凭记忆补码**。
 
 
 ### 7. 社区知识库（4）
@@ -992,6 +1060,8 @@ authored/lib-*.md frontmatter（+ library-integration / library-integration-jei-
 
 数据位置见 [反编译数据产物](#反编译数据产物) 一节。
 
+> 这两个口径的**权威出处与复算纪律**见 [`CONTRIBUTING.md` §库数据链计数口径](./CONTRIBUTING.md)；本处只给现场读数与结论。
+>
 > **计数口径 A（`verifiedApi` 键）**：分母 = `mcp-server/src/diagnostics/library-catalog.ts` 中各 entry 的 `verifiedApi` 顶层 `"<gameVersion>/<loader>"` 键之和，**实算 2632（2026-09-24 复跑该命令）**；复核命令 `grep -cE '"[0-9][^"]*/[a-z]+": \{' mcp-server/src/diagnostics/library-catalog.ts`（同数钉在 `mcp-server/scripts/assert-lib-ownership.mjs` 的 `LEDGER.verifiedApiKeys`，磁盘实算与钉值不一致该门即红；文档历史写死值 1880 / 1836 / 1830 均已过期，本文件其余处出现的 1836 属历史遗留，一律以本行口径为准）。
 > **计数口径 B（库 API 摘要侧）**：分母 = `mcp-server/data/lib-api-summaries/*.json` 的份数与其 `versions` 组键合计，**实算 48 份 / 824 组（2026-09-24 复跑该命令）**；复核命令 `node -e "const fs=require('fs'),p='mcp-server/data/lib-api-summaries';const f=fs.readdirSync(p).filter(x=>x.endsWith('.json'));console.log(f.length,f.reduce((a,x)=>a+Object.keys(JSON.parse(fs.readFileSync(p+'/'+x,'utf8')).versions||{}).length,0))"`。A 与 B 是**两个不同分母**（2632 ≠ 824），禁止互相顶替或混写。
 > 版本窗口另见各 entry 的 `supportedVersions: string[]`（Modrinth 实测的受支持 MC 版本列表），
@@ -1016,16 +1086,19 @@ authored/lib-*.md frontmatter（+ library-integration / library-integration-jei-
 ### 9. Registry / Mixin / 资源（9）
 
 
-| 工具                                                     | 作用                                                                   |
-| ------------------------------------------------------ | -------------------------------------------------------------------- |
-| `query_registry`                                       | 查询 Vanilla 资源 ID（`nameLayer: registry_id`）；类/方法名用 `convert_mapping`。 |
-| `mixin_analyze`                                        | 解析 mixins.json 与 @Mixin 注入目标（多映射层；高风险，见 supportMatrix）。`deep:true` 时基于已缓存 remapped 客户端 jar 做字节码级校验（目标类/选择器/@At 调用点）；jar 未缓存 → CACHE_MISS 引导（不自动下载）。 |
-| `validate_at`                                          | 字节码级校验 Forge/NeoForge `*_at.cfg`：类/成员存在性（继承链/record/内部类）、映射层不匹配建议、跨文件冲突。 |
-| `validate_aw`                                          | 字节码级校验 Fabric `.accesswidener`：header/namespace、条目类型、存在性、transitive、跨文件冲突。 |
-| `audit_resources`                                      | 静态检查模型纹理引用、孤儿纹理、modId 命名等。                                           |
-| `validate_datapack_json`                               | recipe / loot_table / advancement / tag 精简 JSON 校验（1.21+ recipe `result` 可为对象；不是完整 pack_format schema）。                  |
-| `get_workflow_template`                                | 工作流全文（以 `get_workflow_template` 列表为准；与 MCP Prompt 同名；Cursor tools 兜底）。         |
-| `list_knowledge_resources` / `read_knowledge_resource` | 列出/读取 `mcskill://`（含 patterns、schema、workflow、community 等）。          |
+| 工具                                                     | 作用                                                                   | 判读（三态）                                                              | 错误码        |
+| ------------------------------------------------------ | -------------------------------------------------------------------- | -------------------------------------------------------------------- | ----------- |
+| `query_registry`                                       | 查询 Vanilla 资源 ID（`nameLayer: registry_id`）；类/方法名用 `convert_mapping`。 | 命中类：`ok` + 结果；**空 ≠ 没有该 ID**（只覆盖 `minecraft:`）                | —           |
+| `mixin_analyze`                                        | 解析 mixins.json 与 @Mixin 注入目标（多映射层；高风险，见 supportMatrix）。`deep:true` 时基于已缓存 remapped 客户端 jar 做字节码级校验（目标类/选择器/@At 调用点）；jar 未缓存 → CACHE_MISS 引导（不自动下载）。 | 校验类：`ok` + 结论；**jar 未缓存 = `CACHE_MISS` 引导，不是失败**（先调 `get_minecraft_source`） | `CACHE_MISS` |
+| `validate_at`                                          | 字节码级校验 Forge/NeoForge `*_at.cfg`：类/成员存在性（继承链/record/内部类）、映射层不匹配建议、跨文件冲突。 | 校验类：结论在 `errors[]`；本档未记载其专属三态名，以响应 `ok` / `error` 为准      | —           |
+| `validate_aw`                                          | 字节码级校验 Fabric `.accesswidener`：header/namespace、条目类型、存在性、transitive、跨文件冲突。 | 校验类：同上                                                               | —           |
+| `audit_resources`                                      | 静态检查模型纹理引用、孤儿纹理、modId 命名等。                                           | 校验类：同上（静态面，不做字节码级）                                             | —           |
+| `validate_datapack_json`                               | recipe / loot_table / advancement / tag 精简 JSON 校验（1.21+ recipe `result` 可为对象；不是完整 pack_format schema）。                  | 校验类：**精简 schema ⇒ 通过 ≠ 完整 pack_format 合规**，只证明覆盖了本节列出的面 | —           |
+| `get_workflow_template`                                | 工作流全文（以 `get_workflow_template` 列表为准；与 MCP Prompt 同名；Cursor tools 兜底）。 | 命中类：`ok` + 全文；模板名以该工具的列表为准（不是靠猜名字）                     | —           |
+| `list_knowledge_resources` / `read_knowledge_resource` | 列出/读取 `mcskill://`（含 patterns、schema、workflow、community 等）。          | 命中类：`ok` + URI 列表 / 正文；缺 URI ⇒ `ok:false`                        | —           |
+
+> 判读列口径：`ok:true` = 有结果；`ok:false` = 工具失败（原因在 `errors[]` / `error`）。**命中类工具的空结果不等于目标不存在**。生成类另有 `resultKind` 三态，见 §10。
+> 错误码列的 `—` = 本仓库文档未记载该工具的专属错误码；实际错误以响应里的 `errors[]` / `error.code` 为准，**禁止凭记忆补码**。本组唯一的确证码是 `CACHE_MISS`（`mixin_analyze deep` 的 jar 未缓存引导，不是错误而是"先补缓存"）。
 
 > 计数口径：本组 **9 个工具 / 8 行** —— 末行把 `list_knowledge_resources` 与 `read_knowledge_resource` 合并为一行，标题「（9）」数的是工具数。
 
@@ -1050,19 +1123,22 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 | `generate_entity_renderer` | 实体渲染器骨架。`platform` 与 `version` 必填；fabric/quilt 直接 error。 |
 | `generate_worldgen` | 世界生成 JSON 骨架。`platform` 与 `version` 必填，且有**两端版本哨兵**：1.x 只收 1.18.2–1.21.x、26.x 只收 `26.<n>[.<n>]`（编造版本号如 `1.99.9` 一律拒绝并点名 `WORLDGEN_MAX_MINOR_1X` 抬哨兵出口，不默默生成）；`platform=forge` × 26.x 直接拒绝（Forge 无 26.x）。forge / neoforge 的 feature JSON；fabric / quilt 仅 `configured_feature` / `placed_feature`（禁止 forge `biome_modifier`）。无模板时 `errors` 列出支持档。 |
 | `localize_mod` | 汉化：自有模组 `diff` / `draft_zh`，或第三方 jar `extract` / `pack_draft`。无机器翻译，未填项标 `needsTranslation`；无 `en_us` 时可回退其它语言作源。 |
-| `generate_playtest_driver` | 游玩自测骨架：`driverMode` 默认 `external_bridge`（桥动作序列 + 后置条件 + 证据约定）；`in_jvm_player_agent` 在已取证档（fabric/quilt 1.21.11）出**真执行器**（意图菜单 + 邮箱消费 + 类型化后置条件 + 逐意图预算），其余档只出契约 + 结构壳。不装桥、不跑游戏。 |
+| `generate_playtest_driver` | 游玩自测骨架：`driverMode` 默认 `external_bridge`（桥动作序列 + 后置条件 + 证据约定）；`in_jvm_player_agent` 在 **`PLAYTEST_VERIFIED_TIER` 列出的档**（唯一真源；as-of 2026-10-04 为 **52** 项 = `fabric` 18 / `neoforge` 14 / `quilt` 10 / `forge` 10，含去混淆档 `fabric`/`neoforge` 的 `26.1`/`26.1.1`/`26.1.2`/`26.2`/`26.3`，以及 forge `1.12.2`–`1.19.4` 八档与 fabric `1.14.4`）出**真执行器**（意图菜单 + 邮箱消费 + 类型化后置条件 + 逐意图预算），表外档只出契约 + 结构壳。不装桥、不跑游戏。 |
 
 ### 11. 日志与依赖诊断（7）
 
-| 工具                    | 作用                                      |
-| --------------------- | --------------------------------------- |
-| `analyze_log`         | 解析游戏/崩溃日志片段（可复用 `crash_analyze` 分类）。    |
-| `analyze_build_log`   | 解析粘贴的 Gradle/javac 构建失败日志（不执行 gradlew）；返回符号/文件与建议工具。 |
-| `get_migration_guide` | 默认 Primer **toc**；`section` 只返回该章；`full=true` 才全文（含 url/license/loader）。route 含 platform 或 `from->to`。 |
-| `check_dependencies`  | 根据 `build.gradle` / `mods.toml` / `fabric.mod.json` / `quilt.mod.json` / `litemod.json` / `riftmod.json` / 基岩 manifest 提示依赖问题：loader 判定（quilt/fabric/forge/neoforge/liteloader/rift/modloader/bedrock）、库模组识别（catalog 接线）、冲突/陷阱检测。返回 `detectedLibraries`（含 `supportedVersions` 反编译验证版本窗口与 `manifestSummary` 版本/加载器摘要，数据来自 `library-catalog.ts` + `data/lib-manifests/all.json`）。 |
-| `inspect_playtest_evidence` | 读游玩自测证据（exit-code / state.json / `[QA]` 段 / calls.jsonl / 截图），每件三态 `present\|absent\|unreadable`；须 `MC_SKILL_PLAYTEST_ALLOW=1` + `MC_SKILL_PLAYTEST_ROOT`（realpath 硬边界）。可选委派 `inspect_runtime` 读日志。 |
-| `playtest_intent` | 游玩自测**意图邮箱**（`in_jvm_player_agent` 真执行器的 LLM 侧接线）：`action=read\|write`；write 写 `<evidenceDir>/intent.json`（driver 的 `waitintent` 步消费并改名 `intent.done.json`）。校验顺序：confirmed → 禁列（kill/tnt/fill）→ 菜单（`intent-menu.json`）→ 参数白名单 → 必填 → 邮箱占用（overwrite 覆盖）。须 `MC_SKILL_PLAYTEST_ALLOW=1` + `MC_SKILL_PLAYTEST_ROOT`。失败码：`CONFIRMATION_REQUIRED` / `INTENT_FORBIDDEN` / `INTENT_NOT_IN_MENU` / `PARAM_NOT_DECLARED` / `MISSING_REQUIRED_PARAM` / `MAILBOX_BUSY` / `MENU_NOT_FOUND`。 |
-| `playtest_bridge` | 调 BlackBoxPro 桥（host 恒 `127.0.0.1`，端口默认 38081）：`status` 看 `/status.ready`（已进世界）；`execute` 发 `/execute`（原生超时 ⇒ `PLAYTEST_TIMEOUT`）；`await` 轮询 `query_*` 等条件（桥无 `wait_until`）。`execute`/`await` 须 `confirmed=true` + 授权。桥无鉴权且通配绑定 —— 只在本机用。 |
+| 工具                    | 作用                                      | 判读（三态）                                               | 错误码                                                     |
+| --------------------- | --------------------------------------- | ------------------------------------------------------ | -------------------------------------------------------- |
+| `analyze_log`         | 解析游戏/崩溃日志片段（可复用 `crash_analyze` 分类）。    | 读取类：`ok` + 分类结论；片段解析 ⇒ 结论只覆盖你贴进来的那一段            | —                                                        |
+| `analyze_build_log`   | 解析粘贴的 Gradle/javac 构建失败日志（不执行 gradlew）；返回符号/文件与建议工具。 | 读取类：`ok` + 符号/文件 + 建议工具；**它不跑 gradlew**           | —                                                        |
+| `get_migration_guide` | 默认 Primer **toc**；`section` 只返回该章；`full=true` 才全文（含 url/license/loader）。route 含 platform 或 `from->to`。 | 命中类：默认只给 toc（三档：`toc` / `section` / `full`）；**没给全文不等于没有该章** | —                                                        |
+| `check_dependencies`  | 根据 `build.gradle` / `mods.toml` / `fabric.mod.json` / `quilt.mod.json` / `litemod.json` / `riftmod.json` / 基岩 manifest 提示依赖问题：loader 判定（quilt/fabric/forge/neoforge/liteloader/rift/modloader/bedrock）、库模组识别（catalog 接线）、冲突/陷阱检测。返回 `detectedLibraries`（含 `supportedVersions` 反编译验证版本窗口与 `manifestSummary` 版本/加载器摘要，数据来自 `library-catalog.ts` + `data/lib-manifests/all.json`）。 | 命中类：`ok` + `detectedLibraries`；**启发式 + catalog ⇒ 未收录的库会漏**（不是完整 Gradle 解析） | —                                                        |
+| `inspect_playtest_evidence` | 读游玩自测证据（exit-code / state.json / `[QA]` 段 / calls.jsonl / 截图），每件三态 `present\|absent\|unreadable`；须 `MC_SKILL_PLAYTEST_ALLOW=1` + `MC_SKILL_PLAYTEST_ROOT`（realpath 硬边界）。可选委派 `inspect_runtime` 读日志。 | **三态**：每件 `present` / `absent` / `unreadable`；**缺件不得读成"没有失败"** | —                                                        |
+| `playtest_intent` | 游玩自测**意图邮箱**（`in_jvm_player_agent` 真执行器的 LLM 侧接线）：`action=read\|write`；write 写 `<evidenceDir>/intent.json`（driver 的 `waitintent` 步消费并改名 `intent.done.json`）。校验顺序：confirmed → 禁列（kill/tnt/fill）→ 菜单（`intent-menu.json`）→ 参数白名单 → 必填 → 邮箱占用（overwrite 覆盖）。须 `MC_SKILL_PLAYTEST_ALLOW=1` + `MC_SKILL_PLAYTEST_ROOT`。失败码：`CONFIRMATION_REQUIRED` / `INTENT_FORBIDDEN` / `INTENT_NOT_IN_MENU` / `PARAM_NOT_DECLARED` / `MISSING_REQUIRED_PARAM` / `MAILBOX_BUSY` / `MENU_NOT_FOUND`。 | 写侧六段校验；**非法在写侧就拒**，不进执行器。失败形态三档：邮箱形态失败 = 数据（继续守候）／协议违规 = 写侧拒／脚本形态 = 判红停轮 | `CONFIRMATION_REQUIRED` · `INTENT_FORBIDDEN` · `INTENT_NOT_IN_MENU` · `PARAM_NOT_DECLARED` · `MISSING_REQUIRED_PARAM` · `MAILBOX_BUSY` · `MENU_NOT_FOUND` |
+| `playtest_bridge` | 调 BlackBoxPro 桥（host 恒 `127.0.0.1`，端口默认 38081）：`status` 看 `/status.ready`（已进世界）；`execute` 发 `/execute`（原生超时 ⇒ `PLAYTEST_TIMEOUT`）；`await` 轮询 `query_*` 等条件（桥无 `wait_until`）。`execute`/`await` 须 `confirmed=true` + 授权。桥无鉴权且通配绑定 —— 只在本机用。 | **超时 ≠ 没失败**：原生超时映射 `PLAYTEST_TIMEOUT`，**不得塌成"没失败"**。`/status.ready` 不可信，判"在不在世界"看 `query_player_state` | `PLAYTEST_TIMEOUT`                                       |
+
+> 判读列口径：`ok:true` = 有结果；`ok:false` = 工具失败（原因在 `errors[]` / `error`）。**命中类工具的空结果不等于目标不存在**。本节三个真三态面：`inspect_playtest_evidence` 的 `present|absent|unreadable`、`playtest_intent` 的三档失败形态、`playtest_bridge` 的超时语义。
+> 错误码列的 `—` = 本仓库文档未记载该工具的专属错误码；实际错误以响应里的 `errors[]` / `error.code` 为准，**禁止凭记忆补码**。本节填写的 8 个码均为文档具名值。
 
 ### 12. 自我更新（1）
 
@@ -1274,6 +1350,8 @@ node mcp-server/dist/cli.js get_community_doc_summary --id authored/lib-curios
 | `verifiedApi` | 库 catalog 里逐条目核过的 API 键（`gameVersion/loader`） |
 | `fallback` / `source_version` | 文档回退时：结果实际来自哪一版 / 是否发生回退 |
 | 前半 / 后半 loop | 前半 = 写码→构建→自动起游戏→分诊；后半 = 进游戏游玩→取证→回灌 |
+| 测试阶梯（L0–L7） | 交付前的最低测试门槛：L0 构建 → L1 结构静态 → L2 数据 → L3 GameTest → L4 真机冒烟 → L5 场景 → L6 服务端 / 多人 → L7 回归；低层红不许跳高层，最低线按改动面取最大者（缺证据即判红，见「证据三态」）。见根 `AGENTS.md`「游玩测试要求（交付门槛）」 |
+| 表外版本 | 不在 `PLAYTEST_VERIFIED_TIER` 里的档：真 driver 出不了，**但仍须测** —— 走桥路线或人工游玩，并如实标注「人工验过 / 未验」 |
 | 三通道 | 游玩自测执行权的授权通道（A 仓库沙箱 / B 用户 dev 实例 / C 第三方桥） |
 
 ## 卸载与回退

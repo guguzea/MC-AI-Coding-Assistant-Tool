@@ -2227,7 +2227,7 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
 
 // ↓↓ 两条数组的真身提到模块作用域，唯一读者是**下方 §S18/S19 与 W1-2 两个 `for`** 与 §S4 四数普查。
 // 为什么不能留在 `for (const gate of [ … ])` 里：四数普查的 N/M 必须「从数组本身取长度」，
-// 在别处重抄一遍名单 = 第二个真值源，必然随加门漂掉（CONTRIBUTING.md §未排期清单 `L13`/`L18`）。
+// 在别处重抄一遍名单 = 第二个真值源，必然随加门漂掉（CONTRIBUTING_LIST.md §未排期清单 `L13`/`L18`）。
 const REAL_RUN_GATES = [
     // 2026-09-28：镜像面今天真漂过一次（`fabric/1.17.1/.cursor/skills/mc-particle.md` 改了源稿、7 面没跟），
     // 而它从前只由 `npm test` 覆盖 ⇒ 收口跑 test-scripts 的那一轮看不见。挂进默认链（实测整道门 1.8 s）。
@@ -2325,7 +2325,7 @@ const REAL_RUN_GATES = [
     // A8（2026-09-24）：盘上 `*.test.mjs` ↔ `node --test` 链双向覆盖（新加测试文件忘接线即红；
     // 此前无这道门面，HEAD 版曾漏 `_lib/bedrock-corpus.test.mjs`）。
     "./scripts/assert-test-chain-coverage.mjs",
-    // 第 36 轮：`CONTRIBUTING.md` §未排期清单**表形**门（该表自称「状态的唯一现行读法」，此前全仓无门判其形状
+    // 第 36 轮：`CONTRIBUTING_LIST.md` §未排期清单**表形**门（该表自称「状态的唯一现行读法」，此前全仓无门判其形状
     // ⇒ 第 33/34 两轮连续写坏（第三列整列缺失 + L43 插错位置）无人报警）。只判形状，prose 口径仅打印。
     "./scripts/assert-backlog-table-shape.mjs",
     // A11 清尾①（2026-09-25）：quilt「未版本化现行页」的拷贝事实（14 topic×6 档除时间戳逐字同）
@@ -2486,7 +2486,7 @@ const SELFTEST_GATES = [
  *  - `K` 盘上 = `readdirSync(scripts)` 全量（沿用原有口径，不另起一摊）。
  *  - `P` 可达 = 该名字出现在任一 `test-*.mjs` 或 `package.json` 里 ⇒ **被引用**，不是被执行。
  *  - `N` / `M` = §S18/S19 与 W1-2 两个块**逐道 spawn** 的那两条数组的**去重长度**（数组本身是唯一真值源，
- *    本块只读它的 `length`，绝不重抄名单——重抄 = 造第二个真值源，必然漂，见 CONTRIBUTING.md `L13`/`L18`）。
+ *    本块只读它的 `length`，绝不重抄名单——重抄 = 造第二个真值源，必然漂，见 CONTRIBUTING_LIST.md `L13`/`L18`）。
  *  - `Z` = 名字出现在**本文件源码**里、却**不在**那两条数组中的门 ⇒ 它们由本文件的**其它编号块/散块**
  *    现 spawn（`#16` 的 yarn-slurp、`#20/#21/#22` 的 mixin-shape / ban-vs-example / doc-absence-claims 等），
  *    所以 **`K − N` 不是「只由 npm test 覆盖」的道数**。第 26 轮的打印就是拿 `K − N` 算这道差，
@@ -2691,7 +2691,7 @@ function censusChain({ diskGates, blob, pkg, selfBlob, realRun, selftest, floorR
     );
   }
   // W1-2（2026-09-19）：以下这些门自带 --selftest 投毒自证，把自证也接进默认链 ——
-  // 条数**不写死**（2026-09-19 接线时是 4 道，此后按轮递增；写死必然过期，见 CONTRIBUTING.md §未排期清单 L18）。
+  // 条数**不写死**（2026-09-19 接线时是 4 道，此后按轮递增；写死必然过期，见 CONTRIBUTING_LIST.md §未排期清单 L18）。
   // 本块跑几道**不在这里自述**：上面 §S4 的「门链四数」行现算现印（盘上 K / 可达 P / 真跑 N / selftest M），
   // 那两条数组（`REAL_RUN_GATES` / `SELFTEST_GATES`）是唯一真值源，地板断言也在那一块里。
   // 上面的「真跑」只证明**数据**绿；「selftest」才证明**判据**活着（改瞎 banned 形态必须当场红）。

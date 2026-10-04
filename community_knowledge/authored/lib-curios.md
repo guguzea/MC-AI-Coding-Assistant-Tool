@@ -37,7 +37,7 @@ skillId: mc-curios
 | neoforge | 19 | 18 | 1 beta | 26.2 | 原已点名 |
 | **fabric** | **1** | **0** | 1 beta | — （唯一行 `1.16.5` / `curios-fabric-0.0.13-1.16.5.jar` / `versionType=beta`） | ⇒ **不补**：release 0 条 ⇒ 按裁定不点名 |
 
-- ⚠️ 「不点名」只到「**没有可用 release 构件**」这一层，**不等于**「上游不存在 Fabric 版」（快照 as-of 2026-09-16，且 `CONTRIBUTING.md` `L42` ① 记着「欠一次构件面重抓」）；判据⑤ 的口径也只到「本仓快照有没有这行」为止。
+- ⚠️ 「不点名」只到「**没有可用 release 构件**」这一层，**不等于**「上游不存在 Fabric 版」（快照 as-of 2026-09-16，且 `CONTRIBUTING_LIST.md` `L42` ① 记着「欠一次构件面重抓」）；判据⑤ 的口径也只到「本仓快照有没有这行」为止。
 - Fabric 侧饰品槽走 `authored/lib-trinkets`（`mc-trinkets`），**禁止**把本档的 Curios 代码当 Fabric 教程 —— 与根 `AGENTS.md` 库 Skill 第 5 条同调。
 - 复核（只读、不落盘）：`node temp/ralph-20260922/_r37-probe-slug-loader.mjs`（逐 loader 行数 + versionType 分解 + 数值序上界）· `node temp/ralph-20260922/_r37-probe-rows.mjs`（逐行 fileName / versionNumber）。
 

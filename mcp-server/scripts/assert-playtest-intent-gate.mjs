@@ -418,8 +418,11 @@ async function main() {
     if (PLAYTEST_VERIFIED_TIER.length < 4) problems.push(`PLAYTEST_VERIFIED_TIER 过小：${tierKeys.join(",")}`);
 
     // 非已验证档：只出契约 + 结构壳
+    // 探针档必须落在「仍未翻绿」的组合上；每翻绿一档就把本靶挪到仍为结构壳的档
+    // （2026-10-03：fabric/1.19.4 已入 tier ⇒ 靶迁到 fabric/1.14.4；同日晚些时候 fabric/1.14.4 **也入了 tier**
+    //   ⇒ 靶再迁到 quilt/1.16.5 —— 该组合**没有规则树**（quilt 树 1.18.2 起）、也没有 tier，是**耐久靶**）。
     const shell = generatePlaytestDriver({
-      platform: "fabric", version: "1.19.4", modId: "examplemod",
+      platform: "quilt", version: "1.16.5", modId: "examplemod",
       driverMode: "in_jvm_player_agent", capabilityProfile: "strict_survival",
       evidenceDir: join(root, "shell", "evidence"),
     });

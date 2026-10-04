@@ -80,7 +80,7 @@ Follow each package’s license as published on npm（`@xenova/transformers` 为
 
 - Upstream: Fabric Yarn (Maven `net.fabricmc:yarn`) / https://fabricmc.net/wiki/documentation:yarn
 - Typical local artefacts: `yarn-*.jar`、`yarn-*-tiny.gz`、`yarn-mappings.json`、generated `yarn-mappings.sqlite`
-- License: follow Yarn / FabricMC mapping license terms
+- License: **CC0-1.0**（2026-10-04 核实：FabricMC/yarn 自述 "open, unencumbered Minecraft mappings, free for everyone to use under the Creative Commons Zero license"，GitHub License 标识 CC0-1.0；同门 `FabricMC/intermediary` 亦为 CC0-1.0）
 - Note: the MCP server must use **SQLite point lookups** at runtime; do not treat the full JSON as a redistributable “load everything” database API
 
 ## Vanilla registry ID dumps（`data/vanilla_*/registries/`）
@@ -262,7 +262,11 @@ Minecraft is a trademark of Mojang Synergies AB. This project is not affiliated 
 - 同目录下**没有**非 `.bak` 的 `.gz`（`git ls-files` 里 `mappings/upstream/` 下以 `.gz` 结尾的件数实测 = **0**）⇒ 每一档在库的上游原件只有这一份 `.bak`。
 - 它们是**上游原样 gzip**，不是派生表：`mcp-server/scripts/assert-yarn-named-integrity.mjs` 的头注与夹具把这一点钉成了设计 —— 该门第 5 条判据要求 `provenance.json` 的 `upstreamV1.sha256` **等于** `mappings/upstream/*.bak` 的实测 sha256（「provenance ↔ 磁盘双向 sha 对账」）。⇒ 保留是**有台账、有门**的，不是散落物。
 
-口径落差（登记，不下结论）：本文件对 Mojang `client.txt` 的取舍理由是「上游自述 *may not redistribute the mappings complete and unmodified*」，实测 `git ls-files | grep -c client.txt` = 0 确认未入库；而这一族 13 件是**完整且未修改**的上游映射 gzip 且在库。两者的差别只在：`.bak` 侧有 `provenance.json` + sha 对账门，`client.txt` 侧没有。**同一句理由下的两条不同处置此前未在任何署名文件里对齐说明** ⇒ 需要一次裁定：要么把「保留原样上游件 = 以 sha 台账 + 门为条件」的判据写进许可口径，要么把这 13 件降级到缓存根（`MC_SKILL_CACHE` 指向的目录）只留 provenance。**本文件只登记，不代裁。**
+**已裁定（2026-10-04）**：本族 13 件**保留在库，不降级**，不再是待裁项。依据 = 上游许可本身：FabricMC/yarn 自述「open, unencumbered Minecraft mappings, free for everyone to use under the Creative Commons Zero license」，GitHub License 标识为 **CC0-1.0**（同门 `FabricMC/intermediary` 亦为 CC0-1.0）。CC0 1.0 Universal 不对再分发设任何条件 —— 不要求署名、不要求同许可、不限制用途 —— 因此「完整且未修改」这一形态本身不产生条款冲突。
+
+与 Mojang `client.txt` 的处置差异**不构成双标**：两者不同源、不同义务。`client.txt` 受 Mojang 专有条款约束（明文 *may not redistribute the mappings complete and unmodified*，实测 `git ls-files | grep -c client.txt` = 0 确认未入库），本族受 CC0 约束（无约束）⇒ **两者不适用同一条判据**，此前「同一句理由下两种处置」的表述不成立，已作废。
+
+`.bak` 侧保留 `provenance.json` + sha 双向对账（`assert-yarn-named-integrity.mjs` 第 5 条）是**可审计性**措施，与许可义务无关：CC0 不要求留痕，这是本仓自选的追溯手段。
 
 ### 分发提醒（承接上文 `## Release assets` 三条）
 

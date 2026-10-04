@@ -27,7 +27,7 @@ Enchantment Descriptions 几乎人人装，Bookshelf 的安装量因此巨大。
 
 ## 加载器口径（2026-09-25 按构件面逐 loader 实测；本档 `loaders` 由 [forge, neoforge] 补成 [fabric, forge, neoforge, quilt]）
 
-口径 = 2026-09-22 裁定④ + 2026-09-24 延伸：**点名某 loader ⇔ 构件面该 loader 有 `versionType=release` 的文件行**。数据 = `mcp-server/data/lib-manifests/all.json` 的 slug `bookshelf-lib`（快照 as-of 2026-09-16，文件 mtime 同日；本轮未重抓，该欠账仍挂在 `CONTRIBUTING.md` 未排期清单 `L42` ①）。逐 loader 分解（分母 = 该 slug 73 行）：
+口径 = 2026-09-22 裁定④ + 2026-09-24 延伸：**点名某 loader ⇔ 构件面该 loader 有 `versionType=release` 的文件行**。数据 = `mcp-server/data/lib-manifests/all.json` 的 slug `bookshelf-lib`（快照 as-of 2026-09-16，文件 mtime 同日；本轮未重抓，该欠账仍挂在 `CONTRIBUTING_LIST.md` 未排期清单 `L42` ①）。逐 loader 分解（分母 = 该 slug 73 行）：
 
 | loader | 行 | release | 点分 `gameVersion` 上界（数值序，非字典序） | 判定 |
 |---|---|---|---|---|

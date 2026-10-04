@@ -454,6 +454,8 @@ Cline 常见：`%APPDATA%\Code\User\globalStorage\saoudrizwan.claude-dev\setting
 
 可选：工具列表里应能看到本服务，数量 **86**（`indexToolSchemas` 47 条 + `wave/register.ts` 40 条注册，其中 `resolve_lib_skills` 两处都有 ⇒ 47 + 40 − 1 = 86；as-of 2026-10-02 实测 `list-tools` = 86）。对不上先 `npm run build`，不要改服务名。
 
+> **这一步验的是环境，不是功能。** 环境通了不代表模组能玩：交付任何模组改动前，须按根 `AGENTS.md`「游玩测试要求（交付门槛）」把 L0 构建 → L1 结构静态 → L2 数据 → L3 GameTest → L4 真机冒烟 → L5 场景 → L6 服务端/多人 → L7 回归 逐层测到与改动面相称的那一层，并把证据（`exit-code.txt` / `state.json` / 截图 / 日志）写进「交付汇报 · 怎么验」。给人读的摘要表见 `README.md`「测试要求：交付前必须测到什么程度」。
+
 **验收失败时的 CLI 对照**（可区分「没连上宿主」还是「data 路径错」）：
 
 ```bash

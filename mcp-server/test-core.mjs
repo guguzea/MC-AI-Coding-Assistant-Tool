@@ -2125,7 +2125,7 @@ copyIdeResources = true
   assert.ok(loom261.errors.some((e) => /25/.test(e)));
 
   // 2026-09-21：26.1 已去混淆 ⇒ 只认**不带 `-remap`** 的 `net.fabricmc.fabric-loom`
-  //（一手：fabric/26.1.2/scaffold/build.gradle:4 + 00-project-setup.mdc:9）。
+  //（一手：fabric/26.1.2/scaffold/build.gradle:6 + 00-project-setup.mdc:9）。
   // 旧实现复用 hasNewFabricPlugin（其正则把 `-remap` 列为可选）⇒ 26.1 写 `-remap` 仍判 passed，
   // 与同一分支里「26.1 必须使用 id net.fabricmc.fabric-loom」的文案自相矛盾。
   const loom261Remap = diagnoseGradle({
@@ -6357,6 +6357,7 @@ const WRAPPER_JARS = {
   "8.10": { sha256: "2db75c40782f5e8ba1fc278a5574bab070adccb2d21ca5a6e5ed840888448046", size: 43583, gradlewSha: "a3648413b47ef77af21d5ebc36c687c7d103aaef3e17f33de7d4f080a6f300a3", gradlewBatSha: "57931b17dd228e5c24dac90e815d0bf82477e831a4618dfab4136f5446b42a9f" },
   "9.2.1": { sha256: "423cb469ccc0ecc31f0e4e1c309976198ccb734cdcbb7029d4bda0f18f57e8d9", size: 45633, gradlewSha: "fb68debc1b1acf8ec55dc0d5e5495e1dedd0bd6b61f304bee61613eeb2bd9b92", gradlewBatSha: "fedad02c18e266ec094995a5751b7fe1eb6e74f66bf75db64fae2e50eb22c234" },
   "9.5.1": { sha256: "497c8c2a7e5031f6aa847f88104aa80a93532ec32ee17bdb8d1d2f67a194a9c7", size: 48462, gradlewSha: "ab5c0cad16305af2e619c159c1f58dd68d07fab9c11e36701e109c0277407f7a", gradlewBatSha: "475c4f08cd57cf2faa819e7f36d72aa93f0ad646ea23a8f7fa3ef54dee1cbc52" },
+  "9.7.1": { sha256: "7a9ce74cff467ca1bf60a4fcd9f05185acceda4d0f382434d393e17864262c5d", size: 47505, gradlewSha: "a5a5c199ba02189ae8c46a334223371a20599d9c298ef65e7540ede4a3f72d59", gradlewBatSha: "d539676c48b596afda64c963ec8f7ee56c7b3fe7e3b81d1dbe2d1a1e3dd9e9f8" },
 };
 // 钉值表本身必须先过格式校验：抄错一位 hex 会让该版本所有 scaffold 被误判为「被篡改」。
 function findMalformedPins(table) {
@@ -6373,9 +6374,9 @@ function findMalformedPins(table) {
 // 无 gradle-wrapper.properties 的 scaffold：写三件套必须先定 Gradle 版本，版本无仓内证据 → 登记空洞。
 // 补齐后必须从这里删掉（登记过期同样算失败）。
 const WRAPPER_VERSION_GAPS = [
-  "fabric/1.21.4", "fabric/1.21.8", "fabric/1.21.10", "fabric/26.1.2",
+  "fabric/1.21.4", "fabric/1.21.8", "fabric/1.21.10",
   "liteloader/1.12.2", "modloader/1.6.4",
-  "neoforge/1.20.1", "neoforge/26.1",
+  "neoforge/1.20.1",
   "rift/1.13.2",
 ];
 // Java 平台档的 scaffold 一律是 <平台>/<版本>/scaffold；bedrock/scaffold 是 RP/BP 目录、不含 Gradle，
@@ -6612,12 +6613,12 @@ async function testScaffoldWrappers() {
 
   const { seen, problems, declaredCount, byVersion, noProps } = scanScaffoldWrappers(REPO_ROOT);
   assert.equal(seen.length, 48, `全仓 Java scaffold 应为 48 档，实际 ${seen.length} → ${seen.join(",")}`);
-  assert.equal(declaredCount, 39, `已声明 Gradle 版本、三件套应完整的 scaffold 应为 39 档，实际 ${declaredCount}`);
+  assert.equal(declaredCount, 41, `已声明 Gradle 版本、三件套应完整的 scaffold 应为 41 档，实际 ${declaredCount}`);
   const fabricSeen = seen.filter((k) => k.startsWith("fabric/"));
   assert.equal(fabricSeen.length, 14, `fabric/*/scaffold 应为 14 档，实际 ${fabricSeen.length}`);
   assert.equal(
     fabricSeen.filter((k) => existsSync(join(REPO_ROOT, k, "scaffold", "gradle", "wrapper", "gradle-wrapper.properties"))).length,
-    10, "fabric 已声明 Gradle 版本的档数应为 10");
+    11, "fabric 已声明 Gradle 版本的档数应为 11");
   assert.deepEqual(noProps, [...WRAPPER_VERSION_GAPS].sort(), "无 gradle-wrapper.properties 的 scaffold 必须与空洞登记表逐档相等");
   assert.deepEqual(problems, [], `scaffold wrapper 门禁:\n  ${problems.join("\n  ")}`);
 
@@ -6689,8 +6690,10 @@ async function testScaffoldWrappers() {
           const rel = "fabric/1.20.1/scaffold/gradle/wrapper/gradle-wrapper.properties";
           wr(rel, read(rel).replace("zipStorePath=wrapper/dists", "zipStorePath=gradle/wrapper"));
         } },
-      { name: "空洞档半套", needle: "没有已声明版本却存在", key: "fabric/26.1.2",
-        mutate: ({ wr }) => wr("fabric/26.1.2/scaffold/gradlew", "#!/bin/sh\n") },
+      { name: "空洞档半套", needle: "没有已声明版本却存在", key: "fabric/1.21.4",
+        // 靶档 2026-10-03 从 fabric/26.1.2 移到 fabric/1.21.4：26.1.2 本批补了 wrapper（不再是无 props 的空洞档），
+        // 拿它投毒就是 no-op ⇒ 同 6710 那条的规矩，每补一档就把本靶挪到仍无 props 的档（现余 1.21.4/1.21.8/1.21.10）。
+        mutate: ({ wr }) => wr("fabric/1.21.4/scaffold/gradlew", "#!/bin/sh\n") },
       { name: "登记过期", needle: "登记过期", key: "fabric/1.21.8",
         mutate: ({ wr }) => wr(
           "fabric/1.21.8/scaffold/gradle/wrapper/gradle-wrapper.properties",
@@ -7675,15 +7678,15 @@ function diffDocToolTables({ readme, agents, registered }) {
     problems.push("实际注册集合里存在重复工具名");
   }
 
-  const readmeSec = docMdSlice(readme.split(/\r?\n/), /^## MCP Server 工具/, /^## (?!MCP Server 工具)/);
-  if (!readmeSec) problems.push("README 找不到「## MCP Server 工具」节（锚点被改）");
+  const readmeSec = docMdSlice(readme.split(/\r?\n/), /^## MCP\/CLI TOOLS/, /^## (?!MCP\/CLI TOOLS)/);
+  if (!readmeSec) problems.push("README 找不到「## MCP/CLI TOOLS」节（锚点被改）");
   const readmeGroups = readmeSec ? docReadmeGroups(readmeSec) : [];
   if (readmeSec && readmeGroups.length !== DOC_TOOL_GROUP_IDS.size) {
     problems.push(`README 工具分节数 ${readmeGroups.length}，与预期编号集 ${DOC_TOOL_GROUP_IDS.size} 不符`);
   }
-  const totalDecl = readmeSec ? /^## MCP Server 工具（(\d+) 个）/.exec(readmeSec[0]) : null;
+  const totalDecl = readmeSec ? /^## MCP\/CLI TOOLS:(\d+)/.exec(readmeSec[0]) : null;
   if (readmeSec && !totalDecl) {
-    problems.push(`README 工具节标题未按「（N 个）」声明总数：${(readmeSec[0] ?? "").trim()}`);
+    problems.push(`README 工具节标题未按「MCP/CLI TOOLS:N」声明总数：${(readmeSec[0] ?? "").trim()}`);
   } else if (totalDecl && Number(totalDecl[1]) !== registeredList.length) {
     problems.push(`README 标题声明 ${totalDecl[1]} 个工具，实际注册 ${registeredList.length} 个`);
   }
@@ -7740,7 +7743,7 @@ async function testDocsToolTablesMatchRegistry() {
 
   const poisoned = [
     ["README 少一行工具", { ...base, readme: readme.replace(/^\|[ \t]*`check_dependencies`[ \t]*\|.*\n/m, "") }, /缺 `check_dependencies`/],
-    ["README 总数标错", { ...base, readme: readme.replace(`## MCP Server 工具（${registered.length} 个）`, `## MCP Server 工具（${registered.length - 1} 个）`) }, new RegExp(`标题声明 ${registered.length - 1}`)],
+    ["README 总数标错", { ...base, readme: readme.replace(`## MCP/CLI TOOLS:${registered.length}`, `## MCP/CLI TOOLS:${registered.length - 1}`) }, new RegExp(`标题声明 ${registered.length - 1}`)],
     ["README 分节计数标错", { ...base, readme: readme.replace("### 10. 代码生成模板（9）", "### 10. 代码生成模板（8）") }, /§10 声明 8 个/],
     ["README 出现未注册名", { ...base, readme: readme.replace("### 11. 日志与依赖诊断（7）", "### 11. 日志与依赖诊断（7）\n\n| 工具 | 作用 |\n|------|------|\n| `not_a_real_tool` | x |") }, /未注册的工具名 `not_a_real_tool`/],
     ["README 跨节重复", { ...base, readme: readme.replace("### 11. 日志与依赖诊断（7）", "### 11. 日志与依赖诊断（7）\n\n| 工具 | 作用 |\n|------|------|\n| `validate_at` | x |") }, /同时出现在 §/],
