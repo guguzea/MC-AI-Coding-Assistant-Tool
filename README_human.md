@@ -9,8 +9,8 @@
 
 <div align="center">
 
-<img alt="让 AI 编程助手读懂 Minecraft 模组开发生态：规则 · 文档 · 映射 · 库模组 · 游戏内自测" src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=26&pause=2500&color=F97316&center=true&vCenter=true&width=900&lines=%E8%AE%A9%20AI%20%E7%BC%96%E7%A8%8B%E5%8A%A9%E6%89%8B%E8%AF%BB%E6%87%82%20Minecraft%20%E6%A8%A1%E7%BB%84%E5%BC%80%E5%8F%91%E7%94%9F%E6%80%81%EF%BC%9A%E8%A7%84%E5%88%99%20%C2%B7%20%E6%96%87%E6%A1%A3%20%C2%B7%20%E6%98%A0%E5%B0%84%20%C2%B7%20%E5%BA%93%E6%A8%A1%E7%BB%84%20%C2%B7%20%E6%B8%B8%E6%88%8F%E5%86%85%E8%87%AA%E6%B5%8B" />
-<br />
+<img alt="让 AI 编程助手读懂 Minecraft 模组开发生态" src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=26&pause=2500&color=F97316&center=true&vCenter=true&width=900&lines=%E8%AE%A9+AI+%E7%BC%96%E7%A8%8B%E5%8A%A9%E6%89%8B%E8%AF%BB%E6%87%82+Minecraft+%E6%A8%A1%E7%BB%84%E5%BC%80%E5%8F%91%E7%94%9F%E6%80%81" /><br />
+<img alt="规则 · 文档 · 映射 · 库模组 · 游戏内自测" src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=26&pause=2500&color=F97316&center=true&vCenter=true&width=900&lines=%E8%A7%84%E5%88%99+%C2%B7+%E6%96%87%E6%A1%A3+%C2%B7+%E6%98%A0%E5%B0%84+%C2%B7+%E5%BA%93%E6%A8%A1%E7%BB%84+%C2%B7+%E6%B8%B8%E6%88%8F%E5%86%85%E8%87%AA%E6%B5%8B" /><br />
 
 
 </div>

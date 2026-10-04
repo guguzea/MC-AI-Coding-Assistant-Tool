@@ -168,7 +168,7 @@ npx @modelcontextprotocol/inspector node dist/index.js
 - `action=read` → 观测面：`state.json` 的 `intentState` / `intents[]` / `lastIntent` / `scan.nearest` / `goto.arrived`，外加 `menu`（`playtest/intent-menu.json`）、`mailbox` 状态与 **`nextSteps`**（上一条失败 = 该意图菜单的 fallback）。
 - `action=write` → 写 `<evidenceDir>/intent.json`（扁平 `{"intent":"walk_to","x":10,"z":-20}`）；写前六段校验（confirmed → 禁列 → 菜单 → 参数白名单 → 必填 → 邮箱占用 `MAILBOX_BUSY`/`overwrite`），非法不进执行器。
 - 失败语义：邮箱形态失败 = 记 `intents[]`（`ok:false` + `failure` 字段）并**继续守候**（不自动重试，按 `nextSteps` 换意图）；协议违规判红停轮；脚本形态（plan 里 `intent` 步骤）失败判红停轮。
-- 真执行器覆盖 = `PLAYTEST_VERIFIED_TIER` 列出的档（**唯一真源、随逐档 javap 取证扩面——正文不数档**；as-of 2026-10-04 为 **52** 项 = `fabric` 18 / `neoforge` 14 / `quilt` 10 / `forge` 10，含**去混淆档** `fabric`/`neoforge` 的 `26.1`/`26.1.1`/`26.1.2`/`26.2`/`26.3` 与 forge 早期 `1.12.2`–`1.19.4` 八档；逐版本清单见仓库根 `AGENTS.md`「人在环例外：游玩自测」的已核实边界）；表外档只发 `playtest/intent-menu.json` 契约 + 结构壳。
+- 真执行器覆盖 = `PLAYTEST_VERIFIED_TIER` 列出的档（**唯一真源、随逐档 javap 取证扩面——正文不数档**；as-of 2026-10-04 为 **53** 项 = `fabric` 18 / `neoforge` 14 / `quilt` 10 / `forge` 10 / `liteloader` 1，含**去混淆档** `fabric`/`neoforge` 的 `26.1`/`26.1.1`/`26.1.2`/`26.2`/`26.3` 与 forge 早期 `1.12.2`–`1.19.4` 八档；逐版本清单见仓库根 `AGENTS.md`「人在环例外：游玩自测」的已核实边界）；表外档只发 `playtest/intent-menu.json` 契约 + 结构壳。
 
 ### 社区知识与库模组（与官方文档分离）
 

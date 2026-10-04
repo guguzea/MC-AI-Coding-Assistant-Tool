@@ -16,11 +16,14 @@
  *     （见 mcp-server/scripts/assert-playtest-intent-gate.mjs）；不设该变量时一切按"未验证档"处理，不静默通过。
  */
 import { eraUpperBoundError, exactMcVersion, toPascalCase, type GeneratorResult } from "./common.js";
+import { BRIDGE_MOD_VERSIONS, generateBridgeMod } from "./playtest-bridge-mod.js";
 
 export const PLAYTEST_DRIVER_MODES = ["external_bridge", "in_jvm_player_agent", "temporary_client_tick_driver"] as const;
 export const PLAYTEST_CAPABILITY_PROFILES = ["strict_survival", "operator", "creative"] as const;
 export const PLAYTEST_POSTCONDITIONS = ["block_state", "entity_count", "inventory_contains", "marker_log", "screen_present"] as const;
-export const PLAYTEST_PLATFORMS = ["forge", "neoforge", "fabric", "quilt"] as const;
+// liteloader 只支持 **hybrid（liteloader_forge）** 形态：纯 litemod 没有 Gradle 工程（`scaffold/pure` 是 source-only）
+// ⇒ 没有 `gradlew runClient` 载体，driver 链跑不起来。故该平台面仅对 hybrid 工程开放（见 applyLiteLoader1122）。
+export const PLAYTEST_PLATFORMS = ["forge", "neoforge", "fabric", "quilt", "liteloader"] as const;
 
 export type PlaytestDriverMode = (typeof PLAYTEST_DRIVER_MODES)[number];
 export type PlaytestCapabilityProfile = (typeof PLAYTEST_CAPABILITY_PROFILES)[number];
@@ -93,7 +96,8 @@ interface PlatformProfile {
  * 状态：档表已就位；**调用点改写接线**（把模板里的 fabric 调用机械改写为档表条目）见下一切片。
  */
 export function platformProfile(platform: string): PlatformProfile {
-  const forge = platform === "forge" || platform === "neoforge";
+  // liteloader 走 **hybrid（liteloader_forge）**：Forge 的包与事件总线都在 ⇒ vanilla/Forge 面与 forge 档同源。
+  const forge = platform === "forge" || platform === "neoforge" || platform === "liteloader";
   if (forge) {
     return {
       MC: "net.minecraft.client.Minecraft",
@@ -1172,6 +1176,83 @@ export function applyForgeMCP1122(s: string): string {
 }
 
 /**
+ * **LiteLoader 1.12.2（hybrid = `liteloader_forge`）** 驱动层。用法 = `applyLiteLoader1122(rewriteForForgeLegacy(javaSource, "1.12.2"))`
+ * —— vanilla/Forge 面**完全复用** forge 1.12.2 那两张表（hybrid 工程里 Forge 的包与事件总线都在）。
+ *
+ * **只改一处：tick 的挂接方式。** Forge 档是 `@SubscribeEvent onClientTick(TickEvent.ClientTickEvent)`；
+ * hybrid 工程里**若同时**挂 Forge `TickEvent` 与 LiteLoader `Tickable`，同一个驱动会被两个分发器各推一遍
+ * （tick 走两遍）。故本层把 Forge 的 tick 订阅**摘掉**，改成一个**静态转发入口** `onLiteLoaderTick(Minecraft)`，
+ * 由**被测工程自己的 LiteMod** 转发：
+ *
+ * ```java
+ * public class LiteModExample implements LiteMod, Tickable {          // com.mumfrey.liteloader.Tickable
+ *     @Override public void onTick(net.minecraft.client.Minecraft mc, float partialTicks, boolean inGame, boolean clock) {
+ *         PlaytestQaDriver.onLiteLoaderTick(mc);
+ *     }
+ * }
+ * ```
+ *
+ * **为什么这样切**（两条都重要）：
+ * ① **产物对 LiteLoader 零类型依赖** —— `onLiteLoaderTick` 只收 `net.minecraft.client.Minecraft`，不 import 任何
+ *    `com.mumfrey.*` ⇒ **能与 forge 1.12.2 用同一套真构件 classpath 编译验证**（本层不含未取证 API）。
+ * ② **胶水的唯一外部名字来自本档核实表**，不是臆造：`com.mumfrey.liteloader.Tickable#onTick(Minecraft, float, boolean, boolean)`
+ *    与 `LiteMod#{getName,getVersion,init(File),upgradeSettings(String,File,File)}` 均记在
+ *    `liteloader/1.12.2/knowledge/common/verified-api.md`（源 = LiteMod `1.12.2` 分支；**该 loader 许可证禁止再分发源码/构件**，
+ *    故本仓不内置其 jar，也不 javap —— 与本档既有口径一致）。
+ * ③ 聊天回包**继续走 Forge** `ClientChatReceivedEvent`（hybrid 有该事件）⇒ `register()` 里那条 `EVENT_BUS.register` 保留。
+ *
+ * **边界**：纯 LiteLoader（`scaffold/pure`，无 Gradle、无 Forge）**不进本链** —— 既没有 `gradlew runClient` 载体，
+ * 也没有 Forge 事件总线（产物里的 `MinecraftForge` / `ClientChatReceivedEvent` 编译不过）。本层的 tier 条目一律写 `1.12.2`，
+ * 但其前置是 **hybrid 工程**。
+ */
+export function applyLiteLoader1122(s: string): string {
+  let t = s;
+  // ① 摘掉 Forge 的 tick 订阅（避免与 LiteLoader Tickable 双驱动），换成静态转发入口。
+  t = t.replace(
+    `    @SubscribeEvent
+    public void onClientTick(TickEvent.ClientTickEvent event) {
+        if (event.phase != TickEvent.Phase.END) {
+            return;
+        }
+        onInterpTick(Minecraft.getMinecraft());
+    }`,
+    `    /**
+     * **LiteLoader 入口（本档 = liteloader hybrid）**：tick 不再挂 Forge 事件总线（否则 hybrid 里
+     * LiteLoader \`Tickable\` 与 Forge \`ClientTickEvent\` 会各推一遍）。请在被测工程的 LiteMod 里转发：
+     *
+     *     public class LiteModExample implements LiteMod, Tickable {
+     *         @Override
+     *         public void onTick(net.minecraft.client.Minecraft mc, float partialTicks, boolean inGame, boolean clock) {
+     *             PlaytestQaDriver.onLiteLoaderTick(mc);
+     *         }
+     *     }
+     *
+     * 不为 \`LiteMod\`/\`Tickable\` 引入任何 \`com.mumfrey.*\` 依赖（本类只收 Minecraft），故本产物可脱离 LiteLoader jar 编译。
+     */
+    public static void onLiteLoaderTick(Minecraft client) {
+        onInterpTick(client);
+    }`,
+  );
+  // ② TickEvent 在本产物里已无引用 ⇒ 删掉那条 import（留着会与「tick 由 LiteLoader 推」的口径互相打脸）。
+  t = t.replaceAll("import net.minecraftforge.fml.common.gameevent.TickEvent;\n", "");
+  t = t.replaceAll("import net.minecraftforge.event.TickEvent;\n", "");
+  // ③ register() 的日志点名 LiteLoader 前置，别让用户漏掉 Tickable 转发（漏了 = 永不 tick ⇒ 预算耗尽判红）。
+  t = t.replaceAll(
+    'log("[QA] driver registered（解释器引擎）PLAN=" + PLAN.length + " 步");',
+    'log("[QA] driver registered（解释器引擎 / LiteLoader 档）PLAN=" + PLAN.length + " 步；⚠ 必须由你的 LiteMod 实现 Tickable 并转发 onLiteLoaderTick，否则永不 tick");',
+  );
+  t = t.replaceAll(
+    'log("[QA] driver registered expect=" + EXPECT_ITEM + " slot=" + EXPECT_SLOT);',
+    'log("[QA] driver registered expect=" + EXPECT_ITEM + " slot=" + EXPECT_SLOT + "；⚠ LiteLoader 档：需 LiteMod 实现 Tickable 转发 onLiteLoaderTick");',
+  );
+  // ④ 文件头 **不需要**在这里改：已验证档的表头是**生成器按 tier 条目现拼**的
+  //   （`* 签名出处 = javap 实测（${tier.mappings} 命名 jar，as-of ${tier.asOf}）：` ⇒ liteloader 的表头直接取
+  //   `PLAYTEST_VERIFIED_TIER` 里 liteloader 1.12.2 那条的 `mappings`）。此处**故意不写**死代码式的 replace。
+  return t;
+}
+
+
+/**
  * forge 档改写表：把 fabric（yarn 名 + fabric-api 事件）模板**机械改写**为 forge（mojmap/parchment 名 + Forge 事件总线）。
  * 每条都对应上面 `platformProfile('forge')` 里 javap 实测的签名；fabric 路径**不改一字**（已真机验证）。
  * NeoForge 1.20.1 同此表（包名仍是 `net.minecraftforge`）。
@@ -1936,6 +2017,20 @@ export const PLAYTEST_VERIFIED_TIER: ReadonlyArray<{ platform: string; version: 
     asOf: "2026-10-03",
   },
   {
+    platform: "liteloader",
+    version: "1.12.2",
+    mappings:
+      "**LiteLoader 1.12.2 = hybrid（liteloader_forge）**，vanilla/Forge 面 = `forgeBin-1.12.2-14.23.5.2847.jar`（FG2.3 的 MCP 命名 + Forge 合并件，本机 `.gradle/caches/minecraft/...`，**免下载**），与 `forge 1.12.2` **同表**（`applyForgeMCP132` + `applyForgeMCP1122`）。" +
+      "改写表 = `rewriteForForgeLegacy` → 上述两表 → **`applyLiteLoader1122`**（**只改 tick 挂接**）：摘掉 `@SubscribeEvent onClientTick(TickEvent.ClientTickEvent)`，" +
+      "换成静态转发入口 `public static void onLiteLoaderTick(net.minecraft.client.Minecraft)`（hybrid 里若 LiteLoader `Tickable` 与 Forge `ClientTickEvent` 同时挂，驱动会被推两遍 ⇒ tick 走两遍）。" +
+      "**LiteLoader 侧只用两个名字**，签名出自本档核实表 `liteloader/1.12.2/knowledge/common/verified-api.md`（源 = LiteMod `1.12.2` 分支，**该 loader 许可证禁止再分发其源码/构件** ⇒ 本仓不内置 jar、不 javap）：" +
+      "`com.mumfrey.liteloader.Tickable#onTick(Minecraft, float, boolean, boolean)`（由工程自己的 LiteMod 实现并转发）与 `com.mumfrey.liteloader.LiteMod#{getName(), getVersion(), init(File), upgradeSettings(String, File, File)}`（scaffold `hybrid` 的既有写法）。" +
+      "**产物对 LiteLoader 零类型依赖**（不 import `com.mumfrey.*`）⇒ **编译验证 = JDK 8 `javac` 对上面那只真构件、两种模式各 COMPILE_OK**（与 `forge 1.12.2` 共用同一 classpath）。" +
+      "**前置 = hybrid 工程**（`apply plugin: 'net.minecraftforge.gradle.liteloader'`，见 `liteloader/1.12.2/scaffold/hybrid`）：**纯 litemod（`scaffold/pure`）不在本链** —— 无 Gradle（无 `gradlew runClient` 载体）、无 Forge（产物里的 `MinecraftForge`/`ClientChatReceivedEvent` 编译不过）。" +
+      "聊天回包**继续走 Forge** `ClientChatReceivedEvent`（hybrid 有该事件 ⇒ `EVENT_BUS.register` 保留）。`newworld` 与 forge 1.12.2 一样 **fail-closed**。**真机未跑**。",
+    asOf: "2026-10-04",
+  },
+  {
     platform: "forge",
     version: "1.12.2",
     mappings:
@@ -2281,15 +2376,21 @@ export function generatePlaytestDriver(input: PlaytestDriverInput): GeneratorRes
   const platform = String(input.platform ?? "").trim().toLowerCase();
   const version = String(input.version ?? "").trim();
 
-  if (!platform) errors.push("platform 必填（forge | neoforge | fabric | quilt）。");
+  if (!platform) errors.push("platform 必填（forge | neoforge | fabric | quilt | liteloader）。");
   else if (!(PLAYTEST_PLATFORMS as readonly string[]).includes(platform)) {
-    errors.push(`未知 platform "${platform}"：只支持 forge | neoforge | fabric | quilt。`);
+    errors.push(`未知 platform "${platform}"：只支持 forge | neoforge | fabric | quilt | liteloader。`);
   }
   if (!version) errors.push("version 必填：传精确 Minecraft 版本（如 1.21.11），禁止默认 1.20.1。");
   else if (!exactMcVersion(version)) errors.push(`必须是精确 MC 版本（x.y.z / 26.x.y），收到 ${version}。`);
   else {
     const era = eraUpperBoundError(version, PLAYTEST_MAX_MINOR_26X);
     if (era) errors.push(era);
+  }
+  if (platform === "liteloader" && version !== "1.12.2") {
+    warnings.push(
+      `platform=liteloader 目前**只取证了 1.12.2**（hybrid）⇒ version=${version} 不在本链：产物按**结构壳**给（\`// TODO(未核实)\`），` +
+        `不会借 1.12.2 的表。要支持该档需先按「javap/核实表 + 载体确认」补齐取证，再加 tier 条目。`,
+    );
   }
   if (errors.length > 0) return { code: null, errors, warnings };
 
@@ -2364,6 +2465,22 @@ export function generatePlaytestDriver(input: PlaytestDriverInput): GeneratorRes
     "playtest/actions.json": JSON.stringify(actions, null, 2) + "\n",
     "playtest/README.playtest.md": readme,
   };
+
+  // ── 老平台「最小桥 mod」附加产物（forge 1.7.10–1.12.2）──
+  // 桥路线与 driver 链**互相隔离**：本模板不进 PLAYTEST_VERIFIED_TIER、不参与 driver 派发。
+  // 只在用户走 external_bridge（默认模式）时附赠一份**逐版本正确**的自建桥源码 —— 因为这些档里
+  // 1.7.10–1.11.2 **没有现成桥件**（BlackBoxPro 只覆盖 fabric/neoforge 1.21.1 + 1.21.11、forge 1.12.2），
+  // 而协议与 playtest_bridge 一致（GET /status、POST /execute）⇒ 老平台不必改工具面就能走桥。
+  if (mode === "external_bridge" && platform === "forge" && BRIDGE_MOD_VERSIONS.includes(version)) {
+    const bridgeFiles = generateBridgeMod(version, modId).files;
+    Object.assign(files, bridgeFiles);
+    warnings.push(
+      `已附赠「最小桥 mod」模板（${Object.keys(bridgeFiles).join(" / ")}）：forge ${version} 无现成桥件` +
+        `（BlackBoxPro 覆盖面 = fabric/neoforge 1.21.1 + 1.21.11、forge 1.12.2）⇒ 本模板自带 tick 钩子 + 内嵌 HTTP` +
+        `（协议同 playtest_bridge）⇒ 老平台零工具面改动。⚠️ 1.7.10–1.11.2 的 Minecraft 字段名只有 javadoc 出处` +
+        `（**未编译验证**），1.12.2 已按 stable_39 真构件 javap 兑过；装 jar / 跑 Gradle 前先按 README.bridge.md 确认，测完即删。`,
+    );
+  }
 
   if ((mode === "temporary_client_tick_driver" || mode === "in_jvm_player_agent") && isVerifiedTier(platform, version)) {
     // ── 真 driver（本档全部签名 javap 实测，见 PLAYTEST_VERIFIED_TIER）──
@@ -4351,6 +4468,9 @@ public final class PlaytestQaDriver {
     // neoforge 1.20.2+ 起是 net.neoforged 命名层 ⇒ 走 rewriteForNeoForge（= forge 表 + 事件栈换包，javap 实测）。
     // forge 1.16.5–1.19.4（旧 mojmap 面）⇒ 独立 legacy 表；其余 forge 走 forge 表。
     const useForgeLegacyTable = platform === "forge" && FORGE_LEGACY_VERSIONS.includes(version);
+// liteloader = hybrid（liteloader_forge）：vanilla/Forge 面走 forge 1.12.2 那两张表，再叠加 LiteLoader 的 tick 挂接层。
+// **按版本钉住**（只有 1.12.2 取证过）——别让 liteloader 的其它版本静默借 1.12.2 的表。
+const useLiteLoaderTable = platform === "liteloader" && version === "1.12.2";
     const useForgeTable = (platform === "forge" && !useForgeLegacyTable) || (platform === "neoforge" && version === "1.20.1");
     // neoforge 26.1+ = 去混淆层 + **NeoForge 26.x 事件栈**（ClientTickEvent.Post，无 phase）⇒ 独立表
     const useNeoForge26Table = platform === "neoforge" && /^26\./.test(version);
@@ -4367,7 +4487,9 @@ public final class PlaytestQaDriver {
     // MC 26.1+ = 去混淆层（jackpot：vanilla 名 = mojmap，免 remap）+ Fabric API 事件 ⇒ 独立表。
     // 只覆盖 fabric（本仓 quilt 无 26.x 档，quilt 26.x 仍走结构壳，别越界借 fabric 表）。
     const useFabric26Table = platform === "fabric" && /^26\./.test(version);
-    const emittedJava = useForgeLegacyTable
+    const emittedJava = useLiteLoaderTable
+      ? applyLiteLoader1122(rewriteForForgeLegacy(javaSource, version))
+      : useForgeLegacyTable
       ? rewriteForForgeLegacy(javaSource, version)
       : useForgeTable
       ? rewriteForForge(javaSource, version)
@@ -4385,7 +4507,17 @@ public final class PlaytestQaDriver {
                   ? rewriteForFabric1211(javaSource)
                   : javaSource;
     files["playtest/PlaytestQaDriver.java"] = javadocSafe(emittedJava);
-    if (useForgeLegacyTable) {
+    if (useLiteLoaderTable) {
+      warnings.push(
+        `platform=liteloader version=${version} 档 = **hybrid（liteloader_forge）**：vanilla/Forge 面与 \`forge ${version}\` 同表（\`applyForgeMCP132\` + \`applyForgeMCP1122\`），` +
+          `再叠 \`applyLiteLoader1122\` —— **只改 tick 挂接**：摘掉 Forge \`ClientTickEvent\` 订阅、换成静态转发入口 \`PlaytestQaDriver.onLiteLoaderTick(Minecraft)\`，` +
+          `由**被测工程的 LiteMod** 实现 \`com.mumfrey.liteloader.Tickable\` 后转发（**不转发 = 永不 tick = 预算耗尽判红**）。` +
+          `**产物对 LiteLoader 零类型依赖**（不 import \`com.mumfrey.*\`）⇒ 与 forge 1.12.2 共用同一套真构件 classpath 编译验证。` +
+          `LiteLoader 侧只用两个名字，签名出自本档核实表 \`liteloader/1.12.2/knowledge/common/verified-api.md\`（该 loader **许可证禁止再分发** ⇒ 本仓不内置其 jar、不 javap）。` +
+          `**纯 litemod（\`scaffold/pure\`，无 Gradle、无 Forge）不在本链**：没有 \`gradlew runClient\` 载体，产物里的 \`MinecraftForge\`/\`ClientChatReceivedEvent\` 也编译不过。` +
+          `聊天回包继续走 Forge \`ClientChatReceivedEvent\`。**真机未跑**。`,
+      );
+    } else if (useForgeLegacyTable) {
       warnings.push(
         `platform=forge version=${version} 档由 fabric 模板经 **forge legacy 表**（rewriteForForgeLegacy = forge 表 + 该档旧 API 面）派生——**本档是派生态**（由 1.21.11 模板改写而来，非原生档）。` +
           `javap 依据（本机 \`.gradle/caches/forge_gradle\` 缓存 jar）：1.16.5 = 旧 mojmap 包名（\`GUI screen\` 单数 / \`ClientPlayerEntity\` / \`ClientPlayNetHandler\` / \`util.registry.Registry\` / \`ScreenShotHelper.grab(File,int,int,Framebuffer,Consumer)\` / \`options\`=GameSettings / \`yRot·xRot\` 公开字段）；` +

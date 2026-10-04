@@ -9,9 +9,9 @@
 
 <div align="center">
 
-<img alt="Let your AI coding assistant actually understand Minecraft modding: rules, docs, mappings, library mods, in-game playtesting" src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=26&pause=2500&color=F97316&center=true&vCenter=true&width=900&lines=Let%20your%20AI%20coding%20assistant%20actually%20understand%20Minecraft%20modding%3A%20rules%2C%20docs%2C%20mappings%2C%20library%20mods%2C%20in-game%20playtesting" />
-<br />
-<sub>If the line above did not render, read this: let your AI coding assistant actually understand Minecraft modding — rules, docs, mappings, library mods, in-game playtesting</sub>
+<img alt="Let your AI coding assistant actually understand Minecraft modding" src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=26&pause=2500&color=F97316&center=true&vCenter=true&width=900&lines=Let+your+AI+coding+assistant+actually+understand+Minecraft+modding" /><br />
+<img alt="rules, docs, mappings, library mods, in-game playtesting" src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=26&pause=2500&color=F97316&center=true&vCenter=true&width=900&lines=rules%2C+docs%2C+mappings%2C+library+mods%2C+in-game+playtesting" /><br />
+
 
 </div>
 
