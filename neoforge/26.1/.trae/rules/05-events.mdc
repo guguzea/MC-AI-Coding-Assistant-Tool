@@ -7,7 +7,7 @@
 - **mod bus**：注册、lifecycle（`FMLCommonSetupEvent`、`FMLClientSetupEvent`、`RegisterPayloadHandlersEvent`、`GatherDataEvent.Client / GatherDataEvent.Server`）
 - **游戏总线** `NeoForge.EVENT_BUS`：游玩中事件（如 `ServerStartingEvent`）
 
-`@SubscribeEvent`。类级 `@EventBusSubscriber(modid = "yourmodid")`（1.20.6+ 已去掉 `Mod.` 前缀，默认总线 `Bus.GAME`；注册/lifecycle 等 mod bus 事件必须显式 `bus = Bus.MOD`）。
+`@SubscribeEvent`。类级 `@EventBusSubscriber(modid = "yourmodid")`（1.20.6+ 已去掉 `Mod.` 前缀；1.21.8 起注解上的 `bus` 属性与 `Bus` 类型已移除，不要再写 `bus = Bus.MOD`——写了编译报「找不到符号: 方法 bus()／变量 Bus」）。
 
 入口里 `modEventBus.addListener(this::commonSetup)` 与 MDK 一致。
 

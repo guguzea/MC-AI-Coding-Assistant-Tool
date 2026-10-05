@@ -1,5 +1,17 @@
 # Rift Listener 接口（源码打开，非 Fabric 记忆）
 
+> **桥路线相关性（2026-10-04 补记）**：若要在本档做「最小桥 mod」（协议同 `playtest_bridge`），
+> **tick 钩子就在本表**：`org.dimdev.rift.listener.client.ClientTickable#clientTick()`（client 子目录那张表）。
+> 服务端侧对应 `org.dimdev.rift.listener.ServerTickable#serverTick(MinecraftServer)`。
+> ⚠️ 这两个名字**来自本表既有出处**（源码打开，2026-08-15），**不是我按 Fabric/1.12.2 推的**；表外仍禁止输出。
+> 本档其余的桥前置（客户端单例 / 玩家对象 / 发送聊天 / 截图 / 读方块）**尚未取证**，不要凭 Fabric 记忆填。
+> 依赖源可用性见 `making-mods-wiki.md` 末尾那条（原 maven 已死，**JitPack 替代源已核可用，2026-10-05**）。
+
+> **✅ 2026-10-05 已对真构件复核：本表无需修正。** 用 `Rift-1.0.4-106-dev.jar`（JitPack，sha256 `5B5E333D…D5463`）跑 `javap` 全量导出，与本表逐条对账：
+> **接口 39 vs 39 完全一致**（无「文档有而 jar 没有」，也无「jar 有而文档漏了」），**全部方法名都能对上**。
+> 精确签名与参数类型见同目录 **`verified-api.md`**（那是 `javap` 真构件表，本表是 wiki 抓取表，两者互为对照）。
+> ⚠️ 唯一要辟谣的名字：网上流传的 \`InstanceOfServerTickable\` **在 jar 里不存在**，正确的是 \`ServerTickable\`。
+
 - **抓取日**：2026-08-15
 - **源**：https://github.com/DimensionalDevelopment/Rift/tree/master/src/main/java/org/dimdev/rift/listener
 - **InitializationListener**：`org.dimdev.riftloader.listener.InitializationListener`（包名不是 `org.dimdev.rift.listener`）

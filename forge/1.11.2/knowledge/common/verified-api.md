@@ -6,7 +6,7 @@
 **出处** = 本档 javadoc 语料实页（`data/forge_javadoc/1.11.2/raw/<path>.md`，源 = skmedix ForgeJavaDocs `1.11.2-*`）。
 **表外名字禁止输出**；本表只收「tick 钩子 + 一个不含 GUI 动作的最小 HTTP 桥」所需的接口。
 
-> ⚠️ **字段名的置信度低于类名与方法名**：上表 `Minecraft` 的三个字段（`thePlayer` / `theWorld` / `mcDataDir`）来自 **javadoc 语料**；同一 MC 版本的 MCP **字段名随映射快照而异**（已在 1.12.2 实测到：javadoc 写 `mcDataDir`/`thePlayer`/`theWorld`，而该档 `stable_39` 构件里是 `gameDir`/`player`/`world`）。本机**没有 1.7.10–1.11.2 的构件** ⇒ 这三个名字**未编译验证**；工程若按别的快照编译，按报错改名即可（类名/方法名不受影响）。
+> ⚠️ **字段名的置信度低于类名与方法名**：上表 `Minecraft` 的三个字段（`player` / `world` / `mcDataDir`）来自 **javadoc 语料**；同一 MC 版本的 MCP **字段名随映射快照而异**（已在 1.12.2 实测到：**只有游戏目录一项**不同 —— javadoc 写 `mcDataDir`，而该档 `stable_39` 构件里是 `gameDir`；**玩家/世界字段 javadoc 与构件一致，均为 `player`/`world`**）。本机**没有 1.7.10–1.11.2 的构件** ⇒ 这三个名字**未编译验证**；工程若按别的快照编译，按报错改名即可（类名/方法名不受影响）。
 | 项 | 本档事实 | 语料页 |
 |---|---|---|
 | tick 事件类 | `net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent`（`public static class … extends TickEvent`） | `net/minecraftforge/fml/common/gameevent/TickEvent.ClientTickEvent.md` |
@@ -15,8 +15,8 @@
 | 订阅注解 | `@net.minecraftforge.fml.common.eventhandler.SubscribeEvent` | `net/minecraftforge/fml/common/eventhandler/SubscribeEvent.md` |
 | **注册到哪条总线** | `MinecraftForge.EVENT_BUS`（本档 `FMLCommonHandler.bus()` 已 **`@Deprecated`**；`MinecraftForge.EVENT_BUS` 的 javadoc 逐字写 “all events for Forge will be fired on these, you should use this to register all your listeners”） | `net/minecraftforge/fml/common/FMLCommonHandler.md` · `net/minecraftforge/common/MinecraftForge.md` |
 | 客户端单例 | `Minecraft.getMinecraft()`（static） | `net/minecraft/client/Minecraft.md` |
-| 客户端字段 | `thePlayer` / `theWorld`(`WorldClient`) / `currentScreen` / `gameSettings` / `mcDataDir`(File) / `displayWidth`·`displayHeight`(int) | 同上 |
-| 玩家对象 | `Minecraft.thePlayer`（javadoc 类型 `EntityPlayerSP`） | 同上 · `net/minecraft/client/entity/` |
+| 客户端字段 | `player` / `world`(`WorldClient`) / `currentScreen` / `gameSettings` / `mcDataDir`(File) / `displayWidth`·`displayHeight`(int) | 同上 |
+| 玩家对象 | `Minecraft.player`（javadoc 类型 `EntityPlayerSP`） | 同上 · `net/minecraft/client/entity/` |
 | **发聊天/命令** | `EntityPlayerSP#sendChatMessage(String)` | `net/minecraft/client/entity/EntityPlayerSP.md` |
 | 位置/朝向/落地 | 公开字段 `posX` / `posY` / `posZ` / `rotationYaw` / `rotationPitch` / `onGround` + `getPosition(): BlockPos` | `net/minecraft/entity/Entity.md` |
 | 读方块 | `World#getBlockState(BlockPos): IBlockState` + `IBlockState#getBlock()`；`Block#getRegistryName(): String` | `net/minecraft/world/World.md` · `net/minecraft/block/Block.md` |

@@ -2,43 +2,43 @@
 
 ## 消息处理相关
 
-### ❌ 在消息处理器中直接修改世界（未用 enqueueWork）
+### ❌ 把 1.20.1 的处理器签名搬进 1.20.4
 
 ```java
-// 错误
-@SubscribeEvent
-public static void onMessage(MyMessage message, Supplier<NetworkEvent.Context> ctx) {
+// 错误：1.20.4 没有 NetworkEvent
+public static void handle(MyMessage message, Supplier<NetworkEvent.Context> ctx) {
     ServerPlayer player = ctx.get().getSender();
-    player.getLevel().setBlock(player.blockPosition(), Blocks.AIR.defaultBlockState()); // ❌ 不安全
+    player.level().setBlockAndUpdate(player.blockPosition(), Blocks.AIR.defaultBlockState());
 }
 ```
 
-**症状**：异步修改世界导致数据损坏或崩溃。
+**症状**：编译期报「找不到符号: 类 NetworkEvent」。
 
-**正确方案**：
+**正确方案**：本档处理器签名是 `(MSG, CustomPayloadEvent.Context)`，且注册时用 `.consumerMainThread(...)` 保证主线程。
 
 ```java
-@SubscribeEvent
-public static void onMessage(MyMessage message, Supplier<NetworkEvent.Context> ctx) {
-    ctx.get().enqueueWork(() -> {
-        ServerPlayer player = ctx.get().getSender();
-        if (player != null) {
-            player.getLevel().setBlock(player.blockPosition(), Blocks.AIR.defaultBlockState());
-        }
-    });
-    ctx.get().setPacketHandled(true);
+CHANNEL.messageBuilder(MyMessage.class)
+    .encoder(MyMessage::encode)
+    .decoder(MyMessage::new)
+    .consumerMainThread(ModNetwork::handle)   // 主线程回调
+    .add();
+
+public static void handle(MyMessage message, CustomPayloadEvent.Context ctx) {
+    ServerPlayer player = ctx.getSender();
+    if (player != null) {
+        player.level().setBlockAndUpdate(player.blockPosition(), Blocks.AIR.defaultBlockState());
+    }
+    ctx.setPacketHandled(true);
 }
 ```
-
----
 
 ### ❌ 逐字段发送大量网络数据
 
 ```java
-// 错误
-channel.sendToServer(new SyncFieldMessage("field1", value1));
-channel.sendToServer(new SyncFieldMessage("field2", value2));
-channel.sendToServer(new SyncFieldMessage("field3", value3)); // ❌ 高网络开销
+// 错误（本档 C2S 写法，逐字段发就是问题所在）
+CHANNEL.send(new SyncFieldMessage("field1", value1), PacketDistributor.SERVER.noArg());
+CHANNEL.send(new SyncFieldMessage("field2", value2), PacketDistributor.SERVER.noArg());
+CHANNEL.send(new SyncFieldMessage("field3", value3), PacketDistributor.SERVER.noArg()); // ❌ 高网络开销
 ```
 
 **症状**：网络阻塞，服务器卡顿，玩家感受到明显延迟。
@@ -49,11 +49,11 @@ channel.sendToServer(new SyncFieldMessage("field3", value3)); // ❌ 高网络�
 public class SyncAllDataMessage {
     private CompoundTag data;
 
-    public void toBytes(FriendlyByteBuf buf) {
+    public void encode(FriendlyByteBuf buf) {
         buf.writeNbt(data);
     }
 
-    public void fromBytes(FriendlyByteBuf buf) {
+    public SyncAllDataMessage(FriendlyByteBuf buf) {
         data = buf.readNbt();
     }
 }
@@ -67,67 +67,65 @@ public class SyncAllDataMessage {
 
 ```java
 // 错误（客户端收到消息时）
-public void onMessage(MyMessage message, Supplier<NetworkEvent.Context> ctx) {
-    ServerLevel world = ctx.get().getSender().getLevel(); // ❌ 客户端没有 ServerLevel
+public static void handle(MyMessage message, CustomPayloadEvent.Context ctx) {
+    // ❌ 客户端没有 ServerLevel；ctx.getSender() 在客户端为 null
+    ServerLevel world = (ServerLevel) ctx.getSender().getLevel();
 }
 ```
 
-**症状**：运行时崩溃（`ClassCastException`）。
+**症状**：运行时崩溃（`NullPointerException` / `ClassCastException`）。
 
-**正确方案**：始终在 `enqueueWork` 中执行，使用 `LogicalSide` 确认端。
+**正确方案**：先判空再按逻辑端分支；本档用 `CustomPayloadEvent.Context#getSender()` 取发送者，客户端侧为空即跳过。
 
 ```java
-ctx.get().enqueueWork(() -> {
-    if (ctx.get().getDirection().getReachingSide() == LogicalSide.SERVER) {
-        // 服务端逻辑
+public static void handle(MyMessage message, CustomPayloadEvent.Context ctx) {
+    ServerPlayer sender = ctx.getSender();
+    if (sender != null) {
+        // 仅服务端侧有发送者
     }
-});
+    ctx.setPacketHandled(true);
+}
 ```
-
----
 
 ## 协议版本相关
 
 ### ❌ 忘记处理协议版本不兼容
 
 ```java
-// 错误：没有版本检查
-private static final String PROTOCOL_VERSION = "1.0";
+// 错误：只给出协议号，没有版本判定
+public static final SimpleChannel CHANNEL = ChannelBuilder
+    .named(new ResourceLocation(MOD_ID, "main"))
+    .networkProtocolVersion(PROTOCOL_VERSION)
+    .simpleChannel();   // ❌ 没有设置 acceptedVersions
 ```
 
 **症状**：不同版本的客户端/服务端连接时数据解析错误。
 
-**正确方案**：始终使用版本比较函数。
+**正确方案**：用 `ChannelBuilder#acceptedVersions(VersionTest)`（或 `clientAcceptedVersions` / `serverAcceptedVersions` 分端设置）显式给出可接受版本。
 
 ```java
-public static final SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(
-    new ResourceLocation(MOD_ID, "main"),
-    () -> PROTOCOL_VERSION,
-    PROTOCOL_VERSION::equals,  // 客户端协议版本
-    PROTOCOL_VERSION::equals   // 服务端协议版本
-);
+public static final SimpleChannel CHANNEL = ChannelBuilder
+    .named(new ResourceLocation(MOD_ID, "main"))
+    .networkProtocolVersion(PROTOCOL_VERSION)
+    .acceptedVersions(Channel.VersionTest.exact(PROTOCOL_VERSION))   // 需 import net.minecraftforge.network.Channel
+    .simpleChannel();
 ```
-
----
 
 ## 注册相关
 
-### ❌ 网络包 ID 冲突
+### ❌ 显式 discriminator 冲突
 
 ```java
-// 在多个类中使用相同的 ID
-INSTANCE.registerMessage(0, MyMessage1.class, ...);
-INSTANCE.registerMessage(0, MyMessage2.class, ...); // ❌ ID 冲突
+// 在两个类中给同一个显式 discriminator
+CHANNEL.messageBuilder(MyMessage1.class, 0).encoder(...).decoder(...).consumerMainThread(...).add();
+CHANNEL.messageBuilder(MyMessage2.class, 0).encoder(...).decoder(...).consumerMainThread(...).add(); // ❌ 冲突
 ```
 
 **症状**：消息被错误处理或崩溃。
 
-**正确方案**：使用统一的 ID 管理器。
+**正确方案**：本档可以不传 discriminator，由 `messageBuilder(Class)` 自动分配；确实要显式指定时，用统一的自增分配器。
 
 ```java
-private static int nextDiscriminator = 0;
-
-public static int nextId() {
-    return nextDiscriminator++;
-}
+CHANNEL.messageBuilder(MyMessage1.class).encoder(...).decoder(...).consumerMainThread(...).add();
+CHANNEL.messageBuilder(MyMessage2.class).encoder(...).decoder(...).consumerMainThread(...).add();
 ```

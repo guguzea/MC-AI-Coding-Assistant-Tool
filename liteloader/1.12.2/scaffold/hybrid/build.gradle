@@ -1,17 +1,102 @@
-apply plugin: 'net.minecraftforge.gradle.liteloader'
+// ================================================================
+// ⚠️ 本配方在 2026-10-04 被实测推翻过一次、又按实测重建（证据见 liteloader/1.12.2/HYBRID.md 与
+// community_knowledge/authored/ingame-playtest-automation.md 坑 77/78）。
+//
+// **不要**改回 `apply plugin: 'net.minecraftforge.gradle.liteloader'`：
+//   `LiteloaderPlugin extends UserVanillaBasePlugin`（javap 核过）⇒ 它给的是 **vanilla + LiteLoader，不带 Forge**，
+//   而本目录的产物必须有 Forge API（`MinecraftForge.EVENT_BUS` / `ClientChatReceivedEvent` / `ForgeRegistries`），
+//   用那个插件编译会直接 `找不到符号: 程序包 net.minecraftforge.fml.common 不存在` 等 8 处。
+//   混合的真正做法 = **ForgeGradle 打底 + 把 LiteLoader 当 tweak 挂进 runClient**（见下方 afterEvaluate）。
+//
+// 另：`LiteloaderExtension.setVersion` → `checkVersion` → `LiteloaderPlugin.getVersion(v)` 要求
+// `minecraft.version` 逐字等于 versions.json 的键（`"1.12.2"`），写全 `1.12.2-14.23.5.2847`
+// 在**旧 liteloader 插件**下会报 `No ForgeGradle-compatible LiteLoader version found`。
+// 本文件走 forge 插件，`minecraft.version` 用 ForgeGradle 惯用的完整串即可。
+// ================================================================
 
-minecraft {
-    version = '1.12.2-14.23.5.2847'
-    mappings = 'stable_39'
-    runDir = 'run'
+buildscript {
+    repositories {
+        maven { url = 'https://maven.minecraftforge.net/' }
+        mavenCentral()
+    }
+    dependencies {
+        // FG2.3 的 META-INF/gradle-plugins 只注册了 net.minecraftforge.gradle.forge（无裸 `forge` id）
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+    }
 }
 
-jar { classifier = '' }
-// ================================================================
-// 兼容声明：本文件钉值随 modloader / 工具链版本演进，可能已过期或与最新构建不兼容
-// （实测例：Fabric Language Kotlin 1.14.1 要求 fabricloader >=0.19.5，而某档钉 0.19.3 时
-// runClient 在依赖解析阶段即拒启 Incompatible mods found）。
-// 钉值仅供参考，一律以实际解析结果与该 loader / 库的官方发布为准。
-// 发现钉值过期或有误，请提 issue：
-// https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/issues
-// ================================================================
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+version = "1.0.0"
+group = "com.example.examplehybrid"
+archivesBaseName = "ExampleHybrid"
+
+sourceCompatibility = targetCompatibility = '1.8'
+
+minecraft {
+    version = "1.12.2-14.23.5.2847"
+    mappings = "stable_39"     // MCP 映射必须钉死，缺了运行时 NoSuchMethodError / AbstractMethodError
+    runDir = "run"
+}
+
+repositories {
+    maven { url = 'https://files.minecraftforge.net/maven' }
+    // LiteLoader 本体（com.mumfrey:liteloader:1.12.2-SNAPSHOT）
+    maven { url = 'http://repo.mumfrey.com/content/repositories/snapshots/' }
+    // mixin 0.7.4-SNAPSHOT 只在上游 spongepowered 仓（LiteLoader versions.json 里声明的 url）
+    maven { url = 'https://repo.spongepowered.org/maven/' }
+}
+
+dependencies {
+    // 发布件是 SRG 名 ⇒ 必须走 FG 的 deobf 管线（SRG→MCP），否则 dev 环境 NoSuchMethodError
+    deobfCompile 'com.mumfrey:liteloader:1.12.2-SNAPSHOT'
+    // LiteLoader 的 onPreInit 需要 MixinBootstrap；FG 的 deobfCompile 不会带入它的传递依赖。
+    // ⚠️ 两个库都必须 transitive = false：
+    //    - 不加 mixin ⇒ LiteLoaderTweaker.onPreInit 抛 NoClassDefFoundError: MixinBootstrap，
+    //      紧接着连带 ClassCircularityError: com/mumfrey/liteloader/core/runtime/Obf（**那是下游症状不是根因**）；
+    //    - 带传递依赖 ⇒ gson 被升到 2.8.x，撞 Forge 1.12.2 ModList 的 GsonBuilder.setLenient()（2.8 起已删）
+    //      ⇒ FMLTweaker.injectIntoClassLoader 阶段 NoSuchMethodError。
+    compile('org.spongepowered:mixin:0.7.4-SNAPSHOT') { transitive = false }
+    compile('org.ow2.asm:asm-all:5.2') { transitive = false }
+}
+
+// runClient 追加 LiteLoader tweak（与 FMLTweaker 并存 = 真 hybrid 客户端）
+// 实测三个 tweak class 全部按序加载：FMLTweaker → LiteLoaderTweaker → CoremodTweaker。
+afterEvaluate {
+    tasks.runClient {
+        args '--tweakClass', 'com.mumfrey.liteloader.launch.LiteLoaderTweaker'
+    }
+}
+
+processResources {
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+        expand 'version': project.version, 'mcversion': project.minecraft.version
+    }
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
+
+jar {
+    classifier = ''
+    manifest {
+        attributes([
+            "Specification-Title"     : "examplehybrid",
+            "Specification-Vendor"    : "ExampleMod",
+            "Specification-Version"    : "1",
+            "Implementation-Title"    : project.name,
+            "Implementation-Version"  : "${version}",
+            "Implementation-Vendor"   : "ExampleMod",
+            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+}
+
+// 产物含中文注释 ⇒ 不设这个，Windows 上 javac 默认 GBK 会报 unmappable character for encoding GBK
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}

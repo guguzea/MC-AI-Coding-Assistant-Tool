@@ -11,39 +11,47 @@ mappings: parchment
 
 ## 快速开始
 
-```java
-// 创建 SimpleChannel
-public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
-    new ResourceLocation(MOD_ID, "main"),
-    () -> PROTOCOL_VERSION,
-    PROTOCOL_VERSION::equals,
-    PROTOCOL_VERSION::equals
-);
+⚠️ 1.20.4（Forge 49）**没有** `NetworkRegistry.newSimpleChannel` / `NetworkEvent` / `net.minecraftforge.network.simple.SimpleChannel`；那是 1.20.1 的写法。本档用 `ChannelBuilder` + `net.minecraftforge.network.SimpleChannel`。
 
-// 注册消息
-private static int msgId = 0;
+```java
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.network.ChannelBuilder;
+import net.minecraftforge.network.SimpleChannel;
+
+// 创建通道
+private static final int PROTOCOL_VERSION = 1;
+public static final SimpleChannel CHANNEL = ChannelBuilder
+    .named(new ResourceLocation(MOD_ID, "main"))
+    .networkProtocolVersion(PROTOCOL_VERSION)
+    .simpleChannel();
+
+// 注册消息 + 处理器（在 FMLCommonSetupEvent 中调用）
 public static void register() {
-    CHANNEL.registerMessage(msgId++, MyMessage.class,
-        MyMessage::toBytes, MyMessage::new,
-        MyMessage::handle);
+    CHANNEL.messageBuilder(MyMessage.class)
+        .encoder(MyMessage::encode)
+        .decoder(MyMessage::new)
+        .consumerMainThread(ModNetwork::handle)
+        .add();
 }
 ```
 
-## Decision: 选择数据包类型
+## Decision: 选择数据包方向
 
 ```
 IF 客户端 → 服务端（玩家发起）
-  → 在客户端调用 CHANNEL.sendToServer(msg)
+   → CHANNEL.send(msg, PacketDistributor.SERVER.noArg())
 
 IF 服务端 → 玩家（精准发送）
-  → CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), msg)
+   → CHANNEL.send(msg, PacketDistributor.PLAYER.with(player))
 
 IF 服务端 → 全服广播
-  → CHANNEL.send(PacketDistributor.ALL.noArg(), msg)
+   → CHANNEL.send(msg, PacketDistributor.ALL.noArg())
 
 IF 服务端 → 区域内所有玩家
-  → CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> entity), msg)
+   → CHANNEL.send(msg, PacketDistributor.TRACKING_ENTITY.with(entity))
 ```
+
+> `with(...)` 直接收对象（1.20.1 是收 `Supplier`）；无参目标用 `.noArg()`。
 
 ## 消息类结构
 
@@ -77,33 +85,32 @@ public class MyMessage {
 ## 消息处理器
 
 ```java
-public static void handle(MyMessage msg, Supplier<NetworkEvent.Context> ctx) {
-    ctx.get().enqueueWork(() -> {
-        // 在主线程执行游戏逻辑
-        ServerPlayer sender = ctx.get().getSender();
-        if (sender != null) {
-            // 服务端处理
-        }
-    });
-    ctx.get().setPacketHandled(true);
+// 签名固定为 (MSG, CustomPayloadEvent.Context)；用 consumerMainThread 注册即保证主线程
+public static void handle(MyMessage msg, CustomPayloadEvent.Context ctx) {
+    ServerPlayer sender = ctx.getSender();
+    if (sender != null) {
+        // 服务端处理（此处已在主线程，可直接动世界）
+    }
+    ctx.setPacketHandled(true);
 }
 ```
 
 ## 服务端发送广播
 
 ```java
-// 在 NetworkHandler 类中
+// 在 ModNetwork 类中
 public static void broadcast(MyBroadcastMessage msg) {
-    CHANNEL.send(PacketDistributor.ALL.noArg(), msg);
+    CHANNEL.send(msg, PacketDistributor.ALL.noArg());
 }
 ```
 
 ## 常见错误
 
-- ❌ `IMessage` / `IMessageHandler`：那是 1.12 `SimpleNetworkWrapper`。本档用 `SimpleChannel.registerMessage` + encode/decode/handle
-- ❌ 在网络线程直接修改世界：所有游戏逻辑必须在 `enqueueWork()` 回调中执行
-- ❌ 消息 ID 冲突：每个消息 ID 在同一 channel 中必须唯一
-- ❌ `sendToServer()` 在服务端调用：检查 `LogicalSide`
+- ❌ `NetworkRegistry.newSimpleChannel` / `NetworkEvent` / `network.simple.SimpleChannel`：**1.20.4 已删除**，本档用 `ChannelBuilder` + `net.minecraftforge.network.SimpleChannel`
+- ❌ `IMessage` / `IMessageHandler`：那是 1.12 `SimpleNetworkWrapper`
+- ❌ 在非主线程直接修改世界：注册消息时用 `.consumerMainThread(...)`
+- ❌ 显式 discriminator 冲突：不传 discriminator 时由 `messageBuilder(Class)` 自动分配
+- ❌ `PacketDistributor.PLAYER.with(() -> player)`：本档直接 `with(player)`
 
 ## 参考资料
 
@@ -119,7 +126,7 @@ public static void broadcast(MyBroadcastMessage msg) {
 
 ## 进阶同步（区块级 / 插值 / 大包）
 
-> 本节为策略级写法：只列决策与边界，具体类/方法签名一律以 `search_forge_docs`（`networking` / `networking_simpleimpl` / `networking_entities` 页核实数据）为准，不在此编造。
+> 本节为策略级写法：只列决策与边界，具体类/方法签名一律以 `query_loader_api platform=forge minecraftVersion=1.20.4` 的逐签名摘要为准。⚠️ 上游 `networking_simpleimpl` 页仍是 1.20–1.20.1 的旧 SimpleImpl 写法（`NetworkRegistry.newSimpleChannel`），**本档不要照抄那一页的通道/注册代码**；`networking_entities`（spawn 数据 / `defineSynchedData`）仍适用。
 
 ### 可核实锚点：实体与客户端交互（`networking_entities` 页）
 

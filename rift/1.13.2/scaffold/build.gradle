@@ -1,28 +1,104 @@
-apply plugin: 'net.minecraftforge.gradle.tweaker-client'
+// Verified working recipe (2026-10-05, real Gradle build + real client launch on this machine).
+// Working instance: E:\MC_GAME\rift-1.13.2  |  JDK: G:\zulu8.96.0.205-ca-jdk8.0.504-win_x64  |  Gradle 4.9
+//
+// !! READ THE TWO TRAPS BEFORE TRUSTING THIS FILE !!
+//  1) The ForgeGradle below is NOT net.minecraftforge.gradle -- it is DimensionalDevelopment's
+//     own fork. Only that fork registers `net.minecraftforge.gradle.tweaker-client`
+//     (7 plugin descriptors). ForgeGradle 3.x, the only line that supports MC 1.13.2, has
+//     6 descriptors and does NOT include it, so `apply plugin:` below cannot work on FG3.
+//  2) `libs/` must hold the PLAIN jar (Rift-1.0.4-106.jar), not the `-dev` one. The -dev jar
+//     ships mixins.rift.core.json but NO mixins.rift.refmap.json, and dies with
+//     "Shadow field field_199754_a was not located ... No refMap loaded".
+// Both are explained with the evidence in code-patterns/gradle-recipe.md.
+buildscript {
+    repositories {
+        // The only reachable source of DimensionalDevelopment/ForgeGradle (the dimdev.org
+        // maven is DNS-dead). JitPack gives no directory listing: 404 on the version dir
+        // while the .jar/.pom return 200 -- probe artifacts by exact name, never the dir.
+        maven { url = 'https://jitpack.io' }
+        // The fork's POM pins net.minecraftforge:forgeflower:1.5.380.22, which is NOT on
+        // Maven Central -- it lives on Forge's own maven.
+        maven { url = 'https://maven.minecraftforge.net/' }
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.github.DimensionalDevelopment:ForgeGradle:70d441a286'
+    }
+}
 
-sourceCompatibility = '1.8'
-targetCompatibility = '1.8'
+apply plugin: 'net.minecraftforge.gradle.tweaker-client'
+apply plugin: 'java'
+
+version = "1.0.0"
+group = "com.example.examplemod"
+archivesBaseName = "ExampleMod"
+
+sourceCompatibility = targetCompatibility = '1.8'
+
+repositories {
+    // launchwrapper lives only on Mojang's library host (jitpack and Forge maven both 404).
+    maven { url = 'https://libraries.minecraft.net/' }
+    // Mixin for Rift's class transformer. NOTE the path: /maven-public/ is 404 here,
+    // only /repository/maven-public/ resolves.
+    maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
+    maven { url = 'https://jitpack.io' }
+    mavenCentral()
+    flatDir { dirs 'libs' }
+}
+
+dependencies {
+    // PLAIN jar, not `-dev` -- see trap 2 in the file header.
+    implementation name: 'rift-1.0.4-106'
+    implementation 'net.minecraft:launchwrapper:1.12'
+
+    // Mixin + ASM, with the exact coordinates Rift's own profile.json declares.
+    // The 0.7.7 floor is real, not cosmetic:
+    //   MixinInitialisationError: Required mixin config mixins.rift.core.json
+    //   requires mixin subsystem version 0.7.7
+    // and asm is the 6.2 split triple (asm / asm-commons / asm-tree), NOT asm-all 5.2.
+    // transitive = false so a resolution failure is loud.
+    compile('org.spongepowered:mixin:0.7.11-SNAPSHOT') { transitive = false }
+    compile('org.ow2.asm:asm:6.2') { transitive = false }
+    compile('org.ow2.asm:asm-commons:6.2') { transitive = false }
+    compile('org.ow2.asm:asm-tree:6.2') { transitive = false }
+}
+
+configurations {
+    launchConfiguration
+}
+
+dependencies {
+    launchConfiguration 'net.minecraft:launchwrapper:1.12'
+}
+
+// The fork's run task puts NONE of launchwrapper / mixin / asm on the game classpath:
+//   ClassNotFoundException: net.minecraft.launchwrapper.Launch        (GradleStartCommon.launch)
+//   ClassNotFoundException: org.spongepowered.asm.launch.MixinBootstrap (Rift.onInitialization)
+// and `implementation`, `runtimeClasspath` and `launchConfiguration` all leave both red.
+// Append them as a FileCollection -- `cp + list` yields an ArrayList, which Gradle rejects
+// with "Cannot cast object '[...]' with class 'java.util.ArrayList' to FileCollection".
+tasks.matching { it.name == 'runClient' || it.name == 'runServer' }.all { t ->
+    doFirst {
+        def extra = configurations.runtimeClasspath.findAll {
+            it.name.contains('launchwrapper') || it.name.contains('mixin') ||
+            it.name.contains('asm') || it.name.contains('asm-commons') || it.name.contains('asm-tree')
+        }
+        if (extra) { t.classpath = t.classpath.plus(t.project.files(extra)) }
+    }
+}
 
 minecraft {
     version = '1.13.2'
+    // `snapshot_20180921` only publishes a `-1.13` suffixed artifact upstream, so for 1.13.2
+    // the zip must be dropped in libs/mcp_snapshot-20180921-1.13.2.zip by hand (a copy lives
+    // at data/forge_1.13.2/mappings/mcp_snapshot-20180921-1.13.zip). Without it the build
+    // fails at :extractMcpMappings with "Could not find de.oceanlabs.mcp:mcp_snapshot:
+    // 20180921-1.13.2". Genuine 1.13.2 snapshots start at 20190311-1.13.2 if you prefer one.
     mappings = 'snapshot_20180921'
     runDir = 'run'
     tweakClass = 'org.dimdev.riftloader.launch.RiftLoaderClientTweaker'
 }
 
-repositories {
-    // dimdev.org maven 可能已失效；把 rift 的 dev jar 放进 libs/
-    flatDir { dirs 'libs' }
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
 }
-
-dependencies {
-    implementation name: 'rift-1.0.3-45-dev'
-}
-// ================================================================
-// 兼容声明：本文件钉值随 modloader / 工具链版本演进，可能已过期或与最新构建不兼容
-// （实测例：Fabric Language Kotlin 1.14.1 要求 fabricloader >=0.19.5，而某档钉 0.19.3 时
-// runClient 在依赖解析阶段即拒启 Incompatible mods found）。
-// 钉值仅供参考，一律以实际解析结果与该 loader / 库的官方发布为准。
-// 发现钉值过期或有误，请提 issue：
-// https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/issues
-// ================================================================

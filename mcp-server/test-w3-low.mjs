@@ -287,7 +287,9 @@ function makeStoreZip(name, data, { lieCsize } = {}) {
   assert.equal(side("parchment", "intermediary", "class"), "from", "F131 from=parchment 同理");
   assert.equal(side("mcp", "mojang", "method"), null, "F131 成员级 mcp 查询不得误伤（test-core 钉住）");
   assert.equal(side("intermediary", "yarn", "class"), null, "F131 intermediary/yarn 输入不是 MCP 层");
-  const gateCond = ifCond(cv, "yarnTinyMcpSide !== null").replace(/yarnTinyMcpSide/g, "s").replace(/resolveCsvMappingDbPath\(version\)/g, "hasCsv");
+  // 生产侧 convert.ts:536 现为 `!resolveCsvMappingDbPath(version, prefer)`（`prefer` = mappingDbPreference 查库偏好，
+  // 与本门被测的「yarn-tiny 层判定」无关）⇒ 替换目标放宽到两种元数，否则 `prefer` 会漏进 eval 变 ReferenceError。
+  const gateCond = ifCond(cv, "yarnTinyMcpSide !== null").replace(/yarnTinyMcpSide/g, "s").replace(/resolveCsvMappingDbPath\(version(?:,\s*prefer)?\)/g, "hasCsv");
   const gated = (era, from, to, kind, hasCsv) =>
     Boolean(new Function("era", "s", "hasCsv", `return (${gateCond});`)(era, side(from, to, kind), hasCsv));
   assert.equal(gated("yarn-tiny", "mcp", "yarn", "class", false), true, "F131 1.21.1 from=mcp 类查询应被拒");
@@ -327,7 +329,7 @@ function makeStoreZip(name, data, { lieCsize } = {}) {
   assert.equal(isBare("func_110143_aJ"), true, "F178 searge 名必须仍走 CSV 捷径");
   assert.equal(isBare("net.minecraft.block.Block"), false, "F178 FQCN 不是裸名");
   assert.equal(isBare("net/minecraft/block/Block"), false, "F178 slash FQCN 不是裸名");
-  const allowRhs = constRhs(cv, "allowCsvMethodPath").replace(/resolveCsvMappingDbPath\(version\)/g, "hasCsv");
+  const allowRhs = constRhs(cv, "allowCsvMethodPath").replace(/resolveCsvMappingDbPath\(version(?:,\s*prefer)?\)/g, "hasCsv");
   const allowCsv = (memberName, kind, ownerClass, hasCsv) =>
     Boolean(new Function("kind", "ownerClass", "hasCsv", "csvOnlyBareName", `return (${allowRhs});`)(
       kind,

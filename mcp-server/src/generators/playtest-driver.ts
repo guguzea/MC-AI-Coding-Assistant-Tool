@@ -16,14 +16,14 @@
  *     （见 mcp-server/scripts/assert-playtest-intent-gate.mjs）；不设该变量时一切按"未验证档"处理，不静默通过。
  */
 import { eraUpperBoundError, exactMcVersion, toPascalCase, type GeneratorResult } from "./common.js";
-import { BRIDGE_MOD_VERSIONS, generateBridgeMod } from "./playtest-bridge-mod.js";
+import { isBridgeTarget, generateBridgeMod } from "./playtest-bridge-mod.js";
 
 export const PLAYTEST_DRIVER_MODES = ["external_bridge", "in_jvm_player_agent", "temporary_client_tick_driver"] as const;
 export const PLAYTEST_CAPABILITY_PROFILES = ["strict_survival", "operator", "creative"] as const;
 export const PLAYTEST_POSTCONDITIONS = ["block_state", "entity_count", "inventory_contains", "marker_log", "screen_present"] as const;
 // liteloader 只支持 **hybrid（liteloader_forge）** 形态：纯 litemod 没有 Gradle 工程（`scaffold/pure` 是 source-only）
 // ⇒ 没有 `gradlew runClient` 载体，driver 链跑不起来。故该平台面仅对 hybrid 工程开放（见 applyLiteLoader1122）。
-export const PLAYTEST_PLATFORMS = ["forge", "neoforge", "fabric", "quilt", "liteloader"] as const;
+export const PLAYTEST_PLATFORMS = ["forge", "neoforge", "fabric", "quilt", "liteloader", "rift", "modloader"] as const;
 
 export type PlaytestDriverMode = (typeof PLAYTEST_DRIVER_MODES)[number];
 export type PlaytestCapabilityProfile = (typeof PLAYTEST_CAPABILITY_PROFILES)[number];
@@ -2027,7 +2027,8 @@ export const PLAYTEST_VERIFIED_TIER: ReadonlyArray<{ platform: string; version: 
       "`com.mumfrey.liteloader.Tickable#onTick(Minecraft, float, boolean, boolean)`（由工程自己的 LiteMod 实现并转发）与 `com.mumfrey.liteloader.LiteMod#{getName(), getVersion(), init(File), upgradeSettings(String, File, File)}`（scaffold `hybrid` 的既有写法）。" +
       "**产物对 LiteLoader 零类型依赖**（不 import `com.mumfrey.*`）⇒ **编译验证 = JDK 8 `javac` 对上面那只真构件、两种模式各 COMPILE_OK**（与 `forge 1.12.2` 共用同一 classpath）。" +
       "**前置 = hybrid 工程**（`apply plugin: 'net.minecraftforge.gradle.liteloader'`，见 `liteloader/1.12.2/scaffold/hybrid`）：**纯 litemod（`scaffold/pure`）不在本链** —— 无 Gradle（无 `gradlew runClient` 载体）、无 Forge（产物里的 `MinecraftForge`/`ClientChatReceivedEvent` 编译不过）。" +
-      "聊天回包**继续走 Forge** `ClientChatReceivedEvent`（hybrid 有该事件 ⇒ `EVENT_BUS.register` 保留）。`newworld` 与 forge 1.12.2 一样 **fail-closed**。**真机未跑**。",
+      "聊天回包**继续走 Forge** `ClientChatReceivedEvent`（hybrid 有该事件 ⇒ `EVENT_BUS.register` 保留）。`newworld` 与 forge 1.12.2 一样 **fail-closed**。" +
+      "**真机跑通 = 2026-10-04**（主对话实跑：`exit-code=0` + 16/16 步 + 截图，`scan blocks hits=760`；期间定案并修掉该实例 `options.txt` 的 `fov:70.0` 单位缺陷，见 `mcp-server/CHANGELOG.md` 第六十六批）——逐档读数与证据位置见仓库根 `README.md` 的 LiteLoader 1.12.2 行；**证据文件留主对话授权根、本仓不复制**。",
     asOf: "2026-10-04",
   },
   {
@@ -2049,7 +2050,8 @@ export const PLAYTEST_VERIFIED_TIER: ReadonlyArray<{ platform: string; version: 
       "**与 1.13.2 相同、无需再改的面**：`net.minecraft.block.state.IBlockState`（`World.getBlockState()` 返接口）、`net.minecraft.item.ItemStack`、`net.minecraft.util.math.BlockPos`（旧面 `add(int,int,int)/up()/down()/toImmutable()`）、`net.minecraft.client.gui.inventory.GuiInventory(EntityPlayer)`、`net.minecraft.client.entity.EntityPlayerSP`（`sendChatMessage(String)`/`sendPlayerAbilities()`）、" +
       "`World.loadedEntityList`（**无 getAllEntities()**）、`Entity.rotationYaw/rotationPitch/onGround` 公开字段 + 位置字段 `posX/posY/posZ`（**无 getX/getY/getZ**）、`getPosition()`、`InventoryPlayer.getStackInSlot(int)`、`Minecraft.getFramebuffer()/displayGuiScreen(GuiScreen)/launchIntegratedServer(String,String,WorldSettings)`、`WorldSettings(long,GameType,boolean,boolean,WorldType)`（**5 参**，`WorldType.DEFAULT`）。" +
       "**`newworld` 未取证**⇒ fail-closed（`FORGE_NO_NEWWORLD_VERSIONS`）。" +
-      "**编译验证 = JDK 8 `javac` 对上面这只真构件 COMPILE_OK**（as-of 2026-10-04）；**真机未跑**。",
+      "**编译验证 = JDK 8 `javac` 对上面这只真构件 COMPILE_OK**（as-of 2026-10-04）；" +
+      "**真机跑通 = 2026-10-04**（主对话实跑：`exit-code=0` + 14/14 步 + 截图，`land y=64`、`scan blocks hits=743`）——逐档读数与证据位置见仓库根 `README.md` 的 Forge 1.12.2 行（同一行右列另记了该档的**桥路线**整轮）；**证据文件留主对话授权根、本仓不复制**。",
     asOf: "2026-10-04",
   },
   {
@@ -2376,9 +2378,9 @@ export function generatePlaytestDriver(input: PlaytestDriverInput): GeneratorRes
   const platform = String(input.platform ?? "").trim().toLowerCase();
   const version = String(input.version ?? "").trim();
 
-  if (!platform) errors.push("platform 必填（forge | neoforge | fabric | quilt | liteloader）。");
+  if (!platform) errors.push(`platform 必填（${PLAYTEST_PLATFORMS.join(" | ")}）。`);
   else if (!(PLAYTEST_PLATFORMS as readonly string[]).includes(platform)) {
-    errors.push(`未知 platform "${platform}"：只支持 forge | neoforge | fabric | quilt | liteloader。`);
+    errors.push(`未知 platform "${platform}"：只支持 ${PLAYTEST_PLATFORMS.join(" | ")}。`);
   }
   if (!version) errors.push("version 必填：传精确 Minecraft 版本（如 1.21.11），禁止默认 1.20.1。");
   else if (!exactMcVersion(version)) errors.push(`必须是精确 MC 版本（x.y.z / 26.x.y），收到 ${version}。`);
@@ -2466,19 +2468,28 @@ export function generatePlaytestDriver(input: PlaytestDriverInput): GeneratorRes
     "playtest/README.playtest.md": readme,
   };
 
-  // ── 老平台「最小桥 mod」附加产物（forge 1.7.10–1.12.2）──
+  // ── 老平台「最小桥 mod」附加产物（forge 1.7.10–1.12.2 + rift 1.13.2 + modloader 1.6.4）──
   // 桥路线与 driver 链**互相隔离**：本模板不进 PLAYTEST_VERIFIED_TIER、不参与 driver 派发。
   // 只在用户走 external_bridge（默认模式）时附赠一份**逐版本正确**的自建桥源码 —— 因为这些档里
-  // 1.7.10–1.11.2 **没有现成桥件**（BlackBoxPro 只覆盖 fabric/neoforge 1.21.1 + 1.21.11、forge 1.12.2），
+  // 1.7.10–1.11.2 / rift 1.13.2 / modloader 1.6.4 **没有现成桥件**
+  // （BlackBoxPro 只覆盖 fabric/neoforge 1.21.1 + 1.21.11、forge 1.12.2），
   // 而协议与 playtest_bridge 一致（GET /status、POST /execute）⇒ 老平台不必改工具面就能走桥。
-  if (mode === "external_bridge" && platform === "forge" && BRIDGE_MOD_VERSIONS.includes(version)) {
-    const bridgeFiles = generateBridgeMod(version, modId).files;
+  if (mode === "external_bridge" && isBridgeTarget(platform, version)) {
+    const bridgeFiles = generateBridgeMod(platform, version, modId).files;
     Object.assign(files, bridgeFiles);
+    const caveat = platform === "modloader"
+      ? `⚠️ **modloader 1.6.4 只出到「骨架」**：本仓对该档只有 \`ModLoader.setInGameHook\` 一处出处，` +
+        `客户端单例 / 玩家与位置 / 发聊天 / 截图 / 读方块 **5 项全无来源** ⇒ MC 半边逐条 \`TODO(未核实)\` + throw，` +
+        `\`/status\` 可用但 \`/execute\` 一律 fail-closed；补齐清单在 README.bridge.md。`
+      : platform === "rift"
+        ? `⚠️ rift 1.13.2 的 MC 侧名字来自本仓 1.13.2 MCP 快照（与 rift scaffold 同快照）**逐名有出处**；` +
+          `但 \`Minecraft.getInstance()\` 的 **static 性本仓证不出**、\`block_at\` **只回 translation key 不回注册名**（见 README.bridge.md）；` +
+          `另：Rift 官方依赖源 dimdev.org **DNS 已死** ⇒ 需自备 Rift API jar。`
+        : `⚠️ 1.7.10–1.11.2 的 Minecraft 字段名只有 javadoc 出处（**未编译验证**），1.12.2 已按 stable_39 真构件 javap 兑过。`;
     warnings.push(
-      `已附赠「最小桥 mod」模板（${Object.keys(bridgeFiles).join(" / ")}）：forge ${version} 无现成桥件` +
+      `已附赠「最小桥 mod」模板（${Object.keys(bridgeFiles).join(" / ")}）：${platform} ${version} 无现成桥件` +
         `（BlackBoxPro 覆盖面 = fabric/neoforge 1.21.1 + 1.21.11、forge 1.12.2）⇒ 本模板自带 tick 钩子 + 内嵌 HTTP` +
-        `（协议同 playtest_bridge）⇒ 老平台零工具面改动。⚠️ 1.7.10–1.11.2 的 Minecraft 字段名只有 javadoc 出处` +
-        `（**未编译验证**），1.12.2 已按 stable_39 真构件 javap 兑过；装 jar / 跑 Gradle 前先按 README.bridge.md 确认，测完即删。`,
+        `（协议同 playtest_bridge）⇒ 零工具面改动。${caveat} 装 jar / 跑 Gradle 前先按 README.bridge.md 确认，测完即删。`,
     );
   }
 
@@ -2555,7 +2566,6 @@ export function generatePlaytestDriver(input: PlaytestDriverInput): GeneratorRes
     /** 长驻 + 热重载剧本：游戏只起一次，改 plan.txt 即在同一进程内开新一轮（默认开）。 */
     const watchPlan = input.watchPlan !== false;
     const planFileDisplay = `${evidenceDir}/plan.txt`;
-    const javaPlanFile = planFileDisplay.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
     const budgetTicks = Number.isInteger(input.budgetTicks)
       ? Math.max(200, input.budgetTicks as number)
       : mode === "in_jvm_player_agent"
@@ -2673,7 +2683,13 @@ public final class PlaytestQaDriver {
      *   写 stop.txt（或最后一行 stop）⇒ 驱动器停止接新轮（但仍不关游戏，由人/编排关）。
      */
     private static final boolean WATCH_PLAN = ${watchPlan};
-    private static final String PLAN_FILE = "${javaPlanFile}";
+    /**
+     * 剧本文件路径 —— **故意从 EVIDENCE_DIR 派生**（2026-10-05 修）。
+     * 此前它是**独立**的第二个占位符，于是「手工替换 EVIDENCE_DIR、忘了 PLAN_FILE」会让驱动
+     * 读不到 plan.txt 并**静默退回内置 smoke 剧本**（表面看是某个断言红，极易误判成别的坏了）。
+     * 同一文件里 INTENT_MAILBOX 早就是 EVIDENCE_DIR + "/intent.json"；这里对齐它。
+     */
+    private static final String PLAN_FILE = EVIDENCE_DIR + "/plan.txt";
     private static final int WATCH_EVERY_TICKS = 20;
 
     private static boolean planStarted;
@@ -4173,6 +4189,7 @@ public final class PlaytestQaDriver {
         try {
             Path p = Path.of(PLAN_FILE);
             if (!Files.exists(p)) {
+                warnPlanUnused("文件不存在");
                 return false;
             }
             java.util.List<String> lines = new java.util.ArrayList<>();
@@ -4184,6 +4201,7 @@ public final class PlaytestQaDriver {
                 lines.add(t);
             }
             if (lines.isEmpty()) {
+                warnPlanUnused("文件里没有有效步骤（只剩空行/# 注释）");
                 return false;
             }
             plan = lines.toArray(new String[0]);
@@ -4194,6 +4212,20 @@ public final class PlaytestQaDriver {
             log("[QA] plan load failed: " + e);
             return false;
         }
+    }
+
+    /**
+     * **回落内置剧本时必须出声**（2026-10-05 补）。
+     *
+     * 此前「读不到 plan.txt」的两个分支都**静默** return false，于是驱动照跑内置 smoke 剧本 ——
+     * 表面只表现为某个断言红，极易被误判成「驱动坏了 / goto 坏了 / 世界有问题」。
+     * PLAN_FILE 已改成从 EVIDENCE_DIR 派生（不会再有人单独改错），但**读不到就必须看得见**：
+     * 这一行是那类坑的唯一现场证据。
+     */
+    private static void warnPlanUnused(String why) {
+        log("[QA] WARN plan file unusable (" + why + ") at " + PLAN_FILE
+                + " —— 沿用内置剧本 " + (plan == null ? 0 : plan.length) + " 步；"
+                + "若你本意是跑自定义剧本，请确认 EVIDENCE_DIR 指向正确目录（plan.txt 应在其下）");
     }
 
     private static MinecraftClient mc;
@@ -4723,7 +4755,7 @@ const useLiteLoaderTable = platform === "liteloader" && version === "1.12.2";
 
 ## 前置
 1. 授权（三通道，见根 \`AGENTS.md\`「人在环例外：游玩自测」）：\`MC_SKILL_PLAYTEST_ALLOW=1\` + \`MC_SKILL_PLAYTEST_ROOT=<绝对路径>\`。
-2. 把 \`playtest/PlaytestQaDriver.java\` 放进被测工程 \`src/main/java/${pkg.replace(/\./g, "/")}/playtest/\`，并把 \`EVIDENCE_DIR\` / \`EXPECT_ITEM\` / \`EXPECT_SLOT\` 换成真值。
+2. 把 \`playtest/PlaytestQaDriver.java\` 放进被测工程 \`src/main/java/${pkg.replace(/\./g, "/")}/playtest/\`，并把 \`EVIDENCE_DIR\` / \`EXPECT_ITEM\` / \`EXPECT_SLOT\` 换成真值。**只改 \`EVIDENCE_DIR\` 就够了** —— \`PLAN_FILE\` 与 \`INTENT_MAILBOX\` 都从它派生（\`PLAN_FILE = EVIDENCE_DIR + "/plan.txt"\`，2026-10-05 起不再是独立常量；此前漏改它会让驱动读不到剧本并**静默跑内置 smoke**，见社区短文坑 53）。
 3. 客户端初始化处加一行 \`PlaytestQaDriver.register();\`。
 4. 构建（\`mc-build-mod\`）→ 起 dev 实例 → 进世界（单机或连服均可）。
 

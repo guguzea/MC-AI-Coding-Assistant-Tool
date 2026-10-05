@@ -279,10 +279,18 @@ public class MyBlockEntity extends BlockEntity {
 import net.minecraftforge.fml.util.thread.SidedThreadGroups;
 
 // 在代码中判断物理端
-if (LogicalSide.CLIENT.equals(ctx.get().getDirection().getReceptionSide())) {
-    // 客户端收到消息
+if (FMLEnvironment.dist == Dist.CLIENT) {
+    // 物理客户端
 } else {
-    // 服务端收到消息
+    // 物理服务端（专用服务器）
+}
+
+// 在网络处理器里判断侧：1.20.4 的处理器收 CustomPayloadEvent.Context，
+// 不再有 NetworkEvent.Context 的 getDirection()；用 ctx.getSender() 判空即可
+if (ctx.getSender() != null) {
+    // 服务端侧（有发送者）
+} else {
+    // 客户端侧
 }
 
 // 或者

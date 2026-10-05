@@ -178,7 +178,7 @@ platform/version/
 
 ## Hand-maintained files
 
-The skill / rules / code-pattern files are maintained by hand, so the occasional problem is hard to avoid (1.20.1 and later have none that I know of). If something fails to compile or throws errors, trust the documentation first. You can also open an issue and I'll fix it as soon as I can. Thanks for understanding. Thanks♪(･ω･)ﾉ
+The skill / rules / code-pattern files can run into the occasional problem, both because upstream documentation is wrong (Forge is the offender here — its 1.20.4 docs still teach 1.20.1 things) and because these files are maintained by hand (1.20.1 and later should be fine). If something fails to compile or throws errors, trust the documentation first. You can also open an issue and I'll fix it as soon as I can. Thanks for understanding. Thanks♪(･ω･)ﾉ
 
 ## Where to look for what
 

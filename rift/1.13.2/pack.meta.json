@@ -5,14 +5,18 @@
   "minecraftVersion": "1.13.2",
   "scaffold": {
     "mode": "reference",
+    "gradle": "4.9",
     "provenance": {
-      "text": "house"
+      "text": "house",
+      "build": "2026-10-05 真构建+真机：E:\\MC_GAME\\rift-1.13.2（JDK 8 = G:\\zulu8.96.0.205-ca-jdk8.0.504-win_x64，Gradle 4.9 wrapper）。gradlew build → BUILD SUCCESSFUL in 1m 29s，18 actionable tasks 全 executed（含 :reobfJar），产物 build/libs/ExampleMod-1.0.0.jar（10 entries，含 riftmod.json + pack.mcmeta + ExampleMod.class）；gradlew runClient → 客户端起来（LWJGL 3.1.6 / OpenAL / Created: 1024x512 textures-atlas / Narrator），停在主菜单。关键取证：Rift 用的不是 net.minecraftforge.gradle 而是 DimensionalDevelopment 自己的 FG 分支（该 jar 7 个 plugin 描述符含 tweaker-client；FG 3.0.197 只有 6 个且没有，且全 jar 无 tweakClass 字符串 ⇒ FG3 这条路整条不存在），坐标只能从 JitPack 取 com.github.DimensionalDevelopment:ForgeGradle:70d441a286。六个坑见 code-patterns/gradle-recipe.md §3"
     },
-    "buildVerified": false,
+    "buildVerified": true,
     "gaps": [
-      "build.gradle 无 buildscript{} 块：tweaker-client 插件 classpath 与版本未核实，禁止默写",
-      "CLI: download_official_mdk --platform=rift --minecraftVersion=1.13.2 → MDK_NOT_PINNED（Rift 无官方维护模板仓库）",
-      "无 wrapper 三件套与 settings.gradle；libs/ 需用户自备 rift dev jar（见 scaffold/libs/README.md）"
+      "buildVerified 只覆盖编译期与客户端启动：listener 回调在 1.13.2 上**实测不派发**——日志里 mixins.rift.hooks.json 的 21 个 hook mixin 全部 target not found（client.MixinMinecraft / MixinChunk / MixinFurnace 等，target 是 notch 短名 cfi/cfl/bna/bjl ⇒ refmap 本身有效，但这些名字属于 MC 1.13，1.13.2 重编后变了）⇒ ClientTickable#clientTick() 与 MinecraftStartListener#onMinecraftStart() 均未被调（探针 0 命中）。结论：Rift 1.0.4-106 官方只支持 MC 1.13，1.13.2 属『能启动但功能不完整』",
+      "是否存在 1.0.4-106 之后、支持 1.13.2 的 Rift 版本：**已核实为不存在**（2026-10-05 JitPack 构建状态：ok 的只有 v1.0.4-52/87/106，master-dfc75ff725-1 与 1.0.2-33/1.0.3-45/1.0.4-66 全 Error；且上游仓已 archived / 最后提交 2019-01-01）。⇒ 要在 1.13.2 上真用 Rift 只剩两条路：把 minecraft.version 改成 1.13（本轮未跑），或自行 patch 那 21 个 hook mixin 的 @Mixin(targets=) 并重生成 refmap",
+      "无 wrapper 三件套与 settings.gradle 之外的官方来源：download_official_mdk --platform=rift --minecraftVersion=1.13.2 → MDK_NOT_PINNED；本档 wrapper 与 settings.gradle 是照已验证的 forge/1.13.2 实例移植的",
+      "libs/ 需用户自备 rift 的**非 dev** jar：dev jar 缺 mixins.rift.refmap.json，运行期报 InvalidMixinException No refMap loaded；非 dev jar（140 331 B，含 14 225 B refmap）才可用。另需手动放 libs/mcp_snapshot-20180921-1.13.2.zip（上游只有 -1.13 后缀；源文件见 data/forge_1.13.2/mappings/）",
+      "MC 侧类型仍未对真构件核（本机无 MC 1.13.2 构件，get_minecraft_source 覆盖从 1.14 起）⇒ code-patterns 里凡 net.minecraft.* 均标 TODO(未核实)"
     ]
   }
 }
