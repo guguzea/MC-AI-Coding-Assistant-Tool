@@ -1,0 +1,81 @@
+# Dependabot 配置
+# 文档：https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+#
+# 覆盖两类：npm（/mcp-server 子目录）+ GitHub Actions。均为 weekly。
+#
+# 为什么是 weekly 而不是 daily：
+#   本项目供应链面较重——`onnxruntime-node` 带全平台原生二进制、`@xenova/transformers`
+#   会拉模型文件、`java-parser` 解析用户代码，且发布链会打出 2 GB 的 data zip。
+#   升得太频会让 CI 反复跑一轮重活，而门禁一旦红了又容易连带触发与本次升级无关的
+#   判据（历史上存在「等值变异」这类陷阱：两个常数脱钩后门会突然变红）。
+#   weekly + 小版本分组给了足够的人工复核窗口。
+#
+# 为什么 npm 只写 /mcp-server：
+#   仓库根没有 package.json，唯一有 lockfile 的 npm 包在 mcp-server/。
+#   `temp/` 下的 package.json 是一时抓取留下的副本，**不纳入**。
+
+version: 2
+
+updates:
+  # ── npm 依赖 ────────────────────────────────────────────────────────────
+  - package-ecosystem: "npm"
+    # 仓库根无 package.json，唯一 npm 包在子目录
+    directory: "/mcp-server"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      # 避开周一整点，减少与 CI 自身排队撞车
+      time: "09:00"
+      timezone: "Asia/Shanghai"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "npm"
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      # 生产依赖单独成组：这一组直接改变发布产物，必须人工逐条看 diff
+      production:
+        dependency-type: "production"
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+      # 开发依赖（typescript / tsx / @types/node）合流，一次复核即可
+      development:
+        dependency-type: "development"
+        patterns:
+          - "*"
+    ignore:
+      # CI 判据与发布链已按 `npm audit --omit=dev --audit-level=high` 在 PR 阶段红，
+      # 无需 dependabot 再重复报一次 production 漏洞。
+      # （该 CI 步骤见 .github/workflows/mcp-server-ci.yml 与 release-mcp-server.yml）
+
+  # ── GitHub Actions ──────────────────────────────────────────────────────
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Asia/Shanghai"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      actions:
+        patterns:
+          - "*"
+    ignore:
+      # opencode workflow 用 commit SHA 钉住（anomalyco/opencode/github@77fc88c…），
+      # 属有意为之的供应链加固：不随 Dependabot 自动前进。
+      # 升级需人工评估上游变更，风险自担。
+      - dependency-name: "anomalyco/opencode/github"
+        update-types:
+          - "version-update:semver-major"
+          - "version-update:semver-minor"
+          - "version-update:semver-patch"

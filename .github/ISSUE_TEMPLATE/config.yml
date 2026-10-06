@@ -1,0 +1,25 @@
+# GitHub Issue 模板配置
+# 文档：https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/configuring-issue-templates-for-your-repository
+#
+# 说明（为何这样配）：
+#   · blank_issues_enabled: true —— 本项目的问题类型跨度很大（某档映射对不上、
+#     某条规则的 Decision Flow 走不通、工具返回码看不懂、真机跑不起来……），
+#     模板很难覆盖，硬压模板只会让人把提问塞进 bug 模板反而更慢。允许空白 issue。
+#   · 唯一的导流链接指向 CONTRIBUTING.md —— 它才是入口（口径纪律、门禁规矩、
+#     数据链重算命令都在那里），而不是 README。
+#   · 本文件**不把 bug_report 设为必填**。社区惯例是可选：强制模板会挡掉
+#     「一时说不清是 bug 还是设计如此」的提问，而这类问题在本项目占比不低
+#     （本项目是「人在环」设计，很多"bug"其实是"AI 拒绝代劳"的正确行为）。
+
+blank_issues_enabled: true
+
+contact_links:
+  - name: 📖 贡献指南（提问前建议先看）
+    url: https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/blob/main/CONTRIBUTING.md
+    about: 数据链口径、门禁规矩、重算命令、如何扩展规则与工具 —— 大部分"不知道怎么改"的问题在这里有答案。
+  - name: 🧭 安装与配置（装不上 / 连不上 MCP）
+    url: https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/blob/main/AUTO_SETUP.md
+    about: Node.js 版本要求、MC_SKILL_DATA 指向、MCP 客户端配置、常见启动失败。
+  - name: 🔐 安全漏洞请走私密通道
+    url: https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/security/advisories/new
+    about: 安全问题不要开公开 issue（含 Discussions）。详见 .github/SECURITY.md。

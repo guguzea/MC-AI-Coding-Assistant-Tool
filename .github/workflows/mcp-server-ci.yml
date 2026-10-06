@@ -7,6 +7,12 @@ on:
       - main
       - master
 
+# 同一分支连续 push 时取消旧 run：省额度，且避免新旧 run 抢同一个 self-hosted 资源。
+# （release workflow 故意不取消 —— 已在跑的发布不该被后续 tag 中断。）
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
@@ -34,6 +40,12 @@ jobs:
       - name: Install dependencies
         working-directory: mcp-server
         run: npm ci
+
+      # 与 release-mcp-server.yml 同判据，但提前到 PR 阶段：
+      # 依赖漏洞应在合并前红，而不是等打 tag 才发现（那时已经发布出去了）。
+      - name: npm audit (production)
+        working-directory: mcp-server
+        run: npm audit --omit=dev --audit-level=high
 
       - name: Build
         working-directory: mcp-server
@@ -75,7 +87,7 @@ jobs:
         working-directory: mcp-server
         run: npm run build
 
-      - name: Release smoke (82 tools)
+      - name: Release smoke
         working-directory: mcp-server
         run: npm run smoke:release
         env:

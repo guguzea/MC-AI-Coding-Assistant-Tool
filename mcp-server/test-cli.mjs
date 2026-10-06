@@ -63,6 +63,39 @@ function staleTotalClaims(docs, total) {
   return bad;
 }
 
+/**
+ * F6：受管文档里出现 **per-file 工具数分解**（`tool-registry.ts` / `indexToolSchemas` N + `register.ts` M）
+ * 即红 —— 哪怕当前这一对数字是**对的**，这形态本身也要退役。
+ *
+ * 为什么不能用上面的 `TOOL_COUNT_CLAIM_RES` 顺手加一条：那条的匹配点全是「数字 + 个工具」/「数量 N（」，
+ * 而 `mcp-server/README.md:18` 原印的是「个 **MCP** 工具」—— 数字与「个工具」之间插了 `MCP`
+ * ⇒ 实测既有扫描面在该行**命中数 = 0**。若复用，F6 对目标行恒不命中 ⇒ 新门恒绿（假绿），
+ * 这正是本项目已踩过一次的坑。故此处自带独立正则，匹配点落在**文件名 + 加号**上，与数字对错无关。
+ *
+ * 口径：只有当「一个工具的 schema 与注册落在同一个文件里」时，按文件切的这两个数才等于
+ * 代码实算。但 `resolve_lib_skills` 这类工具 **schema 与注册跨文件**（schema 在 `src/tool-registry.ts`
+ * 的 `indexToolSchemas` 表里，注册在 `src/wave/register.ts`）⇒ per-file 分解天生对不齐，是**错误口径**。
+ * 权威总数只有一个：`tools/list` 实际返回数（由 release-smoke 的 `expectedToolCount` 独立校验）。
+ *
+ * 左锚必须两种拼写都咬住（2026-10-07 扩面）：`tool-registry.ts`（旧 README 写法）与 `indexToolSchemas`
+ * （AUTO_SETUP 写法）—— 只钉前者的那一版对后者实测 **0 命中**，等于给自己留了扇后门；而两种拼写
+ * 指向的是**同一张表**（`indexToolSchemas` 就在 `src/tool-registry.ts` 里）。数字与 `+` 之间改用
+ * 「≤8 个非加号字符」而非 `[`*_\s]*` 直连，以容忍「47 条 +」这类量词。
+ *
+ * GROUP_SCOPED 豁免：下面照样套用（口径与 `staleTotalClaims` 一致），但注意 per-file 形态
+ * 本身不含「个工具」三字，与 GROUP_SCOPED 的匹配点交集为空 ⇒ 实际自动满足，此处仅作口径声明。
+ */
+const PER_FILE_SPLIT_RE =
+  /(?:tool-registry\.ts|indexToolSchemas)[`*_\s]*(\d{1,3})[^\n+]{0,8}?\+[^\n]{0,40}?register\.ts[`*_\s]*(\d{1,3})/g;
+function perFileSplitForms(docs) {
+  const bad = [];
+  for (const m of docs.matchAll(PER_FILE_SPLIT_RE)) {
+    if (GROUP_SCOPED.test(docs.slice(Math.max(0, m.index - 16), m.index))) continue;
+    bad.push(`${m[1]} + ${m[2]}`);
+  }
+  return bad;
+}
+
 {
   // P1-1：基准不再钉死 80，动态取 registry 权威数，防止下次工具增减单元块再腐。
   const { listAllToolSchemas } = await import("./dist/tool-registry.js");
@@ -70,6 +103,29 @@ function staleTotalClaims(docs, total) {
   assert.deepEqual(staleTotalClaims(`服务共 ${total - 1} 个工具`, total), [String(total - 1)], "stale total must be caught");
   assert.deepEqual(staleTotalClaims("计数口径：本组 **9 个工具 / 8 行**", total), [], "group count must be ignored");
   assert.deepEqual(staleTotalClaims(`全部 ${total} 个工具的 schema`, total), [], "matching total must pass");
+}
+
+// F6 自校验（证伪前置）：先证明这条门**真会响**，再去跑它。
+// 反证①：`mcp-server/README.md:18` 的旧形态（`tool-registry.ts` 拼写）必须判红 —— 当年那两个
+//   数字（47 + 39）是对的 ⇒ 若此处不响，F6 就是恒绿假门，下面的实测红就没有意义。
+// 反证②（2026-10-07 扩面）：`AUTO_SETUP.md:455` 的另一种拼写（`indexToolSchemas` N 条 +
+//   `register.ts` M 条）同样必须判红 —— 只钉一种拼写的那版对它实测 0 命中，这条腿就是那次缺口留下的。
+// 正控：纯总数形态不得被 F6 误伤。
+{
+  const poisoned = "- 共 **86** 个 MCP 工具：`src/tool-registry.ts` **47** + `src/wave/register.ts` **39**";
+  assert.deepEqual(
+    perFileSplitForms(poisoned),
+    ["47 + 39"],
+    "F6 必须咬住 tool-registry.ts 拼写（README.md:18 旧形）",
+  );
+  const poisonedIdx =
+    "数量 **86**（`indexToolSchemas` 47 条 + `wave/register.ts` 40 条注册，其中 `resolve_lib_skills` 两处都有 ⇒ 47 + 40 − 1 = 86）";
+  assert.deepEqual(
+    perFileSplitForms(poisonedIdx),
+    ["47 + 40"],
+    "F6 必须咬住 indexToolSchemas 拼写（AUTO_SETUP.md:455 旧形）",
+  );
+  assert.deepEqual(perFileSplitForms("共 **86** 个工具"), [], "纯总数形态不得被 F6 误伤");
 }
 
 // ── 1. flags-only convert（--key value / --key=value 混用）────────────────────
@@ -158,6 +214,16 @@ function staleTotalClaims(docs, total) {
   const stale = staleTotalClaims(docs, j.result.total);
   if (stale.length > 0) {
     throw new Error(`文档写死「${stale.join(" / ")} 个工具」但 list-tools 为 ${j.result.total}`);
+  }
+  // F6：per-file 分解形态即红（复用上面已读入的 docs，零额外 IO）。
+  // 权威总数只有 list-tools 这一个数；文档里「A + B」按文件切的分解天生对不齐（schema 与注册可跨文件），
+  // 即使数字当前正确也属脆弱形态，一律退役。
+  const splits = perFileSplitForms(docs);
+  if (splits.length > 0) {
+    throw new Error(
+      `文档出现 per-file 工具数分解「${splits.join(" / ")}」：该口径对不齐代码实算（schema 与注册可跨文件），` +
+        `请只保留总数 ${j.result.total}。`,
+    );
   }
 }
 

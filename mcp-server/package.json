@@ -1,7 +1,30 @@
 {
   "name": "mc-ai-coding-assistant-tool",
-  "version": "1.0.4",
-  "description": "MC AI Coding Assistant Tool — 本地 stdio MCP（Forge/Fabric/NeoForge）",
+  "version": "2.0.0",
+  "description": "MC AI Coding Assistant — 本地 stdio MCP（Forge/Fabric/NeoForge）。npm 包只含代码，data 需从 GitHub Release 获取",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "minecraft",
+    "modding",
+    "forge",
+    "fabric",
+    "neoforge",
+    "cursor",
+    "claude-code"
+  ],
+  "homepage": "https://github.com/guguzea/MC-AI-Coding-Assistant-Tool#readme",
+  "bugs": {
+    "url": "https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/guguzea/MC-AI-Coding-Assistant-Tool.git",
+    "directory": "mcp-server"
+  },
+  "license": "MIT",
+  "author": "guzi",
+  "mcpName": "io.github.guguzea/mc-ai-coding-assistant-tool",
   "type": "module",
   "main": "dist/index.js",
   "bin": {
@@ -41,7 +64,9 @@
     "assert:no-yarn-slurp": "node scripts/assert-no-yarn-json-slurp.mjs",
     "smoke:release": "node scripts/release-smoke.mjs",
     "test:decompile": "npm run build && node test-decompile.mjs",
-    "test:deep-mixin": "npm run build && node test-deep-mixin.mjs"
+    "test:deep-mixin": "npm run build && node test-deep-mixin.mjs",
+    "test:mdk-npm-form": "tsc --outDir ../temp/_b06dist && node test-mdk-npm-form.mjs",
+    "postinstall": "node scripts/postinstall.mjs"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",
@@ -64,6 +89,8 @@
   "files": [
     "dist",
     "README.md",
-    "package.json"
+    "LICENSE",
+    "package.json",
+    "scripts/postinstall.mjs"
   ]
 }

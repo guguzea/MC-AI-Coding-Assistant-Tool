@@ -15,7 +15,7 @@ npm run build
 
 ## 能力概览
 
-- 共 **86** 个 MCP 工具：`src/tool-registry.ts` **47** + `src/wave/register.ts` **39**
+- 共 **86** 个 MCP 工具（工具数与顺序以 `list-tools` 为准；不按 per-file 分解计数 —— 工具的 schema 声明与注册可跨文件，per-file 口径对不齐，见 `test-cli.mjs` 的 F6 判据）
 - 依赖仓库根 `data/`（API extracted、parchment/mcp、**yarn-mappings.sqlite**、文档索引、porting 等）
 - 官方文档三级：L0 搜索 → L1 摘要 → L2/L2+ 全文
 - **禁止**运行时全量加载 `yarn-mappings.json`（>1.5GB，易 OOM）

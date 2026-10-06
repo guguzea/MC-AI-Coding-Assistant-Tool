@@ -7,18 +7,32 @@ on:
       - "V*"
   workflow_dispatch:
 
+# 发布链与 CI 同为每-PR 触发口径（见 mcp-server-ci.yml:3-8），
+# 但两者跑在不同 job 里，故在此显式声明取消策略，避免同一分支连续推 tag
+# 时旧 run 与新 run 并行争抢 Release 资产。
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
 permissions:
   contents: write
 
 jobs:
   build-and-release:
     runs-on: ubuntu-latest
+    # 发布链比 CI 多 build:yarn-sqlite + data audit + 打包 2.0 GB data zip，
+    # 故超时给到 120（不可照抄 CI 的 45 —— 45 会误杀正常发布）。
+    timeout-minutes: 120
     # CI 语义：发布链同样禁止下载类工具碰网络（smoke 只点名工具、不真跑反编译，见 scripts/release-smoke.mjs）。
     env:
       MC_SKILL_SKIP_DOWNLOAD: "1"
 
     steps:
       - uses: actions/checkout@v4
+
+      # 这里曾有一版「tag 必须落在 main 上」的前置校验，2026-10-07 撤除，原因两条：
+      # ① 本 workflow 未给 gh 配凭据（查询失败会被 `|| echo ""` 吞成「不在 main」，反而堵死全部发版）；
+      # ② `commits/<sha>/branches-where-head` 的语义是「该 commit 是 HEAD 的分支」，对非顶端的老 commit 误判。
 
       - uses: actions/setup-node@v4
         with:
@@ -127,6 +141,9 @@ jobs:
         env:
           MC_SKILL_DATA: ${{ github.workspace }}/data
           MCP_TIMEOUT_MS: 60000
+          # 与 mcp-server-ci.yml:83 对齐：不设则 release-smoke.mjs:124 走「全量 copy data/」
+          # 而非 junction，发布链会多拷 2.0 GB（CI 快得多、发布慢得多）。
+          MC_SKILL_SMOKE_DATA_LINK: "1"
 
       - name: Create GitHub Release and upload assets
         uses: softprops/action-gh-release@v2
