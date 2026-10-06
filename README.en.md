@@ -18,7 +18,7 @@ It gives the AI an environment that "understands the Minecraft mod development e
 
 ## Position: a copilot with a human in the loop
 
-Mod development is **not** a deterministic pipeline. Creative decisions (what to build) must be made by a **human**; if you cannot decide, the agent may decide for you, and afterwards it will explain the trade-offs and the alternatives using the "explanation template" (see the Quick Start section).
+Mod development is **not** a deterministic pipeline. Creative scope, performance trade-offs and debugging strategy must be decided by a **human**; the agent does not take those over. Compatibility trade-offs and API choices it may take for you: for a low-risk call it explains the choice, the alternatives and the revert right after acting, per the "explanation template" (see the Quick Start section); for a high-risk call (switch loader, restructure packages, drop a dependency, edit build scripts) it explains first and waits for your confirmation.
 
 The agent handles version gating, documentation lookup, rules and anti-patterns, skeleton drafts, validation, and crash triage.
 
@@ -297,34 +297,42 @@ The loop above is the **mechanism**; this section is the **gate**. Under a norma
 
 ### Explanation template (mandatory format when deciding on the user's behalf)
 
-1. **Transparent decision**
+> The authoritative text is "Delegation explanation template" in the root `AGENTS.md`. This section is a copy with the same structure — **change one of the three places and you must sync the other two** (`AGENTS.md`, `README.md`, `README.en.md`; no gate checks this yet).
 
-   Any compatibility trade-off or API choice made on the user's behalf must be stated explicitly right after the decision, never executed silently.
+**Judge the risk first; it decides when you speak**:
 
-   Example format:
+| What kind of decision | When to state it | Wait for a reply? |
+| --- | --- | --- |
+| Low risk: an API style, a dependency version | After acting, in the same reply | No |
+| High risk: switch loader platform, restructure packages, drop a dependency, edit build scripts | Before acting | Yes, wait for the user |
+| The user already said "don't ask me, just do it" / "you decide" | After acting | No, but you must give the revert path |
 
-   > I picked `DeferredRegister` for you; the reasoning is below.
+**The explanation must carry five parts, in this order, one part per paragraph**:
 
-2. **The explanation must contain four parts**
+1. **What was chosen** — name and version. Example: Forge 1.20.1's `SimpleChannel`.
+2. **Why it was chosen** — give only reasons tied to this version or this project. "Industry practice" is not a reason.
+3. **The alternatives, and why not** — one or two, one sentence each.
+4. **Impact and risk** — what the user must check or watch because of this.
+5. **How to revert** — which lines change back, and to what.
 
-   Every decision made on the user's behalf must explain at least:
+**Start with this line**:
 
-   - **What was chosen**: the concrete technique or approach (for example "use Forge 1.20.1's `SimpleChannel` instead of NeoForge's `Payload`").
-   - **Why it was chosen**: how it relates to the current version, the docs, best practice, or the user's project (for example "NeoForge 1.20.1 is a Forge compatibility layer, and the official docs point to SimpleChannel").
-   - **The main alternative**: one or two other options, and why they were not used (for example "you could also use NeoForge 1.20.4+'s `Payload`, but your version is 1.20.1, so it does not apply").
-   - **Impact and risk**: consequences, limits, or things to watch out for (for example "this makes the build depend on the `net.minecraftforge` package, so check that your project includes that dependency").
+> I picked `DeferredRegister` for you; the reasoning is below.
 
-3. **Match the explanation to the user's level**
+**Every reason must be checkable**: cite a hit page id or URL from `search_*_docs`, a rule number, or an official doc link. If you cannot find one, write `// TODO(未核实)`. Never fill a name from memory, and never write only "best practice".
 
-   - If the user says "I'm not very technical" or "just decide" → avoid stacking jargon; explain in plain language what the choice will mean for them.
-   - For professional developers → more technical evidence is fine (class names, method signatures, doc links).
-   - Either way, you must give **a verifiable source** (the result of `search_forge_docs`, a rule number, an official doc link). "Best practice" alone is not an answer.
+**Match the language to the user**: when the user says "I'm not very technical" or "just decide", describe the outcome instead of stacking terms (example: "with this style you will have to touch two more places when Forge upgrades"). For a professional developer, give class names, method signatures, and doc links. Both styles must still carry the five parts and the sources above — what changes is the wording, not the content.
 
-4. **High-risk decisions need confirmation first**
+**Worked example** (keep the shape, re-check every fact for your version):
 
-   - **Low-risk decisions** (picking an API style, recommending a dependency version): the agent may decide, but must explain right after acting, per point 2.
-   - **High-risk decisions** (switching loader platform, changing package structure, removing dependencies, editing build scripts): even if the agent may decide, it should briefly present the recommendation and the reasoning and wait for the user to confirm, unless the user has already said "don't ask me, just do it".
-   - If the user says "I don't know, you decide" → treat it as authorization, but still explain the decision afterwards and say how to revert it.
+> I picked `SimpleChannel` for you; the reasoning is below.
+>
+> 1. Network packet registration uses Forge 1.20.1's `SimpleChannel` (`NetworkRegistry.newSimpleChannel`).
+> 2. Your loader is NeoForge 1.20.1, which is the Forge compatibility layer, and its official docs still only give `SimpleChannel` (source: `search_neoforge_docs version=1.20.1`, hit page `1.20.1/networking_simpleimpl`, which contains the name verbatim).
+> 3. The other route is `CustomPacketPayload` + `IPayloadRegistrar`: that API has a doc page only from NeoForge 1.20.4 (`networking/payload` returns `DOC_NOT_FOUND` at 1.20.1), so it is not available to your version.
+> 4. Impact: the code depends on the `net.minecraftforge` package at compile time, so confirm your project carries that dependency.
+> 5. Revert: only your own network registration class changes (the official docs name it `ModidPacketHandler`); when you later move to 1.20.4+, swap the channel construction in that class for payload registration.
+
 
 **Using the scaffold for a new project:**
 

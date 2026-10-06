@@ -6,6 +6,8 @@ version: "1.14.4"
 dependencies: []
 mappings: yarn
 ---
+<!-- external-apis: fabric-loom-gradle-dsl, jdk -->
+
 
 # Kotlin 语言支持（Fabric 1.14.4）
 
@@ -73,10 +75,10 @@ tasks.processResources {
 
 ```kotlin
 // ExampleMod.kt
-@AutoStorageAware
+@AutoStorageAware  // 本件自造的示例注解：Fabric API 与 yarn 映射均零命中，禁止照抄
 class ExampleMod : ModInitializer {
-    override val modId = "examplemod"
-    override val modName = "Example Mod"
+    override val modId = "examplemod"  // ModInitializer 没有可覆写的 modId——本行自造示例，禁止照抄
+    override val modName = "Example Mod"  // ModInitializer 没有可覆写的 modName——本行自造示例，禁止照抄
     override val version = "1.0.0"
 
     companion object {
@@ -98,7 +100,7 @@ class ExampleMod : ModInitializer {
 // @PublishedApi 用于在 lambda 中安全访问私有字段
 class MyItem(settings: Settings) : Item(settings) {
     companion object {
-        val MY_ITEM: Item = Registry.register(
+        val MY_ITEM: Item = Registry.register(  // 示例名，本件自造，没有任何 MC 符号叫 MY_ITEM
             Registry.ITEM,
             Identifier(MOD_ID, "my_item"),
             MyItem(Settings())

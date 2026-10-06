@@ -82,7 +82,7 @@ Block.Properties.create(Material.ROCK)
 ```java
 // 服务端调用：播放给附近所有玩家（不含 player 参数传入者）
 world.playSound(
-    player,                          // EntityPlayer（可传 null 使所有人都听到）
+    player,                          // PlayerEntity（可传 null 使所有人都听到；144 snapshot 类名，javap 实证 2026-10-05）
     x, y, z,                         // 坐标
     ModSounds.MY_SOUND.get(),         // SoundEvent
     SoundCategory.BLOCKS,             // 类别（控制音量滑条）
@@ -95,8 +95,8 @@ world.playSound(
 
 | 方法 | 行为 |
 |------|------|
-| `playSound(EntityPlayer, BlockPos, ...)` | 同上，坐标自动 +0.5 |
-| `playSound(EntityPlayer, double x, y, z, ...)` | 坐标固定，排除 player 玩家 |
+| `playSound(PlayerEntity, BlockPos, ...)` | 同上，坐标自动 +0.5 |
+| `playSound(PlayerEntity, double x, y, z, ...)` | 坐标固定，排除 player 玩家 |
 | `entity.playSound(SoundEvent, vol, pitch)` | 从实体位置播放给所有人（不含实体本身，`Entity#playSound`） |
 
 ### 服务端播放给特定玩家

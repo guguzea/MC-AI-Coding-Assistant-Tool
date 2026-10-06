@@ -30,7 +30,7 @@ IF 食物
 
 IF 是工具（剑/镐）
   → SwordItem(material, Settings) + createAttributeModifiers
-  → 镐斧铲父类 MiningToolItem。不要 DiggerItem
+  → 镐斧铲父类 MiningToolItem。禁止 DiggerItem
 
 IF 可耐久
   → 设置 maxDamage

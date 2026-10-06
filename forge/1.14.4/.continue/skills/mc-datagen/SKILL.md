@@ -70,24 +70,24 @@ public class ModRecipeProvider extends RecipeProvider {
     }
 
     @Override
-    protected void registerRecipes(Consumer<IFinishedRecipe> consumer) { // TODO(未核实：IFinishedRecipe 未在 forge 1.14.4 语料命中，需 search_forge_docs 复核或反编译；方法名 registerRecipes 有出处 data/forge_1.14.4/forge-docs/1.14.4/processed/datagen_intro.md:43)
+    protected void registerRecipes(Consumer<IFinishedRecipe> consumer) { // 构件实证 2026-10-05：144 snapshot（20190719-1.14.3）`RecipeProvider.registerRecipes(Consumer<IFinishedRecipe>)` + `IFinishedRecipe` 均在 jar
         ShapedRecipeBuilder.shapedRecipe(ModItems.MY_ITEM.get())
             .patternLine(" X ")
             .patternLine(" X ")
             .patternLine(" Y ")
             .key('X', Items.DIAMOND)
             .key('Y', Items.STICK)
-            .addCriterion("has_diamond", InventoryChangeTrigger.Instance.hasItems(Items.DIAMOND)) // TODO(未核实：InventoryChangeTrigger 未在 forge 1.14.4 语料命中，需 search_forge_docs 复核或反编译；同行 addCriterion / hasItems 链同样未核实)
+            .addCriterion("has_diamond", InventoryChangeTrigger.Instance.forItems(Items.DIAMOND)) // 构件实证 2026-10-05：144 的 Instance 静态工厂只有 forItems（无 hasItems）
             .build(consumer);
 
         ShapelessRecipeBuilder.shapelessRecipe(ModItems.OTHER_ITEM.get())
             .addIngredient(Items.GOLD_INGOT, 3)
             .addIngredient(Items.DIAMOND)
-            .addCriterion("has_gold", InventoryChangeTrigger.Instance.hasItems(Items.GOLD_INGOT)) // TODO(未核实：InventoryChangeTrigger 未在 forge 1.14.4 语料命中，需 search_forge_docs 复核或反编译)
+            .addCriterion("has_gold", InventoryChangeTrigger.Instance.forItems(Items.GOLD_INGOT)) // 构件实证 2026-10-05：144 的 Instance 只有 forItems（javap）
             .build(consumer);
 
-        CookingRecipeBuilder.smelting(Ingredient.fromItems(Items.COBBLESTONE), Items.STONE, 0.1f, 200) // TODO(未核实：CookingRecipeBuilder 未在 forge 1.14.4 语料命中，需 search_forge_docs 复核或反编译；smelting 只在 JSON 配方语境命中 utilities_recipes.md)
-            .addCriterion("has_cobblestone", InventoryChangeTrigger.Instance.hasItems(Items.COBBLESTONE)) // TODO(未核实：InventoryChangeTrigger 未在 forge 1.14.4 语料命中，需 search_forge_docs 复核或反编译)
+        CookingRecipeBuilder.smeltingRecipe(Ingredient.fromItems(Items.COBBLESTONE), Items.STONE, 0.1f, 200) // 构件实证 2026-10-05：144 工厂名 = smeltingRecipe / blastingRecipe / cookingRecipe（无裸 smelting）
+            .addCriterion("has_cobblestone", InventoryChangeTrigger.Instance.forItems(Items.COBBLESTONE))
             .build(consumer);
     }
 }

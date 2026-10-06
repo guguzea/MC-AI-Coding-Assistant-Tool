@@ -32,7 +32,7 @@ mappings: yarn
 ## 决策
 
 ```
-IF 测纯逻辑 → Fabric Loader JUnit 思路（确切坐标以 query_api / community 复核）
+IF 测纯逻辑 → Fabric Loader JUnit 思路（JUnit 是第三方测试框架名，不是 MC API；确切坐标以 query_api / community 复核，本档未核实）
 IF 测玩法 → 先完成查证路径；未核到就停止输出方法名/示例代码
 IF 需要签名 → 禁止用 1.21.x / 26.x 页改版本号冒充
 ```

@@ -65,7 +65,7 @@ private static final Item MY_APPLE = Registry.register(
 
 ```java
 public enum MyToolMaterial implements ToolMaterial {
-    IRON_LIKE(2, 250, 6.0f, 2.0f, 14, Ingredient.ofItems(Items.IRON_INGOT));
+    IRON_LIKE(2, 250, 6.0f, 2.0f, 14, Ingredient.ofItems(Items.IRON_INGOT)); // IRON_LIKE：本件自造的枚举常量（非外部 API，没有任何 MC 符号出处）
 
     private final int miningLevel;
     private final int itemDurability;

@@ -16,9 +16,9 @@
 
 客户端：`ModLoadingContext.registerExtensionPoint(ExtensionPoint.GUIFACTORY, () -> (FMLPlayMessages.OpenContainer msg) -> GuiScreen)`。
 
-### 仍存在的旧 IGuiHandler
+### 构件里的旧 IGuiHandler = 孤儿类，别走
 
-`IGuiHandler` 仍是 `getServerGuiElement(int, EntityPlayer, World, int, int, int)` / `getClientGuiElement(...)`（loader-api 已核）。**不要**编 `createServerGui(int, PlayerInventory, PacketBuffer)`。
+`IGuiHandler` 接口类**确在构件**（`net.minecraftforge.fml.common.network.IGuiHandler`，方法 `getServerGuiElement(int, EntityPlayer, World, int, int, int)` / `getClientGuiElement(...)`，构件 javap 实证 2026-10-06）——**但 25.0.223 构件里没有任何注册入口**：全 jar 字节扫零命中 `registerGuiHandler`，`NetworkRegistry` 无 `INSTANCE` 字段，`EntityPlayer` 无 `openGui` 方法（均为构件 javap 实证）。该接口是无引用孤儿 ⇒ 本档 GUI **只走** `IInteractionObject` + `NetworkHooks.openGui` + `ExtensionPoint.GUIFACTORY`。`createServerGui(...)` 之类更是编的，禁止。
 
 容器 GUI 客户端类继承 **`GuiContainer`**（`drawGuiContainerBackgroundLayer`），不要把该方法写进裸 `GuiScreen`。
 
@@ -37,9 +37,9 @@ IF 方块/TE 有槽位
 IF 无数据的纯 UI
   → GuiScreen + 自己发包（见 06 SimpleChannel）
 
-IF 仍走旧 IGuiHandler
-  → NetworkRegistry.INSTANCE.registerGuiHandler + player.openGui（xyz int）
-  → 方法签名必须是 EntityPlayer + World + x,y,z
+IF 想走旧 IGuiHandler
+  → 本构件走不了：无 registerGuiHandler / 无 NetworkRegistry.INSTANCE / EntityPlayer 无 openGui（构件 javap + 全 jar 字节扫实证 2026-10-06）
+  → 用上面的 IInteractionObject + NetworkHooks.openGui((EntityPlayerMP) player, ..., pos) + ExtensionPoint.GUIFACTORY 路径
 ```
 
 ---

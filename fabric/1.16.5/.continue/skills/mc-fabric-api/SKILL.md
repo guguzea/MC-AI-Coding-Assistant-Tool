@@ -46,8 +46,9 @@ CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
 ### 内容注册表（燃料 / 堆肥）
 
 ```java
-FuelRegistry.INSTANCE.add(MY_ITEM, 200);
-CompostingChanceRegistry.INSTANCE.add(MY_ITEM, 0.3f);
+// MY_ITEM：示例名（本件自造，非 Fabric API 符号）——换成你自己注册的 Item
+FuelRegistry.INSTANCE.add(MY_ITEM, 200);  // 示例名，本件自造，没有任何 MC 符号叫 MY_ITEM
+CompostingChanceRegistry.INSTANCE.add(MY_ITEM, 0.3f);  // 同上：MY_ITEM 为自造示例名，没有任何 MC 符号叫它
 ```
 
 不要 `FabricItemApi.INSTANCE.canStack`（编造）。自定义物品行为用 `FabricItem` 接口（若本版模块有），不要假单例。

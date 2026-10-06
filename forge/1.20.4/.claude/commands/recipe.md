@@ -30,7 +30,7 @@ public static final RecipeType<MyRecipe> MILLING =
 
 ```java
 public record MyRecipe(
-    ResourceLocation id,
+    // javap 实证 2026-10-05：本档 Recipe 接口没有 getId()（1.20.5+ 才有），record 不要放 id —— id 由 RecipeOutput.accept 单独传入
     Ingredient input,
     ItemStack output,
     int processingTime
@@ -85,22 +85,26 @@ public static final RegistryObject<RecipeSerializer<MyRecipe>> MY_SERIALIZER =
 public class MyRecipeSerializer implements RecipeSerializer<MyRecipe> {
     public static final MyRecipeSerializer INSTANCE = new MyRecipeSerializer();
 
+    // javap 实证 2026-10-05：1.20.4 的 RecipeSerializer 接口 = codec() + fromNetwork(FriendlyByteBuf) + toNetwork(FriendlyByteBuf, T)。
+    // fromJson(ResourceLocation, JsonObject) 已从接口删除（那是 1.20.1 及更早的三件套）；JSON 读写走 Codec，
+    // Ingredient 的 CODEC / CODEC_NONEMPTY 与 ItemStack.SINGLE_ITEM_CODEC 都是本档构件里的真实字段。
+    public static final Codec<MyRecipe> CODEC = RecordCodecBuilder.create(i -> i.group(
+        Ingredient.CODEC_NONEMPTY.fieldOf("input").forGetter(MyRecipe::input),
+        ItemStack.SINGLE_ITEM_CODEC.fieldOf("output").forGetter(MyRecipe::output),
+        Codec.INT.optionalFieldOf("processingTime", 200).forGetter(MyRecipe::processingTime)
+    ).apply(i, MyRecipe::new));
+
     @Override
-    public MyRecipe fromJson(ResourceLocation id, JsonObject json) {
-        Ingredient input = Ingredient.fromJson(JsonHelpers.getAsArray(json, "input"));
-        ItemStack output = CraftingHelper.getItemStack(
-            JsonHelpers.getAsObject(json, "output"), true
-        );
-        int time = JsonHelpers.getAsInt(json, "processingTime", 200);
-        return new MyRecipe(id, input, output, time);
+    public Codec<MyRecipe> codec() {
+        return CODEC;
     }
 
     @Override
-    public MyRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buf) {
-        Ingredient input = Ingredient.STREAM_CODEC.fromNetwork(buf);
+    public MyRecipe fromNetwork(FriendlyByteBuf buf) {
+        Ingredient input = Ingredient.fromNetwork(buf);   // javap 实证：本档 Ingredient 无 fromJson/STREAM_CODEC，网络工厂 = fromNetwork(FriendlyByteBuf)
         ItemStack output = buf.readItem();
         int time = buf.readInt();
-        return new MyRecipe(id, input, output, time);
+        return new MyRecipe(input, output, time);
     }
 
     @Override
@@ -112,7 +116,7 @@ public class MyRecipeSerializer implements RecipeSerializer<MyRecipe> {
 }
 ```
 
-> `Ingredient.fromJson` 接收的 JSON 必须是**数组**：`[{ "item": "minecraft:diamond" }]`，不是 `{ "item": "..." }`。
+> 本档 Ingredient 没有 `fromJson`（javap 实证）——JSON 字段由 `Ingredient.CODEC` 解析，单个对象 `{ "item": ... }` 与数组 `[{ "item": ... }]` 都接受。
 
 ## 4. 在 mod 初始化时调用注册
 
@@ -138,77 +142,48 @@ public class MyMod {
 ```
 
 - `"type"` 必须与 `RecipeSerializer` 注册名一致
-- `"input"` 必须是数组
+- `"input"` 由 `Ingredient.CODEC` 解析，对象与数组两种写法都接受（见上注；旧版「必须是数组」是 ≤1.20.1 的 `fromJson` 行为）
 
 ## 6. DataGen（自定义 Serializer）
 
-> 注意：官方文档未覆盖自定义 Serializer 的 DataGen 流程，以下方案基于社区最佳实践。
+> javap 实证 2026-10-05（`forge-1.20.4-49.2.0` 构件）：本档 `RecipeProvider` 构造**只带 `PackOutput`**；`buildRecipes` 收 **`RecipeOutput`**；
+> `net.minecraft.data.recipes.FinishedRecipe` 接口在本档构件已**不存在**（`javap` 类未找到）——不要再手写 FinishedRecipe 类。
+> 自定义配方的 DataGen = 直接构造 Recipe 实例交给 `RecipeOutput.accept(id, recipe, advancementHolder)`，
+> JSON 由 `RecipeSerializer.codec()` 序列化生成（RecipeOutput 内部调用）。
 
 ```java
 public class MyRecipeProvider extends RecipeProvider {
-    public MyRecipeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries,
-                            CompletableFuture<HolderLookup.Provider> builtins) {
-        super(output, registries);
+    public MyRecipeProvider(PackOutput output) {
+        super(output);   // 1.20.4 单参构造（1.20.1 的 (output, registries) 双参形态在本档构件 javap 不存在）
     }
 
     @Override
-    protected void buildRecipes(Consumer<FinishedRecipe> consumer) {
-        // 手动构造 FinishedRecipe
-        ShapedRecipePattern pattern = ShapedRecipePattern.of(
-            Ingredient.of(Items.DIAMOND), 1,
-            "", "",
-            "", ""
+    protected void buildRecipes(RecipeOutput output) {   // 不再收 Consumer<FinishedRecipe>
+        // 1) 自定义配方：直接 new 出 Recipe，交给 accept（第三参 AdvancementHolder 可为 null）
+        MyRecipe recipe = new MyRecipe(
+            Ingredient.of(Items.DIAMOND),
+            new ItemStack(ModItems.PROCESSED_DIAMOND, 2),
+            400
         );
-        ShapedRecipeBuilder.shaped(result, pattern)
+        output.accept(new ResourceLocation(MOD_ID, "my_recipe"), recipe, null);
+
+        // 2) 合成表配方用 builder（204 形参 = RecipeCategory + ItemLike，见 javap）
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.PROCESSED_DIAMOND, 2)
+            .pattern("XXX")
+            .define('X', Items.DIAMOND)
             .unlockedBy("has_diamond", has(Items.DIAMOND))
-            .save(consumer, MOD_ID + ":my_recipe");
+            .save(output, new ResourceLocation(MOD_ID, "my_recipe2"));
     }
 }
 ```
 
-对于自定义 Serializer，需要手动实现 `FinishedRecipe`：
-
-```java
-public class MyFinishedRecipe implements FinishedRecipe {
-    private final ResourceLocation id;
-    private final Ingredient input;
-    private final ItemStack output;
-    private final int time;
-
-    public MyFinishedRecipe(ResourceLocation id, Ingredient input, ItemStack output, int time) {
-        this.id = id;
-        this.input = input;
-        this.output = output;
-        this.time = time;
-    }
-
-    @Override
-    public void serializeRecipeData(JsonObject json) {
-        json.add("input", input.toJson());
-        json.addProperty("output", BuiltInRegistries.ITEM.getKey(output.getItem()).toString());
-        json.addProperty("count", output.getCount());
-        json.addProperty("processingTime", time);
-    }
-
-    @Override
-    public ResourceLocation id() { return id; }
-
-    @Override
-    public RecipeSerializer<?> type() { return MyRecipeSerializer.INSTANCE; }
-
-    @Override
-    public JsonObject advancement() { return null; }
-
-    @Override
-    public void serializeAdvancement(JsonObject advancement) {}
-}
-```
+> `ShapedRecipePattern.of(Ingredient, int, String...)` 与 `ShapedRecipeBuilder.shaped(ItemStack, pattern)` 在本档构件 javap **无此重载**（`of` 只有 `(Map, String...)` / `(Map, List)`；`shaped` 只有 `(RecipeCategory, ItemLike[, int])`），照旧写法编译必失败。
 
 ## Decision: 选择配方方式
 
 ```
 IF 配方逻辑简单（物品 → 物品）
-  → 继承 SimpleRecipe + 注册 Serializer
+  → 实现 Recipe<C> 类 + 注册 Serializer（构件 javap 实证本档无 SimpleRecipe 类，勿继承该名）
 
 IF 处理机配方（有时间参数）
   → 创建 record MyRecipe implements Recipe<Container>
@@ -219,11 +194,11 @@ IF 配方数量多、固定格式
 
 ## 常见错误
 
-- ❌ `Ingredient.fromJson` 参数不是数组 → `{ "item": "..." }` 改为 `[{ "item": "..." }]`
+- ❌ 仍按 1.20.1 写 `fromJson(ResourceLocation, JsonObject)` / `Ingredient.fromJson` / `Ingredient.STREAM_CODEC` / `FinishedRecipe` 实现类 → 本档接口已 codec 化，这些方法/接口在 1.20.4 构件里都不存在（javap 实证 2026-10-05），改用 `codec()` + `RecipeOutput.accept`
 - ❌ `assemble` / `getResultItem` 返回原对象而非副本 → 多个配方实例共享同一 ItemStack
 - ❌ `RecipeType` 写在 DeferredRegister 中 → 不支持，必须用 `RecipeType.register()`
 - ❌ `RecipeSerializer` 忘了在 mod 初始化时调用 → 配方无法被加载
-- ❌ `RecipeProvider` 中硬编码数据 → 使用 `FinishedRecipe` 接口自定义序列化
+- ❌ `RecipeProvider` 中硬编码数据 → 用 DataGen 构造 Recipe 实例后交给 `RecipeOutput.accept`（本档已无 `FinishedRecipe` 接口可写）
 
 ## 参考资料
 

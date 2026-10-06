@@ -31,7 +31,7 @@ IF 食物
   → new Item(new Item.Settings().food(new FoodComponent.Builder()...build()))
 
 IF 工具（剑/镐）
-  → SwordItem / PickaxeItem（公共父类 MiningToolItem）。不要 DiggerItem
+  → SwordItem / PickaxeItem（公共父类 MiningToolItem）。禁止 DiggerItem
 
 IF 可耐久
   → 设置 maxDamage
@@ -75,7 +75,7 @@ FuelRegistry.INSTANCE.add(MY_ITEM, 300);
 
 ```java
 public enum MyToolMaterial implements ToolMaterial {
-    IRON_LIKE(2, 250, 6.0f, 2.0f, 14, Ingredient.ofItems(Items.IRON_INGOT));
+    IRON_LIKE(2, 250, 6.0f, 2.0f, 14, Ingredient.ofItems(Items.IRON_INGOT)); // IRON_LIKE：本件自造的枚举常量（非外部 API，没有任何 MC 符号出处）
 
     private final int miningLevel;
     private final int itemDurability;

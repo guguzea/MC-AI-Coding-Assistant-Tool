@@ -50,7 +50,7 @@ AbstractBlock.Settings.create()
     .strength(1.5f)
     .strength(1.5f, 6.0f)
     .requiresTool()
-    .dropsLike(Blocks.STONE)
+    .lootTable(Blocks.STONE.getLootTableKey()) // 本档 AbstractBlock$Settings 映射已无 dropsLike；lootTable(Blocks.STONE.getLootTableKey()) 为其等效替代
     .mapColor(MapColor.STONE_GRAY)
     .noCollision()
     .slipperiness(0.98f)
@@ -66,7 +66,7 @@ public class MyChestBlockEntity extends BlockEntity {
         DefaultedList.ofSize(27, ItemStack.EMPTY);
 
     public MyChestBlockEntity(BlockPos pos, BlockState state) {
-        super(ModBlockEntities.MY_CHEST, pos, state);
+        super(MY_CHEST, pos, state);
     }
 
     @Override
@@ -92,6 +92,8 @@ public class MyChestBlock extends Block implements BlockEntityProvider {
         return new MyChestBlockEntity(pos, state);
     }
 }
+
+private static final Block MY_CHEST_BLOCK = new MyChestBlock(AbstractBlock.Settings.copy(Blocks.STONE));
 
 private static final BlockEntityType<MyChestBlockEntity> MY_CHEST =
     Registry.register(

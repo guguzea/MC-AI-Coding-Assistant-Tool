@@ -43,7 +43,7 @@ IF 可流动的液体
 
 IF 静态（源）流体
   → 本档没有通用的 StillFluid 类；只有各流体自带的嵌套源态类
-    WaterFluid.Still / LavaFluid.Still（vanilla 注册在 Fluids 里）
+    WaterFluid$Still / LavaFluid$Still（嵌套形态；本档没有名为独立 Still 类的东西，零命中。vanilla 注册在 Fluids 里）
 ```
 
 ## 常见错误

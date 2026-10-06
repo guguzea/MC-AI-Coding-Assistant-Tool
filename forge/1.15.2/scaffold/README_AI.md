@@ -85,8 +85,8 @@ public static final DeferredRegister<Block> BLOCKS = ...;  // 已存在
 
 // 在 RegistryObject 声明区域添加：
 public static final RegistryObject<Block> MY_BLOCK = BLOCKS.register("my_block",
-    () -> new Block(Block.Properties.create(Material.WOOD)
-        .hardnessAndResistance(2.0f)
+    () -> new Block(Block.Properties.of(Material.WOOD)
+        .strength(2.0f)
     )
 );
 ```
@@ -104,7 +104,7 @@ public static final DeferredRegister<Item> ITEMS = ...;  // 已存在
 
 // 在 RegistryObject 声明区域添加：
 public static final RegistryObject<Item> MY_ITEM = ITEMS.register("my_item",
-    () -> new Item(new Item.Properties().group(ItemGroup.MISC))
+    () -> new Item(new Item.Properties().tab(ItemGroup.TAB_MISC))
 );
 ```
 
@@ -236,7 +236,7 @@ side="BOTH"                 # 加载侧：BOTH / CLIENT / SERVER
 
 | 项目 | 1.15.2 | 1.20.x |
 |------|---------|---------|
-| 方块属性 | `Block.Properties.create(Material)` | `Block.Properties.of(Material)` |
+| 方块属性 | `Block.Properties.of(Material)` | `Block.Properties.of(Material)` |
 | 方块实体 | `TileEntity` + `hasTileEntity`/`createTileEntity` | `BlockEntity` |
 | 工具材料 | `IItemTier` | `Tier` |
 | 食物 | `Food.Builder()` | `FoodProperties.Builder()` |

@@ -65,7 +65,7 @@ public class MyMessage {
 
     public void handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
-            EntityPlayerMP player = ctx.get().getSender();
+            ServerPlayerEntity player = ctx.get().getSender(); // 144 snapshot 玩家类（javap 实证 2026-10-05；EntityPlayerMP 是 1.12 旧名）
             if (player != null) {
                 // 服务端处理
             }

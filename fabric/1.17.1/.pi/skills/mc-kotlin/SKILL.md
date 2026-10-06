@@ -6,6 +6,8 @@ version: "1.17.1"
 dependencies: []
 mappings: yarn
 ---
+<!-- external-apis: fabric-loom-gradle-dsl, jdk -->
+
 
 # Kotlin 语言支持（Fabric 1.17.1）
 

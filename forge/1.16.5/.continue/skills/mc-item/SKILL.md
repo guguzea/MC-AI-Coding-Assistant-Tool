@@ -44,7 +44,7 @@ IF 可在创造模式标签中找到
 
 ```java
 public enum MyTier implements IItemTier {
-    IRON_LIKE(2, 250, 6.0f, 2.0f, 14, () -> Ingredient.fromItems(Items.IRON_INGOT));
+    IRON_LIKE(2, 250, 6.0f, 2.0f, 14, () -> Ingredient.of(Items.IRON_INGOT)); // Ingredient.of：构件实证；❌ fromItems 是 1.14 MCP 名
 
     private final int level;
     private final int uses;          // 耐久度
@@ -67,7 +67,7 @@ public enum MyTier implements IItemTier {
 ## 剑（SwordItem）
 
 ```java
-// 正确：4 参数构造函数（Parchment 1.16.5）
+// 正确：4 参数构造函数（official 1.16.5 构件实证）
 // 参数：(IItemTier tier, float attackSpeed, float damage, Item.Properties)
 public static final RegistryObject<Item> IRON_LIKE_SWORD = ITEMS.register("iron_like_sword",
     () -> new SwordItem(MyTier.IRON_LIKE, 3, -2.4f, new Item.Properties()
@@ -85,8 +85,8 @@ public static final RegistryObject<Item> IRON_LIKE_SWORD = ITEMS.register("iron_
 ## 挖掘工具（PickaxeItem）
 
 ```java
-// MCP 1.16.5：PickaxeItem(IItemTier, int attackDamage, float attackSpeed, Item.Properties)
-// 镐斧铲父类是 ToolItem，没有 Mojmap DiggerItem
+// official 1.16.5：PickaxeItem(IItemTier, int attackDamage, float attackSpeed, Item.Properties)
+// 镐斧铲父类是 ToolItem（构件实证：ToolItem(float, float, IItemTier, Set<Block>, Properties)）
 public static final RegistryObject<Item> IRON_LIKE_PICKAXE = ITEMS.register("iron_like_pickaxe",
     () -> new PickaxeItem(MyTier.IRON_LIKE, 1, -2.8f,
         new Item.Properties().tab(ItemGroup.TAB_TOOLS))
@@ -96,9 +96,12 @@ public static final RegistryObject<Item> IRON_LIKE_PICKAXE = ITEMS.register("iro
 ## 盔甲
 
 ```java
-public enum MyArmorMaterial implements IArmorTier {
+// 接口 = IArmorMaterial（构件实证点名；❌ IArmorTier 是 1.17+ 名，165 构件没有）。8 个实现方法：
+// getDurabilityForSlot(EquipmentSlotType)/getDefenseForSlot(EquipmentSlotType)/getEnchantmentValue()/
+// getEquipSound()/getRepairIngredient()/getName()/getToughness()/getKnockbackResistance()
+public enum MyArmorMaterial implements IArmorMaterial {
     COPPER("copper", 40, new int[]{4, 7, 9, 4}, 20,
-        SoundEvents.ARMOR_EQUIP_IRON, 3.0f, 0.1f, () -> Ingredient.fromItems(Items.IRON_INGOT));
+        SoundEvents.ARMOR_EQUIP_IRON, 3.0f, 0.1f, () -> Ingredient.of(Items.IRON_INGOT));
 
     // format: new int[]{ boots, leggings, chestplate, helmet }
     // durability multiplier, enchantability, toughness, knockback resistance
@@ -120,7 +123,8 @@ public static final RegistryObject<Item> GOLDEN_APPLE = ITEMS.register("golden_a
         .food(new Food.Builder()
             .nutrition(4)
             .saturationMod(1.2f)
-            .effect(() -> new MobEffectInstance(MobEffects.ABSORPTION, 2400, 0), 1.0f)
+            // 类 = net.minecraft.potion.EffectInstance/Effects（构件实证；165 没有 MobEffectInstance/MobEffects，那是 1.17+ 改名）
+            .effect(() -> new EffectInstance(Effects.ABSORPTION, 2400, 0), 1.0f)
             .alwaysEat()       // 不消耗饱食度
             .fast()            // 快速食用
             .meat()            // 肉类（可喂食狼）
@@ -132,13 +136,15 @@ public static final RegistryObject<Item> GOLDEN_APPLE = ITEMS.register("golden_a
 
 ## hurtAndBreak（工具耐久损耗）
 
-在 `on Hurt()` 或 `inventoryTick()` 中正确处理耐久：
+攻击命中时扣耐久。构件实证（javap Item/ItemStack/LivingEntity @1.16.5 official，2026-10-05）：
+覆盖点是 `Item.hurtEnemy(ItemStack, LivingEntity, LivingEntity)`；`hurtAndBreak(int, T extends LivingEntity, Consumer<T>)` 与
+`broadcastBreakEvent(EquipmentSlotType)` 在构件中。❌ `hurtItem(...DamageSource...)` 165 没有该覆盖点（1.17+ 才改名 `hurt`），
+`getEquippedStack`/`hitEntity`/`damageItem` 同为错层名（本档槽位读法 = `getItemBySlot`）。
 
 ```java
 @Override
-public boolean hurtItem(ItemStack stack, DamageSource source, float amount, LivingEntity target) {
-    // ✅ 正确：使用 lambda 接受装备槽位回调
-    stack.hurtAndBreak(1, target, slot -> target.getEquippedStack(slot));
+public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+    stack.hurtAndBreak(1, attacker, e -> e.broadcastBreakEvent(EquipmentSlotType.MAINHAND));
     return true;
 }
 ```
@@ -148,7 +154,7 @@ public boolean hurtItem(ItemStack stack, DamageSource source, float amount, Livi
 - ❌ `SwordItem(IItemTier, Item.Properties)` — Forge 1.16.5 **只有 4 参数版本**，不存在 2 参数版本
 - ❌ `IItemTier.getAttackDamageBonus()` 返回值含工具类型加成（剑已内置 3.0f）
 - ❌ 忘记 `.durability()` 在 Item.Properties 中设置（默认 Integer.MAX_VALUE）
-- ❌ `MobEffects.JUMP_BOOST`（Fabric Yarn 名）→ Forge 用 `MobEffects.JUMP`
+- ❌ `MobEffects.JUMP_BOOST`（Fabric Yarn 名）→ Forge 1.16.5 用 `Effects.JUMP`（类 = `net.minecraft.potion.Effects`；构件实证：165 没有 `MobEffects`，那是 1.17+ 改名）
 
 ## 参考资料
 

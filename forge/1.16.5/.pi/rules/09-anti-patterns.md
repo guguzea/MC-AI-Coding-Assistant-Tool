@@ -86,7 +86,7 @@ private static final String MOD_ID = "examplemod";
 @Override
 public void load(BlockState state, CompoundNBT nbt) { // 语料 tileentities_tileentity.md:38；本档无 read(CompoundNBT) 单参形
     super.load(state, nbt);
-    World world = this.getWorld(); // ❌ world 可能为 null 或 world 未完全加载
+    World world = this.getLevel(); // ❌ getWorld() = MCP 层名（165 official 构件实证：TileEntity#getLevel）
     if (world.getBlockState(pos).getBlock() == Blocks.DIAMOND_BLOCK) {
         this.activate();
     }
@@ -102,7 +102,7 @@ public void load(BlockState state, CompoundNBT nbt) { // 语料 tileentities_til
 @Override
 public void onLoad() {
     super.onLoad();
-    if (this.world != null && !this.world.isClientSide) {
+    if (this.level != null && !this.level.isClientSide) { // 165 official TileEntity 字段 = level（无 this.world，MCP/SRG 层名）
         // 基于世界的初始化逻辑
     }
 }
@@ -149,7 +149,7 @@ public void remove() {
 @SubscribeEvent
 public static void onMessage(MyMessage message, Supplier<NetworkEvent.Context> ctx) {
     ServerPlayerEntity player = ctx.get().getSender();
-    player.getServerWorld().setBlockState(player.getPosition(), Blocks.AIR.getDefaultState()); // ❌ 不安全
+    player.getCommandSenderWorld().setBlock(player.blockPosition(), Blocks.AIR.defaultBlockState(), 2); // ❌ 不安全
 }
 ```
 
@@ -163,7 +163,7 @@ public static void onMessage(MyMessage message, Supplier<NetworkEvent.Context> c
     ctx.get().enqueueWork(() -> {
         ServerPlayerEntity player = ctx.get().getSender();
         if (player != null) {
-            player.getServerWorld().setBlockState(player.getPosition(), Blocks.AIR.getDefaultState());
+            player.getCommandSenderWorld().setBlock(player.blockPosition(), Blocks.AIR.defaultBlockState(), 2);
         }
     });
     ctx.get().setPacketHandled(true);
@@ -216,7 +216,7 @@ public void onServerTick(TickEvent.ServerTickEvent event) {
 // 错误（客户端代码）
 @SubscribeEvent
 public void onRender(RenderGameOverlayEvent.Post event) {
-    world.setBlockState(pos, Blocks.DIRT.getDefaultState()); // ❌ 禁止在渲染线程修改世界
+    world.setBlock(pos, Blocks.DIRT.defaultBlockState(), 3); // ❌ 禁止在渲染线程修改世界
 }
 ```
 

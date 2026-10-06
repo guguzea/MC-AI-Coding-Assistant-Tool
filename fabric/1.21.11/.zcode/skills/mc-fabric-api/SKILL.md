@@ -46,10 +46,11 @@ CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environm
 ### 内容注册表（燃料 / 堆肥）
 
 ```java
+// MY_ITEM：示例名（本件自造，非 Fabric API 符号）——换成你自己注册的 Item
 FuelRegistryEvents.BUILD.register((builder, context) -> {
-    builder.add(MY_ITEM, 200);
+    builder.add(MY_ITEM, 200);  // 示例名，本件自造，没有任何 MC 符号叫 MY_ITEM
 });
-CompostingChanceRegistry.INSTANCE.add(MY_ITEM, 0.3f);
+CompostingChanceRegistry.INSTANCE.add(MY_ITEM, 0.3f);  // 同上：MY_ITEM 为自造示例名，没有任何 MC 符号叫它
 ```
 
 不要 `FabricItemApi.INSTANCE.canStack`（编造）。1.21.1 仍有 `FuelRegistry`；本档用 `FuelRegistryEvents`。

@@ -67,7 +67,7 @@ public class MyMessage {
 
     public void handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
-            ServerPlayer player = ctx.get().getSender();
+            ServerPlayerEntity player = ctx.get().getSender(); // ❌ ServerPlayer = 1.17+ 名
             if (player != null) {
                 // 服务端处理
             }

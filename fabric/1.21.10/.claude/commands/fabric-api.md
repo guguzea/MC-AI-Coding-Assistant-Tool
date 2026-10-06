@@ -50,9 +50,9 @@ CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environm
 
 ```java
 FuelRegistryEvents.BUILD.register((builder, context) -> {
-    builder.add(MY_ITEM, 200);
+    builder.add(MY_ITEM, 200); // MY_ITEM：本件自造的示例常量（没有外部声明出处；换成你自己注册的 Item）
 });
-CompostingChanceRegistry.INSTANCE.add(MY_ITEM, 0.3f);
+CompostingChanceRegistry.INSTANCE.add(MY_ITEM, 0.3f); // MY_ITEM 同上：本件自造的示例常量（没有外部声明出处）
 ```
 
 不要 `FabricItemApi.INSTANCE.canStack`（编造）。1.21.1 仍有 `FuelRegistry`；本档用 `FuelRegistryEvents`。

@@ -54,26 +54,32 @@ public class ModRecipeProvider extends RecipeProvider {
         super(generator);
     }
 
+    // 以下全部方法名 = 1.15.2 official 构件实证
+    // （javap net.minecraft.data.RecipeProvider / ShapedRecipeBuilder / ShapelessRecipeBuilder /
+    //  CookingRecipeBuilder / InventoryChangeTrigger$Instance，jar：
+    //  minecraft_user_repo/net/minecraftforge/forge/1.15.2-31.2.50_mapped_official_1.15.2）
+    // registerRecipes / shapedRecipe / patternLine / key / addCriterion / build(consumer) /
+    // hasItems / Ingredient.fromItems 都是 1.14.x MCP 层名，本档 scaffold（official）编不过。
     @Override
-    protected void registerRecipes(Consumer<IFinishedRecipe> consumer) {
-        ShapedRecipeBuilder.shapedRecipe(ModItems.MY_ITEM.get())
-            .patternLine(" X ")
-            .patternLine(" X ")
-            .patternLine(" Y ")
-            .key('X', Items.DIAMOND)
-            .key('Y', Items.STICK)
-            .addCriterion("has_diamond", InventoryChangeTrigger.Instance.hasItems(Items.DIAMOND))
-            .build(consumer);
+    protected void buildShapelessRecipes(Consumer<IFinishedRecipe> consumer) {
+        ShapedRecipeBuilder.shaped(ModItems.MY_ITEM.get())
+            .pattern(" X ")
+            .pattern(" X ")
+            .pattern(" Y ")
+            .define('X', Items.DIAMOND)
+            .define('Y', Items.STICK)
+            .unlocks("has_diamond", InventoryChangeTrigger.Instance.hasItem(Items.DIAMOND))
+            .save(consumer);
 
-        ShapelessRecipeBuilder.shapelessRecipe(ModItems.OTHER_ITEM.get())
-            .addIngredient(Items.GOLD_INGOT, 3)
-            .addIngredient(Items.DIAMOND)
-            .addCriterion("has_gold", InventoryChangeTrigger.Instance.hasItems(Items.GOLD_INGOT))
-            .build(consumer);
+        ShapelessRecipeBuilder.shapeless(ModItems.OTHER_ITEM.get())
+            .requires(Items.GOLD_INGOT, 3)
+            .requires(Items.DIAMOND)
+            .unlocks("has_gold", InventoryChangeTrigger.Instance.hasItem(Items.GOLD_INGOT))
+            .save(consumer);
 
-        CookingRecipeBuilder.smelting(Ingredient.fromItems(Items.COBBLESTONE), Items.STONE, 0.1f, 200)
-            .addCriterion("has_cobblestone", InventoryChangeTrigger.Instance.hasItems(Items.COBBLESTONE))
-            .build(consumer);
+        CookingRecipeBuilder.smelting(Ingredient.of(Items.COBBLESTONE), Items.STONE, 0.1f, 200)
+            .unlocks("has_cobblestone", InventoryChangeTrigger.Instance.hasItem(Items.COBBLESTONE))
+            .save(consumer);
     }
 }
 ```

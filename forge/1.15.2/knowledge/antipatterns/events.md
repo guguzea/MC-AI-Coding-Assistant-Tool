@@ -73,7 +73,7 @@ public void onServerTick(TickEvent.ServerTickEvent event) {
 // 错误
 @SubscribeEvent
 public static void onClientSetup(FMLClientSetupEvent event) {
-    world.setBlockState(pos, Blocks.DIRT.getDefaultState()); // ❌ 禁止在客户端修改世界数据
+    world.setBlock(pos, Blocks.DIRT.defaultBlockState(), 3); // ❌ 禁止在客户端修改世界数据
 }
 ```
 

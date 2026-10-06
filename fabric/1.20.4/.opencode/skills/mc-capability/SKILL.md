@@ -6,6 +6,7 @@ version: "1.20.4"
 dependencies: []
 mappings: yarn
 ---
+<!-- external-apis: fabric-api -->
 
 # Attachment 与实体事件（Fabric 1.20.4）
 

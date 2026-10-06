@@ -176,8 +176,8 @@ public class ExampleMod {
 
     // 注册方块（lambda 内可安全引用其他已注册的 RegistryObject）
     public static final RegistryObject<Block> MY_BLOCK = BLOCKS.register("my_block",
-        () -> new Block(Block.Properties.create(Material.STONE)
-            .hardnessAndResistance(1.5f, 6.0f)
+        () -> new Block(Block.Properties.of(Material.STONE)
+            .strength(1.5f, 6.0f)
             .harvestTool(ToolType.PICKAXE)
         )
     );
@@ -190,7 +190,7 @@ public class ExampleMod {
     // 注册普通物品
     public static final RegistryObject<Item> MY_ITEM = ITEMS.register("my_item",
         () -> new Item(new Item.Properties()
-            .maxStackSize(64)
+            .stacksTo(64)
         )
     );
 
@@ -227,8 +227,8 @@ public class ModBlocks {
         DeferredRegister.create(ForgeRegistries.BLOCKS, ExampleMod.MOD_ID);
 
     public static final RegistryObject<Block> MY_BLOCK = BLOCKS.register("my_block",
-        () -> new Block(Block.Properties.create(Material.STONE)
-            .hardnessAndResistance(1.5f, 6.0f)
+        () -> new Block(Block.Properties.of(Material.STONE)
+            .strength(1.5f, 6.0f)
             .harvestTool(ToolType.PICKAXE)
         )
     );

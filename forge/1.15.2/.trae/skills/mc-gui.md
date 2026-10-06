@@ -95,10 +95,11 @@ public class MyBlock extends Block {   // 方块实体：重写 hasTileEntity() 
     }
 
     @Override
-    public boolean onBlockActivated(BlockState state, World world, BlockPos pos,
+    // official 构件实证（javap @1.15.2 official，2026-10-05）：onBlockActivated/boolean = MCP 层形态，official = use(...) → ActionResultType
+    public ActionResultType use(BlockState state, World world, BlockPos pos,
             PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         if (!world.isClientSide) {
-            TileEntity tile = world.getTileEntity(pos);
+            TileEntity tile = world.getBlockEntity(pos); // ❌ getTileEntity = MCP 层名（official: World#getBlockEntity，构件实证）
             if (tile instanceof MyTileEntity) {
                 NetworkHooks.openGui(
                     (ServerPlayerEntity) player,
@@ -109,7 +110,7 @@ public class MyBlock extends Block {   // 方块实体：重写 hasTileEntity() 
                 );
             }
         }
-        return true;
+        return ActionResultType.SUCCESS;
     }
 }
 ```

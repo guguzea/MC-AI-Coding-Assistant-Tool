@@ -128,17 +128,23 @@ if (data != null) {
 
 ---
 
-### ❌ 在 `RegisterAttachmentsEvent` 中修改运行时数据
+### ❌ 在 `RegisterCapabilitiesEvent` 中修改运行时数据
+
+> 1.20.4 实测更正（出处：neoforge-20.4.251-merged.jar，`jar tf` 全表 + javap 2026-10-06）：
+> 本节旧文本写的 `RegisterAttachmentsEvent` 在该版**不存在**（全表 0 命中）。注册事件是
+> `net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent`，成员为
+> registerBlock / registerBlockEntity / registerEntity / registerItem（均同一 javap 逐字核实）；
+> `AttachmentType` 本身则经 `DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, MOD_ID)` 注册。
 
 ```java
 // 错误
 @SubscribeEvent
-public static void registerAttachments(RegisterAttachmentsEvent event) {
-    event.register(...);
-    player.getData(ModAttachments.MY_DATA).setData(123); // ❌ 只注册 AttachmentType
+public static void registerCaps(RegisterCapabilitiesEvent event) {
+    event.registerEntity(MY_CAP, EntityType.PLAYER, provider);
+    player.getData(ModAttachments.MY_DATA).setData(123); // ❌ 注册期就碰运行时数据
 }
 ```
 
 **症状**：数据修改时机不对，可能被覆盖。
 
-**正确方案**：`RegisterAttachmentsEvent` 只负责注册 `AttachmentType`；运行时数据在实体创建或 `PlayerEvent` 等时机修改。
+**正确方案**：注册事件只做注册（`RegisterCapabilitiesEvent` 挂能力 provider；`AttachmentType` 走 `ATTACHMENT_TYPES` 的 DeferredRegister）；运行时数据在实体创建或 `PlayerEvent` 等时机修改。

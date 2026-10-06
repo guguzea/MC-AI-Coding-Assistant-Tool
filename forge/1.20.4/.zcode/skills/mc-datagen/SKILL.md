@@ -74,7 +74,7 @@ public class ModRecipeProvider extends RecipeProvider {
     }
 
     @Override
-    protected void buildRecipes(Consumer<FinishedRecipe> consumer) {
+    protected void buildRecipes(RecipeOutput output) {   // 构件 javap 实证：1.20.4 无 FinishedRecipe，buildRecipes 形参 = RecipeOutput
         // TODO(未核实：DIAMOND / EMERALD / IRON_INGOT 未在 forge 1.20.4 语料命中，需 search_forge_docs 复核或反编译)
         // 本档语料逐字命中的 vanilla 常量只有 `Items.DIRT`
         //（出处：data/forge_1.20.4/forge-docs/1.20.4/processed/datagen_server_glm.md:26）；
@@ -88,7 +88,7 @@ public class ModRecipeProvider extends RecipeProvider {
             .define('C', Items.IRON_INGOT)
             .define('D', ModItems.MY_INGOT.get())
             .unlockedBy("has_item", has(ModItems.MY_INGOT.get()))
-            .save(consumer);
+            .save(output, new ResourceLocation("mymod", "my_item"));   // 构件 javap 实证：本档 save 形参 = RecipeOutput（显式 RL 两参形态在 ShapedRecipeBuilder 直接列出；单参 save(RecipeOutput) 是 RecipeBuilder 接口 default，亦可编译）
     }
 }
 ```
@@ -233,7 +233,7 @@ public class ModAdvancementProvider extends AdvancementProvider {
     //（出处：data/forge_1.20.4/forge-docs/1.20.4/processed/datagen_server_advancements.md:8,20,31,42,61,70）
     public ModAdvancementProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
         super(output, registries, List.of(
-            // 每一项是一个 Consumer<Consumer<FinishedRecipe>>，通常对应一个 json 文件
+            // 每一项是实现 Consumer<Consumer<Advancement>> 的子 provider（见下方；本档构件无 FinishedRecipe，旧注释是 1.20.1 recipe-datagen 残留形）
             new ModAdvancementSubProvider()
         ));
     }

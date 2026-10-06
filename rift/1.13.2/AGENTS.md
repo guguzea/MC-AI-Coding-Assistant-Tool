@@ -3,9 +3,10 @@
 短命加载器。方法名 **只许** 来自 `knowledge/common/` 与已核实源码，**禁止**用 Fabric `ModInitializer` / `onInitialize` 记忆填写。
 
 - 元数据官方拼写：**`riftmod.json`**（兼容误写 `rift.mod.json`）
+- 版本支持（2026-10-06 用户裁定 + GitHub API 同日核）：**原生线只到 MC 1.13**（最终原生版 `1.0.4-105`；tag `v1.0.4-86/87/105/106` 同指 master `dfc75ff725`，`build.gradle` 自标 `1.13`）；**1.13.1/1.13.2 = Chocohead 社区分支** `newerer`（自标 `1.13.1`）/ `newerest`（自标 `1.13.2`）支持，JitPack 上无已取到的成品 ⇒ 本档 scaffold 用原生件 `1.0.4-106`（非 dev），2026-10-05 真机实测 1.13.2「能启动但 listener 不派发」（hook mixin 目标是 1.13 notch 名）。详 `knowledge/common/bridge-api.md` §3.3 第 3 条
 - Gradle：`apply plugin: 'net.minecraftforge.gradle.tweaker-client'`
 - Java 8；`tweakClass = 'org.dimdev.riftloader.launch.RiftLoaderClientTweaker'`
-- dimdev.org maven 可能已死 → scaffold 用 `libs/` 备用，禁止写死失效仓库当唯一源
+- dimdev.org maven **已死**（2026-10-05 实测 DNS ENOTFOUND，非 404）→ scaffold 用 `libs/` 自备件（JitPack `com.github.DimensionalDevelopment:Rift:1.0.4-106`，**非 dev**；取法见 `scaffold/libs/README.md`），禁止写死失效仓库当唯一源
 - `search_docs({platform:"rift"})` **不要**回退 Fabric 文档树
 - `port_project` 对 Rift 默认 dryRun；Rift→Fabric 只出笔记
 

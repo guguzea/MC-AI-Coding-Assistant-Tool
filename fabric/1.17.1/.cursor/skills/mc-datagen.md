@@ -24,9 +24,14 @@ dependencies {
 public class ExampleModDataGenerator implements DataGeneratorEntrypoint {
     @Override
     public void onInitializeDataGenerator(FabricDataGenerator generator) {
-        generator.addProvider(MyRecipeProvider::new);
+        // 1.17.1 直接挂 generator：本档 FabricDataGenerator 上只有 addProvider，没有 createPack()/Pack
+        generator.addProvider(MyRecipesProvider::new);
     }
 }
+
+// 下面这个是**你工程里的示例类**（本件声明，不是 Fabric API 的类）。
+// 1.17.1 的配方基类名是复数 FabricRecipesProvider（1.18.2 起才改名 FabricRecipeProvider）。
+abstract class MyRecipesProvider extends FabricRecipesProvider { }
 ```
 
 ```json
@@ -47,7 +52,7 @@ IF 只要稳定资源
 
 IF 代码驱动配方
   → FabricRecipesProvider.generateRecipes
-  → 不要 DataGeneratorInitializer / init_data
+  → 禁止 DataGeneratorInitializer / init_data（本档 fabric-api 里没有这个入口类，只有 DataGeneratorEntrypoint）
 ```
 
 ## 常见错误

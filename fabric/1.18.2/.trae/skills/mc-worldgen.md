@@ -12,6 +12,12 @@ mappings: yarn
 官方 develop 树多数没有独立 worldgen 页。签名来自本版 **loader-api**。Yarn：`GenerationStep.Feature`、`RegistryKey`、`SpawnGroup`。不要抄 26.1.2 Mojmap。
 
 ```java
+// 下面两个常量：示例名（本件自造，非 Fabric API 符号）= 指向数据包 placed feature / carver JSON 的 RegistryKey
+public static final RegistryKey<PlacedFeature> MY_PLACED_FEATURE =
+    RegistryKey.of(Registry.PLACED_FEATURE_KEY, new Identifier(MOD_ID, "my_placed_feature"));
+public static final RegistryKey<ConfiguredCarver<?>> MY_CARVER =
+    RegistryKey.of(Registry.CONFIGURED_CARVER_KEY, new Identifier(MOD_ID, "my_carver"));
+
 BiomeModifications.addFeature(
     BiomeSelectors.foundInOverworld(),
     GenerationStep.Feature.VEGETAL_DECORATION,

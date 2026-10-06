@@ -17,7 +17,7 @@ Yarn 移位是 `quickMove`。本档 loader-api 仍有 `ScreenRegistry.register`�
 // 服务端：ScreenHandler
 public class MyScreenHandler extends ScreenHandler {
     public MyScreenHandler(int syncId, PlayerInventory playerInventory) {
-        super(ModScreenHandlers.MY_SCREEN, syncId);
+        super(MY_SCREEN, syncId);
         // ...
     }
 }

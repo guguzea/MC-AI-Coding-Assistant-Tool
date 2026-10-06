@@ -17,13 +17,16 @@ mappings: yarn
 
 ```java
 public class MyRecipeProvider extends FabricRecipeProvider {
-    public MyRecipeProvider(FabricDataGenerator dataGenerator) {
-        super(dataGenerator);
+    // 1.18.2 的构造入参是 FabricDataGenerator（本档还没有 FabricDataOutput，它自 1.19.4 起才有）
+    public MyRecipeProvider(FabricDataGenerator generator) {
+        super(generator);
     }
 
+    // fabric-api 摘要：FabricRecipeProvider ⇒ protected abstract void generateRecipes(Consumer<RecipeJsonProvider> exporter)
     @Override
-    protected void generateRecipes(Consumer<RecipeJsonProvider> exporter) {
-        ShapedRecipeJsonFactory.create(MY_ITEM) // TODO(未核实)：该重载的实参形状未在本档语料逐字核实
+    protected void generateRecipes(Consumer<RecipeJsonProvider> exporter) { // Consumer 属 JDK java.util.function；本档语料没有 docs 正文可逐字对照
+        // 1.18.2 的 create 只有 (ItemConvertible) / (ItemConvertible, int) 两形——RecipeCategory 重载本版还没有
+        ShapedRecipeJsonBuilder.create(Items.DIAMOND_BLOCK)
             .pattern("AAA")
             .pattern("A A")
             .pattern(" A ")
@@ -33,6 +36,8 @@ public class MyRecipeProvider extends FabricRecipeProvider {
     }
 }
 ```
+
+把产出换成你自己注册的物品时，形参名（`generator` / `exporter`）随你起 —— 它们是本例的局部名，不是 API 名。
 
 在 `DataGeneratorEntrypoint` 里 `addProvider(MyRecipeProvider::new)`（1.18.2）或 `pack.addProvider(MyRecipeProvider::new)`（1.19.4+）。不要 `DataGeneratorInitializer`。
 
@@ -49,7 +54,7 @@ public void onInitialize() {
 
 ```
 IF 使用配方数据
-  → DataGen 生成配方 JSON
+  → datagen 生成配方 JSON
 
 IF 在代码中动态创建配方
   → 仅用于自定义逻辑

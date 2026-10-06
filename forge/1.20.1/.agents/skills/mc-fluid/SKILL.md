@@ -118,7 +118,8 @@ new FluidType(Properties.create()
     .lightLevel(0)             // 0-15，影响水下光照
     .sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL)
     .sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY)
-    .sound(SoundActions.STEP, SoundEvents.WATER_STEP)        // 可选
+    // 构件 javap 实证 2026-10-06：本档 net.minecraftforge.common.SoundActions 只有 BUCKET_FILL / BUCKET_EMPTY / FLUID_VAPORIZE 三个常量（无 STEP），SoundEvents 无 WATER_STEP
+    .sound(SoundActions.FLUID_VAPORIZE, SoundEvents.FIRE_EXTINGUISH)   // 可选
     .descriptionId("fluid." + MOD_ID + ".my_fluid")           // 可选
 )
 ```

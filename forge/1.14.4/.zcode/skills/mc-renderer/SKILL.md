@@ -67,8 +67,8 @@ IF 实体本体渲染 → 本档语料无对应章节，见「本档未覆盖」
 ## Item property 与 overrides（`models_overrides`）
 
 - 与直接用 `ModelLoader.setCustomModelResourceLocation` / `ModelLoader.setCustomMeshDefinition` 绑死模型集合不同（那会把弓的拉弓帧数固定成 4），item property 给每个 `ItemStack` 赋一个 `float`，物品模型 JSON 用 `overrides` 连续选模型。
-- 注册：`Item::addPropertyOverride`；`ResourceLocation` 是属性名（如 `new ResourceLocation("pull")`）；`IItemPropertyGetter` 收 `ItemStack`、所在 `World`、持有时 `EntityLivingBase`，返回 `float`。modded 属性名建议带 modid 命名空间。
-- 页内示例形态：`public float apply(ItemStack stack, @Nullable World world, @Nullable EntityLivingBase entity)`，带 `@SideOnly(Side.CLIENT)`。
+- 注册：`Item::addPropertyOverride`；`ResourceLocation` 是属性名（如 `new ResourceLocation("pull")`）；`IItemPropertyGetter` 收 `ItemStack`、所在 `World`、持有时 `LivingEntity`，返回 `float`。modded 属性名建议带 modid 命名空间。
+- 本档接口形态：`public float call(ItemStack stack, @Nullable World world, @Nullable LivingEntity entity)`——144 snapshot 接口方法名是 `call`、实体参数是 `LivingEntity`（javap 实证 2026-10-05；`apply` 与 `EntityLivingBase` 都是后续版本/旧文档的叫法），带 `@SideOnly(Side.CLIENT)`。
 - predicate 语义：一个 predicate 对所有 **大于等于** 给定值的值生效；无匹配时用当前模型作默认。
 
 ## 1.14 渲染侧的破坏性改动（`primer_1_14` §Rendering Changes）

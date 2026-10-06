@@ -13,7 +13,7 @@
 | 物品模型 | `ItemModelProvider` |
 | 配方（有序） | `ShapedRecipeBuilder` |
 | 配方（无序） | `ShapelessRecipeBuilder` |
-| 配方（熔炉） | `SimpleCookingRecipeBuilder.smelting`（在 `buildShapelessRecipes` 内） |
+| 配方（熔炉） | `CookingRecipeBuilder.smelting`（在 `buildShapelessRecipes` 内；构件实证 2026-10-05，❌ `SimpleCookingRecipeBuilder` 是 1.19.4+ 类名） |
 | 方块标签 | `BlockTagsProvider` |
 | 物品标签 | `ItemTagsProvider` |
 | 战利品表 | `LootTableProvider#getTables` |
@@ -49,13 +49,16 @@ public class DataGenerators {
 
 ```java
 // datagen/ModRecipes.java
+// 构件实证（2026-10-05 javap 对 1.16.5-36.2.34_mapped_official_1.16.5.jar）：
+// buildShapelessRecipes(Consumer<net.minecraft.data.IFinishedRecipe>)/shaped/pattern/define/unlockedBy/save/has 逐字在构件。
+// ❌ FinishedRecipe 裸名（1.19+ 类名）/ registerRecipes（1.14 MCP）本档编不过。
 public class ModRecipeProvider extends RecipeProvider {
     public ModRecipeProvider(DataGenerator generator) {
         super(generator);
     }
 
     @Override
-    protected void buildShapelessRecipes(Consumer<FinishedRecipe> consumer) {
+    protected void buildShapelessRecipes(Consumer<IFinishedRecipe> consumer) {
         ShapedRecipeBuilder.shaped(ModItems.MY_ITEM.get())
             .pattern(" X ")
             .pattern(" X ")
@@ -71,7 +74,7 @@ public class ModRecipeProvider extends RecipeProvider {
             .unlockedBy("has_gold", has(Items.GOLD_INGOT))
             .save(consumer);
 
-        SimpleCookingRecipeBuilder.smelting(Ingredient.fromItems(Items.COBBLESTONE), Items.STONE, 0.1f, 200)
+        CookingRecipeBuilder.smelting(Ingredient.of(Items.COBBLESTONE), Items.STONE, 0.1f, 200)
             .unlockedBy("has_cobblestone", has(Items.COBBLESTONE))
             .save(consumer);
     }

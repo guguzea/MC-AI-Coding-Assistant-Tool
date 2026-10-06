@@ -15,8 +15,8 @@ mappings: mcp
 // 注册（参见 mc-registry Skill）
 public static final RegistryObject<Item> MY_ITEM = ITEMS.register("my_item",
     () -> new Item(new Item.Properties()
-        .maxStackSize(64)
-        .group(ItemGroup.MISC)
+        .stacksTo(64)
+        .tab(ItemGroup.TAB_MISC)
     )
 );
 ```
@@ -37,14 +37,14 @@ IF 可食用
   → Item + .food()
 
 IF 可在创造模式标签中找到
-  → 使用 .group(ItemGroup) 设置创造栏（官方文档方法名是 group，不是 tab）
+  → 使用 .tab(ItemGroup) 设置创造栏（本档 scaffold official 层名；.group/.maxStackSize 是 1.14.4 及更早 MCP 名）
 ```
 
-## ITier
+## IItemTier
 
 ```java
 public enum MyTier implements IItemTier {
-    COPPER(3, 1561, 8.0f, 3.0f, 15, () -> Ingredient.fromItems(Items.DIAMOND));
+    COPPER(3, 1561, 8.0f, 3.0f, 15, () -> Ingredient.of(Items.DIAMOND));
 
     private final int level;
     private final int uses;
@@ -55,12 +55,12 @@ public enum MyTier implements IItemTier {
 
     MyTier(...) { ... }
 
-    @Override public int getHarvestLevel() { return level; }
-    @Override public int getMaxUses() { return uses; }
-    @Override public float getEfficiency() { return speed; }
-    @Override public float getAttackDamage() { return damage; }
-    @Override public int getEnchantability() { return enchantment; }
-    @Override public Ingredient getRepairMaterial() { return repair.get(); }
+    @Override public int getLevel() { return level; }
+    @Override public int getUses() { return uses; }
+    @Override public float getSpeed() { return speed; }
+    @Override public float getAttackDamageBonus() { return damage; }
+    @Override public int getEnchantmentValue() { return enchantment; }
+    @Override public Ingredient getRepairIngredient() { return repair.get(); }
 }
 ```
 
@@ -72,7 +72,7 @@ public enum MyTier implements IItemTier {
 // 攻击伤害计算：attackDamageIn + 3.0f（剑的类型加成）
 public static final RegistryObject<Item> COPPER_SWORD = ITEMS.register("copper_sword",
     () -> new SwordItem(MyTier.COPPER, 3, -2.4f, new Item.Properties()
-        .group(ItemGroup.COMBAT)
+        .tab(ItemGroup.TAB_COMBAT)
     )
 );
 ```
@@ -80,11 +80,11 @@ public static final RegistryObject<Item> COPPER_SWORD = ITEMS.register("copper_s
 ## 挖掘工具（PickaxeItem）
 
 ```java
-// MCP：PickaxeItem(ITier, int attackDamage, float attackSpeed, Item.Properties)
+// official 构件实证（javap @1.15.2 official 2026-10-05）：PickaxeItem(IItemTier, int, float, Item.Properties)；❌ ITier = MCP 层名
 // 镐斧铲父类是 ToolItem，没有 Mojmap DiggerItem
 public static final RegistryObject<Item> IRON_LIKE_PICKAXE = ITEMS.register("iron_like_pickaxe",
     () -> new PickaxeItem(MyTier.COPPER, 1, -2.8f, new Item.Properties()
-        .group(ItemGroup.TOOLS)
+        .tab(ItemGroup.TAB_TOOLS)
     )
 );
 ```
@@ -94,17 +94,17 @@ public static final RegistryObject<Item> IRON_LIKE_PICKAXE = ITEMS.register("iro
 ```java
 public enum MyArmorMaterial implements IArmorMaterial {
     COPPER("copper", 40, new int[]{4, 7, 9, 4}, 20,
-        SoundEvents.ITEM_ARMOR_EQUIP_IRON, 3.0f);
+        SoundEvents.ARMOR_EQUIP_IRON, 3.0f);
 
-    // getDurability(), getDamageReductionAmount(), getEnchantability()
-    // getSoundEvent(), getToughness(), getRepairMaterial(), getName()
+    // getDurabilityForSlot(), getDefenseForSlot(), getEnchantmentValue()
+    // getEquipSound(), getToughness(), getRepairIngredient(), getName()
     // 1.15.2 没有 getKnockbackResistance
 }
 
 // 注册各部位
 public static final RegistryObject<Item> COPPER_HELMET = ITEMS.register("copper_helmet",
     () -> new ArmorItem(MyArmorMaterial.COPPER, EquipmentSlotType.HEAD,
-        new Item.Properties().group(ItemGroup.COMBAT))
+        new Item.Properties().tab(ItemGroup.TAB_COMBAT))
 );
 ```
 
@@ -113,13 +113,13 @@ public static final RegistryObject<Item> COPPER_HELMET = ITEMS.register("copper_
 ```java
 public static final RegistryObject<Item> GOLDEN_APPLE = ITEMS.register("golden_apple",
     () -> new Item(new Item.Properties()
-        .group(ItemGroup.FOOD)
+        .tab(ItemGroup.TAB_FOOD)
         .food(new Food.Builder()
-            .hunger(4)
-            .saturation(1.2f)
+            .nutrition(4)
+            .saturationMod(1.2f)
             .effect(() -> new EffectInstance(Effects.ABSORPTION, 2400, 0), 1.0f)
-            .setAlwaysEdible()
-            .fastToEat()
+            .alwaysEat()
+            .fast()
             .meat()
             .build())
         )
@@ -129,13 +129,13 @@ public static final RegistryObject<Item> GOLDEN_APPLE = ITEMS.register("golden_a
 
 ## hurtAndBreak（工具耐久损耗）
 
-在 `hitEntity()` 或 `onItemUse()` 中正确处理耐久：
+在 `hurtEnemy()` 或 `useOn()` 中正确处理耐久：
 
 ```java
 @Override
-public boolean hitEntity(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-    // ✅ 正确：使用 lambda 接受装备槽位回调
-    stack.damageItem(1, attacker, entity -> entity.sendBreakAnimation(EquipmentSlotType.MAINHAND));
+public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+    // ✅ 本档 official 构件实证面：hurtAndBreak + broadcastBreakEvent
+    stack.hurtAndBreak(1, attacker, entity -> entity.broadcastBreakEvent(EquipmentSlotType.MAINHAND));
     return true;
 }
 ```
@@ -143,10 +143,11 @@ public boolean hitEntity(ItemStack stack, LivingEntity target, LivingEntity atta
 ## 常见错误
 
 - ❌ `SwordItem(Tier, Item.Properties)` — Forge 1.15.2 只有 4 参数版本，不存在 2 参数版本
-- ❌ `Tier` 用法：Forge 用 `ITier`，不是 Fabric 的 `ToolMaterial`
-- ❌ `MobEffects.JUMP` / `StatusEffects.JUMP_BOOST` → 1.15.2 MCP 用 `Effects.JUMP_BOOST`
-- ❌ `.tab(CreativeModeTab)` → 官方文档是 `.group(ItemGroup)`
-- ❌ `Food.Builder.alwaysEat()` / `fast()` → `setAlwaysEdible()` / `fastToEat()`
+- ❌ `Tier` 用法：本档 1.15.2 用 `IItemTier`（`Tier` 是 1.17+ mojmap 名；165 official 构件仍为 `IItemTier`——2026-10-05 javap 实证），不是 Fabric 的 `ToolMaterial`
+- ❌ `MobEffects` / `StatusEffects` / `Effects.JUMP_BOOST` → 本档 official 构件用 `Effects.JUMP`（类 `net.minecraft.potion.Effects`；`JUMP_BOOST` 是 1.16.5+ MCP/parchment 字段名，`MobEffects` 是 1.17+ mojmap 类名）
+- ❌ `.group(ItemGroup.MISC)` / `.maxStackSize()` — 那是 1.14.4 及更早 MCP 层名；本档 scaffold official 用 `.tab(ItemGroup.TAB_MISC)` / `.stacksTo()`（真构件 javap 实证）
+- ❌ `Food.Builder.setAlwaysEdible()` / `fastToEat()` / `hunger()` / `saturation()` — 那是 1.12–1.14 MCP 名；本档 official 构件是 `alwaysEat()` / `fast()` / `nutrition()` / `saturationMod()`（javap 实证）
+- ❌ `stack.damageItem(...)` / `entity.sendBreakAnimation(...)` / `item.getUseAction(...)` / `onItemUse/onItemUseFinish` — 本档 official 构件分别是 `hurtAndBreak` / `broadcastBreakEvent` / `getUseAnimation` / `useOn` / `finishUsingItem`（javap 实证）
 
 ## 参考资料
 

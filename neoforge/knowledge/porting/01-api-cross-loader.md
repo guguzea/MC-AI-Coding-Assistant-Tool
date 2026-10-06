@@ -64,16 +64,20 @@ public static void registerCaps(RegisterCapabilitiesEvent event) {
 `query_loader_api --platform=neoforge`（`found:false` 时改用 `search_neoforge_docs` 该版页面）。
 
 
-### Fabric（使用附加组件 API）
+### Fabric（没有内置 Capability / Attachment）
+
+Fabric API 在 1.20.1 没有内置 Capability/Attachment 系统，**也没有**官方命名的「attachment API」。
+本页旧文本里的 `@AutoRegister`、`AttachmentType<MyAttachmentData>`、以及注释里的
+`EntityAttributeModifierEvent` + `EntityAttachmentsComponent` 都是编造名（出处：
+`EntityAttributeModifierEvent` 在 NeoForge 20.4.251 merged jar 同样 javap 查无，2026-10-06；
+`EntityAttachmentsComponent` 任何构件无出处）——勿照抄。
+
+实务上用第三方附加组件库，如 **CCA**（库源稿：`knowledge/libs/fabric-only/mc-cca/SKILL.md`，
+Fabric 专属，禁止当 Forge 教程）。
 
 ```java
-// Fabric 没有内置 Capability，但可以用附加组件 API 模拟
-@AutoRegister
-public class MyAttachmentType implements AttachmentType<MyAttachmentData> {
-    // Fabric 1.20.1 使用 EntityAttributeModifierEvent + EntityAttachmentsComponent
-}
-
-// 或者使用 Fabric Attachment API（fabric-attachment-api-v1）
+// TODO(未核实)：CCA 等第三方库的类名与方法签名不在本档语料/构件覆盖内，
+// 写依赖与代码前先按库源稿读坐标，再用用户自备 jar 走 ingest_loader_api + query_loader_api 逐签名核实。
 ```
 
 ---

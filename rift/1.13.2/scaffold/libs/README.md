@@ -64,7 +64,8 @@ Rift 扫 `libs/` 下所有 jar，同一 id 出现两次即 `DuplicateModExceptio
   **2026-10-05 真机更新**：在 MC **1.13.2** 上客户端**能起来**（LWJGL / OpenAL / 纹理图集 / Narrator 全绿），
   但 **`mixins.rift.hooks.json` 的 21 个 hook mixin 全部 target not found**（notch 名 `cfi`/`cfl`/`bna`/`bjl`
   属于 1.13）⇒ **`ClientTickable` / `MinecraftStartListener` 都不会被回调**。
-  ⇒ **1.13.2 属「能启动但功能不完整」**；要真用请把 `minecraft.version` 改成 `'1.13'`。
+  ⇒ **1.13.2 属「能启动但功能不完整」**；用本件的真法是把 `minecraft.version` 改成 `'1.13'`。
+  **2026-10-06 补**：1.13.1/1.13.2 的支持线在 **Chocohead 社区分支** `newerer`/`newerest`（`build.gradle` 自标 `1.13.1`/`1.13.2`；用户裁定 + GitHub API 同日核，详 `knowledge/common/bridge-api.md` §3.3 第 3 条）—— 其 JitPack 件未取到成品，本 scaffold 不含它。
 - jar 自带的 `riftmod.json` schema = `{id, name, authors[], listeners[]}`，与本仓桥模板生成的 `riftmod.json` 同形（已逐字对照）。
 - jar 内 `profile.json` 的 `libraries` 逐字列了 **`org.dimdev:mixin:0.7.11-SNAPSHOT`** 与
   **`asm` / `asm-commons` / `asm-tree` 三件 6.2** ⇒ 依赖照它写，别猜版本。

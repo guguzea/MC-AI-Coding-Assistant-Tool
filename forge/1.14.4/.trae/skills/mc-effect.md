@@ -1,6 +1,6 @@
 ---
 name: mc-effect
-description: MobEffect 状态效果。触发词：MobEffect、AttributeModifier
+description: Effect 状态效果（本档 144 = net.minecraft.potion.Effect / EffectInstance / Effects；MobEffect 是后版本名）。触发词：Effect、EffectInstance、MobEffect、AttributeModifier
 platform: forge
 version: "1.14.4"
 dependencies: []

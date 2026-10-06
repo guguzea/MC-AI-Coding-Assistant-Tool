@@ -73,7 +73,7 @@ public class MyEntityRenderer extends LivingEntityRenderer<MyEntity, MyEntityMod
 // ❌ 错误
 public MyTileEntity() {
     super(ModTileEntities.MY_TILE_ENTITY.get());
-    this.world = this.getWorld(); // world 可能为 null
+    this.level = this.getLevel(); // ❌ getWorld()/world 均为 MCP 层名（165 official：字段 level / 方法 getLevel）
 }
 
 // ✅ 正确：在 validate() 或其他回调中访问 world

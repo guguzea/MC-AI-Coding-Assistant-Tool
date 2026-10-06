@@ -12,8 +12,11 @@ mappings: yarn
 ## 快速开始
 
 ```groovy
-fabricApi {
-    configureDataGeneration()
+// 下面两行是 fabric-loom 的 Gradle DSL，不是 MC / Fabric API 的 Java API（类名门对它无管辖权）。
+// 本档语料没有 docs 正文逐字命中它；官方逐字写法在 fabric-docs 1.21.4+ 的 develop_loom_fabric-api 页。
+// 本档 scaffold 钉 fabric-loom 1.8.13（fabric/1.21.3/scaffold/build.gradle:12），仍请按你工程实际 loom 版本核对。
+fabricApi {                     // Gradle DSL ⇒ 本档语料没有逐字出处
+    configureDataGeneration()   // 同上：Gradle DSL，本档语料同样没有出处
 }
 // build.gradle — 用完整 fabric-api，不要单独钉死 fabric-data-generation-api-v1 的假版本号
 dependencies {
@@ -25,12 +28,18 @@ dependencies {
 public class ExampleModDataGenerator implements DataGeneratorEntrypoint {
     @Override
     public void onInitializeDataGenerator(FabricDataGenerator generator) {
-        FabricDataGenerator.Pack pack = generator.createPack();
+        // createPack() 自 1.19.4 起存在：fabric-api 摘要 ⇒ FabricDataGenerator 上有 Pack createPack()
+        FabricDataGenerator.Pack pack = generator.createPack(); // 本档语料没有 docs 正文可逐字对照 ⇒ 签名以摘要件为准
         pack.addProvider(MyRecipeProvider::new);
         pack.addProvider(MyModelProvider::new);
-        pack.addProvider(MyEnLangProvider::new);
+        pack.addProvider(MyLanguageProvider::new);
     }
 }
+
+// 下面三个是**你工程里的示例类**（本件声明，不是 Fabric API 的类）；完整写法见 mc-recipe / mc-model / mc-lang
+abstract class MyRecipeProvider extends FabricRecipeProvider { }     // 骨架：1.21.2+ 需实现 getRecipeGenerator（见 mc-recipe）
+abstract class MyModelProvider extends FabricModelProvider { }       // 骨架：需实现两个 generate* 方法
+abstract class MyLanguageProvider extends FabricLanguageProvider { }  // 骨架：需实现 generateTranslations
 ```
 
 ```json
@@ -61,7 +70,7 @@ IF 生成语言文件
   → FabricLanguageProvider
 ```
 
-Yarn 覆盖 `generate`；不要抄 wiki 的 `buildRecipes`。
+配方自 **1.21.2 起是两层**（本档实测：`RecipeGenerator$RecipeProvider.getRecipeGenerator(RegistryWrapper$WrapperLookup, RecipeExporter)` ⇒ `RecipeGenerator`，`RecipeGenerator` 里才是无参 `generate()`）；`FabricRecipeProvider` 子类上**没有** 1.21.1 那种单参 `generate(RecipeExporter)`，也不要抄 wiki/Mojmap 的 `buildRecipes`。形状见 mc-recipe.md。
 
 ## 常见错误
 

@@ -1,0 +1,69 @@
+# external-apis-signoff.tsv —— assert-skill-yarn-attest.mjs 的外部名逐名签收台账（2026-10-06 R1）
+# 判据：fabric 管辖权分支中，非 MC 宇宙名要转 --queue 人工审，须 ①该**名**在本台账入账
+# 且 ②台账 slug 集与件内 externalApis 声明有交集；未入账 ⇒ 红【外部名未签收】、归属不符 ⇒ 红【外部声明归属不符】。
+# 列：name<TAB>slugs(逗号)<TAB>basis(一句话出处)<TAB>asof(YYYY-MM-DD)。以 # 开头与表头行被门跳过。
+# 入账 = 承认「这确实是该外部库/DSL 的名字」，不是承认签名正确；签名仍须 ingest_loader_api/query_loader_api 或自备 jar 核。
+# 清空本台账 ⇒ 门点名【SIGNOFF-MISSING】判红（清空台账不得关掉执法，与 SQLITE-UNREADABLE 同族）。
+name	slugs	basis	asof
+AbstractConfigListEntry	cloth-config,jdk	cloth-config:Cloth Config 配置库（fabric-only 依赖，mezz/Bluexin 系） ｜ jdk:JDK 标准库（java.*/javax.*/Math 等运行时自带）	2026-10-06
+accessWidener	fabric-loom-gradle-dsl,jdk,mixin-extras,sponge-mixin	fabric-loom-gradle-dsl:Gradle/Loom 构建脚本 DSL 词（构建配置名，非游戏符号） ｜ jdk:JDK 标准库（java.*/javax.*/Math 等运行时自带） ｜ mixin-extras:MixinExtras 注解库（ModifyReturnValue/ModifyVariable 等） ｜ sponge-mixin:SpongePowered Mixin（@Inject/@Shadow/CallbackInfo 等注解与目标类型）	2026-10-06
+accessWidenerPath	fabric-loom-gradle-dsl,jdk,kotlin-stdlib,slf4j	fabric-loom-gradle-dsl:Gradle/Loom 构建脚本 DSL 词（构建配置名，非游戏符号） ｜ jdk:JDK 标准库（java.*/javax.*/Math 等运行时自带） ｜ kotlin-stdlib:Kotlin 标准库与注解（@PublishedApi 等，KFF/kotlin-for-forge 生态） ｜ slf4j:SLF4J 日志门面（LoggerFactory/Logger）	2026-10-06
+AFTER_DEATH	fabric-api	fabric-api:Fabric API（net.fabricmc.fabric.api.* 回调/常量，非 vanilla 映射腿覆盖）	2026-10-06
+AFTER_KILLED_OTHER_ENTITY	fabric-api	fabric-api:Fabric API（net.fabricmc.fabric.api.* 回调/常量，非 vanilla 映射腿覆盖）	2026-10-06
+ALLOW_DAMAGE	fabric-api	fabric-api:Fabric API（net.fabricmc.fabric.api.* 回调/常量，非 vanilla 映射腿覆盖）	2026-10-06
+ALLOW_DEATH	fabric-api	fabric-api:Fabric API（net.fabricmc.fabric.api.* 回调/常量，非 vanilla 映射腿覆盖）	2026-10-06
+BEFORE	fabric-api	fabric-api:Fabric API（net.fabricmc.fabric.api.* 回调/常量，非 vanilla 映射腿覆盖）	2026-10-06
+BoolOption	cloth-config,jdk	cloth-config:Cloth Config 配置库（fabric-only 依赖，mezz/Bluexin 系） ｜ jdk:JDK 标准库（java.*/javax.*/Math 等运行时自带）	2026-10-06
+CallbackInfo	fabric-loom-gradle-dsl,jdk,mixin-extras,sponge-mixin	fabric-loom-gradle-dsl:Gradle/Loom 构建脚本 DSL 词（构建配置名，非游戏符号） ｜ jdk:JDK 标准库（java.*/javax.*/Math 等运行时自带） ｜ mixin-extras:MixinExtras 注解库（ModifyReturnValue/ModifyVariable 等） ｜ sponge-mixin:SpongePowered Mixin（@Inject/@Shadow/CallbackInfo 等注解与目标类型）	2026-10-06
+CallbackInfoReturnable	fabric-loom-gradle-dsl,jdk,mixin-extras,sponge-mixin	fabric-loom-gradle-dsl:Gradle/Loom 构建脚本 DSL 词（构建配置名，非游戏符号） ｜ jdk:JDK 标准库（java.*/javax.*/Math 等运行时自带） ｜ mixin-extras:MixinExtras 注解库（ModifyReturnValue/ModifyVariable 等） ｜ sponge-mixin:SpongePowered Mixin（@Inject/@Shadow/CallbackInfo 等注解与目标类型）	2026-10-06
+ClothConfig	cloth-config	cloth-config:Cloth Config 配置库（fabric-only 依赖，mezz/Bluexin 系）	2026-10-06
+ClothConfigAddon	cloth-config,jdk	cloth-config:Cloth Config 配置库（fabric-only 依赖，mezz/Bluexin 系） ｜ jdk:JDK 标准库（java.*/javax.*/Math 等运行时自带）	2026-10-06
+ClothConfigBuilder	cloth-config,jdk	cloth-config:Cloth Config 配置库（fabric-only 依赖，mezz/Bluexin 系） ｜ jdk:JDK 标准库（java.*/javax.*/Math 等运行时自带）	2026-10-06
+ClothConfigScreenBuilder	cloth-config,jdk	cloth-config:Cloth Config 配置库（fabric-only 依赖，mezz/Bluexin 系） ｜ jdk:JDK 标准库（java.*/javax.*/Math 等运行时自带）	2026-10-06
+CompletableFuture	jdk	jdk:JDK 标准库（java.*/javax.*/Math 等运行时自带）	2026-10-06
+ConfigBuilder	cloth-config,jdk	cloth-config:Cloth Config 配置库（fabric-only 依赖，mezz/Bluexin 系） ｜ jdk:JDK 标准库（java.*/javax.*/Math 等运行时自带）	2026-10-06
+ConfigCategory	cloth-config,jdk	cloth-config:Cloth Config 配置库（fabric-only 依赖，mezz/Bluexin 系） ｜ jdk:JDK 标准库（java.*/javax.*/Math 等运行时自带）	2026-10-06
+ConfigEntry	cloth-config	cloth-config:Cloth Config 配置条目/注解类（@ConfigEntry.Gui.* 用法；1.21.x 档）	2026-10-06
+ConfigEntryBuilder	cloth-config	cloth-config:Cloth Config 配置库（fabric-only 依赖，mezz/Bluexin 系）	2026-10-06
+ConfigScreen	cloth-config,jdk	cloth-config:Cloth Config 配置库（fabric-only 依赖，mezz/Bluexin 系） ｜ jdk:JDK 标准库（java.*/javax.*/Math 等运行时自带）	2026-10-06
+ConfigSerializable	cloth-config,jdk	cloth-config:Cloth Config 配置库（fabric-only 依赖，mezz/Bluexin 系） ｜ jdk:JDK 标准库（java.*/javax.*/Math 等运行时自带）	2026-10-06
+ConfigSerializer	cloth-config,jdk	cloth-config:Cloth Config 配置库（fabric-only 依赖，mezz/Bluexin 系） ｜ jdk:JDK 标准库（java.*/javax.*/Math 等运行时自带）	2026-10-06
+createBuilder	cloth-config,jdk	cloth-config:Cloth Config 配置库（fabric-only 依赖，mezz/Bluexin 系） ｜ jdk:JDK 标准库（java.*/javax.*/Math 等运行时自带）	2026-10-06
+END_SERVER_TICK	fabric-api	fabric-api:Fabric API（net.fabricmc.fabric.api.* 回调/常量，非 vanilla 映射腿覆盖）	2026-10-06
+ENTITY_LOAD	fabric-api	fabric-api:Fabric API（net.fabricmc.fabric.api.* 回调/常量，非 vanilla 映射腿覆盖）	2026-10-06
+EntryBuilder	cloth-config,jdk	cloth-config:Cloth Config 配置库（fabric-only 依赖，mezz/Bluexin 系） ｜ jdk:JDK 标准库（java.*/javax.*/Math 等运行时自带）	2026-10-06
+Excluded	cloth-config,jdk	cloth-config:Cloth Config 配置库（fabric-only 依赖，mezz/Bluexin 系） ｜ jdk:JDK 标准库（java.*/javax.*/Math 等运行时自带）	2026-10-06
+filesMatching	fabric-loom-gradle-dsl,jdk,kotlin-stdlib,slf4j	fabric-loom-gradle-dsl:Gradle/Loom 构建脚本 DSL 词（构建配置名，非游戏符号） ｜ jdk:JDK 标准库（java.*/javax.*/Math 等运行时自带） ｜ kotlin-stdlib:Kotlin 标准库与注解（@PublishedApi 等，KFF/kotlin-for-forge 生态） ｜ slf4j:SLF4J 日志门面（LoggerFactory/Logger）	2026-10-06
+Float	fabric-loom-gradle-dsl,jdk,mixin-extras,sponge-mixin	fabric-loom-gradle-dsl:Gradle/Loom 构建脚本 DSL 词（构建配置名，非游戏符号） ｜ jdk:JDK 标准库（java.*/javax.*/Math 等运行时自带） ｜ mixin-extras:MixinExtras 注解库（ModifyReturnValue/ModifyVariable 等） ｜ sponge-mixin:SpongePowered Mixin（@Inject/@Shadow/CallbackInfo 等注解与目标类型）	2026-10-06
+getOrCreateCategory	cloth-config	cloth-config:Cloth Config 配置库（fabric-only 依赖，mezz/Bluexin 系）	2026-10-06
+getOrCreateModConfig	cloth-config	cloth-config:Cloth Config 配置库（fabric-only 依赖，mezz/Bluexin 系）	2026-10-06
+getReturnValue	fabric-loom-gradle-dsl,jdk,mixin-extras,sponge-mixin	fabric-loom-gradle-dsl:Gradle/Loom 构建脚本 DSL 词（构建配置名，非游戏符号） ｜ jdk:JDK 标准库（java.*/javax.*/Math 等运行时自带） ｜ mixin-extras:MixinExtras 注解库（ModifyReturnValue/ModifyVariable 等） ｜ sponge-mixin:SpongePowered Mixin（@Inject/@Shadow/CallbackInfo 等注解与目标类型）	2026-10-06
+Inject	fabric-loom-gradle-dsl,jdk,mixin-extras,sponge-mixin	fabric-loom-gradle-dsl:Gradle/Loom 构建脚本 DSL 词（构建配置名，非游戏符号） ｜ jdk:JDK 标准库（java.*/javax.*/Math 等运行时自带） ｜ mixin-extras:MixinExtras 注解库（ModifyReturnValue/ModifyVariable 等） ｜ sponge-mixin:SpongePowered Mixin（@Inject/@Shadow/CallbackInfo 等注解与目标类型）	2026-10-06
+IntSliderOption	cloth-config,jdk	cloth-config:Cloth Config 配置库（fabric-only 依赖，mezz/Bluexin 系） ｜ jdk:JDK 标准库（java.*/javax.*/Math 等运行时自带）	2026-10-06
+Logger	fabric-loom-gradle-dsl,jdk	fabric-loom-gradle-dsl:Gradle/Loom 构建脚本 DSL 词（构建配置名，非游戏符号） ｜ jdk:JDK 标准库（java.*/javax.*/Math 等运行时自带）	2026-10-06
+LoggerFactory	fabric-loom-gradle-dsl,kotlin-stdlib,slf4j	fabric-loom-gradle-dsl:Gradle/Loom 构建脚本 DSL 词（构建配置名，非游戏符号） ｜ kotlin-stdlib:Kotlin 标准库与注解（@PublishedApi 等，KFF/kotlin-for-forge 生态） ｜ slf4j:SLF4J 日志门面（LoggerFactory/Logger）	2026-10-06
+mavenCentral	fabric-loom-gradle-dsl,jdk,kotlin-stdlib,slf4j	fabric-loom-gradle-dsl:Gradle/Loom 构建脚本 DSL 词（构建配置名，非游戏符号） ｜ jdk:JDK 标准库（java.*/javax.*/Math 等运行时自带） ｜ kotlin-stdlib:Kotlin 标准库与注解（@PublishedApi 等，KFF/kotlin-for-forge 生态） ｜ slf4j:SLF4J 日志门面（LoggerFactory/Logger）	2026-10-06
+minecraftVersion	fabric-loom-gradle-dsl,jdk	fabric-loom-gradle-dsl:Gradle/Loom 构建脚本 DSL 词（构建配置名，非游戏符号） ｜ jdk:JDK 标准库（java.*/javax.*/Math 等运行时自带）	2026-10-06
+modApi	fabric-loom-gradle-dsl,jdk,kotlin-stdlib,slf4j	fabric-loom-gradle-dsl:Gradle/Loom 构建脚本 DSL 词（构建配置名，非游戏符号） ｜ jdk:JDK 标准库（java.*/javax.*/Math 等运行时自带） ｜ kotlin-stdlib:Kotlin 标准库与注解（@PublishedApi 等，KFF/kotlin-for-forge 生态） ｜ slf4j:SLF4J 日志门面（LoggerFactory/Logger）	2026-10-06
+modId	fabric-loom-gradle-dsl,jdk	fabric-loom-gradle-dsl:Gradle/Loom 构建脚本 DSL 词（构建配置名，非游戏符号） ｜ jdk:JDK 标准库（java.*/javax.*/Math 等运行时自带）	2026-10-06
+MODIFY	fabric-api	fabric-api:Fabric API（net.fabricmc.fabric.api.* 回调/常量，非 vanilla 映射腿覆盖）	2026-10-06
+ModifyReturnValue	fabric-loom-gradle-dsl,jdk,mixin-extras,sponge-mixin	fabric-loom-gradle-dsl:Gradle/Loom 构建脚本 DSL 词（构建配置名，非游戏符号） ｜ jdk:JDK 标准库（java.*/javax.*/Math 等运行时自带） ｜ mixin-extras:MixinExtras 注解库（ModifyReturnValue/ModifyVariable 等） ｜ sponge-mixin:SpongePowered Mixin（@Inject/@Shadow/CallbackInfo 等注解与目标类型）	2026-10-06
+ModifyVariable	fabric-loom-gradle-dsl,jdk,mixin-extras,sponge-mixin	fabric-loom-gradle-dsl:Gradle/Loom 构建脚本 DSL 词（构建配置名，非游戏符号） ｜ jdk:JDK 标准库（java.*/javax.*/Math 等运行时自带） ｜ mixin-extras:MixinExtras 注解库（ModifyReturnValue/ModifyVariable 等） ｜ sponge-mixin:SpongePowered Mixin（@Inject/@Shadow/CallbackInfo 等注解与目标类型）	2026-10-06
+processResources	fabric-loom-gradle-dsl,jdk,kotlin-stdlib,slf4j	fabric-loom-gradle-dsl:Gradle/Loom 构建脚本 DSL 词（构建配置名，非游戏符号） ｜ jdk:JDK 标准库（java.*/javax.*/Math 等运行时自带） ｜ kotlin-stdlib:Kotlin 标准库与注解（@PublishedApi 等，KFF/kotlin-for-forge 生态） ｜ slf4j:SLF4J 日志门面（LoggerFactory/Logger）	2026-10-06
+PublishedApi	fabric-loom-gradle-dsl,kotlin-stdlib,slf4j	fabric-loom-gradle-dsl:Gradle/Loom 构建脚本 DSL 词（构建配置名，非游戏符号） ｜ kotlin-stdlib:Kotlin 标准库与注解（@PublishedApi 等，KFF/kotlin-for-forge 生态） ｜ slf4j:SLF4J 日志门面（LoggerFactory/Logger）	2026-10-06
+RegisterClientPluginsEvent	rei-plugin-api	rei-plugin-api:REI（Roughly Enough Items）插件 API	2026-10-06
+REIPluginClient	rei-plugin-api	rei-plugin-api:REI（Roughly Enough Items）插件 API	2026-10-06
+RETURN	fabric-loom-gradle-dsl,jdk,mixin-extras,sponge-mixin	fabric-loom-gradle-dsl:Gradle/Loom 构建脚本 DSL 词（构建配置名，非游戏符号） ｜ jdk:JDK 标准库（java.*/javax.*/Math 等运行时自带） ｜ mixin-extras:MixinExtras 注解库（ModifyReturnValue/ModifyVariable 等） ｜ sponge-mixin:SpongePowered Mixin（@Inject/@Shadow/CallbackInfo 等注解与目标类型）	2026-10-06
+setDefaultTitle	cloth-config	cloth-config:Cloth Config 配置库（fabric-only 依赖，mezz/Bluexin 系）	2026-10-06
+setDefaultValue	cloth-config,jdk	cloth-config:Cloth Config 配置库（fabric-only 依赖，mezz/Bluexin 系） ｜ jdk:JDK 标准库（java.*/javax.*/Math 等运行时自带）	2026-10-06
+setGlobalErrorSupplier	cloth-config,jdk	cloth-config:Cloth Config 配置库（fabric-only 依赖，mezz/Bluexin 系） ｜ jdk:JDK 标准库（java.*/javax.*/Math 等运行时自带）	2026-10-06
+setNewDefaultValue	cloth-config,jdk	cloth-config:Cloth Config 配置库（fabric-only 依赖，mezz/Bluexin 系） ｜ jdk:JDK 标准库（java.*/javax.*/Math 等运行时自带）	2026-10-06
+setParentScreen	cloth-config	cloth-config:Cloth Config 配置库（fabric-only 依赖，mezz/Bluexin 系）	2026-10-06
+setSaveConsumer	cloth-config,jdk	cloth-config:Cloth Config 配置库（fabric-only 依赖，mezz/Bluexin 系） ｜ jdk:JDK 标准库（java.*/javax.*/Math 等运行时自带）	2026-10-06
+setSavingRunnable	cloth-config,jdk	cloth-config:Cloth Config 配置库（fabric-only 依赖，mezz/Bluexin 系） ｜ jdk:JDK 标准库（java.*/javax.*/Math 等运行时自带）	2026-10-06
+Shadow	fabric-loom-gradle-dsl,jdk,mixin-extras,sponge-mixin	fabric-loom-gradle-dsl:Gradle/Loom 构建脚本 DSL 词（构建配置名，非游戏符号） ｜ jdk:JDK 标准库（java.*/javax.*/Math 等运行时自带） ｜ mixin-extras:MixinExtras 注解库（ModifyReturnValue/ModifyVariable 等） ｜ sponge-mixin:SpongePowered Mixin（@Inject/@Shadow/CallbackInfo 等注解与目标类型）	2026-10-06
+startBooleanToggle	cloth-config,jdk	cloth-config:Cloth Config 配置库（fabric-only 依赖，mezz/Bluexin 系） ｜ jdk:JDK 标准库（java.*/javax.*/Math 等运行时自带）	2026-10-06
+startIntSlider	cloth-config,jdk	cloth-config:Cloth Config 配置库（fabric-only 依赖，mezz/Bluexin 系） ｜ jdk:JDK 标准库（java.*/javax.*/Math 等运行时自带）	2026-10-06
+System	fabric-loom-gradle-dsl,jdk,mixin-extras,sponge-mixin	fabric-loom-gradle-dsl:Gradle/Loom 构建脚本 DSL 词（构建配置名，非游戏符号） ｜ jdk:JDK 标准库（java.*/javax.*/Math 等运行时自带） ｜ mixin-extras:MixinExtras 注解库（ModifyReturnValue/ModifyVariable 等） ｜ sponge-mixin:SpongePowered Mixin（@Inject/@Shadow/CallbackInfo 等注解与目标类型）	2026-10-06
+Unpooled	netty	netty:Netty（io.netty，Unpooled 等缓冲工具）	2026-10-06
+yarnMappings	fabric-loom-gradle-dsl,jdk	fabric-loom-gradle-dsl:Gradle/Loom 构建脚本 DSL 词（构建配置名，非游戏符号） ｜ jdk:JDK 标准库（java.*/javax.*/Math 等运行时自带）	2026-10-06

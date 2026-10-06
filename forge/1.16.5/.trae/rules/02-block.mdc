@@ -62,7 +62,7 @@ IF 需要存储数据（箱子、熔炉等）
   → 需要在 mods.toml 中添加 blockEntity 字段
 
 IF 需要可交互（右键打开 GUI、触发事件）
-  → 基础方块 + onBlockActivated 事件
+  → 基础方块 + 重写 use（返回 ActionResultType；❌ onBlockActivated = MCP 层名，165 official 构件实证 2026-10-05）
   → 或使用 IContainerProvider + ITickableTileEntity 实现 GUI（TODO(未核实)：原写 ContainerProvider/ITickableBlockEntity 本档语料 0 命中、属别的版本线，禁止照抄；ITickableTileEntity 见语料 tileentities_tileentity.md:55）
 
 IF 需要流体

@@ -9,7 +9,7 @@
 @SubscribeEvent
 public static void onMessage(MyMessage message, Supplier<NetworkEvent.Context> ctx) {
     ServerPlayerEntity player = ctx.get().getSender();
-    player.getEntityWorld().setBlockState(player.getPosition(), Blocks.AIR.getDefaultState()); // ❌ 不安全
+    player.getCommandSenderWorld().setBlock(player.getCommandSenderBlockPosition(), Blocks.AIR.defaultBlockState(), 2); // ❌ 不安全
 }
 ```
 
@@ -23,7 +23,7 @@ public static void onMessage(MyMessage message, Supplier<NetworkEvent.Context> c
     ctx.get().enqueueWork(() -> {
         ServerPlayerEntity player = ctx.get().getSender();
         if (player != null) {
-            player.getEntityWorld().setBlockState(player.getPosition(), Blocks.AIR.getDefaultState());
+            player.getCommandSenderWorld().setBlock(player.getCommandSenderBlockPosition(), Blocks.AIR.defaultBlockState(), 2);
         }
     });
     ctx.get().setPacketHandled(true);

@@ -18,7 +18,7 @@ public static final RegistryObject<EntityType<MyEntity>> MY_ENTITY = ENTITY_TYPE
 // 实体类
 public class MyEntity extends CreatureEntity {
     private static final DataParameter<Integer> DATA_HEALTH =
-        EntityDataManager.createKey(MyEntity.class, DataSerializers.VARINT);
+        EntityDataManager.defineId(MyEntity.class, DataSerializers.VARINT); // ❌ createKey = MCP 层名（official: defineId，2026-10-05 构件实证）
 
     protected MyEntity(EntityType<? extends MyEntity> type, World world) {
         super(type, world);
@@ -41,9 +41,9 @@ public class MyEntity extends CreatureEntity {
     }
 
     @Override
-    protected void registerData() {
-        super.registerData();
-        this.dataManager.register(DATA_HEALTH, this.getMaxHealth());
+    protected void defineSynchedData() { // ❌ registerData = MCP 层名（official: Entity#defineSynchedData，2026-10-05 构件实证）
+        super.defineSynchedData();
+        this.entityData.register(DATA_HEALTH, this.getMaxHealth());
     }
 }
 ```
@@ -59,10 +59,11 @@ public class MyProjectile extends ProjectileEntity {
     }
 
     @Override
-    protected void onImpact(RayTraceResult result) {
-        super.onImpact(result);
-        if (!this.world.isClientSide) {
-            this.world.playEvent(2001, this.getPosition(), Block.getStateId(Blocks.AIR.getDefaultState()));
+    protected void onHit(RayTraceResult result) { // ❌ onImpact = MCP 层名（official: ProjectileEntity#onHit，abstract，无 super 可调）
+        if (!this.level.isClientSide) {
+            // official 构件实证（javap @1.16.5 official，2026-10-05）：World#globalLevelEvent(int, BlockPos, int) /
+            // Entity#blockPosition() / Block.getId(BlockState) / defaultBlockState()；❌ playEvent/getPosition/getStateId/getDefaultState/world 均为 MCP 名
+            this.level.globalLevelEvent(2001, this.blockPosition(), Block.getId(Blocks.AIR.defaultBlockState()));
             this.remove();
         }
     }

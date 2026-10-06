@@ -6,6 +6,8 @@ version: "1.14.4"
 dependencies: []
 mappings: yarn
 ---
+<!-- external-apis: netty -->
+
 
 # 网络通信（Fabric 1.14.4）
 

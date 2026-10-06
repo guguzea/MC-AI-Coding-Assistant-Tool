@@ -30,7 +30,7 @@
 |----------|----------------|--------------|---------------|
 | Java 版本 | **Java 8 → Java 8**（不变） | Java 8 → 16 | Java 16 → 17 |
 | 方块实体 | `TileEntity` | `TileEntity` | `TileEntity` → `BlockEntity` |
-| 方块属性 | `Properties.create()` | `Properties.create()` | `Properties.of()` |
+| 方块属性 | `Properties.of(Material)`（152 official 构件实证 2026-10-05；旧表列的 `.create()` 是 docs 层 MCP 名） | `Properties.of(Material)` | `Properties.of(BlockBehaviour.Properties)`（`Material` 移除） |
 | 工具材料 | `IItemTier` | `IItemTier` | `IItemTier` → `Tier` |
 | ForgeGradle | 4.x | 5.x | 6.x |
 | Gradle | 7.x | 7.x | 8.x |
@@ -39,7 +39,7 @@
 
 1. **Java 版本**：1.15.2 与 1.16.5 都按 **Java 8** 编译（`forge_1.15.2/…/gettingstarted.md:14`、`forge_1.16.5/…/gettingstarted.md:14`）；**Java 16 从 1.17.1 起**（`forge_1.17.1/…/gettingstarted.md:14`），**Java 17 从 1.18.2 起**（`forge_1.18.2/…/gettingstarted.md:14`）
 2. **Gradle**：升级到 Gradle 8.x
-3. **方块属性 API**：从 `Block.Properties.create()` 迁移到 `Block.Properties.of()`
+3. **方块属性 API**：`Block.Properties.of(Material)` 从 1.15.2 起就是 official 通道名称（2026-10-05 构件实证；`create()` 只存在于 docs 的 MCP 写法）；1.17→1.18 的变化是 `Material` 移除
 4. **方块实体**：从 `TileEntity` 重命名为 `BlockEntity`（API 基本一致）
 5. **工具材料**：从 `IItemTier` 迁移到 `Tier`
 6. **build.gradle**：升级 ForgeGradle 版本

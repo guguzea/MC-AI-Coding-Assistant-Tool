@@ -55,13 +55,22 @@
       "type.setRegistryName": "04-entity.mdc:194"
     },
     "forge/1.15.2": {
-      "event.getRegistry": "02-block.mdc:159",
-      "getRegistry": "02-block.mdc:159",
-      "setRegistryName": "02-block.mdc:160",
+      "SimpleCookingRecipeBuilder": "07-datagen.mdc:329",
+      "doesNotBlockMovement": "02-block.mdc:97",
+      "event.getRegistry": "02-block.mdc:164",
+      "getRegistry": "02-block.mdc:164",
+      "notSolid": "02-block.mdc:97",
+      "onBlockActivated": "02-block.mdc:14",
+      "setRegistryName": "02-block.mdc:165",
       "type.setRegistryName": "04-entity.mdc:196"
     },
     "forge/1.16.5": {
+      "ServerPlayer": "06-networking.mdc:91",
+      "SimpleCookingRecipeBuilder": "07-datagen.mdc:66",
+      "campfireCooking": "07-datagen.mdc:66",
       "event.getRegistry": "02-block.mdc:155",
+      "getDefenseForType": "03-item.mdc:204",
+      "getDurability": "03-item.mdc:204",
       "getRegistry": "02-block.mdc:155",
       "setRegistryName": "02-block.mdc:156",
       "type.setRegistryName": "04-entity.mdc:220"

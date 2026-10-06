@@ -136,8 +136,8 @@ IF 用自定义工作台配方
 
 ```
 IF 固定掉落某物品
-  → LootItemEntry.of(ItemStack)
-  → .withCount(Function)
+  → LootItem.lootTableItem(Item)
+  → .apply(SetItemCountFunction.setCount(NumberProvider))
 
 IF 掉落方块本身（方块被破坏时）
   → dropSelf()
@@ -149,7 +149,7 @@ IF 有条件的掉落（附魔工具挖掘等）
 
 IF 随机数量掉落
   → NumberProvider
-  → LootItemFunction.setCount
+  → SetItemCountFunction.setCount
 
 IF 掉落多个物品
   → 多个 LootPoolEntryContainer

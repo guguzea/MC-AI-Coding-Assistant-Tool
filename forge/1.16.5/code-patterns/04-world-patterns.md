@@ -9,8 +9,8 @@ public static final DeferredRegister<Biome> BIOMES =
 
 public static final RegistryObject<Biome> MY_BIOME = BIOMES.register("my_biome",
     () -> new Biome.Builder()
-        .surfaceBuilder(SurfaceBuilder.DEFAULT, new SurfaceBuilderConfig(Blocks.GRASS_BLOCK.getDefaultState(),
-            Blocks.DIRT.getDefaultState(), Blocks.GRAVEL.getDefaultState()))
+        .surfaceBuilder(SurfaceBuilder.DEFAULT, new SurfaceBuilderConfig(Blocks.GRASS_BLOCK.defaultBlockState(),
+            Blocks.DIRT.defaultBlockState(), Blocks.GRAVEL.defaultBlockState()))
         .precipitation(Biome.RainType.RAIN)
         .category(Biome.Category.PLAINS)
         .depth(0.125f)

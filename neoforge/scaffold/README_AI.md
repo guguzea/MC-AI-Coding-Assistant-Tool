@@ -100,8 +100,10 @@ public static final DeferredHolder<Block, Block> MY_BLOCK = BLOCKS.register("my_
 public static final DeferredRegister<Item> ITEMS = ...;  // 已存在
 
 // 在 DeferredHolder 声明区域添加：
+// ⚠️ 1.20.4 实测更正（neoforge-20.4.251-merged.jar javap 2026-10-06）：Item$Properties 没有 tab()，
+//    CreativeModeTab 没有 TAB_* 常量；加入创造页改订阅 BuildCreativeModeTabContentsEvent（event.accept(...)）
 public static final DeferredHolder<Item, Item> MY_ITEM = ITEMS.register("my_item",
-    () -> new Item(new Item.Properties().tab(CreativeModeTab.TAB_MISC))
+    () -> new Item(new Item.Properties())
 );
 ```
 

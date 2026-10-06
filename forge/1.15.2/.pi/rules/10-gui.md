@@ -52,7 +52,7 @@ if (FMLEnvironment.dist == Dist.CLIENT) {
 Player interacts
       │
       ▼
-Block#onBlockActivated (Server) ──► creates ITextComponent ──► openContainer (Server)
+Block#use (Server) ──► creates ITextComponent ──► openContainer (Server)
                                                        │
                                                        ▼
                                               Container + ContainerScreen pair
@@ -141,8 +141,8 @@ public SUpdateTileEntityPacket getUpdatePacket() {
 // Set from server
 public void setSyncData(int value) {
     this.syncData = value;
-    this.markDirty();
-    this.world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), 3);
+    this.setChanged(); // markDirty = MCP 层名，152 official TileEntity = setChanged（构件实证 2026-10-05）
+    this.level.notifyBlockUpdate(pos, getBlockState(), getBlockState(), 3); // TileEntity official 字段 = level（无 world/getWorld）
 }
 ```
 
@@ -151,7 +151,9 @@ public void setSyncData(int value) {
 ```java
 public class MyBlock extends Block {
     @Override
-    public boolean onBlockActivated(BlockState state, World world, BlockPos pos,
+    // official 构件实证（javap @1.15.2-31.2.50_mapped_official，2026-10-05）：右键回调 = use(...) 返回 ActionResultType；
+    // MCP 层旧形态的右键回调返回 boolean——本档 official 没有该形态（判死与正解见 02-block.mdc:13）
+    public ActionResultType use(BlockState state, World world, BlockPos pos,
             PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         if (!world.isClientSide) {
             NetworkHooks.openGui(
@@ -162,7 +164,7 @@ public class MyBlock extends Block {
                 )
             );
         }
-        return true;
+        return ActionResultType.SUCCESS;
     }
 }
 ```

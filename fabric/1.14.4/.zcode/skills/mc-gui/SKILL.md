@@ -93,7 +93,7 @@ IF 容器型界面（箱子、机器）
   → Container + ScreenProviderRegistry + ContainerProviderRegistry
 
 IF 需要同步额外数据
-  → openContainer 的 PacketByteBuf writer（不要编造 TypedScreenHandlerFactory）
+  → openContainer 的 PacketByteBuf writer（禁止编造 TypedScreenHandlerFactory）
 ```
 
 ## 常见错误

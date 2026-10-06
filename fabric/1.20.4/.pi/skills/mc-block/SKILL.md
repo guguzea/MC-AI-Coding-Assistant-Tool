@@ -66,7 +66,7 @@ public class MyChestBlockEntity extends BlockEntity {
         DefaultedList.ofSize(27, ItemStack.EMPTY);
 
     public MyChestBlockEntity(BlockPos pos, BlockState state) {
-        super(ModBlockEntities.MY_CHEST, pos, state);
+        super(MY_CHEST, pos, state);
     }
 
     @Override
@@ -92,6 +92,8 @@ public class MyChestBlock extends Block implements BlockEntityProvider {
         return new MyChestBlockEntity(pos, state);
     }
 }
+
+private static final Block MY_CHEST_BLOCK = new MyChestBlock(FabricBlockSettings.copyOf(Blocks.STONE));
 
 private static final BlockEntityType<MyChestBlockEntity> MY_CHEST =
     Registry.register(

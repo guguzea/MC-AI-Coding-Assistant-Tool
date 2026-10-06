@@ -48,7 +48,7 @@ public void onInitialize() {
 
 ```
 IF 有行为实体（动物、怪物）
-  → 继承对应实体类（如 AnimalEntity、MonsterEntity）
+  → 继承对应实体类（如 AnimalEntity、Monster）
 
 IF 静态实体（不移动）
   → EntityType.Builder.create(Entity::new, SpawnGroup.MISC)

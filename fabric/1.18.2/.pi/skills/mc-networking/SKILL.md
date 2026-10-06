@@ -23,7 +23,7 @@ public static final Identifier MY_PACKET_ID = new Identifier(MOD_ID, "my_packet"
 
 // 服务端：接收 C2S（ModInitializer.onInitialize）
 ServerPlayNetworking.registerGlobalReceiver(MY_PACKET_ID, (server, player, handler, buf, responseSender) -> {
-    int value = buf.readInt();
+    int value = buf.readInt(); // readInt 来自 Netty ByteBuf，本档映射里没有这个名
     server.execute(() -> {
         // 主线程处理
     });
@@ -31,7 +31,7 @@ ServerPlayNetworking.registerGlobalReceiver(MY_PACKET_ID, (server, player, handl
 
 // 客户端：接收 S2C（ClientModInitializer.onInitializeClient）
 ClientPlayNetworking.registerGlobalReceiver(MY_PACKET_ID, (client, handler, buf, responseSender) -> {
-    int value = buf.readInt();
+    int value = buf.readInt(); // readInt 来自 Netty ByteBuf，本档映射里没有这个名
     client.execute(() -> {
         // 主线程处理
     });

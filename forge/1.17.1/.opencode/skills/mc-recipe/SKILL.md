@@ -82,17 +82,17 @@ public class MyRecipeSerializer implements RecipeSerializer<MyRecipe> {
 
     @Override
     public MyRecipe fromJson(ResourceLocation id, JsonObject json) {
-        Ingredient input = Ingredient.fromJson(JsonHelpers.getAsArray(json, "input"));
+        Ingredient input = Ingredient.fromJson(GsonHelper.getAsJsonArray(json, "input"));
         ItemStack output = CraftingHelper.getItemStack(
-            JsonHelpers.getAsObject(json, "output"), true
+            GsonHelper.getAsJsonObject(json, "output"), true
         );
-        int time = JsonHelpers.getAsInt(json, "processingTime", 200);
+        int time = GsonHelper.getAsInt(json, "processingTime", 200);
         return new MyRecipe(id, input, output, time);
     }
 
     @Override
     public MyRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buf) {
-        Ingredient input = Ingredient.STREAM_CODEC.fromNetwork(buf);
+        Ingredient input = Ingredient.fromNetwork(buf);   // javap 实证 2026-10-05：本档 Ingredient 无 STREAM_CODEC（该字段 1.20.5+ 才有）；网络工厂 = fromNetwork(FriendlyByteBuf)
         ItemStack output = buf.readItem();
         int time = buf.readInt();
         return new MyRecipe(id, input, output, time);
@@ -139,7 +139,7 @@ public class MyMod {
 
 ```
 IF 配方逻辑简单（物品 → 物品）
-  → 继承 SimpleRecipe + 注册 Serializer
+  → 实现 Recipe<C> 类 + 注册 Serializer（构件 javap 实证本档无 SimpleRecipe 类——只有 vanilla 的 SimpleRecipeSerializer，是成品序列化器、不是可继承的配方基类）
 
 IF 处理机配方（有时间参数）
   → 创建 record MyRecipe implements Recipe<Container>

@@ -30,7 +30,7 @@ public class MyRecipeProvider extends FabricRecipeProvider {
             @Override
             protected void generate() {
                 RegistryEntryLookup<Item> items = registries.getOrThrow(RegistryKeys.ITEM);
-                ShapedRecipeJsonBuilder.create(items, RecipeCategory.MISC, MY_ITEM)
+                ShapedRecipeJsonBuilder.create(items, RecipeCategory.MISC, MY_ITEM) // MY_ITEM：本件自造的示例物品常量（没有外部声明出处；换成你自己注册的 Item 常量）
                     .pattern("AAA")
                     .pattern("A A")
                     .pattern(" A ")

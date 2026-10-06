@@ -23,7 +23,7 @@ public class MyRecipeProvider extends FabricRecipeProvider {
 
     @Override
     public void generate(RecipeExporter exporter) {
-        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, MY_ITEM)
+        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, MY_ITEM) // MY_ITEM：本件自造的示例物品常量（没有外部声明出处；换成你自己注册的 Item 常量）
             .pattern("AAA")
             .pattern("A A")
             .pattern(" A ")

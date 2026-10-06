@@ -6,6 +6,8 @@ version: "1.19.4"
 dependencies: []
 mappings: yarn
 ---
+<!-- external-apis: cloth-config, jdk -->
+
 <!-- cloth-version-inject v=1.19.4 coord=10.0.96 state=commented textApi=literal -->
 
 # Cloth Config（Fabric 1.19.4）
@@ -69,7 +71,7 @@ public class ModConfig implements ConfigSerializable {  // TODO(未核实)
             // 保存配置时的回调
         });
 
-    public boolean enableFeature = true;
+    public boolean enableFeature = true; // 示例配置字段名：本件自造的 ModConfig 字段，没有任何 MC/Cloth 符号叫 enableFeature
     public int value = 10;
 
     @Override
@@ -92,7 +94,7 @@ public class MyConfigScreen extends ConfigScreen {  // TODO(未核实)
     }
 
     @Override
-    public void build(Screen parent, Consumer<AbstractConfigListEntry> consumer,
+    public void build(Screen parent, java.util.function.Consumer<AbstractConfigListEntry> consumer,
                       ClothConfigBuilder builder) {  // TODO(未核实)
         builder.setGlobalErrorSupplier(...);
         builder.setSavingRunnable(() -> {
@@ -103,7 +105,7 @@ public class MyConfigScreen extends ConfigScreen {  // TODO(未核实)
         builder.addEntry(EntryBuilder.startBooleanToggle(  // TODO(未核实)
                 Text.translatable("config.my_mod.enable_feature"))
             .setDefaultValue(true)
-            .setSaveConsumer(v -> enableFeature = v)
+            .setSaveConsumer(v -> enableFeature = v) // enableFeature 为上面本件自造的示例字段，禁止当 API
             .build());
 
         builder.addEntry(EntryBuilder.startIntSlider(  // TODO(未核实)

@@ -12,80 +12,102 @@ mappings: official
 ## 快速总览
 
 ```
-注册 RecipeType（静态） → 实现 Recipe 类 → 注册 RecipeSerializer（静态） → DataGen（可选）
+注册 IRecipeType（静态） → 实现 IRecipe 类 → 注册 IRecipeSerializer（静态） → DataGen（可选）
 ```
 
-## 1. 注册 RecipeType
+> javap 实证 2026-10-05（真构件 `forge-1.16.5-36.2.34_mapped_official_1.16.5`）：本档类名带 `I` 前缀 = `IRecipe` / `IRecipeType` / `IRecipeSerializer`；`RecipeType` / `RecipeSerializer` / `CraftingContainer` 都是 **1.17.1+ 名**，本档构件没有。合成容器类名 = `CraftingInventory`。
 
-`RecipeType` 不支持 `DeferredRegister`，使用**静态注册**：
+## 1. 注册 IRecipeType
+
+`IRecipeType` 不支持 `DeferredRegister`，使用**静态注册**：
 
 ```java
-public static final RecipeType<MyRecipe> MILLING =
-    RecipeType.register(MOD_ID + ":milling");
+public static final IRecipeType<MyRecipe> MILLING =
+    IRecipeType.register(MOD_ID + ":milling");   // javap 实证：本档为 IRecipeType.register(String)
 ```
 
-## 2. 实现 Recipe 类
+## 2. 实现 IRecipe 类
 
 ```java
-public class MyRecipe implements IRecipe<CraftingContainer> {
+public class MyRecipe implements IRecipe<CraftingInventory> {
+
+    private final Ingredient input;
+    private final ItemStack output;
+    private final int processingTime;
+
+    public MyRecipe(ResourceLocation id, Ingredient input, ItemStack output, int processingTime) {
+        this.input = input;
+        this.output = output;
+        this.processingTime = processingTime;
+    }
 
     @Override
-    public boolean matches(CraftingContainer inv, World world) {
+    public boolean matches(CraftingInventory inv, World world) {
         return input.test(inv.getStack(0));
     }
 
     @Override
-    public ItemStack getCraftingResult(CraftingContainer inv) {
-        return output.copy();
+    public ItemStack assemble(CraftingInventory inv) {
+        return output.copy();   // javap 实证：165 接口方法名 = assemble（getCraftingResult 是 ≤1.14.4 旧名）
     }
 
     @Override
-    public boolean canFit(int width, int height) {
-        return width * height >= 1;
+    public boolean canCraftInDimensions(int width, int height) {
+        return width * height >= 1;   // javap 实证：canFit 是 ≤1.14.4 旧名
+    }
+
+    @Override
+    public ItemStack getResultItem() {
+        return output.copy();
     }
 
     @Override
     public IRecipeSerializer<?> getSerializer() {
         return MyRecipeSerializer.INSTANCE;
     }
+
+    @Override
+    public IRecipeType<?> getType() {
+        return MILLING;   // javap 实证：165 的 IRecipe 仍含抽象 getType()/getId()，实现类必须补
+    }
 }
 ```
 
-> `getCraftingResult` **必须返回副本**（`output.copy()`），否则同一个 ItemStack 实例被修改会影响原配方。
+> `assemble` / `getResultItem` **必须返回副本**（`output.copy()`），否则同一个 ItemStack 实例被修改会影响原配方。
 
-## 3. 注册 RecipeSerializer
+## 3. 注册 IRecipeSerializer
 
-`RecipeSerializer` 使用**静态注册**：
+`IRecipeSerializer` 使用**静态注册**，本档三个抽象方法 = `fromJson` / `fromNetwork` / `toNetwork`（javap 实证；`read`/`write` 是 ≤1.14.4 旧名）：
 
 ```java
 // ModRecipeSerializers.java
-public static final RegistryObject<RecipeSerializer<MyRecipe>> MY_SERIALIZER =
+public static final RegistryObject<IRecipeSerializer<MyRecipe>> MY_SERIALIZER =
     RECIPE_SERIALIZERS.register("my_recipe",
         () -> MyRecipeSerializer.INSTANCE
     );
 
 // MyRecipeSerializer.java
-public class MyRecipeSerializer extends RecipeSerializer<MyRecipe> {
+public class MyRecipeSerializer implements IRecipeSerializer<MyRecipe> {
     public static final MyRecipeSerializer INSTANCE = new MyRecipeSerializer();
 
     @Override
-    public MyRecipe read(ResourceLocation id, JsonObject json) {
+    public MyRecipe fromJson(ResourceLocation id, JsonObject json) {
         Ingredient input = Ingredient.fromJson(json.get("input"));
-        ItemStack output = ShapedRecipe.getItemFromJson(json.getAsJsonObject("output"));
-        int time = JSONUtils.getInt(json, "processingTime", 200);
+        ItemStack output = ShapedRecipe.itemFromJson(json.getAsJsonObject("output"));   // javap 实证：本档静态工厂 = itemFromJson
+        int time = JSONUtils.getAsInt(json, "processingTime", 200);   // javap 实证：165 的 JSONUtils 方法名已带 As 前缀（getInt 是 144 名）
         return new MyRecipe(id, input, output, time);
     }
 
     @Override
-    public MyRecipe read(ResourceLocation id, PacketBuffer buf) {
-        Ingredient input = Ingredient.read(buf);
+    public MyRecipe fromNetwork(ResourceLocation id, PacketBuffer buf) {
+        Ingredient input = Ingredient.fromNetwork(buf);   // javap 实证：165 Ingredient 网络工厂 = fromNetwork（read 是 144 名）
         ItemStack output = buf.readItem();
         int time = buf.readVarInt();
         return new MyRecipe(id, input, output, time);
     }
 
     @Override
-    public void write(PacketBuffer buf, MyRecipe recipe) {
+    public void toNetwork(PacketBuffer buf, MyRecipe recipe) {
         recipe.input.toNetwork(buf);
         buf.writeItem(recipe.output);
         buf.writeVarInt(recipe.processingTime);
@@ -109,9 +131,10 @@ public class MyRecipeSerializer extends RecipeSerializer<MyRecipe> {
 ## 常见错误
 
 - ❌ `Ingredient.fromJson` 参数不是数组（单物品时用对象）→ `{ "item": "..." }` 或 `[{ "item": "..." }`
-- ❌ `getCraftingResult` 返回原对象而非副本 → 多个配方实例共享同一 ItemStack
-- ❌ `RecipeType` 写在 DeferredRegister 中 → 不支持，必须用 `RecipeType.register()`
-- ❌ `RecipeSerializer` 忘了在 mod 初始化时调用 → 配方无法被加载
+- ❌ `getCraftingResult` / `canFit` / `read`/`write`（≤1.14.4 旧名）→ 本档接口是 `assemble` / `canCraftInDimensions` / `fromJson`·`fromNetwork`·`toNetwork`
+- ❌ `IRecipeType` 写在 DeferredRegister 中 → 不支持，必须用 `IRecipeType.register()`
+- ❌ `IRecipeSerializer` 忘了在 mod 初始化时调用 → 配方无法被加载
+- ❌ 按 1.17+ 写法用 `RecipeType`/`RecipeSerializer`/`CraftingContainer` → 本档构件没有这些类名（javap 实证 2026-10-05）
 
 ## 参考资料
 

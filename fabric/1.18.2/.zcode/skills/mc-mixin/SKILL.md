@@ -6,6 +6,8 @@ version: "1.18.2"
 dependencies: []
 mappings: yarn
 ---
+<!-- external-apis: sponge-mixin, mixin-extras, jdk, fabric-loom-gradle-dsl -->
+
 
 # Mixin 注入（Fabric 1.18.2）
 

@@ -21,7 +21,7 @@ public class MyBlockEntity extends BlockEntity {
         DefaultedList.ofSize(27, ItemStack.EMPTY);
 
     public MyBlockEntity() {
-        super(ModBlockEntities.MY_BLOCK_ENTITY);
+        super(MY_BLOCK_ENTITY);
     }
 
     @Override
@@ -48,6 +48,8 @@ public class MyBlock extends Block implements BlockEntityProvider {
         return new MyBlockEntity();
     }
 }
+
+private static final Block MY_BLOCK = new MyBlock(FabricBlockSettings.copy(Blocks.STONE));
 
 private static final BlockEntityType<MyBlockEntity> MY_BLOCK_ENTITY =
     Registry.register(

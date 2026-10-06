@@ -6,6 +6,8 @@ version: "1.21.3"
 dependencies: []
 mappings: yarn
 ---
+<!-- external-apis: fabric-loom-gradle-dsl, slf4j, kotlin-stdlib -->
+
 
 # Kotlin 语言支持（Fabric 1.21.3）
 
@@ -114,12 +116,12 @@ class MyItem(settings: Settings) : Item(settings) {
         const val MOD_ID = "examplemod"
 
         @PublishedApi
-        internal val defaultSettings: Settings = Settings()
+        internal val defaultSettings: Settings = Settings()  // 示例属性名，本件自造，没有任何 MC 符号叫 defaultSettings
 
-        val MY_ITEM: Item = Registry.register(
+        val MY_ITEM: Item = Registry.register(  // 示例名，本件自造，没有任何 MC 符号叫 MY_ITEM
             Registries.ITEM,
             Identifier.of(MOD_ID, "my_item"),
-            MyItem(defaultSettings)
+            MyItem(defaultSettings)  // defaultSettings 为上面本件自造的示例属性，禁止当 MC API
         )
     }
 }

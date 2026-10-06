@@ -28,9 +28,14 @@ public class ExampleModDataGenerator implements DataGeneratorEntrypoint {
         FabricDataGenerator.Pack pack = generator.createPack();
         pack.addProvider(MyRecipeProvider::new);
         pack.addProvider(MyModelProvider::new);
-        pack.addProvider(MyEnLangProvider::new);
+        pack.addProvider(MyLanguageProvider::new);
     }
 }
+
+// 下面三个是**你工程里的示例类**（本件声明，不是 Fabric API 的类）；完整写法见 mc-recipe / mc-model / mc-lang
+abstract class MyRecipeProvider extends FabricRecipeProvider { }     // 骨架：1.21.1 需实现 generate(RecipeExporter)
+abstract class MyModelProvider extends FabricModelProvider { }       // 骨架：需实现两个 generate* 方法
+abstract class MyLanguageProvider extends FabricLanguageProvider { }  // 骨架：需实现 generateTranslations
 ```
 
 ```json

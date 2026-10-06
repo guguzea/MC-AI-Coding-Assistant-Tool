@@ -81,7 +81,7 @@ IF 同步大量数据
 ```
 
 - `INSTANCE.sendToServer(msg)` — 客户端发送给服务端
-- `INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), msg)` — 指定 `EntityPlayerMP`
+- `INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), msg)` — 指定 `ServerPlayerEntity`（本档 snapshot 玩家类；`EntityPlayerMP` 是 1.12 旧名，此 jar 没有）
 - `INSTANCE.send(PacketDistributor.ALL.noArg(), msg)` — 全服广播
 - `INSTANCE.send(PacketDistributor.TRACKING_ENTITY.with(() -> entity), msg)` — 追踪该实体的玩家
 - `INSTANCE.sendTo(msg, networkManager, NetworkDirection)` — 低层重载，一般用 `PacketDistributor`
@@ -110,7 +110,7 @@ public class MyMessage {
 
     public void handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
-            EntityPlayerMP player = ctx.get().getSender();
+            ServerPlayerEntity player = ctx.get().getSender(); // javap 实证 2026-10-05：144 的 Context.getSender() 返回 ServerPlayerEntity
             if (player != null) {
                 // 服务端处理逻辑
             }
@@ -143,7 +143,7 @@ public class NetworkHandler {
         );
     }
 
-    public static void sendTo(EntityPlayerMP player, MyMessage message) {
+    public static void sendTo(ServerPlayerEntity player, MyMessage message) {
         INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), message);
     }
 

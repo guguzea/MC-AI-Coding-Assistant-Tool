@@ -1,7 +1,7 @@
 # verified-api · rift 1.13.2（本档 **Rift 侧**的权威签名表）
 
 > **性质**：本表是 **`javap` 对真构件**跑出来的，**不是 wiki 转述**。与 `listeners.md`（wiki 抓取）互为对照 ——2026-10-05 逐条比对结果是 **39 个接口名 + 全部方法名 100% 对得上**（详见末节「对账结果」）。
-> **MC 侧不在本表**：本机没有 MC 1.13.2 构件（`get_minecraft_source` 覆盖到 1.14 起），所以凡涉及 `net.minecraft.*` 的名字一律标「未对真构件核」。
+> **MC 侧不在本表**（本表只收 Rift 侧签名）。**2026-10-06 更新**：本机已有 MC 1.13.2 真构件（`forgeBin-1.13.2-25.0.223_mapped_snapshot_20180921-1.13.jar`，forge 1.13.2 scaffold 编译遗留，与 rift scaffold 所钉 `snapshot_20180921` 同映射层）⇒ 桥所用 `net.minecraft.*` 已逐名 javap 核过（43/43 在盘；结果记在 `bridge-api.md` §3/§4，本表不重复）。`get_minecraft_source` 覆盖从 1.14 起、不含该档。
 
 ## 1. 构件（可复现）
 
@@ -76,7 +76,7 @@
 
 - `riftmod.json`（Rift 自己的）schema = `{ "id", "name", "authors":[], "listeners":[FQCN,…] }` ⇒ **与本仓桥模板生成的 `riftmod.json` 同形**（已逐字对照）。
 - `profile.json`：`"inheritsFrom": "1.13"`、`"releaseTime": "2018-07-18"`、`arguments.game = ["--tweakClass","org.dimdev.riftloader.launch.RiftLoaderClientTweaker"]` ⇒ **官方标称 MC 1.13**。
-  ⚠️ **1.13.2 能否真起客户端未核实**（要真机）。
+  ⚠️ 真机已答（2026-10-05）：**1.13.2 客户端能起，但 21 个 hook mixin target not found ⇒ listener 不派发**（`gradle-recipe.md` §5）；1.13.1/1.13.2 的社区支持分支（Chocohead `newerer`/`newerest`）见 `bridge-api.md` §3.3 第 3 条（2026-10-06 结案）。
 
 ## 5. 对账结果（2026-10-05）
 

@@ -14,8 +14,8 @@ public static final DeferredRegister<Block> BLOCKS =
     DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);
 
 public static final RegistryObject<Block> STONE_BLOCK = BLOCKS.register("stone_block",
-    () -> new Block(Block.Properties.create(Material.STONE)
-        .hardnessAndResistance(1.5f, 6.0f)
+    () -> new Block(Block.Properties.of(Material.STONE)
+        .strength(1.5f, 6.0f)
         .harvestTool(ToolType.PICKAXE)
         .harvestLevel(0)
     )
@@ -24,7 +24,7 @@ public static final RegistryObject<Block> STONE_BLOCK = BLOCKS.register("stone_b
 // ItemBlock
 public static final RegistryObject<Item> STONE_BLOCK_ITEM = ITEMS.register("stone_block",
     () -> new BlockItem(STONE_BLOCK.get(), new Item.Properties()
-        .group(ItemGroup.BUILDING_BLOCKS)
+        .tab(ItemGroup.TAB_BUILDING_BLOCKS)
     )
 );
 ```
@@ -32,18 +32,22 @@ public static final RegistryObject<Item> STONE_BLOCK_ITEM = ITEMS.register("ston
 ## 带变体的方块（Faced / Horizontal / Axis）
 
 ```java
+// official 构件实证（javap @1.15.2-31.2.50_mapped_official，2026-10-05）：
+// fillStateContainer/getDefaultState/with/get/isBlockPowered/setBlockState 均为 MCP 层名；
+// official 通道 = createBlockStateDefinition/defaultBlockState()/setValue/getValue/hasNeighborSignal/setBlock
+
 // BlockState 定义
 @Override
-protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
     builder.add(FACING, POWERED);
 }
 
 // getStateForPlacement 返回初始状态
 @Override
 public BlockState getStateForPlacement(BlockItemUseContext context) {
-    return this.getDefaultState()
-        .with(FACING, context.getPlacementHorizontalFacing().getOpposite())
-        .with(POWERED, false);
+    return this.defaultBlockState()
+        .setValue(FACING, context.getHorizontalDirection().getOpposite())
+        .setValue(POWERED, false);
 }
 
 // 放置时更新临接方块
@@ -52,9 +56,9 @@ public void neighborChanged(BlockState state, World world, BlockPos pos,
         Block block, BlockPos fromPos, boolean isMoving) {
     super.neighborChanged(state, world, pos, block, fromPos, isMoving);
     if (!world.isClientSide) {
-        boolean powered = world.isBlockPowered(pos);
-        if (powered != state.get(POWERED)) {
-            world.setBlockState(pos, state.with(POWERED, powered), 2);
+        boolean powered = world.hasNeighborSignal(pos);
+        if (powered != state.getValue(POWERED)) {
+            world.setBlock(pos, state.setValue(POWERED, powered), 2);
         }
     }
 }
@@ -122,8 +126,8 @@ public class MachineTileEntity extends TileEntity {
 
 ```java
 public static final RegistryObject<Block> MY_ORE = BLOCKS.register("my_ore",
-    () -> new Block(Block.Properties.create(Material.STONE)
-        .hardnessAndResistance(3.0f, 3.0f)
+    () -> new Block(Block.Properties.of(Material.STONE)
+        .strength(3.0f, 3.0f)
         .harvestTool(ToolType.PICKAXE)
         .harvestLevel(2)
     )

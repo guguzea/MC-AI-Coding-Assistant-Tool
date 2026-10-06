@@ -14,8 +14,8 @@ mappings: mcp
 ```java
 // 注册（参见 mc-registry Skill）
 public static final RegistryObject<Block> MY_BLOCK = BLOCKS.register("my_block",
-    () -> new Block(Block.Properties.create(Material.STONE)
-        .hardnessAndResistance(1.5f, 6.0f)
+    () -> new Block(Block.Properties.of(Material.STONE)
+        .strength(1.5f, 6.0f)
         .harvestTool(ToolType.PICKAXE)
         .harvestLevel(0)
     )
@@ -38,12 +38,12 @@ IF 需要流体
 ## Block.Properties 常用配置
 
 ```java
-Block.Properties.create(Material.WOOD)
-    .hardnessAndResistance(1.5f, 6.0f)              // 硬度和抗爆性
+Block.Properties.of(Material.WOOD)
+    .strength(1.5f, 6.0f)              // 硬度和抗爆性
     .harvestTool(ToolType.PICKAXE)                    // 需要特定工具
     .harvestLevel(0)                                  // 挖掘等级
     .noDrops()                                       // 无掉落
-    .notSolid()                                      // 非固体
+    .noOcclusion()                                     // 不遮挡相邻面（❌ notSolid = MCP 层名，official 构件实证 2026-10-05）
     .sound(SoundType.WOOD)                           // 音效
 ```
 

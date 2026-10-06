@@ -49,7 +49,7 @@ protected void registerAttributes() {
 // ❌ 错误
 public MyTileEntity() {
     super(ModTileEntities.MY_TILE_ENTITY.get());
-    World world = this.getWorld(); // world 可能为 null
+    World world = this.getLevel(); // ❌ getWorld() = MCP 层名（152 official 构件实证：TileEntity#getLevel）
 }
 
 // ✅ 正确：在 readFromNBT 或 onLoad 中访问 world

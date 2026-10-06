@@ -151,22 +151,22 @@ public class ModKeyInputEvents {
 ```java
 // entities/MyEntity.java（服务端设置，客户端自动同步）
 public class MyEntity extends LivingEntity {
-    private static final EntityDataManager.DataEntry<Integer> DATA_CUSTOM =
-        EntityDataManager.createKey(MyEntity.class, DataSerializers.VARINT);
+    private static final DataParameter<Integer> DATA_CUSTOM =
+        EntityDataManager.defineId(MyEntity.class, DataSerializers.VARINT); // ❌ createKey/DataEntry = MCP 层名（165 official: defineId/DataParameter，2026-10-05 构件实证）
 
     @Override
-    protected void registerData() {
-        this.dataManager.register(DATA_CUSTOM, 0);
+    protected void defineSynchedData() { // ❌ registerData = MCP 层名（official: defineSynchedData）
+        this.entityData.register(DATA_CUSTOM, 0);
     }
 
     public void setCustomValue(int value) {
         // 服务端设置
-        this.dataManager.set(DATA_CUSTOM, value);
+        this.entityData.set(DATA_CUSTOM, value);
     }
 
     public int getCustomValue() {
         // 两端都可以读取
-        return this.dataManager.get(DATA_CUSTOM);
+        return this.entityData.get(DATA_CUSTOM);
     }
 }
 ```

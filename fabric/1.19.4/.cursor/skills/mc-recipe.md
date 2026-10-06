@@ -21,9 +21,12 @@ public class MyRecipeProvider extends FabricRecipeProvider {
         super(output);
     }
 
+    // fabric-api 摘要：FabricRecipeProvider ⇒ abstract void method_10419(Consumer<RecipeJsonProvider>)，
+    // 该 intermediary 槽位在本档 Yarn 里叫 generate（convert_mapping intermediary→yarn 1.19.4 ⇒ generate(Consumer): void）
     @Override
-    public void generate(Consumer<RecipeJsonProvider> exporter) {
-        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, MY_ITEM)
+    public void generate(Consumer<RecipeJsonProvider> exporter) { // Consumer 属 JDK java.util.function；本档语料没有 docs 正文可逐字对照
+        // 产出示例用原版钻石块；写你自己的物品时换成注册过的 Item 即可
+        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, Items.DIAMOND_BLOCK)
             .pattern("AAA")
             .pattern("A A")
             .pattern(" A ")
@@ -49,7 +52,7 @@ public void onInitialize() {
 
 ```
 IF 使用配方数据
-  → DataGen 生成配方 JSON
+  → datagen 生成配方 JSON
 
 IF 在代码中动态创建配方
   → 仅用于自定义逻辑

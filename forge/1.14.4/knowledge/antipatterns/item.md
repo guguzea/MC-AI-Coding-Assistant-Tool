@@ -52,16 +52,16 @@ public enum MyTier implements IItemTier {
 
 ---
 
-## 错误：使用 MobEffects.JUMP_BOOST（Fabric Yarn 名）用于 Forge
+## 错误：使用 MobEffects / MobEffectInstance 用于 Forge 1.14.4（本包应为 Effects / EffectInstance）
 
-**症状：** 编译错误，找不到字段
+**症状：** 编译错误，找不到类或字段
 
 ```java
-// ❌ 错误（Fabric/Yarn 名称）
+// ❌ 错误（MobEffects / MobEffectInstance 是后续版本 mojmap 层名，本档 snapshot 构件实证 2026-10-05：144 jar 里没有）
 new MobEffectInstance(MobEffects.JUMP_BOOST, 200, 1)
 
-// ✅ 正确（Forge/MCP 名称）
-new MobEffectInstance(MobEffects.JUMP, 200, 1)
+// ✅ 正确（本档 = net.minecraft.potion.EffectInstance + Effects.JUMP_BOOST）
+new EffectInstance(Effects.JUMP_BOOST, 200, 1)
 ```
 
 ---

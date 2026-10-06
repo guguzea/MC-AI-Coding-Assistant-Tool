@@ -6,6 +6,8 @@ version: "1.17.1"
 dependencies: []
 mappings: yarn
 ---
+<!-- external-apis: cloth-config -->
+
 <!-- cloth-version-inject v=1.17.1 coord=5.3.63 state=active textApi=constructor -->
 
 # Cloth Config（Fabric 1.17.1）
@@ -61,7 +63,7 @@ public class ModConfig {
 
         general.addEntry(ConfigEntryBuilder.create()
             .startBooleanToggle(new LiteralText("Enable Feature"), true)
-            .setSaveConsumer(value -> enableFeature = value)
+            .setSaveConsumer(value -> enableFeature = value) // enableFeature 为上面本件自造的示例字段，禁止当 API
             .build()
         );
 
@@ -72,7 +74,7 @@ public class ModConfig {
         );
     }
 
-    public boolean enableFeature = true;
+    public boolean enableFeature = true; // 示例配置字段名：本件自造的 ModConfig 字段，没有任何 MC/Cloth 符号叫 enableFeature
     public int value = 10;
 
     public ConfigBuilder getBuilder() {

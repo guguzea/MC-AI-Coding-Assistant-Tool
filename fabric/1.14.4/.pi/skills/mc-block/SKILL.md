@@ -51,7 +51,7 @@ loader-api 已核 `net.fabricmc.fabric.api.block.FabricBlockSettings`：有 `har
 FabricBlockSettings.of(Material.STONE)
     .hardness(1.5f)
     .strength(1.5f, 6.0f)
-    .breakByTool(FabricToolTags.PICKAXES, 1)
+    .breakByTool(FabricToolTags.PICKAXES, 1) // 宿主说明：FabricToolTags 属本档 Fabric API 标签类；本档 vanilla ItemTags 里没有 PICKAXES（ItemTags.PICKAXES 自 1.19.4 起）
     .breakByHand(false)
     .dropsLike(Blocks.STONE)
     .materialColor(MaterialColor.STONE)
@@ -69,7 +69,7 @@ public class MyChestBlockEntity extends BlockEntity {
         DefaultedList.ofSize(27, ItemStack.EMPTY);
 
     public MyChestBlockEntity() {
-        super(ModBlockEntities.MY_CHEST);
+        super(MY_CHEST);
     }
 
     @Override
@@ -96,6 +96,8 @@ public class MyChestBlock extends Block implements BlockEntityProvider {
         return new MyChestBlockEntity();
     }
 }
+
+private static final Block MY_CHEST_BLOCK = new MyChestBlock(FabricBlockSettings.copy(Blocks.STONE).build());
 
 private static final BlockEntityType<MyChestBlockEntity> MY_CHEST =
     Registry.register(

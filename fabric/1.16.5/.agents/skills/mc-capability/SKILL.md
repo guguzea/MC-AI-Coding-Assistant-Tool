@@ -6,6 +6,7 @@ version: "1.16.5"
 dependencies: []
 mappings: yarn
 ---
+<!-- external-apis: fabric-api -->
 
 # 实体事件（Fabric 1.16.5）
 

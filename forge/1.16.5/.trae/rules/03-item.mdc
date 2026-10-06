@@ -28,9 +28,9 @@ new Item.Properties()
 
 ```java
 public enum MyItemTier implements IItemTier {
-    MY_MATERIAL(4, 2000, 10.0f, 4.0f, 20, () -> Ingredient.fromItems(Items.DIAMOND));
+    MY_MATERIAL(4, 2000, 10.0f, 4.0f, 20, () -> Ingredient.of(Items.DIAMOND));
 
-    // getLevel(), getUses(), getSpeed(), getAttackDamageBonus(), getEnchantmentValue(), getRepairMaterial()
+    // getLevel(), getUses(), getSpeed(), getAttackDamageBonus(), getEnchantmentValue(), getRepairIngredient()
 }
 ```
 
@@ -108,7 +108,7 @@ IF 需要鞘翅、火焰弹等特殊物品
 IF 自定义工具材料
   → 定义枚举实现 IItemTier 接口
   → 6 个必需方法全部实现
-  → getRepairMaterial() 必须返回有效的 Ingredient
+  → getRepairIngredient() 必须返回有效的 Ingredient
   → 在物品类中引用
 
 IF 复用现有材料
@@ -118,16 +118,16 @@ IF 复用现有材料
 ### Decision: 物品放置在哪个 ItemGroup
 
 ```
-IF 建筑方块 → ItemGroup.BUILDING_BLOCKS
-IF 自然方块 → ItemGroup.DECORATIONS
-IF 工具 → ItemGroup.TOOLS
-IF 武器 → ItemGroup.COMBAT
-IF 食物 → ItemGroup.FOOD
-IF 材料 → ItemGroup.MATERIALS
-IF 红石 → ItemGroup.REDSTONE
-IF 交通 → ItemGroup.TRANSPORTATION
-IF 杂项 → ItemGroup.MISC
-IF 搜索 → ItemGroup.SEARCH（不推荐）
+IF 建筑方块 → ItemGroup.TAB_BUILDING_BLOCKS
+IF 自然方块 → ItemGroup.TAB_DECORATIONS
+IF 工具 → ItemGroup.TAB_TOOLS
+IF 武器 → ItemGroup.TAB_COMBAT
+IF 食物 → ItemGroup.TAB_FOOD
+IF 材料 → ItemGroup.TAB_MATERIALS
+IF 红石 → ItemGroup.TAB_REDSTONE
+IF 交通 → ItemGroup.TAB_TRANSPORTATION
+IF 杂项 → ItemGroup.TAB_MISC
+IF 搜索 → ItemGroup.TAB_SEARCH（不推荐）
 ```
 
 ---
@@ -144,10 +144,14 @@ public class MyItem extends Item {
         );
     }
 
+    // official 1.16.5 构件实证（javap 对 1.16.5-36.2.34_mapped_official_1.16.5.jar，2026-10-05）：
+    // 世界内右键 = Item#use(World, PlayerEntity, Hand)，返回 ActionResult<ItemStack>；
+    // 静态工厂 = ActionResult.success/consume/pass/fail。useOnWorld/ItemUsageContext 是 Fabric API 形态，本包禁用。
     @Override
-    public ActionResult<ItemStack> useOnWorld(ItemUsageContext context) {
-        // 右键点击方块时的逻辑
-        return ActionResult.SUCCESS;
+    public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+        // 右键（世界内）逻辑；server 侧判断用 world.isClientSide
+        ItemStack stack = player.getItemBySlot(EquipmentSlotType.MAINHAND);
+        return ActionResult.pass(stack);
     }
 }
 ```
@@ -157,7 +161,7 @@ public class MyItem extends Item {
 ```java
 // items/MyTier.java
 public enum MyTier implements IItemTier {
-    MY_MATERIAL(3, 1561, 8.0f, 3.0f, 15, () -> Ingredient.fromItems(Items.DIAMOND));
+    MY_MATERIAL(3, 1561, 8.0f, 3.0f, 15, () -> Ingredient.of(Items.DIAMOND));
 
     private final int level;
     private final int uses;
@@ -196,19 +200,22 @@ public static final RegistryObject<Item> MY_SWORD = ITEMS.register("my_sword",
 
 ```java
 // items/MyArmorMaterial.java
-public enum MyArmorMaterial implements IArmorTier {
+// official 1.16.5 构件实证：接口名 = IArmorMaterial（net.minecraft.item，2026-10-05 javap 对真构件点名；
+// ❌ IArmorTier 是 1.17+ 名，本包构件没有）；getDurability(SlotType)/getDefenseForType(SlotType) 是 Yarn 形，
+// 本包方法 ✅ = getDurabilityForSlot/getDefenseForSlot
+public enum MyArmorMaterial implements IArmorMaterial {
     MY_MATERIAL("my_material", 40, new int[]{4, 7, 9, 4}, 20,
-        SoundEvents.ARMOR_EQUIP_DIAMOND, 3.0f, 0.1f, () -> Ingredient.fromItems(Items.DIAMOND));
+        SoundEvents.ARMOR_EQUIP_DIAMOND, 3.0f, 0.1f, () -> Ingredient.of(Items.DIAMOND));
 
-    // getDurability(SlotType), getDefenseForType(SlotType), getEnchantmentValue(),
-    // getEquipSound(), getToughness(), getKnockbackResistance(), getRepairIngredient()
+    // 接口 8 法（构件实证）：getDurabilityForSlot(EquipmentSlotType), getDefenseForSlot(EquipmentSlotType),
+    // getEnchantmentValue(), getEquipSound(), getRepairIngredient(), getName(), getToughness(), getKnockbackResistance()
 }
 ```
 
 ```java
 // items/MyArmorItem.java
 public class MyArmorItem extends ArmorItem {
-    public MyArmorItem(IArmorTier material, EquipmentSlotType slot, Properties properties) {
+    public MyArmorItem(IArmorMaterial material, EquipmentSlotType slot, Properties properties) {
         super(material, slot, properties);
     }
 }

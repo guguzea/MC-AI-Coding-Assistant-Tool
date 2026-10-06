@@ -17,7 +17,7 @@ Yarn 移位是 `transferSlot`，不是 wiki 现页的 `quickMove`。容器屏可
 // 服务端：ScreenHandler
 public class MyScreenHandler extends ScreenHandler {
     public MyScreenHandler(int syncId, PlayerInventory playerInventory) {
-        super(ModScreenHandlers.MY_SCREEN, syncId);
+        super(MY_SCREEN, syncId);
         // ...
     }
 }

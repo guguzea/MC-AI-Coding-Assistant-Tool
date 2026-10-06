@@ -22,10 +22,15 @@ dependencies {
 public class ExampleModDataGenerator implements DataGeneratorEntrypoint {
     @Override
     public void onInitializeDataGenerator(FabricDataGenerator generator) {
+        // 1.18.2 直接挂 generator：本档 FabricDataGenerator 上只有 addProvider，没有 createPack()/Pack
         generator.addProvider(MyRecipeProvider::new);
         generator.addProvider(MyModelProvider::new);
     }
 }
+
+// 下面两个是**你工程里的示例类**（本件声明，不是 Fabric API 的类）；完整写法见 mc-recipe / mc-model
+abstract class MyRecipeProvider extends FabricRecipeProvider { }   // 骨架：需实现 generateRecipes
+abstract class MyModelProvider extends FabricModelProvider { }     // 骨架：需实现两个 generate* 方法
 ```
 
 ```json

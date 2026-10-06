@@ -185,8 +185,10 @@ MinecraftForge.EVENT_BUS.addGenericListener(Entity.class, AttachCapabilitiesEven
 ### NeoForge 版本（1.20.4+ Data Attachments）
 
 ```java
+// 1.20.4 实测更正（neoforge-20.4.251-merged.jar javap 2026-10-06）：
+// 原版 Registries 没有 ATTACHMENT_TYPE 字段（javap 查无）；该键在 NeoForge 侧：
 public static final DeferredRegister<AttachmentType<EnergyStorage>> ENERGY =
-    DeferredRegister.create(Registries.ATTACHMENT_TYPE, MOD_ID);
+    DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, MOD_ID);
 
 public static final Supplier<AttachmentType<EnergyStorage>> ENERGY_TYPE =
     ENERGY.register("energy", () -> AttachmentType.serializable(EnergyStorage::new));

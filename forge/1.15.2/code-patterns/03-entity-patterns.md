@@ -8,8 +8,8 @@ public static final DeferredRegister<EntityType<?>> ENTITY_TYPES =
     DeferredRegister.create(ForgeRegistries.ENTITIES, MOD_ID);
 
 public static final RegistryObject<EntityType<MyEntity>> MY_ENTITY = ENTITY_TYPES.register("my_entity",
-    () -> EntityType.Builder.create(MyEntity::new, EntityClassification.CREATURE)
-        .size(0.6f, 1.8f)
+    () -> EntityType.Builder.of(MyEntity::new, EntityClassification.CREATURE)
+        .sized(0.6f, 1.8f)
         .setTrackingRange(8)
         .setUpdateInterval(3)
     .build("my_entity")
@@ -43,8 +43,13 @@ public class MyEntity extends LivingEntity {
 
 ## 投掷物实体（Projectile）
 
+official 构件实证（javap @`forge-1.15.2-31.2.50_mapped_official_1.15.2.jar`，2026-10-05）：152 official 构件**没有**
+`Projectile` / `ProjectileEntity` 通用投掷物基类（`ProjectileEntity` 是 1.16+ 类名）；generic 形态走 `ThrowableEntity`，
+命中回调 = `onHit(RayTraceResult)`（❌ `onImpact` = MCP 层名）。❌ `this.world` / `getPosX` / `createExplosion` 同理，
+official = `this.level` / `position()` / `World#explode(...)`。
+
 ```java
-public class MyProjectile extends Projectile {
+public class MyProjectile extends ThrowableEntity {
     public static EntityType<MyProjectile> TYPE;
 
     public MyProjectile(EntityType<? extends MyProjectile> type, World world) {
@@ -52,10 +57,9 @@ public class MyProjectile extends Projectile {
     }
 
     @Override
-    protected void onImpact(RayTraceResult result) {
-        super.onImpact(result);
-        if (!this.world.isClientSide) {
-            this.world.createExplosion(null, this.getPosX(), this.getPosY(), this.getPosZ(),
+    protected void onHit(RayTraceResult result) {
+        if (!this.level.isClientSide) {
+            this.level.explode(null, this.position().x, this.position().y, this.position().z,
                 2.0f, false, Explosion.Mode.BREAK);
             this.remove();
         }

@@ -51,7 +51,7 @@ public class DataGenerators {
 |----------|----------|
 | 方块状态变体 | `BlockStateProvider#registerStatesAndModels` |
 | 方块/物品模型 | `ItemModelProvider#registerModels` |
-| 配方 | `RecipeProvider`（覆盖 **registerRecipes**） |
+| 配方 | `RecipeProvider`（覆盖 **buildShapelessRecipes**；`registerRecipes` 只见于本档语料页，1.15.2 official 构件已无此方法） |
 | 战利品表 | `LootTableProvider#getTables` |
 | 进度 | 优先手写 JSON |
 | 语言 | `LanguageProvider#addTranslations` |
@@ -70,25 +70,29 @@ public class ModRecipeProvider extends RecipeProvider {
     }
 
     @Override
-    protected void registerRecipes(Consumer<IFinishedRecipe> consumer) { // TODO(未核实：IFinishedRecipe 未在 forge 1.15.2 语料命中，需 search_forge_docs 复核或反编译；方法名 registerRecipes 有出处 data/forge_1.15.2/forge-docs/1.15.2/processed/datagen_intro.md:43)
-        ShapedRecipeBuilder.shapedRecipe(ModItems.MY_ITEM.get())
-            .patternLine(" X ")
-            .patternLine(" X ")
-            .patternLine(" Y ")
-            .key('X', Items.DIAMOND)
-            .key('Y', Items.STICK)
-            .addCriterion("has_diamond", InventoryChangeTrigger.Instance.hasItems(Items.DIAMOND)) // TODO(未核实：InventoryChangeTrigger 未在 forge 1.15.2 语料命中，需 search_forge_docs 复核或反编译；同行 addCriterion / hasItems 链同样未核实)
-            .build(consumer);
+    // 本段方法名 2026-10-05 已对 1.15.2-31.2.50_mapped_official_1.15.2 构件 javap 实证：
+    // RecipeProvider#buildShapelessRecipes(Consumer<IFinishedRecipe>)、shaped/pattern/define/unlocks/save、
+    // shapeless/requires、CookingRecipeBuilder.smelting(Ingredient, IItemProvider, float, int) 均存在；
+    // registerRecipes/shapedRecipe/patternLine/key/addCriterion/hasItems/build 在构件中不存在（语料页 datagen_intro.md 用的是 MCP 旧名）。
+    protected void buildShapelessRecipes(Consumer<IFinishedRecipe> consumer) {
+        ShapedRecipeBuilder.shaped(ModItems.MY_ITEM.get())
+            .pattern(" X ")
+            .pattern(" X ")
+            .pattern(" Y ")
+            .define('X', Items.DIAMOND)
+            .define('Y', Items.STICK)
+            .unlocks("has_diamond", has(Items.DIAMOND))
+            .save(consumer);
 
-        ShapelessRecipeBuilder.shapelessRecipe(ModItems.OTHER_ITEM.get())
-            .addIngredient(Items.GOLD_INGOT, 3)
-            .addIngredient(Items.DIAMOND)
-            .addCriterion("has_gold", InventoryChangeTrigger.Instance.hasItems(Items.GOLD_INGOT)) // TODO(未核实：InventoryChangeTrigger 未在 forge 1.15.2 语料命中，需 search_forge_docs 复核或反编译)
-            .build(consumer);
+        ShapelessRecipeBuilder.shapeless(ModItems.OTHER_ITEM.get())
+            .requires(Items.GOLD_INGOT, 3)
+            .requires(Items.DIAMOND)
+            .unlocks("has_gold", has(Items.GOLD_INGOT))
+            .save(consumer);
 
-        CookingRecipeBuilder.smelting(Ingredient.fromItems(Items.COBBLESTONE), Items.STONE, 0.1f, 200) // TODO(未核实：CookingRecipeBuilder 未在 forge 1.15.2 语料命中，需 search_forge_docs 复核或反编译；smelting 只在 JSON 配方语境命中 utilities_recipes.md)
-            .addCriterion("has_cobblestone", InventoryChangeTrigger.Instance.hasItems(Items.COBBLESTONE)) // TODO(未核实：InventoryChangeTrigger 未在 forge 1.15.2 语料命中，需 search_forge_docs 复核或反编译)
-            .build(consumer);
+        CookingRecipeBuilder.smelting(Ingredient.of(Items.COBBLESTONE), Items.STONE, 0.1f, 200)
+            .unlocks("has_cobblestone", has(Items.COBBLESTONE))
+            .save(consumer);
     }
 }
 ```

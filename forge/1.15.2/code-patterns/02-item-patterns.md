@@ -10,8 +10,8 @@
 ```java
 public static final RegistryObject<Item> MY_ITEM = ITEMS.register("my_item",
     () -> new Item(new Item.Properties()
-        .group(ItemGroup.MISC)
-        .maxStackSize(64)
+        .tab(ItemGroup.TAB_MISC)
+        .stacksTo(64)
     )
 );
 ```
@@ -21,36 +21,37 @@ public static final RegistryObject<Item> MY_ITEM = ITEMS.register("my_item",
 ```java
 // IItemTier 枚举
 public enum MyTier implements IItemTier {
-    COPPER(2, 1561, 8.0f, 3.0f, 15, () -> Ingredient.fromItems(Items.COPPER_INGOT));
+    COPPER(2, 1561, 8.0f, 3.0f, 15, () -> Ingredient.of(Items.COPPER_INGOT));
 
     private final int level;
-    private final int maxUses;
-    private final float efficiency;
+    private final int uses;
+    private final float speed;
     private final float damage;
-    private final int enchantability;
-    private final Supplier<Ingredient> repairMaterial;
+    private final int enchantmentValue;
+    private final Supplier<Ingredient> repairIngredient;
 
-    MyTier(int level, int maxUses, float efficiency, float damage, int enchantability, Supplier<Ingredient> repairMaterial) {
+    MyTier(int level, int uses, float speed, float damage, int enchantmentValue, Supplier<Ingredient> repairIngredient) {
         this.level = level;
-        this.maxUses = maxUses;
-        this.efficiency = efficiency;
+        this.uses = uses;
+        this.speed = speed;
         this.damage = damage;
-        this.enchantability = enchantability;
-        this.repairMaterial = repairMaterial;
+        this.enchantmentValue = enchantmentValue;
+        this.repairIngredient = repairIngredient;
     }
 
-    @Override public int getMaxUses() { return maxUses; }
-    @Override public float getEfficiency() { return efficiency; }
-    @Override public float getAttackDamage() { return damage; }
-    @Override public int getHarvestLevel() { return level; }
-    @Override public int getEnchantability() { return enchantability; }
-    @Override public Ingredient getRepairMaterial() { return repairMaterial.get(); }
+    // 方法名 = 1.15.2 official 构件实证（getMaxUses/getEfficiency/getAttackDamage/getHarvestLevel/getEnchantability/getRepairMaterial 是 MCP 旧名，本档编不过）
+    @Override public int getUses() { return uses; }
+    @Override public float getSpeed() { return speed; }
+    @Override public float getAttackDamageBonus() { return damage; }
+    @Override public int getLevel() { return level; }
+    @Override public int getEnchantmentValue() { return enchantmentValue; }
+    @Override public Ingredient getRepairIngredient() { return repairIngredient.get(); }
 }
 
 // 剑
 public static final RegistryObject<Item> COPPER_SWORD = ITEMS.register("copper_sword",
     () -> new SwordItem(MyTier.COPPER, 3, 1.6f, new Item.Properties()
-        .group(ItemGroup.TAB_COMBAT)
+        .tab(ItemGroup.TAB_COMBAT)
         .defaultDurability(1561)
     )
 );
@@ -60,8 +61,8 @@ public static final RegistryObject<Item> COPPER_SWORD = ITEMS.register("copper_s
 
 ```java
 public static final RegistryObject<Item> COPPER_PICKAXE = ITEMS.register("copper_pickaxe",
-    () -> new PickaxeItem(MyTier.COPPER, 1.0f, -2.8f,
-        new Item.Properties().group(ItemGroup.TOOLS))
+    () -> new PickaxeItem(MyTier.COPPER, 1, -2.8f,
+        new Item.Properties().tab(ItemGroup.TAB_TOOLS))
 );
 ```
 
@@ -71,16 +72,17 @@ public static final RegistryObject<Item> COPPER_PICKAXE = ITEMS.register("copper
 public enum MyArmorMaterial implements IArmorMaterial {
     COPPER("copper", 40,
         new int[]{4, 7, 9, 4},   // boots, leggings, chestplate, helmet
-        20, SoundEvents.ITEM_ARMOR_EQUIP_IRON,
+        20, SoundEvents.ARMOR_EQUIP_IRON,
         0.0f, 0.0f,
-        () -> Ingredient.fromItems(Items.COPPER_INGOT)
+        () -> Ingredient.of(Items.COPPER_INGOT)
     );
 
-    @Override public int getDurability(EquipmentSlotType slot) { ... }
-    @Override public int getDamageReductionAmount(EquipmentSlotType slot) { ... }
-    @Override public int getEnchantability() { ... }
-    @Override public SoundEvent getSoundEvent() { ... }
-    @Override public Ingredient getRepairMaterial() { ... }
+    // 方法名 = 1.15.2 official 构件实证（getDurability/getDamageReductionAmount/getEnchantability/getSoundEvent/getRepairMaterial 是 MCP 旧名）
+    @Override public int getDurabilityForSlot(EquipmentSlotType slot) { ... }
+    @Override public int getDefenseForSlot(EquipmentSlotType slot) { ... }
+    @Override public int getEnchantmentValue() { ... }
+    @Override public SoundEvent getEquipSound() { ... }
+    @Override public Ingredient getRepairIngredient() { ... }
 }
 
 public static RegistryObject<Item> COPPER_HELMET    = ITEMS.register("copper_helmet",
@@ -93,10 +95,10 @@ public static RegistryObject<Item> COPPER_HELMET    = ITEMS.register("copper_hel
 ```java
 public static final RegistryObject<Item> GOLDEN_APPLE = ITEMS.register("golden_apple",
     () -> new Item(new Item.Properties()
-        .group(ItemGroup.FOOD)
+        .tab(ItemGroup.TAB_FOOD)
         .food(new Food.Builder()
-            .hunger(4)
-            .saturation(1.2f)
+            .nutrition(4)
+            .saturationMod(1.2f)
             .effect(() -> new EffectInstance(Effects.ABSORPTION, 2400, 0), 1.0f)
             .alwaysEat()
             .build())
@@ -110,13 +112,13 @@ public static final RegistryObject<Item> GOLDEN_APPLE = ITEMS.register("golden_a
 public class MyUseItem extends Item {
     public MyUseItem() {
         super(new Item.Properties()
-            .group(ItemGroup.BREWING)
-            .maxStackSize(16)
+            .tab(ItemGroup.TAB_BREWING)
+            .stacksTo(16)
         );
     }
 
     @Override
-    public UseAction getUseAction(ItemStack stack) {
+    public UseAction getUseAnimation(ItemStack stack) {  // 构件实证名 getUseAnimation（getUseAction 是 MCP 旧名）
         return UseAction.DRINK;  // 饮用动画
     }
 
@@ -126,8 +128,8 @@ public class MyUseItem extends Item {
     }
 
     @Override
-    public ItemStack onItemUseFinish(ItemStack stack, World world, LivingEntity entity) {
-        entity.addPotionEffect(new EffectInstance(Effects.SPEED, 600, 1));
+    public ItemStack finishUsingItem(ItemStack stack, World world, LivingEntity entity) {  // 构件实证名 finishUsingItem（onItemUseFinish 是 MCP 旧名）
+        entity.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 600, 1));  // 构件实证：addEffect；Effects 字段 1.15.2 叫 MOVEMENT_SPEED（SPEED 是 1.17+ 名）
         if (!world.isClientSide) {
             stack.shrink(1);
         }
@@ -140,13 +142,13 @@ public class MyUseItem extends Item {
 
 ```java
 public class MySwordItem extends SwordItem {
-    public MySwordItem(IItemTier tier, float attackDamage, float attackSpeed, Properties props) {
+    public MySwordItem(IItemTier tier, int attackDamage, float attackSpeed, Properties props) {  // SwordItem 第二参是 int（构件实证）
         super(tier, attackDamage, attackSpeed, props);
     }
 
     @Override
-    public boolean hitEntity(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        stack.damageItem(1, attacker, i -> i.sendBreakAnimation(EquipmentSlotType.MAINHAND));
+    public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {  // 构件实证名 hurtEnemy（hitEntity 是 MCP 旧名）
+        stack.hurtAndBreak(1, attacker, i -> i.broadcastBreakEvent(EquipmentSlotType.MAINHAND));
         return true;
     }
 }

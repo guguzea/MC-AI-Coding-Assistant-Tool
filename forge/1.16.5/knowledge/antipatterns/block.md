@@ -69,7 +69,7 @@ public TileEntity createTileEntity(BlockState state, IBlockReader world) { // �
 // 错误
 public MyTileEntity() {
     super(ModTileEntities.MY_TILE_ENTITY.get());
-    World world = this.getWorld(); // ❌ world 可能为 null
+    World world = this.getLevel(); // ❌ getWorld() = MCP 层名（165 official 构件实证：TileEntity#getLevel）
     if (world != null && !world.isClientSide) { ... }
 }
 ```

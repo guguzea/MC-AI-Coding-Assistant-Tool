@@ -131,7 +131,7 @@ org.dimdev.riftloader.DuplicateModException: Duplicate mod rift:
 | Gradle 构建 | ✅ `BUILD SUCCESSFUL in 1m 29s`，18 actionable tasks，含 `:reobfJar`；产物 `ExampleMod-1.0.0.jar`（10 entries，含 `riftmod.json` + `pack.mcmeta` + `ExampleMod.class`） |
 | Rift loader 启动 | ✅ `RiftLoaderTweaker.injectIntoClassLoader` → `RiftLoader.load` → `findMods` 全部走到 |
 | 客户端启动 | ✅ LWJGL 3.1.6 / OpenAL / `Created: 1024x512 textures-atlas` / Narrator，停在主菜单 |
-| **listener 回调** | ❌ **未验证** —— 见下节 |
+| **listener 回调** | ❌ **真机实测不派发** —— 见下节 |
 
 ## 5. ⚠️ 1.13.2 悬案：**部分证实**，不是全绿
 
@@ -153,10 +153,15 @@ org.dimdev.riftloader.DuplicateModException: Duplicate mod rift:
 `ClientTickable#clientTick()` 的注入点同理失效 ⇒ **本轮 `[QA] RIFT_PROBE` 一个都没打出来**。
 （不是 mod 写错：`riftmod.json` 形状、listener 类名、`listeners[]` FQCN 都已核过。）
 
-**所以**：Rift 1.0.4-106 官方只支持 **MC 1.13**，1.13.2 能启动但**功能不完整**。
-要在 1.13.2 上真用 Rift，**没有更新版可换** —— JitPack 构建状态实测（2026-10-05）：
+**所以**：Rift 1.0.4-106（**原生线**）只支持 **MC 1.13**，1.13.2 能启动但**功能不完整**。
+要在 1.13.2 上真用 Rift，**原生线没有更新版可换** —— JitPack 构建状态实测（2026-10-05）：
 ok 的只有 `v1.0.4-52` / `v1.0.4-87` / `1.0.4-87` / `1.0.4-106` / `v1.0.4-87` / `v1.0.4-106`，
 **`master-dfc75ff725-1` = Error**，`1.0.2-33` / `1.0.3-45` / `1.0.4-66` 全 Error；
 且上游仓 `DimensionalDevelopment/Rift` 已 **archived**（最后提交 2019-01-01）。
-⇒ **可行路径只剩两条**：把 `minecraft.version` 改成 `'1.13'`（上游示例的做法，本轮未跑），
+**社区线补充（2026-10-06 用户裁定 + GitHub API 同日核）**：1.13.1/1.13.2 的支持在 Chocohead 仓库分支 `newerer`（自标 `1.13.1`）/ `newerest`（自标 `1.13.2`）；
+最终**原生**版本号 `1.0.4-105`（tag `v1.0.4-86/87/105/106` 同指 master `dfc75ff725`，其 `build.gradle` 自标 `1.13`）。
+社区常引用的 `1.0.4-77`（tag `e5636ddfdb`，在 JitPack `com.github.Chocohead:Rift` 线）`build.gradle` 亦自标 `1.13` 且落后 `newerest` 47 提交 ⇒ 不是 1.13.2 成品；
+`newerest` 分支件 2026-10-06 在 JitPack 呈 Building/超时、未取到成品。
+⇒ **可行路径剩三条**：把 `minecraft.version` 改成 `'1.13'`（上游示例的做法，本轮未跑）、
+自编译 Chocohead `newerest` 分支并真机复跑（2026-10-06 新增，产物未核）、
 或自行 patch 那 21 个 hook mixin 的 `@Mixin(targets=…)` 到 1.13.2 的类名（需重新生成 refmap）。

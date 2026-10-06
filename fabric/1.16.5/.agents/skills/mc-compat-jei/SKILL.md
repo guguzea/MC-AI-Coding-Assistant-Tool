@@ -6,6 +6,8 @@ version: "1.16.5"
 dependencies: []
 mappings: yarn
 ---
+<!-- external-apis: rei-plugin-api -->
+
 
 # JEI / REI 兼容（Fabric 1.16.5）
 

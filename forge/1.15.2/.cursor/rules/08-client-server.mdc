@@ -167,22 +167,22 @@ public class ModKeyBindings {
 // entities/MyEntity.java（服务端设置，客户端自动同步）
 public class MyEntity extends LivingEntity {
     private static final DataParameter<Integer> DATA_CUSTOM =
-        EntityDataManager.createKey(MyEntity.class, DataSerializers.VARINT);
+        EntityDataManager.defineId(MyEntity.class, DataSerializers.VARINT); // ❌ createKey = MCP 层名（152 official 构件实证 2026-10-05：defineId + DataParameter）
 
     @Override
-    protected void registerData() {
-        super.registerData();
-        this.dataManager.register(DATA_CUSTOM, 0);
+    protected void defineSynchedData() { // ❌ registerData = MCP 层名（official: defineSynchedData，构件实证）
+        super.defineSynchedData();
+        this.entityData.register(DATA_CUSTOM, 0);
     }
 
     public void setCustomValue(int value) {
         // 服务端设置
-        this.dataManager.set(DATA_CUSTOM, value);
+        this.entityData.set(DATA_CUSTOM, value);
     }
 
     public int getCustomValue() {
         // 两端都可以读取
-        return this.dataManager.get(DATA_CUSTOM);
+        return this.entityData.get(DATA_CUSTOM);
     }
 }
 ```
@@ -219,15 +219,15 @@ public class MyTileEntity extends TileEntity {
     // 在服务端逻辑中修改数据后，同步到客户端
     public void modifyData(int newValue) {
         this.syncData = newValue;
-        this.markDirty();
-        this.world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), 3);
+        this.setChanged(); // markDirty = MCP 层名，152 official TileEntity = setChanged（构件实证 2026-10-05）
+        this.level.notifyBlockUpdate(pos, getBlockState(), getBlockState(), 3); // official 字段 = level（无 world/getWorld）
     }
 }
 ```
 
 > 注意：
-> - `markDirty()` 标记数据已修改
-> - `world.notifyBlockUpdate()` 将更新通知发送给客户端
+> - `setChanged()` 标记数据已修改（official；markDirty 是 MCP 层名）
+> - `level.notifyBlockUpdate()` 将更新通知发送给客户端（official 字段是 `level`）
 > - `getUpdatePacket()` 返回同步数据
 > - `onDataPacket()` 处理接收到的数据
 

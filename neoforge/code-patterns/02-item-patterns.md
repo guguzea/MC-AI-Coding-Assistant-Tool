@@ -10,10 +10,15 @@
 ```java
 public static final DeferredHolder<Item, Item> MY_ITEM = ITEMS.register("my_item",
     () -> new Item(new Item.Properties()
-        .tab(CreativeModeTab.TAB_MISC)
         .stacksTo(64)
     )
 );
+// 1.20.4 实测（出处：neoforge-20.4.251-merged.jar javap 2026-10-06）：
+//   Item$Properties 没有 tab()，CreativeModeTab 没有 TAB_* 常量，本文各代码片段里的
+//   `.tab(CreativeModeTab.TAB_*)` 一律应删（已删）。加入创造模式标签页改订阅 mod 总线事件：
+//   @SubscribeEvent public static void addTab(BuildCreativeModeTabContentsEvent event) {
+//       if (event.getTabKey() == CreativeModeTabs.COMBAT) { event.accept(COPPER_SWORD.get()); } }
+//   （getTabKey / accept(ItemLike) / CreativeModeTabs.* ResourceKey 常量均同一 javap 逐字核实）
 ```
 
 ## 剑（完整示例）
@@ -49,7 +54,6 @@ public enum MyTier implements Tier {
 // 例如：attackDamageModifier=3 → 总伤害 = 3 + 3.0 = 6.0
 public static final DeferredHolder<Item, Item> COPPER_SWORD = ITEMS.register("copper_sword",
     () -> new SwordItem(MyTier.COPPER, 3, 1.6f, new Item.Properties()
-        .tab(CreativeModeTab.TAB_COMBAT)
         .durability(1561)
     )
 );
@@ -62,8 +66,7 @@ public static final DeferredHolder<Item, Item> COPPER_SWORD = ITEMS.register("co
 // ⚠️ 第二参是 int（旧文本写 1.0f 编译不过）；带 TagKey<Block> 的五参构造属于父类 DiggerItem：
 //    DiggerItem(float, float, Tier, TagKey<Block>, Item.Properties)
 public static final DeferredHolder<Item, Item> COPPER_PICKAXE = ITEMS.register("copper_pickaxe",
-    () -> new PickaxeItem(MyTier.COPPER, 1, -2.8f,
-        new Item.Properties().tab(CreativeModeTab.TAB_TOOLS))
+    () -> new PickaxeItem(MyTier.COPPER, 1, -2.8f, new Item.Properties())
 );
 ```
 
@@ -96,7 +99,6 @@ public static DeferredHolder<Item, Item> COPPER_BOOTS      = ITEMS.register("cop
 ```java
 public static final DeferredHolder<Item, Item> GOLDEN_APPLE = ITEMS.register("golden_apple",
     () -> new Item(new Item.Properties()
-        .tab(CreativeModeTab.TAB_FOOD)
         .food(new FoodProperties.Builder()
             .nutrition(4)
             .saturationMod(1.2f)
@@ -113,7 +115,6 @@ public static final DeferredHolder<Item, Item> GOLDEN_APPLE = ITEMS.register("go
 public class MyUseItem extends Item {
     public MyUseItem() {
         super(new Item.Properties()
-            .tab(CreativeModeTab.TAB_BREWING)
             .stacksTo(16)
         );
     }
@@ -131,7 +132,9 @@ public class MyUseItem extends Item {
     @Override
     public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity entity) {
         super.finishUsingItem(stack, level, entity);
-        entity.addEffect(new MobEffectInstance(MobEffects.SPEED, 600, 1));
+        // 1.20.4 实测（同 javap 2026-10-06）：MobEffects 没有 SPEED（那是 Yarn 名），
+        // 官方映射下叫 MOVEMENT_SPEED
+        entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 600, 1));
         if (!level.isClientSide) {
             stack.shrink(1);
         }

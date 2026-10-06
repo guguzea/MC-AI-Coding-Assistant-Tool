@@ -73,7 +73,7 @@ public void onServerTick(TickEvent.ServerTickEvent event) {
 // 错误（客户端代码）
 @SubscribeEvent
 public void onRender(RenderGameOverlayEvent.Post event) {
-    world.setBlockState(pos, Blocks.DIRT.getDefaultState()); // ❌ 禁止在渲染线程修改世界
+    world.setBlock(pos, Blocks.DIRT.defaultBlockState(), 3); // ❌ 禁止在渲染线程修改世界
 }
 ```
 
@@ -96,7 +96,7 @@ public void onRender(RenderGameOverlayEvent.Post event) {
 // 错误
 @SubscribeEvent
 public static void onClientSetup(FMLClientSetupEvent event) {
-    world.setBlockState(pos, Blocks.DIRT.getDefaultState()); // ❌ 禁止在客户端修改世界数据
+    world.setBlock(pos, Blocks.DIRT.defaultBlockState(), 3); // ❌ 禁止在客户端修改世界数据
 }
 ```
 

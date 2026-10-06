@@ -43,7 +43,7 @@ IF 注册 客户端专用组件（渲染器/快捷键）
 
 IF 平台 = Forge
   → 跳转 forge/1.20.4/.cursor/rules/01-registry.mdc（forge/1.21.1 是 draft：磁盘无 00–10 规则树，
-    activate_platform_pack session 返回 PACK_NOT_FOUND，故跳最近已建档的 Forge 档）
+    activate_platform_pack session 返回 PACK_NOT_FOUND，故跳最近已建档的 Forge 档；PACK_NOT_FOUND 是本仓工具返回码术语，不是 MC 符号，禁止当类名抄）
 ```
 
 ## Registry 类型

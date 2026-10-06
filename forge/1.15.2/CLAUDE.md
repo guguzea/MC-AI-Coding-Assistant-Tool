@@ -84,7 +84,7 @@ src/main/java/com/example/mod/
 
 | 1.15.2 | 1.20.x |
 |---------|---------|
-| `Block.Properties.create(Material)` | `Block.Properties.of(Material)` |
+| `Block.Properties.of(Material)`（official 构件实证 2026-10-05；❌ docs 层旧列 `.create` 是 MCP 名） | `Block.Properties.of(...)`（1.20+ 无 `Material`） |
 | `TileEntity` | `BlockEntity` |
 | `IItemTier` | `Tier` |
 | `Food.Builder()` | `FoodProperties.Builder()` |

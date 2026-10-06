@@ -17,7 +17,7 @@ mappings: mcp
 → 多方块 = 控制器（TileEntity/方块实体）+ 结构校验 + formed 状态
 → 结构探测 → BlockPos/World 逐格扫描（:74 签名可参考）
 → 状态比对 → BlockState 用 == 引用相等（:88 原文）
-→ 属性修改 → BlockState#with(IProperty<T>, T)（:86 原文）
+→ 属性修改 → BlockState#with(IProperty<T>, T)（:86 原文）——⚠️ 那是 docs 层 MCP 名；152 official 构件方法 = `StateHolder#setValue(IProperty<T>, Comparable)`（2026-10-05 javap 实证，official 无 `with`/`get`）
 → 注册与生命周期 → mc-registry、01-registry.mdc、02-block.mdc
 ```
 

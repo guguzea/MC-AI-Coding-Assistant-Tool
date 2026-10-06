@@ -17,7 +17,7 @@ Yarn 移位是 `transferSlot`（[yarn 1.18.2 ScreenHandler.mapping](https://gith
 // 服务端：ScreenHandler
 public class MyScreenHandler extends ScreenHandler {
     public MyScreenHandler(int syncId, PlayerInventory playerInventory) {
-        super(ModScreenHandlers.MY_SCREEN, syncId);
+        super(MY_SCREEN, syncId);
         // ...
     }
 }

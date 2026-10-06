@@ -78,7 +78,7 @@ public class MyRecipe implements IRecipe<IInventory> {
 ## 3. 注册 RecipeSerializer
 
 ```java
-public static final RegistryObject<RecipeSerializer<MyRecipe>> MY_SERIALIZER =
+public static final RegistryObject<IRecipeSerializer<MyRecipe>> MY_SERIALIZER =   // javap 实证：本档接口名 = IRecipeSerializer（RecipeSerializer 是 1.17+ 名）
     RECIPE_SERIALIZERS.register("my_recipe", () -> MyRecipeSerializer.INSTANCE);
 
 public class MyRecipeSerializer implements IRecipeSerializer<MyRecipe> {
@@ -86,9 +86,11 @@ public class MyRecipeSerializer implements IRecipeSerializer<MyRecipe> {
 
     @Override
     public MyRecipe read(ResourceLocation id, JsonObject json) {
-        Ingredient input = Ingredient.fromJson(json.getAsJsonArray("input"));
-        ItemStack output = ShapedRecipe.deserializeItem(JsonUtils.getJsonObject(json, "output"));
-        int time = JsonUtils.getInt(json, "processingTime", 200);
+        Ingredient input = Ingredient.deserialize(json.getAsJsonArray("input"));
+        // javap 实证 2026-10-05：144 的 Ingredient 没有 fromJson（那是 1.16+ 名），json 工厂 = deserialize(JsonElement)
+        ItemStack output = ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "output"));
+        // javap 实证：类名 = JSONUtils（全大写 JSON），本档有 getJsonObject(JsonObject,String)/getInt(JsonObject,String,int)
+        int time = JSONUtils.getInt(json, "processingTime", 200);
         return new MyRecipe(id, input, output, time);
     }
 
@@ -113,23 +115,48 @@ public class MyRecipeSerializer implements IRecipeSerializer<MyRecipe> {
 
 ```java
 public class MyRecipeProvider extends RecipeProvider {
-    public MyRecipeProvider(IRecipeType<?> recipeTypeIn) {
-        super(recipeTypeIn);
+    public MyRecipeProvider(DataGenerator generator) {
+        super(generator);
     }
 
     @Override
     protected void registerRecipes(Consumer<IFinishedRecipe> consumer) {
-        consumer.accept(new FinishedRecipe(
-            new ResourceLocation(MOD_ID, "my_recipe"),
-            Ingredient.fromItems(Items.DIAMOND),
-            new ItemStack(ModItems.PROCESSED_DIAMOND.get(), 2),
-            400
-        ));
+        // 构件实证 2026-10-05：144 jar 只有接口 `IFinishedRecipe`（没有具体类 `FinishedRecipe`），
+        // 抽象方法 = serialize(JsonObject) / getID() / getSerializer() / getAdvancementJson() / getAdvancementID()
+        // （getRecipeJson() 是 default）。⇒ 自定义配方匿名实现接口：
+        consumer.accept(new IFinishedRecipe() {
+            @Override
+            public void serialize(JsonObject json) {
+                json.addProperty("type", MOD_ID + ":milling");
+                json.add("input", Ingredient.fromItems(Items.DIAMOND).serialize());
+                JsonObject result = new JsonObject();
+                result.addProperty("item", ModItems.PROCESSED_DIAMOND.get().getRegistryName().toString());
+                result.addProperty("count", 2);
+                json.add("output", result);
+                json.addProperty("processingTime", 400);
+            }
+            @Override
+            public ResourceLocation getID() {
+                return new ResourceLocation(MOD_ID, "my_recipe");
+            }
+            @Override
+            public IRecipeSerializer<?> getSerializer() {
+                return ModRecipeSerializers.MY_SERIALIZER.get();
+            }
+            @Override
+            public JsonObject getAdvancementJson() {
+                return null; // 不需要伴随进度
+            }
+            @Override
+            public ResourceLocation getAdvancementID() {
+                return null;
+            }
+        });
     }
 }
 
 // GatherDataEvent 中：
-generator.addProvider(new MyRecipeProvider(MILLING));
+generator.addProvider(new MyRecipeProvider(generator));
 ```
 
 ## Decision: 选择配方方式

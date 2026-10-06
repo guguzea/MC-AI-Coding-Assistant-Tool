@@ -33,7 +33,7 @@
 - Java 版本：Java 16 → Java 17（1.18.2 `gettingstarted.md:14`「Minecraft and MinecraftForge both compile against Java 17」）
 - pack_format：7 → 8
 - DeferredRegister 完全可用
-- 方块属性：`Properties.create()` → `Properties.of()`
+- 方块属性：本档（152 official 构件）已是 `Properties.of()`；`create()` 是 docs 层 MCP 名（2026-10-05 javap 实证）
 
 ---
 

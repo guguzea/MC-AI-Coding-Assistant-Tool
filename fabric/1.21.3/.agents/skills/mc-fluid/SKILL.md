@@ -36,8 +36,8 @@ IF 可流动的液体
   → 继承 FlowableFluid（net/minecraft/fluid/FlowableFluid，本档 class_3609）
 
 IF 需要「静态 / 流动」成对形态
-  → 照原版家族结构自己写两个子类：静态侧对应 WaterFluid$Still / LavaFluid$Still，
-     流动侧对应 WaterFluid$Flowing / LavaFluid$Flowing
+  → 照原版家族结构自己写两个子类：静态侧对应 WaterFluid$Still / LavaFluid$Still（嵌套形态，本档没有独立同名类，零命中）
+     流动侧对应 WaterFluid$Flowing / LavaFluid$Flowing（嵌套形态，本档没有独立同名类，零命中）
      （本档**没有**名为 StillFluid 的独立类，全表 0 命中）
 
 IF 流体要出现在世界里

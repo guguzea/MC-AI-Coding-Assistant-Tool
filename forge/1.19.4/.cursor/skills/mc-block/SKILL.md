@@ -47,7 +47,7 @@ BlockBehaviour.Properties.of(Material.WOOD)
     .isViewBlocking(...)                // 阻挡视角
     .hasPostProcess(...)               // 后处理效果
     .emissiveRendering(...)            // 自发光
-    .noLootTablePoolsBuilder()         // 无掉落表
+    .noLootTable()                   // 无掉落表（构件 javap 实证 2026-10-06：Properties 实名 = noLootTable()，无 "noLootTablePoolsBuilder"）
 ```
 
 ## Decision: 物品形态（BlockItem）

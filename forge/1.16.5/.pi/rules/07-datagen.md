@@ -64,10 +64,10 @@ public class DataGenerators {
 
 ### RecipeProvider 使用规范
 
-- 覆盖 `buildShapelessRecipes(Consumer<FinishedRecipe>)`，**不要** `buildRecipes`（1.19.3+）也不要 `registerRecipes`（1.14 MCP）
+- 覆盖 `buildShapelessRecipes(Consumer<IFinishedRecipe>)`（`net.minecraft.data.IFinishedRecipe`，构件实证），**不要** `FinishedRecipe` 裸名（1.19+ 类名）也不要 `registerRecipes`（1.14 MCP）、`buildRecipes`（1.19.3+）
 - Official：`ShapedRecipeBuilder.shaped` + `pattern` + `define` + `unlockedBy` + `save`
 - 无序：`ShapelessRecipeBuilder.shapeless` + `requires`（不是 `.ingredient()`）
-- 熔炉：`SimpleCookingRecipeBuilder.smelting`（无 RecipeCategory；不要 `CookingRecipeBuilder` / `FurnaceRecipeProvider`）
+- 熔炉：`CookingRecipeBuilder.smelting(Ingredient, IItemProvider, float, int)`（构件实证：165 有 `smelting/blasting/cooking`，**无** `smoking()/campfireCooking()` 便捷静态——那是 1.17+ 形，烟熏/营火走 `cooking(..., RecipeSerializer.SMOKING_RECIPE)` 通用形；❌ `SimpleCookingRecipeBuilder` 是 1.19.4+ 类名，本包构件没有）
 
 ### LootTableProvider 使用规范
 
@@ -83,7 +83,7 @@ public class DataGenerators {
 ```
 IF 生成合成配方
   → 使用 RecipeProvider 子类
-  → ShapedRecipeBuilder / ShapelessRecipeBuilder / SimpleCookingRecipeBuilder
+  → ShapedRecipeBuilder / ShapelessRecipeBuilder / CookingRecipeBuilder
   → 放到 data/{modid}/recipes/
 
 IF 生成战利品表
@@ -125,9 +125,9 @@ IF 配方成分无固定位置（药水、染料混合等）
 
 IF 熔炉烧制/烟熏/营火烧制
   → 在 buildShapelessRecipes() 中使用：
-  → SimpleCookingRecipeBuilder.smelting()
-  → SimpleCookingRecipeBuilder.smoking()
-  → SimpleCookingRecipeBuilder.campfireCooking()
+  → CookingRecipeBuilder.smelting(...)  /  .blasting(...)
+  → 烟熏/营火走通用形 CookingRecipeBuilder.cooking(Ingredient, IItemProvider, float, int, CookingRecipeSerializer<?>)，传 RecipeSerializer.SMOKING_RECIPE / RecipeSerializer.CAMPFIRE_COOKING_RECIPE
+  → ❌ SimpleCookingRecipeBuilder（1.19.4+ 类名，本包构件没有；2026-10-05 javap 对 1.16.5-36.2.34_mapped_official_1.16.5 点名）
 
 IF 用自定义工作台配方
   → 实现 IRecipe + 自定义 Container 和 Screen
@@ -185,13 +185,16 @@ public class DataGenerators {
 
 ```java
 // datagen/ModRecipes.java
+// 以下方法名全部对真构件点名（javap net.minecraft.data.RecipeProvider / ShapedRecipeBuilder /
+// ShapelessRecipeBuilder / CookingRecipeBuilder，jar = 1.16.5-36.2.34_mapped_official_1.16.5，2026-10-05）：
+// shaped/shapeless/define/pattern/requires/unlockedBy/save(Consumer<IFinishedRecipe>)/has(IItemProvider) 均逐字在构件中。
 public class ModRecipeProvider extends RecipeProvider {
     public ModRecipeProvider(DataGenerator generator) {
         super(generator);
     }
 
     @Override
-    protected void buildShapelessRecipes(Consumer<FinishedRecipe> consumer) {
+    protected void buildShapelessRecipes(Consumer<IFinishedRecipe> consumer) {
         ShapedRecipeBuilder.shaped(ModItems.MY_ITEM.get())
             .pattern(" X ")
             .pattern(" X ")
@@ -207,7 +210,7 @@ public class ModRecipeProvider extends RecipeProvider {
             .unlockedBy("has_gold", has(Items.GOLD_INGOT))
             .save(consumer);
 
-        SimpleCookingRecipeBuilder.smelting(Ingredient.fromItems(Items.COBBLESTONE), Items.STONE, 0.1f, 200)
+        CookingRecipeBuilder.smelting(Ingredient.of(Items.COBBLESTONE), Items.STONE, 0.1f, 200)
             .unlockedBy("has_cobblestone", has(Items.COBBLESTONE))
             .save(consumer);
     }

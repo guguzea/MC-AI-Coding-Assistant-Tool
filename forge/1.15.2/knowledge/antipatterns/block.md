@@ -6,7 +6,7 @@
 
 ```java
 // 错误
-public static final Block MY_BLOCK = new Block(Properties.create(Material.STONE));
+public static final Block MY_BLOCK = new Block(Properties.of(Material.STONE));
 ```
 
 **症状**：方块在世界显示为缺失方块（紫色黑色格子）。
@@ -18,7 +18,7 @@ public static final DeferredRegister<Block> BLOCKS =
     DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);
 
 public static final RegistryObject<Block> MY_BLOCK =
-    BLOCKS.register("my_block", () -> new Block(Properties.create(Material.STONE)));
+    BLOCKS.register("my_block", () -> new Block(Properties.of(Material.STONE)));
 ```
 
 ---
@@ -46,7 +46,7 @@ event.getRegistry().register(
 // 错误
 public MyTileEntity() {
     super(ModTileEntities.MY_TILE_ENTITY.get());
-    World level = this.getWorld(); // ❌ world 可能为 null
+    World level = this.getLevel(); // ❌ getWorld() = MCP 层名（152 official 构件实证：TileEntity#getLevel）
 }
 ```
 

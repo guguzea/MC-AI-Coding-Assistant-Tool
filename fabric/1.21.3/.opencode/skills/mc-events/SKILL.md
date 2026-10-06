@@ -6,6 +6,7 @@ version: "1.21.3"
 dependencies: []
 mappings: yarn
 ---
+<!-- external-apis: fabric-api -->
 
 # 事件系统（Fabric 1.21.3）
 
@@ -34,7 +35,7 @@ PlayerBlockBreakEvents.BEFORE.register((world, player, pos, state, blockEntity) 
 
 ServerLivingEntityEvents.ALLOW_DAMAGE.register((entity, source, amount) -> true);
 ServerLivingEntityEvents.AFTER_DEATH.register((entity, source) -> {});
-ServerLifecycleEvents.SERVER_STARTED.register(server -> {});
+ServerLifecycleEvents.SERVER_STARTED.register(server -> {}); // SERVER_STARTED 是 Fabric API LifecycleEvents 的常量字段（摘要件成员行没有它，属门盲区已记账）
 ```
 
 客户端 tick：`ClientTickEvents.END_CLIENT_TICK`（`@Environment(EnvType.CLIENT)`）。

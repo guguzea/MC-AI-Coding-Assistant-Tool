@@ -60,10 +60,11 @@ public class DataGenerators {
 
 ### RecipeProvider 使用规范
 
-- 覆盖 `registerRecipes(Consumer<IFinishedRecipe>)`
-- `shapedRecipe` / `patternLine` / `key` / `addCriterion` / `build`
-- 熔炉：`CookingRecipeBuilder.smelting`，不要 `FurnaceRecipeProvider`
-- 必须 `build(consumer)`，不是 `.save()`
+- 覆盖 `buildShapelessRecipes(Consumer<IFinishedRecipe>)`（本档 official 构件实证；`registerRecipes` 是 1.14 及更早 MCP 名，1.15.2 构件已无）
+- `ShapedRecipeBuilder.shaped` / `pattern` / `define` / `unlocks` / `save`（构件实证；`shapedRecipe`/`patternLine`/`key`/`addCriterion`/`build` 是 MCP 旧名，本档构件不存在）
+- 熔炉：`CookingRecipeBuilder.smelting(Ingredient, IItemProvider, float, int)`（构件实证），不要 `FurnaceRecipeProvider`（1.17+）；无序配方用 `ShapelessRecipeBuilder.shapeless(...).requires(...)`
+- 末端方法就是 `.save(consumer)`（构件实证有 `save(Consumer)` / `save(Consumer, String)` / `save(Consumer, ResourceLocation)` 三重载）；`registerRecipes`/`build(consumer)` 在 1.15.2 official 构件里都不存在，**不要**再用
+- 解锁条件用 `RecipeProvider` 自带的 `has(IItemProvider)`：`.unlocks("has_diamond", has(Items.DIAMOND))`（构件实证 `has` 返回 `InventoryChangeTrigger.Instance`；`ItemPredicate.getItemByItem` 在 1.15.2 构件不存在，别按 1.16.2+ 写法补）
 
 ### LootTableProvider 使用规范
 
@@ -114,10 +115,10 @@ IF 生成语言文件
 
 ```
 IF 配方有固定形状（工具、武器等）
-  → ShapedRecipeBuilder.shapedRecipe + patternLine
+  → ShapedRecipeBuilder.shaped + pattern + define（构件实证名）
 
 IF 配方成分无固定位置（药水、染料混合等）
-  → ShapelessRecipeBuilder.shapelessRecipe + addIngredient
+  → ShapelessRecipeBuilder.shapeless + requires
 
 IF 熔炉烧制
   → CookingRecipeBuilder.smelting
@@ -184,25 +185,26 @@ public class ModRecipeProvider extends RecipeProvider {
     }
 
     @Override
-    protected void registerRecipes(Consumer<IFinishedRecipe> consumer) {
-        ShapedRecipeBuilder.shapedRecipe(ModItems.MY_ITEM.get())
-            .patternLine(" X ")
-            .patternLine(" X ")
-            .patternLine(" Y ")
-            .key('X', Items.DIAMOND)
-            .key('Y', Items.STICK)
-            .addCriterion("has_diamond", InventoryChangeTrigger.Instance.hasItems(Items.DIAMOND))
-            .build(consumer);
+    protected void buildShapelessRecipes(Consumer<IFinishedRecipe> consumer) {
+        // 1.15.2 official 构件实证面：shaped/pattern/define/unlocks/save + has()（RecipeProvider 自带）
+        ShapedRecipeBuilder.shaped(ModItems.MY_ITEM.get())
+            .pattern(" X ")
+            .pattern(" X ")
+            .pattern(" Y ")
+            .define('X', Items.DIAMOND)
+            .define('Y', Items.STICK)
+            .unlocks("has_diamond", has(Items.DIAMOND))
+            .save(consumer);
 
-        ShapelessRecipeBuilder.shapelessRecipe(ModItems.OTHER_ITEM.get())
-            .addIngredient(Items.GOLD_INGOT, 3)
-            .addIngredient(Items.DIAMOND)
-            .addCriterion("has_gold", InventoryChangeTrigger.Instance.hasItems(Items.GOLD_INGOT))
-            .build(consumer);
+        ShapelessRecipeBuilder.shapeless(ModItems.OTHER_ITEM.get())
+            .requires(Items.GOLD_INGOT, 3)
+            .requires(Items.DIAMOND)
+            .unlocks("has_gold", has(Items.GOLD_INGOT))
+            .save(consumer);
 
-        CookingRecipeBuilder.smelting(Ingredient.fromItems(Items.COBBLESTONE), Items.STONE, 0.1f, 200)
-            .addCriterion("has_cobblestone", InventoryChangeTrigger.Instance.hasItems(Items.COBBLESTONE))
-            .build(consumer);
+        CookingRecipeBuilder.smelting(Ingredient.of(Items.COBBLESTONE), Items.STONE, 0.1f, 200)
+            .unlocks("has_cobblestone", has(Items.COBBLESTONE))
+            .save(consumer);
     }
 }
 ```
@@ -324,7 +326,7 @@ public class ModLanguageProvider extends LanguageProvider {
 - ❌ 手改 `src/generated/resources/`
 - ❌ `FurnaceRecipe.Builder` / `setRegistryName` 当 DataGen 保存配方
 - ❌ `modLoc()` 与 `mcLoc()` 用反
-- ❌ `SimpleCookingRecipeBuilder` / `.save()` — 那是 1.16+ 官方映射名
+- ❌ `SimpleCookingRecipeBuilder` / `.build(consumer)` / `registerRecipes` — 前者是 1.17+ 类名（1.15.2/1.16.5 official 构件都没有），后两个是 1.14 及更早 MCP 名；本档末端方法恰恰是 `.save(consumer)`（构件 javap 实证）
 
 ## 扩展点
 

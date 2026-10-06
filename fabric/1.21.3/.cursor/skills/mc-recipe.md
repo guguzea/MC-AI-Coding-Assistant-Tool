@@ -6,6 +6,8 @@ version: "1.21.3"
 dependencies: []
 mappings: yarn
 ---
+<!-- external-apis: jdk -->
+
 
 # 配方系统（Fabric 1.21.3）
 
@@ -24,7 +26,7 @@ public class MyRecipeProvider extends FabricRecipeProvider {
 
     @Override
     public void generate(RecipeExporter exporter) {
-        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, MY_ITEM)
+        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, MY_ITEM) // MY_ITEM：本件自造的示例物品常量（没有外部声明出处；换成你自己注册的 Item 常量）
             .pattern("AAA")
             .pattern("A A")
             .pattern(" A ")
@@ -50,7 +52,7 @@ public void onInitialize() {
 
 ```
 IF 使用配方数据
-  → DataGen 生成配方 JSON
+  → DataGen 生成配方 JSON（DataGen 是术语缩写，不是 API 名，禁止当类名抄）
 
 IF 在代码中动态创建配方
   → 仅用于自定义逻辑

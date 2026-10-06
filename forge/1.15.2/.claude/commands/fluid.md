@@ -63,9 +63,9 @@ public static final RegistryObject<FlowingFluid> MY_FLUID_FLOWING =
 public static final RegistryObject<FlowingFluidBlock> MY_FLUID_BLOCK =
     BLOCKS.register("my_fluid",
         () -> new FlowingFluidBlock(MY_FLUID_SOURCE,
-            Block.Properties.create(Material.WATER)
+            Block.Properties.of(Material.WATER)
                 .doesNotBlockMovement()
-                .hardnessAndResistance(100.0f)
+                .strength(100.0f)
                 .noDrops()
         )
     );
@@ -73,7 +73,7 @@ public static final RegistryObject<FlowingFluidBlock> MY_FLUID_BLOCK =
 public static final RegistryObject<Item> MY_BUCKET =
     ITEMS.register("my_fluid_bucket",
         () -> new BucketItem(MY_FLUID_SOURCE,
-            new Item.Properties().maxStackSize(1).group(ItemGroup.MISC)
+            new Item.Properties().stacksTo(1).tab(ItemGroup.TAB_MISC)
         )
     );
 ```

@@ -6,6 +6,8 @@ version: "1.21.1"
 dependencies: []
 mappings: yarn
 ---
+<!-- external-apis: cloth-config, jdk -->
+
 <!-- cloth-version-inject v=1.21.1 coord=15.0.127 state=active textApi=literal -->
 
 # Cloth Config（Fabric 1.21.1）
@@ -47,16 +49,16 @@ dependencies {
 ```java
 // 1. 创建配置选项类
 public class ModConfig implements ConfigSerializable {
-    @ConfigEntry.Gui.Excluded
+    @ConfigEntry.Gui.Excluded // ConfigEntry 是 Cloth Config 的注解，本档 MC 映射里没有这个名字
     public ConfigBuilder builder = ConfigBuilder.create()
         .title(Text.literal("My Mod Config"))
         .category(ConfigCategory.createBuilder()
             .name(Text.literal("General"))
-            .option(ConfigEntry.BoolOption.createBuilder(true)
+            .option(ConfigEntry.BoolOption.createBuilder(true) // ConfigEntry 是 Cloth Config 的注解，本档 MC 映射里没有这个名字
                 .name(Text.literal("Enable Feature"))
                 .tooltip(Text.literal("Enable or disable the feature"))
                 .build())
-            .option(ConfigEntry.IntSliderOption.createBuilder(10, 1, 100)
+            .option(ConfigEntry.IntSliderOption.createBuilder(10, 1, 100) // ConfigEntry 是 Cloth Config 的注解，本档 MC 映射里没有这个名字
                 .name(Text.literal("Value"))
                 .build())
             .build())
@@ -64,7 +66,7 @@ public class ModConfig implements ConfigSerializable {
             // 保存配置时的回调
         });
 
-    public boolean enableFeature = true;
+    public boolean enableFeature = true; // 示例配置字段名：本件自造的 ModConfig 字段，没有任何 MC/Cloth 符号叫 enableFeature
     public int value = 10;
 
     @Override
@@ -94,7 +96,7 @@ public class MyConfigScreen extends ConfigScreen {
         builder.addEntry(EntryBuilder.startBooleanToggle(
                 Text.translatable("config.my_mod.enable_feature"))
             .setDefaultValue(true)
-            .setSaveConsumer(v -> enableFeature = v)
+            .setSaveConsumer(v -> enableFeature = v) // enableFeature 为上面本件自造的示例字段，禁止当 API
             .build());
 
         builder.addEntry(EntryBuilder.startIntSlider(

@@ -12,10 +12,14 @@ mappings: yarn
 loader-api：`addFeature` 仍是 **ConfiguredFeature** 的 `RegistryKey`（与 1.16.5 同形）。Yarn。
 
 ```java
+// MY_CONFIGURED_FEATURE：示例名（本件自造，非 Fabric API 符号）= 指向数据包 configured_feature JSON 的 RegistryKey<ConfiguredFeature<?, ?>>
+public static final RegistryKey<ConfiguredFeature<?, ?>> MY_CONFIGURED_FEATURE = // 示例名，本件自造，没有任何 MC 符号叫 MY_CONFIGURED_FEATURE
+    RegistryKey.of(Registry.CONFIGURED_FEATURE_KEY, new Identifier(MOD_ID, "my_feature"));
+
 BiomeModifications.addFeature(
     BiomeSelectors.foundInOverworld(),
     GenerationStep.Feature.VEGETAL_DECORATION,
-    MY_CONFIGURED_FEATURE
+    MY_CONFIGURED_FEATURE  // 示例名，本件自造，没有任何 MC 符号叫 MY_CONFIGURED_FEATURE
 );
 ```
 
@@ -25,7 +29,7 @@ BiomeModifications.addFeature(
 
 ```
 IF 1.18+ 写法
-  → 不要：本档还不是 PlacedFeature
+→ 不得用 PlacedFeature：本档还没有（那是 1.18+ 别的版本的名字）
 IF 生物
   → addSpawn
 ```

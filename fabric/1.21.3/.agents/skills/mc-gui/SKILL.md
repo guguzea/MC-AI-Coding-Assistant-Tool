@@ -17,7 +17,7 @@ Yarn 移位是 `quickMove`。客户端只用 `HandledScreens.register`。额外�
 // 服务端：ScreenHandler
 public class MyScreenHandler extends ScreenHandler {
     public MyScreenHandler(int syncId, PlayerInventory playerInventory) {
-        super(ModScreenHandlers.MY_SCREEN, syncId);
+        super(MY_SCREEN, syncId);
         // ...
     }
 }

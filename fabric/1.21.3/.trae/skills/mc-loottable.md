@@ -6,6 +6,7 @@ version: "1.21.3"
 dependencies: []
 mappings: yarn
 ---
+<!-- external-apis: fabric-api -->
 
 # 战利品表（Fabric 1.21.3）
 
@@ -13,7 +14,7 @@ mappings: yarn
 - 改原版表：`net.fabricmc.fabric.api.loot.v3.LootTableEvents`（loader-api 已核）
 
 ```java
-LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
+LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {  // tableBuilder 为示例形参名（本件自定，没有任何 MC 符号叫它）
     // RegistryKey<LootTable> key；LootTable.Builder；RegistryWrapper.WrapperLookup
 });
 ```

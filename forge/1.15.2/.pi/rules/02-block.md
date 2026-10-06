@@ -13,18 +13,20 @@ description: 02 — 方块开发
 ### Block 子类规范
 
 - 方块类必须继承 `Block`（`net.minecraft.block.Block`）
-- 推荐使用 `Block.Properties.create(Material)` 创建属性
-- 右键交互重写 `onBlockActivated`（返回 `ActionResultType`）。1.15.2 没有 Mojmap `use`
+- 推荐使用 `Block.Properties.of(Material)` 创建属性
+- 右键交互重写 `use`（返回 `ActionResultType`）。official 构件实证（javap @`forge-1.15.2-31.2.50_mapped_official_1.15.2.jar`，2026-10-05）：`Block#use(BlockState, World, BlockPos, PlayerEntity, Hand, BlockRayTraceResult)` 在场。
+  - ❌ `onBlockActivated` 是 MCP 层名，本档实钉的 official 通道没有它
 
 ### Block.Properties 常用配置
 
 ```java
-Block.Properties.create(Material material)
-    .hardnessAndResistance(float hardness, float resistance)  // 硬度和抗爆性
+Block.Properties.of(Material material)
+    .strength(float hardness, float resistance)  // 硬度和抗爆性
     .harvestTool(ToolType type)                            // 需要特定工具
     .harvestLevel(int level)                               // 挖掘等级
     .noDrops()                                             // 无掉落
-    .notSolid()                                            // 非固体方块
+    .noOcclusion()                                         // 不遮挡相邻面（透明渲染）
+    .noCollission()                                        // 无碰撞（可穿行）——❌ notSolid 是 MCP 层名，official 构件无此方法
     .sound(SoundType type)                                 // 放置/破坏音效
 ```
 
@@ -66,7 +68,7 @@ IF 需要存储数据（箱子、熔炉等）
   → 需要注册 TileEntityType
 
 IF 需要可交互（右键打开 GUI、触发事件）
-  → 方块重写 onBlockActivated（返回 ActionResultType）
+  → 方块重写 use（返回 ActionResultType）
   → 或使用 Container + ITickableTileEntity 实现 GUI
 
 IF 需要流体
@@ -95,7 +97,8 @@ IF 泥土类
 
 IF 玻璃/冰/透明
   → Material.GLASS / Material.ICE
-  → 需要 .notSolid() 和 .doesNotBlockMovement()
+  → ✅ `.noOcclusion()`（不遮挡相邻面）；要可穿行再加 `.noCollission()`（152 official 构件实证 2026-10-05）
+  → ❌ `notSolid` / `doesNotBlockMovement` 是 MCP 层名，本包 official 构件没有这两个方法
 
 IF 植物
   → Material.PLANTS / Material.REPLACEABLE_PLANT
@@ -130,21 +133,23 @@ IF 只需要静态方块（装饰、完整方块）
 // blocks/MyBlock.java
 public class MyBlock extends Block {
     public MyBlock() {
-        super(Properties.create(Material.STONE)
-            .hardnessAndResistance(1.5f, 6.0f)
+        super(Properties.of(Material.STONE)
+            .strength(1.5f, 6.0f)
             .harvestTool(ToolType.PICKAXE)
             .harvestLevel(0)
         );
     }
 
+    // official 构件实证（javap @1.15.2 official jar，2026-10-05）：放置回调 = onPlace，
+    // 玩家破坏回调 = playerWillDestroy；❌ onBlockAdded / onBlockDestroyedByPlayer 是 MCP 层名
     @Override
-    public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {
+    public void onPlace(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {
         // 方块放置时的逻辑
     }
 
     @Override
-    public void onBlockDestroyedByPlayer(BlockState state, World world, BlockPos pos, BlockState newState) {
-        // 方块被破坏时的逻辑
+    public void playerWillDestroy(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+        // 方块被玩家破坏时的逻辑
     }
 }
 ```
@@ -171,7 +176,7 @@ event.getRegistry().register(
 // blocks/MyTileEntityBlock.java
 public class MyTileEntityBlock extends Block {
     public MyTileEntityBlock() {
-        super(Properties.create(Material.WOOD).notSolid());
+        super(Properties.of(Material.WOOD).noOcclusion());
     }
 
     @Override
@@ -212,4 +217,4 @@ public class MyTileEntity extends TileEntity {
 }
 ```
 
-> 注意：`read()` 中读取 NBT 是安全的，但你**不能**在 `read()` 中读取世界数据。如需基于世界的逻辑，在 `onLoad()` 或 `markDirty()` 中处理。
+> 注意：`read()` 中读取 NBT 是安全的，但你**不能**在 `read()` 中读取世界数据。如需基于世界的逻辑，在 `onLoad()` 或 `setChanged()` 后处理。

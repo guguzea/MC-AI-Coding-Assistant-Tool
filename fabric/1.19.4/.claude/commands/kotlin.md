@@ -6,6 +6,8 @@ version: "1.19.4"
 dependencies: []
 mappings: yarn
 ---
+<!-- external-apis: fabric-loom-gradle-dsl, jdk -->
+
 
 # Kotlin 语言支持（Fabric 1.19.4）
 
@@ -99,7 +101,7 @@ class ExampleMod : ModInitializer {
 // @PublishedApi 用于在 lambda 中安全访问私有字段
 class MyItem(settings: Settings) : Item(settings) {
     companion object {
-        val MY_ITEM: Item = Registry.register(
+        val MY_ITEM: Item = Registry.register(  // 示例名，本件自造，没有任何 MC 符号叫 MY_ITEM
             Registries.ITEM,
             Identifier(MOD_ID, "my_item"),
             MyItem(Settings())

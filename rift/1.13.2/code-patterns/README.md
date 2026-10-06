@@ -42,4 +42,4 @@ import org.dimdev.rift.listener.BlockAdder;
 - 一个 jar 里**只应有一份 `riftmod.json`**；要多个 mod 就各自打成独立 jar。
 - listener 接口可以**一个类同时实现多个**，Rift 会分别回调。
 - 方法名/参数**逐字照 `../knowledge/common/verified-api.md`**，那是 javap 真构件表。
-- MC 类型（`Minecraft` / `Registry` / `Block` / `Item` …）**本档未对真构件核**，改前先 `search_docs platform=rift version=1.13.2` 或对自备的 1.13.2 构件 `javap`。
+- MC 类型（`Minecraft` / `Registry` / `Block` / `Item` …）**2026-10-06 起已对真构件核**：本机有 `forgeBin-1.13.2-25.0.223_mapped_snapshot_20180921-1.13.jar`（与 rift scaffold 的 `snapshot_20180921` 同映射层），桥所用 `net.minecraft.*` 逐名 javap 43/43 在盘（结果记于 `../knowledge/common/bridge-api.md` §3/§4）。新增名字仍先 `search_docs platform=rift version=1.13.2` 或对该 jar `javap` 再落笔。

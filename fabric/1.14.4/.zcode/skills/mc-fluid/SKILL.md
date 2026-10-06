@@ -9,42 +9,82 @@ mappings: yarn
 
 # 流体开发（Fabric 1.14.4）
 
+## 本档更正（2026-10-05；证据 = 本档 yarn 映射 `data/fabric_1.14.4/mappings/yarn-mappings.sqlite` 与本档 Fabric API 真构件 roster）
+
+- 旧正文的 `new FabricFlowableFluid.Settings().slopeFindDistance(3).levelDecreasePerBlock(1).tickRate(5).supportsBoating(true)` 全部零命中：`FabricFlowableFluid` / `Settings` builder 链 / `slopeFindDistance` / `levelDecreasePerBlock` / `tickRate` / `supportsBoating` 在本档 Yarn 映射与 Fabric API 真构件里都不存在，是虚构写法，不可用。
+- 本档**没有** `FlowableFluid`（该名 1.16.5 起才进 Yarn）；本档流体包里可证的真类是 `net/minecraft/fluid/BaseFluid`（可流动流体基类，`getStill()` / `getFlowing()` 挂它身上）与 `WaterFluid` / `LavaFluid` 及嵌套 `WaterFluid$Still` / `WaterFluid$Flowing` / `LavaFluid$Still` / `LavaFluid$Flowing`、`Fluid` / `FluidState` / `Fluids` / `EmptyFluid`。
+- 旧正文用同一 id 连调两次 `Registry.register(Registry.FLUID, …)`（第二次还注册第一次的返回值）：重复注册即报错路径；流体只注册一次，「流体对应的方块」是另一条 BLOCK 注册，不是再注册一次 FLUID。
+
 ## 快速开始
 
 ```java
-// 1. 创建流体
-private static final Fluid MY_FLUID = Registry.register(
+// 1. 自定义可流动流体：继承本档 Yarn 真类 net.minecraft.fluid.BaseFluid（本档没有 FlowableFluid，别拿 1.16+ 名字）
+//    getStill()/getFlowing() 为本档映射真名（返回 Fluid）；
+//    该基类的抽象成员全集与构造参数本档映射未核实 ⇒ 落地前
+//    get_minecraft_source(version="1.14.4", className="net.minecraft.fluid.BaseFluid") 反编译补齐，禁止凭记忆填
+public abstract class MyFluid extends BaseFluid {
+
+    @Override
+    public Fluid getStill() { return MY_STILL; }
+
+    @Override
+    public Fluid getFlowing() { return MY_FLOWING; }
+    // TODO(未核实): 其余抽象 override（方块状态/流体状态映射一族）本档未证出，不得按 1.16+ 形状直接照抄
+
+    public static class Still extends MyFluid { }
+
+    public static class Flowing extends MyFluid { }
+}
+
+// 2. 两种形态各注册一次。本档注册入口 = net.minecraft.util.registry.Registry（Registries 是 1.19+ 拼写，本档没有）；
+//    本档没有 Identifier.of（0 命中），用 new Identifier(modId, path)
+public static final Fluid MY_STILL = Registry.register(
     Registry.FLUID,
     new Identifier(MOD_ID, "my_fluid"),
-    new FabricFlowableFluid.Settings()
-        .slopeFindDistance(3)
-        .levelDecreasePerBlock(1)
-        .tickRate(5)
-        .supportsBoating(true)
+    new MyFluid.Still()
 );
 
-// 2. 注册方块状态映射
-Registry.register(
+public static final Fluid MY_FLOWING = Registry.register(
     Registry.FLUID,
-    new Identifier(MOD_ID, "my_fluid"),
-    MY_FLUID
+    new Identifier(MOD_ID, "flowing_my_fluid"),
+    new MyFluid.Flowing()
 );
+
+// 3. 流体要进世界还须注册对应方块（见 mc-block）——那是 BLOCK 注册，不是再注册一次 FLUID
 ```
 
 ## Decision: 选择流体类型
 
 ```
 IF 可流动的液体
-  → FabricFlowableFluid
+  → 继承本档真类 BaseFluid（FabricFlowableFluid 本档零命中，禁止当注册方式写）
 
-IF 静态流体（岩浆等）
-  → StillFluid
+IF 需要「静止/流动」成对形态
+  → 照原版家族各写一个子类（本档没有名为 StillFluid 的独立类，零命中）
+
+IF 流体要出现在世界里
+  → 还要注册对应方块（见 mc-block），流体本身只注册一次
+```
+
+## 渲染（客户端，本档 Fabric API 真构件）
+
+```java
+// net.fabricmc.fabric.api.client.render.fluid.v1 —— FluidRenderHandler / FluidRenderHandlerRegistry
+// 本档 FAPI 构件的 register 只有单流体签名：register(Fluid, FluidRenderHandler)
+FluidRenderHandlerRegistry.INSTANCE.register(MY_STILL, new MyFluidRenderHandler());
+FluidRenderHandlerRegistry.INSTANCE.register(MY_FLOWING, new MyFluidRenderHandler());
+
+class MyFluidRenderHandler implements FluidRenderHandler {
+    // TODO(未核实): 接口方法本档摘要类行（loader-api-summaries/1.14.4-fabric-api.json）列尽 2 个 —— getFluidSprites → class_1058[]（参数 class_1920 view / class_2338 pos / class_3610 state）、getFluidColor（同参）→ int（default）；类型只到 intermediary 形、Yarn 可读类型名本档未证 ⇒ 实现体禁止凭记忆补
+}
 ```
 
 ## 常见错误
 
-- ❌忘记注册 Fluid 和对应的方块 — 流体不显示
-- ❌Fluid 和 Block 使用不同 ID — 状态映射失败
+- ❌ 把 `FabricFlowableFluid` / `slopeFindDistance` / `tickRate` 那组 builder 链当注册方式 — 本档 Yarn 与本档 Fabric API 真构件零命中，不可写
+- ❌ 同一 id 调两次 `Registry.register(Registry.FLUID, …)` — 重复注册是报错路径，流体只注册一次
+- ❌ 忘记注册 Fluid 和对应的方块 — 流体不显示
+- ❌ Fluid 和 Block 使用不同 ID — 状态映射失败
 
 ## 扩展点
 
@@ -52,3 +92,4 @@ IF 静态流体（岩浆等）
 |-----------|---------|
 | `mc-registry` | 流体通过 Registry.register() 注册 |
 | `mc-block` | 流体需要对应的方块 |
+| `mc-item` | 通常再配一个桶物品（本档映射真类 BucketItem） |

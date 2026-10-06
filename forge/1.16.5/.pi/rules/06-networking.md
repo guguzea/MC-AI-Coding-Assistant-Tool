@@ -85,12 +85,14 @@ IF 同步大量数据
 ```
 
 - `INSTANCE.sendToServer(msg)` — 客户端发送给服务端
-- `INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), msg)` — 指定 `ServerPlayer`
+- `INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), msg)` — 指定 `ServerPlayerEntity`
 - `INSTANCE.send(PacketDistributor.ALL.noArg(), msg)` — 全服广播
 - `INSTANCE.send(PacketDistributor.TRACKING_ENTITY.with(() -> entity), msg)` — 追踪该实体的玩家
 - `INSTANCE.sendTo(msg, networkManager, NetworkDirection)` — 低层重载，一般用 `PacketDistributor`
 
-**不要** `sendTo(player, msg)` / `sendToAll(msg)`（1.12 `SimpleNetworkWrapper`）。
+（以上四条为 165 official 构件实证正解，javap 2026-10-05）
+**不要** 1.12 的单参 sendTo / sendToAll 形态（那是 `SimpleNetworkWrapper` 的签名）。
+❌ `ServerPlayer` 是 1.17+ 改名；165 本包玩家类叫 `ServerPlayerEntity`（构件实证 2026-10-05）。
 
 ---
 
@@ -114,7 +116,7 @@ public class MyMessage {
 
     public void handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
-            ServerPlayer player = ctx.get().getSender();
+            ServerPlayerEntity player = ctx.get().getSender(); // ❌ ServerPlayer = 1.17+ 名（165 official 构件实证 2026-10-05）
             if (player != null) {
                 // 服务端处理逻辑
             }
@@ -147,7 +149,7 @@ public class NetworkHandler {
         );
     }
 
-    public static void sendTo(ServerPlayer player, MyMessage message) {
+    public static void sendTo(ServerPlayerEntity player, MyMessage message) {
         INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), message);
     }
 

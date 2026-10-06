@@ -111,7 +111,7 @@ public void validate() {
 
 ---
 
-### ❌ 忘记注册 TileEntityType
+### ❌ 忘记注册 TileEntity
 
 ```java
 // 错误：方块实现了 IHasModel 但没有注册 TileEntity
@@ -220,21 +220,23 @@ public void init(FMLInitializationEvent event) {
 ### ❌ Capability 未检查 null
 
 ```java
-// 错误
-player.getCapability(MY_CAP).ifPresent(cap -> {
-    cap.setData(someData); // 如果 Capability 未附加，可能出问题
-});
+// 错误（构件 javap 实证 2026-10-06：1.12.2 的 ICapabilityProvider 只有双参 getCapability(Capability, EnumFacing)，
+// 未附加时直接返回 null；`.ifPresent(...)` 是 1.13+ 的 LazyOptional 形，本档没有）
+IMyCapability cap = player.getCapability(MY_CAP, null);
+cap.setData(someData); // Capability 未附加 → NPE
 ```
 
-**错误症状**：数据写入后丢失，或逻辑不执行
+**错误症状**：数据写入后丢失，或直接 NPE 崩溃
 
 **正确方案**：
 
 ```java
-// 正确：主动检查 Capability 是否存在
-if (player.hasCapability(MY_CAP)) {
-    IMyCapability cap = player.getCapability(MY_CAP);
-    cap.setData(someData);
+// 正确：本档 getCapability 返回裸 T，先判 hasCapability 再判 null
+if (player.hasCapability(MY_CAP, null)) {
+    IMyCapability cap = player.getCapability(MY_CAP, null);
+    if (cap != null) {
+        cap.setData(someData);
+    }
 }
 ```
 

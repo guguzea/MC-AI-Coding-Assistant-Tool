@@ -56,9 +56,9 @@ Rift-MDK 另支持 listener 对象形式：`{"class":"...","side":"client","prio
   ⚠️ 本 jar **没有** `InstanceOfServerTickable`（全 jar 扫该名 = 0 命中）—— 若别处提到它，一律以 `ServerTickable` 为准。
 - ✅ jar 自带的 `riftmod.json` schema = `{id, name, authors[], listeners[]}`，与本仓桥模板生成的 `riftmod.json` **同形**（逐字对照过）。
 - jar 内 `profile.json`：`"inheritsFrom": "1.13"`、`releaseTime 2018-07-18`、`arguments.game = ["--tweakClass","org.dimdev.riftloader.launch.RiftLoaderClientTweaker"]`
-  ⇒ **官方标称 MC 1.13**；**1.13.2 能否真跑仍未核实**（要真机）。
+  ⇒ **官方标称 MC 1.13**（指**原生线**）。1.13.2 真机结果见本页底部「2026-10-05 真机更正」第 3 条：客户端起得来、21 个 hook mixin target not found ⇒ listener 不派发；**1.13.1/1.13.2 的支持线 = Chocohead 社区分支 `newerer`/`newerest`**（2026-10-06 用户裁定 + GitHub API 同日核，详 `bridge-api.md` §3.3 第 3 条）。
 - **编译验证已升级**：把本仓生成的 rift 桥（`generate_playtest_driver --platform=rift --version=1.13.2 --driverMode=external_bridge`）
-  对**这只真 jar**（Rift 侧走真构件，MC 侧仍替身）JDK 8 `javac -encoding UTF-8` ⇒ `RIFT_REALJAR_EXIT=0`，产出 5 个 class。
+  对**这只真 jar**（Rift 侧走真构件；MC 侧当时仍替身 —— **2026-10-06 已升级为真构件**：`forgeBin-1.13.2-25.0.223_mapped_snapshot_20180921-1.13.jar`，桥用名字逐名 javap 43/43 在盘）JDK 8 `javac -encoding UTF-8` ⇒ `RIFT_REALJAR_EXIT=0`，产出 5 个 class。
 
 **版本错位（仍成立，但已不构成阻塞）**：本页 wiki 记的是 `1.0.3-45`，JitPack 上只有 `1.0.4-*`。
 上表的 javap 比对已确认 **`1.0.4-106` 的 listener API 与本表逐字一致**，因此对本仓桥模板可当等价替换使用；
@@ -77,7 +77,9 @@ Rift-MDK 另支持 listener 对象形式：`{"class":"...","side":"client","prio
    坐标只能从 JitPack 取：`com.github.DimensionalDevelopment:ForgeGradle:70d441a286`。
 3. **本页「Java 8 + `minecraft { version = '1.13' }`」是对的、且必须保留**：2026-10-05 实测 Rift 在 **1.13.2** 上
    **客户端能起来但 21 个 hook mixin 全部 target not found**（notch 名 `cfi`/`cfl`/`bna`/`bjl` 属 1.13）
-   ⇒ **listener 完全不派发**。且**不存在支持 1.13.2 的更新版**（JitPack 上 ok 的最高就是 `1.0.4-106`，
-   `master-dfc75ff725-1` = Error，上游已 archived）。
+   ⇒ **listener 完全不派发**。**更正（2026-10-06）**：原文「不存在支持 1.13.2 的更新版」只查了**原生线**即判死，被用户裁定推翻：
+   支持线在 Chocohead 仓库分支 `newerer`（`build.gradle` 自标 `1.13.1`）/ `newerest`（自标 `1.13.2`），GitHub API 同日核。
+   **原生线本身确无更新件**（JitPack 上 ok 的最高就是 `1.0.4-106`，`master-dfc75ff725-1` = Error，上游已 archived）；
+   `newerest` 的 JitPack 分支件 2026-10-06 呈 Building/超时、未取到成品 ⇒ 本档 scaffold 仍是「106 能启动但不派发」，要真跑得自编译 `newerest`。
 
 完整配方与六个坑见 `../../code-patterns/gradle-recipe.md`。

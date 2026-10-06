@@ -34,7 +34,7 @@ if (!world.isRemote && player instanceof EntityPlayerMP) {
 
 客户端：`ModLoadingContext.registerExtensionPoint(ExtensionPoint.GUIFACTORY, ...)` 返回 `GuiContainer`。
 
-旧 `IGuiHandler` 仍是 `getServerGuiElement(int, EntityPlayer, World, int, int, int)`。不要编 `createServerGui(..., PacketBuffer)`。
+旧 `IGuiHandler` 接口（`getServerGuiElement(int, EntityPlayer, World, int, int, int)`）虽在构件里，但**本 build 没有注册入口**：全 jar 字节扫零命中 `registerGuiHandler`、`NetworkRegistry` 无 `INSTANCE`、`EntityPlayer` 无 `openGui`（构件 javap 实证 2026-10-06）⇒ 走孤儿接口等于 GUI 打不开，只许用上面的 `NetworkHooks.openGui` 路径。不要编 `createServerGui(..., PacketBuffer)`。
 
 容器屏继承 **`GuiContainer`**，实现 `drawGuiContainerBackgroundLayer`。不要把该方法写在裸 `GuiScreen` 上。
 

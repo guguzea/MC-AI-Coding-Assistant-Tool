@@ -89,15 +89,15 @@ public class MyRecipeSerializer implements RecipeSerializer<MyRecipe> {
 
     @Override
     public MyRecipe fromJson(ResourceLocation id, JsonObject json) {
-        Ingredient input = Ingredient.fromJson(JsonOps.INSTANCE, json.get("input"));
-        ItemStack output = CraftingHelper.getItemStack(JsonOps.INSTANCE, json.get("output"), true);
+        Ingredient input = Ingredient.fromJson(json.get("input"));   // javap 实证 2026-10-05：182 的 fromJson 收单参 JsonElement，(JsonOps, ...) 形态是 1.20.5+ 写法
+        ItemStack output = CraftingHelper.getItemStack(GsonHelper.getAsJsonObject(json, "output"), true);   // 同上：182 的 CraftingHelper.getItemStack = (JsonObject, boolean)
         int time = GsonHelper.getAsInt(json, "processingTime", 200);
         return new MyRecipe(id, input, output, time);
     }
 
     @Override
     public MyRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buf) {
-        Ingredient input = Ingredient.STREAM_CODEC.fromNetwork(buf);
+        Ingredient input = Ingredient.fromNetwork(buf);   // javap 实证：本档 Ingredient 无 STREAM_CODEC（1.20.5+ 才有）
         ItemStack output = buf.readItem();
         int time = buf.readInt();
         return new MyRecipe(id, input, output, time);

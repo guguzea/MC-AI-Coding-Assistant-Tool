@@ -72,7 +72,9 @@ public class MyContainer extends Container {
 ```java
 public class MyBlock extends Block {
     @Override
-    public ActionResult onBlockActivated(BlockState state, World world, BlockPos pos,
+    // 构件实证（2026-10-05 javap @1.16.5 official 映射 jar）：方法 = AbstractBlock#use 返回 ActionResultType；
+    // ❌ onBlockActivated（MCP 层名）与裸 ActionResult（缺泛型参且返回类型错）本包编不过
+    public ActionResultType use(BlockState state, World world, BlockPos pos,
             PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         if (!world.isClientSide) {
             // 服务端打开 GUI

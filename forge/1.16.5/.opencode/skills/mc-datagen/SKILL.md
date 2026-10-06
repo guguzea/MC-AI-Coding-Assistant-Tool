@@ -1,7 +1,7 @@
 ---
 name: mc-datagen
 description: Minecraft Forge 数据生成器。GatherDataEvent、IDataProvider、RecipeProvider、LootTableProvider、LanguageProvider。触发词：DataGen、DataGenerator、LootTables、Recipes、BlockStates、TagProvider、AdvancementProvider、LanguageProvider
-mappings: mcp
+mappings: official
 ---
 
 # 数据生成器（Forge 1.16.5）
@@ -65,20 +65,17 @@ public class DataGenerators {
 
 ```java
 // datagen/ModRecipes.java
-// TODO(未核实：Items.DIAMOND 未在 forge 1.16.5 语料命中，需 search_forge_docs 复核或反编译)
-// TODO(未核实：Items.STICK 未在 forge 1.16.5 语料命中，需 search_forge_docs 复核或反编译)
-// TODO(未核实：Items.GOLD_INGOT 未在 forge 1.16.5 语料命中，需 search_forge_docs 复核或反编译)
-// TODO(未核实：Items.COBBLESTONE 未在 forge 1.16.5 语料命中，需 search_forge_docs 复核或反编译)
-// TODO(未核实：Ingredient.fromItems 未在 forge 1.16.5 语料命中，需 search_forge_docs 复核或反编译)
-// 本段只有 RecipeProvider 与要覆盖的 #buildShapelessRecipes 有语料出处（datagen_intro.md:44）；
-// 构建器方法名与 vanilla 物品常量本档语料未收录 ⇒ 下面是结构壳，编译前须逐名核实，勿当已核实签名照抄。
+// 构件实证（2026-10-05 javap 对 1.16.5-36.2.34_mapped_official_1.16.5.jar 逐名点名，覆盖旧 TODO）：
+// Items.DIAMOND/STICK/GOLD_INGOT/COBBLESTONE 在 net.minecraft.item.Items；Ingredient.of(IItemProvider...) 在构件（❌ fromItems 是 1.14 MCP 名）；
+// buildShapelessRecipes(Consumer<IFinishedRecipe>)/shaped/pattern/define/unlockedBy/has(IItemProvider)/save 均逐字命中；
+// 熔炉 = CookingRecipeBuilder.smelting(Ingredient, IItemProvider, float, int)（❌ SimpleCookingRecipeBuilder 为 1.19.4+ 类名，本包构件没有）
 public class ModRecipeProvider extends RecipeProvider {
     public ModRecipeProvider(DataGenerator generator) {
         super(generator);
     }
 
     @Override
-    protected void buildShapelessRecipes(Consumer<FinishedRecipe> consumer) {
+    protected void buildShapelessRecipes(Consumer<IFinishedRecipe> consumer) {
         ShapedRecipeBuilder.shaped(ModItems.MY_ITEM.get())
             .pattern(" X ")
             .pattern(" X ")
@@ -94,7 +91,7 @@ public class ModRecipeProvider extends RecipeProvider {
             .unlockedBy("has_gold", has(Items.GOLD_INGOT))
             .save(consumer);
 
-        SimpleCookingRecipeBuilder.smelting(Ingredient.fromItems(Items.COBBLESTONE), Items.STONE, 0.1f, 200)
+        CookingRecipeBuilder.smelting(Ingredient.of(Items.COBBLESTONE), Items.STONE, 0.1f, 200)
             .unlockedBy("has_cobblestone", has(Items.COBBLESTONE))
             .save(consumer);
     }
@@ -106,11 +103,10 @@ public class ModRecipeProvider extends RecipeProvider {
 `BlockStateProvider` 构造：`DataGenerator`、`modId`、`ExistingFileHelper`。
 
 ```java
-// TODO(未核实：simpleBlock 未在 forge 1.16.5 语料命中，需 search_forge_docs 复核或反编译)
-// TODO(未核实：cubeAll 未在 forge 1.16.5 语料命中，需 search_forge_docs 复核或反编译)
-// TODO(未核实：modLoc 未在 forge 1.16.5 语料命中，需 search_forge_docs 复核或反编译)
-// 本档语料只背书 BlockStateProvider#registerStatesAndModels（datagen_intro.md:36）与可取的 #models() / #itemModels()
-// 实例（datagen_modelproviders.md:21）；具体建模 helper 名未收录 ⇒ 下面是结构壳，勿当已核实签名照抄。
+// 构件实证（2026-10-05 javap @1.16.5-36.2.34_mapped_official_1.16.5.jar）：
+// BlockStateProvider.simpleBlock(Block)/simpleBlock(Block, ModelFile) 在构件；models() 返回 BlockModelProvider，
+// 其基类 ModelProvider<T> 声明 cubeAll(String, ResourceLocation)/withExistingParent/modLoc/mcLoc 全部逐字命中。
+// 旧 TODO「未在语料命中」已过时（当时只有 docs 语料、没有构件），现按构件点名改写。
 public class ModBlockStatesProvider extends BlockStateProvider {
     public ModBlockStatesProvider(DataGenerator generator, ExistingFileHelper efh) {
         super(generator, MOD_ID, efh);
@@ -128,10 +124,8 @@ public class ModBlockStatesProvider extends BlockStateProvider {
 ## 物品模型（来自方块）
 
 ```java
-// TODO(未核实：withExistingParent 未在 forge 1.16.5 语料命中，需 search_forge_docs 复核或反编译)
-// TODO(未核实：modLoc 未在 forge 1.16.5 语料命中，需 search_forge_docs 复核或反编译)
-// 本档语料只背书 ItemModelProvider 及要覆盖的 #registerModels / #generateModels
-// （datagen_intro.md:35、datagen_modelproviders.md:19）；建模 helper 名未收录 ⇒ 结构壳，须逐名核实。
+// 构件实证（2026-10-05 同上 jar）：ItemModelProvider 在构件（extends ModelProvider<ItemModelBuilder>，
+// 自身仅声明 getName，withExistingParent/modLoc 由基类 ModelProvider<T> 继承而来，逐字点名）。
 public class ModItemModelsProvider extends ItemModelProvider {
     public ModItemModelsProvider(DataGenerator generator, ExistingFileHelper helper) {
         super(generator, MOD_ID, helper);

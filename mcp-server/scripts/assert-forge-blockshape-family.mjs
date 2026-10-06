@@ -81,12 +81,11 @@ const KNOWN_LEGIT = [
     id: 'block-noarg',
     why: '反模式**标题**：教的是「未注册」缺陷，不是无参构造；正文示例是 `new Block(...)`',
   },
-  {
-    rel: 'forge/1.16.5/AGENTS.md',
-    line: 25,
-    id: 'archives-name-dsl',
-    why: '钉值矛盾档案行：逐字记录 2026-09-11 的修复（`base { archivesName }` → 顶层 `archivesBaseName`）',
-  },
+  // 重签（2026-10-05）：sweep126 把 forge/1.16.5/AGENTS.md:25 的 Gradle 行重写为
+  // 「6.9.4 + FG[4.1,4.2) 真机 BUILD SUCCESSFUL（buildVerified:true）」，原逐字记录的
+  // `base { archivesName }` → `archivesBaseName` 修复说明随重写移除（根因文档仍在
+  // knowledge/antipatterns/gradle.md:97/199/204 三条合法提及中，继续受白名单保护），
+  // 该行不再命中 archives-name-dsl，死条目删除。
   {
     rel: 'forge/1.16.5/knowledge/antipatterns/gradle.md',
     line: 97,

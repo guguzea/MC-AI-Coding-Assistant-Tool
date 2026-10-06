@@ -50,7 +50,7 @@ if (FMLEnvironment.dist == Dist.CLIENT) {
 Player interacts
       │
       ▼
-Block#onBlockActivated (Server) ──► creates IContainerProvider ──► openGui (Server)
+Block#use (Server) ──► creates IContainerProvider ──► openGui (Server)
                                                                     │
                                                                     ▼
                                                           Container + ContainerScreen
@@ -137,8 +137,10 @@ int value = this.dataSlots.get(0);
 ```java
 public class MyBlock extends Block {
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos,
-            PlayerEntity player, Hand hand, BlockRayTraceResult hit) { // 类名见语料 blocks_interaction.md:32
+    // 方法名构件实证（javap net.minecraft.block.AbstractBlock，1.16.5-36.2.34_mapped_official_1.16.5，2026-10-05）：
+    // 本包 = use(...) 返回 ActionResultType；❌ onBlockActivated 是 MCP/1.14 层名，official 构件没有该声明。类名见语料 blocks_interaction.md:32
+    public ActionResultType use(BlockState state, World world, BlockPos pos,
+            PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         if (!world.isClientSide) {
             // Server side: open the container
             NetworkHooks.openGui(
@@ -150,7 +152,7 @@ public class MyBlock extends Block {
                 pos
             );
         }
-        return ActionResultType.sidedSuccess(world.isClientSide); // TODO(未核实)：sidedSuccess 本档语料 0 命中，成员名以 IDE 为准
+        return ActionResultType.sidedSuccess(world.isClientSide); // official 构件实证（javap @1.16.5-36.2.34_mapped_official，2026-10-05）：sidedSuccess(boolean) 在场
     }
 }
 ```

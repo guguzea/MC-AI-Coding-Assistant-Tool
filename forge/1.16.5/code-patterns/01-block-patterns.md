@@ -31,19 +31,21 @@ public static final RegistryObject<Item> STONE_BLOCK_ITEM = ITEMS.register("ston
 ## 带变体的方块（Faced / Horizontal / Axis）
 
 ```java
+// official 构件实证（javap @1.16.5-36.2.34_mapped_official，2026-10-05）：状态容器类 = StateContainer（❌ StateDefinition
+// 是 1.17+ 名）；BlockState 属性读写 = getValue/setValue（❌ get/with 是 MCP 层名）；setBlock / hasNeighborSignal /
+// defaultBlockState / getHorizontalDirection / getDirection 为 official 名。
 // BlockState 定义
 @Override
-protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
     builder.add(FACING, POWERED);
 }
 
 // getStateForPlacement 返回初始状态
 @Override
-public BlockState getStateForPlacement(PlayerEntity player, Hand hand,
-        BlockRayTraceResult result) {
-    return this.getDefaultState()
-        .with(FACING, player.getHorizontalFacing().getOpposite())
-        .with(POWERED, false);
+public BlockState getStateForPlacement(BlockItemUseContext context) {
+    return this.defaultBlockState()
+        .setValue(FACING, context.getHorizontalDirection().getOpposite())
+        .setValue(POWERED, false);
 }
 
 // 放置时更新临接方块
@@ -52,9 +54,9 @@ public void neighborChanged(BlockState state, World world, BlockPos pos,
         Block block, BlockPos fromPos, boolean isMoving) {
     super.neighborChanged(state, world, pos, block, fromPos, isMoving);
     if (!world.isClientSide) {
-        boolean powered = world.isBlockPowered(pos);
-        if (powered != state.get(POWERED)) {
-            world.setBlockState(pos, state.with(POWERED, powered), 2);
+        boolean powered = world.hasNeighborSignal(pos);
+        if (powered != state.getValue(POWERED)) {
+            world.setBlock(pos, state.setValue(POWERED, powered), 2);
         }
     }
 }

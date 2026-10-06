@@ -94,7 +94,7 @@ public void read(CompoundNBT nbt) {
 
 **错误症状**：`NullPointerException`，游戏崩溃在 `TileEntity.read`
 
-**正确方案**：在 `markDirty()` 或单独的同步方法中处理需要世界数据的逻辑
+**正确方案**：在 `setChanged()` 或单独的同步方法中处理需要世界数据的逻辑
 
 ---
 
@@ -137,7 +137,7 @@ public void invalidate() {
 @SubscribeEvent
 public static void onMessage(MyMessage message, Supplier<NetworkEvent.Context> ctx) {
     ServerPlayerEntity player = ctx.get().getSender();
-    player.getEntityWorld().setBlockState(player.getPosition(), Blocks.AIR.getDefaultState()); // ❌ 不安全
+    player.getCommandSenderWorld().setBlock(player.getCommandSenderBlockPosition(), Blocks.AIR.defaultBlockState(), 2); // ❌ 不安全
 }
 ```
 
@@ -151,7 +151,7 @@ public static void onMessage(MyMessage message, Supplier<NetworkEvent.Context> c
     ctx.get().enqueueWork(() -> {
         ServerPlayerEntity player = ctx.get().getSender();
         if (player != null) {
-            player.getEntityWorld().setBlockState(player.getPosition(), Blocks.AIR.getDefaultState());
+            player.getCommandSenderWorld().setBlock(player.getCommandSenderBlockPosition(), Blocks.AIR.defaultBlockState(), 2);
         }
     });
     ctx.get().setPacketHandled(true);
@@ -235,7 +235,7 @@ public void onServerTick(TickEvent.ServerTickEvent event) {
 // 错误（客户端代码）
 @SubscribeEvent
 public void onRender(RenderGameOverlayEvent.Post event) {
-    world.setBlockState(pos, Blocks.DIRT.getDefaultState()); // ❌ 禁止在渲染线程修改世界
+    world.setBlock(pos, Blocks.DIRT.defaultBlockState(), 3); // ❌ 禁止在渲染线程修改世界
 }
 ```
 
@@ -261,7 +261,7 @@ public void onRender(RenderGameOverlayEvent.Post event) {
 // 错误
 @SubscribeEvent
 public static void onClientSetup(FMLClientSetupEvent event) {
-    world.setBlockState(pos, Blocks.DIRT.getDefaultState()); // ❌ 禁止在客户端修改世界数据
+    world.setBlock(pos, Blocks.DIRT.defaultBlockState(), 3); // ❌ 禁止在客户端修改世界数据
 }
 ```
 

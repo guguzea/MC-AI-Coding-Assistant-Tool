@@ -50,7 +50,7 @@ IF 使用配方数据
   → 手写 JSON 到 data/{modid}/recipes/
 
 IF 在代码中动态创建配方
-  → 仅用于自定义逻辑；不要编造 offerShapedRecipe
+  → 仅用于自定义逻辑；禁止编造 offerShapedRecipe（本档 fabric-api 与 vanilla 映射里都没有这个方法名）
 ```
 
 ## 扩展点

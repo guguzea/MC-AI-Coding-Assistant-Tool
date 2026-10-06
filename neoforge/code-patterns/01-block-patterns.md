@@ -22,11 +22,21 @@ public static final DeferredHolder<Block, Block> STONE_BLOCK = BLOCKS.register("
 );
 
 // ItemBlock
+// 1.20.4 实测（出处：neoforge-20.4.251-merged.jar javap 2026-10-06）：
+//   Item$Properties 没有 tab() 方法，CreativeModeTab 也没有 TAB_* 常量（旧写法编译不过）。
+//   创造模式入口改订阅 BuildCreativeModeTabContentsEvent（该类在 NeoForge 侧存在，见下）。
 public static final DeferredHolder<Item, Item> STONE_BLOCK_ITEM = ITEMS.register("stone_block",
-    () -> new BlockItem(STONE_BLOCK.get(), new Item.Properties()
-        .tab(CreativeModeTab.TAB_BUILDING_BLOCKS)
-    )
+    () -> new BlockItem(STONE_BLOCK.get(), new Item.Properties())
 );
+
+// 把方块/物品加入创造模式标签页（mod 总线事件）：
+@SubscribeEvent
+public static void addTabContents(BuildCreativeModeTabContentsEvent event) {
+    if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
+        event.accept(STONE_BLOCK_ITEM.get());   // 事件本身 implements CreativeModeTab$Output
+    }
+}
+// getTabKey() / accept(ItemLike) / CreativeModeTabs.BUILDING_BLOCKS（ResourceKey 常量）均同一 javap 逐字核实
 ```
 
 ## 带变体的方块（Faced / Horizontal / Axis）

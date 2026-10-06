@@ -339,13 +339,26 @@ if (census.packsChecked === 0) {
 //   （那是拿同族名字推包名推错了 ⇒ 假「找不到符号」）⇒ 最终形态 = 改成 ⚠️ 说明、**不判死任何符号**，
 //   1.14.4 判死分布回到基线 1、banned 60 → 58。符号台账已按门指示重生成（18 档 / 58 符号）。
 // conflicts 仍为 **0**：这才是本门的实质判据（规则 ❌ 写法与同档 scaffold 代码无冲突）。
+// 2026-10-05 重钉（第二次，152/165 official 构件定案轮）：上轮写进 rules 的 ❌ 构件实证披露把
+// 整个示例块纳入 ❌ 管辖，造成一批「正版 API 被假判死」（152 的 NetworkHooks.openGui/openGui/
+// SimpleNamedContainerProvider/TranslationTextComponent/noCollission，165 的 INSTANCE.sendTo/
+// PacketDistributor.TRACKING_ENTITY.with + IArmorMaterial 接口 6 个正版方法名
+// （getDurabilityForSlot/getDefenseForSlot/getEquipSound/getName/getToughness/getKnockbackResistance）
+// ——共 13 个，banned 一度 59→78）。修法 = 把 ❌ 从示例块内挪到示例块之后独立一行，
+// 或在示例块内改标 ✅（假判死的 13 个因此脱离 ❌ 管辖、不再被抽取）；同时按构件/sources jar
+// 实证**补了 8 个真判死**（152：onBlockActivated/notSolid/doesNotBlockMovement；
+// 165：ServerPlayer/SimpleCookingRecipeBuilder/campfireCooking/getDurability/getDefenseForType）。
+// 净结果 banned 67 = 59 + 8 真判死。另 152 三个 setRegistryName 族符号因披露拆行锚点 159/160→164/165。
+// crossLines 428→455、contextualSkipped 3029→3054、verdictSkipped 2260→2341、歧义丢弃 160（未变）。
 const LEDGER = {
   packsChecked: 47,
   rulesFiles: 447,
-  crossLines: 426,
-  contextualSkipped: 3029,
-  verdictSkipped: 2262,
-  banned: 58,
+  // 2026-10-06 重钉（非forge javap 普查收口轮）：contextualSkipped 3054→3056（+2 场合型丢弃行，
+  // 来自本会话 rift/forge 规则 ❌ 实证行改写与 neoforge loose 修复轮；判死分布与 conflicts 0 不变）。
+  crossLines: 455,
+  contextualSkipped: 3056,
+  verdictSkipped: 2341,
+  banned: 67,
   conflicts: 0,
 };
 
@@ -365,8 +378,13 @@ const LEDGER_PER_PACK_BANNED = {
   "fabric/1.21.11": 6,
   "fabric/26.1.2": 4,
   "forge/1.14.4": 3,
-  "forge/1.15.2": 4,
-  "forge/1.16.5": 4,
+  // 2026-10-05 重钉（第二次）：5→8（+ onBlockActivated @02-block.mdc:14、notSolid/doesNotBlockMovement @02-block.mdc:97，
+  // 均 152 official 构件证无；setRegistryName 族锚点 159/160→164/165）
+  "forge/1.15.2": 8,
+  // 2026-10-05 重钉（第二次）：4→9（+ ServerPlayer @06-networking.mdc:91、SimpleCookingRecipeBuilder/
+  // campfireCooking @07-datagen.mdc:66、getDurability/getDefenseForType @03-item.mdc:204，
+  // 均 mapped_official jar javap 证无；13 个假判死已脱离 ❌ 管辖救回）
+  "forge/1.16.5": 9,
   "forge/1.17.1": 4,
   "forge/1.18.2": 3,
   "forge/1.19.4": 4,

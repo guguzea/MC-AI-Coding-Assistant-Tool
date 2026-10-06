@@ -1,7 +1,7 @@
 # listener 模式（Rift 的「事件系统」）
 
 > **本文件的 Rift 侧签名全部来自 `javap` 对真构件 `Rift-1.0.4-106-dev.jar`（sha256 `5B5E333D…D5463`）**，逐条对照见 `../knowledge/common/verified-api.md`。
-> **MC 侧类型未对真构件核**（本机无 1.13.2 构件）⇒ 凡是 `net.minecraft.*` 都标了 `TODO(未核实)`。
+> **MC 侧类型 2026-10-06 起已对真构件核**：本机有 `forgeBin-1.13.2-25.0.223_mapped_snapshot_20180921-1.13.jar`（与 rift scaffold 的 `snapshot_20180921` 同映射层），桥所用 `net.minecraft.*` 逐名 javap 43/43 在盘（含 `Minecraft.getInstance()` = `public static`）。正文里写于本轮之前的 `TODO(未核实)` 标记是历史痕迹：**类存在性腿已闭合**，签名细节仍以 `joined.tsrg`/`methods.csv` + 该 jar 的 javap 为准；新增名字照旧先核再写。
 
 ## 1. 机制
 
@@ -25,8 +25,8 @@ public class ExampleClient implements ClientTickable {
     public void clientTick() {
         // ClientTickable#clientTick() 是**无参**（javap: public abstract void clientTick();）
         // ⇒ 要拿客户端实例必须自己取单例
-        // TODO(未核实)：1.13.2 的单例访问式（forge_1.13.2 映射里是 Minecraft.getInstance()，
-        //              本仓 1.13.2 extracted 数据不含修饰符 ⇒ static 性证不出，见 verified-api.md §2）
+        // 单例访问式已由真构件核（2026-10-06）：import net.minecraft.client.Minecraft;
+        // 然后 Minecraft mc = Minecraft.getInstance();  // javap = public static Minecraft getInstance()（旧「static 性证不出」作废）
     }
 }
 ```
@@ -82,7 +82,7 @@ public class ExampleMod implements ClientTickable, ItemAdder, BlockAdder {
 `registerEnchantments()` / `registerSounds()` / `registerParticles()` / `registerMobEffects()` /
 `registerFluids()` / `registerMessages(RegistryNamespaced<ResourceLocation, Class<? extends Message>>)` /
 `registerBiomes()` / `registerStructureNames()` / `registerDispenserBehaviors()` /
-`registerArgumentTypes()` / `registerBiomes()` / `afterVanillaBootstrap()` 等，完整 39 个见 `verified-api.md` §3。
+`addArgumentTypes()`（`ArgumentTypeAdder` 实名 —— 2026-10-06 对真构件 javap：只有 `public abstract void addArgumentTypes()`，全 jar 无 `registerArgumentTypes`；本行旧写法系笔误、与 `verified-api.md` §3 自相矛盾）/ `registerBiomes()` / `afterVanillaBootstrap()` 等，完整 39 个见 `verified-api.md` §3。
 
 ### 4.3 渲染 / 客户端 UI
 
@@ -125,7 +125,7 @@ public class ExampleMod implements ClientTickable, ItemAdder, BlockAdder {
 - ⇒ 注入点不存在 ⇒ **`ClientTickable#clientTick()` 与 `MinecraftStartListener#onMinecraftStart()` 都不会被调**
   （实测 `System.out.println` 探针一个都没打出来）。
 
-⇒ **Rift 1.0.4-106 官方只支持 MC 1.13**；在 1.13.2 上「能启动但 listener 不派发」。
+⇒ **Rift 1.0.4-106（原生线）只支持 MC 1.13**；在 1.13.2 上「能启动但 listener 不派发」。1.13.1/1.13.2 的支持线在 **Chocohead 社区分支** `newerer`/`newerest`（2026-10-06 用户裁定 + GitHub API 同日核，详 `../knowledge/common/bridge-api.md` §3.3 第 3 条）—— 本档 scaffold 用原生件，上述结论对本档成立。
 本档其余接口（注册类目、渲染、网络、命令…）同理**不可信**，因为它们大多也靠 hook mixin 注入。
 详见 `gradle-recipe.md` §5。
 

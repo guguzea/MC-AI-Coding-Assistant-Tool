@@ -30,7 +30,7 @@ IF 食物
 
 IF 是工具（剑/镐/斧/铲）
   → SwordItem / PickaxeItem / AxeItem / ShovelItem（镐斧铲父类 MiningToolItem）
-  → 不要 DiggerItem、不要编造 DurableToolItem
+  → 禁止 DiggerItem、禁止编造 DurableToolItem
 
 IF 可耐久
   → 设置 maxDamage

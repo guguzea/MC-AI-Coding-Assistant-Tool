@@ -6,6 +6,7 @@ version: "1.20.1"
 dependencies: []
 mappings: yarn
 ---
+<!-- external-apis: fabric-api -->
 
 # 战利品表（Fabric 1.20.1）
 
@@ -13,7 +14,7 @@ mappings: yarn
 - 改原版表：`net.fabricmc.fabric.api.loot.v2.LootTableEvents`（loader-api 已核）
 
 ```java
-LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder, source) -> {
+LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder, source) -> {  // tableBuilder 为示例形参名（本件自定，没有任何 MC 符号叫它）
     // Identifier id；LootTable.Builder tableBuilder
 });
 ```
@@ -22,7 +23,7 @@ LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder,
 
 ```
 IF 自定义掉落
-  → 数据包 JSON 或本档 DataGen loot provider
+  → 数据包 JSON 或本档 DataGen loot provider（DataGen 是术语缩写，不是 API 名，禁止当类名抄）
 IF 改原版表
   → LootTableEvents.MODIFY（v2 五参）
 ```

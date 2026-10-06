@@ -61,9 +61,12 @@ public class MyProjectile extends Projectile {
     @Override
     protected void onHit(HitResult result) {
         super.onHit(result);
-        if (!this.level.isClientSide) {
-            // 爆炸效果
-            this.level.explode(null, this.getX(), this.getY(), this.getZ(),
+        // 1.20.4 实测（出处：neoforge-20.4.251-merged.jar javap 2026-10-06）：
+        //   Entity 的 level 字段是 private（javap -p：`private net.minecraft.world.level.Level level`），
+        //   子类里 `this.level` 直接访问编译不过，必须走公开的 level() 方法
+        if (!this.level().isClientSide) {
+            // 爆炸效果（ExplosionInteraction.BLOW 在 1.20.4 存在，同一 javap 核实）
+            this.level().explode(null, this.getX(), this.getY(), this.getZ(),
                 2.0f, Level.ExplosionInteraction.BLOW);
             this.discard();
         }
@@ -89,6 +92,11 @@ public class ClientSetup {
             // ⚠️ ModelLayers 在 1.20.4 没有 createHumanoidBody()（该类只有 createLocation / register / registerInnerArmor / registerOuterArmor / create*ModelName 等）
             LayerDefinition.create(HumanoidModel.createMesh(CubeDeformation.NONE, 0.0f), 64, 32)
         );
+        // 护甲层（见 MyEntityRenderer）也要注册后才能在 bakeLayer 里取到：
+        event.registerLayerDefinition(MyEntityRenderer.MY_INNER_ARMOR, () ->
+            LayerDefinition.create(HumanoidModel.createMesh(CubeDeformation.NONE, 0.0f), 64, 32));
+        event.registerLayerDefinition(MyEntityRenderer.MY_OUTER_ARMOR, () ->
+            LayerDefinition.create(HumanoidModel.createMesh(CubeDeformation.NONE, 0.0f), 64, 32));
     }
 
     @SubscribeEvent
@@ -99,11 +107,21 @@ public class ClientSetup {
 }
 
 public class MyEntityRenderer extends HumanoidMobRenderer<MyEntity, MyEntityModel<MyEntity>> {
+    // 1.20.4 实测（同一 merged.jar javap 2026-10-06）：
+    //   ① HumanoidArmorLayer 构造是 4 参 (RenderLayerParent<T>, inner, outer, ModelManager)——三参写法编译不过；
+    //   ② ModelLayers 里没有裸 INNER_ARMOR / OUTER_ARMOR 常量（只有 PLAYER_INNER_ARMOR / PLAYER_OUTER_ARMOR 这类带前缀的），
+    //      自定义实体护甲要自定义 ModelLayerLocation 并在 RegisterLayerDefinitions 注册（见上面的事件处理器）。
+    public static final ModelLayerLocation MY_INNER_ARMOR =
+        new ModelLayerLocation(new ResourceLocation(MOD_ID, "my_entity_inner_armor"), "main");
+    public static final ModelLayerLocation MY_OUTER_ARMOR =
+        new ModelLayerLocation(new ResourceLocation(MOD_ID, "my_entity_outer_armor"), "main");
+
     public MyEntityRenderer(EntityRendererProvider.Context context) {
         super(context, new MyEntityModel<>(context.bakeLayer(MY_MODEL_LAYER)), 0.5f);
         this.addLayer(new HumanoidArmorLayer<>(this,
-            new MyEntityModel<>(context.bakeLayer(INNER_ARMOR)),
-            new MyEntityModel<>(context.bakeLayer(OUTER_ARMOR))));
+            new MyEntityModel<>(context.bakeLayer(MY_INNER_ARMOR)),
+            new MyEntityModel<>(context.bakeLayer(MY_OUTER_ARMOR)),
+            context.getModelManager()));
     }
 
     @Override
