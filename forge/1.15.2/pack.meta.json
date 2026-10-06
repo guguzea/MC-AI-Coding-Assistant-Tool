@@ -5,14 +5,15 @@
   "minecraftVersion": "1.15.2",
   "scaffold": {
     "mode": "gradle",
-    "gradle": "7.3.3",
+    "gradle": "6.9.4",
     "provenance": {
       "text": "house",
-      "wrapper": "gradle-wrapper-task"
+      "wrapper": "gradle-wrapper-task",
+      "build": "2026-10-05 零改动副本构建取证（robocopy forge/1.15.2/scaffold → F:/MOD_TEST/verify/forge-1.15.2，逐文件 sha256 与仓库比对 = 0 差异）：gradlew build --no-daemon → BUILD SUCCESSFUL in 1m 5s；JDK 8（G:/zulu8.96.0.205-ca-jdk8.0.504-win_x64）+ **Gradle 6.9.4 wrapper 的真 6.9.4 实物**（jar sha256 e996d452…/59203 B、gradlew f9594eb5…/8047 B、gradlew.bat af835f98…/2763 B，与 mcp-server/data/wrapper-jars.json 的 6.9.4 基线逐字节一致）+ ForgeGradle [4.1,4.2) + forge 31.2.50+ mapping_channel=official；产物 build/libs/examplemod-1.0.0.jar (6358 B)；日志 F:/MOD_TEST/logs/verify-forge-1.15.2.log。边界：只覆盖 :build 任务链（含 :reobfJar），未跑 runClient / runServer / runData。此项取代此前的 buildVerified:false —— 那条的卡点是 wrapper 钉值（7.3.3 / 7.6 被 FG [4.1,4.2) 硬拒），wrapper 已于 2026-10-05 换成 6.9.4（props 与三件套实物一并换，见 gaps[0]），卡点消失。"
     },
-    "buildVerified": false,
+    "buildVerified": true,
     "gaps": [
-      "按声明的 wrapper 钉值跑不通（故 `buildVerified` 只能为 false）：真机 `./gradlew build`（种子 dist Gradle 7.3.3，JDK 8）配置期即失败 —— `Failed to apply plugin 'net.minecraftforge.gradle'. > Found Gradle version Gradle 7.3.3. Versions Gradle 7.0 and newer are not supported yet. Note: Support for Gradle 7 will be added in ForgeGradle 5.`（2026-09-11 `_g_fg4gw_1.15.2.log`，`build.gradle:5`，BUILD FAILED in 12s）。FG `[4.1,4.2)` 与 Gradle ≥7 互斥，钉值不追平（根 memory 裁定「Forge 各档与官方 MDK 的代差不追平，不擅自改钉值」）⇒ 卡点是钉值本身，不是模板代码",
+      "wrapper 钉值已于 2026-10-05 由 7.3.3 改为 6.9.4（本仓 `gradle-wrapper-task` 生成的 house 钉值，非官方 MDK 抄值）：FG `[4.1,4.2)` 配置期硬拒 Gradle ≥7，实测 `Found Gradle version Gradle 7.3.3. Versions Gradle 7.0 and newer are not supported yet.`（Gradle 7.3.3，JDK 8，BUILD FAILED）；同工程仅把 wrapper 换成 6.9.4 即 BUILD SUCCESSFUL。原判「钉值不追平」不适用于 wrapper（它是 house 生成、不存在与官方 MDK 的代差），此条已消解。",
       "scaffold 内唯一的 Gradle-7-only 构造已于 2026-09-11 删除（不是改钉值）：`settings.gradle` 原 `org.gradle.toolchains.foojay-resolver-convention 0.4.0` 在 7.3.3 上实测 `Could not generate a decorated class for type FoojayToolchainsPlugin. > org/gradle/jvm/toolchain/JavaToolchainResolverRegistry`，而 FG4 又不收 Gradle ≥7 ⇒ 无任何 Gradle 版本能同时满足两者；已改为注释要求「用 JDK 8 运行 Gradle（JAVA_HOME 或 org.gradle.java.home）」。`build.gradle` 顶层 `archivesBaseName = mod_id` 本就是 Gradle 6 形态，无需改",
       "ForgeGradle 4 缓存目录缺陷（本机任何成功构建的前置条件，必须披露）：FG4 用 `Files.newOutputStream` 写 tsrg 时不 `mkdirs`，首建必报 `NoSuchFileException` —— `…minecraft_user_repo\\de\\oceanlabs\\mcp\\mcp_config\\1.15.2-20200515.085601\\srg_to_snapshot_20200514-1.15.1.tsrg`（`MinecraftUserRepo.findSrgToMcp`）/ `…mcp_repo\\de\\oceanlabs\\mcp\\mcp_config\\1.15.2\\mcp_config-1.15.2-obf_to_srg.tsrg`（`MCPRepo.findRenames`）。按报错路径预建目录后重跑即通过；用户侧等价操作 = 重跑构建（第二次会自己建上）或手动建目录",
       "mappings：本档实际只有 **official** 一条可读名通道可用（`gradle.properties:14-15` = `official` / `1.15.2`，与 `AGENTS.md` Mappings 行同调）。对照实测：官方 1.15.2-31.2.57 MDK 声明 MCP `snapshot 20200514-1.15.1`，但该组合在本机产出的编译类路径是 SRG 名（javap `forge-1.15.2-31.2.50_mapped_snapshot_20200514-1.15.1.jar`：`Block$Properties.func_200945_a(Material)`、`ItemGroup.field_78030_b`，仅 Forge 自有成员 `harvestLevel` / `harvestTool` 可读）⇒ 按 MCP 可读名写的代码在该通道编译不过，禁止把 MDK 的 snapshot 声明当本档命名依据",

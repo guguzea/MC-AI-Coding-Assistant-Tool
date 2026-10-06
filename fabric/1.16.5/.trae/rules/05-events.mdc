@@ -215,4 +215,4 @@ modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_versi
 | `mc-item` | `UseItemCallback` / `UseBlockCallback` 做物品交互 |
 | `mc-entity` | 实体 tick / 属性；死亡用本页的 Living/Combat 事件或 Mixin |
 | `mc-networking` | 事件里给玩家发自定义包（API 见 `06-networking.mdc`） |
-| `mc-gui` | 客户端 tick 里打开 Screen；容器同步走 ScreenHandler/Container |
+| `mc-gui` | 客户端 tick 里打开 Screen；容器同步走 `ScreenHandler` / `ScreenHandlerType` |

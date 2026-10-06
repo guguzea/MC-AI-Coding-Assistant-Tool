@@ -13,7 +13,7 @@ description: 05 — 事件系统
 ### 核心原则
 
 - Fabric 使用**事件回调**（Event Callback）而非 Forge 的 `@SubscribeEvent`
-- 每个事件类型有自己的回调接口（如 `ServerTickCallback.EVENT`、`UseItemCallback`）
+- 每个事件类型有自己的回调接口（如 `ServerTickEvents.END_SERVER_TICK`、`UseItemCallback`）
 - 在 `onInitialize()` / `onInitializeClient()` 里对静态 `Event` 调用 `.register(lambda)`
 - Fabric 事件是**静态 `Event` 字段**（单例），**没有** `@EventHandler` 注解
 
@@ -36,12 +36,12 @@ description: 05 — 事件系统
 
 ```
 IF 处理玩家每 tick 逻辑
-  → 客户端 ClientTickCallback.EVENT
-  → 服务端 ServerTickCallback.EVENT（再遍历 playerManager）
+  → 客户端 ClientTickEvents.END_CLIENT_TICK
+  → 服务端 ServerTickEvents.END_SERVER_TICK（再遍历 playerManager）
   → 不要 PlayerTickEvents（不是 Fabric API）
 
 IF 处理实体每 tick 逻辑
-  → 重写实体 tick()，或 ServerTickCallback.EVENT 里遍历世界实体
+  → 重写实体 tick()，或 ServerTickEvents.END_SERVER_TICK 里遍历世界实体
   → 不要 EntityTickEvents
 
 IF 处理方块破坏
@@ -72,14 +72,16 @@ IF 处理数据包加载/重载
 
 ### 每 tick（客户端 / 服务端）
 
-没有 `PlayerTickEvents`。客户端用 `ClientTickCallback.EVENT`，服务端用 `ServerTickCallback.EVENT`，需要「每个玩家」时自己遍历。
+没有 `PlayerTickEvents`。客户端用 `ClientTickEvents.END_CLIENT_TICK`，服务端用 `ServerTickEvents.END_SERVER_TICK`，需要「每个玩家」时自己遍历。
+
+> ⚠️ **import 别照同族名字推**（本档实测）：`ClientTickEvents` 在 `net.fabricmc.fabric.api.client.event.lifecycle.v1`、`ServerTickEvents` 在 `net.fabricmc.fabric.api.event.lifecycle.v1`（模块 `fabric-lifecycle-events-v1`）。另有 v0 旧面 `net.fabricmc.fabric.api.event.client.ClientTickCallback` / `...api.event.server.ServerTickCallback`（模块 `fabric-events-lifecycle-v0`，**已 deprecated**）—— 两者**不同包**，混用 import 直接「找不到符号」。
 
 ```java
 @Environment(EnvType.CLIENT)
 public class ExampleModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        ClientTickCallback.EVENT.register(client -> {
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (client.player == null) return;
             // 每客户端 tick 结束（可访问 client.player）
         });
@@ -89,7 +91,7 @@ public class ExampleModClient implements ClientModInitializer {
 public class ExampleMod implements ModInitializer {
     @Override
     public void onInitialize() {
-        ServerTickCallback.EVENT.register(server -> {
+        ServerTickEvents.END_SERVER_TICK.register(server -> {
             for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
                 // 每 server tick、每个在线玩家
             }
@@ -196,7 +198,13 @@ modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_versi
 
 - ❌ 使用 `@EventHandler` / `@SubscribeEvent` — Fabric 没有这些注解，回调不会被注册
 - ❌ 在 `onInitialize()` 外、或条件分支里「有时才 register」— 容易漏注册；应在初始化时注册，逻辑放进 lambda
-- ❌ 把 1.16+ 的 `ClientTickEvents` / `ServerTickEvents` 抄到 1.14.4 — 本档是 `ClientTickCallback` / `ServerTickCallback`
+> ⚠️ **别以为 `ClientTickCallback` 与 `ClientTickEvents` 同包 / 可互换**（本档实测）：两者**不同模块、不同包** ——
+> `net.fabricmc.fabric.api.event.client.ClientTickCallback` / `net.fabricmc.fabric.api.event.server.ServerTickCallback`
+> （模块 `fabric-events-lifecycle-v0`，**已标 deprecated**）；
+> `net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents` / `net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents`
+> （模块 `fabric-lifecycle-events-v1`）。按错包 import 直接「找不到符号」（本轮真踩过）。**本档两者都能编过**，推荐非 deprecated 的后者。
+>
+> 证据（2026-10-05，本档工程 `dev/fabric-1.14.4` 真跑 `gradlew compileJava`，并用其真实 `compileClasspath` 逐类扫描；FAPI 钉 `0.28.5+1.14`）：四条写法都编得过（v0 两条带 deprecation 提示）。**包名必须从该档 classpath 核出，不能照同族名字推** —— 推错包会得出「类不存在」的假结论（本轮就因此自我更正过一次）。
 - ❌ 在客户端 lambda 里改服务端世界数据 — 用 `world.isClient` 区分，写世界只在服务端
 - ❌ 忘记处理返回值 — `ActionResult` / `TypedActionResult` / `boolean` 决定是否取消或消费
 - ❌ 把 `PlayerBlockBreakEvents.BEFORE` 当成 `ActionResult` — 它是 `boolean`
@@ -210,4 +218,4 @@ modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_versi
 | `mc-item` | `UseItemCallback` / `UseBlockCallback` 做物品交互 |
 | `mc-entity` | 实体 tick / 属性；死亡用本页的 Living/Combat 事件或 Mixin |
 | `mc-networking` | 事件里给玩家发自定义包（API 见 `06-networking.mdc`） |
-| `mc-gui` | 客户端 tick 里打开 Screen；容器同步走 ScreenHandler/Container |
+| `mc-gui` | 客户端 tick 里打开 Screen；容器同步走 `Container` / `ContainerType` |

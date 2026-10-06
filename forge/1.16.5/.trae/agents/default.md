@@ -5,11 +5,11 @@
 
 ---
 
-> **⚠️ Forge 1.16.5 `scaffold/` 与官方 MDK 存在代差 —— 有意保留，不是缺陷；禁止为了「对齐」去改 scaffold 钉值。**
-> 注意（不是「已跑通」）：本档 `pack.meta.json` → `buildVerified: **false**`，卡点就是钉值本身 —— FG `[4.1,4.2)` 硬拒 Gradle 7+（2026-09-10 实测 `_g_forge1.16.5_v5.log`："Found Gradle version Gradle 7.6. Versions Gradle 7.0 and newer are not supported yet"），而 `gradle/wrapper/gradle-wrapper.properties:3` 钉的正是 7.6。按根裁定 wrapper 钉值保持不动；**是否降到 Gradle 6.x 需用户裁定**，本档只登记。
+> **⚠️ Forge 1.16.5 `scaffold/` 与官方 MDK 存在代差（事实陈述，不是缺陷）—— 钉值以「实际编译能否跑通」为准，不以「与官方 MDK 对齐」为准。**
+> 本档 `pack.meta.json` → `buildVerified: true`（2026-10-05 零改动副本 BUILD SUCCESSFUL，覆盖 `:compileJava` + `:reobfJar`；进游戏后的行为未验）。wrapper 已由 **7.6 换成 6.9.4**（原「是否降到 Gradle 6.x 需用户裁定」已落地）：FG `[4.1,4.2)` 配置期硬拒 Gradle ≥7，6.9.4 满足；原判「代差不追平、不擅自改钉值」**不适用于 wrapper**（它是本仓 `gradle-wrapper-task` 生成的 house 钉值，不存在与官方 MDK 的代差）。改钉值前先按实际编译取证并同步 `pack.meta` 与台账。
 > 需要新版工具链：自行调用 `download_official_mdk`（默认 dryRun，只落到 `$MC_SKILL_CACHE`，不写仓库），再把返回值填进**你自己的工程**。
 
-> - Gradle Wrapper：本档 `scaffold/gradle/wrapper/gradle-wrapper.properties:3` → `gradle-7.6-bin` ↔ 官方 MDK `gradle-7.3.3-bin`
+> - Gradle Wrapper：本档 `scaffold/gradle/wrapper/gradle-wrapper.properties:3` → `gradle-6.9.4-bin` ↔ 官方 MDK `gradle-7.3.3-bin`
 > - ForgeGradle：本档 `scaffold/build.gradle:5` → `[4.1,4.2)` ↔ 官方 MDK `build.gradle:7` → `ForgeGradle:5.1.+`
 > - Forge：本档 `scaffold/gradle.properties:9` → `36.2.34` ↔ 官方 MDK `build.gradle:120` → `1.16.5-36.2.34`（同）
 > - mappings：本档 `scaffold/gradle.properties:16-17` → `official` / `1.16.5` ↔ 官方 MDK `build.gradle:33` → `official` / `1.16.5`（同）
@@ -22,7 +22,7 @@
 | Minecraft 版本 | 1.16.5 |
 | 注册模式 | `DeferredRegister`（推荐）/ `RegistryEvent.Register`（备选） |
 | Java 版本 | **Java 8**（官方：Minecraft 与 MinecraftForge 均按 Java 8 编译，「must only use Java 8 code」；Java 15 只是后期 Forge 的运行期支持）。详见 `00-project-setup.mdc` |
-| Gradle | **Gradle 7.6 + ForgeGradle `[4.1,4.2)`**（本包 `scaffold/build.gradle:5` + `scaffold/gradle/wrapper/gradle-wrapper.properties:3`）。⚠️ 官方 1.16.5-36.2.34 MDK 声明的是 **FG `5.1.+` + Gradle 7.3.3**（MDK `build.gradle:7`、`gradle-wrapper.properties:3`；sha256 见 `mcp-server/data/mdk-checksums.json`，`source=official`）。scaffold 与 MDK 组合不一致（未裁定分歧），不要把一套当另一套的官方背书。❌ 按声明钉值跑不起来（非风格分歧）：`./gradlew build`（Gradle 7.6）配置期即失败 —— `Found Gradle version Gradle 7.6. Versions Gradle 7.0 and newer are not supported yet. Note: Support for Gradle 7 will be added in ForgeGradle 5.`；钉值不追平（根 memory 裁定），但 scaffold 内两处 Gradle-7-only 构造已于 2026-09-11 改到 FG4 可用形态（`base { archivesName }` → 顶层 `archivesBaseName`；删 `foojay-resolver-convention 0.4.0`，改为要求用 JDK 8 跑 Gradle）。改后**原样 scaffold** 在 Gradle 6.9.4 + JDK 8 真机 `BUILD SUCCESSFUL`（前置：预建 FG4 漏 `mkdirs` 的 tsrg 缓存目录，见 `pack.meta.json` gaps）⇒ `buildVerified` 仍 false，卡点只剩 wrapper 钉值本身 |
+| Gradle | **Gradle 6.9.4 + ForgeGradle `[4.1,4.2)`**（本包 `scaffold/build.gradle:5` + `scaffold/gradle/wrapper/gradle-wrapper.properties:3`）。⚠️ 官方 1.16.5-36.2.34 MDK 声明的是 **FG `5.1.+` + Gradle 7.3.3**（MDK `build.gradle:7`、`gradle-wrapper.properties:3`；sha256 见 `mcp-server/data/mdk-checksums.json`，`source=official`）：不要把一套当另一套的官方背书。wrapper 已于 2026-10-05 由 7.6 换成 6.9.4（含三件套实物）：FG `[4.1,4.2)` 配置期硬拒 Gradle ≥7（实测 `Found Gradle version Gradle 7.6. Versions Gradle 7.0 and newer are not supported yet.`），换后零改动副本 `gradlew build` **BUILD SUCCESSFUL**（前置：预建 FG4 漏 `mkdirs` 的 tsrg 缓存目录，见 `pack.meta.json` gaps） |
 | Mappings | 本包 scaffold = **official**（`scaffold/gradle.properties:15-16` `mapping_channel=official` / `mapping_version=1.16.5`，`scaffold/build.gradle:24` 以 `project.` 显式引用）。与官方 1.16.5-36.2.34 MDK 默认同向（Mojmap：方法/字段官方名、类名仍是 MCP 名），也与本包全部示例命名同源（`.tab(ItemGroup.TAB_…)` / `stacksTo(...)`）。⚠️ **已知偏差（2026-09-11 裁定保留）**：本档通道为 official，因 FG4 不支持 Parchment Librarian。2026-09-11 前这里声明的是 **Parchment `2021.07.27-1.16.5`** —— 本档 FG4 无该 provider：`java.lang.IllegalArgumentException: Unknown mapping provider: parchment_2021.07.27-1.16.5`，补 librarian 插件又缺 FG5+ 才有的 `ChannelProvider` ⇒ 用 Parchment 必须先升 FG 5+。MCP 工程走 `snapshot` 通道，命名随之换形（`group(...)` / `maxStackSize(...)` / `ItemGroup.MISC`）。三套映射不同源，按用户工程实际声明的那一套写名字，禁止混用（详见 `knowledge/version-changes/1.16.x.md` + `00-project-setup.mdc`「Mappings 约束」）。⚠️ **本档是混合档（2026-09-25 定案，`mcp-server/docs/knowledge-coverage-sweep-20260924.md` §6.10）**：两通道**类名同一套**（MCP 形），差别只在**成员名**——official = Mojang（`getLevel`/`isClientSide`/`stacksTo`）、mcp = MCP（`getEntityWorld`/`isRemote`）；实测本包正文**两套成员名并存**（36 件有证据的件里多数并用），逐件 `mappings` 值只描述成员名族且并非每件都经核实 ⇒ 照抄前核对该件实际用名（对照 `data/forge_1.16.5/mappings/`：`client.txt` = Mojang 名〔本地、不入库〕，`mcp_snapshot-20210309/` = MCP named 表〔已入库〕） |
 | 构建工具 | ForgeGradle（`build.gradle`） |
 

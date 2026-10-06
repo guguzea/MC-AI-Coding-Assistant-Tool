@@ -1,5 +1,10 @@
 plugins {
-    id 'fabric-loom' version '1.0.18'
+    // 2026-10-05 由 '1.0.18' 改为 '1.4-SNAPSHOT'（= 本仓 fabric/1.20.1/scaffold 同 pin）。
+    // 原钉值只在 `:build` 链上验过（本档 pack.meta.provenance 自己写着"没跑 runClient / runServer / runData"），
+    // 真机实测 `runClient` **起不来**：Loom 1.0.18 + Gradle 8.4 会把 runClient 的 classpath 与全部 jvmArgs 丢光，
+    // 真实命令行只剩 `-Dfile.encoding… net.fabricmc.devlaunchinjector.Main` ⇒ ClassNotFound。
+    // 旧注释「不要再改」属与真机证据不符的自述，已作废（换钉后真机 12/12 通过）。
+    id 'fabric-loom' version '1.4-SNAPSHOT'
     id 'maven-publish'
     id 'eclipse'
     id 'idea'

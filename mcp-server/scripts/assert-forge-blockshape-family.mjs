@@ -210,8 +210,9 @@ const RULES = {
   // oracle：fabric/1.14.4 wrapper 钉 6.9.4（gradle-wrapper.properties:3）且 pack.meta.json:19 记
   // 2026-09-16 真机 BUILD SUCCESSFUL（改用 archivesBaseName 后）；forge/1.16.5/scaffold/build.gradle:11-13
   // 注释逐字「FG4 硬拒 Gradle ≥7，而 base.archivesName 是 Gradle 7+ DSL（6.9.4 实测无此属性）」。
-  // 注意：forge/1.15.2 wrapper = Gradle 7.3.3，其 scaffold 用 archivesName 属合法 ⇒ 族按**档**枚举，
-  // 不能按 MC 版本推断（与 with-material/no-material 的分界逻辑同源）。
+  // 注意：**2026-10-05 起 forge/1.15.2 的 wrapper 也钉 6.9.4**（此前钉 7.3.3，其 scaffold 用
+  // `archivesName` 也算合法 ⇒ 那时本族必须按**档**枚举）。现两档同为 Gradle 6.x，都用顶层
+  // `archivesBaseName`；族成员仍按档枚举而非按 MC 版本推断（与 with-material/no-material 同源）。
   'gradle6-no-archivesname': {
     banned: [
       {
@@ -232,6 +233,14 @@ const RULES = {
   // 注册行 `MyRequestHandler::handleRequest`。局限：逐行正则看不见跨行类型不匹配，
   // 钉的是撤回后的**回归形态**（类体缺 buf 构造器 + 裸 `MyRequest::handleRequest` 复活）。
   // 注意 banned 正则不误伤修复后的 `MyRequestHandler::handleRequest`（`Handler` 前缀中断匹配）。
+  // 2026-10-05 更新（forge/1.20.4 换成 FML49 形态后）：正解探针原本锚死类名 `MyRequest`，
+  // 而 1.20.4 的示例已随 sweep125 重写为 FML49 形态（`ChannelBuilder` + payload 类改名 `MyMessage`，
+  // decoder 写 `.decoder(MyMessage::new)`）⇒ 正解计数归零、门自称「已瞎」。
+  // 本族钉的语义是**「payload 类必须有 (FriendlyByteBuf) 构造器」**（因为注册行用 `<类>::new` 当 decoder），
+  // 与类名无关 ⇒ 正则改成不锚类名（大写开头的类型名 + 该构造器）。
+  // banned 仍锚 `MyRequest`：那是旧形态的回归形态（裸静态方法引用），FML49 形态的 handler 放在
+  // 独立注册类里（`ModNetwork::handle` 私有静态），该写法在其余三档不出现，不需要也不能泛化
+  // （泛化会把 `XxxHandler::handleRequest` 这类合法形态一起咬住 —— 见下方自证第 2 条）。
   'networking-decoder-noctor': {
     banned: [
       {
@@ -241,7 +250,7 @@ const RULES = {
       },
     ],
     positive: [
-      { id: 'requestBufCtor', re: /MyRequest\s*\(\s*FriendlyByteBuf\b/g },
+      { id: 'requestBufCtor', re: /\b[A-Z]\w*\s*\(\s*FriendlyByteBuf\b/g },
     ],
   },
   // W3-2（2026-09-19）：七档 10-gui / mc-gui / 1.15.2 mc-entity·mc-particle·code-patterns 的
@@ -401,6 +410,11 @@ function selftest() {
     ['networking-decoder-noctor', 'good', 'public MyRequest(FriendlyByteBuf buf) { this.data = buf.readInt(); }\n    MyRequestHandler::handleRequest\n', null],
     // 1.13.2 合法对照：显式 (PacketBuffer) 构造器 + `MyMessage::new` decoder 不入 banned
     ['networking-decoder-noctor', 'good', 'INSTANCE.registerMessage(id++, MyMessage.class, MyMessage::encode, MyMessage::new, (msg, ctx) -> msg.handle(ctx));\n', null],
+    // 2026-10-05：FML49 形态（forge/1.20.4，sweep125 重写）payload 类为 MyMessage、注册走 ChannelBuilder
+    // `.decoder(MyMessage::new)` + `.consumerMainThread(ModNetwork::handle)`（handler 是注册类内的私有静态方法）
+    // ⇒ 正解探针必须认它、banned 不得误伤（`ModNetwork::handle` 不含 handleRequest 字样）
+    ['networking-decoder-noctor', 'good', 'public MyMessage(FriendlyByteBuf buf) {\n    this.value = buf.readInt();\n}\n', null],
+    ['networking-decoder-noctor', 'good', '        .decoder(MyMessage::new)\n        .consumerMainThread(ModNetwork::handle)\n', null],
     // W3-2：缺 bus 的 ClientSetup 注解必须咬住（含缩进变体）；1.14.4 全称形态不误伤
     ['gui-clientsetup-needs-modbus', 'bad', '@Mod.EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT)\npublic class ClientSetup {\n', 'clientsetup-no-modbus'],
     ['gui-clientsetup-needs-modbus', 'bad', '    @Mod.EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT)\n', 'clientsetup-no-modbus'],

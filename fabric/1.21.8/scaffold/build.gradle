@@ -1,7 +1,8 @@
 plugins {
-    // Loom 版本以 https://fabricmc.net/develop/ 与 search_fabric_docs version=1.21.8 为准，禁止默写
+    // 2026-10-05 补版本号：原「禁止默写」注释使本档连插件都解析不出（pack.meta.gaps 自陈）。
+    // 记录值与本仓 fabric/1.21.11/scaffold 同 pin，且在本仓 base-mod 矩阵真机跑过。
     // remap 线专用 id（≤1.21.x 混淆时代）；去混淆的 26.x 用 net.fabricmc.fabric-loom
-    id "net.fabricmc.fabric-loom-remap"
+    id "net.fabricmc.fabric-loom-remap" version "${loom_version}"
 }
 
 version = project.mod_version
@@ -15,7 +16,9 @@ java {
 
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    // mappings / fabric-loader 版本以 search_fabric_docs version=1.21.8 与官方模板为准，禁止默写
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 }
 
 processResources {

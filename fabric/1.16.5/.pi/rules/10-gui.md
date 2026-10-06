@@ -214,7 +214,7 @@ ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> 
 
 | 配合 Skill | 协作说明 |
 |-----------|---------|
-| `mc-registry` | ScreenHandler / ContainerType 通过 `Registry.register` 注册 |
+| `mc-registry` | `ScreenHandler` / `ScreenHandlerType` 通过 `Registry.register` 注册 |
 | `mc-item` | 物品右键可 `openHandledScreen` / `openContainer` |
 | `mc-block` | 方块实体提供 Factory / 打开包数据 |
 | `mc-networking` | 槽位不够时再用自定义 Payload 同步进度条等 |

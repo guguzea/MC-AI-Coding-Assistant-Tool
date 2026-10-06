@@ -8,11 +8,11 @@
 
 ---
 
-> **⚠️ Forge 1.15.2 `scaffold/` 与官方 MDK 存在代差 —— 有意保留，不是缺陷；禁止为了「对齐」去改 scaffold 钉值。**
-> 注意（不是「已跑通」）：本档 `pack.meta.json` → `buildVerified: **false**`，卡点就是钉值本身 —— FG `[4.1,4.2)` 硬拒 Gradle ≥7（2026-09-11 真机 `_g_fg4gw_1.15.2.log`："Found Gradle version Gradle 7.3.3. Versions Gradle 7.0 and newer are not supported yet"，BUILD FAILED in 12s）。按根裁定「代差不追平、不擅自改钉值」wrapper 保持不动；**是否把 wrapper 降到 Gradle 6.x 需用户裁定**，本档只登记。
+> **⚠️ Forge 1.15.2 `scaffold/` 与官方 MDK 存在代差（事实陈述，不是缺陷）—— 钉值以「实际编译能否跑通」为准，不以「与官方 MDK 对齐」为准。**
+> 本档 `pack.meta.json` → `buildVerified: true`（2026-10-05 零改动副本 BUILD SUCCESSFUL，覆盖 `:compileJava` + `:reobfJar`；进游戏后的行为未验）。wrapper 已由 **7.3.3 换成 6.9.4**（原「是否降到 Gradle 6.x 需用户裁定」已落地）：FG `[4.1,4.2)` 配置期硬拒 Gradle ≥7，6.9.4 满足；原判「代差不追平、不擅自改钉值」**不适用于 wrapper**（它是本仓 `gradle-wrapper-task` 生成的 house 钉值，不存在与官方 MDK 的代差）。改钉值前先按实际编译取证并同步 `pack.meta` 与台账。
 > 需要新版工具链：自行调用 `download_official_mdk`（默认 dryRun，只落到 `$MC_SKILL_CACHE`，不写仓库），再把返回值填进**你自己的工程**。
 
-> - Gradle Wrapper：本档 `scaffold/gradle/wrapper/gradle-wrapper.properties:3` → `gradle-7.3.3-bin` ↔ 官方 MDK `gradle-4.10.3-bin`
+> - Gradle Wrapper：本档 `scaffold/gradle/wrapper/gradle-wrapper.properties:3` → `gradle-6.9.4-bin` ↔ 官方 MDK `gradle-4.10.3-bin`
 > - ForgeGradle：本档 `scaffold/build.gradle:5` → `[4.1,4.2)` ↔ 官方 MDK `build.gradle:7` → `ForgeGradle:3.+`
 > - Forge：本档 `scaffold/gradle.properties:9` → `31.2.50` ↔ 官方 MDK `build.gradle:93` → `1.15.2-31.2.57`
 > - mappings：本档 `scaffold/gradle.properties:14-15` → `official` / `1.15.2` ↔ 官方 MDK `build.gradle:30` → `snapshot` / `20200514-1.15.1`
@@ -25,7 +25,7 @@
 | Minecraft 版本 | 1.15.2 |
 | 注册模式 | `DeferredRegister`（推荐）/ `RegistryEvent.Register`（备选） |
 | Java 版本 | **Java 8**（Forge 1.15.2 最低要求） |
-| Gradle | **Gradle 7.3.3 + ForgeGradle `[4.1,4.2)`**（本包 `scaffold/build.gradle:5` + `scaffold/gradle/wrapper/gradle-wrapper.properties:3`）。⚠️ 官方 1.15.2-31.2.57 MDK 是 **Gradle 4.10.3 + FG `3.+`**（MDK `build.gradle:7`、`gradle-wrapper.properties:5`；sha256 见 `mcp-server/data/mdk-checksums.json`，`source=official`）。scaffold 与 MDK 组合不一致（未裁定分歧），不要互相背书。❌ 按声明钉值跑不起来：真机 `./gradlew build`（Gradle 7.3.3 + JDK 8）配置期失败 `Failed to apply plugin 'net.minecraftforge.gradle'. > Found Gradle version Gradle 7.3.3. Versions Gradle 7.0 and newer are not supported yet.`（`_g_fg4gw_1.15.2.log`）；钉值不追平（根 memory 裁定），但 `settings.gradle` 的 `foojay-resolver-convention 0.4.0`（Gradle-7-only，7.3.3 实测缺 `JavaToolchainResolverRegistry`）已于 2026-09-11 删除并改为「用 JDK 8 跑 Gradle」。此后**原样 scaffold** 在 Gradle 6.9.4 真机 `BUILD SUCCESSFUL`（`_g_fg4exp8_1.15.2.log`；前置：预建 FG4 漏 `mkdirs` 的 tsrg 缓存目录）⇒ `pack.meta.json` 的 `buildVerified` 仍 false，唯一卡点是 wrapper 钉值 |
+| Gradle | **Gradle 6.9.4 + ForgeGradle `[4.1,4.2)`**（本包 `scaffold/build.gradle:5` + `scaffold/gradle/wrapper/gradle-wrapper.properties:3`）。⚠️ 官方 1.15.2-31.2.57 MDK 是 **Gradle 4.10.3 + FG `3.+`**（MDK `build.gradle:7`、`gradle-wrapper.properties:5`；sha256 见 `mcp-server/data/mdk-checksums.json`，`source=official`）：scaffold 与 MDK 组合不一致，不要互相背书。wrapper 已于 2026-10-05 由 7.3.3 换成 6.9.4（含三件套实物）：FG `[4.1,4.2)` 配置期硬拒 Gradle ≥7（实测 `Found Gradle version Gradle 7.3.3. Versions Gradle 7.0 and newer are not supported yet.`），换后零改动副本 `gradlew build` **BUILD SUCCESSFUL**（前置：预建 FG4 漏 `mkdirs` 的 tsrg 缓存目录） |
 | Mappings | 本包 scaffold = **official**（`scaffold/gradle.properties:14` `mapping_channel=official`，`scaffold/build.gradle:18` 用该变量；须 `project.` 显式引用，FG4 的 `MinecraftExtension` 自带同名空字段）。官方 1.15.2-31.2.57 MDK 用的是 **MCP `snapshot` 通道**（MDK `build.gradle:29` `mappings channel: 'snapshot', version: '20200514-1.15.1'`），但本档 **只有 official 可用可读名**：真机该 snapshot 组合的编译类路径是 SRG 名（javap `forge-1.15.2-31.2.50_mapped_snapshot_20200514-1.15.1.jar` → `func_200945_a` / `field_78030_b`）⇒ 禁止拿 MDK 的 snapshot 声明当本档命名依据。两侧不同源：按用户工程实际的那一套写方法名，禁止 MCP / official / Parchment 混用。⚠️ **本档是混合档（2026-09-25 javap 复核定案，`mcp-server/docs/knowledge-coverage-sweep-20260924.md` §6.10）**：scaffold `official` 通道 = **MCP 类名**（`net/minecraft/world/World`）+ **Mojang 成员名**（`Block$Properties.of`、`World.isClientSide`/`getLevel`——javap 直证；`snapshot` 通道成员名是 SRG 不可读）；而本包 35 件 skills 全声明 `mappings: mcp`，正文成员名**两套并存**（`isClientSide` 20 处 vs `isRemote` 1 处；`Properties.create(` 24 处）⇒ 逐件值只描述成员名族且并非每件都经核实，照抄前核对该件实际用名 |
 | 构建工具 | ForgeGradle（`build.gradle`） |
 
@@ -154,7 +154,7 @@ src/main/java/
 |------|---------------|--------------|------|
 | 注册方式 | `DeferredRegister` | `DeferredRegister` | 一致（均推荐） |
 | Java 版本 | Java 8 | Java 17+ | 1.15.2 使用 Java 8 |
-| Gradle | Gradle 7.3.3 + FG `[4.1,4.2)` | Gradle 8.x + FG `[6.0,6.2)` | 本包 `scaffold/build.gradle:5` + `gradle-wrapper.properties:3`。⚠️ 官方 1.15.2-31.2.57 MDK 是 **Gradle 4.10.3 + FG `3.+`**（MDK `build.gradle:7`、`gradle-wrapper.properties:5`；sha256 见 `mcp-server/data/mdk-checksums.json`）：scaffold 与 MDK 组合不一致（未裁定分歧），不要互相背书 |
+| Gradle | Gradle 6.9.4 + FG `[4.1,4.2)` | Gradle 8.x + FG `[6.0,6.2)` | 本包 `scaffold/build.gradle:5` + `gradle-wrapper.properties:3`。⚠️ 官方 1.15.2-31.2.57 MDK 是 **Gradle 4.10.3 + FG `3.+`**（MDK `build.gradle:7`、`gradle-wrapper.properties:5`；sha256 见 `mcp-server/data/mdk-checksums.json`）：scaffold 与 MDK 组合不一致，不要互相背书 |
 | pack_format | 5 | 15 (1.20.1) | 官方 1.15.2-31.2.57 MDK `pack.mcmeta` = `"pack_format": 5`（本包 scaffold 同为 5）；1.18 前数据包与资源包共用此号，1.18 起分家（资源 8 / 数据 9）。原写 6 是 1.16.2+ 的号 |
 
 如果你发现用户的代码与本规则集描述不符，先询问 Minecraft 版本。

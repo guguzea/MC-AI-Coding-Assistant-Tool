@@ -6340,14 +6340,14 @@ async function testPortingKbProvenance() {
 // diffWrapperPins 强制对齐。
 // 钉值语义（见 JSON method.notVersionBound）：钉的是「props 声明版本 → 该版本发行包 wrapper 任务
 // 产物字节」，不是 jar 内嵌版本字符串。wrapper 产物不随版本唯一——实测 7.2≡7.3.3、7.6≡7.6.1
-// 三件套全等、8.5≡8.6 jar 全等、8.4/8.5 的 gradlew 全等，故表内出现重复 sha 是对证结果而非抄错，
+// 三件套全等（7.3.3 表项 2026-10-05 已撤：forge/1.15.2 换成 6.9.4 后无档声明它 = 孤儿钉值，
+// 该字节类由 7.2 代表）、8.5≡8.6 jar 全等、8.4/8.5 的 gradlew 全等，故表内出现重复 sha 是对证结果而非抄错，
 // 判定一律按字节集合相等。8.6 表项已于 2026-09-16 随 fabric/1.21.3 升 Gradle 8.10 撤除
 // （撤项后无任何 scaffold 声明 8.6，留着会触发「孤儿钉值」判据；其 jar 字节类由 8.5 代表）。
 const WRAPPER_JARS = {
   "4.9": { sha256: "e55e7e47a79e04c26363805b31e2f40b7a9cc89ea12113be7de750a3b2cede85", size: 54413, gradlewSha: "8c4c04dd98db1f00d49456dd162418a39312c5cb13d6865d783deb483bd1ed22", gradlewBatSha: "0008d785920c9ff5cab17403e0270ccc7ceee8e169b6d67a82d96a5475fec5c9" },
   "6.9.4": { sha256: "e996d452d2645e70c01c11143ca2d3742734a28da2bf61f25c82bdc288c9e637", size: 59203, gradlewSha: "f9594eb5c08a148f23b9d7a5fd99551224db96dadb1b7cecd3985c4758c4f867", gradlewBatSha: "af835f98787e9269af5a046edcb821a592fed372139df7b947b471a63cfc236b" },
   "7.2": { sha256: "33ad4583fd7ee156f533778736fa1b4940bd83b433934d1cc4e9f608e99a6a89", size: 59536, gradlewSha: "f96a757581fe5292465e3f3393380bd11fd8086d450b92e7c693da6513f583fe", gradlewBatSha: "af835f98787e9269af5a046edcb821a592fed372139df7b947b471a63cfc236b" },
-  "7.3.3": { sha256: "33ad4583fd7ee156f533778736fa1b4940bd83b433934d1cc4e9f608e99a6a89", size: 59536, gradlewSha: "f96a757581fe5292465e3f3393380bd11fd8086d450b92e7c693da6513f583fe", gradlewBatSha: "af835f98787e9269af5a046edcb821a592fed372139df7b947b471a63cfc236b" },
   "7.4.2": { sha256: "575098db54a998ff1c6770b352c3b16766c09848bee7555dab09afc34e8cf590", size: 59821, gradlewSha: "f96a757581fe5292465e3f3393380bd11fd8086d450b92e7c693da6513f583fe", gradlewBatSha: "af835f98787e9269af5a046edcb821a592fed372139df7b947b471a63cfc236b" },
   "7.6": { sha256: "c5a643cf80162e665cc228f7b16f343fef868e47d3a4836f62e18b7e17ac018a", size: 61574, gradlewSha: "638c2862d623c302f3029f5bd1441276be484c5b79909b706a614ebe8e7a409b", gradlewBatSha: "8e327fcb99d29ce0fe3ee2fec6e6a25de815a2df83a6a44a553dea89ffc92955" },
   "7.6.1": { sha256: "c5a643cf80162e665cc228f7b16f343fef868e47d3a4836f62e18b7e17ac018a", size: 61574, gradlewSha: "638c2862d623c302f3029f5bd1441276be484c5b79909b706a614ebe8e7a409b", gradlewBatSha: "8e327fcb99d29ce0fe3ee2fec6e6a25de815a2df83a6a44a553dea89ffc92955" },
@@ -6374,7 +6374,6 @@ function findMalformedPins(table) {
 // 无 gradle-wrapper.properties 的 scaffold：写三件套必须先定 Gradle 版本，版本无仓内证据 → 登记空洞。
 // 补齐后必须从这里删掉（登记过期同样算失败）。
 const WRAPPER_VERSION_GAPS = [
-  "fabric/1.21.4", "fabric/1.21.8", "fabric/1.21.10",
   "liteloader/1.12.2", "modloader/1.6.4",
   "neoforge/1.20.1",
   "rift/1.13.2",
@@ -6613,12 +6612,12 @@ async function testScaffoldWrappers() {
 
   const { seen, problems, declaredCount, byVersion, noProps } = scanScaffoldWrappers(REPO_ROOT);
   assert.equal(seen.length, 48, `全仓 Java scaffold 应为 48 档，实际 ${seen.length} → ${seen.join(",")}`);
-  assert.equal(declaredCount, 41, `已声明 Gradle 版本、三件套应完整的 scaffold 应为 41 档，实际 ${declaredCount}`);
+  assert.equal(declaredCount, 44, `已声明 Gradle 版本、三件套应完整的 scaffold 应为 44 档，实际 ${declaredCount}`);
   const fabricSeen = seen.filter((k) => k.startsWith("fabric/"));
   assert.equal(fabricSeen.length, 14, `fabric/*/scaffold 应为 14 档，实际 ${fabricSeen.length}`);
   assert.equal(
     fabricSeen.filter((k) => existsSync(join(REPO_ROOT, k, "scaffold", "gradle", "wrapper", "gradle-wrapper.properties"))).length,
-    11, "fabric 已声明 Gradle 版本的档数应为 11");
+    14, "fabric 已声明 Gradle 版本的档数应为 14（2026-10-05 补齐 1.21.4 / 1.21.8 / 1.21.10 后全档齐全）");
   assert.deepEqual(noProps, [...WRAPPER_VERSION_GAPS].sort(), "无 gradle-wrapper.properties 的 scaffold 必须与空洞登记表逐档相等");
   assert.deepEqual(problems, [], `scaffold wrapper 门禁:\n  ${problems.join("\n  ")}`);
 
@@ -6690,13 +6689,15 @@ async function testScaffoldWrappers() {
           const rel = "fabric/1.20.1/scaffold/gradle/wrapper/gradle-wrapper.properties";
           wr(rel, read(rel).replace("zipStorePath=wrapper/dists", "zipStorePath=gradle/wrapper"));
         } },
-      { name: "空洞档半套", needle: "没有已声明版本却存在", key: "fabric/1.21.4",
-        // 靶档 2026-10-03 从 fabric/26.1.2 移到 fabric/1.21.4：26.1.2 本批补了 wrapper（不再是无 props 的空洞档），
-        // 拿它投毒就是 no-op ⇒ 同 6710 那条的规矩，每补一档就把本靶挪到仍无 props 的档（现余 1.21.4/1.21.8/1.21.10）。
-        mutate: ({ wr }) => wr("fabric/1.21.4/scaffold/gradlew", "#!/bin/sh\n") },
-      { name: "登记过期", needle: "登记过期", key: "fabric/1.21.8",
+      { name: "空洞档半套", needle: "没有已声明版本却存在", key: "neoforge/1.20.1",
+        // 靶档 2026-10-05 由 fabric/1.21.4 移到 neoforge/1.20.1：1.21.4（连同 1.21.8 / 1.21.10）本批补了
+        // wrapper 四件套，不再是空洞档，拿它投毒就是 no-op ⇒ 每补一档就把本靶挪到仍无 props 的档
+        // （现余 neoforge/1.20.1 / liteloader/1.12.2 / rift/1.13.2 / modloader/1.6.4）。
+        mutate: ({ wr }) => wr("neoforge/1.20.1/scaffold/gradlew", "#!/bin/sh\n") },
+      { name: "登记过期", needle: "登记过期", key: "liteloader/1.12.2",
+        // 2026-10-05 由 fabric/1.21.8 移到 liteloader/1.12.2（同因：1.21.8 已有 props，投毒不再触发「登记过期」）。
         mutate: ({ wr }) => wr(
-          "fabric/1.21.8/scaffold/gradle/wrapper/gradle-wrapper.properties",
+          "liteloader/1.12.2/scaffold/gradle/wrapper/gradle-wrapper.properties",
           "distributionUrl=https\\://services.gradle.org/distributions/gradle-8.10-bin.zip\n") },
       // ↓ 本 story 新增：三件套另两件 + gitignore + pack.meta.json 自我声明
       { name: "gradlew 拿错版本", needle: "gradlew sha256", key: "fabric/1.20.1",
@@ -6709,13 +6710,12 @@ async function testScaffoldWrappers() {
         mutate: setMeta("forge/1.20.1/pack.meta.json", (m) => { m.scaffold.gradle = "8.4"; }) },
       { name: "meta 形态声明过期", needle: "但 props 已声明", key: "forge/1.16.5",
         mutate: setMeta("forge/1.16.5/pack.meta.json", (m) => { m.scaffold.mode = "reference"; }) },
-      { name: "自称已构建却无出处", needle: "provenance.build 为空", key: "forge/1.15.2",
-        // 选档条件：mode=gradle + provenance 无 build + 本机翻不了绿。1.15.2 的「翻不了绿」与 JDK 无关：
-        // FG [4.1,4.2) 配置期硬拒 Gradle ≥7，而 wrapper 钉 7.3.3，钉值按裁定不改 ⇒ buildVerified 恒 false。
-        // 前两处靶都已失效：neoforge/1.20.4（2026-09-09 真机跑通）、forge/1.12.2（2026-09-11；本机现已有
-        // JDK 8 G:/zulu8.96.0.205-ca-jdk8.0.504-win_x64 与 Gradle 4.9 发行包）都写了 buildVerified:true，
-        // 再拿它们投毒就是 no-op ⇒ 每翻绿一档，必须把本靶挪到仍不可翻绿的档。
-        mutate: setMeta("forge/1.15.2/pack.meta.json", (m) => { m.scaffold.buildVerified = true; }) },
+      { name: "自称已构建却无出处", needle: "provenance.build 为空", key: "fabric/26.1.2",
+        // 选档条件：mode=gradle + provenance 无 build。历次靶档都是「本机翻不了绿所以没写出处」的档，
+        // 每翻绿一档就必须挪靶（neoforge/1.20.4 2026-09-09、forge/1.12.2 2026-09-11、forge/1.15.2
+        // 与 forge/1.16.5 2026-10-05 都已补上 provenance.build）。现余 fabric/26.1.2 与 neoforge/26.1
+        // （两者 buildVerified 仍为 false、无出处），本靶取前者的 pack.meta 投毒。
+        mutate: setMeta("fabric/26.1.2/pack.meta.json", (m) => { m.scaffold.buildVerified = true; }) },
       { name: "meta mode 非法", needle: "非法（只允许 gradle / reference）", key: "rift/1.13.2",
         mutate: setMeta("rift/1.13.2/pack.meta.json", (m) => { m.scaffold.mode = "maven"; }) },
     ];
@@ -6737,7 +6737,7 @@ async function testScaffoldWrappers() {
       { name: "钉值被截位", needle: "8.4: JSON jarSha256 != 钉值表", mutate: ({ table }) => { table["8.4"].sha256 = table["8.4"].sha256.slice(0, 63); } },
       { name: "gradlew 钉值漂移", needle: "8.4: JSON gradlewSha256 != 钉值表", mutate: ({ prov: p }) => { p.jars["8.4"].gradlewSha256 = p.jars["8.8"].gradlewSha256; } },
       { name: "usedBy 漂移", needle: "usedBy=", mutate: ({ prov: p }) => { p.jars["8.4"].usedBy = ["fabric/1.18.2", "fabric/1.19.4"]; } },
-      { name: "空洞登记漂移", needle: "JSON gaps=", mutate: ({ prov: p }) => { p.gaps.wrapperVersionUndeclared = p.gaps.wrapperVersionUndeclared.filter((x) => x !== "fabric/1.21.4"); } },
+      { name: "空洞登记漂移", needle: "JSON gaps=", mutate: ({ prov: p }) => { p.gaps.wrapperVersionUndeclared = p.gaps.wrapperVersionUndeclared.filter((x) => x !== "liteloader/1.12.2"); } },
       { name: "measuredOn 过期格式", needle: "measuredOn 不是", mutate: ({ prov: p }) => { p.jars["8.4"].measuredOn = "9-2"; } },
       { name: "孤儿钉值", needle: "孤儿钉值", mutate: ({ table, byVersion: v }) => { table["9.9.9"] = { ...table["8.4"] }; delete v["9.2.1"]; } },
       // ↓ 阶段③引导实测记录本身必须可证伪（不是写在 note 里的散文）

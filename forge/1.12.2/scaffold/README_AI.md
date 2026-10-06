@@ -2,7 +2,7 @@
 
 > 本文件是 AI 助手在开发此模组时的参考指南。
 
-> **⚠️ Forge 1.12.2 `scaffold/` 与官方 MDK 存在代差 —— 有意保留，不是缺陷；禁止为了「对齐」去改 scaffold 钉值。**
+> **Forge 1.12.2 `scaffold/` 与官方 MDK 存在代差（事实陈述，不是缺陷）—— 钉值以「实际编译能否跑通」为准，不以「与官方 MDK 对齐」为准。** 本档 `pack.meta.json` → `buildVerified: true`（覆盖 `:compileJava` + `:reobfJar`；进游戏后的行为未验）。改动钉值前请先按实际编译取证，并同步 `pack.meta.json` 与本档台账，否则既有构建账失效。
 > 保留理由：本档 scaffold 钉值已在本仓真机 build 记过账（`pack.meta.json` → `buildVerified: true`，覆盖 `:compileJava` + `:reobfJar`；进游戏后的行为未验），改值会使既有构建账失效。
 > 需要新版工具链：自行调用 `download_official_mdk`（默认 dryRun，只落到 `$MC_SKILL_CACHE`，不写仓库），再把返回值填进**你自己的工程**。
 

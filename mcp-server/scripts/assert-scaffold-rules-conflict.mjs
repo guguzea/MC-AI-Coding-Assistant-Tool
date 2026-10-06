@@ -329,18 +329,21 @@ if (census.packsChecked === 0) {
 }
 
 // ── B. 台账层 ───────────────────────────────────────────────────────────
+// 2026-10-05 重钉（同日第三次，**含一次自我更正**）：fabric/1.14.4 的 `05-events.mdc` 原写
+// 「❌ 把 1.16+ 的 `ClientTickEvents` / `ServerTickEvents` 抄到 1.14.4 — 本档是 `ClientTickCallback`」。
+// 用该档工程 `dev/fabric-1.14.4`（FAPI 钉 `0.28.5+1.14`）实测：**四条写法都能编过**，只是
+// **不同模块不同包** —— `ClientTickEvents`/`ServerTickEvents` 在 `fabric-lifecycle-events-v1`
+// （`…api.client.event.lifecycle.v1` / `…api.event.lifecycle.v1`），`ClientTickCallback`/`ServerTickCallback`
+// 在 v0 模块 `fabric-events-lifecycle-v0`（`…api.event.client` / `…api.event.server`，已标 deprecated）。
+// ⇒ 原 ❌ 不成立（被禁的是合法非 deprecated API）；**中途我一度改成「这两个类不存在」，同样不成立**
+//   （那是拿同族名字推包名推错了 ⇒ 假「找不到符号」）⇒ 最终形态 = 改成 ⚠️ 说明、**不判死任何符号**，
+//   1.14.4 判死分布回到基线 1、banned 60 → 58。符号台账已按门指示重生成（18 档 / 58 符号）。
+// conflicts 仍为 **0**：这才是本门的实质判据（规则 ❌ 写法与同档 scaffold 代码无冲突）。
 const LEDGER = {
   packsChecked: 47,
   rulesFiles: 447,
-  crossLines: 422,
-  // 2026-09-13 重钉（S18 裁定·散文禁令升级）：1.19.4 / 1.20.1 / 1.20.4 的 03-item.mdc 各新增
-  // 一条 `❌ Item.Properties#tab(...)` 行（带 api-index + 语料页证据锚）。该 3 行含场合语，
-  // 门按「场合型」丢弃 ⇒ contextualSkipped 3021 → 3027（+6 = 3 行 × 含空行 2 行），crossLines 不变。
-  contextualSkipped: 3027,
-  // 2026-09-14 重钉（S29e · fabric/1.16.5 判死示证改口）：08-client-server.mdc 里两处
-  // `EntityRendererRegistry.register(...)`（1.17+ 静态形态，对本档是错签名）换成「实例形态 + 取法见 04」
-  // 的指针注释 ⇒ crossLines 425 → 422、verdictSkipped 2261 → 2262、banned 60 → 58（1.16.5 判死清零）。
-  // conflicts 仍为 0：这条才是本门的实质判据，台账只负责让「分布变了」必须被看见。
+  crossLines: 426,
+  contextualSkipped: 3029,
   verdictSkipped: 2262,
   banned: 58,
   conflicts: 0,
