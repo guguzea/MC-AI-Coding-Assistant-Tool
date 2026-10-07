@@ -3,9 +3,15 @@
 本文件是**版本索引**，不是完整变更记录。
 
 > **详细变更记录在 [`mcp-server/CHANGELOG.md`](./mcp-server/CHANGELOG.md)。**
-> 本文件刻意**不复述**各版本改了什么——那些条目由逐批次记录维护，写一份第二手摘要只会
+> 本文件**不复述**各版本改了什么——那些条目由逐批次记录维护，写一份第二手摘要只会
 > 腐烂，且口径一旦分叉就没人知道该信哪份。需要"某版本到底动了什么"时，请直接读
 > `mcp-server/CHANGELOG.md`，那是唯一权威来源。
+>
+> **唯一的例外是 Release 正文**：发版时另写一份
+> [`V2.0.0-RELEASE-NOTES.md`](./V2.0.0-RELEASE-NOTES.md)，**贴进 GitHub Release 用**，
+> 读者是 mod 开发者而不是维护者 —— 所以不写口径、sweep 编号、commit 哈希那套内部语言。
+> 它是**导出物**不是第二真值：**两者冲突时一律以 `mcp-server/CHANGELOG.md` 为准**，
+> 正文里的数字如需复核，回到逐批次记录查。
 
 ---
 
@@ -13,6 +19,7 @@
 
 | 版本 | 变更详情 |
 |------|---------|
+| V2.0.0 | Release 正文：[`V2.0.0-RELEASE-NOTES.md`](./V2.0.0-RELEASE-NOTES.md) · 逐批次明细 → [`mcp-server/CHANGELOG.md`](./mcp-server/CHANGELOG.md) |
 | V1.0.4 | → [`mcp-server/CHANGELOG.md`](./mcp-server/CHANGELOG.md) |
 | V1.0.3 | → [`mcp-server/CHANGELOG.md`](./mcp-server/CHANGELOG.md) |
 | V1.0.2 | → [`mcp-server/CHANGELOG.md`](./mcp-server/CHANGELOG.md) |
@@ -24,6 +31,13 @@
 
 > 📝 **待维护者补充**：上表未填发布日期。各 tag 的日期可从 GitHub Releases 页面或
 > `git log` 取得，**请勿凭印象填**——日期错比不填更难查。确认后可直接在本表加一列。
+>
+> 📝 **V2.0.0 的两点待确认**（发布前请拍板）：
+> ① `V1.0.4` tag 内 `mcp-server/package.json` 的 `version` 当时仍是 `0.1.0`（`1.0.4` 是 3 天后
+> 另一 commit 才补上的）⇒ **按包版本找发布会找不到该 tag**。打 V2.0.0 tag 前请确认 tag 与
+> `package.json` 的 `version` 同步。
+> ② 本项目**是否严格遵循 SemVer 尚未正式确认**（见文末）⇒ 若要把 V2.0.0 称作
+> "breaking change"，建议先补这条裁定。
 
 ---
 
@@ -32,6 +46,7 @@
 | 你想知道 | 去哪里 |
 |---------|--------|
 | 某个版本具体改了什么 | [`mcp-server/CHANGELOG.md`](./mcp-server/CHANGELOG.md) |
+| V2.0.0 的 Release 正文（贴 GitHub Release 用） | [`V2.0.0-RELEASE-NOTES.md`](./V2.0.0-RELEASE-NOTES.md) |
 | 当前工作树（未发版）改了什么 | 同上，`Unreleased` 一节 |
 | 装了之后怎么配 | [`AUTO_SETUP.md`](./AUTO_SETUP.md) |
 | 怎么贡献 / 门禁规矩 / 数据链口径 | [`CONTRIBUTING.md`](./CONTRIBUTING.md) / [`CONTRIBUTING.en.md`](./CONTRIBUTING.en.md) |
