@@ -1,0 +1,167 @@
+# Gradle
+.gradle/
+build/
+!**/gradle/wrapper/gradle-wrapper.jar
+gradle-*.zip
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.omo/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+/.zcode/
+/.codebuddy/
+/.workbuddy/
+# 只忽略仓库根 Cursor IDE 目录（prompts / 本地草稿）。
+# 禁止写成 `.cursor/`：那会排除 fabric/<ver>/.cursor 等平台包。
+# session 只从各档 `.cursor/rules` 注入 00–10，漏提交则 clone 后 rules[] 为空。
+/.cursor/
+# MCP server
+mcp-server/node_modules/
+mcp-server/dist/
+release/
+*.tsbuildinfo
+*.log
+npm-debug.log*
+
+# Local-only audit / scratch artefacts
+mcp-server/data/loader-api-summaries/*-last.json
+mcp-server/data/loader-api-summaries/extracted-classes.json
+mcp-server/audit-*.txt
+mcp-server/scripts/_temp/
+mcp-server/_temp_localize_test/
+agent-tools/
+check-sources.txt
+临时文件*.md
+
+# Local jar scratch (do not commit)
+temp/
+temp/mod-jars/
+
+# Mapping build leftovers / large Mojang downloads (re-fetched by extractor)
+data/**/yarn-mappings.sqlite.tmp*
+data/**/mappings/test-build*.sqlite
+data/**/mappings/client.txt
+data/**/mappings/mojang-client.txt
+data/**/mappings/client-mappings-*.txt
+
+# Java / Minecraft
+*.class
+# Keep mapping zips / yarn jars under data/ tracked; ignore elsewhere
+*.jar
+!data/**/*.jar
+*.zip
+!data/**/*.zip
+run/
+run-data/
+src/generated/
+eclipse/
+out/
+
+# Environment
+.env
+.env.local
+
+mcp-server/_temp_tool_probe/
+mcp-server/_sweep-findings.json
+mcp-server/_audit-findings.json
+mcp-server/scripts/_audit-findings.json
+mcp-server/scripts/_repair-broken-italic.mjs
+openspec/
+ralphy-spec/
+# SQLite journals (never commit)
+data/**/*.sqlite-journal
+data/**/*-journal
+
+# 测试残留（MCP 解包产物，勿入库；已跟踪的需 git rm -r --cached data/test_mcp_check）
+data/test_mcp_check/
+mcp-server/--only=*/
+# 会话缓存 / 提交信息草稿（本地工作文件）
+_tmp_session.json
+.gitcommitmsg.txt
+
+# 本地代码索引
+.codegraph/
+
+# 一次性扫描/草稿文件（曾入库的已随 sweep31 删除，防复发）
+scripts/_scan-*.mjs
+scripts/_temp/*.log.err
+临时文件-*.md
+bugfix_list.md
+# Local debug scratch (mcp-server/scripts/_debug* 等)；不要无确认批量删除已跟踪文件
+**/_debug*
+**/_test_*
+**/_scan*
+**/_sample*
+
+# HH1: update state lives in $MC_SKILL_CACHE; keep any leftover out of git
+data/mc-skill-update-state.json
+
+# BOM / scratch audit dumps
+temp/audit-report.json
+
+# sweep81 删除清单（temp/audit/sweep81/CLEANUP-list.md）：防复发忽略
+# ⚠️ `sm-120x.xml` 是**用户 2026-09-20 裁定的保留项**，不是待清理的垃圾：
+#    裁定原话「剩下2项保留」——① 该文件**保留跟踪**、本规则**保留不动**（不做 git rm --cached）。
+#    裁定由门 `scripts/assert-w55-hygiene-rulings.mjs` 钉住：文件被删 / 被撤跟踪 / 规则被删即红。
+#    ⇒ 本规则与「被跟踪」并存是**裁定的预期状态**，不是「规则未生效的半执行」（旧注释的误读）。
+#      机制：`git check-ignore -v sm-120x.xml` 对已跟踪文件一律 rc=1，属正常表现；
+#      加 `--no-index` 才可见规则命中。
+#    （2026-10-07 审计误按「垃圾文件」处理并 git rm --cached，已当场 `git add -f` 恢复，
+#      并由上述钉门实跑确认回绿。此处留痕以防再次误判。）
+/sm-120x.xml
+/mcp-server/e.check*
+# 以下三件是 2026-10-07 实测确认的调试/误输入残留，已 `git rm --cached`
+# （只从索引移除、保留工作区文件本体）：
+#   mcp-server/i.level          —— 调试残留
+#   mcp-server/m[1])            —— shell 误输入痕迹（文件名本身即误操作产物）
+#   mcp-server/x[1]+'           —— 同上
+# 后两件文件名含 `[`/`]`/`'`，gitignore 的 glob 语法无法可靠表达（会误解括号），
+# 故**不进 .gitignore**，靠上面的索引清理 + 提交纪律防复发。
+/mcp-server/i.level
+# 说明：`_scanbin.js`/`_scanbin.txt` 已被上方 **/_scan* 命中，`mcp-server-local.zip` 已被 *.zip 命中；
+# `%TEMP%\mcp-gate-poison-*` 在仓库外（.gitignore 管不到）；
+# `data/forge_javadoc/1.12.2/processed/` 的 914 份孤儿混在 3,653 份有效文件里，无法用模式表达
+# （只删 processed 会破坏 raw==processed 的 A1 口径，须与 raw 侧重名件成对删 —— 见 CLEANUP-list §1.5）。
+# 交接文件
+mcp-server/docs/handoff-playtest-next.md
+R147-1379.verdicts.tsv
+V2.0.0-RELEASE-NOTES.md
+
+# ===== ↑ 以上同步自 .gitignore（「从 .gitignore 同步」只重写以上部分）=====
+.git/
+.hg/
+.svn/
+node_modules/
+bower_components/
+jspm_packages/
+__pycache__/
+site-packages/
+venv/
+coverage/
+htmlcov/
+lcov-report/
+cmakefiles/
+cmake-build-*/
+bazel-*/
+pods/
+deriveddata/
+storybook-static/
+playwright-report/
+test-results/
+allure-results/
+allure-report/
+cdk.out/
+*.egg-info/
+*.dist-info/
+eggs/
+pip-wheel-metadata/
+wheels/
+# ----- ↑ 以上为 ZCode 默认排除规则（自定义规则请写在本行下方，不会被同步/恢复改动）-----
+# 自定义规则写在下方（本行提示可删除）
