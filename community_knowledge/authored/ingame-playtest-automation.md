@@ -470,7 +470,7 @@ NeoForge 1.20.1 无官方 MDK pin（原返回 `MDK_NOT_PINNED`）⇒ 按**兼容
 
 ### T2 · 原「已核实边界」40 条（逐字保留；按原序）
 
-<!-- 源：并入前的根 README.md 第 182–235 行（同上古坐标，现已漂移；整份备份见 temp/backup-ledger-20261008/README.md）。与本文坑位重复的条目**未删除**，原话留在此处作证据。 -->
+<!-- 源：并入前的根 README.md 第 182–235 行（同上古坐标，现已漂移；改写前的整份原文见仓库 git 历史）。与本文坑位重复的条目**未删除**，原话留在此处作证据。 -->
 **已核实边界（写清不吹）**：
 
 - **有桥**此前只覆盖 BlackBoxPro 有预编译件的档；其余档一律走**无桥**（进程内 driver）。**2026-10-04 起 `forge 1.7.10–1.12.2` 也可走桥** —— `generate_playtest_driver driverMode=external_bridge` 会**附赠**一份自建「最小桥 mod」模板（`playtest/bridge/BridgeMod.java` + `mcmod.info` + `README.bridge.md`；tick 钩子 + 内嵌 `com.sun.net.httpserver`，线协议逐键对齐 `playtest_bridge` ⇒ **工具面零改动**）。桥**无鉴权**且通配绑定 ⇒ 只在可信网络、短会话；`playtest_bridge` 只连 `127.0.0.1`。
@@ -541,7 +541,7 @@ NeoForge 1.20.1 无官方 MDK pin（原返回 `MDK_NOT_PINNED`）⇒ 按**兼容
 
 > `README.en.md` 的同两节（矩阵 + 36 条边界）与中文同本账，2026-10-08 一并降级为紧凑判据；英文原文逐字存这里，需要引用英文措辞时读本节。
 
-#### T4.1 原英文矩阵节（并入前 README.en.md 第 159–178 行；整份备份见 temp/backup-ledger-20261008/README.en.md）
+#### T4.1 原英文矩阵节（并入前 README.en.md 第 159–178 行；改写前的整份原文见仓库 git 历史）
 
 > **英文侧原本落后中文侧**（并入前实测）：原英文矩阵只有 **13** 个数据行（中文 17），原英文「Verified boundaries」只有 **36** 条（中文 40）—— 差的正是 Fabric `1.14.4–1.19.4`、Quilt `1.18.2 / 1.19.4`、Forge `1.12.2`、LiteLoader `1.12.2` 四行与对应的边界条。2026-10-08 这次改写**把英文补到与中文同构**（17 行 + 8 条判据），落后部分的原貌不在此归档（本来就没有）。
 
