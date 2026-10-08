@@ -204,4 +204,6 @@ graph LR
    (其实是部分内容拆了之后会导致合并工具出现一些妙妙BUG)
 #### 有问题可以提issue与讨论,我会尽快回复
 ## 可以进来玩玩:
+QQ:
 <img width="1228" height="2184" alt="0bd61b684c78842d59a5ad09de01f4be_720" src="https://github.com/user-attachments/assets/41e370aa-611c-4af2-ad9a-007e1973a24a" />
+DISCORD:https://discord.gg/vY8n6G865
