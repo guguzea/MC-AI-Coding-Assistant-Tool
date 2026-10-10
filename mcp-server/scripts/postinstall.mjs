@@ -21,6 +21,10 @@
  *   MC_SKILL_GITHUB_API_BASE         可选，API 镜像（与 src/update/http.ts:82 一致；只改 API 主机，不改资产主机）
  *   MC_SKILL_DATA_DOWNLOAD_TIMEOUT_MS  下载超时，默认 600000（与 src/update/download.ts 一致）
  *   HTTPS_PROXY / HTTP_PROXY / ALL_PROXY   仅 curl 回退路径使用（与 src/update/http.ts:104 一致）
+ *   MC_SKILL_POSTINSTALL_ALLOW_IN_REPO=1
+ *     仅供维护者：允许在**仓库检出**里跑 --data 分支。默认拒写 —— clone 里 `mcp-server/data`
+ *     就是受版本控制的语料目录，而本脚本的落地方式是「先删该目录、再把暂存目录整体改名」，
+ *     默认跑一趟就等于把跟踪语料换掉。装到 node_modules 下的常规安装不受影响（自动放行）。
  *   MC_SKILL_DATA_DRYRUN=1
  *     ⚠️ **仅供开发/测试自检使用，不是给用户用的开关。**
  *     它只打印「将要下载什么 / 解压到哪里 / 校验和从哪来」，不发起资产下载、不落盘。
@@ -675,6 +679,19 @@ async function dataDirLooksPopulated() {
   }
 }
 
+/**
+ * 仓库检出保护（2026-10-09）。主流程的落地方式是「先删 DATA_DIR、再把暂存目录整体改名」，
+ * 而 clone 里 `PKG_ROOT` = `<repo>/mcp-server`、`DATA_DIR` 正是**受版本控制**的那份目录
+ * （mcp-server/data/**）⇒ 少了这道闸门，在 clone 里跑 `npm install --data` 就是删跟踪语料。
+ * 判据：安装态的 `PKG_ROOT` 必在某个 node_modules 段之下（npm / pnpm / yarn 的落点都如此）；
+ * 不在 node_modules 下、而自身或父目录是 git 检出 ⇒ 判为仓库检出。
+ * 放行口只有一个：MC_SKILL_POSTINSTALL_ALLOW_IN_REPO=1（维护者刻意要给 clone 补 data 时用）。
+ */
+function isRepoCheckoutInstall() {
+  if (PKG_ROOT.split(/[\\/]+/).includes("node_modules")) return false;
+  return existsSync(join(PKG_ROOT, ".git")) || existsSync(join(PKG_ROOT, "..", ".git"));
+}
+
 async function main() {
   // 1) 显式跳过优先于一切（在判定 --data 之前，这样 CI / release 链连提示都不打）
   if (skipRequested()) {
@@ -689,6 +706,16 @@ async function main() {
   }
 
   info("检测到 --data，开始准备 data 资产。");
+
+  // 仓库检出保护：先于任何落笔（详见 isRepoCheckoutInstall 注释）。契约不变：只 warn + return，
+  // 绝不 exit 1 —— 「data 装不上」不能变成「npm install 失败」。
+  if (isRepoCheckoutInstall() && process.env.MC_SKILL_POSTINSTALL_ALLOW_IN_REPO !== "1") {
+    warn(`检测到仓库检出（${PKG_ROOT}）：拒绝把 data 写进受版本控制的 ${DATA_DIR}。`);
+    info("  这里跑 --data 的落地方式是「先删该目录、再把下载内容整体改名」，在 clone 里会换掉跟踪语料。");
+    info("  确要给这个检出补 data：设 MC_SKILL_POSTINSTALL_ALLOW_IN_REPO=1 再跑（维护者用）。");
+    info(`  或者把 data 资产放到别处，并设置 MC_SKILL_DATA=<其他路径>。`);
+    return;
+  }
 
   if (await dataDirLooksPopulated()) {
     info(`${DATA_DIR} 已存在且非空，跳过下载（如需强制重下，请先删除该目录）。`);

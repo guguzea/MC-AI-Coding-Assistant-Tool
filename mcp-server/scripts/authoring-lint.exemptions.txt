@@ -1,0 +1,4 @@
+# 作者规范 J3 豁免台账：file<TAB>scope（行前 24 字符指纹或 *）<TAB>basis（只许 safety-neg:/example:/user-approved: 三形）
+# 原文漂走 = [STALE] 红。判据与基线见 assert-authoring-lint.mjs 门头注。
+common_skill/mc-retro/SKILL.md	- 只复盘本轮：不搬记忆里的旧数与旧账凑数；本轮	safety-neg:防编造（作者规范 §4 安全负向留职）
+common_skill/mc-router/SKILL.md	## 第 2 步 · 查实况名单（禁止凭记忆报名	safety-neg:防编造（作者规范 §4 安全负向留职）

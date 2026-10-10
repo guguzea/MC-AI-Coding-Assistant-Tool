@@ -750,12 +750,12 @@ Cursor 主路径是 **tools**；协议层仍注册 Prompt/Resource，工具兜�
 
 | 能力   | 工具                         | 说明                                                                                                   |
 | ---- | -------------------------- | ---------------------------------------------------------------------------------------------------- |
-| 工作流  | `get_workflow_template`    | 模板名以 `get_workflow_template` 列表为准（含 `mc-new-block` / `mc-new-item` / `mc-new-blockentity` / `mc-mixin` / `mc-worldgen` / `mc-config` / `mc-gametest` / `mc-setup-env` / `mc-publish` 等，与 Prompt 同名） |
+| 工作流  | `get_workflow_template`    | 模板名以 `get_workflow_template` 列表为准（含 `mc-new-block` / `mc-new-item` / `mc-new-blockentity` / `mc-mixin` / `mc-worldgen` / `mc-config` / `mc-gametest` / `mc-setup-env` / `mc-publish` 等，与 Prompt 同名）；编排型 `mc-grill` / `mc-handoff` / `mc-router` / `mc-review` / `mc-spec` / `mc-retro` / `mc-breakdown` / `mc-wizard` / `mc-research` / `mc-glossary` / `mc-waitwhat` / `mc-prototype` 源稿在仓库根 `common_skill/`（普通文档待遇，不进受管门） |
 | 知识列表 | `list_knowledge_resources` | 列出 `mcskill://` URI                                                                                  |
 | 知识读取 | `read_knowledge_resource`  | 按 URI 读正文                                                                                            |
 
 
-常用 URI：`mcskill://patterns/README`（→ `community_knowledge/patterns/README.md`）、`mcskill://schema/sqlite`、`mcskill://matrix/mixin-support`、`mcskill://version-changes/1.21`、`mcskill://antipatterns/registry`、`mcskill://workflow/<模板名>`、`mcskill://community/<authored-id>`。兼容说明见 [mcp-server/docs/prompts-client-compat.md](./mcp-server/docs/prompts-client-compat.md)。
+常用 URI：`mcskill://patterns/README`（→ `community_knowledge/patterns/README.md`）、`mcskill://schema/sqlite`、`mcskill://matrix/mixin-support`、`mcskill://version-changes/1.21`、`mcskill://antipatterns/registry`、`mcskill://workflow/<模板名>`、`mcskill://community/<authored-id>`、`mcskill://skill/<编排技能名>`（读 `common_skill/` 源稿正文；实名单 = `list_knowledge_resources` 的 `skill-` 前缀条目，登记由盘派生）。兼容说明见 [mcp-server/docs/prompts-client-compat.md](./mcp-server/docs/prompts-client-compat.md)。
 
 **补充文档**（`mcp-server/docs/`）：`mixin-support.md`（字节码校验支持矩阵）、`vanilla-registries.md` / `registry-data-source.md`（Registry 数据源）、`mc-skill-update.md`（自更新机制）、`prompts-client-compat.md`（Prompt/Resource 客户端兼容）。
 

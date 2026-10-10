@@ -792,3 +792,41 @@ NeoForge 1.20.1 无官方 MDK pin（原返回 `MDK_NOT_PINNED`）⇒ 按**兼容
   - https://github.com/newstarbar/ModCrafting
   - https://github.com/mc-agents
   - https://www.player.games/
+
+## 作业规则的原生细节与取证史（2026-10-09 自根 `AGENTS.md` 并入）
+
+根纲「游玩自测作业规则」只留规范句（要做什么 / 判红 / 撤除纪律）；**为什么这样规定、怎么操作、哪一轮验的**归档在本节。
+
+### 规则生效日期与起因
+
+- 四条作业规则（常驻会话 + 剧本热载 / fail-closed 证据三件 / 关游戏先问用户 / 撤除纪律）**自 2026-09-29 起生效**（原小节标题即写「2026-09-29 起」）。
+- 起因：执行面此前「改一次动作就重启一次游戏」，时间大多花在世界加载上；同一批代码改动的验证被拆成多轮，每轮都要重进世界。
+
+### 常驻会话与剧本热载的实现细节
+
+- 无桥 driver（`generate_playtest_driver` 的 `driverMode=temporary_client_tick_driver`）是**长驻解释器**：进世界后守候 `<evidenceDir>/plan.txt`，**文件一变就在同一游戏进程内开新一轮**。
+- 每轮开始打日志 `[QA] ROUND n START`；历史轮次记 `<evidenceDir>/rounds.jsonl`（`qa.log` 只含本轮 `[QA]` 段）。
+- 判 verdict 必须读 `rounds.jsonl` —— 只看最后一轮的 `qa.log` 会把历史轮误读成「没跑过」。
+- 只有两类改动需要重启游戏：① driver 生成物 / 被测 mod 的 **Java 源码**变了（JVM 不能热换类）；② 会话崩了，或世界被 `session.lock` 占住。
+
+### 关游戏的操作细节
+
+- 要关就**精确杀真身 JVM**：命令行特征含 `-Dfabric.dli.config`（按命令行过滤，不要只 `taskkill /IM java.exe`）。
+- **别只杀 `gradlew` wrapper**：wrapper 退出后真身客户端还在，残留会占住世界 `session.lock`，下一轮进世界直接报「另一个程序已锁定文件的一部分」。
+- 强杀构建/游戏还可能留下 loom 弃主锁 ⇒ 清 `~/.gradle/caches/fabric-loom/*.lock` 才能重建。
+
+### driver / 桥的逐轮取证史
+
+- driver 真代码覆盖 = `PLAYTEST_VERIFIED_TIER`（`mcp-server/src/generators/playtest-driver.ts`）。as-of 2026-10-04 记 **53** 项 = `fabric` 18 / `neoforge` 14 / `quilt` 10 / `forge` 10 / `liteloader` 1；**该字数是当时快照，正文与本档都不作真源 —— 以生成器那张表为准**。
+  - `fabric` 含去混淆档 `26.1` / `26.1.1` / `26.1.2` / `26.2` / `26.3`（需 fabric-api）与低版本 `1.14.4` / `1.16.5` / `1.17.1` / `1.18.2` / `1.19.4`；`neoforge` 含去混淆档同五档；`forge` 含早期 8 档 `1.12.2` / `1.13.2` / `1.14.4` / `1.15.2` / `1.16.5` / `1.17.1` / `1.18.2` / `1.19.4`。
+  - 逐档改写表都不同：1.12.2 = MCP 命名层**再退一层**（Forge 三包在 `fml.common.*` 旧位置 / 无 `Minecraft.getInstance()` / 无 `mainWindow` / 截图无 Consumer 变体 / `ITextComponent` 无 `getString()` / `Entity.getName()` 返 String / `EntityList.getKey(Entity)` / `capabilities` / `GuiScreen.mouseClicked` 是 **protected+void** ⇒ 点击证明降级走 `PlayerControllerMP.windowClick` 后端）；1.13.2 是 MCP 命名层；1.14.4 / 1.15.2 / 1.16.5 属旧 mojmap 族但字段名各异；1.19.4 仅 `isOnGround` 差一处。
+- **验证强度三等**：① 真机跑通 = 26.x 十档（fabric 5 + neoforge 5）；② 真构件编译验证（javap 取证 + `javac` 对**真** jar：JDK 8 腿含 `fabric 1.14.4` / `1.16.5` 与 `forge 1.12.2` / `1.13.2` / `1.14.4` / `1.15.2` / `1.16.5`）——**编译验证 ≠ 真机验证**；③ 替身腿 = `fabric 1.17.1` / `1.18.2`（真 named jar + 两类 FAPI 替身，本机没有这两档的 yarn-remapped 模块件）。
+- `liteloader 1.12.2` = hybrid（`liteloader_forge`）档：vanilla/Forge 面与 `forge 1.12.2` 同表，再叠 `applyLiteLoader1122`（**只改 tick 挂接** —— 摘掉 Forge `ClientTickEvent` 订阅、换成静态转发 `onLiteLoaderTick(Minecraft)`，由工程自己的 LiteMod 实现 `com.mumfrey.liteloader.Tickable` 后转发；不转发 = 永不 tick = 预算耗尽判红）；产物对 LiteLoader 零类型依赖（不 import `com.mumfrey.*`）⇒ 与 forge 1.12.2 共用同一套真构件 classpath 编译验证通过；LiteLoader 侧那两个名字出自该档核实表 `liteloader/1.12.2/knowledge/common/verified-api.md`（该 loader 许可证禁止再分发 ⇒ 本仓不内置其 jar）；纯 litemod（无 Gradle、无 Forge）不在本链。
+- `quilt` 全族只有 javap / 派生面、无编译验证（本机没有 quilt 的 yarn-remapped 模块件），且 quilt 工程须自备 dev-only `fabric-api`。
+- **「替身只证签名形状，不证类存在」** —— 判某类在该版存不存在必须拿真构件。
+- 桥路线现成件下限的两批扩面（2026-10-04）：`generate_playtest_driver driverMode=external_bridge` 在 `(platform,version) ∈ BRIDGE_MOD_TARGETS`（8 个 = `forge {1.7.10,1.8.9,1.9.4,1.10.2,1.11.2,1.12.2}` + `rift 1.13.2` + `modloader 1.6.4`）时附赠自建最小桥模板 `playtest/bridge/**`（生成器 `mcp-server/src/generators/playtest-bridge-mod.ts`，**不进 `PLAYTEST_VERIFIED_TIER`**、`temporary_client_tick_driver` 时不附赠 ⇒ 与 driver 链隔离）。线协议逐键对齐 BlackBoxPro（`GET /status` → `{status,version,platform,httpPort,actions,ready}`；`POST /execute` → `{id,status,message,data}`，HTTP 恒 200；超时串逐字 `Timeout after 10000ms` ⇒ 工具侧照常映射 `PLAYTEST_TIMEOUT`）。
+- 桥件验证强度两等：`1.12.2` 已 JDK 8 `javac` 对真 `forgeBin-1.12.2-14.23.5.2847.jar` 编译验证（**这轮真构件编译揪出 `Item.getUnlocalizedName()` 改名 —— stable_39 真 jar 是 `getTranslationKey()`，javadoc 骗人**）；`1.7.10–1.11.2` 只有 javadoc 出处、未编译验证；`rift 1.13.2` = 真模板（MC 侧逐名有 1.13.2 MCP 快照出处 —— 与 rift scaffold 的 `snapshot_20180921` 同快照，且 2026-10-06 起已对本机真构件 `forgeBin-1.13.2-25.0.223_mapped` 逐名 javap 核过：43/43 在盘，`Minecraft.getInstance()` 的 static 性**已证出** —— 旧「证不出」作废；右键入口实名 `PlayerControllerMP`、`EntityType` tsrg 成员 122 行 —— 旧「不在 tsrg / m·f 皆 0」两处陈述作废）。仍为缺口：`block_at` 只回 translation key、实体 `type` 只回类简单名（升级走 `EntityType.getId`，需改模板重编译）。
+- 桥件版本支持（2026-10-06 用户裁定 + GitHub API 同日核）：原生线只到 MC 1.13（最终原生 `1.0.4-105`），1.13.1/1.13.2 = Chocohead 社区分支 `newerer`/`newerest`，JitPack 无已取到成品 ⇒ 桥件用原生 `1.0.4-106`，在 1.13.2 上实测「能启动但 listener 不派发」。
+- `modloader 1.6.4` = 骨架（本仓只 tick 一处出处 ⇒ `Mc` 内部类 10 动作 + `isInWorld` 全 `TODO(未核实)` + fail-closed，宁出骨架也不猜）。
+- 字段名逐档不同（玩家/世界字段在 `1.10.2 → 1.11.2` 改名；游戏目录只 `1.12.2` 有「构件 `gameDir` ↔ javadoc `mcDataDir`」一处差异）。
+- `/locate` 实测 ≈2.5 秒且结果落 `<gameDir>/logs/latest.log` 的 `[CHAT]` 行。

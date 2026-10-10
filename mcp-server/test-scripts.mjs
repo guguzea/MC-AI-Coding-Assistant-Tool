@@ -2366,6 +2366,15 @@ const REAL_RUN_GATES = [
     // 默认只跑三族离线判据（菜单契约 ×2 profile、执行器 Java 形状、工具 14 例矩阵）；真机 E2E 是 opt-in
     // （MC_SKILL_PLAYTEST_INTENT_E2E=1 + …_EVIDENCE=<abs>），不设即跳过且不静默通过。
     "./scripts/assert-playtest-intent-gate.mjs",
+    // 2026-10-10 作者规范执法面：WRITING-FOR-AGENTS.md 的机器可判子集（J1 frontmatter 形状 /
+    // J2 指针路径防过期 / J3 纯负向棘轮 + 豁免台账原文在盘）。面 = WRITING-FOR-AGENTS.md +
+    // common_skill/**（CONTRIBUTING/根 AGENTS 属相对平台路径假红区，扩面另批，见门头注）。
+    "./scripts/assert-authoring-lint.mjs",
+    // 2026-10-09 档案指针执法面：「档案/历史/证据搬走 + 留指针」的守卫。依据 = 指针跟随实验（13 臂）：
+    // 代理会跟指针读（含 1000 文件规模），**唯一实测到的失败形态**是「档案存在、但没有一行出现在它会读到的
+    // 面上」⇒ 本门把「在册档案在盘 + 被 AGENTS / WRITING-FOR-AGENTS / CONTRIBUTING 之一按仓库相对路径
+    // 提到」变成红，并普查「名字像账本的新文件必须登记或带原因豁免」。真跑面故意窄（盲区写在门头）。
+    "./scripts/assert-archive-pointers.mjs",
   ];
 
 const SELFTEST_GATES = [
@@ -2473,6 +2482,13 @@ const SELFTEST_GATES = [
     // 摘 waitintent 步、mine 长出成功分支 / 假实现全 ok 必被矩阵咬住 / 证据 11 项 invariant 逐条投毒 ——
     // 各必须当场红，另四条正对照须绿（分母唯一真值源 = 该门 `--selftest` 末行）。
     "./scripts/assert-playtest-intent-gate.mjs",
+    // 2026-10-10：作者规范门的判据活性自证（J1 三形投毒 / J2 过期路径与围栏与占位符出局 /
+    // J3 棘轮升-基线缺-孤儿条目 / 豁免漂走与 basis 坏形，臂数不在这里抄 —— 分母唯一真值源 = 该门
+    // `--selftest` 末行「N 通过（x 正控 + y 投毒 + z 反退化）」）。
+    "./scripts/assert-authoring-lint.mjs",
+    // 2026-10-09：档案指针门的两向自证（P1 缺失 / P2 无提及 / P2 README 替代 / P3 缺面 / 围栏两向 /
+    // P4 未在册两向 —— 臂数不在这里抄，唯一真值源 = 该门 `--selftest` 末行）。
+    "./scripts/assert-archive-pointers.mjs",
   ];
 
 /**

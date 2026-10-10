@@ -8067,6 +8067,10 @@ async function testScriptWriteGuardFunnel() {
     ["guard 失去 DRYRUN 输出", SCRIPT_WRITE_GUARD_REL, () => guardText.replace(/DRYRUN/g, "SKIP"), /缺 DRYRUN 输出/],
     ["guard 失去 scratch 检查函数", SCRIPT_WRITE_GUARD_REL, () => guardText.replace(/function assertScratch\(/, "function notChecking("), /缺 scratch 仓库路径检查/],
     ["guard 失去 scratch throw", SCRIPT_WRITE_GUARD_REL, () => guardText.replace(/不许落在仓库内/, "随便写"), /缺 scratch 仓库路径检查/],
+    // 2026-10-09：`open` 认 mode 之后，「写意图」必须照旧被 C-3 抓住（否则认 mode 就成了放宽）。
+    ["异步 open 写成写意图（认 mode 后仍须抓）", oneoffRel, (t) => t + '\nconst fh = await fs.promises.open(p, "w");\n', /异步\/回调式写盘原语 open\(/],
+    // 2026-10-09：安装器（postinstall.mjs）的豁免依据 = 那道仓库拒写闸门，摘掉即失效。
+    ["安装器自保闸门被摘（豁免依据失效）", "mcp-server/scripts/postinstall.mjs", (t) => t.replace(/MC_SKILL_POSTINSTALL_ALLOW_IN_REPO/g, "MC_SKILL_DISABLED"), /在册豁免依据/],
   ];
   for (const [label, rel, mutate, anchor] of poisoned) {
     const src = files.find((f) => f.rel === rel);
@@ -8126,9 +8130,10 @@ async function testScriptWriteGuardFunnel() {
       `豁免依据闸门被摘掉后必须失效（${debtRel}），实际：\n${lostBasis.problems.join("\n")}`,
     );
   }
-  // 反向对照：只读脚本里的 readFileSync 不得被当成写盘（否则门禁会误伤读盘）
+  // 反向对照：只读脚本里的 readFileSync 与**只读 open 探头**都不得被当成写盘
+  //（后者是 2026-10-09 修既有红时补的：zip 中央目录定位那种 `await open(p, "r")` 曾被按名字误报）。
   const readOnly = diffScriptWriteGuard([
-    { rel: "scripts/_oneoff/probe-readonly.mjs", text: 'import { emit } from "../_lib/write-guard.mjs";\nconst t = readFileSync(p, "utf8");\nif (want) emit(p, t);\n' },
+    { rel: "scripts/_oneoff/probe-readonly.mjs", text: 'import { emit } from "../_lib/write-guard.mjs";\nconst t = readFileSync(p, "utf8");\nconst fh = await fs.promises.open(p, "r");\nif (want) emit(p, t);\n' },
   ]);
   assert.deepEqual(readOnly.problems, [], `只读脚本误报：\n${readOnly.problems.join("\n")}`);
 
@@ -8166,8 +8171,8 @@ async function testScriptWriteGuardFunnel() {
       ` 写盘原语=${s.primitiveHits}（write-guard 内 ${s.primitiveHits - s.exemptPrimitiveHits - s.outsideGuardHits}，` +
       `在册豁免 ${s.exemptPrimitiveHits}，范围外 ${s.outsideGuardHits}）` +
       ` 清单：非写盘 ${SCRIPT_WRITE_GUARD_NON_WRITERS.size} + 待收口债务 ${SCRIPT_WRITE_GUARD_DEBT.size}` +
-      ` 投毒=${poisoned.length + 3} 类全命中（含新增裸写仓库脚本 mcp-server/scripts/**.js / 已收口脚本复现裸写 / 豁免依据失效 ×1）` +
-      ` + 只读误报对照通过 + scratch 仓库拒绝实跑 throw`,
+      ` 投毒=${poisoned.length + 3} 类全命中（含新增裸写仓库脚本 mcp-server/scripts/**.js / 已收口脚本复现裸写 / 豁免依据失效 ×2（其一为安装器自保闸门））` +
+      ` + 只读误报对照（readFileSync + 只读 open 探头）通过 + scratch 仓库拒绝实跑 throw`,
   );
 }
 

@@ -20,6 +20,47 @@ export interface KnowledgeResource {
 const CODE_PATTERN_PLATFORMS = ["forge", "fabric", "neoforge"];
 const CODE_PATTERN_PREFIX = "mcskill://code-patterns/";
 
+/**
+ * 编排型技能族（common_skill/<name>/SKILL.md）：跨平台纯程序文本，无版本×平台矩阵。
+ * URI 面 `mcskill://skill/<name>`；登记与读取都从盘派生，目录不存在时恒空、不报错。
+ * 名字单一 token（不含 / 与 \），防穿越靠 skillRel + isResolvedInside 两重。
+ */
+const SKILL_PREFIX = "mcskill://skill/";
+
+function skillRel(name: string): string | null {
+  if (!name || name.includes("/") || name.includes("\\")) return null;
+  if (!/^[A-Za-z0-9._-]+$/.test(name) || name === "." || name === "..") return null;
+  return `common_skill/${name}/SKILL.md`;
+}
+
+function listCommonSkills(): { name: string; description: string }[] {
+  const dir = join(resolveRepoRoot(), "common_skill");
+  let names: string[];
+  try {
+    names = readdirSync(dir);
+  } catch {
+    return [];
+  }
+  const out: { name: string; description: string }[] = [];
+  for (const n of names.sort()) {
+    if (n === "." || n === ".." || !/^[A-Za-z0-9._-]+$/.test(n)) continue;
+    const p = join(dir, n, "SKILL.md");
+    if (!existsSync(p)) continue;
+    let description = `编排技能 ${n}`;
+    try {
+      const m = readFileSync(p, "utf8").slice(0, 2000).match(/^description:[ \t]*(.+)$/m);
+      if (m) {
+        const d = m[1].trim().replace(/\s+/g, " ");
+        description = d.length > 120 ? d.slice(0, 117) + "…" : d;
+      }
+    } catch {
+      /* 读不动就留默认行，登记面不塌 */
+    }
+    out.push({ name: n, description });
+  }
+  return out;
+}
+
 /** 盘上实际有哪些 code-patterns 正文 → 仓库根相对路径（含 `code-patterns/` 段）。清单与读取都由它派生，工具输出因此不可能与实文件名脱钩。 */
 function scanCodePatterns(repoRoot: string): string[] {
   const rels: string[] = [];
@@ -109,6 +150,9 @@ export function listKnowledgeResources(): KnowledgeResource[] {
         ? { uri, name, description: `实读 ${rel}；本目录「主题 → 文件」索引（其余 code-patterns 条从这里取主题归属）` }
         : { uri, name, description: `实读 ${rel}，仅 ${dir} 档适用；索引见 ${dir}/code-patterns/README.md` },
     );
+  }
+  for (const s of listCommonSkills()) {
+    resources.push({ uri: `${SKILL_PREFIX}${s.name}`, name: `skill-${s.name}`, description: s.description });
   }
   for (const name of listWorkflowTemplateNames()) {
     resources.push({
@@ -260,6 +304,29 @@ function readKnowledgeResourceInner(uri: string): {
     if (existsSync(p)) {
       return { found: true, uri, mimeType: "text/markdown", text: readFileSync(p, "utf8") };
     }
+  }
+
+  if (uri.startsWith(SKILL_PREFIX)) {
+    const rel = skillRel(uri.slice(SKILL_PREFIX.length));
+    if (!rel) {
+      return {
+        found: false,
+        uri,
+        mimeType: "text/plain",
+        text: "非法 skill URI：只接受 mcskill://skill/<单一目录名>，实名单以 list_knowledge_resources 的 skill- 前缀条目为准。",
+      };
+    }
+    const root = resolveRepoRoot();
+    const p = join(root, rel);
+    if (!isResolvedInside(root, p) || !existsSync(p)) {
+      return {
+        found: false,
+        uri,
+        mimeType: "text/markdown",
+        text: `未找到编排技能源稿 ${rel}（该文件不存在，或 common_skill/ 不在仓库根）。实名单见 list_knowledge_resources 的 skill- 前缀条目；禁止拼任意路径、禁止拿别的文件顶上。`,
+      } as const;
+    }
+    return { found: true, uri, mimeType: "text/markdown", text: readFileSync(p, "utf8") };
   }
 
   if (uri.startsWith("mcskill://community/")) {

@@ -20,7 +20,7 @@
 | 社区实务知识 | `community_knowledge/` | 持续维护 | 发布 / 崩溃 / 软依赖 |
 | MCP Server | `mcp-server/` | 以 list-tools / 实际注册为准 | 新工具、脚本、测试 |
 | 离线数据 | `data/` | 8 平台多版本（档面以 `ls data/` 为准） | 抓取、索引、审计 |
-| 根文档 | `README.md` / `AUTO_SETUP.md` / `AGENTS.md` / `CONTRIBUTING.md` | 持续维护 | 修正与同步 |
+| 根文档 | `README.md` / `AUTO_SETUP.md` / `AGENTS.md` / `CONTRIBUTING.md` / `WRITING-FOR-AGENTS.md` | 持续维护 | 修正与同步 |
 
 哪个平台有哪几档、哪条是主推，**以根 `README.md`「平台说明」表为准**，本节不重述；核对用 `ls -d <平台>/*/` 与 `ls -d data/*/`。
 
@@ -86,6 +86,8 @@ cd <平台>/<版本>
 
 ## 扩展现有规则
 
+正文的写法与放位见仓库根 `WRITING-FOR-AGENTS.md`（负载分级、完成判据、指针句、出处、同步与门链）；本节只给形状模板。
+
 每个 `.mdc` 建议包含：
 
 1. **约束（Constraints）**
@@ -112,6 +114,8 @@ ELSE
 ---
 
 ## 添加新 Skill
+
+写正文前先读仓库根 `WRITING-FOR-AGENTS.md`（含 `mappings:` 键、镜像与门链要求）。
 
 目录：`平台/版本/.cursor/skills/<skill-name>/`
 

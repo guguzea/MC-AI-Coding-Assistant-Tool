@@ -586,6 +586,115 @@ ${WORKFLOW_ERA_GUARD}
 8. 事件面无专用 generate_* 生成器：手写按该档规则；Attachment / Capability 骨架另走 mc-capability 工作流（Fabric 侧是 Attachment API，不是 Forge Capability）。GUI / 网络协作面看该档 05-events 末尾扩展点表（1.21.11 档 :212-:221 列 mc-registry / mc-item / mc-entity / mc-networking / mc-gui）。
 9. 【停 · 语料边界】1.14.4–1.21.11 的 fabric 语料里 7 档（1.14.4 / 1.16.5 / 1.17.1 / 1.18.2 / 1.19.4 / 1.20.1 / 1.21.3）**上游从来没有 fabric-docs 正文**，该些档本地只有 fabric-wiki 少量页 + 规则树 ⇒ 只能读该档规则与核实表，禁止拿邻版 docs 正文当本版全文，也禁止承诺补抓。基岩版没有本清单：Bedrock 事件走 Script API（另档），不要套 Fabric 回调。`,
   },
+  "mc-grill": {
+    title: "编排：需求对齐拷问",
+    body: `${WORKFLOW_HITL}
+1. 适用：新内容 / 新机制 / 新玩法且需求未定型。需求已明确、或属具体 API 问答与报错排查 → 不走本清单，直接进对应开发工作流或检索。
+2. 先定坐标：平台 + 精确 MC 版本（可用则 detect_mod_project，否则问用户）。坐标未定不开始内容对齐——不同平台是完全不同的设计题。
+3. 取拷问程序执行：read_knowledge_resource uri=mcskill://skill/mc-grill（正文是仓库 common_skill/mc-grill/SKILL.md）。按其程序走：需求展开成设计树（创意枝只能用户拍板 / 技术枝按平台分叉 / 代劳枝可自定但必须记理由与回退）；按 frontier 一轮轮提问，每题编号并附推荐答案；能查的事实自己查（search_*_docs / query_loader_api / 派子代理），核不到就在问题里标「未核实」，禁止编。
+4. frontier 清空才算谈完：输出共识清单四块（已定 / 已代劳含回退 / 未核实 / 下一步）。**用户确认清单前不写代码、不改文件。**
+5. 用户中途喊停 → 停止提问，未决分支列进「未核实」，按现有共识走。`,
+  },
+  "mc-handoff": {
+    title: "编排：会话交接",
+    body: `${WORKFLOW_HITL}
+1. 适用：长会话要换上下文 / 换机器 / 换宿主继续同一件事。不替代 git 提交。
+2. 取交接程序并按其六块生成：read_knowledge_resource uri=mcskill://skill/mc-handoff（正文是仓库 common_skill/mc-handoff/SKILL.md）。六块 = 目标与现状 / 已落改动 / 证据指针 / 未做清单 / 下一步 / 踩坑备忘，空块写「无」。
+3. 只写本轮真实发生过的事；没核实的进「未核实」并在未做清单点名，禁止用记忆或推测填空白。自造简写首次出现带解释。
+4. 先输出全文给用户过目，确认后（写盘须确认）才落盘；新会话第一件事是读交接文档、再按其「下一步」行动。
+${WORKFLOW_HITL_STEPS}`,
+  },
+  "mc-router": {
+    title: "编排：流程选型路由",
+    body: `${WORKFLOW_HITL}
+1. 适用：用户不确定「该走哪条流程 / 用什么技能 / 下一步做什么」，或刚对齐完需求要选工作流。情况已明确（加方块、崩溃分诊、移植）→ 直接进对应模板，不走本清单。
+2. 取路由程序执行：read_knowledge_resource uri=mcskill://skill/mc-router（正文是仓库 common_skill/mc-router/SKILL.md）。三步：归类情况 → 查实况名单 → 三行制推荐（主推荐+备选+可直接执行的入口）。
+3. 名单必须现查，禁止凭记忆报名：list_knowledge_resources 的 workflow- 前缀条目 = 模板全量实况、skill- 前缀 = 编排技能；名单外的名字传 get_workflow_template 会被 schema 枚举拒（校验错误的期望值面也含全量名单）。核不到的名字不当存在，明说「本面没有这条现成流程」，禁止编。
+4. 路由只给下一跳，不接管执行；用户选定流程后按该流程走。`,
+  },
+  "mc-review": {
+    title: "编排：双轴代码评审",
+    body: `${WORKFLOW_HITL}
+1. 适用：用户要「review 这段改动 / 合并前把关」。报错跑不起来 → 走崩溃分诊，不走本清单。
+2. 定对象：diff 起点（用户指定，默认工作区相对最近提交）+ 平台/精确版本/mappings 坐标（取不到先问；坐标未定的评审不作数）。
+3. 取评审程序执行：read_knowledge_resource uri=mcskill://skill/mc-review。两轴独立跑（有子代理面时并行派两个，互不污染）：标准轴只按该档规则/反模式/核实表/mappings 核，API 名核不到标「存疑」不判通过；规格轴对 spec 或共识清单逐条核对，没有就明说只跑标准轴。
+4. 全仓模式（用户点名「全项目体检 / 不看这次改动看整体」时替代 diff 范围）：按维度扫整工程——注册与生命周期是否按档 / 资源完整性（audit_resources）/ 客户端-服务端分离 / 数据 JSON（validate_datapack_json）/ gradle 与依赖（diagnose_gradle、check_dependencies）/ 废弃 API 与同构重复。输出改进点清单按严重度×爆炸半径排序，规格轴缺依据时如实写「只跑标准轴的全仓扩展」。
+5. 输出 = 报告：每条 file:line + 轴 + 证据 + 一句建议，末尾列「未核到」清单。评审不代改代码；选中的改进条目交 mc-breakdown 排进切片再实施。
+${WORKFLOW_HITL_STEPS}`,
+  },
+  "mc-spec": {
+    title: "编排：对话凝成规格",
+    body: `${WORKFLOW_HITL}
+1. 适用：mc-grill 共识确认后、或用户要「写成文档 / 定规格」。只综合本轮已拍板的东西，不开新提问——发现未决分支 → 回去 mc-grill。
+2. 取规格程序执行：read_knowledge_resource uri=mcskill://skill/mc-spec。六节结构：目标 / 范围与 out-of-scope / 可验收行为条目 / 数据资源清单（含 lang 键）/ 平台约束 / 未决项与验收层级（按游玩测试阶梯写明测到哪层）。
+3. 每条内容须能指回本轮真实拍板处；写不出来源的句子不许写。已代劳项原样入决定记录，带理由与回退。
+4. 先输出全文，用户确认后写盘（默认 docs/spec-<主题>.md）。
+${WORKFLOW_HITL_STEPS}`,
+  },
+  "mc-retro": {
+    title: "编排：会话复盘",
+    body: `${WORKFLOW_HITL}
+1. 适用：一段工作收尾，或用户说「复盘 / 这轮哪里不顺 / 环境要改什么」。只认本轮证据，不搬记忆旧账。
+2. 取复盘程序执行：read_knowledge_resource uri=mcskill://skill/mc-retro。按四类找摩擦：工程导航 / 缺失的检查 / 规则措辞带偏 / 可自动化的手工。
+3. 每条建议四件套：现象（指到具体回合/文件/命令输出）→ 根因假设（可推翻写法）→ 最小改法（具体到文件/命令/一句措辞）→ 严重度。无摩擦写「无改进项」，禁止硬造。
+4. 建议是清单不是授权：改规则/加门/动受管面都须用户点头后另走维护流程。
+${WORKFLOW_HITL_STEPS}`,
+  },
+  "mc-breakdown": {
+    title: "编排：任务拆解",
+    body: `${WORKFLOW_HITL}
+1. 适用：spec 或共识清单已拍板，要排「先做哪片、每片怎么验收」。需求还没定 → 先走 mc-grill / mc-spec，禁止从一句话需求直接拆。
+2. 取拆解程序执行：read_knowledge_resource uri=mcskill://skill/mc-breakdown。切竖片不切横层（每片注册→资源→行为→验收一条道），每片五要素：名字 / 玩家可见行为 / 依赖 / 最低验收层级（按游玩测试阶梯写明到 L 几）/ 对应开发工作流模板；首片曳光弹穿骨架。
+3. 排序给理由；同文件 / 同注册表标串行冲突，不得并到两个会话盲改。切片粒度与玩法先后由用户拍板，拆完不悄悄重排。
+4. 输出 = 编号切片表 + 「未拆进来」清单，用户过目后落盘（默认 docs/breakdown-<主题>.md），逐片喂对应开发模板 + mc-review 验收。
+5. 多会话大工程把这份文档当共享地图：新会话先读它、从依赖前沿挑片；片内冒出不该代劳的决定就记进「待决」栏（问题/选项/推荐），待决没清完的片标阻塞；地图只更新状态与追加，改顺序回第 3 步问用户。
+${WORKFLOW_HITL_STEPS}`,
+  },
+  "mc-wizard": {
+    title: "编排：人工步骤向导",
+    body: `${WORKFLOW_HITL}
+1. 适用：流程走到「只有人能做」的操作——接受 EULA、隔离实例、授权路径、装桥、重载 MCP、发布页手动步骤。agent 不代做，把人的那一段铺平。
+2. 取向导程序执行：read_knowledge_resource uri=mcskill://skill/mc-wizard。每步五件套：做什么 / 在哪 / 可粘贴命令（按用户系统给 PowerShell 或 CMD）/ 判绿点（不许「应该好了」）/ 失败长相与回退步。
+3. 本会话没实测过的路径、账号、版本一律 <在此填>，禁止编；向导命令不得含 agent 自己被禁的动作（删用户数据、动网络栈、动正式实例）。
+4. 全文先给用户过目，确认后落盘（默认 docs/wizard-<主题>.md）；人做完那段，agent 从对应判绿点回到主链继续验证。
+${WORKFLOW_HITL_STEPS}`,
+  },
+  "mc-research": {
+    title: "编排：带出处的调查",
+    body: `${WORKFLOW_HITL}
+1. 适用：「X 存不存在 / 上游到第几 build / 这坐标对不对 / 该用哪个库」这类事实题。设计题（做什么内容）回 mc-grill，不走本清单。
+2. 取调查程序执行：read_knowledge_resource uri=mcskill://skill/mc-research。来源分级从上往下：query_upstream_releases 与构件在场性（三态读：ok:false=没查到≠上游没有）→ 官方文档页（verbatim:false 不算证据）→ 反编译（get_minecraft_source / decompile_mod_jar）→ 社区短文只作线索；训练记忆不得当出处，核不到写「未核实」。
+3. 已知坑逐条过：Modrinth slug 碰撞、改名只见于 301、mod jar vs library jar、maven 坐标≠分发真身、「本仓没入库」≠「上游没有」。
+4. 产出 = 结论一句话 + 证据表（论断/出处/状态/as-of）+ 未查到点名；证伪明写不和稀泥。先输出过目，确认后落盘（默认 docs/research-<主题>.md）。
+${WORKFLOW_HITL_STEPS}`,
+  },
+  "mc-glossary": {
+    title: "编排：项目术语与决策记录",
+    body: `${WORKFLOW_HITL}
+1. 适用：用户工程里同一概念两种叫法、决定被反复重议、代码名与聊天名打架；或用户说「立术语表 / 记这个决定 / ADR / 统一命名」。
+2. 取维护程序执行：read_knowledge_resource uri=mcskill://skill/mc-glossary。GLOSSARY.md 每条：定义 + 禁用同义词或判别问句 + 代码落点；adr/NNNN-*.md 每篇必含「没选的方案与原因」。只记真实发生过的分歧，不回头造几十条。
+3. 消费面：mc-spec / mc-breakdown 对齐词条，mc-review 点名新名冲突，mc-handoff 引用路径。定义与改名的拍板在用户，agent 只给草案与冲突证据。
+4. 落盘先过目（默认 docs/GLOSSARY.md 与 docs/adr/）。本仓维护侧台账（CORPUS_PROVENANCE / CHANGELOG）不吃本技能。
+${WORKFLOW_HITL_STEPS}`,
+  },
+  "mc-waitwhat": {
+    title: "编排：没听懂就重讲",
+    body: `${WORKFLOW_HITL}
+1. 适用：用户对上一轮的话说「没看懂 / 什么意思 / 再说一遍 / 等等什么叫 X」。不会操作 → mc-wizard；决定分歧 → mc-grill；话没落地才走本清单。
+2. 取重讲程序执行：read_knowledge_resource uri=mcskill://skill/mc-waitwhat。原话照抄引用卡住的句子，先分清卡的是词还是信息：卡词逐词解释（用户工程有 GLOSSARY.md 按表对照），缺背景就明说「这句默认了 X」再补。
+3. 重写只换措辞不改结论：条件、数字、风险一个都不能变；真要改口就明说并回去查证（mc-research），禁止用更含糊的说法糊过去。形状 = 先一句「我的意思是…」，比喻最多一个，之后回到字面。
+4. 重讲不写盘；同一个词第二次绊住用户 → 建议进 mc-glossary 立词条（立不立用户拍板）。
+${WORKFLOW_HITL_STEPS}`,
+  },
+  "mc-prototype": {
+    title: "编排：一次性设计原型",
+    body: `${WORKFLOW_HITL}
+1. 适用：创意/取舍题要「先看一眼再拍板」——GUI 布局、HUD 信息层级、tooltip 排版、配色占位这类屏幕上可呈现的设计选择。游戏内渲染与手感、技术可行性不走本清单（那是游玩自测与 GameTest 的活）。
+2. 取原型程序执行：read_knowledge_resource uri=mcskill://skill/mc-prototype。先把设计题收窄成可判定的一句，再做 2–3 个**差异明显**的单文件 HTML 变体（同一入口切换，差异落在方案层不是像素层），每案头部两行：这个方案赌什么 / 与游戏内哪里对不上。
+3. 假数据逐处标注「为占位」；素材用色块文字占位，从游戏里抠图当素材要先用户同意。整份标明一次性件、不提交。
+4. 选哪个由用户拍板——agent 只给每案取舍说明；结论回写 mc-spec 条目或共识清单，原型用完即弃。实现是拍板后的事，另走对应开发模板。
+${WORKFLOW_HITL_STEPS}`,
+  },
 };
 
 export function getWorkflowTemplate(name: string): { found: boolean; name: string; title?: string; body?: string } {

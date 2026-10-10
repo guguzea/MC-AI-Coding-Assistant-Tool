@@ -155,6 +155,20 @@ const TOPIC_ALIASES: Record<string, string> = {
 };
 
 const TASK_SPECS: Record<string, TaskSpec> = {
+  // 编排型任务：不追加平台规则/技能（底座 00/01/09 已够），只作任务名合法化；
+  // test-platform-pack 的「每个工作流模板名都必须是 session 已知 task」循环要求登记。
+  "mc-grill": { rules: [], skills: [], nextReads: [] },
+  "mc-handoff": { rules: [], skills: [], nextReads: [] },
+  "mc-router": { rules: [], skills: [], nextReads: [] },
+  "mc-review": { rules: [], skills: [], nextReads: [] },
+  "mc-spec": { rules: [], skills: [], nextReads: [] },
+  "mc-retro": { rules: [], skills: [], nextReads: [] },
+  "mc-breakdown": { rules: [], skills: [], nextReads: [] },
+  "mc-wizard": { rules: [], skills: [], nextReads: [] },
+  "mc-research": { rules: [], skills: [], nextReads: [] },
+  "mc-glossary": { rules: [], skills: [], nextReads: [] },
+  "mc-waitwhat": { rules: [], skills: [], nextReads: [] },
+  "mc-prototype": { rules: [], skills: [], nextReads: [] },
   "mc-new-block": { rules: ["02"], skills: ["mc-block"], nextReads: ["mc-blockentity"] },
   block: { rules: ["02"], skills: ["mc-block"], nextReads: ["mc-blockentity"] },
   "mc-new-item": { rules: ["03"], skills: ["mc-item"], nextReads: [] },

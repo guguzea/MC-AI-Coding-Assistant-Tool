@@ -20,7 +20,7 @@ Thanks for wanting to contribute to **MC AI Coding Assistant Tool**. This file e
 | Community practice knowledge | `community_knowledge/` | ongoing | publishing / crashes / soft dependencies |
 | MCP Server | `mcp-server/` | whatever `list-tools` / the actual registration says | new tools, scripts, tests |
 | Offline data | `data/` | 8 platforms, many versions (the surface is whatever `ls data/` says) | fetching, indexing, auditing |
-| Root docs | `README.md` / `AUTO_SETUP.md` / `AGENTS.md` / `CONTRIBUTING.md` | ongoing | fixes and sync |
+| Root docs | `README.md` / `AUTO_SETUP.md` / `AGENTS.md` / `CONTRIBUTING.md` / `WRITING-FOR-AGENTS.md` | ongoing | fixes and sync |
 
 Which platform has which versions, and which one is the main push, is **decided by the "Platforms" table in the root `README.md`** — this section does not repeat it. Verify with `ls -d <platform>/*/` and `ls -d data/*/`.
 
@@ -86,6 +86,8 @@ Each version's `sync-skills.ps1` is a thin wrapper over `scripts/sync-skills.ps1
 
 ## Extending existing rules
 
+For writing rules and placement, see the repo-root `WRITING-FOR-AGENTS.md` (load tiers, completion criteria, pointer sentences, provenance, sync and gate chain). This section gives the shape template only.
+
 Every `.mdc` should contain:
 
 1. **Constraints**
@@ -112,6 +114,8 @@ Anti-patterns go in `knowledge/antipatterns/` or `09-anti-patterns.mdc`; each en
 ---
 
 ## Adding a new Skill
+
+Before writing a Skill body, read the repo-root `WRITING-FOR-AGENTS.md` (it covers the `mappings:` key, mirrors and gate-chain requirements).
 
 Directory: `platform/version/.cursor/skills/<skill-name>/`
 

@@ -29,6 +29,7 @@ import {
   checkGuardScopeCoverage,
   diffScriptWriteGuard,
   dropGitIgnored,
+  lineHasAsyncWritePrimitive,
   listWriteGuardScope,
   scriptRequiresGuard,
   scriptWritesFiles,
@@ -44,6 +45,8 @@ const M = "mkdir" + "Sync";
 const RM = "rm" + "Sync";
 /** 异步族同理拆开：豁免只覆盖旧表 `*Sync` 原语，异步原语字面在豁免文件里也照样算问题。 */
 const AWRITE = "write" + "File";
+/** `open` 族（2026-10-09 起判据要认 mode）同样拆开：喂用例的字面写法会自伤，理由同上一行。 */
+const AOPEN = "op" + "en";
 
 function runGate() {
   const files = listWriteGuardScope();
@@ -64,7 +67,8 @@ function runGate() {
     for (const p of problems) console.error(`  ${p}`);
     console.error(
       "\n两种正当出路：① 改道 `scripts/_lib/write-guard.mjs` 的 emit / emitCopy（默认 dry-run，--write 才落盘）；" +
-        "② 若确为只写 cache / OS tmpdir / gitignore 产物，登记进 NON_WRITERS 并附**依据正则**（依据一断即再红）。",
+        "② 若确为只写 cache / OS tmpdir / gitignore 产物 / **安装目的地**（自带仓库拒写闸门），" +
+        "登记进 NON_WRITERS 并附**依据正则**（依据一断即再红）。",
     );
     process.exit(1);
   }
@@ -82,14 +86,20 @@ function runGate() {
 }
 
 function runSelftest() {
-  const clean = { rel: "scripts/_oneoff/probe-readonly.mjs", text: 'import { emit, wantWrite } from "../_lib/write-guard.mjs";\nconst t = readFileSync(p, "utf8");\nif (wantWrite()) emit(p, t);\n' };
+  // 正对照：只读脚本（读盘 + 只读 open 探头 + 走 emit）不得误报 —— 否则门会逼人把读盘也改道。
+  // 2026-10-09 起探头这条也在正对照里：zip 中央目录定位那类只读 `open` 不再是写盘。
+  const clean = { rel: "scripts/_oneoff/probe-readonly.mjs", text: `import { emit, wantWrite } from "../_lib/write-guard.mjs";\nconst t = readFileSync(p, "utf8");\nconst fh = await fs.promises.${AOPEN}(p, "r");\nif (wantWrite()) emit(p, t);\n` };
   const cases = [
     ["裸写盘原语", { rel: "scripts/_oneoff/poison.mjs", text: `import { ${W} } from "node:fs";\n${W}("a.json", "{}");\n` }, /直接调用 writeFileSync\(\)/],
     ["无 import 的写盘脚本", { rel: "scripts/poison-nobody.mjs", text: `import { ${W} } from "node:fs";\n${W}("x", "y");\n` }, /未 import write-guard/],
     ["裸目录原语", { rel: "scripts/_oneoff/poison-mkdir.mjs", text: `import fs from "node:fs";\nfs.${M}("d", { recursive: true });\n` }, /直接调用 mkdirSync\(\)/],
     ["裸删除原语", { rel: "scripts/_oneoff/poison-rm.mjs", text: `import { ${RM} } from "node:fs";\n${RM}(dir, { recursive: true, force: true });\n` }, /直接调用 rmSync\(\)/],
     ["异步 promise 写盘（C-3 形态）", { rel: "scripts/_oneoff/poison-async.mjs", text: `import fs from "node:fs";\nawait fs.promises.${AWRITE}(p, t);\n` }, /异步\/回调式写盘原语 writeFile\(/],
+    // 2026-10-09：`open` 认 mode 之后，「写意图」必须照旧被 C-3 抓住（否则认 mode 就成了放宽）。
+    ["异步 open 写成写意图（认 mode 后仍须抓）", { rel: "scripts/_oneoff/poison-open-write.mjs", text: `import fs from "node:fs";\nconst fh = await fs.promises.${AOPEN}(p, "w");\n` }, /异步\/回调式写盘原语 open\(/],
     ["豁免依据失效（摘掉闸门）", { rel: "scripts/scaffold-version.mjs", text: "const dry = true;\n" }, /在册豁免依据/],
+    // 2026-10-09：安装器（postinstall.mjs）的豁免依据 = 那道仓库拒写闸门，摘掉即失效。
+    ["安装器自保闸门被摘（豁免依据失效）", { rel: "mcp-server/scripts/postinstall.mjs", text: "const dry = true;\n" }, /在册豁免依据/],
     ["guard 自身失去 --write 判定", { rel: SCRIPT_WRITE_GUARD_REL, text: "const x = 1;\n" }, /缺 "--write" 判定/],
     ["guard 自身失去 DRYRUN 输出", { rel: SCRIPT_WRITE_GUARD_REL, text: 'const w = "--write";\nfunction assertScratch() { throw new Error("不许落在仓库内"); }\n' }, /缺 DRYRUN 输出/],
   ];
@@ -106,6 +116,34 @@ function runSelftest() {
   assert.deepEqual(ok.problems, [], `只读脚本被误报：\n${ok.problems.join("\n")}`);
   assert.equal(scriptWritesFiles(clean.text), false, "只读脚本不应被判定为「能写文件」");
   assert.equal(scriptRequiresGuard(clean.rel, clean.text), true, "已在用 emit 的脚本必须仍被要求 import guard");
+  // 2026-10-09：`open` 认 mode 的两向自证 —— 只读形态不得入账（否则 postinstall 那类合规安装器永远过不去），
+  // 写意图与「信息不足」两种形态必须照旧入账（fail-closed：变量 mode / 跨行调用都算写）。
+  const readOnlyOpenLines = [
+    `const a = await fs.promises.${AOPEN}(p, "r");`,
+    `const b = await ${AOPEN}(p);`,
+    `const c = await fsPromises.${AOPEN}(join(dir, name), 'r');`,
+    `const d = await fs.${AOPEN}(abs, "r");`,
+  ];
+  for (const line of readOnlyOpenLines) {
+    assert.equal(
+      lineHasAsyncWritePrimitive(line, AOPEN, new Set([AOPEN])),
+      false,
+      `只读 ${AOPEN} 探头被误判成写盘：${line}`,
+    );
+  }
+  const writeOpenLines = [
+    `const a = await fs.promises.${AOPEN}(p, "w");`,
+    `const b = await fsp.${AOPEN}(p, "a+");`,
+    `const c = await ${AOPEN}(join(dir, name), "w");`, // 实参含内层括号 ⇒ 必须按括号配平读，截断会漏
+    `const d = await fs.promises.${AOPEN}(p, MODE);`, // mode 是变量 ⇒ 信息不足 ⇒ fail-closed
+    `const e = await fs.promises.${AOPEN}(`, // 跨行调用 ⇒ 实参被截断 ⇒ fail-closed
+  ];
+  for (const line of writeOpenLines) {
+    assert.ok(
+      lineHasAsyncWritePrimitive(line, AOPEN, new Set([AOPEN])),
+      `写意图 / 信息不足的 ${AOPEN} 必须照旧判写盘：${line}`,
+    );
+  }
   // 反向腿自证（辅助 agent 2026-09-21 指出「DEBT 只能进不能出」）：豁免条目若指向盘上已不存在的
   // 文件（僵尸豁免），覆盖自证必须当场报 —— 这条腿不投毒就没人知道它还活着。
   const zombie = checkGuardScopeCoverage([{ rel: "scripts/_oneoff/probe.mjs", text: "" }]);
@@ -172,7 +210,8 @@ function runSelftest() {
     }
   }
   console.log(
-    `assert-script-write-guard: selftest OK（${cases.length} 例投毒 + 1 例正对照 + 1 例扫描面自证 + 1 例 ignored×僵尸交界 + 6 例 ignored 过滤（含 fail-closed 与反证））`,
+    `assert-script-write-guard: selftest OK（${cases.length} 例投毒 + 1 例正对照（含只读 ${AOPEN} 探头）+ ` +
+      `1 例 ${AOPEN} 认 mode 两向自证 + 1 例扫描面自证 + 1 例 ignored×僵尸交界 + 6 例 ignored 过滤（含 fail-closed 与反证））`,
   );
 }
 

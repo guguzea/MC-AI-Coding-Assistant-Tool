@@ -166,6 +166,18 @@ export const getWorkflowTemplateSchema = z.object({
     "mc-events-forge",
     "mc-events-neoforge",
     "mc-events-fabric",
+    "mc-grill",
+    "mc-handoff",
+    "mc-router",
+    "mc-review",
+    "mc-spec",
+    "mc-retro",
+    "mc-breakdown",
+    "mc-wizard",
+    "mc-research",
+    "mc-glossary",
+    "mc-waitwhat",
+    "mc-prototype",
   ]),
 });
 // ── 游玩自测（playtest）工具面：schema + 描述常量（registerTool 与 waveToolSchemas 共用同串）──

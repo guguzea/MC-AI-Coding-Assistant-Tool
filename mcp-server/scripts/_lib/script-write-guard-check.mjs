@@ -134,6 +134,16 @@ export const SCRIPT_WRITE_GUARD_NON_WRITERS = new Map([
   // 两个前缀，同样只在 tmpdir；对仓库全程只读（生成器与 playtest_intent 均 in-process 真调）。
   // 依据正则咬住这三个 mkdtemp 前缀 —— 夹具落点一旦改到仓库内，本豁免即失效（重签或改道 write-guard）。
   ["mcp-server/scripts/assert-playtest-intent-gate.mjs", /mkdtempSync\(join\(tmpdir\(\), "mc-skill-intent-/],
+  // ── 2026-10-09（修 S20 的既有红：`98e2d777` sweep129 起一直红着的那个）──────────────
+  // npm 生命周期安装器。它与 S20 的默认口径**结构性**不同：write-guard 的语义是
+  // 「默认 dry-run，--write 才落盘」，而安装器**必须**在 `npm install --data` 里真的落盘 ——
+  // 改道只会把它变成 no-op（data 永远装不上），所以走豁免而不是走 emit。
+  // 它写的是**安装目的地**：`<pkg>/data`，即 npm 给的那个目录（本清单口径里的「由调用方给的 dest」），
+  // 且**仓库检出内默认拒写** —— 新增的 isRepoCheckoutInstall 一旦认出 `PKG_ROOT` 不在 node_modules
+  // 段下、而其自身或父目录是 git 检出（clone 里 `PKG_ROOT` = `<repo>/mcp-server`，`data` 就是
+  // 受版本控制的语料目录），主流程在落笔前 warn + return，「先删该目录再整体改名」那条路因此走不到。
+  // 依据正则咬住那个显式放行开关（MC_SKILL_POSTINSTALL_ALLOW_IN_REPO）：闸门被摘 ⇒ 依据失效 ⇒ 当场再红。
+  ["mcp-server/scripts/postinstall.mjs", /MC_SKILL_POSTINSTALL_ALLOW_IN_REPO/],
 ]);
 /**
  * 会写仓库但本轮不收口的债务（并发代理 owns / 自带显式 --write 闸门未改道 / 新文件只靠 --force）。
@@ -265,20 +275,116 @@ export function promiseImportedPrimitives(text) {
   return out;
 }
 
-/** 单行是否命中「异步写盘」：限定名 / 回调式 / 该文件从 fs/promises 具名导入的原语。 */
+/** 调用实参文本：从 `(` 起按括号配平到行内配对的 `)`；行内未闭合（跨行调用）取到行尾。 */
+function callArgsText(line, openParenIdx) {
+  let depth = 0;
+  for (let i = openParenIdx; i < line.length; i++) {
+    const c = line[i];
+    if (c === "(") depth++;
+    else if (c === ")") {
+      depth--;
+      if (depth === 0) return line.slice(openParenIdx, i + 1);
+    }
+  }
+  return line.slice(openParenIdx);
+}
+
+/** 顶层实参切分（认 paren / bracket / brace / 引号；引号内的逗号不是切点）。 */
+function splitTopLevelArgs(inner) {
+  const out = [];
+  let depth = 0;
+  let cur = "";
+  let quote = "";
+  for (let i = 0; i < inner.length; i++) {
+    const c = inner[i];
+    if (quote) {
+      cur += c;
+      if (c === "\\") {
+        cur += inner[++i] ?? "";
+        continue;
+      }
+      if (c === quote) quote = "";
+      continue;
+    }
+    if (c === '"' || c === "'" || c === "`") {
+      quote = c;
+      cur += c;
+      continue;
+    }
+    if (c === "(" || c === "[" || c === "{") depth++;
+    else if (c === ")" || c === "]" || c === "}") depth--;
+    if (c === "," && depth === 0) {
+      out.push(cur);
+      cur = "";
+      continue;
+    }
+    cur += c;
+  }
+  out.push(cur);
+  const args = out.map((s) => s.trim());
+  return args.length === 1 && args[0] === "" ? [] : args;
+}
+
+/**
+ * `open` 族调用是否**写意图** —— 这一族是唯一带 mode 的写盘原语，而 mode 定读写：
+ * 无第二个实参（Node 缺省 `"r"`）与读 mode ⇒ 读；mode 含 w / a / + ⇒ 写。
+ * 第二个实参不是**字面量**（变量 / 表达式）、或调用跨行（实参被截断）⇒ 信息不足，
+ * **按写盘报**（fail-closed）：本判据只负责把「证据确凿的只读探头」摘出去，其余一律照旧入账。
+ *
+ * 活体（2026-10-09）：postinstall.mjs 的两处 zip 中央目录定位是只读探头形态，
+ * 按名字命中时被误报成写盘，而豁免清单对 async 原语不生效（见 diffScriptWriteGuard 里的收窄口径）
+ * ⇒ 只有在这里认 mode，合规安装器才过得去门。
+ * ⚠️ 刻意**只接在 async 类**上：同步表的 `openSync` 在豁免文件里被整体跳过（async 表不跳），
+ * 所以非豁免文件里只读 `openSync` 的假阳性仍按旧口径报、由 NON_WRITERS 逐条签字
+ * （audit-data-consistency.mjs 就是这种形态）。两侧不对称是已知取舍，不是遗漏。
+ */
+function openCallArgsAreWrite(argsText) {
+  if (!argsText.endsWith(")")) return true;
+  const args = splitTopLevelArgs(argsText.replace(/^\s*\(/, "").replace(/\)\s*$/, ""));
+  if (args.length < 2) return false;
+  const lit = /^["'`]([^"'`]*)["'`]$/.exec(args[1]);
+  if (!lit) return true;
+  return /[wa+]/.test(lit[1]);
+}
+
+/** 本行是否存在**写意图**的 `open` 族调用（只读探头返回 false）。 */
+function lineHasWriteOpenCall(line) {
+  for (const m of line.matchAll(/\bopen\s*\(/g)) {
+    if (openCallArgsAreWrite(callArgsText(line, m.index + m[0].length - 1))) return true;
+  }
+  return false;
+}
+
+/** 文本里是否存在**写意图**的 `open` 族调用（逐行判，口径与 lineHasAsyncWritePrimitive 相同）。 */
+function textHasWriteOpenCall(text) {
+  return text.split(/\r?\n/).some((line) => lineHasWriteOpenCall(line));
+}
+
+/**
+ * 单行是否命中「异步写盘」：限定名 / 回调式 / 该文件从 fs/promises 具名导入的原语。
+ * `open` 另走 mode 判据（见上）—— 它是这一族里唯一能凭实参证明「只读」的原语。
+ */
 export function lineHasAsyncWritePrimitive(line, fn, importedPromiseNames) {
-  if (fsPromiseQualifiedRe(fn).test(line) || fsCallbackRe(fn).test(line)) return true;
-  if (!importedPromiseNames.has(fn)) return false;
-  return new RegExp(`\\b${fn}\\s*\\(`).test(line);
+  const qualified = fsPromiseQualifiedRe(fn).test(line) || fsCallbackRe(fn).test(line);
+  const bare = importedPromiseNames.has(fn) && new RegExp(`\\b${fn}\\s*\\(`).test(line);
+  if (!qualified && !bare) return false;
+  return fn === "open" ? lineHasWriteOpenCall(line) : true;
 }
 
 /** 文本里是否出现任何 fs 写盘原语（= 该脚本「能写文件」）。 */
 export function scriptWritesFiles(text) {
   if (FS_MUTATION_PRIMITIVES.some((fn) => fsMutationPrimitiveRe(fn).test(text))) return true;
-  if (FS_ASYNC_MUTATION_PRIMITIVES.some((fn) => fsPromiseQualifiedRe(fn).test(text))) return true;
-  if (FS_ASYNC_MUTATION_PRIMITIVES.some((fn) => fsCallbackRe(fn).test(text))) return true;
+  if (FS_ASYNC_MUTATION_PRIMITIVES.some((fn) => fn !== "open" && fsPromiseQualifiedRe(fn).test(text))) return true;
+  if (FS_ASYNC_MUTATION_PRIMITIVES.some((fn) => fn !== "open" && fsCallbackRe(fn).test(text))) return true;
   const imported = promiseImportedPrimitives(text);
-  for (const fn of imported) if (new RegExp(`\\b${fn}\\s*\\(`).test(text)) return true;
+  // `open` 单独走 mode 判据（三个入口都算）：它是这一族里唯一的读/写两态原语，
+  // 按名字入账会把只读探头也算成「能写文件」（2026-10-09，与 lineHasAsyncWritePrimitive 同口径）。
+  const openEntry = fsPromiseQualifiedRe("open").test(text) || fsCallbackRe("open").test(text) || imported.has("open");
+  if (openEntry && textHasWriteOpenCall(text)) return true;
+  for (const fn of imported) {
+    if (fn === "open") continue;
+    if (new RegExp(`\\b${fn}\\s*\\(`).test(text)) return true;
+  }
   return false;
 }
 
