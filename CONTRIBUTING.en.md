@@ -4,6 +4,8 @@
 
 Thanks for wanting to contribute to **MC AI Coding Assistant Tool**. This file explains how to extend rules, data, the MCP Server, and the CLI.
 
+> Before writing or editing any doc meant to be read by agents (root `AGENTS.md`, platform rule trees, Skill sources, workflow template bodies and `mcskill://` payloads, `CORPUS_PROVENANCE.md`, community notes), read [`WRITING-FOR-AGENTS.md`](./WRITING-FOR-AGENTS.md) — it covers *how to write it and where to put it*; this file covers data-chain and verification rules, and wins on conflicts (together with the root `AGENTS.md`; see the division-of-scope lines at the top of that file).
+
 ---
 
 ## Module overview
@@ -373,6 +375,102 @@ docs(AUTO_SETUP): 同步工具清单与配置草稿流程
 chore(data): 忽略临时 plan 文件
 docs(fabric/1.21.1): 补充 mixin 反模式
 ```
+
+---
+
+## Maintenance night-batch protocol (tier 1)
+
+This section confines "unattended batch maintenance" to a revocable, sampleable shape: **one task sheet = one authorization**, changes land only on a dedicated local maintenance branch, never pushed, never merged to main, and a human reviews them the next morning before deciding their fate. The carve-out to the commit prohibition lives in the root [`AGENTS.md`](./AGENTS.md) "人在环例外：维护面夜批（阶 1）"; this section is the protocol only — one-off decisions do not belong here.
+
+### Origin and positioning
+
+- Method source: poteto's (Lauren Tan) live stream on agent automation workflows (Bilibili repost `BV1q9He6SEyX`, 66m46s; the local full transcript and frame samples are scratch — not committed, path not fixed; the repost is **second-hand**, not the original upload), plus the relay and gating shape of Matt Pocock's sandcastle (shallow-cloned and read directly, scratch).
+- Positioning: the **smallest usable rung** of the trust ladder, not an unattended pipeline. The trade-off order is "let the environment (gates + narrow admission + sampling) carry the risk first, then talk about automation", not the other way round.
+
+### Tier definition (only tier 1 is enabled)
+
+| Tier | Shape | Status |
+| --- | --- | --- |
+| 0 | Interactive maintenance: a human nod at every step (the current normal) | current |
+| 1 | **Night batch**: dedicated local branch + one commit per piece + morning sampling (this section) | **enabled by this protocol** |
+| 2 | Auto-merge to main when all gates are green | **not enabled**; entry condition = several consecutive tier-1 batches with zero reverts, ruled in a later batch |
+| 3 | Full auto-development (dark-factory shape) | **not planned**: this repo lacks the verification quality and revert economics for it |
+
+### Admission (narrow) and reverse list
+
+Only three change surfaces are admitted:
+
+1. repairs and builds of gates / fixtures / scripts (test files included);
+2. root docs and discipline wording;
+3. mcp-server internal docs and ledgers.
+
+**Reverse list (never through night batches)**: deletions; release artifacts (jars / uploads / version bumps); platform rule trees and the `data/**` corpus; API facts and version verdicts (names, signatures, constants, mappings); dependency and scaffold pins; CI and secrets; **`mcp-server/src/**` (product code goes through the interactive path)**.
+
+**One-way doors must convert**: every morning revert (see "Morning sampling protocol") must on the spot produce a new gate or a narrowed admission clause, written into the next task sheet — a revert is never wasted; the same failure class must not recur.
+
+### Single-batch workflow
+
+1. **Opening gate (fail-closed)**: a non-empty `git status --porcelain` means no start (someone else's half-done tree is their scene, not dirty data). Branch `maint/night-batch-<date>` is cut from the main HEAD; record the cut sha + timestamp (the entry anchor).
+2. Per piece: declare (piece id / admission class / change surface / green-evidence command) → execute → run the piece's green evidence and step 8 (`cd mcp-server && node test-scripts.mjs`) → **one commit per piece** (the message carries the piece id and admission class) → write one receipt line.
+3. Stop on out-of-admission: if execution reveals the piece exceeds its declared admission, stop immediately, record it as "not done · out of admission" in the receipt, and do not push through.
+4. **Closing anchor check**: verify main HEAD == the branch cut point (with timestamp). Displacement means the batch is **re-anchored and re-cut** from the new HEAD, same rule as the root `AGENTS.md` "entry pin / exit lease".
+
+### Night-batch receipt format
+
+Receipt header (one line per batch):
+
+```
+batch <id> | branch maint/night-batch-<date> | base <cut sha> | main-head-at-close <sha> (==base ?) | <timestamp> | pieces n/m done
+```
+
+Per piece, one line:
+
+```
+<piece id> | admission: <one of the three classes> | commit <sha> | evidence: <command> => exit <code>, key figures <...> | not done: <none/reason> | sampling point: <the one place a human should look>
+```
+
+### Buffer-queue discipline
+
+- **The receipt is the queue's only carrier**: no separate ledger, no scattered temp files.
+- An unfinished piece goes into the receipt's "not done" column with a reason and does not enter the next batch's queue; to carry it over it must pass admission again.
+- Restock from: the previous receipt + a same-day pass over the "不做/未跑" field of `mcp-server/CHANGELOG.md`, filtered by admission.
+
+### Morning sampling protocol
+
+Sampling is **sampling**, not re-reading every piece: look at the receipt's "sampling point" column and the actual output of the green-evidence command.
+
+Three questions:
+
+1. Do I accept these changes (is the direction right)?
+2. Is the green evidence real (do the command, exit code, and key figures line up)?
+3. Should this debt be paid now (is it worth it)?
+
+Four choices (per piece):
+
+- **Accept and merge**: land it under the normal commit discipline;
+- **Revert the piece**: drop that commit and record why;
+- **Add a gate**: turn the failure shape the piece exposed into a gate that can go red (preferred — the converted form of a revert);
+- **Narrow admission**: remove the piece's class from admission, or add a condition.
+
+### Task-sheet template (to initiate)
+
+```
+[Night-batch task sheet · <date>]
+Authorization: this batch may run the following pieces on the dedicated local
+  branch maint/night-batch-<date>; one commit per piece; never push, never
+  merge to main, never touch deletions or release artifacts.
+Queue:
+  piece <id>: <one-line goal>
+    admission: <gates/fixtures/scripts | root docs | mcp-server internal docs> (stop if out)
+    change surface: <expected file list>
+    green evidence: <command + expected exit code / key figures>
+Receipt: write to <path>, format per "Night-batch receipt format" in this file
+Hard boundaries: as in "Single-batch workflow"; opening gate = clean work tree.
+```
+
+### Hard boundaries
+
+Never push, never merge to main, never touch deletions or release artifacts, never accept the EULA on the user's behalf, never touch a real game instance; one batch's authorization is valid only for that batch's task sheet.
 
 ---
 

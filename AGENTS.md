@@ -91,6 +91,10 @@
 
 交付格式见文末「§交付汇报」：默认走**主档四块**（模组开发）；改动落在仓库知识库 / 工具面才走**维护档六块**。
 
+### 人在环例外：维护面夜批（阶 1）
+
+仓库维护面允许「一次任务书 = 一次授权」的无人值守批量维护（夜批）：改动只落**专用本地维护分支**（一片一提交），**绝不 push、不合主线、不碰删除类与发布物**。准入、作业流程、回执与晨间抽查协议以 [`CONTRIBUTING.md`](./CONTRIBUTING.md)「维护面夜批协议（阶 1）」为准——本处只声明例外存在，细则不复述（防两处漂移）。
+
 ## 第一步：判断项目使用的平台和版本
 
 打开任何 MC Mod / Add-On 项目时，**必须按此顺序**判断（Quilt → NeoForge → Fabric；残留 `fabric.mod.json` 不得压过 Neo 元数据，也不得压过 LiteLoader 插件 / `litemod.json`；LiteLoader 元数据在「看见 ForgeGradle 就算 Forge」之前）：
@@ -565,4 +569,4 @@ Decision: 选择注册方式
 - API / 签名 / 常量 / 映射的名字，要么有本档出处（`search_*_docs` / `query_loader_api` / 用户自备 jar），要么留 `// TODO(未核实)`；禁止凭训练记忆补。
 - 汇报里每个路径都要能被人打开核对；不能核对的注明 `temp/` 或缓存产物。
 
-**维护档另加**：两机制不一致时以表与文件实况为准，不以工具自述为准；产物须落生效路径（只在 `temp/`、`$MC_SKILL_CACHE`、overlay 里算未修）；删除类只做清单；提交由用户执行，agent 不 `git add/commit/push`。强度真源：本机 `.codebuddy/rules/*.mdc`（不入库）与 [`CONTRIBUTING.md`](./CONTRIBUTING.md) §验证纪律 重叠时**按更严者执行**。
+**维护档另加**：两机制不一致时以表与文件实况为准，不以工具自述为准；产物须落生效路径（只在 `temp/`、`$MC_SKILL_CACHE`、overlay 里算未修）；删除类只做清单；提交由用户执行，agent 不 `git add/commit/push`；唯一例外：夜批（阶 1）任务书授权执行期间，agent 可在专用本地维护分支上 `git add/commit`；任何情况下不 push、不合主线。强度真源：本机 `.codebuddy/rules/*.mdc`（不入库）与 [`CONTRIBUTING.md`](./CONTRIBUTING.md) §验证纪律 重叠时**按更严者执行**。
