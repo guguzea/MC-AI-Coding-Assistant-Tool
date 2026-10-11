@@ -1,5 +1,5 @@
 /**
- * playtest_bridge —— 游玩自测桥调用（BlackBoxPro HTTP，源码级契约 as-of 2026-09-29）。
+ * playtest_bridge —— 游玩自测桥调用（BlackBoxPro HTTP，源码级契约）。
  *
  * 契约（读 dev-2.0 源码钉死）：
  *   POST /execute  CommandMessage{id,action,params,delay,target?} → ResponseMessage{id,status,message,data}；HTTP 恒 200

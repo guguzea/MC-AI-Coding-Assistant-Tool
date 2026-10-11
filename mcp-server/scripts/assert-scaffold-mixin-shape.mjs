@@ -62,7 +62,7 @@
  * 地板口径 = runScan() 的 records.length（①）/ entryRecords.length + cfg.files.length + cfg.refs（②），
  * **不是**文件数。地板是**下界**：实扫值随真树长高只增不减，判红消息永远回显当前实扫值，
  * 所以长高不会假红，地板只挡「退化 / 被绕过」。
- * S1d 地板重扫（as-of 2026-09-24 工作树，HEAD 9141eed5 + 并发未提交面）：
+ * S1d 地板重扫（工作树，HEAD 9141eed5 + 并发未提交面）：
  *   注入点 20（95 个 scaffold java → 20 个含注入 → 20 条判定，①腿口径未变）
  *   mixin 配置 10（全部 fabric 档 examplemod.mixins.json，主链 10 引用 ∪ 辅链 10 命中 → 去重 10）
  *   注册条目 20（10 个配置 × client/server/mixins 展开 2 条）· 元数据引用 10

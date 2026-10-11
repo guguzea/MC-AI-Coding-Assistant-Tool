@@ -172,12 +172,12 @@ export const CLAIMS = [
 ];
 
 /**
- * 采集面地板（R47）。口径与 as-of 随值注明：
- *   filesMin   —— 表内 anchor.file 去重后在 ROOT **真读到**的件数；as-of 2026-09-23 实扫 = 4 件
+ * 采集面地板（R47）。口径与时效随值注明：
+ *   filesMin   —— 表内 anchor.file 去重后在 ROOT **真读到**的件数；实扫 = 4 件
  *     （`AGENTS.md` / `mc-networking/SKILL.md` / 两档 `06-networking.mdc`），地板取 3。
- *   judgedMin  —— **判定成功**的条目数（锚点行找得到；含 citation / unjudged 桶）；as-of 实扫 = 7，地板取 5。
+ *   judgedMin  —— **判定成功**的条目数（锚点行找得到；含 citation / unjudged 桶）；实扫 = 7，地板取 5。
  *   claimsMin  —— 活声称数（kind 匹配到声称式、且不在 citation 桶）；
- *     as-of 修复前 = 5（4 红 + 1 与实况一致的绿禁令），修复后 = 1（只剩 `neoforge-1.20.4-skill-plural-term`
+ *    修复前 = 5（4 红 + 1 与实况一致的绿禁令），修复后 = 1（只剩 `neoforge-1.20.4-skill-plural-term`
  *     这条与实况一致的本档禁令）⇒ 地板取下界 1，**不是**等式棘轮。
  */
 export const FLOORS = { filesMin: 3, judgedMin: 5, claimsMin: 1 };
@@ -355,19 +355,19 @@ export function judge(claims, floors, read, retr) {
   const resolved = claims.length - lost.length;
   const floorTrips = [];
   if (scanned === 0) {
-    floorTrips.push({ kind: 'COLLECTOR', msg: `[FLOOR-COLLECTOR] 采集面 扫文件=0 —— 这是**采集器失效**（换错根 / 表内路径写错 / 档被搬走），不是断言干净（地板 文件≥${floors.filesMin}；口径见 FLOORS 注释与 as-of）` });
+    floorTrips.push({ kind: 'COLLECTOR', msg: `[FLOOR-COLLECTOR] 采集面 扫文件=0 —— 这是**采集器失效**（换错根 / 表内路径写错 / 档被搬走），不是断言干净（地板 文件≥${floors.filesMin}；口径见 FLOORS 注释）` });
   } else if (scanned < floors.filesMin) {
-    floorTrips.push({ kind: 'LOW', msg: `[FLOOR-LOW] 扫文件=${scanned} < 地板 ${floors.filesMin}（口径：CLAIMS 去重 anchor.file 在 ROOT 真读到件数；as-of 2026-09-23）` });
+    floorTrips.push({ kind: 'LOW', msg: `[FLOOR-LOW] 扫文件=${scanned} < 地板 ${floors.filesMin}（口径：CLAIMS 去重 anchor.file 在 ROOT 真读到件数）` });
   }
   if (scanned > 0 && resolved === 0) {
-    floorTrips.push({ kind: 'COLLECTOR', msg: `[FLOOR-COLLECTOR] 采集面 判定条目=0（登记 ${claims.length} 条）—— 这是**采集器失效**（hint 全部失配 / 锚点行被静默删除 / CITE_RE 改宽到吞掉一切），不是断言干净（地板 判定条目≥${floors.judgedMin}；as-of 2026-09-23）` });
+    floorTrips.push({ kind: 'COLLECTOR', msg: `[FLOOR-COLLECTOR] 采集面 判定条目=0（登记 ${claims.length} 条）—— 这是**采集器失效**（hint 全部失配 / 锚点行被静默删除 / CITE_RE 改宽到吞掉一切），不是断言干净（地板 判定条目≥${floors.judgedMin}）` });
   } else if (resolved > 0 && resolved < floors.judgedMin) {
-    floorTrips.push({ kind: 'LOW', msg: `[FLOOR-LOW] 判定条目=${resolved} < 地板 ${floors.judgedMin}（口径：锚点行找得到、落到 声称/引用/未判定/改准 四桶之一的条目数；as-of 2026-09-23）` });
+    floorTrips.push({ kind: 'LOW', msg: `[FLOOR-LOW] 判定条目=${resolved} < 地板 ${floors.judgedMin}（口径：锚点行找得到、落到 声称/引用/未判定/改准 四桶之一的条目数）` });
   }
   if (resolved > 0 && activeClaims === 0) {
-    floorTrips.push({ kind: 'COLLECTOR', msg: `[FLOOR-COLLECTOR] 采集面 活声称=0（登记 ${claims.length} 条）—— 这是**声称式判据失效**（PAGE_RE / BAN_RE 被改瞎，或全部锚点行被重写成散文），门已无腿可判（地板 活声称≥${floors.claimsMin}；as-of 2026-09-23）` });
+    floorTrips.push({ kind: 'COLLECTOR', msg: `[FLOOR-COLLECTOR] 采集面 活声称=0（登记 ${claims.length} 条）—— 这是**声称式判据失效**（PAGE_RE / BAN_RE 被改瞎，或全部锚点行被重写成散文），门已无腿可判（地板 活声称≥${floors.claimsMin}）` });
   } else if (activeClaims > 0 && activeClaims < floors.claimsMin) {
-    floorTrips.push({ kind: 'LOW', msg: `[FLOOR-LOW] 活声称=${activeClaims} < 地板 ${floors.claimsMin}（口径：锚点行匹配声称式且不在 citation 桶；as-of 2026-09-23）` });
+    floorTrips.push({ kind: 'LOW', msg: `[FLOOR-LOW] 活声称=${activeClaims} < 地板 ${floors.claimsMin}（口径：锚点行匹配声称式且不在 citation 桶）` });
   }
   return { conflicts, lost, citations, unjudged, consistent, scanned, missing, judged, resolved, activeClaims, floorTrips, claims: claims.length };
 }
@@ -559,7 +559,7 @@ if (process.argv.includes('--selftest')) {
     `覆盖面：表内 ${CLAIMS.length} 条 / 判 ${packs} 档 / 被扫文件 ${r.scanned}（登记表去重实际读到的 anchor.file 件数）；检索侧=只读 data/**/index-l0.json + processed 正文，未 spawn CLI` +
     ` —— 这是**回归守卫**（钉住已登记的断言-页对，新病灶须人工新增登记），**不是万能检测器**：表外的档、表外的声称不判红；未判定桶 ${r.unjudged.length} 条 + 引用桶 ${r.citations.length} 条须人工抽查。`;
   console.log(`  ${coverage}`);
-  console.log(`  ${summary}（口径与 as-of 见 FLOORS 注释）`);
+  console.log(`  ${summary}（口径见 FLOORS 注释）`);
 
   if (failures.length) {
     console.error(`assert-doc-absence-claims: ${failures.length} 项不通过（根=${relOf(ROOT) || '.'} · data=${relOf(DATA) || '.'}）`);

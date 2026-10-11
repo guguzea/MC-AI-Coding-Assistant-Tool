@@ -22,8 +22,8 @@
  *   ⑥ 采到 0 行 ⇒ `COLLECTOR_RETURNED_ZERO` + exit(1)（采集器塌了 ≠ 「表很干净」）
  *   ⑦ 锚（`## 未排期清单`）不在盘 ⇒ `ANCHOR_MISSING` + exit(1)
  *
- * **只打印不判红**（防把散文口径做成棘轮）：`现状` 列含 `as-of` / `未复核` / `已闭环` 的**份数**、
- * 单元格数分布。该表规矩要求「带分母 + 口径 + as-of」是 **prose 口径**，做成红腿会让一次**合法的改词**
+ * **只打印不判红**（防把散文口径做成棘轮）：`现状` 列含 `未复核` / `已闭环` 的**份数**、
+ * 单元格数分布。该表规矩要求「带分母 + 口径」是 **prose 口径**，做成红腿会让一次**合法的改词**
  * 把无关门判红 —— 同 `CONTRIBUTING_LIST.md` `L18` 那条教训的形状。
  *
  * 本门**只读**：不改 `CONTRIBUTING_LIST.md`、不碰 `data/**`、不 spawn CLI（墙钟须在 `test-scripts.mjs` 的预算内）。
@@ -46,11 +46,11 @@ export const CONTRIBUTING = CONTRIBUTING_LIST;
 export const SECTION_HEADING = "## 未排期清单";
 /** 行锚：一条一行、行首是反引号包的 `L<n>`（与 `temp/ralph-20260922/_v32-table.mjs` 探针同口径）。 */
 export const ROW_RE = /^\| `L(\d+)`/;
-/** 地板（as-of 2026-09-25 现扫 = 43 行）。**只许 `<` 判红**：合法加行必然让它涨。 */
+/** 地板（现扫 = 43 行）。**只许 `<` 判红**：合法加行必然让它涨。*/
 export const FLOOR_ROWS = 40;
 /** 表应有的列数：条目 / 现状 / 需要谁拍板。 */
 export const EXPECT_CELLS = 3;
-/** prose 口径（只打印）：现状列是否带 as-of / 未复核 / 已闭环 三者之一。 */
+/** prose 口径（只打印）：现状列是否含 未复核 / 已闭环 三者之一。*/
 export const PROSE_RE = /as-of|未复核|已闭环/;
 
 /** 拆格：`| a | b | c |` → ["a","b","c"]（首尾空串去掉，同 `split("|").length - 2` 的分母）。 */
@@ -113,7 +113,7 @@ export function shapeCheck(rows, { floor = FLOOR_ROWS } = {}) {
   }
   if (rows[0].n !== 1) errors.push(`BACKLOG FIRST_NUM：首号 = L${rows[0].n} ≠ 1 ⇒ 表头之前的条目被吞了（本表规矩是 L<n> 从 1 递增）`);
   if (rows.length < floor) {
-    errors.push(`BACKLOG COVERAGE_BELOW_FLOOR：采到 ${rows.length} 行 < 地板 ${floor}（as-of 2026-09-25 现扫 43）⇒ 表被整段截断/采集面变薄（下界，加行不红）`);
+    errors.push(`BACKLOG COVERAGE_BELOW_FLOOR：采到 ${rows.length} 行 < 地板 ${floor}（现扫 43）⇒ 表被整段截断/采集面变薄（下界，加行不红）`);
   }
   const prose = rows.filter((r) => PROSE_RE.test(r.cells[1] ?? "")).length;
   return { errors, rows: rows.length, prose, first: rows[0].n, last: rows[rows.length - 1].n, gaps, badCells, emptyDecider };
@@ -228,7 +228,7 @@ export function selfTest() {
       return c.headingMissing && backlogShapeFromCollected(c).length ? backlogShapeFromCollected(c).join(" | ") : "";
     })() });
 
-  // ⑥ **不判对照**（prose 口径不得做成红腿）：把某行 `现状` 里的 as-of 全删掉 ⇒ 仍绿
+  // ⑥ **不判对照**（prose 口径不得做成红腿）：把某行 `现状` 里的时效串全删掉 ⇒ 仍绿
   cases.push({ name: "CONTROL 合法改词（现状列去掉 as-of）⇒ 不判红", red: false,
     err: (() => {
       const poisoned = base.rows.map((r) => (r.n === 3 ? { ...r, cells: [r.cells[0], "本轮实测，没有 as-of 也没有分母", r.cells[2]] } : r));

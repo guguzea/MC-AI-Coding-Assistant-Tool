@@ -19,7 +19,7 @@ skillId: mc-yacl
 
 ## 何时用 / 何时不用
 
-用：新项目需要友好配置屏，且目标为 Fabric / Forge / NeoForge / Quilt。Builder 式 API 生成界面，风格贴近原版。Modrinth API 实测（2026-09-02）：**1.19 → 26.3-snapshot-1 共 294 条构建，其中稳定版上界 26.2**（该读数当时成立）；下载量 1.18 亿。**2026-09-25 更正**：26.3 已有正式版 —— 构件面 `mcp-server/data/lib-manifests/all.json`（as-of 2026-09-25 重抓后的完整面）给 `yacl` 两行 `gameVersion=26.3` 的 release（`3.9.7+26.3-fabric` / `3.9.7+26.3-neoforge`），上游现读同页三行（另含 2026-07-19 的 `3.9.6+26.3-fabric`）⇒ 上面那句「26.3 只有 snapshot 构建，无正式版」**已作废**，逐端窗口以 `knowledge/libs/all-platforms/mc-yacl/SKILL.md` 的 `mcVersionsByPlatform` 为准（fabric 1.19-26.3 / neoforge 1.20-26.3 / forge 1.19.4-1.20.2 / quilt 1.19-1.20.4）。Cloth Config 进入功能冻结后（注意：是功能冻结，不是停更，见 `lib-cloth-config`），YACL 是新配置库的主流替代之一。
+用：新项目需要友好配置屏，且目标为 Fabric / Forge / NeoForge / Quilt。Builder 式 API 生成界面，风格贴近原版。Modrinth API 实测：**1.19 → 26.3-snapshot-1 共 294 条构建，其中稳定版上界 26.2**（该读数当时成立）；下载量 1.18 亿。**更正**：26.3 已有正式版 —— 构件面 `mcp-server/data/lib-manifests/all.json`（重抓后的完整面）给 `yacl` 两行 `gameVersion=26.3` 的 release（`3.9.7+26.3-fabric` / `3.9.7+26.3-neoforge`），上游现读同页三行（另含 2026-07-19 的 `3.9.6+26.3-fabric`）⇒ 上面那句「26.3 只有 snapshot 构建，无正式版」**已作废**，逐端窗口以 `knowledge/libs/all-platforms/mc-yacl/SKILL.md` 的 `mcVersionsByPlatform` 为准（fabric 1.19-26.3 / neoforge 1.20-26.3 / forge 1.19.4-1.20.2 / quilt 1.19-1.20.4）。Cloth Config 进入功能冻结后（注意：是功能冻结，不是停更，见 `lib-cloth-config`），YACL 是新配置库的主流替代之一。
 
 不用：仅需服务端配置时，Forge 用 `ForgeConfigSpec`、Neo ≥1.20.4（含 26.x）用 `ModConfigSpec`（patterns `config-spec`）就够；旧项目已用 Cloth 且无新特性需求，不必迁移；目标版本低于 1.19 时 YACL 无对应构建，回退 Cloth。
 

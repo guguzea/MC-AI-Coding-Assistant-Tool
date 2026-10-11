@@ -4,10 +4,10 @@ description: 01 — Quilt 注册（QSL ≠ FAPI Registry）
 
 # 01 — Quilt 注册（QSL ≠ FAPI Registry）
 
-> ⚠️ **QSL 停更（2025-12 说法 `// TODO(未核实)`：原引官方 FAQ 已 404，无法复核）**：本版本**无 QSL/QFAPI 正式版构件**（maven 只到 alpha；实证数据见 quilt/1.21.3/AGENTS.md 顶部横幅）。本文件中的 QSL API 全部是**源码树考据，非可编译 API**——禁止生成。注册一律走 Vanilla `Registry.register` 或同版 Fabric API。
+> ⚠️ **QSL 停更（2025-12 说法 `// TODO(未核实)`：原引官方 FAQ 已 404，无法复核）**：本版本**无 QSL/QFAPI 构件**：release 线止于 MC 1.21.1（`10.0.0-alpha.5+1.21.1`）、snapshot 线另有 `+1.21.5-SNAPSHOT`——**两条线均无本版（1.21.3）件**（实证数据见 quilt/1.21.3/AGENTS.md 顶部横幅）。本文件中的 QSL API 仅为源码树考据（本版无构件可按）——禁止生成。注册一律走 Vanilla `Registry.register` 或同版 Fabric API。
 
 > 适用：Quilt 1.21.3。**禁止编造 `QuiltRegistry.register()`。** 未核实的 QSL 方法名：停止生成，改 `search_docs({platform:"quilt"})`。
-> ⚠️ **离线数据**：`data/quilt_1.21.3/` 无 quilt-docs 树（本版本无已发布 QSL/QFAPI 构件，属上游真实状态）。`search_docs({platform:"quilt", version:"1.21.3"})` **两种查询都不会**返回 `PLATFORM_DATA_MISSING`（逐档实跑 CLI）：① QSL 措辞查询（`query="QSL registry key"`）→ `ok:true` + `fallback:"quilt"` + `resolvedVersion:"1.21.1"` + `semantic:true` + `total:4`——同线已建档语料，不是本版专属正文；`source_version` 与 `resolvedVersion` 在该路径**同为顶层键**（实测 13 键，另含 `requestedVersion` / `query`），二者都是 1.21.1；② 那条路径无此键、只有 `sourcePlatform`。② 普通词查询（`query="registry"`）→ `ok:true` + `fallback:"fabric"` + `sourcePlatform:"fabric"` + `resolvedVersion:"1.21.3"` + `semantic:false` + `total:0`，命中面是同版 Fabric 正文，**不能**当 QSL 证据（本版这条路径的 `warning` 另含「语义索引缺库，本次已回退 L0 关键词检索」⇒ 本次实际 0 命中）。⇒ 必须逐字读 `fallback` / `sourcePlatform`（仅 ②）/ `source_version`（仅 ①）/ `resolvedVersion` / `semantic` / `total` 再下结论；`total:0` 只说明本仓索引未覆盖，**不代表本版没有该 API**。⚠️ ① 的改口命中含 `1.21.1/qsl-verified`，其**语料正文** `data/quilt_1.21.1/quilt-docs/1.21.1/processed/qsl-verified.md:3` 仍端出已撤回断言（「QSL 已于 2025-12 停更」/ `11.0.0-alpha.3`）——语料受「上游原样」原则保护、不改写 ⇒ 只当背景，QSL 状态结论以源稿 `quilt/1.21.1/knowledge/common/qsl-verified.md:3` 为准。需要同版 Fabric API 写法时改用 `search_docs({platform:"fabric", version:"1.21.3"})`。禁止补抓或从邻版克隆 quilt-docs。
+> ⚠️ **离线数据**：`data/quilt_1.21.3/` 无 quilt-docs 树（本版无 QSL/QFAPI 构件——release 与 snapshot 两线均无本版件，属上游真实状态）。`search_docs({platform:"quilt", version:"1.21.3"})` **两种查询都不会**返回 `PLATFORM_DATA_MISSING`（逐档实跑 CLI）：① QSL 措辞查询（`query="QSL registry key"`）→ `ok:true` + `fallback:"quilt"` + `resolvedVersion:"1.21.1"` + `semantic:true` + `total:4`——同线已建档语料，不是本版专属正文；`source_version` 与 `resolvedVersion` 在该路径**同为顶层键**（实测 13 键，另含 `requestedVersion` / `query`），二者都是 1.21.1；② 那条路径无此键、只有 `sourcePlatform`。② 普通词查询（`query="registry"`）→ `ok:true` + `fallback:"fabric"` + `sourcePlatform:"fabric"` + `resolvedVersion:"1.21.3"` + `semantic:false` + `total:0`，命中面是同版 Fabric 正文，**不能**当 QSL 证据（本版这条路径的 `warning` 另含「语义索引缺库，本次已回退 L0 关键词检索」⇒ 本次实际 0 命中）。⇒ 必须逐字读 `fallback` / `sourcePlatform`（仅 ②）/ `source_version`（仅 ①）/ `resolvedVersion` / `semantic` / `total` 再下结论；`total:0` 只说明本仓索引未覆盖，**不代表本版没有该 API**。⚠️ ① 的改口命中含 `1.21.1/qsl-verified`，其**语料正文** `data/quilt_1.21.1/quilt-docs/1.21.1/processed/qsl-verified.md:3` 仍端出已撤回断言（「QSL 已于 2025-12 停更」/ `11.0.0-alpha.3`）——语料受「上游原样」原则保护、不改写 ⇒ 只当背景，QSL 状态结论以源稿 `quilt/1.21.1/knowledge/common/qsl-verified.md:3` 为准。需要同版 Fabric API 写法时改用 `search_docs({platform:"fabric", version:"1.21.3"})`。禁止补抓或从邻版克隆 quilt-docs。
 
 ## 核心事实
 
@@ -20,6 +20,7 @@ description: 01 — Quilt 注册（QSL ≠ FAPI Registry）
 
 ```
 → 简单 Item/Block → Vanilla Registry.register（ModInitializer#onInitialize(ModContainer)）
-→ QSL 专属 → **本档不可生成**（本版本无 QSL/QFAPI 正式版构件，见本文件 :3 与 AGENTS.md 顶部横幅；已撤回旧指引（原教「先补 QSL 依赖、再用已核实 API」）——它与 :3「QSL API 非可编译、禁止生成」互斥）→ 改走 Vanilla Registry.register 或同版 Fabric API；确需 QSL 方法名须先 ingest_loader_api(自备 jar) 再 query_loader_api 逐签名复核，禁止凭记忆补
+→ QSL 专属 → **本档不可生成**（本版无 QSL/QFAPI 构件——release/snapshot 两线均无本版件，见本文件 :3 与 AGENTS.md 顶部横幅；已撤回旧指引（原教「先补 QSL 依赖、再用已核实 API」）——它与 :3「本版无构件可按、禁止生成」互斥）→ 改走 Vanilla Registry.register 或同版 Fabric API；确需 QSL 方法名须先 ingest_loader_api(自备 jar) 再 query_loader_api 逐签名复核，禁止凭记忆补
 → 禁止：把 Fabric Registry 教程改名交差
 ```
+

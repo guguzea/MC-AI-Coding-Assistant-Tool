@@ -229,8 +229,8 @@ processed 正文里的这两行都是**转引标记**，不是可执行代码；
 
 ### 库数据链计数口径（A / B 两个分母，禁止混用）
 
-- **计数口径 A（`verifiedApi` 键）**：分母 = `mcp-server/src/diagnostics/library-catalog.ts` 中各 entry 的 `verifiedApi` 顶层 `"<gameVersion>/<loader>"` 键之和，实算 **2632**（2026-09-24 复跑）；复核命令 `grep -cE '"[0-9][^"]*/[a-z]+": \{' mcp-server/src/diagnostics/library-catalog.ts`。同数被钉在 `mcp-server/scripts/assert-lib-ownership.mjs` 的 `LEDGER.verifiedApiKeys`，磁盘实算与钉值不一致该门即红。文档历史写死值 1880 / 1836 / 1830 均已过期，一律以本口径为准。
-- **计数口径 B（库 API 摘要侧）**：分母 = `mcp-server/data/lib-api-summaries/*.json` 的份数与其 `versions` 组键合计，实算 **48 份 / 824 组**（2026-09-24 复跑）；复核命令 `node -e "const fs=require('fs'),p='mcp-server/data/lib-api-summaries';const f=fs.readdirSync(p).filter(x=>x.endsWith('.json'));console.log(f.length,f.reduce((a,x)=>a+Object.keys(JSON.parse(fs.readFileSync(p+'/'+x,'utf8')).versions||{}).length,0))"`。
+- **计数口径 A（`verifiedApi` 键）**：分母 = `mcp-server/src/diagnostics/library-catalog.ts` 中各 entry 的 `verifiedApi` 顶层 `"<gameVersion>/<loader>"` 键之和，实算 **2632**；复核命令 `grep -cE '"[0-9][^"]*/[a-z]+": \{' mcp-server/src/diagnostics/library-catalog.ts`。同数被钉在 `mcp-server/scripts/assert-lib-ownership.mjs` 的 `LEDGER.verifiedApiKeys`，磁盘实算与钉值不一致该门即红。文档历史写死值 1880 / 1836 / 1830 均已过期，一律以本口径为准。
+- **计数口径 B（库 API 摘要侧）**：分母 = `mcp-server/data/lib-api-summaries/*.json` 的份数与其 `versions` 组键合计，实算 **48 份 / 824 组**；复核命令 `node -e "const fs=require('fs'),p='mcp-server/data/lib-api-summaries';const f=fs.readdirSync(p).filter(x=>x.endsWith('.json'));console.log(f.length,f.reduce((a,x)=>a+Object.keys(JSON.parse(fs.readFileSync(p+'/'+x,'utf8')).versions||{}).length,0))"`。
 - **A 与 B 是两个不同分母**（2632 ≠ 824），禁止互相顶替或混写。根 `README.md` §7.5 现场仍给出这两个读数，但**口径与复算纪律以本节为准**。
 
 ### 台账、豁免与债务

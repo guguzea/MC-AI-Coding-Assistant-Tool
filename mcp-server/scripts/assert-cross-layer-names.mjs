@@ -70,7 +70,7 @@ const MIRROR = /[\\/](\.claude|\.continue|\.trae|\.opencode|\.agents|\.zcode|\.p
 const NOUN_LINE = /Minecraft\s+(Wiki|EULA)/;
 /**
  * 逐文件豁免台账（解旗不是免责：要加条目必须先给出「该 token 在此文件里确为另一层/第三方」的证据）。
- * as-of 2026-09-25 首测为空（8 件首测冲突全按内容修正，基线 0）。
+ * 首测为空（8 件首测冲突全按内容修正，基线 0）。
  */
 const ALLOW = [
   // 2026-09-25：Forge 自有 datagen 类，**跨代同名**（Forge 类不随 MC 重映射改名）⇒ 1.16.5 tsrg 快照里
@@ -89,7 +89,7 @@ const ALLOW = [
  *   · D 腿 = 「MCP 档（≤1.16.5 / 老平台）出现同代 mojmap 名」。它**天然夹带合法的跨版本对照**
  *     （`knowledge/version-changes/**`、`knowledge/porting/**` 会点名别档的类；`Resource`/`Pack`/`Recipe`/
  *     `Player`/`Context` 这类词又是通用英文）⇒ 先按实测登记基线、只做**棘轮**（新增即红），
- *     存量按 §6.8 的法子逐条人核后再降。as-of 2026-09-25 首测见 BASELINE_D。
+ *     存量按 §6.8 的法子逐条人核后再降。首测见 BASELINE_D。
  */
 const BASELINE = 110; // A/B 存量沿革：首测 130（13:34）→ 135（pairs 判集微移）→ 125（B 真欠账 10 行修复）→ **110（2026-09-26 三钉，A=87 + B=23）**：
 // ① B 真欠账再修 15 行（KeyBinding 术语散用改词：rules/09 ×4、AGENTS.md ×5、CLAUDE.md ×5、knowledge/antipatterns/events.md ×5
@@ -110,7 +110,7 @@ const BASELINE_C = 0; // 首测 33 ⇒ 同日清零（2026-09-25 第二遍）：
 // 全是 `TickEvent.Phase.START/END` 的**嵌套枚举成员访问**，不是类引用 ⇒ 走**门侧判据**修正（大写限定豁免，
 // 见 flagsFor 头注），**不改文本**——`Phase` 是 Forge 事件 API 实名；撞名来源 = tsrg 顶层
 // `net/minecraft/entity/boss/dragon/phase/Phase`（1.17+ 该 vanilla 类叫 `EnderDragonPhase`，五版 client.txt 逐字可核）。
-const BASELINE_D = 97; // as-of 2026-09-25 首测 109（腿 D：MCP 档出现同代 mojmap 名；`version-changes/**`/
+const BASELINE_D = 97; // 首测 109（腿 D：MCP 档出现同代 mojmap 名；`version-changes/**`/
 // `porting/**` 的**合法跨版本对照**与通用英文词（`Resource`/`Pack`/`Recipe`/`Player`/`Context`）是主要噪声）。
 // 同日随大写限定判据修正**降钉 109→97**：−12 条全是点号限定成员访问（与 C 腿 15 条 `Phase` 同一豁免，
 // 复测读数 97 见本文件实跑行）。

@@ -8,9 +8,150 @@
 
 ---
 
+## 2026-10-12 · 五树「无 QSL 构件」表述精化（联网复核天花板 + 77 处改写 + 派生件重生成）（维护档）
+
+**第 0 块 · 结论**：按用户令「完成五树『无 QSL 构件』表述精化」——先联网复核 QSL 天花板（六面一手：release 线止 MC 1.21.1、snapshot 线与源码仓库止 1.21.5；那五个版本在 release+snapshot+QFAPI+Modrinth 四线全 0；真正到 1.21.11 的是 quilt-loader / quilt-mappings），再对五树 48 个文件 **77 处**改写统一为「两条构件线 + 本版 0 命中」措辞并加防误读注；1.21.11 源稿改动触发 data 派生件按生成器重生成。终态门链 rc=0（中途唯一一次红 = `assert-qsl-verified-sync` 抓派生件过期，已按生成器正路修复）。未提交。
+
+### 1. 改了哪些文件
+
+- 五树共 48 文件：quilt `1.21.3 / 1.21.4 / 1.21.8 / 1.21.10` 各 10 文件、`1.21.11` 8 文件——`.cursor/rules/00-project-setup.mdc`（入口行括注）、`01-registry.mdc`（:3 横幅、Decision Flow 行；四树另有离线数据条）、`05-events.mdc`、`06-networking.mdc`（仅四树）、`.cursor/skills/mc-{registry,events,networking}/SKILL.md:12`、`AGENTS.md`（:8 横幅 + 注册行）、`knowledge/common/qsl-verified.md`、四树 `pack.meta.json:8`（其「未联网复核」句改为「已联网复核」——**日期-free**，与同日确认的 as-of/日期清理政策对齐）。
+- 措辞统一点：**无 QSL/QFAPI 构件：release 线止于 MC 1.21.1（`10.0.0-alpha.5+1.21.1`）、snapshot 线另有 `+1.21.5-SNAPSHOT`——两条线均无本版件**；AGENTS 横幅另注**源码仓库最高分支 1.21.5**（五版两线同样 0 命中）；旧句 `maven 只到 alpha` / `非可编译 API——禁止生成` / `无可用…正式版构件` / `禁止当可编译` 全部退场；skills 面保持无日期式（现状 + 指针）。文内保留的 `lastUpdated 2025-09-21` / `2025-12 停更` 均属上游字段值 / 争议声明名（数据值与裁定引用类，不属我方动作时间戳）。
+- `quilt/1.21.11/AGENTS.md:9` 对照事实行插入防误读句：「**QSL 本体不在对照之列**——release 止 1.21.1、snapshot 另有 `+1.21.5-SNAPSHOT`，1.21.11 在两线均 0 命中（见 :8）」（quilt-mappings/loader 到 1.21.11 是「QSL 到 1.21.11」误传的最可能来源）。
+- 镜像：五树各跑 `sync-skills.ps1` 一次（含 `.cursor/agent/default.md` 孪生件按 AGENTS.md 重生）。
+- 工具（scratch，不入仓）：`D:\mc-skill-temp\adjud2\refine-5trees.mjs`——断言式批量改写器（每 op 先断言目标行现内容/唯一命中数，77/77 全过后才统一写盘；默认 check 模式）。
+- data 侧（见第 4 块）：`data/quilt_1.21.11/**` processed `qsl-verified.md` + `index-l0/l1/l2.json` 由生成器重写。
+
+### 2. 判据与反证
+
+- 上网复核（六面一手，2026-10-11/12）：① umbrella `org.quiltmc:qsl` release **144 版**（`<release>`=`<latest>`=`10.0.0-alpha.5+1.21.1`，lastUpdated 2025-09-21；`1.21.3/1.21.4/1.21.8/1.21.10/1.21.11` 后缀逐字 0）；② 模块 `qsl.core:registry` **141 版**同形；③ **snapshot 168 版**（1.21 族仅 6 条，最高 `10.0.0-alpha.5+1.21.5-SNAPSHOT`，lastUpdated 2026-01-14）；④ QFAPI 坐标 **151 版**止 `11.0.0-alpha.3+0.102.0-1.21`；⑤ Modrinth 合并页（slug `qsl`=「QFAPI / QSL」）**143 版** game_versions 上界 1.21；⑥ **QSL 源码仓库 12 分支最高 `1.21.5`**。对照实测：quilt-loader 1.21.11=**307 构建**（同端点 99.9.9→404 反证按版本分列真实）、quilt-mappings **712 版**、`<release>`=`1.21.11+build.2`。
+- 反证（没动不该动的）：1.18.2/1.19.4/1.20.1/1.20.4/1.21.1 五树零改动（已按四件套）；1.21.11 `qsl-verified.md` 入口行的「javap 实测」本体保留，只换「maven 上无构件」括注。
+- 残留扫（五树源面含孪生件、排 7 面镜像目录）：旧词 `maven 只到 alpha|非可编译|正式版构件|禁止当可编译|当可用依赖|QSL 构件只出到` **15→0**；五树新增日期扫描 `2026-10-1x` **0**。
+- 口径自正（写进新文案）：①「只出到 1.21.1」是 **release 线** shorthand——snapshot 线与源码仓库到 1.21.5，两线并列后五版仍全 0；② 改 `qsl-verified.md` 源稿后 data 派生件必须走 `node scripts/index-qsl-verified.mjs --write`（**仓库根 scripts/**），门会抓手改/过期。
+
+### 3. 验证台账
+
+- 终态门链（as-of 2026-10-12，串行，全 exit 0）：`node test-scripts.mjs` **rc=0**（日志 `D:\mc-skill-temp\adjud2\ts-run6.log`，46 行；`本轮未执法腿=0`；#23 规则树 API 名门真树红 0 且「靠豁免洗的 0 条」；末行 `script helper regression tests passed`）。中途读数：`ts-run4` 红于 `assert-qsl-verified-sync`（「1.21.11: processed 与源稿不一致（派生件过期/被手改）」）→ 生成器重生成 → `g-qslsync` 绿（「ok（10/10 档源稿存在，processed 派生件全部与源稿归一化一致，无孤儿）」）→ `ts-run5` 绿 → pack.meta 去日期戳 → `ts-run6` 绿（终态）。
+- `assert-scaffold-rules-conflict` = 「47 档 · 规则 447 篇 · 判死符号 67 · scaffold 冲突 0 · **台账 checked**」（LEDGER 3065 未动、免重钉）。
+- `assert-skill-mirrors` = 「扫档=57 · 镜像目标=12418 · AGENTS 漂移 0 档 · 拒=0」；`assert-authoring-lint` = 「目标 13 件 · J1 12 份 · J2 23 枚全在盘 · J3 纯负向 0」。
+- 生成器读数（`qsl-idx2.log`）：1.21.11 四件 WROTE（processed + index-l0/l1/l2，sha 已刷新）；1.21.1 sha 未变；1.21.3/4/8/10 按设计 skip（无语料树）。
+- 抽查：1.21.3 `AGENTS.md:8` 与 1.21.11 `.cursor/rules/01-registry.mdc`（:3 横幅 + Decision Flow 行）逐字复核新文案，无残句。
+- 改写器证据：`refine-5trees.mjs` check 模式 77/77 断言全过 → `--write` 77/77（0 失败）。
+
+### 4. 数据侧变更
+
+- `data/quilt_1.21.11/quilt-docs/1.21.11/processed/qsl-verified.md` + `index-l0.json` / `index-l1.json` / `index-l2.json`：由 `node scripts/index-qsl-verified.mjs --write`（仓库根）按源稿机械重生成（唯一被改语料 = 源稿改动的派生；其余四树无语料树按设计 skip；1.21.1 轮内核对 sha 未变）。
+- 门 LEDGER、其它索引与台账：**零变更**。
+
+### 5. 未做清单
+
+- 1.18.2/1.19.4/1.20.1/1.20.4/1.21.1 五树未动（已按四件套；1.20.4/1.21.1 上轮已精化）。
+- 并行写方清扫在两处 AGENTS 横幅留下的引号残句（1.21.1「「止于」」、1.20.4「「的 QFAPI 7.7.0 + QSL 6.3.0 终版」」）未修——非本轮面，留其收口。
+- `pack.meta.json` 只改「未联网复核」句；其内 `2026-09-13` 实测读数段与 `A-43 更正 2026-09-19` 保留（机器载荷面，日期类按同日 as-of 政策的保留类处置——若该政策要扫机器载荷，另行拍板）。
+- 规则/knowledge 面的日期戳维持现状（技能面 0 日期为本轮保持项）。
+- 未提交（提交归用户）。
+
+### 6. 自我更正
+
+- 口径级自正两处（本轮直接修正了我此前给用户的口头结论）：① 「QSL 构件只出到 MC 1.21.1」是 **release 线** shorthand——snapshot 线与源码仓库到 1.21.5；五树文案已按「两条线 + 本版 0 命中」写全。② 生成器命令的正确 cwd 是**仓库根**：`node scripts/index-qsl-verified.mjs --write`（首试 `cd mcp-server && node scripts/…` 报 MODULE_NOT_FOUND；`assert-qsl-verified-sync` 报错文案里的同款命令亦未标 cwd）。
+- 一处当日自纠：`pack.meta.json` 初稿写成「已于 2026-10-11 联网复核」——属我方动作日期戳；按同日确认的「as-of 与日期全仓清理」政策改为日期-free「已联网复核」，并复扫五树 `2026-10-1x`=0、复跑收口链 rc=0。
+- 并发写记：本轮与「`as-of` 术语与取证日期戳全仓清扫」轮同日并行（其节在本文件下方）；本轮的规则/AGENTS/skills 新文案按无日期式落笔、与该政策同向；若其清扫后续触及 quilt 五树，以彼轮记为准。
+- 对旧节无更正；本节与「四族构件实证轮」「四族构件实证轮审查 F1–F4 修复」两节同族——那两节的 QSL 事实结论不受影响，本版只是把 shorthand 精确化并接线到五树全文。
+
+---
+
+## 2026-10-11 · `as-of` 术语与取证日期戳全仓清扫 + 规范本体删除（用户令「as-of以及日期全部清理；并找找那个规则写了这个规范，删除」；维护档）
+
+**第 0 块 · 结论**：把「计数必须带 **分母 + 口径 + as-of**」这条规范**本体**从 8 处规范/表单文件里删掉（统一改为「分母 + 口径」），并据此把**面文**（README 两语 / AUTO_SETUP / mcp-server README / forge 1.18.2 scaffold README_AI / 8 篇 lib-* 社区短文 / library-integration-jei-emi / mc-research 技能源稿 + 装机副本）里的 as-of 与「我方动作时间戳」清面；**脚本/代码层**清掉 50 行注释戳、26 处错误消息串里的 as-of 标注、2 个已成死字段的 `asof`。**边界（按判定刀保留）**：台账落点（`DELIVERY_LOG` / `mcp-server/CHANGELOG` / `CORPUS_PROVENANCE` / `NIGHT_BATCH` / `doc/tool-error-codes` / `ingame-playtest-automation`）+ 机器载荷（`assert-community-attribution` 的 as-of 时效判据、`mcmod-dev-tutorials.md` 的 ≥20 行 as-of 地板、`assert-bedrock-script-api-pin` 的 `asOf` 钉值、`external-apis-signoff.tsv` 的 `asof` 列、`PROSE_RE` / `asOfRe`）+ 上游事实（`As of Minecraft 1.20.2 …` 引文、parchment `2023.09.03` 格式例）+ 裁定落款（`（2026-09-08 裁定）` 类）。`npm run build` 通过；第 8 步 `node test-scripts.mjs` **rc=0**；`assert-authoring-lint` ok。未 commit。
+
+### 1. 改了哪些文件
+
+**A. 规范本体删除（8 处，义务句由「分母 + 口径 + as-of」改为「分母 + 口径」）**
+
+- `WRITING-FOR-AGENTS.md:96`（§7 出处形状）／`REPORT-FORMAT.md:43`（§维护档 · 3 验证台账）／`.codebuddy/rules/实施计划要求.mdc:16`／`.github/PULL_REQUEST_TEMPLATE.md:26`／`bugfix_list.md:232`（追加规则③）／`CONTRIBUTING.md:232-233`（库数据链计数口径 A/B 的「（2026-09-24 复跑）」）／`CONTRIBUTING.en.md:232-233`（同构镜像）／`CONTRIBUTING.en.md:487,492`（未排期清单列规）／`CONTRIBUTING_LIST.md:5,10`（列规与表头）／`common_skill/mc-research/SKILL.md:8,31,35`（技能在教 as-of）。
+- 装机副本同步：`C:\Users\zzrCN\.agents\skills\mc-research\SKILL.md`（逐行 diff 后拷回，现已与源稿逐字一致）。
+- 模板体同步：`mcp-server/src/prompts/templates.ts:668`（`mc-research` 工作流产出行「论断/出处/状态/as-of」→ 去 as-of），与源稿同改。
+
+**B. 面文清 as-of（我方动作时间戳）**
+
+- `README.md`（zh）/ `README.en.md`（en）：as-of 与带日期标题全量清（zh 已落盘于上一轮；本轮修 en 6 个锚后重跑 `clean-readmes-asof.cjs en`，en 40 对全命中写出）。残留仅 2 条「留」项：`README.md:742` / `README.en.md:720` 的「2026-09-08 裁定」落款、`README.md:970` / `README.en.md:916` 的 parchment `2023.09.03` 版本串格式例。
+- `AUTO_SETUP.md:455`：`（as-of 2026-10-02 实测 …）` → `（实测 …）`。
+- `mcp-server/README.md`：22 对替换（薄档合法落款行保留；`2026-09-12 补的` / `2026-09-25 现扫更新` / `第 42/43 轮` / `快照不自带 as-of` 等段内戳清理；保留 mtime / sha / 计数 / 提交哈希等数据值）。
+- `forge/1.18.2/scaffold/README_AI.md`：3 对（`（2026-09-14 实读）` / `（2026-09-24 一手坐实，勿删）` / `（… as-of 2026-09-24）`）。
+- 社区短文 8 篇：`lib-bookshelf.md` / `lib-curios.md` / `lib-fabric-language-kotlin.md` / `lib-modern-ui.md` / `lib-patchouli.md` / `lib-satin.md` / `lib-yacl.md` / `library-integration-jei-emi.md`（`快照 as-of 2026-09-16`→`快照`、`as-of 2026-09-07 最新件`→`最新件`、`（2026-09-02）`/`**2026-09-25 更正**`/`（as-of 2026-09-25 重抓后的完整面）`）；「2026-09-22 裁定④」等落款保留。
+- `community_knowledge/authored/ingame-playtest-automation.md` 与 `community_knowledge/links/mcmod-dev-tutorials.md` **未动**——两者是 REGISTRY 落点与 attribution 门的载荷面（见 §2 与 §5）。
+- 量具：`temp/backup-ledger-20261011/clean-readmes-asof.cjs`（en 锚修正版，带 `en`/`zh` 单侧开关）/ `clean-surfaces-asof.cjs`（面文，含 `--dry`）/ `scan-asof-rest.cjs` / `agg2.cjs` / `probe*.cjs` / `check*.cjs`；报告 `asof-clean-report.txt` / `surfaces-report.txt` / `asof-rest-raw{,2,3}.txt` / `comments-diff*.txt`。
+
+**C. 脚本 / 代码注释清戳（50 行，注释级）**
+
+- `clean-comments-asof.cjs` 处理 24 个文件 50 行：`assert-lib-session-resolve-parity.mjs`(10) / `assert-doc-absence-claims.mjs`(4) / `assert-rule-ban-vs-example.mjs`(3) / `assert-backlog-table-shape.mjs`(5) / `assert-bedrock-script-api-pin.mjs`(2) / `assert-forge-blockshape-family.mjs`(1) / `assert-cross-layer-names.mjs`(2) / `assert-forge-1182-registry-consts.mjs`(2) / `assert-corpus-faithfulness.mjs`(1) / `assert-lib-coord-snapshot.mjs`(1) / `assert-scaffold-mixin-shape.mjs`(1) / `assert-workflow-hitl.mjs`(1) / `build-yarn-mojmap-pairs.mjs`(1) / `test-scripts.mjs`(1) / `test-assistant-gaps.mjs`(1) / `test-core.mjs`(1) / `test-semantic.mjs`(1) / `src/tool-registry.ts`(1) / `src/generators/index.ts`(2) / `src/generators/common.ts`(1) / `src/generators/playtest-bridge-mod.ts`(2) / `src/playtest-bridge/index.ts`(1) / `src/bedrock/index.ts`(1) / `src/generators/playtest-driver.ts`(4)。
+- **错误消息串**里的 as-of 标注（26 对，`clean-msg-asof.cjs`）：`assert-doc-absence-claims.mjs`(5) / `assert-rule-ban-vs-example.mjs`(4) / `assert-backlog-table-shape.mjs`(1) / `assert-forge-blockshape-family.mjs`(2) / `assert-lib-session-resolve-parity.mjs`(14，含 10 条 `basis:` 台账条目里的 as-of 尾标）。
+- `assert-forge-blockshape-family.mjs:298,324`：`asof: '2026-09-23'` 两处死字段（消息串已不再读它）删除。
+- 注：上列两批的 .mjs 改前均存 `temp/backup-ledger-20261011/pre-msg-clean/`（5 件）。
+
+**C2. 第二批残留（同轮续清；`clean-residual-asof.cjs` 精确对，任一对不符即整文件 SKIP 不写）**：11 文件 19 对——
+
+- `src/generators/playtest-driver.ts`(3)：`**八处 javap 分叉**（JDK 8 \`javap -p\`，as-of 2026-10-04）` 与 `COMPILE_OK**（as-of 2026-10-04）` 去 as-of；两处 `**真机跑通 = 2026-10-04**` → `**真机跑通**`。
+- `src/generators/playtest-bridge-mod.ts`(1)：`## 本仓对该档的完整出处盘点（as-of 2026-10-11，构件复核后）` → `（构件复核后）`。
+- `src/bedrock/index.ts`(1)：`上游实况（npm dist-tags，as-of 2026-09-18）` → `（npm dist-tags）`。
+- `src/generators/index.ts`(2) / `src/generators/common.ts`(1)：`（本仓 as-of 2026-09-19/21 只核到 …）` → `（本仓只核到 …）`（哨兵消息的数值与「先按 search_*_docs 核」半句不动）。
+- `assert-lib-session-resolve-parity.mjs`(4)：5 处 `。as-of 2026-09-25` 尾标、`（as-of 2026-09-25 实扫 50）`→`（实扫 50）`、`（as-of mtime …）`→`（mtime …）`、`。复核 as-of 2026-09-26`。
+- `assert-doc-absence-claims.mjs`(2) / `assert-rule-ban-vs-example.mjs`(1)：两门地板消息去 `；as-of 2026-09-23`。
+- `assert-bedrock-script-api-pin.mjs`(2)：`钉值必须带依据与 as-of 日期` → `…与日期`（字段名 `asOf` 与判据①④不动）。
+- `CONTRIBUTING_LIST.md`(2)：`新增条目的规矩`（`:136`）与 `L43` 行括号（`:54`）里的 `分母 + 口径 + as-of` → `分母 + 口径`。
+- `.github/CODE_OF_CONDUCT.md`(1)：`验证强度、as-of 日期` → `验证强度、日期`。
+- 规范声明残留 2 处：`V2.0.0-RELEASE-NOTES.md:5` 与 `mcp-server/docs/mcmap-linkie-absorption.md:7` 的「本文/下文每个数字都带**分母 + 口径 + as-of**」→ 去 `+ as-of`（文件名、日期与读数不动）。
+
+**C2 保留边界（机器载荷，未动）**：`${tier.asOf}` / `${apiPin.asOf}` 的机器渲染（`playtest-driver.ts:4755` / `bedrock/index.ts:870`）、`assert-community-attribution.mjs` 的 `asOf`/`asOfRe`/`FLOOR_ASOF`/三地板与其语料模板、`assert-backlog-table-shape.mjs` 的 `PROSE_RE` 与自检夹具、四份基线 JSON 的 `asOf` 键、pin JSON 的 `asOf` 值、`_lib/api-name-collector.mjs` 的 `as-of ${baseline.asOf}` 渲染、`community_knowledge/links/mcmod-dev-tutorials.md` 与 `community_knowledge/authored/forge-event-system-practices.md` 的 as-of（attribution 门按行读取）；`.codebuddy/plans/*` 与 `.workbuddy/memory/*`（gitignored 历史计划/记忆，非受管面）。
+
+### 2. 判据与反证
+
+- 判据 = 用户令 + 本项目既定判定刀（记忆 `skills-no-ledger-stamps`）：**清** = 我方取证动作时间戳（实测 / 复核 / 现扫 / 复测 / 复跑 / 重抓 / 本轮 + 其 as-of 标注）；**留** = ① 裁定落款（`（2026-09-xx 裁定）`）② 上游事实（`As of Minecraft 1.20.2 …` 引文、parchment `2023.09.03`）③ 数据名/值内嵌（mtime / sha / 计数 / 提交哈希）④ 落点文件与机器载荷（见 §5）。
+- 反证 1（en 全命中）：`clean-readmes-asof.cjs en` 40 对**全部 x1**（无 MISS），输出末行 `ALL OK`；两次全量重扫（`scan-asof-rest.cjs`）后，`README.md` / `README.en.md` 只剩前述 4 个「留」命中（经 `indexOf` 放大逐条核过 = 裁定落款 + 格式例）。
+- 反证 2（脚本层清净）：对 `mcp-server/scripts/` + `src/` + `test-*` 三前缀过滤重扫 `asof-rest-raw3.txt` = **0 行**（`left.cjs` 输出 `REMAINING script/src lines: 0`）。
+- 反证 3（语法与构建）：改动过的 .mjs 全 `node --check` OK；`npm run build`（tsc）通过（`src/` 有改，必须重编 dist）。
+- 反证 4（门链）：第 8 步 `node test-scripts.mjs` **rc=0**（`GREEN`）；`node scripts/assert-authoring-lint.mjs` = `ok: 目标 13 件 · J1 技能 12 份 · J2 路径指针 23 枚全在盘 · J3 纯负向现数 0（豁免 2）`。
+- 反证 5（装机副本）：`common_skill/mc-research/SKILL.md` vs `~/.agents/skills/mc-research/SKILL.md` 逐行 diff 仅 3 行差（即本次改的三行），拷回后 `identical: true`、`has as-of: false`。
+- 可红性：量具本身按「精确 count 断言」写（不符即记 MISS 且整文件不写），首跑 en 6 锚不匹配时**确实是整文件 SKIP 未写**（保护性），修锚后 40 对全绿才落盘——即量具的「不匹配就不动盘」这条腿本轮被真实走过一次。
+
+### 3. 验证台账
+
+（as-of 2026-10-11，串行）
+- `node --check`（改动过的 .mjs）：全 OK。
+- `npm run build`（mcp-server）：`tsc` 无输出 = 成功。
+- **第 8 步** `node test-scripts.mjs`：**rc=0**（`GREEN`；`§S4 门链四数` 盘上 75 / 可达 75 · §S18/S19 真跑 50 道 · W1-2 selftest 40 道 · `本轮未执法腿=0` · 末行 `script helper regression tests passed`）。触因 = 本轮改了 `mcp-server/scripts/**` 与 `src/**`。**消息串清理与死字段删除之后复跑一次仍 `GREEN`**（同一命令两次 rc=0；子门读数：#22 自检 9/9 · #21 自检 8/8 · #20 自检 37/37 · #23 自检 62/62）。
+- `node test-cli.mjs`：`test-cli: ok`（其 DOC_SCAN 覆盖本轮改过的 `mcp-server/README.md` / `AUTO_SETUP.md`）。
+- `node test-core.mjs`：`core regression tests passed`（`docs-tool-tables registered=86 … 双向零差异` 不变）。
+- 三条被改门的直跑：`assert-backlog-table-shape: ok`（124 行 × 3 列，号序连续；「现状列含 as-of/未复核/已闭环 93/124 份」照常只打印）· `assert-lib-session-resolve-parity: ok`（6 组双链路同答 + 35 组窗口口径；地板 30/1/4/8/12）· `assert-forge-blockshape-family: ok`（13 档 / 被扫文件 917 / 禁用形态 0）。
+- `node scripts/assert-authoring-lint.mjs`：ok（13 目标 / 12 技能 / 23 指针 / J3=0）。
+- 全仓重扫读数（`scan-asof-rest.cjs`，排除 `data/` `temp/` 构建产物）：首扫 76 文件 → 清扫后 **46 文件 / 441 行**，余下全部落在 §5 的「留」清单（台账落点 99+82+63+28+21+18+17+7+6… 行）。
+- **第二批（C2）后复跑**（as-of 2026-10-11）：改动 4 个 .mjs 全 `node --check` OK；`npm run build`（tsc）无输出；**第 8 步 `node test-scripts.mjs` 单次复跑绿**（日志 `temp/backup-ledger-20261011/ts-residual.log`；末行 `script helper regression tests passed` · `本轮未执法腿=0` · 0 处 `✗` / `FAIL`；#21 / #22 / #23 三门自检与真树读数不变）。C2 之后另有 3 处**纯文档文本**改动（`CONTRIBUTING_LIST.md:54` 行括号、`V2.0.0-RELEASE-NOTES.md:5`、`mcp-server/docs/mcmap-linkie-absorption.md:7`）落在门跑之后，三者均不在任何门的读面内（`test-cli.mjs` 的 `DOC_SCAN` 只覆盖 `README.md` / `mcp-server/README.md` / `AGENTS.md` / `AUTO_SETUP.md` / `CONTRIBUTING.md`），故未再跑门。
+- **复扫读数**：`scan-final-asof.cjs`（含英文 `as of` 短语，不排除 `data/`）= 244 文件 / 701 行；其中 `mcp-server/(scripts|src)` 剩 22 行，**逐行核过全是机器载荷 / 别名误伤**（`alias of enUsJson` 的 `as of`；`_temp/*.d.ts` 上游文本；`（as-of ${baseline.asOf}）` 渲染）。规范短语 `分母 + 口径 + as-of` 全仓剩 13 行 = 本批自身的记录 3 行（`DELIVERY_LOG` / `CHANGELOG`）+ gitignored 的 `.codebuddy/plans`、`.workbuddy/memory` 10 行。
+- 门跑范围说明：**按用户令「小范围改文档就不用跑门了」**，README / 面文 / 规范本体那几批**未**逐批跑门；本轮改到 `scripts/**` 与 `src/**`，故按第 8 步纪律跑一次全链（rc=0）——不是为文档改动跑的。
+
+### 4. 数据侧变更
+
+无——未触 `data/**`、门基线、`LEDGER` 值；`src/**` 改的是注释与模板体字符串（`templates.ts` 一行），已 `npm run build` 重编 `dist/`（`dist/` 不入库）。
+
+### 5. 未做清单
+
+- **按判定刀保留（未清，若用户要清请点名）**：① 台账落点 —— `DELIVERY_LOG.md`、`mcp-server/CHANGELOG.md`、`CORPUS_PROVENANCE.md`、`NIGHT_BATCH.md`、`doc/tool-error-codes.md`、`community_knowledge/authored/ingame-playtest-automation.md`、`mcp-server/docs/{knowledge-coverage-sweep-20260924,mcmap-linkie-absorption,evidence-forge-1182-registries}.md`、`V2.0.0-RELEASE-NOTES.md`、`CONTRIBUTING_LIST.md` 正文（99 行，逐条实测记录）、`.codebuddy/plans/*`、`.workbuddy/memory/*`；② 机器载荷 —— `assert-community-attribution.mjs` 的 `asOf` / `asOfRe` / 三地板、`community_knowledge/links/mcmod-dev-tutorials.md`（82 行，门要求 ≥20 行含 as-of）、`assert-bedrock-script-api-pin.mjs` 的 `asOf` 钉值形状（判据①④）、`assert-skill-yarn-attest.mjs` 的 `external-apis-signoff.tsv` 的 `asof` 列、`assert-backlog-table-shape.mjs` 的 `PROSE_RE`、`authoring-lint-baseline.json` / `corpus-semantics-baseline.json` / `rules-api-names-baseline.json` / `assertion-ledger.json` 的 `asOf` 键；③ 上游事实 —— `forge/1.20.4/knowledge/common/datapack-format.md` / `neoforge/knowledge/{common/resourcepack-format,version-changes/1.20.x}.md` 的 `As of Minecraft 1.20.2 …` 引文。
+- `THIRD_PARTY_NOTICES.md`（3 处 as-of 2026-09-27）**未动**：该文件在 `.codebuddy/rules/实施计划要求.mdc:19` 列为**禁区**（与根 `LICENSE` / `package.json` 同列），改它超出本令授权的默认范围，留待用户点名。
+- `.codebuddy/plans/*` / `.workbuddy/memory/*`：属历史计划与记忆档（非受管面），未动。
+- **C2 补清**：此前 §1 C 漏列的门内 prose 残留已清（`assert-lib-session-resolve-parity` / `assert-doc-absence-claims` / `assert-rule-ban-vs-example` / `assert-bedrock-script-api-pin` 的消息串；`CONTRIBUTING_LIST.md` 两处规范短语；`.github/CODE_OF_CONDUCT.md` 一处；`V2.0.0-RELEASE-NOTES.md` 与 `mcmap-linkie-absorption.md` 两处「口径声明」）⇒ 现全仓 `as-of` 只剩上列机器载荷 + 台账落点 + 上游引文 + gitignored 的 `.codebuddy`/`.workbuddy`。`mcp-server/scripts/provision-26x-docs.mjs:8` 的 `(as of crawl)` 是英文习语（无日期、非台账戳），未动。
+- **C2 的行数口径**：`CONTRIBUTING_LIST.md` 表内 99 处 `as-of` 行仍保留（逐条实测记录，属台账正文）；只清了其中的**规范短语**与表头/列规。
+- 未 commit（提交归用户）。
+
+### 6. 自我更正
+
+- **量具三度改坏注释**：`clean-comments-asof.cjs` 初版把注释里的 `getX()` 改成 `getX(`（ASCII 括号清理规则误伤，在 `playtest-driver.ts` 上放大到 79 行 diff 时暴露）——改为**只清全角括号**并加「只动含 as-of 的行」门后重跑；随后又两次因前导缩进/悬空标点被吃（2 空格变 0）继续收紧，最终版保留前导空白、只吃 token 与紧邻标点。教训：**批量改写量具必须先在放大 diff 上人工过一遍**，不能只看「x1 命中」。
+- **规范本体漏算一处**：初次盘点把 `CONTRIBUTING.md` 的库数据链计数口径（`:232-233` 的「（2026-09-24 复跑）」）归为「台账数据」未动，后按「它本身就是计数口径义务句」改判为**规范本体**并清（zh + en 同构）。
+- 首扫曾把 `mcp-server/scripts/_temp/server-2.9.0-index.d.ts` 计入待清面；实为 `_temp/` 临时产物目录，未动（**不是** `_lib/`）。
+
+---
+
 ## 2026-10-11 · README 系错误码台账入住 `doc/tool-error-codes.md` + 两语文末立「指针表」（用户令「清掉、放 doc 文件夹、留指针、所有指针收文末、en 同步」；维护档）
 
-**第 0 块 · 结论**：README.md / README.en.md / mcp-server/README.md 里残余的三处 as-of 台账（「实跑取证」21 行、「86 个工具的错误码覆盖清单」18 行、tier 计数副本一句）已清面，逐字并入新落点 [`doc/tool-error-codes.md`](./doc/tool-error-codes.md)（98 行，含 tier 快照附录）。两语 README 文末各立「指针表（外部落点索引）」21 行，把正文外指落点收拢；en 同步；两语「项目结构」树已按用户拍板加 `doc/` 行。声明面三处（受管面清单 / 台账落点行 / 归档指针门 REGISTRY 5→6）同步。门链 authoring-lint / test-core / test-cli / 第 8 步 test-scripts 全 rc=0（树行落盘后 test-cli / test-core 已复跑仍绿）；搬运反证四腿 ALL GREEN。未 commit。
+**第 0 块 · 结论**：README.md / README.en.md / mcp-server/README.md 里残余的三处 as-of 台账（「实跑取证」21 行、「86 个工具的错误码覆盖清单」18 行、tier 计数副本一句）已清面，逐字并入新落点 [`doc/tool-error-codes.md`](./doc/tool-error-codes.md)（98 行，含 tier 快照附录）。两语 README 文末各立「指针表（外部落点索引）」21 行，把正文外指落点收拢；en 同步；两语「项目结构」树已按用户拍板加 `doc/` 行；清理遗留的四处悬空引用（两语各两处，用户读 README 发现）已按拍板「带路径自含」修复；「快速开始」整节（含「解释模板」）已按指令移到「模组测试流程 loop」之前（两语同步）。声明面三处（受管面清单 / 台账落点行 / 归档指针门 REGISTRY 5→6）同步。门链 authoring-lint / test-core / test-cli / 第 8 步 test-scripts 全 rc=0（树行与引用修复落盘后 test-cli / test-core 均已复跑仍绿）；搬运反证四腿 ALL GREEN。未 commit。
 
 ### 1. 改了哪些文件
 
@@ -20,6 +161,10 @@
 - `mcp-server/README.md:171`：删计数副本（「as-of 2026-10-04 为 53 项 = …」），口径句「唯一真源、正文不数档」保留（快照已入 doc 附录）。
 - 声明面：`REPORT-FORMAT.md:19`（受管面清单 + `doc/**`，清单是手列快照，新增顶层目录须同步）；`CONTRIBUTING.md`（目录清单 + `doc/`；§台账落点行 + 「工具错误码台账 → `doc/tool-error-codes.md`」）；`CONTRIBUTING.en.md`（同构镜像两处）；`mcp-server/scripts/assert-archive-pointers.mjs`（REGISTRY 5→6，why 行点名来源）。
 - 用户拍板跟进（同轮）：`README.md` / `README.en.md` 的「项目结构 / Project layout」树各加 `doc/` 行（放在平台树后的非平台目录组，`bedrock/` 与 `community_knowledge/` 之间；zh 4 字符 + 25 空格对齐既有列宽）。
+- 悬空引用修复（用户拍板「带路径自含」，同轮追加）：`README.md:205/213` 与 `README.en.md:206/214` 四处替换——首现处（205/206）改为「见游玩自测口径单源 [`community_knowledge/authored/ingame-playtest-automation.md`](./community_knowledge/authored/ingame-playtest-automation.md) 的「意图空间 · 执行器落地面」节（入口行在文末「指针表」）」（术语就地定义）；末处（213/214）把「见上方『后半 loop 真机矩阵与已核实边界』」/ "the pointer above (…)" 改指「文末「指针表」的游玩自测行（§真机台账 = 现行判据 T5 + 历史归档 T0–T4）」，前半改「见上文…（同一口径单源）」/ "the same single source of truth"。
+- 结构重排（用户指令「快速开始放到模组测试流程 loop 前面」，同轮追加）：`快速开始`（含「解释模板」子节，58 行）从「社区知识与库模组」之前**整节移到「模组测试流程 loop」之前**——两语同步（en `Quick start` 同构）；内容逐字不动，只搬块 + 接缝空行归一到单空行（搬运器断言：块逐字在场一次 + 非空白行数不变）；zh 1289→1288 行 / en 1218→1218 行。量具 `temp/backup-ledger-20261011/move-quickstart.cjs`（含移前整份备份 `README*.md.premove`）。
+- 首节标题改名（用户点选「2」，同轮追加）：`## 定位：人在环的副驾驶` → `## 它是什么：AI 帮你干活，重要决定你来做`；en `## Position: a copilot with a human in the loop` → `## What it is: AI does the work, you make the calls`；术语表两语引用同步（zh「人在环（HITL）」行改「见「它是什么」一节」，en 改 `see the "What it is" section`）；全仓扫旧名（人在环的副驾驶 / copilot with a human / 见「定位」一节 / the "Position" section）零残留。
+- 支持版本表同步（用户指「没有同步」，同轮追加；两语 10 处）：① NeoForge 两表把「primer 可有 26.2（旁路）」改为「**26.2 / 26.3 走迁移指南**」+ 表注（`get_migration_guide` 的 `route="26.1->26.2"` / `"26.2->26.3"`，源 = NeoForge Primer；配合 `analyze_porting_path`；官方文档发布后同步补档）；② LiteLoader 行补 **`1.8.9` / `1.10.2` 为 draft**；③ ModLoader 行补 **`1.2.5` / `1.5.2` 为 draft**（禁止用 `1.6.4` 顶替）。一手证据：`get_migration_guide` 两条路线 `found:true`（platform=fabric 也回同一 Primer）；`list_fabric_versions` / `list_neoforge_versions` 均无 26.2/26.3；`activate_platform_pack session modloader 1.2.5` 与 `liteloader 1.8.9` 均 `PACK_NOT_FOUND`（message 明写 `pack-status=draft`）。
 - temp 量具（不入库）：`temp/backup-ledger-20261011/` 的 `build-doc-file.cjs` / `clean-readme2.cjs` / `verify-round3.cjs` + 两语改写前整份备份 + `testscripts-run.log`。
 
 ### 2. 判据与反证
@@ -39,6 +184,10 @@
 - `node test-cli.mjs`：`test-cli: ok`（「根 README 短形式 0 行」文本地面门 + 形式门 5 份文档 0 处）。
 - **第 8 步** `node test-scripts.mjs`：**rc=0**（日志 `temp/backup-ledger-20261011/testscripts-run.log`；§S4 门链四数 盘上 75 / 可达 75 · §S18/S19 真跑 50 道 · W1-2 selftest 40 道 · `本轮未执法腿=0` · 末行 `script helper regression tests passed`）。触因 = 本轮改了 `mcp-server/scripts/assert-archive-pointers.mjs`（与第九十批不同，那批未动脚本故未跑）。
 - 树行落盘后复跑（用户拍板跟进）：`node test-cli.mjs` = `test-cli: ok`；`node test-core.mjs` = `core regression tests passed`（`docs-tool-tables registered=86 … 双向零差异` 不变）——日志 `temp/backup-ledger-20261011/testcli-rerun.log` / `testcore-rerun.log`。
+- 悬空引用修复后复跑：`node test-cli.mjs` = `test-cli: ok`；`node test-core.mjs` = `core regression tests passed`——日志 `temp/backup-ledger-20261011/testcli-rerun2.log` / `testcore-rerun2.log`。
+- 结构重排后复跑：`node test-cli.mjs` = `test-cli: ok`；`node test-core.mjs` = `core regression tests passed`——日志 `temp/backup-ledger-20261011/testcli-rerun3.log` / `testcore-rerun3.log`；post-move sha256 前 12：`README.md` = `24dddc695015`、`README.en.md` = `525a9df9059a`。
+- ⚠️ 并发写记：本轮期间 `模组测试流程 loop` 的 **zh 标题日期**（原「（2026-10-01 起）」）被另一写方清掉——本轮首次骨架提取时还在、本批搬运前复读时已无；**不是本批任何一步改的；en 标题仍带 "(since 2026-10-01)" ⇒ 两语标题现不同步**。来源未核实，本批未动，是否把 en 同步去掉等用户定。
+- 本批尾部两项（首节标题改名 + 支持版本表同步）**未跑门**——用户令「小范围改文档就不用跑门了」（标题改名那次门跑已被用户取消）；只做 grep 级残引自检（旧名/残引零残留，改动点逐条复读）。
 
 ### 4. 数据侧变更
 
@@ -56,6 +205,7 @@
 - 本批汇报初稿曾写 en 指针表「18 行、剔 agent 向行」——盘上实物为 **21 行、与 zh 同集**；以盘为准更正。
 - 并入时中文两节标题由 `###` 降为 `## 1.` / `## 2.` 并编号（结构适配）；doc 抬头已如实写明「正文未改写」，避免「逐字」句被标题层级差打脸。
 - 首跑核对脚本三红（zh 两个标题 + tier 附录锚串）均为**量具**按原样标题写死所致，非产物缺陷——修量具后四腿全绿（坑记在脚本注释）。
+- **自我更正（悬空引用）**：本批把 5 行游玩自测指针块整体收进文末指针表时，连带删掉了块内两条锚（`[[详细口径单源：…]]` 定义行 + 节标题本身）⇒ 教程节内两语各两处悬空（zh 205/213、en 206/214 的「口径单源」与「见上方『后半 loop 真机矩阵与已核实边界』」/ "the pointer above"）——由用户读 README 直觉发现（「结构有点问题」），已按拍板「带路径自含」修复（首现带路径定义、末处指文末指针表行）。教训：**收块要顺带扫正文对块内「定义行 / 术语 / 标题」的引用**。
 
 ---
 

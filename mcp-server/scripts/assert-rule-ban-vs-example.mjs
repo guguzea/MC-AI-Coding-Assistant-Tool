@@ -141,12 +141,12 @@ export const PAIRS = [
 ];
 
 /**
- * 采集面地板（R47）。口径与 as-of 随值注明：
+ * 采集面地板（R47）。口径与时效随值注明：
  *   filesMin —— 表内出现过的**去重文件数**（禁令锚点 + 对面文件集），按 ROOT 真读到的件数；
- *     as-of 2026-09-23 实扫 = 16 件（`node scripts/assert-rule-ban-vs-example.mjs` 汇总行「扫文件=16」；
+ *     实扫 = 16 件（`node scripts/assert-rule-ban-vs-example.mjs` 汇总行「扫文件=16」；
  *     地板取 12，留出「人工删对/并档」的余量，**不是**等式棘轮）。
  *   bansMin —— 表内**活禁令**数（锚点文件里确实存在「NEG ∧ hint」行）；
- *     as-of 2026-09-23 实扫 = 4/4（`--selftest` 的 ST3 另证地板是下界：实扫高于地板仍绿）。
+ *     实扫 = 4/4（`--selftest` 的 ST3 另证地板是下界：实扫高于地板仍绿）。
  *   两者都取**低于实扫**的下界（不是等式），避免「等式棘轮」型假绿/假红。
  */
 export const FLOORS = { filesMin: 12, bansMin: 3 };
@@ -236,14 +236,14 @@ export function judge(pairs, floors, read) {
   const liveBans = pairs.length - lifted.length;
   const floorTrips = [];
   if (scanned === 0) {
-    floorTrips.push({ kind: 'COLLECTOR', msg: `[FLOOR-COLLECTOR] 采集面 扫文件=0 —— 这是**采集器失效**（换错根 / 表内路径写错 / 档被搬走），不是代码干净（地板 地板≥${floors.filesMin}；口径见 FLOORS 注释与 as-of）` });
+    floorTrips.push({ kind: 'COLLECTOR', msg: `[FLOOR-COLLECTOR] 采集面 扫文件=0 —— 这是**采集器失效**（换错根 / 表内路径写错 / 档被搬走），不是代码干净（地板 地板≥${floors.filesMin}；口径见 FLOORS 注释）` });
   } else if (scanned < floors.filesMin) {
-    floorTrips.push({ kind: 'LOW', msg: `[FLOOR-LOW] 扫文件=${scanned} < 地板 ${floors.filesMin}（口径：PAIRS 去重文件在 ROOT 真读到件数；as-of 2026-09-23）` });
+    floorTrips.push({ kind: 'LOW', msg: `[FLOOR-LOW] 扫文件=${scanned} < 地板 ${floors.filesMin}（口径：PAIRS 去重文件在 ROOT 真读到件数）` });
   }
   if (scanned > 0 && liveBans === 0) {
-    floorTrips.push({ kind: 'COLLECTOR', msg: `[FLOOR-COLLECTOR] 采集面 活禁令=0（登记 ${pairs.length} 对）—— 这是**采集器失效**（NEG 正则改瞎 / hint 串全部失配 / 禁令被静默删除），不是代码干净（地板 ≥${floors.bansMin}；as-of 2026-09-23）` });
+    floorTrips.push({ kind: 'COLLECTOR', msg: `[FLOOR-COLLECTOR] 采集面 活禁令=0（登记 ${pairs.length} 对）—— 这是**采集器失效**（NEG 正则改瞎 / hint 串全部失配 / 禁令被静默删除），不是代码干净（地板 ≥${floors.bansMin}）` });
   } else if (liveBans > 0 && liveBans < floors.bansMin) {
-    floorTrips.push({ kind: 'LOW', msg: `[FLOOR-LOW] 活禁令=${liveBans} < 地板 ${floors.bansMin}（口径：表内「NEG ∧ hint」锚点行仍存在的对数；as-of 2026-09-23）` });
+    floorTrips.push({ kind: 'LOW', msg: `[FLOOR-LOW] 活禁令=${liveBans} < 地板 ${floors.bansMin}（口径：表内「NEG ∧ hint」锚点行仍存在的对数）` });
   }
   return { conflicts, lifted, scanned, missing, judged, liveBans, floorTrips, pairs: pairs.length };
 }
@@ -470,7 +470,7 @@ if (process.argv.includes('--selftest')) {
     `覆盖面：表内 ${PAIRS.length} 对 / 判 ${packs} 档 / 被扫文件 ${r.scanned}（登记表去重实际读到的件数）` +
     ` —— 这是**回归守卫**（钉住已登记的对 + 人工新增登记），**不是万能检测器**：表外的档、表外的对不判红。`;
   console.log(`  ${coverage}`);
-  console.log(`  ${summary}（口径与 as-of 见 FLOORS 注释）`);
+  console.log(`  ${summary}（口径见 FLOORS 注释）`);
 
   if (failures.length) {
     console.error(`assert-rule-ban-vs-example: ${failures.length} 项不通过（根=${relOf(ROOT) || '.'}）`);

@@ -463,7 +463,7 @@ const VERBATIM_DESC =
  * 「total 到底是什么」口径（2026-09-27 用户裁定 ③）。放在注册面而不是只放 docs-platform 那份 schema 包装对象：
  * 后者的 description 串在 tool-registry 注册时被本文件这份字面量顶掉 ⇒ pre-call 看不见，宿主 list-tools 也读不到；
  * post-call 只有 search_community_docs 会把 note 原文回显。真生效面另有 AGENTS.md（session 注入）与 README。
- * total 的计算点逐个核过（as-of 2026-09-28）：forge:339／:953、fabric:690、neoforge:333、quilt:279／:364、
+ * total 的计算点逐个核过：forge:339／:953、fabric:690、neoforge:333、quilt:279／:364、
  * bedrock:420、community:66 —— 八个发射点全是 slice **之后**的长度。
  * `L79` ② 之后本面不再只能「说清拿不到池」：`poolFieldsOf`（docs-platform/search-utils.ts）在这 8 个点
  * 无条件回 `totalPool` + `truncated`，机器消费者按 truncated 分支即可，不必再猜（执法：assert-total-semantics-wording 判据 6）。

@@ -4,7 +4,7 @@
  * （2026-09-19 用户裁定 N9(c) 落地：「统一真值，但先区分语义」）。
  *
  * 立门缘由：sweep85 把 `bedrock/scaffold/BP/manifest.json` 的依赖从 2.9.0 提到 2.10.0（依据 npm
- * dist-tags，as-of 2026-09-18），而 `data/bedrock-docs-status.json` 的 `scriptApiStable` 仍是 2.9.0
+ * dist-tags），而 `data/bedrock-docs-status.json` 的 `scriptApiStable` 仍是 2.9.0
  * （Learn 快照 fetchedAt=2026-08-14）—— 两个数都「对」，但当时**没有任何机械判据**：
  * `validate_addon_manifest` 完全不看 `dependencies`，于是模板与生成器默认值可以静默分叉，
  * 「谁是真值、为什么不同」只写在散文里（写散文的地方还会被下一次 sweep 覆盖）。
@@ -37,7 +37,7 @@
  *   node scripts/assert-bedrock-script-api-pin.mjs
  *   node scripts/assert-bedrock-script-api-pin.mjs --selftest   # 纯内存投毒（例数由 cases.length 现算，勿在此写死）
  *
- * 盲区（写明，不假装覆盖）：本门不联网复核 npm（`basis` 里那句 as-of 是人工一手核对的结果，
+ * 盲区（写明，不假装覆盖）：本门不联网复核 npm（`basis` 里那句是人工一手核对的结果，
  * 复核需外网 + 用户拍板是否推进钉值）；也不判断 `@minecraft/server-ui` 等其它 module 的版本。
  * 判据④⑤ 同理只核**形状与接线**，不复核 `basis` 里那句 modrinth 读数是不是真的（需外网）。
  */
@@ -89,7 +89,7 @@ export function fapiPinProblems(text, packs) {
       continue;
     }
     for (const f of ["basis", "asOf"]) {
-      if (typeof e[f] !== "string" || !e[f].trim()) bad(`${k} 缺 ${f}（钉值必须带依据与 as-of 日期，否则无从复核 —— 与判据①同一条）`);
+      if (typeof e[f] !== "string" || !e[f].trim()) bad(`${k} 缺 ${f}（钉值必须带依据与日期，否则无从复核 —— 与判据①同一条）`);
     }
     if (typeof e.asOf === "string" && e.asOf.trim() && !/^\d{4}-\d{2}-\d{2}$/.test(e.asOf)) {
       bad(`${k} 的 asOf 应为 YYYY-MM-DD，实得 ${JSON.stringify(e.asOf)}`);
@@ -151,7 +151,7 @@ export function judge(io) {
       }
     }
     for (const k of ["basis", "asOf"]) {
-      if (typeof pin[k] !== "string" || !pin[k].trim()) problems.push(`判据①：缺 ${k}（钉值必须带依据与 as-of 日期，否则无从复核）`);
+      if (typeof pin[k] !== "string" || !pin[k].trim()) problems.push(`判据①：缺 ${k}（钉值必须带依据与日期，否则无从复核）`);
     }
     if (typeof pin.asOf === "string" && pin.asOf.trim() && !/^\d{4}-\d{2}-\d{2}$/.test(pin.asOf)) {
       problems.push(`判据①：asOf 应为 YYYY-MM-DD，实得 ${JSON.stringify(pin.asOf)}`);

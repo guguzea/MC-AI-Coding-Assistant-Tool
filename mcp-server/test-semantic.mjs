@@ -967,7 +967,7 @@ testAsync("S11/T2: 只含 <<< 转引的页也要重算 meta.codeBlockCount（26.
 // 本文件此前**全部**跑在内存夹具上（三行手搓 chunk 的假库）。假库能证明"检索核会算"，
 // 证不了"真语料上的 BM25 排序还是那个顺序" —— 排序被改坏（换分词、改 limit、改 ORDER BY）
 // 时假库照样绿，而用户拿到的第一条结果已经换页。这里补一条真档断言 + 一条比较核反证。
-// 数值来源：本轮实测 fts5TopDocsSync(q, semanticDbPath(...), 5)，as-of 2026-09-27；
+// 数值来源：本轮实测 fts5TopDocsSync(q, semanticDbPath(...), 5)；
 // 命中**数**只作下界（补抓语料必然涨，钉等式会假红），top-1 才钉死。
 testAsync("真语料 FTS5 排序：top-1 钉死，且比较核本身可投毒", async () => {
   const expectTop = (hits, want, ctx) => {

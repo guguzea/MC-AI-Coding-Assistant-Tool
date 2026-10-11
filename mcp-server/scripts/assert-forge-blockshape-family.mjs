@@ -271,7 +271,7 @@ const RULES = {
   // ── S2（2026-09-23，story S2 task 3 的落点）：1.16.5 方块属性接收类 ─────────────────
   // R6：`assert-no-invalid-api-shapes.mjs:40-41` 明文拒绝版本区间判据并把这类改判转指本门。
   // 判据：本档 `of` 的宿主类**只有** `AbstractBlock.Properties`。
-  // oracle（三机制互核，as-of 2026-09-23）：
+  // oracle（三机制互核）：
   //   ① data/forge_1.16.5/extracted/class-names.json（3922 类全表）：
   //      `net/minecraft/block/AbstractBlock$Properties` = 在，`net/minecraft/block/Block$Properties` = 不在；
   //      同法反证 1.13.2 的 class-names.json **有** `Block$Properties` ⇒ 本族只挂 1.16.5，禁止推广。
@@ -295,7 +295,7 @@ const RULES = {
       { id: 'abstractPropsOf', re: /AbstractBlock\.Properties\s*\.\s*of\s*\(/g },
     ],
     floors: [
-      { id: 'abstractPropsOf', min: 17, asof: '2026-09-23', what: 'forge/1.16.5 非投影非迁移目录被扫文件内 AbstractBlock.Properties.of( 匹配数（本轮修完 17 处后实扫）' },
+      { id: 'abstractPropsOf', min: 17, what: 'forge/1.16.5 非投影非迁移目录被扫文件内 AbstractBlock.Properties.of( 匹配数（本轮修完 17 处后实扫）' },
     ],
   },
   // ── S3（2026-09-23）：forge/1.13.2 的 gradle.properties 形态不许把 `mcp` 当通道值 ──────
@@ -321,7 +321,7 @@ const RULES = {
       { id: 'channelSnapshot', re: /mapping_channel\s*=\s*snapshot|channel\s*:\s*'snapshot'/g },
     ],
     floors: [
-      { id: 'channelSnapshot', min: 2, asof: '2026-09-23', what: 'forge/1.13.2 非投影非迁移目录被扫文件内 snapshot 通道写法匹配数（rules 00 的 properties 围栏 + scaffold/README_AI）' },
+      { id: 'channelSnapshot', min: 2, what: 'forge/1.13.2 非投影非迁移目录被扫文件内 snapshot 通道写法匹配数（rules 00 的 properties 围栏 + scaffold/README_AI）' },
     ],
   },
 };
@@ -485,16 +485,16 @@ if (process.argv.includes('--selftest')) {
       for (const fl of fls) {
         const n = r.positives[fl.id] ?? 0;
         if (n === 0) {
-          fail(`[FLOOR-COLLECTOR] ${pack} [${kind}]: 采集面 ${fl.id} = 0 —— 这是**采集器失效**，不是代码干净（地板 ${fl.min}；口径 ${fl.what}；as-of ${fl.asof}）`);
+          fail(`[FLOOR-COLLECTOR] ${pack} [${kind}]: 采集面 ${fl.id} = 0 —— 这是**采集器失效**，不是代码干净（地板 ${fl.min}；口径 ${fl.what}）`);
         } else if (n < fl.min) {
-          fail(`[FLOOR-LOW] ${pack} [${kind}]: 采集面 ${fl.id} = ${n} < 地板 ${fl.min}（口径 ${fl.what}；as-of ${fl.asof}）`);
+          fail(`[FLOOR-LOW] ${pack} [${kind}]: 采集面 ${fl.id} = ${n} < 地板 ${fl.min}（口径 ${fl.what}）`);
         }
       }
       if (fls.length) {
         console.log(
           `  R47 ${pack} [${kind}] 扫文件=${entries.length} 判行=${r.judged} 拒=${r.bannedHits} 采集面=` +
             fls.map((fl) => `${fl.id}:${r.positives[fl.id]}/地板${fl.min}`).join(' ') +
-            `（口径与 as-of 见族注释）`,
+            `（口径见族注释）`,
         );
       }
       allHits.push(...r.hits);

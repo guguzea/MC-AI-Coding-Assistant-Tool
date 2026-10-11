@@ -1564,7 +1564,7 @@ public class ${pascal}Renderer extends EntityRenderer<${pascal}> {
   };
 }
 
-/** N6：1.x 代上限哨兵（as-of 2026-09-19 本仓只核到 1.21.11 的 datapack feature 格式；上游出新代时改这里并附依据）。 */
+/** N6：1.x 代上限哨兵（本仓只核到 1.21.11 的 datapack feature 格式；上游出新代时改这里并附依据）。*/
 const WORLDGEN_MAX_MINOR_1X = 21;
 
 export function generateWorldgen(
@@ -1621,7 +1621,7 @@ export function generateWorldgen(
       return {
         code: null,
         errors: [
-          `generate_worldgen 未跟进 1.${minor}.x（本仓 as-of 2026-09-19 只核到 1.${WORLDGEN_MAX_MINOR_1X}.x 的 datapack feature 格式）—— 禁止默默生成；` +
+          `generate_worldgen 未跟进 1.${minor}.x（本仓只核到 1.${WORLDGEN_MAX_MINOR_1X}.x 的 datapack feature 格式）—— 禁止默默生成；` +
             `先按 search_*_docs 核该代格式，再抬 WORLDGEN_MAX_MINOR_1X。` +
             noNativeGeneratorError("search_*_docs", "规则 07 / mc-worldgen Skill"),
         ],
@@ -1639,7 +1639,7 @@ export function generateWorldgen(
     // N6 同形（2026-09-22 S9/T3）：26.x 侧此前**只有**上面那条形状门，没有 1.x 那样的**上界哨兵**
     // ⇒ 实测 `generate_worldgen --platform=neoforge --version=26.99.9` 一路吐完整 files + exit 0，
     // 而 `1.99.9` 被 WORLDGEN_MAX_MINOR_1X 正确拒绝。补同款 era 哨兵；数值复用
-    // generators/common.js 的 MC_MAX_MINOR_26X（与 eraUpperBoundError 同源，本仓 as-of 2026-09-21
+    // generators/common.js 的 MC_MAX_MINOR_26X（与 eraUpperBoundError 同源，本仓
     // 只核到 26.1.x），不再新增第二份硬编码常量。上游出新代时抬那个常量并附依据。
     const mm26 = ver.match(/^26\.(\d+)/);
     const minor26 = mm26 ? Number(mm26[1]) : 0;
@@ -1647,7 +1647,7 @@ export function generateWorldgen(
       return {
         code: null,
         errors: [
-          `generate_worldgen 未跟进 26.${minor26}.x（本仓 as-of 2026-09-21 只核到 26.${MC_MAX_MINOR_26X}.x 的 datapack feature 格式）—— 禁止默默生成；` +
+          `generate_worldgen 未跟进 26.${minor26}.x（本仓只核到 26.${MC_MAX_MINOR_26X}.x 的 datapack feature 格式）—— 禁止默默生成；` +
             `先按 search_*_docs 核该代格式，再抬 MC_MAX_MINOR_26X。` +
             noNativeGeneratorError("search_*_docs", "规则 07 / mc-worldgen Skill"),
         ],

@@ -42,7 +42,7 @@
  *   现由 `bridgeCoverageCheck` 钉住：未通桥**逐名**登记在 `BRIDGE_BLINDSPOTS`，新增未登记 / 登记了却通了 / 条数越界都判红。
  * 仍不覆盖：本门只核「两条链路是否同答」与「三方是否互相打架」，**不**核「答案对不对」——
  *   窗口终点取值由 `mcVersionsByPlatform` + 判据④a/④b 负责；快照本身是否滞后由 `all.json` 的
- *   as-of（2026-09-16）与上游复核（`query_upstream_releases`）负责，本门不得据「快照无该行」断言「上游没有」。
+ *   与上游复核（`query_upstream_releases`）负责，本门不得据「快照无该行」断言「上游没有」。
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -66,7 +66,7 @@ export const COMBOS = [
   ["neoforge", "1.20.4"],
 ];
 
-/** 地板（as-of 2026-09-24 实扫：SKILL.md 36 份 / 带该键 1 份；**第 33 轮复扫 = 带该键 9 份**（S22 步2 的八份平台窗口已落 frontmatter）⇒ 地板仍取 1 不动（只许 `<`，不许等式），但别再按 1 读现状 / COMBOS 6）。只许 `<`，不许等式。 */
+/** 地板（实扫：SKILL.md 36 份 / 带该键 1 份；**第 33 轮复扫 = 带该键 9 份**（S22 步2 的八份平台窗口已落 frontmatter）⇒ 地板仍取 1 不动（只许 `<`，不许等式），但别再按 1 读现状 / COMBOS 6）。只许 `<`，不许等式。*/
 export const FLOOR_SKILLS = 30;
 export const FLOOR_PLATFORM_SCOPED = 1;
 export const FLOOR_COMBOS = 4;
@@ -148,7 +148,7 @@ export function coverageSelfCheck(skills, combos) {
   if (skills.length === 0) {
     errors.push(`COLLECTOR_RETURNED_ZERO：${path.relative(ROOT, LIBS_ROOT)}/**/SKILL.md 实扫 0 份（发现器或路径已失效，本门此刻什么也没在看）`);
   } else if (skills.length < FLOOR_SKILLS) {
-    errors.push(`COVERAGE_BELOW_FLOOR：SKILL.md 实扫 ${skills.length} 份 < 地板 ${FLOOR_SKILLS}（地板 as-of 2026-09-24 实扫 36 份）`);
+    errors.push(`COVERAGE_BELOW_FLOOR：SKILL.md 实扫 ${skills.length} 份 < 地板 ${FLOOR_SKILLS}（地板实扫 36 份）`);
   }
   const scoped = skills.filter((s) => s.platformScoped).length;
   if (scoped < FLOOR_PLATFORM_SCOPED) {
@@ -207,11 +207,11 @@ export const SKILL_TO_SLUG = {
   "mc-pehkui": "pehkui",
 };
 
-/** 地板（as-of 2026-09-24 实扫：9 份源稿声明该键 / 判到的 (skill,loader) 组见运行输出）。只许 `<`。 */
+/** 地板（实扫：9 份源稿声明该键 / 判到的 (skill,loader) 组见运行输出）。只许 `<`。*/
 export const FLOOR_WINDOW_SKILLS = 8;
 export const FLOOR_WINDOW_PAIRS = 12;
 /**
- * 判据④b 地板（as-of 2026-09-24 实扫 6 组，见 `temp/ralph-20260922/logs/r16-14-gate4b-run.log`）：
+ * 判据④b 地板（实扫 6 组，见 `temp/ralph-20260922/logs/r16-14-gate4b-run.log`）：
  * 带 ≥1 平台窗口的源稿里，`platforms` 声明了但**没有可判窗口**的 loader 共 6 组 ——
  * `mc-geckolib` 的 fabric/forge/neoforge（其 `fabric=1.16.5+` / `neoforge=1.20+` 是开放形，
  * `parseWindowTokens` 只收 `A-B` 形 ⇒ 三组都拿不到窗口终点）、`mc-architectury/fabric`（`forge=…-…` 里没 fabric）、
@@ -220,7 +220,7 @@ export const FLOOR_WINDOW_PAIRS = 12;
  * `mc-playeranimator` 的 fabric 本轮已补 `fabric=1.16.4-1.21.4` 窗口，不再是无窗口组。地板取 3（留余量，禁止等式棘轮）。
  */
 export const FLOOR_UNION_ELIGIBLE = 3;
-/** 判据④d 地板（as-of 2026-09-24 实扫 9 份带窗口源稿全部正向对称）。只许 `<`，禁止等式棘轮。 */
+/** 判据④d 地板（实扫 9 份带窗口源稿全部正向对称）。只许 `<`，禁止等式棘轮。*/
 export const FLOOR_WINDOW_SYM = 8;
 
 /* ---------- 判据④b：`platforms` 逐 loader —— 无窗口者按 union `mcVersions` 判（第 16 轮扩面，2026-09-24） ---------- */
@@ -513,14 +513,14 @@ export function libWindowFace() {
     errors.push(`COVERAGE_BELOW_FLOOR：声明 mcVersionsByPlatform 的源稿 ${scanned} 份 < 地板 ${FLOOR_WINDOW_SKILLS} ⇒ 判据④覆盖面变薄`);
   }
   if (judged < FLOOR_WINDOW_PAIRS) {
-    errors.push(`COVERAGE_BELOW_FLOOR：判据④a 实际判到的 (skill,loader) 组数 ${judged} < 地板 ${FLOOR_WINDOW_PAIRS}（地板 as-of 2026-09-24 实扫）`);
+    errors.push(`COVERAGE_BELOW_FLOOR：判据④a 实际判到的 (skill,loader) 组数 ${judged} < 地板 ${FLOOR_WINDOW_PAIRS}（地板实扫）`);
   }
   /* 判据④b 自证采集面（R47）：零覆盖 / 组数变薄 / 计数不闭合都算红 */
   if (unionStats.eligible === 0) {
     errors.push("COLLECTOR_RETURNED_ZERO：判据④b 的 (skill,loader) 组集为 0 —— 没有任何「platforms 点名但窗口没给」的组可判 ⇒ 要么发现器失效，要么所有源稿已补齐窗口（补齐后请显式改本腿口径，不得让它静默变装饰）");
   }
   if (unionStats.eligible < FLOOR_UNION_ELIGIBLE) {
-    errors.push(`COVERAGE_BELOW_FLOOR：判据④b 的无窗口 (skill,loader) 组数 ${unionStats.eligible} < 地板 ${FLOOR_UNION_ELIGIBLE}（地板 as-of 2026-09-24 实扫 4 组）⇒ 覆盖面变薄`);
+    errors.push(`COVERAGE_BELOW_FLOOR：判据④b 的无窗口 (skill,loader) 组数 ${unionStats.eligible} < 地板 ${FLOOR_UNION_ELIGIBLE}（地板实扫 4 组）⇒ 覆盖面变薄`);
   }
   const accounted = unionStats.judged + unionStats.openForm + unionStats.noFace;
   if (accounted !== unionStats.eligible) {
@@ -534,7 +534,7 @@ export function libWindowFace() {
   const symErrors = platformWindowSymmetryCheck(symRows);
   errors.push(...symErrors);
   if (symRows.length < FLOOR_WINDOW_SYM) {
-    errors.push(`COVERAGE_BELOW_FLOOR：判据④d 的带窗口源稿 ${symRows.length} 份 < 地板 ${FLOOR_WINDOW_SYM}（as-of 2026-09-24 实扫 9 份）⇒ 覆盖面变薄`);
+    errors.push(`COVERAGE_BELOW_FLOOR：判据④d 的带窗口源稿 ${symRows.length} 份 < 地板 ${FLOOR_WINDOW_SYM}（实扫 9 份）⇒ 覆盖面变薄`);
   }
   const zeroWindow = zeroWindowKeyCheck(keyDecls);
   errors.push(...zeroWindow);
@@ -685,12 +685,12 @@ export function unionSelfCases() {
  *    （口径既然是构建面，三方不一致即缺陷），并按门禁铁律配投毒用例」。
  *
  * 口径（2026-09-22 裁定 ④，本门沿用）：**构建面 = `mcp-server/data/lib-manifests/all.json`
- * 逐发布文件行**（49 slug / 3,003 行，as-of 2026-09-25 第 47 轮现扫 = 第 44 轮翻页重抓后的完整面；
+ * 逐发布文件行**（49 slug / 3,003 行，第 47 轮现扫 = 第 44 轮翻页重抓后的完整面；
  * 旧值 48 slug / 2,870 行是重抓前的首页截断面，两处口径不得互抄）。`platforms` 与 `loaders`
  * 一律读作「该 loader 有发布构件」⇒ **声明了构件面没有的 loader = 过度声明 = 缺陷**（判红）。
  *
  * 三个面各自是谁：
- *   ① 声明面 `knowledge/libs/<组>/mc-<名>/SKILL.md` 的 `platforms:`（36 份，as-of 2026-09-25）
+ *   ① 声明面 `knowledge/libs/<组>/mc-<名>/SKILL.md` 的 `platforms:`（36 份）
  *   ② 生成物 `mcp-server/src/diagnostics/library-catalog.ts` 的 `loaders:`（50 行；生产者
  *      `scripts/build-library-catalog-from-authored.mjs`，头注「勿手改」⇒ 本门只读不写）
  *   ③ 构件面 `all.json` 的 `entries[].loader`
@@ -705,7 +705,7 @@ export function unionSelfCases() {
  *      `authored/library-integration`）⇒ 那三份**构件面明明有同名 slug**（`libgui` / `server-translations` /
  *      `spruceui-obsidianui`）却被静默判成「无桥」。4° = 只按**逐字等于构件面 slug** 的名字认桥
  *      （候选取自该 skill 自己那行的 `authored/lib-<X>` 之 X，或 SKILL 裸名），禁止子串/模糊匹配。
- *   ⇒ 覆盖率的真实分母（现扫复算，as-of 2026-09-25）：**桥通 29 份 / 36 份**（第 33 轮 CONTRIBUTING `L41`
+ *   ⇒ 覆盖率的真实分母（现扫复算）：**桥通 29 份 / 36 份**（第 33 轮 CONTRIBUTING `L41`
  *      已记 29，本文件旧注写的「33/36」是**错的**，第 35 轮改口）；补 4° 后 = **32 / 36**；
  *      第 36 轮让桥吃**多值 slug 串**（`splitSlugList` + `mergedFace`：把 1°–4° 拿到的串按逗号拆开逐个判，
  *      构件口径取这些 slug 的 loader **并集**；仍只认构件面逐字存在的 slug，不猜名字）后 = **33 / 36**，未通桥逐名登记在 `BRIDGE_BLINDSPOTS`（新增未登记 /
@@ -733,13 +733,13 @@ const LIBRARY_CATALOG_TS = path.join(ROOT, "mcp-server", "src", "diagnostics", "
 // 生产者在 mcp-server/scripts/ 下（第 33 轮实测：仓库根 `scripts/` **没有**这个文件）。
 const CATALOG_PRODUCER = path.join(ROOT, "mcp-server", "scripts", "build-library-catalog-from-authored.mjs");
 
-/** 地板（as-of 2026-09-25 现扫：all.json **49 slug / 3,003 行**（第 47 轮复算；旧注写的 48 / 2870 = 第 44 轮翻页重抓**前**的首页截断面，地板本身按 `<` 判、两面值都过）、catalog 50 行、SKILL 36 份；桥通 **29** 份（第 33 轮，`L41` 实况）、补 4° 后 **32** 份、第 36 轮吃多值 slug 串后 **33** 份。旧注误写 33。只许 `<`，禁止等式棘轮。 */
+/** 地板（现扫：all.json **49 slug / 3,003 行**（第 47 轮复算；旧注写的 48 / 2870 = 第 44 轮翻页重抓**前**的首页截断面，地板本身按 `<` 判、两面值都过）、catalog 50 行、SKILL 36 份；桥通 **29** 份（第 33 轮，`L41` 实况）、补 4° 后 **32** 份、第 36 轮吃多值 slug 串后 **33** 份。旧注误写 33。只许 `<`，禁止等式棘轮。*/
 export const FLOOR_TRIAD_SLUGS = 40;
 export const FLOOR_TRIAD_ROWS = 2500;
 export const FLOOR_TRIAD_CATALOG_ROWS = 45;
 export const FLOOR_TRIAD_BRIDGED = 25;
 export const FLOOR_TRIAD_JUDGED = 40;
-/** 覆盖下界腿的分母（第 35 轮，as-of 2026-09-25 现扫 = `all-platforms` 12 + `fabric-only` 18 = 30 份）。只许 `<`。 */
+/** 覆盖下界腿的分母（第 35 轮，现扫 = `all-platforms` 12 + `fabric-only` 18 = 30 份）。只许 `<`。*/
 export const FLOOR_DECLARE_FABRIC_FACE = 25;
 /** 未通桥名单的上界（第 35 轮补 4° 后现扫 4 份；**第 36 轮桥吃多值 slug 串后现扫 3 份**）。只许 `<`（越过才红），含义 = 「未通桥的份数不得越过登记线」。 */
 export const FLOOR_TRIAD_UNBRIDGED_MAX = 5;
@@ -759,15 +759,15 @@ export const FLOOR_TRIAD_UNBRIDGED_MAX = 5;
 export const BRIDGE_BLINDSPOTS = [
   {
     skill: "mc-lib-catalog",
-    basis: "库索引稿（`all-platforms/mc-lib-catalog`），本身不对应任何上游构件；其 `platforms` 写满 5 个 loader 是「读物范围」而非构件声明 ⇒ 构件面永远无行、桥永远不通。禁止为了让它有桥去改正文。as-of 2026-09-25",
+    basis: "库索引稿（`all-platforms/mc-lib-catalog`），本身不对应任何上游构件；其 `platforms` 写满 5 个 loader 是「读物范围」而非构件声明 ⇒ 构件面永远无行、桥永远不通。禁止为了让它有桥去改正文",
   },
   {
     skill: "mc-script-server",
-    basis: "bedrock-only 的 Script API 稿；构件面 `all.json` 是 Java 库快照（Modrinth / GitHub Releases），按设计没有基岩面 ⇒ 无桥是设计边界，不是覆盖缺陷。as-of 2026-09-25",
+    basis: "bedrock-only 的 Script API 稿；构件面 `all.json` 是 Java 库快照（Modrinth / GitHub Releases），按设计没有基岩面 ⇒ 无桥是设计边界，不是覆盖缺陷",
   },
   {
     skill: "mc-script-ui",
-    basis: "同 `mc-script-server`：基岩 Script API 稿，Java 构件面无对应 slug。as-of 2026-09-25",
+    basis: "同 `mc-script-server`：基岩 Script API 稿，Java 构件面无对应 slug",
   },
 ];
 
@@ -790,27 +790,27 @@ export const BRIDGE_BLINDSPOTS = [
 export const TRIAD_OVERCLAIM_DEBT = [
   {
     skill: "mc-libgui", loader: "quilt",
-    basis: "第 35 轮桥补通（4° 构件面正名 slug `libgui`）后本腿首次判到：`platforms`=[fabric,quilt] 而构件面 `libgui` 仅 **1 行 fabric**（`LibGui-18.0.1+26.3-rc-2.jar`，快照 as-of 2026-09-16）。⚠️ 该 slug 的**判面天然残缺**：SKILL.md 正文自述「Modrinth 已下架（slug 空），分发走 Cotton maven / GitHub Releases」⇒ 快照里那 1 行只是抓到的一个 GitHub release 文件，不是全量发布史。**禁止**据「快照 0 行 quilt」断言 LibGui 无 Quilt 构建（`CONTRIBUTING_LIST.md` L42 已记「欠一次 all.json 构件面重抓」）。修法 = 重抓非 Modrinth 源后复跑本腿，或拿到 Cotton 发布清单原文；本轮 `data/**` 零写、未动 platforms ⇒ 留账。as-of 2026-09-25",
+    basis: "第 35 轮桥补通（4° 构件面正名 slug `libgui`）后本腿首次判到：`platforms`=[fabric,quilt] 而构件面 `libgui` 仅 **1 行 fabric**（`LibGui-18.0.1+26.3-rc-2.jar`，快照）。⚠️ 该 slug 的**判面天然残缺**：SKILL.md 正文自述「Modrinth 已下架（slug 空），分发走 Cotton maven / GitHub Releases」⇒ 快照里那 1 行只是抓到的一个 GitHub release 文件，不是全量发布史。**禁止**据「快照 0 行 quilt」断言 LibGui 无 Quilt 构建（`CONTRIBUTING_LIST.md` L42 已记「欠一次 all.json 构件面重抓」）。修法 = 重抓非 Modrinth 源后复跑本腿，或拿到 Cotton 发布清单原文；本轮 `data/**` 零写、未动 platforms ⇒ 留账",
   },
   {
     skill: "mc-server-translations", loader: "forge",
-    basis: "第 35 轮桥补通（4°：`authored/lib-server-translations` → slug `server-translations`）后判到：`platforms`=[fabric,forge,neoforge] 而构件面该 slug 仅 fabric 行。上游未复核（同 L42 构件面重抓欠账）⇒ 留账不判红，禁止据此改正文。as-of 2026-09-25",
+    basis: "第 35 轮桥补通（4°：`authored/lib-server-translations` → slug `server-translations`）后判到：`platforms`=[fabric,forge,neoforge] 而构件面该 slug 仅 fabric 行。上游未复核（同 L42 构件面重抓欠账）⇒ 留账不判红，禁止据此改正文",
   },
   {
     skill: "mc-server-translations", loader: "neoforge",
-    basis: "同上一条同一 slug、同一判面缺失方向（`server-translations` 快照只有 fabric 行）。上游未复核 ⇒ 留账。as-of 2026-09-25",
+    basis: "同上一条同一 slug、同一判面缺失方向（`server-translations` 快照只有 fabric 行）。上游未复核 ⇒ 留账",
   },
   {
     skill: "mc-spruceui", loader: "forge",
-    basis: "第 35 轮桥补通（4°：`authored/lib-spruceui-obsidianui` → slug `spruceui-obsidianui`，裸名 `spruceui` **不在**构件面，靠的是行 id）后判到：`platforms`=[fabric,forge,neoforge,quilt] 而构件面该 slug 仅 fabric 行。SpruceUI 是 Cotton 系（同 libgui 的 Modrinth 下架情形），快照口径对它覆盖度低 ⇒ 只留账、不改语料。as-of 2026-09-25",
+    basis: "第 35 轮桥补通（4°：`authored/lib-spruceui-obsidianui` → slug `spruceui-obsidianui`，裸名 `spruceui` **不在**构件面，靠的是行 id）后判到：`platforms`=[fabric,forge,neoforge,quilt] 而构件面该 slug 仅 fabric 行。SpruceUI 是 Cotton 系（同 libgui 的 Modrinth 下架情形），快照口径对它覆盖度低 ⇒ 只留账、不改语料",
   },
   {
     skill: "mc-spruceui", loader: "neoforge",
-    basis: "同 `mc-spruceui`/forge 条：同一 slug、同一仅 fabric 行的快照面，上游未复核 ⇒ 留账。as-of 2026-09-25",
+    basis: "同 `mc-spruceui`/forge 条：同一 slug、同一仅 fabric 行的快照面，上游未复核 ⇒ 留账",
   },
   {
     skill: "mc-spruceui", loader: "quilt",
-    basis: "同 `mc-spruceui`/forge 条（该档 `platforms` 三条全部未被构件面支撑，快照只 fabric）。⚠️ 本条与 §「`platforms` 语义」待裁项**无关**：按构建面读法它判红、按读物读法它不判 ⇒ 裁定前只留账，禁止摘 quilt（那会把一条未裁的语义问题当成已定案写进语料）。as-of 2026-09-25",
+    basis: "同 `mc-spruceui`/forge 条（该档 `platforms` 三条全部未被构件面支撑，快照只 fabric）。⚠️ 本条与 §「`platforms` 语义」待裁项**无关**：按构建面读法它判红、按读物读法它不判 ⇒ 裁定前只留账，禁止摘 quilt（那会把一条未裁的语义问题当成已定案写进语料）",
   },
 ];
 
@@ -835,11 +835,11 @@ export const TRIAD_OVERCLAIM_DEBT = [
 export const INFO_DEBT_DECIDED = [
   {
     skill: "mc-compat-jei", loader: "quilt", verdict: "not-add",
-    basis: "第 37 轮逐 slug 定案「不补」，第 51 轮据构件面复核改点名（判定不变、依据变硬）：该档桥到合并串 `emi,jei,rei`，quilt 的 13 行 release **全部来自 `emi` 一家**（`jei` quilt **0 行**；`rei` **在面**、84 行里 **quilt 也是 0 行** —— fabric 51 行含 45 release（上界 26.2）/ rift 2 行含 2 release（1.13.2）/ forge 13 与 neoforge 18 全 beta ⇒ 原先那句「`rei` 该 slug 根本不在构件面」是**错的**，正确说法是「rei 在面但没有 quilt 行」）⇒ 给 `mc-compat-jei` 点名 quilt 就是让一家替另一家背书。反向局限同时成立：`jei` 自己 fabric 19 行 / neoforge 15 行都是 **0 release**。分母口径 = `mcp-server/data/lib-manifests/all.json`（as-of mtime 2026-09-25T06:21Z，49 slug / Σentries 3,003）逐 slug 逐 loader 的行数与 `versionType` 分解（探针 `temp/ralph-20260922/_r37-probe-slug-loader.mjs` + `_r37-probe-rows.mjs`，输出 `logs/r37-probe1.log` / `r37-probe2.log`；第 51 轮复算探针 `temp/ralph-20260922/_r51-rei-probe.mjs`）。正文已逐 slug 披露 = `community_knowledge/authored/library-integration-jei-emi.md`「## 构件面逐 slug 实测」。复核 as-of 2026-09-26",
+    basis: "第 37 轮逐 slug 定案「不补」，第 51 轮据构件面复核改点名（判定不变、依据变硬）：该档桥到合并串 `emi,jei,rei`，quilt 的 13 行 release **全部来自 `emi` 一家**（`jei` quilt **0 行**；`rei` **在面**、84 行里 **quilt 也是 0 行** —— fabric 51 行含 45 release（上界 26.2）/ rift 2 行含 2 release（1.13.2）/ forge 13 与 neoforge 18 全 beta ⇒ 原先那句「`rei` 该 slug 根本不在构件面」是**错的**，正确说法是「rei 在面但没有 quilt 行」）⇒ 给 `mc-compat-jei` 点名 quilt 就是让一家替另一家背书。反向局限同时成立：`jei` 自己 fabric 19 行 / neoforge 15 行都是 **0 release**。分母口径 = `mcp-server/data/lib-manifests/all.json`（mtime 2026-09-25T06:21Z，49 slug / Σentries 3,003）逐 slug 逐 loader 的行数与 `versionType` 分解（探针 `temp/ralph-20260922/_r37-probe-slug-loader.mjs` + `_r37-probe-rows.mjs`，输出 `logs/r37-probe1.log` / `r37-probe2.log`；第 51 轮复算探针 `temp/ralph-20260922/_r51-rei-probe.mjs`）。正文已逐 slug 披露 = `community_knowledge/authored/library-integration-jei-emi.md`「## 构件面逐 slug 实测」",
   },
   {
     skill: "mc-curios", loader: "fabric", verdict: "not-add",
-    basis: "第 37 轮定案「不补」：`curios` 的 fabric 在构件面只有 **1 行且 `versionType=beta`**（`1.16.5` / `curios-fabric-0.0.13-1.16.5.jar`，release **0**）⇒ 按 2026-09-24 裁定「只有 beta ⇒ 不点名」（同一条裁定当年把 `terrablender` 的 quilt 移出窗口，方向反过来同样适用）。正文已披露并写明「不点名 ≠ 上游没有」= `community_knowledge/authored/lib-curios.md`「## 构件面逐 loader 实测」。⚠️ 若日后重抓构件面出现 fabric release 行，本条**不再**是 INFO 欠账 ⇒ 第 3 条双向失步腿会当场红，届时删本行即可。as-of 2026-09-25",
+    basis: "第 37 轮定案「不补」：`curios` 的 fabric 在构件面只有 **1 行且 `versionType=beta`**（`1.16.5` / `curios-fabric-0.0.13-1.16.5.jar`，release **0**）⇒ 按 2026-09-24 裁定「只有 beta ⇒ 不点名」（同一条裁定当年把 `terrablender` 的 quilt 移出窗口，方向反过来同样适用）。正文已披露并写明「不点名 ≠ 上游没有」= `community_knowledge/authored/lib-curios.md`「## 构件面逐 loader 实测」。⚠️ 若日后重抓构件面出现 fabric release 行，本条**不再**是 INFO 欠账 ⇒ 第 3 条双向失步腿会当场红，届时删本行即可",
   },
 ];
 
@@ -1117,7 +1117,7 @@ export function bridgeCoverageCheck(declareRows, unbridged, blindspots = BRIDGE_
     return { errors: ["⑤ COLLECTOR_RETURNED_ZERO：腿 B 的声明面采集 0 份 SKILL.md ⇒ 桥覆盖判断什么也没在看（发现器或 libs 路径失效）"], declared: 0, unbridged: unbridged.length, silent: [] };
   }
   if (declareRows.length < FLOOR_DECLARE_FABRIC_FACE) {
-    errors.push(`⑤ COVERAGE_BELOW_FLOOR：腿 B 声明面 ${declareRows.length} 份 < 地板 ${FLOOR_DECLARE_FABRIC_FACE}（地板 as-of 2026-09-25 现扫 36 份总 / fabric-only+all-platforms 30 份）⇒ 分母塌了，桥通率再高也没意义`);
+    errors.push(`⑤ COVERAGE_BELOW_FLOOR：腿 B 声明面 ${declareRows.length} 份 < 地板 ${FLOOR_DECLARE_FABRIC_FACE}（地板现扫 36 份总 / fabric-only+all-platforms 30 份）⇒ 分母塌了，桥通率再高也没意义`);
   }
   const registered = new Set(blindspots.map((b) => b.skill));
   const silent = unbridged.filter((s) => !registered.has(s));
@@ -1132,7 +1132,7 @@ export function bridgeCoverageCheck(declareRows, unbridged, blindspots = BRIDGE_
     if (!b.basis || !String(b.basis).trim()) errors.push(`⑤ BRIDGE_BLINDSPOT 条目失效：${b.skill} 没有 basis ⇒ 登记不是免检牌`);
   }
   if (unbridged.length > FLOOR_TRIAD_UNBRIDGED_MAX) {
-    errors.push(`⑤ COVERAGE_BELOW_FLOOR：未通桥 ${unbridged.length} 份 > 上界 ${FLOOR_TRIAD_UNBRIDGED_MAX}（as-of 2026-09-25 现扫 3 份；第 36 轮桥吃多值 slug 串之前是 4 份）⇒ 腿 B 的覆盖面在变薄（逐名 = ${unbridged.join(",")}）`);
+    errors.push(`⑤ COVERAGE_BELOW_FLOOR：未通桥 ${unbridged.length} 份 > 上界 ${FLOOR_TRIAD_UNBRIDGED_MAX}（现扫 3 份；第 36 轮桥吃多值 slug 串之前是 4 份）⇒ 腿 B 的覆盖面在变薄（逐名 = ${unbridged.join(",")}）`);
   }
   return { errors, declared: declareRows.length, unbridged: unbridged.length, silent };
 }
@@ -1206,10 +1206,10 @@ export function libTriadFace() {
     errors.push(`⑤ CATALOG_STALE：生成物 library-catalog.ts 比它自己的生产者 ${path.basename(CATALOG_PRODUCER)} 旧 ⇒ 生产侧改过没重跑，本门核到的是旧 loaders（只报，不代跑）`);
   }
 
-  if (counts.slugs < FLOOR_TRIAD_SLUGS) errors.push(`⑤ COVERAGE_BELOW_FLOOR：构件面 ${counts.slugs} slug < 地板 ${FLOOR_TRIAD_SLUGS}（地板钉自旧面 48 slug；现面 as-of 2026-09-25 = 49，口径见 mcp-server/README.md §数据来源与边界）`);
-  if (counts.rows < FLOOR_TRIAD_ROWS) errors.push(`⑤ COVERAGE_BELOW_FLOOR：构件面 ${counts.rows} 发布文件行 < 地板 ${FLOOR_TRIAD_ROWS}（地板钉自旧面 2,870 行；现面 as-of 2026-09-25 = 3,003，口径见 mcp-server/README.md §数据来源与边界）`);
-  if (counts.catalogRows < FLOOR_TRIAD_CATALOG_ROWS) errors.push(`⑤ COVERAGE_BELOW_FLOOR：catalog ${counts.catalogRows} 行 < 地板 ${FLOOR_TRIAD_CATALOG_ROWS}（as-of 2026-09-25 实扫 50）`);
-  if (counts.bridged < FLOOR_TRIAD_BRIDGED) errors.push(`⑤ COVERAGE_BELOW_FLOOR：桥通（SKILL→slug 可解析）${counts.bridged} 份 < 地板 ${FLOOR_TRIAD_BRIDGED}（as-of 2026-09-25 现扫：三档桥 29 份命中 / 36 份总，补 4° 构件面正名后 32 份，第 36 轮桥吃多值 slug 串后 33 份；门头注旧写的「33/36」是错的，第 35 轮改口）⇒ 腿 B 覆盖面变薄`);
+  if (counts.slugs < FLOOR_TRIAD_SLUGS) errors.push(`⑤ COVERAGE_BELOW_FLOOR：构件面 ${counts.slugs} slug < 地板 ${FLOOR_TRIAD_SLUGS}（地板钉自旧面 48 slug；现面 = 49，口径见 mcp-server/README.md §数据来源与边界）`);
+  if (counts.rows < FLOOR_TRIAD_ROWS) errors.push(`⑤ COVERAGE_BELOW_FLOOR：构件面 ${counts.rows} 发布文件行 < 地板 ${FLOOR_TRIAD_ROWS}（地板钉自旧面 2,870 行；现面 = 3,003，口径见 mcp-server/README.md §数据来源与边界）`);
+  if (counts.catalogRows < FLOOR_TRIAD_CATALOG_ROWS) errors.push(`⑤ COVERAGE_BELOW_FLOOR：catalog ${counts.catalogRows} 行 < 地板 ${FLOOR_TRIAD_CATALOG_ROWS}（实扫 50）`);
+  if (counts.bridged < FLOOR_TRIAD_BRIDGED) errors.push(`⑤ COVERAGE_BELOW_FLOOR：桥通（SKILL→slug 可解析）${counts.bridged} 份 < 地板 ${FLOOR_TRIAD_BRIDGED}（现扫：三档桥 29 份命中 / 36 份总，补 4° 构件面正名后 32 份，第 36 轮桥吃多值 slug 串后 33 份；门头注旧写的「33/36」是错的，第 35 轮改口）⇒ 腿 B 覆盖面变薄`);
   if (counts.judgedA + counts.judgedB === 0) {
     errors.push("⑤ COLLECTOR_RETURNED_ZERO：两条腿合计判 0 个 (面,loader) 组 ⇒ 判据⑤是装饰（桥全断 / loaders 与 platforms 全空都会是这个形状）");
   } else if (counts.judgedA + counts.judgedB < FLOOR_TRIAD_JUDGED) {

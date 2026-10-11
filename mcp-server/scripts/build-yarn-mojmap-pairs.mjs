@@ -15,7 +15,7 @@
  *     join 键 ：obf 短名（`client.txt` 的 `com.foo.Bar -> enr:` 右侧 == 上两者的 official 列）
  *   缺失的 client.txt 走仓库自带的 `ensureMojangClientMappings` 现拉到**产物目录**下（gitignored 之外）。
  *
- * 产物（**生成器从不写仓库**）：`<out>/yarn-mojmap-<v>.json`（每档一份）+ `<out>/index.json`（版本 → 文件 / 条数 / as-of）。
+ * 产物（**生成器从不写仓库**）：`<out>/yarn-mojmap-<v>.json`（每档一份）+ `<out>/index.json`（版本 → 文件 / 条数）。
  * 默认 `<out>` = `$MC_SKILL_CACHE/yarn-mojmap-pairs`；未设该环境变量时退到 `os.tmpdir()` 的一次性目录
  * （打印实际落点，别猜）。
  * 2026-09-25 裁定：`client.txt` 本体继续 gitignored，但**按它 join 出的派生对照表**由人工一次性发布到

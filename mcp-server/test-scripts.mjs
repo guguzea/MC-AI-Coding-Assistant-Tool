@@ -2438,7 +2438,7 @@ const SELFTEST_GATES = [
     "./scripts/assert-test-chain-coverage.mjs",
     // 第 36 轮：表形门的判据自证（第三列缺失 / 第三列为空 / 号序乱（现盘真发生过）/ 重号 / 跳号 / 首号≠1 /
     // 正则采 0 行 ⇒ COLLECTOR_RETURNED_ZERO / 锚改名 ⇒ ANCHOR_MISSING / 截断到地板下，各必须红；
-    // 另三记**不判对照**须绿：合法改词（去掉 as-of）不红、合法加一行不红（地板只 `<`）、现盘逐字副本绿）。
+    // 另三记**不判对照**须绿：合法改词（去掉时效串）不红、合法加一行不红（地板只 `<`）、现盘逐字副本绿）。
     "./scripts/assert-backlog-table-shape.mjs",
     // 清尾①（2026-09-25）：未版本化现行页判据的自证（跨档改写 / 时间戳缺或重 / 警告删 / 未登记页 / 整页缺失 ⇒ 必红）。
     "./scripts/assert-quilt-unversioned-wiki.mjs",
@@ -2514,9 +2514,9 @@ const SELFTEST_GATES = [
  *  `Y` 的下界另配一记**差分对照**（投毒④）证明扫描是活的：往 `selfBlob` 夹具里追加一条 spawn 形引用，
  *  `Y` 必须 −1 且仍绿；只按下界的话，「扫描恒不命中 ⇒ Y=K」与「扫描恒命中 ⇒ Y=0」都不会自己现形。
  */
-const FLOOR_REAL_RUN = 30; // 口径 = REAL_RUN_GATES 去重长度；as-of 2026-09-25 实测 37（+assert-quilt-unversioned-wiki / +assert-cross-layer-names / +assert-generator-rejection-codes）；下界（< 才红），非等式
-const FLOOR_SELFTEST = 15; // 口径 = SELFTEST_GATES 去重长度；as-of 2026-09-25 实测 26（+quilt-unversioned-wiki / +qsl-verified-sync / +cross-layer-names / +generator-rejection-codes 四条自证）；下界，非等式
-const FLOOR_UNREF = 8; // 口径 = 盘上 assert-*.mjs 中「本文件源码零出现」的道数；as-of 2026-09-24 实测 10；下界，非等式（合法把某道门挪进本文件 spawn 块会让 Y 降，不该红）
+const FLOOR_REAL_RUN = 30; // 口径 = REAL_RUN_GATES 去重长度；实测 37（+assert-quilt-unversioned-wiki / +assert-cross-layer-names / +assert-generator-rejection-codes）；下界（< 才红），非等式
+const FLOOR_SELFTEST = 15; // 口径 = SELFTEST_GATES 去重长度；实测 26（+quilt-unversioned-wiki / +qsl-verified-sync / +cross-layer-names / +generator-rejection-codes 四条自证）；下界，非等式
+const FLOOR_UNREF = 8; // 口径 = 盘上 assert-*.mjs 中「本文件源码零出现」的道数；实测 10；下界，非等式（合法把某道门挪进本文件 spawn 块会让 Y 降，不该红）
 
 /**
  * 纯函数：输入（盘上清单 / 全 test-*.mjs+package.json 的引用 blob / **本文件自身源码** / 两条数组）
@@ -2669,7 +2669,7 @@ function censusChain({ diskGates, blob, pkg, selfBlob, realRun, selftest, floorR
       `本文件完全未引用 Y=${prod.Y} 道（列名：${prod.yNames.join(", ") || "无"}）`,
   );
   console.log(
-    `    断言: P===K（唯一等式）· N≥${FLOOR_REAL_RUN} · M≥${FLOOR_SELFTEST} · Y≥${FLOOR_UNREF}（三条下界，as-of 2026-09-24 实测 N/M/Y=${prod.N}/${prod.M}/${prod.Y}）`,
+    `    断言: P===K（唯一等式）· N≥${FLOOR_REAL_RUN} · M≥${FLOOR_SELFTEST} · Y≥${FLOOR_UNREF}（三条下界，实测 N/M/Y=${prod.N}/${prod.M}/${prod.Y}）`,
   );
   console.log(`    投毒① 可达腿（摘掉 ${probe} 的全部引用）红在: ${redReach}`);
   console.log(`    投毒② N 地板腿（地板抬到 K+1=${prod.K + 1}）红在: ${redFloorN}`);

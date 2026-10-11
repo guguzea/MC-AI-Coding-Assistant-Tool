@@ -5,7 +5,7 @@
  * **1.7.10–1.11.2 一件都没有**。本生成器给出一份**最小、逐版本正确**的桥 mod 源码模板：tick 钩子 + 内嵌 `com.sun.net.httpserver`，
  * 协议与 `playtest_bridge` 一致（`GET /status`、`POST /execute`），⇒ 老平台不必改工具面就能走桥路线。
  *
- * **线协议（逐键对齐 BlackBoxPro，源码级 as-of 2026-09-29；不对齐就等于"工具面零改动"是假的）**：
+ * **线协议（逐键对齐 BlackBoxPro，源码级；不对齐就等于"工具面零改动"是假的）**：
  *   - `GET /status` → `{status,version,platform,httpPort,actions,ready}`；`ready = player!=null && world!=null`
  *     （本模板里 `ready` 由 tick 线程每 tick 刷新、HTTP 线程只读 `volatile` —— HTTP 线程直接碰 `Minecraft` 会崩）。
  *   - `POST /execute` body = `{id,action,params,delay}` →
@@ -113,7 +113,7 @@ interface VerFacts {
 /**
  * forge 第二批动作集（`query_inventory_slot` / `query_inventory` / `query_nearby_entities` / `query_chat_history` / `use_item` / `query_screen`）。
  *
- * 逐版本出处（`data/forge_javadoc/<ver>/processed/**` 实页，as-of 2026-10-04 逐页读出）：
+ * 逐版本出处（`data/forge_javadoc/<ver>/processed/**` 实页，逐页读出）：
  *   - `InventoryPlayer#getStackInSlot(int)` / `getSizeInventory()` / `getCurrentItem()` —— **六档同形**；
  *   - `ItemStack#getItem()` / `getUnlocalizedName()` —— 六档同形；**空判定** `s == null`（≤1.10.2）↔ `s.isEmpty()`（1.11.2+）；
  *     **数量** `s.stackSize`（≤1.10.2）↔ `s.getCount()`（1.11.2+）；
@@ -1260,7 +1260,7 @@ function modloaderReadme(modId: string): string {
 > \`query_nearby_entities\` / \`query_chat_history\` / \`use_item\` / \`query_screen\`（全部走内部类 \`Mc\` 的 \`throw\`）。
 > 这不是偷懒：本仓对 1.6.4 **无 MCP 映射**（2026-10-11 构件复核已把 tick 回调名与客户端单例取法补上，其余名称仍**没有来源**），按纪律**不许猜**。
 
-## 本仓对该档的完整出处盘点（as-of 2026-10-11，构件复核后）
+## 本仓对该档的完整出处盘点（构件复核后）
 
 | 桥需要什么 | 本档状态 | 出处 |
 |---|---|---|

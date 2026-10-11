@@ -153,7 +153,7 @@ const T = (key, body) => `\n  "${key}": {\n    title: "t",\n    body: \`${body}\
 const CITED_PATH_RE =
   /(?:forge|neoforge|fabric|quilt|liteloader|rift|modloader|bedrock)\/[0-9][\w.]*\/\.cursor\/(?:rules|skills)\/[A-Za-z0-9._/-]+/g;
 
-/** 地板（实测 as-of 2026-09-24：48 模板 / 22→30+ 条具象引用）：低于即采集面塌了，不是数量契约。 */
+/** 地板（实测：48 模板 / 22→30+ 条具象引用）：低于即采集面塌了，不是数量契约。*/
 export const CITED_BLOCK_FLOOR = 4;
 export const CITED_ITEM_FLOOR = 20;
 

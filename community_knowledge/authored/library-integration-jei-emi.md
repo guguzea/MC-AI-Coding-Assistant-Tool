@@ -21,7 +21,7 @@ sourceKind: authored
 
 ## 构件面逐 slug 实测（2026-09-25：判据⑤ 的「少推荐」欠账点名本档 `quilt`，**结论 = 不点名**）
 
-本档是**三库合并行**（本档 `modrinthSlug: jei, emi, rei` ⇒ 生成物里被生产者按字典序归一成 `"emi,jei,rei"`），判据⑤ 腿 B 按 loader **并集**读构件面，于是把 `quilt` 列成 INFO「少推荐」（不判红）。但并集不能当「本档点名的库族支持 quilt」的证据 ⇒ 逐 slug 实测（数据 = `mcp-server/data/lib-manifests/all.json`，快照 as-of 2026-09-16）：
+本档是**三库合并行**（本档 `modrinthSlug: jei, emi, rei` ⇒ 生成物里被生产者按字典序归一成 `"emi,jei,rei"`），判据⑤ 腿 B 按 loader **并集**读构件面，于是把 `quilt` 列成 INFO「少推荐」（不判红）。但并集不能当「本档点名的库族支持 quilt」的证据 ⇒ 逐 slug 实测（数据 = `mcp-server/data/lib-manifests/all.json`，快照）：
 
 | slug | 在构件面？ | fabric | forge | neoforge | **quilt** |
 |---|---|---|---|---|---|

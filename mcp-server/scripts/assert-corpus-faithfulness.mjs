@@ -230,7 +230,7 @@ const LEDGER_TOTALS = {
  * 挂一张「允许它不等于上游」的空白票 —— 那才是裁定明令禁止的「整体放松」。
  * 保留的机制才是裁定要的东西：将来真出现取件缺口时，只能走具名条目，不能走旁路。
  *
- * 现盘依据（as-of 2026-09-26 第 50 轮）：`MC_SKILL_CORPUS_RELEDGER=1` 读
+ * 现盘依据（第 50 轮）：`MC_SKILL_CORPUS_RELEDGER=1` 读
  * `LEDGER_TOTALS.directiveSites = 633` 且 `directiveOnDisk = 633` ⇒ 取件缺口 **0** 处，
  * 所以「默认必红」在今天的盘上是**零行为变更**的收紧。
  */

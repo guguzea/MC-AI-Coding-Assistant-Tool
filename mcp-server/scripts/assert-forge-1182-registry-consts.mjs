@@ -50,7 +50,7 @@ const LEDGER = {
   //   版本都不存在 ⇒ source 面 15 → 5。**本门判据与 holds 钉值不随出处口径改动**（5a 轮只改注释）。
   //   **2026-09-24（Ralph 第 19 轮，S25 尾）核验并同批重签**：处方腿已落盘兑现（非只改注释）——1.18.2
   //   源面 `ENTITYTYPES` 处方 **0** 处（正名 `ForgeRegistries.ENTITIES`：canonical 面 **9 份文件 / 11 处**，
-  //   口径 = `grep -o` 逐次计数、排除 7 个宿主镜像目录只留 `.cursor` 与 knowledge/ 等源面，as-of 2026-09-24；
+  //   口径 = `grep -o` 逐次计数、排除 7 个宿主镜像目录只留 `.cursor` 与 knowledge/ 等源面；
   //   原写「10 处」为未经核对的数，第 19 轮验收时按现算改并补口径归属），1.19.4 全树 `ENTITYTYPES` **0** 命中（正名 `ENTITY_TYPES`；两档禁止平推）。
   //   `MC_SKILL_F146_RELEDGER=1` 实算仍 5/6/0 ⇒ **钉值照抄未变**；`sync-skills`（1.18.2 + 1.19.4 两个
   //   target）后 F6 实测 drift 仍 0 ⇒ `mirrorDrift` 亦未重钉。口径归属：改口由 2026-09-23 S25 裁定
@@ -94,7 +94,7 @@ const LEDGER = {
   //   计数反而涨到 10 —— 因为「解释为什么这个名字不存在」必须把名字写出来。F3 是**等式棘轮**
   //   （`now === pinned`，不是上界）⇒ 涨/跌都得逐处点名，防的就是「顺手多写一处」。口径 = source 桶
   //   （`.cursor/skills` + `knowledge` + `code-patterns`，`grep -o` 逐次计数、7 个宿主镜像目录不计，
-  //   as-of 2026-09-24）。10 处逐点：
+  // 10 处逐点：
   //     1-2) `.cursor/skills/mc-fluid/SKILL.md:22`、`:102` = ❌ 禁令（本轮一个字没动，它是胜侧）
   //     3)   `knowledge/antipatterns/registry.md:130` = 表行「`FLUIDTYPES` 与 `FLUID_TYPES` 都不存在」说明
   //     4-5) 同文件 `:135` ×2 = 引述旧处方「把 FLUIDTYPES 当 1.18.2 正名」＋「既没有 FLUIDTYPES 也没有 FLUID_TYPES」证伪

@@ -8666,7 +8666,7 @@ testCommunityIndexSync();
  *
  * 判据（行级，负例形状照抄 `scripts/assert-skill-yarn-attest.mjs` 的 `NEG` 常量）：
  *   含 `@minecraft/server-beta` 且同行**不含** NEG 词（禁止/不存在/不是/勿/错误/❌/非包名/未核实…）⇒ 违规。
- *   ⇒ `09-anti-patterns` 的 ❌ 禁令行本身要写这个名字，那是合法提及，不判红（实测 as-of 2026-09-23：真面 18 处提及 / 0 违规 = bedrock 8 宿主 ×2 行 + `mc-script-server/SKILL.md` 1 + 生成器 1）。
+ *   ⇒ `09-anti-patterns` 的 ❌ 禁令行本身要写这个名字，那是合法提及，不判红（实测：真面 18 处提及 / 0 违规 = bedrock 8 宿主 ×2 行 + `mc-script-server/SKILL.md` 1 + 生成器 1）。
  * 地板：R47 `[FLOOR-COLLECTOR]` 语义 —— 采集 0 或某个**声明过的面**采到 0 ⇒ 立刻红（采集器失效/假覆盖），
  *   **不做等式棘轮**（正常新增只会抬高计数）。汇总行无条件打印。
  * 投毒：① 内存夹具走同一判据函数 ② `MC_SKILL_S19_ROOT=<假根>` 走真实文件面（该次 rc 应为 1）。

@@ -14,7 +14,7 @@ export { matchesExactMcVersion };
  * W2-1（2026-09-21）：MC 时代**上界**哨兵（与 generate_worldgen 的 N6 同形）。
  * `exactMcVersion` 只判「是不是 x.y.z 形」，`1.99.9` / `26.99.9` 这类编造 version 会一路生成成功
  * （旧病：generate_model / generate_lang / generate_config 的 fabric 分支接受 1.99.9 并回 ok:true + files）。
- * 本仓 as-of 2026-09-21 只核到 1.x 的 1.21.x 与 26.1.x；超出即拒 —— 上游出新代时抬常量并附依据。
+ * 本仓只核到 1.x 的 1.21.x 与 26.1.x；超出即拒 —— 上游出新代时抬常量并附依据。
  */
 export const MC_MAX_MINOR_1X = 21;
 export const MC_MAX_MINOR_26X = 1;
@@ -32,7 +32,7 @@ export function eraUpperBoundError(version: string, max26x: number = MC_MAX_MINO
     const mm = v.match(/^1\.(\d+)(?:\.(\d+))?$/);
     const minor = mm ? Number(mm[1]) : 0;
     if (minor > MC_MAX_MINOR_1X) {
-      return `未跟进 1.${minor}.x（本仓 as-of 2026-09-21 只核到 1.${MC_MAX_MINOR_1X}.x）—— 禁止默默生成；先按 search_*_docs 核该代格式，再抬 MC_MAX_MINOR_1X。`;
+      return `未跟进 1.${minor}.x（本仓只核到 1.${MC_MAX_MINOR_1X}.x）—— 禁止默默生成；先按 search_*_docs 核该代格式，再抬 MC_MAX_MINOR_1X。`;
     }
     return null;
   }

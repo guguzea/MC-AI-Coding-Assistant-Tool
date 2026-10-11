@@ -60,7 +60,7 @@ export const REGEN_COMMAND = "node mcp-server/scripts/check-lib-coords.mjs --wri
 
 /**
  * 地板 = **下界**（`<` 才红），不是等式（等式棘轮会让下一次合法加坐标必红）。
- * 分母口径 = 本文件 `collectClaims()` 的返回，as-of 2026-09-26 实测：
+ * 分母口径 = 本文件 `collectClaims()` 的返回，实测：
  * SKILL.md 36 份 / 坐标主张 23 条（doc 9 + 槽位 14）/ 唯一 group:artifact 3 枚 / 快照行 3 行。
  * 地板取实测的约 2/3 ⇒ 采集器整体失灵（正则改坏、目录挪走、walk 早退）必红，正常增删单条不红。
  */

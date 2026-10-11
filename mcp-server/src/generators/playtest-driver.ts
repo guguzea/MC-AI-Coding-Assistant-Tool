@@ -2,7 +2,7 @@
  * generate_playtest_driver —— 游玩自测骨架生成（只吐文本；默认 driverMode=external_bridge）。
  *
  * 口径单源：`community_knowledge/authored/ingame-playtest-automation.md`。
- * 桥契约（源码级 as-of 2026-09-29）：
+ * 桥契约（源码级）：
  *   POST /execute  CommandMessage{id,action,params,delay,target?} → ResponseMessage{id,status,message,data}（HTTP 恒 200）
  *   GET  /status   {status,version,platform,httpPort,actions,ready}；ready = player!=null && world!=null
  *   超时：服务端 responseTimeoutMs 默认 10000ms ⇒ status:"failure" + "Timeout after Nms"（无专用码 ⇒ 调用侧映射 PLAYTEST_TIMEOUT）
@@ -863,7 +863,7 @@ const FORGE_KEYS: Record<string, string> = {
  *     命令走 `LocalPlayer.chat(String)`（`ClientPacketListener.sendCommand` 1.19 才有）、注册表是 `core.Registry` 静态字段。
  *   - `1.19.4` = 与 1.20.1 基本同形（`createWorldOpenFlows().loadLevel`、`BuiltInRegistries`、`sendCommand`、7 参 LevelSettings 均在），
  *     仅 `Entity.isOnGround()`（`onGround()` 是 1.20 才改的名）差一处。
- * 全部 7 档的 javac 编译验证（本机 `.gradle/caches` 的 mapped jar 做 classpath）**逐档 COMPILE_OK**，as-of 2026-10-03。
+ * 全部 7 档的 javac 编译验证（本机 `.gradle/caches` 的 mapped jar 做 classpath）**逐档 COMPILE_OK**。
  */
 export const FORGE_LEGACY_VERSIONS: readonly string[] = ["1.12.2", "1.13.2", "1.14.4", "1.15.2", "1.16.5", "1.17.1", "1.18.2", "1.19.4"];
 /** 其中 `createFreshLevel` 造世界面**未取证**（LevelSettings/WorldDimensions 构造面不同）⇒ 保留 fail-closed 桩。 */
@@ -1246,7 +1246,7 @@ export function applyLiteLoader1122(s: string): string {
     'log("[QA] driver registered expect=" + EXPECT_ITEM + " slot=" + EXPECT_SLOT + "；⚠ LiteLoader 档：需 LiteMod 实现 Tickable 转发 onLiteLoaderTick");',
   );
   // ④ 文件头 **不需要**在这里改：已验证档的表头是**生成器按 tier 条目现拼**的
-  //   （`* 签名出处 = javap 实测（${tier.mappings} 命名 jar，as-of ${tier.asOf}）：` ⇒ liteloader 的表头直接取
+  //   （`* 签名出处 = javap 实测（${tier.mappings} 命名 jar，${tier.asOf}）：` ⇒ liteloader 的表头直接取
   //   `PLAYTEST_VERIFIED_TIER` 里 liteloader 1.12.2 那条的 `mappings`）。此处**故意不写**死代码式的 replace。
   return t;
 }
@@ -2028,7 +2028,7 @@ export const PLAYTEST_VERIFIED_TIER: ReadonlyArray<{ platform: string; version: 
       "**产物对 LiteLoader 零类型依赖**（不 import `com.mumfrey.*`）⇒ **编译验证 = JDK 8 `javac` 对上面那只真构件、两种模式各 COMPILE_OK**（与 `forge 1.12.2` 共用同一 classpath）。" +
       "**前置 = hybrid 工程**（`apply plugin: 'net.minecraftforge.gradle.liteloader'`，见 `liteloader/1.12.2/scaffold/hybrid`）：**纯 litemod（`scaffold/pure`）不在本链** —— 无 Gradle（无 `gradlew runClient` 载体）、无 Forge（产物里的 `MinecraftForge`/`ClientChatReceivedEvent` 编译不过）。" +
       "聊天回包**继续走 Forge** `ClientChatReceivedEvent`（hybrid 有该事件 ⇒ `EVENT_BUS.register` 保留）。`newworld` 与 forge 1.12.2 一样 **fail-closed**。" +
-      "**真机跑通 = 2026-10-04**（主对话实跑：`exit-code=0` + 16/16 步 + 截图，`scan blocks hits=760`；期间定案并修掉该实例 `options.txt` 的 `fov:70.0` 单位缺陷，见 `mcp-server/CHANGELOG.md` 第六十六批）——逐档读数与证据位置见仓库根 `README.md` 的 LiteLoader 1.12.2 行；**证据文件留主对话授权根、本仓不复制**。",
+      "**真机跑通**（主对话实跑：`exit-code=0` + 16/16 步 + 截图，`scan blocks hits=760`；期间定案并修掉该实例 `options.txt` 的 `fov:70.0` 单位缺陷，见 `mcp-server/CHANGELOG.md` 第六十六批）——逐档读数与证据位置见仓库根 `README.md` 的 LiteLoader 1.12.2 行；**证据文件留主对话授权根、本仓不复制**。",
     asOf: "2026-10-04",
   },
   {
@@ -2037,7 +2037,7 @@ export const PLAYTEST_VERIFIED_TIER: ReadonlyArray<{ platform: string; version: 
     mappings:
       "`forgeBin-1.12.2-14.23.5.2847.jar`（**FG2.3 的 MCP 命名 + Forge 合并件**，本机 `.gradle/caches/minecraft/net/minecraftforge/forge/1.12.2-14.23.5.2847/stable/39/`，**免下载**）。" +
       "改写表 = rewriteForForgeLegacy → **applyForgeMCP132 + applyForgeMCP1122**（**MCP 命名层**，与 1.14+ 的 mojmap 完全不同源；1.12.2 在 132 之上再退一层）。" +
-      "**八处 javap 分叉**（JDK 8 `javap -p`，as-of 2026-10-04）：" +
+      "**八处 javap 分叉**（JDK 8 `javap -p`）：" +
       "① **Forge 三包的 1.12.2 位置**：`net.minecraftforge.fml.common.registry.ForgeRegistries`（1.13 才搬 `net.minecraftforge.registries`；`BLOCKS/ITEMS/ENTITIES` + `IForgeRegistry.getKey(V)` 同在）、" +
       "`net.minecraftforge.fml.common.eventhandler.SubscribeEvent`（1.13 才搬 `eventbus.api`；总线 `MinecraftForge.EVENT_BUS` 类型是 `fml.common.eventhandler.EventBus`）、`fml.common.gameevent.TickEvent`（同 1.13.2，有 `phase` 字段）；" +
       "② **无 `Minecraft.getInstance()`** ⇒ 静态 `Minecraft.getMinecraft()`（javap 只有 `public static Minecraft getMinecraft()`）；" +
@@ -2050,8 +2050,8 @@ export const PLAYTEST_VERIFIED_TIER: ReadonlyArray<{ platform: string; version: 
       "**与 1.13.2 相同、无需再改的面**：`net.minecraft.block.state.IBlockState`（`World.getBlockState()` 返接口）、`net.minecraft.item.ItemStack`、`net.minecraft.util.math.BlockPos`（旧面 `add(int,int,int)/up()/down()/toImmutable()`）、`net.minecraft.client.gui.inventory.GuiInventory(EntityPlayer)`、`net.minecraft.client.entity.EntityPlayerSP`（`sendChatMessage(String)`/`sendPlayerAbilities()`）、" +
       "`World.loadedEntityList`（**无 getAllEntities()**）、`Entity.rotationYaw/rotationPitch/onGround` 公开字段 + 位置字段 `posX/posY/posZ`（**无 getX/getY/getZ**）、`getPosition()`、`InventoryPlayer.getStackInSlot(int)`、`Minecraft.getFramebuffer()/displayGuiScreen(GuiScreen)/launchIntegratedServer(String,String,WorldSettings)`、`WorldSettings(long,GameType,boolean,boolean,WorldType)`（**5 参**，`WorldType.DEFAULT`）。" +
       "**`newworld` 未取证**⇒ fail-closed（`FORGE_NO_NEWWORLD_VERSIONS`）。" +
-      "**编译验证 = JDK 8 `javac` 对上面这只真构件 COMPILE_OK**（as-of 2026-10-04）；" +
-      "**真机跑通 = 2026-10-04**（主对话实跑：`exit-code=0` + 14/14 步 + 截图，`land y=64`、`scan blocks hits=743`）——逐档读数与证据位置见仓库根 `README.md` 的 Forge 1.12.2 行（同一行右列另记了该档的**桥路线**整轮）；**证据文件留主对话授权根、本仓不复制**。",
+      "**编译验证 = JDK 8 `javac` 对上面这只真构件 COMPILE_OK**；" +
+      "**真机跑通**（主对话实跑：`exit-code=0` + 14/14 步 + 截图，`land y=64`、`scan blocks hits=743`）——逐档读数与证据位置见仓库根 `README.md` 的 Forge 1.12.2 行（同一行右列另记了该档的**桥路线**整轮）；**证据文件留主对话授权根、本仓不复制**。",
     asOf: "2026-10-04",
   },
   {
@@ -2605,7 +2605,7 @@ import net.minecraft.util.math.BlockPos;
 /**
  * 进程内临时 QA 驱动（${mode} / ${platform} ${version}）。测完必须按同目录 REVERT.md 撤除。
  *
- * 签名出处 = javap 实测（${tier.mappings} 命名 jar，as-of ${tier.asOf}）：
+ * 签名出处 = javap 实测（${tier.mappings} 命名 jar，${tier.asOf}）：
  *   ClientTickEvents.END_CLIENT_TICK : Event<EndTick>
  *   MinecraftClient.player / world / getFramebuffer() / runDirectory(File) / setScreen(Screen)
  *   ScreenshotRecorder.saveScreenshot(File, Framebuffer, Consumer<Text>)
