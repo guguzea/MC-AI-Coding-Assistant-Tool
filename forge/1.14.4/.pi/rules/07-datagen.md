@@ -128,7 +128,7 @@ IF 配方成分无固定位置（药水、染料混合等）
   → 用 .addIngredient() 添加成分
 
 IF 熔炉烧制
-  → CookingRecipeBuilder.smeltingRecipe(Ingredient, IItemProvider, float, int)（144 工厂名带 Recipe 后缀；blastingRecipe / cookingRecipe 同理，构件实证 2026-10-05）
+  → CookingRecipeBuilder.smeltingRecipe(Ingredient, IItemProvider, float, int)（144 工厂名带 Recipe 后缀；blastingRecipe / cookingRecipe 同理，构件实证）
 
 IF 用自定义工作台配方
   → 实现 IRecipe + 自定义 Container 和 GUI
@@ -199,7 +199,7 @@ public class ModRecipeProvider extends RecipeProvider {
             .patternLine(" Y ")
             .key('X', Items.DIAMOND)
             .key('Y', Items.STICK)
-            .addCriterion("has_diamond", InventoryChangeTrigger.Instance.forItems(Items.DIAMOND)) // javap 实证 2026-10-05：144 Instance 静态工厂是 forItems，没有 hasItems
+            .addCriterion("has_diamond", InventoryChangeTrigger.Instance.forItems(Items.DIAMOND)) // javap 实证：144 Instance 静态工厂是 forItems，没有 hasItems
             .build(consumer);
 
         ShapelessRecipeBuilder.shapelessRecipe(ModItems.OTHER_ITEM.get())
@@ -208,7 +208,7 @@ public class ModRecipeProvider extends RecipeProvider {
             .addCriterion("has_gold", InventoryChangeTrigger.Instance.forItems(Items.GOLD_INGOT))
             .build(consumer);
 
-        CookingRecipeBuilder.smeltingRecipe(Ingredient.fromItems(Items.COBBLESTONE), Items.STONE, 0.1f, 200) // 144 静态工厂叫 smeltingRecipe（javap 实证 2026-10-05），不是 smelting
+        CookingRecipeBuilder.smeltingRecipe(Ingredient.fromItems(Items.COBBLESTONE), Items.STONE, 0.1f, 200) // 144 静态工厂叫 smeltingRecipe（javap 实证），不是 smelting
             .addCriterion("has_cobblestone", InventoryChangeTrigger.Instance.forItems(Items.COBBLESTONE))
             .build(consumer);
     }
@@ -244,7 +244,7 @@ public class ModBlockLootTables implements Consumer<BiConsumer<ResourceLocation,
             LootTable.builder().addLootPool(
                 LootPool.builder().addEntry(
                     ItemLootEntry.builder(ModItems.SPECIAL_DROP.get())
-                        // 构件 javap 实证 2026-10-06（snapshot_20190719-1.14.3）：本档 Builder 方法名 = acceptFunction，
+                        // 构件 javap 实证（snapshot_20190719-1.14.3）：本档 Builder 方法名 = acceptFunction，
                         // SetCount 工厂 = func_215932_a（setCount 是 1.16+ 才有的名），RandomValueRange 的 of() = func_215837_a，
                         // 可读替代 = 公开构造 new RandomValueRange(float,float)
                         .acceptFunction(SetCount.func_215932_a(new RandomValueRange(1, 3)))

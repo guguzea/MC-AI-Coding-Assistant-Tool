@@ -8,11 +8,11 @@ mappings: yarn
 ---
 
 [DONOR_SKILL 禁止直接抄写]
-本 Skill 正文原派生自 fabric/1.21.4；**2026-10-05 已按本档 yarn 映射（data/fabric_1.21.10/mappings/yarn-mappings.sqlite）与本档 Fabric API 真构件 roster 逐名核正**：类名/方法名有本档出处，但构造参数表与抽象成员全集仍未核实 ⇒ 落地前必须 get_minecraft_source(version="1.21.10") 复核，禁止跨档照抄，禁止把 26.1.2 的 mojmap 写法当本档。
+本 Skill 正文原派生自 fabric/1.21.4；**已按本档 yarn 映射（data/fabric_1.21.10/mappings/yarn-mappings.sqlite）与本档 Fabric API 真构件 roster 逐名核正**：类名/方法名有本档出处，但构造参数表与抽象成员全集仍未核实 ⇒ 落地前必须 get_minecraft_source(version="1.21.10") 复核，禁止跨档照抄，禁止把 26.1.2 的 mojmap 写法当本档。
 
 # 流体开发（Fabric 1.21.10）
 
-## 本档更正（2026-10-05；证据 = 本档 yarn 映射与本档 Fabric API 真构件 roster）
+## 本档更正（证据 = 本档 yarn 映射与本档 Fabric API 真构件 roster）
 
 - 旧正文的 `new FabricFlowableFluid.Settings().slopeFindDistance(3).levelDecreasePerBlock(1).tickRate(5).supportsBoating(true)` 全部零命中：`FabricFlowableFluid` / `slopeFindDistance` / `levelDecreasePerBlock` / `supportsBoating` 不在本档 Yarn 映射；`FlowableFluid` 本档映射里的具名嵌套类只有 `$1` / `$NeighborGroup` / `$SpreadCache`，**没有 `$Settings`**。`tickRate` 在本档只属 `TickManager` / `UpdateTickRateS2CPacket`（游戏刻速管理），与流体构造无关。流体没有 Settings builder，实例只能**子类化 `FlowableFluid`**（本档真实类 `net/minecraft/fluid/FlowableFluid`）。
 - 旧正文用同一 id 连调两次 `Registry.register(Registries.FLUID, …)`（第二次还注册第一次的返回值）：重复注册即报错路径；流体只注册一次，「流体对应的方块」是另一条 BLOCK 注册，不是再注册一次 FLUID。

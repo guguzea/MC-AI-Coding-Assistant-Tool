@@ -4,4 +4,4 @@ description: 04 — 实体
 
 # 04 — 实体
 
-仅表内名字（如 `ModLoader.getUniqueEntityId`）。无 DistExecutor。
+仅表内名字（如 `ModLoader.registerTileEntity` / `ModLoader.registerEntityID`；~~`getUniqueEntityId`~~ 经构件复核 在 1.6.2 线**不存在**）。无 DistExecutor。

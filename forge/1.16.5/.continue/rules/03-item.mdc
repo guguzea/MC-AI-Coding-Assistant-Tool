@@ -144,7 +144,7 @@ public class MyItem extends Item {
         );
     }
 
-    // official 1.16.5 构件实证（javap 对 1.16.5-36.2.34_mapped_official_1.16.5.jar，2026-10-05）：
+    // official 1.16.5 构件实证（javap 对 1.16.5-36.2.34_mapped_official_1.16.5.jar）：
     // 世界内右键 = Item#use(World, PlayerEntity, Hand)，返回 ActionResult<ItemStack>；
     // 静态工厂 = ActionResult.success/consume/pass/fail。useOnWorld/ItemUsageContext 是 Fabric API 形态，本包禁用。
     @Override
@@ -200,7 +200,7 @@ public static final RegistryObject<Item> MY_SWORD = ITEMS.register("my_sword",
 
 ```java
 // items/MyArmorMaterial.java
-// official 1.16.5 构件实证：接口名 = IArmorMaterial（net.minecraft.item，2026-10-05 javap 对真构件点名；
+// official 1.16.5 构件实证：接口名 = IArmorMaterial（net.minecraft.item，javap 对真构件点名；
 // ❌ IArmorTier 是 1.17+ 名，本包构件没有）；getDurability(SlotType)/getDefenseForType(SlotType) 是 Yarn 形，
 // 本包方法 ✅ = getDurabilityForSlot/getDefenseForSlot
 public enum MyArmorMaterial implements IArmorMaterial {

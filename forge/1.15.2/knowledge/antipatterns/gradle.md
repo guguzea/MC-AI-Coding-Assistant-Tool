@@ -103,7 +103,7 @@ java {
 
 ## 错误：FG4 档混用 Gradle 7+ 构造 / Parchment 通道
 
-**症状：** 配置期就失败，一行 Java 都没编译（2026-09-11 真机逐条复现）：
+**症状：** 配置期就失败，一行 Java 都没编译：
 
 ```
 Failed to apply plugin 'net.minecraftforge.gradle'.
@@ -117,7 +117,7 @@ Could not find method base() for arguments [...] on project 'examplemod' of type
 **根因：** ForgeGradle `[4.1,4.2)` 硬拒 Gradle ≥ 7，而下列构造只在 Gradle 7+ 存在／生效——两者不存在共同可用版本：
 
 ```groovy
-// ❌ FG4 档不可用（本包 2026-09-11 前就是这样，pack.meta.buildVerified=false）
+// ❌ FG4 档不可用（本包此前就是这样，pack.meta.buildVerified=false）
 // settings.gradle
 plugins { id 'org.gradle.toolchains.foojay-resolver-convention' version '0.4.0' }
 // build.gradle

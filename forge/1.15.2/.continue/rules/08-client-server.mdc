@@ -143,16 +143,20 @@ public class ClientSetup {
 // client/input/ModKeyBindings.java
 public class ModKeyBindings {
     // KeyMapping 定义
+    // 1.15.2 实测（构件 javap）：键码用 GLFW 常量；Keyboard.KEY_* 属 LWJGL2，
+    // 1.13 起已不存在（与 1.13.2 档同一结论）
     public static KeyBinding TEST_KEY = new KeyBinding(
         "key.examplemod.test",
         KeyConflictContext.IN_GAME,
         InputMappings.Type.KEYSYM,
-        Keyboard.KEY_G,
+        GLFW.GLFW_KEY_G,
         "key.categories.examplemod"
     );
 
     @Mod.EventBusSubscriber(modid = ExampleMod.MOD_ID, bus = Bus.MOD, value = Dist.CLIENT)
     public static class ClientEvents {
+        // import net.minecraftforge.client.event.InputEvent.KeyInputEvent;
+        // 1.15.2 实测（同 javap）：KeyInputEvent 在 client.event 包；fml.common.gameevent 版本档不存在
         @SubscribeEvent
         public static void onKeyInput(KeyInputEvent event) {
             // 检测按键按下
@@ -167,7 +171,7 @@ public class ModKeyBindings {
 // entities/MyEntity.java（服务端设置，客户端自动同步）
 public class MyEntity extends LivingEntity {
     private static final DataParameter<Integer> DATA_CUSTOM =
-        EntityDataManager.defineId(MyEntity.class, DataSerializers.VARINT); // ❌ createKey = MCP 层名（152 official 构件实证 2026-10-05：defineId + DataParameter）
+        EntityDataManager.defineId(MyEntity.class, DataSerializers.VARINT); // ❌ createKey = MCP 层名（152 official 构件实证：defineId + DataParameter）
 
     @Override
     protected void defineSynchedData() { // ❌ registerData = MCP 层名（official: defineSynchedData，构件实证）
@@ -219,7 +223,7 @@ public class MyTileEntity extends TileEntity {
     // 在服务端逻辑中修改数据后，同步到客户端
     public void modifyData(int newValue) {
         this.syncData = newValue;
-        this.setChanged(); // markDirty = MCP 层名，152 official TileEntity = setChanged（构件实证 2026-10-05）
+        this.setChanged(); // markDirty = MCP 层名，152 official TileEntity = setChanged（构件实证）
         this.level.notifyBlockUpdate(pos, getBlockState(), getBlockState(), 3); // official 字段 = level（无 world/getWorld）
     }
 }

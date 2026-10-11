@@ -9,7 +9,7 @@ mappings: yarn
 
 # mc-datapack（1.21.10）
 
-> 一手来源（2026-09-19 核实）：Minecraft Wiki《Pack format》数据包格式表（https://minecraft.wiki/w/Pack_format ，1.21.9–1.21.10 = 88.0）与《Data pack》目录改名记载（https://minecraft.wiki/w/Data_pack ，1.21 起目录改单数）。本技能不含 Java API——数据包是 JSON 面；Java 侧数据生成走 `mc-datagen`。
+> 一手来源：Minecraft Wiki《Pack format》数据包格式表（https://minecraft.wiki/w/Pack_format，1.21.9–1.21.10 = 88.0）与《Data pack》目录改名记载（https://minecraft.wiki/w/Data_pack，1.21 起目录改单数）。本技能不含 Java API——数据包是 JSON 面；Java 侧数据生成走 `mc-datagen`。
 
 ## Decision Flow
 

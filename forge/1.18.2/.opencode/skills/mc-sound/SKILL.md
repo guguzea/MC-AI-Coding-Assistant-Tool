@@ -56,14 +56,16 @@ SOUNDS.register(modEventBus);
 ## SoundType（方块音效）
 
 ```java
+// 1.18.2 实测（构件 javap, parchment 2022.08.21）：名字无 BLOCK_ 前缀——
+// SoundEvents 里 BLOCK_STONE_* 零命中，真名 = STONE_BREAK/STEP/PLACE/HIT/FALL（各 1 个，逐名核过）
 public static final SoundType MY_BLOCK_SOUNDS = new SoundType(
     1.0f,   // volume
     1.0f,   // pitch
-    SoundEvents.BLOCK_STONE_BREAK,    // breakSound
-    SoundEvents.BLOCK_STONE_STEP,     // stepSound
-    SoundEvents.BLOCK_STONE_PLACE,    // placeSound
-    SoundEvents.BLOCK_STONE_HIT,      // hitSound
-    SoundEvents.BLOCK_STONE_FALL       // fallSound
+    SoundEvents.STONE_BREAK,    // breakSound
+    SoundEvents.STONE_STEP,     // stepSound
+    SoundEvents.STONE_PLACE,    // placeSound
+    SoundEvents.STONE_HIT,      // hitSound
+    SoundEvents.STONE_FALL      // fallSound
 );
 
 // 使用

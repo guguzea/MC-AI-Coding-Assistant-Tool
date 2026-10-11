@@ -8,7 +8,7 @@ modrinthSlug: polymer
 mappings: hint
 ---
 
-> 数据读取日期：2026-09-14（源：Modrinth project/polymer 版本表 limit=100；本轮 release 上界 fabric=26.2 / quilt=1.21.11）
+> 数据来源：Modrinth project/polymer 版本表 limit=100；本轮 release 上界 fabric=26.2 / quilt=1.21.11
 > 复核：curl.exe --ssl-no-revoke -sS "https://api.modrinth.com/v2/project/polymer/version?limit=100" 后按 game_versions + loaders + version_type 取上界
 
 # Polymer（Fabric/Quilt，纯服务端内容）

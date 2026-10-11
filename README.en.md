@@ -32,6 +32,8 @@ MC_skill/
 ├── AGENTS.md                    # root master guide: points the AI at the right platform rules
 ├── CONTRIBUTING.md              # contribution guide
 ├── AUTO_SETUP.md                # any MCP host: build + host-format config draft
+├── REPORT-FORMAT.md             # full delivery-report form (for agents: tier judging / main 4 blocks / maintenance 6 blocks / hard rules)
+├── DELIVERY_LOG.md              # rolling delivery draft (newest on top; chat shows only the three human-facing items)
 ├── THIRD_PARTY_NOTICES.md       # third-party docs / mapping data licensing
 ├── LICENSE                      # this repo's code: MIT
 ├── Minecraft 社区常用库模组全览（2026 版）.md  # pointer; full text in community_knowledge/authored/library-catalog-2026
@@ -45,6 +47,7 @@ MC_skill/
 ├── modloader/                   # Risugami ModLoader 1.6.4 + safe API table
 ├── bedrock/                     # Bedrock Add-On rules (flat bedrock/)
 │
+├── doc/                         # landing-spot ledgers (tool error codes: measured failures + full coverage list + tier snapshot)
 ├── community_knowledge/         # community practice knowledge → MCP search_community_docs
 │   ├── authored/                # short essays written here (incl. 48 lib-* integration notes, publishing, crashes, GUI, etc.)
 │   ├── permitted/               # community posts distilled with permission (e.g. mcmod 3993)
@@ -156,47 +159,9 @@ The loop above is the mechanism; this section is the **delivery gate**. A change
 
 **Boundary with human-in-the-loop**: the gate says testing is required, not that the agent gets to run anything. Gradle and launching the game still follow the three-channel authorization. Without authorization, write "not verified on a real machine" in the delivery report and hand the user the checklist above — **never** declare a pass on the user's behalf.
 
-### Second-half loop: real-machine matrix (village test: `newworld` to create the world → `locate` to find it → fly there → `land` on the ground → scan → assert → screenshot; criteria as of 2026-10-08)
-
-> **This section keeps only the decision criteria** (which combo is green, which verification tier it reached, what you must know before running it). Per-cell real-machine readings (`land y=` / `blocks hits` / `nearest=` / screenshot names / bridge jar sha256), the evidence-gathering process and the historical reversals all live in **§真机台账 (real-machine ledger)** of `community_knowledge/authored/ingame-playtest-automation.md`: T0 = the heading and pointer lines rewritten here, T1 = the original 16-row matrix archived verbatim, T2 = the original 40 "verified boundaries" bullets archived verbatim, T3 = the de-duplication verdict taken at merge time, T4 = the English originals archived verbatim.
-> Legend: ✅ = the full round passed (`exit-code=0`; evidence under the authorized root `E:\MC_GAME\instances\<tag>\evidence{,-bridge}/`); ⚠️ = that version or instance was not created; `—` = that version has no usable artifact for this route (**not a failure**).
-
-| Platform | Version | No-bridge driver | Bridge BlackBoxPro | Verification tier |
-| --- | --- | --- | --- | --- |
-| Fabric | 1.20.1 / 1.20.4 / 1.21.1 / 1.21.3 / 1.21.4 / 1.21.8 / 1.21.11 | ✅ each full round (1.21.4 / 1.21.11 via a retry round) | ✅ 1.21.1 + 1.21.11, each full round (pure bridge route); `—` elsewhere (no bridge jar installed) | real machine |
-| Fabric | 1.21.10 | ✅ full round (round 1: 17/17; the earlier "fell into the void" was solved with `forceload` + a longer plan) | `—` | real machine |
-| Fabric | 26.1 / 26.1.1 / 26.1.2 / 26.2 / 26.3 | ✅ five versions, each a full round (2026-10-03, all via the in-process no-bridge driver; four green on round 1) | `—` (no 26.x bridge artifact: BlackBoxPro covers only 1.12.2 / 1.21.1 / 1.21.11) | real machine; one "needs a re-run to confirm" note on the 26.x `newworld` path, see ledger T2 |
-| Fabric | 1.14.4 / 1.16.5 / 1.17.1 / 1.18.2 / 1.19.4 | ✅ five versions all green (2026-10-04, each 15/15) | `—` (no bridge artifact for 1.14.4–1.19.4) | real machine; compile evidence splits three ways: 1.14.4 / 1.16.5 = JDK 8 against real artifacts; 1.17.1 / 1.18.2 = real named jar + two FAPI stand-ins; 1.19.4 = same table as 1.20.1 |
-| Quilt | 1.20.1 / 1.20.4 / 1.21.1 / 1.21.3 / 1.21.4 / 1.21.8 / 1.21.10 / 1.21.11 | ✅ each full round (1.21.3 / 1.21.4 / 1.21.8 via a retry round) | `—` (**the bridge ships no Quilt artifact** ⇒ the bridge route is structurally unavailable on Quilt, not "untested") | real machine; **no javac compile verification for the whole Quilt family** (no quilt yarn-remapped module jars on this machine) |
-| Quilt | 1.18.2 / 1.19.4 | ✅ both versions green (2026-10-04, each 15/15) | `—` | real machine (does not impersonate compile verification) |
-| Forge | 1.20.1 | ✅ full round (18/18 `ok:true`) | `—` (BlackBoxPro has no forge artifact at or above 1.20.1) | real machine |
-| Forge | 1.20.4 | ✅ full round (after fixing two real defects: the FML 49 dev merged-block issue + the Forge 49 loot ISE; round 2: 17/17) | `—` | real machine |
-| Forge | 1.21.1 | ⚠️ **draft version, no rule tree** (only `AGENTS.md` + `pack.meta.json`, no `.cursor/rules/`; session returns `PACK_NOT_FOUND`, `list_forge_versions` omits it) ⇒ no instance | `—` | `—` |
-| Forge | 1.13.2 / 1.14.4 / 1.15.2 / 1.16.5 / 1.17.1 / 1.18.2 / 1.19.4 | ✅ seven versions all green (2026-10-04, each 15/15; all via `gradlew runClient`) | `—` | real machine + 9/9 COMPILE_OK against real artifacts (2026-10-03); the seven rewrite tables **all differ**; `newworld` implemented only on 1.19.4 |
-| Forge | **1.12.2** | ✅ full round (2026-10-04, 14/14 steps) | ✅ **village full round (2026-10-04, bridge route, third-party release 2.2.4)**: self-contained jar ⇒ **KFF not needed** (opposite of the 1.21.x line); `newworld` is fail-closed here, so the world can only come from the bridge's `create_world` | real machine + JDK 8 compile against real artifacts (tier 52); **this repo's own bridge template has never run on a real machine** — compile-level evidence only (see criterion 8) |
-| LiteLoader | **1.12.2 (hybrid)** | ✅ full round (2026-10-04, 16/16 steps); ticking goes only through the project's own `LiteMod implements Tickable` forwarding (the Forge `ClientTickEvent` subscription is removed — **no forwarding = never ticks = budget exhausted = red**) | `—` (no LiteLoader bridge artifact) | real machine + tier 53 compile verification; **the artifact carries zero `com.mumfrey.*` dependencies** |
-| NeoForge | 1.20.4 / 1.20.6 / 1.21.1 | ✅ each full round (1.20.4: 18/18; 1.20.6 / 1.21.1 = first run on the 1206+ table, via a retry round) | `—` (**1.21.1 unavailable**: the released jar is not a mod jar) | real machine |
-| NeoForge | 1.20.1 | ⚠️ no instance (this version's scaffold carries no build plugin, still under study) | `—` | `—` |
-| NeoForge | **1.21.11** | ⚠️ no instance (the bridge route does pass, see the next column) | ✅ **village full round (2026-10-02)**: bridge mod + `kotlinforforge-*-all.jar` into `run/mods` → `join_world` → `locate` → arrive and land → block / entity evidence + screenshot | real machine (bridge) |
-| NeoForge | 1.21.3 / 1.21.5 / 1.21.8 / 1.21.10 | ⚠️ no instance (**rule trees are complete**: 11 rules `00–10` + `data/neoforge_<ver>` corpus + working `search_neoforge_docs`; "no instance" means the client was never launched, not that the version is missing) | `—` | `—` |
-| NeoForge | **26.1 / 26.1.1 / 26.1.2 / 26.2 / 26.3** | ✅ five versions, each a full round (2026-10-03, sharing `apply26xxShared` with fabric 26.x, **all green on round 1**) | `—` (no 26.x bridge artifact) | real machine; prerequisites in criterion 6 |
-
-**Verified boundaries — the eight criteria that change a decision** (per-version readings, the evidence-gathering process and the reversals are in ledger T2 / T3 / T4; the ledger is authoritative for details):
-
-1. **The bridge's `/status.ready` is not trustworthy** (measured 2026-10-02): it reports `ready:true` even at the main menu ⇒ to decide "am I in the world", look only at `query_player_state` (success with `data` = in; `ok:false` + `"Player not available"` = out). **One timeout must not be read as "not in the world"** — that misread triggers a full world reload, which on a slow disk took ~28 minutes and never came back.
-2. **The CLI envelope is `{success, tool, result:{…}}`**: always unwrap `result` before reading fields (`st.ok` is permanently `undefined`; `ready` sits at `result.ready`). If a driver script's CLI path contains non-ASCII directory names, **build it with `String.fromCharCode`** — file encoding turning it into U+FFFD makes every `node <path>` fail with MODULE_NOT_FOUND, which looks like "the CLI regressed".
-3. **`scan` samples blocks only in a thin layer from −4 to +8 blocks around the player's feet** (default `stride=4`): villages are on the ground ⇒ the plan must put **`land max=<n>`** (waits for `isOnGround`) between `goto` and `scan`; scanning the ground while hovering **always yields 0 hits**. A `land` timeout (chunks missing, the character keeps falling) is judged red — that is a **fault signal, not a false red**.
-4. **A `cmd` step overwrites "the most recent game message"** (the driver keeps exactly one `lastGameMessage`): `goto parsed` takes coordinates from the latest `/locate` receipt ⇒ inserting **any** `cmd` between `cmd locate …` and `goto parsed` (`forceload`, `time set day`) makes the parsing wait until timeout (`goto_parse_failed`). **Fix: put all such `cmd` steps before `cmd locate`.**
-5. **Clients only see entities within the tracking range (≈48 blocks)** ⇒ an `await entity_nearby` with `type` while the target is far away **correctly** times out (`PLAYTEST_TIMEOUT` + `typeCount:0`); that is not `type` being dropped. Block evidence is not subject to this limit.
-6. **Prerequisites for the no-bridge driver on 26.x**: the project must ship fabric-api (**`implementation`, not `modImplementation`**; 26.1 / 26.1.1 / 26.1.2 share `0.155.3+26.1.2`, 26.2 uses `0.161.0+26.2`, 26.3 uses `0.161.0+26.3`); `run/options.txt` needs `onboardAccessibility:false` + `pauseOnLostFocus:false` (the first-run accessibility onboarding screen blocks quickPlay — see ledger T2). **26.2 / 26.3 need ModDevGradle ≥ 2.0.148** (the 2.0.144 pinned by this repo's scaffold always fails at `recompile` on those two). Artifact anchors: `26.1.2 → 26.1.2.114` and `26.2 → 26.2.0.88` are releases, while **`26.1`, `26.1.1`, `26.3` are beta-only upstream**.
-7. **KotlinForForge for the NeoForge bridge must be the `-all.jar` from Modrinth** (slug `kotlin-for-forge`, note: not `kotlinforforge`): the two maven coordinates are byte-identical and **neither is a mod jar** (only `META-INF/jarjar/*.jar` inside, no `services/` language loader) ⇒ installing it makes FML refuse to start (`Missing language loader kotlinforforge`).
-8. **The "minimal bridge mod" entry for legacy platforms (root `AGENTS.md`'s verified-boundaries paragraph points here)**: `generate_playtest_driver driverMode=external_bridge` bundles the `playtest/bridge/**` self-built minimal bridge template when `(platform,version)` is in `BRIDGE_MOD_TARGETS` (**8 targets** = `forge {1.7.10, 1.8.9, 1.9.4, 1.10.2, 1.11.2, 1.12.2}` + `rift 1.13.2` + `modloader 1.6.4`); generator = `mcp-server/src/generators/playtest-bridge-mod.ts`, **not** part of `PLAYTEST_VERIFIED_TIER` (not bundled for `temporary_client_tick_driver`, so it is isolated from the driver chain). **⚠️ The capability ceiling is "command level" — it cannot replace a driver**: the bridge sends **chat packets**, not key input ⇒ reading state (position / health / blocks / inventory / entity list / current screen / screenshot) and command-level manipulation (`/tp`, `/setblock`) work, subject to the instance's op / cheats settings, but **physical player paths cannot be tested** (walking, jumping, mining duration, collision) and **GUI clicks are unavailable**. **10 actions** (names and `params` keys such as `itemId` **follow `probe()` in the tool source `src/playtest-bridge/index.ts`**) — exactly covering the 5 conditions of `playtest_bridge await`; **unavailable actions fail closed per version** (chat on `1.7.10`, `use_item` on `1.9.4–1.12.2`, chat + `use_item` on rift, everything on modloader). **Verification strength splits in two**: `1.12.2` = JDK 8 `javac` against a real artifact (that compile caught `Item.getUnlocalizedName()` being really named `getTranslationKey()` in the stable_39 jar — **the javadoc disagrees with the real artifact**); **`1.7.10–1.11.2` have javadoc provenance only and were never compile-verified**. rift = a **real template** (every MC-side name has a 1.13.2 MCP snapshot provenance); modloader = a **skeleton** (a skeleton is emitted instead of guessing names). Field names differ per version (player / world fields were renamed between `1.10.2` and `1.11.2`; only `1.12.2` has the "artifact `gameDir` vs javadoc `mcDataDir`" discrepancy) ⇒ per-version readings in ledger T2. Generated sources for all three platforms contain Chinese comments ⇒ compilation **must** pass `-encoding UTF-8`.
-
-[[Detailed single source of truth: `community_knowledge/authored/ingame-playtest-automation.md` (bridge contract, pitfall list, finalized intent space, **real-machine ledger**)]]
-
 ### Second-half loop tutorial: three routes, end to end
 
-> This section covers **how to get the game running from scratch, let the agent play inside it, and keep the evidence**. Per-version evidence and pitfall numbering follow `community_knowledge/authored/ingame-playtest-automation.md` (its "minimal reproduction path" holds the full command sequences for tiers A/B/C, and "intent space" is the single source for the intent menu); this section gathers the steps and operational notes scattered elsewhere into something you can follow top to bottom.
+> This section covers **how to get the game running from scratch, let the agent play inside it, and keep the evidence**: the three routes step by step, plus the operational bits gathered in one place. **The real-machine ledger and capability boundaries you must read before running anything are in the pointer table at the end of this file.**
 
 **How to pick a route**:
 
@@ -234,11 +199,11 @@ The loop above is the mechanism; this section is the **delivery gate**. A change
 3. **Generate**: `generate_playtest_driver{platform:"quilt", version:"1.21.11", driverMode:"in_jvm_player_agent", capabilityProfile:"operator"|"creative"|"strict_survival", evidenceDir:"<absolute path inside the authorized root>", budgetTicks:36000}` ⇒ five artifacts plus **`playtest/intent-menu.json`** (the menu contract); the default script = `mark in_jvm:intent-session` + `waitintent max=6000`.
 4. **Install and run**: same as route ②; by `[QA] ROUND 1 START` the first `waitintent` tick in the world seeds `state.json` (the observation surface).
 5. **Observe (read)**: `playtest_intent{action:"read", evidenceDir}` ⇒ observation surface: `intentState` (profile / menu / mailbox / remaining budget / current intent), `intents[]`, `lastIntent`, `scan.nearest{found,id,x,y,z}`, `goto{x,z,arrived,arrivedDist}`, plus `menu` and `mailbox` state and **`nextSteps`** (after a failure, the fallbacks from that intent's menu).
-6. **Send an intent (write)**: `playtest_intent{action:"write", evidenceDir, intent:"walk_to", params:{x:10,z:-20,tol:3}, confirmed:true}` ⇒ writes `<evidenceDir>/intent.json` (flat JSON). **Six checks on the write side**: confirmed → forbidden list (`kill`/`tnt`/`fill`) → the 13-intent menu → parameter allowlist → required parameters → mailbox occupancy (occupied returns `MAILBOX_BUSY` unless `overwrite=true`); illegal intents are **rejected on the write side** and never reach the executor. **Two usability boundaries exposed by the first real-machine run (fabric 26.1.2, 2026-10-03)**: ① **the default menu lookup misses** — the generator writes `playtest/intent-menu.json` at the **project root**, while the tool looks for `<evidenceDir>/intent-menu.json` and then `<evidenceDir>/../playtest/intent-menu.json`; when `evidenceDir` is (as recommended) outside the project (`<authorized root>/instances/<tag>/evidence-intent`) both miss ⇒ **you must pass `menuPath=<project root>/playtest/intent-menu.json` explicitly**, otherwise you get `MENU_NOT_FOUND`. ② **`observe` needs `entities=` or `blocks=`** — passing only `radius=` is judged red as `observe_need_scan` (v1: an empty scan has no criterion to judge); that is fail-closed design, not a bug.
+6. **Send an intent (write)**: `playtest_intent{action:"write", evidenceDir, intent:"walk_to", params:{x:10,z:-20,tol:3}, confirmed:true}` ⇒ writes `<evidenceDir>/intent.json` (flat JSON). **Six checks on the write side**: confirmed → forbidden list (`kill`/`tnt`/`fill`) → the 13-intent menu → parameter allowlist → required parameters → mailbox occupancy (occupied returns `MAILBOX_BUSY` unless `overwrite=true`); illegal intents are **rejected on the write side** and never reach the executor. **Two usability boundaries (measured on `fabric 26.1.2`)**: ① **the default menu lookup misses** — the generator writes `playtest/intent-menu.json` at the **project root**, while the tool looks for `<evidenceDir>/intent-menu.json` and then `<evidenceDir>/../playtest/intent-menu.json`; when `evidenceDir` is (as recommended) outside the project (`<authorized root>/instances/<tag>/evidence-intent`) both miss ⇒ **you must pass `menuPath=<project root>/playtest/intent-menu.json` explicitly**, otherwise you get `MENU_NOT_FOUND`. ② **`observe` needs `entities=` or `blocks=`** — passing only `radius=` is judged red as `observe_need_scan` (v1: an empty scan has no criterion to judge); that is fail-closed design, not a bug.
 7. **Session loop**: `read` to observe → pick an intent (on failure switch per `nextSteps`) → `write` → the driver consumes it (renames `intent.json` to `intent.done.json`) → expands it into primitives → judges **exactly one** typed postcondition → appends to `intents[]` and refreshes `state.json` → back to guarding. **Failures must not be retried automatically** (retrying a one-shot intent would re-consume blocks or trigger side effects again); switch intents instead.
 8. **Wrap up**: `write {"intent":"stop"}` ⇒ ends the round (**does not close the game**); then clean up per `playtest/REVERT.md`.
 
-**Measured chain (deobfuscated fabric 26.1.2, first real-machine run 2026-10-03)**: `observe` (rejected first by `observe_need_scan` → after adding `blocks=`, `scan_written`, `scan.nearest=oak_log@-34.5,71,-2.5`) → `walk_to{x:-34,z:-2,tol:3}` → `distance_le_tol_and_moved_ge_min`(`dist=2.75 traveled=6.28`) → `screenshot` → `screenshot_file_nonempty`(`2026-10-03_20.22.16.png bytes=351378`) → `stop` → `driver_stops`; `exit-code=0`, and round 2 of `rounds.jsonl` is `ok:true intents:5`. **Two operational readings**: the `at` field in `state.json` is the **time of the last intent** (not the file's write time) ⇒ to judge whether the driver is alive, look at the **process + the file mtime + `intent.done.json`**, not at `at`; and the `screenshot` PNG lands in **`<gameDir>/screenshots/`** (the gameDir of `runClient` is `run/`), not at the project root. The default script's `waitintent max=6000` (5 min) can expire before you send your first intent (the whole round is then judged red) — the driver **does not exit**, it falls back to the idle state guarding `plan.txt`, and **rewriting `plan.txt` once starts a new round in the same process** (`max=30000` is steadier).
+**Two operational rules (measured on `fabric 26.1.2`)**: the `at` field in `state.json` is the **time of the last intent** (not the file's write time) ⇒ judge whether the driver is alive by the **process + the file mtime + `intent.done.json`**, not by `at`; the `screenshot` PNG lands in **`<gameDir>/screenshots/`** (the gameDir of `runClient` is `run/`), not at the project root. The default script's `waitintent max=6000` (5 min) can expire before you send your first intent (the whole round is then judged red) — the driver **does not exit**, it falls back to the idle state guarding `plan.txt`, and **rewriting `plan.txt` once starts a new round in the same process** (`max=30000` is steadier). Per-step readings for that chain (`observe`→`walk_to`→`screenshot`→`stop`, all five intents green, `exit-code=0`) are in the single source of truth, "intent space → executor implementation surface".
 
 **Failure semantics (the most important difference across the three routes)**: a failure at the mailbox level is **data** (`intents[]` records `ok:false` plus a `failure` field) and **guarding continues** (the session stays alive); protocol violations (forbidden list, not in menu, wrong profile) are rejected by the tool on the write side; failures in script form (an `intent` step inside `plan.txt`) are **judged red and stop the round**.
 
@@ -246,7 +211,7 @@ The loop above is the mechanism; this section is the **delivery gate**. A change
 
 **v1 implementation surface and known limits**: implemented = `walk_to` / `look_at`(yaw|pos) / `find_and_goto`(structure|block|entity) / `observe` / `open_gui` / `inventory` / `screenshot` / `wait`(ticks) / `tp`(op/creative) / `stop`; `mine`/`place`/`interact` and `wait until=` are not implemented (a hit is judged red, never silent). `goto` has **no pathfinding** (straight line + `fly` + a cruise speed of 140 with anti-stuck; complex terrain times out → switch intent); the `structure` form needs cheats enabled in that world; the `block` form only samples a thin vertical layer of `-4..+8` (start near the target height); `entity` only covers roughly the 48-block tracking range; if a village has no villagers in range, suspect an abandoned village first (try another one).
 
-**Real-machine readings (as-of 2026-10-01, `quilt 1.21.11` / `operator`)**: four sessions, all `exit-code=0` — including the intent-switch chain "`find_and_goto{diamond_ore}` miss judged red → switch to `structure` → PASS", `entity:villager found=true dist=0.62`, `block:hay_block onGround=true`, screenshot `ageMs` freshness as the criterion, and the `walk_to{x:abc}` negative case judged red. Per-item readings are in the single source of truth, "intent space" → "executor implementation surface".
+**Four real-machine sessions (`quilt 1.21.11` / `operator`)**: the intent-switch chain, entity / block positive cases, the screenshot `ageMs` freshness criterion and the `walk_to{x:abc}` negative case — all `exit-code=0`; per-item readings are in the single source of truth, "intent space → executor implementation surface"; for the per-version matrix and the current criteria see the pointer above ("Second-half loop: real-machine matrix and verified boundaries").
 
 #### Second-half loop operational bits (scattered everywhere, gathered here)
 
@@ -263,8 +228,6 @@ The loop above is the mechanism; this section is the **delivery gate**. A change
 | Separate instances | use a separate runId / instance per run (sharing a runDir silently overwrites screenshots) |
 | Reading evidence | `inspect_playtest_evidence` (three states; **a missing item must not be read as "no failure"**); `rounds.jsonl` must be **one valid JSON object per line** (entries `{intent,params,ok,postcondition|failure,detail}`); check screenshot freshness via `ageMs` (negative means clock jitter); `qa.log` must be a `.log` file (the reader takes the `[QA]` section from the tail of any `.log` in the directory) |
 | Cleanup | delete the driver file and the `register()` call line; evidence stays only in the authorized root; self-check with `git status` for zero hits — **never commit** |
-
-> Detailed procedures, pitfall numbering, and every real-machine reading for the three routes: `community_knowledge/authored/ingame-playtest-automation.md`; historical ledger: the per-batch entries in `mcp-server/CHANGELOG.md`.
 
 ## Quick start
 
@@ -317,14 +280,13 @@ The loop above is the mechanism; this section is the **delivery gate**. A change
 
 **Syncing multiple IDEs:**
 
-> After editing `.cursor/`, run `sync-skills.ps1` in that version directory. The IDE directory list and the batch sync commands are in [For humans](README_human.en.md#multi-ide-support).
+> After editing `.cursor/`, run `sync-skills.ps1` in that version directory.
 
 **Configuring the local MCP server:**
 
 > Drop [AUTO_SETUP.md](./AUTO_SETUP.md) into your AI IDE / CLI. The agent should detect the host (Cursor / Claude Code / VS Code / Continue / Trae / OpenCode / Codex, etc.), build `mcp-server`, produce a config draft in that host's format, and **merge it only after you confirm** (it never overwrites silently).  
 > Requires **Node.js >= 22.5** (**22.5–22.12 and 23.0–23.3 must be started with `--experimental-sqlite`** — the built-in `node:sqlite` is only on by default from 22.13 / 23.4; the MCP/CLI entry point probes for that window before any sqlite use and, if it hits, prints a loud pointer and exits non-zero). Service name `MC-AI-Coding-Assistant-Tool` (stdio, 86 tools). With no MCP client available, use `node mcp-server/dist/cli.js`.
 >
-> **The full installation steps are not in this file** — [AUTO_SETUP.md](./AUTO_SETUP.md) is the one and only install manual. Follow its steps: Step 0-pre verifies the absolute paths in an existing config → Step 1 identifies the host → Step 2 checks Node and runs `npm ci && npm run build` (including the **four post-build self-checks**) → Step 3 computes the paths and the canonical stdio payload → Step 4 produces a config draft for that host → Step 5 merge + reload + **verify by calling tools** (the agent calls the tools itself; do not just ask the user to look at the UI) → Step 6 (optional) install Skills. That file also has a "Common errors" section and a CLI fallback section, and its opening "Agent must-read: execution order" is a hard constraint on agents.
 
 ## Community knowledge and library mods
 
@@ -340,9 +302,9 @@ Separate from the **official** Forge/Fabric/NeoForge docs under `data/`, this re
 
 Index: `indexes/index-l0.json` (about **110** entries). MCP: `list_community_sources` → `search_community_docs` → `get_community_doc_summary` / `get_community_doc_full`. The environment variable `MC_SKILL_COMMUNITY` can change the root path.
 
-**Topic quick reference** (the full table is in [`community_knowledge/README.md`](./community_knowledge/README.md)): publishing / crash triage / soft dependencies / machine GUI / localization / code patterns (`patterns/`), and so on. **Library integration** has its own 48 `authored/lib-*.md` files plus the overview `library-catalog-2026`, the traps `lib-traps-2026`, and the recipe integration notes `library-integration` / `library-integration-jei-emi`.
+**Topic quick reference**: publishing / crash triage / soft dependencies / machine GUI / localization / code patterns (`patterns/`), and so on. **Library integration** has its own 48 `authored/lib-*.md` files plus the overview `library-catalog-2026`, the traps `lib-traps-2026`, and the recipe integration notes `library-integration` / `library-integration-jei-emi`.
 
-**Mandatory rule**: before writing code from a community essay, if a method name or version detail is uncertain you must first check the original source or the official docs the essay points to (see [`community_knowledge/AGENT_USAGE.md`](./community_knowledge/AGENT_USAGE.md)).
+**Mandatory rule**: before writing code from a community essay, if a method name or version detail is uncertain you must first check the original source or the official docs the essay points to.
 
 ### Library mod knowledge system (`knowledge/libs/` + the data chain)
 
@@ -417,7 +379,7 @@ node dist/cli.js activate_platform_pack --action=list   # should return the plat
 node dist/cli.js diagnose_data_paths          # each platform should be found; empty / not_found = MC_SKILL_DATA is wrong
 ```
 
-If the tools are all uncallable inside the MCP host, it is usually an unbuilt `dist/` or an unreloaded host (installing new `dist/` still requires **reloading MCP**). See `AUTO_SETUP.md` and "Tool not working" below.
+If the tools are all uncallable inside the MCP host, it is usually an unbuilt `dist/` or an unreloaded host (installing new `dist/` still requires **reloading MCP**). The checklist is in "Tool not working" below.
 
 Common scripts after `cd mcp-server` (the full set of 33 lives in `mcp-server/package.json`):
 
@@ -464,7 +426,6 @@ node mcp-server/dist/cli.js crash_analyze --crashReport @./crash-reports/latest.
 - **Argument conventions**: flags-only (`--key value` / `--key=value` / bare `--flag` → true); `--file field=path`, `@path` / `@-` (read a file / stdin), `--stdin-json` (base object for all parameters, same-named command-line values always win), `--raw [field]` (literal escape hatch), `--timeout <ms>`, `--quiet`, `--project <dir>`, `--output-format json`. **Parameter names follow each tool's schema** (e.g. `resolve_lib_skills` uses `--mcVersion`; run `… <tool name> --help` when unsure).
 - **Output**: always a JSON wrapper `{success, tool, result|error}`; **exit codes** 0 = success / 1 = tool failure or timeout (`errorKind: tool_failure | timeout`) / 2 = usage error (`usage | validation`).
 - **Project-scoped tools**: `--project <dir>` maps to `projectPath`; `--fail-on-error` promotes `found:false` / a non-empty `errors[]` to exit code 1.
-- All details (the full global flag table / aliases / field precedence / migration notes) are in the "Standalone CLI" section of [`mcp-server/README.md`](./mcp-server/README.md).
 
 #### Entry point two: the repo line (maintenance-side script subcommands)
 
@@ -590,47 +551,6 @@ These are not "the class does not exist in the game" but a wrong index / lookup,
 
 This class of lookup always goes through `ownGet` (`mcp-server/src/utils/own-record.ts`); never write `record[userString]`.
 
-### Measured, not derived: common error codes and "when not to use it" (as of 2026-10-04)
-
-Every `code` below came from a **minimum failing call** on this machine's CLI, not from reading the docs:
-
-| Tool (call shape) | Measured `code` | When not to use it / how to read it |
-|---|---|---|
-| `activate_platform_pack action=session` (version not indexed) | `PACK_NOT_FOUND` | never substitute a neighbouring version; pick an indexed one, or run `action=list` first |
-| `search_forge_docs` / `search_*` (version not indexed) | `VERSION_NOT_FOUND` | run `list_*_versions` first; **not being on the list ≠ upstream has none** (ask upstream with `query_upstream_releases`) |
-| `query_api` (no extracted index for that version) | `DATA_UNAVAILABLE` (`found:false`) | 26.1+ / 1.14.4 / 1.15.2 have no index; switch to semantic search or `get_minecraft_source` |
-| `diagnose_gradle` (missing `--project`) | `INVALID_INPUT` | the project path is required; Rift / BaseMod / Bedrock still bail out early |
-| `generate_lang` / `get_minecraft_source` (missing required field) | `MISSING_REQUIRED` | fill in the required fields first; this is not "the tool is broken" |
-| `check_dependencies` (no project / no known libraries) | `ok:false` + `detectedLibraries: []` | **an empty array ≠ no dependencies** — libraries it does not know will be missed (heuristics, not a full Gradle resolution) |
-| `crash_analyze` (missing version) | `VERSION_REQUIRED` | pass the version; it only covers the log excerpt you pasted |
-| `detect_mod_project` (no `projectPath`, env unset) | `PROJECT_ROOT_REQUIRED` | set `MC_SKILL_PROJECT_ROOT` or pass `--project` first; pointing at the knowledge base root gives `KNOWLEDGE_REPO_NOT_MOD` |
-| `generate_worldgen` (invented version `1.99.9`) | `INVALID_INPUT` (`errorKind: usage`) | rejected outright by the two-ended version sentinel, never generated quietly; the docs say this case names `WORLDGEN_MAX_MINOR_1X` |
-| `localize_mod` / `port_project` / `query_loader_api` / `generate_lang` / `analyze_mod_jar` / `resolve_lib_skills` / `get_method_params` / `get_version_info` / `search_fabric_docs` / `list_doc_versions` / `search_docs` / `query_registry` (missing required fields) | `MISSING_REQUIRED` | fill in the required arguments first; this is not "the tool is broken". **Measured across 12 tools, the missing-argument shape converges on this single code** |
-| `search_mod_code` (no `jarPath` / `decompiledDir`) | `INVALID_INPUT` | run `decompile_mod_jar` first (or point at an existing decompiled directory), otherwise `NOT_FOUND` |
-| `get_workflow_template` (unknown template name) | `INVALID_ENUM_VALUE` | the workflow name is an enum and Zod rejects it directly; take names from that tool's list; do not guess |
-| `convert_mapping` (target layer missing on that version) | `DATA_UNAVAILABLE` (`converted: null`) | failures default to `converted:null`; only `allow_fallback` returns the original name, with `fallbackUsed` set (a fake success is forbidden) |
-
-> How to reproduce: `node mcp-server/dist/cli.js <tool> <minimum failing args>` and read `ok` / `code` / `errorKind` from the response. **Tools that were not measured get no code here** — see the "`—` = not recorded in this repo" note under the §6b / §9 / §11 tables.
-
-### Error-code coverage for all 86 tools (as of 2026-10-04; the tool list and its order are whatever `list-tools` says)
-
-Three evidence tiers: **measured** = read from a minimum failing call on this machine via `node mcp-server/dist/cli.js <tool> <minimum failing args>`; **documented** = already named in that tool's row in this file; **not recorded** = neither the repo docs nor a measurement gives it a dedicated code (for failures, read `errors[]` / `error.code` in the response).
-
-| Group | Tools | Error codes | Evidence |
-|---|---|---|---|
-| Version / index | `activate_platform_pack` · `search_forge_docs` · `query_api` · `detect_mod_project` · `convert_mapping` · `generate_worldgen` | `PACK_NOT_FOUND` (+`PACK_INCOMPLETE`) · `VERSION_NOT_FOUND` · `DATA_UNAVAILABLE` · `PROJECT_ROOT_REQUIRED` (+`KNOWLEDGE_REPO_NOT_MOD`) · `DATA_UNAVAILABLE` (`converted:null`) · `INVALID_INPUT` | measured |
-| Required-argument checks | `get_method_params` · `get_version_info` · `search_fabric_docs` · `list_doc_versions` · `search_docs` · `query_registry` · `localize_mod` · `generate_lang` · `analyze_mod_jar` · `resolve_lib_skills` · `get_workflow_template` | `MISSING_REQUIRED` (11 of them); `get_workflow_template` gives `INVALID_ENUM_VALUE` (the workflow name is an enum) | measured (the missing-argument shape converges on `MISSING_REQUIRED`) |
-| Diagnostics | `diagnose_gradle` · `inspect_runtime` · `crash_analyze` | `INVALID_INPUT` · `INVALID_INPUT` · `VERSION_REQUIRED` | measured |
-| Index / reverse lookup | `list_forge_versions` · `list_fabric_versions` · `list_neoforge_versions` · `mixin_analyze` · `lookup_obfuscated` · `query_loader_api` · `search_loader_api` · `ingest_loader_api` | `PLATFORM_DATA_MISSING` · `CACHE_MISS` · `UNOBFUSCATED_NO_YARN` · `PLATFORM_SKIPPED` · `LOADER_API_NOT_INDEXED` · `INVALID_INPUT` | documented |
-| Porting / writing | `analyze_porting_path` · `port_project` | `NOT_A_MOD_PROJECT` · `UNSUPPORTED_PORT` · `INVALID_INPUT` · `PROJECT_ROOT_REQUIRED` · `PATH_OUTSIDE_ALLOWLIST` | documented |
-| Upstream queries | `query_upstream_releases` | `URL_REJECTED` (plus the two states `ok:false` / `available:false`, which mean different things) | documented |
-| In-game playtesting | `playtest_intent` · `playtest_bridge` · `inspect_playtest_evidence` | `CONFIRMATION_REQUIRED` · `INTENT_FORBIDDEN` · `INTENT_NOT_IN_MENU` · `PARAM_NOT_DECLARED` · `MISSING_REQUIRED_PARAM` · `MAILBOX_BUSY` · `MENU_NOT_FOUND` · `PLAYTEST_TIMEOUT` · the three states `present\|absent\|unreadable` | documented |
-| Decompilation | `get_minecraft_source` · `decompile_mod_jar` · `download_official_mdk` · `search_mod_code` | `TOOLCHAIN_MISSING` · `NOT_FOUND` · `MDK_NOT_PINNED` · `NOT_FOUND` | documented |
-| Generators | `generate_datagen` · `generate_model` · `generate_network_packet` · `generate_capability` · `generate_config` · `generate_entity_renderer` · `generate_addon_manifest` · `generate_bp_entity` · `generate_playtest_driver` | the `resultKind` three states `ok` / `generation_failed` / `write_blocked`; when a write does not complete, `writeError.code` ∈ `CONFIRMATION_REQUIRED` / `PROJECT_ROOT_REQUIRED` / `PATH_OUTSIDE_ALLOWLIST` / `NOTHING_TO_WRITE` / `WRITE_FAILED` | documented |
-| **No dedicated code (39)** | `get_server_status` · `validate_project` · `check_dependencies` · `mc_skill_update` · `check_publish_ready` · `list_community_sources` · `search_community_docs` · `get_community_doc_summary` · `get_community_doc_full` · `get_forge_doc_summary` · `get_forge_doc_full` · `get_forge_doc_related` · `get_fabric_doc_summary` · `get_fabric_doc_full` · `get_fabric_doc_related` · `get_neoforge_doc_summary` · `get_neoforge_doc_full` · `get_neoforge_doc_related` · `search_neoforge_docs` · `get_doc_summary` · `get_doc_full` · `get_doc_related` · `diagnose_data_paths` · `search_bedrock_docs` · `get_bedrock_doc_summary` · `get_bedrock_doc_full` · `get_bedrock_doc_related` · `analyze_bedrock_log` · `validate_addon_manifest` · `validate_bp_json` · `audit_resources` · `validate_datapack_json` · `validate_at` · `validate_aw` · `list_knowledge_resources` · `read_knowledge_resource` · `analyze_log` · `analyze_build_log` · `get_migration_guide` | **no dedicated code recorded** ⇒ on failure read the response's `errors[]` / `error.code`; **filling them in from memory is forbidden**. Among these, `get_*_doc_*`, `list_*`, `audit_*`, `validate_*`, `analyze_*` and `read_*` have the three shapes "result / empty result / tool failure", and **an empty result never means the target does not exist** | not measured |
-
-> Coverage rule: this list names all **86** tools (6+11+3+8+2+1+3+4+9+39 = 86). "Not recorded" is not a verdict of absence — it is an honest marker of insufficient evidence. Filling those in requires designing, per tool, a call whose arguments are valid but semantically failing (e.g. handing `get_*_doc_full` a well-formed but non-existent `id`) and measuring it; that is a separate round of work.
-
 ### Rule pack loading (`activate_platform_pack`)
 
 The `forge/<ver>/.cursor` tree in the knowledge base is **not** picked up by the IDE of a user's mod project. During coding, use MCP to deliver that version into the **current conversation**; do not copy the rules into the `MC_skill` repo root.
@@ -741,9 +661,7 @@ Cursor's main path is **tools**; the protocol layer still registers Prompts/Reso
 | Knowledge list | `list_knowledge_resources` | lists the `mcskill://` URIs                                                                                  |
 | Knowledge read | `read_knowledge_resource`  | reads the body for a URI                                                                                            |
 
-Common URIs: `mcskill://patterns/README` (→ `community_knowledge/patterns/README.md`), `mcskill://schema/sqlite`, `mcskill://matrix/mixin-support`, `mcskill://version-changes/1.21`, `mcskill://antipatterns/registry`, `mcskill://workflow/<template name>`, `mcskill://community/<authored-id>`, `mcskill://skill/<name>` (reads the `common_skill/` source bodies; the live list = the `skill-` prefixed entries of `list_knowledge_resources`, registered from disk). For compatibility notes see [mcp-server/docs/prompts-client-compat.md](./mcp-server/docs/prompts-client-compat.md).
-
-**Additional docs** (under `mcp-server/docs/`): `mixin-support.md` (the bytecode-verification support matrix), `vanilla-registries.md` / `registry-data-source.md` (registry data sources), `mc-skill-update.md` (the self-update mechanism), `prompts-client-compat.md` (Prompt/Resource client compatibility).
+Common URIs: `mcskill://patterns/README` (→ `community_knowledge/patterns/README.md`), `mcskill://schema/sqlite`, `mcskill://matrix/mixin-support`, `mcskill://version-changes/1.21`, `mcskill://antipatterns/registry`, `mcskill://workflow/<template name>`, `mcskill://community/<authored-id>`, `mcskill://skill/<name>` (reads the `common_skill/` source bodies; the live list = the `skill-` prefixed entries of `list_knowledge_resources`, registered from disk).
 
 ### Porting analysis (`analyze_porting_path`)
 
@@ -763,8 +681,6 @@ The indexes and text under `data/` are generated by `mcp-server/scripts/`. Large
 - Run `cd mcp-server && npm run audit:data`; any `ERROR` means the data pack is not fit for publishing.
 - The full data pack can be distributed through the GitHub Release assets `mc-skill-data-full-*.zip` + `SHA256SUMS-*.txt` + `data-manifest.json`.
 - If a local original package is lost, re-fetch it; never copy across versions and rename it.
-
-Third-party documentation and mapping licenses are described in [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md).
 
 ## Directory conventions
 
@@ -822,7 +738,7 @@ Fabric additionally has `mc-fabric-api`, `mc-kotlin`, `mc-cloth-config`; Forge 1
 
 ## MCP/CLI TOOLS:86
 
-Service name: `MC-AI-Coding-Assistant-Tool`. Installation and configuration: [AUTO_SETUP.md](./AUTO_SETUP.md), [mcp-server/README.md](./mcp-server/README.md).
+Service name: `MC-AI-Coding-Assistant-Tool`.
 
 Recommended general flow:
 
@@ -1019,7 +935,6 @@ For data locations see the [Decompiled data artifacts](#decompiled-data-artifact
 > Counting rule: this group has **9 tools in 8 rows** — the last row merges `list_knowledge_resources` and `read_knowledge_resource`, while the heading "（9）" counts tools.
 
 Bytecode-level verification (`mixin_analyze deep` / `validate_at` / `validate_aw`) depends on the T2 cache pipeline: when the jar is not cached you get a `CACHE_MISS` pointer (run `get_minecraft_source` first), and it **never starts a large download on its own**.
-See `mcp-server/docs/mixin-support.md`.
 
 ### 10. Code generation templates (9)
 
@@ -1056,7 +971,7 @@ The 9 tools in this group **return text + `suggestedPath` only, no disk writes**
 
 | Tool | What it does |
 |------|------|
-| `mc_skill_update` | Checks / applies **tooling + data** updates for this repo (GitHub Release). `action=check\|apply`; `scope=tooling\|data\|all`; `channel=stable` by default (pre-releases ignored). `apply` is dryRun by default; a real write needs `confirmed=true` + `MC_SKILL_ALLOW_WRITE=1` + `MC_SKILL_PROJECT_ROOT`=**this repo's root**. It returns `filesToOverwrite` / `diskSpace` / `restartRequired`. CLI: `node mcp-server/dist/cli.js update --action check\|apply` (the old positional form `check\|apply` still works, with a migration hint on stderr). Details: [`mcp-server/docs/mc-skill-update.md`](./mcp-server/docs/mc-skill-update.md). |
+| `mc_skill_update` | Checks / applies **tooling + data** updates for this repo (GitHub Release). `action=check\|apply`; `scope=tooling\|data\|all`; `channel=stable` by default (pre-releases ignored). `apply` is dryRun by default; a real write needs `confirmed=true` + `MC_SKILL_ALLOW_WRITE=1` + `MC_SKILL_PROJECT_ROOT`=**this repo's root**. It returns `filesToOverwrite` / `diskSpace` / `restartRequired`. CLI: `node mcp-server/dist/cli.js update --action check\|apply` (the old positional form `check\|apply` still works, with a migration hint on stderr). |
 
 `get_server_status` also carries `buildStatus` (`buildRequired=true` when src is newer than dist, telling you to run `npm run build` again), `updateHint` (cached from the last check, default TTL 1h), and `pendingRestart`.
 
@@ -1099,7 +1014,7 @@ The 9 tools in this group **return text + `suggestedPath` only, no disk writes**
 
 The decompiled sources themselves (280,000 .java files) are **not committed** (generated on demand into `$MC_SKILL_CACHE`); `search_mod_code` returns `NOT_FOUND` plus a pointer to `decompile_mod_jar` when the sources are missing. Related scripts: `scripts/build-lib-manifest.mjs` (manifest), `scripts/build-api-summaries.mjs` (API summaries), `scripts/batch-decompile.mjs` (batch decompilation), `scripts/merge-verified-api.mjs` (writing verifiedApi back into the catalog).
 
-Also: `registerPrompt` / `registerResource` (workflow and knowledge URIs) are for clients that support prompts/resources; see `mcp-server/docs/prompts-client-compat.md`.
+Also: `registerPrompt` / `registerResource` (workflow and knowledge URIs) are for clients that support prompts/resources.
 ### Workflow templates (MCP Prompts)
 
 Workflow templates are registered through `registerPrompt` (usable by clients that support prompts); tools-only clients such as Cursor use the `get_workflow_template` tool to get the same full text. **There are 49** (counted live from `get_workflow_template`'s enum as of 2026-10-02; this table lists all of them).
@@ -1179,7 +1094,7 @@ These templates are **agent step checklists** (human in the loop): once the crea
 
 ### Standalone CLI (`node mcp-server/dist/cli.js`, all 86 tools available)
 
-Flags-only (`--key value` / `--key=value` / bare `--flag` → true), output always wrapped as JSON `{success, tool, result|error}`, exit codes 0 = success / 1 = tool error / 2 = usage error. Global flags (not part of any tool schema): `--help`/`-h`, `--version`/`-V` (printed before the tool name, or when the whole command has no tool name; when `--version` follows the tool name it is the tool's own field, while `-V` in that position is treated as an unknown argument and exits 2), `--json` (does not change tool output, kept only for compatibility; it affects how `--help` is rendered in an interactive terminal), `--compact`, `--fail-on-error`, `--quiet` (silences progress lines and heartbeats; errors / warnings / migration hints still print), `--timeout <ms>` (exits 1 on expiry with `errorKind:"timeout"`, and the exit code still stays within 0/1/2), `--project <dir>`, `--file field=path`, `--raw [field]` (that field is passed completely literally; writing it bare disables the global `@` expansion), `--output-format json` (the canonical way to express an output-format intent; the only legal value today, anything else exits 2), `--stdin-json` (reads a whole argument object from stdin as a base, with same-named command-line fields always winning; under a TTY, and when it appears together with `@-` / `=-` / `--file f=-`, it always exits 2); every string field supports file input — `--crashReport @./latest.txt` reads a file, `--crashReport=-` / `@-` reads stdin (once per process), and `--file crashReport=./latest.txt` is equivalent, with single files and `--stdin-json` payloads sharing an ~8MB limit. **With `--fail-on-error`, `found:false` and a non-empty `errors[]` are also promoted to exit code 1**. `--fail-on-error=false` **turns that behaviour off** (do not read writing `=false` as enabling it). Boolean flags only accept `true/false/1/0/yes/no/on/off`; `--flag=junk` is rejected. For the full semantics see §Standalone CLI in [mcp-server/README.md](./mcp-server/README.md):
+Flags-only (`--key value` / `--key=value` / bare `--flag` → true), output always wrapped as JSON `{success, tool, result|error}`, exit codes 0 = success / 1 = tool error / 2 = usage error. Global flags (not part of any tool schema): `--help`/`-h`, `--version`/`-V` (printed before the tool name, or when the whole command has no tool name; when `--version` follows the tool name it is the tool's own field, while `-V` in that position is treated as an unknown argument and exits 2), `--json` (does not change tool output, kept only for compatibility; it affects how `--help` is rendered in an interactive terminal), `--compact`, `--fail-on-error`, `--quiet` (silences progress lines and heartbeats; errors / warnings / migration hints still print), `--timeout <ms>` (exits 1 on expiry with `errorKind:"timeout"`, and the exit code still stays within 0/1/2), `--project <dir>`, `--file field=path`, `--raw [field]` (that field is passed completely literally; writing it bare disables the global `@` expansion), `--output-format json` (the canonical way to express an output-format intent; the only legal value today, anything else exits 2), `--stdin-json` (reads a whole argument object from stdin as a base, with same-named command-line fields always winning; under a TTY, and when it appears together with `@-` / `=-` / `--file f=-`, it always exits 2); every string field supports file input — `--crashReport @./latest.txt` reads a file, `--crashReport=-` / `@-` reads stdin (once per process), and `--file crashReport=./latest.txt` is equivalent, with single files and `--stdin-json` payloads sharing an ~8MB limit. **With `--fail-on-error`, `found:false` and a non-empty `errors[]` are also promoted to exit code 1**. `--fail-on-error=false` **turns that behaviour off** (do not read writing `=false` as enabling it). Boolean flags only accept `true/false/1/0/yes/no/on/off`; `--flag=junk` is rejected.
 
 > ⚠️ **Windows PowerShell 5.1 console pitfall (E-7)**: under a GBK code page, PS 5.1 capturing this CLI's UTF-8 JSON through a pipeline introduces bad control characters that break `JSON.parse`; plain Node `spawnSync` pipeline parsing of the same output is perfectly fine. Consume it from scripts through a Node child process, or run `chcp 65001` first.
 
@@ -1212,7 +1127,7 @@ The troubleshooting data lives in the dedicated tables below; this section is an
 
 | Symptom | Check first | Where |
 | --- | --- | --- |
-| All tools uncallable inside the MCP host | Is `dist/` built? Has the host been **reloaded**? | "Tool not working" below; `AUTO_SETUP.md` |
+| All tools uncallable inside the MCP host | Is `dist/` built? Has the host been **reloaded**? | "Tool not working" below |
 | `PLATFORM_DATA_MISSING` / a platform's data is empty | Does `MC_SKILL_DATA` point at this repo's `data/`? | `diagnose_data_paths`, or set `MC_SKILL_DEBUG_PATHS=1` |
 | Can't find some API / class | It is outside index coverage or the simple name is ambiguous, **not** a proof the class is missing from the game | the misreading table in "Tool boundaries" above |
 | The game launched but the driver does nothing | the authorization pair / focus pause / the world's `session.lock` being held | "Second-half loop operational bits" above |
@@ -1224,9 +1139,7 @@ The troubleshooting data lives in the dedicated tables below; this section is an
 - Fetch / upstream query failures (TLS, timeout, 404, proxy) → "Tool and network boundaries"
 - An update installed but nothing changed → `mc_skill_update`'s `updateHint` (TTL 1h) + `get_server_status.buildStatus` (`buildRequired`)
 - CLI garbled output / `MODULE_NOT_FOUND` (non-ASCII path) → the PowerShell 5.1 pitfall in "Standalone CLI"
-- Playtest: bridge timeout / `scan=0` / world won't load / can't close the client → "verified boundaries" + "operational bits" in the real-machine matrix
-
-**Historical ledgers**: cross-round unresolved issues are in `bugfix_list.md` at the repo root; the batch-by-batch change history is in `mcp-server/CHANGELOG.md`.
+- Playtest: bridge timeout / `scan=0` / world won't load / can't close the client → "operational bits" above
 
 ### Tool not working (read after cloning)
 
@@ -1275,3 +1188,30 @@ The troubleshooting data lives in the dedicated tables below; this section is an
 | Phase 4   | ✅ done  | knowledge base / anti-patterns / data audit and Release distribution |
 | Phase 4.5 | ✅ done  | **Full library mod coverage**: 48 `lib-*` essays + 33 unique library Skills (`knowledge/libs`, 35 source files) + an enhanced check_dependencies + full decompilation (jar count **unverified**, artifacts generated on demand into `$MC_SKILL_CACHE` and not committed; → 1836 verifiedApi keys) + API summaries + manifest + generic CLI dispatch **(this row is the state as of when Phase 4.5 finished ⇒ the numbers are never revised backwards; for current figures scan again: library Skills = 34 unique / 36 source files (see the "Project layout" tree, the "five groups" count row in the "Library mod knowledge system" section below, and "current scale" in `knowledge/libs/README.md`; live scan as of 2026-10-02 via `find knowledge/libs -name SKILL.md` = 36 files / 34 unique skillIds); the current value of the `verifiedApi` key count = 2632 (re-run 2026-09-24, see `knowledge/libs/README.md:75`), and the 1836 in this row is likewise the figure as of that time)** |
 | Phase 5   | 📋 partial  | `inspect_runtime` is a log-based inspector (not JVM attach); the fine-tuning dataset is still on hold |
+
+## Pointer table (external landing spots)
+
+Every **external landing spot** this file refers to is listed here (cross-references inside this file are not). Usage: find the row by topic; the third column gives the trigger and how to read it.
+
+| What | Landing spot | When to read it / how |
+| --- | --- | --- |
+| Standing rules (human-in-the-loop / testing gate / tool boundaries) | `AGENTS.md` | before starting any round; the "verified boundaries" under its in-game-playtest exception decide "can this version run / what can the bridge test" |
+| MCP installation and host configuration (the one and only manual) | [`AUTO_SETUP.md`](./AUTO_SETUP.md) | follow its steps when installing or fixing MCP (Step 0-pre path check → Step 6 install Skills); its opening "Agent must-read: execution order" is a hard constraint |
+| Tool error codes: measured failures + full coverage list (criteria as of 2026-10-04) | [`doc/tool-error-codes.md`](./doc/tool-error-codes.md) | read it when you get a `code` / `errorKind`; **never write a code you did not measure** |
+| Per-batch implementation history (gates and baselines) | `mcp-server/CHANGELOG.md` | "which batch changed what, and why" |
+| Corpus provenance / re-sourcing / per-version re-test history | `CORPUS_PROVENANCE.md` | before quoting version coverage or corpus counts |
+| In-game playtest: criteria / pitfalls / per-round evidence (its §真机台账 = current criteria T5 + archives T0–T4) | `community_knowledge/authored/ingame-playtest-automation.md` | read **before** running any playtest; if your combo is not in the ledger, treat it as **unverified** — do not extrapolate from a neighbouring version |
+| Per-round delivery drafts (numbered blocks, rolling, newest on top) | `DELIVERY_LOG.md` | handoff / overnight runs / spot checks; append-only |
+| Delivery report form (tier judging + main 4 blocks + maintenance 6 blocks + managed-surface list) | `REPORT-FORMAT.md` | before writing a delivery draft; if it is unreadable, answer with the three human-facing items from `AGENTS.md` and name the missing form |
+| Maintenance night-batch receipts (rolling) | `NIGHT_BATCH.md` | night-batch queue and morning spot checks |
+| Debt and decision ledger (batches / unplanned items) | `CONTRIBUTING_LIST.md` | "decided but not done / waiting on a decision" |
+| Release-increment ledger (V1.0.4..HEAD, item by item) | root `CHANGELOG.md` / `bugfix_list.md` | moved into the Release body when publishing |
+| Contribution / verification discipline / data-chain rules | `CONTRIBUTING.md` | before touching gates, scripts, or managed-surface docs |
+| Authoring rules (writing docs for agents) | `WRITING-FOR-AGENTS.md` | before writing or editing any agent-facing doc |
+| Community-essay usage discipline (essays are **not** API specs) | `community_knowledge/AGENT_USAGE.md` | before writing code from an essay; when unsure, open the original URL it cites |
+| Community knowledge index (full topic table) | `community_knowledge/README.md` | finding essays: publishing / crash triage / soft dependencies / machine GUI / localization … |
+| Library-mod Skill sources (read directly per group mapping; not projected) | `knowledge/libs/<group>/mc-<name>/SKILL.md` (overview: `knowledge/libs/README.md`) | library selection / usage; unsure which → read `all-platforms/mc-lib-catalog` first |
+| Full tool semantics (global flag table / Standalone CLI section / tool index / install config) | `mcp-server/README.md` | CLI details, `npm run` scripts, the MCP tool surface |
+| mcp-server additional docs (mixin-support / vanilla-registries / registry-data-source / mc-skill-update / prompts-client-compat) | `mcp-server/docs/` | bytecode-verification matrix / registry sources / self-update / prompt compatibility |
+| Human-facing README (multi-IDE sync list, plain-language start) | `README_human.md` | the entry for people; English: `README_human.en.md` |
+| Third-party documentation and mapping licenses | `THIRD_PARTY_NOTICES.md` | distribution / licensing questions |

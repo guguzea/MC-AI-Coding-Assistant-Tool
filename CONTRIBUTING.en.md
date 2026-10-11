@@ -187,7 +187,7 @@ The table is examples, not the full set; **whether a script exists is decided by
 - **Do not** assume `mcp-server/data/` is the runtime path; MCP reads the repo-root `data/` that `MC_SKILL_DATA` points at
 - The ignore rules for large `*.jar` / `*.zip` files are in the root `.gitignore`; the full pack ships as a Release artifact with `SHA256SUMS` + `data-manifest.json`
 - When redistributing `data/`, ship [`THIRD_PARTY_NOTICES.md`](./THIRD_PARTY_NOTICES.md) alongside it
-- **When adding a new top-level directory / top-level module**: the "managed surfaces" list in the delivery report is the **hand-written list** inside the root `AGENTS.md` §delivery report (currently the 8 platform trees + `data/` / `knowledge/` / `community_knowledge/` / `mcp-server/` / `scripts/` / `agent-tools/` / `openspec/` / `ralphy-spec/` + the root `*.md` files). **A new directory must be added to that list when it lands** (that list is the authority; this section does not restate it), otherwise the round that touches it gets judged as the main-report form and loses the ledger and gate-verification reporting of the maintenance form. How to check: compare `Get-ChildItem -Directory` at the repo root against that list item by item.
+- **When adding a new top-level directory / top-level module**: the "managed surfaces" list in the delivery report is the **hand-written list** inside `REPORT-FORMAT.md` §先判档 (moved out of the root `AGENTS.md` §delivery report on 2026-10-11; the `AGENTS.md` side now carries only the three human-facing items; currently the 8 platform trees + `data/` / `knowledge/` / `community_knowledge/` / `doc/` / `mcp-server/` / `scripts/` / `agent-tools/` / `openspec/` / `ralphy-spec/` + the root `*.md` files). **A new directory must be added to that list when it lands** (that list is the authority; this section does not restate it), otherwise the round that touches it gets judged as the main-report form and loses the ledger and gate-verification reporting of the maintenance form. How to check: compare `Get-ChildItem -Directory` at the repo root against that list item by item.
 
 ---
 
@@ -236,6 +236,8 @@ Both of these lines in processed text are **transclusion markers**, not executab
 ### Ledger, waivers, and debt
 
 - **Numbers may only be recomputed by the gates themselves**: G3 `MC_SKILL_CORPUS_RELEDGER=1` and G4 `MC_SKILL_INDEX_RELEDGER=1` dump and write back; the LEDGER constants for G1/G2 take the measured value printed on the gate's success line. **Docs do not restate counts that will rot**, only the rules.
+- **One history, one home for ledgers and implementation status**: record-type content lives only at its single home (batch implementation history / corpus provenance / night-batch receipts / the debt ledger each have theirs); other faces — including the human-read README family — keep pointer sentences only. Home table and moving procedure: [`WRITING-FOR-AGENTS.md`](./WRITING-FOR-AGENTS.md) §6.
+- **Tool error-code ledger** (measured failures + full coverage list + the `PLAYTEST_VERIFIED_TIER` count snapshot) lives in [`doc/tool-error-codes.md`](./doc/tool-error-codes.md) (merged out of the README family / `mcp-server/README.md` on 2026-10-11); both READMEs keep a single row in their end-of-file pointer table.
 - **Anything new outside the ledger is red; a ledger entry that stops reproducing is also red** (drain check — G1/G3/G4 all implement bidirectional reconciliation). Debt lists are **emptied, not deleted**: leaving an empty array is zero tolerance, and a recurrence then rings loudly.
 - Gates **never delete files**. Leftovers under `data/` (`db.sqlite.old` / `tmp-*`) are only pinned into `DEBT_RESIDUE` and reported on a delete list; deleting belongs to the data owner.
 - Every gate clause must **be able to go red from a named poisoning** (the poisons are registered one by one inside `mcp-server/test-scripts.mjs`).
@@ -413,9 +415,11 @@ Only three change surfaces are admitted:
 1. **Opening gate (fail-closed)**: a non-empty `git status --porcelain` means no start (someone else's half-done tree is their scene, not dirty data). Branch `maint/night-batch-<date>` is cut from the main HEAD; record the cut sha + timestamp (the entry anchor).
 2. Per piece: declare (piece id / admission class / change surface / green-evidence command) → execute → run the piece's green evidence and step 8 (`cd mcp-server && node test-scripts.mjs`) → **one commit per piece** (the message carries the piece id and admission class) → write one receipt line.
 3. Stop on out-of-admission: if execution reveals the piece exceeds its declared admission, stop immediately, record it as "not done · out of admission" in the receipt, and do not push through.
-4. **Closing anchor check**: verify main HEAD == the branch cut point (with timestamp). Displacement means the batch is **re-anchored and re-cut** from the new HEAD, same rule as the root `AGENTS.md` "entry pin / exit lease".
+4. **Closing anchor check and receipt commit**: verify main HEAD == the branch cut point (with timestamp); displacement means the batch is **re-anchored and re-cut** from the new HEAD, same rule as the root `AGENTS.md` "entry pin / exit lease". Then append this batch's receipt to `NIGHT_BATCH.md` and add the batch-level "receipt commit" on the maintenance branch.
 
 ### Night-batch receipt format
+
+**Fixed home**: `NIGHT_BATCH.md` at the repo root (rolling append, newest first). At the end of a batch, append its receipt there and add a **batch-level "receipt commit"** on the maintenance branch (independent of "one commit per piece"); it lands on main with the acceptance merge, so any collaborator sees the queue state after cloning.
 
 Receipt header (one line per batch):
 
@@ -452,6 +456,8 @@ Four choices (per piece):
 - **Add a gate**: turn the failure shape the piece exposed into a gate that can go red (preferred — the converted form of a revert);
 - **Narrow admission**: remove the piece's class from admission, or add a condition.
 
+The verdict is expressed by the merge action (**accept = merge; revert = drop that piece's commit**); verdicts requiring conversion or narrowing go into the next task sheet per "One-way doors must convert".
+
 ### Task-sheet template (to initiate)
 
 ```
@@ -464,7 +470,7 @@ Queue:
     admission: <gates/fixtures/scripts | root docs | mcp-server internal docs> (stop if out)
     change surface: <expected file list>
     green evidence: <command + expected exit code / key figures>
-Receipt: write to <path>, format per "Night-batch receipt format" in this file
+Receipt: fixed home NIGHT_BATCH.md (rolling, in-repo), format per "Night-batch receipt format" in this file
 Hard boundaries: as in "Single-batch workflow"; opening gate = clean work tree.
 ```
 

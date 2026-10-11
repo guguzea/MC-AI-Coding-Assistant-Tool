@@ -80,7 +80,7 @@ public static final RegistryObject<Item> COPPER_SWORD = ITEMS.register("copper_s
 ## 挖掘工具（PickaxeItem）
 
 ```java
-// official 构件实证（javap @1.15.2 official 2026-10-05）：PickaxeItem(IItemTier, int, float, Item.Properties)；❌ ITier = MCP 层名
+// official 构件实证（javap @1.15.2 official）：PickaxeItem(IItemTier, int, float, Item.Properties)；❌ ITier = MCP 层名
 // 镐斧铲父类是 ToolItem，没有 Mojmap DiggerItem
 public static final RegistryObject<Item> IRON_LIKE_PICKAXE = ITEMS.register("iron_like_pickaxe",
     () -> new PickaxeItem(MyTier.COPPER, 1, -2.8f, new Item.Properties()
@@ -143,7 +143,7 @@ public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity atta
 ## 常见错误
 
 - ❌ `SwordItem(Tier, Item.Properties)` — Forge 1.15.2 只有 4 参数版本，不存在 2 参数版本
-- ❌ `Tier` 用法：本档 1.15.2 用 `IItemTier`（`Tier` 是 1.17+ mojmap 名；165 official 构件仍为 `IItemTier`——2026-10-05 javap 实证），不是 Fabric 的 `ToolMaterial`
+- ❌ `Tier` 用法：本档 1.15.2 用 `IItemTier`（`Tier` 是 1.17+ mojmap 名；165 official 构件仍为 `IItemTier`——javap 实证），不是 Fabric 的 `ToolMaterial`
 - ❌ `MobEffects` / `StatusEffects` / `Effects.JUMP_BOOST` → 本档 official 构件用 `Effects.JUMP`（类 `net.minecraft.potion.Effects`；`JUMP_BOOST` 是 1.16.5+ MCP/parchment 字段名，`MobEffects` 是 1.17+ mojmap 类名）
 - ❌ `.group(ItemGroup.MISC)` / `.maxStackSize()` — 那是 1.14.4 及更早 MCP 层名；本档 scaffold official 用 `.tab(ItemGroup.TAB_MISC)` / `.stacksTo()`（真构件 javap 实证）
 - ❌ `Food.Builder.setAlwaysEdible()` / `fastToEat()` / `hunger()` / `saturation()` — 那是 1.12–1.14 MCP 名；本档 official 构件是 `alwaysEat()` / `fast()` / `nutrition()` / `saturationMod()`（javap 实证）

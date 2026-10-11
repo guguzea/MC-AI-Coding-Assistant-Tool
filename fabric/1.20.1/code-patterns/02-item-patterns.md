@@ -43,7 +43,7 @@ private static final Item MY_APPLE = Registry.register(
 
 ## 模式 3：工具（剑）
 
-> ℹ️ oracle 口径（2026-09-18）：`FabricToolTags` 已从 fabric-api **移除**——≤1.17.1 摘要在、1.18.2/1.20.1/1.21.3 摘要 0 命中；旧包 0.45.0+1.18 起 @Deprecated。官方文档口径：工具类别归**原版物品标签**（ItemTags.SWORDS/AXES 例）。下面是**示意**草图：`ToolMaterial` 的参数形态本仓无可核 oracle（fabric-api 摘要无该类条目），抄前用自备 jar 走 `ingest_loader_api` 核实签名；**禁止凭记忆补**。
+> ℹ️ oracle 口径：`FabricToolTags` 已从 fabric-api **移除**——≤1.17.1 摘要在、1.18.2/1.20.1/1.21.3 摘要 0 命中；旧包 0.45.0+1.18 起 @Deprecated。官方文档口径：工具类别归**原版物品标签**（ItemTags.SWORDS/AXES 例）。下面是**示意**草图：`ToolMaterial` 的参数形态本仓无可核 oracle（fabric-api 摘要无该类条目），抄前用自备 jar 走 `ingest_loader_api` 核实签名；**禁止凭记忆补**。
 
 ```yaml
 模式: Sword Tool

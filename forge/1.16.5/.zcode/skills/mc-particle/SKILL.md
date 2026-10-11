@@ -58,9 +58,12 @@ public class ParticleProviders {
     @SubscribeEvent
     public static void registerParticles(ParticleFactoryRegisterEvent event) {
         ParticleManager particleManager = Minecraft.getInstance().particleEngine;
+        // 1.16.5 实测（构件 javap）：IParticleFactory#createParticle 首参是 data（T extends IParticleData）、
+        // 第二参才是 world；而本技能 MyParticle 的构造是 (ClientWorld, x..z, vx..vz, data)（基类 SpriteTexturedParticle
+        // 的构造只有 (ClientWorld, ×3)/(ClientWorld, ×6)，无 data 参）——参数序不同，直接写 MyParticle::new 对不上 ⇒ 用显式 lambda 转换
         particleManager.register(
             ModParticles.MY_PARTICLE.get(),
-            MyParticle::new
+            (type, world, x, y, z, vx, vy, vz) -> new MyParticle((ClientWorld) world, x, y, z, vx, vy, vz, type)
         );
     }
 }

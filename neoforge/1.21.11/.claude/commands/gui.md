@@ -13,7 +13,7 @@ mappings: mojmap
 
 # 10 — GUI（NeoForge 1.21.11）
 
-官方 `https://docs.neoforged.net/docs/1.21.11/gui/menus/` 与 `.../gui/screens/` **已 404**（2026-08-19 核）。**禁止**把邻档 gui 页当本档全文。
+官方 `https://docs.neoforged.net/docs/1.21.11/gui/menus/` 与 `.../gui/screens/` **已 404**。**禁止**把邻档 gui 页当本档全文。
 
 以本档 loader-api 为准（已核）：
 

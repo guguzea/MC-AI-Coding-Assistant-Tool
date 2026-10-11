@@ -8,7 +8,7 @@ modrinthSlug: balm
 mappings: "库按各 loader 预重映射；公共代码禁止 import 平台类，映射差异由 Balm 隔离"
 ---
 
-> 数据读取日期：2026-09-14（源：Modrinth project/balm 版本表 limit=100；本轮 release 上界 fabric=26.2 / forge=26.1.2 / neoforge=26.2）
+> 数据来源：Modrinth project/balm 版本表 limit=100；本轮 release 上界 fabric=26.2 / forge=26.1.2 / neoforge=26.2
 > 复核：curl.exe --ssl-no-revoke -sS "https://api.modrinth.com/v2/project/balm/version?limit=100" 后按 game_versions + loaders + version_type 取上界
 
 # Balm 跨平台抽象（操作指引）

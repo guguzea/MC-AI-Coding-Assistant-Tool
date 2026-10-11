@@ -24,7 +24,7 @@ Registry.register(
 );
 ```
 
-> **本节更正（F185，2026-09-13；证据 = 本档 yarn 映射全表 `[T12111]` = `M:\data\fabric_1.21.11\mappings\yarn-1.21.11+build.6-tiny.gz` 的 `gunzip -c` 输出）**：
+> **本节更正（F185；证据 = 本档 yarn 映射全表 `[T12111]` = `M:\data\fabric_1.21.11\mappings\yarn-1.21.11+build.6-tiny.gz` 的 `gunzip -c` 输出）**：
 > ① 原示例的 `new FabricFlowableFluid.Settings().slopeFindDistance(3).levelDecreasePerBlock(1).tickRate(5).supportsBoating(true)` 全部查无此名：`FabricFlowableFluid` / `slopeFindDistance` / `levelDecreasePerBlock` / `supportsBoating` 在 `[T12111]` 全表 **0 命中**；可流动流体的 Yarn 基类是 `net/minecraft/fluid/FlowableFluid`（`[T12111]` L71911 = `class_3609`），它的具名嵌套类**只有** `$1`（L71947）/ `$NeighborGroup`（L71948）/ `$SpreadCache`（L71955），**没有 `$Settings`**。`tickRate` 全表只出现 1 行且是 **FIELD**（L33727 `field_46961`），不是流体上的链式方法。这组拼写来自 Mojmap 侧命名，Yarn 轴不成立。
 > ② 原示例用**同一个 id** `Identifier.of(MOD_ID, "my_fluid")` 连续调了两次 `Registry.register(Registries.FLUID, …)`（第二次还注册的是第一次的返回值）—— 重复注册同名条目就是报错路径，流体只需注册一次；`Registries.FLUID` 本身存在（`[T12111]` L6449 `field_41173`）。
 > ③ 本文件 frontmatter 的 `description` 仍写着 `FluidType`：`FluidType` 在 `[T12111]` 全表 **0 命中**（它是 Forge/NeoForge 的流体类型类，不在 Yarn 轴）。frontmatter 属禁改区，**已登记移交主代理**。

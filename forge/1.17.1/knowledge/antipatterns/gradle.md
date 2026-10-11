@@ -70,7 +70,7 @@ minecraft {
 }
 ```
 
-实测取证（同族，2026-09-10 本机）：`forge/1.18.2` scaffold 在 `minecraft { }` 内写 `copyIdeResources = true` + FG `[5.1.2,5.2)` + Gradle 7.6 + JDK 17.0.12 → `gradlew help --stacktrace` 报 `Caused by: groovy.lang.MissingPropertyException: copyIdeResources`，随后级联 `Missing 'minecraft' dependency.`。官方 1.17.1 MDK（FG `5.1.+`）亦不含该行；含该行的是 FG `[6.0,6.2)` 的官方 MDK（1.18.2-40.3.0 / 1.19.4 / 1.20.1 / 1.20.4）。「IDE 改资源不生效」是 FG 6 时代的症状；本档 FG 5.1 的替代做法未核实，不要臆造。
+实测取证（同族，本机）：`forge/1.18.2` scaffold 在 `minecraft { }` 内写 `copyIdeResources = true` + FG `[5.1.2,5.2)` + Gradle 7.6 + JDK 17.0.12 → `gradlew help --stacktrace` 报 `Caused by: groovy.lang.MissingPropertyException: copyIdeResources`，随后级联 `Missing 'minecraft' dependency.`。官方 1.17.1 MDK（FG `5.1.+`）亦不含该行；含该行的是 FG `[6.0,6.2)` 的官方 MDK（1.18.2-40.3.0 / 1.19.4 / 1.20.1 / 1.20.4）。「IDE 改资源不生效」是 FG 6 时代的症状；本档 FG 5.1 的替代做法未核实，不要臆造。
 
 ---
 

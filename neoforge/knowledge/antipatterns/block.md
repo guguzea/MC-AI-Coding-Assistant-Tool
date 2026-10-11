@@ -17,7 +17,7 @@ public static final Block MY_BLOCK = new Block(Properties.of(Material.STONE));
 public static final DeferredRegister<Block> BLOCKS =
     DeferredRegister.create(BuiltInRegistries.BLOCK, MOD_ID);
 
-// 1.20.4 实测更正（出处：neoforge-20.4.251-merged.jar javap 2026-10-06）：
+// 1.20.4 实测更正（出处：neoforge-20.4.251-merged.jar javap）：
 //   Material 类在该版已被移除（jar tf 全表 0 命中），Properties 静态工厂只剩 of() / ofFullCopy / ofLegacyCopy；
 //   上面 ❌ 示例里的 Properties.of(Material.STONE) 同样编译不过，材质语义用 mapColor 表达。
 public static final DeferredHolder<Block, Block> MY_BLOCK =
@@ -138,7 +138,7 @@ public void load(CompoundTag nbt) {
 
 **正确方案：**
 ```java
-// 1.20.4 实测（neoforge-20.4.251-merged.jar javap 2026-10-06）：没有 Properties.of(Material)，
+// 1.20.4 实测（neoforge-20.4.251-merged.jar javap）：没有 Properties.of(Material)，
 // Material 类在该版不存在——改用空 of() 起步，显式声明需要的属性
 BlockBehaviour.Properties.of()
     .mapColor(MapColor.STONE)

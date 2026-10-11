@@ -44,7 +44,7 @@
 : NeoForge 官方 Gradle 插件之一，插件 id `net.neoforged.moddev`，DSL 入口 `neoForge { version = project.neo_version }` + `parchment { }` + `runs { }`。本仓 9 份 `neoforge/<ver>/scaffold/build.gradle` 用它（`1.20.4` 钉 `2.0.143`，其余 8 份钉 `2.0.144`）。
 
 ### NeoGradle
-: 官方 Mod Generator 对同版另提供的另一套插件，插件 id `net.neoforged.gradle.userdev`（maven.neoforged.net 最新 `7.1.38`，2026-09-11 实测）。DSL 与 MDG 不同名，两套不能同工程混上。
+: 官方 Mod Generator 对同版另提供的另一套插件，插件 id `net.neoforged.gradle.userdev`（maven.neoforged.net 最新 `7.1.38`，实测）。DSL 与 MDG 不同名，两套不能同工程混上。
 : 注意：裸 `net.neoforged.gradle` 是 **旧 Forge 时代**的 NeoGradle，插件门户上最新只到 `6.0.21`；`net.minecraftforge.gradle` 则是 ForgeGradle，只属于 Forge 档。
 
 ### Foojay Toolchains

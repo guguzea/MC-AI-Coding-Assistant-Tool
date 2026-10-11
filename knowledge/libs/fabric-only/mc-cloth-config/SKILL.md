@@ -8,9 +8,9 @@ modrinthSlug: cloth-config
 mappings: hint
 ---
 
-> 数据日期：2026-09-14。本稿是**通用形**（不绑单个 MC 版本）：版本相关的坐标一律走下面的「版本映射表」，逐行标证据等级。
-> 证据等级：`manifest` = `mcp-server/data/lib-manifests/all.json` 里 cloth-config 条目的取件记录（文件名即上游构建名）；`本仓:` = 本仓库某档 scaffold 或 skill 正文的**现状**（是证据，不一定是正解，冲突处已标 ★）；`短文` = `authored/lib-cloth-config`（Modrinth API 实测 2026-09-02）。
-> **`platforms` 不含 quilt 的口径（2026-09-25 定案）**：口径 = 2026-09-22 裁定④「loader 声明一律读作该 loader 有发布构件」。三条独立证据：① 上游全量 `query_upstream_releases --source=modrinth --slug=cloth-config --limit=200` → `ok:true / available:true / total:161 / truncated:false`，161 条发布的 `loaders` = fabric 79 / forge 50 / neoforge 32、**quilt 0 条**；② 本仓构件面 `all.json` cloth-config **115** 行亦 0 条 quilt（第 45 轮按 2026-09-25 重抓后的完整面复算：fabric 58 / forge 35 / neoforge 22 = 115；本行旧值 113 是 09-25 重抓前的快照行数，已被 +2 挪动 ⇒ 探针 `node temp/ralph-20260922/_v45-ceilings.mjs` → `temp/ralph-20260922/logs/r45-ceilings.log`）；③ 本档 `versions.json`（3 keys：note/dataDate/slots）全文 **0 次**出现 quilt ⇒ 从未给过 quilt 坐标。⇒ S22 原文的「未复核前不要直接删」两个前置（查 versions.json + 复核上游）均已做完且同向。**本稿对 Quilt 工程仍可读物**（Quilt 仍按 `fabric-only` + `all-platforms` 读库面源稿），只是不得据此断言「Cloth 有 Quilt 构件」。
+> 本稿是**通用形**（不绑单个 MC 版本）：版本相关的坐标一律走下面的「版本映射表」，逐行标证据等级。
+> 证据等级：`manifest` = `mcp-server/data/lib-manifests/all.json` 里 cloth-config 条目的取件记录（文件名即上游构建名）；`本仓:` = 本仓库某档 scaffold 或 skill 正文的**现状**（是证据，不一定是正解，冲突处已标 ★）；`短文` = `authored/lib-cloth-config`（Modrinth API 实测）。
+> **`platforms` 不含 quilt 的口径（2026-09-25 定案）**：口径 = 2026-09-22 裁定④「loader 声明一律读作该 loader 有发布构件」。三条独立证据：① 上游全量 `query_upstream_releases --source=modrinth --slug=cloth-config --limit=200` → `ok:true / available:true / total:161 / truncated:false`，161 条发布的 `loaders` = fabric 79 / forge 50 / neoforge 32、**quilt 0 条**；② 本仓构件面 `all.json` cloth-config **115** 行亦 0 条 quilt（第 45 轮按重抓后的完整面复算：fabric 58 / forge 35 / neoforge 22 = 115；本行旧值 113 是 09-25 重抓前的快照行数，已被 +2 挪动 ⇒ 探针 `node temp/ralph-20260922/_v45-ceilings.mjs` → `temp/ralph-20260922/logs/r45-ceilings.log`）；③ 本档 `versions.json`（3 keys：note/dataDate/slots）全文 **0 次**出现 quilt ⇒ 从未给过 quilt 坐标。⇒ S22 原文的「未复核前不要直接删」两个前置（查 versions.json + 复核上游）均已做完且同向。**本稿对 Quilt 工程仍可读物**（Quilt 仍按 `fabric-only` + `all-platforms` 读库面源稿），只是不得据此断言「Cloth 有 Quilt 构件」。
 > **为什么本稿不写 `mcVersionsByPlatform`（第 45 轮，选择=正文披露）**：该键的用途是「同一份稿子对**不同加载器**给出不同窗口」，而本稿 `platforms: [fabric]` 只有一个声明面加载器 ⇒ 加键等于把 union 抄一遍，零收益、还有形状风险。构件面实测的逐 loader release 上界是 **fabric 26.3 / neoforge 26.3 / forge 1.21.3**（口径 = `versionType==="release"` 且点分版本号的最大值，探针同上），比 frontmatter `mcVersions: ["1.14-26.2"]` 的 **26.3 > 26.2 是「少推荐」不是「过称」**，但**抬 union 上界不是本改的最小动作**：Cloth 的坐标真值在 `versions.json` 的槽位 + `scripts/project-cloth-skill.mjs` 硬编码的 `VERS` 档清单两处（AGENTS.md「版本标记是坐标唯一真值」+ 记忆「Cloth 版本槽有第二道静默门」），只把 frontmatter 改成 26.3 会造出「窗口说 26.3、坐标表只到 26.2、投影脚本根本不认 26.3」的三面失步 ⇒ **本轮只在此点名 26.3 已有 release 构件，抬槽位另成一单**（要同时扩 `versions.json` 槽、扩 `VERS`、重跑投影）。
 
 # Cloth Config（Fabric / Quilt 视角通用形）
@@ -25,7 +25,7 @@ Decision: 配置方案
 → 需要图形配置屏 且 版本在 1.14–26.2 内 → 可用 Cloth
    ├─ 新项目 / 长维护 → 先比 mc-yacl；Cloth 冻结、社区新项目多转 YACL/Fzzy/owo-config
    ├─ 已有 Cloth 依赖（REI/Kiwi 生态）→ 保持 Cloth，别期待新 API
-   └─ 平台 = quilt → 先读 QSL 配置文档；实测 161 条构建里 quilt 0 条（2026-09-25 全量分页重读），别当 Fabric 工程照抄（2026-09-25 上游全量复核后本稿 `platforms` 已不再点名 quilt，见下）
+   └─ 平台 = quilt → 先读 QSL 配置文档；实测 161 条构建里 quilt 0 条（全量分页重读），别当 Fabric 工程照抄（上游全量复核后本稿 `platforms` 已不再点名 quilt，见下）
 → 平台 = bedrock → 本 skill 不适用
 ```
 
@@ -57,7 +57,7 @@ dependencies {
 
 **用途**：选坐标里的 `<版本>`。**只写本仓有一手证据的行**；证据不足一律 `TODO(未核实)`，不许按邻居档推。
 
-**真值来源（2026-09-14 实测，可复现）**：以 Modrinth API 逐 `game_versions` 取该 MC 版本下的 fabric 构建（77 条），取**最新 release** 的 `version_number`；再用 `maven.shedaniel.me` 的 `maven-metadata.xml`（该 artifact 共 **128** 个版本）确认该串**真的存在**。命令：
+**真值来源（实测，可复现）**：以 Modrinth API 逐 `game_versions` 取该 MC 版本下的 fabric 构建（77 条），取**最新 release** 的 `version_number`；再用 `maven.shedaniel.me` 的 `maven-metadata.xml`（该 artifact 共 **128** 个版本）确认该串**真的存在**。命令：
 
 ```bash
 curl -sS "https://api.modrinth.com/v2/project/cloth-config/version?loaders=%5B%22fabric%22%5D&game_versions=%5B%221.16.5%22%5D"
@@ -92,17 +92,17 @@ curl -sS "https://maven.shedaniel.me/me/shedaniel/cloth/cloth-config-fabric/mave
 
 > **同线选哪个构建（不是对错，是选型）**：本表给的是**该 MC 线的最新 release**；另一条同样成立的选法是**按项目自带 Fabric API 版本对齐**（看候选构建 pom 里 `fabric-api` 依赖的后缀，如 `+1.16`），偏保守、与老项目依赖树摩擦小。两者差的是「同线内取哪一版」，**不改变「哪条 MC 线用哪个大版本」**（`4.x→1.16`、`5.x→1.17`、`6.x→1.18`、`7.x→1.19`、`8.x→1.19.1`、`9.x→1.19.3`、`10.x→1.19.4`、`11.x→1.20`、`12.x→1.20.2`、`13.x→1.20.4`；1.20.5 起按 jar 内 `fabric.mod.json` 的 `depends.minecraft` 判）。
 >
-> **本仓旧态警告（别抄历史值）**：2026-09-14 前，8 个档的 skill 正文写着 `11.0.106+1.20.1`（1.20.1 旧串，且该串**在 maven 也不存在**），另有 `6.0.50+1.16.5` / `6.0.46+1.17` / `9.0.2+1.18.2` / `9.0.118+1.19.4` / `13.0.0+1.21` 同样不在 maven —— 全是跨档复制产物。仓库正在把这些档逐个对齐（并行进行中）；**无论读到哪一版，以本表的 MC 线 + 上面两条实测命令为准**，不要按邻居档抄。
+> **本仓旧态警告（别抄历史值）**：此前，8 个档的 skill 正文写着 `11.0.106+1.20.1`（1.20.1 旧串，且该串**在 maven 也不存在**），另有 `6.0.50+1.16.5` / `6.0.46+1.17` / `9.0.2+1.18.2` / `9.0.118+1.19.4` / `13.0.0+1.21` 同样不在 maven —— 全是跨档复制产物。仓库正在把这些档逐个对齐（并行进行中）；**无论读到哪一版，以本表的 MC 线 + 上面两条实测命令为准**，不要按邻居档抄。
 >
 > Modrinth 的 `version_number` 带 `+fabric` 后缀、maven 坐标不带后缀（如 Modrinth `4.17.101` = 坐标 `me.shedaniel.cloth:cloth-config-fabric:4.17.101`）；两者是同一构建的两种写法，**坐标里不要带 `+fabric`**，也不要用 `+1.16.5` / `+1.20.1` 这类后缀（本仓 `client.txt`-式后缀在 Cloth 的 maven 上不存在）。
 
-## 档位版本注入点（投影机制，2026-09-16）
+## 档位版本注入点（投影机制）
 
 - 各档手稿（`fabric/<v>/.cursor/skills/mc-cloth-config.md`）frontmatter 后带 **`cloth-version-inject` 标记行**（coord/state/textApi 三字段），由 `scripts/project-cloth-skill.mjs` 按本目录 `versions.json` 校验/回填——**改坐标先改 versions.json 再重投影**，禁止手改标记行。
-- 本中心稿是**通用形权威**；手稿正文是各档已逐档修正的实况（2026-09-14 落地）。本表「本仓现状」列反映 2026-09-14 上午前的状态（S41-b 当日深夜已把各档坐标落为实证值），**以 `versions.json` 与档内标记为准**。
+- 本中心稿是**通用形权威**；手稿正文是各档已逐档修正的实况。本表「本仓现状」列反映上午前的状态（S41-b 当日深夜已把各档坐标落为实证值），**以 `versions.json` 与档内标记为准**。
 - 两套选法（本表「该线最新 release」/ 档内「对齐项目自带 FAPI」）都成立：同线内取哪一版是选型，不改变「哪条 MC 线用哪个大版本」。
 
-## 已核实成员（签名级，2026-09-16）
+## 已核实成员（签名级）
 
 **来源**：4 条 MC 版本线的 **Fabric 构件本体**（`me.shedaniel.cloth:cloth-config-fabric`）`javap` 直读，**逐签名四版一致**：
 

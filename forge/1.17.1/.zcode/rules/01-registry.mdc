@@ -202,8 +202,10 @@ public class ExampleMod {
         LOGGER.info("ExampleMod commonSetup — mod loaded");
     }
 
+    // 1.17.1 实测（构件 javap）：服务端启动事件类是 FMLServerStartingEvent，
+    // 且本档已搬到 net.minecraftforge.fmlserverevents 包（event.server.ServerStartingEvent 是 1.18 起的新名/新包——本档查无，1.18.2 构件已换用新名）
     @SubscribeEvent
-    public void onServerStarting(ServerStartingEvent event) {
+    public void onServerStarting(FMLServerStartingEvent event) {
         LOGGER.info("Server starting: {}", event.getServer().getWorldData().getLevelName());
     }
 }

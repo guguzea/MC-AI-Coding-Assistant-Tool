@@ -30,7 +30,7 @@ public static final RecipeType<MyRecipe> MILLING =
 
 ```java
 public record MyRecipe(
-    // javap 实证 2026-10-05：本档 Recipe 接口没有 getId()（1.20.5+ 才有），record 不要放 id —— id 由 RecipeOutput.accept 单独传入
+    // javap 实证：本档 Recipe 接口没有 getId()（1.20.5+ 才有），record 不要放 id —— id 由 RecipeOutput.accept 单独传入
     Ingredient input,
     ItemStack output,
     int processingTime
@@ -85,7 +85,7 @@ public static final RegistryObject<RecipeSerializer<MyRecipe>> MY_SERIALIZER =
 public class MyRecipeSerializer implements RecipeSerializer<MyRecipe> {
     public static final MyRecipeSerializer INSTANCE = new MyRecipeSerializer();
 
-    // javap 实证 2026-10-05：1.20.4 的 RecipeSerializer 接口 = codec() + fromNetwork(FriendlyByteBuf) + toNetwork(FriendlyByteBuf, T)。
+    // javap 实证：1.20.4 的 RecipeSerializer 接口 = codec() + fromNetwork(FriendlyByteBuf) + toNetwork(FriendlyByteBuf, T)。
     // fromJson(ResourceLocation, JsonObject) 已从接口删除（那是 1.20.1 及更早的三件套）；JSON 读写走 Codec，
     // Ingredient 的 CODEC / CODEC_NONEMPTY 与 ItemStack.SINGLE_ITEM_CODEC 都是本档构件里的真实字段。
     public static final Codec<MyRecipe> CODEC = RecordCodecBuilder.create(i -> i.group(
@@ -146,7 +146,7 @@ public class MyMod {
 
 ## 6. DataGen（自定义 Serializer）
 
-> javap 实证 2026-10-05（`forge-1.20.4-49.2.0` 构件）：本档 `RecipeProvider` 构造**只带 `PackOutput`**；`buildRecipes` 收 **`RecipeOutput`**；
+> javap 实证（`forge-1.20.4-49.2.0` 构件）：本档 `RecipeProvider` 构造**只带 `PackOutput`**；`buildRecipes` 收 **`RecipeOutput`**；
 > `net.minecraft.data.recipes.FinishedRecipe` 接口在本档构件已**不存在**（`javap` 类未找到）——不要再手写 FinishedRecipe 类。
 > 自定义配方的 DataGen = 直接构造 Recipe 实例交给 `RecipeOutput.accept(id, recipe, advancementHolder)`，
 > JSON 由 `RecipeSerializer.codec()` 序列化生成（RecipeOutput 内部调用）。
@@ -194,7 +194,7 @@ IF 配方数量多、固定格式
 
 ## 常见错误
 
-- ❌ 仍按 1.20.1 写 `fromJson(ResourceLocation, JsonObject)` / `Ingredient.fromJson` / `Ingredient.STREAM_CODEC` / `FinishedRecipe` 实现类 → 本档接口已 codec 化，这些方法/接口在 1.20.4 构件里都不存在（javap 实证 2026-10-05），改用 `codec()` + `RecipeOutput.accept`
+- ❌ 仍按 1.20.1 写 `fromJson(ResourceLocation, JsonObject)` / `Ingredient.fromJson` / `Ingredient.STREAM_CODEC` / `FinishedRecipe` 实现类 → 本档接口已 codec 化，这些方法/接口在 1.20.4 构件里都不存在（javap 实证），改用 `codec()` + `RecipeOutput.accept`
 - ❌ `assemble` / `getResultItem` 返回原对象而非副本 → 多个配方实例共享同一 ItemStack
 - ❌ `RecipeType` 写在 DeferredRegister 中 → 不支持，必须用 `RecipeType.register()`
 - ❌ `RecipeSerializer` 忘了在 mod 初始化时调用 → 配方无法被加载

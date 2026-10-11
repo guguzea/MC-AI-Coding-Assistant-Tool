@@ -13,7 +13,7 @@ public static final DeferredHolder<Item, Item> MY_ITEM = ITEMS.register("my_item
         .stacksTo(64)
     )
 );
-// 1.20.4 实测（出处：neoforge-20.4.251-merged.jar javap 2026-10-06）：
+// 1.20.4 实测（出处：neoforge-20.4.251-merged.jar javap）：
 //   Item$Properties 没有 tab()，CreativeModeTab 没有 TAB_* 常量，本文各代码片段里的
 //   `.tab(CreativeModeTab.TAB_*)` 一律应删（已删）。加入创造模式标签页改订阅 mod 总线事件：
 //   @SubscribeEvent public static void addTab(BuildCreativeModeTabContentsEvent event) {
@@ -132,7 +132,7 @@ public class MyUseItem extends Item {
     @Override
     public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity entity) {
         super.finishUsingItem(stack, level, entity);
-        // 1.20.4 实测（同 javap 2026-10-06）：MobEffects 没有 SPEED（那是 Yarn 名），
+        // 1.20.4 实测（同 javap）：MobEffects 没有 SPEED（那是 Yarn 名），
         // 官方映射下叫 MOVEMENT_SPEED
         entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 600, 1));
         if (!level.isClientSide) {

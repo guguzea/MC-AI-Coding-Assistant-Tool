@@ -70,23 +70,23 @@ public class ModRecipeProvider extends RecipeProvider {
     }
 
     @Override
-    protected void registerRecipes(Consumer<IFinishedRecipe> consumer) { // 构件实证 2026-10-05：144 snapshot（20190719-1.14.3）`RecipeProvider.registerRecipes(Consumer<IFinishedRecipe>)` + `IFinishedRecipe` 均在 jar
+    protected void registerRecipes(Consumer<IFinishedRecipe> consumer) { // 构件实证：144 snapshot（20190719-1.14.3）`RecipeProvider.registerRecipes(Consumer<IFinishedRecipe>)` + `IFinishedRecipe` 均在 jar
         ShapedRecipeBuilder.shapedRecipe(ModItems.MY_ITEM.get())
             .patternLine(" X ")
             .patternLine(" X ")
             .patternLine(" Y ")
             .key('X', Items.DIAMOND)
             .key('Y', Items.STICK)
-            .addCriterion("has_diamond", InventoryChangeTrigger.Instance.forItems(Items.DIAMOND)) // 构件实证 2026-10-05：144 的 Instance 静态工厂只有 forItems（无 hasItems）
+            .addCriterion("has_diamond", InventoryChangeTrigger.Instance.forItems(Items.DIAMOND)) // 构件实证：144 的 Instance 静态工厂只有 forItems（无 hasItems）
             .build(consumer);
 
         ShapelessRecipeBuilder.shapelessRecipe(ModItems.OTHER_ITEM.get())
             .addIngredient(Items.GOLD_INGOT, 3)
             .addIngredient(Items.DIAMOND)
-            .addCriterion("has_gold", InventoryChangeTrigger.Instance.forItems(Items.GOLD_INGOT)) // 构件实证 2026-10-05：144 的 Instance 只有 forItems（javap）
+            .addCriterion("has_gold", InventoryChangeTrigger.Instance.forItems(Items.GOLD_INGOT)) // 构件实证：144 的 Instance 只有 forItems（javap）
             .build(consumer);
 
-        CookingRecipeBuilder.smeltingRecipe(Ingredient.fromItems(Items.COBBLESTONE), Items.STONE, 0.1f, 200) // 构件实证 2026-10-05：144 工厂名 = smeltingRecipe / blastingRecipe / cookingRecipe（无裸 smelting）
+        CookingRecipeBuilder.smeltingRecipe(Ingredient.fromItems(Items.COBBLESTONE), Items.STONE, 0.1f, 200) // 构件实证：144 工厂名 = smeltingRecipe / blastingRecipe / cookingRecipe（无裸 smelting）
             .addCriterion("has_cobblestone", InventoryChangeTrigger.Instance.forItems(Items.COBBLESTONE))
             .build(consumer);
     }

@@ -133,7 +133,7 @@ int value = this.dataSlots.get(0);
 ```java
 public class MyBlock extends Block {
     @Override
-    // 方法名构件实证（javap net.minecraft.block.AbstractBlock，1.16.5-36.2.34_mapped_official_1.16.5，2026-10-05）：
+    // 方法名构件实证（javap net.minecraft.block.AbstractBlock，1.16.5-36.2.34_mapped_official_1.16.5）：
     // 本包 = use(...) 返回 ActionResultType；❌ onBlockActivated 是 MCP/1.14 层名，official 构件没有该声明。类名见语料 blocks_interaction.md:32
     public ActionResultType use(BlockState state, World world, BlockPos pos,
             PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
@@ -148,7 +148,7 @@ public class MyBlock extends Block {
                 pos
             );
         }
-        return ActionResultType.sidedSuccess(world.isClientSide); // official 构件实证（javap @1.16.5-36.2.34_mapped_official，2026-10-05）：sidedSuccess(boolean) 在场
+        return ActionResultType.sidedSuccess(world.isClientSide); // official 构件实证（javap @1.16.5-36.2.34_mapped_official）：sidedSuccess(boolean) 在场
     }
 }
 ```

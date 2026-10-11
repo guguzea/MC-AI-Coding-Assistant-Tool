@@ -92,7 +92,7 @@ loom_version=1.17-SNAPSHOT
 
 ### 6. accessWidener 路径错误
 
-> 更正（F185，2026-09-13）：本节原先的 ❌ / ✅ 两段代码逐字节相同，示例等于没写；「相对路径是错的」这个断言也不成立——本档 `.cursor/rules/00-project-setup.mdc:123` 与语料 `fabric-docs/1.21.11/processed/develop_loom_options.md:21` 用的都是 `file("src/main/resources/…")`。真正会踩的坑是**成对声明缺一半**，下面按这个口径重写（标题保留原样以免打乱本节编号）。
+> 更正（F185）：本节原先的 ❌ / ✅ 两段代码逐字节相同，示例等于没写；「相对路径是错的」这个断言也不成立——本档 `.cursor/rules/00-project-setup.mdc:123` 与语料 `fabric-docs/1.21.11/processed/develop_loom_options.md:21` 用的都是 `file("src/main/resources/…")`。真正会踩的坑是**成对声明缺一半**，下面按这个口径重写（标题保留原样以免打乱本节编号）。
 
 **错误配置：**
 ```groovy

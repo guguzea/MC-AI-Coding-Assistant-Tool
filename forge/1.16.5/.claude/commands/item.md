@@ -136,7 +136,7 @@ public static final RegistryObject<Item> GOLDEN_APPLE = ITEMS.register("golden_a
 
 ## hurtAndBreak（工具耐久损耗）
 
-攻击命中时扣耐久。构件实证（javap Item/ItemStack/LivingEntity @1.16.5 official，2026-10-05）：
+攻击命中时扣耐久。构件实证（javap Item/ItemStack/LivingEntity @1.16.5 official）：
 覆盖点是 `Item.hurtEnemy(ItemStack, LivingEntity, LivingEntity)`；`hurtAndBreak(int, T extends LivingEntity, Consumer<T>)` 与
 `broadcastBreakEvent(EquipmentSlotType)` 在构件中。❌ `hurtItem(...DamageSource...)` 165 没有该覆盖点（1.17+ 才改名 `hurt`），
 `getEquippedStack`/`hitEntity`/`damageItem` 同为错层名（本档槽位读法 = `getItemBySlot`）。

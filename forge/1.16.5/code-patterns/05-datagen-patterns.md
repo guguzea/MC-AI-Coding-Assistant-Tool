@@ -13,7 +13,7 @@
 | 物品模型 | `ItemModelProvider` |
 | 配方（有序） | `ShapedRecipeBuilder` |
 | 配方（无序） | `ShapelessRecipeBuilder` |
-| 配方（熔炉） | `CookingRecipeBuilder.smelting`（在 `buildShapelessRecipes` 内；构件实证 2026-10-05，❌ `SimpleCookingRecipeBuilder` 是 1.19.4+ 类名） |
+| 配方（熔炉） | `CookingRecipeBuilder.smelting`（在 `buildShapelessRecipes` 内；构件实证，❌ `SimpleCookingRecipeBuilder` 是 1.19.4+ 类名） |
 | 方块标签 | `BlockTagsProvider` |
 | 物品标签 | `ItemTagsProvider` |
 | 战利品表 | `LootTableProvider#getTables` |
@@ -49,7 +49,7 @@ public class DataGenerators {
 
 ```java
 // datagen/ModRecipes.java
-// 构件实证（2026-10-05 javap 对 1.16.5-36.2.34_mapped_official_1.16.5.jar）：
+// 构件实证（javap 对 1.16.5-36.2.34_mapped_official_1.16.5.jar）：
 // buildShapelessRecipes(Consumer<net.minecraft.data.IFinishedRecipe>)/shaped/pattern/define/unlockedBy/save/has 逐字在构件。
 // ❌ FinishedRecipe 裸名（1.19+ 类名）/ registerRecipes（1.14 MCP）本档编不过。
 public class ModRecipeProvider extends RecipeProvider {

@@ -9,7 +9,7 @@ mappings: yarn
 
 # mc-resourcepack（1.21.8）
 
-> 一手来源（2026-09-19 核实）：Minecraft Wiki《Pack format》资源包格式表（https://minecraft.wiki/w/Pack_format ，1.21.7–1.21.8 = 64）与《Resource pack》页（https://minecraft.wiki/w/Resource_pack ）。本技能不含 Java API；客户端渲染类名走 `search_fabric_docs(version=1.21.8)`。
+> 一手来源：Minecraft Wiki《Pack format》资源包格式表（https://minecraft.wiki/w/Pack_format，1.21.7–1.21.8 = 64）与《Resource pack》页（https://minecraft.wiki/w/Resource_pack）。本技能不含 Java API；客户端渲染类名走 `search_fabric_docs(version=1.21.8)`。
 
 ## Decision Flow
 

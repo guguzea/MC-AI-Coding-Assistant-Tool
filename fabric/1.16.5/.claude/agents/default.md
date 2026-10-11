@@ -211,7 +211,7 @@ fabric-mod/
 - ❌ **不要**使用 1.19.3+ 引入的 `Registries` 类（使用 `Registry`）
 - ❌ **不要**使用 1.17+ 引入的 `Identifier` 简化 API
 - Mixin 走 `mixins.json` + fmj 的 `mixins` 键；Loom 自动处理，不要手写 MixinBootstrap
-- `fabric.mod.json` **可以**写 `environment`（v1 schema 核心字段；本档 loader 0.11.2 支持，官方规范未列最低 loader 版本门槛 —— docs.fabricmc.net/develop/loader/fabric-mod-json §Environment，2026-09-13 核读）；本档规则 `00-project-setup.mdc` 旧述「1.14-1.17.x 不支持」已废除
+- `fabric.mod.json` **可以**写 `environment`（v1 schema 核心字段；本档 loader 0.11.2 支持，官方规范未列最低 loader 版本门槛 —— docs.fabricmc.net/develop/loader/fabric-mod-json §Environment，核读）；本档规则 `00-project-setup.mdc` 旧述「1.14-1.17.x 不支持」已废除
 
 ---
 

@@ -70,7 +70,7 @@ public enum MyTier implements IItemTier {
 // ❌ 错误（Fabric/Yarn 名称）
 new EffectInstance(MobEffects.JUMP_BOOST, 200, 1)
 
-// ✅ 正确（official 构件实证，javap @1.15.2 official 2026-10-05：效果常量类 = net.minecraft.potion.Effects；
+// ✅ 正确（official 构件实证，javap @1.15.2 official：效果常量类 = net.minecraft.potion.Effects；
 //    MobEffects / JUMP_BOOST 在 152 official 构件不存在）
 new EffectInstance(Effects.JUMP, 200, 1)
 ```

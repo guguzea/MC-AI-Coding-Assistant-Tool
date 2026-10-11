@@ -10,14 +10,14 @@ mappings: official
 # mc-fluid（Fabric 26.1.2）
 
 本档是**去混淆档**：游戏 jar 即 Mojang official 名，没有 yarn 映射轴（禁止按 1.21.x 的 Yarn 名写流体）。
-下列写法全部取本档语料**逐字出处**（2026-10-05 核）：
+下列写法全部取本档语料**逐字出处**：
 
 - `data/fabric_26.1.2/fabric-docs/26.1.2/processed/develop_fluids_first-fluid.md`（官方「Creating Your First Fluid」页）
 - `data/fabric_26.1.2/reference/26.1.2/src/main/java/com/example/docs/fluid/custom/AcidFluid.java`（extends FlowingFluid，嵌套 Source / Flowing）
 - `data/fabric_26.1.2/reference/26.1.2/src/main/java/com/example/docs/fluid/ModFluids.java`（BuiltInRegistries.FLUID 注册）
 - `data/fabric_26.1.2/reference/26.1.2/src/client/java/com/example/docs/appearance/ExampleModAppearanceClient.java`（FluidRenderingRegistry.register + FluidModel.Unbaked）
 
-> **更正注记（2026-10-05）**：旧 yarn 档流传的 `FabricFlowableFluid` / `FlowableFluid.Settings` / `slopeFindDistance` / `supportsBoating` / `StillFluid` 一族在本档语料与 Fabric API 真构件 roster（26.1.2）里**零命中**，是虚构名，禁止输出；本档没有 yarn 轴，`FlowableFluid` 这类 Yarn 名也不许照搬（本档基类 = **FlowingFluid**）。同理 1.21.x 的 `FluidRenderHandlerRegistry.INSTANCE` 在 26.1.2 构件已移除（本档 FAPI = `FluidRenderingRegistry` 静态入口）——不得照 1.21.x 抄。
+> **更正注记**：旧 yarn 档流传的 `FabricFlowableFluid` / `FlowableFluid.Settings` / `slopeFindDistance` / `supportsBoating` / `StillFluid` 一族在本档语料与 Fabric API 真构件 roster（26.1.2）里**零命中**，是虚构名，禁止输出；本档没有 yarn 轴，`FlowableFluid` 这类 Yarn 名也不许照搬（本档基类 = **FlowingFluid**）。同理 1.21.x 的 `FluidRenderHandlerRegistry.INSTANCE` 在 26.1.2 构件已移除（本档 FAPI = `FluidRenderingRegistry` 静态入口）——不得照 1.21.x 抄。
 > **映射口径**：本档为去混淆档，official（mojmap 层）名就是基线——`Registry` / `BuiltInRegistries` / `Identifier.fromNamespaceAndPath` / `getSource` / `Material` / `BlockTintSources` 等全部按本档语料逐字取用（参考件 + 官方页），不存在「回 Yarn 名换写」的问题，但也不得反向把 1.21.x 的 Yarn 名当本档名。
 
 ## 快速开始

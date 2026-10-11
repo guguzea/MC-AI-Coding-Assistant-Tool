@@ -32,7 +32,7 @@ public static final RegistryObject<Item> STONE_BLOCK_ITEM = ITEMS.register("ston
 ## 带变体的方块（Faced / Horizontal / Axis）
 
 ```java
-// official 构件实证（javap @1.15.2-31.2.50_mapped_official，2026-10-05）：
+// official 构件实证（javap @1.15.2-31.2.50_mapped_official）：
 // fillStateContainer/getDefaultState/with/get/isBlockPowered/setBlockState 均为 MCP 层名；
 // official 通道 = createBlockStateDefinition/defaultBlockState()/setValue/getValue/hasNeighborSignal/setBlock
 

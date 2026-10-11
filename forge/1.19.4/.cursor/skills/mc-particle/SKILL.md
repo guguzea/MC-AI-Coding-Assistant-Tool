@@ -57,16 +57,22 @@ public class MyParticle extends TextureSheetParticle {
 public class ParticleProviders {
     @SubscribeEvent
     public static void registerParticles(RegisterParticleProvidersEvent event) {
+        // 1.19.4 实测（构件 javap）：
+        //   registerSpriteSet 的第二参是 ParticleEngine.SpriteParticleRegistration（嵌套类、顶层无此类；
+        //   create(SpriteSet) → ParticleProvider），
+        //   registerSprite 的第二参是 ParticleProvider.Sprite（createParticle(T, ClientLevel, ×6)）——
+        //   两者都不是粒子构造器本身；直接写 MyParticle::new（构造是 ClientLevel 在前、SpriteSet 在后）对不上 ⇒ 用 lambda 转换
         // 配合 particles/*.json 的多纹理粒子
         event.registerSpriteSet(
             ModParticles.MY_PARTICLE.get(),
-            MyParticle::new
+            (SpriteSet sprites) ->
+                (type, level, x, y, z, vx, vy, vz) -> new MyParticle(level, x, y, z, vx, vy, vz, sprites)
         );
 
         // 单纹理粒子，无需 JSON
         event.registerSprite(
             ModParticles.MY_SIMPLE_PARTICLE.get(),
-            MySingleTextureParticle::new
+            (type, level, x, y, z, vx, vy, vz) -> new MySingleTextureParticle(level, x, y, z, vx, vy, vz)
         );
 
         // 完全自定义（无 sprite）

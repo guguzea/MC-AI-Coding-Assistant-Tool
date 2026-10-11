@@ -16,12 +16,12 @@ description: 06 — 网络通信
 - 服务端 mod 的网络包发送给客户端时，客户端收到的是**反序列化后的数据对象**，不是完整类
 - 禁止在客户端包类中直接访问服务端独有类（如 `WorldServer`）
 - 使用 `DistExecutor` 或 `FMLEnvironment.dist` 判断当前物理端
-- 使用 `world.isClientSide` 判断当前逻辑端（2026-09-14 javap 实测：official 1.15.2 `World` 有 `isClientSide`；原写 `isRemote` 是 MCP 名）
+- 使用 `world.isClientSide` 判断当前逻辑端（javap 实测：official 1.15.2 `World` 有 `isClientSide`；原写 `isRemote` 是 MCP 名）
 
 ### SimpleChannel 配置
 
 1.13 起类名是 **`SimpleChannel`**（`NetworkRegistry.newSimpleChannel` 的返回值）。**不要** `SimpleNetworkWrapper`（那是 1.12）。
-包路径（`forge-1.15.2-31.2.50-sources.jar` 实证 2026-10-05）：本档 = `net.minecraftforge.fml.network`（`NetworkHooks`/`PacketDistributor`/`NetworkRegistry` 都在此，`SimpleChannel` 在 `fml.network.simple`）；1.16.5 才迁到 `net.minecraftforge.network`。
+包路径（`forge-1.15.2-31.2.50-sources.jar` 实证）：本档 = `net.minecraftforge.fml.network`（`NetworkHooks`/`PacketDistributor`/`NetworkRegistry` 都在此，`SimpleChannel` 在 `fml.network.simple`）；1.16.5 才迁到 `net.minecraftforge.network`。
 
 ```java
 private static final String PROTOCOL_VERSION = "1";

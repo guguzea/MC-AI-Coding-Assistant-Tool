@@ -89,7 +89,7 @@ public class MyRecipeSerializer implements RecipeSerializer<MyRecipe> {
 
     @Override
     public MyRecipe fromJson(ResourceLocation id, JsonObject json) {
-        Ingredient input = Ingredient.fromJson(json.get("input"));   // javap 实证 2026-10-05：182 的 fromJson 收单参 JsonElement，(JsonOps, ...) 形态是 1.20.5+ 写法
+        Ingredient input = Ingredient.fromJson(json.get("input"));   // javap 实证：182 的 fromJson 收单参 JsonElement，(JsonOps, ...) 形态是 1.20.5+ 写法
         ItemStack output = CraftingHelper.getItemStack(GsonHelper.getAsJsonObject(json, "output"), true);   // 同上：182 的 CraftingHelper.getItemStack = (JsonObject, boolean)
         int time = GsonHelper.getAsInt(json, "processingTime", 200);
         return new MyRecipe(id, input, output, time);

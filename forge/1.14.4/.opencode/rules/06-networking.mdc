@@ -110,7 +110,7 @@ public class MyMessage {
 
     public void handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
-            ServerPlayerEntity player = ctx.get().getSender(); // javap 实证 2026-10-05：144 的 Context.getSender() 返回 ServerPlayerEntity
+            ServerPlayerEntity player = ctx.get().getSender(); // javap 实证：144 的 Context.getSender() 返回 ServerPlayerEntity
             if (player != null) {
                 // 服务端处理逻辑
             }

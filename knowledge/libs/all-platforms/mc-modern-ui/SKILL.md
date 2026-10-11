@@ -9,7 +9,7 @@ modrinthSlug: modern-ui
 mappings: "库按各 loader 预重映射；GUI/渲染全部客户端侧，与项目 mappings 无直接交互"
 ---
 
-> 数据读取日期：2026-09-14（源：Modrinth project/modern-ui 版本表 limit=100；本轮 release 上界 fabric=26.1.2 / forge=26.1.2 / neoforge=26.1.2）
+> 数据来源：Modrinth project/modern-ui 版本表 limit=100；本轮 release 上界 fabric=26.1.2 / forge=26.1.2 / neoforge=26.1.2
 > 复核：curl.exe --ssl-no-revoke -sS "https://api.modrinth.com/v2/project/modern-ui/version?limit=100" 后按 game_versions + loaders + version_type 取上界
 
 # Modern UI 文本排版与 GUI（操作指引）
@@ -31,7 +31,7 @@ Decision: 用不用 Modern UI
 → 要现成 GUI 控件 + 现代排版 → 用（GUI API + 文本引擎一体）
 → 已选：
    ├─ 平台分支：fabric / forge / neoforge 各按 README 声明依赖（Modrinth slug 为 modern-ui，勿与仓库名混淆）
-   ├─ 版本：以官方 Releases 为准（实测窗口 1.18.1–26.1.2，截至 2026-09-04；26.2 无构建；**1.18.1 / 1.18.2 命中的构建 loaders 只有 forge**）
+   ├─ 版本：以官方 Releases 为准（实测窗口 1.18.1–26.1.2；26.2 无构建；**1.18.1 / 1.18.2 命中的构建 loaders 只有 forge**）
    ├─ 客户端专用：渲染与 GUI 全部 client 侧
    └─ 兼容：与 Sodium / Iris / OptiFine 组合逐个版本验证（Releases 有对应兼容说明）
 ```
@@ -51,7 +51,7 @@ Decision: 用不用 Modern UI
 - 文本配置（字体回退、阴影、原始字号）用户可调，别在模组里写死，引擎是全局的
 - 与渲染管线（Sodium/Iris/OptiFine）的兼容要逐个版本确认，不能想当然
 
-> **Quilt 侧安装口径（2026-09-24 补）**：本 Skill 的 `platforms` 含 `quilt`，依据是本仓构件快照 `mcp-server/data/lib-manifests/all.json` 里 slug `modern-ui` 的 **8 条 `loader:"quilt"` 构件行**（本轮现算，as-of 2026-09-24；窗口终点见 frontmatter `mcVersionsByPlatform`）。这 8 条的**文件名 0 条带 `quilt` 字样**（形如 `ModernUI-Fabric-1.20.1-3.12.0.1-universal.jar`）⇒ 实况是 **Quilt 按同 MC 版本的 Fabric 构件加载**，上面「操作步骤 1」说的 Fabric 坐标对 Quilt 同样适用。⚠️ **Quilt 专属 maven 仓库 URL / artifact 坐标未核实**：本仓只核到构件文件名，没核到 Gradle 声明串 ⇒ **禁止**照本文默写 `maven { url }` / `modImplementation` 一行。要坐实：`query_upstream_releases`（`modrinth`，slug=`modern-ui`）列 quilt 构件清单，或拿到实际 jar 后 `ingest_loader_api` 逐签名核。
+> **Quilt 侧安装口径（补）**：本 Skill 的 `platforms` 含 `quilt`，依据是本仓构件快照 `mcp-server/data/lib-manifests/all.json` 里 slug `modern-ui` 的 **8 条 `loader:"quilt"` 构件行**（本轮现算；窗口终点见 frontmatter `mcVersionsByPlatform`）。这 8 条的**文件名 0 条带 `quilt` 字样**（形如 `ModernUI-Fabric-1.20.1-3.12.0.1-universal.jar`）⇒ 实况是 **Quilt 按同 MC 版本的 Fabric 构件加载**，上面「操作步骤 1」说的 Fabric 坐标对 Quilt 同样适用。⚠️ **Quilt 专属 maven 仓库 URL / artifact 坐标未核实**：本仓只核到构件文件名，没核到 Gradle 声明串 ⇒ **禁止**照本文默写 `maven { url }` / `modImplementation` 一行。要坐实：`query_upstream_releases`（`modrinth`，slug=`modern-ui`）列 quilt 构件清单，或拿到实际 jar 后 `ingest_loader_api` 逐签名核。
 
 ## 常见错误
 

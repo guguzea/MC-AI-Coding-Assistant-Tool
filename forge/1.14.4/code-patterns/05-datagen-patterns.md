@@ -62,7 +62,7 @@ public class ModRecipeProvider extends RecipeProvider {
             .patternLine(" Y ")
             .key('X', Items.DIAMOND)
             .key('Y', Items.STICK)
-            .addCriterion("has_diamond", InventoryChangeTrigger.Instance.forItems(Items.DIAMOND)) // 144 snapshot 构件实证 2026-10-05：Instance 只有 forItems
+            .addCriterion("has_diamond", InventoryChangeTrigger.Instance.forItems(Items.DIAMOND)) // 144 snapshot 构件实证：Instance 只有 forItems
             .build(consumer);
 
         ShapelessRecipeBuilder.shapelessRecipe(ModItems.OTHER_ITEM.get())
@@ -71,7 +71,7 @@ public class ModRecipeProvider extends RecipeProvider {
             .addCriterion("has_gold", InventoryChangeTrigger.Instance.forItems(Items.GOLD_INGOT))
             .build(consumer);
 
-        CookingRecipeBuilder.smeltingRecipe(Ingredient.fromItems(Items.COBBLESTONE), Items.STONE, 0.1f, 200) // 144 工厂名 = smeltingRecipe（构件实证 2026-10-05）
+        CookingRecipeBuilder.smeltingRecipe(Ingredient.fromItems(Items.COBBLESTONE), Items.STONE, 0.1f, 200) // 144 工厂名 = smeltingRecipe（构件实证）
             .addCriterion("has_cobblestone", InventoryChangeTrigger.Instance.forItems(Items.COBBLESTONE))
             .build(consumer);
     }

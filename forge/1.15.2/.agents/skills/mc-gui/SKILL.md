@@ -95,7 +95,7 @@ public class MyBlock extends Block {   // 方块实体：重写 hasTileEntity() 
     }
 
     @Override
-    // official 构件实证（javap @1.15.2 official，2026-10-05）：onBlockActivated/boolean = MCP 层形态，official = use(...) → ActionResultType
+    // official 构件实证（javap @1.15.2 official）：onBlockActivated/boolean = MCP 层形态，official = use(...) → ActionResultType
     public ActionResultType use(BlockState state, World world, BlockPos pos,
             PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         if (!world.isClientSide) {

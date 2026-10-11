@@ -97,7 +97,7 @@ public class MyRecipeSerializer implements RecipeSerializer<MyRecipe> {
 
     @Override
     public MyRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buf) {
-        Ingredient input = Ingredient.fromNetwork(buf);   // javap 实证 2026-10-05：本档 Ingredient 无 STREAM_CODEC（该字段 1.20.5+ 才有）；网络工厂 = fromNetwork(FriendlyByteBuf)
+        Ingredient input = Ingredient.fromNetwork(buf);   // javap 实证：本档 Ingredient 无 STREAM_CODEC（该字段 1.20.5+ 才有）；网络工厂 = fromNetwork(FriendlyByteBuf)
         ItemStack output = buf.readItem();
         int time = buf.readInt();
         return new MyRecipe(id, input, output, time);

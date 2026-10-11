@@ -20,7 +20,7 @@ public static final RegistryObject<Item> MY_ITEM = ITEMS.register("my_item",
 
 ```java
 // Tier 枚举（1.16.5 签名）
-public enum MyTier implements IItemTier { // ❌ ITier = Fabric 名；165 official 构件（2026-10-05 javap）= net.minecraft.item.IItemTier
+public enum MyTier implements IItemTier { // ❌ ITier = Fabric 名；165 official 构件（javap）= net.minecraft.item.IItemTier
     COPPER(3, 1561, 8.0f, 3.0f, 15, () -> Ingredient.of(Items.COPPER_INGOT));
 
     private final int level;
@@ -44,7 +44,7 @@ public enum MyTier implements IItemTier { // ❌ ITier = Fabric 名；165 offici
 }
 
 // 剑：4 参数构造函数
-// SwordItem(IItemTier tier, int attackDamageModifier, float attackSpeedModifier, Item.Properties) ——165 official 构件实证（javap 2026-10-05）
+// SwordItem(IItemTier tier, int attackDamageModifier, float attackSpeedModifier, Item.Properties) ——165 official 构件实证（javap）
 // 最终攻击伤害 = attackDamageModifier + 3.0f（剑类内置固定加成）
 // 例如：attackDamageModifier=3 → 总伤害 = 3 + 3.0 = 6.0
 public static final RegistryObject<Item> COPPER_SWORD = ITEMS.register("copper_sword",
@@ -58,7 +58,7 @@ public static final RegistryObject<Item> COPPER_SWORD = ITEMS.register("copper_s
 ## 镐
 
 ```java
-// PickaxeItem(IItemTier tier, int attackDamageModifier, float attackSpeedModifier, Item.Properties) ——165 official 构件实证（javap 2026-10-05）；(float,float,ITier,TagKey) 是 1.20.1/Forge47 形，本档编不过
+// PickaxeItem(IItemTier tier, int attackDamageModifier, float attackSpeedModifier, Item.Properties) ——165 official 构件实证（javap）；(float,float,ITier,TagKey) 是 1.20.1/Forge47 形，本档编不过
 // attackDamageModifier：类型加成外额外增加的攻击伤害（镐通常为 1）
 public static final RegistryObject<Item> COPPER_PICKAXE = ITEMS.register("copper_pickaxe",
     () -> new PickaxeItem(MyTier.COPPER, 1, -2.8f,
@@ -119,7 +119,7 @@ public class MyUseItem extends Item {
 
     @Override
     public UseAction getUseAnimation(ItemStack stack) {
-        // 构件实证（2026-10-05 javap @1.16.5 official 映射 jar）：方法名 = getUseAnimation；❌ getUseAction 是 1.14/1.15 MCP 名
+        // 构件实证（javap @1.16.5 official 映射 jar）：方法名 = getUseAnimation；❌ getUseAction 是 1.14/1.15 MCP 名
         return UseAction.DRINK;  // 饮用动画（UseAction.EAT/DRINK/BLOCK/SHIELD/BOW/CROSSBOW/SPEARS 构件点名）
     }
 
@@ -129,7 +129,7 @@ public class MyUseItem extends Item {
     }
 
     @Override
-    // 构件实证（2026-10-05 javap @1.16.5 official 映射 jar）：食用完成 = Item#finishUsingItem；
+    // 构件实证（javap @1.16.5 official 映射 jar）：食用完成 = Item#finishUsingItem；
     // ❌ onItemUseFinish 是 MCP/1.14 名，本包编不过。LivingEntity#addEffect（❌ addPotionEffect 为 1.17+/MCP 层）
     public ItemStack finishUsingItem(ItemStack stack, World world, LivingEntity entity) {
         super.finishUsingItem(stack, world, entity);
@@ -146,7 +146,7 @@ public class MyUseItem extends Item {
 
 ```java
 // 自定义剑可以直接继承 SwordItem 并覆盖方法
-// 构件实证（2026-10-05 javap @1.16.5 official 映射 jar）：
+// 构件实证（javap @1.16.5 official 映射 jar）：
 // SwordItem(IItemTier, int, float, Properties) 4 参在构件；命中回调 = Item#hurtEnemy；
 // 扣耐久 = ItemStack#hurtAndBreak(int, T, Consumer<T>)；破坏动画 = LivingEntity#broadcastBreakEvent(EquipmentSlotType)。
 // ❌ ITier（Fabric 名）、hitEntity / damageItem / sendBreakAnimation（MCP 层名）本包都编不过。

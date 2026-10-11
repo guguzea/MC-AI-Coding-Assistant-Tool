@@ -8,7 +8,7 @@ modrinthSlug: satin-api
 mappings: hint
 ---
 
-> 数据读取日期：2026-09-14（源：Modrinth project/satin-api 版本表 limit=100；本轮 release 上界 fabric=1.21.1 / quilt=1.21.1 ⇒ 本文件 mcVersions 上界 1.21.4 高于 release 上界，仅 beta/alpha 支撑）
+> 数据来源：Modrinth project/satin-api 版本表 limit=100；本轮 release 上界 fabric=1.21.1 / quilt=1.21.1 ⇒ 本文件 mcVersions 上界 1.21.4 高于 release 上界，仅 beta/alpha 支撑
 > 复核：curl.exe --ssl-no-revoke -sS "https://api.modrinth.com/v2/project/satin-api/version?limit=100" 后按 game_versions + loaders + version_type 取上界
 
 # Satin（Fabric 后期处理着色器）

@@ -61,7 +61,7 @@ public class MyProjectile extends Projectile {
     @Override
     protected void onHit(HitResult result) {
         super.onHit(result);
-        // 1.20.4 实测（出处：neoforge-20.4.251-merged.jar javap 2026-10-06）：
+        // 1.20.4 实测（出处：neoforge-20.4.251-merged.jar javap）：
         //   Entity 的 level 字段是 private（javap -p：`private net.minecraft.world.level.Level level`），
         //   子类里 `this.level` 直接访问编译不过，必须走公开的 level() 方法
         if (!this.level().isClientSide) {
@@ -107,7 +107,7 @@ public class ClientSetup {
 }
 
 public class MyEntityRenderer extends HumanoidMobRenderer<MyEntity, MyEntityModel<MyEntity>> {
-    // 1.20.4 实测（同一 merged.jar javap 2026-10-06）：
+    // 1.20.4 实测（同一 merged.jar javap）：
     //   ① HumanoidArmorLayer 构造是 4 参 (RenderLayerParent<T>, inner, outer, ModelManager)——三参写法编译不过；
     //   ② ModelLayers 里没有裸 INNER_ARMOR / OUTER_ARMOR 常量（只有 PLAYER_INNER_ARMOR / PLAYER_OUTER_ARMOR 这类带前缀的），
     //      自定义实体护甲要自定义 ModelLayerLocation 并在 RegisterLayerDefinitions 注册（见上面的事件处理器）。

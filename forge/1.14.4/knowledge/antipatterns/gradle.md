@@ -70,7 +70,7 @@ minecraft {
 }
 ```
 
-实测取证（同族，2026-09-10 本机）：`forge/1.18.2` scaffold 在 `minecraft { }` 内写 `copyIdeResources = true` + FG `[5.1.2,5.2)` + Gradle 7.6 + JDK 17.0.12 → `gradlew help --stacktrace` 报 `Caused by: groovy.lang.MissingPropertyException: copyIdeResources`，随后级联 `Missing 'minecraft' dependency.`。本档 FG 更旧，同样不含该属性；官方 1.14.4-28.2.26 MDK（FG `3.+`）亦不含该行，含该行的是 FG `[6.0,6.2)` 的官方 MDK（1.18.2-40.3.0 / 1.19.4 / 1.20.1 / 1.20.4）。「IDE 改资源不生效」是 FG 6 时代的症状；本档 FG 3 的替代做法未核实，不要臆造。
+实测取证（同族，本机）：`forge/1.18.2` scaffold 在 `minecraft { }` 内写 `copyIdeResources = true` + FG `[5.1.2,5.2)` + Gradle 7.6 + JDK 17.0.12 → `gradlew help --stacktrace` 报 `Caused by: groovy.lang.MissingPropertyException: copyIdeResources`，随后级联 `Missing 'minecraft' dependency.`。本档 FG 更旧，同样不含该属性；官方 1.14.4-28.2.26 MDK（FG `3.+`）亦不含该行，含该行的是 FG `[6.0,6.2)` 的官方 MDK（1.18.2-40.3.0 / 1.19.4 / 1.20.1 / 1.20.4）。「IDE 改资源不生效」是 FG 6 时代的症状；本档 FG 3 的替代做法未核实，不要臆造。
 
 ---
 
@@ -96,7 +96,7 @@ minecraft {
 
 1.17.1+ 各档同样裸写不会发病（扩展已无该二字段）——**不要**拿邻档「能跑」反证本档写法正确。
 
-实测取证（2026-09-11 本机）：本档 scaffold 加 `project.` 限定后 `gradlew build` → BUILD SUCCESSFUL in 24s（JDK 8 + Gradle 4.9 wrapper + FG 3.0.197 + forge 1.14.4-28.2.26 + snapshot/20190719-1.14.3，产物 build/libs/examplemod-1.0.0.jar 4734 B，含 :reobfJar）；改前为该条配置期异常。
+实测取证（本机）：本档 scaffold 加 `project.` 限定后 `gradlew build` → BUILD SUCCESSFUL in 24s（JDK 8 + Gradle 4.9 wrapper + FG 3.0.197 + forge 1.14.4-28.2.26 + snapshot/20190719-1.14.3，产物 build/libs/examplemod-1.0.0.jar 4734 B，含:reobfJar）；改前为该条配置期异常。
 
 ---
 

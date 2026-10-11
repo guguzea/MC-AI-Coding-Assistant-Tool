@@ -84,7 +84,7 @@ IF 注册自定义 Registry
   → 使用 RegistryEvent.NewRegistry
 
 IF 平台 = Fabric
-  → 跳转 fabric/1.13.2/AGENTS.md（Fabric 使用 Registry.register() in onInitialize）
+  → 本仓没有 fabric/1.13.2 树（本仓 fabric 建档自 1.14.4 起，见本档 knowledge/porting/01-api-cross-loader.md 的 `ls data` 实证；官方 Fabric 线不支持 1.13——meta 实测对该版回 400/空表、1.14.4 回 200；Fabric 系支持仅见 Legacy Fabric 分支、本仓未建档）——让用户复核平台与版本，禁止拿邻版 Fabric 树顶替
 
 IF 平台 = NeoForge
   → 不要读本 Forge 规则。list_neoforge_versions 锁定精确版本后读 neoforge/<ver>/AGENTS.md。未列入 `list_neoforge_versions` 的版本禁止读邻档 00–10，改口 search_neoforge_docs。

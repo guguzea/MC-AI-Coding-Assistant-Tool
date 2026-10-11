@@ -1,7 +1,7 @@
 # 物品模式（Fabric 1.21.11）
 
 > ⚠ **1.21.2+ 起：物品注册必须先有 `RegistryKey`**。`new Item(new Item.Settings())` 这类"先构造、再交给 `Registry.register(Registries.ITEM, …)`"的写法在**运行期**会抛
-> `java.lang.NullPointerException: Item id not set`（本仓 2026-09-29 真机复现，崩溃报告 `run/crash-reports/crash-2026-09-29_12.54.10-client.txt`；**编译期不报错**，只在进世界/加载物品时炸）。
+> `java.lang.NullPointerException: Item id not set`（本仓真机复现，崩溃报告 `run/crash-reports/crash-2026-09-29_12.54.10-client.txt`；**编译期不报错**，只在进世界/加载物品时炸）。
 > 正确形态（官方 wiki `tutorial_items.md`「Creating Items in 1.21.2+」）＝
 > **`Items.register(RegistryKey.of(RegistryKeys.ITEM, Identifier.of(MOD_ID, "…")), 工厂, Item.Settings)`**。
 > 下面 5 个模式已按此改正；老写法 `Registry.register(Registries.ITEM, …)` 只适用于 **1.21.1 及更早**。

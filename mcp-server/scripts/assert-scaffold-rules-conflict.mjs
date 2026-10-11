@@ -355,8 +355,15 @@ const LEDGER = {
   rulesFiles: 447,
   // 2026-10-06 重钉（非forge javap 普查收口轮）：contextualSkipped 3054→3056（+2 场合型丢弃行，
   // 来自本会话 rift/forge 规则 ❌ 实证行改写与 neoforge loose 修复轮；判死分布与 conflicts 0 不变）。
+  // 2026-10-11 重钉（forge 系老版本全量构件裁决轮，10 档 936 行 → 22 处修复）：contextualSkipped
+  // 3056→3062（+6 场合型丢弃行，来自 9 棵 forge 树规则/技能侧的 ❌/✅ 实证行改写；scaffold 侧
+  // 无改动经 git status 核对；crossLines / verdictSkipped / 判死分布 / conflicts 0 全部不变）。
+  // 2026-10-11 重钉（第二轮，liteloader/modloader/bedrock/quilt QSL 构件实证轮）：contextualSkipped
+  // 3062→3065（+3 场合型丢弃行，来自这四族 `.cursor/rules` 侧的实证行改写——modloader 1.6.4
+  // 04/05 勘误行、quilt 1.21.1 05-events 解禁行等）。技能面不在本门扫描面（只读 `.cursor/rules`，
+  // 见头注），改技能不会动此数；crossLines / verdictSkipped / 判死分布 / conflicts 0 全部不变。
   crossLines: 455,
-  contextualSkipped: 3056,
+  contextualSkipped: 3065,
   verdictSkipped: 2341,
   banned: 67,
   conflicts: 0,

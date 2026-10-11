@@ -69,7 +69,7 @@ public static void registerCaps(RegisterCapabilitiesEvent event) {
 Fabric API 在 1.20.1 没有内置 Capability/Attachment 系统，**也没有**官方命名的「attachment API」。
 本页旧文本里的 `@AutoRegister`、`AttachmentType<MyAttachmentData>`、以及注释里的
 `EntityAttributeModifierEvent` + `EntityAttachmentsComponent` 都是编造名（出处：
-`EntityAttributeModifierEvent` 在 NeoForge 20.4.251 merged jar 同样 javap 查无，2026-10-06；
+`EntityAttributeModifierEvent` 在 NeoForge 20.4.251 merged jar 同样 javap 查无；
 `EntityAttachmentsComponent` 任何构件无出处）——勿照抄。
 
 实务上用第三方附加组件库，如 **CCA**（库源稿：`knowledge/libs/fabric-only/mc-cca/SKILL.md`，

@@ -4,15 +4,15 @@ description: 01 — Quilt 注册（QSL ≠ FAPI Registry）
 
 # 01 — Quilt 注册（QSL ≠ FAPI Registry）
 
-> ⚠️ **QSL 停更（2025-12 说法 `// TODO(未核实)`：原引官方 FAQ 已 404，无法复核）**：本版本**无 QSL/QFAPI 正式版构件**（maven 只到 alpha；实证数据见 quilt/1.21.1/AGENTS.md 顶部横幅）。本文件中的 QSL API 全部是**源码树考据，非可编译 API**——禁止生成。注册一律走 Vanilla `Registry.register` 或同版 Fabric API。
+> ⚠️ **QSL 停更（2025-12 说法 `// TODO(未核实)`：原引官方 FAQ 已 404，无法复核）**：本版本**无 QSL/QFAPI 正式版构件**（1.21 线只到 alpha；实证数据见 quilt/1.21.1/AGENTS.md 顶部横幅）。本文件涉及的 QSL registry 符号已由 alpha 构件 javap **逐字实证**（见 `knowledge/common/qsl-verified.md`），但**默认不生成 QSL**——注册一律走 Vanilla `Registry.register` 或同版 Fabric API；要用须用户显式确认接受 alpha 依赖。
 >
 > 适用：Quilt 1.21.1。**禁止编造 `QuiltRegistry.register()`。** 未核实的 QSL 方法名：停止生成，改 `search_docs({platform:"quilt"})` 或 QSL 源码 / loader-api-summaries。
 
 ## 核心事实（已核实）
 
-- **maven 实证（截至 2026-09-04）：`org.quiltmc:qsl` 的 1.21 线只有 4 个 alpha 构件（`10.0.0-alpha.1+1.21`、`10.0.0-alpha.2/3/5+1.21.1`），无正式版；1.21.1 零可用正式版构件**——下述 QSL 差异仅为考据背景（「2025-12 停更」原引的 `quiltmc.org/en/faq/` 已 404 → `// TODO(未核实)`）
+- **maven 实证：`org.quiltmc:qsl` 的 1.21 线只有 4 个 alpha 构件（`10.0.0-alpha.1+1.21`、`10.0.0-alpha.2/3/5+1.21.1`），无正式版；1.21.1 零可用正式版构件**——下述 QSL 差异已由 alpha 构件 javap 逐字实证（`qsl-verified.md`），仍**默认不生成**；「2025-12 停更」原引的 `quiltmc.org/en/faq/` 已 404 → `// TODO(未核实)`
 - 简单物品/方块/事件：用 **Vanilla** `Registry.register(Registries.*, id, value)` 与同版 Fabric API（与 Fabric 共享，不是 FAPI 专属）
-- ~~需要监听条目添加：`RegistryEvents#getEntryAddEvent` / `RegistryMonitor#create`~~——**源码树考据，无已发布构件，禁止生成**（见 `qsl-verified.md` 降级声明）
+- ~~需要监听条目添加：`RegistryEvents#getEntryAddEvent` / `RegistryMonitor#create`~~——**构件复核：二者在 `registry-10.0.0-alpha.5+1.21.1.jar` 逐字在场；仍无正式版 ⇒ 默认不生成**（要用须用户确认接受 alpha 依赖；见 `qsl-verified.md`）
 - **不要**生成 `net.fabricmc.fabric.api.event.registry` / `FabricRegistryBuilder` / `RegistrySyncManager` 当作 QSL
 
 ## Decision Flow
@@ -21,11 +21,11 @@ description: 01 — Quilt 注册（QSL ≠ FAPI Registry）
 Decision: 注册方式
 → 简单 Item/Block/BlockEntity → Vanilla Registry.register（在 net.fabricmc.api.ModInitializer#onInitialize() 中——quilt.mod.json entrypoints.main；QSL 入口写法见 00-project-setup）
 → 事件/生命周期 → 同版 Fabric API（fabric/1.21.1 overlay 的 05-events.mdc）
-→ QSL 专属 API → 本版本不存在可用构件：拒绝生成，向用户说明本版本无可用构件（maven 实证）
+→ QSL 专属 API → 默认拒绝（本版本无正式版构件，maven 实证）；仅当用户显式接受 alpha 依赖时，才许用本档 `qsl-verified.md` 构件实证表内的名字
 → 禁止：把 Fabric Registry 教程改名交差
 ```
 
 对照：https://wiki.quiltmc.org/en/concepts/qsl-qfapi
 已核实表：`quilt/1.21.1/knowledge/common/qsl-verified.md`（02–10 仍读 fabric/1.21.1）。
 
-> **F115 读法（语料 = 源稿的机械派生件；2026-09-19 路线 A 已同步）**：`search_docs({platform:"quilt", version:"1.21.1"})` 命中的语料页 `data/quilt_1.21.1/quilt-docs/1.21.1/processed/qsl-verified.md` 由 `scripts/index-qsl-verified.mjs` 从 `quilt/1.21.1/knowledge/common/qsl-verified.md` 机械复制（逐字节一致；此前副本曾滞留已撤回的「QSL 已于 2025-12 停更」与 `11.0.0-alpha.3` 旧断言，已随路线 A 刷新清除，虚构横幅不再出现在任何 snippet / get_doc_full）。语料正文按仓规**上游原样、不改写**——编辑只发生在源稿，data 侧副本只准由生成器刷新。读到该页正文即等同源稿口径；降级/撤回声明与构件实证以源稿 `:3`（maven 复核横幅）与 `:9`（maven 计数）为准，**禁止**把已撤回的停更日期或版本号当可引用事实写进答案。
+> **F115 读法（语料 = 源稿的机械派生件；路线 A 已同步）**：`search_docs({platform:"quilt", version:"1.21.1"})` 命中的语料页 `data/quilt_1.21.1/quilt-docs/1.21.1/processed/qsl-verified.md` 由 `scripts/index-qsl-verified.mjs` 从 `quilt/1.21.1/knowledge/common/qsl-verified.md` 机械复制（逐字节一致；此前副本曾滞留已撤回的「QSL 已于 2025-12 停更」与 `11.0.0-alpha.3` 旧断言，已随路线 A 刷新清除，虚构横幅不再出现在任何 snippet / get_doc_full）。语料正文按仓规**上游原样、不改写**——编辑只发生在源稿，data 侧副本只准由生成器刷新。读到该页正文即等同源稿口径；降级/撤回声明与构件实证以源稿 `:3`（maven 复核横幅）与 `:9`（maven 计数）为准，**禁止**把已撤回的停更日期或版本号当可引用事实写进答案。

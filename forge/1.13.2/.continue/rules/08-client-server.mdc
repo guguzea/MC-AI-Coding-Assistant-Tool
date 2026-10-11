@@ -119,6 +119,9 @@ public class ModKeyBindings {
 
     @Mod.EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT)
     public static class ClientEvents {
+        // import net.minecraftforge.client.event.InputEvent.KeyInputEvent;
+        // 1.13.2 实测（构件 javap）：KeyInputEvent 在 client.event 包；fml.common.gameevent.InputEvent
+        // （1.12.2 的包）在 1.13.2 整体不存在——跨版本抄会编译不过
         @SubscribeEvent
         public static void onKeyInput(KeyInputEvent event) {
             if (TEST_KEY.isPressed()) {

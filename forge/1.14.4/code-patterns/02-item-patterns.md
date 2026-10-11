@@ -74,7 +74,7 @@ public enum MyArmorMaterial implements IArmorMaterial {
         new int[]{4, 7, 9, 4},   // boots, leggings, chestplate, helmet
         20, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 3.0f);
 
-    // 144 本包 IArmorMaterial 方法（构件实证 2026-10-05）：
+    // 144 本包 IArmorMaterial 方法（构件实证）：
     // getDurability(), getDamageReductionAmount(), getEnchantability(),
     // getSoundEvent(), getRepairMaterial(), getName(), getToughness()
     // 没有 getKnockbackResistance（1.16+ 才有）
@@ -99,7 +99,7 @@ public static final RegistryObject<Item> GOLDEN_APPLE = ITEMS.register("golden_a
         .food(new Food.Builder()
             .hunger(4)
             .saturation(1.2f)
-            .effect(new EffectInstance(Effects.ABSORPTION, 2400, 0), 1.0f) // 144 = effect(EffectInstance, float)，无 Supplier 形；类是 EffectInstance/Effects（构件实证 2026-10-05）
+            .effect(new EffectInstance(Effects.ABSORPTION, 2400, 0), 1.0f) // 144 = effect(EffectInstance, float)，无 Supplier 形；类是 EffectInstance/Effects（构件实证）
             .setAlwaysEdible() // 144 无 alwaysEat()，用 setAlwaysEdible()
             .build())
     )
@@ -130,7 +130,7 @@ public class MyUseItem extends Item {
     @Override
     public ItemStack onItemUseFinish(ItemStack stack, World world, LivingEntity entity) {
         super.onItemUseFinish(stack, world, entity);
-        entity.addPotionEffect(new EffectInstance(Effects.SPEED, 600, 1)); // 144 = LivingEntity.addPotionEffect(EffectInstance)（构件实证 2026-10-05；addEffect/MobEffectInstance 是 1.17+ 名）
+        entity.addPotionEffect(new EffectInstance(Effects.SPEED, 600, 1)); // 144 = LivingEntity.addPotionEffect(EffectInstance)（构件实证；addEffect/MobEffectInstance 是 1.17+ 名）
         if (!world.isRemote) {
             stack.shrink(1);
         }

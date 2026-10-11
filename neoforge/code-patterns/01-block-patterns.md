@@ -22,7 +22,7 @@ public static final DeferredHolder<Block, Block> STONE_BLOCK = BLOCKS.register("
 );
 
 // ItemBlock
-// 1.20.4 实测（出处：neoforge-20.4.251-merged.jar javap 2026-10-06）：
+// 1.20.4 实测（出处：neoforge-20.4.251-merged.jar javap）：
 //   Item$Properties 没有 tab() 方法，CreativeModeTab 也没有 TAB_* 常量（旧写法编译不过）。
 //   创造模式入口改订阅 BuildCreativeModeTabContentsEvent（该类在 NeoForge 侧存在，见下）。
 public static final DeferredHolder<Item, Item> STONE_BLOCK_ITEM = ITEMS.register("stone_block",

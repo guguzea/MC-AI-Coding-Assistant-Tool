@@ -91,7 +91,7 @@ int val = player.getCapability(CAP).get().getValue(); // NPE!
 ## 内置 Capability
 
 ```java
-// 构件 javap 实证 2026-10-06（forge-1.18.2-40.1.80）：本档没有 `Capabilities` 类，也没有 `ForgeCapabilities`（那是 1.19+）；
+// 构件 javap 实证（forge-1.18.2-40.1.80）：本档没有 `Capabilities` 类，也没有 `ForgeCapabilities`（那是 1.19+）；
 // 内置能力字段按各自 Capability 持有类取值：
 // ItemHandler（物品栏）
 player.getCapability(net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)

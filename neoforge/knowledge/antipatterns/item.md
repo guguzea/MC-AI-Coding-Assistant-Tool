@@ -71,7 +71,7 @@ public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity atta
 
 **正确方案：**
 ```java
-// ✅ 使用 lambda 形式（1.20.4 实测，出处：neoforge-20.4.251-merged.jar javap 2026-10-06：
+// ✅ 使用 lambda 形式（1.20.4 实测，出处：neoforge-20.4.251-merged.jar javap：
 //    ItemStack#hurtAndBreak 是 `<T extends LivingEntity> void hurtAndBreak(int, T, Consumer<T>)`
 //    —— 回调参数是「装备者 LivingEntity」，不是 EquipmentSlot）
 @Override

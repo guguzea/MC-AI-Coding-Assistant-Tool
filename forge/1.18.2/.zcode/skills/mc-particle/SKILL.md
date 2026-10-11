@@ -58,10 +58,14 @@ public class ParticleProviders {
     @SubscribeEvent
     public static void registerParticles(ParticleFactoryRegisterEvent event) {
         ParticleEngine engine = Minecraft.getInstance().particleEngine;
+        // 1.18.2 实测（构件 javap）：register 第二参要么 ParticleProvider（createParticle(T, ClientLevel, ×6)），
+        // 要么 ParticleEngine.SpriteParticleRegistration（嵌套类，顶层无此类；create(SpriteSet) → ParticleProvider）——
+        // 两者首参都不是 ClientLevel，直接写 MyParticle::new（构造是 ClientLevel 在前、SpriteSet 在后）对不上 ⇒ 两级 lambda 转换
         // 配合 particles/*.json 的多纹理粒子
         engine.register(
             ModParticles.MY_PARTICLE.get(),
-            MyParticle::new
+            (SpriteSet sprites) ->
+                (type, level, x, y, z, vx, vy, vz) -> new MyParticle(level, x, y, z, vx, vy, vz, sprites)
         );
     }
 }

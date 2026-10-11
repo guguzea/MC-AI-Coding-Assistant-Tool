@@ -70,7 +70,7 @@ public class ModRecipeProvider extends RecipeProvider {
     }
 
     @Override
-    // 本段方法名 2026-10-05 已对 1.15.2-31.2.50_mapped_official_1.15.2 构件 javap 实证：
+    // 本段方法名已对 1.15.2-31.2.50_mapped_official_1.15.2 构件 javap 实证：
     // RecipeProvider#buildShapelessRecipes(Consumer<IFinishedRecipe>)、shaped/pattern/define/unlocks/save、
     // shapeless/requires、CookingRecipeBuilder.smelting(Ingredient, IItemProvider, float, int) 均存在；
     // registerRecipes/shapedRecipe/patternLine/key/addCriterion/hasItems/build 在构件中不存在（语料页 datagen_intro.md 用的是 MCP 旧名）。

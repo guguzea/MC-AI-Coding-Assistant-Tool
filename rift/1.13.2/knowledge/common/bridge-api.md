@@ -1,4 +1,4 @@
-# Rift 1.13.2 · 最小桥 mod 的逐名出处（2026-10-04）
+# Rift 1.13.2 · 最小桥 mod 的逐名出处
 
 本表服务 `mcp-server/src/generators/playtest-bridge-mod.ts` 的 rift 分支
 （`generate_playtest_driver driverMode=external_bridge platform=rift version=1.13.2` 时附赠 `playtest/bridge/**`）。
@@ -8,7 +8,7 @@
 
 桥的 6 项前置 = tick 钩子 + 客户端单例 + 玩家对象/位置字段 + 发聊天 + 截图 + 读方块。本档**六项全有出处**：
 
-- **tick 钩子**来自 Rift 自己的 API（`rift/1.13.2/knowledge/common/listeners.md`，源码打开取证 2026-08-15）；
+- **tick 钩子**来自 Rift 自己的 API（`rift/1.13.2/knowledge/common/listeners.md`，源码打开取证）；
 - **其余五项**来自本仓 **1.13.2 的 MCP 映射数据** `data/forge_1.13.2/mappings/{joined.tsrg,methods.csv,fields.csv}`
   ＋ `data/forge_1.13.2/extracted/config/{constructors.txt,static_methods.txt}`。
 
@@ -52,7 +52,7 @@
 
 ## 3. 未证项（生成物里已逐条披露，**禁止当已证用**）
 
-1. ~~**`Minecraft.getInstance()` 的 `static` 性本仓证不出**~~ —— **已关闭（2026-10-06）**：对本机真构件 `forgeBin-1.13.2-25.0.223_mapped_snapshot_20180921-1.13.jar` javap 得 **`public static net.minecraft.client.Minecraft getInstance();`**。
+1. ~~**`Minecraft.getInstance()` 的 `static` 性本仓证不出**~~ —— **已关闭**：对本机真构件 `forgeBin-1.13.2-25.0.223_mapped_snapshot_20180921-1.13.jar` javap 得 **`public static net.minecraft.client.Minecraft getInstance();`**。
    旧推理（extracted 不含修饰符、`static_methods.txt` 是部分提示表、漏 `func_71410_x` 不能当反证）过程属实，结论被真构件 javap 取代；该「部分提示表不能当反证」的教训仍然有效。
    **另注（真差异）**：本仓 1.13.2 forge-docs 语料用的是**旧快照名** `Minecraft.getMinecraft()`
    （`data/forge_1.13.2/forge-docs/1.13.2/processed/models_color.md:20,22`、`models_advanced_extended-blockstates.md:73`，同一 SRG、class 限定调用）
@@ -62,14 +62,14 @@
    可行替代是 `net.minecraft.util.registry.RegistryNamespaced#getKey(Object) → ResourceLocation`（`joined.tsrg` 有），
    但**取注册表实例的访问式未证** ⇒ 本模板不写。返回里带 `"idKind":"translationKey"` 明示。
 3. **版本支持线（2026-10-06 结案：用户裁定 + GitHub API 同日核；原「未核实」作废）**：Rift 官方 maven `https://www.dimdev.org/maven/`（含去 www）**DNS ENOTFOUND**（不是 404）；
-   JitPack `com.github.DimensionalDevelopment:Rift` 有 release `1.0.4-106`（另 `1.0.4-87` 等），`dev` classifier **确有**（2026-10-05 实测四件全 200；⚠️ dev 件缺 refmap，本档 scaffold 用**非 dev**），
+   JitPack `com.github.DimensionalDevelopment:Rift` 有 release `1.0.4-106`（另 `1.0.4-87` 等），`dev` classifier **确有**（实测四件全 200；⚠️ dev 件缺 refmap，本档 scaffold 用**非 dev**），
    且与 wiki 记的 `1.0.3-45` **不等价**（该坐标 JitPack 上不存在，见 `knowledge/common/making-mods-wiki.md`）。
    另：Rift 的 MultiMC 组件 JSON 写的是 `requires: {equals: "1.13"}`（`data/rift_1.13.2/rift-docs/1.13.2/raw/wiki_installing_multimc.md`）。
-   ⇒ **支持线结案（用户裁定 2026-10-06 + GitHub API 同日核）**：**原生线（DimensionalDevelopment，已 archived）只到 MC 1.13** —— 最终原生版本号 **`1.0.4-105`**；tag `v1.0.4-86`/`87`/`105`/`106` 全指 master 同一提交 `dfc75ff725`，其 `build.gradle` 自标 `version='1.13'`。**1.13.1 / 1.13.2 = 社区支持**，来自 Chocohead 仓库分支 **`newerer`**（`build.gradle` 自标 `1.13.1`）/ **`newerest`**（自标 `1.13.2`）—— 口语「newer/newest」，实测分支名双 r。**常用构建「`1.0.4-77` 或 `1.0.4-106`」引用时要分开**：`106` = 原生件，真机实测 2026-10-05 在 1.13.2「客户端能起、21 个 hook mixin target not found ⇒ listener 不派发」；tag `v1.0.4-77`（提交 `e5636ddfdb`，在 JitPack `com.github.Chocohead:Rift` 线上，该线另有 `v1.0.4-65/66/72/74`）的 `build.gradle` 仍自标 `1.13`、落后 `newerest` 47 个提交 ⇒ **不是支持 1.13.2 的成品**；真支持 1.13.2 的是 `newerest` 分支尖，其 JitPack 分支件 2026-10-06 呈 Building/超时、**未取到成品**。⇒ 本档 scaffold（原生 106 非 dev 件）对 1.13.2 仍是「能启动但功能不完整」。
-4. **编译验证强度（2026-10-05 升级为「Rift 侧对真构件」）**：生成物 `BridgeMod.java` 用 **JDK 8 `javac -encoding UTF-8`** 编译通过（5 个 class，exit 0），分两腿：
+   ⇒ **支持线结案（用户裁定 2026-10-06 + GitHub API 同日核）**：**原生线（DimensionalDevelopment，已 archived）只到 MC 1.13** —— 最终原生版本号 **`1.0.4-105`**；tag `v1.0.4-86`/`87`/`105`/`106` 全指 master 同一提交 `dfc75ff725`，其 `build.gradle` 自标 `version='1.13'`。**1.13.1 / 1.13.2 = 社区支持**，来自 Chocohead 仓库分支 **`newerer`**（`build.gradle` 自标 `1.13.1`）/ **`newerest`**（自标 `1.13.2`）—— 口语「newer/newest」，实测分支名双 r。**常用构建「`1.0.4-77` 或 `1.0.4-106`」引用时要分开**：`106` = 原生件，真机实测 在 1.13.2「客户端能起、21 个 hook mixin target not found ⇒ listener 不派发」；tag `v1.0.4-77`（提交 `e5636ddfdb`，在 JitPack `com.github.Chocohead:Rift` 线上，该线另有 `v1.0.4-65/66/72/74`）的 `build.gradle` 仍自标 `1.13`、落后 `newerest` 47 个提交 ⇒ **不是支持 1.13.2 的成品**；真支持 1.13.2 的是 `newerest` 分支尖，其 JitPack 分支件呈 Building/超时、**未取到成品**。⇒ 本档 scaffold（原生 106 非 dev 件）对 1.13.2 仍是「能启动但功能不完整」。
+4. **编译验证强度（升级为「Rift 侧对真构件」）**：生成物 `BridgeMod.java` 用 **JDK 8 `javac -encoding UTF-8`** 编译通过（5 个 class，exit 0），分两腿：
    - ✅ **Rift 侧走真 jar**：`Rift-1.0.4-106-dev.jar`（JitPack `com.github.DimensionalDevelopment:Rift:1.0.4-106`，135 503 B，sha256 `5B5E333D…D5463`，**MIT**）⇒ `RIFT_REALJAR_EXIT=0`。
-   - ✅ **MC 侧 2026-10-06 由「签名替身」升级为真构件**：本机已有 `forgeBin-1.13.2-25.0.223_mapped_snapshot_20180921-1.13.jar`（forge 1.13.2 scaffold 编译遗留，MCP 层与 rift scaffold 所钉同快照），桥所用 `net.minecraft.*` 已逐名 javap 对真构件核（**43/43 在盘**：`Minecraft.getInstance()` = `public static`、右键入口实名 `PlayerControllerMP`、`EntityType` tsrg 成员 122 行）——「替身只证签名形状、不证类存在」在该腿作废。
-5. **依赖源已找到（2026-10-05）**：`https://www.dimdev.org/maven/` DNS `ENOTFOUND`；**JitPack 可用**，`-dev` classifier 确有。取法与 sha256 见 `scaffold/libs/README.md` 与 `making-mods-wiki.md`「依赖源可用性核查」节。
+   - ✅ **MC 侧由「签名替身」升级为真构件**：本机已有 `forgeBin-1.13.2-25.0.223_mapped_snapshot_20180921-1.13.jar`（forge 1.13.2 scaffold 编译遗留，MCP 层与 rift scaffold 所钉同快照），桥所用 `net.minecraft.*` 已逐名 javap 对真构件核（**43/43 在盘**：`Minecraft.getInstance()` = `public static`、右键入口实名 `PlayerControllerMP`、`EntityType` tsrg 成员 122 行）——「替身只证签名形状、不证类存在」在该腿作废。
+5. **依赖源已找到**：`https://www.dimdev.org/maven/` DNS `ENOTFOUND`；**JitPack 可用**，`-dev` classifier 确有。取法与 sha256 见 `scaffold/libs/README.md` 与 `making-mods-wiki.md`「依赖源可用性核查」节。
 
 ## 4. 第二批动作集（`query_inventory_slot` / `query_inventory` / `query_nearby_entities` / `query_chat_history` / `use_item` / `query_screen`）
 
@@ -88,18 +88,18 @@
 **本档三处 fail-closed（不猜）**：
 
 1. **`query_chat_history` 未实现** —— Rift 的 listener 表（本档 `listeners.md` 全文）**没有任何聊天接收接口**；1.13.2 也没有 Forge 事件 ⇒ 要接只能自写 **Mixin**（Rift 自带 Mixin 库，但 Mixin 目标类与注入点的出处不在本表，属另一次取证）。
-2. **`use_item` 未实现**（fail-closed 不变，**理由更正 2026-10-06**）—— 1.13.2 的右键入口实名是 **`net.minecraft.client.multiplayer.PlayerControllerMP`**（对 mapped `forgeBin-1.13.2-25.0.223` 构件 javap：类在、44 成员，`joined.tsrg` 块亦在；mojmap 时代才叫 `PlayerController`，该名在 `snapshot_20180921` 层不存在）。原文写「右键入口在 `PlayerController`，而该类不在本仓 tsrg ⇒ 无出处」—— 名字与前提都被构件证伪。动作仍不生成：右键方法面（如 `rightClickMouse`）未逐项核过 ⇒ 出处不齐前保持 fail-closed。
-3. **实体 `type` 只有类简单名**（行为不变，**前提更正 2026-10-06**）—— `Entity.getType()` 在 tsrg 里有；原文称「它返回的 `net.minecraft.entity.EntityType` 在 tsrg 里没有任何成员（m/f 皆 0）⇒ 拿不到实体的注册名」—— **错**：tsrg `EntityType` 块实有 122 成员行（103 field + 19 func），构件有 `public static ResourceLocation getId(EntityType<?>)` ⇒ **注册名可取**。现桥模板仍回 `e.getClass().getSimpleName()`（如 `EntityZombie`），`await entity_nearby type=…` 按该形式传；把 `type` 升级为 `EntityType.getId(...)` 需要改生成物并重编译复跑，本轮不做、只更正陈述。
+2. **`use_item` 未实现**（fail-closed 不变，**理由更正**）—— 1.13.2 的右键入口实名是 **`net.minecraft.client.multiplayer.PlayerControllerMP`**（对 mapped `forgeBin-1.13.2-25.0.223` 构件 javap：类在、44 成员，`joined.tsrg` 块亦在；mojmap 时代才叫 `PlayerController`，该名在 `snapshot_20180921` 层不存在）。原文写「右键入口在 `PlayerController`，而该类不在本仓 tsrg ⇒ 无出处」—— 名字与前提都被构件证伪。动作仍不生成：右键方法面（如 `rightClickMouse`）未逐项核过 ⇒ 出处不齐前保持 fail-closed。
+3. **实体 `type` 只有类简单名**（行为不变，**前提更正**）—— `Entity.getType()` 在 tsrg 里有；原文称「它返回的 `net.minecraft.entity.EntityType` 在 tsrg 里没有任何成员（m/f 皆 0）⇒ 拿不到实体的注册名」—— **错**：tsrg `EntityType` 块实有 122 成员行（103 field + 19 func），构件有 `public static ResourceLocation getId(EntityType<?>)` ⇒ **注册名可取**。现桥模板仍回 `e.getClass().getSimpleName()`（如 `EntityZombie`），`await entity_nearby type=…` 按该形式传；把 `type` 升级为 `EntityType.getId(...)` 需要改生成物并重编译复跑，本轮不做、只更正陈述。
 
-**编译验证强度**（2026-10-05 升级）：第二批动作全量生成的 `BridgeMod.java` 已用 **JDK 8 `javac -encoding UTF-8` 编译通过**（5 个 class，0 error），两腿分列：
+**编译验证强度**（升级）：第二批动作全量生成的 `BridgeMod.java` 已用 **JDK 8 `javac -encoding UTF-8` 编译通过**（5 个 class，0 error），两腿分列：
 - ✅ **Rift 侧 = 对真构件**：`Rift-1.0.4-106-dev.jar`（JitPack，135 503 B，sha256 `5B5E333D…D5463`，**MIT**）⇒ `RIFT_REALJAR_EXIT=0`。
   该 jar 上 `javap` 实证：`ClientTickable` = `public abstract void clientTick()`（**无参**，与本档入口实现一致）、`ServerTickable#serverTick(MinecraftServer)`、
   `org.dimdev.riftloader.launch.RiftLoaderClientTweaker` 在包内（⇒ 本档 scaffold 的 `tweakClass` 正确）、jar 自带 `riftmod.json` schema 与桥模板产物**同形**。
   ⚠️ **该 jar 没有 `InstanceOfServerTickable`**（全 jar 扫名 0 命中）—— 本档只以 `ServerTickable` 为准。
-- ✅ **MC 侧 2026-10-06 起对真构件**：`net.minecraft.*` 名字已逐名 javap 核对 `forgeBin-1.13.2-25.0.223_mapped_snapshot_20180921-1.13.jar`（43/43 在盘，含 `EntityPlayer.inventory` / `InventoryPlayer#getStackInSlot`）；`get_minecraft_source` 覆盖从 1.14 起、不含该档，本轮靠的是本机真 jar。
+- ✅ **MC 侧 对真构件**：`net.minecraft.*` 名字已逐名 javap 核对 `forgeBin-1.13.2-25.0.223_mapped_snapshot_20180921-1.13.jar`（43/43 在盘，含 `EntityPlayer.inventory` / `InventoryPlayer#getStackInSlot`）；`get_minecraft_source` 覆盖从 1.14 起、不含该档，本轮靠的是本机真 jar。
 
 ## 5. 编码要求（实测踩过）
 
 生成物含中文注释；本机 Java 编译器默认 **GBK**，不加 `-encoding UTF-8` 会报
-`unmappable character for encoding GBK`（实测 2026-10-04）。
+`unmappable character for encoding GBK`（实测）。
 ⇒ 工程 `build.gradle` 需 `tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }`，或 `javac -encoding UTF-8`。

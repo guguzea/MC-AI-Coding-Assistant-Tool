@@ -130,7 +130,7 @@ if (data != null) {
 
 ### ❌ 在 `RegisterCapabilitiesEvent` 中修改运行时数据
 
-> 1.20.4 实测更正（出处：neoforge-20.4.251-merged.jar，`jar tf` 全表 + javap 2026-10-06）：
+> 1.20.4 实测更正（出处：neoforge-20.4.251-merged.jar，`jar tf` 全表 + javap）：
 > 本节旧文本写的 `RegisterAttachmentsEvent` 在该版**不存在**（全表 0 命中）。注册事件是
 > `net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent`，成员为
 > registerBlock / registerBlockEntity / registerEntity / registerItem（均同一 javap 逐字核实）；

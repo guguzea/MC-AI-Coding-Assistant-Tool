@@ -60,7 +60,7 @@ tasks.processResources {
 }
 ```
 
-> **fabric-language-kotlin 坐标口径（读值日期 2026-09-13）**：原写 `2.1.0+kotlin.2.0.0`，上游 `https://maven.fabricmc.net/net/fabricmc/fabric-language-kotlin/maven-metadata.xml`（111 个版本，lastUpdated 20260907124859）里没有这一号，HTTP 404。现改为该表中与上面 `kotlin("jvm") version "2.0.0"` 唯一配对的 `1.11.0+kotlin.2.0.0`；同表当前最新是 `1.14.1+kotlin.2.4.20`。
+> **fabric-language-kotlin 坐标口径**：原写 `2.1.0+kotlin.2.0.0`，上游 `https://maven.fabricmc.net/net/fabricmc/fabric-language-kotlin/maven-metadata.xml`（111 个版本，lastUpdated 20260907124859）里没有这一号，HTTP 404。现改为该表中与上面 `kotlin("jvm") version "2.0.0"` 唯一配对的 `1.11.0+kotlin.2.0.0`；同表当前最新是 `1.14.1+kotlin.2.4.20`。
 > **未核实**：`1.11.0+kotlin.2.0.0` 与本档 MC 1.21.3 的官方兼容矩阵——语料 `fabric-wiki/1.21.3/processed/tutorial_kotlin.md:72` 只说「按官方 README 取合适版本」，本次 GitHub 不可达未读取该 README。
 
 ### 2. fabric.mod.json 中的 Kotlin 依赖
@@ -81,7 +81,7 @@ tasks.processResources {
 }
 ```
 
-> 两处更正（F185，2026-09-13）：① 原片段的 `depends` 写 `">=2.1.0"`，缺 `+kotlin.x.y.z` 后缀；语料 `fabric-wiki/1.21.3/processed/tutorial_kotlin.md:92` 的写法是完整带后缀的。② 原片段没有 `entrypoints`，而 Kotlin 模组的入口点必须带 `"adapter": "kotlin"`（同一页 :86）。
+> 两处更正（F185）：① 原片段的 `depends` 写 `">=2.1.0"`，缺 `+kotlin.x.y.z` 后缀；语料 `fabric-wiki/1.21.3/processed/tutorial_kotlin.md:92` 的写法是完整带后缀的。② 原片段没有 `entrypoints`，而 Kotlin 模组的入口点必须带 `"adapter": "kotlin"`（同一页:86）。
 
 ## Kotlin 代码示例
 
@@ -103,7 +103,7 @@ class ExampleMod : ModInitializer {
 }
 ```
 
-> 更正（F185，2026-09-13）：原示例带 `@AutoStorageAware` 注解，并在 `ModInitializer` 实现类里 `override val modId / modName / version`。`ModInitializer` 没有可覆写的这些成员——本档 `scaffold/src/main/java/com/example/examplemod/ExampleMod.java:7-12` 的实现只覆写 `onInitialize()`；`@AutoStorageAware` 在本档语料与 yarn 全量映射里都查不到（yarn 只覆盖原版类，所以这是「未见依据」而非「证明上游不存在」）。日志器按 scaffold 用 `org.slf4j.LoggerFactory`。
+> 更正（F185）：原示例带 `@AutoStorageAware` 注解，并在 `ModInitializer` 实现类里 `override val modId / modName / version`。`ModInitializer` 没有可覆写的这些成员——本档 `scaffold/src/main/java/com/example/examplemod/ExampleMod.java:7-12` 的实现只覆写 `onInitialize()`；`@AutoStorageAware` 在本档语料与 yarn 全量映射里都查不到（yarn 只覆盖原版类，所以这是「未见依据」而非「证明上游不存在」）。日志器按 scaffold 用 `org.slf4j.LoggerFactory`。
 
 ## @PublishedApi 注解
 
@@ -127,7 +127,7 @@ class MyItem(settings: Settings) : Item(settings) {
 }
 ```
 
-> 更正（F185，2026-09-13）：原示例在同一个类里写了 `companion object { … }` 与 `private companion object { … }` 两段——一个类只能有一个伴生对象，这段代码编译不过；`Identifier(MOD_ID, "my_item")` 也改成本档统一的 `Identifier.of(...)` 写法（依据见 `knowledge/antipatterns/registry.md` §5）。`@PublishedApi` 的语义措辞以 Kotlin 官方文档为准，本次网络不可达，**未核实**。
+> 更正（F185）：原示例在同一个类里写了 `companion object { … }` 与 `private companion object { … }` 两段——一个类只能有一个伴生对象，这段代码编译不过；`Identifier(MOD_ID, "my_item")` 也改成本档统一的 `Identifier.of(...)` 写法（依据见 `knowledge/antipatterns/registry.md` §5）。`@PublishedApi` 的语义措辞以 Kotlin 官方文档为准，本次网络不可达，**未核实**。
 
 ## 常见错误
 

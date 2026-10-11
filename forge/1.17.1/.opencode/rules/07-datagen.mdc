@@ -225,7 +225,7 @@ public class ModLootTableProvider extends LootTableProvider {
 }
 
 public class ModBlockLoot extends BlockLoot {
-    // 2026-09-14 javap 实测（forge-1.17.1-37.1.1_mapped_official_1.17.1.jar）：
+    // javap 实测（forge-1.17.1-37.1.1_mapped_official_1.17.1.jar）：
     // BlockLoot 有 protected void addTables() / protected Iterable<Block> getKnownBlocks() / dropSelf(Block) ⇒ 示例形态正确。
     @Override
     protected void addTables() {

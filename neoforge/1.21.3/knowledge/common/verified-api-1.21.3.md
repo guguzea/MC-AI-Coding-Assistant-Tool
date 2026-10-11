@@ -45,8 +45,8 @@
 
 ## 对照签字
 
-| 编号 | 对照 URL | 抓取日 | 结论 |
-| 03 | https://docs.neoforged.net/docs/1.21.3/items/ | 2026-08-16 | 已按该版文档改写（DeferredItem + setId 必填） |
-| 04 | — | — | 无独立 entities 页（DOC_NOT_FOUND）；04-entity 为 stub |
-| 08 | https://docs.neoforged.net/docs/1.21.3/concepts/sides/ | 2026-08-16 | 已按该版文档改写（FMLEnvironment.dist + @Mod dist） |
+| 编号 | 对照 URL | 结论 |
+| 03 | https://docs.neoforged.net/docs/1.21.3/items/ | 已按该版文档改写（DeferredItem + setId 必填） |
+| 04 | — | 无独立 entities 页（DOC_NOT_FOUND）；04-entity 为 stub |
+| 08 | https://docs.neoforged.net/docs/1.21.3/concepts/sides/ | 已按该版文档改写（FMLEnvironment.dist + @Mod dist） |
 

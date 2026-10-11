@@ -8,14 +8,14 @@ modrinthSlug: kotlin-for-forge
 mappings: hint
 ---
 
-> 数据读取日期：2026-09-14（源：Modrinth project/kotlin-for-forge 定向查询 game_versions=26.2 / 1.21.11：6.3.0 release（2026-06-28）只标 neoforge 且 gameVersions 含 26.2；6.0.0 是最后标 forge 的构建，最高 1.21.11）
+> 数据来源：Modrinth project/kotlin-for-forge 定向查询 game_versions=26.2 / 1.21.11：6.3.0 release（2026-06-28）只标 neoforge 且 gameVersions 含 26.2；6.0.0 是最后标 forge 的构建，最高 1.21.11
 > 复核：curl.exe --ssl-no-revoke -sS "https://api.modrinth.com/v2/project/kotlin-for-forge/version?limit=100" 后按 game_versions + loaders + version_type 重取上界（本轮 limit=100 覆盖不到低界时改定向 game_versions 查询）
 
 # Kotlin for Forge（NeoForge）
 
 NeoForge 模组用 Kotlin 编写：语言加载器把 Kotlin 标准库、kotlinx-coroutines 运行时带进游戏（1.19.3-26.2）。Modrinth 上 KFF 老版本同时标 `forge`+`neoforge`，**6.1.0 起为纯 Neo 构建**。Fabric 平台用 `mc-fabric-language-kotlin`。
 
-> 版本区间口径：以 Modrinth 实读为准（Modrinth 实读 2026-09-13：**最新 release `6.3.0` 覆盖 26.1.1 / 26.1.2 / 26.2，且只标 neoforge loader**；`6.0.0` 是最后一个同时标 forge 的构建，故 forge 线止于 1.21.11）。
+> 版本区间口径：以 Modrinth 实读为准（Modrinth 实读：**最新 release `6.3.0` 覆盖 26.1.1 / 26.1.2 / 26.2，且只标 neoforge loader**；`6.0.0` 是最后一个同时标 forge 的构建，故 forge 线止于 1.21.11）。
 > 低界取 neoforge 标注最低档 1.19.3（上游 `loaders[]` 标注，未逐条复核其 MC 归属）。
 > catalog 里 KFF 是**单一条目**（`verifiedApi` 最低 1.14 / 最高 1.21.10）未按 loader 拆分，已滞后，不再充当本档区间依据。
 

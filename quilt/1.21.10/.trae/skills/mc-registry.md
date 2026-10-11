@@ -9,7 +9,7 @@ docsTool: search_docs
 
 # mc-registry（Quilt 1.21.10）
 
-> ⚠️ **QSL 构件只出到 MC 1.21.1（maven 实测 2026-10-01：+1.21.3 起 0 命中）；「2025-12 停更」原引页 404 属 `// TODO(未核实)`，不作依据。本档无可用 QSL/QFAPI 构件**；本档内容仅为考据/stub，禁止当可编译 API。注册/事件走 Vanilla Registry.register 或同版 Fabric API。
+> ⚠️ **QSL 构件只出到 MC 1.21.1（maven 实测：+1.21.3 起 0 命中）；「2025-12 停更」原引页 404 属 `// TODO(未核实)`，不作依据。本档无可用 QSL/QFAPI 构件**；本档内容仅为考据/stub，禁止当可编译 API。注册/事件走 Vanilla Registry.register 或同版 Fabric API。
 
 
 核实表：knowledge/common/qsl-verified.md。

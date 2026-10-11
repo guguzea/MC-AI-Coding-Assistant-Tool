@@ -122,11 +122,12 @@ public class ClientSetup {
 ```java
 // client/input/ModKeyBindings.java
 public class ModKeyBindings {
+    // 1.16.5 实测（构件 javap）：键码用 GLFW 常量；Keyboard.KEY_* 属 LWJGL2，1.13 起不存在
     public static final KeyBinding TEST_KEY = new KeyBinding(
         "key.examplemod.test",
         KeyConflictContext.IN_GAME,
         InputMappings.Type.KEYSYM,
-        Keyboard.KEY_G,
+        GLFW.GLFW_KEY_G,
         "key.categories.examplemod"
     );
 }
@@ -148,7 +149,7 @@ public class ModKeyInputEvents {
 // entities/MyEntity.java（服务端设置，客户端自动同步）
 public class MyEntity extends LivingEntity {
     private static final DataParameter<Integer> DATA_CUSTOM =
-        EntityDataManager.defineId(MyEntity.class, DataSerializers.VARINT); // ❌ createKey/DataEntry = MCP 层名（165 official: defineId/DataParameter，2026-10-05 构件实证）
+        EntityDataManager.defineId(MyEntity.class, DataSerializers.VARINT); // ❌ createKey/DataEntry = MCP 层名（165 official: defineId/DataParameter，构件实证）
 
     @Override
     protected void defineSynchedData() { // ❌ registerData = MCP 层名（official: defineSynchedData）

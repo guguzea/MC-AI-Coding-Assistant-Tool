@@ -56,7 +56,7 @@
 逐行自问三件事：
 
 1. **这条还活着吗** —— 模型本来就会做、或环境已经表达的，不配占一行。`package.json`、目录结构、钉值文件本身就是真相源；文档复述"Node >= 22.5"这种环境事实时指针给它，别手抄一份等着过期。
-2. **这条有几个家** —— 同一语义单源；实现史、修订记录一律住 `mcp-server/CHANGELOG.md` / `CORPUS_PROVENANCE.md`，正文只留现行口径。
+2. **这条有几个家** —— 同一语义单源；实现史、修订记录一律住 `mcp-server/CHANGELOG.md` / `CORPUS_PROVENANCE.md`，正文只留现行口径；台账与实施状态的完整落点表与搬动程序见 §6。
 3. **分歧怎么裁** —— 按运行文档定，不按读者感觉定。拿不准一条指令有没有用，最便宜的裁决是：照文档跑一遍 agent，看行为。
 
 ## §6 位置图：什么内容放哪、谁触发
@@ -71,6 +71,22 @@
 | 数据链、门、取证史 | `CONTRIBUTING.md` / `mcp-server/CHANGELOG.md` / `CORPUS_PROVENANCE.md` | 维护会话按需 |
 | 每轮都相关的铁律 | 根 `AGENTS.md` | 常驻 —— 只准放"每轮都可能用到"的行 |
 
+**台账与实施状态：一史一处**（2026-10-10 立规；防「面上又长出台账」——历史上根 `AGENTS.md` 与 README 系都积过大块台账）。记录类内容只住各自唯一落点：
+
+| 记录 | 唯一落点 |
+| --- | --- |
+| 逐批实现史（含门与基线台账） | `mcp-server/CHANGELOG.md` |
+| 语料来源 / 换源 / 逐档复测史 | `CORPUS_PROVENANCE.md` |
+| 游玩自测口径、坑位与逐轮取证史 | `community_knowledge/authored/ingame-playtest-automation.md` |
+| 夜批回执（队列与抽查记录） | `NIGHT_BATCH.md` |
+| 每轮交付底稿正文（判档后该档的编号块全文） | `DELIVERY_LOG.md` |
+| 债务与拍板台账（未排期清单） | `CONTRIBUTING_LIST.md` |
+| 发布增量台账 | 根 `CHANGELOG.md` / `bugfix_list.md`（人读面） |
+
+- **判定刀**：落笔前问一句——这是「规则 / 口径」（怎么做）还是「记录 / 状态」（做过什么、现在到哪）？规则留在面文，记录去落点；面文与落点之间一律用指针句（§2）连接。单行规则落款（「2026-10-05 用户裁定」这类归属）随规则留面，不迁落点。
+- **面上只留指针**：根 `AGENTS.md`、README 系、平台规则树、Skill 正文、工作流模板体只留按路径点名的指针行；逐批编号条目、状态表、取证史整段、会腐烂的计数副本一律进落点。本块对仓内全部文档生效——含 §0 所列「不受约束」的人读面（README 系、`AUTO_SETUP.md`）。
+- **搬动程序**：面文里发现长台账——先把内容并入落点（新建落点须在 `mcp-server/scripts/assert-archive-pointers.mjs` 的 REGISTRY 登记），原处留指针句，再跑门链（该门 + `mcp-server/scripts/assert-authoring-lint.mjs`）。
+
 **两层调用**（编排与纪律分开）：编排型 = 用户点名触发、只负责调用与止损；纪律型 = 任务匹配时可被模型自取。编排型不调用另一个编排型；纪律型可被编排型调用。**本仓实况**：宿主没有 Matt 的 `disable-model-invocation` 硬闸，"用户点名"靠 description 的触发词 + 正文 `边界` 节软约束 —— description 必须三件齐：**干什么 / 什么触发 / 什么时候不触发**（反例："帮助开发模组。" 正例：`mc-grill` 的 description）。
 
 **新增 `common_skill/` 技能三处同步**（漏一处 = 宿主与工具面脱钩）：源稿本身、`mcp-server/src/prompts/templates.ts` 模板体 + `mcp-server/src/wave/register.ts` 名单 + `mcp-server/src/platform-pack/session.ts` `TASK_SPECS` 登记、本机拷贝安装。拷贝纪律只有一条：先改源稿，再拷贝刷新；出现不一致以源稿为准重拷。`mcskill://skill/<名字>` 登记由盘派生，新增源稿自动可达。
@@ -84,7 +100,7 @@
 1. **定负载定位置** —— 先回答"谁读、每轮读还是按需读"，按 §6 位置图选去处；常驻面内容逐行过"每轮都相关"测试。
 2. **写正文** —— 步骤/参考分级（§1），每步完成判据齐清晰与要求度（§3），指针句三件齐（§2），风格禁令正向化、安全禁令配对写（§4）。
 3. **出处关** —— 全文名字逐个给出处或 `// TODO(未核实)`（§7）。
-4. **登记与同步** —— Skill 源稿含闭合围栏代码的，frontmatter 声明非空 `mappings:`（门：`mcp-server/scripts/assert-skill-mappings-key.mjs`）；改 `.cursor/rules` 正文后刷镜像面（`scripts/sync-skills.ps1`，门：`assert-skill-mirrors`）；新平台/新受管目录命中根 `AGENTS.md` §交付汇报的受管清单时同步该行；新增 `common_skill/` 技能走完 §6 的三处同步。
+4. **登记与同步** —— Skill 源稿含闭合围栏代码的，frontmatter 声明非空 `mappings:`（门：`mcp-server/scripts/assert-skill-mappings-key.mjs`）；改 `.cursor/rules` 正文后刷镜像面（`scripts/sync-skills.ps1`，门：`assert-skill-mirrors`）；新平台/新受管目录命中 `REPORT-FORMAT.md` §先判档 的受管清单时同步该行（该清单 2026-10-11 从根 `AGENTS.md` §交付汇报 搬出）；新增 `common_skill/` 技能走完 §6 的三处同步。
 5. **跑门链** —— 动了 `mcp-server/scripts/**` 或 `scripts/**` 后收口必跑 `cd mcp-server && node test-scripts.mjs`；只动 prose 至少跑 `node test-core.mjs`。新加的门必须带 `--selftest` 正反臂（投毒必红、摘掉必绿）。本篇执法面 = `mcp-server/scripts/assert-authoring-lint.mjs`（J1 frontmatter / J2 过期路径 / J3 纯负向棘轮；基线与豁免同目录）。
 6. **记账** —— 改工具面（`mcp-server/src/**`）在同轮 `mcp-server/CHANGELOG.md` 落一条批次；纯文档改动可免。
 7. **自审读** —— 通读一遍：一个**零本会话记忆**的接手 agent 照这份文档执行，会在哪一行猜？猜的位置全部改掉。

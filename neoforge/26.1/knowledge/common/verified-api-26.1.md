@@ -44,12 +44,12 @@ ModDevGradle 与 NeoGradle，必须传 buildPlugin。不为 26.1.1 单造规则�
 - DataGen：GatherDataEvent.Client / GatherDataEvent.Server
 - Java 25；mojmap-unobfuscated（游戏 jar 已是 Mojang 名）
 - 26.1 去混淆 + Identifier。禁止 Yarn。query_api 无本版索引。
-- 26.1 是独立档：Java 25、去混淆、ModContainer 构造参数、GatherDataEvent 拆分。26.2 不是「未发布」：maven 26.2 线已构建到 26.2.0.75（2026-09-02 实读 maven.neoforged.net），官方 Primer 也有 26.2 迁移页（/primer/docs/26.2/ 返回 200，本仓已入库 data/neoforge_primers/26.2.md）。但官方主文档站不按版本分线——/docs/26.2/ 与 /docs/26.1/ 同样 404，现行主文档是未版本化的 /docs/；本仓也没有 26.2 规则树与主文档语料，禁止把本档克隆成 26.2。
+- 26.1 是独立档：Java 25、去混淆、ModContainer 构造参数、GatherDataEvent 拆分。26.2 不是「未发布」：maven 26.2 线已构建到 26.2.0.75（实读 maven.neoforged.net），官方 Primer 也有 26.2 迁移页（/primer/docs/26.2/ 返回 200，本仓已入库 data/neoforge_primers/26.2.md）。但官方主文档站不按版本分线——/docs/26.2/ 与 /docs/26.1/ 同样 404，现行主文档是未版本化的 /docs/；本仓也没有 26.2 规则树与主文档语料，禁止把本档克隆成 26.2。
 
 ## 对照签字
 
-| 编号 | 对照 URL | 抓取日 | 结论 |
-| 03 | https://docs.neoforged.net/docs/items/ | 2026-08-16 | 已按该版文档改写（setId + unary + ItemStackTemplate） |
-| 04 | https://docs.neoforged.net/docs/entities/ | 2026-08-16 | 已按该版文档改写（Identifier + registerEntityType） |
-| 08 | https://docs.neoforged.net/docs/concepts/sides/ | 2026-08-16 | 已按该版文档改写（FMLEnvironment#getDist） |
+| 编号 | 对照 URL | 结论 |
+| 03 | https://docs.neoforged.net/docs/items/ | 已按该版文档改写（setId + unary + ItemStackTemplate） |
+| 04 | https://docs.neoforged.net/docs/entities/ | 已按该版文档改写（Identifier + registerEntityType） |
+| 08 | https://docs.neoforged.net/docs/concepts/sides/ | 已按该版文档改写（FMLEnvironment#getDist） |
 

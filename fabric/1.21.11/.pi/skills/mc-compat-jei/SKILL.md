@@ -27,7 +27,7 @@ dependencies {
 }
 ```
 
-> **坐标复核（读取日期 2026-09-13）**：原写 `com.github.shedaniel:RoughlyEnoughItems:16.0.762+1.21` —— 组名是 jitpack 形状、版本号属 1.21 档，与本档 MC 1.21.11 不匹配。现值：`curl -sS -o /dev/null -w '%{http_code}' https://maven.shedaniel.me/me/shedaniel/RoughlyEnoughItems-fabric/21.11.816/RoughlyEnoughItems-fabric-21.11.816.pom` → **200**；Modrinth `project/rei/version?game_versions=["1.21.11"]` 首条即 `21.11.816+fabric`。再次复核：`curl -sS "https://api.modrinth.com/v2/project/rei/version?limit=400"`。
+> **坐标复核**：原写 `com.github.shedaniel:RoughlyEnoughItems:16.0.762+1.21` —— 组名是 jitpack 形状、版本号属 1.21 档，与本档 MC 1.21.11 不匹配。现值：`curl -sS -o /dev/null -w '%{http_code}' https://maven.shedaniel.me/me/shedaniel/RoughlyEnoughItems-fabric/21.11.816/RoughlyEnoughItems-fabric-21.11.816.pom` → **200**；Modrinth `project/rei/version?game_versions=["1.21.11"]` 首条即 `21.11.816+fabric`。再次复核：`curl -sS "https://api.modrinth.com/v2/project/rei/version?limit=400"`。
 
 ## 创建 REI 插件
 

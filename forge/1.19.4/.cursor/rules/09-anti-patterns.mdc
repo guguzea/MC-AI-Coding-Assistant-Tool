@@ -250,8 +250,11 @@ public void onServerTick(TickEvent.ServerTickEvent event) {
 
 ```java
 // 错误（客户端代码）
+// 1.19.4 实测（构件 javap）：RenderGameOverlayEvent 在本档构件中已不存在（旧族止于 1.18.2：
+// 实测 40.3.11 有、41.1.0（1.19）已无——41.x 的 2022-07 客户端重构 #8786 引入 RenderGuiOverlayEvent 族），
+// 按帧的 GUI 叠加改听 RenderGuiOverlayEvent（Post 子类在场）
 @SubscribeEvent
-public void onRender(RenderGameOverlayEvent.Post event) {
+public void onRender(RenderGuiOverlayEvent.Post event) {
     world.setBlockState(pos, Blocks.DIRT.defaultBlockState()); // ❌ 禁止在渲染线程修改世界
 }
 ```

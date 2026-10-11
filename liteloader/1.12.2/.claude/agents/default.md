@@ -13,7 +13,7 @@
 
 Java 8。映射：混合工程钉 `mappings = 'stable_39'`（社区 1.12.2 常见兼容值，来自当时 FG/LiteLoader 文档，不要臆造 snapshot）。
 
-已核实 API（hempflower 镜像 / LiteMod 源码 + 2026-08-15 GitLab 1.12.2 打开）：
+已核实 API（hempflower 镜像 / LiteMod 源码 + GitLab 1.12.2 打开）：
 
 - `LiteMod`: `getVersion()`, `init(File)`, `upgradeSettings(...)`
 - `Listener.getName()`

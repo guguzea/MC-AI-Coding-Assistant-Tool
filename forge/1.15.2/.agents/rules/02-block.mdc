@@ -10,7 +10,7 @@
 
 - 方块类必须继承 `Block`（`net.minecraft.block.Block`）
 - 推荐使用 `Block.Properties.of(Material)` 创建属性
-- 右键交互重写 `use`（返回 `ActionResultType`）。official 构件实证（javap @`forge-1.15.2-31.2.50_mapped_official_1.15.2.jar`，2026-10-05）：`Block#use(BlockState, World, BlockPos, PlayerEntity, Hand, BlockRayTraceResult)` 在场。
+- 右键交互重写 `use`（返回 `ActionResultType`）。official 构件实证（javap @`forge-1.15.2-31.2.50_mapped_official_1.15.2.jar`）：`Block#use(BlockState, World, BlockPos, PlayerEntity, Hand, BlockRayTraceResult)` 在场。
   - ❌ `onBlockActivated` 是 MCP 层名，本档实钉的 official 通道没有它
 
 ### Block.Properties 常用配置
@@ -81,9 +81,9 @@ IF 需要特殊渲染（多面材质、透明度、动画）
 
 ```
 IF 自然方块（石头、木头、草）
-  → Material.STONE / Material.WOOD / Material.GRASS（2026-09-14 javap 实测：三者均在场，`ROCK` 不存在）
+  → Material.STONE / Material.WOOD / Material.GRASS（javap 实测：三者均在场，`ROCK` 不存在）
 
-通道口径（2026-09-14 以 `forge-1.15.2-31.2.50_mapped_official_1.15.2.jar` javap 实测）：本档实钉 **official** 通道，
+通道口径（以 `forge-1.15.2-31.2.50_mapped_official_1.15.2.jar` javap 实测）：本档实钉 **official** 通道，
 `net.minecraft.block.material.Material` 的 42 个常量里 **`STONE` / `GRASS` / `WOOD` 在场、`ROCK` 不存在**；同档 scaffold 也写
 `Material.STONE`（真机构建通过）。官方 1.15.2 docs 页 `concepts_registries.md:25` 用的是 MCP 名（`ROCK`），**本档勿照抄**。
   → 需要 .harvestTool() 时用 STONE/WOOD
@@ -93,7 +93,7 @@ IF 泥土类
 
 IF 玻璃/冰/透明
   → Material.GLASS / Material.ICE
-  → ✅ `.noOcclusion()`（不遮挡相邻面）；要可穿行再加 `.noCollission()`（152 official 构件实证 2026-10-05）
+  → ✅ `.noOcclusion()`（不遮挡相邻面）；要可穿行再加 `.noCollission()`（152 official 构件实证）
   → ❌ `notSolid` / `doesNotBlockMovement` 是 MCP 层名，本包 official 构件没有这两个方法
 
 IF 植物
@@ -136,7 +136,7 @@ public class MyBlock extends Block {
         );
     }
 
-    // official 构件实证（javap @1.15.2 official jar，2026-10-05）：放置回调 = onPlace，
+    // official 构件实证（javap @1.15.2 official jar）：放置回调 = onPlace，
     // 玩家破坏回调 = playerWillDestroy；❌ onBlockAdded / onBlockDestroyedByPlayer 是 MCP 层名
     @Override
     public void onPlace(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {

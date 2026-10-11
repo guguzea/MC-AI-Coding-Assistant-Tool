@@ -6,7 +6,7 @@ mcVersions: ["1.16.4-1.21.5"]
 communityDocId: authored/lib-spruceui-obsidianui
 ---
 
-> API 摘要状态（2026-09-18 复核）：**有** ⇒ `mcp-server/data/lib-api-summaries/spruceui-obsidianui.json`（31.2 KB）在盘，catalog 条目 `authored/lib-spruceui-obsidianui` 的 `verifiedApi` 非空（键含 `1.21.5/fabric` 等）。**旧稿「无摘要 / 空 `verifiedApi` 表示无摘要」已不成立**。Modrinth 亦无该项目（slug 空，404）；类名/方法以官方 GitHub README 为准，要签名先 `query_loader_api` 或 `ingest_loader_api`（用户自备 jar），禁止凭记忆补
+> API 摘要状态：**有** ⇒ `mcp-server/data/lib-api-summaries/spruceui-obsidianui.json`（31.2 KB）在盘，catalog 条目 `authored/lib-spruceui-obsidianui` 的 `verifiedApi` 非空（键含 `1.21.5/fabric` 等）。**旧稿「无摘要 / 空 `verifiedApi` 表示无摘要」已不成立**。Modrinth 亦无该项目（slug 空，404）；类名/方法以官方 GitHub README 为准，要签名先 `query_loader_api` 或 `ingest_loader_api`（用户自备 jar），禁止凭记忆补
 
 # SpruceUI / ObsidianUI GUI 抽象（操作指引）
 
@@ -16,7 +16,7 @@ communityDocId: authored/lib-spruceui-obsidianui
 
 - 能力：GUI 控件/布局抽象（列表、按钮、文本框等），跨加载器（Fabric/Forge/NeoForge；Quilt 见下条边界）复用界面代码（245 万下载，1.16.4-1.21.5）
 - 生态：SpruceUI 原版（LambdAurora）**已下架**，ObsidianUI 是 Architectury 移植的延续版本
-- 版本 / loader 边界：窗口 **1.16.4-1.21.5**；**版本停在 1.21.5，26.x / 1.22+ 无对应构建**。⚠️ **Quilt 侧无构建支撑（反向 over-claim，2026-09-24 量）**：构建面 = `mcp-server/data/lib-manifests/all.json` 快照（as-of 2026-09-16，本轮 2026-09-24 现算） 该 slug 只有 **1 条构件行、loader=fabric、gameVersion=1.21.5，quilt 0 条** ⇒ 上面 frontmatter 里的 `quilt` 是**声明型**、当前无构件可核；Quilt 工程引它之前先按 `query_upstream_releases`（source=modrinth，slug `spruceui-obsidianui`）复核，**快照无行 ≠ 上游无构件**（同型缺陷见 `mc-cloth-config`，裁定=改措辞不补抓）
+- 版本 / loader 边界：窗口 **1.16.4-1.21.5**；**版本停在 1.21.5，26.x / 1.22+ 无对应构建**。⚠️ **Quilt 侧无构建支撑（反向 over-claim，量）**：构建面 = `mcp-server/data/lib-manifests/all.json` 快照（本轮 现算） 该 slug 只有 **1 条构件行、loader=fabric、gameVersion=1.21.5，quilt 0 条** ⇒ 上面 frontmatter 里的 `quilt` 是**声明型**、当前无构件可核；Quilt 工程引它之前先按 `query_upstream_releases`（source=modrinth，slug `spruceui-obsidianui`）复核，**快照无行 ≠ 上游无构件**（同型缺陷见 `mc-cloth-config`，裁定=改措辞不补抓）
 - 边界：只有客户端 GUI 抽象，服务器侧逻辑（容器/同步）照样自己写
 
 ## Decision Flow

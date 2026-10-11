@@ -32,7 +32,7 @@ public static final DeferredRegister<MenuType<?>> MENUS =
 
 public static final RegistryObject<MenuType<MyMenu>> MY_MENU =
     MENUS.register("my_menu",
-        // A-43（2026-09-19 更正）：原行 `new MenuType<>(MyMenu::new, FeatureFlags.DEFAULT_FLAGS)` 与本文件
+        // A-43：原行 `new MenuType<>(MyMenu::new, FeatureFlags.DEFAULT_FLAGS)` 与本文件
         // 的 3 参（extraData）构造器**不配对**——vanilla 供应器只接 (int windowId, Inventory inv) 两参，照抄编译不过。
         // 3 参路径改用 Forge 工厂（形态与同仓 forge/1.18.2 档实测写法一致；签名 TODO(未核实)：
         // 先 query_loader_api 核 net.minecraftforge.common.extensions.IForgeMenuType 再落地，禁止凭记忆补）。

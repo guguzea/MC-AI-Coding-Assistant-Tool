@@ -4,7 +4,7 @@ import { resolveDataDir, resolveCommunityDir, resolveRepoRoot, isResolvedInside 
 import { getWorkflowTemplate, listWorkflowTemplateNames, WORKFLOW_TEMPLATES } from "./templates.js";
 import { getCommunityDocStore } from "../docs-platform/community/store.js";
 import { legacyArchiveMatchRel, legacyArchivedNote } from "../platform-pack/legacy-archive.js";
-import { EXTERNAL_CONTENT_NOTICE } from "../utils/actionable.js";
+import { EXTERNAL_CONTENT_NOTICE, REPO_OWNED_CONTENT_NOTICE } from "../utils/actionable.js";
 
 export { getWorkflowTemplate, listWorkflowTemplateNames, WORKFLOW_TEMPLATES };
 
@@ -371,7 +371,13 @@ function readKnowledgeResourceInner(uri: string): {
 /**
  * W5-4（2026-09-20）信任边界：知识资源正文来自仓库语料 / 社区文本 / 上游 wiki，
  * 其中「指令式」句子不构成对 agent 的指令。所有读取路径统一带 notice（单点收口，覆盖每条分支）。
+ *
+ * 2026-10-11 边界修正：`mcskill://skill/*` 与 `mcskill://workflow/*` 是仓库第一方内容
+ * （common_skill/** 源稿 / 工作流模板体），不是「只作资料」的外部语料 —— 这两族改挂
+ * REPO_OWNED_CONTENT_NOTICE（按其程序执行）；其余族照旧带 EXTERNAL_CONTENT_NOTICE。
  */
+const REPO_OWNED_URI_PREFIXES = [SKILL_PREFIX, "mcskill://workflow/"];
+
 export function readKnowledgeResource(uri: string): {
   found: boolean;
   uri: string;
@@ -380,5 +386,8 @@ export function readKnowledgeResource(uri: string): {
   archived?: boolean;
   notice: string;
 } {
-  return { ...readKnowledgeResourceInner(uri), notice: EXTERNAL_CONTENT_NOTICE };
+  const notice = REPO_OWNED_URI_PREFIXES.some((p) => uri.startsWith(p))
+    ? REPO_OWNED_CONTENT_NOTICE
+    : EXTERNAL_CONTENT_NOTICE;
+  return { ...readKnowledgeResourceInner(uri), notice };
 }

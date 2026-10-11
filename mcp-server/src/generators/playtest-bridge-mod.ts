@@ -58,10 +58,11 @@
  *   ② `block_at` **不给注册名**（1.13.2 的方块注册表字段 `Block.REGISTRY` 的 SRG 在本仓 tsrg 里**不存在** ⇒ 无背书）
  *      ⇒ 只给 `Block.getTranslationKey()`（如 `tile.stone`）+ `isAir`。
  *
- * **modloader 1.6.4 = 骨架（协议半边真、MC 半边全 TODO）**：本仓对该档**只有 tick 钩子一处出处**
- * （`ModLoader.setInGameHook(BaseMod, boolean, boolean)`，`modloader/1.6.4/knowledge/common/safe-api.md:29`）；
- * 客户端单例 / 玩家与位置字段 / 发聊天 / 截图 / 读方块**五项一项都没有来源**（无 1.6.4 映射、无上游文档、无工具覆盖，ModLoader 自 1.6.2 停更）。
- * 因此生成的类**能编译能加载**：HTTP 半边 + `setInGameHook` 注册是真的，MC 半边集中在一个 `Mc` 内部类里**逐条 `throw UnsupportedOperationException`**
+ * **modloader 1.6.4 = 骨架（协议半边真、MC 半边全 TODO）**：2026-10-11 构件复核后本仓对该档已实证三类出处
+ * （`ModLoader.setInGameHook` 注册 / `BaseMod.onTickInGame(float, Minecraft)` 回调实名 / `ModLoader.getMinecraftInstance()` 客户端单例；
+ * 官方 zip 1.2.5/1.5.2/1.6.2 逐类 javap，见 `modloader/1.6.4/knowledge/common/safe-api.md`）；
+ * 玩家与位置字段 / 发聊天（语义）/ 截图 / 读方块**四类仍无来源**（无 1.6.4 MCP 映射、无工具覆盖，ModLoader 自 1.6.2 停更）。
+ * 因此生成的类**能编译能加载**：HTTP 半边 + `setInGameHook` 注册 + 回调实名是真的，MC 半边集中在一个 `Mc` 内部类里**逐条 `throw UnsupportedOperationException`**
  * 并点名「未核实」——**fail-closed**：`/status` 可用，`/execute` 一律返回带 `TODO(未核实)` 的 failure。宁可这样，也不拿 1.7.10 记忆填 1.6.4。
  */
 
@@ -1102,10 +1103,11 @@ curl -s -X POST http://127.0.0.1:38081/execute -d '{"id":"2","action":"chat_comm
 /**
  * ModLoader 1.6.4 桥 —— **骨架**。
  *
- * 本仓对该档只有 **tick 钩子**一处出处（\`ModLoader.setInGameHook(BaseMod, boolean, boolean)\`，
- * \`modloader/1.6.4/knowledge/common/safe-api.md:29\`）。桥的其余出处（客户端单例 / 玩家与位置字段 / 发聊天 / 截图 / 读方块 / 背包 / 实体列表 / 右键入口 / 当前界面）
- * **在本仓没有任何来源** —— 该档无映射、无上游文档（Risugami 自 1.6.2（2013）停更）、工具链也不覆盖 1.6.4。
- * ⇒ 生成的类**能编译、能加载**：HTTP 半边 + \`setInGameHook\` 注册是真的，MC 半边集中在内部类 \`Mc\` 里**逐条 throw**并点名「未核实」。
+ * 2026-10-11 构件复核后已取得三类出处（官方 zip \`javap\`，见 \`modloader/1.6.4/knowledge/common/safe-api.md\`）：
+ * tick 注册 \`ModLoader.setInGameHook\`、**回调实名 \`BaseMod.onTickInGame(float, Minecraft)\`**、**客户端单例 \`ModLoader.getMinecraftInstance()\`**。
+ * 桥的其余出处（玩家与位置字段 / 发聊天 / 截图 / 读方块 / 背包 / 实体列表 / 右键入口 / 当前界面）
+ * **在本仓仍无来源** —— 该档无 MCP 映射、工具链也不覆盖 1.6.4。
+ * ⇒ 生成的类**能编译、能加载**：HTTP 半边 + \`setInGameHook\` 注册 + 回调名是真的，MC 半边集中在内部类 \`Mc\` 里**逐条 throw**并点名「未核实」。
  * `/status` 可用；`/execute` 一律返回带 `TODO(未核实)` 的 failure（**fail-closed**，不是假绿）。
  */
 function modloaderJava(modId: string): string {
@@ -1130,9 +1132,12 @@ import com.sun.net.httpserver.HttpServer;
  * **协议半边是真的、能跑**：\`GET /status\` / \`POST /execute\` + 内嵌 \`com.sun.net.httpserver\`（JDK 6+ 自带），
  * 与 \`playtest_bridge\` 逐键一致；\`load()\` 里的 \`ModLoader.setInGameHook(this, true, false)\` 有出处。
  *
- * **MC 半边全是 TODO(未核实)**：1.6.4 的「客户端单例 / 玩家与位置字段 / 发聊天 / 截图 / 读方块」在本仓**没有任何来源** ——
- * 该档无映射（\`data/modloader_1.6.4/\` 只有 house 自撰的 safe-api.md）、无上游文档（Risugami 自 MC 1.6.2（2013）停更）、
- * 工具链也不覆盖 1.6.4。⇒ 这些名字集中在内部类 \`Mc\`，**逐条 throw**，绝不按 1.7.10 / Fabric 记忆猜。
+ * **2026-10-11 构件复核**：回调实名 \`onTickInGame(float, Minecraft)\`（构件实证：ModLoader 调的就是它）
+ * 与客户端单例取法 \`ModLoader.getMinecraftInstance()\` 已按官方 zip（mcarchive 归档 1.2.5/1.5.2/1.6.2）\`javap\` 实证并写死。
+ *
+ * **MC 半边其余全是 TODO(未核实)**：1.6.4 的「玩家与位置字段 / 发聊天 / 截图 / 读方块」在本仓**仍没有来源** ——
+ * 该档无 MCP 映射（\`data/modloader_1.6.4/\` 只有 house 自撰的 safe-api.md）、工具链也不覆盖 1.6.4。
+ * ⇒ 这些名字集中在内部类 \`Mc\`，**逐条 throw**，绝不按 1.7.10 / Fabric 记忆猜。
  * 要真用起来：在**你自己的 MCP 1.6.4 工作区**里核出真名 → 打开 README.bridge.md 的清单逐条替换。
  *
  * 撤除纪律与其它档相同：**测完即删**（本类 + jar + 实例 \`mods/\` 里的副本）。
@@ -1166,11 +1171,13 @@ public class ${cls} extends BaseMod {
     }
 
     /**
-     * ⚠️ TODO(未核实)：**方法名与签名**都要核。safe-api.md 只给了 \`setInGameHook\` 这一行，
-     * **没有给回调方法名** —— 若 ModLoader 用反射调的不是 \`onTick()\`，这个桥永远不会 tick（届时预算耗尽判红，不会假绿）。
-     * 核出真名后把这个方法改名/改签名即可，方法体不用动。
+     * 回调实名与签名（**构件 javap 实证 2026-10-11**）：\`BaseMod#onTickInGame(float, Minecraft) → boolean\`。
+     * 出处 = 官方 zip（mcarchive 归档）1.2.5 / 1.5.2 / 1.6.2 的 \`BaseMod.class\` 逐字；
+     * 1.2.5 / 1.5.2 构件里第二参可读名 = \`net.minecraft.client.Minecraft\`（本工作区类型名若不同，按你的工作区改）。
+     * ⚠️ 返回值语义（返回 false 是否摘钩）**未核实** —— 先恒 true。
      */
-    public void onTick() {
+    @Override
+    public boolean onTickInGame(float partialTicks, Minecraft mc) {
         try {
             ready = Mc.isInWorld();
         } catch (Throwable e) {
@@ -1186,6 +1193,7 @@ public class ${cls} extends BaseMod {
                 t.latch.countDown();
             }
         }
+        return true; // TODO(未核实)：返回值语义；先恒 true
     }
 
     /**
@@ -1196,7 +1204,7 @@ public class ${cls} extends BaseMod {
 
         private static String todo(String what) {
             return "TODO(未核实)：ModLoader 1.6.4 的「" + what + "」在本仓无出处"
-                 + "（modloader/1.6.4/knowledge/common/safe-api.md 只核到 tick 钩子一行；该档无映射、无上游文档、工具链不覆盖）"
+                 + "（safe-api.md 2026-10-11 构件复核只补上了 tick 回调名与客户端单例取法；该档无 MCP 映射、工具链不覆盖）"
                  + " ⇒ 请在自备的 MCP 1.6.4 工作区里核出真名后替换，禁止按 1.7.10 / Fabric 记忆猜。";
         }
 
@@ -1246,37 +1254,36 @@ function modloaderReadme(modId: string): string {
   const cls = `mod_${safe(modId)}_PlaytestBridge`;
   return `# 最小游玩测试桥 · **骨架**（Risugami's ModLoader 1.6.4）
 
-> ⚠️ **先说清楚：这份产物现在不是一座能用的桥。** 它的**协议半边是真的**（HTTP + \`setInGameHook\` 注册），
+> ⚠️ **先说清楚：这份产物现在不是一座能用的桥。** 它的**协议半边是真的**（HTTP + \`setInGameHook\` 注册 + 回调实名），
 > 但 **10 个动作的 MC 侧取值全都是 \`TODO(未核实)\`** —— \`/status\` 能通，\`/execute\` 一律返回带 \`TODO(未核实)\` 的 failure。
 > 动作清单 = \`query_player_state\` / \`chat_command\` / \`screenshot\` / \`block_at\` / \`query_inventory_slot\` / \`query_inventory\` /
 > \`query_nearby_entities\` / \`query_chat_history\` / \`use_item\` / \`query_screen\`（全部走内部类 \`Mc\` 的 \`throw\`）。
-> 这不是偷懒：本仓对 1.6.4 **只有 tick 钩子一处出处**，其余名称**一个来源都没有**，按纪律**不许猜**。
+> 这不是偷懒：本仓对 1.6.4 **无 MCP 映射**（2026-10-11 构件复核已把 tick 回调名与客户端单例取法补上，其余名称仍**没有来源**），按纪律**不许猜**。
 
-## 本仓对该档的完整出处盘点（as-of 2026-10-04）
+## 本仓对该档的完整出处盘点（as-of 2026-10-11，构件复核后）
 
 | 桥需要什么 | 本档状态 | 出处 |
 |---|---|---|
-| tick 钩子 | ✅ \`ModLoader.setInGameHook(BaseMod, boolean, boolean)\` | \`modloader/1.6.4/knowledge/common/safe-api.md:29\`（+ \`setInGUIHook\` :30） |
-| 回调方法名/签名 | ❌ 未核（表里没有） | — |
-| 客户端单例 | ❌ 无来源 | — |
+| tick 钩子 | ✅ \`ModLoader.setInGameHook(BaseMod, boolean, boolean)\` | \`modloader/1.6.4/knowledge/common/safe-api.md\`（+ \`setInGUIHook\`） |
+| 回调方法名/签名 | ✅ \`BaseMod.onTickInGame(float, Minecraft) → boolean\`（骨架已按此写死） | 官方 zip 1.2.5/1.5.2/1.6.2 \`javap\`（safe-api.md 2026-10-11 行） |
+| 客户端单例 | ✅ \`ModLoader.getMinecraftInstance()\`（名字与返回类型位实证；骨架暂未使用——\`isInWorld\` 仍需世界字段名） | 同上 |
 | 玩家对象 / 位置字段 | ❌ 无来源 | — |
-| 发聊天 / 发命令 | ❌ 无来源 | — |
+| 发聊天 / 发命令 | ⚠️ 名字在（\`ModLoader.clientChat(String)\` / BaseMod 回调同族），语义未核；发命令入口未核 | 同上 |
 | 截图 API | ❌ 无来源 | — |
 | 读方块签名 | ❌ 无来源（表里只有 \`World.getBlockId\` 这个名字，**签名与参数形未核**；且 ModLoader 时代 \`Block\` 无 \`getRegistryName\`） | — |
 | 映射数据 | ❌ \`data/modloader_1.6.4/\` 只有 \`modloader-docs\`（即 house 自撰的 safe-api.md），**无 mappings** | — |
-| 上游文档 | ❌ Risugami 自 **MC 1.6.2（2013）** 停更，官方无稳定落点 | safe-api.md:5 |
+| 上游文档 | ⚠️ Risugami 自 **MC 1.6.2（2013）** 停更；**官方发布物已由 mcarchive 归档取回**（1.2.5 / 1.5.2 / 1.6.2），本机留档 \`F:\\MC_GAME\\_oracle-jars\\modloader\\\` | safe-api.md 2026-10-11 行 |
 | 工具链覆盖 | ❌ \`get_minecraft_source\` 只覆盖 1.14–1.21.11 与 26.1+；\`convert_mapping\` 不覆盖 1.6.4 | — |
 
 ## 怎么把它变成真桥（**在你自己有 MCP 1.6.4 工作区的前提下**）
 
-1. 在你的 MCP 1.6.4 工作区里核出这 5（+1）个名字：
-   - ModLoader in-game hook 的**回调方法名与签名**；
-   - 取客户端单例的式（ModLoader 时代通常是 \`net.minecraft.src.Minecraft\` 的某个静态访问式——**具体写法必须核**）；
+1. 在你的 MCP 1.6.4 工作区里核出这 4（+1）个名字（回调名与单例取法已由构件实证写死，不用再核）：
    - 世界 / 玩家对象字段名，以及位置（3 个 double）、朝向、落地、血量（\`getHealth()\` 之类）的取法；
-   - 发聊天 / 发命令的方法（1.6.4 的实际名字与 1.7.10 的 \`sendChatMessage\` **不保证一致**）；
+   - 发聊天 / 发命令的方法（\`ModLoader.clientChat(String)\` 的名字在，**语义未核**；1.6.4 的实际名字与 1.7.10 的 \`sendChatMessage\` **不保证一致**）；
    - 截图 API（1.6.4 的截图路径与 1.7.10 **不是同一个**）；
-   - 按坐标读方块的签名（\`World.getBlockId(int,int,int)\` 还是别的；参数形要核）。
-2. 把结果填进 \`${cls}.Mc\` 内部类（**只改那一个内部类**），把 \`onTick()\` 改成真实的回调签名。
+   - 按坐标读方块的签名（\`World.getBlockId(int,int,int)\` 还是别的；参数形要核）；
+   - （+1）\`setInGameHook\` 两个 boolean 的语义。
+2. 把结果填进 \`${cls}.Mc\` 内部类（**只改那一个内部类**）；回调已按构件实证写为 \`onTickInGame(float, Minecraft)\`（若你的工作区类型名不同再改）。
 3. 构建（**本档无 Gradle 工程形态**：ModLoader 时代是 MCP + Eclipse，手工 \`javac\` + 打 jar）：
    \`\`\`bat
    javac -encoding UTF-8 -source 1.6 -target 1.6 -cp "<你的 MCP 1.6.4 工作区>\\bin;<ModLoader>.jar" -d out ${cls}.java

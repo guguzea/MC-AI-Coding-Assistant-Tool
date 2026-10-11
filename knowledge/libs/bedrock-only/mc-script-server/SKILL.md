@@ -8,7 +8,9 @@ communityDocId: authored/bedrock-script-api-primer
 
 # @minecraft/server（基岩 Script API）
 
-默认只用 **stable** `@minecraft/server`。用户明确写 `@minecraft/server-beta`（**不存在此发布名**：真实形态 = `@minecraft/server` + `version: "beta"`，npm dist-tag 与 Learn 模块页同口径，as-of 2026-09-23）、要「最新实验性」、或点名仍属 Beta 的事件（如 `BlockExplodeAfterEvent`）时才允许 Beta。
+默认只用 **stable** `@minecraft/server`。用户明确写 `@minecraft/server-beta`（**不存在此发布名**：真实形态 = `@minecraft/server` + `version: "beta"`，npm dist-tag 与 Learn 模块页同口径）、要「最新实验性」、或点名仍属 Beta 的 API 时才允许 Beta。
+**Beta 判定法**：下载该 API 的 stable 包（`npm pack @minecraft/server@<latest>`）与 beta 包对照，**只在 beta 包里出现的才是 beta-only**（两个自证读数：stable 包 `index.d.ts` 全域 **0** 条 `@beta`、beta 包 **110** 条；对照臂：`BlockComponentTypes.EntityStorage` 在 beta 包带 `@beta`、stable 包查无）。
+⚠️ `BlockExplodeAfterEvent` 属 stable 面（stable 与 beta 包都有）——**不是** Beta API，不要当 Beta 事件生成。
 
 ## Decision Flow
 

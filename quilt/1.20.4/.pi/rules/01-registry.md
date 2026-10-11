@@ -4,7 +4,7 @@ description: 01 — Quilt 注册（QSL ≠ FAPI Registry）
 
 # 01 — Quilt 注册（QSL ≠ FAPI Registry）
 
-> ⚠️ **QSL 停更（2025-12 说法 `// TODO(未核实)`：原引官方 FAQ 已 404，无法复核）**：本版本**无 QSL/QFAPI 正式版构件**（maven 只到 alpha；实证数据见 quilt/1.20.4/AGENTS.md 顶部横幅）。本文件中的 QSL API 全部是**源码树考据，非可编译 API**——禁止生成。注册一律走 Vanilla `Registry.register` 或同版 Fabric API。
+> ⚠️ **QSL 停更（2025-12 说法 `// TODO(未核实)`：原引官方 FAQ 已 404，无法复核）**：本版本**无 QSL/QFAPI 正式版构件**（1.20.4 线只到 alpha——`8.0.0-alpha.*`；实证数据见 quilt/1.20.4/AGENTS.md 顶部横幅）。本文件涉及的 QSL registry 符号已由 alpha 构件 javap **逐字实证**（见 `knowledge/common/qsl-verified.md`），但**默认不生成 QSL**——注册一律走 Vanilla `Registry.register` 或同版 Fabric API；要用须用户显式确认接受 alpha 依赖。
 
 > 适用：Quilt 1.20.4。**禁止编造 `QuiltRegistry.register()`。** 未核实的 QSL 方法名：停止生成，改 `search_docs({platform:"quilt"})` 或 QSL 源码 / loader-api-summaries。
 
@@ -20,7 +20,7 @@ description: 01 — Quilt 注册（QSL ≠ FAPI Registry）
 ```
 Decision: 注册方式
 → 简单 Item/Block/BlockEntity → Vanilla Registry.register（在 net.fabricmc.api.ModInitializer#onInitialize() 中——quilt.mod.json entrypoints.main；QSL 入口写法见 00-project-setup）
-→ 需要注册表同步/条目附件/QSL 专属 → 只使用 org.quiltmc.qsl.* 已核实 API；不清楚就拒绝臆造
+→ 需要注册表同步/条目附件/QSL 专属 → 默认不生成；用户显式接受 alpha 依赖时只许用本档 `qsl-verified.md` 构件实证表内的 `org.quiltmc.qsl.*` 名字；不清楚就拒绝臆造
 → 禁止：把 Fabric Registry 教程改名交差
 ```
 

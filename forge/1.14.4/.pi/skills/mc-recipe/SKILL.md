@@ -87,7 +87,7 @@ public class MyRecipeSerializer implements IRecipeSerializer<MyRecipe> {
     @Override
     public MyRecipe read(ResourceLocation id, JsonObject json) {
         Ingredient input = Ingredient.deserialize(json.getAsJsonArray("input"));
-        // javap 实证 2026-10-05：144 的 Ingredient 没有 fromJson（那是 1.16+ 名），json 工厂 = deserialize(JsonElement)
+        // javap 实证：144 的 Ingredient 没有 fromJson（那是 1.16+ 名），json 工厂 = deserialize(JsonElement)
         ItemStack output = ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "output"));
         // javap 实证：类名 = JSONUtils（全大写 JSON），本档有 getJsonObject(JsonObject,String)/getInt(JsonObject,String,int)
         int time = JSONUtils.getInt(json, "processingTime", 200);
@@ -121,7 +121,7 @@ public class MyRecipeProvider extends RecipeProvider {
 
     @Override
     protected void registerRecipes(Consumer<IFinishedRecipe> consumer) {
-        // 构件实证 2026-10-05：144 jar 只有接口 `IFinishedRecipe`（没有具体类 `FinishedRecipe`），
+        // 构件实证：144 jar 只有接口 `IFinishedRecipe`（没有具体类 `FinishedRecipe`），
         // 抽象方法 = serialize(JsonObject) / getID() / getSerializer() / getAdvancementJson() / getAdvancementID()
         // （getRecipeJson() 是 default）。⇒ 自定义配方匿名实现接口：
         consumer.accept(new IFinishedRecipe() {

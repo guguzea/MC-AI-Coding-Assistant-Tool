@@ -16,7 +16,7 @@
 - IDE（IDEA / VSCode）需配置相同的 JDK 版本
 
 > **⚠️ Forge 1.16.5 `scaffold/` 与官方 MDK 存在代差 —— 有意保留，不是缺陷；禁止为了「对齐」去改 scaffold 钉值。**
-> 注意（不是「已跑通」）：本档 `pack.meta.json` → `buildVerified: **false**`，卡点就是钉值本身 —— FG `[4.1,4.2)` 硬拒 Gradle 7+（2026-09-10 实测 `_g_forge1.16.5_v5.log`："Found Gradle version Gradle 7.6. Versions Gradle 7.0 and newer are not supported yet"），而 `gradle/wrapper/gradle-wrapper.properties:3` 钉的正是 7.6。按根裁定 wrapper 钉值保持不动；**是否降到 Gradle 6.x 需用户裁定**，本档只登记。
+> 注意（不是「已跑通」）：本档 `pack.meta.json` → `buildVerified: **false**`，卡点就是钉值本身 —— FG `[4.1,4.2)` 硬拒 Gradle 7+（实测 `_g_forge1.16.5_v5.log`："Found Gradle version Gradle 7.6. Versions Gradle 7.0 and newer are not supported yet"），而 `gradle/wrapper/gradle-wrapper.properties:3` 钉的正是 7.6。按根裁定 wrapper 钉值保持不动；**是否降到 Gradle 6.x 需用户裁定**，本档只登记。
 > 需要新版工具链：自行调用 `download_official_mdk`（默认 dryRun，只落到 `$MC_SKILL_CACHE`，不写仓库），再把返回值填进**你自己的工程**。
 
 > - Gradle Wrapper：本档 `scaffold/gradle/wrapper/gradle-wrapper.properties:3` → `gradle-7.6-bin` ↔ 官方 MDK `gradle-7.3.3-bin`
@@ -158,7 +158,7 @@ group = mod_group_id
 
 // Gradle 6.9.4（本档 wrapper 钉值）没有 base{} DSL（Gradle 7+，6.9.4 真机实测
 // Could not find method base()）⇒ 用 Gradle 6 认的顶层 archivesBaseName
-// （与 scaffold/build.gradle:13 一致；2026-09-11 改后真机 BUILD SUCCESSFUL）
+// （与 scaffold/build.gradle:13 一致；真机 BUILD SUCCESSFUL）
 archivesBaseName = mod_id
 
 // 官方 1.16.5-36.2.34 MDK build.gradle:19 即 of(8)；上游文档只背书「按 Java 8 编译」

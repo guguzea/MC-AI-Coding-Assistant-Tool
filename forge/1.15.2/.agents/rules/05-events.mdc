@@ -61,7 +61,7 @@ if (FMLEnvironment.dist == Dist.CLIENT) {
 ```
 IF 监听玩家右键点击方块
   → PlayerInteractEvent.RightClickBlock（或 RightClickItem）
-  → 注意：此事件双侧触发（客户端+服务端），改世界前用 `world.isClientSide` 守卫（2026-09-14 javap 实测：official 1.15.2 的 `World` 有 `isClientSide` 字段与方法；`isClientSide` 是 MCP 名，语料 `concepts_sides.md:26` 是 MCP 写法）
+  → 注意：此事件双侧触发（客户端+服务端），改世界前用 `world.isClientSide` 守卫（javap 实测：official 1.15.2 的 `World` 有 `isClientSide` 字段与方法；`isClientSide` 是 MCP 名，语料 `concepts_sides.md:26` 是 MCP 写法）
 
 IF 监听生物死亡
   → LivingDeathEvent

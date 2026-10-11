@@ -1,6 +1,6 @@
 ---
 name: mc-gui
-description: LiteLoader 1.8.9 仅 HUDRenderListener 已核实。
+description: LiteLoader 1.8.9 GUI / HUD 钩子（HUDRenderListener / Tickable / PluginChannelListener，签名已核）。
 platform: liteloader
 version: "1.8.9"
 docsTool: search_docs
@@ -11,5 +11,6 @@ docsTool: search_docs
 核实表：knowledge/common/verified-api.md。
 必须 search_docs({platform:"liteloader"}) version=1.8.9。
 
-表内仅 HUDRenderListener#onPreRenderHUD(int,int) / onPostRenderHUD(int,int)。
-Tickable / PluginChannelListener **不在本档核实表内，禁止输出**。禁止把 1.12.2 整表抄来。禁止 ModInitializer。
+本档可用（名字以 knowledge/common/verified-api.md 核实表为准）：HUDRenderListener#onPreRenderHUD(int,int) / onPostRenderHUD(int,int)、
+Tickable#onTick(Minecraft, float, boolean, boolean)、PluginChannelListener#onCustomPayload(String, PacketBuffer)。
+仍禁止把 1.12.2 整表抄来；未列进本档核实表的名字不得输出。禁止 ModInitializer。

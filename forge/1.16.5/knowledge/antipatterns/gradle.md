@@ -70,7 +70,7 @@ minecraft {
 }
 ```
 
-实测取证（同族，2026-09-10 本机）：`forge/1.18.2` scaffold 在 `minecraft { }` 内写 `copyIdeResources = true` + FG `[5.1.2,5.2)` + Gradle 7.6 + JDK 17.0.12 → `gradlew help --stacktrace` 报 `Caused by: groovy.lang.MissingPropertyException: copyIdeResources`，随后级联 `Missing 'minecraft' dependency.`。本档 FG 更旧，同样不含该属性；官方 1.16.5-36.2.34 MDK（FG `5.1.+`）亦不含该行，含该行的是 FG `[6.0,6.2)` 的官方 MDK（1.18.2-40.3.0 / 1.19.4 / 1.20.1 / 1.20.4）。「IDE 改资源不生效」是 FG 6 时代的症状；本档 FG 4.1 的替代做法未核实，不要臆造。
+实测取证（同族，本机）：`forge/1.18.2` scaffold 在 `minecraft { }` 内写 `copyIdeResources = true` + FG `[5.1.2,5.2)` + Gradle 7.6 + JDK 17.0.12 → `gradlew help --stacktrace` 报 `Caused by: groovy.lang.MissingPropertyException: copyIdeResources`，随后级联 `Missing 'minecraft' dependency.`。本档 FG 更旧，同样不含该属性；官方 1.16.5-36.2.34 MDK（FG `5.1.+`）亦不含该行，含该行的是 FG `[6.0,6.2)` 的官方 MDK（1.18.2-40.3.0 / 1.19.4 / 1.20.1 / 1.20.4）。「IDE 改资源不生效」是 FG 6 时代的症状；本档 FG 4.1 的替代做法未核实，不要臆造。
 
 ---
 
@@ -185,7 +185,7 @@ repositories {
 
 ## 错误：FG4 档混用 Gradle 7+ 构造 / Parchment 通道
 
-**症状：** 配置期就失败，一行 Java 都没编译（2026-09-11 真机逐条复现于本档）：
+**症状：** 配置期就失败，一行 Java 都没编译（真机逐条复现于本档）：
 
 ```
 Failed to apply plugin 'net.minecraftforge.gradle'.
@@ -199,7 +199,7 @@ java.lang.IllegalArgumentException: Unknown mapping provider: parchment_2021.07.
 **根因：** ForgeGradle `[4.1,4.2)` 硬拒 Gradle ≥ 7；`foojay-resolver-convention 0.4.0` 与 `base { archivesName }` 需要 Gradle 7+；Parchment 通道依赖 FG5+ 才有的 `net/minecraftforge/gradle/mcp/ChannelProvider`（补 `org.parchmentmc.librarian.forgegradle 1.+` 也只得到 `Could not generate a decorated class for type LibrarianForgeGradlePlugin`）。三者在 FG4 上没有共同可用版本。
 
 ```groovy
-// ❌ 本包 2026-09-11 前的形态（pack.meta.buildVerified=false）
+// ❌ 本包此前的形态（pack.meta.buildVerified=false）
 plugins { id 'org.gradle.toolchains.foojay-resolver-convention' version '0.4.0' }  // settings.gradle
 base { archivesName = mod_id }                                                     // build.gradle
 mapping_channel=parchment                                                          // gradle.properties

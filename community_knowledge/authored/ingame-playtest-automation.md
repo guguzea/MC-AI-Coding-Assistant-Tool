@@ -428,10 +428,11 @@ NeoForge 1.20.1 无官方 MDK pin（原返回 `MDK_NOT_PINNED`）⇒ 按**兼容
 
 
 
-## 真机台账（2026-10-08 自根 `README.md` 并入 · 逐字归档）
+## 真机台账（自根 `README.md` 并入 · 逐字归档；2026-10-08 首并，2026-10-11 二次清理）
 
-> **为什么在本文**：根 `README.md` 原先自带一份「后半 loop 真机矩阵」+ 40 条「已核实边界」，与本文的坑位清单是**同一本账的两份副本**（本文 L236 那条「详细口径单源」即自我声明）。2026-10-08 把副本并入此处并去重：README 只留**一行一判据的紧凑矩阵**与操作契约，逐格读数、取证过程、历史来回全在这一节。
-> **下面两块是从 `README.md` 逐字搬来的原文**（未转写、未压缩），所以坑号对不上的地方以本节的字面为准；引用前仍按各条自带的 as-of 重跑。
+> **为什么在本文**：根 `README.md` 原先自带一份「后半 loop 真机矩阵」+ 40 条「已核实边界」，与本文的坑位清单是**同一本账的两份副本**（本文 L236 那条「详细口径单源」即自我声明）。2026-10-08 把副本并入此处并去重：逐格读数、取证过程、历史来回全在这一节，README 留一行一判据的紧凑矩阵与判据契约（T0–T4）。
+> **2026-10-11 二次清理**：README 两语余下的**紧凑矩阵 + 判据八条**（含英文镜像）也并入本节 **T5**（逐字），根 README 两语只留指针块 —— 依据同上（`WRITING-FOR-AGENTS.md` §6「面上只留指针」）。
+> **下面各块是从 `README.md` / `README.en.md` 逐字搬来的原文**（未转写、未压缩），所以坑号对不上的地方以本节的字面为准；引用前仍按各条自带的 as-of 重跑。
 > 读数口径：单元格 = 该 combo 村庄测试**真机**结果，证据在授权根 `E:\MC_GAME\instances\<tag>\evidence{,-bridge}/`。逐条坑位见上文「计划层与运行环境的新坑」与下文各坑。
 
 ### T0 · 被改写掉的标题行与指针行（逐字留档）
@@ -445,7 +446,7 @@ NeoForge 1.20.1 无官方 MDK pin（原返回 `MDK_NOT_PINNED`）⇒ 按**兼容
 
 ### T1 · 原矩阵（17 个数据行，逐字保留；as-of 2026-10-04）
 
-<!-- 源：并入前的根 README.md 第 158–178 行（行号是 2026-10-08 改写前的坐标，现已漂移；改写前的整份文件备份在 temp/backup-ledger-20261008/README.md）。现行紧凑版矩阵在 README「后半 loop 真机矩阵」节。 -->
+<!-- 源：并入前的根 README.md 第 158–178 行（行号是 2026-10-08 改写前的坐标，现已漂移；改写前的整份文件备份在 temp/backup-ledger-20261008/README.md）。现行判据 2026-10-11 起并入本节 T5（README 两语只留指针块）。 -->
 > 单元格 = 该 combo 的村庄测试**真机**结果：✅ = 整轮通过（`exit-code=0`；证据在授权根 `E:\MC_GAME\instances\<tag>\evidence{,-bridge}/`）；❌ = 未通过（原因随行注明）；⏳ = 修复/重跑中；⚠️ = 该档或实例未建；`—` = 该档没有对应路线的可用件（**不是失败**）。
 
 | 平台 | 版本 | 无桥 driver（村庄整轮） | 有桥 BlackBoxPro |
@@ -614,6 +615,107 @@ NeoForge 1.20.1 无官方 MDK pin（原返回 `MDK_NOT_PINNED`）⇒ 按**兼容
 [[Detailed single source of truth: `community_knowledge/authored/ingame-playtest-automation.md` (bridge contract, pitfall list, finalized intent space)]]
 
 ````
+
+### T5 · 现行判据（2026-10-11 二次清理自根 `README.md` / `README.en.md` 并入；判据与读数 as-of 2026-10-08）
+
+> **为什么并到这里**：2026-10-08 首并（T0–T4）之后，README 仍留着「一行一判据的紧凑矩阵 + 判据八条」——它们同属**状态表与判据副本**（`WRITING-FOR-AGENTS.md` §6「台账与实施状态：一史一处」：面上只留指针；**要再减账，先删坑位里的重复方，不要删归档**，同 T3 口径）。2026-10-11 用户指正后二次清理并入本节：**T5.1 = 中文原文逐字，T5.2 = 英文原文逐字**；根 README 两语各留指针块。
+> 源 = 2026-10-11 改写前的根 `README.md` 第 160–196 行 / `README.en.md` 第 161–197 行；整份文件备份在 `temp/backup-ledger-20261011/`（该目录不入库）。归档里的自指（「判据 6」「见台账 T2」）在本文内可解；跨文件指针（「根 `AGENTS.md` 指向这一条」）按目标文件现行文本读。
+
+#### T5.1 · 中文原文（逐字）
+
+并入前原文标题行（已随二次清理改写为指针块）：
+
+```text
+### 后半 loop 真机矩阵（村庄测试：`newworld` 造世界 → `locate` 定位 → 飞抵 → `land` 落地 → 扫描 → 断言 → 截图；判据 as-of 2026-10-08）
+```
+
+并入前原文收尾指针行（同上）：
+
+```text
+[[详细口径单源：`community_knowledge/authored/ingame-playtest-automation.md`（桥契约、坑位清单、意图空间定稿、**§真机台账**）]]
+```
+
+> **这一节只记判据**（哪个 combo 绿、验证强度是哪一等、跑之前必须知道什么）。逐格真机读数（`land y=` / `blocks hits` / `nearest=` / 截图名 / 桥件 sha256）与取证过程、历史来回，全部在 `community_knowledge/authored/ingame-playtest-automation.md` **§真机台账**：T1 = 原 17 行矩阵逐字归档，T2 = 原 40 条「已核实边界」逐字归档，T3 = 并入时的去重判定（实测：40 条里 24 条与本文原有坑位逐字重复，16 条带独有 token，合计 50 个）。
+> 图例：✅ = 整轮通过（`exit-code=0`；证据在授权根 `E:\MC_GAME\instances\<tag>\evidence{,-bridge}/`）；⚠️ = 该档或实例未建；`—` = 该档没有对应路线的可用件（**不是失败**）。
+
+| 平台 | 版本 | 无桥 driver | 有桥 BlackBoxPro | 验证强度 |
+| --- | --- | --- | --- | --- |
+| Fabric | 1.20.1 / 1.20.4 / 1.21.1 / 1.21.3 / 1.21.4 / 1.21.8 / 1.21.11 | ✅ 各整轮（1.21.4 / 1.21.11 经 retry 轮） | ✅ 1.21.1 + 1.21.11 各整轮（纯桥路线）；其余 —（未装桥件） | 真机 |
+| Fabric | 1.21.10 | ✅ 整轮（第 1 轮 17/17；「坠虚空」由 `forceload` + 加长等待计划解决） | — | 真机 |
+| Fabric | 26.1 / 26.1.1 / 26.1.2 / 26.2 / 26.3 | ✅ 五档各整轮（2026-10-03，统一无桥进程内 driver；四档第 1 轮即绿） | —（无 26.x 桥件：BlackBoxPro 只覆盖 1.12.2 / 1.21.1 / 1.21.11） | 真机；26.x 的 `newworld` 造世界面有一条「待复跑确认」，见台账 T2 |
+| Fabric | 1.14.4 / 1.16.5 / 1.17.1 / 1.18.2 / 1.19.4 | ✅ 五档真机整轮全绿（2026-10-04，各 15/15） | —（无 1.14.4–1.19.4 桥件） | 真机 + 编译验证分三档：1.14.4 / 1.16.5 = JDK 8 真构件；1.17.1 / 1.18.2 = 真 named jar + 两类 FAPI 替身；1.19.4 = 与 1.20.1 同表 |
+| Quilt | 1.20.1 / 1.20.4 / 1.21.1 / 1.21.3 / 1.21.4 / 1.21.8 / 1.21.10 / 1.21.11 | ✅ 各整轮（1.21.3 / 1.21.4 / 1.21.8 经 retry 轮） | —（**桥无 quilt 构件** ⇒ 桥路线在 quilt 上结构不可用，不是「未测」） | 真机；**quilt 全族无 javac 编译验证**（本机无 quilt 的 yarn-remapped 模块件） |
+| Quilt | 1.18.2 / 1.19.4 | ✅ 两档真机整轮全绿（2026-10-04，各 15/15） | — | 真机（无编译验证） |
+| Forge | 1.20.1 | ✅ 整轮（18/18 `ok:true`） | —（BlackBoxPro 无 forge ≥1.20.1 件） | 真机 |
+| Forge | 1.20.4 | ✅ 整轮（修复两个缺陷：FML 49 dev 合并块 + Forge 49 loot ISE；第 2 轮 17/17） | — | 真机 |
+| Forge | 1.21.1 | ⚠️ **draft 档无规则树**（目录只有 `AGENTS.md` + `pack.meta.json`，无 `.cursor/rules/`；session `PACK_NOT_FOUND`、不在 `list_forge_versions`）⇒ 未建实例 | — | — |
+| Forge | 1.13.2 / 1.14.4 / 1.15.2 / 1.16.5 / 1.17.1 / 1.18.2 / 1.19.4 | ✅ 七档真机整轮全绿（2026-10-04，各 15/15；统一 `gradlew runClient`） | — | 真机 + 9/9 真构件 COMPILE_OK（2026-10-03）；七档改写表**各不相同**，`newworld` 只在 1.19.4 已实现 |
+| Forge | **1.12.2** | ✅ 真机整轮全绿（2026-10-04，14/14 步） | ✅ **村庄整轮通过（2026-10-04，桥路线，第三方发布件 2.2.4）**：自足件 ⇒ **不需要 KFF**（与 1.21.x 线相反）；该档 `newworld` fail-closed ⇒ 世界只能由桥 `create_world` 造 | 真机 + JDK 8 真构件 COMPILE_OK（tier 52）；**本仓自建桥模板真机未跑**，只有编译层证据（见判据 8） |
+| LiteLoader | **1.12.2（hybrid）** | ✅ 真机整轮全绿（2026-10-04，16/16 步）；tick 只走工程 `LiteMod implements Tickable` 的转发（Forge `ClientTickEvent` 已摘，**不转发 = 永不 tick = 判红**） | —（无 LiteLoader 桥件） | 真机 + tier 53 编译验证；**产物零 `com.mumfrey.*` 依赖** |
+| NeoForge | 1.20.4 / 1.20.6 / 1.21.1 | ✅ 各整轮（1.20.4 18/18；1.20.6 / 1.21.1 = 1206+ 新表首跑，经 retry 轮） | —（**1.21.1 不可用**：发布件不是 mod jar） | 真机 |
+| NeoForge | 1.20.1 | ⚠️ 未建实例（该档 scaffold 无构建插件，待研究） | — | — |
+| NeoForge | **1.21.11** | ⚠️ 未建实例（桥路线已跑通，见右列） | ✅ **村庄整轮通过（2026-10-02）**：桥 mod + `kotlinforforge-*-all.jar` 进 `run/mods` → `join_world` → `locate` → 抵达落地 → 方块 / 实体证据 + 截图 | 真机（桥） |
+| NeoForge | 1.21.3 / 1.21.5 / 1.21.8 / 1.21.10 | ⚠️ 未建实例（**规则树齐备**：各 11 条 `00–10` + `data/neoforge_<ver>` 语料 + `search_neoforge_docs` 可用；「未建」= 没起过客户端，不是缺档） | — | — |
+| NeoForge | **26.1 / 26.1.1 / 26.1.2 / 26.2 / 26.3** | ✅ 五档各整轮（2026-10-03，与 fabric 26.x 共用 `apply26xxShared`，**全部第 1 轮即绿**） | —（无 26.x 桥件） | 真机；前置见判据 6 |
+
+**已核实边界 · 会改变决策的八条**（逐格读数、取证过程、历史来回都在台账 T2 / T3，细节以台账为准）：
+
+1. **桥的 `/status.ready` 不可信**（2026-10-02 实测）：主菜单下它也报 `ready:true` ⇒ 判「在不在世界」只看 `query_player_state`（成功带 `data` = 在；`ok:false` + `"Player not available"` = 不在）。**一次超时不能当「不在世界」**——误判会触发全量世界重载，慢盘上 ~28 分钟不回来。
+2. **CLI envelope 是 `{success, tool, result:{…}}`**：读字段一律先解 `result`（`st.ok` 恒 `undefined`；`ready` 在 `result.ready`）。驱动脚本的 CLI 路径含非 ASCII 目录名时**用 `String.fromCharCode` 拼**，文件编码不得让它变成 U+FFFD（那会让每次 `node <path>` 都 MODULE_NOT_FOUND，看起来像「CLI 退化」）。
+3. **`scan` 的方块采样是「玩家脚边 −4..+8 格的薄层」**（默认 `stride=4`）：村庄在地面 ⇒ 剧本必须在 `goto` 之后、`scan` 之前写 **`land max=<n>`**（等 `isOnGround`）再扫；悬停空中扫地面**必然 0 命中**。`land` 超时（区块缺失、持续坠落）判红——那是**故障信号不是假红**。
+4. **`cmd` 步会覆盖「最近一条游戏消息」**（驱动只保留一条 `lastGameMessage`）：`goto parsed` 靠最近一条 `/locate` 回执拿坐标 ⇒ 在 `cmd locate …` 与 `goto parsed` **之间插任何 `cmd`**（`forceload`、`time set day` 这类）都会让解析等到超时（`goto_parse_failed`）。**处方：这类 `cmd` 全部排在 `cmd locate` 之前。**
+5. **客户端实体只在追踪范围（≈48 格）内可见** ⇒ `await entity_nearby` 带 `type` 而目标不在附近时**会正确地**超时（`PLAYTEST_TIMEOUT` + `typeCount:0`）—— 这不是 `type` 丢失；方块证据不受此限。
+6. **26.x 走无桥 driver 的前置**：工程自带 fabric-api（**`implementation` 不是 `modImplementation`**；26.1 / 26.1.1 / 26.1.2 三档共用 `0.155.3+26.1.2`，26.2 用 `0.161.0+26.2`、26.3 用 `0.161.0+26.3`）；`run/options.txt` 需要 `onboardAccessibility:false` + `pauseOnLostFocus:false`（首次启动的无障碍引导屏会挡 quickPlay，台账 T2）。**26.2 / 26.3 要把 ModDevGradle 升到 ≥ 2.0.148**（本仓 scaffold 钉的 2.0.144 在这两档 `recompile` 必失败）。构件锚点：`26.1.2 → 26.1.2.114`、`26.2 → 26.2.0.88` 是正式版，**`26.1 / 26.1.1 / 26.3` 上游只有 beta**。
+7. **NeoForge 桥的 KotlinForForge 必须取 Modrinth 的 `-all.jar`**（slug `kotlin-for-forge`，注意不是 `kotlinforforge`）：maven 的两枚坐标逐字节相同且**都不是 mod jar**（包内只有 `META-INF/jarjar/*.jar`、无 `services/` 语言加载器）⇒ 装上去 FML 直接拒启（`Missing language loader kotlinforforge`）。
+8. **老平台「最小桥 mod」条（根 `AGENTS.md`「已核实边界」指向这一条）**：`generate_playtest_driver driverMode=external_bridge` 在 `(platform,version) ∈ BRIDGE_MOD_TARGETS`（**8 个** = `forge {1.7.10, 1.8.9, 1.9.4, 1.10.2, 1.11.2, 1.12.2}` + `rift 1.13.2` + `modloader 1.6.4`）时附赠 `playtest/bridge/**` 自建最小桥模板（生成器 `mcp-server/src/generators/playtest-bridge-mod.ts`；**不进 `PLAYTEST_VERIFIED_TIER`**，`temporary_client_tick_driver` 时不附赠 ⇒ 与 driver 链隔离）。**⚠️ 能力天花板 = 「命令级」，不能替代 driver**：桥发的是**聊天包**、不是键位输入 ⇒ 读数（位置 / 血量 / 方块 / 背包 / 实体列表 / 当前界面 / 截图）与 `/tp` `/setblock` 这类命令级操控可用（受实例 op / 开作弊约束），但**玩家物理路径测不了**（走位 / 跳跃 / 挖掘耗时 / 碰撞），**GUI 点击**也不可用。动作 **10 个**（名称与 `params` 键名如 `itemId` **以工具源码 `src/playtest-bridge/index.ts` 的 `probe()` 为准**），恰好覆盖 `playtest_bridge await` 的 5 个 condition；**不可用动作按档 fail-closed**（`1.7.10` 聊天、`1.9.4–1.12.2` `use_item`、rift 聊天 + `use_item`、modloader 全部）。**验证强度分两等**：`1.12.2` = JDK 8 `javac` 对真构件编译验证（该轮真构件编译揪出 `Item.getUnlocalizedName()` 在 stable_39 真 jar 里实名 `getTranslationKey()` —— **javadoc 与真构件不一致**）；**`1.7.10–1.11.2` 只有 javadoc 出处、未编译验证**。rift = **真模板**（MC 侧逐名有 1.13.2 MCP 快照出处）；modloader = **骨架**（缺出处就只出骨架，不猜名字）。字段名逐档不同（玩家 / 世界字段在 `1.10.2 → 1.11.2` 改名；游戏目录只 `1.12.2` 有「构件 `gameDir` ↔ javadoc `mcDataDir`」一处差异）⇒ 逐档读数见台账 T2。三平台生成物含中文注释 ⇒ 编译**必须** `-encoding UTF-8`。
+
+#### T5.2 · 英文原文（逐字）
+
+并入前原文标题行：
+
+```text
+### Second-half loop: real-machine matrix (village test: `newworld` to create the world → `locate` to find it → fly there → `land` on the ground → scan → assert → screenshot; criteria as of 2026-10-08)
+```
+
+并入前原文收尾指针行：
+
+```text
+[[Detailed single source of truth: `community_knowledge/authored/ingame-playtest-automation.md` (bridge contract, pitfall list, finalized intent space, **real-machine ledger**)]]
+```
+
+> **This section keeps only the decision criteria** (which combo is green, which verification tier it reached, what you must know before running it). Per-cell real-machine readings (`land y=` / `blocks hits` / `nearest=` / screenshot names / bridge jar sha256), the evidence-gathering process and the historical reversals all live in **§真机台账 (real-machine ledger)** of `community_knowledge/authored/ingame-playtest-automation.md`: T0 = the heading and pointer lines rewritten here, T1 = the original 16-row matrix archived verbatim, T2 = the original 40 "verified boundaries" bullets archived verbatim, T3 = the de-duplication verdict taken at merge time, T4 = the English originals archived verbatim.
+> Legend: ✅ = the full round passed (`exit-code=0`; evidence under the authorized root `E:\MC_GAME\instances\<tag>\evidence{,-bridge}/`); ⚠️ = that version or instance was not created; `—` = that version has no usable artifact for this route (**not a failure**).
+
+| Platform | Version | No-bridge driver | Bridge BlackBoxPro | Verification tier |
+| --- | --- | --- | --- | --- |
+| Fabric | 1.20.1 / 1.20.4 / 1.21.1 / 1.21.3 / 1.21.4 / 1.21.8 / 1.21.11 | ✅ each full round (1.21.4 / 1.21.11 via a retry round) | ✅ 1.21.1 + 1.21.11, each full round (pure bridge route); `—` elsewhere (no bridge jar installed) | real machine |
+| Fabric | 1.21.10 | ✅ full round (round 1: 17/17; the earlier "fell into the void" was solved with `forceload` + a longer plan) | `—` | real machine |
+| Fabric | 26.1 / 26.1.1 / 26.1.2 / 26.2 / 26.3 | ✅ five versions, each a full round (2026-10-03, all via the in-process no-bridge driver; four green on round 1) | `—` (no 26.x bridge artifact: BlackBoxPro covers only 1.12.2 / 1.21.1 / 1.21.11) | real machine; one "needs a re-run to confirm" note on the 26.x `newworld` path, see ledger T2 |
+| Fabric | 1.14.4 / 1.16.5 / 1.17.1 / 1.18.2 / 1.19.4 | ✅ five versions all green (2026-10-04, each 15/15) | `—` (no bridge artifact for 1.14.4–1.19.4) | real machine; compile evidence splits three ways: 1.14.4 / 1.16.5 = JDK 8 against real artifacts; 1.17.1 / 1.18.2 = real named jar + two FAPI stand-ins; 1.19.4 = same table as 1.20.1 |
+| Quilt | 1.20.1 / 1.20.4 / 1.21.1 / 1.21.3 / 1.21.4 / 1.21.8 / 1.21.10 / 1.21.11 | ✅ each full round (1.21.3 / 1.21.4 / 1.21.8 via a retry round) | `—` (**the bridge ships no Quilt artifact** ⇒ the bridge route is structurally unavailable on Quilt, not "untested") | real machine; **no javac compile verification for the whole Quilt family** (no quilt yarn-remapped module jars on this machine) |
+| Quilt | 1.18.2 / 1.19.4 | ✅ both versions green (2026-10-04, each 15/15) | `—` | real machine (does not impersonate compile verification) |
+| Forge | 1.20.1 | ✅ full round (18/18 `ok:true`) | `—` (BlackBoxPro has no forge artifact at or above 1.20.1) | real machine |
+| Forge | 1.20.4 | ✅ full round (after fixing two real defects: the FML 49 dev merged-block issue + the Forge 49 loot ISE; round 2: 17/17) | `—` | real machine |
+| Forge | 1.21.1 | ⚠️ **draft version, no rule tree** (only `AGENTS.md` + `pack.meta.json`, no `.cursor/rules/`; session returns `PACK_NOT_FOUND`, `list_forge_versions` omits it) ⇒ no instance | `—` | `—` |
+| Forge | 1.13.2 / 1.14.4 / 1.15.2 / 1.16.5 / 1.17.1 / 1.18.2 / 1.19.4 | ✅ seven versions all green (2026-10-04, each 15/15; all via `gradlew runClient`) | `—` | real machine + 9/9 COMPILE_OK against real artifacts (2026-10-03); the seven rewrite tables **all differ**; `newworld` implemented only on 1.19.4 |
+| Forge | **1.12.2** | ✅ full round (2026-10-04, 14/14 steps) | ✅ **village full round (2026-10-04, bridge route, third-party release 2.2.4)**: self-contained jar ⇒ **KFF not needed** (opposite of the 1.21.x line); `newworld` is fail-closed here, so the world can only come from the bridge's `create_world` | real machine + JDK 8 compile against real artifacts (tier 52); **this repo's own bridge template has never run on a real machine** — compile-level evidence only (see criterion 8) |
+| LiteLoader | **1.12.2 (hybrid)** | ✅ full round (2026-10-04, 16/16 steps); ticking goes only through the project's own `LiteMod implements Tickable` forwarding (the Forge `ClientTickEvent` subscription is removed — **no forwarding = never ticks = budget exhausted = red**) | `—` (no LiteLoader bridge artifact) | real machine + tier 53 compile verification; **the artifact carries zero `com.mumfrey.*` dependencies** |
+| NeoForge | 1.20.4 / 1.20.6 / 1.21.1 | ✅ each full round (1.20.4: 18/18; 1.20.6 / 1.21.1 = first run on the 1206+ table, via a retry round) | `—` (**1.21.1 unavailable**: the released jar is not a mod jar) | real machine |
+| NeoForge | 1.20.1 | ⚠️ no instance (this version's scaffold carries no build plugin, still under study) | `—` | `—` |
+| NeoForge | **1.21.11** | ⚠️ no instance (the bridge route does pass, see the next column) | ✅ **village full round (2026-10-02)**: bridge mod + `kotlinforforge-*-all.jar` into `run/mods` → `join_world` → `locate` → arrive and land → block / entity evidence + screenshot | real machine (bridge) |
+| NeoForge | 1.21.3 / 1.21.5 / 1.21.8 / 1.21.10 | ⚠️ no instance (**rule trees are complete**: 11 rules `00–10` + `data/neoforge_<ver>` corpus + working `search_neoforge_docs`; "no instance" means the client was never launched, not that the version is missing) | `—` | `—` |
+| NeoForge | **26.1 / 26.1.1 / 26.1.2 / 26.2 / 26.3** | ✅ five versions, each a full round (2026-10-03, sharing `apply26xxShared` with fabric 26.x, **all green on round 1**) | `—` (no 26.x bridge artifact) | real machine; prerequisites in criterion 6 |
+
+**Verified boundaries — the eight criteria that change a decision** (per-version readings, the evidence-gathering process and the reversals are in ledger T2 / T3 / T4; the ledger is authoritative for details):
+
+1. **The bridge's `/status.ready` is not trustworthy** (measured 2026-10-02): it reports `ready:true` even at the main menu ⇒ to decide "am I in the world", look only at `query_player_state` (success with `data` = in; `ok:false` + `"Player not available"` = out). **One timeout must not be read as "not in the world"** — that misread triggers a full world reload, which on a slow disk took ~28 minutes and never came back.
+2. **The CLI envelope is `{success, tool, result:{…}}`**: always unwrap `result` before reading fields (`st.ok` is permanently `undefined`; `ready` sits at `result.ready`). If a driver script's CLI path contains non-ASCII directory names, **build it with `String.fromCharCode`** — file encoding turning it into U+FFFD makes every `node <path>` fail with MODULE_NOT_FOUND, which looks like "the CLI regressed".
+3. **`scan` samples blocks only in a thin layer from −4 to +8 blocks around the player's feet** (default `stride=4`): villages are on the ground ⇒ the plan must put **`land max=<n>`** (waits for `isOnGround`) between `goto` and `scan`; scanning the ground while hovering **always yields 0 hits**. A `land` timeout (chunks missing, the character keeps falling) is judged red — that is a **fault signal, not a false red**.
+4. **A `cmd` step overwrites "the most recent game message"** (the driver keeps exactly one `lastGameMessage`): `goto parsed` takes coordinates from the latest `/locate` receipt ⇒ inserting **any** `cmd` between `cmd locate …` and `goto parsed` (`forceload`, `time set day`) makes the parsing wait until timeout (`goto_parse_failed`). **Fix: put all such `cmd` steps before `cmd locate`.**
+5. **Clients only see entities within the tracking range (≈48 blocks)** ⇒ an `await entity_nearby` with `type` while the target is far away **correctly** times out (`PLAYTEST_TIMEOUT` + `typeCount:0`); that is not `type` being dropped. Block evidence is not subject to this limit.
+6. **Prerequisites for the no-bridge driver on 26.x**: the project must ship fabric-api (**`implementation`, not `modImplementation`**; 26.1 / 26.1.1 / 26.1.2 share `0.155.3+26.1.2`, 26.2 uses `0.161.0+26.2`, 26.3 uses `0.161.0+26.3`); `run/options.txt` needs `onboardAccessibility:false` + `pauseOnLostFocus:false` (the first-run accessibility onboarding screen blocks quickPlay — see ledger T2). **26.2 / 26.3 need ModDevGradle ≥ 2.0.148** (the 2.0.144 pinned by this repo's scaffold always fails at `recompile` on those two). Artifact anchors: `26.1.2 → 26.1.2.114` and `26.2 → 26.2.0.88` are releases, while **`26.1`, `26.1.1`, `26.3` are beta-only upstream**.
+7. **KotlinForForge for the NeoForge bridge must be the `-all.jar` from Modrinth** (slug `kotlin-for-forge`, note: not `kotlinforforge`): the two maven coordinates are byte-identical and **neither is a mod jar** (only `META-INF/jarjar/*.jar` inside, no `services/` language loader) ⇒ installing it makes FML refuse to start (`Missing language loader kotlinforforge`).
+8. **The "minimal bridge mod" entry for legacy platforms (root `AGENTS.md`'s verified-boundaries paragraph points here)**: `generate_playtest_driver driverMode=external_bridge` bundles the `playtest/bridge/**` self-built minimal bridge template when `(platform,version)` is in `BRIDGE_MOD_TARGETS` (**8 targets** = `forge {1.7.10, 1.8.9, 1.9.4, 1.10.2, 1.11.2, 1.12.2}` + `rift 1.13.2` + `modloader 1.6.4`); generator = `mcp-server/src/generators/playtest-bridge-mod.ts`, **not** part of `PLAYTEST_VERIFIED_TIER` (not bundled for `temporary_client_tick_driver`, so it is isolated from the driver chain). **⚠️ The capability ceiling is "command level" — it cannot replace a driver**: the bridge sends **chat packets**, not key input ⇒ reading state (position / health / blocks / inventory / entity list / current screen / screenshot) and command-level manipulation (`/tp`, `/setblock`) work, subject to the instance's op / cheats settings, but **physical player paths cannot be tested** (walking, jumping, mining duration, collision) and **GUI clicks are unavailable**. **10 actions** (names and `params` keys such as `itemId` **follow `probe()` in the tool source `src/playtest-bridge/index.ts`**) — exactly covering the 5 conditions of `playtest_bridge await`; **unavailable actions fail closed per version** (chat on `1.7.10`, `use_item` on `1.9.4–1.12.2`, chat + `use_item` on rift, everything on modloader). **Verification strength splits in two**: `1.12.2` = JDK 8 `javac` against a real artifact (that compile caught `Item.getUnlocalizedName()` being really named `getTranslationKey()` in the stable_39 jar — **the javadoc disagrees with the real artifact**); **`1.7.10–1.11.2` have javadoc provenance only and were never compile-verified**. rift = a **real template** (every MC-side name has a 1.13.2 MCP snapshot provenance); modloader = a **skeleton** (a skeleton is emitted instead of guessing names). Field names differ per version (player / world fields were renamed between `1.10.2` and `1.11.2`; only `1.12.2` has the "artifact `gameDir` vs javadoc `mcDataDir`" discrepancy) ⇒ per-version readings in ledger T2. Generated sources for all three platforms contain Chinese comments ⇒ compilation **must** pass `-encoding UTF-8`.
 
 ### quilt 1.21.11 档的四个硬约束（2026-10-01 实测）
 1. **quilt 脚手架都不带 Gradle wrapper**：10 个 quilt 树实测 **0 个** `gradlew.bat`（fabric 树都带）⇒ 需要时从同代 fabric 脚手架借 `gradlew` / `gradlew.bat` / `gradle/wrapper/`。

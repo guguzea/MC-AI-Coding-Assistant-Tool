@@ -15,7 +15,7 @@ public static final RegistryObject<Biome> MY_BIOME = BIOMES.register("my_biome",
         .depth(0.1f)
         .category(Biome.Category.PLAINS)
         .precipitation(Biome.RainType.RAIN)
-        // official 构件实证（javap @1.15.2 official，2026-10-05）：SurfaceBuilder 为抽象类（公开实例 = static 常量 DEFAULT 等），
+        // official 构件实证（javap @1.15.2 official）：SurfaceBuilder 为抽象类（公开实例 = static 常量 DEFAULT 等），
         // 配置类 = SurfaceBuilderConfig（❌ DefaultSurfaceConfig = MCP 层名）；Builder 方法只有 temperature/downfall（无 withX 前缀）。
         .surfaceBuilder(SurfaceBuilder.DEFAULT, new SurfaceBuilderConfig(
             Blocks.GRASS_BLOCK.defaultBlockState(),

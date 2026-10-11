@@ -60,14 +60,16 @@ SOUNDS.register(modEventBus);
 用于自定义方块被破坏/放置/踩踏时的音效：
 
 ```java
+// 1.17.1 实测（构件 javap）：vanilla 没有 DIRT_* 方块音（dirt 类方块在 vanilla 用 gravel 音型；
+// DIRT_* 只有 1.17 新增的 ROOTED_DIRT_* 一组）；且取 vanilla 音应当用类 SoundEvents（没有 Sounds 这个类）。
 public static final SoundType MY_BLOCK_SOUNDS = new SoundType(
     1.0f,   // volume
     1.0f,   // pitch
-    Sounds.DIRT_BREAK.get(),    // breakSound
-    Sounds.DIRT_STEP.get(),     // stepSound
-    Sounds.DIRT_PLACE.get(),    // placeSound
-    Sounds.DIRT_HIT.get(),      // hitSound
-    Sounds.DIRT_FALL.get()      // fallSound
+    SoundEvents.GRAVEL_BREAK,   // breakSound
+    SoundEvents.GRAVEL_STEP,    // stepSound
+    SoundEvents.GRAVEL_PLACE,   // placeSound
+    SoundEvents.GRAVEL_HIT,     // hitSound
+    SoundEvents.GRAVEL_FALL     // fallSound
 );
 
 // 使用

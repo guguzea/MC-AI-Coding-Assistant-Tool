@@ -9,7 +9,7 @@ mappings: yarn
 
 # 流体开发（Fabric 1.14.4）
 
-## 本档更正（2026-10-05；证据 = 本档 yarn 映射 `data/fabric_1.14.4/mappings/yarn-mappings.sqlite` 与本档 Fabric API 真构件 roster）
+## 本档更正（证据 = 本档 yarn 映射 `data/fabric_1.14.4/mappings/yarn-mappings.sqlite` 与本档 Fabric API 真构件 roster）
 
 - 旧正文的 `new FabricFlowableFluid.Settings().slopeFindDistance(3).levelDecreasePerBlock(1).tickRate(5).supportsBoating(true)` 全部零命中：`FabricFlowableFluid` / `Settings` builder 链 / `slopeFindDistance` / `levelDecreasePerBlock` / `tickRate` / `supportsBoating` 在本档 Yarn 映射与 Fabric API 真构件里都不存在，是虚构写法，不可用。
 - 本档**没有** `FlowableFluid`（该名 1.16.5 起才进 Yarn）；本档流体包里可证的真类是 `net/minecraft/fluid/BaseFluid`（可流动流体基类，`getStill()` / `getFlowing()` 挂它身上）与 `WaterFluid` / `LavaFluid` 及嵌套 `WaterFluid$Still` / `WaterFluid$Flowing` / `LavaFluid$Still` / `LavaFluid$Flowing`、`Fluid` / `FluidState` / `Fluids` / `EmptyFluid`。

@@ -57,7 +57,7 @@ public enum MyTier implements IItemTier {
 **症状：** 编译错误，找不到类或字段
 
 ```java
-// ❌ 错误（MobEffects / MobEffectInstance 是后续版本 mojmap 层名，本档 snapshot 构件实证 2026-10-05：144 jar 里没有）
+// ❌ 错误（MobEffects / MobEffectInstance 是后续版本 mojmap 层名，本档 snapshot 构件实证：144 jar 里没有）
 new MobEffectInstance(MobEffects.JUMP_BOOST, 200, 1)
 
 // ✅ 正确（本档 = net.minecraft.potion.EffectInstance + Effects.JUMP_BOOST）

@@ -127,7 +127,7 @@ IF 熔炉烧制/烟熏/营火烧制
   → 在 buildShapelessRecipes() 中使用：
   → CookingRecipeBuilder.smelting(...)  /  .blasting(...)
   → 烟熏/营火走通用形 CookingRecipeBuilder.cooking(Ingredient, IItemProvider, float, int, CookingRecipeSerializer<?>)，传 RecipeSerializer.SMOKING_RECIPE / RecipeSerializer.CAMPFIRE_COOKING_RECIPE
-  → ❌ SimpleCookingRecipeBuilder（1.19.4+ 类名，本包构件没有；2026-10-05 javap 对 1.16.5-36.2.34_mapped_official_1.16.5 点名）
+  → ❌ SimpleCookingRecipeBuilder（1.19.4+ 类名，本包构件没有；javap 对 1.16.5-36.2.34_mapped_official_1.16.5 点名）
 
 IF 用自定义工作台配方
   → 实现 IRecipe + 自定义 Container 和 Screen
@@ -137,7 +137,7 @@ IF 用自定义工作台配方
 
 ```
 IF 固定掉落某物品
-  → `ItemLootEntry.lootTableItem(...)` + SetCount（2026-09-14 javap 实测：official 1.16.5 有 `net.minecraft.loot.ItemLootEntry.lootTableItem(IItemProvider)`；`LootItem` 不在）
+  → `ItemLootEntry.lootTableItem(...)` + SetCount（javap 实测：official 1.16.5 有 `net.minecraft.loot.ItemLootEntry.lootTableItem(IItemProvider)`；`LootItem` 不在）
 
 IF 掉落方块本身（方块被破坏时）
   → `BlockLootTables#dropSelf`（javap 实测：1.16.5 官方类名是 `net.minecraft.data.loot.BlockLootTables`）
@@ -186,7 +186,7 @@ public class DataGenerators {
 ```java
 // datagen/ModRecipes.java
 // 以下方法名全部对真构件点名（javap net.minecraft.data.RecipeProvider / ShapedRecipeBuilder /
-// ShapelessRecipeBuilder / CookingRecipeBuilder，jar = 1.16.5-36.2.34_mapped_official_1.16.5，2026-10-05）：
+// ShapelessRecipeBuilder / CookingRecipeBuilder，jar = 1.16.5-36.2.34_mapped_official_1.16.5）：
 // shaped/shapeless/define/pattern/requires/unlockedBy/save(Consumer<IFinishedRecipe>)/has(IItemProvider) 均逐字在构件中。
 public class ModRecipeProvider extends RecipeProvider {
     public ModRecipeProvider(DataGenerator generator) {
@@ -232,7 +232,7 @@ public class ModLootTableProvider extends LootTableProvider {
 }
 
 public class ModBlockLoot extends BlockLootTables {
-    // 2026-09-14 javap 实测（forge-1.16.5-36.2.34_mapped_official_1.16.5.jar）：BlockLootTables 有
+    // javap 实测（forge-1.16.5-36.2.34_mapped_official_1.16.5.jar）：BlockLootTables 有
     // protected void addTables() / protected Iterable<Block> getKnownBlocks() / dropSelf(Block) ⇒ 示例形态正确。
     @Override
     protected void addTables() {

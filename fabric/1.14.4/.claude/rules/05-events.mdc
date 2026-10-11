@@ -200,7 +200,7 @@ modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_versi
 > `net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents` / `net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents`
 > （模块 `fabric-lifecycle-events-v1`）。按错包 import 直接「找不到符号」（本轮真踩过）。**本档两者都能编过**，推荐非 deprecated 的后者。
 >
-> 证据（2026-10-05，本档工程 `dev/fabric-1.14.4` 真跑 `gradlew compileJava`，并用其真实 `compileClasspath` 逐类扫描；FAPI 钉 `0.28.5+1.14`）：四条写法都编得过（v0 两条带 deprecation 提示）。**包名必须从该档 classpath 核出，不能照同族名字推** —— 推错包会得出「类不存在」的假结论（本轮就因此自我更正过一次）。
+> 证据（本档工程 `dev/fabric-1.14.4` 真跑 `gradlew compileJava`，并用其真实 `compileClasspath` 逐类扫描；FAPI 钉 `0.28.5+1.14`）：四条写法都编得过（v0 两条带 deprecation 提示）。**包名必须从该档 classpath 核出，不能照同族名字推** —— 推错包会得出「类不存在」的假结论（本轮就因此自我更正过一次）。
 - ❌ 在客户端 lambda 里改服务端世界数据 — 用 `world.isClient` 区分，写世界只在服务端
 - ❌ 忘记处理返回值 — `ActionResult` / `TypedActionResult` / `boolean` 决定是否取消或消费
 - ❌ 把 `PlayerBlockBreakEvents.BEFORE` 当成 `ActionResult` — 它是 `boolean`

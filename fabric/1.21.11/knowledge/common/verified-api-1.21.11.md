@@ -8,7 +8,7 @@
 - `映射表` = `data/fabric_1.21.11/mappings/yarn-mappings.sqlite`（`classes` / `methods` / `fields`，列含 `named` / `intermediary` / `official`）
 - `源码树` = 按需反编译的 1.21.11 yarn / mojmap 源码（`get_minecraft_source` 产物）
 - `语料` = `data/fabric_1.21.11/fabric-docs/1.21.11/raw/<page>.md`
-- `LIVE` = `maven.fabricmc.net` 实查（截至 2026-09-04）
+- `LIVE` = `maven.fabricmc.net` 实查
 
 ## 已核实（可用）
 
@@ -64,7 +64,7 @@
 - `ToolMaterial` record 六个组件的参数名（映射表只有 `comp_*`），含义顺序以官方 `develop_items_custom-tools` 页为准。
 - 语料里所有 `@[code transclude]` 占位（本档 raw 页未展开），不要当成「文档没给代码」→ 需要示例时回 CLI / 映射表核名。
 
-## 构建版本（LIVE 实查 2026-09-04）
+## 构建版本（LIVE 实查）
 
 | 字段 | 制品坐标 | 值 |
 |------|----------|-----|

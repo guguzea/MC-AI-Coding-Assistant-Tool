@@ -90,6 +90,8 @@ In plain words (in case the diagram does not render):
 2. **Let it see your mod project**: open the project in your host. The agent identifies the platform and the exact version per [AGENTS.md](AGENTS.md), then loads the matching rule set into the conversation.
 3. **Ask for what you need**: look up docs, generate code, triage a crash, or let it playtest inside the game. Anything that writes files, runs Gradle, copies jars, or uploads a release is shown to you first and waits for your confirmation.
 
+> **Before you start building, spend one round aligning the requirements**: hold off on new content / mechanics / gameplay until the AI has run the repo's requirement-grilling skill `mc-grill`. It asks one round of questions at a time, each with a recommended answer, until every branch of the design tree is decided, then hands you a consensus list and waits for your confirmation before writing anything. To trigger it: say "grill me / help me pin down the requirements / let's align first", or type `/mc-grill` (the reliable way); when the requirements are still open, it also enters this step on its own.
+
 ## What it can do
 
 ### Platform rules and skills

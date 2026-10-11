@@ -9,7 +9,7 @@ docsTool: search_docs
 
 # mc-registry（Quilt 1.20.4）
 
-> ⚠️ **QSL 停更（2025-12 说法 `// TODO(未核实)`：原引官方 FAQ 已 404，无法复核）**：本档 maven 上有 QSL 构件 8.0.0-alpha.13+1.20.4（alpha 线，2026-10-01 实测）。本文件中的 QSL API 全部是**源码树考据，非可编译 API**——禁止生成。
+> ⚠️ **QSL 停更（2025-12 说法 `// TODO(未核实)`：原引官方 FAQ 已 404，无法复核）**：本档 maven 上有 QSL 构件 8.0.0-alpha.13+1.20.4（alpha 线，实测）。本档 registry / lifecycle 符号已由该构件 javap 逐字实证（`knowledge/common/qsl-verified.md`）；仍无正式版 ⇒ **默认不生成 QSL**（要用须用户显式确认接受 alpha 依赖）。
 
 核实表：knowledge/common/qsl-verified.md。
 必须 search_docs({platform:"quilt"}) 且 version=1.20.4。02–10 仍读 fabric/1.20.4 overlay。

@@ -85,7 +85,7 @@ IF 注册自定义 Registry
   → 使用 RegistryBuilder + RegistryEvent.NewRegistry + makeRegistry()
 
 IF 平台 = Fabric
-  → 跳转 fabric/1.15.2/AGENTS.md（Fabric 使用 Registry.register() in onInitialize）
+  → 本仓没有 fabric/1.15.2 树（Fabric 建档不含 1.15.2，最近档为 1.14.4 / 1.16.5）——让用户复核平台与版本，禁止拿邻版 Fabric 树顶替
 
 IF 平台 = NeoForge
   → 不要读本 Forge 规则。list_neoforge_versions 锁定精确版本后读 neoforge/<ver>/AGENTS.md。未列入 `list_neoforge_versions` 的版本禁止读邻档 00–10，改口 search_neoforge_docs。

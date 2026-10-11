@@ -33,13 +33,13 @@ dependencies {
 }
 ```
 
-> **坐标复核（读取日期 2026-09-13）**：原写 `15.0.131+1.21` 是 1.21 档的版本号，与本档 MC 1.21.11 不匹配。现值 `21.11.153`：`curl -sS -o /dev/null -w '%{http_code}' https://maven.shedaniel.me/me/shedaniel/cloth/cloth-config-fabric/21.11.153/cloth-config-fabric-21.11.153.pom` → **200**；Modrinth `project/cloth-config/version?game_versions=["1.21.11"]&loaders=["fabric"]` 首条即 `21.11.153+fabric`。再次复核：`curl -sS "https://api.modrinth.com/v2/project/cloth-config/version?limit=400"`。
+> **坐标复核**：原写 `15.0.131+1.21` 是 1.21 档的版本号，与本档 MC 1.21.11 不匹配。现值 `21.11.153`：`curl -sS -o /dev/null -w '%{http_code}' https://maven.shedaniel.me/me/shedaniel/cloth/cloth-config-fabric/21.11.153/cloth-config-fabric-21.11.153.pom` → **200**；Modrinth `project/cloth-config/version?game_versions=["1.21.11"]&loaders=["fabric"]` 首条即 `21.11.153+fabric`。再次复核：`curl -sS "https://api.modrinth.com/v2/project/cloth-config/version?limit=400"`。
 > **未核实**：本节以下代码里的 `ConfigSerializable`、`ConfigEntry.BoolOption.createBuilder(...)` 等成员名本轮未逐条对上游 javadoc 复核（只改坐标），需要单独立项。
 
 
 > 本档取 21.11.153：版本号前缀即 1.21.11 线；本档原稿已带仓库行 ⇒ 只补依据句。Cloth 是第三方库，其 **API 面**（ConfigBuilder / ConfigEntryBuilder 等签名）本包未走 `ingest_loader_api` 入库 ⇒ 写代码前仍须自备 jar 入库逐签名核对，版本号已核实不代表 API 面已核实。
 
-> 版本怎么定（一手判据，2026-09-14 实取 `maven.shedaniel.me/.../cloth-config-fabric/maven-metadata.xml`，126 条）：
+> 版本怎么定（一手判据，实取 `maven.shedaniel.me/.../cloth-config-fabric/maven-metadata.xml`，126 条）：
 > cloth 的版本号形态**从来不带 `+<MC>` 后缀**；MC 线绑在「该版 pom 里 fabric-api 依赖的后缀」上。对照：
 > `4.x → +1.16`｜`5.x → +1.17`｜`6.x → +1.18`｜`7.0.x → +1.19`｜`8.x → +1.19.1`｜`9.x → +1.19.3`｜`10.0.x → +1.19.4`｜
 > `11.x → +1.20`｜`12.x → +1.20.2`｜`13.0.x → +1.20.4`；1.20.5 起改由 jar 内 `fabric.mod.json` 的 `depends.minecraft` 判定：

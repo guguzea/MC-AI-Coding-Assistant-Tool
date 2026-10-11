@@ -2478,8 +2478,9 @@ export function generatePlaytestDriver(input: PlaytestDriverInput): GeneratorRes
     const bridgeFiles = generateBridgeMod(platform, version, modId).files;
     Object.assign(files, bridgeFiles);
     const caveat = platform === "modloader"
-      ? `⚠️ **modloader 1.6.4 只出到「骨架」**：本仓对该档只有 \`ModLoader.setInGameHook\` 一处出处，` +
-        `客户端单例 / 玩家与位置 / 发聊天 / 截图 / 读方块 **5 项全无来源** ⇒ MC 半边逐条 \`TODO(未核实)\` + throw，` +
+      ? `⚠️ **modloader 1.6.4 只出到「骨架」**：本仓对该档已实证三类出处（\`ModLoader.setInGameHook\` 注册 / ` +
+        `\`BaseMod.onTickInGame(float, Minecraft)\` 回调实名 / \`ModLoader.getMinecraftInstance()\` 客户端单例），` +
+        `玩家与位置 / 发聊天（语义）/ 截图 / 读方块 **4 项仍无来源** ⇒ MC 半边逐条 \`TODO(未核实)\` + throw，` +
         `\`/status\` 可用但 \`/execute\` 一律 fail-closed；补齐清单在 README.bridge.md。`
       : platform === "rift"
         ? `⚠️ rift 1.13.2 的 MC 侧名字来自本仓 1.13.2 MCP 快照（与 rift scaffold 同快照）**逐名有出处**；` +

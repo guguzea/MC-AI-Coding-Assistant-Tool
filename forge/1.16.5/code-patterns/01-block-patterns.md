@@ -31,7 +31,7 @@ public static final RegistryObject<Item> STONE_BLOCK_ITEM = ITEMS.register("ston
 ## 带变体的方块（Faced / Horizontal / Axis）
 
 ```java
-// official 构件实证（javap @1.16.5-36.2.34_mapped_official，2026-10-05）：状态容器类 = StateContainer（❌ StateDefinition
+// official 构件实证（javap @1.16.5-36.2.34_mapped_official）：状态容器类 = StateContainer（❌ StateDefinition
 // 是 1.17+ 名）；BlockState 属性读写 = getValue/setValue（❌ get/with 是 MCP 层名）；setBlock / hasNeighborSignal /
 // defaultBlockState / getHorizontalDirection / getDirection 为 official 名。
 // BlockState 定义

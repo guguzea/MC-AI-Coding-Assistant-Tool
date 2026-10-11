@@ -12,14 +12,14 @@
     → 需要 eval → capabilities 写法**未核实**（Learn pack-manifest 无 `script_eval`）
     → 禁止 experimentalGameplay、禁止虚构 worldgen/experimental.json
 → min_engine_version < 约 1.19.80：对照该引擎归档，不要倒灌现行 capabilities
-→ ≥ 1.19.80：世界实验 = level.dat 里 `experiments` compound，每个功能一个 **byte = 1**（关 = 删掉该 byte tag）；「Beta APIs」对应键名 **`gametest`**。出处：wiki.bedrock.dev/nbt/enabling-experiments（2026-09-02 取）= **社区权威，非 Microsoft Learn 官方**，键名只用于手工改 level.dat 分诊，禁止当官方 API 写进 pack 文档。pack JSON 仍**打不开**该开关；Minecraft Education / BDS 无 GUI，只能手改 level.dat
+→ ≥ 1.19.80：世界实验 = level.dat 里 `experiments` compound，每个功能一个 **byte = 1**（关 = 删掉该 byte tag）；「Beta APIs」对应键名 **`gametest`**。出处：wiki.bedrock.dev/nbt/enabling-experiments= **社区权威，非 Microsoft Learn 官方**，键名只用于手工改 level.dat 分诊，禁止当官方 API 写进 pack 文档。pack JSON 仍**打不开**该开关；Minecraft Education / BDS 无 GUI，只能手改 level.dat
 → UI → 只用 stable @minecraft/server-ui（stable/script-server-ui）
 ```
 
 ## 已核实约束
 
 - BP manifest：`modules` 含 `type: script`、`language: javascript`、`entry`（scaffold：`scripts/main.js`）；`dependencies` 含 `module_name: "@minecraft/server"`。
-- 版本号读 `data/bedrock-docs-status.json` 的 `scriptApiStable`（不要写死旧 1.x）。`docsStatus.stale` **不是**拒绝令。
+- 版本号**以 npm dist-tag `latest` 为准**（实况 = `2.10.0`，见 00 的登记行）；`data/bedrock-docs-status.json` 的 `scriptApiStable` 是**语料抓取基准**（会滞后：读 = 2.9.0），两者不一致时用 npm 实况。不要写死旧 1.x。`docsStatus.stale` **不是**拒绝令。
 - 事件概述：`stable/world-after-events`、`stable/system-after-events`。类/模块：`stable/script-server`、`stable/script-api-intro`。
 - 库 Skill：`knowledge/libs/bedrock-only/mc-script-server`、`mc-script-ui`。禁止把 CCA/Trinkets/GeckoLib 当基岩教程。
 

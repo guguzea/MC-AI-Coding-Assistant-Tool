@@ -43,7 +43,7 @@ Block.Properties.of(Material.WOOD)
     .harvestTool(ToolType.PICKAXE)                    // 需要特定工具
     .harvestLevel(0)                                  // 挖掘等级
     .noDrops()                                       // 无掉落
-    .noOcclusion()                                     // 不遮挡相邻面（❌ notSolid = MCP 层名，official 构件实证 2026-10-05）
+    .noOcclusion()                                     // 不遮挡相邻面（❌ notSolid = MCP 层名，official 构件实证）
     .sound(SoundType.WOOD)                           // 音效
 ```
 

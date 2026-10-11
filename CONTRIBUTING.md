@@ -187,7 +187,7 @@ fabric 档 `mappings/` 里的 `yarn-tiny-provenance.json` 记录 tiny named 列�
 - **不要**假设 `mcp-server/data/` 是运行时路径；MCP 读取的是 `MC_SKILL_DATA` 指向的仓库根 `data/`
 - 大体积 `*.jar` / `*.zip` 的忽略规则见根 `.gitignore`；完整包走 Release artifact + `SHA256SUMS` + `data-manifest.json`
 - Redistribute `data/` 时附带 [`THIRD_PARTY_NOTICES.md`](./THIRD_PARTY_NOTICES.md)
-- **新增仓库顶层目录 / 顶层模块时**：交付汇报的「受管面」是根 `AGENTS.md` §交付汇报 里**手列的清单**（现为 8 个平台树 + `data/` / `knowledge/` / `community_knowledge/` / `mcp-server/` / `scripts/` / `agent-tools/` / `openspec/` / `ralphy-spec/` + 根 `*.md`）。**新目录落地必须同步补进那份清单**（清单以那份为准，本节不复述），否则改动它的那一轮会被判成主档、丢掉维护档的台账与门验证汇报。核对方法：把仓库顶层 `ls`（`Get-ChildItem -Directory`）结果与那份清单逐个比对。
+- **新增仓库顶层目录 / 顶层模块时**：交付汇报的「受管面」是 `REPORT-FORMAT.md` §先判档 里**手列的清单**（2026-10-11 从根 `AGENTS.md` §交付汇报 搬出，AGENTS 侧只留人看三件）（现为 8 个平台树 + `data/` / `knowledge/` / `community_knowledge/` / `doc/` / `mcp-server/` / `scripts/` / `agent-tools/` / `openspec/` / `ralphy-spec/` + 根 `*.md`）。**新目录落地必须同步补进那份清单**（清单以那份为准，本节不复述），否则改动它的那一轮会被判成主档、丢掉维护档的台账与门验证汇报。核对方法：把仓库顶层 `ls`（`Get-ChildItem -Directory`）结果与那份清单逐个比对。
 
 ---
 
@@ -236,6 +236,8 @@ processed 正文里的这两行都是**转引标记**，不是可执行代码；
 ### 台账、豁免与债务
 
 - **数字只能由门自己重算**：G3 `MC_SKILL_CORPUS_RELEDGER=1`、G4 `MC_SKILL_INDEX_RELEDGER=1` 转储后回填；G1/G2 的 LEDGER 常量取门成功行打印的实测值。**文档不重述会腐烂的计数**，只述口径。
+- **台账与实施状态一史一处**：记录类内容只住各自唯一落点（逐批实现史 / 语料取证史 / 夜批回执 / 债务账各有其家），面上（含人读 README 系）只留指针句；落点表与搬动程序见 [`WRITING-FOR-AGENTS.md`](./WRITING-FOR-AGENTS.md) §6。
+- **工具错误码台账**（实跑取证 + 全工具覆盖清单 + `PLAYTEST_VERIFIED_TIER` 计数快照）住 [`doc/tool-error-codes.md`](./doc/tool-error-codes.md)（2026-10-11 自 README 系 / `mcp-server/README.md` 并入）；README 两语只在文末「指针表」留一行指针。
 - **台账外新增即红；台账条目停止复现也即红**（drain check，G1/G3/G4 均已实现双向对账）。债务清单**清空而不删除**：留空数组 = 零容忍，复发才响亮。
 - 门禁**一律不删文件**。`data/` 下的残留（`db.sqlite.old` / `tmp-*`）只钉进 `DEBT_RESIDUE` 并出待删清单，删除动作归数据拥有者。
 - 每个门禁条款必须**可被点名的投毒红**（`mcp-server/test-scripts.mjs` 内逐条 poison 已在册）。
@@ -419,9 +421,11 @@ docs(fabric/1.21.1): 补充 mixin 反模式
 1. **开工闸（fail-closed）**：`git status --porcelain` 非空即不许开工（别人改到一半的工作树是别人的现场，不是脏数据）。分支 `maint/night-batch-<日期>` 从主场 HEAD 切出，记录切点 sha + 时间戳（进场锚）。
 2. 逐片作业：先声明（片 id / 准入类别 / 改动面 / 绿据命令）→ 执行 → 跑该片绿据与第 8 步（`cd mcp-server && node test-scripts.mjs`）→ **一片一提交**（commit message 带片 id 与准入类别）→ 回执照写一行。
 3. 超准入即停片：执行中发现该片超出声明准入，立刻停手，该片记「未做 · 超准入」进回执，不硬做。
-4. **收尾对锚**：核对主场 HEAD == 分支切点（附时间戳）。位移 = 该批**复锚重切**（从新 HEAD 重做），口径同根 `AGENTS.md`「进场 pin、出场 lease」。
+4. **收尾对锚与回执提交**：核对主场 HEAD == 分支切点（附时间戳），位移 = 该批**复锚重切**（从新 HEAD 重做），口径同根 `AGENTS.md`「进场 pin、出场 lease」；把本批回执追加到 `NIGHT_BATCH.md`，并在维护分支上补一个批级「回执提交」。
 
 ### 夜批回执格式
+
+**固定落点**：仓库根 `NIGHT_BATCH.md`（滚动追加、最新在上）。批末把本批回执追加进去，并在维护分支上补一个**批级「回执提交」**（独立于「一片一提交」），随接受合并进主线——协作者 clone 即见队列状态。
 
 回执头（一批一行）：
 
@@ -458,6 +462,8 @@ per 片一行：
 - **加门**：把该片暴露的失败形态变成一道能红的门（首选——这是撤销的转化形态）；
 - **收窄准入**：把该片所属类别从准入里划掉或加限制条件。
 
+抽查结论体现在合并动作里（**接受 = 合入；撤销 = 丢弃该片提交**）；需要转化或收窄的裁决按「单向门待转化」写进下份任务书。
+
 ### 发起任务书模板
 
 ```
@@ -469,7 +475,7 @@ per 片一行：
     准入：<门/夹具/脚本 | 根文档 | mcp-server 内部文档>（越界即停）
     改动面：<预计文件清单>
     绿据：<命令 + 期望退出码/关键数>
-回执：落 <路径>，格式见本文件「夜批回执格式」
+回执：固定落点 NIGHT_BATCH.md（仓内滚动追加），格式见本文件「夜批回执格式」
 硬边界：同「单次作业流程」；开工闸 = 工作树洁净。
 ```
 

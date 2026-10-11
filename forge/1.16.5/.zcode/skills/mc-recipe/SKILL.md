@@ -15,7 +15,7 @@ mappings: official
 注册 IRecipeType（静态） → 实现 IRecipe 类 → 注册 IRecipeSerializer（静态） → DataGen（可选）
 ```
 
-> javap 实证 2026-10-05（真构件 `forge-1.16.5-36.2.34_mapped_official_1.16.5`）：本档类名带 `I` 前缀 = `IRecipe` / `IRecipeType` / `IRecipeSerializer`；`RecipeType` / `RecipeSerializer` / `CraftingContainer` 都是 **1.17.1+ 名**，本档构件没有。合成容器类名 = `CraftingInventory`。
+> javap 实证（真构件 `forge-1.16.5-36.2.34_mapped_official_1.16.5`）：本档类名带 `I` 前缀 = `IRecipe` / `IRecipeType` / `IRecipeSerializer`；`RecipeType` / `RecipeSerializer` / `CraftingContainer` 都是 **1.17.1+ 名**，本档构件没有。合成容器类名 = `CraftingInventory`。
 
 ## 1. 注册 IRecipeType
 
@@ -134,7 +134,7 @@ public class MyRecipeSerializer implements IRecipeSerializer<MyRecipe> {
 - ❌ `getCraftingResult` / `canFit` / `read`/`write`（≤1.14.4 旧名）→ 本档接口是 `assemble` / `canCraftInDimensions` / `fromJson`·`fromNetwork`·`toNetwork`
 - ❌ `IRecipeType` 写在 DeferredRegister 中 → 不支持，必须用 `IRecipeType.register()`
 - ❌ `IRecipeSerializer` 忘了在 mod 初始化时调用 → 配方无法被加载
-- ❌ 按 1.17+ 写法用 `RecipeType`/`RecipeSerializer`/`CraftingContainer` → 本档构件没有这些类名（javap 实证 2026-10-05）
+- ❌ 按 1.17+ 写法用 `RecipeType`/`RecipeSerializer`/`CraftingContainer` → 本档构件没有这些类名（javap 实证）
 
 ## 参考资料
 

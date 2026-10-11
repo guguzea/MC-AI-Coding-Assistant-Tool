@@ -204,18 +204,19 @@ public class ModBlockTagsProvider extends BlockTagsProvider {
 
 // ItemTagsProvider
 public class ModItemTagsProvider extends ItemTagsProvider {
-    // TODO(未核实：blockLookupProvider 未在 forge 1.20.1 语料命中，需 search_forge_docs 复核或反编译)
-    //（该形参名本档语料从未逐字出现；语料里 ItemTagsProvider 只出现在 provider 对照表
-    //  data/forge_1.20.1/forge-docs/1.20.1/processed/datagen_server_tags.md:72 与 `#copy` 用法 :89-99，均无构造签名；
-    //  语料给出的形参名风格是 `registries` / `fileHelper`，见同档 :106、:120）
+    // 1.20.1 实测（构件 javap）：真签名 = ItemTagsProvider(PackOutput,
+    //   CompletableFuture<HolderLookup.Provider>, CompletableFuture<TagsProvider.TagLookup<Block>>,
+    //   String, ExistingFileHelper)——第三参是 TagLookup<Block>（旧文本写成 HolderLookup.Provider 编译不过），
+    //   且没有「三参 + String」的四参重载（旧文本的 super(..., MOD_ID) 无匹配）；形参名 blockLookupProvider 为示例自取。
     public ModItemTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider,
-            CompletableFuture<HolderLookup.Provider> blockLookupProvider) {
-        super(output, lookupProvider, blockLookupProvider, MOD_ID);
+            CompletableFuture<TagsProvider.TagLookup<Block>> blockLookupProvider,
+            String modId, ExistingFileHelper existingFileHelper) {
+        super(output, lookupProvider, blockLookupProvider, modId, existingFileHelper);
     }
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
-        // TODO(未核实：PIGLIN_LOVED 未在 forge 1.20.1 语料命中，需 search_forge_docs 复核或反编译)
+        // 1.20.1 实测同 javap：ItemTags.PIGLIN_LOVED 在场（原 TODO(未核实) 就此销账）
         tag(ItemTags.PIGLIN_LOVED)
             .add(ModItems.MY_INGOT.get());
     }

@@ -8,7 +8,7 @@ modrinthSlug: trinkets
 mappings: hint
 ---
 
-> 数据读取日期：2026-09-14（源：Modrinth project/trinkets 版本表 limit=100；本轮 release 上界 fabric=1.21.1 / quilt=1.20.4）
+> 数据来源：Modrinth project/trinkets 版本表 limit=100；本轮 release 上界 fabric=1.21.1 / quilt=1.20.4
 > 复核：curl.exe --ssl-no-revoke -sS "https://api.modrinth.com/v2/project/trinkets/version?limit=100" 后按 game_versions + loaders + version_type 取上界
 
 # Trinkets 饰品槽（Fabric/Quilt）
@@ -25,7 +25,7 @@ Decision: 饰品槽方案选择
    ├─ mcVersion 1.21.4+ / 26.x → 停更窗口，不要用：自研槽位（组件/NBT）或原版机制
    │    └─ 必须要现成饰品槽 → 社区移植 `trinkets-polymer`（Modrinth 项目 id `G8hlgtEk`，标题 *Polymer Patch for Trinkets Updated*）：
    │         1.21.4 起有 `3.11.0-beta.1+polymerport.0`；26.1.2 = `4.0.0-beta.1.0+26.1` / `4.0.0-rc.1.0+26.1`，26.2 = `4.1.0-beta.1.0+26.2` / `4.1.0-rc.1.0+26.2`
-   │         （截至 2026-09-04 最新 `4.1.0-rc.1.0+26.2`，2026-08-18）——**26.x 线全为 beta/rc、无 release，且 loaders 只有 fabric（无 quilt）**；生产环境仍优先自研槽位
+   │         （最新 `4.1.0-rc.1.0+26.2`，2026-08-18）——**26.x 线全为 beta/rc、无 release，且 loaders 只有 fabric（无 quilt）**；生产环境仍优先自研槽位
    └─ 已选 Trinkets：
         ├─ 槽位：数据驱动定义（槽组 JSON，6 组默认），以官方格式为准
         ├─ 物品：注册为饰品（接口/注册 API 以官方 README 为准），声明可放入的槽组

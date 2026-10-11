@@ -65,7 +65,7 @@ public class DataGenerators {
 
 ```java
 // datagen/ModRecipes.java
-// 构件实证（2026-10-05 javap 对 1.16.5-36.2.34_mapped_official_1.16.5.jar 逐名点名，覆盖旧 TODO）：
+// 构件实证（javap 对 1.16.5-36.2.34_mapped_official_1.16.5.jar 逐名点名，覆盖旧 TODO）：
 // Items.DIAMOND/STICK/GOLD_INGOT/COBBLESTONE 在 net.minecraft.item.Items；Ingredient.of(IItemProvider...) 在构件（❌ fromItems 是 1.14 MCP 名）；
 // buildShapelessRecipes(Consumer<IFinishedRecipe>)/shaped/pattern/define/unlockedBy/has(IItemProvider)/save 均逐字命中；
 // 熔炉 = CookingRecipeBuilder.smelting(Ingredient, IItemProvider, float, int)（❌ SimpleCookingRecipeBuilder 为 1.19.4+ 类名，本包构件没有）
@@ -103,7 +103,7 @@ public class ModRecipeProvider extends RecipeProvider {
 `BlockStateProvider` 构造：`DataGenerator`、`modId`、`ExistingFileHelper`。
 
 ```java
-// 构件实证（2026-10-05 javap @1.16.5-36.2.34_mapped_official_1.16.5.jar）：
+// 构件实证（javap @1.16.5-36.2.34_mapped_official_1.16.5.jar）：
 // BlockStateProvider.simpleBlock(Block)/simpleBlock(Block, ModelFile) 在构件；models() 返回 BlockModelProvider，
 // 其基类 ModelProvider<T> 声明 cubeAll(String, ResourceLocation)/withExistingParent/modLoc/mcLoc 全部逐字命中。
 // 旧 TODO「未在语料命中」已过时（当时只有 docs 语料、没有构件），现按构件点名改写。
@@ -124,7 +124,7 @@ public class ModBlockStatesProvider extends BlockStateProvider {
 ## 物品模型（来自方块）
 
 ```java
-// 构件实证（2026-10-05 同上 jar）：ItemModelProvider 在构件（extends ModelProvider<ItemModelBuilder>，
+// 构件实证（同上 jar）：ItemModelProvider 在构件（extends ModelProvider<ItemModelBuilder>，
 // 自身仅声明 getName，withExistingParent/modLoc 由基类 ModelProvider<T> 继承而来，逐字点名）。
 public class ModItemModelsProvider extends ItemModelProvider {
     public ModItemModelsProvider(DataGenerator generator, ExistingFileHelper helper) {

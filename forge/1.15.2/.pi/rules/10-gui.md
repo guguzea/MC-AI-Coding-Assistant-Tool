@@ -82,7 +82,7 @@ IF inventory with multiple slots
 // 1. Define the Container class
 public class MyContainer extends Container {
     // 工厂契约（IForgeContainerType.create(MyContainer::new)）的第三参是 PacketBuffer（IContainerFactory 签名），
-    // 不是 IInteractionObject —— 第三参类型不符则方法引用编译不过（W3-2 同族，2026-09-21 修）。
+    // 不是 IInteractionObject —— 第三参类型不符则方法引用编译不过（W3-2 同族，修）。
     public MyContainer(int windowId, PlayerInventory inv, PacketBuffer data) {
         super(MyContainers.MY_CONTAINER.get(), windowId);
         // slot layout...
@@ -141,7 +141,7 @@ public SUpdateTileEntityPacket getUpdatePacket() {
 // Set from server
 public void setSyncData(int value) {
     this.syncData = value;
-    this.setChanged(); // markDirty = MCP 层名，152 official TileEntity = setChanged（构件实证 2026-10-05）
+    this.setChanged(); // markDirty = MCP 层名，152 official TileEntity = setChanged（构件实证）
     this.level.notifyBlockUpdate(pos, getBlockState(), getBlockState(), 3); // TileEntity official 字段 = level（无 world/getWorld）
 }
 ```
@@ -151,7 +151,7 @@ public void setSyncData(int value) {
 ```java
 public class MyBlock extends Block {
     @Override
-    // official 构件实证（javap @1.15.2-31.2.50_mapped_official，2026-10-05）：右键回调 = use(...) 返回 ActionResultType；
+    // official 构件实证（javap @1.15.2-31.2.50_mapped_official）：右键回调 = use(...) 返回 ActionResultType；
     // MCP 层旧形态的右键回调返回 boolean——本档 official 没有该形态（判死与正解见 02-block.mdc:13）
     public ActionResultType use(BlockState state, World world, BlockPos pos,
             PlayerEntity player, Hand hand, BlockRayTraceResult hit) {

@@ -47,6 +47,18 @@ export const REGISTRY = [
     file: "community_knowledge/authored/ingame-playtest-automation.md",
     why: "游玩自测的口径 / 坑位 / 逐轮取证史（根纲「游玩自测」段指派的家）",
   },
+  {
+    file: "NIGHT_BATCH.md",
+    why: "维护面夜批回执（滚动；队列唯一载体与抽查记录的家，协议见 CONTRIBUTING.md「维护面夜批协议（阶 1）」）",
+  },
+  {
+    file: "DELIVERY_LOG.md",
+    why: "每轮交付底稿正文（滚动；2026-10-11 汇报拆分后编号块的落点；表单见 REPORT-FORMAT.md，聊天形状见 AGENTS.md §交付汇报）",
+  },
+  {
+    file: "doc/tool-error-codes.md",
+    why: "工具错误码台账（实跑取证 + 全工具覆盖清单 + PLAYTEST_VERIFIED_TIER 计数快照；2026-10-11 自 README 系 / mcp-server/README.md 并入）",
+  },
 ];
 
 /** 常驻 / 必读面：这些文件在 agent 的默认读取路径上，提及才防得住静默失效。 */

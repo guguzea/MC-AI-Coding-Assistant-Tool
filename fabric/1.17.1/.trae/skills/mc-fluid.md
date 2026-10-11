@@ -9,7 +9,7 @@ mappings: yarn
 
 # 流体开发（Fabric 1.17.1）
 
-## 本档更正（2026-10-05；证据 = 本档 yarn 映射 `data/fabric_1.17.1/mappings/yarn-mappings.sqlite` 与本档 Fabric API 真构件 roster）
+## 本档更正（证据 = 本档 yarn 映射 `data/fabric_1.17.1/mappings/yarn-mappings.sqlite` 与本档 Fabric API 真构件 roster）
 
 - 旧正文的 `new FabricFlowableFluid.Settings().slopeFindDistance(3).levelDecreasePerBlock(1).tickRate(5)` 全部零命中：`FabricFlowableFluid` / `slopeFindDistance` / `levelDecreasePerBlock` / `supportsBoating` 不在本档 Yarn 映射；`FlowableFluid` 本档映射里的具名嵌套类只有 `$1`，**没有 `$Settings`**；`tickRate` 在本档映射 0 命中（1.20.4 起也只属 `TickManager` / `UpdateTickRateS2CPacket`，与流体构造无关）。流体没有 Settings builder，实例只能**子类化 `FlowableFluid`**（本档真实类 `net/minecraft/fluid/FlowableFluid`）。
 - 旧正文用同一 id 连调两次 `Registry.register(Registry.FLUID, …)`（第二次还注册第一次的返回值）：重复注册即报错路径；流体只注册一次，「流体对应的方块」是另一条 BLOCK 注册，不是再注册一次 FLUID。

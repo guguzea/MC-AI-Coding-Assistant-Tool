@@ -43,7 +43,7 @@ public class MyEntity extends LivingEntity {
 
 ## 投掷物实体（Projectile）
 
-official 构件实证（javap @`forge-1.15.2-31.2.50_mapped_official_1.15.2.jar`，2026-10-05）：152 official 构件**没有**
+official 构件实证（javap @`forge-1.15.2-31.2.50_mapped_official_1.15.2.jar`）：152 official 构件**没有**
 `Projectile` / `ProjectileEntity` 通用投掷物基类（`ProjectileEntity` 是 1.16+ 类名）；generic 形态走 `ThrowableEntity`，
 命中回调 = `onHit(RayTraceResult)`（❌ `onImpact` = MCP 层名）。❌ `this.world` / `getPosX` / `createExplosion` 同理，
 official = `this.level` / `position()` / `World#explode(...)`。

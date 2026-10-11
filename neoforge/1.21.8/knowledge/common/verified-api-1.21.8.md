@@ -48,8 +48,8 @@
 
 ## 对照签字
 
-| 编号 | 对照 URL | 抓取日 | 结论 |
-| 03 | https://docs.neoforged.net/docs/1.21.8/items/ | 2026-08-16 | 已按该版文档改写（DeferredItem + setNoCombineRepair） |
-| 04 | https://docs.neoforged.net/docs/1.21.8/entities/ | 2026-08-16 | 本编号 API 与邻档相同，非未核克隆 |
-| 08 | https://docs.neoforged.net/docs/1.21.8/concepts/sides/ | 2026-08-16 | 已按该版文档改写（FMLEnvironment.dist + @Mod dist） |
+| 编号 | 对照 URL | 结论 |
+| 03 | https://docs.neoforged.net/docs/1.21.8/items/ | 已按该版文档改写（DeferredItem + setNoCombineRepair） |
+| 04 | https://docs.neoforged.net/docs/1.21.8/entities/ | 本编号 API 与邻档相同，非未核克隆 |
+| 08 | https://docs.neoforged.net/docs/1.21.8/concepts/sides/ | 已按该版文档改写（FMLEnvironment.dist + @Mod dist） |
 

@@ -44,9 +44,9 @@ platform=neoforge minecraftVersion=1.21.1 并传 buildPlugin）。   + **官方 
 
 ## 对照签字
 
-| 编号 | 对照 URL | 抓取日 | 结论 |
-| 03 | https://docs.neoforged.net/docs/1.21.1/items/ | 2026-08-16 | 已按该版文档改写（Supplier + 无 setId 必填） |
-| 04 | — | — | 无独立 entities 页（DOC_NOT_FOUND）；04-entity 为 stub |
-| 08 | https://docs.neoforged.net/docs/1.21.1/concepts/sides/ | 2026-08-16 | 已按该版文档改写（FMLEnvironment.dist + @Mod dist） |
+| 编号 | 对照 URL | 结论 |
+| 03 | https://docs.neoforged.net/docs/1.21.1/items/ | 已按该版文档改写（Supplier + 无 setId 必填） |
+| 04 | — | 无独立 entities 页（DOC_NOT_FOUND）；04-entity 为 stub |
+| 08 | https://docs.neoforged.net/docs/1.21.1/concepts/sides/ | 已按该版文档改写（FMLEnvironment.dist + @Mod dist） |
 
 - 复数 Handlers 事件名的分界在 **1.20.5 / 1.20.6**，不是本档：本仓语料实测 1.20.4 仍是单数 `RegisterPayloadHandlerEvent`（`data/neoforge_1.20.4/neoforge-docs/1.20.4/processed/networking_payload.md:9`），1.20.6 已改复数 `RegisterPayloadHandlersEvent`（`data/neoforge_1.20.6/neoforge-docs/1.20.6/processed/networking_payload.md:9`，同页 :85 `registrar.playBidirectional(`）；本仓无 `data/neoforge_1.20.5` 主文档语料，故分界只钉到这一档距。本档 1.21.1 沿用复数形态。payload 用 CustomPacketPayload.Type + StreamCodec + playBidirectional/ToClient/ToServer。
