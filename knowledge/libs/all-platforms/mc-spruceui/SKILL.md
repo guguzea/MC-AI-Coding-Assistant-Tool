@@ -41,7 +41,7 @@ Decision: 用不用 SpruceUI / ObsidianUI
 
 ## 核心 API 速查
 
-具体类名以 ObsidianUI README/源码为准（注意：暂未反编译核对，catalog 无 verifiedApi），下面只列能力与流程：
+具体类名以 ObsidianUI README/源码为准（本档 API 摘要 `spruceui-obsidianui.json` 在盘，catalog 的 `verifiedApi` 非空），下面只列能力与流程：
 
 - **Screen 基类**：继承/实现库提供的 Screen 基类，用其控件构建界面（按钮/文本框/列表等抽象）
 - **客户端专用**：Screen 相关代码只放 client 侧，服务端槽位/数据同步仍走原版容器 + 网络包

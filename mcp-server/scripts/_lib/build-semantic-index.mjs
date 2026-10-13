@@ -769,10 +769,14 @@ async function main() {
       }
     }
     const byKey = new Map();
+    const liveKeys = new Set(entries.map((e) => `${e.platform}|${e.version}|${e.source}`));
     for (const e of prev.entries ?? []) {
-      if (e?.platform && e?.version && e?.source) {
-        byKey.set(`${e.platform}|${e.version}|${e.source}`, e);
-      }
+      if (!(e?.platform && e?.version && e?.source)) continue;
+      const k = `${e.platform}|${e.version}|${e.source}`;
+      // prune 死条目：本轮 targets 未覆盖且盘上库不存在的历史条目不再滞留台账
+      // （否则 sha256/chunks 指向不存在的库，A1 自检只看路径**形状**、不查存在，永远看不见）。
+      if (!liveKeys.has(k) && !existsSync(semanticDbPath(dataRoot, e.platform, e.version, e.source))) continue;
+      byKey.set(k, e);
     }
     for (const e of entries) {
       byKey.set(`${e.platform}|${e.version}|${e.source}`, e);
@@ -785,8 +789,9 @@ async function main() {
     const merged = [...byKey.values()].sort((a, b) =>
       `${a.platform}|${a.version}|${a.source}`.localeCompare(`${b.platform}|${b.version}|${b.source}`),
     );
-    const mergedMode =
-      prev.embedMode === "hybrid" || embedMode === "hybrid" ? "hybrid" : embedMode;
+    // 按本轮实况写（旧码 `prev==="hybrid" || embedMode==="hybrid"` ⇒ 一次 fts5-only 重建后顶层仍标 hybrid，
+    // 让按顶层字段判「有没有向量层」的消费者被骗；每条的 embedded 计数才是真值）。
+    const mergedMode = embedMode;
     // A1 自检：manifest 里不允许出现绝对路径（win32 盘符 / posix 根）。
     const absLeak = merged.filter((e) => /^([A-Za-z]:[\\/]|\/)/.test(String(e.path ?? "")));
     if (absLeak.length) console.warn(`[warn] semantic-index-manifest.json 仍有绝对路径 ${absLeak.length} 条：` + absLeak.slice(0, 3).map((e) => `${e.platform}/${e.version}/${e.source}`).join(", "));

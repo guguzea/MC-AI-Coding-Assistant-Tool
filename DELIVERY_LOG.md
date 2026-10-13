@@ -8,6 +8,139 @@
 
 ---
 
+## 2026-10-12 · 只读审查（`temp/audit-20261011`）非版本面修复 · 批 B（~27 P1）+ 批 C（~115 P2 + P3）（维护档）
+
+**第 0 块 · 结论**：按审计判决修完**非版本面**的批 B 与批 C —— `src`/`scripts`/门脚本的 P1 与 P2 逐条落地，文档与计数块对齐现值，P3 只做可操作且不产生新假红项；版本面（8 个平台树）仍**只出移交清单、不改文件**。验证链全绿：`npm run build` / `node test-scripts.mjs` / `npm test` / `test:cli:quick` / `test:cli:full` 均 exit 0，两新门与 `assert-authoring-lint` 直跑绿。**无落盘风险**：未 commit、未 push。**一处需你拍板**：见第 6 块 —— 为容纳 `generateCapability` 的上界哨兵，把 `assert-generator-rejection-codes` 的未判定地板 4→5。
+
+### 1. 改了哪些文件
+
+**`mcp-server/src`（B1 P1 + C1 P2，共 45 件）**
+- `lib-skills/index.ts`（去根级 `.refine`，ZodEffects 使 MCP inputSchema 空）；`loader-api/extract.ts`（varargs / C 数组维）；`mappings/yarn-sqlite.ts` + `lookup-obfuscated.ts` + `mixin/method-string.ts` + `mixin/resolve.ts` + `mixin/access-transformer.ts`（SRG 正则放宽 + `prefer=forge` + `mojang_hashed`→`from=mcp`）；`prompts/templates.ts`（3 处 Quilt entrypoint）+ `prompts/index.ts` + `mixin/index.ts`；`porting/index.ts`（26.x 不写 parchment）。
+- P2：`validate/index.ts`、`wave/register.ts`、`docs-platform/fabric/index.ts`、`generators/index.ts`、`bedrock/index.ts`、`playtest-bridge/index.ts`、`playtest-evidence/index.ts`、`update/github.ts`、`build-log/index.ts`、`audit-resources/index.ts`、`cli-parse.ts`、`platform-pack/detect.ts`、`platform-pack/write.ts`、`gradle/index.ts`、`datapack/index.ts`、`diagnostics/index.ts`、`utils/actionable.ts`（A-27 计数 380→381）等。
+
+**`mcp-server/scripts`（B2 P1 + C2 P2 + B3 门 P1，共 30 件）**
+- 生产者：`parchment-extractor.js`、`process-neoforge-docs.js`、`forge-javadoc-indexer.js`、`tsrg-extractor.js`、`process-fabric-docs.js`、`process-fabric-wiki.js`、`process-forge-docs.js`、`provision-26x-docs.mjs`、`probe-forge-versions.js`、`probe-neoforge-versions.js`、`postinstall.mjs`、`pin-mdk-checksums.mjs`、`generate-porting-breakdown.js`。
+- `_lib/`：`api-name-collector.mjs`、`build-yarn-sqlite.mjs`、`import-mcp-csv.mjs`、`import-forge-srg.mjs`、`import-tsrg.mjs`、`build-semantic-index.mjs`。
+- 门：`assert-test-harness.mjs`、`assert-registry-limit-window.mjs`、`assert-rule-ledger.mjs`、`assert-rule-java-shapes.mjs`、`assert-scaffold-mixin-shape.mjs`、`assert-glossary-mojmap-face.mjs`、`assert-cross-layer-names.mjs`、`assert-skill-mappings-key.mjs`、`assert-index-channel-layout.mjs`、`assert-generator-rejection-codes.mjs`（地板 4→5）。
+
+**根 `scripts/`**：`build-api-summaries.mjs`、`pin-mdk-checksums.mjs`、`project-cloth-skill.mjs`、`validate-rules-against-cache.mjs`。
+
+**测试**：`test-core.mjs`（`m_46859_` 断言语义反转 + 新增真·不存在 token 用例）、`test-decompile.mjs`、`test-cli.mjs`、`test-mdk-npm-form.mjs`（`test()` 补 thenable 检测）、`test-scripts.mjs`。
+
+**文档 / 元信息（B4/B5 + C3）**：根 `README.md` / `README.en.md` / `README_human.md` / `README_human.en.md` / `AGENTS.md` / `AUTO_SETUP.md` / `CONTRIBUTING.md` / `CONTRIBUTING.en.md` / `CONTRIBUTING_LIST.md` / `CORPUS_PROVENANCE.md` / `THIRD_PARTY_NOTICES.md` / `CHANGELOG.md` / `Minecraft 社区常用库模组全览（2026 版）.md` / `server.json` / `doc/tool-error-codes.md` / `mcp-server/README.md` / `mcp-server/CHANGELOG.md` / `mcp-server/docs/{mcmap-linkie-absorption,mixin-support,query-api-classname-case,evidence-forge-registries-all-versions,mc-skill-update}.md` / `knowledge/libs/**`（README + 6 份 SKILL）/ `common_skill/{README.md,mc-router/SKILL.md}` / `.github/{SECURITY,CODE_OF_CONDUCT,ISSUE_TEMPLATE/bug_report.md,ISSUE_TEMPLATE/config.yml,dependabot.yml,workflows/release-mcp-server.yml}` / `community_knowledge/{ATTRIBUTION.md,README.md,authored×4,links×3,indexes/index-l0.json}`。
+
+### 2. 判据与反证
+
+- **`isMounted`（assert-rule-ledger）**：旧判据 = 宿主全文裸子串，`test-scripts.mjs` 里那张「本文件完全未引用 Y=10 道（列名：…）」的 `console.log` 串与注释都能把它喂绿。新判据分族：`assert-*` 要求 `scripts/<gate>` 路径段、`test-*` 要求剥离行首 `//` 后的独立 token。**踩坑与纠正**：首版把 `./scripts/` 归一成 `scripts/` 却仍要求前导定界符 ⇒ 实测 52 条假红（真挂载 `"./scripts/<gate>"` 前是 `/`）；改为断言-族走路径段、测试-族走 token 后 86 条全绿。
+- **R-2 窗口锚（assert-test-harness）**：旧锚 `indexOf("function test(")` 会落到 `test-mdk-npm-form.mjs` 注释里的 `` `function test(` `` 字面量上（+400 窗口正好覆盖下一行注释的 "thenable"）⇒ 假绿。新锚 `LOCAL_HARNESS.exec().index` 实测抓出该文件同步 `test()` 未处理 thenable ⇒ 已给该文件补 thenable 检测（该文件是真缺陷，不是误报：`test-decompile.mjs` 参考实现就有）。R-4 另加两条恒真模式。
+- **`test-core` 的 `m_46859_`**：审计 `R4-V2-008-009` 明证 `m_/f_` 形是 **Forge SRG（MCP 侧）**名、就在 `data/forge_1.20.1/mappings/yarn-mappings.sqlite` 的 `methods.name_named`（实测 `m_46859_` → `isEmptyBlock`）。旧断言「NOT_FOUND + mojang-hashed 名不在 yarn sqlite」编码的是**修前缺陷行为**，故反转并另加真·不存在 token 保留否证意图。同批把 `lookup-obfuscated.ts` 的 NT_FOUND 建议串从「mojang-hashed（m_/f_）名不在 yarn sqlite 中」改成真事实。
+- **`union-number`（cli-parse）**：首版「凡 union 含 number 成员即转 number」实测打破 `test-cli-parse.mjs:155`（`string|number` union 的 `"123"` 被转成 `123`）；改为**含 number 且不含 string** 才转 —— `packFormat: number|[number,number]` 可达，`string|number` 保持原样（:122 与 :155 双绿）。
+- **A-27 计数**：`src/build-log/index.ts` 新增 `LOG_HARD_MAX` 拒绝位点（真 +1）与 `lib-skills/index.ts` 注释里手写的 `ok:false` 字面量（误 +1）共推高 2；注释改写为「落失败分支」并把口径数字 380→381（`actionable.ts` 头注，`grepLines` 358 在 ±5 窗内）。
+
+### 3. 验证台账
+
+- `cd mcp-server && npm run build`（tsc）⇒ 无输出（成功）。
+- `node test-scripts.mjs` ⇒ **rc=0**（盘上 77 道 assert-* / 可达 77 · §S18/S19 真跑 52 道 · W1-2 selftest 42 道 · 末行 `script helper regression tests passed`）。
+- `npm test` ⇒ **exit 0**；`npm run test:cli:quick` ⇒ exit 0；`npm run test:cli:full` ⇒ exit 0。
+- 新门 / 受影响门直跑：`assert-prose-name-roster.mjs`（`--selftest` + 真跑）、`assert-registry-field-existence.mjs`（`--selftest` + 真跑）、`assert-authoring-lint.mjs` ⇒ 均绿。
+- 社区索引随 frontmatter（3 个 links 补 `mcHint`）重建：`node scripts/build-community-index.mjs --write` ⇒ `wrote 110 entries`；`test-core` 的 `testCommunityIndexSync` 由红转绿。
+- 未跑：语料抓取类命令（与 `npm test` 并发会假红）；`mc_skill_update check`。
+
+### 4. 数据侧变更
+
+- `data/forge_1.13.2/extracted/{api-index,class-names,method-lookup}.json` 重建（`tsrg-extractor.js` 登记恒等 `CL:` 行的直接产物）：键 3993→**4027** / 非空类 3827→**3861** / 成员 **40635** / 类名 3993→**4027**。
+- `community_knowledge/indexes/index-l0.json` 重建（110 条；3 个 links 文件的 `mcHint` 变更）。
+- （批 A 已重建的 `data/forge_{1.7.10…1.12.2}/extracted/**` 24 件不在本轮。）
+
+### 5. 未做清单
+
+- `assert-rule-ledger` 的 `evidenceRefs` 仍允许指向 gitignored 的 `temp/`（fresh clone 必红）—— 审计记的独立项，本批未处理。
+- `CORPUS_PROVENANCE.md` 7 处「原 `AGENTS.md:NNN`」历史行号漂移未改（需补 commit 锚或改指章节名）。
+- 根文档内 `src/...` 缺 `mcp-server/` 前缀的 P3 群（`AGENTS.md` / `AUTO_SETUP.md` / `CONTRIBUTING*.md` / `README.md:1023`）未逐处改（低价值、改有误伤风险）。
+- `README_human.en.md` 的 F&Q 第 4 条与 QQ/Discord 段相对中文版缺失（翻译滞后）未补。
+- 版本面全部（`fabric|forge|neoforge|quilt|bedrock|liteloader|rift|modloader/<档>/**`）**未改**，移交清单见 `temp/audit-20261011/HANDOVER-VERSION-FACE.md`。
+- 未 commit、未 push（提交归用户）。
+
+### 6. 自我更正
+
+- **需你拍板**：`mcp-server/scripts/assert-generator-rejection-codes.mjs` 的 `UNJUDGED_CEILING` 由 **4 抬到 5**。原因：C1 给 `generateCapability` 补了与 `generate_model/_lang/_config/_worldgen/_entity_runner` 四兄弟同形的上界哨兵，多出一个「`errors` 正文由变量/函数调用组成」的静态未判定（运行期有码，实测 `VERSION_UNSUPPORTED`）。该门自述「只许降不许增」，此抬动即一次**棘轮放宽** —— 若你要求严守，替代是**撤掉 `generateCapability` 的上界哨兵**（`26.99.9` 会被 `isNeoForgeAttachmentVersion` 的 `/^26\.\d/` 放行、回 `ok:true` + 骨架）。二者择一，现取「保哨兵、抬地板并在门内注释与交付里双记」。
+- 本批多为我自己 B/C 改动触发的连带红（`assert-rule-ledger` / `assert-test-harness` / `test-core` / `test-cli-parse` / `test-wave-bcd` / `assert-generator-rejection-codes`），均已在**改地面文**一侧收口（不靠改 harness 变绿，唯一例外是上面那条显式记名的地板抬升）。
+- 批 A 节（本文件下一节）所述「未跑 `mc_skill_update check`」在本批同样成立。
+
+---
+
+## 2026-10-12 · 只读审查（`temp/audit-20261011`）非版本面修复 · 批 A（P0 三条 + 三条反向检测门腿）（维护档）
+
+**第 0 块 · 结论**：按审计判决修掉**非版本面**批 A —— 3 个 P0（legacy Forge 六档 api-index 全员错挂 / remap 缓存键缺版本与构件身份 / test-cli 的 `--fail-on-error` 死臂）+ 审计 §6.5 点的三条反向检测腿（成员分布地板、围栏外名字清单 vs 真构件名册、注册表字段级存在性）。P0-A **连数据一起重建**（六档 `extracted/` 四件），用户可见症状已消：`query_api 1.12.2 World` 从 `methods=0` 变为 **80 条 SRG 方法**且不再有空壳警告。版本面（`<平台>/<档>/` 规则树与 knowledge）按裁定**不改**，只出移交清单。批 B/C **未做**。未提交。
+
+### 1. 改了哪些文件
+
+**新建（2 门 + 2 基线）**
+- `mcp-server/scripts/assert-prose-name-roster.mjs` —— 门腿①：围栏外「清单行」里的 `<Name>Registry` 名必须落在本档 FAPI 真构件名册或 vanilla 映射。`--selftest` / `--measure` / `MC_SKILL_PROSE_ROSTER_TEST_ROOT`。
+- `mcp-server/scripts/assert-registry-field-existence.mjs` —— 门腿②：`Registries.<M>` / `RegistryKeys.<M>` 的字段级存在性（member 真存在但 owner 不对即红）。同上三入口。
+- `mcp-server/scripts/data/prose-name-roster-baseline.json`（36 条棘轮键 + `fileFloor`/`tokenFloor`）
+- `mcp-server/scripts/data/registry-field-baseline.json`（27 条棘轮键 + `fileFloor`）
+
+**改（工具/数据/测试/文档）**
+- `mcp-server/scripts/forge-srg-extractor.js` —— owner 改从成员行自带的 mapped 全名取（`FD:` 2 token / `MD:` 4 token）；成员行 owner 缺位先建位；**恒等 `CL:` 行也登记**；加 `ownerNotInClassNames` 计数告警。原 `currentClass` 机制整体退场。
+- `data/forge_{1.7.10,1.8.9,1.9.4,1.10.2,1.11.2,1.12.2}/extracted/{api-index,method-lookup,critical-classes,class-names}.json` —— 24 个受控 JSON 重建（见第 4 块）。
+- `mcp-server/scripts/assert-index-channel-layout.mjs` —— `mappingInput` 按档分叉（旧六档 `joined.srg`）；六档登记类数钉；**新增 A5 成员分布地板**（比例阈值）；新增 `MC_SKILL_INDEX_LAYOUT_TEST_INDEX_PACK`；成功行改按档判定（原全局 `failures.length` 写法在多档下会吞后续档的成功行）。
+- `mcp-server/src/api/index.ts` —— 删 `QUERY_API_SHELL_INDEX` 常量与 `:833` 正则分支；头注（:5）去「类名空壳」；`no-methods` 文案（原 :759）去陈旧括注。
+- `mcp-server/src/tool-registry.ts` —— `query_api` 边界句「可能 found:true 但 methods 为空（类名空壳）」→「只有 SRG 类名与 `func_/field_` 成员名」。
+- `mcp-server/src/decompile/services/mod-decompile.ts` —— 新增导出纯函数 `remapCacheStem(modId, modVersion, version, jarIdentity, kind)`；最终件与 `yarn-intermediary` 中间步共用（键含 MC 版本 + jar 内容身份，与 `outDir` 同口径）。
+- `mcp-server/test-core.mjs` —— 1.12.2 断言语义反转（「空壳警告必须保留」→「数据健康：无空壳警告且方法清单非空」）。
+- `mcp-server/test-decompile.mjs` —— import `remapCacheStem` + 新钉键用例。
+- `mcp-server/test-cli.mjs` —— `diagnose_gradle --fail-on-error` 臂改无条件 + 换会真出 error 的夹具 + 钉住夹具前提。
+- `mcp-server/test-scripts.mjs` —— 两新门登记进 `REAL_RUN_GATES` 与 `SELFTEST_GATES`；§A5/§idx 投毒块加「旧档成员分布折成一类必红」一记；两条地板注释改为「以 §S4 自印行为准」（原注释里的实测数早已漂）。
+- `README.md`（8 处：:506 / :510 / :527 / :528 / :529 / :551 / :579 / :581 / :593 / :595 / :769 / :787 中的症状词与连带行）、`README.en.md`（6 处同段镜像）、`AGENTS.md:408,455`、`AUTO_SETUP.md:599`、`mcp-server/README.md:25,344,361` —— 只改症状词，保留仍成立的建议（「不要把 `query_api` 当 javadoc」一律留着）。
+- `mcp-server/CHANGELOG.md` —— 第九十三批条目。
+
+**temp（不入受管面，供复算/移交）**：`tools/c-srg-fingerprint-verify.mjs`（四值对拍器）、`tools/_grep.mjs`（UTF-8 安全递归 grep，cmd 的 findstr 会毁 CJK）、`HANDOVER-VERSION-FACE.md`（版本面移交清单）。
+
+### 2. 判据与反证
+
+- **A1 反证**：修前六档「非空类恒为 1」、成员被并进最后一个类 ⇒ 四值指纹的 `nonEmpty`/`hash` 必不等；修后 `ALL MATCH`（1.7.10 `26f08b1f4697a5c2` … 1.12.2 `42d303369c9a0fec`）。指纹由**独立解析 `joined.srg`** 得到，不是抽取器产物 ⇒ 真·对拍。
+- **A5 地板投毒**（`assert-index-channel-layout.mjs`）：把 1.12.2 的 api-index 折成「键集不变、全部成员并进第一个类」⇒ 实测双红：`非空类占比 0.000 < 地板 0.9`、`单类成员占比 1.000 > 上限 0.05`；干净基线同门 rc=0。
+- **A3 死臂反证**：旧夹具实测 `errors=[]` + `status=0`（臂真空）；新夹具实测 `errors=[缺少 Forge 依赖, 缺少 ForgeGradle 插件]` + `status=1`。probe 脚本 `tools/_probe-gradle.mjs`（argv 直传，绕开 CMD 引号）。
+- **两新门活性**：①`--selftest` 4 组纯函数夹具 + `1.21.10` FAPI 真名册腿（`CompostingChanceRegistry` 在册 / `CompostableItemRegistry` 不在）；②`--selftest` 4 组 + `1.21.10` 真库腿（`Registries` 上无 `ENCHANTMENT`、`RegistryKeys` 上有）。两门真跑 rc=0 且**新增违规 0**（现值 = 基线）。
+- **反证（没误伤）**：`Registries.ENCHANTMENT` 在 1.19.4/1.20.1/1.20.4 是**正确写法**（实测该三档 `Fields` 表 owner 真在 `Registries`），门腿②对这三档 0 判 —— 故**严禁全局替换**（已写进移交清单）。
+
+### 3. 验证台账
+
+- 四值指纹对拍：`node temp/audit-20261011/tools/c-srg-fingerprint-verify.mjs` ⇒ `ALL MATCH`（6/6 档；口径 = classes/nonEmpty/total/hash，as-of 2026-10-12）。
+- 用户可见冒烟：`node mcp-server/dist/cli.js query_api --className=net.minecraft.world.World --version=1.12.2`（`MC_SKILL_DATA=<repo>/data`）⇒ `found=true` + `methods` 80 条（`func_*`）+ 无 `类名空壳` warning + `truncated=true`。
+- `cd mcp-server && node test-scripts.mjs` ⇒ **rc=0**（§S4：盘上 77 道 assert-* / 可达 77 · §S18/S19 真跑 **52** 道 · W1-2 selftest **42** 道 · 末行 `script helper regression tests passed`；§A5/§idx 投毒自检行含新增的「旧档成员分布 1 记必红」）。
+- `cd mcp-server && npm test` ⇒ **exit 0**（含 `build` tsc / `test-core.mjs` 反转断言 / `test-decompile.mjs` 新用例 / `test-cli.mjs` 新臂 / `assert-cli-quick`）。
+- `npm run test:cli:quick` ⇒ exit 0；`npm run test:cli:full` ⇒ exit 0。
+- 两新门直跑：`node scripts/assert-prose-name-roster.mjs` ⇒ `扫 519 件 / 名册 token 114 · 违规 36（基线 36，新增 0）`；`node scripts/assert-registry-field-existence.mjs` ⇒ `扫 778 件 / 706 处强类型位 · 违规 27（基线 27，新增 0）`。
+- 文档面（无门看护）：按症状词（`类名空壳|空壳警告|methods:\[\]|3313|3300 个`）在全部面 grep 归零（残留 2 条为**本轮新写的否定句**「不再有空壳警告」与 en 同句，人工核过）；`grep SHELL_INDEX mcp-server/src` = 0。
+- 未跑：`mc_skill_update check`、语料抓取类命令（与 `npm test` 并发会假红）。
+
+### 4. 数据侧变更
+
+- `data/forge_<v>/extracted/**` 六档 × 4 件 = **24 个受控 JSON** 重建（1.7.10 / 1.8.9 / 1.9.4 / 1.10.2 / 1.11.2 / 1.12.2）。前 → 后（`api-index` 成员归属从「全并进最后一个类」变为按 owner 归位；`class-names.json` 长度 = CL 去重数）：
+  - 类数（= class-names 长度）：1836 / 2541 / 2941 / 2980 / 3122 / 3344（修前 `class-names.json` 在 1.8.9 / 1.9.4 是 6 字节空壳，现为满量）。
+  - 非空类：1780 / 2468 / 2864 / 2902 / 3034 / 3256（修前六档**恒为 1**）。
+  - 成员合计：20163 / 25343 / 28862 / 29384 / 30410 / 32732（修前同值但全挂在一个类上）。
+  - 未重算：`critical-classes.json` 的名册仍是 mojmap/1.16+ 类名（旧 SRG 档必大面积 null，六档实测 `1/42 found`）—— 属批 C 的 P2，本批未动；`*_RELEDGER=1` 未跑（本轮未动任何台账门）。
+- 门基线新增 2 份（见第 1 块）；未改任何既有基线。
+
+### 5. 未做清单
+
+- **批 B（~27 个非版本面 P1）未做**：`src/loader-api/extract.ts` varargs / `src/lib-skills/index.ts` root `.refine()` 使 MCP `inputSchema` 序列化为空（`resolve_lib_skills` 在 MCP 面失效）/ `src/mappings/yarn-sqlite.ts` SRG 反查缺 `prefer:"forge"` / `src/prompts/templates.ts:581,582` Quilt entrypoint 引用反向 / `src/porting/index.ts` 对 26.x 硬写 parchment / 四个生产者覆盖保护（`parchment-extractor.js` · `process-neoforge-docs.js` · `forge-javadoc-indexer.js` · `tsrg-extractor.js`）/ 8 道门脚本 P1 / 计数与元信息类（`mcp-server/README.md:90` 82→86、模板 49→61、`THIRD_PARTY_NOTICES.md` 计数、`server.json` 137M→1.8GiB 等）。
+- **批 C（~115 P2 + P3 清扫）未做**。
+- **版本面 94 单元 / 2,255 文件未判未改**（按用户裁定）：落点清单与机读基线见 `temp/audit-20261011/HANDOVER-VERSION-FACE.md`（含门腿①② 的两份基线 = 27 + 36 条可复算清单，以及 F18/F19/F8/§2.2 与逐档 P1 计数）。
+- **`critical-classes.json` 名册错层**（旧 SRG 档的 P2）未修 —— 归批 C。
+- **未 commit / 未 push**（提交归用户）；本轮未按「维护面夜批（阶 1）」走（未建专用分支、未代提交）。
+
+### 6. 自我更正
+
+- **上一版计划的两处被用户当场纠正，已改**：① 我一度把「禁台账日期戳」的门归因错（写成 `assert-authoring-lint` 管日期戳；实际该门只有 J1 frontmatter / J2 指针路径 / J3 纯负向三条腿，真出处是本仓既有口径）——本轮执行约束据此改写为「面文只写现状与指针；读数与历史归 `DELIVERY_LOG` / `CHANGELOG`」，并据此**没有**在面文里加任何日期戳；② 我列的文档锚点漏了 README.en.md 整个英文面与若干行，`AGENTS.md:452` 是假锚点（该行是「`query_*` 是兼容工具」段、无空壳症状，动它即误伤）—— 实际改法改为**按症状词 grep 机械枚举 + zh/en 成对**，`AGENTS.md` 只动 `:408` 与 `:455`。
+- **本 CHANGELOG 内的一条数字更正**：`test-scripts.mjs` 的两条地板注释原写「实测 37 / 26」，实测 §S4 自印为「真跑 52 / selftest 42」；我已去掉具体数字，改为指向 §S4 自印行（该注释早已漂，属审计点在的「披露位 ≠ 实测量」家族）。
+- **一处工具教训（写进临时件注）**：CMD 下 `findstr` 对 UTF-8 CJK 不可靠（会整行乱码/漏命中），本轮改用自写 `tools/_grep.mjs`；`%errorlevel%` 在 CMD 里于解析期展开 ⇒ 判退出码一律走 node `spawnSync`（`tools/_rc.mjs` / `_probe-gradle.mjs`），本轮的 A3 结论正是靠它才拿对。
+
+---
+
 ## 2026-10-12 · 五树「无 QSL 构件」表述精化（联网复核天花板 + 77 处改写 + 派生件重生成）（维护档）
 
 **第 0 块 · 结论**：按用户令「完成五树『无 QSL 构件』表述精化」——先联网复核 QSL 天花板（六面一手：release 线止 MC 1.21.1、snapshot 线与源码仓库止 1.21.5；那五个版本在 release+snapshot+QFAPI+Modrinth 四线全 0；真正到 1.21.11 的是 quilt-loader / quilt-mappings），再对五树 48 个文件 **77 处**改写统一为「两条构件线 + 本版 0 命中」措辞并加防误读注；1.21.11 源稿改动触发 data 派生件按生成器重生成。终态门链 rc=0（中途唯一一次红 = `assert-qsl-verified-sync` 抓派生件过期，已按生成器正路修复）。未提交。

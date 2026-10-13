@@ -460,7 +460,7 @@ function judge(root, pairs) {
   };
   const conflicts = [];
   const legCounts = { A: 0, B: 0, C: 0, D: 0, E: 0 };
-  const judged = { files: 0, withCode: 0, noPairs: 0, noMemberTablesLicense: 0, noMemberTablesData: 0 };
+  const judged = { files: 0, withCode: 0, noPairs: 0, noMemberTablesLicense: 0, noMemberTablesData: 0, noClientTxt: 0, noEraSrc: 0 };
   const memberSetCache = new Map();
   for (const rel of collect(root)) {
     const [pf, ver] = rel.split("/");
@@ -491,6 +491,11 @@ function judge(root, pairs) {
       eraMojmapOnly: layer === "mcp" ? era : null,
       ownMcp: layer === "mcp" ? (ownCache.has(ver) ? ownCache.get(ver) : (ownCache.set(ver, ownMcpClasses(root, ver) ?? mcpTop), ownCache.get(ver))) : null,
     };
+    // 记账「判无可判」与「真有零冲突」不可混读：client.txt 按许可不入库（.gitignore 排除）
+    // ⇒ 干净 clone / CI 里腿 C（本档 mojmap 集合）与腿 D（同代 mojmap 集合）整族空转、rc 照绿。
+    // A/B 有 PAIRS_MISSING 门 + 入库派生表双保，C/D 此前无任何对应防线 —— 这里补计数，供 --require-pairs 判红。
+    if (layer === "mojmap" && !sets.mojmapOwn) judged.noClientTxt += 1;
+    if (layer === "mcp" && (!sets.eraMojmapOnly || sets.eraMojmapOnly.size === 0)) judged.noEraSrc += 1;
     for (const f of flagsFor({ layer, code, sets })) {
       if (allowed(rel, f.tok)) continue;
       legCounts[f.leg[0]] += 1;
@@ -704,12 +709,23 @@ for (const w of res.memberUntracked ?? []) {
   console.log(`  ⚠️ 纳管表未 git add（clean clone 断链，L10 口径）：${w.rel} :: ${w.files.join(", ")}`);
 }
 const { judged, sets, legCounts } = res;
+// --require-pairs 扩成「源不齐即响亮红」：C/D 腿的对照源（client.txt，按许可不入库）缺位时，
+// 基线 C/D 读数不构成任何检验，静默放行 = 本门立项主因（跨层名互串）无人执法。
+// 判定为**开关门控**（默认不开）：干净 clone 天然无 client.txt，无条件红会误伤 CI。
+if (REQUIRE_PAIRS && (judged.noClientTxt > 0 || judged.noEraSrc > 0)) {
+  console.error(
+    "assert-cross-layer-names: CLIENT_TXT_MISSING —— --require-pairs 开启，但腿 C/D 的对照源不在：" +
+      `腿 C 静默 ${judged.noClientTxt} 件 · 腿 D 源缺 ${judged.noEraSrc} 件。`,
+  );
+  process.exit(1);
+}
 const ab = legCounts.A + legCounts.B;
 const brief = () =>
   `判 ${judged.withCode} 件含代码 / 扫 ${judged.files} 件；腿计数 A=${legCounts.A} B=${legCounts.B} C=${legCounts.C} D=${legCounts.D} E=${legCounts.E}；` +
   `基线${STRICT ? "（--strict 已归零）" : ""} A/B=${STRICT ? 0 : BASELINE} C=${STRICT ? 0 : BASELINE_C} D=${STRICT ? 0 : BASELINE_D} E=${STRICT ? 0 : BASELINE_E}；` +
   `集合：pairs 档 ${sets.pairsVersions} / 顶层 MCP 名 ${sets.mcpTop} / 同代 mojmap 名 ${sets.era}；无对照产物 ${judged.noPairs} 件 · ` +
-  `无成员名表：许可 ${judged.noMemberTablesLicense}（合法跳过）· 数据洞 ${judged.noMemberTablesData}（计 rc）`;
+  `无成员名表：许可 ${judged.noMemberTablesLicense}（合法跳过）· 数据洞 ${judged.noMemberTablesData}（计 rc）；` +
+  `无对照源：腿 C（本档 client.txt 缺）${judged.noClientTxt} 件 · 腿 D（同代 client.txt 缺）${judged.noEraSrc} 件`;
 if (DUMP) {
   console.log(`  cross-layer dump：冲突 ${res.conflicts.length} 件（${brief()}）`);
   for (const c of res.conflicts) console.log(`  CROSS ${c.rel} :: ${c.tok} (${c.leg})`);

@@ -4,4 +4,4 @@ Minecraft 社区常用库模组全览（2026 版）
 完整目录、分类导航、平台推荐路线与陷阱摘要已移入社区知识库：
 
 - 完整目录与分类导航见 `community_knowledge/authored/library-catalog-2026`
-- 链接：https://github.com/oh-my-open-code/MC_skill/blob/main/community_knowledge/authored/library-catalog-2026.md
+- 链接：https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/blob/main/community_knowledge/authored/library-catalog-2026.md

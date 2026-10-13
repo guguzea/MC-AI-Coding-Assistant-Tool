@@ -5,6 +5,7 @@ url: https://neoforged.net/news/26.1release/
 summary: 26.1 去混淆、NeoForm 版本号变化、可移除 Parchment。不是 API 规范。
 tags: [official, neoforge, 26.1, mappings]
 sourceKind: links
+mcHint: 26.1
 ---
 
 # NeoForge 26.1 发布说明（外链）

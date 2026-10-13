@@ -362,7 +362,7 @@ cd mcp-server
 npm ci
 npm run build
 npm run build:yarn-sqlite
-set MC_SKILL_DATA=<仓库>/data
+export MC_SKILL_DATA=<仓库>/data
 npm test
 npm run audit:data
 npm run smoke:release   # 可选

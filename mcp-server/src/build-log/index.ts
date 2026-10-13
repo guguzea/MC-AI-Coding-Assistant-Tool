@@ -51,6 +51,9 @@ export interface AnalyzeBuildLogResult {
 }
 
 const LOG_MAX = 2 * 1024 * 1024;
+// W2-11：整读前硬上限（镜像 crash/index.ts 的预检）；超过即拒绝，不再先 UTF-8 全量解码驻留内存
+// （clampLogBytes 的 LOG_MAX 只作用于已读入的字符串）。
+const LOG_HARD_MAX = 32 * 1024 * 1024;
 const LOG_HEAD_RATIO = 0.25;
 
 export interface LogClamp {
@@ -272,8 +275,19 @@ export function analyzeBuildLog(input: AnalyzeBuildLogInput): AnalyzeBuildLogRes
   if (!text?.trim() && input.logPath) {
     const p = input.logPath;
     try {
-      if (!existsSync(p) || !statSync(p).isFile()) {
+      const st = statSync(p);
+      if (!existsSync(p) || !st.isFile()) {
         return { ok: false, issueCount: 0, issues: [], summary: [], error: `无法读取 logPath：${p}` };
+      }
+      // W2-11：超硬上限直接拒绝，避免 200MB 日志先整读进内存（可 DoS 整个 MCP server）。
+      if (st.size > LOG_HARD_MAX) {
+        return {
+          ok: false,
+          issueCount: 0,
+          issues: [],
+          summary: [],
+          error: `logPath 超过 ${LOG_HARD_MAX} 字节上限（收到 ${st.size} 字节），已拒绝整读以避免阻塞 MCP；请只粘贴相关失败段。`,
+        };
       }
       text = readFileSync(p, "utf8");
     } catch (err) {

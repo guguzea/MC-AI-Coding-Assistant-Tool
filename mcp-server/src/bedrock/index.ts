@@ -857,7 +857,9 @@ export function generateAddonManifest(args: z.infer<typeof generateAddonManifest
   }
   const stableVer = status.scriptApiStable ?? "1.11.0";
   warnings.push(
-    `默认 @minecraft/server 版本取自 bedrock-docs-status.scriptApiStable（当前 ${stableVer}）。入库可能滞后，发布前对照 Learn。`,
+    status.scriptApiStable
+      ? `默认 @minecraft/server 版本取自 bedrock-docs-status.scriptApiStable（当前 ${stableVer}）。入库可能滞后，发布前对照 Learn。`
+      : `bedrock-docs-status.json 不在盘（scriptApiStable 为 null）⇒ 已回退到硬编码兜底 1.11.0；该值**不来自** scriptApiStable。发布前务必对照 Learn 显式指定。`,
   );
   // N9(c)：把「模板钉值」与「文档快照」两个真值同时摊开（只加披露，不动默认值 —— 默认跟随快照是既定语义）。
   const apiPin = loadBedrockScriptApiPin();

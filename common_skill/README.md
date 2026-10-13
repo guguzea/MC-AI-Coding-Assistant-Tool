@@ -41,8 +41,11 @@
 ZCode 用户级技能目录是 `~/.agents/skills/`，装进去后**任何项目的会话**都能用（新会话生效）。改完源稿跑一遍拷贝即可刷新：
 
 ```bat
+mkdir "%USERPROFILE%\.agents\skills\mc-grill"
 copy /Y "common_skill\mc-grill\SKILL.md" "%USERPROFILE%\.agents\skills\mc-grill\SKILL.md"
 ```
+
+（新增技能时先 `mkdir` 目标子目录——`copy` 不会自动建目录。）
 
 纪律只有一条：**先改源稿，再拷贝刷新**；本机安装件永远是源稿的副本，出现不一致以源稿为准重新拷贝。
 

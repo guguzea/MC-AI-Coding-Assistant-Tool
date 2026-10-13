@@ -85,6 +85,7 @@
 | 发布 / 崩溃 / 性能 / 测试 | `publishing`、`crash-reports`、`profiling-performance`、`testing-automation`、`ingame-playtest-automation`（跨版本通用，四列同） | ← | ← | ← |
 
 基岩版不在这套 Java 版本轴里：Script API 见 `authored/bedrock-script-api-primer`（stable 线，模块版本随游戏走）。老加载器（LiteLoader / Rift / ModLoader）走仓库版本档规则树，社区层只有 `authored/modloader-1.6.4`。
+
 | 主题 | 条目 |
 |------|------|
 | 映射字段 schema v3 | `authored/mapping-fields-v3` |

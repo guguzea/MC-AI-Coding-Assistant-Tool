@@ -39,7 +39,7 @@ mc-skill-data-full-*.zip
 
 若唯一顶层目录名为 `data/`，工具会自动剥离该前缀。其它歧义布局拒绝写入（`DATA_ZIP_LAYOUT_INVALID`）。
 
-同次 Release 须附带 `SHA256SUMS*.txt`。写入策略为按 zip 内路径覆盖，**不删除**用户在 data 下的额外文件；`dryRun` / 响应含 `filesToOverwrite`。
+同次 Release 须附带 `SHA256SUMS*.txt`。写入策略为**全量快照换入**（`swapInDataDir` 换入即 `rmSync(prevDir)`）：data 下本地新增文件会被列入响应字段 `localAdditions`，并在 `dryRun=false` + `confirmed=true` 换入时销毁（未确认时返回 `UPDATE_LOCAL_ADDITIONS_CONFIRM_REQUIRED` 一类确认门）；响应含 `filesToOverwrite` / `localAdditions` / `strippedDataPrefix`。
 
 ## 环境变量
 

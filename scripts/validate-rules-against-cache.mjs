@@ -94,6 +94,7 @@ for (const f of javaFiles) {
 }
 
 const seenFq = new Set(classes.map((c) => c.fqcn));
+let parseFailed = 0;
 for (const name of existsSync(OUT) ? readdirSync(OUT).filter((n) => n.endsWith(".json") && !n.includes("last") && n !== "index.json" && n !== "status.json" && n !== "extracted-classes.json") : []) {
   try {
     const j = JSON.parse(readFileSync(join(OUT, name), "utf8"));
@@ -120,8 +121,10 @@ for (const name of existsSync(OUT) ? readdirSync(OUT).filter((n) => n.endsWith("
         });
       }
     }
-  } catch {
-    /* ignore */
+  } catch (e) {
+    // 单个摘要 JSON 解析失败此前静默忽略 ⇒ 损坏的摘要不进 classes，规则校验少一批 FQCN 而看着正常。
+    console.warn(`validate-rules-against-cache: 摘要 JSON 解析失败，已跳过 ${name}: ${e?.message ?? e}`);
+    parseFailed++;
   }
 }
 
@@ -327,6 +330,7 @@ const summary = {
   mappingsVersion,
   classCount: classes.length,
   javaFileCount: javaFiles.length,
+  summaryParseFailed: parseFailed,
   issues,
   negativeMentions,
   extractedSample: classes.slice(0, 30).map((c) => ({

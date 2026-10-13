@@ -53,8 +53,8 @@ export interface MemberLookupResult {
 
 // ── 共享辅助（AW 复用）─────────────────────────────────────────────────────────
 
-const SRG_METHOD_RE = /^func_\d+_[a-zA-Z]+$/;
-const SRG_FIELD_RE = /^field_\d+_[a-zA-Z]+$/;
+const SRG_METHOD_RE = /^func_\d+_[a-zA-Z0-9]*_?$/;
+const SRG_FIELD_RE = /^field_\d+_[a-zA-Z0-9]*_?$/;
 const YARN_METHOD_RE = /^method_\d+$/i;
 const YARN_FIELD_RE = /^field_\d+$/i;
 const MOJANG_METHOD_RE = /^m_\d+_$/;

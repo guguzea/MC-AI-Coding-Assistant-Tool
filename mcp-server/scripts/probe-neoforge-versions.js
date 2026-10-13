@@ -447,8 +447,10 @@ async function probeVersion(cfg) {
     return { ...unversioned, available: true, httpStatus: ures.status, versionLabel, chapters, unversionedCurrent: true };
   }
 
-  if (!res.ok) {
-    console.log(`  ${cfg.version}: HTTP ${res.status}`);
+  if (!res.ok || res.suspicious === true) {
+    // fetchHtml 对 200 但 isLikelyValidHtmlPage 失败的体（截断/SPA 外壳）标 suspicious:true，调用方此前不读
+    // ⇒ 退化 200 被记 available:true。折进不可用分支消费该信号。
+    console.log(`  ${cfg.version}: HTTP ${res.status}${res.suspicious ? " (suspicious: 200 but invalid HTML)" : ""}`);
     return { ...cfg, available: false, httpStatus: res.status, chapters: [] };
   }
 
@@ -507,7 +509,7 @@ async function probePrimers() {
       url: cfg.url,
       from: cfg.from,
       to: cfg.to ?? v,
-      available: res.ok,
+      available: res.ok && res.suspicious !== true,
       httpStatus: res.status,
     };
     console.log(`  Primer ${v}: HTTP ${res.status}`);

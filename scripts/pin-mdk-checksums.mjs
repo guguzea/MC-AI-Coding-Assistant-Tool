@@ -249,6 +249,9 @@ async function main() {
       dryRun: false,
     };
     if (e.buildPlugin && e.buildPlugin !== "unknown") args.buildPlugin = e.buildPlugin;
+    // A-2 回写：缺 sha256 的条目必须显式 allowUnpinned 才肯下载并回写 hash，
+    // 否则 dist 侧 fail-closed 抛 MDK_NOT_PINNED、脚本头注声称的「成功后写回 sha256」永不发生。
+    if (!e.sha256) args.allowUnpinned = true;
     const out = await downloadOfficialMdk(args);
     results.push({
       id: e.id,

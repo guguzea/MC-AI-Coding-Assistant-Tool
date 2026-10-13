@@ -45,7 +45,7 @@ Decision: 要不要用 Moonlight Lib
 
 ## 核心 API 速查
 
-类名/包名以官方 README 为准（核对记录：1.20.1/fabric 顶层包 `net.mehvahdjukaar.moonlight`），下面只列能力与流程：
+类名/包名以官方 README 为准（核对记录：1.20.1/fabric 顶层包 `net.mehvahdjukaar.moonlight`；**本仓摘要未入库该版本**——`moonlight.json` 仅有 `1.18.2` 且包根是旧名 `net.mehvahdjukaar.selene.*`，故此记录未核实），下面只列能力与流程：
 
 - **动态注册**：用其注册入口登记方块/物品（比手写 DeferredRegister 样板少）
 - **BlockSetAPI**：把新方块声明进目标方块族（如原版石头族），库补全楼梯/台阶/墙等变体与模型；生成的内容也要补语言文件与掉落物，别漏

@@ -6,7 +6,7 @@
 ## 背景：为什么曾经输出全小写
 
 类名前缀 trie 的键是**小写段**——`src/workers/preloader.ts` 的 `buildTrieIndex()` 按
-`name.toLowerCase().split("/")` 建树（`:87`），`TrieNodeFlat` 不保留原始大小写字段。
+`name.toLowerCase().split("/")` 建树（函数 `:85`、建树行 `:94`），`TrieNodeFlat` 不保留原始大小写字段。
 于是 `TrieIndex._collect()` 只能用小写段拼回名字，`fuzzyClassSearch()` 的 prefix 分支
 （`kind:"prefix"`）拿到的就是 `com/mojang/blaze3d/blaze3d` 这种 destroyed-case 串。
 

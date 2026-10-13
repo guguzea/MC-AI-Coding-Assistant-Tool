@@ -12,15 +12,16 @@
 |---|---|---|
 | `activate_platform_pack action=session`（未建档版本） | `PACK_NOT_FOUND` | 不得用邻档顶替；换已建档版本，或先 `action=list` |
 | `search_forge_docs` / `search_*`（未建档版本） | `VERSION_NOT_FOUND` | 先 `list_*_versions`；**不在清单 ≠ 上游没有**（查上游用 `query_upstream_releases`） |
-| `query_api`（该版本无 extracted 索引） | `DATA_UNAVAILABLE`（`found:false`） | 26.1+ / 1.14.4 / 1.15.2 无索引；改语义搜索，或 `get_minecraft_source` |
+| `query_api`（该版本**无 extracted 索引目录**） | `DATA_UNAVAILABLE`（`found:false`） | 26.1+ 无索引目录；改语义搜索，或 `get_minecraft_source` |
+| `query_api`（索引在盘但**为空**，如 1.14.4 / 1.15.2） | 无 `action.code`，仅 `found:false` + 覆盖度 `warning` | 空索引档 ≠ 无索引档；改语义搜索 |
 | `diagnose_gradle`（缺 `--project`） | `INVALID_INPUT` | 必须给工程路径；Rift / BaseMod / 基岩仍早退 |
 | `generate_lang` / `get_minecraft_source`（缺必填项） | `MISSING_REQUIRED` | 先补齐必填（此码不表示工具故障） |
 | `check_dependencies`（无工程 / 无已知依赖） | `ok:false` + `detectedLibraries: []` | **空数组 ≠ 没有依赖** —— 未收录的库会漏（启发式，不是完整 Gradle 解析） |
 | `crash_analyze`（缺 version） | `VERSION_REQUIRED` | 传版本；它只覆盖你贴进来的那一段日志 |
 | `detect_mod_project`（无 `projectPath` 且未设 env） | `PROJECT_ROOT_REQUIRED` | 先设 `MC_SKILL_PROJECT_ROOT` 或传 `--project`；指向知识库根会判 `KNOWLEDGE_REPO_NOT_MOD` |
-| `generate_worldgen`（编造版本 `1.99.9`） | `INVALID_INPUT`（`errorKind: usage`） | 两端版本哨兵直接拒绝，不默默生成；文档称此时点名 `WORLDGEN_MAX_MINOR_1X` |
+| `generate_worldgen`（编造版本 `1.99.9`） | `VERSION_UNSUPPORTED`（`errorKind: tool_failure`） | 两端版本哨兵直接拒绝，不默默生成；`WORLDGEN_MAX_MINOR_1X` 是生成器内部常量名，不是错误码 |
 | `localize_mod` / `port_project` / `query_loader_api` / `generate_lang` / `analyze_mod_jar` / `resolve_lib_skills` / `get_method_params` / `get_version_info` / `search_fabric_docs` / `list_doc_versions` / `search_docs` / `query_registry`（缺必填） | `MISSING_REQUIRED` | 先补齐必填参数（此码不表示工具故障）。**实测这 12 个内置工具的缺参形态统一收敛到这一个码**（此处 12 是**本行列出的子集**，不是服务端工具总数；总数以 `list-tools` 为准） |
-| `search_mod_code`（未给 `jarPath` / `decompiledDir`） | `INVALID_INPUT` | 必须先 `decompile_mod_jar`（或已有反编译目录），否则 `NOT_FOUND` |
+| `search_mod_code`（未给 `jarPath` / `decompiledDir`） | `INVALID_INPUT` | 必须先 `decompile_mod_jar`（或已有反编译目录）：jar 存在但未反编译 → `NOT_DECOMPILED`；jar 不存在 → `NOT_FOUND` |
 | `get_workflow_template`（未知名的模板） | `INVALID_ENUM_VALUE` | 工作流名是 enum，Zod 直接拒；模板名以该工具列表为准，不得猜测 |
 | `convert_mapping`（该版本无目标层） | `DATA_UNAVAILABLE`（`converted: null`） | 失败默认 `converted:null`；只有 `allow_fallback` 才回传原名并带 `fallbackUsed`（禁止假成功） |
 
@@ -33,7 +34,7 @@
 
 | 组 | 工具 | 错误码 | 证据 |
 |---|---|---|---|
-| 版本 / 索引类 | `activate_platform_pack` · `search_forge_docs` · `query_api` · `detect_mod_project` · `convert_mapping` · `generate_worldgen` | `PACK_NOT_FOUND`（+`PACK_INCOMPLETE`）· `VERSION_NOT_FOUND` · `DATA_UNAVAILABLE` · `PROJECT_ROOT_REQUIRED`（+`KNOWLEDGE_REPO_NOT_MOD`）· `DATA_UNAVAILABLE`（`converted:null`）· `INVALID_INPUT` | 实测 |
+| 版本 / 索引类 | `activate_platform_pack` · `search_forge_docs` · `query_api` · `detect_mod_project` · `convert_mapping` · `generate_worldgen` | `PACK_NOT_FOUND`（+`PACK_INCOMPLETE`）· `VERSION_NOT_FOUND` · `DATA_UNAVAILABLE` · `PROJECT_ROOT_REQUIRED`（+`KNOWLEDGE_REPO_NOT_MOD`）· `DATA_UNAVAILABLE`（`converted:null`）· `VERSION_UNSUPPORTED` | 实测 |
 | 必填校验类 | `get_method_params` · `get_version_info` · `search_fabric_docs` · `list_doc_versions` · `search_docs` · `query_registry` · `localize_mod` · `generate_lang` · `analyze_mod_jar` · `resolve_lib_skills` · `get_workflow_template` | `MISSING_REQUIRED`（11 个）；`get_workflow_template` 为 `INVALID_ENUM_VALUE`（工作流名是 enum） | 实测（缺参形态收敛于 `MISSING_REQUIRED`） |
 | 诊断类 | `diagnose_gradle` · `inspect_runtime` · `crash_analyze` | `INVALID_INPUT` · `INVALID_INPUT` · `VERSION_REQUIRED` | 实测 |
 | 索引 / 反查类 | `list_forge_versions` · `list_fabric_versions` · `list_neoforge_versions` · `mixin_analyze` · `lookup_obfuscated` · `query_loader_api` · `search_loader_api` · `ingest_loader_api` | `PLATFORM_DATA_MISSING` · `CACHE_MISS` · `UNOBFUSCATED_NO_YARN` · `PLATFORM_SKIPPED` · `LOADER_API_NOT_INDEXED` · `INVALID_INPUT` | 文档 |
@@ -57,15 +58,16 @@ Every `code` below came from a **minimum failing call** on this machine's CLI, n
 |---|---|---|
 | `activate_platform_pack action=session` (version not indexed) | `PACK_NOT_FOUND` | never substitute a neighbouring version; pick an indexed one, or run `action=list` first |
 | `search_forge_docs` / `search_*` (version not indexed) | `VERSION_NOT_FOUND` | run `list_*_versions` first; **not being on the list ≠ upstream has none** (ask upstream with `query_upstream_releases`) |
-| `query_api` (no extracted index for that version) | `DATA_UNAVAILABLE` (`found:false`) | 26.1+ / 1.14.4 / 1.15.2 have no index; switch to semantic search or `get_minecraft_source` |
+| `query_api` (no extracted index **directory** for that version) | `DATA_UNAVAILABLE` (`found:false`) | 26.1+ has no index directory; switch to semantic search or `get_minecraft_source` |
+| `query_api` (index present but **empty**, e.g. 1.14.4 / 1.15.2) | no `action.code`; just `found:false` + a coverage `warning` | an empty-index version is not a "no-index" version; switch to semantic search |
 | `diagnose_gradle` (missing `--project`) | `INVALID_INPUT` | the project path is required; Rift / BaseMod / Bedrock still bail out early |
 | `generate_lang` / `get_minecraft_source` (missing required field) | `MISSING_REQUIRED` | fill in the required fields first; this is not "the tool is broken" |
 | `check_dependencies` (no project / no known libraries) | `ok:false` + `detectedLibraries: []` | **an empty array ≠ no dependencies** — libraries it does not know will be missed (heuristics, not a full Gradle resolution) |
 | `crash_analyze` (missing version) | `VERSION_REQUIRED` | pass the version; it only covers the log excerpt you pasted |
 | `detect_mod_project` (no `projectPath`, env unset) | `PROJECT_ROOT_REQUIRED` | set `MC_SKILL_PROJECT_ROOT` or pass `--project` first; pointing at the knowledge base root gives `KNOWLEDGE_REPO_NOT_MOD` |
-| `generate_worldgen` (invented version `1.99.9`) | `INVALID_INPUT` (`errorKind: usage`) | rejected outright by the two-ended version sentinel, never generated quietly; the docs say this case names `WORLDGEN_MAX_MINOR_1X` |
+| `generate_worldgen` (invented version `1.99.9`) | `VERSION_UNSUPPORTED` (`errorKind: tool_failure`) | rejected outright by the two-ended version sentinel, never generated quietly; `WORLDGEN_MAX_MINOR_1X` is an internal generator constant, not an error code |
 | `localize_mod` / `port_project` / `query_loader_api` / `generate_lang` / `analyze_mod_jar` / `resolve_lib_skills` / `get_method_params` / `get_version_info` / `search_fabric_docs` / `list_doc_versions` / `search_docs` / `query_registry` (missing required fields) | `MISSING_REQUIRED` | fill in the required arguments first; this is not "the tool is broken". **Measured across 12 tools, the missing-argument shape converges on this single code** |
-| `search_mod_code` (no `jarPath` / `decompiledDir`) | `INVALID_INPUT` | run `decompile_mod_jar` first (or point at an existing decompiled directory), otherwise `NOT_FOUND` |
+| `search_mod_code` (no `jarPath` / `decompiledDir`) | `INVALID_INPUT` | run `decompile_mod_jar` first (or point at an existing decompiled directory): jar exists but not decompiled → `NOT_DECOMPILED`; jar absent → `NOT_FOUND` |
 | `get_workflow_template` (unknown template name) | `INVALID_ENUM_VALUE` | the workflow name is an enum and Zod rejects it directly; take names from that tool's list; do not guess |
 | `convert_mapping` (target layer missing on that version) | `DATA_UNAVAILABLE` (`converted: null`) | failures default to `converted:null`; only `allow_fallback` returns the original name, with `fallbackUsed` set (a fake success is forbidden) |
 
@@ -78,7 +80,7 @@ Three evidence tiers: **measured** = read from a minimum failing call on this ma
 
 | Group | Tools | Error codes | Evidence |
 |---|---|---|---|
-| Version / index | `activate_platform_pack` · `search_forge_docs` · `query_api` · `detect_mod_project` · `convert_mapping` · `generate_worldgen` | `PACK_NOT_FOUND` (+`PACK_INCOMPLETE`) · `VERSION_NOT_FOUND` · `DATA_UNAVAILABLE` · `PROJECT_ROOT_REQUIRED` (+`KNOWLEDGE_REPO_NOT_MOD`) · `DATA_UNAVAILABLE` (`converted:null`) · `INVALID_INPUT` | measured |
+| Version / index | `activate_platform_pack` · `search_forge_docs` · `query_api` · `detect_mod_project` · `convert_mapping` · `generate_worldgen` | `PACK_NOT_FOUND` (+`PACK_INCOMPLETE`) · `VERSION_NOT_FOUND` · `DATA_UNAVAILABLE` · `PROJECT_ROOT_REQUIRED` (+`KNOWLEDGE_REPO_NOT_MOD`) · `DATA_UNAVAILABLE` (`converted:null`) · `VERSION_UNSUPPORTED` | measured |
 | Required-argument checks | `get_method_params` · `get_version_info` · `search_fabric_docs` · `list_doc_versions` · `search_docs` · `query_registry` · `localize_mod` · `generate_lang` · `analyze_mod_jar` · `resolve_lib_skills` · `get_workflow_template` | `MISSING_REQUIRED` (11 of them); `get_workflow_template` gives `INVALID_ENUM_VALUE` (the workflow name is an enum) | measured (the missing-argument shape converges on `MISSING_REQUIRED`) |
 | Diagnostics | `diagnose_gradle` · `inspect_runtime` · `crash_analyze` | `INVALID_INPUT` · `INVALID_INPUT` · `VERSION_REQUIRED` | measured |
 | Index / reverse lookup | `list_forge_versions` · `list_fabric_versions` · `list_neoforge_versions` · `mixin_analyze` · `lookup_obfuscated` · `query_loader_api` · `search_loader_api` · `ingest_loader_api` | `PLATFORM_DATA_MISSING` · `CACHE_MISS` · `UNOBFUSCATED_NO_YARN` · `PLATFORM_SKIPPED` · `LOADER_API_NOT_INDEXED` · `INVALID_INPUT` | documented |

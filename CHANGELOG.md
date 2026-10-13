@@ -8,7 +8,7 @@
 > `mcp-server/CHANGELOG.md`，那是唯一权威来源。
 >
 > **唯一的例外是 Release 正文**：发版时另写一份
-> [`V2.0.0-RELEASE-NOTES.md`](./V2.0.0-RELEASE-NOTES.md)，**贴进 GitHub Release 用**，
+> [`V2.0.0-RELEASE-NOTES.md`](./V2.0.0-RELEASE-NOTES.md)（本机/未跟踪件，不随仓库分发；网页读者见 Releases 页），**贴进 GitHub Release 用**，
 > 读者是 mod 开发者而不是维护者 —— 所以不写口径、sweep 编号、commit 哈希那套内部语言。
 > 它是**导出物**不是第二真值：**两者冲突时一律以 `mcp-server/CHANGELOG.md` 为准**，
 > 正文里的数字如需复核，回到逐批次记录查。
@@ -19,7 +19,7 @@
 
 | 版本 | 变更详情 |
 |------|---------|
-| V2.0.0 | Release 正文：[`V2.0.0-RELEASE-NOTES.md`](./V2.0.0-RELEASE-NOTES.md) · 逐批次明细 → [`mcp-server/CHANGELOG.md`](./mcp-server/CHANGELOG.md) |
+| V2.0.0 | Release 正文（本机/未跟踪件，见 [Releases](https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/releases)） · 逐批次明细 → [`mcp-server/CHANGELOG.md`](./mcp-server/CHANGELOG.md) |
 | V1.0.4 | → [`mcp-server/CHANGELOG.md`](./mcp-server/CHANGELOG.md) |
 | V1.0.3 | → [`mcp-server/CHANGELOG.md`](./mcp-server/CHANGELOG.md) |
 | V1.0.2 | → [`mcp-server/CHANGELOG.md`](./mcp-server/CHANGELOG.md) |
@@ -46,7 +46,7 @@
 | 你想知道 | 去哪里 |
 |---------|--------|
 | 某个版本具体改了什么 | [`mcp-server/CHANGELOG.md`](./mcp-server/CHANGELOG.md) |
-| V2.0.0 的 Release 正文（贴 GitHub Release 用） | [`V2.0.0-RELEASE-NOTES.md`](./V2.0.0-RELEASE-NOTES.md) |
+| V2.0.0 的 Release 正文（贴 GitHub Release 用） | 本机/未跟踪件（不随仓库分发）→ [Releases 页](https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/releases) |
 | 当前工作树（未发版）改了什么 | 同上，`Unreleased` 一节 |
 | 装了之后怎么配 | [`AUTO_SETUP.md`](./AUTO_SETUP.md) |
 | 怎么贡献 / 门禁规矩 / 数据链口径 | [`CONTRIBUTING.md`](./CONTRIBUTING.md) / [`CONTRIBUTING.en.md`](./CONTRIBUTING.en.md) |
@@ -61,7 +61,7 @@
 
 ### npm —— 只发代码
 
-- 包名 `mc-ai-coding-assistant-tool`，**只包含 `mcp-server/`**（`dist/`、`package.json`、`README.md`）。
+- 包名 `mc-ai-coding-assistant-tool`，**只包含 `mcp-server/`**（`dist/`、`package.json`、`README.md`、`LICENSE`、`bin/mc-skill-scripts.mjs`）。
 - npm 包**不含** `data/` 知识资产（体积极大，且随上游文档版本变动，不适合按代码节奏发版）。
 - 安装后需要自备 `data/`，并把 `MC_SKILL_DATA` 指过去；用
   `node mcp-server/dist/cli.js diagnose_data_paths` 自查是否指对。
@@ -89,7 +89,7 @@
 → 打包 → **release smoke** → 建 Release。
 
 同一批判据在 CI（每个 PR 都跑）里也有一份，所以**依赖漏洞与数据漂移应在 PR 阶段就红，
-而不是等 tag push 才发现**。tag 还必须落在 `main`/`master` 上，否则发布链直接拒绝。
+而不是等 tag push 才发现**。（「tag 必须落在 `main`/`master` 上」的前置校验已于 2026-10-07 从发布链撤除，见 `.github/workflows/release-mcp-server.yml` 注释。）
 
 ---
 

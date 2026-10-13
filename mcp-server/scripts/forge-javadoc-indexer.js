@@ -253,6 +253,7 @@ function processVersion(version) {
 
   let totalFiles = 0;
   let forgeCount = 0;
+  let walkErrors = 0;
 
   // 遍历所有 .md 文件
   function walkDir(dir, pathPrefix) {
@@ -342,11 +343,21 @@ function processVersion(version) {
         }
       }
     } catch (e) {
-      // ignore
+      // 吞异常 = 该目录剩余条目 + 向上传播的父目录后续全部静默丢失，随后无条件把**缩窄后的**
+      // index 写盘、进程 rc=0（Windows 上并发写者锁住某个 .md（EBUSY/EPERM）完全现实）。
+      // 记数 + 点名，并在写盘前判红、拒绝写缩窄件。
+      walkErrors++;
+      console.warn(`  [WARN] ${version}: walkDir 读取失败 ${dir}: ${e?.message ?? e}`);
     }
   }
 
   walkDir(rawDir, "");
+
+  if (walkErrors > 0) {
+    console.error(`  [FAIL] ${version}: walkDir 遇到 ${walkErrors} 次读取失败 ⇒ 索引可能缩窄，拒绝写盘（rc=1）`);
+    process.exitCode = 1;
+    return;
+  }
 
   // 确定性排序（钉口径）：walkDir 的产出顺序 = readdir 的目录枚举顺序，Windows 上按大小写折叠排、
   // 跨机器与跨次都不保证稳定 ⇒ 「重跑生产者」会产出整份重排的 index diff。这里按 id 的**码点序**

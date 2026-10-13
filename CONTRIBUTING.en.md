@@ -356,7 +356,7 @@ cd mcp-server
 npm ci
 npm run build
 npm run build:yarn-sqlite
-set MC_SKILL_DATA=<repo>/data
+export MC_SKILL_DATA=<repo>/data
 npm test
 npm run audit:data
 npm run smoke:release   # optional
@@ -487,11 +487,11 @@ This table registers leftover items that are **found, recorded, not owed to anyo
 - The `现状` column only answers "what was measured this round (denominator + rule)"; when something cannot be measured it says `未复核` outright — it is **not** a claim that the item is fixed, and it is **not** an assertion that "upstream / this repo has none".
 - The `需要谁拍板` column names the owner: rows marked 「用户」 must not be done by the maintenance side; rows marked 「排期」 have **no gate protecting them** until someone writes a criterion, so the next person will redo the work anyway.
 - Division of labour with the ledger: `temp/ralph-20260922/PLAN-STATE-r2.md` (per-round R rows) records "what happened"; this table records "who still owes a decision". Ledger history rows are never revised, so this table is the **only current reading** of the state.
-- The relationship with `openspec/` is named in one line in the Chinese table: the `openspec/changes|specs|archive` directories **exist on disk**, while the root `.gitignore:76` says `openspec/` ⇒ zero files in that tree are under management, yet the root `AGENTS.md:410` lists `openspec/**` as a managed surface; that mismatch is one of the registered items.
+- The relationship with `openspec/` is named in one line in the Chinese table: the `openspec/changes|specs|archive` directories **exist on disk**, while the root `.gitignore:76` says `openspec/` ⇒ zero files in that tree are under management, yet `REPORT-FORMAT.md:19` lists `openspec/**` as a managed surface; that mismatch is one of the registered items.
 
 **Rules for new entries**: keep incrementing `L<n>`, one entry per line, and `现状` must carry a denominator + rule, or say `未复核` explicitly. **Never** hand over the previous round's status verbatim — that is what lets "a wrong premise survive many rounds" (see `temp/ralph-20260922/round-22-final-sweep.md` §6, item 1).
 
-> **This table is deliberately not duplicated here.** Its 124 rows are ~297 KB in the Chinese file, and their shape is adjudicated by `mcp-server/scripts/assert-backlog-table-shape.mjs` against `CONTRIBUTING.md`. A second English copy of 297 KB would be guaranteed to drift, and would not be checked by any gate.
+> **This table is deliberately not duplicated here.** Its 124 rows are ~484 KB in the Chinese file, and their shape is adjudicated by `mcp-server/scripts/assert-backlog-table-shape.mjs` against `CONTRIBUTING.md`. A second English copy of 484 KB would be guaranteed to drift, and would not be checked by any gate.
 > ⇒ **Read the rows in [`CONTRIBUTING_LIST.md` §未排期清单](./CONTRIBUTING_LIST.md)**. That section is the single current source; this one states only the semantics and the entry rules.
 
 ---

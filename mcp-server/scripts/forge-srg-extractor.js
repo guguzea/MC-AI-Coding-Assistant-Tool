@@ -113,9 +113,22 @@ const apiIndex = {};       // className → { javadoc, methods: [], fields: [] }
 const methodLookup = {};   // "className.methodName:desc" → details
 const classNames = new Set();
 
-let currentClass = null;
 let totalMethods = 0;
 let totalFields = 0;
+let ownerNotInClassNames = 0; // 成员行 owner 不在 CL 名册的条数（非 0 即解析异常，作诊断信号）
+
+// 成员行的 owner 取自本行自带的 mapped 全名前缀，而不是「最近的 CL: 行」——
+// joined.srg 的 CL/FD/MD 是分段排布，用 currentClass 会把全文件成员并进最后一个类。
+function splitOwner(mapped) {
+  const i = mapped.lastIndexOf("/");
+  if (i <= 0) return null;
+  return { owner: mapped.slice(0, i), member: mapped.slice(i + 1) };
+}
+
+function ensureOwnerSlot(owner) {
+  if (!apiIndex[owner]) apiIndex[owner] = { javadoc: null, methods: [], fields: [] };
+  if (!classNames.has(owner)) ownerNotInClassNames++;
+}
 
 // Forge SRG 行格式：
 //   CL: <obf> <mapped_class>
@@ -137,66 +150,54 @@ for (const line of lines) {
   }
 
   if (code === "CL:") {
-    if (tokens.length === 2 && tokens[0] !== tokens[1]) {
-      currentClass = tokens[1];
-      classNames.add(currentClass);
-      if (!apiIndex[currentClass]) {
-        apiIndex[currentClass] = { javadoc: null, methods: [], fields: [] };
+    // 恒等/同名 CL 行（obf 名 == mapped 名）曾因 tokens[0] !== tokens[1] 被整行跳过：
+    // 该类既不进 classNames、也不建 apiIndex 位 ⇒ 其成员被并进「最后一个类」，类名也从
+    // class-names.json 里少掉。六档各有 21/34/33/31/31/31 个恒等类、挂着 1.8–2.3% 的成员。
+    if (tokens.length === 2) {
+      classNames.add(tokens[1]);
+      if (!apiIndex[tokens[1]]) {
+        apiIndex[tokens[1]] = { javadoc: null, methods: [], fields: [] };
       }
     }
     continue;
   }
 
-  if (!currentClass) continue;
-
   if (code === "FD:") {
-    // FD: obf/class obf/field MAPPED/CLASS/mapped_field
-    // tokens: [obfClass/obfField, mappedClassFull/mappedField]  (2 tokens)
-    // 或: [obfClass/obfField, descriptor, mappedClassFull/mappedField, descriptor] (4 tokens, 含描述符)
-    if (tokens.length === 2) {
-      const mappedField = tokens[1].split("/").pop() ?? tokens[1];
-      apiIndex[currentClass].fields.push({ name: mappedField, descriptor: "", javadoc: null });
-      methodLookup[`${currentClass}.${mappedField}:`] = {
-        className: currentClass, fieldName: mappedField, descriptor: "", javadoc: null,
-      };
-      totalFields++;
-    } else if (tokens.length >= 4) {
-      const mappedField = tokens[tokens.length - 1].split("/").pop() ?? tokens[tokens.length - 1];
-      const descriptor = tokens[tokens.length - 2].includes("(") ? tokens[tokens.length - 2] : "";
-      apiIndex[currentClass].fields.push({ name: mappedField, descriptor, javadoc: null });
-      methodLookup[`${currentClass}.${mappedField}:${descriptor}`] = {
-        className: currentClass, fieldName: mappedField, descriptor, javadoc: null,
-      };
-      totalFields++;
-    }
+    // FD: obf/class obf/field MAPPED/CLASS/mapped_field（joined.srg 恒 2 token）
+    // 4 token 形（含描述符）取 tokens[2] 为 mapped 全名、tokens[3] 为描述符。
+    const mapped = tokens.length === 2 ? tokens[1] : tokens.length >= 4 ? tokens[2] : null;
+    const descriptor = tokens.length >= 4 && tokens[3].includes("(") ? tokens[3] : "";
+    const sp = mapped ? splitOwner(mapped) : null;
+    if (!sp) continue;
+    ensureOwnerSlot(sp.owner);
+    apiIndex[sp.owner].fields.push({ name: sp.member, descriptor, javadoc: null });
+    methodLookup[`${sp.owner}.${sp.member}:${descriptor}`] = {
+      className: sp.owner, fieldName: sp.member, descriptor, javadoc: null,
+    };
+    totalFields++;
     continue;
   }
 
   if (code === "MD:") {
-    // MD: obfClass/obfMethod descriptor mappedClassFull/mappedMethod descriptor
-    // 常见 4 tokens；也有 2 tokens 形式（仅 obf + mapped）
-    if (tokens.length === 4) {
-      const mappedMethodFull = tokens[2];
-      const descriptor = tokens[3];
-      const mappedMethod = mappedMethodFull.split("/").pop() ?? mappedMethodFull;
-      apiIndex[currentClass].methods.push({ name: mappedMethod, descriptor, parameters: [], javadoc: null });
-      methodLookup[`${currentClass}.${mappedMethod}:${descriptor}`] = {
-        className: currentClass, methodName: mappedMethod, descriptor, parameters: [], javadoc: null,
-      };
-      totalMethods++;
-    } else if (tokens.length === 2) {
-      const mappedMethod = tokens[1].split("/").pop() ?? tokens[1];
-      apiIndex[currentClass].methods.push({ name: mappedMethod, descriptor: "", parameters: [], javadoc: null });
-      methodLookup[`${currentClass}.${mappedMethod}:`] = {
-        className: currentClass, methodName: mappedMethod, descriptor: "", parameters: [], javadoc: null,
-      };
-      totalMethods++;
-    }
+    // MD: obfClass/obfMethod descriptor mappedClassFull/mappedMethod descriptor（joined.srg 恒 4 token）
+    const mapped = tokens.length === 4 ? tokens[2] : tokens.length === 2 ? tokens[1] : null;
+    const descriptor = tokens.length === 4 ? tokens[3] : "";
+    const sp = mapped ? splitOwner(mapped) : null;
+    if (!sp) continue;
+    ensureOwnerSlot(sp.owner);
+    apiIndex[sp.owner].methods.push({ name: sp.member, descriptor, parameters: [], javadoc: null });
+    methodLookup[`${sp.owner}.${sp.member}:${descriptor}`] = {
+      className: sp.owner, methodName: sp.member, descriptor, parameters: [], javadoc: null,
+    };
+    totalMethods++;
     continue;
   }
 }
 
 console.log(`Parsed ${classNames.size} classes, ${totalMethods} methods, ${totalFields} fields`);
+if (ownerNotInClassNames > 0) {
+  console.warn(`WARN: ${ownerNotInClassNames} 条成员行的 owner 不在 CL 名册 —— 解析异常或 CL 行缺失`);
+}
 
 // ── 写文件 ──────────────────────────────────────────────────────────────
 

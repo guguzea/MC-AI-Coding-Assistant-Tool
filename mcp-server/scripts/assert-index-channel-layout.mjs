@@ -16,9 +16,12 @@
  *  A2 **禁用面**：不得出现 Mojang 专属路径（`world/level/`、`world/entity/`）+ 具名 Mojang 专属类。
  *  A3 **必存面**：javap 实测存在的 SRG 锚点必须都在。
  *  A4 通道映射制品在位（`mappings/obf_to_srg.tsrg`）——回映射的输入面，缺了说明管线退化了。
+ *  A5 **成员分布地板**：单类不得吞掉全部成员。旧 SRG 档（1.7.10–1.12.2）曾因 joined.srg 分段
+ *     排布 + 用「最近的 CL: 行」定 owner，把全文件成员并进最后一个类（非空类恒为 1）；
+ *     该缺陷在 A1–A4 全绿，故补本条。地板用比例阈值（非等值钉），合法增长不假红。
  *
  * 投毒（3 记，见 temp 对拍脚本）：注入 `world/level/Level` / 把 `BlockLootTables` 换成 `BlockLoot` /
- * 删掉一个锚点 —— 三者都必须红。
+ * 删掉一个锚点 —— 三者都必须红（投毒只换一个索引 ⇒ `testIndexPack` 档才参与）。
  *
  * 用法：
  *   node scripts/assert-index-channel-layout.mjs
@@ -54,15 +57,41 @@ const CHANNEL_KEEPS_SRG_CLASSES = {
     ],
     /// 回映射输入制品
     mappingInput: "mappings/obf_to_srg.tsrg",
+    /// 投毒对拍只换一个索引（见 test-scripts.mjs §A5/§idx）⇒ 只有该档在 TEST_INDEX 下参与
+    testIndexPack: true,
   },
 };
 
+/** 旧 SRG 档（1.7.10–1.12.2）：映射输入是 joined.srg，成员按 owner 归属；值 = 类数钉（CL 名去重数）。 */
+const LEGACY_SRG_PACKS = {
+  "1.7.10": 1836,
+  "1.8.9": 2541,
+  "1.9.4": 2941,
+  "1.10.2": 2980,
+  "1.11.2": 3122,
+  "1.12.2": 3344,
+};
+for (const [v, n] of Object.entries(LEGACY_SRG_PACKS)) {
+  CHANNEL_KEEPS_SRG_CLASSES[`forge/${v}`] = {
+    classes: n,
+    forbiddenPrefixes: [],
+    forbiddenNames: [],
+    requiredNames: [],
+    mappingInput: "mappings/joined.srg",
+    membersFloor: { minNonEmptyRatio: 0.9, maxTopClassShare: 0.05 },
+  };
+}
+
 const TEST_ROOT = process.env.MC_SKILL_INDEX_LAYOUT_TEST_ROOT;
 const TEST_INDEX = process.env.MC_SKILL_INDEX_LAYOUT_TEST_INDEX;
+// 可选：把 TEST_INDEX 绑到指定档（如 forge/1.12.2）。留空 = 只跑 testIndexPack 档（1.16.5）。
+const TEST_INDEX_PACK = process.env.MC_SKILL_INDEX_LAYOUT_TEST_INDEX_PACK;
 const ROOT = TEST_ROOT ? path.resolve(TEST_ROOT) : REPO_ROOT;
 const failures = [];
 
 for (const [pack, spec] of Object.entries(CHANNEL_KEEPS_SRG_CLASSES)) {
+  if (TEST_INDEX && (TEST_INDEX_PACK ? pack !== TEST_INDEX_PACK : !spec.testIndexPack)) continue; // 投毒只换一个索引 ⇒ 只跑它对应的档
+  const before = failures.length;
   const idxPath = TEST_INDEX
     ? path.resolve(TEST_INDEX)
     : path.join(ROOT, "data", `forge_${pack.split("/")[1]}`, "extracted", "api-index.json");
@@ -71,13 +100,14 @@ for (const [pack, spec] of Object.entries(CHANNEL_KEEPS_SRG_CLASSES)) {
     failures.push(`${pack}: 索引不存在 ${rel}`);
     continue;
   }
-  let names;
+  let idxObj;
   try {
-    names = Object.keys(JSON.parse(fs.readFileSync(idxPath, "utf8")));
+    idxObj = JSON.parse(fs.readFileSync(idxPath, "utf8"));
   } catch (e) {
     failures.push(`${pack}: 索引不可解析 ${rel}（${e.message}）`);
     continue;
   }
+  const names = Object.keys(idxObj);
   // A1 类数钉值
   if (names.length !== spec.classes) {
     failures.push(`${pack}: 类数 ${names.length} ≠ 钉值 ${spec.classes}（${rel}）—— 生成物变了要签字`);
@@ -102,7 +132,21 @@ for (const [pack, spec] of Object.entries(CHANNEL_KEEPS_SRG_CLASSES)) {
     const mp = path.join(ROOT, "data", `forge_${pack.split("/")[1]}`, spec.mappingInput);
     if (!fs.existsSync(mp)) failures.push(`${pack}: 缺通道回映射输入 ${spec.mappingInput}（管线退化）`);
   }
-  if (!failures.length) {
+  // A5 成员分布地板（比例阈值，避免合法增长假红）
+  if (spec.membersFloor) {
+    const counts = names.map((n) => (idxObj[n].methods?.length ?? 0) + (idxObj[n].fields?.length ?? 0));
+    const totalMembers = counts.reduce((a, b) => a + b, 0);
+    const nonEmpty = counts.filter((c) => c > 0).length;
+    const ratio = names.length ? nonEmpty / names.length : 0;
+    const maxShare = totalMembers ? Math.max(...counts) / totalMembers : 0;
+    if (ratio < spec.membersFloor.minNonEmptyRatio) {
+      failures.push(`${pack}: 非空类占比 ${ratio.toFixed(3)} < 地板 ${spec.membersFloor.minNonEmptyRatio}（成员错挂：全文件成员并进最后一个类）`);
+    }
+    if (maxShare > spec.membersFloor.maxTopClassShare) {
+      failures.push(`${pack}: 单类成员占比 ${maxShare.toFixed(3)} > 上限 ${spec.membersFloor.maxTopClassShare}（成员错挂：单类吞掉全部成员）`);
+    }
+  }
+  if (failures.length === before) {
     console.log(`  ${pack}: ${names.length} 类 · 禁用面前缀 ${spec.forbiddenPrefixes.length} 项 0 命中 · 锚点 ${spec.requiredNames.length}/${spec.requiredNames.length} 在场 · 回映射制品在位`);
   }
 }

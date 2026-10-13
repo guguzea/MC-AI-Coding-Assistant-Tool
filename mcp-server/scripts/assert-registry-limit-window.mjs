@@ -154,6 +154,13 @@ async function realRun() {
   // ⚠️ 谁改 .max(200) 必须同改本腿与 :150 那条，且**新上界必须 ≥ 被查询的真池**，否则本腿比的已经不是全池前 N ⇒ 假绿。
   const big = payload(cli("query_registry", ["--query=block", "--version=1.20.1", "--limit=200"]));
   const sqlCount = await independentCount("block");
+  // 第二把尺子缺件 = 判据未跑，不得静默降级成「仅内部自洽」而照绿（缺件≠合格）。
+  if (sqlCount === undefined) {
+    errors.push(
+      `独立 SQL 尺子不可用：${join(DATA, `vanilla_${VERSION}`, "registries", "registry-index.sqlite")} 不在 ⇒ ` +
+        "B 腿「totalMatches == 独立计数」未跑（门头承诺不许拿生产自述当自证）。",
+    );
+  }
   const b = checkDisclosure(def, sqlCount);
   if (!b.ok) errors.push(...b.errors);
   const c = checkPrefix(def, { ...big, query: "block" });
@@ -207,13 +214,19 @@ function selfTest() {
       "--limit=1000": { success: false, errorKind: "validation", fieldErrors: [{ field: "limit", code: "TOO_BIG" }] },
     }).ok === true,
   ]);
+  cases.push(["正控：旗标解析认 --selftest ⇒ 绿", parseFlags(["--selftest"]).selftest === true && parseFlags(["--selftest"]).unknown.length === 0]);
+  cases.push(["投毒：不认识的旗标必须进 unknown（不得静默走默认模式）", parseFlags(["--census"]).unknown.join(",") === "--census"]);
+  // 两条 argv 臂必须在评分循环**之前** push：旧码在循环里只评前 11 例，这两条永不参与 rc，
+  // 而下面的分母又把它们算进「13/13 通过」⇒ 虚报覆盖面（掏空 parseFlags 的 unknown 过滤仍 rc=0）。
+  if (cases.length < 12) {
+    console.error(`FAIL：selftest 用例只剩 ${cases.length} 条（地板 12）⇒ 夹具被掏空，本腿不可信`);
+    return 1;
+  }
   let bad = 0;
   for (const [label, pass] of cases) {
     console.log(`  ${pass ? "✓" : "✗"} ${label}`);
     if (!pass) bad++;
   }
-  cases.push(["正控：旗标解析认 --selftest ⇒ 绿", parseFlags(["--selftest"]).selftest === true && parseFlags(["--selftest"]).unknown.length === 0]);
-  cases.push(["投毒：不认识的旗标必须进 unknown（不得静默走默认模式）", parseFlags(["--census"]).unknown.join(",") === "--census"]);
   // 正控/投毒的分母按标签现数，不写死 —— 本门自己的「披露位 ≠ 实测量」教训不能在自己尾巴上复发。
   const pos = cases.filter(([l]) => l.startsWith("正控")).length;
   console.log(`自检 ${cases.length - bad}/${cases.length} 通过（${pos} 正控 + ${cases.length - pos} 投毒，分母现数）`);

@@ -27,7 +27,7 @@ IF 平台数 ≥ 2 其他情况 → Architectury：
 
 ## common 源集纪律（最重要）
 
-- common 只 import 平台无关 + net.architectury.* 抽象；禁止 import net.minecraftforge.* / net.fabricmc.* / net.neoforged.*
+- common 只 import 平台无关 + dev.architectury.* 抽象；禁止 import net.minecraftforge.* / net.fabricmc.* / net.neoforged.*
 - 网络：用 Architectury 网络抽象，别在 common 里碰各平台 channel 细节
 - 映射：Fabric 侧 Yarn 与 Forge/Neo 侧 Mojang/MCP 由工具链各自处理，common 里别写死映射差异符号
 

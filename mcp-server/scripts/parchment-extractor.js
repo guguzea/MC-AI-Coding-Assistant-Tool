@@ -34,7 +34,9 @@ const OUT_DIR = join(__dirname, "..", "..", "data", `forge_${versionArg}`, "extr
 const FABRIC_MAPPINGS = join(__dirname, "..", "..", "data", `fabric_${versionArg}`, "mappings");
 
 function findParchmentJson() {
-  const files = readdirSync(DATA_DIR).filter((f) => f.endsWith(".json"));
+  // 排除 provenance 元数据件：盘上 `mcp_config-<v>_<日期>.provenance.json` 与 `parchment.json` 同目录，
+  // 且 readdir 字母序 provenance 在前 ⇒ 缺 `parchment*` 时旧回退会选中它，`raw.classes` 得空数组。
+  const files = readdirSync(DATA_DIR).filter((f) => f.endsWith(".json") && !/provenance/i.test(f));
   const preferred = files.find((f) => f.startsWith("parchment"));
   if (preferred) return join(DATA_DIR, preferred);
   if (files.length > 0) return join(DATA_DIR, files[0]);
@@ -331,6 +333,17 @@ const channelClassRemap = CHANNEL_CLASS_REMAP_VERSIONS.has(versionArg)
   ? await buildChannelClassRemap()
   : null;
 if (channelClassRemap) applyChannelClassRemap(channelClassRemap);
+
+// 空索引不得覆盖在线消费的产物：src/api/index.ts 直读这四件给 query_api（1.16.5–1.20.4 六档）。
+// 空 apiIndex（选件回退成 provenance / 上游格式漂移）会让 supplement 循环全 continue，
+// 四件 writeFileSync 照写空壳、rc=0 ⇒ 六档瞬间退化「类名空壳」。fail-closed：空则退 1、不写盘。
+if (Object.keys(apiIndex).length === 0) {
+  console.error(
+    `ERROR: apiIndex 为空（parchment 件=${parchmentPath}）—— 拒绝用空壳覆盖在线索引 ${OUT_DIR}。` +
+      `排查：parchment.json 是否在场、格式是否漂移；provenance 元数据件不应被选中。`,
+  );
+  process.exit(1);
+}
 
 writeFileSync(join(OUT_DIR, "api-index.json"), JSON.stringify(apiIndex, null, 0));
 console.log(

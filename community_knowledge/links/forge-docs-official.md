@@ -5,6 +5,7 @@ url: https://docs.minecraftforge.net/
 summary: 官方 Getting Started / Concepts；API 与注册请以此为准，勿用社区教程替代。
 tags: [official, forge, docs]
 sourceKind: links
+mcHint: 全版本（官方文档站）
 ---
 
 # Forge 官方文档（外链）

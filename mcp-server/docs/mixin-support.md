@@ -66,8 +66,8 @@ jar 不可用 → `{ok:false, action: CACHE_MISS}`（引导 `get_minecraft_sourc
 
 | 校验项 | 说明 |
 |---|---|
-| header | `accessWidener v[12] <namespace>`；namespace ∉ named/intermediary/official → warning |
-| 条目格式 | `[transitive ]<accessible\|extendable\|mutable> <class\|method\|field> <owner> [<member> <descriptor>]` |
+| header | `accessWidener v[12] <namespace>` 或 `classTweaker vN <namespace>`；namespace ∉ named/intermediary/official → warning |
+| 条目格式 | `[transitive ]<accessible\|extendable\|mutable> <class\|method\|field> <owner> [<member> <descriptor>]`；另接受两操作数指令 `inject-interface <owner> <被注入接口内部名>` / `extend-enum <owner> <枚举常量名>`（无 class/method/field 关键字） |
 | 类/成员存在性 | 同 AT 框架（继承链 / record / 内部类） |
 | Fabric 语义 | `transitive` 仅 v2（v1 使用 → warning）；`extendable` 目标是 final 类 → warning；`mutable` 用于方法 → warning |
 | 跨文件冲突 | `# ===== file: 名字 =====` 分隔多文件；同目标不同类型 → 冲突；transitive 标记不一致 / 重复 → warning |
@@ -77,9 +77,8 @@ jar 不可用 → `{ok:false, action: CACHE_MISS}`（引导 `get_minecraft_sourc
 
 ## 4. jar 定位优先级
 
-`jarPath` 参数 > `$MC_SKILL_CACHE` 缓存扫描（`remapped/minecraft-<version>-*.jar`
-（优先 yarn 再 mojmap）> `remapped/<version>/*.jar` > `jars/minecraft-<version>-client.jar`）。
-全部未命中 → `CACHE_MISS`（**不自动下载**，遵守离线优先红线）。
+`jarPath` 参数 > `$MC_SKILL_CACHE` 缓存扫描（三目录 `remapped/`、`remapped/<version>/`、`jars/` **并集成一个列表**后统一排序：vanilla 客户端 jar 优先 → 映射层 rank（yarn 0 > mojmap 1 > official 2 > unknown 3）→ 版本整段精确；**目录本身不是排序键**）。
+**必须存在 vanilla 客户端 jar**（`minecraft-*.jar`）：只有 mod jar 时返回 `null` ⇒ `CACHE_MISS`（不把 mod jar 的「类不存在」当验证结论，也**不自动下载**，遵守离线优先红线）。
 
 ## 5. `@At(HEAD|RETURN|TAIL)` 位置语义
 

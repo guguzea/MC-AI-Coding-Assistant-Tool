@@ -18,10 +18,10 @@ export interface ParsedMethodRef {
   raw: string;
 }
 
-/** MCP SRG：`func_110143_aJ`（后缀可为多字母，禁止写成 `[a-z]$` 单字母） */
-export const SRG_METHOD_RE = /^func_\d+_[a-zA-Z]+$/;
-/** MCP SRG 字段：`field_100013_f`；与 Yarn `field_6247`（无后缀字母）不重叠 */
-export const SRG_FIELD_RE = /^field_\d+_[a-zA-Z]+$/;
+/** MCP SRG：`func_110143_aJ`（后缀可为多字母，禁止写成 `[a-z]$` 单字母）；1.16.5 尾下划线形 `func_227860_a_` 亦收 */
+export const SRG_METHOD_RE = /^func_\d+_[a-zA-Z0-9]*_?$/;
+/** MCP SRG 字段：`field_100013_f`（1.16.5 尾下划线形同收）；与 Yarn `field_6247`（无后缀字母）不重叠 */
+export const SRG_FIELD_RE = /^field_\d+_[a-zA-Z0-9]*_?$/;
 const YARN_RE = /^method_\d+$/i;
 const MOJANG_RE = /^m_\d+_$/;
 

@@ -743,10 +743,9 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
         const tinyJars = await ensureTinyRemapperJars({ cacheRoot: cache.root });
         // 缓存键：yarn 用 yarn-named（两步最终产物），避免命中旧单步 official→intermediary 的
         // `mod-*-yarn.jar`（仅 intermediary 名）。中间步独立键 yarn-intermediary。
-        const remapStem =
-          mapping === "yarn"
-            ? sanitizeCacheSegment(`mod-${modId}-${modVersion}-yarn-named`)
-            : sanitizeCacheSegment(`mod-${modId}-${modVersion}-mojmap`);
+        // 键含 MC 版本与 jar 内容身份（见 remapCacheStem 头注）：否则同声明 id+version 的两个
+        // 不同构建/不同 MC 版本会命中同一 remapped jar，静默复用错误的命名字节。
+        const remapStem = remapCacheStem(modId, modVersion, version, jarIdentity, mapping === "yarn" ? "yarn-named" : "mojmap");
         if (!remapStem) {
           throw new Error("remap 输出文件名非法（含路径穿越）");
         }
@@ -800,7 +799,7 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
             mappings = mojmapPath;
           }
           if (mapping === "yarn") {
-            const step1Stem = sanitizeCacheSegment(`mod-${modId}-${modVersion}-yarn-intermediary`);
+            const step1Stem = remapCacheStem(modId, modVersion, version, jarIdentity, "yarn-intermediary");
             if (!step1Stem) {
               throw new Error("remap 中间文件名非法（含路径穿越）");
             }
@@ -1041,6 +1040,24 @@ export function requestedRemapKey(
   const vi = parseMinecraftVersion(version);
   if (!vi.valid || !vi.supported || vi.unobfuscated) return { version: null, mapping: null };
   return { version: vi.version, mapping: mapping === "mojmap" ? "mojmap" : "yarn" };
+}
+
+/**
+ * remap 中间 / 最终 jar 的缓存文件名 stem（纯函数）。
+ *
+ * P0：键必须含 **MC 版本**（`version`）与 **jar 内容身份**（`jarIdentity`，sha512 前 12 位）。
+ * 只按 `mod-<id>-<modVersion>` 命名时，同声明 id+version 的两个不同构建、或同一 jar 以不同
+ * MC 版本请求，都会命中同一 remapped jar ⇒ `existsSync` 通过 ⇒ 整段跳过 remap，返回别的
+ * MC 版本/别的构建的命名字节却报本次请求的版本（与 `outDir` 的身份段同口径）。
+ */
+export function remapCacheStem(
+  modId: string,
+  modVersion: string,
+  version: string,
+  jarIdentity: string,
+  kind: "yarn-named" | "yarn-intermediary" | "mojmap",
+): string | null {
+  return sanitizeCacheSegment(`mod-${modId}-${modVersion}-${version}-${jarIdentity}-${kind}`);
 }
 
 /**

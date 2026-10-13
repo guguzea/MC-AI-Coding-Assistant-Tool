@@ -207,7 +207,20 @@ export function schemaPropertyType(schema: z.ZodTypeAny | undefined, key: string
   if (prop instanceof z.ZodArray) return "array";
   if (prop instanceof z.ZodRecord) return "object";
   if (prop instanceof z.ZodObject) return "object";
-  if (prop instanceof z.ZodUnion) return "union";
+  if (prop instanceof z.ZodUnion) {
+    // W2-04：union 含 number 成员而**不含 string 成员**（如 packFormat: number | [number, number]）时，
+    // 纯数字串必须被转成 number，否则 CLI 面数字分支永远不可达（"15" 被 zod 两分支都拒）。
+    // 若 union 同时有 string 成员（`string | number`），string 是合法形态 ⇒ 保留 `union`，不提前转 number。
+    const opts = (prop._def as { options?: z.ZodTypeAny[] }).options ?? [];
+    let hasNumber = false;
+    let hasString = false;
+    for (const o of opts) {
+      const u = unwrapZod(o);
+      if (u instanceof z.ZodNumber || u instanceof z.ZodBigInt) hasNumber = true;
+      if (u instanceof z.ZodString) hasString = true;
+    }
+    return hasNumber && !hasString ? "union-number" : "union";
+  }
   return "string";
 }
 
@@ -253,7 +266,8 @@ function parseArrayish(value: string): unknown[] {
 
 /**
  * 按 schema 字段类型转换 flag 值。
- * coerce 必须先看字段 Zod 类型：union 不把 "123" 提前转 number；空字符串不转成 0。
+ * coerce 必须先看字段 Zod 类型：不含 number 成员的 union 不把 "123" 提前转 number（含 number 成员的
+ * union-number 例外，见 schemaPropertyType / W2-04）；空字符串不转成 0。
  */
 export function coerceFlagValue(value: string, expectedType?: string, itemType?: string): unknown {
   switch (expectedType) {
@@ -289,7 +303,8 @@ export function coerceFlagValue(value: string, expectedType?: string, itemType?:
         return value;
       }
     }
-    case "union": {
+    case "union":
+    case "union-number": {
       const t = value.trim();
       if ((t.startsWith("{") && t.endsWith("}")) || (t.startsWith("[") && t.endsWith("]"))) {
         try {
@@ -297,6 +312,10 @@ export function coerceFlagValue(value: string, expectedType?: string, itemType?:
         } catch {
           return value;
         }
+      }
+      // union-number：union 里有 number 成员 ⇒ 裸数字串按数字走（packFormat "15" → 15）。
+      if (expectedType === "union-number" && t !== "" && !Number.isNaN(Number(t))) {
+        return Number(t);
       }
       return value;
     }

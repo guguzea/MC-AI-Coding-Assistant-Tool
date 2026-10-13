@@ -1060,6 +1060,12 @@ export function generateCapability(
   if (!version?.trim()) {
     return { code: null, errors: ["version is required。" + noNativeGeneratorError("search_*_docs", "规则 05 / mc-capability Skill")] };
   }
+  // P2-4：与 generate_model/_lang/_config/_worldgen/_entity_renderer 同口径的上界哨兵 ——
+  // 26.99.9 / 1.99.9 这类编造版本不得回 ok:true + 骨架（isNeoForgeAttachmentVersion 的 /^26\.\d/ 会放行任意 26.x）。
+  const eraErrCap = eraUpperBoundError(version);
+  if (eraErrCap) {
+    return { code: null, errors: [eraErrCap + noNativeGeneratorError("search_*_docs", "规则 05 / mc-capability Skill")] };
+  }
   const p = platform.trim().toLowerCase();
   if (p === "fabric" || p === "quilt") {
     return {

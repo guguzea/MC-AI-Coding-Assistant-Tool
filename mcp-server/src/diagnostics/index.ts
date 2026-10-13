@@ -165,7 +165,7 @@ export interface DetectedLibrary {
   communityDocId?: string;
   skillId?: string;
   matchReason: string;
-  /** 反编译验证过的 MC 版本窗口（catalog verifiedApi 键推导） */
+  /** 反编译验证过的 MC 版本窗口（取自 catalog entry.supportedVersions；verifiedApi 运行时不被消费） */
   supportedVersions?: string[];
   /** manifest 版本摘要（lib-manifests/all.json） */
   manifestSummary?: { versions: number; samples: string[]; loaders: string[] };

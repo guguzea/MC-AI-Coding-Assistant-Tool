@@ -147,24 +147,24 @@ for (const v of VERS) {
   if (cur) {
     const curLine = cur[0].replace(/\r?\n$/, "");
     if (curLine === want) { console.log(`${v}: OK (${found.layout})`); continue; }
-    bad++;
     if (wantWrite()) {
       const eol = t.includes("\r\n") ? "\r\n" : "\n";
       emit(p, head + want + eol + rest.slice(cur[0].length));
       console.log(`${v}: UPDATED (${found.layout})`);
-    } else {
-      console.log(`${v}: MISMATCH 现有=${curLine}`);
-      console.log(`${v}:          期望=${want}`);
+      continue; // 已修好，不计入退出码
     }
-  } else {
     bad++;
+    console.log(`${v}: MISMATCH 现有=${curLine}`);
+    console.log(`${v}:          期望=${want}`);
+  } else {
     if (wantWrite()) {
       const eol = t.includes("\r\n") ? "\r\n" : "\n";
       emit(p, head + want + eol + rest);
       console.log(`${v}: INSERTED (${found.layout})`);
-    } else {
-      console.log(`${v}: MISSING（--write 可插入）`);
+      continue; // 已插入，不计入退出码
     }
+    bad++;
+    console.log(`${v}: MISSING（--write 可插入）`);
   }
 }
 console.log(bad === 0 ? `check: ${VERS.length} 档全部一致（扁平 ${flatN} + 目录 ${dirN}）` : `check: ${bad} 档待处理`);

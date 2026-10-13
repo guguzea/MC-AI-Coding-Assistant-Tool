@@ -12,7 +12,7 @@
 
 `data/quilt_*` 共 **6 档**带目录 —— `1.18.2` / `1.19.4` / `1.20.1` / `1.20.4` / `1.21.1` / `1.21.11`（第 6 档此前没登记过，别按旧清单以为只有 5 档）。
 
-每档正文 **18 页** = 上游 `QuiltMC/developer-wiki` 的 **15 篇英文页**（取 `wiki/<路径>/en.md` 的 markdown 本体）+ QSL 按分支 README + `quilt.mod.json` RFC + 本档 `qsl-verified`。
+每档正文 **18 页** = 上游 `QuiltMC/developer-wiki` 的 **14 篇英文 wiki 页**（取 `wiki/<路径>/en.md` 的 markdown 本体，即 `wiki-*.md`）+ 4 篇 QSL/元数据页（`qsl-qfapi` / QSL 按分支 README / `quilt.mod.json` RFC / 本档 `qsl-verified`）。
 
 **换源原因**：正文源已从 `wiki.quiltmc.org` 的 HTML 换成仓库 markdown —— 该站是 SvelteKit 壳，服务端 `<main>` 只有 ~287 字符，旧抓取器掉进 `body` 兜底后把整棵导航菜单与页脚版权灌进语料、并已进语义索引。
 

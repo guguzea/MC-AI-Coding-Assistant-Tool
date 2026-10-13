@@ -33,6 +33,8 @@ export async function importTsrgStream(db, input, meta = {}) {
   let classCount = 0;
   let methodCount = 0;
   let fieldCount = 0;
+  // 形状不符行（顶层 tokens≠2、成员行 tokens∉{2,3,4}、`<` 形）此前静默 continue，无计数无留痕。
+  let skipped = 0;
 
   db.exec("BEGIN");
   const rl = readline.createInterface({ input, crlfDelay: Infinity });
@@ -51,10 +53,10 @@ export async function importTsrgStream(db, input, meta = {}) {
       }
       continue;
     }
-    if (!currentNamed) continue;
+    if (!currentNamed) { skipped++; continue; }
     const tokens = rawLine.trim().split(/\s+/);
-    if (tokens.length === 0) continue;
-    if (tokens[0].startsWith("<")) continue;
+    if (tokens.length === 0) { skipped++; continue; }
+    if (tokens[0].startsWith("<")) { skipped++; continue; }
 
     if (tokens.length === 3) {
       const [obfName, descriptor, mappedName] = tokens;
@@ -89,5 +91,12 @@ export async function importTsrgStream(db, input, meta = {}) {
   }
   void currentObf;
   db.exec("COMMIT");
-  return { classCount, methodCount, fieldCount, mappingEra: "tsrg", source: meta.source ?? "" };
+  return {
+    classCount,
+    methodCount,
+    fieldCount,
+    mappingEra: "tsrg",
+    source: meta.source ?? "",
+    ...(skipped > 0 ? { buildWarnings: [`形状不符行 ${skipped} 条被跳过（上游形状漂移?）`] } : {}),
+  };
 }

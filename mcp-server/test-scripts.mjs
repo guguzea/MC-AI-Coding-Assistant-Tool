@@ -2375,6 +2375,14 @@ const REAL_RUN_GATES = [
     // 面上」⇒ 本门把「在册档案在盘 + 被 AGENTS / WRITING-FOR-AGENTS / CONTRIBUTING 之一按仓库相对路径
     // 提到」变成红，并普查「名字像账本的新文件必须登记或带原因豁免」。真跑面故意窄（盲区写在门头）。
     "./scripts/assert-archive-pointers.mjs",
+    // 2026-10-12 审计 §6.5 三条反向检测腿之①：技能源稿**围栏外**的「名字清单」必须落在本档
+    // FAPI 真构件名册（或本档 vanilla 映射）里 —— 补 assert-skill-yarn-attest 只看围栏内的盲区
+    // （F18：`mc-item/SKILL.md:15` 的散文名字清单里的不存在类名）。
+    "./scripts/assert-prose-name-roster.mjs",
+    // 之②：规则/技能里 `Registries.<MEMBER>` / `RegistryKeys.<MEMBER>` 的**字段级存在性** ——
+    // 补 assert-rules-api-names 只判类名的盲区（`Registries` 类在各档都在，而 `Registries.ENCHANTMENT`
+    // 自 1.21.1 起已改挂 `RegistryKeys`）。
+    "./scripts/assert-registry-field-existence.mjs",
   ];
 
 const SELFTEST_GATES = [
@@ -2459,6 +2467,10 @@ const SELFTEST_GATES = [
     // L72①（2026-09-26）：AT 示例行同答门的自证（9 记投毒 + 1 正对照，夹具 8 档/16 行全内存，
     // 投毒不碰仓库；正对照那条在两臂都必须绿，用来区分「门有牙」和「脚本自己崩了」）。
     "./scripts/assert-forge-at-example.mjs",
+    // 2026-10-12 审计 §6.5 反向检测腿之①/②：围栏外名字清单 vs FAPI 真构件名册（F18 类）、
+    // 注册表字段级存在性（F19 类）。两门各自 --selftest 带纯函数夹具 + 真库/真名册活性腿。
+    "./scripts/assert-prose-name-roster.mjs",
+    "./scripts/assert-registry-field-existence.mjs",
     // S5′（2026-09-25）：库坐标门的自证（投毒必红 + 不判红对照 + 真实输入正对照三桶，例数由该门自印；
     // 全内存 + 一次性临时根，不联网、不改仓内快照）。实测 rc=0 / 114–195 ms。
     "./scripts/assert-lib-coord-snapshot.mjs",
@@ -2514,8 +2526,8 @@ const SELFTEST_GATES = [
  *  `Y` 的下界另配一记**差分对照**（投毒④）证明扫描是活的：往 `selfBlob` 夹具里追加一条 spawn 形引用，
  *  `Y` 必须 −1 且仍绿；只按下界的话，「扫描恒不命中 ⇒ Y=K」与「扫描恒命中 ⇒ Y=0」都不会自己现形。
  */
-const FLOOR_REAL_RUN = 30; // 口径 = REAL_RUN_GATES 去重长度；实测 37（+assert-quilt-unversioned-wiki / +assert-cross-layer-names / +assert-generator-rejection-codes）；下界（< 才红），非等式
-const FLOOR_SELFTEST = 15; // 口径 = SELFTEST_GATES 去重长度；实测 26（+quilt-unversioned-wiki / +qsl-verified-sync / +cross-layer-names / +generator-rejection-codes 四条自证）；下界，非等式
+const FLOOR_REAL_RUN = 30; // 口径 = REAL_RUN_GATES 去重长度（真实值以本链 §S4 自印行「真跑 N 道」为准，会随加门漂）；地板是下界（< 才红），非等式
+const FLOOR_SELFTEST = 15; // 口径 = SELFTEST_GATES 去重长度（真实值以本链 §S4 自印行「selftest M 道」为准，会随加门漂）；地板是下界，非等式
 const FLOOR_UNREF = 8; // 口径 = 盘上 assert-*.mjs 中「本文件源码零出现」的道数；实测 10；下界，非等式（合法把某道门挪进本文件 spawn 块会让 Y 降，不该红）
 
 /**
@@ -2795,8 +2807,21 @@ function censusChain({ diskGates, blob, pkg, selfBlob, realRun, selftest, floorR
   for (const [tag, p] of [["注入 Mojang 专属类", q1], ["改名 BlockLootTables", q2], ["删锚点", q3]]) {
     expect(`api-index 通道布局投毒（${tag}）`, runGate(H, { MC_SKILL_INDEX_LAYOUT_TEST_INDEX: p }).status, 1);
   }
+  // 旧 SRG 档（1.7.10–1.12.2）成员分布地板（A5）：基线绿 + 折成「单类吞全部成员」必红。
+  const IDX1122 = fileURLToPath(new URL("../data/forge_1.12.2/extracted/api-index.json", import.meta.url));
+  const idx1122 = JSON.parse(readFileSync(IDX1122, "utf8"));
+  const k1122 = Object.keys(idx1122);
+  const foldM = [], foldF = [];
+  for (const k of k1122) { foldM.push(...(idx1122[k].methods || [])); foldF.push(...(idx1122[k].fields || [])); }
+  const folded = {};
+  for (const k of k1122) folded[k] = { javadoc: null, methods: [], fields: [] };
+  folded[k1122[0]] = { javadoc: null, methods: foldM, fields: foldF };
+  const q4 = `${tmp}\\idx-fold-1122.json`;
+  writeFileSync(q4, JSON.stringify(folded));
+  expect("idx 旧档成员分布基线", runGate(H, { MC_SKILL_INDEX_LAYOUT_TEST_INDEX: IDX1122, MC_SKILL_INDEX_LAYOUT_TEST_INDEX_PACK: "forge/1.12.2" }).status, 0);
+  expect("api-index 旧档成员分布投毒（全并进一类）", runGate(H, { MC_SKILL_INDEX_LAYOUT_TEST_INDEX: q4, MC_SKILL_INDEX_LAYOUT_TEST_INDEX_PACK: "forge/1.12.2" }).status, 1);
   console.log(
-    "  §A5/§idx 投毒自检: 判死符号台账（基线绿 + 少记/多记/锚点挪位 3 记必红）· api-index 通道布局（基线绿 + Mojang 类注入/改名/删锚点 3 记必红）",
+    "  §A5/§idx 投毒自检: 判死符号台账（基线绿 + 少记/多记/锚点挪位 3 记必红）· api-index 通道布局（基线绿 + Mojang 类注入/改名/删锚点 3 记必红 + 旧档成员分布 1 记必红）",
   );
   } finally {
     // 本块夹具 = 3 份 6.5MB api-index 投毒副本 + 3 份台账副本；此前从不清理 ⇒ 2026-09-25 实测盘上

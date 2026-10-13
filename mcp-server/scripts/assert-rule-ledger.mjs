@@ -122,7 +122,7 @@ export function validateLedger(ledger, ctx = {}) {
       const gatePath = gatePathOf(gate, scriptsDir);
       if (!fs.existsSync(gatePath)) {
         problems.push(`${at}: 点名的门不存在 ${gate}（清单指向空气 = 该不变量其实无人守）`);
-      } else if (hostTexts.length > 0 && !hostTexts.some((t) => t.includes(gate))) {
+      } else if (hostTexts.length > 0 && !hostTexts.some((t) => isMounted(t, gate))) {
         problems.push(
           `${at}: 点名的门 ${gate} 没有被任何宿主真跑（test-scripts.mjs 与 package.json 的 test 链都没提到 ⇒ 登记在册≠有人跑）`,
         );
@@ -130,6 +130,24 @@ export function validateLedger(ledger, ctx = {}) {
     }
   }
   return problems;
+}
+
+/**
+ * 「该门被真跑」= 命中**挂载形状**，不是宿主全文的裸子串：
+ *   · `assert-*` 门落 `scripts/`，宿主以数组项 `"./scripts/<gate>"` 或 `node scripts/<gate>` 挂载
+ *     ⇒ 要求带 `scripts/` 路径段。裸名（如 test-scripts.mjs 里「未引用清单」的 console.log 串、
+ *     或纯注释里的文件名）**不算** —— 那正是本判据原先被喂绿的口子。
+ *   · `test-*` 门落 `mcp-server/` 根，package.json 以 `node <gate>` 调用 ⇒ 先剥行首 `//` 注释行，
+ *     再要求独立 token（前后是空白/引号/括号/逗号）。
+ */
+export function isMounted(hostText, gate) {
+  if (!gate.startsWith('test-')) return hostText.includes(`scripts/${gate}`);
+  const esc = gate.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const code = hostText
+    .split(/\r?\n/)
+    .filter((l) => !/^\s*\/\//.test(l))
+    .join('\n');
+  return new RegExp(`(?:^|[\\s"'\`(,])${esc}(?:[\\s"'\`),]|$)`).test(code);
 }
 
 /** --verify：逐条真跑每道门，返回 per-item 结果（不写盘）。 */
@@ -143,7 +161,16 @@ function verifyLedger(ledger) {
       perGate.set(gate, { rc: 127, note: '门文件不存在' });
       continue;
     }
-    const r = spawnSync(process.execPath, [gatePath], { cwd: SERVER_ROOT, encoding: 'utf8', timeout: 900_000, windowsHide: true });
+    const r = spawnSync(process.execPath, [gatePath], {
+      cwd: SERVER_ROOT,
+      encoding: 'utf8',
+      timeout: 900_000,
+      windowsHide: true,
+      // env 封闭：不清理 env 会把 MC_SKILL_LEDGER_VERIFY=1 泄漏给每一道被 spawn 的门 ⇒ 若台账内
+      // 有门经 test-scripts 链再 spawn 本门，即成无限递归自调用；内层被 900s 超时杀掉、rc=1 ⇒
+      // --verify 恒报同一批「未销账」。清掉两个开关即断链。
+      env: { ...process.env, MC_SKILL_LEDGER_VERIFY: '', MC_SKILL_RULE_LEDGER_INFO: '' },
+    });
     const tail = `${r.stdout ?? ''}${r.stderr ?? ''}`.trim().split(/\r?\n/).filter(Boolean).pop() ?? '';
     perGate.set(gate, { rc: r.status ?? 1, note: tail.slice(0, 120) });
   }
@@ -190,7 +217,7 @@ if (process.argv.includes('--selftest')) {
   const orphan = fs
     .readdirSync(SCRIPTS_DIR)
     .filter((n) => n.startsWith('assert-') && n.endsWith('.mjs'))
-    .find((n) => !hostTexts.some((t) => t.includes(n)));
+    .find((n) => !hostTexts.some((t) => isMounted(t, n)));
   if (orphan) cases.push([`指向没被真跑的门(${orphan})`, mk({ gates: [orphan], gate: undefined })]);
   else console.log('  note: scripts/ 下不存在「存在但未被任何宿主真跑」的门 ⇒ 跳过该投毒用例');
   let missed = 0;

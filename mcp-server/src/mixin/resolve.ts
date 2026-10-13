@@ -21,7 +21,9 @@ function mappingFromForStyle(style: ParsedMethodRef["style"]): "mcp" | "yarn" | 
     case "yarn_intermediary":
       return "yarn";
     case "mojang_hashed":
-      return "mojang";
+      // P1-R4-2：`m_*_`/`f_*_` 是 Forge 1.17+ 的 **SRG（MCP named）** 名，不是 mojmap；
+      // 旧映射 from="mojang" 会去查 official 列（存混淆短名，从不含 m_），必然 miss。
+      return "mcp";
     case "readable":
       return "mcp";
     default:
@@ -82,6 +84,8 @@ export async function resolveMixinMethodTarget(
       memberName: ref.methodName,
       ownerClass,
       descriptor: ref.descriptor,
+      // P1-R4-2：mcp 层的 token 走 Forge 库；fabric 的 yarn 查询保持 null 不改变既有行为。
+      mappingDbPreference: from === "mcp" ? "forge" : null,
       version,
     });
     if (map.found) {
@@ -90,6 +94,7 @@ export async function resolveMixinMethodTarget(
         memberName: map.converted ?? ref.methodName,
         descriptor: ref.descriptor,
         from: "mcp",
+        preferPlatform: from === "mcp" ? "forge" : null,
       });
       if (!lookup.found) {
         return {

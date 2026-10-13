@@ -107,7 +107,10 @@ for (const rawLine of lines) {
     const tokens = rawLine.trim().split(/\s+/);
     if (tokens.length === 2) {
       const [obfName, mappedName] = tokens;
-      if (!mappedName || mappedName === "" || obfName === mappedName) continue;
+      if (!mappedName || mappedName === "") continue;
+      // 身份类行（obfName === mappedName）也是合法 owner：**不得 continue 跳过** ——
+      // 跳过会使 currentClassName 停在前一任真名类，其下全部 tab 缩进成员行错挂到那个类
+      // （1.13.2 实测：34 条身份 CLASS 行 + 640 条成员行错挂；旧 continue 亦不 reset owner）。
       currentClassName = mappedName;
       classNames.add(currentClassName);
       if (!apiIndex[currentClassName]) {

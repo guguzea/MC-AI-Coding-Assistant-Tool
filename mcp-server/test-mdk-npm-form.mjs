@@ -26,20 +26,28 @@ const distEntry = join(here, "..", "temp", "_b06dist", "mdk", "index.js");
 let pass = 0;
 const failures = [];
 /**
- * 同步用例。**async 用例一律用下面的 `atest`**：`assert-test-harness` 的 R-2 判据是纯语法的 ——
- * 只要本文件里既有 `function test(` 定义、又有「把 async 回调交给 test」的调用点，就判红
- * （它分辨不出本地的 test 是否识别 thenable；注释里写出那个字形同样会被打中）。
- * 故按项目约定 `test()/atest()`（同 `test-decompile.mjs`）把两族拆开。
+ * 同步用例。async 用例一律用下面的 `atest`（同 `test-decompile.mjs` 的两族拆分约定）。
+ * 本 `test()` 也显式检出 thenable：把 async 回调误交给它时判失败而非静默通过
+ * （`assert-test-harness` 的 R-2 要求本地 harness 处理 thenable）。
  */
 function test(name, fn) {
+  let result;
   try {
-    fn();
-    pass++;
-    console.log(`[OK] ${name}`);
+    result = fn();
   } catch (e) {
     failures.push([name, e]);
     console.log(`[XX] ${name} :: ${e.message}`);
+    return;
   }
+  if (result && typeof result.then === "function") {
+    const e = new Error("async 用例被交给同步 test()：断言永不按序执行。改成 await atest(...)");
+    failures.push([name, e]);
+    console.log(`[XX] ${name} :: ${e.message}`);
+    result.catch(() => {});
+    return;
+  }
+  pass++;
+  console.log(`[OK] ${name}`);
 }
 
 /** async 用例：调用点必须 `await atest(...)`，否则断言在 Promise 里被吞掉（harness 假绿）。 */

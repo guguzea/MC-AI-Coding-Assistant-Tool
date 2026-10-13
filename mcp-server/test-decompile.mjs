@@ -20,6 +20,7 @@ import { crc32, deflateRawSync } from "node:zlib";
 import {
   decompileDegradation,
   requestedRemapKey,
+  remapCacheStem,
   judgeDecompiledCacheHit,
   readDecompiledMeta,
   writeDecompiledMeta,
@@ -1119,6 +1120,25 @@ section("decompiled cache hit criteria (S8)");
       assert.deepEqual(requestedRemapKey("1.12.2", "yarn"), { version: null, mapping: null });
       assert.deepEqual(requestedRemapKey(undefined, "yarn"), { version: null, mapping: null });
       assert.deepEqual(requestedRemapKey("不存在的版本", undefined), { version: null, mapping: null });
+    });
+
+    test("remapStem 含 MC 版本 + jar 内容身份（同 id+version 不同构建/不同版本不得共用）", () => {
+      const a = remapCacheStem("mymod", "1.0.0", "1.20.1", "aaaaaaaaaaaa", "yarn-named");
+      // 同 id+modVersion、换 MC 版本 ⇒ 键必须不同（否则跨版本复用错误命名 jar）
+      const b = remapCacheStem("mymod", "1.0.0", "1.21.1", "aaaaaaaaaaaa", "yarn-named");
+      // 同 id+modVersion+MC 版本、换 jar 字节 ⇒ 键必须不同（否则另一构建的字节被复用）
+      const c = remapCacheStem("mymod", "1.0.0", "1.20.1", "bbbbbbbbbbbb", "yarn-named");
+      assert.ok(a && b && c, `键不得为空：${a} / ${b} / ${c}`);
+      assert.notEqual(a, b, "换 MC 版本必须换键");
+      assert.notEqual(a, c, "换 jar 内容身份必须换键");
+      // 映射层与中间步各自独立键
+      assert.notEqual(a, remapCacheStem("mymod", "1.0.0", "1.20.1", "aaaaaaaaaaaa", "mojmap"));
+      assert.notEqual(
+        remapCacheStem("mymod", "1.0.0", "1.20.1", "aaaaaaaaaaaa", "yarn-named"),
+        remapCacheStem("mymod", "1.0.0", "1.20.1", "aaaaaaaaaaaa", "yarn-intermediary"),
+      );
+      // 判据只依赖入参：同样入参必须稳定（可复现命名，不会每次重建都 miss）
+      assert.equal(a, remapCacheStem("mymod", "1.0.0", "1.20.1", "aaaaaaaaaaaa", "yarn-named"));
     });
 
     test("命中键含 version + mapping：任一不同即 cacheStale", () => {

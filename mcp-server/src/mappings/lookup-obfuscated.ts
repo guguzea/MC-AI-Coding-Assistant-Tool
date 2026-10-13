@@ -2,7 +2,8 @@
  * lookup_obfuscated：崩溃日志反混淆（单 token 全局反查，无需 ownerClass）。
  *
  * 输入可为：method_6032（intermediary）/ er（obfuscated 短名）/ func_110143_aJ（SRG）/
- * field_100013_f / m_46859_（mojang-hashed，yarn sqlite 中不存在 → NOT_FOUND）。
+ * field_100013_f / m_46859_ / f_100013_a（Forge SRG（MCP）名，存于本仓 Forge 库的 named/searge 列；
+ * 1.16.5–1.20.4 的 func_ 尾下划线形与 m_/f_ 形经 getCsvDb(version,"forge") 反查，见 lookupByObfuscated）。
  * 方法优先 → 字段其次 → 类最后；多命中返回 AMBIGUOUS。
  *
  * `resolveObfuscatedThreeWay` 供 convert_mapping 与本工具共用，避免两套逻辑分叉。
@@ -101,11 +102,11 @@ function singleHit(
  */
 export function resolveObfuscatedThreeWay(version: string, token: string): ObfuscatedThreeWayHit {
   const style = detectNamingStyle(token);
-  const isFieldToken = /^field_\d+_[a-zA-Z]+$/.test(token) || /^field_/.test(token);
+  const isFieldToken = /^field_\d+_[a-zA-Z0-9]*_?$/.test(token) || /^field_/.test(token);
   const isMethodToken =
     style === "yarn_intermediary" ||
     style === "mojang_hashed" ||
-    /^func_\d+_[a-zA-Z]+$/.test(token) ||
+    /^func_\d+_[a-zA-Z0-9]*_?$/.test(token) ||
     /^method_/.test(token);
 
   const methodHits = isFieldToken ? null : lookupByObfuscated(version, token, "method");
@@ -309,7 +310,7 @@ export function lookupObfuscated(query: LookupObfuscatedQuery): LookupObfuscated
       `未找到映射: ${token}`,
       [
         "确认 version / token 拼写",
-        "mojang-hashed（m_/f_）名不在 yarn sqlite 中",
+        "`m_/f_` 形是 Forge SRG 名（MCP 侧），本工具已在 Forge 库的 named 列反查；查不到再用 convert_mapping platform=forge",
         "用 convert_mapping 传 ownerClass 再试",
       ],
       ["convert_mapping", "query_api"],

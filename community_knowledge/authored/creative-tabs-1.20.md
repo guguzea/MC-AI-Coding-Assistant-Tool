@@ -15,7 +15,7 @@ sourceKind: authored
 
 | 版本 | 做法 |
 |------|------|
-| 1.18 / 1.19 | `new Item.Properties().tab(CreativeModeTab.TAB_MISC)` 等，构造时挂页签 |
+| 1.18–1.19.2 | `new Item.Properties().tab(CreativeModeTab.TAB_MISC)` 等，构造时挂页签 |
 | **1.20+** | **去掉** `.tab(...)`；单独注册 `CreativeModeTab`，再在填充回调里 `accept` 物品 |
 
 从 1.18 教程抄代码到 1.20 时，`.tab` 编译失败或行为不对是最常见坑。

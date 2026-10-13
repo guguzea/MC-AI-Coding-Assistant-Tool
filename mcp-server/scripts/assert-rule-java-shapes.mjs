@@ -78,14 +78,24 @@ export function fencedBlocks(text) {
   return out;
 }
 
-/** 数实参个数（顶层逗号分割；`<`/`>` 只在与括号配对时按泛型深度处理）。 */
+/** 数实参个数（顶层逗号分割；`<`/`>` 只在与括号配对时按泛型深度处理；**字符串字面量内逗号不计**）。 */
 function argCount(inner) {
   let paren = 0;
   let angle = 0;
   let n = 0;
   let hasAny = false;
+  // 字符串/字符字面量感知：`new C(1, "a,b")` 的字面量逗号不是实参分隔符（旧码把它算成 3 参 ⇒ 假红）；
+  // 反向亦成立：真 2 参调用 `new C(1, "two,three")` 被算成 2 参 ⇒ 漏判（编译错绿着放行）。
+  let inString = null; // null | '"' | "'"
+  let escaped = false;
   for (const ch of inner) {
-    if (ch === "(") paren++;
+    if (inString) {
+      if (escaped) escaped = false;
+      else if (ch === "\\") escaped = true;
+      else if (ch === inString) inString = null;
+    } else if (ch === '"' || ch === "'") {
+      inString = ch;
+    } else if (ch === "(") paren++;
     else if (ch === ")") paren--;
     else if (ch === "<") angle++;
     else if (ch === ">") angle = Math.max(0, angle - 1);

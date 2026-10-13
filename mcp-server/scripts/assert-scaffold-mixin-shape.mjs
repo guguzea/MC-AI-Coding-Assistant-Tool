@@ -161,9 +161,13 @@ function mappingLeg(platform, version) {
 function descriptors(platform, version, simpleClass, methodName) {
   const db = dbCache.get(`${platform}_${version}`);
   if (!db) return null;
+  // owner 必须按**末段精确**匹配：旧 `like '%<simpleClass>'` 无段边界，`DedicatedMinecraftServer`
+  // 也逐字以 `MinecraftServer` 结尾 ⇒ 把别人类描述符混进 kinds（{V,L}）⇒ 判分红线双向腐化。
+  // `%/<simpleClass>` 要求前导 `/`；LIKE 里 `_`/`%` 是通配符，用 ESCAPE 转义。
+  const likePattern = "%/" + simpleClass.replace(/[\\%_]/g, "\\$&");
   const rows = db
-    .prepare("select distinct descriptor_named from methods where name_named = ? and owner_named like ?")
-    .all(methodName, `%${simpleClass}`);
+    .prepare("select distinct descriptor_named from methods where name_named = ? and owner_named like ? escape '\\'")
+    .all(methodName, likePattern);
   return rows.map((r) => String(r.descriptor_named ?? ""));
 }
 
@@ -222,8 +226,28 @@ function scanFile(rel) {
     if (mm) {
       for (const s of mm[1].matchAll(/"((?:[^"\\]|\\.)*)"/g)) methods.push(s[1]);
     }
-    // 方法声明体：注解之后到下一个 { 之间
-    const after = lines.slice(j).join("\n");
+    // 方法声明体：**注解之后**到下一个 { 之间。必须先剥掉 `@Inject(...)` 本体（括号配平）——
+    // 数组形 `method = {"x"}` 的注解行自带 `{`，直接 `split("{")[0]` 会停在注解自己的 `{` 上，
+    // 把方法签名段（含 CallbackInfoReturnable）整段切掉 ⇒ cbir 恒 false，本门立门原形（void 目标 + CIR）
+    // 在该书写形态下静默判 OK（反向：非 void + 正确 CIR 数组形 ⇒ 假红）。
+    const afterRaw = lines.slice(j).join("\n");
+    const annAt = afterRaw.indexOf("@Inject");
+    const open = annAt < 0 ? -1 : afterRaw.indexOf("(", annAt);
+    let after = afterRaw;
+    if (open >= 0) {
+      let d = 0;
+      for (let k = open; k < afterRaw.length; k++) {
+        const c = afterRaw[k];
+        if (c === "(") d++;
+        else if (c === ")") {
+          d--;
+          if (d === 0) {
+            after = afterRaw.slice(k + 1);
+            break;
+          }
+        }
+      }
+    }
     const body = after.split("{")[0] || "";
     res.injects.push({
       line: i + 1,
@@ -301,6 +325,13 @@ function judge(scan) {
       if (!kinds.size) {
         verdict = "UNRESOLVED";
         notes.push(`描述符 ${descs.join("|")} 解不出返回类型 ⇒ 未判定`);
+        break;
+      }
+      // 返回类型混合（重载 {V,L}）时**不得强行择一硬判**：与本门「歧义不猜 ⇒ UNRESOLVED」同口径。
+      // 旧码 `every(k === "V")` 把混 {V,L} 判成「非 void」，正是上一条 P1 的放大机制。
+      if (kinds.size > 1) {
+        verdict = "UNRESOLVED";
+        notes.push(`描述符返回类型混合（${[...kinds].join("/")}，${descs.join("|")}）⇒ 歧义不猜，未判定`);
         break;
       }
       const isVoid = [...kinds].every((k) => k === "V");

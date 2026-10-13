@@ -368,6 +368,17 @@ function processVersion(version) {
 
   const files = readdirSync(rawDir).filter(f => f.endsWith(".md") && !f.startsWith("_"));
   if (files.length === 0) {
+    // 覆盖保护：raw 为空但既有索引非空 ⇒ 疑似 fetch 崩/上游改版，不得把好索引刷成 []。
+    const l0Path = join(versionDir, "index-l0.json");
+    let prevCount = 0;
+    if (existsSync(l0Path)) {
+      try { const prev = JSON.parse(readFileSync(l0Path, "utf-8")); prevCount = Array.isArray(prev) ? prev.length : 0; } catch { /* treat as 0 */ }
+    }
+    if (prevCount > 0) {
+      console.error(`❌ ${version}: raw 为空但既有 index-l0 有 ${prevCount} 条 —— 拒绝覆盖（疑似 fetch 空跑）。请先确认 fetch-fabric-docs 结果。`);
+      process.exitCode = 1;
+      return;
+    }
     mkdirSync(versionDir, { recursive: true });
     mkdirSync(join(versionDir, "processed"), { recursive: true });
     const empty = [];

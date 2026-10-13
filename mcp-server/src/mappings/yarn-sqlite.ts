@@ -1379,12 +1379,14 @@ export function lookupByObfuscated(
   token: string,
   kind: "method" | "field",
 ): LookupByObfuscatedResult {
-  const era = getMappingEra(version);
-  const isSrg = kind === "method" ? /^func_\d+_[a-zA-Z]+$/.test(token) : /^field_\d+_[a-zA-Z]+$/.test(token);
+  const isSrg = kind === "method" ? /^(?:func|m)_\d+_[a-zA-Z0-9]*_?$/.test(token) : /^(?:field|f)_\d+_[a-zA-Z0-9]*_?$/.test(token);
+  // SRG token 来自 Forge 库 ⇒ era 也按 forge 判：1.16.5–1.20.4 同时有 fabric 与 forge 库，
+  // 不传 prefer 会取到 fabric 的 yarn-tiny 标签，与本函数下面的 forge 反查结果自相矛盾。
+  const era = getMappingEra(version, isSrg ? "forge" : null);
 
   // SRG → Forge CSV searge 表全局反查
   if (isSrg) {
-    const csvDb = getCsvDb(version);
+    const csvDb = getCsvDb(version, "forge");
     if (csvDb) {
       const table = kind === "method" ? "searge_methods" : "searge_fields";
       try {

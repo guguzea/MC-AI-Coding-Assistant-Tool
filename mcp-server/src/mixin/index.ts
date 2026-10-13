@@ -55,7 +55,7 @@ export interface MixinAnalyzeResult {
 }
 
 const SUPPORT_MATRIX = [
-  "SRG func_* / Yarn method_* / Mojang m_*_",
+  "SRG func_*/field_*（1.16.5 含尾下划线形） / Yarn method_* / Forge SRG m_*/f_*",
   "可读方法名 + ownerClass（query_api）",
   "method+descriptor 一体字符串",
   "@Inject method + desc 分离",

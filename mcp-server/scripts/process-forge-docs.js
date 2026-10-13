@@ -325,14 +325,16 @@ function processVersion(version) {
   if (!existsSync(rawDir)) {
     console.error(`❌ 版本目录不存在: ${rawDir}`);
     console.error(`   请先运行 fetch-forge-docs.js 爬取文档。`);
-    return;
+    process.exitCode = 1;
+    return false;
   }
 
   const files = readdirSync(rawDir).filter(f => f.endsWith(".md") && !f.startsWith("_"));
 
   if (files.length === 0) {
     console.error(`❌ 版本 ${version} 的 raw/ 目录下没有找到 .md 文件，请先运行 fetch-forge-docs.js`);
-    return;
+    process.exitCode = 1;
+    return false;
   }
 
   console.log(`\n📦 处理版本 ${version}：${files.length} 个文件`);
@@ -483,8 +485,13 @@ async function main() {
         d.startsWith("forge_")
       ).map(d => d.replace(/^forge_/, ""));
 
+  let okCount = 0;
   for (const version of versions) {
-    processVersion(version);
+    if (processVersion(version) !== false) okCount++;
+  }
+  if (versions.length > 0 && okCount === 0) {
+    console.error(`❌ 请求的 ${versions.length} 档全部未产出（raw 缺失/为空）—— 按失败退出。`);
+    process.exitCode = 1;
   }
 }
 

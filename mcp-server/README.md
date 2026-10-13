@@ -22,7 +22,7 @@ npm run build
 - **薄档合法（2026-09-20 裁定）**：部分 `data/fabric_<ver>/mappings/` 按设计**只有 `yarn-mappings.sqlite` + `*-tiny.gz`、没有 `yarn-mappings.json`**（实测 `1.21.4` / `1.21.8` / `1.21.10` 三档同形）。`yarn-mappings.json` 是 legacy 中间产物、**不是运行时不变量**：sqlite 档可由 tiny 直建（见 `build-yarn-sqlite.mjs` 头注释与 `build-yarn-mappings.test.mjs` 的「薄档 json=null」用例）；`audit-data-consistency` 也只在 json 存在时才要求 sqlite 存在，反之不要求。⇒ 发现某档缺 json **不要**当漏建去补。
 - T2 反编译工具族：**默认零下载**，仅显式调用时按需下载到 `$MC_SKILL_CACHE`（Java 17+ 前置）
 
-完整分类、降级与**工具边界（避免误判）**见根目录 [README.md](../README.md)。常见误判：`query_api` 1.12.2 空壳 / 26.1+ 无索引；`diagnose_gradle` 覆盖 ForgeGradle+Loom+Neo/MDG；`validate_project` 对 Fabric/Quilt/NeoForge 真检查，LiteLoader/Rift/基岩 skipped；文档 `id` 必须来自搜索结果；`generate_*` 不写盘；改 dist 后须重载 MCP。
+完整分类、降级与**工具边界（避免误判）**见根目录 [README.md](../README.md)。常见误判：`query_api` 1.12.2 只有 SRG 名 / 26.1+ 无索引；`diagnose_gradle` 覆盖 ForgeGradle+Loom+Neo/MDG；`validate_project` 对 Fabric/Quilt/NeoForge 真检查，LiteLoader/Rift/基岩 skipped；文档 `id` 必须来自搜索结果；`generate_*` 不写盘；改 dist 后须重载 MCP。
 
 **人在环**：模组开发不是确定性流水线（创意、兼容取舍、API、性能、调试由人决定）。写盘 / Gradle / 拷 jar / 上传默认不代跑，须用户确认；不要把 dryRun 与「只吐文本」当成漏做的无人值守编排。
 
@@ -87,7 +87,7 @@ VS Code 项目级配置顶层键是 `servers`（不是 `mcpServers`）。Continu
 
 ### 3. 验收
 
-重载该宿主的 MCP 后，Agent 应调用 `get_server_status`、`diagnose_data_paths`。应出现服务名 **`MC-AI-Coding-Assistant-Tool`**，工具数 **82**。不要只让用户「看设置页」。
+重载该宿主的 MCP 后，Agent 应调用 `get_server_status`、`diagnose_data_paths`。应出现服务名 **`MC-AI-Coding-Assistant-Tool`**，工具数 **86**。不要只让用户「看设置页」。
 
 ### 4. 环境变量
 
@@ -312,7 +312,7 @@ node dist/cli.js list-tools
 
 | 入口 | 说明 |
 |------|------|
-| MCP Prompt | 与 `WORKFLOW_TEMPLATES` 等量注册（当前 **49 个**：`mc-new-block` / `mc-new-entity` / `mc-new-gui` / `mc-crash-triage` / `mc-port-mod` / `mc-build-mod` / `mc-ingame-iterate` / `mc-ingame-playtest` / `mc-localize-mod` / `mc-decompile-mod` / `mc-villager` / `mc-multiblock` / `mc-ai` 等；完整清单以 `get_workflow_template` 列表为准） |
+| MCP Prompt | 与 `WORKFLOW_TEMPLATES` 等量注册（当前 **61 个**：`mc-new-block` / `mc-new-entity` / `mc-new-gui` / `mc-crash-triage` / `mc-port-mod` / `mc-build-mod` / `mc-ingame-iterate` / `mc-ingame-playtest` / `mc-localize-mod` / `mc-decompile-mod` / `mc-villager` / `mc-multiblock` / `mc-ai` 等；完整清单以 `get_workflow_template` 列表为准） |
 | 工具兜底 | `get_workflow_template`（同名正文） |
 | MCP Resource | `mcskill://…`（见 `listKnowledgeResources`） |
 | 工具兜底 | `list_knowledge_resources` → `read_knowledge_resource` |
@@ -329,7 +329,7 @@ node dist/cli.js list-tools
 | `mcskill://antipatterns/registry` | 注册反模式短文 |
 | `mcskill://patterns/README` | 代码模式库索引（community_knowledge/patterns/） |
 | `mcskill://code-patterns/<平台>[/<版本>]/<文件>.md` | 各档 `code-patterns/` 正文（实测 18 个档目录 / 116 篇）；编号集合按档不同，文件名一律以 `list_knowledge_resources` 返回为准 |
-| `mcskill://workflow/<模板名>` | 与 Prompt 同名的工作流正文（与 `WORKFLOW_TEMPLATES` 等量，当前 49 个；含构建、真机循环、游玩自测、模组汉化、反编译、村民/多方块/实体 AI 等） |
+| `mcskill://workflow/<模板名>` | 与 Prompt 同名的工作流正文（与 `WORKFLOW_TEMPLATES` 等量，当前 61 个；含构建、真机循环、游玩自测、模组汉化、反编译、村民/多方块/实体 AI 等） |
 
 **客户端兼容结论**：Cursor 等仅 tools 客户端主走 `get_workflow_template` / `list_knowledge_resources` / `read_knowledge_resource` 兜底；Claude Desktop 等支持 prompts/resources 的客户端可直接使用注册的 Prompt 与 Resource。
 
@@ -341,8 +341,8 @@ node dist/cli.js list-tools
 
 | 工具 | 用途 |
 |------|------|
-| `query_api` | Vanilla/Parchment **游戏** API（约 1.16.5–1.20.4）。不含 Forge/Fabric 类。**1.12.2 类名空壳**（`found:true` + `methods:[]`）；**26.1+ 无索引**。 |
-| `query_loader_api` | 加载器/模组 API 摘要（Neo/Forge/Fabric-API/QSL）。必填 `platform`+`minecraftVersion`。1.12.2-forge 已索引。Fabric 精选档以 `search_loader_api mode=list` / 下节枚举为准（不是连续区间；无 1.21.4/8/10），不要再当成 maven 404。 |
+| `query_api` | Vanilla/Parchment **游戏** API（约 1.16.5–1.20.4）。不含 Forge/Fabric 类。**1.12.2 只有 SRG 类名与 `func_/field_` 成员名**（无 Parchment 参数/javadoc）；**26.1+ 无索引**。 |
+| `query_loader_api` | 加载器/模组 API 摘要（Neo/Forge/Fabric-API/QSL）。必填 `platform`+`minecraftVersion`。1.12.2-forge 已索引。Fabric 精选档以 `search_loader_api mode=list` / 下节枚举为准（不是连续区间），不要再当成 maven 404。 |
 | `activate_platform_pack` | 把该档规则送进**当前会话**，或写入**用户模组工程**的 IDE 目录。**不能**改 Cursor/Claude 等扫描器。 |
 
 CLI 与现行全局 flag 对齐：`--project` / `--file` / `--dry-run` / `--confirm`。不要写 `--projectRoot=`。ingest 的 jar 用 `--jarPath=`，不要用 `--file`。
@@ -358,7 +358,7 @@ node dist/cli.js ingest_loader_api --platform=liteloader --minecraftVersion=1.12
 
 `session` 参数：`topics`（只追加规则号到底座，不注入 Skill 正文）、`task`（同样追加规则；建议名可进 skillBodies）、`skillNames`（与 task 建议名去重后注入正文，skillBodies 总条数上限 8）、`includeAllRules`（灌 00–10 规则全文）。库 Skill 不进 nextReads。ok=true 且带「仅底座」warning = 包可用但规则未按任务扩展（`rulesMode=base`，含 `next`）。包存在但缺 00/01/09 → `ok:false` + `PACK_INCOMPLETE`（与无规则树的 `PACK_NOT_FOUND` 区分）。`write` 不要再用 `includeSkills`，改用 `writeSkillStubs`（默认 true，只写 stub）；`includeSkillBodies` 才写知识库 Skill 全文。细节见仓库根 [README.md](../README.md)「规则包加载」。Quilt 本档磁盘 Skill 为 QSL 差异 3 个（`mc-registry` / `mc-events` / `mc-networking`）+ Fabric overlay。Neo 薄档（1.20.6 / 1.21.5 / 1.21.10）本档 Skill 与主档同名集合，不再是 6 个。
 
-Forge 官方文档：先 `list_forge_versions`，再 `search_forge_docs --version=1.12.2`（或 `search_docs --platform=forge --version=1.12.2`）。**不要**用 `query_api` 核 1.12.2 Vanilla 签名（空壳）。查询 `constructor` 等词已用 `ownGet` 避开 `Object.prototype`；改代码后须 **重载 MCP**，或用本 CLI 验证。
+Forge 官方文档：先 `list_forge_versions`，再 `search_forge_docs --version=1.12.2`（或 `search_docs --platform=forge --version=1.12.2`）。**不要**用 `query_api` 核 1.12.2 Vanilla 签名（只有 SRG 名）。查询 `constructor` 等词已用 `ownGet` 避开 `Object.prototype`；改代码后须 **重载 MCP**，或用本 CLI 验证。
 
 ### 数据来源与边界（用户必读）
 
@@ -366,7 +366,7 @@ Forge 官方文档：先 `list_forge_versions`，再 `search_forge_docs --versio
 - **用户 ingest**：只写 `$MC_SKILL_CACHE/loader-api-summaries/`，**不入库、不共享给他人**。
 - **查询顺序**：官方先，本地 overlay 后，同 key 本地覆盖官方。
 - LiteLoader / Rift / ModLoader **不是内置全集**；未 ingest 时 `PLATFORM_SKIPPED`。Bedrock 与 Forge 1.7.10–1.11.2 无 Java ingest。空 sidecar 模板见 `mcp-server/data/loader-api-summaries/sidecar-templates/`。手摘极小摘要（如 `1.12.2-liteloader` 6 类、`1.13.2-rift` 8 类、`1.6.4-modloader` 2 类）**不是**完整 loader javadoc。
-- **Fabric loader 摘要**：以 `search_loader_api mode=list` 为准。`1.14.4` / `1.16.5` / `1.17.1` / `1.18.2` / `1.19.4` / `1.20.1` / `1.20.4` / `1.21.1` / `1.21.3` / `1.21.11` / `26.1.2` 均已入库。`skipped-ingest.json` 的 `mavenNotIndexed` 现为空；不要再把这些档写成 `LOADER_API_NOT_INDEXED`。
+- **Fabric loader 摘要**：以 `search_loader_api mode=list` 为准。`1.14.4` / `1.16.5` / `1.17.1` / `1.18.2` / `1.19.4` / `1.20.1` / `1.20.4` / `1.21.1` / `1.21.3` / `1.21.4` / `1.21.8` / `1.21.10` / `1.21.11` / `26.1.2` 均已入库。`skipped-ingest.json` 的 `mavenNotIndexed` 现为空；不要再把这些档写成 `LOADER_API_NOT_INDEXED`。
 - **静态字段名不在摘要能力范围内**：`query_loader_api` / `search_loader_api` 的摘要只收**类 + 方法签名**，`fields` 恒为 0。实测 `mcp-server/data/loader-api-summaries/1.18.2-forge.json`（node 直接读该 json 累加）：`classCount` 988（`classes` 实数 988）、methods 4950、**fields 0**、`fqcnIndex` 617 条，且 `ForgeRegistries` 在 `classes` 与 `fqcnIndex` 里**都没有条目**——所以加载器/模组 API 的**字段名**（例：`ForgeRegistries.ENTITIES` vs `ENTITY_TYPES`）即便类已入库也核不到。字段名按**四档出处**落笔，四档不得混称（口径真值 = 根 `AGENTS.md`「工具边界」里那条「静态字段名不在 `query_loader_api` 能力内」，两处必须同步改）：**① 语料逐字**（本仓 `data/**` 上游正文可复核）——**仍然只有** `BLOCKS` / `ITEMS`（`data/forge_1.18.2/forge-docs/1.18.2/processed/concepts_registries.md:24,96`、1.19.4 同名页 `:24,106`）；**①b 官方构件逐字**（新增档；自备 jar 可复核、构件不入库）：1.18.2 的 `ENTITIES` / `BLOCK_ENTITIES` / `SOUND_EVENTS` / `PARTICLE_TYPES` / `CONTAINERS` / `PAINTING_TYPES` / `FLUIDS` 由官方 1.18.2-40.1.80 源码（157 行）＋ 1.18.2-40.3.12 universal jar `javap -p`（41 行 / 注册表字段 32 个）两 build 两机制互证；**② 处方-only**（只有本档 rules/skills 自撰、无外部出处）：forge/1.18.2 面**现已清空**；**③ 外部-only**（仓内不可复核）：`ENTITY_TYPES`@1.19.4 —— **1.19.4 侧字段名与 1.20.x 的 `MENU_TYPES` 本次未取证，禁止拿 ①b 外推**；**④ 证伪（不是未核实）**：`FLUIDTYPES` 与 `FLUID_TYPES`@1.18.2 —— 1.18.2 没有流体类型注册表，流体走 `FLUIDS`（`FluidType` + `FLUID_TYPES` 自 1.19 才有），修法是删/改表行、**不是**改名成 `FLUID_TYPES`。复核入口两条（需自备 jar + JDK 17+，只读不写库）：`unzip -p <forge-1.18.2-40.1.80-sources.jar> net/minecraftforge/registries/ForgeRegistries.java` ＋ `javap -p -classpath <forge-1.18.2-40.3.12-universal.jar> net.minecraftforge.registries.ForgeRegistries`。⚠️ **禁止把本仓规则行当外部出处（那是循环引证）**：`forge/1.18.2/.cursor/rules/01-registry.mdc:27`、`forge/1.19.4/.cursor/rules/01-registry.mdc:27` 属**处方实况**（也正是裁定自己改过的行），只说明「现状长什么样」。四档都给不出的名字留 `// TODO(未核实)`，禁止凭训练记忆补。
 
 - **库模组构件快照 `mcp-server/data/lib-manifests/all.json`（边界口径）**：本节此前只覆盖 `loader-api-summaries`，**构件快照没有任何边界说明**，本条补上。

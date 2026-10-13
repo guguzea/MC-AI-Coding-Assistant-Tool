@@ -461,8 +461,11 @@ function leg2Check({ root, files, byVersion }) {
     // 值域族（2026-09-25 修正⑦）：`yarn` 一侧 ↔ 其余（mojmap/official/parchment/mcp）一侧 ——
     // official/parchment 都叠在 mojmap 上（parchment 只补参数名/javadoc，见仓根 AGENTS.md:212）；
     // mcp（≤1.16.5）的**类名**沿用 MCP 层，由 `mcpClassNameProtect` 兜底。见门头注/基线沿革⑦。
+    // 与 leg1 同刀的「值+括注取前缀」体例：旧码全串精确等 ⇒ `mappings: yarn（备注）` 得 family=null
+    // 直接 continue，实名一致判据整条脱检（leg1 却明文支持括注，同门两标准）。
+    const declaredBase = String(declared ?? "").split(/[\s（(]/)[0];
     const family =
-      declared === "yarn" ? "yarn" : ["mojmap", "official", "parchment", "mcp"].includes(declared) ? "mojmap" : null;
+      declaredBase === "yarn" ? "yarn" : ["mojmap", "official", "parchment", "mcp"].includes(declaredBase) ? "mojmap" : null;
     if (!family) continue;
     if (!hasFencedCode(text.slice(fm.length + 6))) continue; // 门只管有代码的件
     const entry = byVersion.get(version);

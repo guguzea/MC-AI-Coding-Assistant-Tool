@@ -22,8 +22,6 @@
 
 ### ✅ 请走私密渠道：GitHub Security Advisories
 
-不严重的也可以提交issue
-
 本仓库已启用 GitHub 漏洞公告（Security Advisory）。请使用以下入口提交私密报告：
 
 - **网页入口**：<https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/security/advisories/new>
@@ -41,7 +39,7 @@
 
   若该命令返回权限错误，说明你的账号对该仓库无提报资格，请改用网页入口，或在 issue 里**只**留下「希望私下沟通安全议题」的信号并等待维护者联系（**不要**在正文写漏洞细节）。
 
-- 若 GitHub 私密通道不可用：提交issue吧
+- 若 GitHub 私密通道不可用：在公开 issue 里**只**留下「希望私下沟通安全议题」的信号（**不要**在正文写漏洞细节），等待维护者联系
 
 ### 报告里建议包含的信息
 

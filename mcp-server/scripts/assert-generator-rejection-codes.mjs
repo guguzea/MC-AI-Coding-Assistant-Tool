@@ -34,14 +34,16 @@ const ROOT = join(HERE, "..");
 const DIST_COMMON = join(ROOT, "dist", "generators", "common.js");
 
 /**
- * 未判定位点的地板（2026-09-25 实测 4，**只许降不许增**）。
- * 这四处都是 `errors: [某变量 + noNativeGeneratorError("…", "规则 NN")]` —— 拒绝正文由函数调用拼出来，
- * 门在源码层读不到（读函数入参当正文会造假红，实测第一版就红了 3 条假的）。它们在**运行期**是有码的
- * （实测 `generate_model --version=1.99.9` → `action.code=VERSION_UNSUPPORTED`），所以不是漏网缺陷，
- * 只是本门的静态面够不着。降它们的两条路：把文案改成可读的字面量拼接，或给门加一层常量折叠。
- *   src/generators/index.ts:30 / :112 / :1284、src/datagen/index.ts:488
+ * 未判定位点的地板（**只许降不许增**）。这五处都是 `errors: [某变量 + noNativeGeneratorError("…", "规则 NN")]` ——
+ * 拒绝正文由函数调用拼出来，门在源码层读不到（读函数入参当正文会造假红，实测第一版就红了 3 条假的）。
+ * 它们在**运行期**是有码的（实测 `generate_model --version=1.99.9` → `action.code=VERSION_UNSUPPORTED`），
+ * 所以不是漏网缺陷，只是本门的静态面够不着。降它们的两条路：把文案改成可读的字面量拼接，或给门加一层常量折叠。
+ *   src/generators/index.ts:30 / :112 / :1067 / :1305、src/datagen/index.ts:488
+ *
+ * 2026-10-11 由 4 提到 5：`generateCapability` 补了与四兄弟同口径的上界哨兵（`eraErrCap`），
+ * 是**经审阅的同族新增**、不是文案变形成门读不到 —— 正是本棘轮要人过目的那种增量，故显式记在这里。
  */
-const UNJUDGED_CEILING = 4;
+const UNJUDGED_CEILING = 5;
 
 const SELFTEST = process.argv.includes("--selftest");
 

@@ -360,7 +360,7 @@ const QUERY_API_DESC =
   "查询 Minecraft/Vanilla 类的完整方法签名、参数名、返回值类型。数据来源：按 version 加载的 Parchment extracted 索引（version 必填，禁止默认 1.20.1）。" +
   "适用于：需要确认某个 Minecraft API 的正确用法时。" +
   "注意：不包含 Forge 特有类（如 DeferredRegister、Capability）。返回 found=true 时包含完整 javadoc。" +
-  "【边界】覆盖约 1.16.5–1.20.4。1.7.10–1.12.2 可能 found:true 但 methods 为空（类名空壳），不是完整 javadoc。" +
+  "【边界】覆盖约 1.16.5–1.20.4。1.7.10–1.12.2 只有 SRG 类名与 func_/field_ 成员名，不是完整 javadoc。" +
   "1.14.4/1.15.2 与 1.21+/26.1+ 无可用方法索引。found:false 表示本索引没有该类。" +
   "精确 FQCN 或唯一精确简名（如 Item）才 found:true（简名改写时带 autoCorrected+requestedClassName）；" +
   "Handler 等歧义子串 found:false 且 suggestions，不返回 methods。平台 API 请用 query_loader_api 或 search_*_docs。";

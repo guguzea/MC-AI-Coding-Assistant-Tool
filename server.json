@@ -32,8 +32,8 @@
             "summary": "npm 包按 files 白名单只发布代码（dist/、README.md、LICENSE、package.json），不含 data/。",
             "dataLocation": "GitHub Release zip",
             "dataPathInRelease": "mcp-server/data/",
-            "why": "data/ 及其 137M 资产体积远超 npm 单包上限，且随代码发版节奏与数据发版节奏不同，故分离分发。",
-            "userActionRequired": "npm 安装后 data/ 不存在，需要 137M 离线资产的功能（本地文档检索、核实表、MDK pin 表等）不可用；请从 GitHub Release 下载 Release zip 并把其中的 mcp-server/data/ 放到 npm 包同级目录下。",
+            "why": "data/ 及其约 1.8 GiB 资产体积远超 npm 单包上限，且随代码发版节奏与数据发版节奏不同，故分离分发。",
+            "userActionRequired": "npm 安装后 data/ 不存在，需要约 1.8 GiB（≈4.2 万文件）离线资产的功能（本地文档检索、核实表、MDK pin 表等）不可用；请从 GitHub Release 下载 Release zip 并把其中的 mcp-server/data/ 放到 npm 包同级目录下。",
             "pinTablePath": "mcp-server/data/mdk-checksums.json",
             "envOverride": "MC_SKILL_MDK_CHECKSUMS 可显式指定 pin 表路径，用于把 Release 形态的 data/ 指给 npm 形态的代码。"
           }

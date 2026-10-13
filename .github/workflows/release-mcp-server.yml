@@ -141,7 +141,7 @@ jobs:
         env:
           MC_SKILL_DATA: ${{ github.workspace }}/data
           MCP_TIMEOUT_MS: 60000
-          # 与 mcp-server-ci.yml:83 对齐：不设则 release-smoke.mjs:124 走「全量 copy data/」
+          # 与 mcp-server-ci.yml:95 对齐：不设则 release-smoke.mjs:124 走「全量 copy data/」
           # 而非 junction，发布链会多拷 2.0 GB（CI 快得多、发布慢得多）。
           MC_SKILL_SMOKE_DATA_LINK: "1"
 

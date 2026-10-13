@@ -162,7 +162,7 @@ npm run build:yarn-sqlite
 
 ```bash
 cd mcp-server
-node dist/cli.js --version                      # 应打印版本号（当前 package.json = 1.0.4）
+node dist/cli.js --version                      # 应打印版本号（当前 package.json = 2.0.0）
 node dist/cli.js list-tools --names-only        # 应回 86 个工具名
 node dist/cli.js activate_platform_pack --action=list   # 应回本机已建档的平台 / 版本
 node dist/cli.js diagnose_data_paths            # 各平台应为 found；empty / not_found = MC_SKILL_DATA 没指对
@@ -174,7 +174,7 @@ node dist/cli.js diagnose_data_paths            # 各平台应为 found；empty 
 - Yarn 查询依赖 `data/fabric_*/mappings/yarn-mappings.sqlite`（由 `build:yarn-sqlite` 生成）。
 - 运行时 **禁止** 全量加载 `yarn-mappings.json`（体积过大，易 OOM）。
 - 可选：`set MC_SKILL_DATA=<data 绝对路径>` 后 `npm run audit:data`。有 `ERROR` 时不要宣称数据包可用。
-- 常用脚本速查（33 条全表见 `mcp-server/package.json`，逐条说明见根 `README.md`「安装后验收与 npm 脚本速查」）：`npm test`（全量门链）/ `test:core` / `test:cli` / `test:cli:quick` / `test:cli:full` / `test:scripts` / `test:audit` / `test:semantic` / `test:decompile` / `test:update` / `build:yarn-sqlite` / `build:semantic-index` / `build:vanilla-registries`（`-- --version=<v>`）/ `audit:data`（`:forge` / `:fabric` / `:neoforge` / `:fail-on-error`）/ `community:index` / `smoke:release`。
+- 常用脚本速查（35 条全表见 `mcp-server/package.json`，逐条说明见根 `README.md`「安装后验收与 npm 脚本速查」）：`npm test`（全量门链）/ `test:core` / `test:cli` / `test:cli:quick` / `test:cli:full` / `test:scripts` / `test:audit` / `test:semantic` / `test:decompile` / `test:update` / `build:yarn-sqlite` / `build:semantic-index` / `build:vanilla-registries`（`-- --version=<v>`）/ `audit:data`（`:forge` / `:fabric` / `:neoforge` / `:fail-on-error`）/ `community:index` / `smoke:release`。
 
 Windows PowerShell 没有 `&&` 时用 `;`，或 `cmd /c "..."`。环境变量：cmd 用 `set MC_SKILL_DATA=...`，PowerShell 用 `$env:MC_SKILL_DATA="..."`，Unix 用 `export`。
 
@@ -596,7 +596,7 @@ npx @modelcontextprotocol/inspector node dist/index.js
 调用前看清工具 schema 与根目录 `README.md`「工具边界」：
 
 - 平台专用工具不要套另一平台（`get_version_info` **仅 Forge**；`diagnose_gradle` / `validate_project` 覆盖范围见根 README，不是「仅 ForgeGradle」）
-- `query_api` **不是** Forge/Fabric API，也**不是** 1.12.2 完整 javadoc（空壳 `methods:[]`）；`found:false` 多半是索引范围，不是「类不存在」
+- `query_api` **不是** Forge/Fabric API，也**不是** 1.12.2 完整 javadoc（只有 SRG 类名与 `func_/field_` 成员名）；`found:false` 多半是索引范围，不是「类不存在」
 - 改完 mcp-server 后 `npm run build` **并重载 MCP**；
 - 规则树用 `activate_platform_pack`；官方文档先 `list_*_versions` 再 `search_*_docs`
 - `search_community_docs` 不替代官方文档；社区短文不能当 API 规范（`community_knowledge/AGENT_USAGE.md`）；库 Skill 读 `knowledge/libs/` 源稿

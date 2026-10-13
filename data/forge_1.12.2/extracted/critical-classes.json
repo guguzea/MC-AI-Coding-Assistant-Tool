@@ -15,8 +15,8 @@
   "net/minecraft/world/block/Block": null,
   "net/minecraft/world/block/state/BlockBehaviour": null,
   "net/minecraft/tileentity/TileEntity": {
-    "methods": 0,
-    "fields": 0
+    "methods": 30,
+    "fields": 7
   },
   "net/minecraft/tileentity/TileEntityType": null,
   "net/minecraft/world/entity/Entity": null,

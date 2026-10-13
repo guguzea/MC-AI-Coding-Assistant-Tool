@@ -307,32 +307,22 @@ function checkBlockEntityReferences(
   errors: string[],
   warnings: string[],
 ): void {
-  for (const { path, content } of javaFiles) {
-    const blockRefs = extractBlockNamesFromBlockEntity(content);
-    const allLines = content;
-
-    // 收集文件中所有注册的 Block 名称
-    const registeredBlocks = new Set<string>();
-    const blockMatches = allLines.matchAll(
+  // P2-R3-2：标准 Forge 工程把方块注册放 ModBlocks.java、BlockEntityType.Builder.of
+  // 放 ModBlockEntities.java —— 注册集必须**跨全部 Java 文件**收集，否则标准分文件布局下
+  // 每个 BE 都会假报「未在同文件中找到对应的 BLOCKS.register()」。
+  const registeredBlocks = new Set<string>();
+  const collectRegistered = (src: string): void => {
+    for (const bm of src.matchAll(
       /(?:BLOCKS|BlockReg)\s*\.\s*register\s*\(\s*"([^"]+)"\s*,/g,
-    );
-    for (const bm of blockMatches) {
+    )) {
       registeredBlocks.add(bm[1]);
     }
-
-    // 收集文件中通过 RegistryObject 引用的 Block
-    const roMatches = allLines.matchAll(
+    // R66/S8-T3：按原始常量名入集，只剥**一次**尾部 `_BLOCK`；大小写各存一份：
+    // Builder.of 引的是 Java 常量名，BLOCKS.register 的第一参是注册表 id（小写）。
+    //   EXAMPLE_BLOCK -> EXAMPLE_BLOCK / example_block / EXAMPLE / example
+    for (const rm of src.matchAll(
       /RegistryObject\s*<\s*Block\s*>\s+([A-Z_][A-Z0-9_]*)/g,
-    );
-    for (const rm of roMatches) {
-      // R66/S8-T3：这里此前把**已经按 `[A-Z_][A-Z0-9_]*` 抓出来的**常量名再套一次
-      // `/([A-Z])/g → "_$1"`，`EXAMPLE_BLOCK` 被逐字母拆成 `e_x_a_m_p_l_e__b_l_o_c_k`，
-      // 于是 `includes("_block")` 永假、这个集合永远是空 ⇒ 标准 DeferredRegister 写法
-      // （`RegistryObject<Block> EXAMPLE_BLOCK` + `Builder.of(F, ModBlocks.EXAMPLE_BLOCK.get())`）
-      // 100% 被判「未找到 BLOCKS.register」假 warning。
-      // 现按原始常量名入集，并只剥**一次**尾部 `_BLOCK`；大小写各存一份：
-      // Builder.of 引的是 Java 常量名，BLOCKS.register 的第一参是注册表 id（小写）。
-      //   EXAMPLE_BLOCK -> EXAMPLE_BLOCK / example_block / EXAMPLE / example
+    )) {
       const name = rm[1];
       registeredBlocks.add(name);
       registeredBlocks.add(name.toLowerCase());
@@ -342,7 +332,11 @@ function checkBlockEntityReferences(
         registeredBlocks.add(stripped.toLowerCase());
       }
     }
+  };
+  for (const { content } of javaFiles) collectRegistered(content);
 
+  for (const { path, content } of javaFiles) {
+    const blockRefs = extractBlockNamesFromBlockEntity(content);
     for (const ref of blockRefs) {
       // 尝试多种匹配方式
       const refName = ref.name.trim();
@@ -357,7 +351,8 @@ function checkBlockEntityReferences(
 
       if (!found) {
         warnings.push(
-          `[${path}:${ref.line}] BlockEntityType.Builder.of(...) 引用了 '${refName}'，但未在同文件中找到对应的 BLOCKS.register()`,
+          `[${path}:${ref.line}] BlockEntityType.Builder.of(...) 引用了 '${refName}'，但未在全部 Java 文件中找到对应的 BLOCKS.register()` +
+            "（跨文件注册属正常布局，可忽略此提示）",
         );
       }
     }
@@ -943,8 +938,10 @@ export function validateProject(query: ValidateQuery): ValidationResult {
     }
 
     // RegistryObject 命名（全大写检查）
+    // P3-R3-S1：捕获组此前已强制 `[A-Z][A-Z0-9_]+`，下面的 `!/^[A-Z][A-Z0-9_]+$/.test(m[1])` 恒假、
+    // 「应使用全大写下划线命名」warning 永不可达。放宽捕获为 `\w+`，让体内大小写检查真正生效。
     const registryMatches = content.matchAll(
-      /RegistryObject<[^>]+>\s+([A-Z][A-Z0-9_]+)\s*=/g,
+      /RegistryObject<[^>]+>\s+(\w+)\s*=/g,
     );
     for (const m of registryMatches) {
       if (!/^[A-Z][A-Z0-9_]+$/.test(m[1])) {

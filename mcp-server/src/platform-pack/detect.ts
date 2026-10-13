@@ -164,6 +164,14 @@ export function detectModProject(args: DetectModProjectArgs = {}): DetectModProj
   if (minecraftVersion === "1.21") {
     versionWarnings.push("不要把 1.21 当成 1.21.1");
   }
+  // P2-R4-5：liteloader_forge（hybrid）被归为 platform=liteloader 只为定位树；根纲要求 session 用
+  // platform=forge（LiteLoader 05/08 用 topics 追加）并先读 HYBRID.md。补一条披露，免得 agent 照字面
+  // 给混合工程加载纯客户端规则树。
+  if (loader === "liteloader_forge") {
+    versionWarnings.push(
+      "HYBRID（LiteLoader+Forge 混合工程）：session 请用 platform=forge（LiteLoader 05/08 用 topics 追加），先读 liteloader/<ver>/HYBRID.md；本输出的 platform=liteloader 仅供规则树定位。",
+    );
+  }
 
   if (detected.multiLoader) {
     const listed = detected.loaders.join(", ");

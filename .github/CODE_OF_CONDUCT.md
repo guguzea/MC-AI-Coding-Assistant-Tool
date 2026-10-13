@@ -53,11 +53,10 @@
 滥用、骚扰或其他不可接受行为的实例，可向社区负责人举报。**所有投诉都将被迅速、公平地审查与处理。**
 
 > 📮 **举报渠道：**
-> 维护者需在此确认接收渠道（一处即可）：
 > - GitHub 账号：`@guguzea`
 >
 > 涉及安全漏洞时，**不要**用本节渠道，请改走 `.github/SECURITY.md` 第 2 节的私密通道或者提交issue。
 
 ## 8. 归属（Attribution）
 
-本准则改编自 [Contributor Covenant](https://www.contributor-covenant.org/) v2.1，遵循 [Mozilla 公共利益贡献协议](https://www.mozilla.org/en-US/MPL/2.0/)。
+本准则改编自 [Contributor Covenant](https://www.contributor-covenant.org/) v2.1（<https://www.contributor-covenant.org/version/2/1/code_of_conduct/>）。

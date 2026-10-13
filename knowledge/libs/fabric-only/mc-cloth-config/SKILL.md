@@ -64,6 +64,8 @@ curl -sS "https://api.modrinth.com/v2/project/cloth-config/version?loaders=%5B%2
 curl -sS "https://maven.shedaniel.me/me/shedaniel/cloth/cloth-config-fabric/maven-metadata.xml"
 ```
 
+> **取值请以同目录 `versions.json` 的 slot 为准**（对齐 Fabric API 口径），本表只示「该 MC 线最新 release」这一种选法；两种口径在同线内可能取到不同构建。
+
 | MC 版本线 | 坐标里的版本串（fabric，最新 release，实测） | 本仓现状 | 判定 |
 | --- | --- | --- | --- |
 | 1.14 / 1.14.1–1.14.4 | `1.8+fabric` | 该档 skill 写 `TODO` | 本仓未接，真值已给 |
@@ -109,7 +111,7 @@ curl -sS "https://maven.shedaniel.me/me/shedaniel/cloth/cloth-config-fabric/mave
 | jar | MC 线 | 字节数 |
 | --- | --- | --- |
 | `cloth-fabric-4.17.101.jar` | 1.16.4 / 1.16.5 | 1,117,847 |
-| `cloth-11.1.106.jar` | 1.20 / 1.20.1 | 1,159,179 |
+| `cloth-11.1.136.jar` | 1.20 / 1.20.1 | （见 `lib-manifests/all.json`） |
 | `cloth-15.0.127.jar` | 1.21 / 1.21.1 | 1,144,382 |
 | `cloth-21.11.150.jar` | 1.21.11 | 1,148,412 |
 

@@ -13,6 +13,8 @@ sourceKind: authored
 
 ## 定义 Payload（与 NeoForge 同构）
 
+> ⚠️ 示例混列两套映射名：`Identifier` / `Vec3` 是 Yarn 名，`StreamCodec` / `RegistryFriendlyByteBuf` 是 Mojmap 名——抄码前按工程 mappings 取一套（Mojmap 侧对应 `ResourceLocation`）。
+
 ```java
 public record SummonLightningPayload(Vec3 pos) implements CustomPacketPayload {
     public static final Type<SummonLightningPayload> TYPE =

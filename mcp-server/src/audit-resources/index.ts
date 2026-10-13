@@ -202,6 +202,11 @@ export function auditResources(input: AuditResourcesInput): AuditResourcesResult
 
   const all = walkFiles(root);
   const rel = (p: string) => relative(root, p).replace(/\\/g, "/");
+  // W2-12：候选 1 推导出的根是 `.../src/main/resources/assets/<modid>`（rel 不含 `assets/<ns>/` 段），
+  // 此时 rel 抽不出命名空间 ⇒ 所有纹理落 ns="" 桶，而带命名空间的模型引用（`mymod:block/foo`）
+  // 查 texturesByNs.get("mymod") 恒空 ⇒ missing + orphan 双假报。命中该根形态时，
+  // 把 effectiveModId 作为该根下纹理的缺省命名空间。
+  const rootIsAssetsDir = /(?:^|[\\/])assets[\\/][^\\/]+[\\/]?$/.test(root.replace(/\\/g, "/"));
   // 命名空间感知索引：ns -> (path -> rel)。
   // ns 为 "" 表示该纹理不在 assets/<ns>/ 布局下（退化为未知命名空间）。
   const texturesByNs = new Map<string, Map<string, string>>();
@@ -209,7 +214,7 @@ export function auditResources(input: AuditResourcesInput): AuditResourcesResult
     const r = rel(p);
     const key = textureKeyFromRel(r);
     if (!key) continue;
-    const ns = textureNamespaceFromRel(r) ?? "";
+    const ns = textureNamespaceFromRel(r) ?? (rootIsAssetsDir ? (effectiveModId ?? "") : "");
     if (!texturesByNs.has(ns)) texturesByNs.set(ns, new Map());
     const bucket = texturesByNs.get(ns)!;
     const prev = bucket.get(key);

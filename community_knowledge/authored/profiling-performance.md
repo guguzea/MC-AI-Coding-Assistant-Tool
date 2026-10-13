@@ -23,7 +23,7 @@ sourceKind: authored
 - 常用入口：`/spark profiler`（tick 采样，产出网页报告链接）、`/spark tps`（快速看 MSPT/TPS 曲线）、`/spark gcmonitor`（GC 压力观察）。子命令以游戏内补全与官方文档为准。
 - 读报告：按 Self 时间排序找热点；mod 代码的包名一眼可辨；平台/原生平铺的大头先别动。
 
-## vanilla 自带：/debug tick
+## vanilla 自带：/debug start / stop
 
 - `/debug start` → 复现卡顿 → `/debug stop`，产物在 `debug/` 下（profiling 与 chunk 信息）。
 - 适合无 spark 的最小环境快速定性；交互体验不如 spark。

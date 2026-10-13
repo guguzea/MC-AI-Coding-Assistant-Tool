@@ -299,10 +299,20 @@ function pickAssets(release) {
 async function sha256FromSums(sumsAsset) {
   if (!sumsAsset?.browser_download_url) return undefined;
   if (!isAllowedGithubUrl(sumsAsset.browser_download_url)) return undefined;
-  const res = await fetch(rewriteGithubApiUrl(sumsAsset.browser_download_url), {
-    headers: { "User-Agent": "MC-AI-Coding-Assistant-Tool-installer" },
-    redirect: "follow",
-  });
+  const ac = new AbortController();
+  const timer = setTimeout(() => ac.abort(), apiTimeoutMs());
+  let res;
+  try {
+    res = await fetch(rewriteGithubApiUrl(sumsAsset.browser_download_url), {
+      headers: { "User-Agent": "MC-AI-Coding-Assistant-Tool-installer" },
+      redirect: "follow",
+      signal: ac.signal,
+    });
+  } catch {
+    return undefined;
+  } finally {
+    clearTimeout(timer);
+  }
   if (!res.ok) return undefined;
   const text = await res.text();
   const lines = text.split(/\r?\n/);

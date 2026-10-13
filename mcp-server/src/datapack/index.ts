@@ -271,7 +271,7 @@ export function validateDatapackJson(input: ValidateDatapackInput): ValidateData
       requireKeys(data, ["pools"], errors);
       if (!Array.isArray(data.pools)) errors.push("pools 必须为数组");
       checkLootPoolsShape(data, errors, warnings);
-      if ("type" in data && typeof data.type === "string" && !/^[a-z0-9_.:-]+$/i.test(data.type)) {
+      if ("type" in data && typeof data.type === "string" && !/^[a-z0-9_.:-]+$/.test(data.type)) {
         errors.push(`type 看起来不是合法资源 id: ${String(data.type)}`);
       } else if (!("type" in data)) {
         warnings.push("loot table 未声明顶层 type（可选；如需 random_sequence 语义请显式声明）");

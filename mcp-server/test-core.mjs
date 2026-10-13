@@ -2070,10 +2070,17 @@ async function testDatagenAndMappingGates() {
     q1415b.warning && /1\.14\.4\/1\.15\.2/.test(q1415b.warning),
     `1.15.2 同样必须报边界: ${JSON.stringify(q1415b.warning)}`,
   );
-  const q1415shell = await queryApi({ className: "EntityAIBase", version: "1.12.2" });
+  // P0-A 修复后：1.7.10–1.12.2 的 api-index 成员已归位，不再有「类名空壳」警告；
+  // 且查询必须给出方法清单（此前 owner 错挂使非空类恒为 1、methods 恒 0）。
+  const q1122 = await queryApi({ className: "net.minecraft.world.World", version: "1.12.2" });
+  assert.equal(q1122.found, true, `1.12.2 World 应可查: ${JSON.stringify(q1122).slice(0, 300)}`);
   assert.ok(
-    q1415shell.warning && /类名空壳/.test(q1415shell.warning),
-    `1.12.2 空壳档警告必须保留: ${JSON.stringify(q1415shell.warning)}`,
+    !q1122.warning || !/类名空壳/.test(q1122.warning),
+    `1.12.2 不应再有空壳警告: ${JSON.stringify(q1122.warning)}`,
+  );
+  assert.ok(
+    (q1122.methods ?? []).length > 0,
+    `1.12.2 World 应给出方法清单: methods=${(q1122.methods ?? []).length}`,
   );
 
   const { getMethodParams } = await import("./dist/mappings/convert.js");
@@ -2905,9 +2912,17 @@ async function testObfuscatedLayerAndLookup() {
   assert.equal(lo4.kind, "class");
   assert.equal(lo4.yarn, "net.minecraft.server.command.PlaySoundCommand");
 
+  // m_<n>_ / f_<n>_ 是 Forge SRG（MCP 侧）名，存在于本仓 Forge 库 named 列（1.16.5–1.20.4）
+  // ⇒ 必须判 found（修前被当成「mojang-hashed」误报 NOT_FOUND）。
   const lo5 = lookupObfuscated({ name: "m_46859_", version: "1.20.1" });
-  assert.equal(lo5.found, false, "mojang-hashed names not in yarn sqlite");
-  assert.equal(lo5.action?.code, "NOT_FOUND");
+  assert.equal(lo5.found, true, "Forge SRG m_<n>_ form must resolve via the Forge bank");
+  assert.equal(lo5.kind, "method");
+  assert.equal(lo5.yarn, "isEmptyBlock");
+
+  // 真·不在任何表的 token ⇒ NOT_FOUND（保留原用例的否证意图）
+  const lo5b = lookupObfuscated({ name: "zz_not_a_real_token", version: "1.20.1" });
+  assert.equal(lo5b.found, false, "a token absent from every table must be NOT_FOUND");
+  assert.equal(lo5b.action?.code, "NOT_FOUND");
 
   const lo6 = lookupObfuscated({ name: "er", version: "26.1" });
   assert.equal(lo6.found, false);

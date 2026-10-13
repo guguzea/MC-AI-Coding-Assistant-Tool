@@ -1056,7 +1056,11 @@ function generateRootBuildGradleContent(mcVersion: string): string {
     "        minecraft \"com.mojang:minecraft:${rootProject.minecraft_version}\"",
     "        mappings loom.layered {",
     "            officialMojangMappings()",
-    "            parchment(\"org.parchmentmc.data:parchment-${rootProject.minecraft_version}:2024.01.20@zip\")",
+    // P1-R4-3：26.x 的目标 jar 已是去混淆官方名，且上游无 `parchment-<mc>` 构件
+    // ⇒ 只 emit officialMojangMappings()，不再拼一条编译期必失败的 parchment 依赖。
+    ...(isMcVersion26OrAbove(mcVersion)
+      ? []
+      : ["            parchment(\"org.parchmentmc.data:parchment-${rootProject.minecraft_version}:2024.01.20@zip\")"]),
     "        }",
     "    }",
     "}",

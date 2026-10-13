@@ -41,13 +41,26 @@ const NOTE_RE = /（即\s*mojang/i;
 const NEGATORS = /(?:不是|并非|而非|不含|没有|无 SRG|无混淆)/i;
 const NEG_WINDOW = 30;
 
-/** 否定感知判别器：行内 混淆|srg 是否被**肯定地**关联到 mojang（任一命中点无否定前缀 ⇒ true）。 */
+/**
+ * 否定感知判别器：行内 混淆|srg 是否被**肯定地**关联到 mojang（任一命中点在其**同小句**无否定 ⇒ true）。
+ * 旧实现取「命中点前 30 字符」跨小句 ⇒ 行首一个「不是」即可把同行的肯定式关联整体洗绿。
+ */
 export function hasAffirmativeObf(line) {
   OBF_RE.lastIndex = 0;
   let m;
   while ((m = OBF_RE.exec(line))) {
-    const start = Math.max(0, m.index - NEG_WINDOW);
-    if (!NEGATORS.test(line.slice(start, m.index))) return true;
+    const left = line.slice(0, m.index);
+    const cut = Math.max(
+      left.lastIndexOf("，"),
+      left.lastIndexOf("。"),
+      left.lastIndexOf("；"),
+      left.lastIndexOf("、"),
+      left.lastIndexOf("|"),
+      left.lastIndexOf(","),
+      left.lastIndexOf(";"),
+    );
+    const from = Math.max(cut + 1, m.index - NEG_WINDOW);
+    if (!NEGATORS.test(line.slice(from, m.index))) return true;
   }
   return false;
 }

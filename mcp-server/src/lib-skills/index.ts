@@ -32,13 +32,12 @@ export const resolveLibSkillsSchema = z.object({
     .string()
     .optional()
     .describe("mcVersion 的别名（CLI `--version`）——与 mcVersion 二选一，同时给出时以 mcVersion 为准"),
-})
-  // W0-5（2026-09-19）：schema 与运行时对齐 —— mcVersion/version 至少给一个，缺省不再是
-  // 「schema 允许、运行时才报错」的两层面。缺省走 zod 校验错误（errorKind:validation）。
-  .refine(
-    (a) => Boolean(String(a.mcVersion ?? "").trim() || String(a.version ?? "").trim()),
-    { message: "mcVersion 必填（精确 MC 版本，如 1.21.1 / 26.1.2；bedrock 可传 stable；或用别名 version）" },
-  );
+});
+// W2-03：此前根级挂 `.refine(...)`（W0-5 的「mcVersion/version 至少给一个」约束），会把整份 schema
+// 变成 ZodEffects；MCP SDK 的 normalizeObjectSchema → getObjectShape 只读 `.shape`（ZodEffects 无此属性）
+// ⇒ 宿主把 inputSchema 序列化成**空对象**，platform/mcVersion/version 全丢，resolve_lib_skills 在 MCP 面
+// 收 `{}` ⇒ 永远落失败分支。该约束改由 handler 兜底（见 resolveLibSkills 的 `!mcVersion` 分支，本文件 :79），
+// 保持 schema 为 ZodObject —— CLI 的 zodToJsonSchema 与 MCP SDK 两侧都能正常展开参数。
 
 /** 工具描述单一来源（registerTool 与静态 schema 表共用 —— test-cli 有 description drift 门） */
 export const RESOLVE_LIB_SKILLS_DESCRIPTION =

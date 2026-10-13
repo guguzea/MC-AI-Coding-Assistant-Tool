@@ -401,12 +401,14 @@ function processVersion() {
   const rawDir = join(DATA_DIR, VERSION, "raw");
   if (!existsSync(rawDir)) {
     console.error(`❌ raw 目录不存在: ${rawDir}`);
+    process.exitCode = 1;
     return;
   }
 
   const files = readdirSync(rawDir).filter(f => f.endsWith(".txt"));
   if (files.length === 0) {
     console.error(`❌ raw/ 没有 .txt 文件`);
+    process.exitCode = 1;
     return;
   }
 
@@ -509,6 +511,9 @@ function processVersion() {
 // ── 入口 ─────────────────────────────────────────────────────────────────
 
 processVersion();
+if (process.exitCode) {
+  process.exit(process.exitCode);
+}
 console.log(
   `  [${VERSION}] yarn 名还原：class ${yarnStats.classResolved} · 成员 ${yarnStats.memberResolved} · ` +
     `歧义保留 ${yarnStats.ambiguous.length} · 本版映射查不到 ${[...new Set(yarnStats.unresolved)].length}${yarnStats.unresolved.length ? "（" + [...new Set(yarnStats.unresolved)].join(", ") + "）" : ""}`,

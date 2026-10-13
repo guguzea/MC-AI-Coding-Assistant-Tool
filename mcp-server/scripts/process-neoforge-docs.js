@@ -210,16 +210,30 @@ function processVersion(version) {
 
   const files = readdirSync(rawDir).filter(f => f.endsWith(".md"));
   console.log(`  Found ${files.length} raw files`);
+  // 空目录（fetch 崩后只留目录）不得往下走：下面是无条件写 index-l0/l1/l2，
+  // 空 rawFiles 会把 live 搜索索引（src/docs-platform/neoforge/store.ts 直读）刷成 []。
+  // 无 raw 即「本档这次没东西可加工」，退 false、保留旧索引不覆盖。
+  if (files.length === 0) {
+    console.error(`  ERROR: raw 目录存在但无 .md（${rawDir}）⇒ 不写索引、保留旧件`);
+    return false;
+  }
 
   // Read all files
   const rawFiles = {};
+  let readFailures = 0;
   for (const file of files) {
     const pageId = file.replace(/\.md$/, "").replace(/_/g, "/");
     try {
       rawFiles[pageId] = readFileSync(join(rawDir, file), "utf-8");
     } catch (e) {
+      readFailures += 1;
       console.error(`  ERROR reading ${file}: ${e.message}`);
     }
+  }
+  // 部分读失败 ⇒ rawFiles 是**残缺**集，写下去会把 live 索引换成残缺件（不是纯空，更难察觉）。
+  if (readFailures > 0) {
+    console.error(`  ERROR: ${readFailures}/${files.length} 个 raw 文件读取失败 ⇒ 拒绝写残缺索引`);
+    return false;
   }
 
   // ── Build L0 index ──────────────────────────────────────────────────
@@ -309,6 +323,8 @@ async function main() {
   }
   console.log(`\n=== Summary ===`);
   console.log(`Success: ${success} | Failed: ${failed}`);
+  // failed 必须映射到退出码：否则「请求的档全部 raw 缺失/fetch 跑空」也 rc=0，下游按退出码判绿即被骗。
+  if (failed > 0) process.exitCode = 1;
 }
 
 main().catch(err => {

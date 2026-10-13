@@ -44,7 +44,7 @@
 
 ## 禁止 propagate
 
-- `scripts/propagate-wave-d-skills.mjs` 的 WAVE_D **不含库项**（已移除 mc-config / mc-geckolib / mc-curios / mc-patchouli），文件头注释指向本目录
+- `scripts/_oneoff/propagate-wave-d-skills.mjs` 的 WAVE_D **不含库项**（已移除 mc-config / mc-geckolib / mc-curios / mc-patchouli），文件头注释指向本目录
 - 库项**不做**任何落盘/复制/写入动作；`sync-skills.ps1` 仅同步平台自有 skill 的 IDE 镜像
 - **例外（2026-09-16 裁定：保留中心稿 + 加投影版本注入点）**：`mc-cloth-config` 双轨——本目录 `fabric-only/mc-cloth-config/`（SKILL.md 通用形 + `versions.json` 档位坐标真值）为权威；各档 `fabric/<v>/.cursor/skills/mc-cloth-config.md` 为档内实况（frontmatter 后带 `cloth-version-inject` 标记行），由 `scripts/project-cloth-skill.mjs` 按 versions.json 校验/回填标记（默认 dry-run）。仍**禁止**把中心稿正文批量覆盖到档内——注入点只管理版本标记，档内正文含逐档修正
 
@@ -53,7 +53,7 @@
 - AI 按 AGENTS 指引经上述解析**直接读源稿**（`knowledge/libs/<group>/mc-<name>/SKILL.md`），正文与源稿一致，禁止改写正文
 - 不确定读哪个 → 用 `mc-lib-catalog` 路由；依赖检查走 MCP `check_dependencies`
 - catalog 显式路由未列出的 11 个 id 走组级路由（按组直接读源稿）：mc-curios / mc-trinkets / kotlin-for-forge / fabric-language-kotlin / cca / impersonate / libgui / player-ability-lib / polymer / satin / text-placeholder
-- 每个 SKILL.md 均含 `communityDocId`（`authored/lib-*`），细节经 MCP `search_community_docs` 读取
+- 每个 SKILL.md 均含 `communityDocId`（`authored/<id>`，多数为 `lib-*`），细节经 MCP `search_community_docs` 读取
 - 未核对签名不写死：API 以官方文档 + 反编译核对为准
 
 ## 当前清单
@@ -64,8 +64,8 @@
 
 **forge-only（2）**：mc-curios、mc-kotlin-for-forge（`platforms: [forge]`）
 
-**neo-only（2）**：mc-curios、mc-kotlin-for-forge（镜像，`platforms: [neoforge]`；不改 `neoforge → neo-only 
-+ all-platforms` 映射）
+**neo-only（2）**：mc-curios、mc-kotlin-for-forge（镜像，`platforms: [neoforge]`；不改 `neoforge → neo-only + all-platforms` 映射）
+
 **bedrock-only（2）**：mc-script-ui、mc-script-server
 
 ## 关联数据（MCP 消费）

@@ -29,6 +29,9 @@ export async function importForgeSrgStream(db, input, meta = {}) {
   let classCount = 0;
   let methodCount = 0;
   let fieldCount = 0;
+  // 形状不符的行（CL tokens≠2、MD tokens∉{2,4}、FD tokens<2）此前静默 continue，无计数无 warning：
+  // 上游形状漂移只会缩小库而不可见（forge-srg 无三家对账门兜底）。计一个 skipped 并入 meta.buildWarnings。
+  let skipped = 0;
 
   db.exec("BEGIN");
   const rl = readline.createInterface({ input, crlfDelay: Infinity });
@@ -48,6 +51,8 @@ export async function importForgeSrgStream(db, input, meta = {}) {
         const [obf, mapped] = tokens;
         insertClass.run(mapped, mapped, obf);
         classCount++;
+      } else {
+        skipped++;
       }
       continue;
     }
@@ -85,6 +90,8 @@ export async function importForgeSrgStream(db, input, meta = {}) {
         if (mappedMethod.startsWith("<")) continue;
         insertMethod.run(mappedClass, mappedMethod, "", obfMethod, "", null);
         methodCount++;
+      } else {
+        skipped++;
       }
       continue;
     }
@@ -101,10 +108,19 @@ export async function importForgeSrgStream(db, input, meta = {}) {
         const mappedField = mappedSlash >= 0 ? mappedFull.slice(mappedSlash + 1) : mappedFull;
         insertField.run(mappedClass, mappedField, "", obfField, "", null);
         fieldCount++;
+      } else {
+        skipped++;
       }
       continue;
     }
   }
   db.exec("COMMIT");
-  return { classCount, methodCount, fieldCount, mappingEra: "forge-srg", source: meta.source ?? "" };
+  return {
+    classCount,
+    methodCount,
+    fieldCount,
+    mappingEra: "forge-srg",
+    source: meta.source ?? "",
+    ...(skipped > 0 ? { buildWarnings: [`形状不符行 ${skipped} 条被跳过（上游形状漂移?）`] } : {}),
+  };
 }

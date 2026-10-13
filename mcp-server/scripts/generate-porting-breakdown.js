@@ -33,12 +33,14 @@ const VERSION_PAIRS = [
 
 const VERSIONS_JSON_PATH = join(DATA_DIR, "porting", "knowledge-base", "versions.json");
 let knownBreakingChanges = {};
+let knownLoadFailed = false;
 try {
   const versionsJson = JSON.parse(readFileSync(VERSIONS_JSON_PATH, "utf-8"));
   for (const [ver, info] of Object.entries(versionsJson.versions || {})) {
     knownBreakingChanges[ver] = info.breakingChanges || [];
   }
 } catch (e) {
+  knownLoadFailed = true;
   console.warn("Warning: Could not load versions.json for known breaking changes");
 }
 
@@ -86,6 +88,14 @@ function main() {
     const fromIndex = loadIndexL0(from);
     const toIndex = loadIndexL0(to);
 
+    if (!fromIndex || !toIndex) {
+      // 一侧 index-l0 缺失 ⇒ compareIndexes 视作空集仍会写出 addedCount:0/removedCount:0，
+      // 「结构零变化」与「无法比较」不可区分。拒绝写盘 + 非零退出，避免产出看似正常的空报告。
+      console.error(`⚠️ ${key}: 一侧 index-l0 缺失（结构对比不可比）—— 跳过写盘，避免产出「零变化」空工件。`);
+      process.exitCode = 1;
+      continue;
+    }
+
     const { added, removed } = compareIndexes(fromIndex, toIndex);
 
     // 已知 API breaking changes（从 to 版本的 versions.json 读取）
@@ -97,13 +107,16 @@ function main() {
       generatedAt: new Date().toISOString(),
       structuralChanges: {
         description: "⚠️ 基于文档章节结构变化（自动检测），不代表完整 API breaking changes",
+        available: true,
         addedCount: added.length,
         removedCount: removed.length,
         added: added.slice(0, 20),
         removed: removed.slice(0, 20),
       },
       breakingChanges: {
-        description: "✅ 基于 versions.json 手动录入的 API 级别变更",
+        description: knownLoadFailed
+          ? "⚠️ versions.json 未加载（该版变更未录入）"
+          : "✅ 基于 versions.json 手动录入的 API 级别变更",
         changes: known,
       },
     };
@@ -111,8 +124,7 @@ function main() {
     const outPath = join(outDir, `${key}.json`);
     writeFileSync(outPath, JSON.stringify(report, null, 2), "utf-8");
 
-    const status = (fromIndex && toIndex) ? "✅" : "⚠️";
-    console.log(`${status} ${key}: +${added.length} -${removed.length} chapters | ${known.length} known API changes`);
+    console.log(`✅ ${key}: +${added.length} -${removed.length} chapters | ${known.length} known API changes`);
   }
 
   console.log(`\nOutput: ${outDir}`);

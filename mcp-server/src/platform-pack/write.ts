@@ -624,14 +624,15 @@ export function writePlatformPack(args: WriteArgs) {
   for (const h of hosts) hostFiles[h] = { created: [], patched: [] };
   const partial: string[] = [];
 
-  const rollback = () => {
+  const rollback = (): string[] => {
+    const failed: string[] = [];
     for (const rel of [...newlyCreated].reverse()) {
       const abs = join(proj.root, rel.split("/").join(sep));
       try {
         if (existsSync(abs)) unlinkSync(winLongPath(abs));
         pruneEmptyParents(abs, proj.root);
       } catch {
-        /* ignore */
+        failed.push(rel);
       }
     }
     for (const [rel, prev] of backups) {
@@ -644,9 +645,10 @@ export function writePlatformPack(args: WriteArgs) {
           writeText(abs, prev);
         }
       } catch {
-        /* ignore */
+        failed.push(rel);
       }
     }
+    return failed;
   };
 
   try {
@@ -729,15 +731,18 @@ export function writePlatformPack(args: WriteArgs) {
       manifest: posixRel(".mc-skill/pack-manifest.json"),
     };
   } catch (err) {
-    rollback();
+    const rollbackFailed = rollback();
     return {
       ok: false,
       dest: "project",
       resolvedProjectRoot: proj.root,
       partial,
-      rolledBack: true,
+      rolledBack: rollbackFailed.length === 0,
+      ...(rollbackFailed.length ? { rollbackFailed } : {}),
       action: actionable("WRITE_FAILED", err instanceof Error ? err.message : String(err), [
-        "已回滚本工具新建文件与标记块",
+        rollbackFailed.length === 0
+          ? "已回滚本工具新建文件与标记块"
+          : `回滚有 ${rollbackFailed.length} 件失败：${rollbackFailed.join(", ")}（请手删这些残留，勿当成已回滚）`,
         "可 dryRun 后重试",
       ]),
     };
@@ -885,12 +890,17 @@ export function deactivatePlatformPack(args: WriteArgs) {
       if (originalManifest !== null) undo.push(() => writeText(manPath, originalManifest));
     }
   } catch (err) {
+    let undoFailed = 0;
     for (const fn of undo.reverse()) {
       try {
         fn();
       } catch {
-        /* 回滚失败不再追加错误 */
+        undoFailed += 1;
       }
+    }
+    if (undoFailed > 0) {
+      const base = err instanceof Error ? err.message : String(err);
+      throw new Error(`${base}；deactivate 回滚有 ${undoFailed} 件失败——请检查 .mc-skill/pack-manifest.json 与残留标记块，勿当成已干净停用`);
     }
     throw err;
   }

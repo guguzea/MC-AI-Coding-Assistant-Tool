@@ -123,20 +123,20 @@ function methodModifiers(method: CstNode): string[] {
 }
 
 function paramName(param: CstNode): string {
-  const regular = first(param, "variableParaRegularParameter") ?? param;
+  const regular = first(param, "variableArityParameter") ?? first(param, "variableParaRegularParameter") ?? param;
   const id = first(regular, "variableDeclaratorId");
   const img = identifierImage(id) || identifierImage(first(regular, "Identifier"));
   return img.replace(/\[\]/g, "").trim();
 }
 
 function paramType(param: CstNode): string {
-  const regular = first(param, "variableParaRegularParameter") ?? param;
+  const regular = first(param, "variableArityParameter") ?? first(param, "variableParaRegularParameter") ?? param;
   const ty = first(regular, "unannType");
   let t = cstImage(ty);
   if (first(regular, "DotDotDot") || kids(param, "DotDotDot").length) {
     t += "...";
   }
-  const dims = first(regular, "dims");
+  const dims = first(regular, "dims") ?? first(first(regular, "variableDeclaratorId"), "dims");
   if (dims) t += cstImage(dims);
   return t || "?";
 }

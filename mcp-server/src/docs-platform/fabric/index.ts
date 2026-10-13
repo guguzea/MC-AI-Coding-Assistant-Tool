@@ -481,6 +481,8 @@ export async function searchFabricDocs(
                   sourceIsRequestedVersion: false,
                   warning: extraWarn,
                   total: portingHits.length,
+                  // P2-2：本早退此前漏带 totalPool/truncated（八发射点无条件契约）。此路径不加输出窗口，池=返回数。
+                  ...poolFieldsOf(portingHits.length, portingHits.length),
                   results: portingHits,
                 }),
                 null,

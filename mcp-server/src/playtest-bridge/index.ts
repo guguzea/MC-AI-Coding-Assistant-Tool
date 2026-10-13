@@ -41,6 +41,9 @@ const DEFAULT_TIMEOUT_MS = 10_000;
 const HARD_TIMEOUT_MS = 120_000;
 const DEFAULT_POLL_MS = 250;
 const CALLS_MAX_LINES = 200;
+// P2-R4-7：calls.jsonl 证据文件字节封顶 + 一次性「触顶」标记位（此前是 512*1024 裸 magic 且静默截断）。
+const CALLS_MAX_BYTES = 512 * 1024;
+let callsCapNoted = false;
 
 type AuthResult = { ok: true; root: string } | { ok: false; code: string; message: string };
 
@@ -115,6 +118,17 @@ function responseOf(json: unknown): { status?: string; message?: string; data?: 
   };
 }
 
+/** P2-R4-9：把 query_* 读数并入证据时按字节截断，避免个别响应把 calls.jsonl 撑爆。 */
+function clipJson(value: unknown, maxBytes: number): unknown {
+  try {
+    const s = JSON.stringify(value);
+    if (s !== undefined && Buffer.byteLength(s, "utf8") <= maxBytes) return value;
+    return { _truncated: true, preview: s.slice(0, maxBytes) };
+  } catch {
+    return { _unserializable: true };
+  }
+}
+
 function appendCall(root: string, evidenceDir: string | undefined, entry: Record<string, unknown>): void {
   if (!evidenceDir?.trim()) return;
   const target = resolve(evidenceDir);
@@ -143,20 +157,23 @@ function appendCall(root: string, evidenceDir: string | undefined, entry: Record
   }
   if (!isInsideReal(real, root)) return;
   const file = join(real, "calls.jsonl");
-  const lines = (() => {
-    try {
-      return statSync(file).size > 0 ? 1 : 0;
-    } catch {
-      return 0;
+  try {
+    const size = statSync(file).size;
+    if (size > CALLS_MAX_BYTES) {
+      // P2-R4-7：触顶必须**一次性留痕**，否则证据流无声掐断（inspect 会把「后半程没记录」
+      // 读成「后半程没动作」）。写一条 CALLS_CAPPED 标记后不再追加。
+      if (!callsCapNoted) {
+        callsCapNoted = true;
+        try {
+          appendFileSync(file, JSON.stringify({ at: new Date().toISOString(), note: "CALLS_CAPPED", bytes: size }) + "\n", "utf8");
+        } catch {
+          /* ignore */
+        }
+      }
+      return;
     }
-  })();
-  if (lines > 0) {
-    // 简化封顶：超大文件时截断重写代价高，这里只按文件字节数粗控。
-    try {
-      if (statSync(file).size > 512 * 1024) return;
-    } catch {
-      /* ignore */
-    }
+  } catch {
+    /* 文件不存在 ⇒ 正常首次写入 */
   }
   try {
     appendFileSync(file, JSON.stringify({ at: new Date().toISOString(), ...entry }) + "\n", "utf8");
@@ -199,8 +216,17 @@ export async function callPlaytestBridge(query: PlaytestBridgeQuery): Promise<Re
     const r = await callBridge(port, "/execute", body, DEFAULT_TIMEOUT_MS);
     if (!r.ok) return { ok: false, code: r.code, message: r.message };
     const resp = responseOf(r.json);
-    appendCall(auth.root, query.evidenceDir, { id, action: cmd.action, status: resp.status, message: resp.message });
     const timeout = resp.status === "failure" && /^Timeout after \d+ms$/.test(resp.message ?? "");
+    appendCall(auth.root, query.evidenceDir, {
+      id,
+      action: cmd.action,
+      status: resp.status,
+      message: resp.message,
+      // P2-R4-10：execute 超时分支此前不落任何标记 ⇒ evidence 的 PLAYTEST_TIMEOUT 计数恒 0。
+      ...(timeout ? { code: "PLAYTEST_TIMEOUT" } : {}),
+      // P2-R4-9：query_* 的真实读数此前整段丢弃，违背「桥模式证据 = calls.jsonl + query 响应 + 日志」；按 2KB 截断并入。
+      ...(resp.data !== undefined ? { data: clipJson(resp.data, 2048) } : {}),
+    });
     if (timeout) {
       return {
         ok: false,
@@ -277,22 +303,31 @@ export async function callPlaytestBridge(query: PlaytestBridgeQuery): Promise<Re
     return exec("query_chat_history", { count: params.count ?? 20 });
   };
 
+  const startedAt = Date.now();
+  let pollsCapped = false;
   while (Date.now() < deadline) {
     const r = await probe();
     lastDetail = r.detail;
     polls.push({ at: new Date().toISOString(), matched: r.matched, detail: r.detail });
-    if (polls.length >= CALLS_MAX_LINES) break;
+    // P2-R4-8：matched 判定必须在封顶 break **之前** —— 否则第 N 次探测恰成立也会被误报超时（假红）。
     if (r.matched) {
       matched = true;
       break;
     }
+    if (polls.length >= CALLS_MAX_LINES) {
+      pollsCapped = true;
+      break;
+    }
     await new Promise((res) => setTimeout(res, pollMs));
   }
+  const waitedMs = Date.now() - startedAt;
 
   appendCall(auth.root, query.evidenceDir, {
     action: "await",
     condition,
     matched,
+    // P2-R4-10：失败 await 也落 PLAYTEST_TIMEOUT 码，让 evidence 侧能数出超时条数。
+    ...(matched ? {} : { code: "PLAYTEST_TIMEOUT" }),
     polls: polls.length,
     last: polls[polls.length - 1] ?? null,
   });
@@ -303,10 +338,13 @@ export async function callPlaytestBridge(query: PlaytestBridgeQuery): Promise<Re
       code: "PLAYTEST_TIMEOUT",
       matched: false,
       condition,
-      waitedMs: timeoutMs,
+      waitedMs,
       polls: polls.length,
       lastDetail,
-      note: "条件在超时前未成立（PLAYTEST_TIMEOUT）——不是「没有失败」。放宽 timeoutMs 或核对动作序列。",
+      ...(pollsCapped ? { pollsCapped: true } : {}),
+      note: pollsCapped
+        ? `轮询次数达采样上限 ${CALLS_MAX_LINES}（实测等待 ${waitedMs}ms，非申报 timeout）后条件仍未成立——放宽 pollIntervalMs 或核对动作序列，勿把此处读成已等满 timeout。`
+        : "条件在超时前未成立（PLAYTEST_TIMEOUT）——不是「没有失败」。放宽 timeoutMs 或核对动作序列。",
     };
   }
   return { ok: true, matched: true, condition, polls: polls.length, lastDetail };

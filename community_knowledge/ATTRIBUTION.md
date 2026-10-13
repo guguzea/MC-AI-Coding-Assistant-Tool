@@ -8,7 +8,7 @@
 - 许可说明：作者在评论区（约 51 楼）回复「随意吧」，允许本仓库收录提炼内容用于 MCP / 知识库。
 - 注意：教程主体偏 **1.18.X**；查当前版本 API 仍以官方文档与 `search_*_docs` 为准。
 
-已获许可**入库提炼正文**：`permitted/mcmod-3993-forge-mod-guide/pages/` 4 篇（crash-publishing / items-registry / mixin-basics / setup，约 0.8 KB/篇）+ `meta.json`（作者/来源/许可）。`links/` 侧只收指针，两者不同面（A-43 更正：原写「不入库正文」与 permitted 目录实况矛盾）。
+已获许可**仅收指针页**（归属声明 + 原文 URL，**不入库正文**）：`permitted/mcmod-3993-forge-mod-guide/pages/` 4 篇（crash-publishing / items-registry / mixin-basics / setup）+ `meta.json`（作者/来源/许可）。`links/` 侧同样只收指针，两者不同面。
 
 ## 自写报告 / 综述（不列第三方致谢）
 

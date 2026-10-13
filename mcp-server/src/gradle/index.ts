@@ -506,5 +506,7 @@ function diagnoseLiteLoaderGradle(buildGradle: string): GradleResult {
 }
 
 function buildGradlerIncludesParchment(buildGradle: string): boolean {
-  return /parchment/i.test(buildGradle) || /mappings\s*=.*parchment/i.test(buildGradle);
+  // W2-14：右半 `/mappings\s*=.*parchment/i` 是死条件 —— 命中它必命中左半 `/parchment/i`
+  // （parchment 子串），OR 结果恒等于左半。删右半，行为不变，去掉噪音。
+  return /parchment/i.test(buildGradle);
 }

@@ -5,6 +5,7 @@ url: https://fabricmc.net/2026/06/15/262.html
 summary: Loom 1.17、Vulkan 后端、BlockIds DataGen、GUI setScreen 迁移。不是 API 规范。
 tags: [official, fabric, 26.2]
 sourceKind: links
+mcHint: 26.2
 ---
 
 # Fabric 26.2 博客（外链）

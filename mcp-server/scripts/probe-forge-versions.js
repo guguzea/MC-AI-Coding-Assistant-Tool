@@ -310,8 +310,12 @@ export function mergeManifest(prev, fresh, { filterMc } = {}) {
     if (!prevEntry) { out.versions[key] = freshEntry; continue; }
     const merged = { ...prevEntry, ...freshEntry };
     for (const sub of ["mkdocs", "javadoc"]) {
-      if (freshEntry[sub] && prevEntry[sub]) merged[sub] = { ...prevEntry[sub], ...freshEntry[sub] };
-      else if (prevEntry[sub] && !freshEntry[sub]) merged[sub] = prevEntry[sub];
+      // 单档重探瞬时失败会产出 `mkdocs:{available:false,chapters:[],chapterCount:0}`（键在、数组空），
+      // 旧 `freshEntry[sub] &&` 判它会通过 ⇒ `{...prev,...fresh}` 把 prev 的 43 章洗掉。
+      // 把「退化 fresh」当不可用，保留 prev（本函数自己的「单档重探不得清台账」契约）。
+      const freshUsable = freshEntry[sub] && (sub !== "mkdocs" || freshEntry[sub].available !== false);
+      if (freshUsable && prevEntry[sub]) merged[sub] = { ...prevEntry[sub], ...freshEntry[sub] };
+      else if (prevEntry[sub] && !freshUsable) merged[sub] = prevEntry[sub];
     }
     out.versions[key] = merged;
   }
@@ -390,6 +394,16 @@ async function main() {
   if (dryRun) {
     console.log(JSON.stringify(manifest, null, 2));
     return;
+  }
+
+  // 聚合地板：全量跑里「available:true 但 0 章」应视为探测失败，不得覆盖台账
+  // （HTTP 200 但 SPA 外壳/半渲染会产出 available:true + chapterCount:0，合并又不继承 prev）。
+  const hollow = Object.values(manifest.versions).filter(
+    (v) => v?.mkdocs?.available === true && (v.mkdocs.chapters?.length ?? 0) === 0,
+  ).length;
+  if (hollow > 0) {
+    console.error(`❌ ${hollow} 档 available:true 但 chapters 为空（SPA 外壳/半渲染?）—— 拒绝写入以免覆盖台账。`);
+    process.exit(1);
   }
 
   writeFileSync(OUT_FILE, JSON.stringify(manifest, null, 2), "utf-8");

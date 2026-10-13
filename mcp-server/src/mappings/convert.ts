@@ -834,7 +834,7 @@ export function convertMapping(query: MappingQuery): MappingResult {
     kind === "method" ||
     Boolean(ownerClass) ||
     era === "mcp-csv" ||
-    Boolean(resolveCsvMappingDbPath(version) && !ownerClass) ||
+    Boolean(resolveCsvMappingDbPath(version, prefer) && !ownerClass) ||
     /^func_/.test(memberName) ||
     Boolean(descriptor);
 
@@ -845,7 +845,7 @@ export function convertMapping(query: MappingQuery): MappingResult {
   // CSV 的 searge 表里成员名永不含点/斜杠，故限裸名不会误伤任何合法成员查询。
   const csvOnlyBareName = !memberName.includes("/") && !memberName.includes(".");
   const allowCsvMethodPath =
-    Boolean(resolveCsvMappingDbPath(version) && !ownerClass) && (kind !== "class" || csvOnlyBareName);
+    Boolean(resolveCsvMappingDbPath(version, prefer) && !ownerClass) && (kind !== "class" || csvOnlyBareName);
   if (wantMethod && dbPath && (kind !== "class" || allowCsvMethodPath)) {
     // obfuscated/intermediary 层支持无 owner 全局反查（崩溃日志单 token）
     if (!ownerClass && (from === "obfuscated" || from === "intermediary")) {

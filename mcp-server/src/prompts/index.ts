@@ -207,7 +207,7 @@ function readKnowledgeResourceInner(uri: string): {
       found: true,
       uri,
       mimeType: "text/plain",
-      text: "mixin_analyze 支持: SRG, Yarn intermediary, Mojang m_*, readable+MCP, descriptor 一体, method+desc 分离, method 数组",
+      text: "mixin_analyze 支持: SRG func_*/field_*（1.16.5 含尾下划线形）, Yarn intermediary, Forge SRG m_*/f_*, readable+MCP, descriptor 一体, method+desc 分离, method 数组",
     };
   }
 

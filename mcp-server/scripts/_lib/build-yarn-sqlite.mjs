@@ -747,12 +747,10 @@ function replaceSqliteAtomically(tmpPath, outPath) {
       if (fs.existsSync(outPath)) {
         try {
           fs.renameSync(outPath, bak);
-        } catch {
-          try {
-            fs.unlinkSync(outPath);
-          } catch {
-            /* keep trying */
-          }
+        } catch (renameErr) {
+          // 降级路径：rename→bak 失败时**不许** unlink 原库，否则后续 tmp→out 再失败即
+          // 「旧库既无 .bak 也无回滚」。直接抛给外层重试（让 Windows 释放句柄）。
+          throw renameErr;
         }
       }
       try {

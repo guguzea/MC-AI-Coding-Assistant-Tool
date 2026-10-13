@@ -24,7 +24,7 @@ export const WORKFLOW_TEMPLATES: Record<string, { title: string; body: string }>
    - Forge：DeferredRegister（该版规则）
    - NeoForge：该档 DeferredRegister / DeferredBlock / DeferredHolder；禁止 RegistryObject 冒充 1.20.4+ Neo；禁止 NeoForgeAddonPlugin
    - Fabric：Registry.register；26.1.2 用官方名 + implementation，不要 modImplementation
-   - Quilt：Vanilla Registry.register + ModInitializer(ModContainer)；禁止编 QuiltRegistry；02–10 仍读 fabric/<ver>
+   - Quilt：Vanilla Registry.register + quilt.mod.json entrypoints.main（实现 net.fabricmc.api.ModInitializer#onInitialize()，quilt-loader 自带兼容接口）；禁止编 QuiltRegistry；02–10 仍读 fabric/<ver>
    - LiteLoader / Rift / ModLoader：只使用该版核实表；禁止 DeferredRegister / generate_datagen
 3. 注册 BlockItem（现代档）或该时代等价物
 4. 资源：现代档 generate_model（须传 version）或 DataGen；老平台手写 assets/ JSON
@@ -179,7 +179,7 @@ Java 前置：本机需 Java 17+（Temurin/Adoptium https://adoptium.net/temurin
    - Forge：DeferredRegister ITEMS（该版规则）
    - NeoForge：该档 DeferredItem / DeferredHolder；禁止 RegistryObject 冒充 1.20.4+ Neo
    - Fabric：Registry.register；26.1.2 用官方名 + implementation
-   - Quilt：Vanilla Registry + ModInitializer(ModContainer)；02–10 读 fabric/<ver>
+   - Quilt：Vanilla Registry + quilt.mod.json entrypoints.main（实现 net.fabricmc.api.ModInitializer#onInitialize()）；02–10 读 fabric/<ver>
    - 老平台：核实表；禁止 DeferredRegister
 3. 创造栏 / 食物 / 工具属性按该档 03，不要抄邻版
 4. 模型：generate_model（须传 version）或 DataGen；lang：generate_lang（须传 version）
@@ -578,8 +578,8 @@ ${WORKFLOW_ERA_GUARD}
 5. 【Quilt 分支 · 禁止把 Fabric API 回调当 QSL】逐档读该档自家 quilt/<ver>/.cursor/rules/05-events.mdc（它比本清单权威）：
    - 10 档共同禁令：「**禁止** \`QuiltRegistry.register()\`；不要把 FAPI Registry 事件当 QSL」——quilt/1.21.1/.cursor/rules/05-events.mdc:11（1.18.2 档同义条 :6，措辞「不要把 FAPI Registry 事件当 QSL」）、quilt/1.20.4/.cursor/rules/05-events.mdc:8；「QSL 生命周期/注册事件 ≠ \`net.fabricmc.fabric.api.event.lifecycle\`」（quilt/1.18.2/.cursor/rules/05-events.mdc:5、quilt/1.20.4/.cursor/rules/05-events.mdc:7）。⚠️ quilt/1.21.1/.cursor/rules/05-events.mdc:8 的写法不同——那一档直接说「本版本无可用 QSL/QFAPI 正式版构件；生命周期/注册事件**用** \`net.fabricmc.fabric.api.event.lifecycle\`」，两条按各自档面读，不得互抄。
    - 默认路径：各档自家 :3（1.20.4+ 为 :5）写「默认读 \`fabric/<同版>/.cursor/rules/05-events.mdc\`。仅当用户要 **QSL 事件** 或 QFAPI 弃用提示时用本文件」⇒ Quilt 工程要事件时先按第 2–3 步的同版 Fabric 档落笔，只把入口与 mod json 换成 Quilt。
-   - 入口真值：\`org.quiltmc.loader.api.entrypoint.ModInitializer#onInitialize(ModContainer)\`（\`quilt.mod.json\` → \`entrypoints.init\`）——quilt/1.21.1/.cursor/rules/05-events.mdc:15 原句并带「禁止用 Fabric 无参 \`onInitialize()\` 记忆冒充」；别把 Fabric 的 \`ModInitializer#onInitialize()\` / \`ClientModInitializer\` 名字直接当 Quilt 入口写进 Quilt 工程。
-   - QSL 符号表不可生成：quilt/1.21.1/.cursor/rules/05-events.mdc:3 顶部横幅「本版本**无 QSL/QFAPI 正式版构件**（maven 只到 alpha）……下表 API 是**源码树考据，非可编译 API——禁止生成**」，那张表（:21-:24 的 \`RegistryEvents#getEntryAddEvent\` / \`RegistryMonitor\` / \`ServerLifecycleEvents\` / \`ClientLifecycleEvents\`）整族在文件中已划删除线，:26「以上符号在已发布构件中**不存在**」。1.20.4 / 1.21.3 / 1.21.4 / 1.21.8 / 1.21.10 / 1.21.11 六档带同款停更横幅；1.18.2 / 1.19.4 / 1.20.1 三档（9 行）没有横幅，只写「本档分支**未**打开 1.21 的 \`RegistryEvents.java\` / \`ServerLifecycleEvents\` 字段表，**禁止**把 \`quilt/1.21.1/knowledge/common/qsl-verified.md\` 的 \`getEntryAddEvent\` / \`startingServer\` 等名字抄进本档」（quilt/1.18.2/.cursor/rules/05-events.mdc:7）⇒ 这三档连「考据表」都没有，QSL 名一律未核实。
+   - 入口真值：\`quilt.mod.json\` → \`entrypoints.main\`，实现 \`net.fabricmc.api.ModInitializer#onInitialize()\`（quilt-loader 自带兼容接口）——quilt/1.21.1/.cursor/rules/05-events.mdc:15 原句；Quilt 原生 \`org.quiltmc.loader.api.entrypoint.ModInitializer\` 在 quilt-loader 0.31 **已删除**（javap 实测），QSL 替代 \`org.quiltmc.qsl.base.api.entrypoint.ModInitializer#onInitialize(ModContainer)\` 需 \`org.quiltmc.qsl.core:qsl_base\` 构件（本档只有 alpha，未采用）⇒ 别写 \`entrypoints.init\` 或原生 ModInitializer。
+   - QSL 符号表默认不生成：quilt/1.21.1/.cursor/rules/05-events.mdc:3 顶部横幅「本版本**无 QSL/QFAPI 正式版构件**（maven 只到 alpha）……默认不生成 QSL——事件一律走同版 Fabric API」，表（:21-:24 的 \`RegistryEvents#getEntryAddEvent\` / \`RegistryMonitor\` / \`ServerLifecycleEvents\` / \`ClientLifecycleEvents\`）已由 alpha 构件 javap 逐字实证在场；**:26 勘误**：旧文写「以上符号在已发布构件中**不存在**」——不成立，已删。仍成立的是：**1.21.1 线只有 alpha、没有正式版**（maven \`<release>\` 同为 \`10.0.0-alpha.5+1.21.1\`）⇒ 默认仍建议 Fabric API（\`ServerLifecycleEvents\` / \`ClientLifecycleEvents\` / \`RegistryEntryAddCallback\`），要改用 QSL 先与用户确认接受 alpha 依赖。1.20.4 / 1.21.3 / 1.21.4 / 1.21.8 / 1.21.10 / 1.21.11 六档带同款停更横幅；1.18.2 / 1.19.4 / 1.20.1 三档（9 行）没有横幅，只写「本档分支**未**打开 1.21 的 \`RegistryEvents.java\` / \`ServerLifecycleEvents\` 字段表，**禁止**把 \`quilt/1.21.1/knowledge/common/qsl-verified.md\` 的 \`getEntryAddEvent\` / \`startingServer\` 等名字抄进本档」（quilt/1.18.2/.cursor/rules/05-events.mdc:7）⇒ 这三档连「考据表」都没有，QSL 名一律未核实。
    - QSL 方法名唯一入口：\`query_loader_api\`（先 \`ingest_loader_api\`，用**用户自备 jar**；未入库只能 // TODO(未核实)）。检索判据只看字段不看直觉：\`search_docs platform=quilt\` 普通词查询可能回 \`fallback:"fabric"\` + \`sourcePlatform:"fabric"\`（同版 Fabric 正文，**不是** QSL 证据），QSL 措辞查询会改口同线已建档语料（\`fallback:"quilt"\` + \`source_version\` 指向别的档，**不是**本版专属正文），完全无语料的空洞档才 \`VERSION_NOT_FOUND\`。本仓实扫 \`data/quilt_*\` = 6 档（1.18.2 / 1.19.4 / 1.20.1 / 1.20.4 / 1.21.1 / 1.21.11），另 4 档（1.21.3 / 1.21.4 / 1.21.8 / 1.21.10）的「离线数据」条自己写明了回退面（quilt/1.21.4/.cursor/rules/05-events.mdc:6）；\`total\` 随语料扩容变化，不是稳定契约。
 6. 名字核不到 → 语义搜索优先：\`search_fabric_docs\`（先 list_fabric_versions，参数用入库档名，如 26.1.2 而不是工程里的 \`26.1\`）/ \`search_docs platform=fabric|quilt\`，再 \`get_*_doc_full\`（一次 ≤ 2 页）；命中页的 \`verbatim:false\` 只说明该页正文没逐字出现这个名字，不构成「该 API 存在」的证据。文档 \`id\` 只取搜索结果，不要拿网站 URL。
 7. 物理端与线程：客户端回调（\`ClientTickEvents\` / \`ClientModInitializer\` 入口）只在客户端注册；写世界数据只在服务端（1.21.11 档 :207 的 ❌ 项「在客户端 lambda 里改服务端世界数据 — 用 \`world.isClient\` 区分」）。返回值不是摆设：\`ActionResult\` / \`boolean\` 决定取消或消费，\`PlayerBlockBreakEvents.BEFORE\` 是 boolean 不是 ActionResult（同档 :209）。

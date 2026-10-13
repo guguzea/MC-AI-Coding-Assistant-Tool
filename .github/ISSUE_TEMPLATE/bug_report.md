@@ -55,7 +55,7 @@ MC AI Coding Assistant Tool 是**副驾驶，不是全自动代理**。创意设
 
 ```
 
-如果能取到失败码，取证方式（见根 `README.md` §取证）：
+如果能取到失败码，取证方式（见根 `README.md` 指针表 → `doc/tool-error-codes.md`）：
 
 ```bash
 

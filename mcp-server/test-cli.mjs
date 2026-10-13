@@ -626,9 +626,22 @@ function perFileSplitForms(docs) {
 }
 
 {
-  const r = run(["diagnose_gradle", "--buildGradle", "plugins { id 'net.minecraftforge.gradle' }\n", "--fail-on-error"]);
+  // 本臂要求夹具**真的产生 errors[]**，否则 `errors.length > 0` 的条件永不成立 ⇒ 空转假绿。
+  // 旧夹具（`plugins { id 'net.minecraftforge.gradle' }` 单行）实测 errors=[]：判档落 unknown，
+  // 只出 warning。改用「有 minecraft_version 但 build.gradle 缺 Forge 依赖/插件」＝必出两条 error。
+  const r = run([
+    "diagnose_gradle",
+    "--buildGradle",
+    "plugins { id 'java' }\n",
+    "--gradleProperties",
+    "minecraft_version=1.20.1\nforge_version=47.2.0\n",
+    "--fail-on-error",
+  ]);
   const j = parseJson(r, "gradle-fail-on-error");
-  if (Array.isArray(j.result?.errors) && j.result.errors.length > 0 && r.status !== 1) {
+  if (!Array.isArray(j.result?.errors) || j.result.errors.length === 0) {
+    throw new Error(`夹具前提不成立：本臂要求 errors[] 非空，实际 ${JSON.stringify(j.result?.errors)}`);
+  }
+  if (r.status !== 1) {
     throw new Error(`--fail-on-error should lift errors[] to exit 1, got ${r.status}: ${JSON.stringify(j.result.errors)}`);
   }
   console.log("diagnose_gradle --fail-on-error: ok");

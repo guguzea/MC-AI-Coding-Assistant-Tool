@@ -2,7 +2,7 @@
  * API 精确查询模块 — 基于真实数据
  *
  * 数据来源（按 Minecraft 版本）：
- * - 1.7.10–1.13.2: 类名空壳（methods 几乎全空）+  MCP stable 映射（1.13.2）+ ForgeJavaDocs 文档树；不要把 query_api found:true 当完整签名
+ * - 1.7.10–1.13.2: SRG 类名 + `func_/field_` 成员名（无 Parchment 参数/javadoc）+ MCP stable 映射（1.13.2）+ ForgeJavaDocs 文档树；不要把 query_api found:true 当完整签名
  * - 1.14.4–1.15.2: MCP stable CSV 映射+ api-index 为空 {}（Parchment 约从 1.16.5 才有）
  * - 1.16.5–1.20.4: Parchment 映射（带 javadoc）
  * - 1.21+ / 26.1+: 无 extracted 索引
@@ -756,7 +756,7 @@ function buildClassResult(
   }
   if (!cls.methods.length) {
     notes.push(
-      "本索引该类无方法条目（常见于 1.7.10–1.12.2 javadoc 空壳）。found:true 不是完整签名；请用 search_forge_docs / query_loader_api / convert_mapping。",
+      "本索引该类无方法条目。found:true 不是完整签名；请用 search_forge_docs / query_loader_api / convert_mapping。",
     );
   }
   const METHODS_CAP = 80;
@@ -809,9 +809,6 @@ function buildMethodResult(
 const QUERY_API_EMPTY_INDEX =
   "当前版本无 Vanilla API 索引，无法执行 query_api（found:false / DATA_UNAVAILABLE 只表示本 Parchment 索引没有该类，不代表游戏里没有）。请改用 search_*_docs，或 get_minecraft_source。query_api 覆盖约 1.16.5–1.20.4；1.21+ / 26.1+ 无索引。";
 
-const QUERY_API_SHELL_INDEX =
-  "该版 extracted 多为类名空壳（methods 为空）。found:true 只表示类名在索引里，不是完整 javadoc/签名。请改 search_forge_docs / query_loader_api / convert_mapping。";
-
 // 兼容工具标记（sweep104，用户裁定）：query_api 属类名/签名索引类兼容工具，每次调用响应都带此注释，
 // 提示文档/语义面优先 search_*_docs 语义搜索。
 const QUERY_API_COMPAT_NOTE =
@@ -829,8 +826,6 @@ function queryApiCoverageWarning(version: string, classCount?: number): string |
   if (outOfRange || classCount === 0) return QUERY_API_EMPTY_INDEX;
   // 1.14.4–1.15.2：api-index 刻意为空的设计边界——报告并推荐语义搜索
   if (/^1\.1[45](\.|$)/.test(v)) return QUERY_API_EMPTY_1415;
-  // 1.7.10–1.13.2：有类名列表，但几乎没有方法条目
-  if (/^1\.(7|8|9|10|11|12|13)(\.|$)/.test(v)) return QUERY_API_SHELL_INDEX;
   return undefined;
 }
 

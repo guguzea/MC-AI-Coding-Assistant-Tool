@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-01T14:01:32.316Z",
+  "generatedAt": "2026-10-13T01:20:03.987Z",
   "entries": [
     {
       "id": "authored/addon-dev-workflow",
@@ -1885,7 +1885,7 @@
       "sourceKind": "links",
       "priority": "🟢",
       "summary": "Loom 1.17、Vulkan 后端、BlockIds DataGen、GUI setScreen 迁移。不是 API 规范。",
-      "mcHint": ""
+      "mcHint": "26.2"
     },
     {
       "id": "links/fabric-wiki-tutorial-index",
@@ -1920,7 +1920,7 @@
       "sourceKind": "links",
       "priority": "🟢",
       "summary": "官方 Getting Started / Concepts；API 与注册请以此为准，勿用社区教程替代。",
-      "mcHint": ""
+      "mcHint": "全版本（官方文档站）"
     },
     {
       "id": "links/kaupenjoe-courses-index",
@@ -2063,7 +2063,7 @@
       "sourceKind": "links",
       "priority": "🟢",
       "summary": "26.1 去混淆、NeoForm 版本号变化、可移除 Parchment。不是 API 规范。",
-      "mcHint": ""
+      "mcHint": "26.1"
     },
     {
       "id": "mcmod-3993/crash-publishing",

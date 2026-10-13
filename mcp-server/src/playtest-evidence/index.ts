@@ -183,7 +183,11 @@ export function inspectPlaytestEvidence(query: PlaytestEvidenceQuery): Record<st
     if (r.state !== "present") calls = { state: r.state, reason: r.reason };
     else {
       const lines = (r.text ?? "").split(/\r?\n/).filter(Boolean);
-      const timeouts = lines.filter((l) => l.includes("PLAYTEST_TIMEOUT")).length;
+      // P2-R4-10：判据串此前在 calls.jsonl 里永不可能出现（写侧不产该码）⇒ 超时计数恒 0。
+      // 双口径取并：显式码 + await 的 matched:false + 桥原生「Timeout after Nms」串。
+      const timeouts = lines.filter(
+        (l) => l.includes("PLAYTEST_TIMEOUT") || /"matched"\s*:\s*false/.test(l) || /Timeout after \d+ms/.test(l),
+      ).length;
       calls = {
         state: "present",
         lines: lines.length,

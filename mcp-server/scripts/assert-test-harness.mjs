@@ -69,7 +69,10 @@ for (const root of roots) {
     if (usesNodeTest) continue; // 官方 runner 自己会 await，不在本闸门范围
 
     harnesses += 1;
-    const harnessDecl = text.slice(0, text.indexOf("function test(") > -1 ? text.indexOf("function test(") + 400 : 600);
+    // 窗口锚点必须与入检面（LOCAL_HARNESS）同源：旧锚点只找字面量 `function test(`，找不到退化为
+    // 文件头 600 字 —— 而入检面明收 `const test = (` 箭头形，箭头 harness 定义体落 600 字之后即整体失明。
+    const declAt = LOCAL_HARNESS.exec(text)?.index ?? 0;
+    const harnessDecl = text.slice(declAt, declAt + 600);
     if (!THENABLE_AWARE.test(harnessDecl)) {
       problems.push({
         file,
@@ -169,8 +172,12 @@ const SELF = fileURLToPath(import.meta.url);
 const TAUTOLOGY = [
   [/assert\.ok\s*\(\s*(?:true|!false)\s*[,)]/, "assert.ok(true)"],
   [/assert\.ok\s*\(\s*\d+(?:\.\d+)?\s*(?:>=|<=|>|<)\s*\d+(?:\.\d+)?\s*[,)]/, "字面量之间的恒真比较"],
-  [/assert\.(?:equal|strictEqual)\s*\(\s*([A-Za-z_$][\w$.]*)\s*,\s*\1\s*[,)]/, "同名自比（x, x）"],
+  [/assert\.(?:equal|strictEqual|deepStrictEqual)\s*\(\s*([A-Za-z_$][\w$.]*)\s*,\s*\1\s*[,)]/, "同名自比（x, x）"],
   [/(?:async\s+)?function\s+test[A-Za-z0-9_]*\s*\([^)]*\)\s*\{\s*\}/, "空测试函数体（无断言）"],
+  // 补腿（R7 §26 P1）：旧四模式抓不住等号两侧**同字面量**（assert.equal(1, 1) / strictEqual("a","a")）
+  // 与 assert.ok(<非零字面量>/<非空串>) —— 0 / "" 是假值，不算恒真。
+  [/assert\.(?:equal|strictEqual|deepStrictEqual)\s*\(\s*('(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*"|\d+(?:\.\d+)?|true|false)\s*,\s*\1\s*[,)]/, "等号两侧同字面量（死断言）"],
+  [/assert\.ok\s*\(\s*(?:[1-9]\d*(?:\.\d+)?|0\.\d*[1-9]\d*|'(?:[^'\\]|\\.)+'|"(?:[^"\\]|\\.)+")\s*[,)]/, "assert.ok(<非零字面量/非空串>)"],
 ];
 let tautologyFiles = 0;
 for (const root of roots) {

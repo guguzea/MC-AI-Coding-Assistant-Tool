@@ -47,10 +47,9 @@ updates:
         dependency-type: "development"
         patterns:
           - "*"
-    ignore:
-      # CI 判据与发布链已按 `npm audit --omit=dev --audit-level=high` 在 PR 阶段红，
-      # 无需 dependabot 再重复报一次 production 漏洞。
-      # （该 CI 步骤见 .github/workflows/mcp-server-ci.yml 与 release-mcp-server.yml）
+    # CI 判据与发布链已按 `npm audit --omit=dev --audit-level=high` 在 PR 阶段红，
+    # 无需 dependabot 再重复报一次 production 漏洞。
+    # （该 CI 步骤见 .github/workflows/mcp-server-ci.yml 与 release-mcp-server.yml）
 
   # ── GitHub Actions ──────────────────────────────────────────────────────
   - package-ecosystem: "github-actions"

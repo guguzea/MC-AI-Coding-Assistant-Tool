@@ -71,16 +71,26 @@ async function main() {
   console.log("=== provision-26x-docs (no version alias/clone) ===");
   console.log(`skipFetch=${skipFetch}`);
   if (!wantWrite()) {
-    console.log("[provision-26x-docs] dry-run：删除段只打印清单（--write 才真删）；抓取段按各子脚本自身开关。");
+    console.log("[provision-26x-docs] dry-run：删除段只打印清单（--write 才真删）；抓取段也须 --write 才真跑。");
   }
 
   if (!skipFetch) {
-    run(process.execPath, ["scripts/probe-neoforge-versions.js", "--force"]);
-    run(process.execPath, ["scripts/fetch-neoforge-docs.js", "--version=26.1", "--force"]);
-    run(process.execPath, ["scripts/process-neoforge-docs.js", "--version=26.1"]);
-    run(process.execPath, ["scripts/fetch-neoforge-primers.js", "--version=26.2", "--force"]);
-    run(process.execPath, ["scripts/fetch-fabric-docs.js", "--version=26.1.2", "--force"]);
-    run(process.execPath, ["scripts/process-fabric-docs.js", "--version=26.1.2"]);
+    if (!wantWrite()) {
+      console.log("[provision-26x-docs] dry-run：抓取段将 spawn 以下命令（加 --write 才真跑）：");
+      console.log("  node scripts/probe-neoforge-versions.js --force");
+      console.log("  node scripts/fetch-neoforge-docs.js --version=26.1 --force");
+      console.log("  node scripts/process-neoforge-docs.js --version=26.1");
+      console.log("  node scripts/fetch-neoforge-primers.js --version=26.2 --force");
+      console.log("  node scripts/fetch-fabric-docs.js --version=26.1.2 --force");
+      console.log("  node scripts/process-fabric-docs.js --version=26.1.2");
+    } else {
+      run(process.execPath, ["scripts/probe-neoforge-versions.js", "--force"]);
+      run(process.execPath, ["scripts/fetch-neoforge-docs.js", "--version=26.1", "--force"]);
+      run(process.execPath, ["scripts/process-neoforge-docs.js", "--version=26.1"]);
+      run(process.execPath, ["scripts/fetch-neoforge-primers.js", "--version=26.2", "--force"]);
+      run(process.execPath, ["scripts/fetch-fabric-docs.js", "--version=26.1.2", "--force"]);
+      run(process.execPath, ["scripts/process-fabric-docs.js", "--version=26.1.2"]);
+    }
   }
 
   removeMisleadingClone(

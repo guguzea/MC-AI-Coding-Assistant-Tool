@@ -147,6 +147,7 @@ function loadJsonlDirs() {
   for (const p of candidates) {
     try {
       if (!fs.existsSync(p)) continue;
+      let badLines = 0;
       for (const line of fs.readFileSync(p, 'utf8').split('\n')) {
         if (!line.trim()) continue;
         try {
@@ -155,8 +156,13 @@ function loadJsonlDirs() {
           const list = JSONL_DIRS.get(j.slug) ?? [];
           list.push(j.outputDir);
           JSONL_DIRS.set(j.slug, list);
-        } catch { /* 坏行跳过 */ }
+        } catch (e) {
+          // 坏行此前静默跳过、不入任何计数 ⇒ JSONL 局部损坏时版本归属静默缺行而覆盖度看着正常。
+          badLines++;
+          if (badLines <= 3) console.warn(`build-api-summaries: 坏 JSONL 行跳过（${p}）: ${e?.message ?? e}`);
+        }
       }
+      if (badLines > 0) console.warn(`build-api-summaries: ${p} 共 ${badLines} 行解析失败`);
       console.log(`已加载 JSONL 映射（${p}）：${JSONL_DIRS.size} 个 slug`);
       return;
     } catch { /* 尝试下一个 */ }

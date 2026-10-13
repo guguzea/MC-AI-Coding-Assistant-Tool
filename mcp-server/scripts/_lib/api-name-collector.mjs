@@ -70,7 +70,7 @@ export function fenceIds(text) {
   let opens = 0;
   for (let i = 0; i < lines.length; i++) {
     const l = lines[i];
-    if (/^```/.test(l)) { inB = !inB; opens++; continue; }
+    if (/^\s*```/.test(l)) { inB = !inB; opens++; continue; }
     if (!inB) continue;
     if (/^\s*(\/\/|\*|\/\*)/.test(l)) continue;
     if (NEG.test(l)) continue;
@@ -192,9 +192,13 @@ export function mappingLeg(pack, packDir, opts = {}) {
           const s = String(r.n ?? "").split("/").pop();
           if (s) leg.memberTails.add(s);
         }
-      } catch {}
+      } catch (err) {
+        leg.memberErr = `${t}: ${err?.message ?? String(err)}`;
+      }
     }
     if (leg.rows === 0) { leg.state = "zero-rows"; leg.why = "classes 表 0 行（库被清空或摄入失败）"; return leg; }
+    // 成员表读失败不得塌成「该名不存在」：进 unreadable（与 classes 打不开同一档），否则成员证据腿静默掏空。
+    if (leg.memberErr) { leg.state = "unreadable"; leg.why = `成员表读取失败：${leg.memberErr}`; return leg; }
     leg.proven = new Set([...leg.tails, ...leg.memberTails]);
     leg.state = "ok";
     leg.usable = true;

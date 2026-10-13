@@ -144,12 +144,21 @@ async function parseGithubResponse(res: Response): Promise<FetchReleaseResult> {
       ),
     };
   }
-  if (Array.isArray(json) || !json || typeof json !== "object" || typeof (json as GhRelease).tag_name !== "string") {
+  // P2-R3-1/C3：单 Release 路径必须与列表路径同形校验 —— 消费者（update/index.ts:84 的 pickDataAssets）
+  // 会解引用 .assets。畸形 200 体（有 tag_name 无 assets）此前放行，导致 pickDataAssets 内
+  // release.assets.find 抛 TypeError（非结构化信封）。
+  if (
+    Array.isArray(json) ||
+    !json ||
+    typeof json !== "object" ||
+    typeof (json as GhRelease).tag_name !== "string" ||
+    !Array.isArray((json as GhRelease).assets)
+  ) {
     return {
       ok: false,
       action: actionable(
         "UPDATE_CHECK_FAILED",
-        "GitHub 响应无法解析为单个 release（数组或缺少 tag_name）",
+        "GitHub 响应无法解析为单个 release（数组，或缺少 tag_name / assets 数组）",
         ["改用 releases 列表接口", "检查代理/镜像是否改写了 JSON"],
         ["mc_skill_update"],
       ),
