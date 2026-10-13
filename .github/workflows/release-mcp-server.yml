@@ -28,17 +28,17 @@ jobs:
       MC_SKILL_SKIP_DOWNLOAD: "1"
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # 这里曾有一版「tag 必须落在 main 上」的前置校验，2026-10-07 撤除，原因两条：
       # ① 本 workflow 未给 gh 配凭据（查询失败会被 `|| echo ""` 吞成「不在 main」，反而堵死全部发版）；
       # ② `commits/<sha>/branches-where-head` 的语义是「该 commit 是 HEAD 的分支」，对非顶端的老 commit 误判。
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: "22"
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: "17"
@@ -146,7 +146,7 @@ jobs:
           MC_SKILL_SMOKE_DATA_LINK: "1"
 
       - name: Create GitHub Release and upload assets
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: |
             ${{ env.SERVER_ZIP }}
