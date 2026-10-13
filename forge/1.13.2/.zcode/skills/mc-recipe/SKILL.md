@@ -59,10 +59,7 @@ public class MyRecipe implements IRecipe<IInventory> {
     return ModRecipeSerializers.MY_SERIALIZER.get();
   }
 
-  @Override
-  public IRecipeType<?> getType() {
-    return ModRecipes.MY_TYPE;
-  }
+  // 1.13.2 构件 javap：IRecipe **没有** getType()（IRecipeType 是 1.14 起的体系）；本档配方按 serializer 注册
 
   @Override
   public ResourceLocation getId() {

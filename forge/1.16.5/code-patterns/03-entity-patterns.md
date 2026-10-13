@@ -103,14 +103,16 @@ public static final DeferredRegister<Attribute> ATTRIBUTES =
     DeferredRegister.create(ForgeRegistries.ATTRIBUTES, MOD_ID);
 
 public static final RegistryObject<Attribute> EXTRA_HEALTH = ATTRIBUTES.register("extra_health",
-    () -> (new RangedAttribute("attribute.modid.extra_health", 0.0, 0.0, 1000.0)).setShouldWatch(true)
+    () -> new RangedAttribute("attribute.modid.extra_health", 0.0, 0.0, 1000.0)   // 1.16.5 实测：无 setShouldWatch/setSyncable
 );
 
 // 在 mod 构造函数中
 ATTRIBUTES.register(modEventBus);
 
 // 实体中应用
-this.getAttribute(EXTRA_HEALTH.get()).ifPresent(attr ->
-    this.getAttributeManager().registerAttribute(attr)
-);
+// 实体中注册：1.16.5 实测（构件 javap）—— createAttributes() 返回 AttributeModifierMap.MutableAttribute；
+//   不存在 getAttributeManager()/registerAttribute()
+public static AttributeModifierMap.MutableAttribute createAttributes() {
+    return MonsterEntity.createMonsterAttributes().add(EXTRA_HEALTH.get());
+}
 ```

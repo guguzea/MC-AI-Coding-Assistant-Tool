@@ -54,8 +54,8 @@ public MyTileEntity() {
 
 // ✅ 正确：在 readFromNBT 或 onLoad 中访问 world
 @Override
-public void readFromNBT(NBTTagCompound nbt) {
-    super.readFromNBT(nbt);
+public void read(CompoundNBT nbt) {   // 1.15.2 构件 javap：类名 CompoundNBT、覆写 read（readFromNBT 是 1.12 老名）
+    super.read(nbt);
     // 安全访问 world
 }
 ```

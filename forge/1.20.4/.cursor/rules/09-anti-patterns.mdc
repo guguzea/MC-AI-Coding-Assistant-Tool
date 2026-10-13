@@ -265,7 +265,7 @@ public void onRender(RenderGuiOverlayEvent.Post event) {
 
 ```java
 @SubscribeEvent
-public void onRender(RenderGameOverlayEvent.Post event) {
+public void onRender(RenderGuiOverlayEvent.Post event) {   // 本档实测：旧名已删，见上块说明
     // 发送网络消息，让服务端执行
     NetworkHandler.INSTANCE.sendToServer(new ModifyBlockMessage(pos));
 }

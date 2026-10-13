@@ -96,13 +96,9 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
-        // FMLClientSetupEvent 仅用于客户端特有初始化
-        // KeyMapping 注册应在 RegisterKeyMappingsEvent 中完成
-    }
-
-    @SubscribeEvent
-    public static void registerKeyMappings(RegisterKeyMappingsEvent event) {
-        event.register(TEST_KEY);  // TEST_KEY 需定义在静态字段中
+        // 1.18.2 构件 javap：本档没有 RegisterKeyMappingsEvent（1.19.4+ 才有），
+        //   1.18.2 在 FMLClientSetupEvent 里用 ClientRegistry.registerKeyBinding 注册
+        ClientRegistry.registerKeyBinding(TEST_KEY);  // TEST_KEY 需定义在静态字段中
     }
 
     @SubscribeEvent

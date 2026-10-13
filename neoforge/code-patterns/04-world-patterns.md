@@ -17,7 +17,7 @@ public static final DeferredHolder<Biome, Biome> MY_BIOME = BIOMES.register("my_
             .skyColor(0x78a9ff)
             .grassColorOverride(0x7ed957)   // 1.20.4 实名 grassColorOverride / foliageColorOverride，不是 grassColor / foliageColor
             .foliageColorOverride(0x60bd3f)
-            .ambientMoodSound(AmbientMoodSettings.LEGACY_CAVE) // 方法签名已核实收 AmbientMoodSettings；LEGACY_CAVE 这个常量名本档无出处 → TODO(未核实)
+            .ambientMoodSound(AmbientMoodSettings.LEGACY_CAVE_SETTINGS) // 1.20.4 构件 javap：常量实名 LEGACY_CAVE_SETTINGS（ambientMoodSound(AmbientMoodSettings) 签名已核实）
             .build())
         .generationSettings(...)
         .mobSpawnSettings(...)   // 1.20.4 实名 mobSpawnSettings(MobSpawnSettings)，不是 mobSettings

@@ -88,7 +88,7 @@ public class MachineTileEntity extends TileEntity {
     }
 
     @Override
-    public NBTTagCompound write(NBTTagCompound compound) {
+    public CompoundNBT write(CompoundNBT compound) {   // 1.14.4 构件 javap：本档 NBT 类名是 CompoundNBT（NBTTagCompound 是 1.12 老名）
         super.write(compound);
         compound.putInt("progress", progress);
         return compound;

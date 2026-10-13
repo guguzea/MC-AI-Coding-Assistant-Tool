@@ -184,17 +184,14 @@ public class ModSetup {
 public class ClientSetup {
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
-        // KeyMapping 在 RegisterKeyMappingsEvent 中注册
-    }
-
-    @SubscribeEvent
-    public static void registerBindings(RegisterKeyMappingsEvent event) {
-        event.register(EXAMPLE_KEY_MAPPING.get());
+        // 1.18.2 构件 javap：本档没有 RegisterKeyMappingsEvent（1.19.4+ 才有），
+        //   1.18.2 用 ClientRegistry.registerKeyBinding 注册 KeyMapping
+        ClientRegistry.registerKeyBinding(EXAMPLE_KEY_MAPPING.get());
     }
 }
 ```
 
-KeyMapping 注册应使用 `RegisterKeyMappingsEvent` + `event.register()`。
+KeyMapping 注册在 1.18.2 用 `ClientRegistry.registerKeyBinding(...)`；`RegisterKeyMappingsEvent` + `event.register()` 是 1.19.4+ 的写法。
 
 ## 示例：Capability 附加事件
 

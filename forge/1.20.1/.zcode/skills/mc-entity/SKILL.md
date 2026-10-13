@@ -166,7 +166,7 @@ public class MyEntityModel extends HierarchicalModel<MyEntity> {
     }
 
     @Override
-    public ModelRenderer root() { return body; }
+    public ModelPart root() { return body; }   // 1.20.1 构件 javap：本档类名是 ModelPart（ModelRenderer 是 ≤1.13 的老名）
 }
 ```
 

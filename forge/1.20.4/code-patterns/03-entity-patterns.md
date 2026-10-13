@@ -102,8 +102,8 @@ public class MyEntityRenderer extends HumanoidMobRenderer<MyEntity, MyEntityMode
         super(context, new MyEntityModel<>(context.bakeLayer(MY_MODEL_LAYER)), 0.5f);
         // 1.19.4+ 索引实测为 4 参：(RenderLayerParent, HumanoidModel, HumanoidModel, ModelManager)
         this.addLayer(new HumanoidArmorLayer<>(this,
-            new MyEntityModel<>(context.bakeLayer(INNER_ARMOR)),
-            new MyEntityModel<>(context.bakeLayer(OUTER_ARMOR)),
+            new MyEntityModel<>(context.bakeLayer(ModelLayers.PLAYER_INNER_ARMOR)),
+            new MyEntityModel<>(context.bakeLayer(ModelLayers.PLAYER_OUTER_ARMOR)),
             context.getModelManager()));
     }
 
@@ -128,7 +128,9 @@ public static final RegistryObject<Attribute> EXTRA_HEALTH = ATTRIBUTES.register
 ATTRIBUTES.register(modEventBus);
 
 // 实体中应用
-this.getAttribute(ATTRIBUTES.get("extra_health")).ifPresent(attr ->
-    this.getAttributeMap().registerAttribute(attr)
-);
+// 实体中注册：1.20.4 构件 javap 实测 —— 属性走 createAttributes()（AttributeSupplier.Builder#add）；
+//   AttributeMap 没有 registerAttribute()，也不存在 getAttributeMap()
+public static AttributeSupplier.Builder createAttributes() {
+    return Mob.createMobAttributes().add(EXTRA_HEALTH.get());
+}
 ```

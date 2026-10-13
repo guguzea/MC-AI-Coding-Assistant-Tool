@@ -68,7 +68,7 @@ public class MyProjectile extends Projectile {
         super.onHit(result);
         if (!this.level.isClientSide) {
             this.level.explode(null, this.getX(), this.getY(), this.getZ(),
-                2.0f, Level.ExplosionInteraction.BLOW);
+                2.0f, Explosion.BlockInteraction.BREAK);   // 1.18.2 构件 javap：本档 explode 只吃 Explosion.BlockInteraction.{NONE,BREAK,DESTROY}；Level.ExplosionInteraction 自 1.19.4 起才有
             this.discard();
         }
     }

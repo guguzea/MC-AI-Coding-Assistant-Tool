@@ -58,13 +58,21 @@ public void onItemsRegistry(RegistryEvent.Register<Item> event) {
 依赖: [TileEntity]
 扩展点: [GUI, 数据存储]
 ---
-public class MyTileEntityBlock extends Block implements ITileEntityProvider {
+// 1.13.2 构件 javap：本档无 ITileEntityProvider / createNewTileEntity（1.12.2 写法），
+//   方块实体走 IForgeBlock 的 hasTileEntity(IBlockState) / createTileEntity(IBlockState, IBlockReader)；
+//   本档也没有 DeferredRegister，TileEntityType 在 RegistryEvent.Register<TileEntityType<?>> 里注册。
+public class MyTileEntityBlock extends Block {
     public MyTileEntityBlock() {
         super(Block.Properties.create(Material.WOOD));
     }
 
     @Override
-    public TileEntity createNewTileEntity(IBlockReader world) {
+    public boolean hasTileEntity(IBlockState state) {
+        return true;
+    }
+
+    @Override
+    public TileEntity createTileEntity(IBlockState state, IBlockReader world) {
         return new MyTileEntity();
     }
 }
@@ -73,25 +81,37 @@ public class MyTileEntity extends TileEntity implements ITickable {
     private int counter = 0;
 
     public MyTileEntity() {
-        super(TileEntityTypeRegistry.MY_TILE_ENTITY.get());
+        super(MY_TILE_ENTITY);   // MY_TILE_ENTITY 是 TileEntityType<MyTileEntity>，见下注册
     }
 
     @Override
-    public void update() {
+    public void tick() {   // 1.13.2 构件 javap：ITickable（net.minecraft.util）的方法是 tick()，不是 update()
         if (world.isRemote) return;
         counter++;
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound compound) {
-        super.writeToNBT(compound);
-        compound.setInteger("counter", counter);
+    public void read(NBTTagCompound compound) {   // 1.13.2 构件 javap：TileEntity 覆写 read/write，不是 readFromNBT/writeToNBT
+        super.read(compound);
+        counter = compound.getInt("counter");
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound compound) {
-        super.readFromNBT(compound);
-        counter = compound.getInteger("counter");
+    public NBTTagCompound write(NBTTagCompound compound) {
+        super.write(compound);
+        compound.setInt("counter", counter);   // 1.13.2 构件 javap：NBTTagCompound 是 setInt（无 setInteger）
+        return compound;
     }
+}
+
+// 注册（1.13.2 构件 javap：TileEntityType.Builder.create(Supplier) 只吃一个工厂，build(Type) 传 null）
+public static final TileEntityType<MyTileEntity> MY_TILE_ENTITY =
+    TileEntityType.Builder.create(MyTileEntity::new).build(null);
+
+@SubscribeEvent
+public void onTileEntitiesRegistry(RegistryEvent.Register<TileEntityType<?>> event) {
+    event.getRegistry().register(
+        MY_TILE_ENTITY.setRegistryName(new ResourceLocation(MOD_ID, "my_tile_entity"))
+    );
 }
 ```

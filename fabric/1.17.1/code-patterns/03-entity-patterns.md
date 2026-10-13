@@ -34,11 +34,14 @@ private static final EntityType<MyCowEntity> MY_COW = Registry.register(
 );
 
 // 在 onInitialize() 中注册属性
-EntityAttributeModification.Builder.create()
-    .add(EntityAttributes.GENERIC_MAX_HEALTH, 20.0)
-    .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25)
-    .add(EntityAttributes.GENERIC_FOLLOW_RANGE)
-    .apply(MobEntity.create(null));
+// ⚠️ 1.17.1 构件 javap：Fabric API 里**没有** EntityAttributeModification（本档全部 FAPI 依赖件查无）。
+//   本档正确入口是 net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry#register
+//   TODO(未核实)：register(...) 的确切签名（AttributeContainer 还是 DefaultAttributeContainer.Builder）
+// EntityAttributeModification.Builder.create()
+//     .add(EntityAttributes.GENERIC_MAX_HEALTH, 20.0)
+//     .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25)
+//     .add(EntityAttributes.GENERIC_FOLLOW_RANGE)
+//     .apply(MobEntity.create(null));
 
 // 生成限制
 SpawnRestriction.register(

@@ -94,9 +94,12 @@ public static final Item MY_SWORD = new ItemSword(MyTier.MY_MATERIAL, 3, 1.6f,
 ## 盔甲
 
 ```java
+// 1.13.2 构件 javap：IArmorMaterial 的抽象方法只有 getDurability / getDamageReductionAmount /
+//   getEnchantability / getSoundEvent / getRepairMaterial / getName / getToughness ——
+//   **没有 getKnockbackResistance**（那是 1.16 起才加的）
 public enum MyArmorMaterial implements IArmorMaterial {
     MY_MATERIAL("my_material", 40, new int[]{4, 7, 9, 4}, 20,
-        SoundEvents.BLOCK_ANVIL_PLACE, 3.0f, 0.1f);
+        SoundEvents.BLOCK_ANVIL_PLACE, 3.0f);
 
     private final String name;
     private final int durability;
@@ -104,18 +107,16 @@ public enum MyArmorMaterial implements IArmorMaterial {
     private final int enchantability;
     private final SoundEvent sound;
     private final float toughness;
-    private final float knockbackResistance;
 
     MyArmorMaterial(String name, int durability, int[] damageReduction,
                    int enchantability, SoundEvent sound,
-                   float toughness, float knockbackResistance) {
+                   float toughness) {
         this.name = name;
         this.durability = durability;
         this.damageReduction = damageReduction;
         this.enchantability = enchantability;
         this.sound = sound;
         this.toughness = toughness;
-        this.knockbackResistance = knockbackResistance;
     }
 
     @Override public String getName() { return name; }
@@ -123,8 +124,8 @@ public enum MyArmorMaterial implements IArmorMaterial {
     @Override public int getDamageReductionAmount(EntityEquipmentSlot slot) { return damageReduction[slot.getIndex()]; }
     @Override public int getEnchantability() { return enchantability; }
     @Override public SoundEvent getSoundEvent() { return sound; }
+    @Override public Ingredient getRepairMaterial() { return Ingredient.fromItems(Items.IRON_INGOT); }
     @Override public float getToughness() { return toughness; }
-    @Override public float getKnockbackResistance() { return knockbackResistance; }
 }
 
 public static final Item MY_HELMET = new ItemArmor(MyArmorMaterial.MY_MATERIAL,

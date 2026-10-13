@@ -41,7 +41,7 @@ CONTAINERS.register(modEventBus);
 ```java
 public class MyContainer extends Container {
     // 服务端构造函数
-    public MyContainer(int windowId, PlayerInventory inv, IInteractionObject target) {
+    public MyContainer(int windowId, PlayerInventory inv, INamedContainerProvider target) {   // 1.15.2 构件 javap：本档类名是 INamedContainerProvider（IInteractionObject 是 1.12 老名）
         super(MyContainers.MY_CONTAINER.get(), windowId);
         // 添加槽位（示例：3 行 9 列容器 = 27 格，索引 0-26）
         for (int row = 0; row < 3; row++) {

@@ -42,12 +42,14 @@ channel.sendToServer(new SyncFieldMessage("field3", value3)); // ❌ 高网络�
 
 **症状**：网络阻塞，服务器卡顿，玩家感受到明显延迟。
 
-**正确方案**：使用 `NBTTagCompound` 或自定义 `PacketBuffer` 批量序列化。
+**正确方案**：把整份数据装进一个网络包批量发送。
+
+> ⚠️ 1.14.4 构件 javap：本档 NBT 类名是 `CompoundNBT`（不是 `NBTTagCompound`）；且 1.14.4 的网络包走 `SimpleChannel` 的 `encode/decode`，不是 1.12 的 `toBytes/fromBytes`。下面这块是 **1.12 形态，待改写**。
 
 ```java
-// 正确：单次批量同步
+// ⚠️ 待改写（1.12 形态）
 public class SyncAllDataMessage {
-    private NBTTagCompound data;
+    private CompoundNBT data;
 
     public void toBytes(PacketBuffer buf) {
         buf.writeCompoundTag(data);

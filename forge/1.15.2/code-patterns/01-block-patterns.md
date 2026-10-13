@@ -90,13 +90,13 @@ public class MachineTileEntity extends TileEntity {
     }
 
     @Override
-    public void read(NBTTagCompound nbt) {
+    public void read(CompoundNBT nbt) {   // 1.15.2 构件 javap：本档 NBT 类名是 CompoundNBT
         super.read(nbt);
         progress = nbt.getInt("progress");
     }
 
     @Override
-    public NBTTagCompound write(NBTTagCompound nbt) {
+    public CompoundNBT write(CompoundNBT nbt) {
         super.write(nbt);
         nbt.putInt("progress", progress);
         return nbt;

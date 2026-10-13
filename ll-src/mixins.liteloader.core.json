@@ -1,0 +1,19 @@
+{
+    "required": true,
+    "minVersion": "0.7.4",
+    "compatibilityLevel": "JAVA_8",
+    "target": "@env(DEFAULT)",
+    "package": "com.mumfrey.liteloader.common.mixin",
+    "refmap": "mixins.liteloader.core.refmap.json",
+    "mixins": [
+        "MixinMinecraftServer",
+        "MixinPlayerList",
+        "MixinNetHandlerPlayServer",
+        "MixinPlayerInteractionManager",
+        "MixinC15PacketClientSettings",
+        "MixinS02PacketChat"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
+}

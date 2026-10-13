@@ -93,7 +93,7 @@ IF 代码涉及网络消息处理
 
 ```
 IF 只需在客户端显示额外信息（如 GUI 覆盖层）
-  → 使用 ClientTickEvent / RenderGameOverlayEvent
+  → 使用 ClientTickEvent / RenderGuiOverlayEvent（旧名 RenderGameOverlayEvent 在本档已删）
   → 检查 OverlayMessage 来判断状态
 
 IF 需要在客户端渲染自定义模型

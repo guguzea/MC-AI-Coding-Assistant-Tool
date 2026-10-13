@@ -117,7 +117,7 @@ public class MyBlock extends Block implements EntityBlock {
         if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
             MenuProvider p = state.getMenuProvider(level, pos);
             if (p != null) {
-                NetworkHooks.openScreen(serverPlayer, p);
+                serverPlayer.openMenu(p);   // 1.20.4 构件 javap：本档无 NetworkHooks（1.20.1 还在，1.20.2+ 移除）；改用 ServerPlayer#openMenu(MenuProvider)
             }
         }
         return InteractionResult.sidedSuccess(level.isClientSide);

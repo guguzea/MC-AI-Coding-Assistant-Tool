@@ -35,12 +35,12 @@ public class MyParticle extends Particle {
         this.particleGreen = 1.0f;
         this.particleBlue = 1.0f;
         this.particleGravity = 1.0F;
-        this.particleMaxAge = 40;
+        this.setMaxAge(40);   // 1.13.2 构件 javap：Particle 的字段是 age/maxAge（有 setMaxAge/getMaxAge），无 particleMaxAge
     }
 
     @Override
-    public void onUpdate() {
-        super.onUpdate();
+    public void tick() {   // 1.13.2 构件 javap：方法名是 tick()（onUpdate 是 1.12 老名）
+        super.tick();
         this.motionX *= 0.95;
         this.motionY *= 0.95;
         this.motionZ *= 0.95;

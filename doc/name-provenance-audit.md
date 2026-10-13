@@ -1,0 +1,582 @@
+# 名字出处核验台账（nowhere 清单 × 真构件）
+# 人类不用看这个
+> 本文件由 `F:\MOD_TEST\gen-doc.mjs` 从 `verify3.json` / `artifact-map2.json` 生成，**不要手改数字**；口径与脚本见文末「复现」。
+> 生成日期：2026-10-13。
+
+## 1. 这是什么
+
+仓内有一份**候选发现器**（`F:\MOD_TEST\nonfabric-skill-names.mjs`，不入库），扫各平台/档的 `.cursor/{rules,skills}`、`code-patterns/`、`knowledge/`、`AGENTS.md`、`scaffold/**`（含 `.java` 模板）里的标识符，凡在**六条仓内腿**（本档语料逐字 / 本档映射库 / 本档 loader 摘要 / mojmap 派生表 / 本包自声明 / 同平台并集）里都找不到出处的，记入 **nowhere**。本台账把这些 nowhere 逐名交给**真构件**复核。
+
+六条腿全在仓内、**没有一条是真构件**，所以 nowhere 只是一份「待核候选」。本台账的结论一律以真构件为准。
+
+## 2. 方法与判据
+
+- **真构件集**：合并件（forge `*_mapped_*`、neoforge `*-merged`、fabric loom `minecraft-merged-*`/`project-@-mapped`）+ **该档依赖件**（net.minecraftforge `eventbus/coremods/unsafe` 与 `fml*`、net.neoforged `neoforge-<ver>-universal/bus/coremods`、fabric loom `remapped_mods` 全部件）+ **本机模块缓存全量库件**（1890 件，含跨版本）。
+- **存在性判据**：逐 `.class` 解析常量池（纯 Node，最小 ZIP reader + class 文件常量池解析），**精确匹配**名字；顶层类的简单名不单独出现在常量池，故对含 `/` 或 `$` 的项再切词核对 FQCN/描述符/泛型签名。
+- **verdict 四态**：`PRESENT-MAIN`（本档合并件里有）/ `PRESENT-DEPS`（本档依赖件里有）/ `PRESENT-LIB`（本机库缓存里有，**跨版本**，方向偏「存在」）/ `ABSENT`（三者皆无）。
+- **偏保守**：目录含跨版本件 ⇒ `ABSENT` 是强结论（该名在本机这一档的构件里确实不存在），`PRESENT-*` 只说明存在、**不证明用法正确**。
+
+### 覆盖（哪些档核得了）
+
+| 档 | 主件 | 依赖件数 |
+| --- | --- | --- |
+| fabric|1.17.1 | minecraft-project-@-mapped.jar | 50 |
+| fabric|1.18.2 | minecraft-merged-3abf014fcc-1.18.2-net.fabricmc.yarn.1_18_2.1.18.2+build.4-v2.jar | 49 |
+| fabric|1.19.4 | minecraft-merged-44e7483152-1.19.4-net.fabricmc.yarn.1_19_4.1.19.4+build.2-v2.jar | 53 |
+| fabric|1.20.1 | minecraft-merged-51c0cfe141-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.jar | 53 |
+| fabric|1.20.4 | minecraft-merged-dd71698084-1.20.4-net.fabricmc.yarn.1_20_4.1.20.4+build.3-v2.jar | 52 |
+| fabric|1.21.1 | minecraft-merged-c3f060f70f-1.21.1-net.fabricmc.yarn.1_21_1.1.21.1+build.2-v2.jar | 50 |
+| fabric|1.21.10 | minecraft-merged-6227aad8ee-1.21.10-net.fabricmc.yarn.1_21_10.1.21.10+build.3-v2.jar | 92 |
+| fabric|1.21.11 | minecraft-merged-2ae02fda0f-1.21.11-net.fabricmc.yarn.1_21_11.1.21.11+build.6-v2.jar | 95 |
+| fabric|1.21.3 | minecraft-merged-4c1b918aa2-1.21.3-net.fabricmc.yarn.1_21_3.1.21.3+build.2-v2.jar | 49 |
+| fabric|1.21.4 | minecraft-merged-a172fc6613-1.21.4-net.fabricmc.yarn.1_21_4.1.21.4+build.8-v2.jar | 149 |
+| fabric|1.21.8 | minecraft-merged-0cbc897a28-1.21.8-net.fabricmc.yarn.1_21_8.1.21.8+build.1-v2.jar | 91 |
+| fabric|26.1.2 | minecraft-merged-043a8b3edf-26.1.2.jar | 0 |
+| forge|1.13.2 | forge-1.13.2-25.0.223_mapped_snapshot_20180921-1.13.jar | 17 |
+| forge|1.14.4 | forge-1.14.4-28.2.26_mapped_snapshot_20190719-1.14.3.jar | 17 |
+| forge|1.15.2 | forge-1.15.2-31.2.50_mapped_official_1.15.2.jar | 17 |
+| forge|1.16.5 | forge-1.16.5-36.2.34_mapped_official_1.16.5.jar | 17 |
+| forge|1.17.1 | forge-1.17.1-37.1.1_mapped_official_1.17.1.jar | 21 |
+| forge|1.18.2 | forge-1.18.2-40.1.80_mapped_parchment_2022.08.21-1.18.2.jar | 21 |
+| forge|1.19.4 | forge-1.19.4-45.4.0_mapped_parchment_2023.06.26-1.19.4.jar | 21 |
+| forge|1.20.1 | forge-1.20.1-47.4.0_mapped_official_1.20.1.jar | 25 |
+| forge|1.20.4 | forge-1.20.4-49.2.0_mapped_parchment_2024.02.25-1.20.4.jar | 21 |
+| neoforge|1.20.1 | forge-1.20.1-47.4.0_mapped_official_1.20.1.jar | 13 |
+| neoforge|1.20.4 | neoforge-20.4.251-merged.jar | 10 |
+| neoforge|1.20.6 | neoforge-20.6.139-merged.jar | 6 |
+| neoforge|1.21.1 | neoforge-21.1.248-merged.jar | 8 |
+| neoforge|1.21.10 | neoforge-21.10.64-merged.jar | 6 |
+| neoforge|1.21.11 | neoforge-21.11.45-merged.jar | 6 |
+| neoforge|1.21.3 | neoforge-21.3.97-merged.jar | 6 |
+| neoforge|1.21.5 | neoforge-21.5.98-merged.jar | 6 |
+| neoforge|1.21.8 | neoforge-21.8.54-merged.jar | 6 |
+| neoforge|26.1 | minecraft-patched-26.1.2.114-merged.jar | 8 |
+| rift|1.13.2 | forge-1.13.2-25.0.223_mapped_snapshot_20180921-1.13.jar | 17 |
+
+**本机无可用构件（一律记「未核实」，不据此判缺陷）** —— ⚠️ **下表已被 §8.9(1) 更正**：forge 1.7.10–1.12.2 / fabric 1.14.4·1.16.5 / quilt 1.18.2–1.21.1 / liteloader 三档 / modloader / bedrock **本机其实都有可用件**（路径与覆盖范围见 §8.9(1)）。下表保留为「扫描构件集当时的状态」：
+
+| 档 | 原因 |
+| --- | --- |
+| forge|1.7.10 | 无 mapped 构件 |
+| forge|1.8.9 | 无 mapped 构件 |
+| forge|1.9.4 | 无 mapped 构件 |
+| forge|1.10.2 | 无 mapped 构件 |
+| forge|1.11.2 | 无 mapped 构件 |
+| forge|1.12.2 | 无 mapped 构件 |
+| forge|1.21.1 | 无 mapped 构件 |
+| fabric|1.14.4 | 无 merged 构件 |
+| fabric|1.16.5 | 无 merged 构件 |
+| quilt|1.18.2 | 本档无 QSL/QFAPI 构件（仓库自述） |
+| quilt|1.19.4 | 本档无 QSL/QFAPI 构件（仓库自述） |
+| quilt|1.20.1 | 本档无 QSL/QFAPI 构件（仓库自述） |
+| quilt|1.20.4 | 本档无 QSL/QFAPI 构件（仓库自述） |
+| quilt|1.21.1 | 本档无 QSL/QFAPI 构件（仓库自述） |
+| quilt|1.21.3 | 本档无 QSL/QFAPI 构件（仓库自述） |
+| quilt|1.21.4 | 本档无 QSL/QFAPI 构件（仓库自述） |
+| quilt|1.21.8 | 本档无 QSL/QFAPI 构件（仓库自述） |
+| quilt|1.21.10 | 本档无 QSL/QFAPI 构件（仓库自述） |
+| quilt|1.21.11 | 本档无 QSL/QFAPI 构件（仓库自述） |
+| liteloader|1.8.9 | 仅有 LiteLoader 加载器件，无 MC/Forge 侧参照 |
+| liteloader|1.10.2 | 仅有 LiteLoader 加载器件，无 MC/Forge 侧参照 |
+| liteloader|1.12.2 | 仅有加载器件；MC 侧可借 forge 1.12.2（本机无 1.12.2 映射件） |
+| modloader|1.2.5 | 无构件（远古版本，本机无 jar） |
+| modloader|1.5.2 | 无构件（远古版本，本机无 jar） |
+| modloader|1.6.4 | 无构件（远古版本，本机无 jar） |
+| bedrock| | 非 Java 构件，不适用 |
+
+## 3. 总表（3073 行 nowhere）
+
+| verdict | 行数 | 含义 |
+| --- | --- | --- |
+| PRESENT-MAIN | 966 | 本档合并件里就有 ⇒ **量具盲区**（文档没错） |
+| PRESENT-DEPS | 299 | 本档依赖件里有（如 Forge `eventbus` 的 `SubscribeEvent`）⇒ 文档没错 |
+| PRESENT-LIB | 560 | 本机库缓存里有 ⇒ 文档没错 |
+| ABSENT（可核档） | 846 | 该档构件里查无 ⇒ 需分诊（见 §4/§5） |
+| ABSENT（无构件档） | 498 | 本机无该档构件 ⇒ **未核实** |
+
+> ⚠️ **本表是「扫描面修正前」的读数（3073）。** 量具的 `extractCodeFences` 曾整块跳过 ```yaml 围栏，而本仓 `code-patterns/**` 的代码恰恰写在 ```yaml 围栏里（元数据头 + `---` + 代码）⇒ 这些档的代码从未进面。修正后 nowhere = **3232**；本轮再修 §8.3 那批真缺陷后 = **3222**。修正经过、新增行分诊与第二批修复见 **§8**。
+
+**量具盲区的主因**：① **枚举常量/静态字段**——loader 摘要只收类+方法（fields 恒 0），Forge 侧映射库成员是 MCP `func_/field_` 不可读；② **loader 自有类**（`SubscribeEvent`/`DeferredRegister` 在独立 `eventbus` 件里）；③ **库类**（Cloth/REI/JEI 等不在本机）；④ 中文围栏散文被当作代码。
+
+## 4. 真缺陷（本轮已修，共 8 族）
+
+### 4.1 LEGACY_CAVE → LEGACY_CAVE_SETTINGS
+
+- 落点：
+  - `forge/1.17.1/code-patterns/04-world-patterns.md:20`
+  - `forge/1.18.2/code-patterns/04-world-patterns.md:25`
+  - `forge/1.19.4/code-patterns/04-world-patterns.md:32（原 TODO 注释块）`
+  - `forge/1.19.4/code-patterns/README.md:60`
+  - `forge/1.20.1/code-patterns/04-world-patterns.md:20`
+  - `forge/1.20.4/code-patterns/04-world-patterns.md:20`
+  - `neoforge/code-patterns/04-world-patterns.md:20`
+- 证据：构件 javap：1.16.5–1.20.4 各族构件里 `AmbientMoodSettings` 只有 `CODEC` + `LEGACY_CAVE_SETTINGS`；`LEGACY_CAVE` 零命中
+- 处置：改文档 + **就地留出处标记**（改的是受管面 `forge/**`、`neoforge/**`；`.cursor/rules` 改动已按纪律刷 7 面镜像）。
+
+### 4.2 RenderGameOverlayEvent → RenderGuiOverlayEvent
+
+- 落点：
+  - `forge/1.19.4|1.20.1|1.20.4 的 `.cursor/rules/09-anti-patterns.mdc`（✅ 正确方案块）`
+  - `同三档 `.cursor/rules/08-client-server.mdc`（决策流文案）`
+  - `同三档 `knowledge/antipatterns/events.md`（❌ 块 + ✅ 块，并补披露注释）`
+- 证据：构件 javap：1.19.4/1.20.1/1.20.4 同包只有 `RenderGuiOverlayEvent`(+`RenderGuiEvent`)，`RenderGameOverlayEvent` 已删；1.17.1 仍在
+- 处置：改文档 + **就地留出处标记**（改的是受管面 `forge/**`、`neoforge/**`；`.cursor/rules` 改动已按纪律刷 7 面镜像）。
+
+### 4.3 1.14.4 `code-patterns/04-world-patterns.md` 整套重写
+
+- 落点：
+  - `forge/1.14.4/code-patterns/04-world-patterns.md:18-27`
+- 证据：构件 javap：1.14.4 `Biome$Builder` 只有 precipitation/category/depth/scale/temperature/downfall/waterColor/waterFogColor/surfaceBuilder/parent；无 `BiomeAmbience`（1.16.5 才出现）、无 skyColor/grassColor/foliageColor、无 ambientSound/specialEffects/generationSettings/mobSettings
+- 处置：改文档 + **就地留出处标记**（改的是受管面 `forge/**`、`neoforge/**`；`.cursor/rules` 改动已按纪律刷 7 面镜像）。
+
+### 4.4 1.16.5 `code-patterns/04-world-patterns.md` 按真名改写
+
+- 落点：
+  - `forge/1.16.5/code-patterns/04-world-patterns.md:12-28`
+- 证据：构件 javap：`with*` 全族不存在；真名 = `biomeCategory` / `specialEffects` / `waterColor` / `waterFogColor` / `fogColor` / `skyColor` / `ambientLoopSound` / `mobSpawnSettings` / `generationSettings`；`AMBIENT_BASALT_DELTAS_LAZY` 无此常量（真名 `…_LOOP/_MOOD/_ADDITIONS`）；1.16.2+ 地表迁到 BiomeGenerationSettings
+- 处置：改文档 + **就地留出处标记**（改的是受管面 `forge/**`、`neoforge/**`；`.cursor/rules` 改动已按纪律刷 7 面镜像）。
+
+### 4.5 `Level.ExplosionInteraction.BLOW` → `Explosion.BlockInteraction.BREAK`
+
+- 落点：
+  - `forge/1.17.1/code-patterns/03-entity-patterns.md:67`
+- 证据：构件 javap：1.17.1 `Level#explode(..., Explosion$BlockInteraction)`；`BlockInteraction` 有 NONE/BREAK/DESTROY，无 `ExplosionInteraction`/`BLOW`
+- 处置：改文档 + **就地留出处标记**（改的是受管面 `forge/**`、`neoforge/**`；`.cursor/rules` 改动已按纪律刷 7 面镜像）。
+
+### 4.6 裸 `INNER_ARMOR`/`OUTER_ARMOR` → `ModelLayers.PLAYER_INNER/OUTER_ARMOR`
+
+- 落点：
+  - `forge/1.17.1/code-patterns/03-entity-patterns.md:106-107`
+  - `forge/1.19.4/code-patterns/03-entity-patterns.md:137-138`
+  - `forge/1.20.1/code-patterns/03-entity-patterns.md:105-106`
+  - `forge/1.20.4/code-patterns/03-entity-patterns.md:105-106`
+- 证据：构件实测：裸常量零命中；1.17.1/1.18.2/1.19.4/1.20.x 均有 `PLAYER_INNER_ARMOR`/`PLAYER_OUTER_ARMOR`（neoforge 档早已写明此点）
+- 处置：改文档 + **就地留出处标记**（改的是受管面 `forge/**`、`neoforge/**`；`.cursor/rules` 改动已按纪律刷 7 面镜像）。
+
+### 4.7 `getAttributeMap()/getAttributeManager().registerAttribute(...)` → `createAttributes()` 形态
+
+- 落点：
+  - `forge/1.16.5/code-patterns/03-entity-patterns.md:106,113-115`
+  - `forge/1.17.1/code-patterns/03-entity-patterns.md:131-133`
+  - `forge/1.19.4/code-patterns/03-entity-patterns.md:181（散文）`
+  - `forge/1.20.1/code-patterns/03-entity-patterns.md:132`
+  - `forge/1.20.4/code-patterns/03-entity-patterns.md:132`
+- 证据：构件实测：`registerAttribute` 零命中、`getAttributeMap`/`getAttributeManager` 零命中；真名 `getAttributes()`；1.16.5 走 `AttributeModifierMap.MutableAttribute` + `MonsterEntity.createMonsterAttributes()`，1.17.1+ 走 `AttributeSupplier.Builder` + `Mob.createMobAttributes()`
+- 处置：改文档 + **就地留出处标记**（改的是受管面 `forge/**`、`neoforge/**`；`.cursor/rules` 改动已按纪律刷 7 面镜像）。
+
+### 4.8 `getReachingSide` → `getReceptionSide`
+
+- 落点：
+  - `forge/1.16.5/knowledge/antipatterns/networking.md:81`
+  - `forge/1.17.1/knowledge/antipatterns/networking.md:81`
+  - `forge/1.19.4/knowledge/antipatterns/networking.md:81`
+  - `forge/1.20.1/knowledge/antipatterns/networking.md:81`
+- 证据：构件实测：`getReachingSide` 零命中、`getReceptionSide` 各档 4 处
+- 处置：改文档 + **就地留出处标记**（改的是受管面 `forge/**`、`neoforge/**`；`.cursor/rules` 改动已按纪律刷 7 面镜像）。
+
+
+## 5. 查无但仍需人审（分诊，未改文档）
+
+自建名/处理器名等**本来就不该有出处**的占绝大多数；下表按机器启发式分诊，**不是结论**。
+
+| 类别 | 行数 | 唯一名 | 说明 |
+| --- | --- | --- | --- |
+| 模板自建名（`Mod*`/`My*`/`IMy*`/`some*`…） | 130 | 17 | 读者自己的类/字段名，文档是模板 |
+| 自建方法名（`on*`/`register*`/`modify*`…） | 166 | 36 | 事件处理器/回调名，由读者命名 |
+| **反例/披露提及**（`❌`/`不是`/`旧名`…） | 14 | 4 | 文档把错名当反面例子写（如 1.13.2「字段是 MISC 不是 TAB_MISC」）⇒ 文档正确 |
+| 版本迁移文档（`version-changes/`） | 9 | 4 | 讲的是**别的版本**的 API，却按宿主档构件核 ⇒ 需拿被述版本的构件再核 |
+| 跨加载器对照文档里的**他加载器**名 | 54 | 16 | 如 fabric 档 `porting/*` 里写 Forge 的 `ForgeRegistries`/`SimpleChannel` |
+| Gradle 构建脚本 API | 24 | 4 | 非 MC API，构件自然查无 |
+| 第三方库 API（本机无该库构件） | 248 | 48 | Cloth/REI/JEI/GeckoLib 等未入库 ⇒ **未核实** |
+| 已修（见 §4，此处为修复前扫描残留） | 40 | 17 | LEGACY_CAVE / RenderGameOverlayEvent / withEffects / withFogColor / withSkyColor / withGenerationSettings / withMobSpawnSettings / AMBIENT_BASALT_DELTAS_LAZY / AmbientManager / getReachingSide / getAttributeMap / getAttributeManager / INNER_ARMOR / OUTER_ARMOR / BLOW / AmbientSoundEvents / setShouldWatch |
+| **其余待审** | 161 | 39 | 见下表 |
+
+### 5.1 待审清单（按出现次数降序）
+
+| 次数 | 平台\|名 | 首次出现位置 |
+| --- | --- | --- |
+| 18 | `forge|scheduleProcessing` | `forge/1.13.2/.cursor/rules/09-anti-patterns.mdc:156` |
+| 17 | `forge|OTHER_ITEM` | `forge/1.14.4/.cursor/skills/mc-datagen/SKILL.md:83` |
+| 14 | `forge|someData` | `forge/1.14.4/.cursor/rules/09-anti-patterns.mdc:308` |
+| 9 | `forge|SPECIAL_BLOCK` | `forge/1.14.4/.cursor/rules/07-datagen.mdc:239` |
+| 9 | `forge|SPECIAL_DROP` | `forge/1.14.4/.cursor/rules/07-datagen.mdc:242` |
+| 8 | `forge|attachToPlayer` | `forge/1.14.4/.cursor/skills/mc-capability/SKILL.md:52` |
+| 8 | `fabric|blockInventory` | `fabric/1.17.1/.cursor/rules/10-gui.mdc:91` |
+| 7 | `forge|slotStack` | `forge/1.14.4/.cursor/skills/mc-gui/SKILL.md:76` |
+| 7 | `forge|clientOnlyMethod` | `forge/1.14.4/.cursor/rules/08-client-server.mdc:269` |
+| 7 | `forge|serverInit` | `forge/1.15.2/.cursor/rules/10-gui.mdc:26` |
+| 5 | `forge|DATA_ID` | `forge/1.17.1/.cursor/skills/mc-entity/SKILL.md:62` |
+| 5 | `forge|LAYER_LOCATION` | `forge/1.17.1/.cursor/skills/mc-entity/SKILL.md:93` |
+| 4 | `forge|attackDamageIn` | `forge/1.14.4/.cursor/rules/03-item.mdc:87` |
+| 4 | `forge|AIR_BLOCK` | `forge/1.19.4/.cursor/rules/07-datagen.mdc:257` |
+| 3 | `forge|attackSpeedIn` | `forge/1.14.4/code-patterns/02-item-patterns.md:147` |
+| 3 | `forge|REQ_ID` | `forge/1.17.1/.cursor/rules/06-networking.mdc:278` |
+| 3 | `forge|blockLookupProvider` | `forge/1.19.4/.cursor/skills/mc-datagen/SKILL.md:204` |
+| 3 | `forge|NetworkHandler` | `forge/1.20.4/.cursor/rules/05-events.mdc:188` |
+| 2 | `forge|clientMethod` | `forge/1.13.2/.cursor/rules/08-client-server.mdc:146` |
+| 2 | `forge|DataGen` | `forge/1.14.4/.cursor/skills/mc-recipe/SKILL.md:15` |
+| 2 | `forge|PROCESSED_DIAMOND` | `forge/1.14.4/.cursor/skills/mc-recipe/SKILL.md:133` |
+| 2 | `forge|transferHandler` | `forge/1.15.2/.cursor/rules/10-gui.mdc:72` |
+| 2 | `forge|WALK` | `forge/1.20.1/.cursor/skills/mc-entity/SKILL.md:162` |
+| 2 | `fabric|Mojmap` | `fabric/1.21.11/.cursor/rules/02-block.mdc:28` |
+| 1 | `forge|damageReduction` | `forge/1.13.2/.cursor/skills/mc-item/SKILL.md:103` |
+| 1 | `forge|interactionObject` | `forge/1.13.2/.cursor/rules/10-gui.mdc:34` |
+| 1 | `forge|dataSlots` | `forge/1.14.4/.cursor/skills/mc-gui/SKILL.md:46` |
+| 1 | `forge|worldClient` | `forge/1.14.4/.cursor/skills/mc-sound/SKILL.md:113` |
+| 1 | `forge|attachToTile` | `forge/1.14.4/.cursor/skills/mc-capability/SKILL.md:69` |
+| 1 | `forge|dedicatedInit` | `forge/1.14.4/.cursor/rules/10-gui.mdc:25` |
+| 1 | `forge|mobSpawn` | `forge/1.16.5/code-patterns/04-world-patterns.md:27` |
+| 1 | `forge|serverMethod` | `forge/1.17.1/.cursor/skills/mc-events/SKILL.md:100` |
+| 1 | `forge|MACHINE_BLOCK` | `forge/1.19.4/code-patterns/01-block-patterns.md:105` |
+| 1 | `neoforge|NetworkHandler` | `neoforge/knowledge/antipatterns/events.md:89` |
+| 1 | `neoforge|someData` | `neoforge/knowledge/antipatterns/events.md:125` |
+| 1 | `neoforge|scheduleProcessing` | `neoforge/knowledge/antipatterns/events.md:60` |
+| 1 | `fabric|README_AI` | `fabric/1.20.4/.cursor/rules/00-project-setup.mdc:71` |
+| 1 | `fabric|loveTimer` | `fabric/1.21.1/code-patterns/03-entity-patterns.md:97` |
+| 1 | `fabric|DataGen` | `fabric/1.21.11/.cursor/rules/01-registry.mdc:63` |
+
+## 6. 复现
+
+| 脚本 | 用途 |
+| --- | --- |
+| `F:\MOD_TEST\nonfabric-skill-names.mjs` | 候选发现器（扫面/腿/桶），输出 `nonfabric-scan/` |
+| `F:\MOD_TEST\artifact-map2.mjs` | 生成真构件集（主件 + 依赖件）→ `artifact-map2.json` |
+| `F:\MOD_TEST\verify-names3.mjs` | 逐名过构件（常量池匹配 + 库池复试）→ `verify3.json/.tsv` |
+| `F:\MOD_TEST\apply-fixes.mjs` / `apply-fixes2.mjs` | 本轮修文档的可审脚本（dry-run 默认，`APPLY=1` 才写盘） |
+| `F:\MOD_TEST\verify-all.mjs` | 全局核验（按 jar 聚合所需名字 ⇒ 每件只读一遍）；输入 `merged.tsv` ∪ `merged-cross.tsv` |
+| `F:\MOD_TEST\verify-extra.mjs` | 「无构件档」补核；支持**源码 jar 按词切**；输入同前 → `verify-extra.json` |
+| `F:\MOD_TEST\scan-jars.mjs` | 横扫 12 个根的 jar，找「无构件档」的可用件 |
+| `F:\MOD_TEST\verify-mc.mjs` | **MC 侧**核验：解析 classfile 的 `fields[]` / `methods[]` 声明表（比常量池串匹配强）→ `verify-mc.json` |
+| `F:\MOD_TEST\probe-mc.mjs` | 定向探针：给定名字问「哪个类声明了它」（解析器先验后信用） |
+| `F:\MOD_TEST\resid.mjs` | 残余 ABSENT 分诊（读 `verify-extra.json`） |
+| `F:\MC_GAME\_oracle-jars\mc\minecraft-{1.14.4-yarn-build.18,1.16.5-yarn-build.10}.jar` | fabric 两档的 **Yarn 具名** MC 件（§8.10 用） |
+| `F:\MOD_TEST\nonfabric-skill-names.mjs` | **已改**：`srcDirs()` 增 `.cursor/agent/**` 与档根 `CLAUDE.md`；新增 `libs` 伪档（`knowledge/libs/**`，腿 = 全平台并集）——见 §8.12(2) |
+| `F:\MOD_TEST\extract.mjs` | 从 `merged*.tsv` 抽某个平台的行（带上下文） |
+| `F:\MOD_TEST\cover.mjs` / `split.mjs` / `dump-pending.mjs` / `surfaces.mjs` | 覆盖账 / 分桶 / 待审导出 / 未扫面计数（§8.11） |
+| `F:\MC_GAME\_oracle-jars\fabric-api\` | 5 个 fabric-api jar（1.21.3 / .4 / .8 / .10 / .11）+ `quilt-loader-0.31.0-beta.4.jar`（§8.12 用） |
+
+不变量（本轮实测）：① 量具行凡来自整行注释者 = **0**；② 各包 JSON 求和 = 总表（扫描面扩到 `code-patterns/knowledge/AGENTS/scaffold` 后 nowhere = 3073）；③ 修复后非镜像面内旧名零残留（仅剩披露注释与「该版本确实存在」的用法）。
+
+## 7. 后续
+
+- 量具的腿可补：**字段名腿**（loader 摘要无字段）、**库件腿**（Cloth/REI/JEI 未入库）。
+- 未覆盖档：forge ≤1.12.2、quilt 全族、liteloader、modloader、bedrock、fabric 1.14.4/1.16.5 —— 需要构件才能核。
+- §5.1 待审清单里若出现**确属本档 API 却无此名**的，按 §4 的方式改文档 + 留标记。
+
+---
+
+## 8. 第二批（2026-10-13 · 扫描面修正后）
+
+### 8.1 量具的 yaml 盲区（本轮发现并修复）
+
+上一批（§1–§7）把扫描面扩到了 `code-patterns/**`，但量具的 `extractCodeFences` 有一条 `if (NONJVM.test(lang)) continue;`，把 ```yaml 围栏**整块跳过**。本仓 `code-patterns/**` 的约定恰恰是：```yaml 围栏 = 模式元数据头 + 单独一行 `---` + **代码**。⇒ 凡把代码写进 yaml 围栏的档（实测 86 个 `.md` 带 yaml 围栏；`forge/1.13.2/code-patterns/**` 5 个文件全部如此）的代码**从未进过面**。
+
+修法：`extractCodeFences` 对 `ya?ml` 围栏取 `---` 之后的片段当代码扫（`F:\MOD_TEST\nonfabric-skill-names.mjs`，NONJVM 分支）。重跑后 nowhere 由 **3073 → 3232**（+159 行；yaml 围栏带来的新候选）。
+
+### 8.2 新增行的分诊（逐类）
+
+- **真缺陷（已修，见 §8.3）**：`forge/1.13.2/code-patterns/{01,04}`；`forge/1.18.2/code-patterns/03`；`fabric/{1.16.5,1.18.2,1.20.1}/code-patterns/01`。
+- **构件里其实存在（量具盲区，不改）**：`forge/1.13.2` 的 `EntityAINearestAttackableTarget` / `initEntityAI` / `targetTasks`（1.13.2 构件实测**都在**；Goal 改写是 1.14 才发生 —— 一度被我误判为缺陷）；fabric 档的 `writeNbt`/`readNbt`/`initGoals`/`mobTick`/`setDimensions`/`maxTrackingRange`/`getActiveHand`/`addStatusEffect`/`breakInstantly`/`copyOf`/`wasPressed`/`addDrawableChild` 等（Yarn 实名）；`EntityRendererRegistry`/`EntityAttributeModification`/`LootTableLoadingCallback`/`FabricRecipesProvider`/`TagRegistry`/`withEntry`（Fabric API，不在 Yarn 映射）；`GLFW`（LWJGL）。
+- **读者自建名/参数名/处理器名（本就不该有出处）**：`onOreGen`/`onBlocksRegistry`/`onEntitiesRegistry`/`onRender`/`onTick`/`hasJumpDisabledEffect`/`packetByteBuf`/`responseSender`/`nextDiscriminator` 等。
+
+### 8.3 第二批真缺陷（本轮已修，构件 javap 逐名取证）
+
+| 落点 | 原（构件查无） | 改为 | 证据 |
+| --- | --- | --- | --- |
+| `forge/1.18.2/code-patterns/03-entity-patterns.md:71` | `Level.ExplosionInteraction.BLOW` | `Explosion.BlockInteraction.BREAK` | 1.18.2 主件只有 `Explosion$BlockInteraction`；`Level$ExplosionInteraction` 自 **1.19.4** 起才出现在主件里 |
+| `forge/1.13.2/code-patterns/01-block-patterns.md`（TileEntity 模式） | `implements ITileEntityProvider` + `createNewTileEntity(IBlockReader)` | `IForgeBlock#hasTileEntity(IBlockState)` / `createTileEntity(IBlockState, IBlockReader)` | 1.13.2 主件**无** `ITileEntityProvider`；`IForgeBlock` 有这两个 default 方法 |
+| 同上 | `TileEntityTypeRegistry.MY_TILE_ENTITY.get()` | `TileEntityType.Builder.create(MyTileEntity::new).build(null)` + `RegistryEvent.Register<TileEntityType<?>>` | 主件无 `TileEntityTypeRegistry`、无 `DeferredRegister`；`TileEntityType$Builder.create(Supplier)` / `build(Type)` 实名 |
+| 同上 | `implements ITickable` + `void update()` | `void tick()` | `net.minecraft.util.ITickable` 在；其唯一方法名是 `tick()` |
+| 同上 | `writeToNBT` / `readFromNBT` + `setInteger` / `getInteger` | `write(NBTTagCompound)` / `read(NBTTagCompound)` + `setInt` / `getInt` | `TileEntity` 实名 `read`/`write`；`NBTTagCompound` 实名 `setInt`/`getInt`（无 `setInteger`） |
+| `forge/1.13.2/code-patterns/04-world-patterns.md`（Ore Generation 模式） | `MinecraftForge.ORE_GEN_BUS` + `WorldEvent.GenerateSpawn` | 改指点 `Biome#addFeature(GenerationStage.Decoration, CompositeFeature)` | 主件无 `ORE_GEN_BUS`；`WorldEvent` 子类只有 Load/Save/Unload/PotentialSpawns/CreateSpawnPosition；`Biome#addFeature` / `Biome.createCompositeFeature` 在 |
+| `forge/1.13.2/code-patterns/04-world-patterns.md`（Custom Biome 模式） | `new Biome.Builder()` + `withDefaultTemperature()` + `withTemperatureBiome()` + `surfaceBuilder(new SurfaceBuilder(...), new SurfaceConfig(...))` + `.build()` | `new Biome.BiomeBuilder()`；删去两个 `with*`；`surfaceBuilder(new CompositeSurfaceBuilder<>(new DefaultSurfaceBuilder(), new SurfaceBuilderConfig(...)))` | `Biome$BiomeBuilder` 实名（无 `Biome$Builder`）；构建器方法全表已核；主件无 `SurfaceBuilder`/`SurfaceConfig` 类 |
+| `fabric/{1.16.5,1.18.2,1.20.1}/code-patterns/01-block-patterns.md` | `BlockSoundGroups.GRASS` | `BlockSoundGroup.GRASS` | fabric 1.17.1 / 1.20.1 loom 合并件只有 `net/minecraft/sound/BlockSoundGroup`；常量 `GRASS` 实名 |
+
+> 本批修复处一律**就地留 `// 1.13.2 / 1.18.2 构件 javap：…` 出处标记**；改的都是 `code-patterns/**`（非镜像面，无需刷镜像）。
+
+### 8.4 尚未处理的缺口（诚实记账，未静默）
+
+1. **`crossPack` 降档面从未被逐行审过**：`merged-cross.tsv` 现有 944 TYPE + 1059 MEMBER 行。「某名在同平台**别的版本**存在」正是版本错配最可能藏身处 —— 1.18.2 的 `Level.ExplosionInteraction.BLOW` 就因为「1.19.4 有」被 B 腿降成 crossPack，从而**没进 nowhere 清单**。本批唯一靠人工复查补上；系统性审 crossPack 面本轮未做。
+2. **yaml 修正后新进面的行，构件核验只对「已判断可疑的」逐一做了 javap**（§8.2/§8.3），没有像上一批那样跑全量对照（`verify-names3.mjs`）。⇒ §8 未覆盖的新行里若还有真错，属**未核实**。
+3. **`forge/1.13.2` 的 Feature / Placement 配置类名未取证**（已就地在 Ore Generation 模式留 `// TODO(未核实)`）。
+
+### 8.5 复现（本批）
+
+| 脚本 | 变更 |
+| --- | --- |
+| `F:\MOD_TEST\nonfabric-skill-names.mjs` | **已改**：`extractCodeFences` 增 yaml 围栏取 `---` 后片段 |
+| `F:\MOD_TEST\sweep-check2.mjs` / `sweep-check3.mjs` | 全仓旧名残留扫描（按文件聚合） |
+| `F:\MOD_TEST\probe-expl.mjs` | 逐 forge 件列 `ExplosionInteraction` / `Surface*` 条目 |
+| `F:\MOD_TEST\scan-yaml.mjs` | 列各档带 yaml 围栏的文件 |
+
+### 8.6 crossPack 降档面系统审（本轮，对应 §8.4 缺口 1）
+
+- **方法**：把 `merged-cross.tsv`（2003 行）与 nowhere 合并成一份，交给 `F:\MOD_TEST\verify-all.mjs` 逐名过真构件（与 nowhere 同一批：**按 jar 聚合所需名字，每件只读一遍**，缓存记 `queried` 全集）。
+- **读数**：crossPack 2003 行 → `PRESENT-MAIN 981` / `PRESENT-DEPS 504` / `PRESENT-LIB 179` / **`ABSENT 339`**。其中 `ABSENT` 只有 **97 行落在可核档**（88 个文件），另 242 行落在无构件档（quilt / liteloader / modloader / bedrock / fabric 1.14.4·1.16.5 / forge ≤1.12.2）⇒ **未核实**。
+- **分诊那 97 行**：真缺陷 **16 处 / 14 个文件**（见 §8.7）；其余为读者自建名（`ModBlocks`/`ModBlockEntities`/`sendToAll`/`commonSetup`/`onCommonSetup`/`onClientTick`…）、参数名（`translationBuilder`/`entityYaw`/`fromPos`）、SRG/混入名（`field_70725_aQ`/`func_110143_aJ` —— 混入的 `@Shadow` 用 SRG 名是**对的**，读名件里查不到属正常）、1.12 负例块（`toBytes`/`fromBytes`/`MessageContext`/`getServerHandler`）、构建脚本/DK 名（`sourceSets`/`modApi`/`accessWidenerPath`/`archivesName`/`groupId`）、第三方库名（`LoggerFactory`/`SuppressWarnings`/`MAX_VALUE`）与 version-changes 文档（讲别的版本）。
+- **这条腿的价值**：`forge/1.18.2/code-patterns/03` 的 `Level.ExplosionInteraction` 正是被 B 腿（同平台并集）降成 crossPack 才没进 nowhere 清单的 —— 单审 nowhere **必漏**这一类。
+- **同批顺带**：nowhere 3222 行也重跑了一遍全量构件对照，四态 = `PRESENT-MAIN 1086` / `PRESENT-DEPS 309` / `PRESENT-LIB 560` / `ABSENT 1267`（其中可核 838 / 无构件 429）。
+
+### 8.7 第三批真缺陷（crossPack 审出，已修，构件 javap 逐名取证）
+
+| 落点 | 原（本档构件查无） | 改为 | 证据 |
+| --- | --- | --- | --- |
+| `forge/1.13.2/code-patterns/03-entity-patterns.md` | `EntityRendererManager` | `RenderManager` | 1.13.2 主件有 `client/renderer/entity/RenderManager.class`，无 `EntityRendererManager` |
+| `forge/1.14.4/code-patterns/01-block-patterns.md` | `NBTTagCompound` | `CompoundNBT` | 1.14.4 主件有 `nbt/CompoundNBT.class`，无 `NBTTagCompound` |
+| `forge/1.15.2/code-patterns/01-block-patterns.md`（read/write 各一） | `NBTTagCompound` | `CompoundNBT` | 1.15.2 主件同形（`CompoundNBT`） |
+| `forge/1.15.2/knowledge/antipatterns/entity.md` | `readFromNBT(NBTTagCompound)` | `read(CompoundNBT)` | 同上；`TileEntity` 实名 `read`/`write` |
+| `forge/1.14.4/knowledge/antipatterns/networking.md` | `NBTTagCompound` | `CompoundNBT` + 就地 ⚠️ 标「本块是 1.12 形态（`toBytes/fromBytes`）待改写」 | 同上 |
+| `forge/1.15.2/.cursor/skills/mc-gui/SKILL.md` | `IInteractionObject` | `INamedContainerProvider` | 1.14.4 主件有 `inventory/container/INamedContainerProvider.class`，无 `IInteractionObject` |
+| `forge/1.14.4/code-patterns/04-world-patterns.md` | `Blocks.*.defaultBlockState()` | `Blocks.*.getDefaultState()` | 1.14.4 `Block` 有 `getDefaultState()`，无 `defaultBlockState` |
+| `forge/1.20.1` / `forge/1.20.4` `.cursor/skills/mc-entity/SKILL.md` | `ModelRenderer` | `ModelPart` | 1.20.1 主件有 `client/model/geom/ModelPart.class`，无 `ModelRenderer` |
+| `forge/1.20.4/.cursor/skills/mc-gui/SKILL.md` | `NetworkHooks.openScreen(...)` | `serverPlayer.openMenu(p)` | `NetworkHooks` 在 **1.20.1 主件在、1.20.4 主件已无**；`ServerPlayer#openMenu(MenuProvider)` 在 |
+| `forge/1.16.5/.cursor/skills/mc-sound/SKILL.md` | `SoundEvents.BLOCK_STONE_{BREAK,STEP,PLACE,HIT,FALL}` | `SoundEvents.STONE_{BREAK,STEP,PLACE,HIT,FALL}` | 1.16.5 `SoundEvents` 只有 `STONE_*` |
+| `forge/1.19.4` / `1.20.1` / `1.20.4` `.cursor/skills/mc-fluid/SKILL.md` | `.noDrops()` | `.noLootTable()` | 1.19.4 `BlockBehaviour$Properties` 有 `noLootTable()`，无 `noDrops` |
+| `forge/1.18.2/.cursor/rules/{05-events,08-client-server}.mdc` | `RegisterKeyMappingsEvent` + `event.register(...)` | `ClientRegistry.registerKeyBinding(...)`（放进 `FMLClientSetupEvent`） | 1.18.2 主件**无** `RegisterKeyMappingsEvent`；`net.minecraftforge.client.ClientRegistry#registerKeyBinding(KeyMapping)` 在 |
+
+> 本批修复处一律**就地留 `// 1.x 构件 javap：…` 出处标记**；`.cursor/**` 改动已按纪律对 **forge 1.15.2 / 1.16.5 / 1.18.2 / 1.19.4 / 1.20.1 / 1.20.4** 六档重刷 7 面镜像（`scripts/sync-skills.ps1 -TargetDir <档>`），`assert-skill-mirrors` = `ok`（57 档 / 12418 目标 / 漂移 0 / 孤儿 0）。
+
+### 8.8 仍留「未核实」（⚠️ 其中 4 项已由 §8.9 处置；下表为当时状态）
+
+| 项 | 为什么没改 |
+| --- | --- |
+| `forge/1.13.2/.cursor/skills/{mc-item,mc-recipe,mc-particle}` 的 `knockbackResistance` / `getKnockbackResistance` / `IRecipeType` / `onUpdate` / `particleMaxAge` | 构件已证**本档查无**（1.13.2 无 `IRecipeType`、`Item` 无 `getKnockbackResistance`、`Particle` 只有 `tick()`），但**正确替换形**（1.13.2 的配方类型体系 / 粒子字段实名）本档尚未逐一取证 ⇒ 留待下一轮，不拿 1.16 名顶替 |
+| `forge/1.16.5/.cursor/skills/mc-gui/SKILL.md` 的 `BACKGROUND_TEXTURE` | 1.16.5 `Screen`（含 `-p`）无任何 `*Location` 常量 ⇒ 更像读者自建常量，但文档未声明它 ⇒ 归类存疑，未动 |
+| `forge/1.16.5`、`forge/1.17.1` 的 `knowledge/porting/*` 的 `builtInRegistryHolder` | porting 文档讲的是**目标版本**的 API，按宿主档构件核会假红（= 台账 §5「版本迁移文档」那类的近亲） |
+| `fabric/1.17.1/code-patterns/03` 的 `EntityAttributeModification`、`fabric/1.21.1/code-patterns/02` 的 `getKnockbackResistance` | 构件实测**连 Fabric API 依赖件里都没有** ⇒ 可疑，但正确形态未定 |
+| crossPack `ABSENT` 中落在无构件档的 242 行 | 本机无该档构件 ⇒ **未核实** |
+
+**修完后重跑**（`node F:\MOD_TEST\nonfabric-skill-names.mjs`）：nowhere = **3222**（TYPE 1238 + MEMBER 1984）；crossPack = **1984**（TYPE 935 + MEMBER 1049）——crossPack 比 §8.6 那次 **2003 少 19 行**（修掉的名字不再被 B 腿降档）。
+
+### 8.9 第三批续（用户点名）—— ①「无构件档」复核 ② §8.8 四项处置
+
+#### (1) 「本机无构件」这句是错的（更正 §2 下半张表）
+
+用 `F:\MOD_TEST\scan-jars.mjs` 横扫 12 个根（`D:\mc-skill-temp`、`F:\MC_GAME`、`F:\MOD_TEST`、`F:\finish_MCMODS`、`D:\Minecraft`、`C:\Users\zzrCN\.gradle\caches\{minecraft,quilt-loom,modules-2}` 等），共约 3.6 万个 jar。**原判「无构件」的档里，以下其实有可用件**：
+
+| 档 | 找到的件（本机路径） | 能核什么 / 不能核什么 |
+| --- | --- | --- |
+| forge 1.7.10 / 1.8.9 / 1.9.4 / 1.10.2 / 1.11.2 / 1.12.2 | `D:\mc-skill-temp\forge-<v>-universal.jar`（6 档）；1.12.2 另有 `…\caches\minecraft\…\forgeBin-1.12.2-14.23.5.2847.jar` 与 `loader-jars\1.12.2-forge.jar` | Forge 类名（SRG 可读类名）。**MC 侧类与 MCP 成员名仍不可核** |
+| fabric 1.14.4 / 1.16.5 | `D:\mc-skill-temp\loader-jars\{1.14.4,1.16.5}-fabric-api.jar` + `-fabric.jar`（**源码件，内容是 `.java`**） | Fabric API / loader 名。**MC 侧仍不可核** |
+| quilt 1.18.2 / 1.19.4 / 1.20.1 / 1.20.4 / 1.21.1 | `F:\MC_GAME\_oracle-jars\qsl\{qsl_base,registry,lifecycle_events}-<ver>.jar` | QSL API 名 |
+| liteloader 1.8.9 / 1.10.2 / 1.12.2 | `_oracle-jars\liteloader\liteloader-{1.8.9,1.10.2}.jar`、`…modules-2\…\liteloader-1.12.2-SNAPSHOT.jar` | LiteLoader API 名 |
+| modloader 1.2.5 / 1.5.2 / 1.6.x | `_oracle-jars\modloader\ex-{1.2.5,1.5.2,1.6.2}\`（反编译类转储）+ `ModLoader-*.zip` | ModLoader 类名。**1.6.4 只有最近的 1.6.2 转储可用** |
+| bedrock | `_oracle-jars\bedrock\{package,beta-pkg}\index.d.ts` + server tgz | Script API 名（**不是 jar**，走 `.d.ts` 类型声明） |
+
+**仍然没有**：fabric 1.14.4 / 1.16.5 的 **MC merged 件**、quilt 1.21.3 / 1.21.4 / 1.21.8 / 1.21.10 / 1.21.11 的 QSL 件、modloader 精确 1.6.4、E: 盘（本轮未挂载）。
+
+#### (2) 补核读数（`F:\MOD_TEST\verify-extra.mjs`；newly 支持「源码 jar 按词切」）
+
+| 档 | 待核行 | 新件里**存在** | 仍查无 | 其中唯一名 |
+| --- | --- | --- | --- | --- |
+| fabric 1.14.4 | 276 | **113** | 163 | 110 |
+| fabric 1.16.5 | 328 | **145** | 183 | 117 |
+| forge 1.12.2 | 167 | **122** | 45 | 40 |
+| liteloader 1.12.2 | 4 | **4** | 0 | 0 |
+| **合计** | **775** | **384（50%）** | **391** | 267 |
+
+⇒ §8.8 末行「无构件档 242 行」的档里，**至少 384 行现在核得了**（例如 fabric 1.14.4/1.16.5 的 Fabric API 名、forge 1.12.2 的 Forge 类名）。余 391 行要**该档 MC 侧件**才核得了，本机确无。逐名清单：`F:\MOD_TEST\verify-extra.json`。
+
+**一个反直觉读数（写在这里免得下轮重复找）**：有 QSL 件的 quilt 5 档（1.18.2 / 1.19.4 / 1.20.1 / 1.20.4 / 1.21.1）在当前扫描里 **0 条 nowhere/cross 行**（全被语料腿与映射腿吸收）；而有行的 quilt 5 档（1.21.3 / 1.21.4 / 1.21.8 / 1.21.10 / 1.21.11）**恰好没有 QSL 件**。两个集合互补 ⇒ **QSL 新件不改变任何现有行的判定**。它的价值是纠正「本机无构件」这个说法本身，不是解锁新修复。
+
+#### (3) §8.8 四项处置（逐项给取证结论）
+
+| 原项 | 取证结论 | 处置 |
+| --- | --- | --- |
+| `forge/1.13.2/.cursor/skills/mc-item` 的 `getKnockbackResistance` | 1.13.2 `IArmorMaterial` 只有 `getDurability` / `getDamageReductionAmount` / `getEnchantability` / `getSoundEvent` / **`getRepairMaterial`** / `getName` / `getToughness` ⇒ 确无 `getKnockbackResistance`，且文档**漏了必需的 `getRepairMaterial`** | **已改**：删该字段 / 构造参数 / override；补 `getRepairMaterial()`（`Ingredient.fromItems` 形态已核） |
+| `forge/1.13.2/.cursor/skills/mc-recipe` 的 `IRecipeType` / `getType()` | 1.13.2 `IRecipe` **没有 `getType()`**（`IRecipeType` 是 1.14 起的体系） | **已改**：删该 override 与 `ModRecipes.MY_TYPE`，就地留说明 |
+| `forge/1.13.2/.cursor/skills/mc-particle` 的 `onUpdate()` / `particleMaxAge` | 1.13.2 `Particle` 字段是 `age` / `maxAge`（有 `setMaxAge` / `getMaxAge`），方法是 **`tick()`**（`onUpdate` 是 1.12 名） | **已改**：`setMaxAge(40)` + `tick()` |
+| `forge/1.16.5/.cursor/skills/mc-gui` 的 `BACKGROUND_TEXTURE` | 1.16.5 `AbstractGui` 有 **`public static final ResourceLocation BACKGROUND_LOCATION`** ⇒ 原来是**常量写错名**，不是读者自建常量 | **已改**：`AbstractGui.BACKGROUND_LOCATION` |
+| `fabric/1.17.1/code-patterns/03` 的 `EntityAttributeModification` | 本档全部 FAPI 依赖件查无；本档正确入口是 `FabricDefaultAttributeRegistry`（已在 object-builder 件中核到该类） | **已改**：注释掉伪 API，指向 `FabricDefaultAttributeRegistry#register`，签名留 `TODO(未核实)` |
+| `fabric/1.21.1/code-patterns/02` 的 `getKnockbackResistance` | 1.21.1 `ArmorMaterial` 是 **record**（不是接口，不能 `implements`）；实名 `toughness()` / `knockbackResistance()` / `enchantability()` / `equipSound()` / `repairIngredient()`，**也没有 `getName` / `getDurability`** ⇒ 整块是旧版形态 | **加 ⚠️ 就地说明**（record 形态 + 逐名对照）；整块按 record 改写留 `TODO(未核实)`（`RegistryEntry<SoundEvent>` 与 `ArmorMaterial.Layer` 的构造形态未取证，不拿猜的写） |
+| porting 文档的 `builtInRegistryHolder` | 讲的是**目标版本** API，按宿主档构件核必假红 | **不改**（登记为假红类，与 §5「版本迁移文档」同类） |
+
+> 已改的三件 `.cursor/skills`（`forge/1.13.2` 两件、`forge/1.16.5` 一件）按纪律重刷 7 面镜像。
+
+#### (4) 残余 391 行的分诊（结论：**未再发现真缺陷**）
+
+`verify-extra.json` 的 267 个唯一查无名，逐名归入四类，**没有一条需要改文档**：
+
+| 类 | 例 | 为什么不算缺陷 |
+| --- | --- | --- |
+| **库类**（本机无该库件） | `ConfigSerializable`/`ConfigCategory`/`ClothConfigBuilder`/`BoolOption`（Cloth Config）、`REIPluginClient`/`AutoStorageAware`（REI）、`JEIPlugin`/`IModPlugin`/`IModRegistry`（JEI） | 库不在本机 ⇒ 核不了，**登记为盲区**（与 §2「量具盲区主因③」同源） |
+| **读者自定义标识符** | `myItem`/`myBlock`/`tileInv`/`playerInv`/`blockInventory`/`modApi`/`packetId`/`syncData`/`sendToolBreakStatus`/`registerMessages`/`registerServerReceivers`/`initClientOnly` | 是示例里作者自己起的名字，**本就不该在构件里** |
+| **Vanilla MC 名**（该档无 MC 侧件） | `getPlacementState`/`getDefaultState`/`setBlockState`/`getActiveHand`/`isSneaking`/`getStill`/`getFlowing`/`ofItems`/`ofSize`/`saturationModifier`/`alwaysEdible`/`renderBackground` | fabric 档只拿得到 **Fabric API/loader 源码件**，MC 侧确无 ⇒ **未核实**，不是缺陷 |
+| **就地否定/对照例**（量具的 `negBlock` 只认块级否定，行内否定抓不到） | `forge/1.12.2` 的 `IItemTier` 全部出现在「**不要** implements `IItemTier`（1.14+）」；`fabric/1.16.5` 的 `MixinLauncher` 出现在「**不要**手写 MixinBootstrap / MixinLauncher」；`fabric/1.14.4` 的 `ScreenEvents` 出现在「1.14.4 索引里**没有** `ScreenEvents.AFTER_INIT`」；`EntityClassification` 出现在 `knowledge/porting/forge-to-fabric.md` 的 **Forge 侧**对照行 | 文档写的正是「这个档没有它」⇒ 构件里查无**恰好印证文档正确** |
+
+> 这三个高信号名（`IItemTier` / `MixinLauncher` / `ScreenEvents`）本轮逐站点读过上下文才判为非缺陷，**不是**按名字猜的。同一类在 fabric 1.14.4 的 `RegistryObject` / `SubscribeEvent` / `modEventBus` 上重复出现（全部是「Fabric **没有** modEventBus」「**不要**用 Forge `RegistryObject`」式对照）。
+
+**量具已知局限（记在这里，免得下轮当新发现）**：`negBlock` 腿只判**代码块级**否定；行内否定（中文散文里说「不要/没有 X」）一律落回 nowhere。⇒ nowhere 表里凡出现**同名跨档真**的名字，先按本条复查上下文再判。
+
+### 8.10 第三批续（用户点名 ②）—— QSL 上游边界 + 用 MC 侧构件核残余 Vanilla 名
+
+#### (1) QSL 上游止于 1.21（用户判断被证实）
+
+`query_upstream_releases source=modrinth slug=qsl`：可查 **143** 条，**最新 = `11.0.0-alpha.3+0.102.0-1.21`**（MC 1.21，`versionType=beta`）；显式按版本过滤 —— `minecraftVersion=1.21.1` ⇒ `ok:true` + **`available:false`** + `total:0`；`1.21.4` 同形（两发都 `tier:"absent"`）。⇒ **QSL 上游根本没有 1.21.1+ 的构建**（release 级最后一版是 1.20.1 的 `7.7.0+0.92.2`）。
+
+所以有行的那 5 个 quilt 档（1.21.3 / 1.21.4 / 1.21.8 / 1.21.10 / 1.21.11）**不可能**有 QSL 参照 —— 这是**上游事实**，不是「本机没下」。§8.9(2) 那个「两集合互补」的读数因此**不需要也不应该**靠补件去闭合。
+
+#### (2) MC 侧构件已找到，并按用户指定落进 `F:\MC_GAME`
+
+| 档 | 件（新落点） | 取自 | 大小 |
+| --- | --- | --- | --- |
+| fabric 1.14.4 | `F:\MC_GAME\_oracle-jars\mc\minecraft-1.14.4-yarn-build.18.jar` | `~\.gradle\caches\fabric-loom\1.14.4-mapped-net.fabricmc.yarn-1.14.4+build.18-v2\` | 26.1 MB |
+| fabric 1.16.5 | `F:\MC_GAME\_oracle-jars\mc\minecraft-1.16.5-yarn-build.10.jar` | `~\.gradle\caches\fabric-loom\1.16.5-mapped-net.fabricmc.yarn-1.16.5+build.10-v2\` | 19.2 MB |
+| forge 1.12.2 | `F:\MC_GAME\_oracle-jars\mc\minecraft_merged-1.12.2-obf.jar` | `~\.gradle\caches\minecraft\net\minecraft\minecraft_merged\1.12.2\` | 9.6 MB（**混淆件**） |
+
+前两件是 **Yarn 具名** jar ⇒ 能核 **fabric 档的 Vanilla 名**。第三件是混淆件，**只作存档**：1.12.2 的 MCP 可读成员名本机仍无（成员名核不了，类名级已由 §8.9(2) 覆盖）。
+
+#### (3) 核验读数（`verify-mc.mjs`：读 classfile 的**声明**表）
+
+判据比前一版强：不是常量池字符串匹配，而是**逐类解析 `fields[]` / `methods[]` 的 `name_index`**，得到「本档 MC 件声明过的名字」全集。
+
+| 档 | 残余名 | 本档 MC 件**声明**命中 | 仍未命中 |
+| --- | --- | --- | --- |
+| fabric 1.14.4 | 110 | **46** | 64 |
+| fabric 1.16.5 | 117 | **52** | 65 |
+| 合计 | 227 | **98** | 129 |
+
+⇒ **98 个名字从「未核实」升为「构件已证存在」**。例：1.14.4 `getDefaultState` 声明在 `Block` / `StateManager` / `Fluid` 三类；1.16.5 `textRenderer` 声明在 `MinecraftClient` 等 6 类、`drawWithShadow` 声明在 `TextRenderer`。
+
+**解析器先验后信**（对已知名定向取证）：`getDefaultState` → 3 类命中；`textRenderer` → 6 类命中；`LiteralText` → 类在 1.14.4 件中。
+
+#### (4) 仍未命中的 129 个：逐类分诊，**未再发现真缺陷**
+
+| 类 | 例 | 判据 |
+| --- | --- | --- |
+| **库类**（本机无该库件） | Cloth：`ConfigSerializable` / `ConfigCategory` / `BoolOption` / `setGlobalErrorSupplier` / `setSavingRunnable`；REI：`REIPluginClient` / `RegisterClientPluginsEvent` / `AutoStorageAware`；Gradle DSL：`mavenCentral` / `processResources` / `filesMatching` / `Excluded` / `accessWidenerPath` / `minecraftVersion` / `modId` | 既不在 MC 件、也不在 FAPI 件 ⇒ **未核实** |
+| **读者自定义** | `myItem` / `myBlock` / `ModBlocks` / `ModBlockEntities` / `ModScreenHandlers` / `PACKET_ID` / `CUSTOM_REGISTRY` / `blockInventory` / `LogUtils` / `modApi` / `yarnMappings`；1.12.2 的 `VARIANT_A/B/C`（示例枚举值）、`BLOCK_SIMPLE` / `BLOCK_COMPLEX`（示例 `RegistryHandler` 字段） | 文档作者自己起的名字 ⇒ 本就不该在构件里 |
+| **Forge 名（出现在 fabric 档）** | `IEventBus` / `FMLJavaModLoadingContext` / `DeferredRegister` / `ForgeRegistries` / `RegistryObject` / `SubscribeEvent` / `PlayerEvent` / `getModEventBus` / `PlayerLoggedInEvent` | 全部是**对照 / 否定**行（「Fabric **没有** modEventBus」「**不要**用 Forge `RegistryObject`」） |
+| **行内否定例** | 1.12.2 `IItemTier`、1.16.5 `MixinLauncher` / `addPrimaryMixin`、1.14.4 `ScreenEvents` | 文档写的正是「这档没有它」⇒ 构件查无**印证**文档正确 |
+| **mixin 处理器名** | `onTick(CallbackInfo ci)`（两档多处） | 作者在自己 mixin 类里起的注入方法名 |
+| **迁移表 / 反模式里的旧名** | 1.14.4 `TextComponentString`（Yarn 实名 `LiteralText`）、`damageItem`（Yarn 实名 `damage`） | 只出现在 `knowledge/version-changes/1.14.x.md` 的「旧 → 新」对照表与 `knowledge/antipatterns/yarn-mappings.md`（教「不要这么写」）⇒ **是对照面的左值，用法正确** |
+| **其它库常量** | `Keyboard.KEY_G`（LWJGL2） | 不在 Forge / MC 件里 |
+
+> 上面每个可疑名都**逐站点读过上下文**才判：`TextComponentString` / `damageItem` 若不是落在迁移表左栏，本来会是**真缺陷**（fabric 档写 mojmap 名）。读后确认是「旧名 → 新名」对照表与反模式示例 ⇒ 不改。
+
+#### (5) 仍未核（诚实记账）
+
+- **forge 1.12.2 的成员名**：本机只有 SRG 具名件（`forgeBin` / universal）与混淆 merged 件 ⇒ MCP 可读成员名核不了。类名级已覆盖（present 122 / 查无 45）。
+- §8.10(4) 的**库类**与 `Keyboard.KEY_G` 需相应库 / 依赖件 ⇒ 未核实。
+- 本轮到 `F:\MC_GAME\_oracle-jars\mc\` 为止；**未改仓内任何 `.cursor/**`** ⇒ 镜像面不受影响。
+
+### 8.11 覆盖面自审（用户问「全部核对了吗？有没有漏的」）
+
+**答：没有全核过。** 本节把「已核 / 未核」逐格算清，并补掉能补的那一档。
+
+#### (1) 行总账（当前快照：`node nonfabric-skill-names.mjs && node verify-all.mjs` 重跑）
+
+| 项 | 行数 | 状态 |
+| --- | --- | --- |
+| 候选行合计（nowhere ∪ crossPack） | 5199 | — |
+| 构件里在（PRESENT-MAIN 2070 + DEPS 813 + LIB 579 + LIB-notV 156） | **3618** | 已证存在 |
+| **ABSENT 且该档有件（必须分诊）** | **909** | 见 (2) |
+| ABSENT 且该档无件 | **672** | 见 (3) |
+
+909 = nowhere 835 + crossPack 74；672 = nowhere 429 + crossPack 243。
+
+#### (2) 909 的分诊：§5 分类 + §5.1「待审」队列**本轮全部判毕**
+
+§5 已把 nowhere 那批按启发式分过类（自建名 / 反例提及 / 版本迁移文档 / 跨加载器对照 / Gradle / 第三方库 / 其余待审）。其中**「其余待审」38 个（档|名）（124 条去重项 / 160 行）从未给结论** —— 本轮逐名**读站点原文**判毕，**34 个唯一名全部为非缺陷**：
+
+| 类 | 名（34） | 判据（读站点，不读名字） |
+| --- | --- | --- |
+| **读者自建标识符**（28） | `scheduleProcessing` `someData` `OTHER_ITEM` `SPECIAL_BLOCK` `SPECIAL_DROP` `blockInventory` `slotStack` `clientOnlyMethod` `serverInit` `DATA_ID` `REQ_ID` `AIR_BLOCK` `clientMethod` `PROCESSED_DIAMOND` `LAYER_LOCATION` `WALK` `MACHINE_BLOCK` `damageReduction` `dataSlots` `worldClient` `loveTimer` `attachToPlayer` `attachToTile` `dedicatedInit` `serverMethod` `NetworkHandler` `interactionObject` `blockLookupProvider` | 全是文档作者自己起的字段 / 方法 / 局部名（`ModItems.OTHER_ITEM.get()`、`MyEntityModel.LAYER_LOCATION`、`() -> clientOnlyMethod`、`this.entityData.define(DATA_ID, 0)`、`cap.setData(someData)`）⇒ **本就不该在构件里** |
+| **形参名**（2） | `attackDamageIn` `attackSpeedIn` | `SwordItem(IItemTier, int attackDamageIn, float attackSpeedIn, Properties)` —— 形参名**不影响编译**，且是 MCP 形（本档通道为 official）⇒ 文档口径小瑕，非错误 |
+| **散文 / 文件名**（4） | `DataGen`（散文「DataGen（可选）」）`Mojmap`（「Mojmap 轴才是…」）`README_AI`（文件名，句意是「本档 scaffold **无** `README_AI.md`」）`transferHandler`（散文「slot management and transferHandler」） | 不是 API 名 |
+
+> 注：§5.1 表里的 `forge|mobSpawn` 在本轮快照里已消失（§8.3 那批按真名改写时一并修掉）。
+
+#### (3) 672 条「无件」：648 已被本轮补核覆盖，24 条上游不可得
+
+fabric 1.14.4 / 1.16.5 / forge 1.12.2 / liteloader 1.12.2 的行（共 648）已由 `verify-extra.mjs` + `verify-mc.mjs` 处理（读数见 §8.9(2) / §8.10(3)）；余 **24** 条 = quilt 1.21.3 / 1.21.4 / 1.21.8 / 1.21.10 各 6 条 —— 上游**没有** QSL（§8.10(1)），**不可核，不是漏查**。
+
+#### (4) **真正还漏着的，是「扫描面」本身**
+
+量具扫面 = `.cursor/{rules,skills}` + 本档 `code-patterns/` + `knowledge/` + `AGENTS.md` + `scaffold/**`。以下面**从未进过量具**（实测文件数，2026-10-13）：
+
+| 未扫面 | 件数 | 说明 |
+| --- | --- | --- |
+| `.cursor/agent/**` | 57 | 与 `AGENTS.md` 常同文（例：`fabric/1.16.5/.cursor/agent/default.md:108` 与 `fabric/1.16.5/AGENTS.md:108` 同句）⇒ 目前靠「与已扫文件同文」间接覆盖，**无机器保证** |
+| 档根 `CLAUDE.md` | 21 | 与 `AGENTS.md` 并列的宿主入口，独立正文 |
+| 根 `*.md` | 19 | `README*` / `CONTRIBUTING*` / `CORPUS_PROVENANCE` / `REPORT-FORMAT` / `WRITING-FOR-AGENTS` / `DELIVERY_LOG` … |
+| `knowledge/libs/**` | 37 | 库模组 Skill 源稿（Cloth / GeckoLib / Trinkets…）—— 本身就是教 API 的 |
+| `community_knowledge/**` | 121 | 社区短文（发布 / 崩溃 / 软依赖） |
+| `mcp-server/**`（md + ts） | 193 | 工作流模板体与工具实现 |
+| *（对照）*扫面内的 md/mdc/java | ≈2463 | — |
+
+#### (5) 仍然核不了的（要用户给件或拍板）
+
+- **第三方库 API：248 行 / 48 唯一名**（Cloth / REI / JEI / GeckoLib；§5 登记口径）⇒ 本机无库件 ⇒ **未核实**
+- **forge 1.12.2 的 MCP 可读成员名**（本机只有 SRG 件 + 混淆 merged 件）
+- 上表六个**未扫面**里的名字：要核先得扩量具扫面并重跑（属范围决定）
+
+### 8.12 用户点名两项：quilt 1.21.x 的 Fabric API 面 + 扫描面扩三处
+
+#### (1) quilt 1.21.3–1.21.11 走「Vanilla + 同版 Fabric API」—— 用户判断成立，且**本档自述早就这么写**
+
+`quilt/<v>/.cursor/agent/default.md` 横幅与 `:20` 逐字写着：**「注册与事件一律用 Vanilla `Registry.register` 或同版 Fabric API；本目录出现的 QSL 相关表述仅为考据/stub（无构件可按）——禁止生成 QSL 代码」**（1.21.3 / 1.21.4 / 1.21.8 / 1.21.10 / 1.21.11 五档同文）。
+
+⇒ §8.11(3) 那 24 行「quilt 无件 ⇒ 未核实」**不再是缺口**：这五档本就不需要 QSL，它们指向的 **Vanilla + 同版 Fabric API** 在本机都有件 ——
+`fabric-api-{0.110.0+1.21.3, 0.119.4+1.21.4, 0.136.1+1.21.8, 0.138.4+1.21.10, 0.141.6+1.21.11}.jar` 与 `quilt-loader-0.31.0-beta.4.jar`（均从 `~\.gradle\caches\modules-2` 取出，已复制到 **`F:\MC_GAME\_oracle-jars\fabric-api\`**）。
+
+**核验**：这五档当前扫出的 53 行里，真正的 API 名只有三个（其余 `AGENTS` / `Vanilla` / `Fabric` / `Quilt` / `QFAPI` / `Deprecated` 是散文词）。用 `quilt-loader-0.31.0-beta.4.jar` 逐名核：
+
+| 名 | 构件实况 |
+| --- | --- |
+| `ModInitializer` | `net/fabricmc/api/ModInitializer`（quilt-loader 自带的 Fabric 兼容接口，类在） |
+| `onInitialize` | 同上接口的方法 |
+| `ModContainer` | `org/quiltmc/loader/api/ModContainer`、`net/fabricmc/loader/api/ModContainer` 等 3 处 |
+
+⇒ 文档所写与 quilt-loader 0.31.0-beta.4 实况一致，**零缺陷**。
+
+> **口径提醒**：五档 `agent/default.md` 里那句「旧横幅的 `11.0.0-alpha.3+0.102.0-1.21` 在 **maven** 上 0 命中（虚构，勿再写）」是 **maven 通道**口径。**Modrinth 通道确有该版本串，总数正好 143**（本轮 `query_upstream_releases source=modrinth slug=qsl` 实测：`total:143`、`latest:11.0.0-alpha.3+0.102.0-1.21`）。两通道结论不同，**别把「Modrinth 全部 143 个发布」当虚构——那个数字是对的**。
+
+#### (2) 扫描面按用户指定扩三处
+
+| 新增面 | 实现（gauge 改动见 §6 复现表） |
+| --- | --- |
+| `.cursor/agent/**`（各档 57 件） | 加进 `srcDirs()`（原先只扫 `.cursor/{skills,rules}`） |
+| 档根 `CLAUDE.md`（21 件） | 与 `AGENTS.md` 同列扫描 |
+| `knowledge/libs/**`（根级 37 件） | 新增 **`libs` 伪档**（`platform:"libs"`, `version:"<libs>"`）；腿取**全平台并集**（库教材里的 MC 侧名字应能在某档语料/映射/摘要出现），库自身 API 仍落 nowhere —— 正是要看的信号 |
+
+**读数**（扩面后全量重跑）：
+
+| 项 | 扩面前 | 扩面后 |
+| --- | --- | --- |
+| nowhere 行 | 3222 | **3238**（+16） |
+| crossPack 行 | 1984 | 1985（quilt 等档新出 48 行） |
+| 其中 `libs` 伪档 | — | **16 行**（TYPE 8 + MEMBER 8） |
+
+⇒ `.cursor/agent/**` 与 `CLAUDE.md` **没有产生新的 nowhere**（内容与 `AGENTS.md` / 规则同源，被本档腿吸收）；新增的 16 行**全在 `libs`** ⇒ 扩面代价极小。
+
+#### (3) libs 那 16 行逐条判毕：**零缺陷**，其中 7 个 Cloth 名**构件已证在场**
+
+| 行 | 判据 |
+| --- | --- |
+| Cloth 7 名：`ConfigBuilder` `ConfigEntryBuilder` `getOrCreateCategory` `startBooleanToggle` `startIntSlider` `setSaveConsumer` `setSavingRunnable`（`mc-cloth-config/SKILL.md`） | 用本机件 `D:\mc-skill-temp\remapped\mod-cloth-config-15.0.140-yarn-named.jar` 核：`me/shedaniel/clothconfig2/api/{ConfigBuilder,ConfigEntryBuilder}` 类在；`getOrCreateCategory` / `setSavingRunnable` 是 `ConfigBuilder` 的方法；`startBooleanToggle` / `startIntSlider` 是 `ConfigEntryBuilder` 的方法；`setSaveConsumer` 命中 19 处 ⇒ **全部在场** |
+| `saveMyConfig` | 作者自己的保存函数（`setSavingRunnable(() -> saveMyConfig())`）⇒ 非缺陷 |
+| `createSomething`（`mc-architectury:47`） | 作者自己的示例方法（`static Something createSomething() { throw new AssertionError("平台实现缺失"); }`）⇒ 非缺陷 |
+| `ExpectPlatform`（`mc-architectury:24`） | Architectury 的 `@ExpectPlatform`；**本机无 Architectury 件** ⇒ **未核实** |
+| `Polymer` `Trinkets` `G8hlgtEk`（`mc-trinkets:26`） | 散文（「Modrinth 项目 id `G8hlgtEk`，标题 *Polymer Patch for Trinkets Updated*」）⇒ 非 API 名 |
+| `skillId` `modIds`（`knowledge/libs/README.md:38`） | 散文（CLI 输出字段说明 `{ skillId, path, modIds, platforms }`）⇒ 非 API 名 |
+
+#### (4) 六个未扫面里本轮**只扩用户点名的三处**
+
+`根 *.md`(19) / `community_knowledge`(121) / `mcp-server`(193) —— 用户判定为教程/说明，**本轮不扫**（§8.11(4) 的表保留作记录）。
+
+### 8.13 横幅「Modrinth 143 = 虚构」更正（用户令「改」）
+
+**结论**：「Modrinth 全部 143 个发布」**不是虚构** —— 实测 `query_upstream_releases source=modrinth slug=qsl` 得 `total=143`、`latest=11.0.0-alpha.3+0.102.0-1.21`；只有 **maven 通道**没有该版本串（两通道口径不同）。
+
+**改动面**：**7 棵 quilt 树**（`1.20.4` / `1.21.1` / `1.21.3` / `1.21.4` / `1.21.8` / `1.21.10` / `1.21.11`）的 `AGENTS.md` + `quilt/1.21.1/knowledge/common/qsl-verified.md`。
+
+**新措辞（各树同义）**：`11.0.0-alpha.3+0.102.0-1.21` **在 maven 清单里 0 命中**（勿当 maven 坐标写），但**在 Modrinth 上是真版本**（`total=143`；按 `1.21.1` / `1.21.4` 过滤均 `available:false`）⇒ **此前标「虚构」有误**。`1.20.4` 树原文没有 maven 那半句，只把「发布数未复核、已删」改成「发布数是实测真值，只有版本号那半句未复核」。
+
+**传播面与派生件（重要顺序）**：
+- `AGENTS.md` 是**权威**；`.cursor/agent/default.md` + `.claude/agents/default.md` + `.trae/agents/default.md` 由 `scripts/sync-skills.ps1` **生成**。⇒ 必须**先改 `AGENTS.md` 再 sync**（本轮先改了 `.cursor/agent/default.md`，被随后自己的 sync 覆盖回旧文 —— 靠「五树 × 四面」逐面读回才定位到）。
+- `quilt/1.21.1/knowledge/common/qsl-verified.md` 的 processed 派生件由 `scripts/index-qsl-verified.mjs --write` 重生成（1.21.1 的 `index-l0/l1/l2.json` sha 同步刷新；其余 5 档源稿未变、sha 未变）。
+
+**验证**：`assert-skill-mirrors` ok（漂移 0 / 孤儿 0）· `assert-qsl-verified-sync` ok（**10/10** 档一致、无孤儿）· `assert-authoring-lint` ok（J3 纯负向 0）· 活树残留扫描（排除 `temp/**` 与本台账）`虚构，勿再写` **为空**。
+
+**未动**：`temp/**` 下的审计快照（`temp/audit*/**`、`temp/ralph-audit*/**`、`temp/w3-*.md`）仍带旧句，属历史副本。

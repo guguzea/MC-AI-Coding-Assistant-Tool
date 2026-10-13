@@ -4,7 +4,7 @@
 > **必须再读** `fabric/1.20.4/.cursor/rules/` 的 **02–04、07–08、10**（及缺的 09）。05/06 用本目录，不要 overlay Fabric 网络。
 > 本目录只写 QSL / Quilt Loader **差异**（00 / 01 / 05 / 06）。禁止把整棵 Fabric 规则复制进来。
 
-> ⚠️ **QSL 构件核实（maven 一手核实）**：`org.quiltmc:qsl` 的 1.20.4 线只有 **`8.0.0-alpha.*+1.20.4` 共 7 个 alpha**（alpha.1/2/3/10/11/12/13），无正式版；maven 清单中最后一个不含 alpha 的构件是 **`6.3.0+1.20.1`**（1.20.1 制品）。旧横幅「Modrinth 全部 143 个发布」「的 QFAPI 7.7.0 + QSL 6.3.0 终版」里的发布数与日期均未复核，已删（`6.3.0` 只以 `6.3.0+1.20.1` 存在这点已核实）。「QSL 2025-12 停更」原引 `https://quiltmc.org/en/faq/`（现返回 **404**，无法复核）→ `// TODO(未核实)`，不再作为依据。**本版本（1.20.4）无 QSL/QFAPI 正式版构件**（1.20.4 线只到 `8.0.0-alpha.*`，见上）——注册与事件**默认**走 Vanilla `Registry.register` 或同版 Fabric API；本档 QSL 符号已由 alpha 构件 javap 逐字实证（`knowledge/common/qsl-verified.md`），**默认不生成 QSL**——要用须用户显式确认接受 alpha 依赖。
+> ⚠️ **QSL 构件核实（maven 一手核实）**：`org.quiltmc:qsl` 的 1.20.4 线只有 **`8.0.0-alpha.*+1.20.4` 共 7 个 alpha**（alpha.1/2/3/10/11/12/13），无正式版；maven 清单中最后一个不含 alpha 的构件是 **`6.3.0+1.20.1`**（1.20.1 制品）。旧横幅「Modrinth 全部 143 个发布」里的**发布数是实测真值**（`query_upstream_releases source=modrinth slug=qsl` 得 `total=143`、`latest=11.0.0-alpha.3+0.102.0-1.21`）—— 当初标「未复核、已删」过严；只有「的 QFAPI 7.7.0 + QSL 6.3.0 终版」那半句的版本号未复核，已删（`6.3.0` 只以 `6.3.0+1.20.1` 存在这点已核实）。「QSL 2025-12 停更」原引 `https://quiltmc.org/en/faq/`（现返回 **404**，无法复核）→ `// TODO(未核实)`，不再作为依据。**本版本（1.20.4）无 QSL/QFAPI 正式版构件**（1.20.4 线只到 `8.0.0-alpha.*`，见上）——注册与事件**默认**走 Vanilla `Registry.register` 或同版 Fabric API；本档 QSL 符号已由 alpha 构件 javap 逐字实证（`knowledge/common/qsl-verified.md`），**默认不生成 QSL**——要用须用户显式确认接受 alpha 依赖。
 
 ## 基本信息
 

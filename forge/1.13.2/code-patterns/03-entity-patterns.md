@@ -61,7 +61,7 @@ public void onEntitiesRegistry(RegistryEvent.Register<EntityType<?>> event) {
 ---
 # 渲染器
 public class MyEntityRenderer extends RenderLiving<MyEntity> {
-    public MyEntityRenderer(EntityRendererManager manager) {
+    public MyEntityRenderer(RenderManager manager) {   // 1.13.2 构件 javap：本档类名是 RenderManager（EntityRendererManager 是 1.15 起才改的名）
         super(manager, new MyEntityModel(), 0.5f);
     }
 

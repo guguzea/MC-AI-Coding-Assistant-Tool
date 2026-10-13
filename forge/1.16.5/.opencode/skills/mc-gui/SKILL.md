@@ -130,7 +130,7 @@ public class MyScreen extends ContainerScreen<MyContainer> {
 
     @Override
     protected void renderBg(PoseStack poseStack, float partialTicks, int mouseX, int mouseY) {
-        this.minecraft.getTextureManager().bind(BACKGROUND_TEXTURE);
+        this.minecraft.getTextureManager().bind(AbstractGui.BACKGROUND_LOCATION);   // 1.16.5 构件 javap：AbstractGui.BACKGROUND_LOCATION（无 BACKGROUND_TEXTURE）
         blit(poseStack, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
     }
 }

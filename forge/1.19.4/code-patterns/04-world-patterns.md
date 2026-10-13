@@ -29,9 +29,7 @@ public static final RegistryObject<Biome> MY_BIOME = BIOMES.register("my_biome",
             //    邻档（1.18.2:23-24、1.20.1:18-19）用的 .grassColor(int)/.foliageColor(int) 在 1.19.4 不存在
             .grassColorOverride(0x7ed957)
             .foliageColorOverride(0x60bd3f)
-            // TODO(未核实)：.ambientMoodSound(AmbientMoodSettings.LEGACY_CAVE)
-            //   —— 方法 ambientMoodSound(AmbientMoodSettings) 已核实存在，
-            //   但常量 LEGACY_CAVE 属字段，query_api 不返回字段、本档规则亦未使用 → 用 IDE 补全核实后再写。
+            .ambientMoodSound(AmbientMoodSettings.LEGACY_CAVE_SETTINGS)   // 1.19.4 构件 javap：常量实名 LEGACY_CAVE_SETTINGS（原写 LEGACY_CAVE 不存在）
             .build())
         .mobSpawnSettings(...)   // 1.19.4 方法名是 mobSpawnSettings，不是邻档的 mobSettings
         .generationSettings(...)

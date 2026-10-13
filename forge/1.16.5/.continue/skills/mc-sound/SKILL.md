@@ -61,11 +61,11 @@ SOUNDS.register(modEventBus);
 public static final SoundType MY_BLOCK_SOUNDS = new SoundType(
     1.0f,   // volume
     1.0f,   // pitch
-    SoundEvents.BLOCK_STONE_BREAK,    // breakSound
-    SoundEvents.BLOCK_STONE_STEP,     // stepSound
-    SoundEvents.BLOCK_STONE_PLACE,    // placeSound
-    SoundEvents.BLOCK_STONE_HIT,      // hitSound
-    SoundEvents.BLOCK_STONE_FALL       // fallSound
+    SoundEvents.STONE_BREAK,    // breakSound   // 1.16.5 构件 javap：本档常量名是 STONE_*（无 BLOCK_STONE_*）
+    SoundEvents.STONE_STEP,     // stepSound
+    SoundEvents.STONE_PLACE,    // placeSound
+    SoundEvents.STONE_HIT,      // hitSound
+    SoundEvents.STONE_FALL      // fallSound
 );
 
 // 使用

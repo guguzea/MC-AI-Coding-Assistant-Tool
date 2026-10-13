@@ -17,7 +17,7 @@ public static final RegistryObject<Biome> MY_BIOME = BIOMES.register("my_biome",
             .skyColor(0x78a9ff)
             .grassColorOverride(0x7ed957)
             .foliageColorOverride(0x60bd3f)
-            .ambientMoodSound(AmbientMoodSettings.LEGACY_CAVE)
+            .ambientMoodSound(AmbientMoodSettings.LEGACY_CAVE_SETTINGS)   // 1.17.1 构件 javap：LEGACY_CAVE 无此常量，实名 LEGACY_CAVE_SETTINGS
             .build())
         .generationSettings(...)
         .mobSpawnSettings(...)

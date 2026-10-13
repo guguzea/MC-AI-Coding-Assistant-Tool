@@ -174,7 +174,9 @@ public enum MyArmorMaterial implements ArmorMaterial {
     @Override public int getEnchantability() { return enchantability; }
     @Override public SoundEvent getEquipSound() { return equipSound; }
     @Override public float getToughness() { return toughness; }
-    @Override public float getKnockbackResistance() { return knockbackResistance; }
+    // ⚠️ 1.21.1 构件 javap：ArmorMaterial 在本档是 **record**（不是接口，不能 implements）；
+    //   方法名无 get 前缀（toughness()/knockbackResistance()/enchantability()/equipSound()/repairIngredient()），
+    //   也没有 getName/getDurability —— 本整块是旧版形态，待按 record 构造改写（TODO(未核实)）
     @Override public Ingredient getRepairIngredient() {
         return repairIngredientSupplier.get();
     }

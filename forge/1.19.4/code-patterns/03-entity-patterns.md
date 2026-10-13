@@ -134,8 +134,8 @@ public class MyHumanoidRenderer extends HumanoidMobRenderer<MyEntity, MyEntityMo
         // ⚠️ 1.19.4 起索引都是 4 参数：(RenderLayerParent, HumanoidModel, HumanoidModel, ModelManager)
         //    （1.18.2 才是 3 参；1.20.1/1.20.4 档的 3 参写法已按此修正）
         this.addLayer(new HumanoidArmorLayer<>(this,
-            new MyEntityModel<>(context.bakeLayer(INNER_ARMOR)),
-            new MyEntityModel<>(context.bakeLayer(OUTER_ARMOR)),
+            new MyEntityModel<>(context.bakeLayer(ModelLayers.PLAYER_INNER_ARMOR)),
+            new MyEntityModel<>(context.bakeLayer(ModelLayers.PLAYER_OUTER_ARMOR)),
             context.getModelManager()));
     }
 }
@@ -178,6 +178,6 @@ public static AttributeSupplier.Builder createAttributes() {
 ```
 
 > 1.20.1 档 `03-entity-patterns.md:126-128` 用的
-> `this.getAttribute(ATTRIBUTES.get("extra_health")).ifPresent(attr -> this.getAttributeMap().registerAttribute(attr))`
+> 属性在实体的 `createAttributes()` 里注册（见上）。**没有** `getAttributeMap()` / `AttributeMap#registerAttribute`——1.19.4 构件 javap 实测。
 > 不是 1.19.4 的注册路径（`ForgeRegistries.ATTRIBUTES` 里没有按字符串取值的 API），
 > 本档按 `04-entity.mdc:30` / `knowledge/antipatterns/entity.md:36-48` 的 `EntityAttributeCreationEvent` 写法。

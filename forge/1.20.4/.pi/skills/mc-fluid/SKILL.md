@@ -80,7 +80,7 @@ public static final RegistryObject<LiquidBlock> MY_FLUID_BLOCK =
             BlockBehaviour.Properties.of().mapColor(MapColor.WATER)
                 .noCollision()
                 .strength(100.0f)
-                .noDrops()
+                .noLootTable()   // 1.20.4 构件 javap：Properties 上是 noLootTable()（noDrops() 已删）
         )
     );
 ```

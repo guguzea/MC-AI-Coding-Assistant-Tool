@@ -8,6 +8,416 @@
 
 ---
 
+## 2026-10-13 · 更正「Modrinth 143 = 虚构」口径（7 棵 quilt 树 + qsl-verified）（维护档）
+
+**第 0 块 · 结论**：按令「改」，把那句改对了 —— 「Modrinth 全部 143 个发布」**不是虚构**，实测 Modrinth `total=143`（`latest=11.0.0-alpha.3+0.102.0-1.21`），只有 **maven 通道**没有该版本串。改面 = **7 棵 quilt 树**（`1.20.4 / 1.21.1 / 1.21.3 / 1.21.4 / 1.21.8 / 1.21.10 / 1.21.11`）的 `AGENTS.md` + `quilt/1.21.1/knowledge/common/qsl-verified.md`；派生件按纪律重生成。**三门全绿**（镜像 ok / qsl-verified-sync **10/10** / authoring-lint ok）。未提交。
+
+### 1. 改了哪些文件
+
+- **7 棵树的 `AGENTS.md`（权威）**：`quilt/{1.20.4,1.21.1,1.21.3,1.21.4,1.21.8,1.21.10,1.21.11}/AGENTS.md`
+- `quilt/1.21.1/knowledge/common/qsl-verified.md`（源稿）
+- **生成物**（由脚本产出，不是手改）：上述 7 树的 `.cursor/agent/default.md` + `.claude/agents/default.md` + `.trae/agents/default.md`（21 件，`sync-skills.ps1`）；`data/quilt_1.21.1/quilt-docs/1.21.1/` 的 `processed/qsl-verified.md` + `index-l0/l1/l2.json`（`index-qsl-verified.mjs --write`）
+- 台账 `doc/name-provenance-audit.md`：新增 **§8.13**；`DELIVERY_LOG.md`：本节
+
+### 2. 判据与反证
+
+- 判据 = `query_upstream_releases source=modrinth slug=qsl` 的**三态读法**：`ok:true` + `available:true` + `total:143` ⇒ Modrinth 真有 143 条（**不是**「没查到」）；`minecraftVersion=1.21.1` / `1.21.4` 各 `available:false` ⇒ 上游确实没有本版件。两句合起来才能说「143 是真的、1.21.1+ 确实没有」
+- **踩坑留档**：`AGENTS.md` 是**权威**，`.cursor/agent/default.md` 是**生成物**。我先直接改了后者，随后自己跑的 sync 把它**覆盖回原文** ⇒ 必须「先改 `AGENTS.md` 再 sync」。这条是靠在改完后按「五树 × 四面」逐面读回、发现全为 OLD 才定位的
+- **反证**：改完按「五树 × 四面」（`AGENTS.md` / `.cursor/agent` / `.claude/agents` / `.trae/agents`）逐面读回，**20/20 全为 NEW**；活树残留扫描 `虚构，勿再写`（排除 `temp/**` 与本台账）**为空**
+- `1.20.4` 树原文没有 maven 那半句，只把「发布数未复核、已删」改成「发布数是实测真值，只有版本号那半句未复核」—— 不套用 1.21.x 的措辞
+
+### 3. 验证台账
+
+- `powershell -File scripts/sync-skills.ps1 -TargetDir quilt/<v>` ×7（`1.21.3/.4/.8/.10/.11` 各跑了两次：第一次浪费在「改错文件」上）
+- `node scripts/index-qsl-verified.mjs --write` ⇒ 6 档 processed 写入；**1.21.1 sha 刷新、其余 5 档 sha 未变**（源稿未动，符合预期）；`1.21.3/.4/.8/.10` 报 `skip（missing src or index）`（这几档本无 qsl-verified 源稿）
+- `node mcp-server/scripts/assert-skill-mirrors.mjs` ⇒ **ok**（漂移 0 / 孤儿 0 / 拒 0）
+- `node mcp-server/scripts/assert-qsl-verified-sync.mjs` ⇒ **ok**（10/10 档源稿与 processed 归一化一致、无孤儿）
+- `node mcp-server/scripts/assert-authoring-lint.mjs` ⇒ **ok**（目标 13 件 / J2 指针 23 枚全在盘 / J3 纯负向 0）
+- **未跑** `npm test` / `node test-scripts.mjs`（本轮没动 `mcp-server/**` 与 `scripts/**` 的代码，只跑了现成门）；未 `git add/commit`
+
+### 4. 数据侧变更
+
+`data/quilt_1.21.1/quilt-docs/1.21.1/` 的 `processed/qsl-verified.md` 与 `index-l0/l1/l2.json` 因子源稿变更而重生成（sha 已刷新，并由 `assert-qsl-verified-sync` 对账）。其余 5 档 processed **字节未变**。
+
+### 5. 未做清单
+
+- `temp/**` 的审计快照（`temp/audit*/**`、`temp/ralph-audit*/**`、`temp/w3-*.md`）仍带旧句 —— 属历史副本，**未动**
+- 未提交（提交归用户）
+
+### 6. 自我更正
+
+- 本轮**先改了生成物**（`.cursor/agent/default.md`）而不是权威（`AGENTS.md`），被自己的 sync 覆盖 —— 已在 §2 留档，下次直接照「改 AGENTS.md → sync」做。
+- 上一节我说该句「建议统一由一方改」；本轮由我改完，**口径已一致**（另一写方那轮没碰这句）。
+
+---
+
+## 2026-10-13 · quilt 1.21.x 的 Fabric API 面核实 + 扫描面扩三处（维护档）
+
+> 本轮为**边聊侧**作业：只改台账与便签脚本、仓外 oracle 目录，**不改仓内知识面文档**。作业期间检测到**另一写方**已在同一主题落地一轮（见下节「五树补『QSL 停更后的替代路线』」）—— 两句可互相印证（我这边是从**本档自述 + 构件**核出「这五档走 Vanilla + 同版 Fabric API」，那边是从**联网实证 + 规则条**把依赖示例补进树）。**两边未冲突**：那边改 `quilt/<v>/.cursor/rules/06-networking.mdc` 与 `scaffold/build.gradle`，本轮一行仓内文档都没动。
+
+**第 0 块 · 结论**：两点都对、都已核。① **quilt 1.21.3–1.21.11 走「Vanilla + 同版 Fabric API」** —— 这几档自己的 `.cursor/agent/default.md` 横幅就写着这句（「本目录……QSL 相关表述仅为考据/stub（无构件可按）——**禁止生成 QSL 代码**」）。我拿**那一面**的真件核了：`quilt-loader-0.31.0-beta.4.jar` 里 `net/fabricmc/api/ModInitializer`（quilt-loader 自带的 Fabric 兼容接口）+ `onInitialize` + `org/quiltmc/loader/api/ModContainer` **全部在场**；5 个 `fabric-api-*+1.21.{3,4,8,10,11}.jar` 也从 gradle 缓存取出放进 **`F:\MC_GAME\_oracle-jars\fabric-api\`**。⇒ 原先「quilt 24 行无件 ⇒ 未核实」这个缺口**按你指的路解掉，零缺陷**。② **扫描面按你点名的三处扩了**（`.cursor/agent/**` + 档根 `CLAUDE.md` + `knowledge/libs/**`）：扩面后 nowhere 只从 3222 涨到 **3238（+16）**，新增 16 行**全在 `libs`**、逐条判毕**零缺陷**（其中 7 个 Cloth Config 名用本机 `cloth-config-15.0.140` 件核到**在场**）。**仓内零文档修复**；未提交。
+
+### 1. 改了哪些文件
+
+- 量具 `F:\MOD_TEST\nonfabric-skill-names.mjs`（不入库）：`srcDirs()` 增 `.cursor/agent/**` + 档根 `CLAUDE.md`；新增 **`libs` 伪档**（`knowledge/libs/**`，腿 = 全平台并集）
+- 台账 `doc/name-provenance-audit.md`：新增 **§8.12**；§6 复现表补量具改动、`extract.mjs` 与新件路径
+- `F:\MC_GAME\_oracle-jars\fabric-api\`（**仓外**）：`fabric-api-{0.110.0+1.21.3, 0.119.4+1.21.4, 0.136.1+1.21.8, 0.138.4+1.21.10, 0.141.6+1.21.11}.jar` + `quilt-loader-0.31.0-beta.4.jar`
+- 便签脚本：`F:\MOD_TEST\extract.mjs`（按平台抽 `merged*.tsv` 的行 + 上下文）
+- **仓内文档零修复**（本轮结论仍是「不用改」）
+
+### 2. 判据与反证
+
+- **方法**：先读本档自述确认它指向**哪一面**（QSL 还是 Fabric API），再拿**那一面**的件核 —— 不拿 QSL 件去核一个本来就不用 QSL 的档
+- **反证 1（quilt 逐名过真件）** `probe-mc.mjs` → `ModInitializer` = `net/fabricmc/api/ModInitializer`（CLASS）；`onInitialize` = 同接口方法；`ModContainer` = 3 处（`org/quiltmc/loader/api/…`、`net/fabricmc/loader/api/…`）
+- **反证 2（libs 的 Cloth 名过真件）** `ConfigBuilder` / `ConfigEntryBuilder` 类在场；`getOrCreateCategory` / `setSavingRunnable` 落在 `ConfigBuilder`；`startBooleanToggle` / `startIntSlider` 落在 `ConfigEntryBuilder`；`setSaveConsumer` 命中 19 处
+- **口径更正**：五档 `agent/default.md` 把「Modrinth 全部 143 个发布」写成「未复核、已删、**虚构**」；本轮实测 Modrinth `total:143` + `latest:11.0.0-alpha.3+0.102.0-1.21` ⇒ **那个数字是真的**，只是 **maven** 通道没有该版本串。两通道口径不同，不能混写
+- 其余名逐条读站点：`saveMyConfig` / `createSomething` 是作者自建；`Polymer` / `Trinkets` / `G8hlgtEk` / `skillId` / `modIds` 是散文或项目 id；只有 `ExpectPlatform`（Architectury）因本机无件留 `未核实`
+
+### 3. 验证台账
+
+- `node F:\MOD_TEST\nonfabric-skill-names.mjs`（**从仓库根跑**）⇒ nowhere **3238**（原 3222，+16 全在 `libs`）；crossPack 1985；`libs` 伪档 16 行（TYPE 8 + MEMBER 8）。**并发写方 23:01 改了五树后已复跑一次复核**（见 §6 自我更正）
+- `node F:\MOD_TEST\verify-all.mjs`（重跑，exit 0）
+- `node F:\MOD_TEST\extract.mjs libs` / `quilt` ⇒ 逐行 + 上下文（quilt 5 行 nowhere + 48 行 crossPack）
+- `node F:\MOD_TEST\probe-mc.mjs <quilt-loader-0.31.0-beta.4.jar> ModInitializer onInitialize ModContainer` ⇒ 全在场
+- `node F:\MOD_TEST\probe-mc.mjs <mod-cloth-config-15.0.140-yarn-named.jar> …` ⇒ Cloth 7 名全在场
+- **未跑** `npm test` / `node test-scripts.mjs`（未动 `mcp-server/**` 与门脚本）；**未跑** `assert-skill-mirrors`（本轮未改任何仓内 `.cursor/**`；并发写方那轮的自述称镜像门已绿）
+- 未 `git add/commit`
+
+### 4. 数据侧变更
+
+无。
+
+### 5. 未做清单
+
+- 根 `*.md`(19) / `community_knowledge`(121) / `mcp-server`(193) 三面**按你的判断不扫**（教程/说明）
+- `ExpectPlatform`（Architectury）本机无件 ⇒ **未核实**
+- forge 1.12.2 的 MCP 可读成员名、以及 Cloth 之外的第三方库（REI / JEI / GeckoLib）仍无件
+- 未提交（提交归用户）
+
+### 6. 自我更正
+
+- §8.11(3) 把「quilt 1.21.3–1.21.10 共 24 行」写成「上游不可得 ⇒ **不可核**」—— **结论下早了**：那些档本就不该拿 QSL 核，正确参照是 Vanilla + 同版 Fabric API（本机有件）。本轮按指路改正，并把件落进 `F:\MC_GAME\_oracle-jars\fabric-api\`。
+- **并发写方**：作业中发现同一主题已有另一轮落地（五树 06 规则条 + scaffold FAPI 依赖示例，23:01 落盘、8 面镜像同改）。我的量具读数在该轮之后**复跑复核过**；两轮改动面无交集（那边改 `.cursor/rules` + `scaffold`，我一行仓内文档未动）。
+
+---
+
+## 2026-10-13 · 五树补「QSL 停更后的替代路线」：06 联网规则条 + scaffold FAPI 示例注释（维护档）
+
+**第 0 块 · 结论**：按用户单字令「补」，把上一轮（五树「无 QSL 构件」表述精化）§5 挂着的「06/scaffold 可补一句（待拍板）」**落地**：五树（`1.21.3 / 1.21.4 / 1.21.8 / 1.21.10 / 1.21.11`）各 2 处共 **10 处**改写 —— ① `.cursor/rules/06-networking.mdc` 新增一条澄清「本版无 QFAPI/QSL 构件」的用意是**防把 QSL 旧表当本版 API，不是禁 FAPI**，本版做法是**直接依赖 Fabric API 本体**（联网实证：`jade` / `owo-lib` 的 quilt 构建均声明 `fabric-api` required）；② `scaffold/build.gradle` 的 API 注释段加 **5 行 Fabric API 依赖示例**（逐档 live 版本读数 + maven 取数 URL + 补仓库提示）。当前树门链全绿（`test-scripts` rc=0、冲突/镜像/作者规范三门绿）。**未提交。**
+
+### 1. 改了哪些文件
+
+- 五树共 **10 文件**：
+  - `quilt/<v>/.cursor/rules/06-networking.mdc` **×5** —— 在「无 QFAPI：只许 `search_docs`…」条后新增一条：澄清该条用意是**防误把 QSL 旧表当本版 API**（不是禁 FAPI）；本版做法 = **直接依赖 Fabric API 本体**（实证 `jade` / `owo-lib` quilt 构建均声明 `fabric-api` required）；名字与流程核 `search_docs({platform:"fabric", version:"<V>"})`，且**仍不得把 FAPI 名当 QSL**。
+  - `quilt/<v>/scaffold/build.gradle` **×5** —— 在「不要把 fabric-api 整包当 QSL。」注释行后新增 5 行注释块：`modImplementation "net.fabricmc.fabric-api:fabric-api:<FAPI 版本>+<V>"` 示例（逐档 live 读数）、`maven-metadata.xml` 取数 URL、解析不到时的 `repositories` 补法、Jade/owo-lib 实证行（QFAPI 在 1.21.3+ 无构件）。
+- 五树各跑一次 `scripts/sync-skills.ps1 -TargetDir quilt/<v>`（`AGENTS.md` → `.cursor/agent/default.md` 孪生件同步）。
+- `DELIVERY_LOG.md`：本节。
+
+### 2. 判据与反证
+
+- **落在 06 的理由**：QSL 停更的直接后果是「QSL 那条线没有了」；quilt 差异树里承载「无 QFAPI → 用 Fabric」判断的落点正是 `06-networking.mdc`（其原有「无 QFAPI：只许 `search_docs`…」条措辞可被读成「禁 FAPI」，本轮补句消歧），故补在 06；01/05 本轮未动（见 §5）。
+- **FAPI 逐档 live 版本读数**（来源：`https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/maven-metadata.xml`，联网实测）：1.21.3→`0.114.1` / 1.21.4→`0.119.4` / 1.21.8→`0.136.1` / 1.21.10→`0.138.4` / 1.21.11→`0.141.6`（`<release>`=`0.162.2+26.4`，全表 1165 版）。
+- **「现代 Quilt 靠什么」的实证**：Modrinth 按 slug 逐查 —— `jade` `21.1.6+fabric`（loaders=`fabric,quilt`）与 `owo-lib` `0.13.0+1.21.11` 的 quilt 构建**均声明 `fabric-api` required**；多加载器库（yacl / architectury / geckolib / jade / owo / bookshelf / fzzy-config / terrablender / patchouli）**都出 quilt 构建到 26.x**。⇒ **无 QSL/QFAPI 继任者**，替代路线就是「Quilt Loader + Fabric API 本体」。
+- **反证（没越界）**：未改 `1.18.2 / 1.19.4 / 1.20.1 / 1.20.4 / 1.21.1` 五树（其 QSL 面口径不同，见各档 AGENTS 横幅）；新增两处文案**均不含 QSL 名引用**（明确写「不得把 FAPI 名当 QSL」），未引入任何 `org.quiltmc.*` 新符号。
+
+### 3. 验证台账
+
+- **在盘复核**（node 逐文件读源码）：10/10 改动词均在场；五档 scaffold 的 live 读数逐档核对 = `0.114.1 / 0.119.4 / 0.136.1 / 0.138.4 / 0.141.6`（**修正一处过程误读**：首次用 `findstr` 核 CJK 标记全报 MISSING，实为 findstr 对 CJK 模式静默失配——改用 node 后 06 侧 5/5 在场；scaffold 侧首用的小写 `fabric-api 本体` 与实际大写 `Fabric API 本体` 不符，亦为量具错、不是文件缺）。
+- **门链（当前树，含并行写方改动）**：`node test-scripts.mjs` **rc=0**（日志 `D:\mc-skill-temp\adjud2\ts-run8.log`，46 行，`本轮未执法腿=0`，末行 `script helper regression tests passed`）。
+- `assert-scaffold-rules-conflict`：「47 档 · 规则 447 篇 · ❌ 行 455 条 · 判死符号 67（歧义丢弃 160）· **scaffold 冲突 0** · 台账 checked」（门 LEDGER 3065 未动、免重钉）。
+- `assert-skill-mirrors`：「**ok**（扫档=57 镜像比对目标=12418 · AGENTS 漂移 **0 档** / 台账 0 档 · R47 复数 agents 孤儿腿 孤儿 0 · **拒=0**）」。
+- `assert-authoring-lint`：「**ok**：目标 13 件 · J1 技能 12 份 · J2 路径指针 23 枚全在盘 · J3 纯负向现数 0（豁免 2）」。
+- 未 `git add/commit`（提交归用户）。
+
+### 4. 数据侧变更
+
+无。本轮只动 `.cursor/**` 与 `scaffold/build.gradle` 注释；未动 `data/**`、平台元数据（`pack.meta.json` 未触碰）、未改 `knowledge/**` 源稿 ⇒ **未触发 qsl-verified 派生件重生成**（`assert-qsl-verified-sync` 面无变更）。
+
+### 5. 未做清单
+
+- **代码级示范未做**：scaffold 里只给依赖坐标注释，**未给一个真用 FAPI 的示范类**——要做属新增内容，须先问用户。
+- `06` 之外（`01-registry` / `05-events`）**未加**同款 FAPI 提示——本轮只落 06（其余 FAPI 归属面可由本条「核 `search_docs` fabric」泛化）。若用户要 01/05 各加一句，另行拍板。
+- `1.18.2 / 1.19.4 / 1.20.1 / 1.20.4 / 1.21.1` 五树的同款措辞未动（各档 QSL 面口径不同）。
+- 未提交（提交归用户）。
+
+### 6. 自我更正
+
+- 本节**兑现**上一节（「五树『无 QSL 构件』表述精化」）§5 未做清单挂的「06/scaffold 可补一句（**待拍板**）」——该轮提出时按待拍板挂着，用户以单字「补」授权，本节落地；两处改动方向、逐档读数与实证口径与上一节 §2 同源。
+- 过程自纠一处已记入 §3（`findstr` 对 CJK 模式静默失配 ⇒ 核标记一律改走 node，不当「文件缺失」读）。
+- 对旧节无更正。
+
+---
+
+## 2026-10-13 · 覆盖面自审（答「全部核对了吗」）+ 待审队列清零（维护档）
+
+**第 0 块 · 结论**：**没有全核过。** 本轮把账算清：候选 **5199 行**里 3618 行已证在构件里、**909 行必须分诊**、672 行无件。① §5.1 一直挂着的**「待审」38 个（档|名）/ 34 个唯一名**（124 条去重项、160 行）本轮**逐名读站点判毕 → 全部非缺陷**（读者自建名 28 / 形参名 2 / 散文或文件名 4）；② 672 条无件里 648 已由 `verify-extra` + `verify-mc` 覆盖，余 **24 条**是 quilt 1.21.3–1.21.10（上游无 QSL，不可核）；③ **真正还漏着的是扫描面本身** —— `.cursor/agent`(57 件) / 档根 `CLAUDE.md`(21) / 根 `*.md`(19) / `knowledge/libs`(37) / `community_knowledge`(121) / `mcp-server`(193) **从未进过量具**；④ 第三方库 API（248 行/48 名）与 forge 1.12.2 的成员名仍**未核实**（本机无件）。本轮**仓内零文档修复**（判下来都不用改）；未提交。
+
+### 1. 改了哪些文件
+
+- 台账 `doc/name-provenance-audit.md`：新增 **§8.11**（行总账 / 待审队列判毕表 / 无件档记账 / **未扫面清单** / 仍未核清单）
+- `DELIVERY_LOG.md`：本节
+- 便签区脚本（不入库）：`cover.mjs`（按 verdict×verifiable×bucket 算覆盖）、`split.mjs`（分桶 + 待审命中）、`dump-pending.mjs`（待审名带上下文导出）、`surfaces.mjs`（未扫面文件计数）
+- 中间产物：`cover-need.json`、`need-triage.json`（739 条需分诊的唯一 `档|版本|名`）
+- **仓内文档零修复**（本轮结论是「不用改」）
+
+### 2. 判据与反证
+
+- 行账判据 = `verify-all.json` 的 `verdict` × `verifiable` × `bucket`（无件档靠 `verifiable:false` 分离出来单记）
+- **反证 1（待审名逐条读站点原文）**：28 个自建名各给出站点形态 —— `ModItems.OTHER_ITEM.get()`、`MyEntityModel.LAYER_LOCATION`、`this.entityData.define(DATA_ID, 0)`、`cap.setData(someData)`、`() -> clientOnlyMethod`、`stack = slotStack.copy()`；2 个形参名确认「形参名不影响编译」；4 个散文/文件名确认非 API 名
+- **反证 2（无件档记账闭合）**：648 + 24 = 672，与逐档计数吻合（fabric 1.16.5 263 / 1.14.4 225 / forge 1.12.2 156 / quilt 四档各 6 / liteloader 4）
+- **反证 3（「未扫面只是目前被同文覆盖」不成立为保证）**：抽查 `fabric/1.16.5/.cursor/agent/default.md:108` 与同档 `AGENTS.md:108` 同句 ⇒ 该件**内容**被扫面覆盖，但**没有机器门**保证 `.cursor/agent/**` 与 `AGENTS.md` 永远同文 ⇒ 只能记为缺口
+
+### 3. 验证台账
+
+- `node F:\MOD_TEST\nonfabric-skill-names.mjs && node F:\MOD_TEST\verify-all.mjs`（重跑，exit 0；**必须从仓库根跑** —— 脚本要读 `mcp-server/scripts/assert-skill-yarn-attest.mjs`，在 `F:\MOD_TEST` 下跑会 ENOENT）⇒ 5199 行 / PRESENT 3618 / **ABSENT-有件 909** / **ABSENT-无件 672**
+- `node F:\MOD_TEST\verify-extra.mjs && node F:\MOD_TEST\verify-mc.mjs`（重跑，exit 0）⇒ 775 行 / 384 present / 391 查无；MC 侧声明命中 46 + 52 = **98**
+- `cover.mjs` / `split.mjs` / `dump-pending.mjs` / `surfaces.mjs` 读数全部落 §8.11
+- **未跑** `npm test` / `node test-scripts.mjs`（未动 `mcp-server/**` 与门脚本）；**未跑** `assert-skill-mirrors`（未改任何 `.cursor/**`）
+- 未 `git add/commit`
+
+### 4. 数据侧变更
+
+无。
+
+### 5. 未做清单（就是本轮答案里的「漏」）
+
+- **六个未扫面**（`.cursor/agent` 57 件 / 档根 `CLAUDE.md` 21 / 根 `*.md` 19 / `knowledge/libs` 37 / `community_knowledge` 121 / `mcp-server` 193）**未进量具** ⇒ 其中的标识符**未核**。扩面是范围决定，等拍板
+- 第三方库 API 248 行 / 48 名（本机无库件）
+- forge 1.12.2 的 MCP 可读成员名（本机无具名件）
+- quilt 1.21.3–1.21.11 的 QSL 面（上游无）
+- 未提交（提交归用户）
+
+### 6. 自我更正
+
+- 前两轮我说「新进面的行跑了一遍全量构件对照」，**说得太满**：那个全量核验做的是「行**过**构件」这一步，**不等于「行被分诊」**。909 行过了构件但没逐行给结论，其中 38 个（档|名）是台账 §5.1 里明写的「待审」。本轮把这一档清零，并把「未扫面」这笔账**第一次**写进台账。
+- §8.10(5) 的未核清单只列了库类与 1.12.2 —— 补上「扫描面缺口」与 quilt 24 条后，才是完整答案。
+
+---
+
+## 2026-10-13 · QSL 上游边界取证 + 用 MC 侧构件核残余 Vanilla 名（维护档）
+
+**第 0 块 · 结论**：两句都办了。① **QSL 上游确实止于 1.21** —— Modrinth 上最新是 `11.0.0-alpha.3+0.102.0-1.21`，按 `1.21.1` / `1.21.4` 显式过滤都是 `available:false` + `total:0` ⇒ 有行的那 5 个 quilt 档（1.21.3–1.21.11）**上游根本没有 QSL 可供参照**，属上游事实、不需要补件。② 残余 391 行的 Vanilla 侧名字已用 **MC 侧真构件**核过：Yarn 具名 jar 两件从本机 loom 缓存取出并**放进 `F:\MC_GAME\_oracle-jars\mc\`**；**227 个残余名里 98 个当场改判「本版确实声明过」**，余 129 个逐类分诊（库类 / 读者自定义 / Forge 对照行 / 行内否定例 / mixin 处理器名 / **迁移表左值**）—— **未再发现真缺陷**，仓内文档零改动。**未提交。**
+
+### 1. 改了哪些文件
+
+- 台账 `doc/name-provenance-audit.md`：新增 **§8.10**（QSL 边界取证 / MC 件落点表 / 核验读数 / 残余分诊 / 未核清单）；§6 复现表补 5 行脚本与 MC 件路径
+- `DELIVERY_LOG.md`：本节
+- `F:\MC_GAME\_oracle-jars\mc\`（**仓外**，用户指定落点）：新增 3 件 —— `minecraft-1.14.4-yarn-build.18.jar`（26.1 MB）、`minecraft-1.16.5-yarn-build.10.jar`（19.2 MB）、`minecraft_merged-1.12.2-obf.jar`（9.6 MB）
+- 便签区脚本（不入库）：`F:\MOD_TEST\verify-mc.mjs`（classfile **声明表**解析）、`probe-mc.mjs`（定向探针）、`verify-extra.mjs`、`scan-jars.mjs`、`resid.mjs`
+- **本轮零文档正文修复**（前几批的 6 件已在上方节记录）
+
+### 2. 判据与反证
+
+- **QSL 三态读法**：`ok:true` + `available:false` + `total:0` ⇒ 上游确实没有（不是「没查到」）；两发都落 `tier:"absent"` 缓存
+- **MC 侧核验判据**：逐类解析 classfile 的 `fields[]` / `methods[]` 的 `name_index`，得到「本档 MC 件声明过的名字」全集 —— 比常量池字符串匹配强（后者证不了成员名）
+- **反证 1（解析器先信后验）**：对已知名定向取证 —— `getDefaultState` 声明在 `Block`/`StateManager`/`Fluid` 3 类、`textRenderer` 在 `MinecraftClient` 等 6 类、`LiteralText` 类在 ⇒ 解析器可信
+- **反证 2（可疑名逐站点读上下文）**：`TextComponentString` / `damageItem` 若不是落在迁移表左栏，本来会是**真缺陷**（fabric 档写 mojmap 名）；实读确认只出现在 `fabric/1.14.4/knowledge/version-changes/1.14.x.md` 的「旧名 → 新名」对照表与 `knowledge/antipatterns/yarn-mappings.md`（教「不要这么写」）⇒ 用法正确、**不改**
+- **反证 3（其余仍未命中的同类核对）**：`onTick(CallbackInfo ci)` = 作者自己 mixin 类的注入方法名；1.12.2 的 `VARIANT_A/B/C`、`BLOCK_SIMPLE`/`BLOCK_COMPLEX` = 示例自造枚举值与自造 `RegistryHandler` 字段；`Keyboard.KEY_G` = LWJGL2 常量（不在 Forge/MC 件里）
+- 前 5 行 Forge 名出现在 fabric 档（`IEventBus`/`DeferredRegister`/`RegistryObject`/`SubscribeEvent`/`modEventBus`）一律是**对照/否定**行（「Fabric **没有** modEventBus」）⇒ 非缺陷
+
+### 3. 验证台账
+
+- `query_upstream_releases source=modrinth slug=qsl`：`total=143`，`latest=11.0.0-alpha.3+0.102.0-1.21`；`minecraftVersion=1.21.1` → `available:false`/`total:0`；`=1.21.4` → 同形
+- `node F:\MOD_TEST\verify-mc.mjs`（exit 0）：fabric 1.14.4 → 110 名里 **46 命中**；fabric 1.16.5 → 117 名里 **52 命中**（合计 **98 / 227**）→ `verify-mc.json`
+- `node F:\MOD_TEST\probe-mc.mjs`（两发，探针自检）
+- `git status --short`：本批新增仓内改动 = 台账（未跟踪新文件）+ `DELIVERY_LOG.md`；工作树另有前几批同族文档修复（M 项，含镜像副本），**全部未提交**
+- **未跑** `assert-skill-mirrors`：本轮**未改任何 `.cursor/**`** ⇒ 镜像面无变更（上一批已跑过并 `ok`）
+- **未跑** `npm test` / `node test-scripts.mjs`：未动 `mcp-server/**` 与门脚本
+- 未 `git add/commit`（提交归用户）
+
+### 4. 数据侧变更
+
+无。未动 `data/**`、平台元数据、scaffold；新增件全在仓外 `F:\MC_GAME`。
+
+### 5. 未做清单
+
+- **forge 1.12.2 的 MCP 可读成员名核不了**：本机只有 SRG 具名件（`forgeBin` / universal）与**混淆** merged 件（本轮已把混淆件存档进 `_oracle-jars\mc\`，但它核不了名字）。类名级已覆盖（present 122 / 查无 45）
+- §8.10(4) 的**库类**（Cloth / REI / Gradle DSL）与 `Keyboard.KEY_G` 一类需相应库/依赖件 ⇒ **未核实**
+- `doc/name-provenance-audit.md` 仍是**未跟踪**文件（`??`）；仓根另有一个**不是本轮产物**的未跟踪目录 `ll-src/`，未触碰
+- 未提交（提交归用户）
+
+### 6. 自我更正
+
+- 上一节 §5 把「残余 Vanilla 名」写成「要核就得拉 MC merged jar（每档几百 MB）」并**推荐不做** —— **本轮推翻**：Yarn 具名件一直在本机 loom 缓存里，**26.1 MB / 19.2 MB**（远小于我说的量级），取出即用 ⇒ 按用户指令做了，并把 98 个名字从「未核实」改判为「构件已证存在」。教训：**报「需要下载」之前先扫本机缓存**。
+- §8.9(2) 说「余 391 行要该档 MC 侧件才核得了」：对 fabric 两档本轮**已兑现**（98/227）；对 forge 1.12.2 仍成立。
+
+---
+
+## 2026-10-13 · 「无构件档」复核 + §8.8 四项处置 + 残余 391 分诊（维护档）
+
+**第 0 块 · 结论**：回答「无构件档是不是真没有构件」—— **不是**。缓存与临时目录里，forge 1.7.10–1.12.2、fabric 1.14.4/1.16.5、quilt 1.18.2–1.21.1、liteloader 三档、modloader、bedrock **都有可用件**（台账 §2 那句「本机无可用构件」已在 §8.9(1) 更正，表头加指针）。用新件补跑 775 行，**384 行（50%）当场改判为「构件里在」**；余 391 行逐名分诊为「库类 / 读者自定义名 / Vanilla 侧无 MC 件 / 行内否定例」四类，**未再发现真缺陷**。台账 §8.8 挂着的四项**全部处置**（3 处改代码、1 处加就地说明、2 项判为假红）。`assert-skill-mirrors` = ok。**未提交**（提交归用户）。
+
+### 1. 改了哪些文件
+
+- 文档修复（§8.8 四项 ⇒ 6 文件）：
+  - `forge/1.13.2/.cursor/skills/mc-item/SKILL.md`：删 `getKnockbackResistance`（字段 / 构造参数 / override）；补上文档漏掉的必需项 `getRepairMaterial()`
+  - `forge/1.13.2/.cursor/skills/mc-recipe/SKILL.md`：删 `getType()` override 与 `ModRecipes.MY_TYPE`（1.13.2 `IRecipe` 无 `getType()`）
+  - `forge/1.13.2/.cursor/skills/mc-particle/SKILL.md`：`particleMaxAge = 40` → `setMaxAge(40)`；`onUpdate()` → `tick()`
+  - `forge/1.16.5/.cursor/skills/mc-gui/SKILL.md`：`BACKGROUND_TEXTURE` → `AbstractGui.BACKGROUND_LOCATION`
+  - `fabric/1.17.1/code-patterns/03-entity-patterns.md`：`EntityAttributeModification` 整块注释掉，改指 `FabricDefaultAttributeRegistry#register`（签名留 `TODO(未核实)`）
+  - `fabric/1.21.1/code-patterns/02-item-patterns.md`：`ArmorMaterial` 加就地 ⚠️（本档是 **record**，逐名对照），整块改写留 `TODO(未核实)`
+- 台账 `doc/name-provenance-audit.md`：§2 表头加「已被 §8.9(1) 更正」指针；新增 **§8.9**（(1) 无构件档复核表 / (2) 补核读数 / (3) §8.8 逐项处置 / (4) 残余 391 行分诊 + 量具已知局限）
+- 便签区脚本（不入库）：`F:\MOD_TEST\verify-extra.mjs`（新增「源码 jar 按词切」支持）、`scan-jars.mjs`（横扫 12 个根的 jar）、`resid.mjs`（残余分诊）
+- 镜像：`forge/1.13.2`、`forge/1.16.5` 两档 × `scripts/sync-skills.ps1 -TargetDir`
+- `fabric/1.17.1`、`fabric/1.21.1` 改的是 `code-patterns/**`（**不进镜像面**），无需刷镜像
+
+### 2. 判据与反证
+
+- 「构件里在」的判据：JVM 类文件**常量池匹配**（顶层类简单名不进常量池 ⇒ 另按含 `/` 的串匹配）；`loader-jars\*-fabric-api.jar` 是**源码 jar**（内容是 `.java`）⇒ 按词切匹配
+- **反证 1（三个高信号名逐站点读上下文判非缺陷）**：`forge/1.12.2` 的 `IItemTier` 全部出现在「**不要** `implements IItemTier`（1.14+）」；`fabric/1.16.5` 的 `MixinLauncher` 出现在「**不要**手写 MixinBootstrap / MixinLauncher」；`fabric/1.14.4` 的 `ScreenEvents` 出现在「1.14.4 索引里**没有** `ScreenEvents.AFTER_INIT`」—— 构件查无恰好**印证文档正确**，不是缺陷
+- **反证 2（quilt 新件不改变任何判定）**：有 QSL 件的 5 档（1.18.2/1.19.4/1.20.1/1.20.4/1.21.1）在当前扫描里 **0 行** nowhere/cross；而有行的 5 档（1.21.3/1.21.4/1.21.8/1.21.10/1.21.11）**恰好没有 QSL 件** ⇒ 两集合互补
+- **假红类登记**：`forge/1.16.5`、`forge/1.17.1` 的 `knowledge/porting/*` 里的 `builtInRegistryHolder` —— porting 文档讲的是**目标版本** API，按宿主档构件核必假红（与台账 §5「版本迁移文档」同类）
+- `fabric/1.21.1` 那条**没有**按 record 全量改写：`RegistryEntry<SoundEvent>` 与 `ArmorMaterial.Layer` 的构造形态本档未取证 ⇒ 只加说明 + `TODO`，不拿猜的写
+
+### 3. 验证台账
+
+- `node F:\MOD_TEST\verify-extra.mjs`（exit 0）：输入 775 行；`fabric|1.14.4` 276 行 → present 113 / 查无 163（唯一 110）；`fabric|1.16.5` 328 → 145 / 183（唯一 117）；`forge|1.12.2` 167 → 122 / 45（唯一 40）；`liteloader|1.12.2` 4 → 4 / 0；**合计 present 384（50%）/ 仍查无 391**
+- 未被任何行命中的 EXTRA 键（16 个，即那些档确实无扫描行）：`quilt|1.18.2/1.19.4/1.20.1/1.20.4/1.21.1`、`liteloader|1.8.9/1.10.2`、`forge|1.7.10/1.8.9/1.9.4/1.10.2/1.11.2`、`modloader|1.2.5/1.5.2/1.6.4`
+- `node mcp-server/scripts/assert-skill-mirrors.mjs` ⇒ **ok**（扫档 57 / 比对目标 12418 / AGENTS 漂移 0 / 孤儿 0 / 拒 0）—— 证明本批 `.cursor/skills` 改动已刷全 7 面
+- §8.8 那 6 个文件改动后**逐文件回读确认已落盘**（早前一次注入式读取显示的是改前内容，属读取陈旧，非改动丢失）
+- 未跑 `npm test` / `node test-scripts.mjs`（本轮未动 `mcp-server/**` 与任何门脚本）；未 `git add/commit`
+
+### 4. 数据侧变更
+
+无。本轮只改 6 个知识面 `.md`、台账与 `DELIVERY_LOG.md`；未动 `data/**`、未动平台元数据、未动 scaffold。
+
+### 5. 未做清单
+
+- 余 391 行里属 **Vanilla 侧**的名字（`getPlacementState` / `setBlockState` / `isSneaking` / `ofItems` / `saturationModifier` …）需要该档 **MC 侧构件**才核得了；本机确无 ⇒ 仍**未核实**
+- `quilt 1.21.3–1.21.11` 的 QSL 面：本机无该 5 档 QSL 件（有件的 5 档恰好无行）⇒ 仍**未核实**
+- 第三方库 API（Cloth / REI / JEI / GeckoLib 等）本机无构件 ⇒ 仍**未核实**
+- `modloader` 精确 1.6.4 无件（本机只有 1.6.2 反编译转储）⇒ 按 1.6.2 核过的结论一律标注「以 1.6.2 代 1.6.4」
+- 未 `git add/commit`（提交归用户）
+
+### 6. 自我更正
+
+- **上一节（「crossPack 降档面系统审」）§5 与台账 §2 的「本机无可用构件」是错的**：前两轮只扫了既有「构件集」里的路径，没扫缓存与临时目录。实际 `F:\MC_GAME\_oracle-jars`、`D:\mc-skill-temp`、`.gradle/caches/**` 里 QSL / liteloader / modloader / fabric-api 源码件 / forge legacy universal 都在。本轮已在台账 §8.9(1) 列表更正，并在 §2 原表加指针（原表保留为「扫描构件集当时的状态」，不改写历史读数）。
+- **上一节 §5「台账 §8.8 四项未动」→ 本轮全部关闭**（3 处改代码 + 1 处加就地说明 + 2 项判假红）。
+- 量具的**行内否定盲区**本轮再次显形（`negBlock` 腿只判代码块级否定）⇒ 已写进台账 §8.9(4) 作为**已知局限**，免得下轮当新发现重复排查。
+
+---
+
+## 2026-10-13 · crossPack 降档面系统审 + 新扫描行全量构件对照（第三批修复：forge 1.13.2/1.14.4/1.15.2/1.16.5/1.18.2/1.20.x）（维护档）
+
+**第 0 块 · 结论**：按令补上前两轮明确记缺的两条腿 —— ① **crossPack 降档面**（2003 行）与 nowhere 合并后过真构件，`ABSENT` 仅 97 行落在可核档（另 242 行落无构件档＝未核实），分诊出 **16 处版本错配**并全部就地修掉 + 留 javap 标记；② **新进面行**（5225 行 = nowhere 3222 ∪ crossPack 2003）跑了一遍全量构件对照。`assert-skill-mirrors` = ok；**未提交**（提交归用户）。
+
+### 1. 改了哪些文件
+
+- 便签区脚本（不入库）：`F:\MOD_TEST\verify-all.mjs`（全局核验：按 jar 聚合所需名字 ⇒ 每件只读一遍、缓存记 `queried` 全集）、`triage-cross.mjs`、`probe-entries.mjs`、`cross-preview.mjs`、`diff-scan.mjs`、`scan-yaml.mjs`、`sweep-check2.mjs` / `sweep-check3.mjs`
+- 修复 16 处 / 14 文件（逐条证据见台账 §8.7）：
+  - `forge/1.13.2/code-patterns/03-entity-patterns.md`：`EntityRendererManager` → `RenderManager`
+  - `forge/1.14.4/code-patterns/01-block-patterns.md`、`forge/1.15.2/code-patterns/01-block-patterns.md`（read/write 两处）、`forge/1.15.2/knowledge/antipatterns/entity.md`、`forge/1.14.4/knowledge/antipatterns/networking.md`：`NBTTagCompound` → `CompoundNBT`（后一处另加就地 ⚠️「本块是 1.12 形态待改写」）
+  - `forge/1.15.2/.cursor/skills/mc-gui/SKILL.md`：`IInteractionObject` → `INamedContainerProvider`
+  - `forge/1.14.4/code-patterns/04-world-patterns.md`：`defaultBlockState()` → `getDefaultState()`
+  - `forge/1.20.1` / `forge/1.20.4` `.cursor/skills/mc-entity/SKILL.md`：`ModelRenderer` → `ModelPart`
+  - `forge/1.20.4/.cursor/skills/mc-gui/SKILL.md`：`NetworkHooks.openScreen(...)` → `serverPlayer.openMenu(p)`
+  - `forge/1.16.5/.cursor/skills/mc-sound/SKILL.md`：`BLOCK_STONE_*` → `STONE_*`
+  - `forge/1.19.4` / `1.20.1` / `1.20.4` `.cursor/skills/mc-fluid/SKILL.md`：`.noDrops()` → `.noLootTable()`
+  - `forge/1.18.2/.cursor/rules/{05-events,08-client-server}.mdc`：`RegisterKeyMappingsEvent` → `ClientRegistry.registerKeyBinding(...)`（放进 `FMLClientSetupEvent`）
+- 镜像：`forge/{1.15.2,1.16.5,1.18.2,1.19.4,1.20.1,1.20.4}` 六档 × `scripts/sync-skills.ps1 -TargetDir`
+- 台账：`doc/name-provenance-audit.md` 新增 **§8.6**（crossPack 系统审读数与分诊）/ **§8.7**（第三批缺陷表）/ **§8.8**（仍留未核实四项）
+
+### 3. 验证台账
+
+- `node F:\MOD_TEST\verify-all.mjs`（exit 0）：输入 5225 行（nowhere 3222 + cross 2003）；读构件件 870 + 库池 1840；结果 nowhere `PRESENT-MAIN 1086 / DEPS 309 / LIB 560 / ABSENT 1267`、cross `PRESENT-MAIN 981 / DEPS 504 / LIB 179 / ABSENT 339`
+- **核验器先验后信**：对 5 组已知名定向取证（1.14.4 有 `CompoundNBT` 无 `NBTTagCompound`；1.13.2 有 `RenderManager`；1.20.1 有 `ModelPart`；1.16.5 `SoundEvents` 只有 `STONE_*`；1.20.4 无 `NetworkHooks` 而 1.20.1 有）—— 全部与判据一致
+- `node mcp-server/scripts/assert-skill-mirrors.mjs` ⇒ `ok`（扫档 57 / 比对目标 12418 / AGENTS 漂移 0 / 孤儿 0 / 拒 0）
+- 修完重跑量具：nowhere **3222**（TYPE 1238 + MEMBER 1984）；crossPack **1984**（比审前 2003 少 19 行）
+- 未跑 `npm test` / `node test-scripts.mjs`（本轮未动 `mcp-server/**` 与门脚本）；未 `git add/commit`
+
+### 5. 未做清单
+
+- 台账 §8.8 四项未动：`forge/1.13.2/.cursor/skills/{mc-item,mc-recipe,mc-particle}` 的 `IRecipeType` / `onUpdate` / `particleMaxAge` / `getKnockbackResistance`（构件已证**本档查无**，但正确替换形未取证 ⇒ 不拿邻版名顶替）；`forge/1.16.5` mc-gui 的 `BACKGROUND_TEXTURE`（归类存疑）；porting 文档的 `builtInRegistryHolder`（讲的是目标版本）；fabric 两处可疑名（正确形态未定）
+- crossPack `ABSENT` 落**无构件档** 242 行、nowhere `ABSENT` 落无构件档 429 行 ⇒ 仍**未核实**
+- 第三方库 API（Cloth / REI / JEI / GeckoLib 等）本机无构件 ⇒ 仍未核实
+- 未 `git add/commit`（提交归用户）
+
+### 6. 自我更正
+
+- 上一节（「量具 yaml 盲区修正」）§5 把「**crossPack 降档面未逐行审**」与「yaml 新行进面未跑全量构件对照」列为缺口 —— **本轮两条都关闭**（读数与分诊见台账 §8.6/§8.7）。
+- 更正本会话中途一处判断：我一度据 `forge/1.13.2` 用了 `initEntityAI` / `EntityAINearestAttackableTarget` 判其「抄了 1.12 的 AI 写法」；构件实测 **1.13.2 仍在**（Goal 改写是 1.14 才发生）⇒ 该判断作废，该文件未改。
+
+---
+
+## 2026-10-13 · 名字出处量具 yaml 盲区修正 + 第二批真缺陷修复（forge 1.13.2 / 1.18.2 / fabric 三档）（维护档）
+
+**第 0 块 · 结论**：复查下一节「全部 nowhere」结论时发现量具的 `extractCodeFences` **整块跳过 ```yaml 围栏**，而本仓 `code-patterns/**` 的代码恰恰写在 yaml 围栏里 ⇒ 下一节「扫描面已扩到 code-patterns」实际大半没生效。已修量具并重跑（nowhere 3073 → 3232）；对随新面进来的行分诊后又修 **7 处真缺陷**（`forge/1.13.2/code-patterns/{01,04}` 的 TileEntity/Biome 写法、`forge/1.18.2/code-patterns/03` 的 `ExplosionInteraction`、`fabric/{1.16.5,1.18.2,1.20.1}/code-patterns/01` 的 `BlockSoundGroups`），一律 javap 逐名取证 + 就地留标记。台账新增 §8 记第二批，并把 §3 的 3073 总表标为过期读数。**本轮未提交**（提交归用户）。
+
+### 1. 改了哪些文件
+
+- 量具（便签区，不入库）：`F:\MOD_TEST\nonfabric-skill-names.mjs` —— `extractCodeFences` 的 NONJVM 分支增「`ya?ml` 围栏取 `---` 之后片段当代码扫」
+- 修复（7 处 / 5 个文件，全部 `code-patterns/**`，非镜像面）：
+  - `forge/1.18.2/code-patterns/03-entity-patterns.md:71`：`Level.ExplosionInteraction.BLOW` → `Explosion.BlockInteraction.BREAK`（1.18.2 主件只有 `Explosion$BlockInteraction`；`Level$ExplosionInteraction` 自 1.19.4 才有）
+  - `forge/1.13.2/code-patterns/01-block-patterns.md`（TileEntity 模式）：`ITileEntityProvider`+`createNewTileEntity` → `IForgeBlock#hasTileEntity` / `createTileEntity`；`TileEntityTypeRegistry….get()` → `TileEntityType.Builder.create(...).build(null)` + `RegistryEvent.Register<TileEntityType<?>>`；`update()` → `tick()`；`writeToNBT/readFromNBT` → `write/read`；`setInteger/getInteger` → `setInt/getInt`
+  - `forge/1.13.2/code-patterns/04-world-patterns.md`（Ore Generation）：删 `MinecraftForge.ORE_GEN_BUS` + `WorldEvent.GenerateSpawn` → 指向 `Biome#addFeature(GenerationStage.Decoration, CompositeFeature)`；Feature / Placement 配置类名留 `// TODO(未核实)`
+  - `forge/1.13.2/code-patterns/04-world-patterns.md`（Custom Biome）：`Biome.Builder` → `Biome.BiomeBuilder`；删 `withDefaultTemperature()` / `withTemperatureBiome()` / `build()`；`surfaceBuilder(new SurfaceBuilder(...), new SurfaceConfig(...))` → `surfaceBuilder(new CompositeSurfaceBuilder<>(new DefaultSurfaceBuilder(), new SurfaceBuilderConfig(...)))`
+  - `fabric/{1.16.5,1.18.2,1.20.1}/code-patterns/01-block-patterns.md`：`BlockSoundGroups.GRASS` → `BlockSoundGroup.GRASS`
+- 台账：`doc/name-provenance-audit.md` —— §3 总表下加过期 banner；新增 §8（yaml 盲区 / 新行分诊 / 第二批缺陷表 / 未处理缺口 / 复现）
+- 未动任何 `data/**`、门脚本、`.cursor/**`（故无需刷镜像）
+
+### 3. 验证台账
+
+- 量具重跑（`node F:\MOD_TEST\nonfabric-skill-names.mjs`，退出码 0）：修 yaml 后 nowhere = **3232**（TYPE 1241 + MEMBER 1991）；再修 7 处缺陷后重跑 = **3222**（TYPE 1237 + MEMBER 1985）
+- 构件取证：1.13.2 主件 `forge-1.13.2-25.0.223_mapped_snapshot_20180921-1.13.jar`、1.18.2 主件 `forge-1.18.2-40.1.80_mapped_parchment_2022.08.21-1.18.2.jar`、fabric 1.17.1 / 1.20.1 loom 合并件，逐名 javap（读数见台账 §8.3 表）
+- 残留扫描（`sweep-check2.mjs` / `sweep-check3.mjs`，扫 24665 个 `.md/.mdc/.java`，排除平台 `data/`、构建产物与报告面）：命中的非镜像面行**全为披露标记 / 负例 / 「该版本确实存在」的合法用法**，未再发现旧名残留
+- 未跑 `npm test` / `test-scripts.mjs`（本轮未动 `mcp-server/**`、未动 `.cursor/rules` ⇒ 无镜像与门链影响）；未跑构件全量对照 `verify-names3.mjs`（缺口见台账 §8.4）
+
+### 5. 未做清单
+
+- **`crossPack` 降档面（944 TYPE + 1059 MEMBER 行）未逐行审**：1.18.2 的 `ExplosionInteraction` 正是靠人工复查才发现（B 腿把「1.19.4 有」降成 crossPack，绕过了 nowhere 清单）。系统性审该面本轮未做。
+- **yaml 修正后新进面的行未跑全量构件对照**：只对判断可疑者逐一 javap，其余属**未核实**。
+- `forge/1.13.2` Ore Generation 的 Feature / Placement 配置类名**未取证**（就地留 `// TODO(未核实)`）。
+- 上一节列的「无构件档」（forge ≤1.12.2 / quilt 全族 / liteloader / modloader / bedrock / fabric 1.14.4·1.16.5）本机仍无构件 ⇒ 仍**未核实**，本轮未复查。
+- 未 `git add/commit`（提交归用户）。
+
+### 6. 自我更正
+
+- **本会话中段的判断错误（已当场推翻）**：我一度据 1.13.2 用 `initEntityAI` / `EntityAINearestAttackableTarget` 判其「用了 1.12.2 的 AI 写法」；构件 javap 后确认 **1.13.2 仍在**（`EntityAITasks` / `EntityAI*` 全族在场，Goal 改写是 1.14 才发生）⇒ 该判断作废，文档不改。
+- **纠正下一节的两处结论**：① 下一节第 0 块称「扫描面按令扩到各档 `code-patterns/`、`knowledge/`、`AGENTS.md`、`scaffold/**`」——实测**大半未生效**（yaml 围栏被整块跳过），故其 nowhere = 3073 与台账 §3 总表是**偏低读数**，真值 3232；② 其 §7「后续」的「未覆盖档」清单不变，但须增列两条覆盖缺口（crossPack 面、yaml 新行未全量核）。
+- **DELIVERY_LOG 结构更正**：下一节（「非版本面收尾四项」）的节标题此前被误删、我又一度把它插到该节正文**之下** ⇒ 本轮移回正文之前；该节内容一字未改。
+
+---
+
+## 2026-10-13 · 名字出处量具扩面 + 全部 nowhere 过真构件 + 8 族文档缺陷修复 + /doc 台账（维护档）
+
+**第 0 块 · 结论**：扫描面按令扩到各档 `code-patterns/`、`knowledge/`、`AGENTS.md`、`scaffold/**`（含 `.java`）并加入 fabric 全族，nowhere 从 806 涨到 3073 行；3073 行逐名过真构件（主件 + 档内依赖件 + 本机库池）后分四态，量具盲区 1825 行（文档没错）、**真缺陷 8 族 45 处已就地修掉并留出处标记**、846 行可核档查无/498 行本机无构件（未核实）。台账落 [doc/name-provenance-audit.md](./doc/name-provenance-audit.md)（脚本生成，含方法/覆盖表/缺陷族/待审 39 名）。本轮**未提交**（提交由用户执行）。
+
+1. **改了哪些文件**
+   - 修复（8 族，均带构件证据与就地标记）：
+     - `forge/{1.17.1,1.18.2,1.19.4,1.20.1,1.20.4}/code-patterns/04-world-patterns.md`、`forge/1.19.4/code-patterns/README.md`、`neoforge/code-patterns/04-world-patterns.md`：`AmbientMoodSettings.LEGACY_CAVE` → `LEGACY_CAVE_SETTINGS`（1.14.4 那处整套 snippet 臆造，按 javap 重写为 `surfaceBuilder`/`parent` 形态）
+     - `forge/{1.19.4,1.20.1,1.20.4}/.cursor/rules/09-anti-patterns.mdc`（✅ 块）、`…/.cursor/rules/08-client-server.mdc`（决策流文案）、`…/knowledge/antipatterns/events.md`（❌+✅ 两处并补披露）：`RenderGameOverlayEvent` → `RenderGuiOverlayEvent`
+     - `forge/1.16.5/code-patterns/04-world-patterns.md`：`withEffects/withFogColor/withSkyColor/withGenerationSettings/withMobSpawnSettings` 全族臆造 → 真名；`category(` → `biomeCategory(`；`AMBIENT_BASALT_DELTAS_LAZY` → `…_LOOP`；`Biome$Builder#surfaceBuilder` 移除（1.16.2+ 已迁 `BiomeGenerationSettings`）
+     - `forge/1.17.1/code-patterns/03-entity-patterns.md`：`Level.ExplosionInteraction.BLOW` → `Explosion.BlockInteraction.BREAK`
+     - `forge/{1.17.1,1.19.4,1.20.1,1.20.4}/code-patterns/03-entity-patterns.md`：裸 `INNER_ARMOR/OUTER_ARMOR` → `ModelLayers.PLAYER_INNER/OUTER_ARMOR`
+     - `forge/{1.16.5,1.17.1,1.19.4,1.20.1,1.20.4}/code-patterns/03-entity-patterns.md`：`getAttributeMap()/getAttributeManager().registerAttribute()` → `createAttributes()` 形态（1.16.5 `AttributeModifierMap.MutableAttribute`，1.17.1+ `AttributeSupplier.Builder`）；`.setShouldWatch(true)` 删除（1.16.5 无此方法）
+     - `forge/{1.16.5,1.17.1,1.19.4,1.20.1}/knowledge/antipatterns/networking.md`：`getReachingSide` → `getReceptionSide`
+   - 镜像：`forge/{1.19.4,1.20.1,1.20.4}` 的 7 面镜像按纪律用 `scripts/sync-skills.ps1 -TargetDir` 重刷（42 个镜像文件随源变化）
+   - 新建：[`doc/name-provenance-audit.md`](./doc/name-provenance-audit.md)（台账，由 `F:\MOD_TEST\gen-doc.mjs` 生成）
+   - 便签区（不入库）：量具 `nonfabric-skill-names.mjs`（扩面 + CRLF 修）、`artifact-map2.mjs`、`verify-names3.mjs`、`apply-fixes.mjs`/`apply-fixes2.mjs`、`gen-doc.mjs`、`probe*.mjs`
+
+3. **验证台账**（as-of 本轮；数字均带口径）
+   - 量具（扩面后，`node F:\MOD_TEST\nonfabric-skill-names.mjs` 退出码 0）：nowhere **3073 行** = TYPE 1229 + MEMBER 1844；各包 JSON 求和 = 总表（自洽）；不变量「来源行是整行注释 = 0」（`probe7`）
+   - 真构件核验（`verify-names3.mjs`，退出码 0，3073 行）：`PRESENT-MAIN 966` / `PRESENT-DEPS 299` / `PRESENT-LIB 560` / `ABSENT 846`（该档有构件、三者皆无）+ `498`（无构件档）；口径：主件 = 各档 mapped/merged/loom 件，依赖件 = net.minecraftforge `eventbus/coremods/unsafe/fml*` + net.neoforged `neoforge-<ver>-universal/bus/coremods` + fabric `remapped_mods` 全部件，库池 = 本机 `modules-2` 1890 件（含跨版本，方向偏 PRESENT）
+   - 修复残留检查（`probe13.mjs`）：非镜像面内 `LEGACY_CAVE` 6 处全为披露注释；`RenderGameOverlayEvent` 28 处 = 19 处「该版本（1.12.2–1.18.2）确实存在」+ 9 处披露；`withEffects` 族 / `getReachingSide` / 裸 `INNER/OUTER_ARMOR` 仅剩披露与负例
+   - 门：`node mcp-server/scripts/assert-skill-mirrors.mjs` → `ok`（57 棵树 / 12418 条比对目标 / AGENTS 漂移 0 / 孤儿 0）
+   - 构件档位覆盖：可核 32 档（forge 1.13.2–1.20.4 九档、neoforge 10 档、fabric 12 档、rift 借 1.13.2）；不可核（本机无构件）列于台账 §2 表
+   - 待审清单（台账 §5.1，39 个唯一名）经逐名核：全部为读者自建名 / 处理器名 / 散文，**无 API 名**
+
+5. **未做清单**
+   - 无构件档一律**未核实**（不是「判无缺陷」）：forge ≤1.12.2（68 行；本机 `caches/minecraft` 下 1.12.2 只有 obf/SRG 件，无 MCP 层）、quilt 10 档、liteloader 3 档、modloader 3 档、bedrock、fabric 1.14.4/1.16.5 = 共 498 行
+   - 第三方库 API 248 行（Cloth/REI/JEI 等）：本机 `modules-2` 无对应 group，未核
+   - `version-changes/*` 文档按宿主档构件核会假红（讲的是别的版本）——需拿被述版本构件重核，本轮未做（台账已单列该类）
+   - 量具的**字段腿 / 库件腿**未补（本轮只用外部构件人工核）
+   - 未 `git add/commit`（纪律：提交归用户）；未改任何 `data/**`、门、脚本
+   - `ll-src/`（LiteLoader 源码树，未跟踪）**非本轮产物**，未动
+
+6. **自我更正**
+   - 本会话早先版本（`verify-names.mjs` / `verify-names2.mjs`）报的 ABSENT 偏大：只拿**合并主件**核 ⇒ `SubscribeEvent`/`DeferredRegister`/`FMLJavaModLoadingContext`/`ScreenEvents`/Cloth 类全成假 ABSENT。v3 加「档内依赖件 + 全机库池」后改判 **560 行**为 PRESENT-LIB；**以 v3（`verify3.json`）为准**，v1/v2 的汇总数字作废。
+   - 上一轮说 1.18.2 的 `RenderGameOverlayEvent`「未核实」→ 本轮构件实测：**1.18.2 有该类**（1.19.4 起才删），故 1.18.2 档不改。
+   - 上一轮报的「181 处」是含 7 面镜像的粗数；本轮按非镜像面重数 = 28 处（19 合法 + 9 披露）。
+
+---
+
 ## 2026-10-13 · 非版本面收尾四项（temp 证据入库 / iserror-anchor selftest 接线 / en README 补 Discord / CORPUS 行号口径）（维护档）
 
 **第 0 块 · 结论**：按用户点名的四项收尾 —— ① 把台账 `evidenceRefs` 指到的 6 份 gitignored `temp/` 证据复制进跟踪面 `mcp-server/docs/evidence/`，台账 9 条引用随之改指（干净 clone 不再在引用位点断链）；② `assert-iserror-anchor.mjs` 的 `--selftest` 接进 `test-scripts.mjs` 的 `SELFTEST_GATES`（此前只在 `REAL_RUN_GATES`）；③ `README_human.en.md` 只补 Discord 段（不含 QQ）；④ `CORPUS_PROVENANCE.md` 头部加一句「`原 AGENTS.md:NNN` 是搬入当时快照、会漂」。验证链 `assert-scripts-parse` / `assert-rule-ledger` / §第8步 `test-scripts.mjs` / `npm test` 全绿。**未 commit、未 push**；6 份新证据件**已 `git add`**（要自行 add 的，`git reset mcp-server/docs/evidence/` 即可）。
@@ -57,6 +467,8 @@
 ### 6. 自我更正
 
 - 无（本轮未推翻上轮任何结论）。进度对照：上轮（2026-10-12）未做清单 4 条中，本轮关 3 条 —— 「`evidenceRefs`→temp/」（第 1 条）、「CORPUS 行号」（第 2 条；上轮记「7 处」，本轮实测 6 行 / 逐行号 8，计数口径不同、不追）、「`README_human.en` 的 QQ/Discord 缺失」（第 4 条的 Discord 半）；剩「`src/...` 缺前缀」（第 3 条）。**iserror-anchor 不在那份未做清单里**，是用户另行点名的项。
+
+---
 
 ## 2026-10-12 · 只读审查（`temp/audit-20261011`）非版本面修复 · 批 B（~27 P1）+ 批 C（~115 P2 + P3）（维护档）
 

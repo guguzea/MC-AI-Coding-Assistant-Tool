@@ -71,8 +71,9 @@ public void onServerTick(TickEvent.ServerTickEvent event) {
 
 ```java
 // 错误（客户端代码）
+// 本档构件实测（javap）：RenderGameOverlayEvent 已删，改听 RenderGuiOverlayEvent（Post 子类在场）
 @SubscribeEvent
-public void onRender(RenderGameOverlayEvent.Post event) {
+public void onRender(RenderGuiOverlayEvent.Post event) {
     world.setBlockState(pos, Blocks.DIRT.defaultBlockState()); // ❌ 禁止在渲染线程修改世界
 }
 ```
@@ -83,7 +84,7 @@ public void onRender(RenderGameOverlayEvent.Post event) {
 
 ```java
 @SubscribeEvent
-public void onRender(RenderGameOverlayEvent.Post event) {
+public void onRender(RenderGuiOverlayEvent.Post event) {
     NetworkHandler.INSTANCE.sendToServer(new ModifyBlockMessage(pos));
 }
 ```

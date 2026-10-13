@@ -23,4 +23,9 @@ dependencies {
     //   官方替代是 QSL 的 org.quiltmc.qsl.base.api.entrypoint.ModInitializer#onInitialize(ModContainer)，构件
     //   org.quiltmc.qsl.core:qsl_base（javap 实测签名）；QSL 构件只出到 MC 1.21.1，故本档默认不引 QSL 依赖。
     //   注册仍用 Vanilla Registry.register；不要把 fabric-api 整包当 QSL。
+    // API 库：本档默认不引任何 API 库（QSL 无本版件）。需要 Fabric API 能力（渲染 / 物品栏 / 按键 / 网络等）时直接加 Fabric API 本体：
+    //   modImplementation "net.fabricmc.fabric-api:fabric-api:<FAPI 版本>+1.21.8"    // 本版线最新 live 读数 = 0.136.1+1.21.8
+    //   版本取 https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/maven-metadata.xml；Fabric maven = maven.fabricmc.net
+    //   （若解析不到该仓库，补 repositories { maven { url = 'https://maven.fabricmc.net/' } }）。
+    //   Quilt Loader 加载 Fabric 模组；实证：Jade / owo-lib 的 quilt 构建均声明 fabric-api required（QFAPI 在 1.21.3+ 无构件）。
 }

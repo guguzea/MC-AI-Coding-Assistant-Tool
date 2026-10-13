@@ -78,7 +78,8 @@ public void onMessage(MyMessage message, Supplier<NetworkEvent.Context> ctx) {
 
 ```java
 ctx.get().enqueueWork(() -> {
-    if (ctx.get().getDirection().getReachingSide() == LogicalSide.SERVER) {
+    // 1.16.5 实测（构件 javap）：方法名是 getReceptionSide（getReceptionSide 不存在）
+    if (ctx.get().getDirection().getReceptionSide() == LogicalSide.SERVER) {
         // 服务端逻辑
     }
 });

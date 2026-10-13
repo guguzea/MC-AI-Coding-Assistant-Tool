@@ -64,7 +64,7 @@ public class MyProjectile extends Projectile {
         if (!this.level.isClientSide) {
             // 爆炸效果
             this.level.explode(null, this.getX(), this.getY(), this.getZ(),
-                2.0f, Level.ExplosionInteraction.BLOW);
+                2.0f, Explosion.BlockInteraction.BREAK);   // 1.17.1 实测：BlockInteraction.{NONE,BREAK,DESTROY}，本档无 ExplosionInteraction/BLOW
             this.discard();
         }
     }
@@ -103,8 +103,8 @@ public class MyEntityRenderer extends HumanoidMobRenderer<MyEntity, MyEntityMode
         // TODO(未核实)：本档 api-index 中 HumanoidArmorLayer 无构造器记录（1.18.2 为 3 参、1.19.4+ 为 4 参），
         //   本档参数个数待 ingest_loader_api 核实后再定
         this.addLayer(new HumanoidArmorLayer<>(this,
-            new MyEntityModel<>(context.bakeLayer(INNER_ARMOR)),
-            new MyEntityModel<>(context.bakeLayer(OUTER_ARMOR))));
+            new MyEntityModel<>(context.bakeLayer(ModelLayers.PLAYER_INNER_ARMOR)),   // 1.17.1 实测：常量是 PLAYER_INNER_ARMOR
+            new MyEntityModel<>(context.bakeLayer(ModelLayers.PLAYER_OUTER_ARMOR))));   // 实测：PLAYER_OUTER_ARMOR
     }
 
     @Override
@@ -128,9 +128,11 @@ public static final RegistryObject<Attribute> EXTRA_HEALTH = ATTRIBUTES.register
 ATTRIBUTES.register(modEventBus);
 
 // 实体中应用
-this.getAttribute(ATTRIBUTES.get("extra_health")).ifPresent(attr ->
-    this.getAttributeMap().registerAttribute(attr)
-);
+// 实体中注册：1.17.1 实测（构件 javap）—— 属性走 createAttributes()（AttributeSupplier.Builder.add）；
+//   AttributeMap 没有 registerAttribute()，也不存在 getAttributeMap()
+public static AttributeSupplier.Builder createAttributes() {
+    return Mob.createMobAttributes().add(EXTRA_HEALTH.get());
+}
 ```
 
 > **注意：** Forge 1.17.1 使用 `ForgeRegistries.ATTRIBUTES` 注册自定义属性，DeferredRegister API 在 1.17.1 中处于过渡阶段。

@@ -105,6 +105,6 @@ private static final Block MY_PLANT = Registry.register(
     new Block(FabricBlockSettings.copyOf(Blocks.DANDELION)
         .noCollision()
         .breakInstantly()
-        .sounds(BlockSoundGroups.GRASS))
+        .sounds(BlockSoundGroup.GRASS))   // 构件实测：类名 BlockSoundGroup（本档无 BlockSoundGroups）
 );
 ```
