@@ -8,6 +8,56 @@
 
 ---
 
+## 2026-10-13 · 非版本面收尾四项（temp 证据入库 / iserror-anchor selftest 接线 / en README 补 Discord / CORPUS 行号口径）（维护档）
+
+**第 0 块 · 结论**：按用户点名的四项收尾 —— ① 把台账 `evidenceRefs` 指到的 6 份 gitignored `temp/` 证据复制进跟踪面 `mcp-server/docs/evidence/`，台账 9 条引用随之改指（干净 clone 不再在引用位点断链）；② `assert-iserror-anchor.mjs` 的 `--selftest` 接进 `test-scripts.mjs` 的 `SELFTEST_GATES`（此前只在 `REAL_RUN_GATES`）；③ `README_human.en.md` 只补 Discord 段（不含 QQ）；④ `CORPUS_PROVENANCE.md` 头部加一句「`原 AGENTS.md:NNN` 是搬入当时快照、会漂」。验证链 `assert-scripts-parse` / `assert-rule-ledger` / §第8步 `test-scripts.mjs` / `npm test` 全绿。**未 commit、未 push**；6 份新证据件**已 `git add`**（要自行 add 的，`git reset mcp-server/docs/evidence/` 即可）。
+
+### 1. 改了哪些文件
+
+**新建（已 `git add`；`mcp-server/docs/evidence/` 6 件，源见括号）**
+- `sweep81-CLEANUP-list.md`（← `temp/audit/sweep81/CLEANUP-list.md`，逐字）
+- `sweep81-SECTIONLESS-TRIAGE.md`（← `temp/audit/sweep81/SECTIONLESS-TRIAGE.md`，逐字）
+- `w14-javadoc-orphan-list.txt`（← `temp/w14-javadoc-orphan-list.txt`，逐字）
+- `audit-20260918-REPORT.md`（← `temp/audit-20260918/REPORT.md`；迁入时把 6 行本机绝对路径 `C:\Program Files\Java…` / `G:\JAVA17…` / `D:\mc-skill-temp…` / `G:\MCP_USE…` / `G:\graalvm-jdk…` 归一化为 `<…>` 占位符、顶部加 1 行迁入说明；729→731 行）
+- `w55-cleanup-list.txt`（← `temp/w55-cleanup-list.txt`，逐字）
+- `anchor-lint.mjs`（← `temp/ralph-20260922/_anchor-lint.mjs`；自用行 `node temp/ralph-20260922/_anchor-lint.mjs` → 新路径，1 处）
+
+**改（跟踪件，未 add）**
+- `mcp-server/scripts/assertion-ledger.json`：9 条 `evidenceRefs` 改指 `mcp-server/docs/evidence/`（涉 7 条规则：`forge-javadoc-1122-orphans-deletion` / `corpus-sectionless-classification` / `javadoc-index-parity-gate` / `w14-javadoc-576-orphans-ruling` / `external-content-trust-boundary` / `w55-hygiene-rulings` / `w54-no-external-injection-entry`）；同批改这几条 `claim`/`evidence` 散文里的旧 temp 路径。`w54` 原写「`_anchor-lint.mjs` 落在 gitignored `temp/`、零 tracked 引用」——迁入后该事实不再成立，故改写成「现跟踪于 `mcp-server/docs/evidence/`、仍**不进 门链** ⇒ 未纳管不变」。
+- `mcp-server/test-scripts.mjs`：`SELFTEST_GATES` 末尾追加 `"./scripts/assert-iserror-anchor.mjs",`（+1 行注释）；数组去重长度 42→43。
+- `mcp-server/scripts/assert-corpus-semantics.mjs:36` / `assert-javadoc-index-parity.mjs:34` / `assert-backlog-table-shape.mjs:10`：注释里的旧 temp 路径改指新路径（3 处，纯注释）。
+- `README_human.en.md`：文末补 `## Come hang out:` + `DISCORD: https://discord.gg/vY8n6G865`（只 Discord）。
+- `CORPUS_PROVENANCE.md`：头部 blockquote 加第 4 行 —— ⚠️「各条 `原 \`AGENTS.md:NNN\`` 的行号是 2026-10-09 搬入快照、会随根纲增删漂移 ⇒ 只作追溯、按章节名/关键句搜索，别拿行号回查」。现盘实测该文件 **6 行**含 `原 \`AGENTS.md:…\``（其中第 54 行并列 3 个行号 ⇒ 逐行号计 8）。
+- `CONTRIBUTING_LIST.md`：`L17` 行「现状」格**追加**一条 2026-10-13 更正（原文不回改 —— 遵本表「台账历史行不回改」规矩）：该件已迁入 `mcp-server/docs/evidence/anchor-lint.mjs` 受版本控制、**仍未进门链**（其依赖 `temp/plan-20260921-fix.json` 仍未入库）⇒ 原「不把它改造成正式门」裁定不变。
+
+**未动（说明）**：`mcp-server/CHANGELOG.md:1091`（2026-09-24 dated 历史记录，按规矩不 back-modify）；`.gitignore:109` / `.zcodeignore:109`（说的是**仍存在**的 temp 副本，未变假）。
+
+### 2. 判据与反证
+
+- **台账 `evidenceRefs` 逐条存在**（`assert-rule-ledger.mjs:95-101` 对每条 ref `fs.existsSync`）是「干净 clone 可复现」的承重判据。改前 9 条指向 gitignored `temp/`（clean clone 必红）；改后 `node scripts/assert-rule-ledger.mjs` ⇒ `ok（… 证据引用逐条存在）`。该判据自身的反证形态已具备：ref 指向空气即报 `evidenceRefs 指向不存在的文件`。
+- **`assert-iserror-anchor --selftest` 接线**：该门 `--selftest` 6 例（绿 2 / 红 4）此前**无默认链触发点**（只在 `REAL_RUN_GATES` 真跑；selftest 臂要人手跑）。接线后由 `test-scripts.mjs` §S4 的 `SELFTEST_GATES` 循环逐道 spawn。反证：`test-scripts.mjs` 自带**投毒③**（selftest 数组删一项、地板取实测 M）⇒ 报 `W1-2 数组 M=42 < 地板 43` 并点名，证该臂有牙。
+- **未新增 / 未放宽任何判据**：本轮只 `git add` 新证据件、改台账 ref、登记一记已有 selftest、改注释与文档。`README_human.*` 无门覆盖（实测全仓 0 引用）；CORPUS / CONTRIBUTING_LIST 是文档面。
+
+### 3. 验证台账
+
+- `cd mcp-server && node scripts/assert-scripts-parse.mjs` ⇒ `ok (223 个跟踪脚本可解析)`；口径 = tracked `.mjs/.js/.cjs`，含新 `anchor-lint.mjs`（改前 222）。
+- `node scripts/assert-rule-ledger.mjs` ⇒ `ok（不变量 86 条：closed 85 / open 1）`，末句「证据引用逐条存在」。
+- `node test-scripts.mjs` ⇒ **rc=0**；§S4 自印「盘上 77 / 可达 77 / §S18-S19 真跑 **52** / W1-2 selftest **43**」（后者改前 42）；末行 `script helper regression tests passed`。
+- `npm test` ⇒ **exit 0**。
+- 未跑：`npm run build`（未动 `src/**`）、`npm run test:cli:*`（未动 CLI 信封）、语料抓取类（与 `npm test` 并发会假红）。
+
+### 5. 未做清单
+
+- **上轮未做清单第 3 条未处理**：根文档内 `src/...` 缺 `mcp-server/` 前缀的 P3 群（`AGENTS.md` / `AUTO_SETUP.md` / `CONTRIBUTING*.md` / `README.md`）——用户本轮未点名。
+- **`README_human.en.md` 的 F&Q 第 4 条**（「为什么这么多工具」）相对中文版仍缺 —— 用户只点名同步 Discord。
+- **另外 13 道带 `--selftest` 但不在 `SELFTEST_GATES` 的门**（实测枚举：`assert-config-platform-face` / `assert-doc-absence-claims` / `assert-glossary-mojmap-face` / `assert-legacy-isolation` / `assert-lib-census-counts` / `assert-rule-ban-vs-example` / `assert-rule-internal-refs` / `assert-rules-api-names` / `assert-scaffold-mixin-shape` / `assert-skill-skeleton-census` / `assert-skill-yarn-attest` / `assert-test-harness` / `assert-yarn-named-integrity`）——用户只点名 iserror-anchor，其余登记备查、未动。
+- **`CORPUS_PROVENANCE.md` 的 6 处 `原 AGENTS.md:NNN`** 只加了口径句、未改成章节名（走「只加说明、不改行号」路线）。
+- **提交 / push 未做**（由用户执行）。
+
+### 6. 自我更正
+
+- 无（本轮未推翻上轮任何结论）。进度对照：上轮（2026-10-12）未做清单 4 条中，本轮关 3 条 —— 「`evidenceRefs`→temp/」（第 1 条）、「CORPUS 行号」（第 2 条；上轮记「7 处」，本轮实测 6 行 / 逐行号 8，计数口径不同、不追）、「`README_human.en` 的 QQ/Discord 缺失」（第 4 条的 Discord 半）；剩「`src/...` 缺前缀」（第 3 条）。**iserror-anchor 不在那份未做清单里**，是用户另行点名的项。
+
 ## 2026-10-12 · 只读审查（`temp/audit-20261011`）非版本面修复 · 批 B（~27 P1）+ 批 C（~115 P2 + P3）（维护档）
 
 **第 0 块 · 结论**：按审计判决修完**非版本面**的批 B 与批 C —— `src`/`scripts`/门脚本的 P1 与 P2 逐条落地，文档与计数块对齐现值，P3 只做可操作且不产生新假红项；版本面（8 个平台树）仍**只出移交清单、不改文件**。验证链全绿：`npm run build` / `node test-scripts.mjs` / `npm test` / `test:cli:quick` / `test:cli:full` 均 exit 0，两新门与 `assert-authoring-lint` 直跑绿。**无落盘风险**：未 commit、未 push。**一处需你拍板**：见第 6 块 —— 为容纳 `generateCapability` 的上界哨兵，把 `assert-generator-rejection-codes` 的未判定地板 4→5。

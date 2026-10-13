@@ -33,7 +33,7 @@
  *
  * 诚实边界（明写，不夸大）：
  *   · `sectionless`（无 `## ` 小节）**只打印、不判红** —— 2026-09-18 **逐族定性完成**
- *     （证据：temp/audit/sweep81/SECTIONLESS-TRIAGE.md + logs/sectionless.log）：
+ *     （证据：mcp-server/docs/evidence/sweep81-SECTIONLESS-TRIAGE.md + logs/sectionless.log）：
  *     bedrock 20/20（Learn 转储为扁平文本）、liteloader 27/30（上游用 `#`+`###` 跳 `##`）、
  *     forge-docs 12–21%（`#`+`###` 或扁平）、fabric-docs 2–6%（setext/MDX 索引页）、
  *     neoforge-docs 1–7%、quilt 25%、modloader 1/1（设计如此的空表页）、rift 1/6（上游空页，具名 residue）

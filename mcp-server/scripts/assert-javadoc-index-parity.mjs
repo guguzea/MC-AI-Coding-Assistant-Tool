@@ -31,7 +31,7 @@ const DATA_ROOT = process.env.MC_SKILL_DATA ?? path.join(REPO_ROOT, "data");
 /**
  * 已登记孤儿债务（盘上有、索引无）：只许减。
  * 2026-09-20：1.7.10 原有 576 个 ` (N)` 重件（raw+processed 各 576），经用户裁定**成对删除**
- * 1152/1152（清单 temp/w14-javadoc-orphan-list.txt）⇒ 债务归零，1.7.10 现 raw=proc=l0=1888。
+ * 1152/1152（清单 mcp-server/docs/evidence/w14-javadoc-orphan-list.txt）⇒ 债务归零，1.7.10 现 raw=proc=l0=1888。
  * 该常量此后必须保持为空：任何档再出现孤儿即红（棘轮只降）。
  */
 export const ORPHAN_DEBT = {};

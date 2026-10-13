@@ -7,7 +7,7 @@
  *
  * 为什么立：该表前言自写「台账历史行不回改，故本表是状态的**唯一现行读法**」，而此前**全仓没有任何门判它的形状** ——
  * `grep -rln CONTRIBUTING mcp-server/scripts/*.mjs` 的命中全是把它当**权威正文引用**，不是判据；
- * `temp/ralph-20260922/_anchor-lint.mjs` 默认判面只有 `PLAN-STATE-r2.md`（CONTRIBUTING 要人手动当 argv 传）。
+ * `mcp-server/docs/evidence/anchor-lint.mjs` 默认判面只有 `PLAN-STATE-r2.md`（CONTRIBUTING 要人手动当 argv 传）。
  * 于是第 33、34 两轮连续把它写坏而无人报警（`L41`/`L42` 的第三列整列缺失 + `L43` 插到 `L42` 之前），
  * 第 35 轮只补了自己那行。后果不是难看：
  *   - **第三列「需要谁拍板」丢失** = 「这条欠谁一个决定」没了 ⇒ 下一轮把它当「无人欠做」跳过；

@@ -207,3 +207,6 @@ The skill / rules / code-pattern files can run into the occasional problem, both
    **A:** Bedrock playtesting is still under development; this page gets updated once it lands.
 
 #### Questions or problems — open an issue and I'll reply as soon as I can
+
+## Come hang out:
+DISCORD: https://discord.gg/vY8n6G865

@@ -232,7 +232,7 @@
       "evidence": "删除探针实测：deleted=1828/1828、**0 失败**；删后 raw=3653 / processed=3653（与索引引用 3,653 一致）；成对关系先经精确核验（orphan↔raw(2) 零偏差）；LEDGER_TREES 已按 RELEDGER 口径同步 4567→3653",
       "evidenceRefs": [
         "mcp-server/scripts/assert-corpus-faithfulness.mjs",
-        "temp/audit/sweep81/CLEANUP-list.md"
+        "mcp-server/docs/evidence/sweep81-CLEANUP-list.md"
       ],
       "status": "closed",
       "gates": [
@@ -244,10 +244,10 @@
       "id": "corpus-sectionless-classification",
       "claim": "`sectionless`（无 `## ` 小节）经逐族定性：**全部为体例差异**（上游 `#`/`###`/setext 排版、纯文本转储、设计空表页、上游空页），无内容缺失 ⇒ 不升级为判据、保持只打印",
       "author": "sweep81 全树语义读首跑观测 → 2026-09-18 逐族抽样定性",
-      "evidence": "逐树抽样（≤5 篇/树；logs/sectionless.log + SECTIONLESS-TRIAGE.md）：bedrock 20/20 扁平转储（中位 11,323 字符）、liteloader 27/30 用 `#`+`###` 跳 `##`、forge-docs 12–21%（`#`+`###` 或扁平）、fabric-docs setext/MDX 索引页、neoforge 1–7%、quilt 25%、modloader 单页「空表」（设计）、rift 上游空页（已具名 residue）",
+      "evidence": "逐树抽样（≤5 篇/树；logs/sectionless.log + mcp-server/docs/evidence/sweep81-SECTIONLESS-TRIAGE.md）：bedrock 20/20 扁平转储（中位 11,323 字符）、liteloader 27/30 用 `#`+`###` 跳 `##`、forge-docs 12–21%（`#`+`###` 或扁平）、fabric-docs setext/MDX 索引页、neoforge 1–7%、quilt 25%、modloader 单页「空表」（设计）、rift 上游空页（已具名 residue）",
       "evidenceRefs": [
         "mcp-server/scripts/assert-corpus-semantics.mjs",
-        "temp/audit/sweep81/SECTIONLESS-TRIAGE.md"
+        "mcp-server/docs/evidence/sweep81-SECTIONLESS-TRIAGE.md"
       ],
       "status": "closed",
       "gates": [
@@ -764,10 +764,10 @@
       "id": "javadoc-index-parity-gate",
       "claim": "forge_javadoc 族必须有独立的「盘上 ↔ index-l0」双向差门：该族目录名（forge_javadoc/<ver>）不带版本前缀，audit-data-consistency 的 docSubDirs/parseIndexName 从不覆盖它 ⇒ §J/§S 对该族从不执行。判据 = raw==processed、索引↔processed 双向零差、盘上孤儿数 == 登记债务（棘轮：数量一变即红）。",
       "author": "原审查 X8/§3（576 孤儿页）+ 计划 v2 W1-4 + 2026-09-20 执行",
-      "evidence": "实测：1.10.2/1.11.2/1.12.2/1.8.9/1.9.4 三数相等、孤儿 0；1.7.10 raw=proc=2464、index-l0=1888、孤儿 576（=` (N)` 重件），登记 ORPHAN_DEBT。投毒：temp 假根造 1 个孤儿 ⇒ rc=1（「本档不许有孤儿」）；真数据 ⇒ rc=0。孤儿清单落 temp/w14-javadoc-orphan-list.txt（576 条，待裁定入索引 or 删除）。",
+      "evidence": "实测：1.10.2/1.11.2/1.12.2/1.8.9/1.9.4 三数相等、孤儿 0；1.7.10 raw=proc=2464、index-l0=1888、孤儿 576（=` (N)` 重件），登记 ORPHAN_DEBT。投毒：temp 假根造 1 个孤儿 ⇒ rc=1（「本档不许有孤儿」）；真数据 ⇒ rc=0。孤儿清单落 mcp-server/docs/evidence/w14-javadoc-orphan-list.txt（576 条，待裁定入索引 or 删除）。",
       "evidenceRefs": [
         "mcp-server/scripts/assert-javadoc-index-parity.mjs",
-        "temp/w14-javadoc-orphan-list.txt"
+        "mcp-server/docs/evidence/w14-javadoc-orphan-list.txt"
       ],
       "status": "closed",
       "gates": [
@@ -863,7 +863,7 @@
         "mcp-server/src/utils/actionable.ts",
         "mcp-server/src/docs-platform/search-utils.ts",
         "mcp-server/src/prompts/index.ts",
-        "temp/audit-20260918/REPORT.md"
+        "mcp-server/docs/evidence/audit-20260918-REPORT.md"
       ],
       "status": "closed",
       "gates": [
@@ -876,9 +876,9 @@
       "id": "w14-javadoc-576-orphans-ruling",
       "claim": "1.7.10 的 576 个 ` (N)` 历史重名件已按用户 2026-09-20 裁定**成对删除**（raw 嵌套 + processed 展平各 576 = 1152 件），删除后 raw=proc=index-l0=1888 三者相等、孤儿 0；门 assert-javadoc-index-parity 的 ORPHAN_DEBT 随之归零（此后任何档出现孤儿即红）。",
       "author": "计划 v2 W1-4「入索引还是删：先出 dryRun 清单给用户」+ 2026-09-20 执行",
-      "evidence": "删除探针实测：配对 576 对 / 无 raw 配对 0 / 落在 index-l0 内 0；删除 1152/1152 成功、0 失败（清单 temp/w14-javadoc-orphan-list.txt，含每对的 raw 与 processed 绝对路径）。删后复算：1.7.10 raw=1888 proc=1888 l0=1888，其余 5 档不变；assert-javadoc-index-parity rc=0；保真门 G3 经 RELEDGER 重算后 rc=0（泛型丢失仍 416、重名 0）。",
+      "evidence": "删除探针实测：配对 576 对 / 无 raw 配对 0 / 落在 index-l0 内 0；删除 1152/1152 成功、0 失败（清单 mcp-server/docs/evidence/w14-javadoc-orphan-list.txt，含每对的 raw 与 processed 绝对路径）。删后复算：1.7.10 raw=1888 proc=1888 l0=1888，其余 5 档不变；assert-javadoc-index-parity rc=0；保真门 G3 经 RELEDGER 重算后 rc=0（泛型丢失仍 416、重名 0）。",
       "evidenceRefs": [
-        "temp/w14-javadoc-orphan-list.txt",
+        "mcp-server/docs/evidence/w14-javadoc-orphan-list.txt",
         "mcp-server/scripts/assert-javadoc-index-parity.mjs"
       ],
       "status": "closed",
@@ -892,10 +892,10 @@
       "id": "w55-hygiene-rulings",
       "claim": "W5-5 卫生件按用户 2026-09-20 裁定**全部保留**：① sm-120x.xml 保留跟踪、.gitignore:113 的 `/sm-120x.xml` 规则保留不动（不做 git rm --cached）；② scripts/_oneoff（10 件）与 temp/audit/a5/a5repo 保留不删；③ 根 .gitattributes 由并行写者建立（未跟踪），本波不 adopt、不改动。裁定由门 assert-w55-hygiene-rulings.mjs 钉住：文件被删 / 被撤跟踪 / 规则被删即红。",
       "author": "计划 v2 W5-5 + 2026-09-20 执行",
-      "evidence": "机制更正（本轮实测）：`git check-ignore -v sm-120x.xml` rc=1 是**已跟踪文件不参与 ignore 判定**的正常表现；`--no-index` 下 ⇒ `.gitignore:113:/sm-120x.xml`（规则存在且形态正确）。此前「规则无效/被覆盖」为误读，REPORT.md 已同步更正。裁定钉门真跑输出：裁定保留物 2 项均在位；selftest 2 类判据（规则被删必红）rc=0。清单 temp/w55-cleanup-list.txt 转为备查。",
+      "evidence": "机制更正（本轮实测）：`git check-ignore -v sm-120x.xml` rc=1 是**已跟踪文件不参与 ignore 判定**的正常表现；`--no-index` 下 ⇒ `.gitignore:113:/sm-120x.xml`（规则存在且形态正确）。此前「规则无效/被覆盖」为误读，`audit-20260918-REPORT.md` 已同步更正。裁定钉门真跑输出：裁定保留物 2 项均在位；selftest 2 类判据（规则被删必红）rc=0。清单 mcp-server/docs/evidence/w55-cleanup-list.txt 转为备查。",
       "evidenceRefs": [
-        "temp/w55-cleanup-list.txt",
-        "temp/audit-20260918/REPORT.md"
+        "mcp-server/docs/evidence/w55-cleanup-list.txt",
+        "mcp-server/docs/evidence/audit-20260918-REPORT.md"
       ],
       "status": "closed",
       "gates": [
@@ -1392,14 +1392,14 @@
     },
     {
       "id": "w54-no-external-injection-entry",
-      "claim": "W5-4 判定落账：外部语料里「指令式」句子的来源**未指向任何仓外注入入口**，同机理已实证为主代理 confabulation；因此现行收口取「统一附 EXTERNAL_CONTENT_NOTICE（外部正文不得当指令）」而不是追注入源，护栏 `_anchor-lint.mjs` **存在但未纳管**（纳管与否另按裁定，不在本条内代裁）。",
+      "claim": "W5-4 判定落账：外部语料里「指令式」句子的来源**未指向任何仓外注入入口**，同机理已实证为主代理 confabulation；因此现行收口取「统一附 EXTERNAL_CONTENT_NOTICE（外部正文不得当指令）」而不是追注入源，护栏 `anchor-lint.mjs` **存在（现跟踪于 `mcp-server/docs/evidence/`）但未纳管**（未进门链；纳管与否另按裁定，不在本条内代裁）。",
       "author": "原审查§0.2（子代理工具结果里的伪造指令）+ 计划 v2 W5-4 + 2026-09-24 side chat 复核后落账（A5）",
-      "evidence": "① 检索面：`data/**/processed` 与 `mcp-server/**/*.md` 对本报告原文那批措辞 0 命中（唯一命中是该报告自身在描述注入），见 external-content-trust-boundary 条目；② 同机理已实证为主代理 confabulation：`temp/ralph-20260922/PLAN-STATE-r2.md` R79 / R87⑤；③ 护栏脚本存在：`temp/ralph-20260922/_anchor-lint.mjs`（`git ls-files | grep -c _anchor-lint` = 0 ⇒ 落在 gitignored `temp/`、零 tracked 引用、不在门链 ⇒ 即 L13；「仓内没有该脚本」的说法已被实测推翻，勿写）；④ 本条只记事实、不改判据，也不改动 EXTERNAL_CONTENT_NOTICE 的既有门（test-core / test-wave-bcd 继续钉注入位）。",
+      "evidence": "① 检索面：`data/**/processed` 与 `mcp-server/**/*.md` 对本报告原文那批措辞 0 命中（唯一命中是该报告自身在描述注入），见 external-content-trust-boundary 条目；② 同机理已实证为主代理 confabulation：`temp/ralph-20260922/PLAN-STATE-r2.md` R79 / R87⑤；③ 护栏脚本存在：`mcp-server/docs/evidence/anchor-lint.mjs`（原 `temp/ralph-20260922/_anchor-lint.mjs`，已随本轮迁入 git 跟踪）；仍**不在门链** ⇒ 未纳管即 L13（「仓内没有该脚本」的说法已被实测推翻，勿写）；④ 本条只记事实、不改判据，也不改动 EXTERNAL_CONTENT_NOTICE 的既有门（test-core / test-wave-bcd 继续钉注入位）。",
       "evidenceRefs": [
         "mcp-server/src/utils/actionable.ts",
         "mcp-server/src/docs-platform/search-utils.ts",
-        "temp/ralph-20260922/_anchor-lint.mjs",
-        "temp/audit-20260918/REPORT.md"
+        "mcp-server/docs/evidence/anchor-lint.mjs",
+        "mcp-server/docs/evidence/audit-20260918-REPORT.md"
       ],
       "status": "closed",
       "gates": [

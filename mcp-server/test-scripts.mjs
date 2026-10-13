@@ -2501,6 +2501,9 @@ const SELFTEST_GATES = [
     // 2026-10-09：档案指针门的两向自证（P1 缺失 / P2 无提及 / P2 README 替代 / P3 缺面 / 围栏两向 /
     // P4 未在册两向 —— 臂数不在这里抄，唯一真值源 = 该门 `--selftest` 末行）。
     "./scripts/assert-archive-pointers.mjs",
+    // `L3` 落地门（2026-09-30 B8，台账 closed）的判据活性自证：处数=0 / 处数=2 / 两条 needle 各缺 /
+    // 落错文件各必红，另两记正对照（唯一处 + 双 needle 绿、注释里的写法不计绿）；例数由该门 `--selftest` 末行自印。
+    "./scripts/assert-iserror-anchor.mjs",
   ];
 
 /**
