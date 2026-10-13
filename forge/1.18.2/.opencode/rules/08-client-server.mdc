@@ -125,8 +125,9 @@ public static final KeyMapping TEST_KEY = new KeyMapping(
 @Mod.EventBusSubscriber(modid = ExampleMod.MOD_ID, bus = Bus.MOD, value = Dist.CLIENT)
 public class ModKeyBindings {
     @SubscribeEvent
-    public static void register(RegisterKeyMappingsEvent event) {
-        event.register(TEST_KEY);
+    public static void onClientSetup(FMLClientSetupEvent event) {
+        // 1.18.2 构件 javap：无 RegisterKeyMappingsEvent（1.19.4+ 才有）——在 FMLClientSetupEvent 里注册
+        ClientRegistry.registerKeyBinding(TEST_KEY);
     }
 
     @SubscribeEvent

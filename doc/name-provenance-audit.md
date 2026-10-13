@@ -254,6 +254,9 @@
 | `F:\MOD_TEST\extract.mjs` | 从 `merged*.tsv` 抽某个平台的行（带上下文） |
 | `F:\MOD_TEST\cover.mjs` / `split.mjs` / `dump-pending.mjs` / `surfaces.mjs` | 覆盖账 / 分桶 / 待审导出 / 未扫面计数（§8.11） |
 | `F:\MC_GAME\_oracle-jars\fabric-api\` | 5 个 fabric-api jar（1.21.3 / .4 / .8 / .10 / .11）+ `quilt-loader-0.31.0-beta.4.jar`（§8.12 用） |
+| `F:\MOD_TEST\verify-strict.mjs`（+ `mk-strict.mjs` 生成器） | **严格版核验器**：构件只准为「同加载器 + 同 MC 版本」作证 —— §8.14 起以此为准 |
+| `F:\MOD_TEST\depsaudit2.mjs` / `strict-diff.mjs` / `dump-drops.mjs` | 正面证据的版本/平台体检、宽松↔严格差异、摘下的行 |
+| `F:\MOD_TEST\verify-strict.json` / `strict-drops.json` | 严格版逐行判决 / 被摘下的 265 行明细 |
 
 不变量（本轮实测）：① 量具行凡来自整行注释者 = **0**；② 各包 JSON 求和 = 总表（扫描面扩到 `code-patterns/knowledge/AGENTS/scaffold` 后 nowhere = 3073）；③ 修复后非镜像面内旧名零残留（仅剩披露注释与「该版本确实存在」的用法）。
 
@@ -580,3 +583,41 @@ fabric 1.14.4 / 1.16.5 / forge 1.12.2 / liteloader 1.12.2 的行（共 648）已
 **验证**：`assert-skill-mirrors` ok（漂移 0 / 孤儿 0）· `assert-qsl-verified-sync` ok（**10/10** 档一致、无孤儿）· `assert-authoring-lint` ok（J3 纯负向 0）· 活树残留扫描（排除 `temp/**` 与本台账）`虚构，勿再写` **为空**。
 
 **未动**：`temp/**` 下的审计快照（`temp/audit*/**`、`temp/ralph-audit*/**`、`temp/w3-*.md`）仍带旧句，属历史副本。
+
+### 8.14 覆盖面自审（第二遍）—— 核验器「正面」不可靠，已改严并摘出 265 行假绿
+
+**发现（结构性，比前几轮都重要）**：前几轮的核验器把「构件里在」判得很宽 —— 一个名字只要在**本机任何** jar 的常量池里出现就算 PRESENT，**既不管加载器、也不管 MC 版本**。实测（`F:\MOD_TEST\depsaudit2.mjs`）：
+
+- 3625 条 PRESENT 里，**354 行**靠**别的加载器**的件作证 —— 例：`forge|1.12.2` 的 `tickCounter` 靠 `fabric-rendering-v1-….jar`；`forge|1.14.4` 的 `Fabric` 靠 `fabric-loader-….jar`；`forge|1.17.1` 的若干名字靠 `azure-json` / `ForgeGradle` 这类**构建工具件**。
+- 另有 **59 行**靠**别的 MC 版本**的件作证 —— 例：`forge|1.13.2` 的 `FluidType` 靠 `neoforge-26.2.0.88-universal.jar`。
+
+⇒ **正面（PRESENT）不构成「该名在本档存在」的证据**；真缺陷可以被假绿掩盖。
+
+**处置：造严格版核验器** —— `verify-strict.mjs`（由 `mk-strict.mjs` 从 `verify-all.mjs` 生成）。规则：一件构件只准为「**同加载器、同 MC 版本**」的档作证（`jarOk()`：① 文件名前缀属另一加载器即拒（neoforge 接受 forge 件）；② 文件名带的**已知 MC 版本** ≠ 本档即拒；无版本 token 的库件照常可用）。库池升级同样过这道闸。
+
+**读数**：5223 行里 **265 行由 PRESENT 降为 ABSENT**（假绿被摘掉），涉及 **49 个唯一名**。降幅前列：`onServerStarting` 26 / `onRegisterRenderers` 20 / `PlayerEvent` 19 / `modEventBus` 18 / `DeferredRegister` 18 / `PlayerLoggedInEvent` 18 / `tickCounter` 15 / `onRender` 14 / `onPlayerInteract` 12。
+
+**49 名逐条分诊 → 2 处真缺陷（已修，3 个文件）**：
+
+| 名 | 判据（构件 javap） | 处置 |
+| --- | --- | --- |
+| `Items.COPPER_INGOT`（`forge/1.15.2`、`forge/1.16.5` 的 `code-patterns/02-item-patterns.md`，各 2 处） | 1.16.5 件里 `COPPER_INGOT` **0 处**（`IRON_INGOT`/`NETHERITE_INGOT` 在场）；**铜是 1.17 才加入** | **已改**：两文件各 2 处 → `Items.IRON_INGOT` + 就地 javap 注（本版无铜，示例改用存在的锭） |
+| `RegisterKeyMappingsEvent`（`forge/1.18.2/.cursor/rules/08-client-server.mdc:128` 的「示例：KeyMapping 处理」块） | 1.18.2 件里 `RegisterKeyMappingsEvent` **0 处**；`ClientRegistry#registerKeyBinding` 在场。同文件 `:98-101` 早已改成该形 ⇒ 本块是**漏改的第二处** | **已改**：改为 `@SubscribeEvent onClientSetup(FMLClientSetupEvent)` + `ClientRegistry.registerKeyBinding(TEST_KEY)` + javap 注。⚠️ `KeyConflictContext` **1.18.2 确有**（`net/minecraftforge/client/settings/KeyConflictContext`）⇒ 不被牵动 |
+
+**其余 47 名：全非缺陷**，四类：
+
+| 类 | 名 | 判据 |
+| --- | --- | --- |
+| **读者自建的处理器/字段/形参名**（17） | `onServerStarting` `onRegisterRenderers` `onRender` `onPlayerInteract` `onPlayerLogin` `onKeyInput` `clientInit` `getCustomValue` `tickCounter` `syncData` `menuProvider` `invSlot` `blockEntity` `entityYaw` `registerCapabilities` `registerRenderers` `onInitializeDataGenerator` | 文档自己定义的处理器/局部名 ⇒ 本就不该在构件里 |
+| **移植 / 版本迁移文档的「另一侧」名**（26） | `PlayerEvent` `PlayerLoggedInEvent` `modEventBus` `DeferredRegister` `PlayerTickEvent` `onPlayerClone` `wasDeath` `NetworkRegistry` `FabricLoader` `ItemStackTemplate` `DeferredHolder` `builtInRegistryHolder` `createBlocks` `createItems` `FluidType` `RegisterEvent` `ModInitializer` `ClientTickEvents` `ServerTickEvents` `ServerLifecycleEvents` `ServerPlayNetworking` `FabricDataGenerator` `END_CLIENT_TICK` `SERVER_STOPPING` `END_SERVER_TICK` `registerGlobalReceiver` | 全在 `knowledge/porting/**` 或 `knowledge/version-changes/**`；**逐站点读过**：讲的是**另一加载器**或**目标版本**的 API（例：`ItemStackTemplate` 是「Before / After」迁移示例的 After 侧，配 `DataComponentPatch`）⇒ 按宿主档构件核必假红（同类已在 §5 登记） |
+| **库 API（无件）**（1） | `registerRecipes`（JEI `IModPlugin`，方法名真） | 本机无 JEI 件 ⇒ 未核实 |
+| **散文**（1） | `NewRegistry`（句中是「RegistryEvent.NewRegistry」） | 非独立标识符 |
+
+**口径更新（自此以严格版为准）**：5220 行 = PRESENT **3360**（MAIN 2070 / DEPS 819 / LIB 471）/ **ABSENT 1860**。先前报的「PRESENT 3618 / ABSENT 1581」是**宽松版**读数，其中 **265 行的 present 是假的** ⇒ 「要分诊」的面比先前大 265 行，本轮已随那 49 名一并判毕。
+
+**仍是「不定 / 假红风险」（诚实记账）**：
+
+- `forge 1.14.4` / `1.15.2` 的映射库是 `zero-rows`、`1.16.5` 的 mapped 件已知残缺 ⇒ 这三档的 strict-ABSENT **可能是假红**（缺类 ≠ 不存在）。
+- 短名（如 `tickCounter`）即使在同档件里也可能靠**无关字符串**命中 ⇒ 严格版只证「版本/平台不矛盾」，不证「成员位语义正确」。
+- 三方库 API、`forge 1.12.2` 的 MCP 可读成员名、Architectury 的 `ExpectPlatform`：本机无件 ⇒ 未核实。
+- 未扫面：根 `*.md` / `community_knowledge` / `mcp-server`（用户已判为不必扫）。

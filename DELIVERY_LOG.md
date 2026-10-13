@@ -8,6 +8,59 @@
 
 ---
 
+## 2026-10-13 · 核验器「正面」改严 + 摘出 265 行假绿 + 修 2 处真缺陷（维护档）
+
+**第 0 块 · 结论**：这一遍查出一个**结构性漏**（比前几轮任何一条都重要）：前几轮的核验器**判 PRESENT 太宽** —— 一个名字只要在**本机任何 jar** 里出现就算「构件里在」，**不管加载器、不管 MC 版本**。实测 3625 条 PRESENT 里，**354 行**靠别的**加载器**的件作证（`forge|1.12.2` 的 `tickCounter` 靠 `fabric-rendering-v1-*.jar`）、**59 行**靠别的**版本**的件作证（`forge|1.13.2` 的 `FluidType` 靠 `neoforge-26.2-universal.jar`）⇒ **假绿能掩盖真缺陷**。我写了严格版核验器（只准同加载器 + 同 MC 版本作证），**5223 行里 265 行由 PRESENT 降为 ABSENT（49 个唯一名）**，逐条分诊后揪出 **2 处真缺陷**并修掉（3 个文件）：`forge 1.15.2`/`1.16.5` 的 `Items.COPPER_INGOT`（铜是 1.17 才有）、`forge 1.18.2` 规则里漏改的第二处 `RegisterKeyMappingsEvent`。**三门全绿**；未提交。
+
+### 1. 改了哪些文件
+
+- **文档修复**（2 处真缺陷 / 3 文件）：
+  - `forge/1.15.2/code-patterns/02-item-patterns.md`（2 处）：`Items.COPPER_INGOT` → `Items.IRON_INGOT` + 就地 javap 注
+  - `forge/1.16.5/code-patterns/02-item-patterns.md`（2 处）：同上
+  - `forge/1.18.2/.cursor/rules/08-client-server.mdc`：「示例：KeyMapping 处理」块改用 `FMLClientSetupEvent` + `ClientRegistry.registerKeyBinding`（+ javap 注）
+- 台账 `doc/name-provenance-audit.md`：新增 **§8.14**；§6 复现表补严格版核验器与体检脚本
+- 镜像：`forge/1.18.2` × `scripts/sync-skills.ps1 -TargetDir`（`code-patterns/**` 非镜像面，另两件无需刷）
+- 便签（不入库）：`verify-strict.mjs`（严格版；`mk-strict.mjs` 生成）、`depsaudit2.mjs`（正面证据的版本/平台体检）、`strict-diff.mjs`、`dump-drops.mjs`
+
+### 2. 判据与反证
+
+- **新判据（严格版）**：一件构件只准为「同加载器 + 同 MC 版本」的档作证 —— ① 文件名前缀属另一加载器即拒（`neoforge` 接受 `forge` 件）；② 文件名带**已知 MC 版本**且 ≠ 本档即拒；无版本 token 的库件照常可用。库池升级同样过闸
+- **反证 1（先验体检器再信它）**：先跑 `depsaudit2.mjs` 量出「跨平台 354 / 跨版本 59」的具体行，再据此写闸；闸写好后重跑，265 行如期降档
+- **反证 2（两个真缺陷逐名过真件）**：`probe-mc.mjs` 打 1.16.5 件 ⇒ `COPPER_INGOT` **0 处**、`IRON_INGOT`/`NETHERITE_INGOT` 在场；打 1.18.2 件 ⇒ `RegisterKeyMappingsEvent` **0 处**、`ClientRegistry#registerKeyBinding` 在场
+- **反证 3（避免误伤）**：`KeyConflictContext` 我一度疑为 1.19+ 才有，**实打构件证伪** —— 1.18.2 件里它在（`net/minecraftforge/client/settings/KeyConflictContext`）⇒ **不动它**
+- **反证 4（47 名逐站点读上下文判非缺陷）**：26 名属 `knowledge/porting/**`、`knowledge/version-changes/**` 的**另一侧**（如 `ItemStackTemplate` 是迁移示例的 After 侧）；17 名是读者自建处理器/字段名；1 名 JEI 库 API；1 名散文
+
+### 3. 验证台账
+
+- `node F:\MOD_TEST\depsaudit2.mjs` ⇒ PRESENT 3625 中跨平台 354 / 跨版本 59
+- `node F:\MOD_TEST\mk-strict.mjs` ⇒ 生成 `verify-strict.mjs`（长度 9498）
+- `node F:\MOD_TEST\nonfabric-skill-names.mjs && node F:\MOD_TEST\verify-strict.mjs`（修完后重跑）⇒ 扫描 5220 行（nowhere 3236 / cross 1984；比修前 **−3 行**，正是 3 处修复）；严格判决 = PRESENT **3360** / ABSENT **1860**
+- `node F:\MOD_TEST\strict-diff.mjs`（修前那次）⇒ PRESENT→ABSENT **265 行 / 49 唯一名**
+- `node F:\MOD_TEST\probe-mc.mjs <forge-1.16.5 mapped jar> COPPER_INGOT IRON_INGOT NETHERITE_INGOT` / `<forge-1.18.2 mapped jar> RegisterKeyMappingsEvent KeyConflictContext registerKeyBinding ClientRegistry KeyMapping`
+- `node mcp-server/scripts/assert-skill-mirrors.mjs` ⇒ **ok**（漂移 0 / 孤儿 0 / 拒 0）
+- `node mcp-server/scripts/assert-authoring-lint.mjs` ⇒ **ok**
+- `node mcp-server/scripts/assert-scaffold-rules-conflict.mjs` ⇒ 47 档 · 规则 447 篇 · scaffold 冲突 0 · 台账 checked
+- **未跑** `npm test` / `node test-scripts.mjs`（未动 `mcp-server/**` 与 `scripts/**` 的代码）；未 `git add/commit`
+
+### 4. 数据侧变更
+
+无。
+
+### 5. 未做清单
+
+- **`forge 1.14.4` / `1.15.2` 的映射库是 `zero-rows`、`1.16.5` 的 mapped 件已知残缺** ⇒ 这三档的 strict-ABSENT 可能是**假红**（缺类 ≠ 不存在），未逐条排
+- 严格版仍只证「版本/平台不矛盾」，不证「成员位语义正确」（短名可被同档件里的无关字符串命中）
+- 三方库 API / `forge 1.12.2` 的 MCP 可读成员名 / Architectury `ExpectPlatform`：本机无件 ⇒ 未核实
+- 未扫面：根 `*.md` / `community_knowledge` / `mcp-server`（用户已判不必扫）
+- 未提交
+
+### 6. 自我更正
+
+- **前几轮报的「PRESENT 3618 / ABSENT 1581」是宽松版读数，其中 265 行的 present 是假的**。本轮把口径改成严格版：**PRESENT 3360 / ABSENT 1860**，并把这 265 行（49 名）连带判毕。前面各节的「要分诊」面因此比当时说的**大 265 行**（不是小）。
+- 上一轮我说「全部核对了吗 → 待审 38 清零、无件档闭合」——那只在**宽松口径**下成立；按严格口径，正面证据当时是不可靠的。这条结构性缺陷现在才算补上。
+
+---
+
 ## 2026-10-13 · 更正「Modrinth 143 = 虚构」口径（7 棵 quilt 树 + qsl-verified）（维护档）
 
 **第 0 块 · 结论**：按令「改」，把那句改对了 —— 「Modrinth 全部 143 个发布」**不是虚构**，实测 Modrinth `total=143`（`latest=11.0.0-alpha.3+0.102.0-1.21`），只有 **maven 通道**没有该版本串。改面 = **7 棵 quilt 树**（`1.20.4 / 1.21.1 / 1.21.3 / 1.21.4 / 1.21.8 / 1.21.10 / 1.21.11`）的 `AGENTS.md` + `quilt/1.21.1/knowledge/common/qsl-verified.md`；派生件按纪律重生成。**三门全绿**（镜像 ok / qsl-verified-sync **10/10** / authoring-lint ok）。未提交。

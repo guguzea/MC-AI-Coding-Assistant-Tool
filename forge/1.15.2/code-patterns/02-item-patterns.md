@@ -21,7 +21,7 @@ public static final RegistryObject<Item> MY_ITEM = ITEMS.register("my_item",
 ```java
 // IItemTier 枚举
 public enum MyTier implements IItemTier {
-    COPPER(2, 1561, 8.0f, 3.0f, 15, () -> Ingredient.of(Items.COPPER_INGOT));
+    COPPER(2, 1561, 8.0f, 3.0f, 15, () -> Ingredient.of(Items.IRON_INGOT));   // 1.15.2 构件 javap：本版无 Items.COPPER_INGOT（铜是 1.17 才有）——示例改用本版存在的锭
 
     private final int level;
     private final int uses;
@@ -74,7 +74,7 @@ public enum MyArmorMaterial implements IArmorMaterial {
         new int[]{4, 7, 9, 4},   // boots, leggings, chestplate, helmet
         20, SoundEvents.ARMOR_EQUIP_IRON,
         0.0f, 0.0f,
-        () -> Ingredient.of(Items.COPPER_INGOT)
+        () -> Ingredient.of(Items.IRON_INGOT)   // 同上：本版无 COPPER_INGOT
     );
 
     // 方法名 = 1.15.2 official 构件实证（getDurability/getDamageReductionAmount/getEnchantability/getSoundEvent/getRepairMaterial 是 MCP 旧名）
