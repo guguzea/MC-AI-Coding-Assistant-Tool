@@ -1,0 +1,30 @@
+W5-5 卫生清单（2026-09-20 生成；**当日已由用户裁定：全部保留，本清单转为备查**）
+====================================================================
+【裁定结果】用户 2026-09-20：「剩下 2 项保留」⇒ 下列 A / B / C 三项一律保留不动；
+裁定由门 mcp-server/scripts/assert-w55-hygiene-rulings.mjs 钉住（被删或被撤跟踪即红）。
+【机制更正】sm-120x.xml 的 `.gitignore:113` 规则**存在且形态正确**，此前「规则无效」是误读：
+  默认 `git check-ignore` 对已跟踪文件一律 rc=1；`--no-index` 下即显形。
+
+
+A. scripts/_oneoff/（10 件，均为一次性写入脚本，任务链已结束）
+  scripts/_oneoff/append-check-sections.mjs
+  scripts/_oneoff/enhance-catalog.mjs
+  scripts/_oneoff/fill-neoforge-b1.mjs
+  scripts/_oneoff/gen-plan2-skills.mjs
+  scripts/_oneoff/generate-five-platform-trees.mjs
+  scripts/_oneoff/propagate-wave-d-skills.mjs
+  scripts/_oneoff/README.md
+  scripts/_oneoff/write-neoforge-blockentity-skills.mjs
+  scripts/_oneoff/write-neoforge-six-trees.mjs
+  scripts/_oneoff/write-plan1-trees.mjs
+  ⇒ 待裁定：整体删除目录，或保留 README.md 作说明。删除前建议 git grep 确认无引用。
+
+B. temp/audit/a5/a5repo/（True = 存在；整仓副本）
+  ⇒ 待裁定：随 temp/ 一同忽略（现状）或物理删除。属本任务链创建物，删除不涉及跟踪文件。
+
+C. 待裁定（配置面，本波未动）
+  - 根 .gitattributes 不存在（core.autocrlf=true）⇒ 建立会触发全仓 EOL 归一。
+  - sm-120x.xml：git ls-files 确认仍被跟踪；git check-ignore -v 无输出（rc=1，现有 ignore 规则不生效）。
+
+D. 报告回写
+  - temp/audit-20260918/REPORT.md 已追加「W5-5 复核回写（2026-09-20）」节（X10 REFUTED / X15 撤回 / X8 18,654→0 / Y6 130·3 / C4 7 档 / A8 152 / C7 撤回 / 注入 0 命中 / §5(c) 仍未证）。
