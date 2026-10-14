@@ -1,0 +1,189 @@
+---
+title: "org.bukkit.entity.EntityType"
+package: "org.bukkit.entity"
+source: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/entity/EntityType.html
+sourceType: javadoc
+fetchedWith: fetch-spigot-javadoc.mjs@1
+fetchedAt: 2026-10-14T12:58:46.913Z
+asOfVersion: "26.3-R0.1-SNAPSHOT"
+---
+
+**Enum Class EntityType**
+`public enum EntityType extends Enum<EntityType> implements Keyed, Translatable, RegistryAware`
+- `public static final EntityType ITEM`
+- `public static final EntityType EXPERIENCE_ORB`
+- `public static final EntityType AREA_EFFECT_CLOUD`
+- `public static final EntityType ELDER_GUARDIAN`
+- `public static final EntityType WITHER_SKELETON`
+- `public static final EntityType STRAY`
+- `public static final EntityType EGG`
+- `public static final EntityType LEASH_KNOT`
+- `public static final EntityType PAINTING`
+- `public static final EntityType ARROW`
+- `public static final EntityType SNOWBALL`
+- `public static final EntityType FIREBALL`
+- `public static final EntityType SMALL_FIREBALL`
+- `public static final EntityType ENDER_PEARL`
+- `public static final EntityType EYE_OF_ENDER`
+- `public static final EntityType SPLASH_POTION`
+- `public static final EntityType LINGERING_POTION`
+- `public static final EntityType EXPERIENCE_BOTTLE`
+- `public static final EntityType ITEM_FRAME`
+- `public static final EntityType WITHER_SKULL`
+- `public static final EntityType TNT`
+- `public static final EntityType FALLING_BLOCK`
+- `public static final EntityType FIREWORK_ROCKET`
+- `public static final EntityType HUSK`
+- `public static final EntityType SPECTRAL_ARROW`
+- `public static final EntityType SHULKER_BULLET`
+- `public static final EntityType DRAGON_FIREBALL`
+- `public static final EntityType ZOMBIE_VILLAGER`
+- `public static final EntityType SKELETON_HORSE`
+- `public static final EntityType ZOMBIE_HORSE`
+- `public static final EntityType ARMOR_STAND`
+- `public static final EntityType DONKEY`
+- `public static final EntityType MULE`
+- `public static final EntityType EVOKER_FANGS`
+- `public static final EntityType EVOKER`
+- `public static final EntityType VEX`
+- `public static final EntityType VINDICATOR`
+- `public static final EntityType ILLUSIONER`
+- `public static final EntityType COMMAND_BLOCK_MINECART`
+- `public static final EntityType MINECART`
+- `public static final EntityType CHEST_MINECART`
+- `public static final EntityType FURNACE_MINECART`
+- `public static final EntityType TNT_MINECART`
+- `public static final EntityType HOPPER_MINECART`
+- `public static final EntityType SPAWNER_MINECART`
+- `public static final EntityType CREEPER`
+- `public static final EntityType SKELETON`
+- `public static final EntityType SPIDER`
+- `public static final EntityType GIANT`
+- `public static final EntityType ZOMBIE`
+- `public static final EntityType SLIME`
+- `public static final EntityType GHAST`
+- `public static final EntityType ZOMBIFIED_PIGLIN`
+- `public static final EntityType ENDERMAN`
+- `public static final EntityType CAVE_SPIDER`
+- `public static final EntityType SILVERFISH`
+- `public static final EntityType BLAZE`
+- `public static final EntityType MAGMA_CUBE`
+- `public static final EntityType ENDER_DRAGON`
+- `public static final EntityType WITHER`
+- `public static final EntityType BAT`
+- `public static final EntityType WITCH`
+- `public static final EntityType ENDERMITE`
+- `public static final EntityType GUARDIAN`
+- `public static final EntityType SHULKER`
+- `public static final EntityType PIG`
+- `public static final EntityType SHEEP`
+- `public static final EntityType COW`
+- `public static final EntityType CHICKEN`
+- `public static final EntityType SQUID`
+- `public static final EntityType WOLF`
+- `public static final EntityType MOOSHROOM`
+- `public static final EntityType SNOW_GOLEM`
+- `public static final EntityType OCELOT`
+- `public static final EntityType IRON_GOLEM`
+- `public static final EntityType HORSE`
+- `public static final EntityType RABBIT`
+- `public static final EntityType POLAR_BEAR`
+- `public static final EntityType LLAMA`
+- `public static final EntityType LLAMA_SPIT`
+- `public static final EntityType PARROT`
+- `public static final EntityType VILLAGER`
+- `public static final EntityType END_CRYSTAL`
+- `public static final EntityType TURTLE`
+- `public static final EntityType PHANTOM`
+- `public static final EntityType TRIDENT`
+- `public static final EntityType COD`
+- `public static final EntityType SALMON`
+- `public static final EntityType PUFFERFISH`
+- `public static final EntityType TROPICAL_FISH`
+- `public static final EntityType DROWNED`
+- `public static final EntityType DOLPHIN`
+- `public static final EntityType CAT`
+- `public static final EntityType PANDA`
+- `public static final EntityType PILLAGER`
+- `public static final EntityType RAVAGER`
+- `public static final EntityType TRADER_LLAMA`
+- `public static final EntityType WANDERING_TRADER`
+- `public static final EntityType FOX`
+- `public static final EntityType BEE`
+- `public static final EntityType HOGLIN`
+- `public static final EntityType PIGLIN`
+- `public static final EntityType STRIDER`
+- `public static final EntityType ZOGLIN`
+- `public static final EntityType PIGLIN_BRUTE`
+- `public static final EntityType AXOLOTL`
+- `public static final EntityType GLOW_ITEM_FRAME`
+- `public static final EntityType GLOW_SQUID`
+- `public static final EntityType GOAT`
+- `public static final EntityType MARKER`
+- `public static final EntityType ALLAY`
+- `public static final EntityType FROG`
+- `public static final EntityType TADPOLE`
+- `public static final EntityType WARDEN`
+- `public static final EntityType CAMEL`
+- `public static final EntityType BLOCK_DISPLAY`
+- `public static final EntityType INTERACTION`
+- `public static final EntityType ITEM_DISPLAY`
+- `public static final EntityType SNIFFER`
+- `public static final EntityType TEXT_DISPLAY`
+- `public static final EntityType BREEZE`
+- `public static final EntityType WIND_CHARGE`
+- `public static final EntityType BREEZE_WIND_CHARGE`
+- `public static final EntityType ARMADILLO`
+- `public static final EntityType BOGGED`
+- `public static final EntityType OMINOUS_ITEM_SPAWNER`
+- `public static final EntityType ACACIA_BOAT`
+- `public static final EntityType ACACIA_CHEST_BOAT`
+- `public static final EntityType BAMBOO_RAFT`
+- `public static final EntityType BAMBOO_CHEST_RAFT`
+- `public static final EntityType BIRCH_BOAT`
+- `public static final EntityType BIRCH_CHEST_BOAT`
+- `public static final EntityType CHERRY_BOAT`
+- `public static final EntityType CHERRY_CHEST_BOAT`
+- `public static final EntityType DARK_OAK_BOAT`
+- `public static final EntityType DARK_OAK_CHEST_BOAT`
+- `public static final EntityType JUNGLE_BOAT`
+- `public static final EntityType JUNGLE_CHEST_BOAT`
+- `public static final EntityType MANGROVE_BOAT`
+- `public static final EntityType MANGROVE_CHEST_BOAT`
+- `public static final EntityType OAK_BOAT`
+- `public static final EntityType OAK_CHEST_BOAT`
+- `public static final EntityType PALE_OAK_BOAT`
+- `public static final EntityType PALE_OAK_CHEST_BOAT`
+- `public static final EntityType POPLAR_BOAT`
+- `public static final EntityType POPLAR_CHEST_BOAT`
+- `public static final EntityType SPRUCE_BOAT`
+- `public static final EntityType SPRUCE_CHEST_BOAT`
+- `public static final EntityType CREAKING`
+- `public static final EntityType HAPPY_GHAST`
+- `public static final EntityType COPPER_GOLEM`
+- `public static final EntityType MANNEQUIN`
+- `public static final EntityType CAMEL_HUSK`
+- `public static final EntityType NAUTILUS`
+- `public static final EntityType PARCHED`
+- `public static final EntityType ZOMBIE_NAUTILUS`
+- `public static final EntityType SULFUR_CUBE`
+- `public static final EntityType CUSHION`
+- `public static final EntityType FISHING_BOBBER`
+- `public static final EntityType LIGHTNING_BOLT`
+- `public static final EntityType PLAYER`
+- `public static final EntityType UNKNOWN`
+- `public static EntityType[] values()`
+- `public static EntityType valueOf(String name)`
+- `@Deprecated(since="1.6.2") @Nullable public String getName()`
+- `@NotNull @Deprecated(since="1.21.4") public NamespacedKey getKey()`
+- `@Nullable public Class<? extends Entity> getEntityClass()`
+- `@Deprecated(since="1.6.2") public short getTypeId()`
+- `@Deprecated(since="1.6.2") @Contract("null -> null") @Nullable public static EntityType fromName(@Nullable String name)`
+- `@Deprecated(since="1.6.2") @Nullable public static EntityType fromId(int id)`
+- `public boolean isSpawnable()`
+- `public boolean isAlive()`
+- `@NotNull public String getTranslationKey()`
+- `public boolean isEnabledByFeature(@NotNull World world)`
+- `@NotNull public NamespacedKey getKeyOrThrow()`
+- `@Nullable public NamespacedKey getKeyOrNull()`
+- `public boolean isRegistered()`

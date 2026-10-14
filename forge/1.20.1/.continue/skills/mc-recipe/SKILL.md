@@ -190,17 +190,20 @@ public class MyFinishedRecipe implements FinishedRecipe {
         json.addProperty("processingTime", time);
     }
 
+    // 1.20.1 实测（构件 javap net/minecraft/data/recipes/FinishedRecipe）：
+    //   getId() / getType() / getAdvancementId() / serializeAdvancement()（无参、返回 JsonObject）
+    //   本档**没有** id() / type() / advancement() / serializeAdvancement(JsonObject) —— 那是 1.21 世代的成员名
     @Override
-    public ResourceLocation id() { return id; }
+    public ResourceLocation getId() { return id; }
 
     @Override
-    public RecipeSerializer<?> type() { return MyRecipeSerializer.INSTANCE; }
+    public RecipeSerializer<?> getType() { return MyRecipeSerializer.INSTANCE; }
 
     @Override
-    public JsonObject advancement() { return null; }
+    public ResourceLocation getAdvancementId() { return null; }
 
     @Override
-    public void serializeAdvancement(JsonObject advancement) {}
+    public JsonObject serializeAdvancement() { return null; }
 }
 ```
 

@@ -1,0 +1,177 @@
+---
+title: "org.bukkit.Bukkit"
+package: "org.bukkit"
+source: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Bukkit.html
+sourceType: javadoc
+fetchedWith: fetch-spigot-javadoc.mjs@1
+fetchedAt: 2026-10-14T12:58:46.913Z
+asOfVersion: "26.3-R0.1-SNAPSHOT"
+---
+
+**Class Bukkit**
+`public final class Bukkit extends Object`
+- `@NotNull public static Server getServer()`
+- `public static void setServer(@NotNull Server server)`
+- `@NotNull public static String getName()`
+- `@NotNull public static String getVersion()`
+- `@NotNull public static String getBukkitVersion()`
+- `@NotNull public static Collection<? extends Player> getOnlinePlayers()`
+- `public static int getMaxPlayers()`
+- `public static void setMaxPlayers(int maxPlayers)`
+- `public static int getPort()`
+- `public static int getViewDistance()`
+- `public static int getSimulationDistance()`
+- `@NotNull public static String getIp()`
+- `@NotNull public static String getWorldType()`
+- `public static boolean getGenerateStructures()`
+- `public static int getMaxWorldSize()`
+- `public static boolean getAllowEnd()`
+- `public static boolean getAllowNether()`
+- `public static boolean isLoggingIPs()`
+- `@NotNull public static List<String> getInitialEnabledPacks()`
+- `@NotNull public static List<String> getInitialDisabledPacks()`
+- `@NotNull public static DataPackManager getDataPackManager()`
+- `@Nullable public static ResourcePack getServerResourcePack()`
+- `@NotNull public static ServerTickManager getServerTickManager()`
+- `@NotNull public static Map<String,String> getCodeOfConducts()`
+- `@NotNull public static String getResourcePack()`
+- `@NotNull public static String getResourcePackHash()`
+- `@NotNull public static String getResourcePackPrompt()`
+- `public static boolean isResourcePackRequired()`
+- `public static boolean hasWhitelist()`
+- `public static void setWhitelist(boolean value)`
+- `public static boolean isWhitelistEnforced()`
+- `public static void setWhitelistEnforced(boolean value)`
+- `@NotNull public static Set<OfflinePlayer> getWhitelistedPlayers()`
+- `public static void reloadWhitelist()`
+- `public static int broadcastMessage(@NotNull String message)`
+- `@NotNull public static String getUpdateFolder()`
+- `@NotNull public static File getUpdateFolderFile()`
+- `public static long getConnectionThrottle()`
+- `@Deprecated(since="1.18.1") public static int getTicksPerAnimalSpawns()`
+- `@Deprecated(since="1.18.1") public static int getTicksPerMonsterSpawns()`
+- `@Deprecated(since="1.18.1") public static int getTicksPerWaterSpawns()`
+- `@Deprecated(since="1.18.1") public static int getTicksPerAmbientSpawns()`
+- `@Deprecated(since="1.18.1") public static int getTicksPerWaterAmbientSpawns()`
+- `@Deprecated(since="1.18.1") public static int getTicksPerWaterUndergroundCreatureSpawns()`
+- `public static int getTicksPerSpawns(@NotNull SpawnCategory spawnCategory)`
+- `@Nullable public static Player getPlayer(@NotNull String name)`
+- `@Nullable public static Player getPlayerExact(@NotNull String name)`
+- `@NotNull public static List<Player> matchPlayer(@NotNull String name)`
+- `@Nullable public static Player getPlayer(@NotNull UUID id)`
+- `@NotNull public static PluginManager getPluginManager()`
+- `@NotNull public static BukkitScheduler getScheduler()`
+- `@NotNull public static ServicesManager getServicesManager()`
+- `@NotNull public static List<World> getWorlds()`
+- `@Nullable public static World createWorld(@NotNull WorldCreator creator)`
+- `public static boolean unloadWorld(@NotNull String name, boolean save)`
+- `public static boolean unloadWorld(@NotNull World world, boolean save)`
+- `@Nullable public static World getWorld(@NotNull String name)`
+- `@Nullable public static World getWorld(@NotNull UUID uid)`
+- `@NotNull public static WorldBorder createWorldBorder()`
+- `@Deprecated(since="1.6.2") @Nullable public static MapView getMap(int id)`
+- `@NotNull public static MapView createMap(@NotNull World world)`
+- `@NotNull public static ItemStack createExplorerMap(@NotNull World world, @NotNull Location location, @NotNull StructureType structureType)`
+- `@NotNull public static ItemStack createExplorerMap(@NotNull World world, @NotNull Location location, @NotNull StructureType structureType, int radius, boolean findUnexplored)`
+- `public static void reload()`
+- `public static void reloadData()`
+- `@NotNull public static Logger getLogger()`
+- `@Nullable public static PluginCommand getPluginCommand(@NotNull String name)`
+- `public static void savePlayers()`
+- `public static boolean dispatchCommand(@NotNull CommandSender sender, @NotNull String commandLine) throws CommandException`
+- `@Contract("null -> false") public static boolean addRecipe(@Nullable Recipe recipe)`
+- `@NotNull public static List<Recipe> getRecipesFor(@NotNull ItemStack result)`
+- `@Nullable public static Recipe getRecipe(@NotNull NamespacedKey recipeKey)`
+- `@Nullable public static Recipe getCraftingRecipe(@NotNull ItemStack[] craftingMatrix, @NotNull World world)`
+- `@NotNull public static ItemCraftResult craftItemResult(@NotNull ItemStack[] craftingMatrix, @NotNull World world, @NotNull Player player)`
+- `@NotNull public static ItemCraftResult craftItemResult(@NotNull ItemStack[] craftingMatrix, @NotNull World world)`
+- `@NotNull public static ItemStack craftItem(@NotNull ItemStack[] craftingMatrix, @NotNull World world, @NotNull Player player)`
+- `@NotNull public static ItemStack craftItem(@NotNull ItemStack[] craftingMatrix, @NotNull World world)`
+- `@NotNull public static Iterator<Recipe> recipeIterator()`
+- `public static void clearRecipes()`
+- `public static void resetRecipes()`
+- `public static boolean removeRecipe(@NotNull NamespacedKey key)`
+- `@NotNull public static Map<String,String[]> getCommandAliases()`
+- `public static int getSpawnRadius()`
+- `public static void setSpawnRadius(int value)`
+- `@Deprecated(since="1.19.3") public static boolean shouldSendChatPreviews()`
+- `public static boolean isEnforcingSecureProfiles()`
+- `public static boolean isAcceptingTransfers()`
+- `public static boolean getHideOnlinePlayers()`
+- `public static boolean getOnlineMode()`
+- `public static boolean getAllowFlight()`
+- `public static boolean isHardcore()`
+- `public static void shutdown()`
+- `public static int broadcast(@NotNull String message, @NotNull String permission)`
+- `@Deprecated(since="1.7.5") @NotNull public static OfflinePlayer getOfflinePlayer(@NotNull String name)`
+- `@NotNull public static OfflinePlayer getOfflinePlayer(@NotNull UUID id)`
+- `@NotNull public static PlayerProfile createPlayerProfile(@Nullable UUID uniqueId, @Nullable String name)`
+- `@NotNull public static PlayerProfile createPlayerProfile(@NotNull UUID uniqueId)`
+- `@NotNull public static PlayerProfile createPlayerProfile(@NotNull String name)`
+- `@NotNull public static Set<String> getIPBans()`
+- `@Deprecated(since="1.20.1") public static void banIP(@NotNull String address)`
+- `@Deprecated(since="1.20.1") public static void unbanIP(@NotNull String address)`
+- `public static void banIP(@NotNull InetAddress address)`
+- `public static void unbanIP(@NotNull InetAddress address)`
+- `@NotNull public static Set<OfflinePlayer> getBannedPlayers()`
+- `@NotNull public static <T extends BanList<?>> T getBanList(@NotNull BanList.Type type)`
+- `@NotNull public static Set<OfflinePlayer> getOperators()`
+- `@NotNull public static GameMode getDefaultGameMode()`
+- `public static void setDefaultGameMode(@NotNull GameMode mode)`
+- `@NotNull public static ConsoleCommandSender getConsoleSender()`
+- `@NotNull public static File getWorldContainer()`
+- `@NotNull public static OfflinePlayer[] getOfflinePlayers()`
+- `@NotNull public static Messenger getMessenger()`
+- `@NotNull public static HelpMap getHelpMap()`
+- `@NotNull public static Inventory createInventory(@Nullable InventoryHolder owner, @NotNull InventoryType type)`
+- `@NotNull public static Inventory createInventory(@Nullable InventoryHolder owner, @NotNull InventoryType type, @NotNull String title)`
+- `@NotNull public static Inventory createInventory(@Nullable InventoryHolder owner, int size) throws IllegalArgumentException`
+- `@NotNull public static Inventory createInventory(@Nullable InventoryHolder owner, int size, @NotNull String title) throws IllegalArgumentException`
+- `@Deprecated(since="1.21.4") @NotNull public static Merchant createMerchant(@Nullable String title)`
+- `@NotNull public static Merchant createMerchant()`
+- `public static int getMaxChainedNeighborUpdates()`
+- `@Deprecated(since="1.18.1") public static int getMonsterSpawnLimit()`
+- `@Deprecated(since="1.18.1") public static int getAnimalSpawnLimit()`
+- `@Deprecated(since="1.18.1") public static int getWaterAnimalSpawnLimit()`
+- `@Deprecated(since="1.18.1") public static int getWaterAmbientSpawnLimit()`
+- `@Deprecated(since="1.18.1") public static int getWaterUndergroundCreatureSpawnLimit()`
+- `@Deprecated(since="1.18.1") public static int getAmbientSpawnLimit()`
+- `public static int getSpawnLimit(@NotNull SpawnCategory spawnCategory)`
+- `public static boolean isPrimaryThread()`
+- `@NotNull public static String getMotd()`
+- `public static void setMotd(@NotNull String motd)`
+- `@NotNull public static ServerLinks getServerLinks()`
+- `@Nullable public static String getShutdownMessage()`
+- `@NotNull public static Warning.WarningState getWarningState()`
+- `@NotNull public static ItemFactory getItemFactory()`
+- `@NotNull public static EntityFactory getEntityFactory()`
+- `@Nullable public static ScoreboardManager getScoreboardManager()`
+- `@NotNull public static Criteria getScoreboardCriteria(@NotNull String name)`
+- `@Nullable public static CachedServerIcon getServerIcon()`
+- `@NotNull public static CachedServerIcon loadServerIcon(@NotNull File file) throws IllegalArgumentException, Exception`
+- `@NotNull public static CachedServerIcon loadServerIcon(@NotNull BufferedImage image) throws IllegalArgumentException, Exception`
+- `public static void setIdleTimeout(int threshold)`
+- `public static int getIdleTimeout()`
+- `public static int getPauseWhenEmptyTime()`
+- `public static void setPauseWhenEmptyTime(int seconds)`
+- `@NotNull public static ChunkGenerator.ChunkData createChunkData(@NotNull World world)`
+- `@NotNull public static BossBar createBossBar(@Nullable String title, @NotNull BarColor color, @NotNull BarStyle style, @NotNull BarFlag... flags)`
+- `@NotNull public static KeyedBossBar createBossBar(@NotNull NamespacedKey key, @Nullable String title, @NotNull BarColor color, @NotNull BarStyle style, @NotNull BarFlag... flags)`
+- `@NotNull public static Iterator<KeyedBossBar> getBossBars()`
+- `@Nullable public static KeyedBossBar getBossBar(@NotNull NamespacedKey key)`
+- `public static boolean removeBossBar(@NotNull NamespacedKey key)`
+- `@Nullable public static Entity getEntity(@NotNull UUID uuid)`
+- `@Nullable public static Advancement getAdvancement(@NotNull NamespacedKey key)`
+- `@NotNull public static Iterator<Advancement> advancementIterator()`
+- `@NotNull public static BlockData createBlockData(@NotNull Material material)`
+- `@NotNull public static BlockData createBlockData(@NotNull Material material, @Nullable Consumer<? super BlockData> consumer)`
+- `@NotNull public static BlockData createBlockData(@NotNull String data) throws IllegalArgumentException`
+- `@NotNull @Contract("null, null -> fail") public static BlockData createBlockData(@Nullable Material material, @Nullable String data) throws IllegalArgumentException`
+- `@Nullable public static <T extends Keyed> Tag<T> getTag(@NotNull String registry, @NotNull NamespacedKey tag, @NotNull Class<T> clazz)`
+- `@NotNull public static <T extends Keyed> Iterable<Tag<T>> getTags(@NotNull String registry, @NotNull Class<T> clazz)`
+- `@Nullable public static LootTable getLootTable(@NotNull NamespacedKey key)`
+- `@NotNull public static List<Entity> selectEntities(@NotNull CommandSender sender, @NotNull String selector) throws IllegalArgumentException`
+- `@NotNull public static StructureManager getStructureManager()`
+- `@Nullable public static <T extends Keyed> Registry<T> getRegistry(@NotNull Class<T> tClass)`
+- `@Deprecated(since="1.7.2") @NotNull public static UnsafeValues getUnsafe()`
+- `@NotNull public static Server.Spigot spigot()`

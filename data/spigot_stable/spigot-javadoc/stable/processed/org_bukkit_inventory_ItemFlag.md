@@ -1,0 +1,117 @@
+---
+title: "org.bukkit.inventory.ItemFlag"
+package: "org.bukkit.inventory"
+source: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/inventory/ItemFlag.html
+sourceType: javadoc
+fetchedWith: fetch-spigot-javadoc.mjs@1
+fetchedAt: 2026-10-14T12:59:21.517Z
+asOfVersion: "26.3-R0.1-SNAPSHOT"
+---
+
+**Enum Class ItemFlag**
+`public enum ItemFlag extends Enum<ItemFlag>`
+- `public static final ItemFlag HIDE_ENCHANTS`
+- `public static final ItemFlag HIDE_ATTRIBUTES`
+- `public static final ItemFlag HIDE_UNBREAKABLE`
+- `public static final ItemFlag HIDE_DESTROYS`
+- `public static final ItemFlag HIDE_PLACED_ON`
+- `public static final ItemFlag HIDE_ADDITIONAL_TOOLTIP`
+- `public static final ItemFlag HIDE_DYE`
+- `public static final ItemFlag HIDE_ARMOR_TRIM`
+- `@Experimental public static final ItemFlag HIDE_CUSTOM_DATA`
+- `@Experimental public static final ItemFlag HIDE_MAX_STACK_SIZE`
+- `@Experimental public static final ItemFlag HIDE_MAX_DAMAGE`
+- `@Experimental public static final ItemFlag HIDE_DAMAGE`
+- `@Experimental public static final ItemFlag HIDE_CUSTOM_NAME`
+- `@Experimental public static final ItemFlag HIDE_ITEM_NAME`
+- `@Experimental public static final ItemFlag HIDE_ITEM_MODEL`
+- `@Experimental public static final ItemFlag HIDE_LORE`
+- `@Experimental public static final ItemFlag HIDE_RARITY`
+- `@Experimental public static final ItemFlag HIDE_ENCHANTMENTS`
+- `@Experimental public static final ItemFlag HIDE_CAN_PLACE_ON`
+- `@Experimental public static final ItemFlag HIDE_CAN_BREAK`
+- `@Experimental public static final ItemFlag HIDE_ATTRIBUTE_MODIFIERS`
+- `@Experimental public static final ItemFlag HIDE_CUSTOM_MODEL_DATA`
+- `@Experimental public static final ItemFlag HIDE_TOOLTIP_DISPLAY`
+- `@Experimental public static final ItemFlag HIDE_REPAIR_COST`
+- `@Experimental public static final ItemFlag HIDE_CREATIVE_SLOT_LOCK`
+- `@Experimental public static final ItemFlag HIDE_ENCHANTMENT_GLINT_OVERRIDE`
+- `@Experimental public static final ItemFlag HIDE_INTANGIBLE_PROJECTILE`
+- `@Experimental public static final ItemFlag HIDE_FOOD`
+- `@Experimental public static final ItemFlag HIDE_CONSUMABLE`
+- `@Experimental public static final ItemFlag HIDE_USE_REMAINDER`
+- `@Experimental public static final ItemFlag HIDE_USE_COOLDOWN`
+- `@Experimental public static final ItemFlag HIDE_DAMAGE_RESISTANT`
+- `@Experimental public static final ItemFlag HIDE_TOOL`
+- `@Experimental public static final ItemFlag HIDE_WEAPON`
+- `@Experimental public static final ItemFlag HIDE_ENCHANTABLE`
+- `@Experimental public static final ItemFlag HIDE_EQUIPPABLE`
+- `@Experimental public static final ItemFlag HIDE_REPAIRABLE`
+- `@Experimental public static final ItemFlag HIDE_GLIDER`
+- `@Experimental public static final ItemFlag HIDE_TOOLTIP_STYLE`
+- `@Experimental public static final ItemFlag HIDE_DEATH_PROTECTION`
+- `@Experimental public static final ItemFlag HIDE_BLOCKS_ATTACKS`
+- `@Experimental public static final ItemFlag HIDE_STORED_ENCHANTMENTS`
+- `@Experimental public static final ItemFlag HIDE_DYED_COLOR`
+- `@Experimental public static final ItemFlag HIDE_MAP_ID`
+- `@Experimental public static final ItemFlag HIDE_MAP_DECORATIONS`
+- `@Experimental public static final ItemFlag HIDE_MAP_POST_PROCESSING`
+- `@Experimental public static final ItemFlag HIDE_CHARGED_PROJECTILES`
+- `@Experimental public static final ItemFlag HIDE_BUNDLE_CONTENTS`
+- `@Experimental public static final ItemFlag HIDE_POTION_CONTENTS`
+- `@Experimental public static final ItemFlag HIDE_POTION_DURATION_SCALE`
+- `@Experimental public static final ItemFlag HIDE_SUSPICIOUS_STEW_EFFECTS`
+- `@Experimental public static final ItemFlag HIDE_WRITABLE_BOOK_CONTENT`
+- `@Experimental public static final ItemFlag HIDE_WRITTEN_BOOK_CONTENT`
+- `@Experimental public static final ItemFlag HIDE_TRIM`
+- `@Experimental public static final ItemFlag HIDE_DEBUG_STICK_STATE`
+- `@Experimental public static final ItemFlag HIDE_ENTITY_DATA`
+- `@Experimental public static final ItemFlag HIDE_BUCKET_ENTITY_DATA`
+- `@Experimental public static final ItemFlag HIDE_BLOCK_ENTITY_DATA`
+- `@Experimental public static final ItemFlag HIDE_INSTRUMENT`
+- `@Experimental public static final ItemFlag HIDE_PROVIDES_TRIM_MATERIAL`
+- `@Experimental public static final ItemFlag HIDE_OMINOUS_BOTTLE_AMPLIFIER`
+- `@Experimental public static final ItemFlag HIDE_JUKEBOX_PLAYABLE`
+- `@Experimental public static final ItemFlag HIDE_PROVIDES_BANNER_PATTERNS`
+- `@Experimental public static final ItemFlag HIDE_RECIPES`
+- `@Experimental public static final ItemFlag HIDE_LODESTONE_TRACKER`
+- `@Experimental public static final ItemFlag HIDE_FIREWORK_EXPLOSION`
+- `@Experimental public static final ItemFlag HIDE_FIREWORKS`
+- `@Experimental public static final ItemFlag HIDE_PROFILE`
+- `@Experimental public static final ItemFlag HIDE_NOTE_BLOCK_SOUND`
+- `@Experimental public static final ItemFlag HIDE_BANNER_PATTERNS`
+- `@Experimental public static final ItemFlag HIDE_BASE_COLOR`
+- `@Experimental public static final ItemFlag HIDE_POT_DECORATIONS`
+- `@Experimental public static final ItemFlag HIDE_CONTAINER`
+- `@Experimental public static final ItemFlag HIDE_BLOCK_STATE`
+- `@Experimental public static final ItemFlag HIDE_BEES`
+- `@Experimental public static final ItemFlag HIDE_LOCK`
+- `@Experimental public static final ItemFlag HIDE_CONTAINER_LOOT`
+- `@Experimental public static final ItemFlag HIDE_BREAK_SOUND`
+- `@Experimental public static final ItemFlag HIDE_VILLAGER_VARIANT`
+- `@Experimental public static final ItemFlag HIDE_WOLF_VARIANT`
+- `@Experimental public static final ItemFlag HIDE_WOLF_SOUND_VARIANT`
+- `@Experimental public static final ItemFlag HIDE_WOLF_COLLAR`
+- `@Experimental public static final ItemFlag HIDE_FOX_VARIANT`
+- `@Experimental public static final ItemFlag HIDE_SALMON_SIZE`
+- `@Experimental public static final ItemFlag HIDE_PARROT_VARIANT`
+- `@Experimental public static final ItemFlag HIDE_TROPICAL_FISH_PATTERN`
+- `@Experimental public static final ItemFlag HIDE_TROPICAL_FISH_BASE_COLOR`
+- `@Experimental public static final ItemFlag HIDE_TROPICAL_FISH_PATTERN_COLOR`
+- `@Experimental public static final ItemFlag HIDE_MOOSHROOM_VARIANT`
+- `@Experimental public static final ItemFlag HIDE_RABBIT_VARIANT`
+- `@Experimental public static final ItemFlag HIDE_PIG_VARIANT`
+- `@Experimental public static final ItemFlag HIDE_COW_VARIANT`
+- `@Experimental public static final ItemFlag HIDE_CHICKEN_VARIANT`
+- `@Experimental public static final ItemFlag HIDE_FROG_VARIANT`
+- `@Experimental public static final ItemFlag HIDE_HORSE_VARIANT`
+- `@Experimental public static final ItemFlag HIDE_PAINTING_VARIANT`
+- `@Experimental public static final ItemFlag HIDE_LLAMA_VARIANT`
+- `@Experimental public static final ItemFlag HIDE_AXOLOTL_VARIANT`
+- `@Experimental public static final ItemFlag HIDE_CAT_VARIANT`
+- `@Experimental public static final ItemFlag HIDE_CAT_COLLAR`
+- `@Experimental public static final ItemFlag HIDE_SHEEP_COLOR`
+- `@Experimental public static final ItemFlag HIDE_SHULKER_COLOR`
+- `public static ItemFlag[] values()`
+- `public static ItemFlag valueOf(String name)`
+- `@Internal @Nullable public NamespacedKey getComponent()`

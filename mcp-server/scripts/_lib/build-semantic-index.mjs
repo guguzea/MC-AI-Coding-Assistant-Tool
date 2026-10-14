@@ -59,6 +59,12 @@ const SOURCES = {
   liteloader: ["liteloader-docs"],
   rift: ["rift-docs"],
   modloader: ["modloader-docs"],
+  // 2026-10-15：服务端面**签名层**两棵树。它们落盘用的是 `versionDataDir` 的规范形状
+  // （`data/<platform>_<ver>/<source>/<ver>/`），所以直接加白名单即可被 `--all` / `--platform=` 认到。
+  // 注意：本面是**签名面**（每页是类声明 + 成员签名列表），语义编码对「按名字找类」帮助有限、
+  // 对「按意图找类」（如"怎么给玩家发消息"→ `Player#sendMessage`）才有增量。
+  spigot: ["spigot-javadoc"],
+  "paper-api": ["paper-javadoc"],
 };
 
 export const MAX_CHUNK_SIZE = 1000;

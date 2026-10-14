@@ -144,12 +144,27 @@ export const SCRIPT_WRITE_GUARD_NON_WRITERS = new Map([
   // 受版本控制的语料目录），主流程在落笔前 warn + return，「先删该目录再整体改名」那条路因此走不到。
   // 依据正则咬住那个显式放行开关（MC_SKILL_POSTINSTALL_ALLOW_IN_REPO）：闸门被摘 ⇒ 依据失效 ⇒ 当场再红。
   ["mcp-server/scripts/postinstall.mjs", /MC_SKILL_POSTINSTALL_ALLOW_IN_REPO/],
+  // 2026-10-14：真构件编译腿的夹具（FAPI 替身源 + 生成的 driver + javac 输出）**一律落在
+  // `$MC_SKILL_CACHE || os.tmpdir()` 的一次性目录，仓库全程只读**（与上面那批 selftest 门同范式）。
+  // 依据锚定那个落点表达式：一旦改成仓库内路径，本豁免即失效（重签或改道 write-guard 的 scratch* 出口）。
+  ["mcp-server/scripts/assert-playtest-driver-compiles.mjs", /process\.env\.MC_SKILL_CACHE \|\| os\.tmpdir\(\)/],
 ]);
 /**
  * 会写仓库但本轮不收口的债务（并发代理 owns / 自带显式 --write 闸门未改道 / 新文件只靠 --force）。
  * 值 = 依据正则：闸门或契约一消失门禁即失败，逼重新签字；脚本收口后删掉本条即回到默认要求。
  */
 export const SCRIPT_WRITE_GUARD_DEBT = new Map([
+  // 2026-10-14：服务端面**签名层**取数器（Spigot/Bukkit 与 Paper Javadoc）。
+  // **默认 dry-run**（`if (LIST || !FETCH) { …process.exit(0) }`），只有显式 `--fetch` 才落盘；
+  // 产物是 `data/<face>_javadoc/<ver>/{raw,processed,index-l0.json,_orphan-report.json}` 语料，
+  // 与本仓 `fetch-forge-javadoc.js` 同一条生产者线。依据锚定 `--fetch` 这道闸门：
+  // 闸门一被删（变成默认落盘）本豁免即失效，逼改道 write-guard。
+  ["mcp-server/scripts/fetch-spigot-javadoc.mjs", /"--fetch"/],
+  // 2026-10-14：服务端面语料提取器。**默认 dry-run**（`if (!EXTRACT) process.exit(0)`），只有显式
+  // `--extract` 才落盘；未走 write-guard 的 `emit` 是有意为之 —— 它的产物是 `data/paper_main/**` 语料，
+  // 与本仓既有 fetch-*-docs 同一条生产者线（那些也都在本清单/豁免面内）。依据锚定 `--extract` 这道闸门：
+  // 闸门一被删（变成默认落盘）本豁免即失效，逼改道 write-guard。
+  ["mcp-server/scripts/fetch-paper-docs.mjs", /"--extract"/],
   ["scripts/decompile-loader-apis.mjs", /"--write"/],
   ["scripts/build-api-summaries.mjs", /--write/],
   ["scripts/merge-verified-api.mjs", /--write/],

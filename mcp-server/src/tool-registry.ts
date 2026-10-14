@@ -427,7 +427,7 @@ const VALIDATE_PROJECT_DESC =
 
 const LIST_DOC_VERSIONS_DESC =
   "返回指定平台的可用文档版本列表。" +
-  "platform 参数指定平台（forge/neoforge/fabric/quilt/liteloader/rift/modloader），必填。基岩请用 search_bedrock_docs。";
+  "platform 参数指定平台（forge/neoforge/fabric/quilt/liteloader/rift/modloader/paper/spigot），必填。基岩请用 search_bedrock_docs。";
 
 /**
  * P0-1 上游可用性（2026-09-21 mcmap / mappings.dev / Linkie 审计里唯一值得吸收的能力）。
@@ -478,7 +478,7 @@ const TOTAL_SEMANTICS_DESC =
 
 const SEARCH_DOCS_DESC =
   "通用文档搜索（hybrid：L0 关键词 + 语义检索，RRF 融合；无语义库时回退纯 L0）。" +
-  "platform 含 forge/neoforge/fabric/quilt/liteloader/rift/modloader，必填，禁止默认 forge。" +
+  "platform 含 forge/neoforge/fabric/quilt/liteloader/rift/modloader/paper/spigot，必填，禁止默认 forge。" +
   "适用于：需要了解平台特有功能的官方说明时。" +
   "增强功能：支持 class:/event:/method: 前缀精确路由；支持 | OR 分组；自动去除 the/and/of 等停用词。" +
   "Quilt 问 QSL 时禁止把 Fabric Registry 当命中。基岩请用 search_bedrock_docs。语义索引过期时 warning 含 stale。";

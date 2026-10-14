@@ -1,0 +1,422 @@
+#!/usr/bin/env node
+/**
+ * fetch-spigot-javadoc.mjs —— 服务端面**签名层**取数器（Spigot/Bukkit 与 Paper Javadoc）。**默认 dry-run**。
+ *
+ * ## 为什么这是"签名面"而不是第二个文档面
+ * 文档面（`data/paper_stable/paper-docs/`，已接）给的是**教程正文**；本脚本抓的是 **API 名字与签名**。
+ * 两者不同源、不同口径，**不要混成一个 index**：正文面回答"怎么写插件"，签名面回答"这个方法到底叫
+ * 什么、参数是什么、哪个版本有"。本仓红线「禁止凭训练记忆补 API 名」靠的就是这一面。
+ *
+ * ## 落点（照 `data/forge_javadoc/<ver>/` 的既有先例，**无 subdir、无重复版本层**）
+ *   data/<face>_javadoc/<ver>/
+ *     raw/<pkg>/<Class>.html        ← 原样留底（**只许 .md/.html**，不许 tmp 残件）
+ *     processed/<pkg>/<Class>.md    ← frontmatter(source/sourceType/fetchedWith/fetchedAt) + 签名正文
+ *     index-l0.json                 ← 字段集与 forge_javadoc 同：id/version/label/url/tags/priority/sectionCount
+ *     meta.json                     ← 本脚本加：出处、as-of 版本串、计数
+ *     _orphan-report.json           ← 孤儿留痕（有 raw/ 必有它，见 assert-javadoc-orphan-record 的判据）
+ *
+ * ## 为什么用 `type-search-index.js` 而不是解 HTML 目录
+ * Javadoc 9+ 自动生成 `type-search-index.js`（**紧凑 JSON**）：
+ *   `typeSearchIndex = [{"p":"org.bukkit.entity","l":"AbstractArrow","k":"10"}, …]`
+ * 实测 **Spigot 与 Paper 两站同款**（各 200）⇒ 一套解析器吃两个站，且类名清单**来自站点自身**、不是我拼的。
+ *
+ * ## 版本轴（两站不同，这是本脚本最要紧的一条）
+ * - **Paper**：URL 自带版本轴（`jd.papermc.io/paper/26.3/`，实测 200；`1.21.4` / `1.20.6` / `1.20.1` 亦 200）。
+ * - **Spigot**：URL **没有**版本轴（`/spigot/1.21.4/` → 实测 **404**）。版本串只能从页面自身读 ——
+ *   `overview-summary.html` 实测含 **`26.3-R0.1-SNAPSHOT`**（`deprecated-list.html` 同）。
+ *   ⇒ 本脚本**从页面读版本并写进 meta.json 的 `asOfVersion`**，作为该档的钉值；档目录名用 `--version` 显式指定，
+ *   且**必须与读到的 asOfVersion 一致**（不一致即拒，防"目录名写着 A、正文其实出自 B"—— 这正是
+ *   `assert-javadoc-build-provenance.mjs` 第 5-7 行记的那类不可核缺陷）。
+ *
+ * ## 用法
+ *   node scripts/fetch-spigot-javadoc.mjs --list                    # 只出清单与计数
+ *   node scripts/fetch-spigot-javadoc.mjs --packages org.bukkit     # 限定包（探针用）
+ *   node scripts/fetch-spigot-javadoc.mjs --face paper --base https://jd.papermc.io/paper/26.3 \
+ *        --version 26.3 --out ../../data/paper_javadoc/26.3 --fetch
+ *   # --fetch 才落盘；不加 = dry-run（只打印，不写任何文件、不建目录）
+ */
+
+import { execFileSync } from "node:child_process";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const HERE = path.dirname(fileURLToPath(import.meta.url));
+const MCP = path.resolve(HERE, "..");
+const REPO = path.resolve(MCP, "..");
+const CACHE = process.env.MC_SKILL_CACHE || path.join(os.tmpdir(), "mc-skill-cache");
+
+const argv = process.argv.slice(2);
+const has = (f) => argv.includes(f);
+const opt = (f) => {
+  const i = argv.indexOf(f);
+  return i >= 0 ? argv[i + 1] : undefined;
+};
+
+const FACE = opt("--face") || "spigot";
+const BASE = (opt("--base") || (FACE === "paper" ? "https://jd.papermc.io/paper/26.3" : "https://hub.spigotmc.org/javadocs/spigot")).replace(/\/+$/, "");
+const VERSION = opt("--version"); // 必填：档目录名 + 与 asOfVersion 双向钉
+const OUT = opt("--out");
+const FETCH = has("--fetch");
+const LIST = has("--list");
+const PKGS = (opt("--packages") || "").split(",").map((s) => s.trim()).filter(Boolean);
+const LIMIT = Number(opt("--limit") || 0);
+const OFFSET = Number(opt("--offset") || 0);
+
+/**
+ * 取页面字节。
+ *
+ * **用 Node 内置 fetch，不 spawn curl**：首版每个类 spawn 一次 `curl.exe`，实测 **≈1.3 秒/类**
+ * ⇒ 全量 1397 类要约 **30 分钟**（不可接受，且本工具链会回收长跑子进程）。改内置 fetch 后连接复用，
+ * 量级降到百毫秒级。
+ * 两个站都是公开只读 ⇒ **不带任何 auth 头**（凭据既不进 argv 也不进 header）。
+ */
+async function get(url) {
+  const r = await fetch(url, {
+    redirect: "follow",
+    signal: AbortSignal.timeout(30000),
+    headers: { "user-agent": "mc-skill-javadoc-fetcher/1" },
+  });
+  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  return await r.text();
+}
+
+console.log(`面 = ${FACE} · base = ${BASE}`);
+if (!VERSION && !LIST) throw new Error("必须显式给 --version（档目录名；会与页面读到的版本串双向对钉）");
+
+// ── ① 类清单：来自站点自身的 type-search-index.js ───────────────────────────────
+/**
+ * 从 `typeSearchIndex = [...]` 里取出数组字面量。
+ * **不用正则**：首版用 `/typeSearchIndex\s*=\s*(\[[\s\S]*?\])\s*;?\s*$/`（带 `$` 锚），实测**直接抛**
+ * —— 文件尾只要有任何残留（换行/尾随代码）就对不上。改成**平衡括号扫描**：从 `= [` 起按深度走，
+ * 遇到字符串就整体跳过（字符串里可能出现 `]`，例如泛型或数组签名）。
+ */
+function extractTypeIndex(src) {
+  const key = src.indexOf("typeSearchIndex");
+  if (key < 0) throw new Error("没找到 typeSearchIndex 标识符");
+  const start = src.indexOf("[", key);
+  if (start < 0) throw new Error("typeSearchIndex 后没有 [");
+  let depth = 0;
+  let inStr = false;
+  let quote = "";
+  for (let i = start; i < src.length; i++) {
+    const c = src[i];
+    if (inStr) {
+      if (c === "\\") i++;
+      else if (c === quote) inStr = false;
+      continue;
+    }
+    if (c === '"' || c === "'") {
+      inStr = true;
+      quote = c;
+    } else if (c === "[") depth++;
+    else if (c === "]") {
+      depth--;
+      if (depth === 0) return src.slice(start, i + 1);
+    }
+  }
+  throw new Error("括号不平衡：typeSearchIndex 的数组没有闭合");
+}
+
+const typesRaw = await get(`${BASE}/type-search-index.js`);
+let types;
+try {
+  const parsed = JSON.parse(extractTypeIndex(typesRaw));
+  // ⚠ `typeSearchIndex` 里混着 **1 条导航项**、它不是类型：`{"l":"All Classes and Interfaces","u":"allclasses-index.html","k":"18"}`。
+  // 实测两站各 1 条（字段分布 spigot `[k,l,p]`876 + `[l,p]`520 + `[k,l,u]`1；paper 1312 + 804 + 1）。
+  // 缺 `p` 的一律跳过 —— 首版没跳，`t.p.replace()` 直接 TypeError 把整跑打断（实测 2026-10-14）。
+  types = parsed.filter((t) => t.p && t.l);
+  const skippedNav = parsed.length - types.length;
+  if (skippedNav) console.log(`（跳过 ${skippedNav} 条非类型的导航项：缺 p 字段）`);
+} catch (e) {
+  throw new Error(
+    `type-search-index.js 解析失败：${e.message}\n` +
+      `  len=${typesRaw.length} head=${JSON.stringify(typesRaw.slice(0, 120))} tail=${JSON.stringify(typesRaw.slice(-80))}`,
+  );
+}
+console.log(`typeSearchIndex：${types.length} 个类型 · 包 ${new Set(types.map((t) => t.p)).size} 个`);
+
+// ── ② as-of 版本串：从页面自身读（Spigot 唯一可证版本的路径）────────────────────
+/**
+ * 读到页面自带的 as-of 版本串。**两个站点的读法不同（都是实测出来的）**：
+ *  - **Spigot**：`overview-summary.html` 里有 `26.3-R0.1-SNAPSHOT`（`deprecated-list.html` 同）⇒ 按 `-R\d`/`SNAPSHOT` 特征排名取众数。
+ *  - **Paper**：**没有 `overview-summary.html`**（新版 javadoc 换了索引页，实测该 URL 拿不到）⇒ 版本在 `index.html` 的 `<title>`：
+ *    `Overview (paper-api 26.3.build.178-stable API)` ⇒ 取 `API` 前那个 token = `26.3.build.178-stable`。
+ * 首版只有 Spigot 那一路，Paper 因此被 fail-closed 拒掉（**拒得对**：宁可拒，不许自造版本）。
+ */
+async function readAsOfVersion() {
+  // 路 1：<title> 里的 `<token> API`（Paper）
+  for (const p of ["index.html", "overview-summary.html", "help-doc.html"]) {
+    let c = "";
+    try {
+      c = await get(`${BASE}/${p}`);
+    } catch {
+      continue;
+    }
+    const t = c.match(/<title>([^<]*)<\/title>/);
+    if (t) {
+      const v = t[1].match(/([A-Za-z0-9_.\-]*\d[A-Za-z0-9_.\-]*)\s+API/i);
+      if (v && /\d/.test(v[1])) return { v: v[1], from: `${p}:<title>` };
+    }
+  }
+  // 路 2：Spigot 式 —— 页面里的 `-R\d`/`SNAPSHOT` 版本串众数
+  for (const p of ["overview-summary.html", "deprecated-list.html", "help-doc.html"]) {
+    let c = "";
+    try {
+      c = await get(`${BASE}/${p}`);
+    } catch {
+      continue;
+    }
+    const cands = [...c.matchAll(/\b\d+\.\d+(?:\.\d+)?(?:-R\d+(?:\.\d+)*)?(?:-SNAPSHOT)?\b/g)].map((x) => x[0]);
+    const ranked = cands
+      .filter((v) => /-R\d|SNAPSHOT/.test(v))
+      .sort((a, b) => cands.filter((x) => x === b).length - cands.filter((x) => x === a).length);
+    if (ranked[0]) return { v: ranked[0], from: p };
+  }
+  return { v: "", from: "" };
+}
+
+const asOf = LIST ? { v: "", from: "" } : await readAsOfVersion();
+let asOfVersion = asOf.v;
+if (asOfVersion) console.log(`as-of 版本串 = ${asOfVersion}（出自 ${asOf.from}）`);
+if (!LIST) {
+  if (!asOfVersion) {
+    throw new Error(
+      `读不到页面自带版本串（${BASE}/overview-summary.html）⇒ 按本仓纪律**不能自造版本**（会造成"目录名写着 A、正文出自 B"的不可核档）。`,
+    );
+  }
+  if (asOfVersion !== VERSION) {
+    throw new Error(`版本双向对钉失败：--version=${VERSION} 但页面读到 ${asOfVersion}。以页面为准（语料自身可证）。`);
+  }
+  console.log(`as-of 版本串 = ${asOfVersion}  ✅ 与 --version 一致`);
+}
+
+// ── ③ 清单输出 / 落盘 ────────────────────────────────────────────────────────
+let picked = types;
+if (PKGS.length) picked = picked.filter((t) => PKGS.includes(t.p));
+// 分块口径：`--offset` 先切、`--limit` 后切 —— 全量语料在本工具链下**必须分块同步抓**
+// （detached 长跑会被回收子进程，实测 2026-10-14：1397 类只落了 22 个就没了）。
+// 分块是**幂等**的：index 与已有文件合并、孤儿报告从磁盘扫 ⇒ 任意顺序/重复跑都收敛到同一结果。
+if (OFFSET) picked = picked.slice(OFFSET);
+if (LIMIT) picked = picked.slice(0, LIMIT);
+console.log(
+  `\n选中 ${picked.length} 个类型` +
+    (PKGS.length ? `（包过滤：${PKGS.join(", ")}）` : "") +
+    (OFFSET || LIMIT ? `（offset=${OFFSET || 0} limit=${LIMIT || "-"}）` : ""),
+);
+for (const t of picked.slice(0, 8)) console.log(`  ${t.p}.${t.l}`);
+if (picked.length > 8) console.log(`  … 其余 ${picked.length - 8} 个`);
+
+if (LIST || !FETCH) {
+  console.log("\n[dry-run] 未写任何文件。落盘请显式加 --fetch --out <dir>。");
+  console.log("（签名面只给名字/签名/出处；正文教程面在 data/paper_stable/paper-docs/，两者不要混。）");
+  process.exit(0);
+}
+if (!OUT) throw new Error("--fetch 必须同时给 --out（显式落点）");
+
+const dest = path.resolve(OUT);
+if (!dest.startsWith(REPO)) {
+  console.log(`⚠ 落点在仓库外（${dest}）—— 正式语料应落 data/<face>_javadoc/<ver>/`);
+}
+const rawDir = path.join(dest, "raw");
+const procDir = path.join(dest, "processed");
+fs.mkdirSync(rawDir, { recursive: true });
+fs.mkdirSync(procDir, { recursive: true });
+
+const fetchedAt = new Date().toISOString();
+const PRODUCER_REV = "fetch-spigot-javadoc.mjs@1";
+const entries = [];
+const gotRaw = new Set();
+const gotProc = new Set();
+let failed = 0;
+
+/**
+ * 续抓底座：把已有的 `index-l0.json` 读进来当**合并底**（不是覆盖底）。
+ * 这样"分块抓"与"某块重跑"都收敛到同一个最终 index —— 不必一次抓完 1397 类。
+ */
+const indexPath = path.join(dest, "index-l0.json");
+const entriesById = new Map();
+if (fs.existsSync(indexPath)) {
+  try {
+    const prev = JSON.parse(fs.readFileSync(indexPath, "utf8"));
+    if (Array.isArray(prev)) for (const e of prev) entriesById.set(e.id, e);
+    console.log(`（续抓：已有 index ${entriesById.size} 条，本轮在其上合并）`);
+  } catch (e) {
+    console.log(`⚠ 已有 index-l0.json 解析失败（${e.message}）⇒ 本轮以空集为底、末尾整体重写`);
+  }
+}
+
+/**
+ * 单个类型：抓 + 落盘（**幂等** —— 同 id 重跑覆盖同路径的同名文件）。
+ * 不抛：失败以 `{ err }` 返回，交给批次汇总，**不让一个 404 打断整块**（首版串行时正是这类打断）。
+ */
+async function fetchOne(t) {
+  const pkgPath = t.p.replace(/\./g, "/");
+  const cls = t.l.replace(/<[^>]+>/g, "");
+  const rel = `${pkgPath}/${cls}.html`;
+  const url = `${BASE}/${rel}`;
+  let html;
+  try {
+    html = await get(url);
+  } catch (e) {
+    return { name: `${t.p}.${cls}`, err: e.message };
+  }
+  if (!html || html.length < 200 || /^404|Not Found/i.test(html.slice(0, 40))) {
+    return { name: `${t.p}.${cls}`, err: "空/404" };
+  }
+  fs.mkdirSync(path.join(rawDir, pkgPath), { recursive: true });
+  fs.mkdirSync(path.join(procDir, pkgPath), { recursive: true });
+  fs.writeFileSync(path.join(rawDir, pkgPath, `${cls}.html`), html, "utf8");
+
+  // 签名抽取：javadoc 的 `member-signature` 块是**唯一真源**（实测 Spigot 165 处 / Paper 226 处）
+  const sigs = [...html.matchAll(/<div class="member-signature">([\s\S]*?)<\/div>/g)].map((x) =>
+    x[1]
+      .replace(/<[^>]+>/g, "")
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
+      .replace(/&amp;/g, "&")
+      .replace(/&nbsp;/g, " ")
+      .replace(/\s+/g, " ")
+      .trim(),
+  );
+  const body = sigs.length ? sigs.map((s) => `- \`${s}\``).join("\n") : "_（本页无明显签名块）_";
+  const header =
+    `---\n` +
+    `title: ${JSON.stringify(`${t.p}.${cls}`)}\n` +
+    `package: ${JSON.stringify(t.p)}\n` +
+    `source: ${url}\n` +
+    `sourceType: javadoc\n` +
+    `fetchedWith: ${PRODUCER_REV}\n` +
+    `fetchedAt: ${fetchedAt}\n` +
+    `asOfVersion: ${JSON.stringify(asOfVersion)}\n` +
+    `---\n\n`;
+  fs.writeFileSync(path.join(procDir, pkgPath, `${cls}.md`), header + body + "\n", "utf8");
+  return {
+    name: `${t.p}.${cls}`,
+    rawRel: `${pkgPath}/${cls}.html`,
+    procRel: `${pkgPath}/${cls}.md`,
+    entry: {
+      id: `${VERSION}/${pkgPath.replace(/\//g, "_")}/${cls}`,
+      version: VERSION,
+      label: `${t.p}.${cls}`,
+      url,
+      tags: [FACE, "javadoc", t.p],
+      priority: "⭐",
+      sectionCount: sigs.length,
+    },
+  };
+}
+
+/**
+ * 并发抓取。
+ * **为什么必须并发**：实测单请求延迟 ≈**1 秒/类**（cache 试跑 0.49 秒/类，真落点 1.03 秒/类）
+ * ⇒ 串行全量（Spigot 1397 + Paper 2117）要约 **1 小时**，而本工具链会回收长跑子进程。
+ * 这是**延迟受限**（不是 CPU 受限）⇒ 批并发把等待重叠掉就是对症手段。
+ * 默认 8；`--concurrency 1` 可退回串行（对照用）。
+ */
+const CONCURRENCY = Math.max(1, Number(opt("--concurrency") || 8));
+const t0 = Date.now();
+let done = 0;
+for (let i = 0; i < picked.length; i += CONCURRENCY) {
+  const batch = picked.slice(i, i + CONCURRENCY);
+  const results = await Promise.all(batch.map((t) => fetchOne(t)));
+  for (const r of results) {
+    if (r.err) {
+      failed++;
+      console.log(`\n  FAIL ${r.name} :: ${r.err}`);
+      continue;
+    }
+    gotRaw.add(r.rawRel);
+    gotProc.add(r.procRel);
+    entries.push(r.entry);
+  }
+  done += batch.length;
+  if (picked.length > CONCURRENCY) {
+    const el = Math.max(0.001, (Date.now() - t0) / 1000);
+    process.stdout.write(`\r  进度 ${done}/${picked.length} · ${el.toFixed(0)}s · ${(done / el).toFixed(1)} 类/秒   `);
+  }
+}
+if (picked.length > CONCURRENCY) {
+  const el = Math.max(0.001, (Date.now() - t0) / 1000);
+  process.stdout.write(`\r  完成 ${picked.length} 类 · ${el.toFixed(0)}s · ${(picked.length / el).toFixed(1)} 类/秒（并发 ${CONCURRENCY}）\n`);
+}
+
+// ── 合并 + 从**磁盘**重算（不是从本轮内存）──────────────────────────────────
+// 为什么必须从磁盘算：分块抓时"本轮"只见过自己那一块，而 index 与孤儿报告描述的是**整档**状态。
+// 从内存算 ⇒ 跑第二块会把第一块的条目抹掉、孤儿报告只剩第二块的。从磁盘算 ⇒ 半截状态自愈。
+for (const e of entries) entriesById.set(e.id, e);
+const merged = [...entriesById.values()].sort((a, b) => a.id.localeCompare(b.id));
+fs.writeFileSync(indexPath, JSON.stringify(merged, null, 2) + "\n", "utf8");
+
+function walkFiles(root, ext) {
+  const out = [];
+  const walk = (d) => {
+    for (const e of fs.readdirSync(d, { withFileTypes: true })) {
+      const full = path.join(d, e.name);
+      if (e.isDirectory()) walk(full);
+      else if (e.name.endsWith(ext)) out.push(path.relative(root, full).replace(/\\/g, "/"));
+    }
+  };
+  if (fs.existsSync(root)) walk(root);
+  return out;
+}
+const diskRaw = walkFiles(rawDir, ".html");
+const diskProc = new Set(walkFiles(procDir, ".md"));
+const orphan = diskRaw.map((p) => p.replace(/\.html$/, "")).filter((p) => !diskProc.has(`${p}.md`));
+
+fs.writeFileSync(
+  path.join(dest, "_orphan-report.json"),
+  JSON.stringify(
+    {
+      version: VERSION,
+      producerRev: PRODUCER_REV,
+      count: orphan.length,
+      orphans: orphan,
+      rawTotal: diskRaw.length,
+      processedTotal: diskProc.size,
+      note:
+        "有 raw/ 必有本文件（assert-javadoc-orphan-record 判据）。孤儿**只报告不代删**。" +
+        "rawTotal/processedTotal 是**整档**盘上计数（从磁盘扫），不是本轮增量。",
+    },
+    null,
+    2,
+  ) + "\n",
+  "utf8",
+);
+
+fs.writeFileSync(
+  path.join(dest, "meta.json"),
+  JSON.stringify(
+    {
+      face: FACE,
+      base: BASE,
+      version: VERSION,
+      asOfVersion,
+      fetchedWith: PRODUCER_REV,
+      fetchedAt,
+      counts: {
+        typesInTypeIndex: types.length,
+        indexEntries: merged.length,
+        rawOnDisk: diskRaw.length,
+        processedOnDisk: diskProc.size,
+        orphans: orphan.length,
+        thisRun: { picked: picked.length, offset: OFFSET, limit: LIMIT || null, failed },
+      },
+      note:
+        "签名面（API 名/签名/出处）。教程正文面另在 data/paper_stable/paper-docs/，两者不同源、不要混成一个 index。" +
+        "本档可**分块续抓**（--offset/--limit），index 与孤儿报告皆按整档重算 ⇒ 任意顺序重跑都收敛。",
+    },
+    null,
+    2,
+  ) + "\n",
+  "utf8",
+);
+
+console.log(`\n已写出 ${dest}`);
+console.log(`  本轮 raw ${gotRaw.size} / processed ${gotProc.size} · 失败 ${failed}`);
+console.log(`  整档 raw ${diskRaw.length} / processed ${diskProc.size} · index ${merged.length} 条 · 孤儿 ${orphan.length}`);
+console.log(`  as-of 版本 = ${asOfVersion}`);
+if (diskProc.size < types.length && !LIMIT && !PKGS.length) {
+  console.log(`  ⚠ 整档尚未抓完（${diskProc.size}/${types.length}）—— 续抓：再跑一次同命令（可配 --offset/--limit 分块）。`);
+}

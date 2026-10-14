@@ -1,0 +1,155 @@
+---
+title: "org.bukkit.entity.Entity"
+package: "org.bukkit.entity"
+source: https://jd.papermc.io/paper/26.3/org/bukkit/entity/Entity.html
+sourceType: javadoc
+fetchedWith: fetch-spigot-javadoc.mjs@1
+fetchedAt: 2026-10-14T13:00:27.472Z
+asOfVersion: "26.3.build.178-stable"
+---
+
+**Interface Entity**
+`public interface Entity extends Metadatable, CommandSender, Nameable, PersistentDataHolder, HoverEventSource<HoverEvent.ShowEntity>, Sound.Emitter, Sound.Source.Provider, DataComponentView`
+- `@NotNull @NotNull Location getLocation()`
+- `@Contract("null -> null; !null -> !null") @Nullable @Nullable Location getLocation(@Nullable @Nullable Location loc)`
+- `void setVelocity(@NotNull @NotNull Vector velocity)`
+- `@NotNull @NotNull Vector getVelocity()`
+- `double getHeight()`
+- `double getWidth()`
+- `@NotNull @NotNull BoundingBox getBoundingBox()`
+- `boolean isOnGround()`
+- `boolean isInWater()`
+- `@NotNull @NotNull World getWorld()`
+- `void setRotation(float yaw, float pitch)`
+- `void setRotation(@NotNull @NotNull Angle yaw, @NotNull @NotNull Angle pitch)`
+- `default boolean teleport(@NotNull @NotNull Location location, @NotNull TeleportFlag @NotNull ... teleportFlags)`
+- `boolean teleport(@NotNull @NotNull Location location, @NotNull @NotNull PlayerTeleportEvent.TeleportCause cause, @NotNull TeleportFlag @NotNull ... teleportFlags)`
+- `void lookAt(double x, double y, double z, @NotNull @NotNull LookAnchor entityAnchor)`
+- `default void lookAt(@NotNull Position position, @NotNull @NotNull LookAnchor entityAnchor)`
+- `boolean teleport(@NotNull @NotNull Location location)`
+- `boolean teleport(@NotNull @NotNull Location location, @NotNull @NotNull PlayerTeleportEvent.TeleportCause cause)`
+- `boolean teleport(@NotNull @NotNull Entity destination)`
+- `boolean teleport(@NotNull @NotNull Entity destination, @NotNull @NotNull PlayerTeleportEvent.TeleportCause cause)`
+- `default @NotNull CompletableFuture<Boolean> teleportAsync(@NotNull @NotNull Location loc)`
+- `default @NotNull CompletableFuture<Boolean> teleportAsync(@NotNull @NotNull Location loc, @NotNull @NotNull PlayerTeleportEvent.TeleportCause cause)`
+- `default @NotNull CompletableFuture<Boolean> teleportAsync(@NotNull @NotNull Location loc, @NotNull TeleportFlag @NotNull ... teleportFlags)`
+- `@NotNull CompletableFuture<Boolean> teleportAsync(@NotNull @NotNull Location loc, @NotNull @NotNull PlayerTeleportEvent.TeleportCause cause, @NotNull TeleportFlag @NotNull ... teleportFlags)`
+- `@NotNull @NotNull List<Entity> getNearbyEntities(double x, double y, double z)`
+- `int getEntityId()`
+- `int getFireTicks()`
+- `int getMaxFireTicks()`
+- `void setFireTicks(int ticks)`
+- `@Deprecated void setVisualFire(boolean fire)`
+- `void setVisualFire(@NotNull @NotNull TriState fire)`
+- `@Deprecated boolean isVisualFire()`
+- `@NotNull @NotNull TriState getVisualFire()`
+- `int getFreezeTicks()`
+- `int getMaxFreezeTicks()`
+- `void setFreezeTicks(int ticks)`
+- `boolean isFrozen()`
+- `void setInvisible(boolean invisible)`
+- `boolean isInvisible()`
+- `void setNoPhysics(boolean noPhysics)`
+- `boolean hasNoPhysics()`
+- `boolean isFreezeTickingLocked()`
+- `void lockFreezeTicks(boolean locked)`
+- `void remove()`
+- `@Nullable EntityRemoveEvent.Cause getRemoveEventCause()`
+- `@Nullable @Nullable RemovalReason getRemovalReason()`
+- `boolean isDead()`
+- `boolean isValid()`
+- `@NotNull @NotNull Server getServer()`
+- `boolean isPersistent()`
+- `void setPersistent(boolean persistent)`
+- `@Deprecated(since="1.11.2") @Nullable @Nullable Entity getPassenger()`
+- `@Deprecated(since="1.11.2") boolean setPassenger(@NotNull @NotNull Entity passenger)`
+- `@NotNull @NotNull List<Entity> getPassengers()`
+- `boolean addPassenger(@NotNull @NotNull Entity passenger)`
+- `boolean removePassenger(@NotNull @NotNull Entity passenger)`
+- `boolean isEmpty()`
+- `boolean eject()`
+- `@NotNull @NotNull ItemStack getPickItemStack()`
+- `float getFallDistance()`
+- `void setFallDistance(float distance)`
+- `@Internal @Deprecated(since="1.20.4", forRemoval=true) void setLastDamageCause(@Nullable @Nullable EntityDamageEvent event)`
+- `@Nullable @Nullable EntityDamageEvent getLastDamageCause()`
+- `@Nullable @Nullable ItemStack getWeapon()`
+- `@NotNull @NotNull UUID getUniqueId()`
+- `int getTicksLived()`
+- `void setTicksLived(int value)`
+- `void playEffect(@NotNull @NotNull EntityEffect effect)`
+- `@NotNull @NotNull EntityType getType()`
+- `@NotNull @NotNull SoundCategory getSoundCategory()`
+- `@NotNull @NotNull Sound getSwimSound()`
+- `@NotNull @NotNull Sound getSwimSplashSound()`
+- `@NotNull @NotNull Sound getSwimHighSpeedSplashSound()`
+- `boolean isInsideVehicle()`
+- `boolean leaveVehicle()`
+- `@Nullable @Nullable Entity getVehicle()`
+- `void setCustomNameVisible(boolean flag)`
+- `boolean isCustomNameVisible()`
+- `void setVisibleByDefault(boolean visible)`
+- `boolean isVisibleByDefault()`
+- `@NotNull @NotNull Set<Player> getTrackedBy()`
+- `boolean isTrackedBy(@NotNull @NotNull Player player)`
+- `void setGlowing(boolean flag)`
+- `boolean isGlowing()`
+- `void setInvulnerable(boolean flag)`
+- `boolean isMarkedInvulnerable()`
+- `boolean isInvulnerableTo(@NotNull @NotNull DamageSource source)`
+- `@Deprecated(since="26.3") default boolean isInvulnerable()`
+- `boolean isSilent()`
+- `void setSilent(boolean flag)`
+- `boolean hasGravity()`
+- `void setGravity(boolean gravity)`
+- `double getDefaultGravity()`
+- `double getGravity()`
+- `float getAirDrag()`
+- `int getPortalCooldown()`
+- `void setPortalCooldown(int cooldown)`
+- `@NotNull @NotNull Set<String> getScoreboardTags()`
+- `boolean addScoreboardTag(@NotNull @NotNull String tag)`
+- `boolean removeScoreboardTag(@NotNull @NotNull String tag)`
+- `@NotNull @NotNull PistonMoveReaction getPistonMoveReaction()`
+- `@NotNull @NotNull BlockFace getFacing()`
+- `@NotNull @NotNull Pose getPose()`
+- `boolean isSneaking()`
+- `void setSneaking(boolean sneak)`
+- `default void setPose(@NotNull @NotNull Pose pose)`
+- `void setPose(@NotNull @NotNull Pose pose, boolean fixed)`
+- `boolean hasFixedPose()`
+- `@NotNull @NotNull SpawnCategory getSpawnCategory()`
+- `boolean isInWorld()`
+- `@Nullable @Experimental @Nullable String getAsString()`
+- `@Nullable @Experimental @Nullable EntitySnapshot createSnapshot()`
+- `@NotNull @Experimental @NotNull Entity copy()`
+- `@NotNull @Experimental @NotNull Entity copy(@NotNull @NotNull Location to)`
+- `@NotNull @NotNull Entity.Spigot spigot()`
+- `@NotNull Component teamDisplayName()`
+- `@NotNull default HoverEvent<HoverEvent.ShowEntity> asHoverEvent(@NotNull UnaryOperator<HoverEvent.ShowEntity> op)`
+- `@Nullable @Nullable Location getOrigin()`
+- `boolean fromMobSpawner()`
+- `@NotNull default @NotNull Chunk getChunk()`
+- `@Nullable CreatureSpawnEvent.SpawnReason getEntitySpawnReason()`
+- `boolean isUnderWater()`
+- `boolean isInRain()`
+- `@Deprecated(since="1.21.5") default boolean isInBubbleColumn()`
+- `@Deprecated(since="1.21.5") default boolean isInWaterOrRain()`
+- `@Deprecated(since="1.21.5") default boolean isInWaterOrBubbleColumn()`
+- `@Deprecated(since="1.21.5") default boolean isInWaterOrRainOrBubbleColumn()`
+- `boolean isInLava()`
+- `boolean isTicking()`
+- `@Deprecated @NotNull @NotNull Set<Player> getTrackedPlayers()`
+- `default boolean spawnAt(@NotNull @NotNull Location location)`
+- `boolean spawnAt(@NotNull @NotNull Location location, @NotNull CreatureSpawnEvent.SpawnReason reason)`
+- `boolean isInPowderedSnow()`
+- `double getX()`
+- `double getY()`
+- `double getZ()`
+- `float getPitch()`
+- `float getYaw()`
+- `boolean collidesAt(@NotNull @NotNull Location location)`
+- `boolean wouldCollideUsing(@NotNull @NotNull BoundingBox boundingBox)`
+- `@NotNull EntityScheduler getScheduler()`
+- `@NotNull @NotNull String getScoreboardEntryName()`
+- `void broadcastHurtAnimation(@NotNull Collection<Player> players)`

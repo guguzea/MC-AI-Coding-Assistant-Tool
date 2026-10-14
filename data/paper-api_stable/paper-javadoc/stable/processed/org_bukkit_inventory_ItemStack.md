@@ -1,0 +1,103 @@
+---
+title: "org.bukkit.inventory.ItemStack"
+package: "org.bukkit.inventory"
+source: https://jd.papermc.io/paper/26.3/org/bukkit/inventory/ItemStack.html
+sourceType: javadoc
+fetchedWith: fetch-spigot-javadoc.mjs@1
+fetchedAt: 2026-10-14T13:00:27.472Z
+asOfVersion: "26.3.build.178-stable"
+---
+
+**Class ItemStack**
+`public class ItemStack extends Object implements Cloneable, ConfigurationSerializable, Translatable, HoverEventSource<HoverEvent.ShowItem>, Translatable, PersistentDataViewHolder, DataComponentHolder`
+- `protected ItemStack()`
+- `@Obsolete(since="1.21") public ItemStack(@NotNull @NotNull Material type)`
+- `@Obsolete(since="1.21") public ItemStack(@NotNull @NotNull Material type, int amount)`
+- `@Deprecated(since="1.20.5") public ItemStack(@NotNull @NotNull Material type, int amount, short damage)`
+- `@Deprecated(since="1.4.5", forRemoval=true) public ItemStack(@NotNull @NotNull Material type, int amount, short damage, @Nullable @Nullable Byte data)`
+- `@Obsolete(since="1.21") public ItemStack(@NotNull @NotNull ItemStack stack) throws IllegalArgumentException`
+- `@Contract(value="_ -> new", pure=true) @NotNull public static @NotNull ItemStack of(@NotNull @NotNull Material type)`
+- `@Contract(value="_, _ -> new", pure=true) @NotNull public static @NotNull ItemStack of(@NotNull @NotNull Material type, int amount)`
+- `public @NotNull PersistentDataContainerView getPersistentDataContainer()`
+- `public boolean editPersistentDataContainer(@NotNull @NotNull Consumer<PersistentDataContainer> consumer)`
+- `@NotNull public @NotNull Material getType()`
+- `@Deprecated public void setType(@NotNull @NotNull Material type)`
+- `@NotNull @Contract(value="_ -> new", pure=true) public @NotNull ItemStack withType(@NotNull @NotNull Material type)`
+- `public int getAmount()`
+- `public void setAmount(int amount)`
+- `@Nullable @Deprecated(forRemoval=true, since="1.13") public @Nullable MaterialData getData()`
+- `@Deprecated(forRemoval=true, since="1.13") public void setData(@Nullable @Nullable MaterialData data)`
+- `@Deprecated(since="1.13") public void setDurability(short durability)`
+- `@Deprecated(since="1.13") public short getDurability()`
+- `public int getMaxStackSize()`
+- `public String toString()`
+- `public boolean equals(Object obj)`
+- `public boolean isSimilar(@Nullable @Nullable ItemStack stack)`
+- `@NotNull public @NotNull ItemStack clone()`
+- `public int hashCode()`
+- `public boolean containsEnchantment(@NotNull @NotNull Enchantment enchant)`
+- `public int getEnchantmentLevel(@NotNull @NotNull Enchantment enchant)`
+- `@NotNull public @NotNull Map<Enchantment, Integer> getEnchantments()`
+- `public void addEnchantments(@NotNull @NotNull Map<Enchantment, Integer> enchantments)`
+- `public void addEnchantment(@NotNull @NotNull Enchantment enchant, int level)`
+- `public void addUnsafeEnchantments(@NotNull @NotNull Map<Enchantment, Integer> enchantments)`
+- `public void addUnsafeEnchantment(@NotNull @NotNull Enchantment enchant, int level)`
+- `public int removeEnchantment(@NotNull @NotNull Enchantment enchant)`
+- `public void removeEnchantments()`
+- `@NotNull public @NotNull Map<String,Object> serialize()`
+- `@NotNull public static @NotNull ItemStack deserialize(@NotNull @NotNull Map<String,Object> args)`
+- `public boolean editMeta(@NotNull Consumer<? super ItemMeta> consumer)`
+- `public <M extends ItemMeta> boolean editMeta(@NotNull @NotNull Class<M> metaClass, @NotNull Consumer<@NotNull ? super M> consumer)`
+- `@UndefinedNullability public ItemMeta getItemMeta()`
+- `public boolean hasItemMeta()`
+- `public boolean setItemMeta(@Nullable @Nullable ItemMeta itemMeta)`
+- `@NotNull @Deprecated(forRemoval=true) public @NotNull String getTranslationKey()`
+- `@NotNull public @NotNull ItemStack enchantWithLevels(int levels, boolean allowTreasure, @NotNull Random random)`
+- `@NotNull public @NotNull ItemStack enchantWithLevels(int levels, @NotNull RegistryKeySet<@NotNull Enchantment> keySet, @NotNull Random random)`
+- `@NotNull public HoverEvent<HoverEvent.ShowItem> asHoverEvent(@NotNull UnaryOperator<HoverEvent.ShowItem> op)`
+- `public @NotNull Component displayName()`
+- `@NotNull public @NotNull Component effectiveName()`
+- `@NotNull public @NotNull ItemStack ensureServerConversions()`
+- `@NotNull public static @NotNull ItemStack deserializeBytes(byte @NotNull [] bytes)`
+- `public byte @NotNull [] serializeAsBytes()`
+- `public static byte @NotNull [] serializeItemsAsBytes(@NotNull Collection<ItemStack> items)`
+- `public static byte @NotNull [] serializeItemsAsBytes(@Nullable @Nullable ItemStack @NotNull [] items)`
+- `@NotNull public static @NotNull ItemStack @NotNull [] deserializeItemsFromBytes(byte @NotNull [] bytes)`
+- `@Nullable @Deprecated public @Nullable String getI18NDisplayName()`
+- `@Deprecated(forRemoval=true) public int getMaxItemUseDuration()`
+- `public int getMaxItemUseDuration(@NotNull LivingEntity entity)`
+- `@NotNull public @NotNull ItemStack asOne()`
+- `@NotNull public @NotNull ItemStack asQuantity(int qty)`
+- `@NotNull public @NotNull ItemStack add()`
+- `@NotNull public @NotNull ItemStack add(int qty)`
+- `@NotNull public @NotNull ItemStack subtract()`
+- `@NotNull public @NotNull ItemStack subtract(int qty)`
+- `@Deprecated @Nullable public List<String> getLore()`
+- `@Nullable public List<Component> lore()`
+- `@Deprecated public void setLore(@Nullable List<String> lore)`
+- `public void lore(@Nullable List<? extends Component> lore)`
+- `public void addItemFlags(@NotNull @NotNull ItemFlag... itemFlags)`
+- `public void removeItemFlags(@NotNull @NotNull ItemFlag... itemFlags)`
+- `@NotNull public Set<ItemFlag> getItemFlags()`
+- `public boolean hasItemFlag(@NotNull @NotNull ItemFlag flag)`
+- `@NotNull public @NotNull String translationKey()`
+- `@NotNull @Deprecated(forRemoval=true, since="1.20.5") public ItemRarity getRarity()`
+- `public boolean isRepairableBy(@NotNull @NotNull ItemStack repairMaterial)`
+- `public boolean canRepair(@NotNull @NotNull ItemStack toBeRepaired)`
+- `@NotNull public @NotNull ItemStack damage(int amount, @NotNull LivingEntity livingEntity)`
+- `@NotNull public static @NotNull ItemStack empty()`
+- `public boolean isEmpty()`
+- `public @NotNull @Unmodifiable List<Component> computeTooltipLines(@NotNull TooltipContext tooltipContext, @Nullable Player player)`
+- `@Contract(pure=true) @Nullable public <T> T getData(@NotNull DataComponentType.Valued<T> type)`
+- `@Contract(value="_, !null -> !null", pure=true) @Nullable public <T> T getDataOrDefault(@NotNull DataComponentType.Valued<? extends T> type, @Nullable T fallback)`
+- `@Contract(pure=true) public boolean hasData(@NotNull DataComponentType type)`
+- `@Contract("-> new") public @Unmodifiable Set<@NotNull DataComponentType> getDataTypes()`
+- `public <T> void setData(@NotNull DataComponentType.Valued<T> type, @NotNull DataComponentBuilder<T> valueBuilder)`
+- `public <T> void setData(@NotNull DataComponentType.Valued<T> type, @NotNull T value)`
+- `public void setData(@NotNull DataComponentType.NonValued type)`
+- `public void unsetData(@NotNull DataComponentType type)`
+- `public void resetData(@NotNull DataComponentType type)`
+- `public void copyDataFrom(@NotNull @NotNull ItemStack source, @NotNull @NotNull Predicate<@NotNull DataComponentType> filter)`
+- `public boolean isDataOverridden(@NotNull DataComponentType type)`
+- `public boolean matchesWithoutData(@NotNull @NotNull ItemStack item, @NotNull Set<@NotNull DataComponentType> excludeTypes)`
+- `public boolean matchesWithoutData(@NotNull @NotNull ItemStack item, @NotNull Set<@NotNull DataComponentType> excludeTypes, boolean ignoreCount)`

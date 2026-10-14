@@ -1,0 +1,143 @@
+---
+title: "org.bukkit.inventory.meta.ItemMeta"
+package: "org.bukkit.inventory.meta"
+source: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/inventory/meta/ItemMeta.html
+sourceType: javadoc
+fetchedWith: fetch-spigot-javadoc.mjs@1
+fetchedAt: 2026-10-14T12:59:21.517Z
+asOfVersion: "26.3-R0.1-SNAPSHOT"
+---
+
+**Interface ItemMeta**
+`public interface ItemMeta extends Cloneable, ConfigurationSerializable, PersistentDataHolder`
+- `boolean hasDisplayName()`
+- `@NotNull String getDisplayName()`
+- `void setDisplayName(@Nullable String name)`
+- `boolean hasItemName()`
+- `@NotNull String getItemName()`
+- `void setItemName(@Nullable String name)`
+- `@Deprecated(since="1.20.5", forRemoval=true) boolean hasLocalizedName()`
+- `@NotNull @Deprecated(since="1.20.5", forRemoval=true) String getLocalizedName()`
+- `@Deprecated(since="1.20.5", forRemoval=true) void setLocalizedName(@Nullable String name)`
+- `boolean hasLore()`
+- `@Nullable List<String> getLore()`
+- `void setLore(@Nullable List<String> lore)`
+- `@Deprecated(since="1.21.5") boolean hasCustomModelData()`
+- `@Deprecated(since="1.21.5") int getCustomModelData()`
+- `@NotNull CustomModelDataComponent getCustomModelDataComponent()`
+- `@Deprecated(since="1.21.5") void setCustomModelData(@Nullable Integer data)`
+- `boolean hasCustomModelDataComponent()`
+- `void setCustomModelDataComponent(@Nullable CustomModelDataComponent customModelData)`
+- `boolean hasEnchantable()`
+- `int getEnchantable()`
+- `void setEnchantable(@Nullable Integer enchantable)`
+- `boolean hasEnchants()`
+- `boolean hasEnchant(@NotNull Enchantment ench)`
+- `int getEnchantLevel(@NotNull Enchantment ench)`
+- `@NotNull Map<Enchantment, Integer> getEnchants()`
+- `boolean addEnchant(@NotNull Enchantment ench, int level, boolean ignoreLevelRestriction)`
+- `boolean removeEnchant(@NotNull Enchantment ench)`
+- `void removeEnchantments()`
+- `boolean hasConflictingEnchant(@NotNull Enchantment ench)`
+- `void addItemFlags(@NotNull ItemFlag... itemFlags)`
+- `void removeItemFlags(@NotNull ItemFlag... itemFlags)`
+- `@NotNull Set<ItemFlag> getItemFlags()`
+- `boolean hasItemFlag(@NotNull ItemFlag flag)`
+- `boolean isHideTooltip()`
+- `void setHideTooltip(boolean hideTooltip)`
+- `boolean hasTooltipStyle()`
+- `@Nullable NamespacedKey getTooltipStyle()`
+- `void setTooltipStyle(@Nullable NamespacedKey tooltipStyle)`
+- `boolean hasItemModel()`
+- `@Nullable NamespacedKey getItemModel()`
+- `void setItemModel(@Nullable NamespacedKey itemModel)`
+- `boolean isUnbreakable()`
+- `void setUnbreakable(boolean unbreakable)`
+- `boolean hasEnchantmentGlintOverride()`
+- `@NotNull Boolean getEnchantmentGlintOverride()`
+- `void setEnchantmentGlintOverride(@Nullable Boolean override)`
+- `boolean isGlider()`
+- `void setGlider(boolean glider)`
+- `@Deprecated(since="1.21.2") boolean isFireResistant()`
+- `@Deprecated(since="1.21.2") void setFireResistant(boolean fireResistant)`
+- `boolean hasDamageResistant()`
+- `@Nullable @Deprecated(since="26.1") Tag<DamageType> getDamageResistant()`
+- `@Nullable Collection<DamageType> getDamageResistances()`
+- `void setDamageResistant(@Nullable Tag<DamageType> tag)`
+- `void setDamageResistant(@Nullable Collection<DamageType> damages)`
+- `boolean hasDamageType()`
+- `@Nullable DamageType getDamageType()`
+- `@Nullable NamespacedKey getDamageTypeKey()`
+- `void setDamageType(@Nullable DamageType type)`
+- `void setDamageTypeKey(@Nullable NamespacedKey type)`
+- `boolean hasMaxStackSize()`
+- `int getMaxStackSize()`
+- `void setMaxStackSize(@Nullable Integer max)`
+- `boolean hasAdditionalTradeCost()`
+- `int getAdditionalTradeCost()`
+- `void setAdditionalTradeCost(@Nullable Integer cost)`
+- `boolean hasRarity()`
+- `@NotNull ItemRarity getRarity()`
+- `void setRarity(@Nullable ItemRarity rarity)`
+- `boolean hasUseRemainder()`
+- `@Nullable ItemStack getUseRemainder()`
+- `void setUseRemainder(@Nullable ItemStack remainder)`
+- `boolean hasUseCooldown()`
+- `@NotNull UseCooldownComponent getUseCooldown()`
+- `void setUseCooldown(@Nullable UseCooldownComponent cooldown)`
+- `boolean hasUseEffects()`
+- `@NotNull UseEffectsComponent getUseEffects()`
+- `void setUseEffects(@Nullable UseEffectsComponent effects)`
+- `boolean hasSwingAnimation()`
+- `@NotNull SwingAnimationComponent getSwingAnimation()`
+- `void setSwingAnimation(@Nullable SwingAnimationComponent component)`
+- `boolean hasAttackRange()`
+- `@NotNull AttackRangeComponent getAttackRange()`
+- `void setAttackRange(@Nullable AttackRangeComponent component)`
+- `boolean hasPiercingWeapon()`
+- `@NotNull PiercingWeaponComponent getPiercingWeapon()`
+- `void setPiercingWeapon(@Nullable PiercingWeaponComponent component)`
+- `boolean hasKineticWeapon()`
+- `@NotNull KineticWeaponComponent getKineticWeapon()`
+- `void setKineticWeapon(@Nullable KineticWeaponComponent component)`
+- `boolean hasFood()`
+- `@NotNull FoodComponent getFood()`
+- `void setFood(@Nullable FoodComponent food)`
+- `boolean hasConsumable()`
+- `@NotNull ConsumableComponent getConsumable()`
+- `void setConsumable(@Nullable ConsumableComponent consumable)`
+- `boolean hasTool()`
+- `@NotNull ToolComponent getTool()`
+- `void setTool(@Nullable ToolComponent tool)`
+- `boolean hasWeapon()`
+- `@NotNull WeaponComponent getWeapon()`
+- `void setWeapon(@Nullable WeaponComponent weapon)`
+- `boolean hasBlocksAttacks()`
+- `@NotNull BlocksAttacksComponent getBlocksAttacks()`
+- `void setBlocksAttacks(@Nullable BlocksAttacksComponent blocksAttacks)`
+- `boolean hasEquippable()`
+- `@NotNull EquippableComponent getEquippable()`
+- `void setEquippable(@Nullable EquippableComponent equippable)`
+- `boolean hasJukeboxPlayable()`
+- `@Nullable JukeboxPlayableComponent getJukeboxPlayable()`
+- `void setJukeboxPlayable(@Nullable JukeboxPlayableComponent jukeboxPlayable)`
+- `boolean hasBreakSound()`
+- `@Nullable Sound getBreakSound()`
+- `void setBreakSound(@Nullable Sound sound)`
+- `boolean hasMinimumAttackCharge()`
+- `float getMinimumAttackCharge()`
+- `void setMinimumAttackCharge(@Nullable Float minimumAttackCharge)`
+- `boolean hasAttributeModifiers()`
+- `@Nullable Multimap<Attribute, AttributeModifier> getAttributeModifiers()`
+- `@NotNull Multimap<Attribute, AttributeModifier> getAttributeModifiers(@NotNull EquipmentSlot slot)`
+- `@Nullable Collection<AttributeModifier> getAttributeModifiers(@NotNull Attribute attribute)`
+- `boolean addAttributeModifier(@NotNull Attribute attribute, @NotNull AttributeModifier modifier)`
+- `void setAttributeModifiers(@Nullable Multimap<Attribute, AttributeModifier> attributeModifiers)`
+- `boolean removeAttributeModifier(@NotNull Attribute attribute)`
+- `boolean removeAttributeModifier(@NotNull EquipmentSlot slot)`
+- `boolean removeAttributeModifier(@NotNull Attribute attribute, @NotNull AttributeModifier modifier)`
+- `@NotNull String getAsString()`
+- `@NotNull String getAsComponentString()`
+- `@NotNull @Deprecated(since="1.14") CustomItemTagContainer getCustomTagContainer()`
+- `@Internal void setVersion(int version)`
+- `@NotNull ItemMeta clone()`

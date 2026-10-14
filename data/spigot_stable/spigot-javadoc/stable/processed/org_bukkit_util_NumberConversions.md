@@ -1,0 +1,26 @@
+---
+title: "org.bukkit.util.NumberConversions"
+package: "org.bukkit.util"
+source: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/util/NumberConversions.html
+sourceType: javadoc
+fetchedWith: fetch-spigot-javadoc.mjs@1
+fetchedAt: 2026-10-14T12:59:21.517Z
+asOfVersion: "26.3-R0.1-SNAPSHOT"
+---
+
+**Class NumberConversions**
+`public final class NumberConversions extends Object`
+- `public static int floor(double num)`
+- `public static int ceil(double num)`
+- `public static int round(double num)`
+- `public static double square(double num)`
+- `public static int toInt(@Nullable Object object)`
+- `public static float toFloat(@Nullable Object object)`
+- `public static double toDouble(@Nullable Object object)`
+- `public static long toLong(@Nullable Object object)`
+- `public static short toShort(@Nullable Object object)`
+- `public static byte toByte(@Nullable Object object)`
+- `public static boolean isFinite(double d)`
+- `public static boolean isFinite(float f)`
+- `public static void checkFinite(double d, @NotNull String message)`
+- `public static void checkFinite(float d, @NotNull String message)`

@@ -1,0 +1,16 @@
+---
+title: "org.bukkit.block.data.Levelled"
+package: "org.bukkit.block.data"
+source: https://jd.papermc.io/paper/26.3/org/bukkit/block/data/Levelled.html
+sourceType: javadoc
+fetchedWith: fetch-spigot-javadoc.mjs@1
+fetchedAt: 2026-10-14T13:00:27.472Z
+asOfVersion: "26.3.build.178-stable"
+---
+
+**Interface Levelled**
+`public interface Levelled extends BlockData`
+- `int getLevel()`
+- `void setLevel(int level)`
+- `int getMaximumLevel()`
+- `int getMinimumLevel()`

@@ -26,9 +26,9 @@ IF 需要流动、填装、无限水源
 ```java
 public static final ForgeFlowingFluid.Properties FLUID_PROPERTIES =
     new ForgeFlowingFluid.Properties(
-        MY_FLUID_TYPE,     // source fluid type
-        MY_FLUID,          // flowing fluid
-        MY_FLUID_SOURCE    // source fluid
+        MY_FLUID_TYPE,     // fluidType
+        MY_FLUID_SOURCE,   // still（静止/源）—— 官方 sources 实证形参序为 (fluidType, still, flowing)
+        MY_FLUID           // flowing（流动）
     )
         .bucket(() -> MY_BUCKET.get())
         .block(() -> MY_FLUID_BLOCK.get());

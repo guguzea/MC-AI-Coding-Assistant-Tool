@@ -11,7 +11,7 @@
 ```java
 // DeferredRegister 方式（官方推荐）
 public static final DeferredRegister<Block> BLOCKS =
-    DeferredRegister.create(NeoForgeRegistries.BLOCKS, MOD_ID);
+    DeferredRegister.create(Registries.BLOCK, MOD_ID);   // 构件实测：NeoForgeRegistries 无 BLOCKS，真名是 vanilla 的 Registries.BLOCK
 
 public static final DeferredHolder<Block, Block> STONE_BLOCK = BLOCKS.register("stone_block",
     () -> new Block(BlockBehaviour.Properties.of()

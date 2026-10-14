@@ -776,6 +776,22 @@
       "closedAt": "2026-09-20"
     },
     {
+      "id": "signature-face-integrity-gate",
+      "claim": "两个服务端面**签名层**（`data/spigot_stable/spigot-javadoc/stable` 1396 页、`data/paper_stable/paper-javadoc/stable` 2116 页）必须有独立的「出处可核 + 档内一致 + 索引差双向空 + raw↔processed 1:1 + 孤儿留痕自洽」门。**不得复用 `forge_javadoc` 那三道**：它们逐处绑死 Forge 约定（数据根硬编码 `forge_javadoc`、版本目录须 `/^\\d/` 开头、`raw` 须 `.md`、`fmValue` 只认双引号、判据②要 `<mc>-<build>` 钉表），而签名面 `raw` 是 `.html`、目录名是伪版本 `stable`、frontmatter 无引号、上游 javadoc URL 无版本段（`/spigot/1.21.4/` 实测 404）⇒ 硬套会**全线误红**。",
+      "author": "2026-10-14 服务端面扩面（Spigot + Paper 签名面）+ 子代理对三道门内部结构的侦察",
+      "evidence": "判绿实测：spigot 页/index/raw/processed 均 1396、asOf=26.3-R0.1-SNAPSHOT；paper 均 2116、asOf=26.3.build.178-stable；两面 fetchedWith 均等于代码钉值 fetch-spigot-javadoc.mjs@1；孤儿 0，且 _orphan-report 的 rawTotal/processedTotal 与磁盘实扫一致。投毒自证（**temp 假根，不碰仓库语料**）：4/4 畸形必红 —— ①索引里有盘上没有 ②孤儿报告 count 失实 ③source 的包路径与目录不符 ④档内 asOfVersion 混版本；另有干净必绿对照。缺面默认**降级并吼**（CI/部分安装上 data/ 不在，硬要求会让门恒红而挂不进链），`--require` 走 fail-closed（缺面 rc=2）。",
+      "evidenceRefs": [
+        "mcp-server/scripts/assert-signature-face-integrity.mjs",
+        "mcp-server/scripts/fetch-spigot-javadoc.mjs",
+        "DELIVERY_LOG.md"
+      ],
+      "status": "closed",
+      "gates": [
+        "assert-signature-face-integrity.mjs"
+      ],
+      "closedAt": "2026-10-14"
+    },
+    {
       "id": "convert-yarn-requires-yarn-data",
       "claim": "convert_mapping 的 to=yarn 只在该档**确实**是 yarn-tiny（fabric 侧 Yarn 名）时才可答：否则 fail(resultKind=YARN_DATA_UNAVAILABLE) 并指路 query_api。另：era 与命中来源矛盾（era=yarn-tiny 而 source=csv）时不得报 confidence:high（降为 medium + notes 说明）。",
       "author": "原审查§3（恒等式伪转换）+ 计划 v2 W4-5 + 2026-09-20 执行",

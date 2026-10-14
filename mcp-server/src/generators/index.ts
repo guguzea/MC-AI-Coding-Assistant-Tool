@@ -391,6 +391,8 @@ function forgeSimpleChannelMcpSkeleton(
   mcVersion: string,
 ): GeneratorResult {
   const body = `// Forge ${mcVersion} — SimpleChannel（MCP 名：PacketBuffer；注册放 FMLCommonSetupEvent）
+// 单个 public 顶层类：SimpleChannel 句柄（INSTANCE / register / sendToServer）与消息类合并在本文件，
+// 文件名等于 public 类型名 ⇒ 照 suggestedPath 落盘即可编译（旧骨架在一个文件里放了两个 public 顶层类）。
 package com.example.${mod}.network;
 
 import java.util.function.Supplier;
@@ -400,7 +402,7 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 
-public class NetworkHandler {
+public class ${pascal}Packet {
     private static final String PROTOCOL_VERSION = "1";
     public static final SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(
             new ResourceLocation("${mod}", "main"),
@@ -409,7 +411,15 @@ public class NetworkHandler {
             PROTOCOL_VERSION::equals);
     private static int id = 0;
 
-    // 在 FMLCommonSetupEvent 里调用 register()
+    private final String message;
+
+    public ${pascal}Packet(String message) { this.message = message; }
+
+    public ${pascal}Packet(PacketBuffer buf) {
+        this(buf.readUtf());
+    }
+
+    // 在 FMLCommonSetupEvent 里调用 ${pascal}Packet.register()
     public static void register() {
         INSTANCE.registerMessage(
                 id++,
@@ -421,16 +431,6 @@ public class NetworkHandler {
 
     public static void sendToServer(${pascal}Packet msg) {
         INSTANCE.sendToServer(msg);
-    }
-}
-
-public class ${pascal}Packet {
-    private final String message;
-
-    public ${pascal}Packet(String message) { this.message = message; }
-
-    public ${pascal}Packet(PacketBuffer buf) {
-        this(buf.readUtf());
     }
 
     public void encode(PacketBuffer buf) {
@@ -462,6 +462,8 @@ function forgeSimpleChannelOfficialSkeleton(
   mcVersion: string,
 ): GeneratorResult {
   const body = `// Forge ${mcVersion} — SimpleChannel（官方映射：FriendlyByteBuf；注册放 FMLCommonSetupEvent）
+// 单个 public 顶层类：SimpleChannel 句柄（INSTANCE / register / sendToServer）与消息类合并在本文件，
+// 文件名等于 public 类型名 ⇒ 照 suggestedPath 落盘即可编译（旧骨架在一个文件里放了两个 public 顶层类）。
 package com.example.${mod}.network;
 
 import java.util.function.Supplier;
@@ -471,7 +473,7 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 
-public class NetworkHandler {
+public class ${pascal}Packet {
     private static final String PROTOCOL_VERSION = "1";
     public static final SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(
             new ResourceLocation("${mod}", "main"),
@@ -480,7 +482,15 @@ public class NetworkHandler {
             PROTOCOL_VERSION::equals);
     private static int id = 0;
 
-    // 在 FMLCommonSetupEvent 里调用 register()
+    private final String message;
+
+    public ${pascal}Packet(String message) { this.message = message; }
+
+    public ${pascal}Packet(FriendlyByteBuf buf) {
+        this(buf.readUtf());
+    }
+
+    // 在 FMLCommonSetupEvent 里调用 ${pascal}Packet.register()
     public static void register() {
         INSTANCE.registerMessage(
                 id++,
@@ -492,16 +502,6 @@ public class NetworkHandler {
 
     public static void sendToServer(${pascal}Packet msg) {
         INSTANCE.sendToServer(msg);
-    }
-}
-
-public class ${pascal}Packet {
-    private final String message;
-
-    public ${pascal}Packet(String message) { this.message = message; }
-
-    public ${pascal}Packet(FriendlyByteBuf buf) {
-        this(buf.readUtf());
     }
 
     public void toBytes(FriendlyByteBuf buf) {

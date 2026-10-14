@@ -12,7 +12,7 @@ docsTool: search_neoforge_docs
 
 Java 21。资源 id：ResourceLocation.fromNamespaceAndPath（不是 new ResourceLocation，也不是 Identifier）。核实表：knowledge/common/verified-api-1.21.1.md。
 
-注册：DeferredRegister.Entities / DeferredRegister.create(Registries.ENTITY_TYPE, MODID)。EntityType.Builder 最后 .build(...) 的 ResourceKey 参数以该版 entities 页为准。
+注册：`DeferredRegister.create(Registries.ENTITY_TYPE, MODID)`（**不要**用 `DeferredRegister.Entities` —— 构件实测该嵌套类 1.21.5 才引入，本档 21.1 查无）。EntityType.Builder 最后 .build(...) 的 ResourceKey 参数以该版 entities 页为准。
 
 渲染只放客户端（@EventBusSubscriber Dist.CLIENT）。不要在服务端加载 Renderer。不要抄 Forge 1.12 EntityRegistry。
 

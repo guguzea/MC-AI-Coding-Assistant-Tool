@@ -5,7 +5,7 @@
 ```java
 // 注册
 public static final DeferredRegister<EntityType<?>> ENTITY_TYPES =
-    DeferredRegister.create(NeoForgeRegistries.ENTITY_TYPES, MOD_ID);
+    DeferredRegister.create(Registries.ENTITY_TYPE, MOD_ID);   // 构件实测：NeoForgeRegistries 无 ENTITY_TYPES，真名是 vanilla 的 Registries.ENTITY_TYPE
 
 public static final DeferredHolder<EntityType<?>, EntityType<MyEntity>> MY_ENTITY = ENTITY_TYPES.register("my_entity",
     () -> EntityType.Builder.of(MyEntity::new, MobCategory.CREATURE)
@@ -135,7 +135,7 @@ public class MyEntityRenderer extends HumanoidMobRenderer<MyEntity, MyEntityMode
 
 ```java
 public static final DeferredRegister<Attribute> ATTRIBUTES =
-    DeferredRegister.create(NeoForgeRegistries.ATTRIBUTES, MOD_ID);
+    DeferredRegister.create(Registries.ATTRIBUTE, MOD_ID);   // 构件实测：NeoForgeRegistries 无 ATTRIBUTES，真名是 vanilla 的 Registries.ATTRIBUTE
 
 public static final DeferredHolder<Attribute, Attribute> EXTRA_HEALTH = ATTRIBUTES.register("extra_health",
     () -> new RangedAttribute("attribute.modid.extra_health", 0.0, 0.0, 1000.0).setSyncable(true)
@@ -152,9 +152,7 @@ if (extra != null) {
     extra.addPermanentModifier(new AttributeModifier("modid.extra_health", 4.0, AttributeModifier.Operation.ADD));
 }
 
-// TODO(未核实)：① NeoForgeRegistries.ATTRIBUTES 这个常量名在本档 1.20.4 语料（61 页）里查无出处
-//              （语料只出现过 NeoForgeRegistries.ATTACHMENT_TYPES）；
-//              ② 自定义属性要先进该实体类型的 AttributeSupplier，NeoForge 侧的注册事件名同样无语料出处
-//                 （1.20.4 语料没有任何 entities / attributes 专页）。
-//              两者都须用户自备 NeoForge jar 走 ingest_loader_api + query_loader_api 逐签名核实后再写，禁止凭记忆补。
+// TODO(未核实)：① 自定义属性要先进该实体类型的 AttributeSupplier，NeoForge 侧的注册事件名在本档 1.20.4 语料里
+//                 无语料出处（1.20.4 语料没有任何 entities / attributes 专页）。
+//              ② 须用户自备 NeoForge jar 走 ingest_loader_api + query_loader_api 逐签名核实后再写，禁止凭记忆补。
 ```

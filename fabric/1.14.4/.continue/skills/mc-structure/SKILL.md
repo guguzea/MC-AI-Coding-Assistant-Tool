@@ -1,6 +1,6 @@
 ---
 name: mc-structure
-description: 结构集、模板、jigsaw。触发词：Structure、TemplateManager
+description: 结构集、模板、jigsaw。触发词：Structure、StructureManager
 platform: fabric
 version: "1.14.4"
 dependencies: []

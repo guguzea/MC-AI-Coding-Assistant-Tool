@@ -1,0 +1,1003 @@
+[
+  {
+    "id": "stable/api__command-api__arguments__adventure",
+    "version": "stable",
+    "label": "Adventure",
+    "url": "https://docs.papermc.io/paper/dev/command-api/arguments/adventure/",
+    "tags": [
+      "paper",
+      "api",
+      "command-api",
+      "arguments"
+    ],
+    "priority": "⭐",
+    "sectionCount": 5,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__command-api__arguments__entity-player",
+    "version": "stable",
+    "label": "Entities and players",
+    "url": "https://docs.papermc.io/paper/dev/command-api/arguments/entity-player/",
+    "tags": [
+      "paper",
+      "api",
+      "command-api",
+      "arguments"
+    ],
+    "priority": "⭐",
+    "sectionCount": 5,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__command-api__arguments__enums",
+    "version": "stable",
+    "label": "Enums",
+    "url": "https://docs.papermc.io/paper/dev/command-api/arguments/enums/",
+    "tags": [
+      "paper",
+      "api",
+      "command-api",
+      "arguments"
+    ],
+    "priority": "⭐",
+    "sectionCount": 6,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__command-api__arguments__index",
+    "version": "stable",
+    "label": "Arguments",
+    "url": "",
+    "tags": [
+      "paper",
+      "api",
+      "command-api",
+      "arguments"
+    ],
+    "priority": "⭐",
+    "sectionCount": 0,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__command-api__arguments__location",
+    "version": "stable",
+    "label": "Location",
+    "url": "https://docs.papermc.io/paper/dev/command-api/arguments/location/",
+    "tags": [
+      "paper",
+      "api",
+      "command-api",
+      "arguments"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__command-api__arguments__minecraft",
+    "version": "stable",
+    "label": "Minecraft-specific",
+    "url": "https://docs.papermc.io/paper/dev/command-api/arguments/minecraft/",
+    "tags": [
+      "paper",
+      "api",
+      "command-api",
+      "arguments"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__command-api__arguments__paper",
+    "version": "stable",
+    "label": "Paper-specific",
+    "url": "https://docs.papermc.io/paper/dev/command-api/arguments/paper/",
+    "tags": [
+      "paper",
+      "api",
+      "command-api",
+      "arguments"
+    ],
+    "priority": "⭐",
+    "sectionCount": 6,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__command-api__arguments__predicate",
+    "version": "stable",
+    "label": "Predicates",
+    "url": "https://docs.papermc.io/paper/dev/command-api/arguments/predicate/",
+    "tags": [
+      "paper",
+      "api",
+      "command-api",
+      "arguments"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__command-api__arguments__registry",
+    "version": "stable",
+    "label": "Registry",
+    "url": "https://docs.papermc.io/paper/dev/command-api/arguments/registry/",
+    "tags": [
+      "paper",
+      "api",
+      "command-api",
+      "arguments"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__command-api__basics__argument-suggestions",
+    "version": "stable",
+    "label": "Suggestions",
+    "url": "https://docs.papermc.io/paper/dev/command-api/basics/argument-suggestions/",
+    "tags": [
+      "paper",
+      "api",
+      "command-api",
+      "basics"
+    ],
+    "priority": "⭐",
+    "sectionCount": 4,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__command-api__basics__arguments-and-literals",
+    "version": "stable",
+    "label": "Arguments and literals",
+    "url": "https://docs.papermc.io/paper/dev/command-api/basics/arguments-and-literals/",
+    "tags": [
+      "paper",
+      "api",
+      "command-api",
+      "basics"
+    ],
+    "priority": "⭐",
+    "sectionCount": 4,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__command-api__basics__command-tree",
+    "version": "stable",
+    "label": "Command trees",
+    "url": "https://docs.papermc.io/paper/dev/command-api/basics/command-tree/",
+    "tags": [
+      "paper",
+      "api",
+      "command-api",
+      "basics"
+    ],
+    "priority": "⭐",
+    "sectionCount": 4,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__command-api__basics__custom-arguments",
+    "version": "stable",
+    "label": "Custom arguments",
+    "url": "https://docs.papermc.io/paper/dev/command-api/basics/custom-arguments/",
+    "tags": [
+      "paper",
+      "api",
+      "command-api",
+      "basics"
+    ],
+    "priority": "⭐",
+    "sectionCount": 5,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__command-api__basics__executors",
+    "version": "stable",
+    "label": "Executors",
+    "url": "https://docs.papermc.io/paper/dev/command-api/basics/executors/",
+    "tags": [
+      "paper",
+      "api",
+      "command-api",
+      "basics"
+    ],
+    "priority": "⭐",
+    "sectionCount": 2,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__command-api__basics__index",
+    "version": "stable",
+    "label": "Basics",
+    "url": "",
+    "tags": [
+      "paper",
+      "api",
+      "command-api",
+      "basics"
+    ],
+    "priority": "⭐",
+    "sectionCount": 0,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__command-api__basics__introduction",
+    "version": "stable",
+    "label": "Introduction",
+    "url": "https://docs.papermc.io/paper/dev/command-api/basics/introduction/",
+    "tags": [
+      "paper",
+      "api",
+      "command-api",
+      "basics"
+    ],
+    "priority": "⭐",
+    "sectionCount": 2,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__command-api__basics__registration",
+    "version": "stable",
+    "label": "Registration",
+    "url": "https://docs.papermc.io/paper/dev/command-api/basics/registration/",
+    "tags": [
+      "paper",
+      "api",
+      "command-api",
+      "basics"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__command-api__basics__requirements",
+    "version": "stable",
+    "label": "Requirements",
+    "url": "https://docs.papermc.io/paper/dev/command-api/basics/requirements/",
+    "tags": [
+      "paper",
+      "api",
+      "command-api",
+      "basics"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__command-api__index",
+    "version": "stable",
+    "label": "Command API",
+    "url": "",
+    "tags": [
+      "paper",
+      "api",
+      "command-api"
+    ],
+    "priority": "⭐",
+    "sectionCount": 0,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__command-api__misc__basic-command",
+    "version": "stable",
+    "label": "Basic commands",
+    "url": "https://docs.papermc.io/paper/dev/command-api/misc/basic-command/",
+    "tags": [
+      "paper",
+      "api",
+      "command-api",
+      "misc"
+    ],
+    "priority": "⭐",
+    "sectionCount": 4,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__command-api__misc__comparison-bukkit-brigadier",
+    "version": "stable",
+    "label": "Comparison",
+    "url": "https://docs.papermc.io/paper/dev/command-api/misc/comparison-bukkit-brigadier/",
+    "tags": [
+      "paper",
+      "api",
+      "command-api",
+      "misc"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__command-api__misc__index",
+    "version": "stable",
+    "label": "Miscellaneous",
+    "url": "",
+    "tags": [
+      "paper",
+      "api",
+      "command-api",
+      "misc"
+    ],
+    "priority": "⭐",
+    "sectionCount": 0,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__component-api__audiences",
+    "version": "stable",
+    "label": "Audiences",
+    "url": "https://docs.papermc.io/paper/dev/component-api/audiences/",
+    "tags": [
+      "paper",
+      "api",
+      "component-api"
+    ],
+    "priority": "⭐",
+    "sectionCount": 4,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__component-api__i18n",
+    "version": "stable",
+    "label": "Internationalization",
+    "url": "https://docs.papermc.io/paper/dev/component-api/i18n/",
+    "tags": [
+      "paper",
+      "api",
+      "component-api"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__component-api__index",
+    "version": "stable",
+    "label": "Component API",
+    "url": "",
+    "tags": [
+      "paper",
+      "api",
+      "component-api"
+    ],
+    "priority": "⭐",
+    "sectionCount": 0,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__component-api__intro",
+    "version": "stable",
+    "label": "Introduction",
+    "url": "https://docs.papermc.io/paper/dev/component-api/introduction/",
+    "tags": [
+      "paper",
+      "api",
+      "component-api"
+    ],
+    "priority": "⭐",
+    "sectionCount": 6,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__component-api__signed-messages",
+    "version": "stable",
+    "label": "Signed messages",
+    "url": "https://docs.papermc.io/paper/dev/component-api/signed-messages/",
+    "tags": [
+      "paper",
+      "api",
+      "component-api"
+    ],
+    "priority": "⭐",
+    "sectionCount": 4,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__data-component-api",
+    "version": "stable",
+    "label": "Data components",
+    "url": "https://docs.papermc.io/paper/dev/data-component-api/",
+    "tags": [
+      "paper",
+      "api"
+    ],
+    "priority": "⭐",
+    "sectionCount": 5,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__dialogs",
+    "version": "stable",
+    "label": "Dialog API",
+    "url": "https://docs.papermc.io/paper/dev/dialogs/",
+    "tags": [
+      "paper",
+      "api"
+    ],
+    "priority": "⭐",
+    "sectionCount": 8,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__entity-api__display-entities",
+    "version": "stable",
+    "label": "Display entities",
+    "url": "https://docs.papermc.io/paper/dev/display-entities/",
+    "tags": [
+      "paper",
+      "api",
+      "entity-api"
+    ],
+    "priority": "⭐",
+    "sectionCount": 4,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__entity-api__entity-pathfinder",
+    "version": "stable",
+    "label": "Entity Pathfinder API",
+    "url": "https://docs.papermc.io/paper/dev/entity-pathfinder/",
+    "tags": [
+      "paper",
+      "api",
+      "entity-api"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__entity-api__entity-teleport",
+    "version": "stable",
+    "label": "Teleportation",
+    "url": "https://docs.papermc.io/paper/dev/entity-teleport/",
+    "tags": [
+      "paper",
+      "api",
+      "entity-api"
+    ],
+    "priority": "⭐",
+    "sectionCount": 2,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__entity-api__index",
+    "version": "stable",
+    "label": "Entity API",
+    "url": "",
+    "tags": [
+      "paper",
+      "api",
+      "entity-api"
+    ],
+    "priority": "⭐",
+    "sectionCount": 0,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__entity-api__mob-goals",
+    "version": "stable",
+    "label": "Mob Goal API",
+    "url": "https://docs.papermc.io/paper/dev/mob-goals/",
+    "tags": [
+      "paper",
+      "api",
+      "entity-api"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__event-api__chat-event",
+    "version": "stable",
+    "label": "Chat events",
+    "url": "https://docs.papermc.io/paper/dev/chat-events/",
+    "tags": [
+      "paper",
+      "api",
+      "event-api"
+    ],
+    "priority": "⭐",
+    "sectionCount": 4,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__event-api__custom-events",
+    "version": "stable",
+    "label": "Custom events",
+    "url": "https://docs.papermc.io/paper/dev/custom-events/",
+    "tags": [
+      "paper",
+      "api",
+      "event-api"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__event-api__event-listeners",
+    "version": "stable",
+    "label": "Listeners",
+    "url": "https://docs.papermc.io/paper/dev/event-listeners/",
+    "tags": [
+      "paper",
+      "api",
+      "event-api"
+    ],
+    "priority": "⭐",
+    "sectionCount": 6,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__event-api__handler-lists",
+    "version": "stable",
+    "label": "Handler lists",
+    "url": "https://docs.papermc.io/paper/dev/handler-lists/",
+    "tags": [
+      "paper",
+      "api",
+      "event-api"
+    ],
+    "priority": "⭐",
+    "sectionCount": 2,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__event-api__index",
+    "version": "stable",
+    "label": "Event API",
+    "url": "",
+    "tags": [
+      "paper",
+      "api",
+      "event-api"
+    ],
+    "priority": "⭐",
+    "sectionCount": 0,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__folia-support",
+    "version": "stable",
+    "label": "Supporting Paper and Folia",
+    "url": "https://docs.papermc.io/paper/dev/folia-support/",
+    "tags": [
+      "paper",
+      "api"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__index",
+    "version": "stable",
+    "label": "API",
+    "url": "",
+    "tags": [
+      "paper",
+      "api"
+    ],
+    "priority": "⭐",
+    "sectionCount": 0,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__inventories__custom-inventory-holder",
+    "version": "stable",
+    "label": "Custom InventoryHolders",
+    "url": "https://docs.papermc.io/paper/dev/custom-inventory-holder/",
+    "tags": [
+      "paper",
+      "api",
+      "inventories"
+    ],
+    "priority": "⭐",
+    "sectionCount": 5,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__inventories__index",
+    "version": "stable",
+    "label": "Inventories",
+    "url": "",
+    "tags": [
+      "paper",
+      "api",
+      "inventories"
+    ],
+    "priority": "⭐",
+    "sectionCount": 0,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__inventories__menu-type-api",
+    "version": "stable",
+    "label": "Menu Type API",
+    "url": "https://docs.papermc.io/paper/dev/menu-type-api/",
+    "tags": [
+      "paper",
+      "api",
+      "inventories"
+    ],
+    "priority": "⭐",
+    "sectionCount": 5,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__lifecycle__datapacks",
+    "version": "stable",
+    "label": "Datapack discovery",
+    "url": "https://docs.papermc.io/paper/dev/lifecycle/datapacks/",
+    "tags": [
+      "paper",
+      "api",
+      "lifecycle"
+    ],
+    "priority": "⭐",
+    "sectionCount": 2,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__lifecycle__index",
+    "version": "stable",
+    "label": "Lifecycle API",
+    "url": "",
+    "tags": [
+      "paper",
+      "api",
+      "lifecycle"
+    ],
+    "priority": "⭐",
+    "sectionCount": 0,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__lifecycle__lifecycle",
+    "version": "stable",
+    "label": "Lifecycle API",
+    "url": "https://docs.papermc.io/paper/dev/lifecycle/",
+    "tags": [
+      "paper",
+      "api",
+      "lifecycle"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__particles",
+    "version": "stable",
+    "label": "Particles",
+    "url": "https://docs.papermc.io/paper/dev/particles/",
+    "tags": [
+      "paper",
+      "api"
+    ],
+    "priority": "⭐",
+    "sectionCount": 11,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__pdc",
+    "version": "stable",
+    "label": "Persistent data container (PDC)",
+    "url": "https://docs.papermc.io/paper/dev/pdc/",
+    "tags": [
+      "paper",
+      "api"
+    ],
+    "priority": "⭐",
+    "sectionCount": 6,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__plugin-configs",
+    "version": "stable",
+    "label": "Plugin configuration",
+    "url": "https://docs.papermc.io/paper/dev/plugin-configurations/",
+    "tags": [
+      "paper",
+      "api"
+    ],
+    "priority": "⭐",
+    "sectionCount": 5,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__plugin-messaging",
+    "version": "stable",
+    "label": "Plugin messaging",
+    "url": "https://docs.papermc.io/paper/dev/plugin-messaging/",
+    "tags": [
+      "paper",
+      "api"
+    ],
+    "priority": "⭐",
+    "sectionCount": 2,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__recipes",
+    "version": "stable",
+    "label": "Recipes",
+    "url": "https://docs.papermc.io/paper/dev/recipes/",
+    "tags": [
+      "paper",
+      "api"
+    ],
+    "priority": "⭐",
+    "sectionCount": 2,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__registries",
+    "version": "stable",
+    "label": "Registries",
+    "url": "https://docs.papermc.io/paper/dev/registries/",
+    "tags": [
+      "paper",
+      "api"
+    ],
+    "priority": "⭐",
+    "sectionCount": 2,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__roadmap",
+    "version": "stable",
+    "label": "Roadmap",
+    "url": "https://docs.papermc.io/paper/dev/roadmap/",
+    "tags": [
+      "paper",
+      "api"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/api__scheduler",
+    "version": "stable",
+    "label": "Scheduling",
+    "url": "https://docs.papermc.io/paper/dev/scheduler/",
+    "tags": [
+      "paper",
+      "api"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/getting-started__how-do-plugins-work",
+    "version": "stable",
+    "label": "How plugins work",
+    "url": "https://docs.papermc.io/paper/dev/how-do-plugins-work/",
+    "tags": [
+      "paper",
+      "getting-started"
+    ],
+    "priority": "⭐",
+    "sectionCount": 6,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/getting-started__index",
+    "version": "stable",
+    "label": "Getting started",
+    "url": "",
+    "tags": [
+      "paper",
+      "getting-started"
+    ],
+    "priority": "⭐",
+    "sectionCount": 0,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/getting-started__paper-plugins",
+    "version": "stable",
+    "label": "Paper plugins",
+    "url": "https://docs.papermc.io/paper/dev/getting-started/paper-plugins/",
+    "tags": [
+      "paper",
+      "getting-started"
+    ],
+    "priority": "⭐",
+    "sectionCount": 5,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/getting-started__plugin-yml",
+    "version": "stable",
+    "label": "plugin.yml",
+    "url": "https://docs.papermc.io/paper/dev/plugin-yml/",
+    "tags": [
+      "paper",
+      "getting-started"
+    ],
+    "priority": "⭐",
+    "sectionCount": 4,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/getting-started__project-setup",
+    "version": "stable",
+    "label": "Project setup",
+    "url": "https://docs.papermc.io/paper/dev/project-setup/",
+    "tags": [
+      "paper",
+      "getting-started"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/getting-started__userdev",
+    "version": "stable",
+    "label": "paperweight-userdev",
+    "url": "https://docs.papermc.io/paper/dev/userdev/",
+    "tags": [
+      "paper",
+      "getting-started"
+    ],
+    "priority": "⭐",
+    "sectionCount": 4,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/index",
+    "version": "stable",
+    "label": "Development",
+    "url": "",
+    "tags": [
+      "paper"
+    ],
+    "priority": "⭐",
+    "sectionCount": 0,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/misc__databases",
+    "version": "stable",
+    "label": "Using databases",
+    "url": "https://docs.papermc.io/paper/dev/using-databases/",
+    "tags": [
+      "paper",
+      "misc"
+    ],
+    "priority": "⭐",
+    "sectionCount": 4,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/misc__debugging",
+    "version": "stable",
+    "label": "Debugging your plugin",
+    "url": "https://docs.papermc.io/paper/dev/debugging/",
+    "tags": [
+      "paper",
+      "misc"
+    ],
+    "priority": "⭐",
+    "sectionCount": 2,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/misc__index",
+    "version": "stable",
+    "label": "Miscellaneous",
+    "url": "",
+    "tags": [
+      "paper",
+      "misc"
+    ],
+    "priority": "⭐",
+    "sectionCount": 0,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/misc__internal-code",
+    "version": "stable",
+    "label": "Minecraft internals",
+    "url": "https://docs.papermc.io/paper/dev/internals/",
+    "tags": [
+      "paper",
+      "misc"
+    ],
+    "priority": "⭐",
+    "sectionCount": 2,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  },
+  {
+    "id": "stable/misc__reading-stacktraces",
+    "version": "stable",
+    "label": "Reading stacktraces",
+    "url": "https://docs.papermc.io/paper/dev/reading-stacktraces/",
+    "tags": [
+      "paper",
+      "misc"
+    ],
+    "priority": "⭐",
+    "sectionCount": 2,
+    "source": "paper-docs",
+    "fetchedAt": "2026-10-14T05:09:12.832Z"
+  }
+]

@@ -1,87 +1,101 @@
 {
-  "note": "mc-cloth-config 档位版本注入数据源（2026-09-16 建，用户裁定「保留中心稿 + 加投影版本注入点」）。scripts/project-cloth-skill.mjs 以本文件为源，校验/回填 fabric/<v>/.cursor/skills/mc-cloth-config.md 的 cloth-version-inject 标记行。改坐标先改这里再重投影；两套选法（该线最新 release / 对齐项目自带 FAPI）见中心稿 SKILL.md「版本映射表」与同表尾注。coord/state 为各档手稿实况（实证坐标 2026-09-14 落地、2026-09-16 提取）；textApi = 该档示例代码的 Text API 写法（constructor = new LiteralText(...)，literal = Text.literal(...)）。",
+  "note": "mc-cloth-config 档位版本注入数据源（2026-09-16 建，用户裁定「保留中心稿 + 加投影版本注入点」）。scripts/project-cloth-skill.mjs 以本文件为源，校验/回填 fabric/<v>/.cursor/skills/mc-cloth-config.md 的 cloth-version-inject 标记行。改坐标先改这里再重投影；两套选法（该线最新 release / 对齐项目自带 FAPI）见中心稿 SKILL.md「版本映射表」与同表尾注。coord/state 为各档手稿实况（实证坐标 2026-09-14 落地、2026-09-16 提取）；textApi = 该档示例代码的 Text API 写法（constructor = new LiteralText(...)，literal = Text.literal(...)）。coordProvenance = coord 串的命名空间来源（不是选法）：maven-artifact = 无后缀的 Maven 版本串，modrinth-release = Modrinth 的 version_number（带 +fabric 后缀），none = 该档尚无坐标；两者形态不同，写进 build.gradle 前须按目标仓库的版本串核对。",
   "dataDate": "2026-09-16",
   "slots": {
     "1.14.4": {
       "coord": "TODO(未核实)",
+      "coordProvenance": "none",
       "state": "todo",
       "textApi": "constructor",
       "basis": "maven.shedaniel.me 126 版、最低 4.10.11，无 1.14.4 时代取证；API 签名须用户自备 jar 走 ingest_loader_api"
     },
     "1.16.5": {
       "coord": "4.14.64",
+      "coordProvenance": "maven-artifact",
       "state": "active",
       "textApi": "constructor",
       "basis": "pom 里 fabric-api 依赖为 0.30.0+1.16（对齐 FAPI 选法）"
     },
     "1.17.1": {
       "coord": "5.3.63",
+      "coordProvenance": "maven-artifact",
       "state": "active",
       "textApi": "constructor",
       "basis": "pom 里 fabric-api 依赖为 0.37.1+1.17（旧稿的 6.0.46 上游 404）"
     },
     "1.18.2": {
       "coord": "6.5.133",
+      "coordProvenance": "maven-artifact",
       "state": "active",
       "textApi": "constructor",
       "basis": "pom 里 fabric-api 依赖为 0.46.4+1.18"
     },
     "1.19.4": {
       "coord": "10.0.96",
+      "coordProvenance": "maven-artifact",
       "state": "commented",
       "textApi": "literal",
       "basis": "pom 里 fabric-api 依赖为 0.76.0+1.19.4（与本档 MC 同线）；正文保持注释态（API 面未入库 = TODO(未核实) 模式，坐标在注释里给出）"
     },
     "1.20.1": {
       "coord": "11.1.136",
+      "coordProvenance": "maven-artifact",
       "state": "active",
       "textApi": "literal",
       "basis": "坐标真值经 4 条仓内 oracle 复核：mcp-server/data/lib-manifests/all.json（11.1.136 = true / 11.1.106 = false）、mcp-server/data/lib-api-summaries/cloth-config.json（键 11.1.136）、生成物 mcp-server/src/diagnostics/library-catalog.ts（3 处 11.1.136）、community_knowledge/authored/lib-cloth-config.md:55/63/102（2026-08 反编译核对 325 个 java 文件）。此前的 11.1.106 不成立；更早的 11.0.106 上游不存在（历史说明保留）。"
     },
     "1.20.4": {
       "coord": "13.0.114",
+      "coordProvenance": "maven-artifact",
       "state": "active",
       "textApi": "literal",
       "basis": "pom 里 fabric-api 依赖为 0.91.2+1.20.4（与本档 MC 同线）"
     },
     "1.21.1": {
       "coord": "15.0.127",
+      "coordProvenance": "maven-artifact",
       "state": "active",
       "textApi": "literal",
       "basis": "该版 jar 的 fabric.mod.json 声明 depends.minecraft => 1.21-"
     },
     "1.21.3": {
       "coord": "16.0.143",
+      "coordProvenance": "maven-artifact",
       "state": "active",
       "textApi": "literal",
       "basis": "同线 16.0.131 的 manifest 声明 => 1.21.2-；本档原稿已是 16.0.143，仅补仓库行与依据"
     },
     "1.21.4": {
       "coord": "17.0.144+fabric",
+      "coordProvenance": "modrinth-release",
       "state": "active",
       "textApi": "literal",
       "basis": "S23（2026-09-24 现拉）：query_upstream_releases source=modrinth slug=cloth-config minecraftVersion=1.21.4 → ok:true available:true total:4，该条原始 release 对象 version=17.0.144+fabric / game_versions=[\"1.21.4\"] / loaders=[\"fabric\"]，matchRule=「game_versions 含 1.21.4」，httpStatus 200 via fetch，fetchedAt 2026-09-24T03:48:14Z（日志 temp/ralph-20260922/logs/r15-02-cloth-1.21.4.json）。同查询另有 17.0.142+fabric（game_versions 同），取 144 为最新。textApi=literal 依据本档语料 data/fabric_1.21.4 正文 Text.literal 25 处（同档另有 new LiteralText 5 处，均出现在移植对照上下文）。本档手稿原为「无 slot」stop-stub，2026-09-24 随本槽落地改写"
     },
     "1.21.8": {
       "coord": "19.0.147+fabric",
+      "coordProvenance": "modrinth-release",
       "state": "active",
       "textApi": "literal",
       "basis": "S23（2026-09-24 现拉）：query_upstream_releases source=modrinth slug=cloth-config minecraftVersion=1.21.8 → ok:true available:true total:2，该条原始 release 对象 version=19.0.147+fabric / game_versions=[\"1.21.6\",\"1.21.7\",\"1.21.8\"] / loaders=[\"fabric\"]，fetchedAt 2026-09-24T03:48:16Z（日志 r15-02-cloth-1.21.8.json）—— 该版只有 147 一条 fabric 构件，故 coord 唯一。textApi=literal 依据 data/fabric_1.21.8 正文 Text.literal 25 处。本档手稿原为「无 slot」stop-stub，2026-09-24 随本槽落地改写"
     },
     "1.21.10": {
       "coord": "20.0.149+fabric",
+      "coordProvenance": "modrinth-release",
       "state": "active",
       "textApi": "literal",
       "basis": "S23（2026-09-24 现拉）：query_upstream_releases source=modrinth slug=cloth-config minecraftVersion=1.21.10 → ok:true available:true total:4，该条原始 release 对象 version=20.0.149+fabric / game_versions=[\"1.21.9\",\"1.21.10\"] / loaders=[\"fabric\"]，fetchedAt 2026-09-24T03:48:18Z（日志 r15-02-cloth-1.21.10.json）。同查询另有 20.0.148+fabric（game_versions 同），取 149 为最新。textApi=literal 依据 data/fabric_1.21.10 正文 Text.literal 25 处。本档手稿原为「无 slot」stop-stub，2026-09-24 随本槽落地改写"
     },
     "26.1.2": {
       "coord": "26.1.154+fabric",
+      "coordProvenance": "modrinth-release",
       "state": "active",
       "textApi": "literal",
       "basis": "S23（2026-09-24 现拉）：query_upstream_releases source=modrinth slug=cloth-config minecraftVersion=26.1.2 → ok:true available:true total:2，该条原始 release 对象 version=26.1.154+fabric / game_versions=[\"26.1\",\"26.1.1\",\"26.1.2\"] / loaders=[\"fabric\"]，fetchedAt 2026-09-24T03:48:20Z（日志 r15-02-cloth-26.1.2.json）—— 该版只有 154 一条 fabric 构件。textApi=literal 取的是 mojmap 静态工厂形：本档语料 data/fabric_26.1.2 正文 Component.literal 68 处、Text.literal / new LiteralText 各 0 处（本档 mappings=official，非 Yarn）。坐标已实证 ≠ 签名已核实：本档正文仍禁止输出方法名/示例代码，签名一律 query_loader_api 或用户自备 jar 走 ingest_loader_api。本档手稿原为 stop-stub，2026-09-24 随本槽落地改写"
     },
     "1.21.11": {
       "coord": "21.11.153",
+      "coordProvenance": "maven-artifact",
       "state": "active",
       "textApi": "literal",
       "basis": "版本号前缀即 1.21.11 线"

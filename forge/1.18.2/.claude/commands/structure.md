@@ -1,6 +1,6 @@
 ---
 name: mc-structure
-description: 结构集、模板、jigsaw。触发词：Structure、TemplateManager
+description: 结构集、模板、jigsaw。触发词：Structure、StructureManager
 platform: forge
 version: "1.18.2"
 dependencies: []

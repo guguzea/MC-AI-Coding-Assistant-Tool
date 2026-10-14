@@ -18,14 +18,14 @@ public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES =
 
 public static final RegistryObject<BlockEntityType<MyBE>> MY_BE =
     BLOCK_ENTITY_TYPES.register("mybe",
-        () -> BlockEntityType.Builder.of(MyBE::new, validBlocks).build(null)
+        () -> BlockEntityType.Builder.of(MyBE::new, MyBlock.INSTANCE).build(null)
     );
 
 // 在 mod 构造函数中
 BLOCK_ENTITY_TYPES.register(modEventBus);
 ```
 
-`validBlocks` 是持有此 BlockEntity 的 Block 实例集合：`Set.of(MyBlock.INSTANCE)` 或 `ImmutableSet.of(...)`。
+`Builder.of` 的第二参是 **varargs `Block...`**（1.20.1 构件 javap：全类只有 `of(BlockEntitySupplier, Block...)` 一个重载，**没有 Set 形**）—— 多个方块直接并列传，不要传 `Set`：`of(MyBE::new, BLOCK_A, BLOCK_B)`。
 
 ## BlockEntity 类结构
 
@@ -108,12 +108,9 @@ public CompoundTag getUpdateTag() {
     return tag;
 }
 
-// 客户端收到时（可选重写）
-@Override
-public void handleUpdateTag(CompoundTag tag) {
-    super.handleUpdateTag(tag);
-    counter = tag.getInt("counter");
-}
+// 客户端侧不需要重写 —— 1.20.1 实测：BlockEntity **没有** handleUpdateTag(CompoundTag)
+//   （构件 javap 0 条；相关成员是 getUpdateTag/getUpdatePacket/load/saveWithoutMetadata/setChanged）。
+//   客户端收到 S2C 包后由 ClientPacketListener 调 BlockEntity#load(CompoundTag) 应用，无需模组重写。
 ```
 
 ### 方式 2：方块更新时同步（getUpdatePacket）
@@ -192,9 +189,9 @@ public class ClientSetup {
 ```
 
 ```java
-public class MyBER extends BlockEntityRenderer<MyBE> {
-    public MyBER(EntityRendererProvider.Context context) {
-        super(context);
+public class MyBER implements BlockEntityRenderer<MyBE> {   // 1.20.1 构件实测：是 **interface**，用 implements
+    public MyBER(BlockEntityRendererProvider.Context context) {   // 参数类型是 BlockEntityRendererProvider$Context
+        // 无 super(context) —— 接口没有构造器
     }
 
     @Override

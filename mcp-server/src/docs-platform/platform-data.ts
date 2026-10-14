@@ -60,6 +60,9 @@ const LIST_TOOL: Record<DocPlatform, string> = {
   rift: "list_doc_versions",
   modloader: "list_doc_versions",
   bedrock: "list_doc_versions",
+  paper: "list_doc_versions",
+  spigot: "list_doc_versions",
+  "paper-api": "list_doc_versions",
 };
 
 export function versionNotFoundPayload(args: {
@@ -114,6 +117,12 @@ const HINTS: Record<DocPlatform, string> = {
     "ModLoader 以仓库内安全 API 表为准（modloader/1.6.4/knowledge/common/safe-api.md），不把 found:false 当成类不存在。",
   bedrock:
     "基岩文档请用 search_bedrock_docs。数据有两棵语料树：data/bedrock_*/bedrock-docs/（Microsoft Learn 文档页）与 data/bedrock_*/bedrock-scriptapi/（@minecraft/server 逐声明页）；并查看 data/bedrock-docs-status.json 的滞后标记。",
+  paper:
+    "Paper（服务端插件）文档位于 data/paper_stable/paper-docs/stable/（伪版本 stable；Paper 文档不按 MC 版本分档）。产出者 = mcp-server/scripts/fetch-paper-docs.mjs（取数走 codeload tarball）。**正文许可 = CC BY-SA 4.0（署名 + ShareAlike）**，见 THIRD_PARTY_NOTICES.md。API 签名面另走 Javadoc（jd.papermc.io/paper/），不在本面。",
+  spigot:
+    "Spigot/Bukkit 只提供**签名面**（Javadoc：API 名字 / 签名 / 出处），没有官方教程正文——SpigotMC Wiki 实测**无任何开放许可**（仅 © SpigotMC Pty. Ltd.）⇒ 按本仓准入不入库。语料在 data/spigot_stable/spigot-javadoc/stable/（伪版本 stable；上游 javadoc URL 无版本轴，真实版本串在各页 frontmatter 的 asOfVersion）。产出者 = mcp-server/scripts/fetch-spigot-javadoc.mjs。教程面请用 paper（data/paper_stable/paper-docs/）。",
+  "paper-api":
+    "paper-api = Paper 的**签名层**（Javadoc），与 paper 的教程面**同平台不同树**：语料在 data/paper-api_stable/paper-javadoc/stable/（伪版本 stable，2116 类；真实上游版本串见各页 asOfVersion，实测 26.3.build.178-stable）。产出者 = mcp-server/scripts/fetch-spigot-javadoc.mjs。要**教程正文**请用 platform=paper；要 Bukkit/Spigot 签名面用 platform=spigot。三面许可不同（paper-docs = CC BY-SA 4.0），见 THIRD_PARTY_NOTICES.md。",
 };
 
 export function platformDataMissingPayload(platform: DocPlatform) {

@@ -1,0 +1,223 @@
+---
+title: "org.bukkit.World"
+package: "org.bukkit"
+source: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/World.html
+sourceType: javadoc
+fetchedWith: fetch-spigot-javadoc.mjs@1
+fetchedAt: 2026-10-14T12:59:21.517Z
+asOfVersion: "26.3-R0.1-SNAPSHOT"
+---
+
+**Interface World**
+`public interface World extends RegionAccessor, WorldInfo, PluginMessageRecipient, Metadatable, PersistentDataHolder, Keyed`
+- `@NotNull Block getBlockAt(int x, int y, int z)`
+- `@NotNull Block getBlockAt(@NotNull Location location)`
+- `@NotNull Block getHighestBlockAt(int x, int z)`
+- `@NotNull Block getHighestBlockAt(@NotNull Location location)`
+- `@NotNull Block getHighestBlockAt(int x, int z, @NotNull HeightMap heightMap)`
+- `@NotNull Block getHighestBlockAt(@NotNull Location location, @NotNull HeightMap heightMap)`
+- `@NotNull Chunk getChunkAt(int x, int z)`
+- `@NotNull Chunk getChunkAt(int x, int z, boolean generate)`
+- `@NotNull Chunk getChunkAt(@NotNull Location location)`
+- `@NotNull Chunk getChunkAt(@NotNull Block block)`
+- `boolean isChunkLoaded(@NotNull Chunk chunk)`
+- `@NotNull Chunk[] getLoadedChunks()`
+- `void loadChunk(@NotNull Chunk chunk)`
+- `boolean isChunkLoaded(int x, int z)`
+- `boolean isChunkGenerated(int x, int z)`
+- `@Deprecated(since="1.14") boolean isChunkInUse(int x, int z)`
+- `void loadChunk(int x, int z)`
+- `boolean loadChunk(int x, int z, boolean generate)`
+- `boolean unloadChunk(@NotNull Chunk chunk)`
+- `boolean unloadChunk(int x, int z)`
+- `boolean unloadChunk(int x, int z, boolean save)`
+- `boolean unloadChunkRequest(int x, int z)`
+- `@Deprecated(since="1.13") boolean regenerateChunk(int x, int z)`
+- `@Deprecated(since="1.8") boolean refreshChunk(int x, int z)`
+- `@NotNull Collection<Player> getPlayersSeeingChunk(@NotNull Chunk chunk)`
+- `@NotNull Collection<Player> getPlayersSeeingChunk(int x, int z)`
+- `boolean isChunkForceLoaded(int x, int z)`
+- `void setChunkForceLoaded(int x, int z, boolean forced)`
+- `@NotNull Collection<Chunk> getForceLoadedChunks()`
+- `boolean addPluginChunkTicket(int x, int z, @NotNull Plugin plugin)`
+- `boolean removePluginChunkTicket(int x, int z, @NotNull Plugin plugin)`
+- `void removePluginChunkTickets(@NotNull Plugin plugin)`
+- `@NotNull Collection<Plugin> getPluginChunkTickets(int x, int z)`
+- `@NotNull Map<Plugin, Collection<Chunk>> getPluginChunkTickets()`
+- `@NotNull Collection<Chunk> getIntersectingChunks(@NotNull BoundingBox box)`
+- `@NotNull Item dropItem(@NotNull Location location, @NotNull ItemStack item)`
+- `@NotNull Item dropItem(@NotNull Location location, @NotNull ItemStack item, @Nullable Consumer<? super Item> function)`
+- `@NotNull Item dropItemNaturally(@NotNull Location location, @NotNull ItemStack item)`
+- `@NotNull Item dropItemNaturally(@NotNull Location location, @NotNull ItemStack item, @Nullable Consumer<? super Item> function)`
+- `@NotNull Arrow spawnArrow(@NotNull Location location, @NotNull Vector direction, float speed, float spread)`
+- `@NotNull <T extends AbstractArrow> T spawnArrow(@NotNull Location location, @NotNull Vector direction, float speed, float spread, @NotNull Class<T> clazz)`
+- `boolean generateTree(@NotNull Location location, @NotNull TreeType type)`
+- `@Deprecated(since="1.17.1") boolean generateTree(@NotNull Location loc, @NotNull TreeType type, @NotNull BlockChangeDelegate delegate)`
+- `@NotNull LightningStrike strikeLightning(@NotNull Location loc)`
+- `@NotNull LightningStrike strikeLightningEffect(@NotNull Location loc)`
+- `@NotNull List<Entity> getEntities()`
+- `@NotNull List<LivingEntity> getLivingEntities()`
+- `@Deprecated(since="1.1") @NotNull <T extends Entity> Collection<T> getEntitiesByClass(@NotNull Class<T>... classes)`
+- `@NotNull <T extends Entity> Collection<T> getEntitiesByClass(@NotNull Class<T> cls)`
+- `@NotNull Collection<Entity> getEntitiesByClasses(@NotNull Class<?>... classes)`
+- `@NotNull List<Player> getPlayers()`
+- `@NotNull Collection<Entity> getNearbyEntities(@NotNull Location location, double x, double y, double z)`
+- `@NotNull Collection<Entity> getNearbyEntities(@NotNull Location location, double x, double y, double z, @Nullable Predicate<? super Entity> filter)`
+- `@NotNull Collection<Entity> getNearbyEntities(@NotNull BoundingBox boundingBox)`
+- `@NotNull Collection<Entity> getNearbyEntities(@NotNull BoundingBox boundingBox, @Nullable Predicate<? super Entity> filter)`
+- `@Nullable RayTraceResult rayTraceEntities(@NotNull Location start, @NotNull Vector direction, double maxDistance)`
+- `@Nullable RayTraceResult rayTraceEntities(@NotNull Location start, @NotNull Vector direction, double maxDistance, double raySize)`
+- `@Nullable RayTraceResult rayTraceEntities(@NotNull Location start, @NotNull Vector direction, double maxDistance, @Nullable Predicate<? super Entity> filter)`
+- `@Nullable RayTraceResult rayTraceEntities(@NotNull Location start, @NotNull Vector direction, double maxDistance, double raySize, @Nullable Predicate<? super Entity> filter)`
+- `@Nullable RayTraceResult rayTraceBlocks(@NotNull Location start, @NotNull Vector direction, double maxDistance)`
+- `@Nullable RayTraceResult rayTraceBlocks(@NotNull Location start, @NotNull Vector direction, double maxDistance, @NotNull FluidCollisionMode fluidCollisionMode)`
+- `@Nullable RayTraceResult rayTraceBlocks(@NotNull Location start, @NotNull Vector direction, double maxDistance, @NotNull FluidCollisionMode fluidCollisionMode, boolean ignorePassableBlocks)`
+- `@Nullable RayTraceResult rayTrace(@NotNull Location start, @NotNull Vector direction, double maxDistance, @NotNull FluidCollisionMode fluidCollisionMode, boolean ignorePassableBlocks, double raySize, @Nullable Predicate<? super Entity> filter)`
+- `@NotNull Location getSpawnLocation()`
+- `boolean setSpawnLocation(@NotNull Location location)`
+- `boolean setSpawnLocation(int x, int y, int z, float angle)`
+- `boolean setSpawnLocation(int x, int y, int z)`
+- `long getTime()`
+- `void setTime(long time)`
+- `long getFullTime()`
+- `void setFullTime(long time)`
+- `long getGameTime()`
+- `boolean hasStorm()`
+- `void setStorm(boolean hasStorm)`
+- `int getWeatherDuration()`
+- `void setWeatherDuration(int duration)`
+- `boolean isThundering()`
+- `void setThundering(boolean thundering)`
+- `int getThunderDuration()`
+- `void setThunderDuration(int duration)`
+- `boolean isClearWeather()`
+- `void setClearWeatherDuration(int duration)`
+- `int getClearWeatherDuration()`
+- `boolean createExplosion(double x, double y, double z, float power)`
+- `boolean createExplosion(double x, double y, double z, float power, boolean setFire)`
+- `boolean createExplosion(double x, double y, double z, float power, boolean setFire, boolean breakBlocks)`
+- `boolean createExplosion(double x, double y, double z, float power, boolean setFire, boolean breakBlocks, @Nullable Entity source)`
+- `boolean createExplosion(@NotNull Location loc, float power)`
+- `boolean createExplosion(@NotNull Location loc, float power, boolean setFire)`
+- `boolean createExplosion(@NotNull Location loc, float power, boolean setFire, boolean breakBlocks)`
+- `boolean createExplosion(@NotNull Location loc, float power, boolean setFire, boolean breakBlocks, @Nullable Entity source)`
+- `boolean getPVP()`
+- `void setPVP(boolean pvp)`
+- `@Nullable ChunkGenerator getGenerator()`
+- `@Nullable BiomeProvider getBiomeProvider()`
+- `void save()`
+- `@NotNull List<BlockPopulator> getPopulators()`
+- `@NotNull <T extends LivingEntity> T spawn(@NotNull Location location, @NotNull Class<T> clazz, @NotNull CreatureSpawnEvent.SpawnReason spawnReason, boolean randomizeData, @Nullable Consumer<? super T> function) throws IllegalArgumentException`
+- `@NotNull FallingBlock spawnFallingBlock(@NotNull Location location, @NotNull MaterialData data) throws IllegalArgumentException`
+- `@NotNull FallingBlock spawnFallingBlock(@NotNull Location location, @NotNull BlockData data) throws IllegalArgumentException`
+- `@Deprecated(since="1.7.5") @NotNull FallingBlock spawnFallingBlock(@NotNull Location location, @NotNull Material material, byte data) throws IllegalArgumentException`
+- `void playEffect(@NotNull Location location, @NotNull Effect effect, int data)`
+- `void playEffect(@NotNull Location location, @NotNull Effect effect, int data, int radius)`
+- `<T> void playEffect(@NotNull Location location, @NotNull Effect effect, @Nullable T data)`
+- `<T> void playEffect(@NotNull Location location, @NotNull Effect effect, @Nullable T data, int radius)`
+- `@NotNull ChunkSnapshot getEmptyChunkSnapshot(int x, int z, boolean includeBiome, boolean includeBiomeTemp)`
+- `void setSpawnFlags(boolean allowMonsters, boolean allowAnimals)`
+- `boolean getAllowAnimals()`
+- `boolean getAllowMonsters()`
+- `@NotNull @Deprecated(since="1.15") Biome getBiome(int x, int z)`
+- `@Deprecated(since="1.15") void setBiome(int x, int z, @NotNull Biome bio)`
+- `@Deprecated(since="1.15") double getTemperature(int x, int z)`
+- `double getTemperature(int x, int y, int z)`
+- `@Deprecated(since="1.15") double getHumidity(int x, int z)`
+- `double getHumidity(int x, int y, int z)`
+- `int getLogicalHeight()`
+- `boolean isNatural()`
+- `boolean isBedWorks()`
+- `boolean hasSkyLight()`
+- `boolean hasCeiling()`
+- `boolean isPiglinSafe()`
+- `boolean isRespawnAnchorWorks()`
+- `boolean hasRaids()`
+- `boolean isUltraWarm()`
+- `int getSeaLevel()`
+- `@Deprecated(since="1.20.5") boolean getKeepSpawnInMemory()`
+- `@Deprecated(since="1.20.5") void setKeepSpawnInMemory(boolean keepLoaded)`
+- `boolean isAutoSave()`
+- `void setAutoSave(boolean value)`
+- `void setDifficulty(@NotNull Difficulty difficulty)`
+- `@NotNull Difficulty getDifficulty()`
+- `int getViewDistance()`
+- `int getSimulationDistance()`
+- `@NotNull File getWorldFolder()`
+- `@Nullable @Deprecated(since="1.16.1") WorldType getWorldType()`
+- `boolean canGenerateStructures()`
+- `boolean isHardcore()`
+- `void setHardcore(boolean hardcore)`
+- `@Deprecated(since="1.18.1") long getTicksPerAnimalSpawns()`
+- `@Deprecated(since="1.18.1") void setTicksPerAnimalSpawns(int ticksPerAnimalSpawns)`
+- `@Deprecated(since="1.18.1") long getTicksPerMonsterSpawns()`
+- `@Deprecated(since="1.18.1") void setTicksPerMonsterSpawns(int ticksPerMonsterSpawns)`
+- `@Deprecated(since="1.18.1") long getTicksPerWaterSpawns()`
+- `@Deprecated(since="1.18.1") void setTicksPerWaterSpawns(int ticksPerWaterSpawns)`
+- `@Deprecated(since="1.18.1") long getTicksPerWaterAmbientSpawns()`
+- `@Deprecated(since="1.18.1") void setTicksPerWaterAmbientSpawns(int ticksPerAmbientSpawns)`
+- `@Deprecated(since="1.18.1") long getTicksPerWaterUndergroundCreatureSpawns()`
+- `@Deprecated(since="1.18.1") void setTicksPerWaterUndergroundCreatureSpawns(int ticksPerWaterUndergroundCreatureSpawns)`
+- `@Deprecated(since="1.18.1") long getTicksPerAmbientSpawns()`
+- `@Deprecated(since="1.18.1") void setTicksPerAmbientSpawns(int ticksPerAmbientSpawns)`
+- `long getTicksPerSpawns(@NotNull SpawnCategory spawnCategory)`
+- `void setTicksPerSpawns(@NotNull SpawnCategory spawnCategory, int ticksPerCategorySpawn)`
+- `@Deprecated(since="1.18.1") int getMonsterSpawnLimit()`
+- `@Deprecated(since="1.18.1") void setMonsterSpawnLimit(int limit)`
+- `@Deprecated(since="1.18.1") int getAnimalSpawnLimit()`
+- `@Deprecated(since="1.18.1") void setAnimalSpawnLimit(int limit)`
+- `@Deprecated(since="1.18.1") int getWaterAnimalSpawnLimit()`
+- `@Deprecated(since="1.18.1") void setWaterAnimalSpawnLimit(int limit)`
+- `@Deprecated(since="1.18.1") int getWaterUndergroundCreatureSpawnLimit()`
+- `@Deprecated(since="1.18.1") void setWaterUndergroundCreatureSpawnLimit(int limit)`
+- `@Deprecated(since="1.18.1") int getWaterAmbientSpawnLimit()`
+- `@Deprecated(since="1.18.1") void setWaterAmbientSpawnLimit(int limit)`
+- `@Deprecated(since="1.18.1") int getAmbientSpawnLimit()`
+- `@Deprecated(since="1.18.1") void setAmbientSpawnLimit(int limit)`
+- `int getSpawnLimit(@NotNull SpawnCategory spawnCategory)`
+- `void setSpawnLimit(@NotNull SpawnCategory spawnCategory, int limit)`
+- `void playNote(@NotNull Location loc, @NotNull Instrument instrument, @NotNull Note note)`
+- `void playSound(@NotNull Location location, @NotNull Sound sound, float volume, float pitch)`
+- `void playSound(@NotNull Location location, @NotNull String sound, float volume, float pitch)`
+- `void playSound(@NotNull Location location, @NotNull Sound sound, @NotNull SoundCategory category, float volume, float pitch)`
+- `void playSound(@NotNull Location location, @NotNull String sound, @NotNull SoundCategory category, float volume, float pitch)`
+- `void playSound(@NotNull Location location, @NotNull Sound sound, @NotNull SoundCategory category, float volume, float pitch, long seed)`
+- `void playSound(@NotNull Location location, @NotNull String sound, @NotNull SoundCategory category, float volume, float pitch, long seed)`
+- `void playSound(@NotNull Entity entity, @NotNull Sound sound, float volume, float pitch)`
+- `void playSound(@NotNull Entity entity, @NotNull String sound, float volume, float pitch)`
+- `void playSound(@NotNull Entity entity, @NotNull Sound sound, @NotNull SoundCategory category, float volume, float pitch)`
+- `void playSound(@NotNull Entity entity, @NotNull String sound, @NotNull SoundCategory category, float volume, float pitch)`
+- `void playSound(@NotNull Entity entity, @NotNull Sound sound, @NotNull SoundCategory category, float volume, float pitch, long seed)`
+- `void playSound(@NotNull Entity entity, @NotNull String sound, @NotNull SoundCategory category, float volume, float pitch, long seed)`
+- `@NotNull @Deprecated(since="1.21.11") String[] getGameRules()`
+- `@Deprecated(since="1.21.11") boolean isGameRule(@NotNull String rule)`
+- `@Nullable <T> T getGameRuleValue(@NotNull GameRule<T> rule)`
+- `@Nullable <T> T getGameRuleDefault(@NotNull GameRule<T> rule)`
+- `<T> boolean setGameRule(@NotNull GameRule<T> rule, @NotNull T newValue)`
+- `@NotNull WorldBorder getWorldBorder()`
+- `void spawnParticle(@NotNull Particle particle, @NotNull Location location, int count)`
+- `void spawnParticle(@NotNull Particle particle, double x, double y, double z, int count)`
+- `<T> void spawnParticle(@NotNull Particle particle, @NotNull Location location, int count, @Nullable T data)`
+- `<T> void spawnParticle(@NotNull Particle particle, double x, double y, double z, int count, @Nullable T data)`
+- `void spawnParticle(@NotNull Particle particle, @NotNull Location location, int count, double offsetX, double offsetY, double offsetZ)`
+- `void spawnParticle(@NotNull Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ)`
+- `<T> void spawnParticle(@NotNull Particle particle, @NotNull Location location, int count, double offsetX, double offsetY, double offsetZ, @Nullable T data)`
+- `<T> void spawnParticle(@NotNull Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ, @Nullable T data)`
+- `void spawnParticle(@NotNull Particle particle, @NotNull Location location, int count, double offsetX, double offsetY, double offsetZ, double extra)`
+- `void spawnParticle(@NotNull Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ, double extra)`
+- `<T> void spawnParticle(@NotNull Particle particle, @NotNull Location location, int count, double offsetX, double offsetY, double offsetZ, double extra, @Nullable T data)`
+- `<T> void spawnParticle(@NotNull Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ, double extra, @Nullable T data)`
+- `<T> void spawnParticle(@NotNull Particle particle, @NotNull Location location, int count, double offsetX, double offsetY, double offsetZ, double extra, @Nullable T data, boolean force)`
+- `<T> void spawnParticle(@NotNull Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ, double extra, @Nullable T data, boolean force)`
+- `@Nullable @Deprecated(since="1.19") Location locateNearestStructure(@NotNull Location origin, @NotNull StructureType structureType, int radius, boolean findUnexplored)`
+- `@Nullable StructureSearchResult locateNearestStructure(@NotNull Location origin, @NotNull StructureType structureType, int radius, boolean findUnexplored)`
+- `@Nullable StructureSearchResult locateNearestStructure(@NotNull Location origin, @NotNull Structure structure, int radius, boolean findUnexplored)`
+- `@NotNull World.Spigot spigot()`
+- `@Nullable BiomeSearchResult locateNearestBiome(@NotNull Location origin, int radius, @NotNull Biome... biomes)`
+- `@Nullable BiomeSearchResult locateNearestBiome(@NotNull Location origin, int radius, int horizontalInterval, int verticalInterval, @NotNull Biome... biomes)`
+- `@Nullable Raid locateNearestRaid(@NotNull Location location, int radius)`
+- `@NotNull List<Raid> getRaids()`
+- `@Nullable DragonBattle getEnderDragonBattle()`
+- `@NotNull Set<FeatureFlag> getFeatureFlags()`
+- `@NotNull Collection<GeneratedStructure> getStructures(int x, int z)`
+- `@NotNull Collection<GeneratedStructure> getStructures(int x, int z, @NotNull Structure structure)`

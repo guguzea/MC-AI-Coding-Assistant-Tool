@@ -1903,7 +1903,9 @@ public class ForeignHelper {
   assert.equal(runs.realRoot.status, 0, `G3 真数据根必须绿（存量台账已钉死）：\n${runs.realRoot.stdout}${runs.realRoot.stderr}`);
   assert.match(
     runs.realRoot.stdout,
-    /49 棵 raw\/processed 树[\s\S]*处字节已在盘上[\s\S]*泛型丢失 \d+ · 重名 0[\s\S]*目录层 \d+ 个目录（0 条目 0 \/ 非法名 0）/,
+    // 树数快照随语料增长（2026-10-14：+2 棵服务端面签名层树 ⇒ 49→51）。**只改数字，形状判据不变**
+    // （`泛型丢失 \d+` / `目录层 \d+ 个目录` 本就是通配；`重名 0` 与 `0 条目 0 / 非法名 0` 仍是硬钉）。
+    /51 棵 raw\/processed 树[\s\S]*处字节已在盘上[\s\S]*泛型丢失 \d+ · 重名 0[\s\S]*目录层 \d+ 个目录（0 条目 0 \/ 非法名 0）/,
     `真根少跑了层或台账口径变了：\n${runs.realRoot.stdout}`,
   );
   console.log(
@@ -2229,6 +2231,14 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT);`);
 // 为什么不能留在 `for (const gate of [ … ])` 里：四数普查的 N/M 必须「从数组本身取长度」，
 // 在别处重抄一遍名单 = 第二个真值源，必然随加门漂掉（CONTRIBUTING_LIST.md §未排期清单 `L13`/`L18`）。
 const REAL_RUN_GATES = [
+    // 2026-10-14：真构件编译腿（验证强度第 ② 等）。缺件（本机无 G:\ JDK / 无 loom named jar）时**降级并吼**，
+    // 所以能挂默认链；强口径手跑 `--require`（缺件即 rc=2）。本门在本机红过一次是真的（首次跑 4/4 挂：
+    // named jar 不带 brigadier 等 MC 库件 ⇒ 补齐 `com.mojang/**` 才过），不是恒绿假门。
+    "./scripts/assert-playtest-driver-compiles.mjs",
+    // 2026-10-14：两个服务端面签名层（spigot 1396 页 / paper 2116 页）的出处+索引差+孤儿留痕门。
+    // 依赖可选的语料包 ⇒ 缺面时**降级并吼**（否则 CI 上恒红、挂不进链）；强口径手跑 `--require`。
+    // 自带投毒自证：4/4 畸形必红、干净必绿（活门，不是橡皮章）。
+    "./scripts/assert-signature-face-integrity.mjs",
     // 2026-09-28：镜像面今天真漂过一次（`fabric/1.17.1/.cursor/skills/mc-particle.md` 改了源稿、7 面没跟），
     // 而它从前只由 `npm test` 覆盖 ⇒ 收口跑 test-scripts 的那一轮看不见。挂进默认链（实测整道门 1.8 s）。
     "./scripts/assert-skill-mirrors.mjs",

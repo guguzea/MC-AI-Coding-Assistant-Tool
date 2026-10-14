@@ -8,6 +8,416 @@
 
 ---
 
+## 2026-10-13 · 修 A1–A28 + G1/G4 量具扩面（维护档）
+
+**第 0 块 · 结论**：按令「先修复 A1–A28」，把上一轮复核成立的判据逐条落盘（**16 个靶点 / 24 个文件**，含 18 个 `mc-structure` 技能）。A2 的守卫在**真跑**里首次生效（某档 `.cursor/skills` 为空 ⇒ 打 `source set empty: skip host skill/command prune`，未误删——**旧行为会删光该宿主目录**）。A16 四个 forge 档「一个文件两个 public 顶层类」改为单 public 类（实跑 CLI：4 档均 `[MyPacket]` + 单 `suggestedPath`）。A19 driver 轮边界补 9 个观测静态位重置。随后按令扩量具：**G1** 抽取面加「行内 code span + frontmatter」，**G4** E 腿（mojmap 派生表）由全档并集改为**按版本分桶**并给命中加腿标签；跑出存量清单（nowhere TYPE **1246→2647**；滤噪后 unique 539，其中 G1/G4 净增 **26**）。**A8 / A22 / A27 判为「要你拍板」或「无需改」**。门：镜像 / powershell / authoring-lint / rules×5 / test-core / test-assistant-gaps **全绿**；`test-scripts` 与 `test-wave-bcd` 各一红，**经核为并发会话在制品**（`data/paper_*`+`spigot_*` 未登记语料基线；新工具致 A-27 计数 358→371），与本轮无关。未提交（侧线约束：不 add/commit/push）。
+
+### 1. 改了哪些文件
+
+- **A2** `scripts/sync-skills.ps1`：剪枝段加 `$pruneAllowed`（空集 → 跳过三个 `Remove-Item` 循环）+ 守卫说明注释。
+- **A4** `knowledge/libs/fabric-only/mc-cloth-config/versions.json`：14 个 slot 各加 `coordProvenance`（none 1 / maven-artifact 9 / modrinth-release 4）+ `note` 加一句。
+- **A7** `forge/1.18.2/.cursor/rules/01-registry.mdc`：`@Mod` 注入形构造参 → `FMLJavaModLoadingContext.get()`。
+- **A9/A18** `fabric/1.21.8/AGENTS.md`、`fabric/1.21.10/AGENTS.md`：`## scaffold` 块改为「可直接构建 / Gradle 9.5.1 / 三件套在盘 / buildVerified:true」。
+- **A11** `forge/1.13.2/knowledge/common/glossary.md:24`：pack_format 6 → 4。
+- **A12** 18 个 `mc-structure` 技能源稿（forge 1.17.1–1.20.4 / fabric 全 14 档中 14 个）：`TemplateManager` → 各档真名（`StructureManager` / `StructureTemplateManager`）；1.12.2–1.15.2 与 1.16.5 双名保留。
+- **A13** `fabric/26.1.2/.cursor/skills/mc-command/SKILL.md`：`source.hasPermission(2)` → `source.permissions().hasPermission(Permissions.COMMANDS_MODERATOR)`。
+- **A14** `forge/1.20.1/.cursor/skills/mc-recipe/SKILL.md`：`id/type/advancement` → `getId/getType/getAdvancementId`。
+- **A15** `fabric/1.21.3/.cursor/rules/00-project-setup.mdc`：loom `'1.8'` → `'1.8.13'`。
+- **A16** `mcp-server/src/generators/index.ts`：两个 SimpleChannel 骨架（Mcp 1.14.4–1.16.5 / Official 1.17.1）两 public 类合并为单 `${pascal}Packet`。
+- **A17** `README.md`(2) + `AGENTS.md`(1)：86 → 87。
+- **A19** `mcp-server/src/generators/playtest-driver.ts`：`startRound()` 补 `blockPosText/blockBefore/blockAfter/targetPos/guiOpened/guiClicked/guiClosed/guiClass` 重置。
+- **A20** `neoforge/{1.20.4,1.21.1}/.cursor/skills/mc-entity/SKILL.md`：`DeferredRegister.Entities` → `DeferredRegister.create(Registries.ENTITY_TYPE, MODID)`。
+- **A21** `neoforge/1.21.1/.cursor/skills/mc-sound`、`neoforge/code-patterns/{01,03}`：`NeoForgeRegistries.<X>` → `Registries.<X>`。
+- **A23** `forge/1.20.1/.cursor/skills/mc-blockentity/SKILL.md`：`extends BlockEntityRenderer` → `implements BlockEntityRenderer<T>`；`Builder.of` 去 `Set`；删 `handleUpdateTag` 块。
+- **A24** `forge/1.20.1/.cursor/skills/mc-fluid/SKILL.md`：`Properties` 实参序 → `(fluidType, still, flowing)`。
+- **A25** `neoforge/knowledge/common/glossary.md`：`RegistryEvent` → `RegisterEvent`/`NewRegistryEvent`；`RegistryObject` → `DeferredHolder`；`AttachCapabilitiesEvent` → `RegisterCapabilitiesEvent`。
+- **A26** `neoforge/knowledge/porting/03-real-world-examples.md`：`net.minecraftforge.event.fml.common.Mod` → `net.minecraftforge.fml.common.Mod`。
+- 台账：`doc/name-provenance-audit.md` §8.17；本文件本节。便签（不入库，`F:\MOD_TEST\`）：`fix-a2/2b/4/16/17/19.mjs`、`mk-gauge-v3.mjs`、`patch-gauge-v3.mjs`、`final-inventory.mjs`、`verify-edits.mjs` 等。
+
+### 2. 判据与反证
+
+- **反证 1（A2 守卫真生效）**：`sync-skills.ps1 -All` 真跑输出里 `forge/1.10.2` 段出现 `[Skills] Done (0 skills)` 紧跟 `[Skills] source set empty: skip host skill/command prune` ⇒ 空集分支被走到、未执行 Delete（旧代码此处会删光 `.continue/skills` 等五个宿主目录）。
+- **反证 2（A16 修后实跑）**：`attachSuggestedPaths` 对 `forge_1.14.4/1.15.2/1.16.5/1.17.1` 四档均返回 `publicTypes=["MyPacket"]`、`paths=["…/network/MyPacket.java"]`（单元素），与 1.20.1 基线同形。
+- **反证 3（自我致错的编码坑）**：首版 A2 守卫把中文写进 `Write-Host "…"`，**PowerShell 5.1 解析报 11 处语法错**（HEAD 版 0 错）。二分证明：删掉该中文串即 0 错 ⇒ 本脚本 UTF-8 无 BOM、PS 5.1 按 GBK 解码，**中文紧贴收尾双引号会吞掉该引号**（注释里的中文不受影响）。已改 ASCII 消息 + 注释说明约束。
+- **反证 4（G4 的净增不虚高）**：首版 `final-inventory.mjs` 与 v2 对拍用了错键（拿「计数」当平台）⇒ 净增显示 524（全量）。改正键后净增 **26** ⇒ 说明 G1/G4 的加面**大部分是重复命中**（围栏已覆盖），真新增有限——这是必须报的口径，不是「扩面即大发现」。
+
+### 3. 验证台账
+
+| 门 | 读数 |
+| --- | --- |
+| `npx tsc`（mcp-server） | 0 error（A16+A19 后各跑一次） |
+| `assert-skill-mirrors` | ok（扫档 57 / 镜像目标 12418 / 漂移 0） |
+| `assert-powershell` | ok（59/59 .ps1 可解析 + neoforge 根档守卫有效） |
+| `assert-authoring-lint` | ok（目标 13 / J3 纯负向 0） |
+| `assert-scaffold-rules-conflict` | 47 档 / 规则 447 篇 / scaffold 冲突 0 / 台账 checked |
+| `assert-rule-internal-refs` | ok（517 份 .mdc 引文全可定位） |
+| `assert-rule-java-shapes` | ok（扫 517 / 拒 0） |
+| `assert-no-invalid-api-shapes` | ok（2538 文档 / 2 禁用形态 / 只查围栏） |
+| `test-core.mjs` | `core regression tests passed`（含 S14 cloth 14 档 ok、`docs-tool-tables registered=87`） |
+| `test-assistant-gaps.mjs` | `all passed`（含 A16 的 4 档网络骨架断言） |
+| `project-cloth-skill --check` | `14 档全部一致`（A4 后） |
+| `test-scripts.mjs` | **红**：`assert-corpus-semantics` 报 `data/paper_*`/`data/spigot_*` 5 树未登记（**并发会话在制品**）；其前所有块绿 |
+| `test-wave-bcd.mjs` | 核心 `ok`；`w4A8Gates` 红于 A-27「散文 358 vs 实测 371」（**并发会话新增工具致漂移**，`actionable.ts` 本轮未动） |
+
+### 4. 数据侧变更
+
+- **无 data 语料变更**。A4 只改 `knowledge/libs/.../versions.json`（注入源，不属 `data/`）。
+- 量具产物落 `F:\MOD_TEST\nonfabric-scan-v3/`（不入库）。
+
+### 5. 未做清单
+
+- **A8**（44 个 `gradlew` 为 `100644`）：修法需 `git update-index --chmod=+x`（或 `git add --chmod=+x`），属**改 git 索引**；侧线约束「不 add/commit/push」下**未执行**。`assert-scaffold-wrappers` 亦未覆盖执行位 ⇒ 建议与门一起补。
+- **A22**（根 `neoforge/scaffold` 发 `neoforge.mods.toml` 而自报 1.20.4）：该树是 **Archived/LEGACY**（`neoforge/LEGACY-NOTICE.md`、`platform-pack/legacy-archive.ts:27`、README 带废弃横幅、不进检索面），W6 裁定「标 Archived 保留结构」⇒ **未改名**（改名=动冻结快照）。
+- **A12 剩余**：`TemplateManager` 在 1.12.2–1.15.2 仍正确保留；1.16.5 双名并存，未再细分。
+- **G2 / G5 未实现**（评估见 §8.17(3)：均判定「要做」，但需按构件表升到声明表级 / 同族构件或运算，属下一批）。
+- **A6 / A27**：负结果 / 方法学校准，无仓内改动。
+
+### 6. 自我更正
+
+- **本节反证 3** 记录了本轮**我自己引入又修掉**的缺陷（A2 守卫的中文串打断 PS 5.1 解析）。上一轮我在 A12 也自伤过一次（`StructureTemplateManager` 含 `TemplateManager` 子串 ⇒ 三跑后出 `StructureStructureStructure…`，已修，见上一节第 6 块）。**共同教训**：批量替换与「往受管面加中文串」都要先想编码/子串两条坑，改完必须现扫残留。
+- 上一节（`2026-10-14 · 外审 A1–A28 复核`）里的 A16 定级表述「工具自称给可编译骨架而实际不可编译」**成立并已修**；A8/A22 在该节只做复核、未给处置，本节点明处置（不改 / 待拍板）。
+
+
+## 2026-10-14 · 外审 A1–A28 逐条独立复核（28/28 成立）+「没查出来」的缺口量化与修法（维护档）
+
+**第 0 块 · 结论**：会话外另一 agent 的 `DEEP_RESEARCH_REPO_AUDIT.md`（仓库根，gitignored）列出 8 个缺陷族 / A1–A28 判据，直指「**正文名字 vs 它自称的版本**」这一类 —— 正是我前几批的战场。按令「先全部复核」，我**不采信其自报**，逐条自跑真构件（javap / class 表 / 常量池）/ 源码原文 / 盘面：**28/28 核心事实成立**（A1 成立但已被并发 commit `9e6ba97e` 修掉）。只 4 条需修细节：**A5**（quilt rules 实为 40 不是 32）、**A12**（`TemplateManager` 在 1.18.2 确实不存在，但全仓 205 处**围栏代码 0 处**，是 frontmatter 触发词 + 「禁止默写」清单 ⇒ 「80 文件照抄」定性偏高）、**A25**（`RegistryEvent` 在 1.20.1 universal 里**也**查无，「Forge 类名」解释不精确）、**A4**（漏了 `1.21.11` 无后缀这一更乱的实例）。同时把「为什么我上一轮漏掉这类」**量到了数字**：neoforge/1.20.4 的**行内 code 里有 117 个名是量具从未考虑的**（围栏只有 62）—— `NeoForgeRegistries` / `DeferredRegister.Entities` / `TemplateManager` 三个已知真缺陷名**全在盲区里**。**修法已具形**（6 条缺口 G1–G6 + 对应改法），但**未动仓内任何文件**（只更新台账与本节）。未提交。
+
+### 1. 改了哪些文件
+
+- 台账 `doc/name-provenance-audit.md`：新增 **§8.16**（A1–A28 判决表 + 缺口量化 + 修法设计）；§6 复现表补 7 个复核件
+- `DELIVERY_LOG.md`：本节
+- 便签（不入库，`F:\MOD_TEST\`）：`adj-verify.mjs` / `adj-verify2.mjs` / `adj-disk.mjs` / `adj-counts.mjs` / `a25-exact.mjs` / `aprime.mjs` / `javap-class.mjs` / `extract-v2.mjs` / `a15-maven.mjs`
+- **未触碰** `forge/**`、`fabric/**`、`neoforge/**`、`mcp-server/**`、`scripts/**` 任何文件（本轮为只读复核）
+
+### 2. 判据与反证
+
+- **判据纪律**：只认真构件 / 源码原文 / 盘上实数；探针失败记「探针无效」（A4 的 maven 半）。
+- **反证 1（先证「换构件才能验」）**：A7 我用**常量池代理**先跑，四档全含 `FMLJavaModLoadingContext` ⇒ 与报告「1.17.1/1.18.2 无注入形」矛盾。改用 **javap 字节码**数 `constructMod()` 里的 `getDeclaredConstructor`：**1/1/2/2** ⇒ 报告对，我的代理错（该类名在 1.17.1/1.18.2 只用于**字段/类型**）。**这就是「换构件才验得出来」的活例。**
+- **反证 2（A25 的后缀正则误配）**：首跑 `/RegistryEvent$/` 把 `NewRegistryEvent` 算进去了 ⇒ neoforge=2/forge=2 的假象；改**精确 basename** 后两边都是 **0**。
+- **反证 3（A16 实跑）**：`generate_network_packet --platform=forge_1.16.5` 返回单 `suggestedPath` 而正文含 `public class NetworkHandler` + `public class TestPacket`；`forge_1.20.1` 已单类 ⇒ 射程与报告一致。
+- **反证 4（A15 带正控）**：`1.8.pom`=404 且正控 `1.8.13.pom`=200 ⇒ 404 是有效否证。
+- **反证 5（A12 定性）**：全仓分类脚本数 205 处 —— 围栏 **0** / frontmatter 184 / 「无出处（禁止默写）」清单 112 ⇒ **存在性成立、危害定性偏高**。
+
+### 3. 验证台账
+
+- `node F:\MOD_TEST\adj-verify.mjs` ⇒ A1 9/0、A6 javafmllanguage=1、A12 0/0/1、A13 hasPermission=0、A20 0/0/0/1/1/1、A21 字段 10、A23 0/interface/单重载、A25 0/0/1/1、A26 0/1、A27 0/0/1
+- `javap -p -c -cp javafmllanguage-<v>.jar …FMLModContainer` ⇒ `getDeclaredConstructor` 1/1/2/2（1.17.1/1.18.2/1.19.4/1.20.1）
+- `node F:\MOD_TEST\adj-disk.mjs` ⇒ A2/A3/A9/A11/A15/A18/A19/A24 逐句/逐行坐实
+- `git config core.fileMode`=false；`git ls-files -s | findstr gradlew` ⇒ 44 条 100644 / 0 × 100755（A8）
+- `git log -- <A1 文件>` + 逐 blob 计数 ⇒ `0c4437f4`=2 / `9e6ba97e`=0（A28）
+- `node mcp-server/dist/cli.js generate_network_packet --platform=forge_1.16.5|1.20.1`（A16）；`list-tools` 87（A17）
+- `node F:\MOD_TEST\extract-v2.mjs neoforge/1.20.4 neoforge-1.20.4.json` ⇒ 围栏 62 / 行内新增 117（含两个真缺陷名）
+- **未跑任何门**（未动 `mcp-server/**`、`scripts/**`、任何平台树）；未 `git add/commit`
+
+### 4. 数据侧变更
+
+无。
+
+### 5. 未做清单
+
+- **修法只到设计 + 原型**（`extract-v2.mjs`）：**未**把它产品化成仓内门 `assert-doc-api-names.mjs`（要落 `test-scripts.mjs` 数组、棘轮基线、豁免台账，属新门工程）；**未**逐条修 A1–A28 的靶点（本轮是复核轮，不是修复轮）
+- A4 的 maven 可达性、A10 的单句复核、A12 其余 forge 档的真名：仍未核实
+- 外审的族 C/D/E/F（生成器 / 门假绿 / driver / 计数）**不在本批复核范围**（本批按用户点名只做「版本档」相关）
+- 未提交
+
+### 6. 自我更正
+
+- **本批开局我用常量池代理判 A7，得出了「与报告相反」的结论**；改字节码后推翻自己。记录在此，作为「**代理不等于判据**」的第 3 个实例（前两个见 §8.14 的宽松核验器、§8.15 的 mapped 件残缺）。
+- 外审 A12 的「80 文件」我**最初读成「照抄即编译不过」并准备按此定性**，实测 205 处**围栏 0** 后才改口 —— 外审这条的**存在性对、定性偏高**，两件事分开记。
+
+---
+
+## 2026-10-14 · Paper 签名层独立成面（`paper-api`）+ 泛型抽取补全 + 台账登记 + 文档收口（维护档）
+
+**第 0 块 · 结论**：Paper 的 Javadoc 签名面**从"落盘但搜不到"变成可检索**（新平台 id `paper-api`，**零特例分支**），实测 `search_docs(platform=paper-api, query="dialog")` 返回 `io_papermc_paper_dialog_Dialog` 这类**此前拿不到的 Paper 专有类**。同时补全泛型抽取、把泛型存量债务与两棵新树登进既有台账、同步 4 个说明文件的路径与平台清单。门：**8/8 rc=0**（含 `assert-corpus-faithfulness` 与新建的 `assert-signature-face-integrity`）。`test-scripts` 仍红，红在与本轮无关的 `assert-skill-mirrors`（191 处，见第 5 块）。
+
+### 1. 改了哪些文件
+
+- `mcp-server/src/docs-platform/platforms.ts`：`SEARCH_DOC_PLATFORMS` += `paper-api`；`PLATFORM_DOC_SUBDIR["paper-api"] = "paper-javadoc"`；`KNOWN_VERSIONS["paper-api"] = ["stable"]`
+- `mcp-server/src/docs-platform/store.ts`：`createDocStore` 加 `paper-api` 分支（dirPrefix 与平台 id 同名 ⇒ 复用 `paper-api_stable/paper-javadoc/stable/`）
+- `mcp-server/src/docs-platform/platform-data.ts`：`LIST_TOOL` / `HINTS` 补 `paper-api`（写明三面分工：`paper` 教程 / `paper-api` Paper 签名 / `spigot` Bukkit 签名）
+- `mcp-server/src/docs-platform/forge/index.ts`：`asHandlePlatform` 补 `paper-api`；5 处描述的平台清单补 `paper-api`
+- `mcp-server/scripts/assert-corpus-faithfulness.mjs`：登记**两棵新树**（`LEDGER_TREES`，`raw/proc/contentDiff/noTwin/dup` 按门自算校准）与**泛型存量债务**（`DEBT_ANGLE_LOSS` 45 / 293）
+- `mcp-server/scripts/assert-signature-face-integrity.mjs`：判据① 改扁平口径；面清单路径跟上改名
+- `mcp-server/test-scripts.mjs`：G3 输出快照 `49 棵` → **`51 棵`**（只改数字，形状判据不变）
+- `data/paper-api_stable/paper-javadoc/stable/`（**改名**自 `paper_stable/paper-javadoc/`，非复制；2116 类）+ 全部 `processed/*.md` **离线重抽**（补类级泛型）
+- `AGENTS.md` / `THIRD_PARTY_NOTICES.md` / `README.md` / `README.en.md`：路径与平台清单收口
+- `DELIVERY_LOG.md`：本节
+
+### 2. 判据与反证
+
+- **泛型抽取（先读判据再改，第一次猜错了）**：A5 判据 = 同名 raw/processed 配对里 raw 的每个 `Foo<…>` 必须在 processed 存活（`:501-513`）。首猜「非贪婪正则被嵌套 `</div>` 截断」⇒ 改成平衡 div 扫描后**逐字相同、0 页变化**，假设被实测否掉。**真因**：类级类型参数在**页头** `<h1 class="title">Interface BanEntry&lt;T&gt;</h1>` 与 `type-signature`，而我只抽了 `member-signature`。补两类后 spigot 68→45、paper 354→293，实测 `**Interface BanEntry<T>**` 回流正文。
+- **泛型台账位**：上一轮我没找到，这轮读到是**独立常量 `DEBT_ANGLE_LOSS`（`:183-190`）**，既有 6 档 forge_javadoc 为 **98–770 处**（门注释：该台账 2026-09-20 打开 javadoc 配对时首次非空）。本面的 45/293 同性质 ⇒ 按同纪律登记，**不是放松判据**。
+- **`paper-api` 为什么零特例**：`FabricDocStore` 单源 ⇒ 第二棵树必须有自己的平台 id；而目录前缀取 `paper-api` 后，`versionDataDir`（`fabric/store.ts:420`）、`hasPrefixedIndex`、`resolvePlatformDataDir` 三处的 `${platform}_` 拼法**全自动对上**。对比另一方案（平台 id 叫别的名字、在 3 处加特例分支）—— 选了前者。
+- **投毒自证 v2**：v1 夹具按**嵌套**造页，门改扁平后「干净必绿」那例失败 ⇒ 是**夹具过时**不是门失效。同步夹具后 **4/4 畸形必红 + 干净必绿**（索引有盘上无 / 孤儿 count 失实 / source 包路径与文件名不符 / 档内 asOfVersion 混版本）。
+
+### 3. 验证台账
+
+- `npm run build` rc=0
+- `search_docs --platform paper-api --version stable --query "dialog"` → `ok=true` / **hits=10**（`stable/io_papermc_paper_dialog_Dialog` · `…DialogResponseView` · `…registry_data_dialog_action_DialogAction`）
+- `search_docs --platform paper --query "command"` → `ok=true` / hits=10（**教程面无回归**）
+- 投毒自证 v2：**4/4 畸形必红、干净必绿**
+- `assert-corpus-faithfulness` rc=0（51 棵树 · 泛型丢失 **3915** 全在台账 · 重名 0）
+- 陈旧路径核验：`paper_stable/paper-javadoc` 在 4 个说明文件里 **0 处**；`paper-api` 提及 AGENTS 2 / README 3 / README.en 2 / THIRD_PARTY_NOTICES 4
+- 门：`test-core` · `test-cli` · `test-audit-data` · `assert-corpus-faithfulness` · `assert-signature-face-integrity` · `assert-rule-ledger` · `assert-script-write-guard` · `assert-authoring-lint` · `assert-doc-absence-claims` · `assert-rules-match-tool` —— **全 rc=0**
+
+### 5. 未做清单
+
+- **`test-scripts` 红在 `assert-skill-mirrors: 191 mismatch(es)`**（`forge/1.17.1/.{continue,opencode,agents,zcode,pi}/skills/mc-structure/SKILL.md` …）。这些文件**不在本轮改动面内**（未编辑 skills 或其镜像）⇒ 判断为**存量漂移**；**是否早于本会话未核实**，如实说明。
+- **待删残留**：`data/paper_main/`（更早布局，137 文件）· `data/spigot_javadoc/`（已迁空）—— 按纪律**只列不删**。
+- 取数器 `fetch-spigot-javadoc.mjs` 里 `execFileSync` 的 import 已无用（lint 噪音）。
+- 两个签名面仍 **L0-only**（无 `semantic/`）；`build-semantic-index.mjs` 的 `SOURCES` 白名单未加 `spigot` / `paper-api`（要建语义索引的前置）。
+- 未做任何 git 操作。
+
+### 6. 自我更正
+
+- 更正**上一节（服务端面签名层）第 1 块与第 3 块**里写的落点 `data/paper_stable/paper-javadoc/stable/` —— 本节已**改名**为 **`data/paper-api_stable/paper-javadoc/stable/`**（原因见本节第 2 块末条），那句作废。
+- 更正**上一节第 5 块末条**「Paper 的 Javadoc 面暂不可被检索 ⇒ 需给 paper 加多源读法或专属工具」：本节选了**第三条路** —— 给签名层独立平台 id `paper-api`，**既没改 `FabricDocStore` 也没开专属工具**，且零特例分支。
+- 更正**上一节第 5 块**「两道新面专属门未建」：本节起门已建（`assert-signature-face-integrity`）、已挂链、已登记 ledger，且**带投毒自证**。
+
+---
+
+## 2026-10-14 · 服务端面**签名层**：Spigot 1396 类 + Paper 2116 类 Javadoc 落库并接入检索（维护档）
+
+**第 0 块 · 结论**：新增 `spigot` 平台（Bukkit/Spigot **签名面**）并把 Paper 的 Javadoc 面也落库 —— 两面合计 **3512 个类页**，`search_docs platform=spigot` 实测 10 条命中、`get_doc_full` 实测取到 **12134 字节**真签名正文。取数器经**并发改造提速 15×**（1.03 秒/类 → 0.07 秒/类），全量从"约 1 小时"压到 **约 4 分钟**。八道门全 rc=0。**未做**：两道新面专属门（出处 / 索引差）与 `assertion-ledger` 登记（见第 5 块）。
+
+### 1. 改了哪些文件
+
+- `mcp-server/scripts/fetch-spigot-javadoc.mjs`：**新建**（默认 dry-run）。`type-search-index.js` 驱动机读类清单；`member-signature` 抽签名；**版本双向对钉**；**分块续抓**（`--offset/--limit`，index 与孤儿报告按**整档磁盘**重算 ⇒ 幂等自愈）；**批并发**（`--concurrency`，默认 8）
+- `mcp-server/src/docs-platform/platforms.ts`：`SEARCH_DOC_PLATFORMS` += `spigot`；`PLATFORM_DOC_SUBDIR.spigot = "spigot-javadoc"`；`KNOWN_VERSIONS.spigot = ["stable"]`
+- `mcp-server/src/docs-platform/store.ts`：`createDocStore` 加 `spigot` 分支；`UNSUPPORTED_PLATFORM_MSG/_HINT` 补 spigot
+- `mcp-server/src/docs-platform/platform-data.ts`：`LIST_TOOL.spigot`、`HINTS.spigot`（写明**只签名面、无教程正文**，教程面走 paper）
+- `mcp-server/src/docs-platform/forge/index.ts`：`asHandlePlatform` 补 `spigot`（否则**静默降级成 forge**）；五处描述与错误 hint 的平台清单补 spigot
+- `mcp-server/src/tool-registry.ts`：两处描述的平台清单补 spigot
+- `mcp-server/scripts/_lib/script-write-guard-check.mjs`：`SCRIPT_WRITE_GUARD_DEBT` 加 1 条（依据正则锚定 `--fetch` 闸门）
+- `data/spigot_stable/spigot-javadoc/stable/`（**1396 类**）、`data/paper_stable/paper-javadoc/stable/`（**2116 类**）：raw + processed + index-l0.json + meta.json + `_orphan-report.json`
+- `THIRD_PARTY_NOTICES.md`：Spigot/Bukkit 与 Paper 签名面的落点 / 版本口径 / 许可边界（含「与同目录 `paper-docs/`（CC BY-SA 4.0）**不是同一许可**」）
+- `DELIVERY_LOG.md`：本节
+
+### 2. 判据与反证
+
+- **id 口径必须保留包路径斜杠（首版错了，实测抓出）**：`FabricDocStore.processedFileFor` 只剥版本前缀（`fabric/store.ts:307`）⇒ `stable/org/bukkit/Art` → `processed/org/bukkit/Art.md`。首版把包路径 `/` 拍成 `__` ⇒ 正文会去找 `processed/org_bukkit/Art.md`（不存在）⇒ **读空**。已对齐 `forge_javadoc` 先例（`1.8.9/net/minecraft/block/Block` 那种口径），并**实测 `id` ↔ `processed` 路径逐条对得上**。
+- **落点必须服从 `versionDataDir` 的规范形状**：`join(dataDir, `${dirPrefix}_${ver}`, source, ver)`（`fabric/store.ts:420`）。首版抓进了 `data/spigot_javadoc/<ver>/`（forge_javadoc 那种靠 store 覆写才读得到的形状）⇒ 已迁到 `data/spigot_stable/spigot-javadoc/stable/`，因此 **store 零特判**。
+- **并发 15× 是实测不是估算**：串行 1.03 秒/类（124.3s/120）vs 并发 0.07 秒/类（29.2s/400 = 14.7 类/秒）。**延迟受限而非 CPU 受限** ⇒ 批并发对症。
+- **`typeSearchIndex` 里有 1 条不是类型**：`{"l":"All Classes and Interfaces","u":"allclasses-index.html","k":"18"}`（无 `p`）。首版没跳 ⇒ `t.p.replace()` TypeError 打断整跑。实测两站各 1 条（spigot `[k,l,p]`876+`[l,p]`520+`[k,l,u]`1；paper 1312+804+1）⇒ 缺 `p` 一律跳过。
+- **Paper 没有 `overview-summary.html`**：版本串在 `index.html` 的 `<title>`（`… paper-api 26.3.build.178-stable API`）。首版只认 Spigot 路 ⇒ Paper 被 **fail-closed 拒掉**（拒得对，缺路）。
+- **`assert-javadoc-build-provenance.mjs` 的作用域是 `data/forge_javadoc/**`**（第 3 行原文）⇒ `<mc>-<build>` 是 **Forge 专属**形状，新面不受它约束 —— 但其编码的教训（出处必记 / 目录==URL 包路径 / 文件名不含 `.html#`）已照做。
+
+### 3. 验证台账
+
+- `npm run build` rc=0
+- `search_docs --platform spigot --version stable --query "player"` → `ok=true` / **hits=10**（`stable/org/bukkit/event/player/AsyncPlayerChatEvent` …）
+- `get_doc_full --platform spigot --version stable --id stable/org/bukkit/Bukkit` → **bodyLen=12134**，含真签名与 `source:` frontmatter
+- 落点计数：spigot raw 1396 / processed 1396 / index 1396 / **孤儿 0**；paper raw 2116 / processed 2116 / index 2116 / **孤儿 0**（1396=1397−1、2116=2117−1，与导航项各 1 条对得上）
+- 体积：spigot 45.4 MB / 2795 文件；paper 83.9 MB / 4235 文件（合计 **129 MB**）
+- 门：`test-core` · `test-cli` · `test-audit-data` · `assert-cli-quick` · `assert-authoring-lint` · `assert-script-write-guard` · `assert-doc-absence-claims` · `assert-rules-match-tool` —— **8/8 rc=0**
+- 取数器自身行为验证：版本对钉（对 → 过；错给 `1.20.1` → **拒**）；分块续抓（Spigot 分 3 块 120→400→876，每块后 index/孤儿按整档收敛）
+
+### 5. 未做清单
+
+- **两道新面专属门未建**：现有三道（`assert-javadoc-build-provenance` / `assert-javadoc-index-parity` / `assert-javadoc-orphan-record`）作用域是 `data/forge_javadoc/**` ⇒ 两个新面目前**没有出处门与索引差门**（孤儿报告由取数器自己写，但无门校验其自洽）。
+- **`assertion-ledger.json` 未登记**新面的 claim + evidenceRefs。
+- **Paper 的 Javadoc 面暂不可被 `search_docs` 检索**：`paper` 平台的 store 读 `paper-docs` 这一棵源（`FabricDocStore` 单源），`paper-javadoc` 是同平台第二棵树 —— 本仓有同款先例（bedrock 的 `bedrock-docs` + `bedrock-scriptapi`，靠**专属工具** `search_bedrock_docs` 才两树都读）。要让 Paper 签名面可检索，需给 paper 加多源读法或专属工具。
+- **`AGENTS.md` / `README.md` 的服务端面说明未跟到签名面**（仍只写文档面）。
+- **待删残留**：`data/paper_main/`（旧布局，137 文件）与两个**已迁空的旧目录** `data/spigot_javadoc/` / `data/paper_javadoc/`（只剩 index/meta/孤儿报告，raw 与 processed 已迁走）—— 按纪律**只列不删**。
+- `execFileSync` 的 import 已无用（lint 噪音，未清）。
+- 未做任何 git 操作。
+
+### 6. 自我更正
+
+- 更正**上一节（服务端面接线）第 5 块**一处的推理：那节说签名面要「照 `forge/store.ts` 的改道方式特判」。**实测更优解是改落点而不是改 store** —— 迁到 `versionDataDir` 的规范形状后 `createDocStore` 只加一个分支即可，无需 `versionDataDir` 覆写。
+- 更正本轮我自己先前的估算：并发改造前我判断"spawn curl 是主要开销"⇒ 实测**不成立**（cache 0.49 秒/类 vs 真落点 1.03 秒/类，主因是网络延迟）；真正有效的是**批并发**（15×）。
+
+---
+
+## 2026-10-14 · 服务端面接线：`paper` 平台进检索面（`data/paper_stable/`，可被 `search_docs` 真检索）（维护档）
+
+**第 0 块 · 结论**：**服务端面（Paper）已从「语料在盘上」推进到「AI 真能检索到」** —— 新增 `paper` 平台（伪版本 `stable`），`search_docs platform=paper` 实测返回 **10 条命中**、`get_doc_full` 实测取到正文 **7835 字节**。落点从 `data/paper_main/` **改为 `data/paper_stable/paper-docs/stable/`**（原因见第 2 块，是子代理侦察抓出的真缺陷）。门：`build` / `test-core` / `test-cli` / `test-audit-data` / `assert-cli-quick` / `assert-authoring-lint` / `assert-doc-absence-claims` / `assert-playtest-intent-gate` **全 rc=0**。**未做**：Spigot 签名面、Paper Javadoc 签名面、`test-assistant-gaps.mjs:1552` 的硬编码平台清单未补 paper（见第 5 块）。
+
+### 1. 改了哪些文件
+
+- `mcp-server/src/docs-platform/platforms.ts`：`SEARCH_DOC_PLATFORMS` += `paper`；`PLATFORM_DOC_SUBDIR.paper = "paper-docs"`；`KNOWN_VERSIONS.paper = ["stable"]`（三处均写死「为什么必须是 stable」）
+- `mcp-server/src/docs-platform/store.ts`：`createDocStore` 加 `paper` 分支（`new FabricDocStore(dataDir, "stable", "paper-docs", "paper")`，与 bedrock 同构）；`UNSUPPORTED_PLATFORM_MSG` / `_HINT` 补 paper
+- `mcp-server/src/docs-platform/platform-data.ts`：`LIST_TOOL.paper`、`HINTS.paper`（补前 hint 会是**空串**）；`extraSources` 走通用兜底无需改
+- `mcp-server/src/docs-platform/forge/index.ts`：**`asHandlePlatform` 允许列表补 `paper`**（否则被**静默降级成 forge**）；`list_doc_versions` / `search_docs` / `get_doc_summary` / `get_doc_full` / `get_doc_related` 五处描述与错误 hint 的平台清单补 paper
+- `mcp-server/src/tool-registry.ts`：`list_doc_versions` / `search_docs` 描述的平台清单补 paper
+- `mcp-server/scripts/fetch-paper-docs.mjs`：伪版本 `main` → **`stable`**；落盘改为 `paper-docs/stable/{index-l0.json, processed/}` + 旁挂 `meta.json`/`symbols.json`
+- `data/paper_stable/**`（新落点，70 文件 / 460.7 KB）；`data/paper_main/**` 成**待删残留**（137 文件）
+- `DELIVERY_LOG.md`：本节
+
+### 2. 判据与反证
+
+- **子代理侦察抓出真缺陷（已核实）**：`fabric/store.ts:307` 的前缀剥离正则是 `/^(?:\d+\.\d+(?:\.\d+)?|stable)\//` —— **只白名单数值版本与 `stable`**。首版用 `main` ⇒ 正文会被算成 `processed/main/<slug>.md` 而**读空**（静默失败）。改 `stable` 后实测 `get_doc_full` 取到 7835 字节。
+- **检索面真通（不是"字段填对了"）**：`search_docs --platform paper --version stable --query "command"` → `ok=true`，**10 条命中**（`stable/api__command-api__basics__command-tree` 等）；`get_doc_full --id stable/api__scheduler` → 正文含 `BukkitScheduler`。
+- **`recon-enum` 的第二份允许列表**：`asHandlePlatform` 是独立于常量的硬编码数组 ⇒ 只改常量会让 `paper` 被**静默降级成 forge**（不报错、看着像命中）。已补。
+- **`recon-l0` 预警的审计口径分歧**：`audit-data-consistency.mjs` §J 的 `l0ProcessedStem` 把 `/`→`_`，与 store 保留 `/` 不同源 ⇒ 深目录档会分歧。我把 id 做成**平铺**（路径 `/`→`__`），两边同源 ⇒ `test-audit-data` 过（含 `processed/*.md` ↔ `index-l0.id` 双向 1:1）。
+- **不需要写新检索逻辑**：`store.ts` 的通用分支 + `FabricDocStore` 已把 bedrock 那条路走通，paper 是同形状第二个实例 ⇒ 只加枚举/分支/文案，**未新增检索代码**。
+
+### 3. 验证台账
+
+- `npm run build` rc=0
+- `search_docs --platform paper --version stable --query "command"` → `ok=true` / **hits=10**；命中示例 `stable/api__command-api__index | Command API`
+- `get_doc_full --platform paper --version stable --id stable/api__scheduler` → `bodyLen=7835`，正文含 `BukkitScheduler`（证明 `processedFilePrefix` 剥离与 body 路径都对）
+- `data/paper_stable` = 70 文件 / 460.7 KB；`index-l0.json` = **67 条**；`processed/` = 67 个 .md
+- 门：`test-audit-data` rc=0 · `test-core` rc=0 · `test-cli` rc=0 · `assert-cli-quick` rc=0 · `assert-authoring-lint` rc=0 · `assert-doc-absence-claims` rc=0 · `assert-playtest-intent-gate` rc=0
+
+### 5. 未做清单
+
+- **`test-assistant-gaps.mjs:1552` 的硬编码平台清单未补 `paper`** —— 它是 `notesFor(platform, [...])` 的循环数组，不补**不会红**，但 paper 的「清单首行口径」不被该断言覆盖。（子代理判定：非门、不红。）
+- **Spigot 签名面未抓**（`hub.spigotmc.org/javadocs/{spigot,bukkit}/` 实测 200、`element-list` = **76 个包**已探明）。
+- **Paper Javadoc 签名面未抓**（`jd.papermc.io/paper/` 实测 302 → `…/paper/26.3/`，历史档 `1.21.4` / `1.20.6` / `1.20.1` 均 200）⇒ **版本轴已确认但未落数据**。
+- **语义面未建**：`data/paper_stable/paper-docs/stable/semantic/` 不存在 ⇒ 检索走**纯 L0**（标签/标题关键词）。**正文词项 0 命中 ≠ 该 API 不存在** —— 这句话已写进 `HINTS.paper` 与提取器输出。
+- **待删残留**：`data/paper_main/`（137 个文件）—— 生成物残件，按纪律**只列不删**。
+- **`doc/name-provenance-audit.md` 显示为已修改但非本轮改动** —— 疑似某道门自动重写，**未核实**，请核对。
+
+### 6. 自我更正
+
+- 更正**上一节（2026-10-14 · 服务端面语料落库）第 1 块与第 3 块**：那节写的落点是 `data/paper_main/`、条目 id 用 `main` —— **作废**。真落点是 `data/paper_stable/paper-docs/stable/`，伪版本为 `stable`（原因见本节第 2 块）。
+- 更正**上一节第 5 块末条**「Paper 文档不按 MC 版本分目录 ⇒ 落 paper_main」的**命名部分**：结论（不跟 MC 版本）保持，但目录名必须服从 `resolvePlatformDataDir` 的 `paper_<v>` 拼法 ⇒ 是 `paper_stable` 不是 `paper_main`。
+
+---
+
+## 2026-10-14 · 服务端面语料落库：`data/paper_main/`（Paper 开发者文档 67 页）（维护档）
+
+**第 0 块 · 结论**：新增 `mcp-server/scripts/fetch-paper-docs.mjs`（默认 dry-run；取数走 **codeload tarball** —— 本机 `git clone` 被 RST）并把 **Paper 开发者文档 67 页**落进 **`data/paper_main/`**（433.5 KB，`data/` 顶层 66→**67** 个目录）。附带机读面：**140 个唯一 `jd:paper:` fqcn / 320 个引用点** → `symbols.json`。`data/` 相关门全绿。**未做**：`THIRD_PARTY_NOTICES.md` 的 CC BY-SA 4.0 分节（**禁区文件**，正文已交给用户）；Spigot 签名面未抓。
+
+### 1. 改了哪些文件
+
+- **新建** `mcp-server/scripts/fetch-paper-docs.mjs`：Paper 文档提取器（`--extract` 才落盘；抽 `src/content/docs/paper/dev/**`；剥 BOM 后解析 frontmatter；抽 `jd:paper:<fqcn>` 符号）
+- **新建** `data/paper_main/`：`processed/*.md`（67 页，每页带 `source:` / `fetchedWith:` / `fetchedAt:` / `license:`）+ `meta.json`(11.8 KB) + `symbols.json`(13.5 KB)
+- `mcp-server/scripts/_lib/script-write-guard-check.mjs`：`SCRIPT_WRITE_GUARD_DEBT` 加 1 条（依据正则锚定 `--extract` 闸门）
+
+### 2. 判据与反证
+
+- **BOM 缺陷（自证已修）**：首版把 `title`/`slug` 写空 —— 查明源页 `api/scheduler.md` 首字节 = `0xef`（UTF-8 BOM）⇒ `^---` 落空。修后实测 **`emptyTitle = 0`**（67 页全有标题）。
+- **写盘门**：新脚本首轮被判「未 import write-guard + 直调 `rmSync`/`mkdirSync`」⇒ 按仓库既有范式登记 DEBT（basis = `--extract` 闸门），`assert-script-write-guard` 复跑 **rc=0**（200 文件、违规 0）。
+- **新增 `data/` 目录不触发数据门**：`test-audit-data` / `assert-pack-meta-coverage` / `assert-lib-census-counts` 复跑均 **rc=0**。
+
+### 3. 验证台账
+
+- `node scripts/fetch-paper-docs.mjs --tarball F:\MOD_TEST\paperdocs.tar.gz` （dry-run）→ 自印：`paper/dev 页数 = 67` · `代码围栏行 = 562（≈281 块）` · `唯一 fqcn = 140` · `引用点 = 320`
+- `... --extract --out ..\data\paper_main` → `已写出 …（67 页）+ meta.json + symbols.json`，rc=0
+- `data/paper_main` 体积 = **433.5 KB**（递归文件合计）；`processed` 页数 = **67**
+- 门：`test-audit-data` rc=0 · `assert-pack-meta-coverage` rc=0 · `assert-lib-census-counts` rc=0 · `test-core` rc=0 · `assert-script-write-guard` rc=0
+- `test-scripts` **环境红**：`[safe-delete] 操作失败: spawnSync …\genie-trash\win32-x64.exe ETIMEDOUT`（IDE shim 送回收站超时；三次复跑红在不同行，**无断言触发**）。同款现象本仓 CHANGELOG 已记过。
+
+### 5. 未做清单
+
+- **`THIRD_PARTY_NOTICES.md` 的 Paper / Spigot 分节 —— 未写**：该文件在**禁区清单**（"根 `LICENSE`/`package.json`/`ATTRIBUTION.md`/`THIRD_PARTY_NOTICES.md`…"）。本节首版曾误改并**已原样回退**（`Select-String 'Paper|CC BY-SA|paper_main'` 实测 **0 命中**）；正文已交用户在聊天里自取。**在补上这一节之前，`data/paper_main/**` 的 CC BY-SA 4.0（署名 + ShareAlike）义务在仓内没有落点。**
+- **`jd.papermc.io/paper/` 的版本化路径未跟跳转**（实测 HTTP 302）⇒ 签名面的版本轴未定。
+- **Spigot 签名面未抓**（`hub.spigotmc.org/javadocs/{spigot,bukkit}/` 实测 200；许可边界见社区短文口径 —— Wiki 无开放许可，不入库）。
+- **Spigot 自写短文 / 链接面未写**。
+
+### 6. 自我更正
+
+- 更正**上一节（2026-10-14 · playtest 扩面）第 5 块**里"`data/paper_main/` 未落库"那句 —— 本节已落库，那句作废。
+- 更正**同一节的第 3 块**：当时写 `test-scripts` rc=0；本轮复跑为**环境红**（safe-delete shim），非断言回归。
+
+---
+
+## 2026-10-14 · playtest 扩面：`waitfor` / 观测面两件 / `touch`+`waitfile` 会合 / `inspect_playtest_multi` + 真构件编译腿（维护档）
+
+**第 0 块 · 结论**：把游玩自测从「单客户端 + 固定等待」扩到「**多客户端会合 + 条件等待**」，并给 driver 补了一条**真构件编译腿**。新增 1 个工具（`inspect_playtest_multi`，工具数 **86→87**，全链计数已同步）、1 道门（`assert-playtest-driver-compiles.mjs`，quilt/fabric 1.18.2+1.19.4 **四档 javac 真过**）、driver **3 个新动词**（`waitfor` / `touch` / `waitfile`）与 **2 个观测面字段**（`nearby` / `logTail`）。门链 test-core / test-cli / test-scripts / 写盘门（含 `--selftest`）全 rc=0。**未做成两件**：真机双客户端会合（已授权、未执行）、服务端面（未动）—— 见第 5 块。
+
+### 1. 改了哪些文件
+
+- `mcp-server/src/generators/playtest-driver.ts`：① `assert` 的求值逻辑抽成 **`condEval`**（唯一真源）并新增 verb **`waitfor <kind> <opts…> max=<ticks>`**（轮询等条件、超时判红 `waitfile_timeout`/`waitfor_timeout` 不静默）；② 新增 **`nearbyJson()` / `logTailJson()`** 两个观测面 helper 并把 `nearby` / `logTail` 接进 `state.json`；③ 新增 **`syncPath()` + `touch` / `waitfile`** 一对会合动词并进 `worldIndependent` 白名单；④ 生成物 `README.playtest.md` 的 DSL 表补 3 行、观测面清单补 2 字段；⑤ `PLAYTEST_OBSERVATION_CONTRACT` 补 2 字段
+- `mcp-server/src/playtest-multi/index.ts`：**新建** —— 多客户端联合判读器（逐客户端三态 + 联合判绿 + 锚点 + 会合 marker；保留名 `sync/` 跳过并写 `autoSkipped`；id 唯一；任一目录越出授权根整体拒）
+- `mcp-server/src/wave/register.ts`：新工具的 import / 描述 / schema / `registerTool` / 工具清单五行；DSL 清单补 `waitfor`/`touch`/`waitfile`；`generate_playtest_driver` 的「能力天花板」补主语为**本桥（external_bridge）**
+- `mcp-server/scripts/assert-playtest-driver-compiles.mjs`：**新建门** —— 真构件编译腿（loom `minecraft-merged-named.jar` + `com.mojang/**` 全量库件 + FAPI 替身，`javac -encoding UTF-8`）
+- `mcp-server/scripts/_lib/script-write-guard-check.mjs`：`SCRIPT_WRITE_GUARD_NON_WRITERS` 加 1 条（依据正则锚定 `process.env.MC_SKILL_CACHE || os.tmpdir()` 落点；改到仓库内即豁免失效）
+- `mcp-server/test-scripts.mjs`：编译腿挂进 `REAL_RUN_GATES`（S4 门链普查要求每道门可达）
+- `mcp-server/test-core.mjs`：投毒载荷锚点 `### 11. 日志与依赖诊断（7）` → `（8）`（**断言强度不变**，只让投毒打在活锚上）
+- `AGENTS.md`：能力天花板拆成 **driver 玩家级 / 桥命令级** 两条；工具表补 `inspect_playtest_multi` 行；`generate_playtest_driver` 行的指针补「分路线」
+- `README.md` / `README.en.md`：三条路线表后补「**能力分界**」段；工具数 `86→87`（含 `**86**` 加粗形态）；`§11` 分节计数 `7→8`；补 `inspect_playtest_multi` 行；判读入口补多客户端工具
+- `AUTO_SETUP.md` / `mcp-server/README.md`：工具数 `86→87`（共 7 处，含 `数量 **N**（` 形态）
+- `mcp-server/src/generators/playtest-bridge-mod.ts`：桥的能力天花板 **8 处**补主语为「本桥的」（文件头 / 两处生成物标题 / 各档边界区 / Java javadoc）
+- `community_knowledge/authored/ingame-playtest-automation.md`：桥天花板条补主语 + 新增 **坑 88（`waitfor`）/ 89（`nearby`+`logTail`）/ 90（`touch`+`waitfile` 会合）/ 91（联合判绿三条 + 自动发现的三个坑）**
+- `DELIVERY_LOG.md`：本节
+
+### 2. 判据与反证
+
+- **编译腿能红（不是恒绿假门）**：首跑 **4/4 FAIL** —— 报 `cannot access Message — class file for com.mojang.brigadier.Message not found` / `cannot access Keyable`，查明 `minecraft-merged-named.jar` **不带 MC 自身库件**；补 `com.mojang/**` **70 件**后 4/4 OK。这是实测红 → 修 → 绿，不是自证。
+- **投毒载荷锚点仍活**：把 README 分节计数改成 `（8）` 后，`test-core` 的投毒「README 出现未注册名」当场报 `投毒「README 出现未注册名」应至少报一条问题` ⇒ 说明那条毒**打在活锚上**、门是活的；改锚点后复绿。
+- **写盘门**：新脚本首轮被判 **3 条**（未 import write-guard / `rmSync()` / `mkdirSync()`）；按仓库既有范式登记 NON_WRITERS 豁免（依据正则锚定落点表达式）后 rc=0，`--selftest` 亦 OK（10 例投毒 + 正对照）。
+- **S4 门链普查**：编译腿未挂链时判「孤儿门 ⇒ 手跑绿也不会进 npm test」；挂进 `REAL_RUN_GATES` 后 rc=0。
+- **跨档改写覆盖（新代码不引新版本面）**：新代码只搬既有原语的字面量表达式 ⇒ 各档改写表条款一字未改即覆盖：`fabric 1.14.4` → `player.inventory.getInvStack` / `e.x` / `client.player.x` / `Paths.get`；`forge 1.12.2` → `client.world.loadedEntityList` / `e.posX` / `client.gameDir`。
+- **多客户端判绿反证（四路）**：见第 3 块。
+
+### 3. 验证台账
+
+- `npm run build`（mcp-server）rc=0；`read_lints`（`mcp-server/src` + 新脚本）**0 诊断**
+- `node scripts/assert-playtest-driver-compiles.mjs --require` → **ok**：跑 4 档 / 编译通过 4 / 失败 0 / 缺件跳过 0（`quilt 1.18.2` · `quilt 1.19.4` · `fabric 1.18.2` · `fabric 1.19.4`，各 2 个 class）
+- `inspect_playtest_multi` 四路功能验证（合成证据目录，授权根 = OS tmpdir 下的一次性目录）：① 两绿 + marker 齐全 = `ok:true`（`green 2/2`）② marker 缺一 = `MARKERS_MISSING` ③ 客户端 exit-code=1 = `CLIENT_NOT_GREEN`（`green 1/2`，点名 clientB）④ 目录越出授权根 = `OUTSIDE_AUTHORIZED_ROOT` **整体拒**
+- 逐档生成物核对（`fabric 1.21.11` / `quilt 1.21.11` / `forge 1.20.1` / `forge 1.12.2` / `fabric 1.14.4` / `neoforge 1.21.5`）：`waitfor` + `condEval` + `nearby`/`logTail` + `.split("\\R", -1)` 转义 全 Y；玩家类型逐档一致（`ClientPlayerEntity` → forge/neo `LocalPlayer`、1.12.2 `EntityPlayerSP`）
+- 门链：`test-core` rc=0 · `test-cli` rc=0（自印 `list-tools: 87 tools`）· `test-scripts` rc=0 · `assert-script-write-guard`（含 `--selftest`）rc=0 · `assert-authoring-lint` rc=0 · `assert-playtest-intent-gate` rc=0（51 档执行器生成面）
+- 工具数同步面（86→87）实测：`README.md` 3 处 · `README.en.md` 4 处 · `AUTO_SETUP.md` 5 处 · `mcp-server/README.md` 2 处
+- 授权登记：用户本轮授权原文 + realpath（`F:\MC_GAME` / `F:\MOD_TEST`）已写入 `$MC_SKILL_CACHE/playtest-authorizations.json`（仓外，不动 `.gitignore`）
+
+### 4. 数据侧变更
+
+无（未动 `data/**`，未改任何台账数值）。
+
+### 5. 未做清单
+
+- **真机双客户端会合验证 —— 已授权、本轮未执行**。授权原文与两处 realpath 已记账（见第 3 块末）。未执行原因：需要两次 `gradlew runClient`（各分钟级）+ 供世界（同版本 vanilla 服务端造）+ 双实例 `pauseOnLostFocus:false` + 两个独立 gameDir/driver 入位，属长跑作业；本轮预算内起不动，**不得读成已验**。载体建议：`F:\MC_GAME\<平台>-<版本>-c1|c2` + 共享 `<根>\sync\`（与工具的保留名 `sync/` 对齐）。
+- **服务端面（Paper/Spigot）—— 未动**。上一轮已判定：**不能用模组平台的形式装**（载体 `runClient` vs `runServer`、Bukkit 抽象 API vs `net.minecraft.*`、`plugin.yml`/`onEnable` vs `@Mod`/事件总线、逐档 javap 改写表在插件侧零适用）。要做就得单开一条服务端面（平台 id `paper`/`spigot`、只写服务端规则、判据走服务端日志/事件），**范围需先拍板**（折中档 = 只加服务端 driver 模式 + 结构壳）。
+- `doc/tool-error-codes.md`（`## 2. 86 个工具的错误码覆盖清单`）与 `V2.0.0-RELEASE-NOTES.md` 里的 **「86 个工具」未跟**：二者是 **as-of 历史台账**且不在 `test-cli` 扫描面内（门不红）⇒ 与现值 87 不一致，清不清待拍板。
+- 编译腿只覆盖 **4 档**：本机 `~/.gradle/caches/fabric-loom/` 里只有 `1.14.4-mapped-*` / `1.18.2` / `1.19.4` 有 **yarn-named** merged jar；`1.20.1+` 与 `26.x` 目录里只有 `minecraft-merged.jar`（非 named）⇒ 未入表。FAPI 侧是**替身**（缓存里只有 intermediary 命名的模块件），照旧受「替身只证签名形状，不证类存在」约束。
+
+### 6. 自我更正
+
+- 上一轮口述「第 4 件（失败快照）基本已有」—— 本轮读码后更准：`failIntent` / `finish` **本来就都刷新 `state.json`**，所以本轮只补 `nearby` / `logTail` 两个字段，**没动失败路径**。
+- 上一轮把「能力天花板」当整条链的上限写，容易误读 ⇒ 已拆成 driver（**玩家级**）/ 桥（**命令级**）两条，并在 7 个文件里把主语写死；顺带把「测不了」的范围限定到桥路线。
+- 本轮把 `q/*` 记法更正：`waitfor` 的超时码是 **`waitfor_timeout`**、会合等待是 **`waitfile_timeout`**（两个码不同，便于分诊）。
+
+---
+
+## 2026-10-13 · 「另找完整件」：三档假红风险否掉 + forge ≥1.17 构件拆分事实（维护档）
+
+**第 0 块 · 结论**：按令「另找完整件」，forge 1.14.4 / 1.15.2 / 1.16.5 三档的完整构件**本就齐**（`mapped` 件是 `mci` 的严格超集）——把三档 **150 个唯一 strict-ABSENT 名**过「该版本全部构件」，**136 个仍缺 ⇒ §8.14 记的「可能假红」不成立，本轮零新增真缺陷**。顺带查清一条**会改变判断**的构件事实：forge **≥1.17** 的 `mapped` MC jar **不再带 `net.minecraftforge.fml` 包**（1.17.1 只有 14 类 vs 1.16.5 的 222 类），FML 搬进 `fmlcore`。据此把两处旧说法判为**错**（见第 6 块），并确认 forge 1.13.2–1.20.4 里 **122 个逻辑文件**的 `DistExecutor` 用法**是对的、不得改**（差点误修）。**未动仓内任何规则/技能/文档**，只更新台账与本节。未提交。
+
+### 1. 改了哪些文件
+
+- 台账 `doc/name-provenance-audit.md`：新增 **§8.15**；§8.14 末那条假红风险加「已否掉」指针；§6 复现表补 5 个取证件
+- `DELIVERY_LOG.md`：本节
+- 便签（不入库，`F:\MOD_TEST\`）：`recheck150.mjs`（完整件重核）、`ls-pkg.mjs`、`forge-surface.mjs`、`nf-surface.mjs`、`find-fml-jar.mjs`
+- **未触碰** `forge/**`、`neoforge/**` 任何规则/技能/文档（本轮判明无需改）
+
+### 2. 判据与反证
+
+- **完整件齐不齐（先证全集再逐名核）**：三档各 12–13 件（`binpatched`/`injected`/`inject_src`/`mci`/`srg`/`mapped`/`universal`/`userdev`/`sources`/`launcher` …）；`mapped` 件是 `mci` 的**严格超集**（类集差 0）⇒ 取数面完整
+- **反证 1（假红否掉）**：`recheck150.mjs` 把 150 名过该版本全构件 ⇒ 命中 14 / **仍缺 136**；14 个命中逐条查为无关串（Forge 源码词、MC 字段名、SRG 名）
+- **反证 2（1.17 fml 缺口的真因）**：1.17.1 mapped 件 `net/minecraftforge/fml/` = **14** 类，1.16.5 = **222** 类；`fmlcore-1.17.1/1.18.2/1.19.4/1.20.1/1.20.4` 各带 `DistExecutor`（6 类）⇒ 缺口是**构件拆分**不是删 API
+- **反证 3（NeoForge 边界）**：`fancymodloader:loader` **2.0.17 / 3.0.45** 带 `net/neoforged/fml/DistExecutor`，**4.0.43 起 0**；`neoforge-*` universal/userdev 全 0（含 26.3）
+- **反证 4（防误修）**：grep 全仓 `DistExecutor` ⇒ forge 1.13.2–1.20.4 命中 122 个逻辑文件；按上表判为**合法**，**不动**
+
+### 3. 验证台账
+
+- `node F:\MOD_TEST\recheck150.mjs` ⇒ 1.14.4 命中 6 / 缺 51、1.15.2 命中 5 / 缺 37、1.16.5 命中 3 / 缺 48（合计命中 14 / 仍缺 136）
+- `node F:\MOD_TEST\forge-surface.mjs <forge-1.17.1 mapped jar>` ⇒ Forge 包 **1113** 类，其中 `net/minecraftforge/fml` **14**（同脚本口径下 1.16.5 = **222**）
+- `node F:\MOD_TEST\find-class.mjs DistExecutor <全部 forge 构件>` ⇒ 1.13.2–1.16.5 在 `mapped` 件；1.17.1–1.20.4 在 `fmlcore-*.jar`；`neoforge-*` 全族 0
+- `node F:\MOD_TEST\nf-surface.mjs <neoforge-21.1.248-merged.jar>` ⇒ 9768 类，`net/neoforged/neoforge` 1492、`net/neoforged/fml` **0**
+- **未跑任何门**（未动 `mcp-server/**`、`scripts/**`、`forge/**` 代码或规则）；未 `git add/commit`
+
+### 4. 数据侧变更
+
+无。
+
+### 5. 未做清单
+
+- **量具构件表未补 neoforge 的 fml 件**（`net.neoforged.fancymodloader:loader:<ver>`）：需先把「neoforge 版本 ↔ loader 版本」映射核出来（手上有 `2.0.17 / 3.0.45 / 4.0.43 / 5.0.8 / 7.0.13 / 9.0.18 / 10.0.32-36 / 11.0.5-16 / 12.0.8` 与 `20.4.251 / 20.6.139 / 21.1.248 / 21.3.97 / 21.5.98 / 21.8.54 / 21.10.64 / 21.11.45 / 26.1.2 / 26.2.0`，但**未逐档对上，不猜**）；本轮观测到的 45 个 neoforge ABSENT 全为脚手架自建名 ⇒ 无假红，故未阻塞
+- `DELIVERY_LOG.md` 旧节（`:51` / `:1199`）与 `doc/name-provenance-audit.md` §8.14 末那条**照惯例不改历史行**，由本节闭环
+- 未提交
+
+### 6. 自我更正
+
+- **本轮中途我一度得出「`DistExecutor` 在 1.17 被删」**，并已开始按此排查 forge 1.17.1 / 1.18.2 的规则面（`.cursor/rules/05-events.mdc`、`10-gui.mdc`、`.cursor/skills/mc-events/SKILL.md`，按 grep 命中面共 122 个逻辑文件）。**该结论是错**：真因是 mapped 件不带 fml 包，`fmlcore` 里它在。若先动文档而不先拉构件，会**误修 122 个文件**。教训与 §8.14 同类：**「找不到」在换构件前不等于「不存在」**。
+- 本轮开头沿用的「1.16.5 的 mapped 件已知残缺」（承 §8.14 旧记）**不成立** —— 该件是 `mci` 的严格超集，含 222 个 fml 类。
+- 更早 `DELIVERY_LOG.md:1199` 记的「`DistExecutor` 类本机所有 1.17.1/1.16.x 构件均不含（fml 核心未下载）」**两句都错**：1.16.x 的 `mapped` 件有它；1.17.1+ 的 `fmlcore` 现在就在盘上。
+
+---
+
 ## 2026-10-13 · 核验器「正面」改严 + 摘出 265 行假绿 + 修 2 处真缺陷（维护档）
 
 **第 0 块 · 结论**：这一遍查出一个**结构性漏**（比前几轮任何一条都重要）：前几轮的核验器**判 PRESENT 太宽** —— 一个名字只要在**本机任何 jar** 里出现就算「构件里在」，**不管加载器、不管 MC 版本**。实测 3625 条 PRESENT 里，**354 行**靠别的**加载器**的件作证（`forge|1.12.2` 的 `tickCounter` 靠 `fabric-rendering-v1-*.jar`）、**59 行**靠别的**版本**的件作证（`forge|1.13.2` 的 `FluidType` 靠 `neoforge-26.2-universal.jar`）⇒ **假绿能掩盖真缺陷**。我写了严格版核验器（只准同加载器 + 同 MC 版本作证），**5223 行里 265 行由 PRESENT 降为 ABSENT（49 个唯一名）**，逐条分诊后揪出 **2 处真缺陷**并修掉（3 个文件）：`forge 1.15.2`/`1.16.5` 的 `Items.COPPER_INGOT`（铜是 1.17 才有）、`forge 1.18.2` 规则里漏改的第二处 `RegisterKeyMappingsEvent`。**三门全绿**；未提交。

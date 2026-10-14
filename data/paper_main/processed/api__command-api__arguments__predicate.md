@@ -1,0 +1,87 @@
+---
+title: "Predicates"
+slug: "paper/dev/command-api/arguments/predicate"
+source: papermc/docs@main:src/content/docs/paper/dev/api/command-api/arguments/predicate.mdx
+fetchedWith: fetch-paper-docs.mjs
+fetchedAt: 2026-10-14T04:48:12.650Z
+license: CC-BY-SA-4.0（LICENSE-docs）
+---
+
+
+import DoubleRangeMp4 from "./assets/vanilla-arguments/doublerange.mp4";
+import IntegerRangeMp4 from "./assets/vanilla-arguments/integerrange.mp4";
+import ItemPredicateMp4 from "./assets/vanilla-arguments/itempredicate.mp4";
+
+import Video from "/src/components/Video.astro";
+
+A predicate allows for checking for valid values. These arguments are dedicated to checking whether some sort of value is valid according to user input.
+
+
+## Double range argument
+This argument can be used as a predicate for numbers, which require precise input.
+
+### Example usage
+```java
+Commands.argument("range", ArgumentTypes.doubleRange())
+    .executes(context -> {
+        final Range<Double> range = context.getArgument("range", DoubleRangeProvider.class).range();
+        final CommandSender sender = context.getSource().getSender();
+
+        for (int i = 0; i < 5; i++) {
+            sender.sendRichMessage("Is <index> in bounds? <result>",
+                Placeholder.unparsed("index", String.valueOf(i)),
+                Placeholder.unparsed("result", String.valueOf(range.contains((double) i)))
+            );
+        }
+        return Command.SINGLE_SUCCESS;
+    })
+```
+
+### In-game preview
+<Video src={DoubleRangeMp4} />
+
+
+## Integer range argument
+This argument works very similarly to the double range argument, with the only difference being that this argument only accepts integers.
+
+### Example usage
+```java
+Commands.argument("range", ArgumentTypes.integerRange())
+    .then(Commands.argument("input", IntegerArgumentType.integer())
+        .executes(context -> {
+            final Range<Integer> range = context.getArgument("range", IntegerRangeProvider.class).range();
+            final int input = IntegerArgumentType.getInteger(context, "input");
+            final CommandSender sender = context.getSource().getSender();
+
+            sender.sendRichMessage("<aqua><input></aqua> <result:'<green>is</green>':'<red>is not</red>'/> inside the specified range!",
+                Placeholder.unparsed("input", String.valueOf(input)),
+                Formatter.booleanChoice("result", range.contains(input))
+            );
+            return Command.SINGLE_SUCCESS;
+        })
+    )
+```
+
+### In-game preview
+<Video src={IntegerRangeMp4} />
+
+
+## Item predicate argument
+This argument allows for checking whether an item fits some predicate. It is useful for filtering out certain items based on some criteria.
+
+### Example usage
+```java
+Commands.argument("predicate", ArgumentTypes.itemPredicate())
+    .executes(context -> {
+        final ItemStackPredicate predicate = context.getArgument("predicate", ItemStackPredicate.class);
+        final ItemStack woodenSword = ItemType.WOODEN_SWORD.createItemStack();
+
+        context.getSource().getSender().sendRichMessage("Does predicate include a default wooden sword? <result:'<green>true</green>':'<red>false</red>'>",
+            Formatter.booleanChoice("result", predicate.test(woodenSword))
+        );
+        return Command.SINGLE_SUCCESS;
+    })
+```
+
+### In-game preview
+<Video src={ItemPredicateMp4} />

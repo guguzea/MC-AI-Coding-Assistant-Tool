@@ -198,8 +198,11 @@ public class ExampleMod {
     );
 
     // 在 mod 构造函数中将 DeferredRegister 注册到 modEventBus
-    public ExampleMod(FMLJavaModLoadingContext context) {
-        IEventBus modEventBus = context.getModEventBus();
+    // 1.18.2 实测（javap FMLModContainer.constructMod）：本档 FML **只走无参构造**
+    //   （constructMod 里 getDeclaredConstructor 调用 1 次、空参数组）；注入形
+    //   ExampleMod(FMLJavaModLoadingContext) 是 1.19.4+ 才合法 ⇒ 本档用静态 get() 取 context
+    public ExampleMod() {
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         BLOCKS.register(modEventBus);
         ITEMS.register(modEventBus);
         BLOCK_ENTITIES.register(modEventBus);
@@ -265,8 +268,9 @@ public class ModItems {
 public class ExampleMod {
     public static final String MOD_ID = "examplemod";
 
-    public ExampleMod(FMLJavaModLoadingContext context) {
-        IEventBus modEventBus = context.getModEventBus();
+    // 1.18.2 只走无参构造（同上）；1.19.4+ 才允许注入 FMLJavaModLoadingContext
+    public ExampleMod() {
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         ModBlocks.BLOCKS.register(modEventBus);
         ModItems.ITEMS.register(modEventBus);
         ModBlockEntities.BLOCK_ENTITIES.register(modEventBus);

@@ -539,6 +539,12 @@ function asHandlePlatform(platform?: string): DocPlatform {
     "rift",
     "modloader",
     "bedrock",
+    // 服务端面（插件）：Paper 开发文档
+    "paper",
+    // 服务端面**签名层**：Spigot/Bukkit Javadoc
+    "spigot",
+    // 服务端面签名层：Paper 的 Javadoc（与 paper 的教程面同平台不同树）
+    "paper-api",
   ];
   return (allowed as string[]).includes(p) ? (p as DocPlatform) : "forge";
 }
@@ -589,7 +595,7 @@ function handleError(e: unknown, platform: string = "forge"): CallToolResult {
       ? `请使用 search_${platform}_docs 查询正确的页面 ID（id 必须来自搜索结果）`
       : "请使用 search_docs 查询正确的页面 ID（id 必须来自搜索结果）";
     const hint = rec.code === "UNSUPPORTED_PLATFORM"
-      ? "请使用 platform: forge、neoforge、fabric、quilt、liteloader、rift 或 modloader；基岩请用 search_bedrock_docs"
+      ? "请使用 platform: forge、neoforge、fabric、quilt、liteloader、rift、modloader、paper（服务端插件正文）或 spigot（Bukkit/Spigot 签名面）；基岩请用 search_bedrock_docs"
       : searchHint;
     const message = rec.code === "UNSUPPORTED_PLATFORM"
       ? rec.version ?? rec.message
@@ -627,7 +633,7 @@ notes 说明清单口径：这里是**本仓库已入库**的文档版本，不�
 如需同时查询多个平台，请分别调用 list_doc_versions({ platform: "forge" }) 和 list_doc_versions({ platform: "fabric" })。
 
 参数说明：
-  - platform: 平台（forge/neoforge/fabric/quilt/liteloader/rift/modloader），必填。基岩请用 search_bedrock_docs。`,
+  - platform: 平台（forge/neoforge/fabric/quilt/liteloader/rift/modloader/paper/paper-api/spigot），必填。基岩请用 search_bedrock_docs。`,
   inputSchema: z.object({
     platform: z
       .enum(SEARCH_DOC_PLATFORMS)
@@ -694,7 +700,7 @@ export const SEARCH_DOCS_LIMIT_MAX = 30;
 
 export const searchDocsSchema = {
   name: "search_docs",
-  description: `通用文档搜索，支持多平台（Forge/NeoForge/Fabric/Quilt/LiteLoader/Rift/ModLoader）。基岩请用 search_bedrock_docs。
+  description: `通用文档搜索，支持多平台（Forge/NeoForge/Fabric/Quilt/LiteLoader/Rift/ModLoader/Paper/Spigot）。基岩请用 search_bedrock_docs。
 
 使用方法：
   1. 先调用 search_docs(query) 找出相关页面。
@@ -986,7 +992,7 @@ export async function searchDocs(
 
 export const getDocSummarySchema = {
   name: "get_doc_summary",
-  description: `获取文档页面的章节骨架与摘要，支持多平台（forge/neoforge/fabric/quilt/liteloader/rift/modloader）。基岩请用 get_bedrock_doc_summary。
+  description: `获取文档页面的章节骨架与摘要，支持多平台（forge/neoforge/fabric/quilt/liteloader/rift/modloader/paper/paper-api/spigot）。基岩请用 get_bedrock_doc_summary。
 适用于：判断某篇文档是否包含所需内容时。返回每个章节的标题、摘要和首段概述，用于判断是否需要深入。
 
 ⚠️ platform 和 version 必须对应；Quilt 无此页时会回退 Fabric（fallback=fabric）。FAPI 专属 Registry/ItemGroup 页会拒绝（ok=false，不返回正文）。QSL 不要用 Fabric Registry 页。`,
@@ -1056,7 +1062,7 @@ export async function getDocSummary(
 
 export const getDocFullSchema = {
   name: "get_doc_full",
-  description: `获取文档页面全文，支持多平台（forge/neoforge/fabric/quilt/liteloader/rift/modloader）。基岩请用 get_bedrock_doc_full。
+  description: `获取文档页面全文，支持多平台（forge/neoforge/fabric/quilt/liteloader/rift/modloader/paper/paper-api/spigot）。基岩请用 get_bedrock_doc_full。
 适用于：需要查看 API 完整步骤、事件列表、配置项清单时。
 highlight_key=true（默认）时，关键段落（🔴新手必读、🟠常见错误、🟢示例代码）会突出显示。
 
@@ -1138,7 +1144,7 @@ export async function getDocFull(
 
 export const getDocRelatedSchema = {
   name: "get_doc_related",
-  description: `获取与指定文档页面相关的其他页面列表，支持多平台（forge/neoforge/fabric/quilt/liteloader/rift/modloader）。
+  description: `获取与指定文档页面相关的其他页面列表，支持多平台（forge/neoforge/fabric/quilt/liteloader/rift/modloader/paper/paper-api/spigot）。
 适用于：想了解某个主题，但不知道还需要查阅哪些关联文档时。返回共享最多关键词的其他页面，按相关性降序排列。基岩请用 get_bedrock_doc_related。
 成功时 JSON 根是数组（与其它 platform 相同）。
 

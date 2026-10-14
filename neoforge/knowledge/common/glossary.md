@@ -3,10 +3,12 @@
 ## 核心概念
 
 ### DeferredRegister
-: NeoForge 1.18+ 推荐的注册方式。延迟注册到 `RegistryEvent`，避免在 mod 构造函数执行前引用未注册的内容。
+: NeoForge 1.18+ 推荐的注册方式。延迟注册到 `RegisterEvent`（注册表创建用 `NewRegistryEvent`），避免在 mod 构造函数执行前引用未注册的内容。
+  （`RegistryEvent` 是 **Forge** 的类名，NeoForge 构件里查无 —— 见本目录 `porting/01-api-cross-loader.md`。）
 
-### RegistryObject / DeferredHolder
+### DeferredHolder
 : 持有注册表条目的懒引用。`.get()` 在注册完成后才返回实际对象，可在 lambda 内部安全使用。
+  （NeoForge 真名是 `DeferredHolder`；`RegistryObject` 是 **Forge** 侧的名字，NeoForge 构件里查无。）
 
 ### Mixin
 : SpongePowered Mixin 框架，通过字节码注入修改 Minecraft / NeoForge 类的行为。需在 `neoforge.mods.toml` 中声明。
@@ -63,8 +65,9 @@
 ### FMLClientSetupEvent
 : 客户端专用初始化，在客户端物理端启动时触发。
 
-### AttachCapabilitiesEvent
-: 在实体 / 方块实体上附加 Capability Provider 的事件。
+### RegisterCapabilitiesEvent
+: 注册能力（Capability）的入口。NeoForge 的能力面在 `net.neoforged.neoforge.capabilities` 下。
+  （`AttachCapabilitiesEvent` 是 **Forge** 的类名，NeoForge 构件里查无 —— 见本目录 `porting/01-api-cross-loader.md`。）
 
 ### RegisterEvent
 : 每个注册表触发一次的通知事件。`DeferredRegister` 内部封装了对 `RegisterEvent` 的订阅。

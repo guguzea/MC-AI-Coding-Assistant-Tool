@@ -1,0 +1,134 @@
+---
+title: "io.papermc.paper.registry.keys.DataComponentTypeKeys"
+package: "io.papermc.paper.registry.keys"
+source: https://jd.papermc.io/paper/26.3/io/papermc/paper/registry/keys/DataComponentTypeKeys.html
+sourceType: javadoc
+fetchedWith: fetch-spigot-javadoc.mjs@1
+fetchedAt: 2026-10-14T13:00:27.472Z
+asOfVersion: "26.3.build.178-stable"
+---
+
+**Class DataComponentTypeKeys**
+`@NullMarked @GeneratedClass public final class DataComponentTypeKeys extends Object`
+- `public static final TypedKey<DataComponentType> ADDITIONAL_TRADE_COST`
+- `public static final TypedKey<DataComponentType> ATTACK_ANIMATION`
+- `public static final TypedKey<DataComponentType> ATTACK_RANGE`
+- `public static final TypedKey<DataComponentType> ATTRIBUTE_MODIFIERS`
+- `public static final TypedKey<DataComponentType> AXOLOTL_VARIANT`
+- `public static final TypedKey<DataComponentType> BANNER_PATTERNS`
+- `public static final TypedKey<DataComponentType> BASE_COLOR`
+- `public static final TypedKey<DataComponentType> BEES`
+- `public static final TypedKey<DataComponentType> BLOCK_ENTITY_DATA`
+- `public static final TypedKey<DataComponentType> BLOCK_STATE`
+- `public static final TypedKey<DataComponentType> BLOCK_TRANSFORMER`
+- `public static final TypedKey<DataComponentType> BLOCKS_ATTACKS`
+- `public static final TypedKey<DataComponentType> BREAK_SOUND`
+- `public static final TypedKey<DataComponentType> BREWING_FUEL`
+- `public static final TypedKey<DataComponentType> BUCKET_ENTITY_DATA`
+- `public static final TypedKey<DataComponentType> BUNDLE_CONTENTS`
+- `public static final TypedKey<DataComponentType> CAN_BREAK`
+- `public static final TypedKey<DataComponentType> CAN_PLACE_ON`
+- `public static final TypedKey<DataComponentType> CAT_COLLAR`
+- `public static final TypedKey<DataComponentType> CAT_SOUND_VARIANT`
+- `public static final TypedKey<DataComponentType> CAT_VARIANT`
+- `public static final TypedKey<DataComponentType> CHARGED_PROJECTILES`
+- `public static final TypedKey<DataComponentType> CHICKEN_SOUND_VARIANT`
+- `public static final TypedKey<DataComponentType> CHICKEN_VARIANT`
+- `public static final TypedKey<DataComponentType> COMPOSTABLE`
+- `public static final TypedKey<DataComponentType> CONSUMABLE`
+- `public static final TypedKey<DataComponentType> CONTAINER`
+- `public static final TypedKey<DataComponentType> CONTAINER_LOOT`
+- `public static final TypedKey<DataComponentType> COOKING_FUEL`
+- `public static final TypedKey<DataComponentType> COW_SOUND_VARIANT`
+- `public static final TypedKey<DataComponentType> COW_VARIANT`
+- `public static final TypedKey<DataComponentType> CREATIVE_SLOT_LOCK`
+- `public static final TypedKey<DataComponentType> CUSHION_COLOR`
+- `public static final TypedKey<DataComponentType> CUSTOM_DATA`
+- `public static final TypedKey<DataComponentType> CUSTOM_MODEL_DATA`
+- `public static final TypedKey<DataComponentType> CUSTOM_NAME`
+- `public static final TypedKey<DataComponentType> DAMAGE`
+- `public static final TypedKey<DataComponentType> DAMAGE_RESISTANT`
+- `public static final TypedKey<DataComponentType> DAMAGE_TYPE`
+- `public static final TypedKey<DataComponentType> DEATH_PROTECTION`
+- `public static final TypedKey<DataComponentType> DEBUG_STICK_STATE`
+- `public static final TypedKey<DataComponentType> DYE`
+- `public static final TypedKey<DataComponentType> DYED_COLOR`
+- `public static final TypedKey<DataComponentType> ENCHANTABLE`
+- `public static final TypedKey<DataComponentType> ENCHANTMENT_GLINT_OVERRIDE`
+- `public static final TypedKey<DataComponentType> ENCHANTMENTS`
+- `public static final TypedKey<DataComponentType> ENTITY_DATA`
+- `public static final TypedKey<DataComponentType> EQUIPPABLE`
+- `public static final TypedKey<DataComponentType> FIREWORK_EXPLOSION`
+- `public static final TypedKey<DataComponentType> FIREWORKS`
+- `public static final TypedKey<DataComponentType> FOOD`
+- `public static final TypedKey<DataComponentType> FOX_VARIANT`
+- `public static final TypedKey<DataComponentType> FROG_VARIANT`
+- `public static final TypedKey<DataComponentType> GLIDER`
+- `public static final TypedKey<DataComponentType> HORSE_VARIANT`
+- `public static final TypedKey<DataComponentType> INSTRUMENT`
+- `public static final TypedKey<DataComponentType> INTANGIBLE_PROJECTILE`
+- `public static final TypedKey<DataComponentType> INTERACT_ANIMATION`
+- `public static final TypedKey<DataComponentType> ITEM_MODEL`
+- `public static final TypedKey<DataComponentType> ITEM_NAME`
+- `public static final TypedKey<DataComponentType> JUKEBOX_PLAYABLE`
+- `public static final TypedKey<DataComponentType> KINETIC_WEAPON`
+- `public static final TypedKey<DataComponentType> LLAMA_VARIANT`
+- `public static final TypedKey<DataComponentType> LOCK`
+- `public static final TypedKey<DataComponentType> LODESTONE_TRACKER`
+- `public static final TypedKey<DataComponentType> LORE`
+- `public static final TypedKey<DataComponentType> MAP_DECORATIONS`
+- `public static final TypedKey<DataComponentType> MAP_ID`
+- `public static final TypedKey<DataComponentType> MAP_POST_PROCESSING`
+- `public static final TypedKey<DataComponentType> MAX_DAMAGE`
+- `public static final TypedKey<DataComponentType> MAX_STACK_SIZE`
+- `public static final TypedKey<DataComponentType> MINIMUM_ATTACK_CHARGE`
+- `public static final TypedKey<DataComponentType> MOB_VISIBILITY`
+- `public static final TypedKey<DataComponentType> MOOSHROOM_VARIANT`
+- `public static final TypedKey<DataComponentType> NOTE_BLOCK_SOUND`
+- `public static final TypedKey<DataComponentType> OMINOUS_BOTTLE_AMPLIFIER`
+- `public static final TypedKey<DataComponentType> PAINTING_VARIANT`
+- `public static final TypedKey<DataComponentType> PARROT_VARIANT`
+- `public static final TypedKey<DataComponentType> PIERCING_WEAPON`
+- `public static final TypedKey<DataComponentType> PIG_SOUND_VARIANT`
+- `public static final TypedKey<DataComponentType> PIG_VARIANT`
+- `public static final TypedKey<DataComponentType> POT_DECORATIONS`
+- `public static final TypedKey<DataComponentType> POTION_CONTENTS`
+- `public static final TypedKey<DataComponentType> POTION_DURATION_SCALE`
+- `public static final TypedKey<DataComponentType> PROFILE`
+- `public static final TypedKey<DataComponentType> PROVIDES_BANNER_PATTERNS`
+- `public static final TypedKey<DataComponentType> PROVIDES_POTTERY_PATTERN`
+- `public static final TypedKey<DataComponentType> PROVIDES_TRIM_MATERIAL`
+- `public static final TypedKey<DataComponentType> RABBIT_VARIANT`
+- `public static final TypedKey<DataComponentType> RARITY`
+- `public static final TypedKey<DataComponentType> RECIPES`
+- `public static final TypedKey<DataComponentType> REPAIR_COST`
+- `public static final TypedKey<DataComponentType> REPAIRABLE`
+- `public static final TypedKey<DataComponentType> SALMON_SIZE`
+- `public static final TypedKey<DataComponentType> SHEEP_COLOR`
+- `public static final TypedKey<DataComponentType> SHULKER_COLOR`
+- `public static final TypedKey<DataComponentType> SIGN_TEXT_BACK`
+- `public static final TypedKey<DataComponentType> SIGN_TEXT_FRONT`
+- `public static final TypedKey<DataComponentType> STORED_ENCHANTMENTS`
+- `public static final TypedKey<DataComponentType> SULFUR_CUBE_CONTENT`
+- `public static final TypedKey<DataComponentType> SUSPICIOUS_STEW_EFFECTS`
+- `public static final TypedKey<DataComponentType> TOOL`
+- `public static final TypedKey<DataComponentType> TOOLTIP_DISPLAY`
+- `public static final TypedKey<DataComponentType> TOOLTIP_STYLE`
+- `public static final TypedKey<DataComponentType> TRIM`
+- `public static final TypedKey<DataComponentType> TROPICAL_FISH_BASE_COLOR`
+- `public static final TypedKey<DataComponentType> TROPICAL_FISH_PATTERN`
+- `public static final TypedKey<DataComponentType> TROPICAL_FISH_PATTERN_COLOR`
+- `public static final TypedKey<DataComponentType> UNBREAKABLE`
+- `public static final TypedKey<DataComponentType> USE_COOLDOWN`
+- `public static final TypedKey<DataComponentType> USE_EFFECTS`
+- `public static final TypedKey<DataComponentType> USE_REMAINDER`
+- `public static final TypedKey<DataComponentType> VILLAGER_VARIANT`
+- `public static final TypedKey<DataComponentType> VILLAGER_FOOD`
+- `public static final TypedKey<DataComponentType> WAXED`
+- `public static final TypedKey<DataComponentType> WEAPON`
+- `public static final TypedKey<DataComponentType> WOLF_COLLAR`
+- `public static final TypedKey<DataComponentType> WOLF_SOUND_VARIANT`
+- `public static final TypedKey<DataComponentType> WOLF_VARIANT`
+- `public static final TypedKey<DataComponentType> WRITABLE_BOOK_CONTENT`
+- `public static final TypedKey<DataComponentType> WRITTEN_BOOK_CONTENT`
+- `public static final TypedKey<DataComponentType> ZOMBIE_NAUTILUS_VARIANT`

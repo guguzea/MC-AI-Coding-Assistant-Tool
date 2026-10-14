@@ -1,0 +1,121 @@
+---
+title: "io.papermc.paper.datacomponent.DataComponentTypes"
+package: "io.papermc.paper.datacomponent"
+source: https://jd.papermc.io/paper/26.3/io/papermc/paper/datacomponent/DataComponentTypes.html
+sourceType: javadoc
+fetchedWith: fetch-spigot-javadoc.mjs@1
+fetchedAt: 2026-10-14T13:00:27.472Z
+asOfVersion: "26.3.build.178-stable"
+---
+
+**Class DataComponentTypes**
+`@NullMarked @MinecraftVersionDependent public final class DataComponentTypes extends Object`
+- `public static final DataComponentType.Valued<@IntRange(from=1L,to=99L) Integer> MAX_STACK_SIZE`
+- `public static final DataComponentType.Valued<@Positive Integer> MAX_DAMAGE`
+- `public static final DataComponentType.Valued<@NonNegative Integer> DAMAGE`
+- `public static final DataComponentType.NonValued UNBREAKABLE`
+- `public static final DataComponentType.Valued<UseEffects> USE_EFFECTS`
+- `public static final DataComponentType.Valued<Component> CUSTOM_NAME`
+- `public static final DataComponentType.Valued<Float> MINIMUM_ATTACK_CHARGE`
+- `public static final DataComponentType.Valued<DamageType> DAMAGE_TYPE`
+- `public static final DataComponentType.Valued<Component> ITEM_NAME`
+- `public static final DataComponentType.Valued<Key> ITEM_MODEL`
+- `public static final DataComponentType.Valued<ItemLore> LORE`
+- `public static final DataComponentType.Valued<ItemRarity> RARITY`
+- `public static final DataComponentType.Valued<ItemEnchantments> ENCHANTMENTS`
+- `public static final DataComponentType.Valued<ItemAdventurePredicate> CAN_PLACE_ON`
+- `public static final DataComponentType.Valued<ItemAdventurePredicate> CAN_BREAK`
+- `public static final DataComponentType.Valued<ItemAttributeModifiers> ATTRIBUTE_MODIFIERS`
+- `public static final DataComponentType.Valued<CustomModelData> CUSTOM_MODEL_DATA`
+- `public static final DataComponentType.Valued<TooltipDisplay> TOOLTIP_DISPLAY`
+- `public static final DataComponentType.Valued<@NonNegative Integer> REPAIR_COST`
+- `public static final DataComponentType.Valued<Boolean> ENCHANTMENT_GLINT_OVERRIDE`
+- `public static final DataComponentType.NonValued INTANGIBLE_PROJECTILE`
+- `public static final DataComponentType.Valued<FoodProperties> FOOD`
+- `public static final DataComponentType.Valued<Consumable> CONSUMABLE`
+- `public static final DataComponentType.Valued<UseRemainder> USE_REMAINDER`
+- `public static final DataComponentType.Valued<UseCooldown> USE_COOLDOWN`
+- `public static final DataComponentType.Valued<DamageResistant> DAMAGE_RESISTANT`
+- `public static final DataComponentType.Valued<Tool> TOOL`
+- `public static final DataComponentType.Valued<Weapon> WEAPON`
+- `public static final DataComponentType.Valued<AttackRange> ATTACK_RANGE`
+- `public static final DataComponentType.Valued<Enchantable> ENCHANTABLE`
+- `public static final DataComponentType.Valued<Equippable> EQUIPPABLE`
+- `public static final DataComponentType.Valued<Repairable> REPAIRABLE`
+- `public static final DataComponentType.NonValued GLIDER`
+- `public static final DataComponentType.Valued<Key> TOOLTIP_STYLE`
+- `public static final DataComponentType.Valued<DeathProtection> DEATH_PROTECTION`
+- `public static final DataComponentType.Valued<BlocksAttacks> BLOCKS_ATTACKS`
+- `public static final DataComponentType.Valued<PiercingWeapon> PIERCING_WEAPON`
+- `public static final DataComponentType.Valued<KineticWeapon> KINETIC_WEAPON`
+- `public static final DataComponentType.Valued<SwingAnimation> ATTACK_ANIMATION`
+- `public static final DataComponentType.Valued<SwingAnimation> INTERACT_ANIMATION`
+- `public static final DataComponentType.Valued<VillagerFood> VILLAGER_FOOD`
+- `public static final DataComponentType.Valued<ItemEnchantments> STORED_ENCHANTMENTS`
+- `public static final DataComponentType.Valued<DyeColor> DYE`
+- `public static final DataComponentType.Valued<DyedItemColor> DYED_COLOR`
+- `public static final DataComponentType.Valued<MapId> MAP_ID`
+- `public static final DataComponentType.Valued<MapDecorations> MAP_DECORATIONS`
+- `public static final DataComponentType.Valued<MapPostProcessing> MAP_POST_PROCESSING`
+- `public static final DataComponentType.Valued<ChargedProjectiles> CHARGED_PROJECTILES`
+- `public static final DataComponentType.Valued<BundleContents> BUNDLE_CONTENTS`
+- `public static final DataComponentType.Valued<PotionContents> POTION_CONTENTS`
+- `public static final DataComponentType.Valued<Float> POTION_DURATION_SCALE`
+- `public static final DataComponentType.Valued<SuspiciousStewEffects> SUSPICIOUS_STEW_EFFECTS`
+- `public static final DataComponentType.Valued<WritableBookContent> WRITABLE_BOOK_CONTENT`
+- `public static final DataComponentType.Valued<WrittenBookContent> WRITTEN_BOOK_CONTENT`
+- `public static final DataComponentType.Valued<ItemArmorTrim> TRIM`
+- `public static final DataComponentType.Valued<MusicInstrument> INSTRUMENT`
+- `public static final DataComponentType.Valued<TrimMaterial> PROVIDES_TRIM_MATERIAL`
+- `public static final DataComponentType.Valued<OminousBottleAmplifier> OMINOUS_BOTTLE_AMPLIFIER`
+- `public static final DataComponentType.Valued<JukeboxPlayable> JUKEBOX_PLAYABLE`
+- `public static final DataComponentType.Valued<RegistryKeySet<PatternType>> PROVIDES_BANNER_PATTERNS`
+- `public static final DataComponentType.Valued<List<Key>> RECIPES`
+- `public static final DataComponentType.Valued<LodestoneTracker> LODESTONE_TRACKER`
+- `public static final DataComponentType.Valued<FireworkEffect> FIREWORK_EXPLOSION`
+- `public static final DataComponentType.Valued<Fireworks> FIREWORKS`
+- `public static final DataComponentType.Valued<ResolvableProfile> PROFILE`
+- `public static final DataComponentType.Valued<Key> NOTE_BLOCK_SOUND`
+- `public static final DataComponentType.Valued<BannerPatternLayers> BANNER_PATTERNS`
+- `public static final DataComponentType.Valued<DyeColor> BASE_COLOR`
+- `public static final DataComponentType.Valued<PotDecorations> POT_DECORATIONS`
+- `public static final DataComponentType.Valued<ItemContainerContents> CONTAINER`
+- `public static final DataComponentType.Valued<BlockItemDataProperties> BLOCK_DATA`
+- `public static final DataComponentType.Valued<SulfurCubeContent> SULFUR_CUBE_CONTENT`
+- `public static final DataComponentType.Valued<SeededContainerLoot> CONTAINER_LOOT`
+- `public static final DataComponentType.Valued<Key> BREAK_SOUND`
+- `public static final DataComponentType.Valued<MobVisibility> MOB_VISIBILITY`
+- `public static final DataComponentType.Valued<Villager.Type> VILLAGER_VARIANT`
+- `public static final DataComponentType.Valued<Wolf.Variant> WOLF_VARIANT`
+- `public static final DataComponentType.Valued<Wolf.SoundVariant> WOLF_SOUND_VARIANT`
+- `public static final DataComponentType.Valued<DyeColor> WOLF_COLLAR`
+- `public static final DataComponentType.Valued<Fox.Type> FOX_VARIANT`
+- `public static final DataComponentType.Valued<Salmon.Variant> SALMON_SIZE`
+- `public static final DataComponentType.Valued<Parrot.Variant> PARROT_VARIANT`
+- `public static final DataComponentType.Valued<TropicalFish.Pattern> TROPICAL_FISH_PATTERN`
+- `public static final DataComponentType.Valued<DyeColor> TROPICAL_FISH_BASE_COLOR`
+- `public static final DataComponentType.Valued<DyeColor> TROPICAL_FISH_PATTERN_COLOR`
+- `public static final DataComponentType.Valued<MushroomCow.Variant> MOOSHROOM_VARIANT`
+- `public static final DataComponentType.Valued<Rabbit.Type> RABBIT_VARIANT`
+- `public static final DataComponentType.Valued<Pig.Variant> PIG_VARIANT`
+- `public static final DataComponentType.Valued<Pig.SoundVariant> PIG_SOUND_VARIANT`
+- `public static final DataComponentType.Valued<Cow.Variant> COW_VARIANT`
+- `public static final DataComponentType.Valued<Cow.SoundVariant> COW_SOUND_VARIANT`
+- `public static final DataComponentType.Valued<Chicken.Variant> CHICKEN_VARIANT`
+- `public static final DataComponentType.Valued<Chicken.SoundVariant> CHICKEN_SOUND_VARIANT`
+- `public static final DataComponentType.Valued<Frog.Variant> FROG_VARIANT`
+- `public static final DataComponentType.Valued<Horse.Color> HORSE_VARIANT`
+- `public static final DataComponentType.Valued<Art> PAINTING_VARIANT`
+- `public static final DataComponentType.Valued<Llama.Color> LLAMA_VARIANT`
+- `public static final DataComponentType.Valued<Axolotl.Variant> AXOLOTL_VARIANT`
+- `public static final DataComponentType.Valued<ZombieNautilus.Variant> ZOMBIE_NAUTILUS_VARIANT`
+- `public static final DataComponentType.Valued<Cat.Type> CAT_VARIANT`
+- `public static final DataComponentType.Valued<Cat.SoundVariant> CAT_SOUND_VARIANT`
+- `public static final DataComponentType.Valued<DyeColor> CAT_COLLAR`
+- `public static final DataComponentType.Valued<DyeColor> SHEEP_COLOR`
+- `public static final DataComponentType.Valued<DyeColor> SHULKER_COLOR`
+- `public static final DataComponentType.Valued<PotPatternType> PROVIDES_POTTERY_PATTERN`
+- `public static final DataComponentType.Valued<SignText> SIGN_TEXT_FRONT`
+- `public static final DataComponentType.Valued<SignText> SIGN_TEXT_BACK`
+- `public static final DataComponentType.NonValued WAXED`
+- `public static final DataComponentType.Valued<DyeColor> CUSHION_COLOR`

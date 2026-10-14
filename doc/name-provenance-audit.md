@@ -257,6 +257,11 @@
 | `F:\MOD_TEST\verify-strict.mjs`（+ `mk-strict.mjs` 生成器） | **严格版核验器**：构件只准为「同加载器 + 同 MC 版本」作证 —— §8.14 起以此为准 |
 | `F:\MOD_TEST\depsaudit2.mjs` / `strict-diff.mjs` / `dump-drops.mjs` | 正面证据的版本/平台体检、宽松↔严格差异、摘下的行 |
 | `F:\MOD_TEST\verify-strict.json` / `strict-drops.json` | 严格版逐行判决 / 被摘下的 265 行明细 |
+| `F:\MOD_TEST\recheck150.mjs` | 三档（1.14.4/1.15.2/1.16.5）strict-ABSENT 的**完整件**重核：逐版本扫全部同版本构件（class 常量池 + 类条目 + 源码 jar 原文）—— §8.15 |
+| `F:\MOD_TEST\ls-pkg.mjs` / `forge-surface.mjs` / `nf-surface.mjs` / `find-class.mjs` | 包清单 / `net/minecraftforge` 包分布 / 任意包面计数 / 类名正则扫（§8.15 构件结构取证） |
+| `F:\MOD_TEST\adj-verify.mjs` / `adj-verify2.mjs` / `adj-disk.mjs` / `adj-counts.mjs` / `a25-exact.mjs` / `aprime.mjs` / `javap-class.mjs` | 外部审计 A1–A28 的独立复核（构件声明表 / 盘面 / 计数 / 精确类名 / 宿主类×成员）—— §8.16 |
+| `F:\MOD_TEST\extract-v2.mjs` | 抽取面原型：把「行内 code / frontmatter」两面也抽出来，量「量具盲区新增候选」—— §8.16(2) |
+| `G:\graalvm-jdk-21_windows-x64_bin\graalvm-jdk-21.0.12+7.1\bin\javap.exe` | 字节码级复核（§8.16 的 A7 `constructMod` 判据；PATH 上的 java 是 Java 8，须写全路径） |
 
 不变量（本轮实测）：① 量具行凡来自整行注释者 = **0**；② 各包 JSON 求和 = 总表（扫描面扩到 `code-patterns/knowledge/AGENTS/scaffold` 后 nowhere = 3073）；③ 修复后非镜像面内旧名零残留（仅剩披露注释与「该版本确实存在」的用法）。
 
@@ -617,7 +622,135 @@ fabric 1.14.4 / 1.16.5 / forge 1.12.2 / liteloader 1.12.2 的行（共 648）已
 
 **仍是「不定 / 假红风险」（诚实记账）**：
 
-- `forge 1.14.4` / `1.15.2` 的映射库是 `zero-rows`、`1.16.5` 的 mapped 件已知残缺 ⇒ 这三档的 strict-ABSENT **可能是假红**（缺类 ≠ 不存在）。
+- ~~`forge 1.14.4` / `1.15.2` 的映射库是 `zero-rows`、`1.16.5` 的 mapped 件已知残缺 ⇒ 这三档的 strict-ABSENT **可能是假红**（缺类 ≠ 不存在）~~ → **§8.15 已复核否掉**：完整件重核，150 名里 136 名仍缺，非假红；且「1.16.5 mapped 件残缺」本身不成立。
 - 短名（如 `tickCounter`）即使在同档件里也可能靠**无关字符串**命中 ⇒ 严格版只证「版本/平台不矛盾」，不证「成员位语义正确」。
 - 三方库 API、`forge 1.12.2` 的 MCP 可读成员名、Architectury 的 `ExpectPlatform`：本机无件 ⇒ 未核实。
 - 未扫面：根 `*.md` / `community_knowledge` / `mcp-server`（用户已判为不必扫）。
+
+### 8.15 第四批 ·「另找完整件」——三档假红风险否掉 + forge ≥1.17 构件拆分事实（本轮，用户点名）
+
+**结论**：forge 1.14.4 / 1.15.2 / 1.16.5 的 strict-ABSENT **不是假红**（§8.14 末那条风险作废）；顺带查清一条**会改变判断**的构件事实（forge ≥1.17 的 `net.minecraftforge.fml` 不在 mapped 件里），并据此更正两处旧说法。**本轮零新增真缺陷**。
+
+#### (1) 完整件是什么
+三档在 `.gradle\caches` 里各有 **12–13 件**：`forge_gradle\minecraft_user_repo\...\forge\<ver>\` 的 `binpatched` / `injected` / `inject_src` / `mci` / `srg` + `_mapped_*` 的 `mapped` / `launcher`；`forge_gradle\maven_downloader\...\forge\<ver>\` 的 `universal` / `userdev` / `sources` / `launcher`；加 `modules-2\...\forge\<ver>\...` 的 `launcher`。`mapped` 件是 `mci` 的**严格超集**（类集差 0，仅差 `package-info` 与 `realmsclient`）⇒ 取数面完整。
+
+#### (2) 逐名重核（`F:\MOD_TEST\recheck150.mjs`）
+把三档的 **150 个唯一「版本|名」（197 行）strict-ABSENT** 过**该版本全部构件**：
+
+| 版本 | 唯一名 | 完整件里命中 | 仍缺 |
+| --- | --- | --- | --- |
+| 1.14.4 | 57 | 6 | 51 |
+| 1.15.2 | 42 | 5 | 37 |
+| 1.16.5 | 51 | 3 | 48 |
+
+**136/150 仍缺 ⇒ 无假红**。14 个命中全是无关字符串（Forge 源码词 `onRender`/`DataGen`/`onSetup`、MC 字段名 `attackDamageIn`/`attackSpeedIn`/`particleMaxAge`/`entityYaw`、SRG 名 `func_110143_aJ`/`field_70725_aQ`）。136 个逐条看过，三类全是预期项：① 读者自建处理器/字段名（`onClientSetup`/`onServerStarting`/`ModCapabilities`/`slotStack`…）；② `knowledge/porting/**`、`knowledge/version-changes/**` 的**另一侧**加载器名（`FabricLoader`/`DeferredHolder`/`ItemStackTemplate`/`RegistrySupplier`/`ExpectPlatform`…）；③ `knowledge/antipatterns/**` 与 `09-anti-patterns.mdc` 里**故意写错**的例子（`ModifyBlockMessage`/`nextDiscriminator`）。另有 JEI 库名（`IModPlugin`/`JeiPlugin`）本机无件。
+
+唯一像嫌疑犯的 `ITickableBlockEntity`（`forge/1.16.5/.cursor/rules/02-block.mdc:66`）：该行**原就带 `TODO(未核实)`**（原写 `ContainerProvider`/`ITickableBlockEntity`、本档语料 0 命中、已指向 `ITickableTileEntity`）⇒ 非缺陷。
+
+#### (3) 构件拆分事实（本轮新发现）
+forge **≥1.17** 的 `mapped` MC jar **不再带 `net.minecraftforge.fml` 包** —— 1.17.1 mapped 件里该包只有 **14** 类，1.16.5 有 **222** 类。FML 搬进独立构件 `net.minecraftforge:fmlcore`（+ `fmlloader` / `javafmllanguage`）。
+
+⇒ **只读 mapped 件会给 forge ≥1.17 的 `net.minecraftforge.fml.*` 造成假 ABSENT**。`artifact-map2.json` 的 `deps` 已含 `fmlcore`（1.17.1–1.20.4 各档），故本轮量具**没**踩到；但这是一条必须记住的前提。
+
+#### (4) 由此推翻「`DistExecutor` 在 1.17 被删」的误读
+按 (3) 只看 mapped 件会得「`DistExecutor` 1.17.1/1.18.2 = 0」；拉齐构件后真值：
+
+| 版本线 | `DistExecutor` 在哪 | 读数 |
+| --- | --- | --- |
+| forge 1.13.2 / 1.14.4 / 1.15.2 / 1.16.5 | `mapped` 件（`net/minecraftforge/fml/DistExecutor`，6 类） | 在场 |
+| forge 1.17.1 / 1.18.2 / 1.19.4 / 1.20.1 / 1.20.4 | `fmlcore-<ver>.jar`（同 6 类） | 在场 |
+| NeoForge | `net.neoforged.fancymodloader:loader` **2.0.17 / 3.0.45** 才有；**loader 4.0.43 起 0**；所有 `neoforge-*` universal/userdev（含 26.x）0 | 1.20.5 起删 |
+
+⇒ forge 1.13.2–1.20.4 规则/技能里 **122 个逻辑文件**的 `DistExecutor.runWhenOn` / `unsafeRunWhenOn` **是对的，不得改**；规则树 `forge/1.12.2/knowledge/version-changes/1.12.x.md:65`「1.18+ 用 `DistExecutor`」也对。`community_knowledge/authored/neoforge-payload-networking.md:82`「26.x 已弃用」方向对，实际**删于 1.20.5**。
+
+#### (5) NeoForge 侧的潜在盲区（本轮未观测到假红）
+neoforge ≥1.20.6 各档，`artifact-map2.json` 的主件是 `neoforge-<ver>-merged.jar`，而 merged / universal 件**只含 `net/neoforged/neoforge/**`**（1.21.1 实测 9768 类里 `net/neoforged/neoforge` 1492、`net/neoforged/fml` **0**）。`net.neoforged.fml.*` 在 **`net.neoforged.fancymodloader:loader:<ver>.jar`**（1.21.1 对应 `loader-11.0.16.jar`：`net/neoforged/fml/common/Mod`、`ModContainer` 在场）——**该件不在量具的构件表内**。
+
+观测到的 45 个 neoforge ABSENT 全是**脚手架自建方法名**（`onServerStarting`/`addCreative`/`commonSetup`/`validateItemName`）与移植/反模式面名字 ⇒ **无假红**；但这是躺着的地雷（任何 NeoForge FML 名若被量具判 ABSENT，必须先按本条补件再信）。
+
+#### (6) 复现
+`node F:\MOD_TEST\recheck150.mjs`（完整件重核）｜`node F:\MOD_TEST\ls-pkg.mjs <jar> <包前缀>`（包清单）｜`node F:\MOD_TEST\forge-surface.mjs <jar>`（`net/minecraftforge` 包分布）｜`node F:\MOD_TEST\nf-surface.mjs <jar>`（任意包面）｜`node F:\MOD_TEST\find-class.mjs <正则> <jar…>`（类名扫）。
+
+### 8.16 第五批 · 外部审计 A1–A28 逐条独立复核 +「没查出来」的修法
+
+**背景**：会话外另一 agent 产出 `DEEP_RESEARCH_REPO_AUDIT.md`（仓库根，`.gitignore:136` 已忽略）+ scratch `D:/mc-skill-temp/repo-audit/`（`ADJ-CR.md` A1–A28 全文、`FINAL-findings.tsv` 1476 条）。其 §3 族 A / A′ / B / G / H 与 §4 的 A1–A28 直指「**正文名字 vs 它自称的版本**」这一类 —— 与本台账前几批同一战场。本批**不采信其自报**，逐条自跑真构件 / 源码原文 / 盘面重核。
+
+#### (1) 逐条判决（A1–A28）
+
+| # | 报告结论 | 我的复核方法与读数 | 判 |
+| --- | --- | --- | --- |
+| A1 | forge 1.20.1 反模式「正确方案」用已删 `RenderGameOverlayEvent.Post` | 构件：1.18.2 universal `RenderGameOverlayEvent*`=**9** / 1.20.1=**0**（`RenderGuiOverlayEvent*`=**3**）；现盘已修 | **成立（已被并发修掉）** |
+| A2 | `sync-skills.ps1` 剪枝集单一来源、空集即整目录删 | 源码 `:168-211` 逐行：`$cursorSkillNames` 只由 `$cursorSkillsDir` 填；剪枝段无「集合非空」守卫 | **成立** |
+| A3 | `generateModel` item 分支 ≤1.21.3 正确 + 自披露 | 源码 `:36-58` + `warnings:["骨架不随 pack_format 变"]` | **成立（设计取舍）** |
+| A4 | cloth `versions.json` 同字段混两套命名空间 | 逐 slot 读：≤1.21.3 无后缀 / 1.21.4+ 带 `+fabric`；**另见 1.21.11=`21.11.153` 无后缀**（夹在中间，比报告更乱）；1.14.4=`TODO(未核实)`、1.19.4=state `commented`（按设计 fail-closed）。maven 可达性**仍未核实**（探针无效） | **成立（更乱）** |
+| A5 | 根文档计数全对 | fabric rules=**154** ✓、neoforge **13** 目录 ✓、forge rules=**125** ✓；**quilt rules=40**（报告写 32，偏高）；`registerTool(` 现 **87**（报告当时 86，已由 A17 取代） | **大体成立；quilt 一项计数错** |
+| A6 | `FMLJavaModLoadingContext` 宿主随版本迁移 | 1.18.2：universal=0 / fmlcore=0 / **javafmllanguage=1** | **成立** |
+| A7 | `@Mod` 注入形分界在 1.19.4 | javap 字节码 `FMLModContainer.constructMod()` 里 `getDeclaredConstructor` 调用数：1.17.1=**1** / 1.18.2=**1** / 1.19.4=**2**+`getParameterCount`+`NoSuchMethodException` 捕获表 / 1.20.1=**2** | **成立** |
+| A8 | `gradlew` 44 条全 `100644` | `git config core.fileMode`=**false**；`git ls-files -s` 里 gradlew=**44**（`100644` 44 / `100755` 0） | **成立** |
+| A9 | fabric 1.21.10 AGENTS 三断言假 | 逐句对 `pack.meta.json`：`mode`=`gradle`✓假 / `buildVerified`=`true`✓假 / 三件套在盘（provenance 记 sha256）✓假 | **成立** |
+| A10 | A9 子断言「无 Gradle 键」字面为真 | 口径备注，未单独复跑 | **备注** |
+| A11 | 1.13.2 pack_format 台账自称「已消解」而盘上三面不同步 | `glossary.md:24`=**6** / `00-project-setup.mdc:239`=**4** / `pack.mcmeta`=**4** / `porting/00-porting-guide.md:98`「~~pack_format~~（已消解）…两侧一致」 | **成立** |
+| A12 | `TemplateManager` 在 1.18.2 不存在 | 构件：`TemplateManager`=**0**、`StructureTemplateManager`=**0**、`StructureManager`=**1**（本档真名）；jar 命名代自证 mojmap。**但全仓分类 205 处：围栏代码 0、frontmatter 184、`mc-multiblock` 的「禁止默写」清单 112** ⇒ 它**不是**「照抄即编译不过」 | **存在性成立；「80 文件」定性偏高** |
+| A13 | fabric 26.1.2 无 `hasPermission(int)` | 构件 `CommandSourceStack`：`hasPermission`=**0**；权限面=`permissions()` / `withPermission` / `withMaximumPermission` | **成立** |
+| A14 | forge 1.20.1 `mc-recipe` 教 `FinishedRecipe` 的 1.21 成员名 | 构件真名 `getId/getType/getAdvancementId/serializeAdvancement()`；文档写 `id/type/advancement/serializeAdvancement(JsonObject)`（实为 **3 改名 + 1 签名差**，报告写 4/4 略夸） | **成立** |
+| A15 | fabric 1.21.3 规则教 loom `'1.8'` 且谎称同值 | maven HEAD：`1.8.pom`=**404** / 正控 `1.8.13.pom`=**200**；scaffold `build.gradle:12`=`1.8.13` | **成立** |
+| A16 | `generate_network_packet` 4 个 forge 档一文件两 public 顶层类 | 实跑 CLI：1.16.5=`[NetworkHandler, TestPacket]`+单 `suggestedPath`；1.20.1=`[TestPacket]` | **成立** |
+| A17 | 工具数 86 vs 87 | `registerTool(`=**87**（tool-registry 46 + wave/register 41）；README 3×87 + 2×86、AGENTS 1×86 | **成立** |
+| A18 | fabric 1.21.8 AGENTS 四断言全假 | 同 A9 形 | **成立** |
+| A19 | driver `startRound()` 漏重置 5 个观测静态位 | 源码：`startRound()`（`:4208-4230`）重置 17 项，**不含** `blockBefore/:2667`、`targetPos`、`guiOpened`、`guiClicked`、`guiClosed`；`:2920/:3491` 的 `if (blockBefore.isEmpty())` 守卫因此从第 2 轮起恒假 | **成立** |
+| A20 | `DeferredRegister.Entities` 1.21.5 才有 | 逐档构件 `DeferredRegister$Entities`：20.4=**0** / 21.1=**0** / 21.3=**0** / 21.5=**1** / 21.8=**1** / 26.1=**1**；21.1 嵌套类=`Blocks,DataComponents,Items,RegistryHolder` | **成立** |
+| A21 | `NeoForgeRegistries` 无 `SOUND_EVENTS/BLOCKS/ENTITY_TYPES/ATTRIBUTES` | 构件 21.1.248 字段 10 个（`…FLUID_TYPES/HOLDER_SET_TYPES/INGREDIENT_TYPES/FLUID_INGREDIENT_TYPES/CONDITION_SERIALIZERS/ATTACHMENT_TYPES`），四名 **0 命中** | **成立** |
+| A22 | 根 `neoforge/scaffold` 面向 1.20.4 却发 `neoforge.mods.toml` | 盘上：根 scaffold `gradle.properties`=1.20.4/20.4.237，发 `neoforge.mods.toml`；版本档 1.20.4→`mods.toml`、1.20.6+→`neoforge.mods.toml`。FML loader：`loader-2.0.17` 含该字面量=**0**、`3.0.45`=**4** | **成立** |
+| A23 | forge 1.20.1 `mc-blockentity` 三处编译不过 | 构件：`BlockEntity.handleUpdateTag`=**0**；`BlockEntityRenderer` `interface`=**true**；`BlockEntityType$Builder.of` 单重载 `(BlockEntitySupplier, Block...)` **无 Set 形** | **成立** |
+| A24 | `mc-fluid` 的 `still`/`flowing` 两实参写反 | 官方 sources `ForgeFlowingFluid.java:204` = `Properties(fluidType, **still**, **flowing**)`；文档 `(MY_FLUID_TYPE, MY_FLUID, MY_FLUID_SOURCE)` 正好对调 | **成立** |
+| A25 | NeoForge 词表收 Forge 专属 `AttachCapabilitiesEvent`/`RegistryObject`/`RegistryEvent` | 构件精确类名：`AttachCapabilitiesEvent` neoforge=**0**/forge=**1**；`RegistryObject` **0**/**1**；`DeferredHolder` **1**/**0**。**但 `RegistryEvent` 两边 universal 都=0**（报告「Forge 的类名」解释对 1.20.1 不精确） | **成立；`RegistryEvent` 一条解释需修** |
+| A26 | `porting/03-real-world-examples.md:14` 的 `net.minecraftforge.event.fml.common.Mod` 包不存在 | `javafmllanguage-1.20.1`：`net/minecraftforge/event/fml` 前缀=**0**、`net/minecraftforge/fml/common/Mod.class`=**1** | **成立** |
+| A27 | 3 条 import 全对；`SidedThreadGroups` 只在 `fmlcore` | mapped=0 / universal=0 / `fmlcore-1.20.1-47.4.10`=**1** | **成立** |
+| A28 | A1 已被并发 commit 修掉 ⇒ finding 有保质期 | `git log` 该文件：`0c4437f4` blob 里旧名 **2** 处、`9e6ba97e`=**0** | **成立** |
+
+**汇总**：**28/28 核心事实成立**（A1 成立但已被并发修掉）。需修细节 4 条：A5（quilt rules 实为 40 不是 32）、A12（存在性真、但「80 文件」是触发词/禁写清单而非代码）、A25（`RegistryEvent` 在 1.20.1 universal 里也查无，「Forge 类名」解释不精确）、A4（漏了 `1.21.11` 无后缀这一更乱的实例）。A3 = 设计取舍、A10 = 口径备注。
+
+> **与本台账前几批的关系**：报告 §3 族 A 的成因判断（「现有的门只查映射层错配，结构上够不着『该档用了更老/更新的同名世代 API』」）**与本台账 §8.14 的自记一致**；A27 的「只看 universal/mapped 会造假红」与 §8.15(3) 的 fml 构件拆分**同源**。
+
+#### (2)「没查出来」的修法 —— 缺口逐条量化 + 对应改法
+
+本批把「我上一轮为什么漏掉这类」量到了具体数字（`F:\MOD_TEST\extract-v2.mjs`，抽取面原型）：
+
+| 缺口 | 实测证据 | 改法 |
+| --- | --- | --- |
+| **G1 抽取面只覆盖围栏** | neoforge/1.20.4：围栏 token **62**，行内 code 里量具**从未考虑**的名 **117**（`NeoForgeRegistries`、`DeferredRegister.Entities` 恰在其中）；forge/1.20.1 同行内新增 **219**、frontmatter 新增 **23** | 抽取器加**行内 code（反引号）**与 **frontmatter `description`/触发词**两个面；清单型（「禁止默写：X」）改判为 negBlock 而非判红 |
+| **G2 判据只到「名字存不存在」** | `FinishedRecipe`（A14）**就在我的 `nowhereTypes` 桶里**，被「类存在」放行；其 4 个成员错全在成员位 | 升到**声明表级**：`X.Y` 判 Y 是否 X 的声明成员；`extends B` 后用到的成员沿 B 的父链找（`javap-class.mjs` 原型已可用） |
+| **G3 `negBlock` 桶过粗** | A1 的旧名落在 `09-anti-patterns.mdc` 的**「正确方案」**段，却被整文件判 negBlock 跳过（实测它在 `merged-skipped.tsv` 标 `negBlock`） | negBlock 从「整文件」降到「带 ❌/错误标记的**块**」，未标注块仍参与判红 |
+| **G4 腿命中是布尔、不带版本** | §8.14 已记：短名可靠本档件里的**无关字符串**命中 ⇒ 只证「版本/平台不矛盾」 | 腿命中改成**带版本的有序命中**；「某版命中」不得为**另一版**的正文背书 |
+| **G5 构件完整性** | A27：`SidedThreadGroups` 只在 `fmlcore`；本台账 §8.15：forge ≥1.17 的 `net.minecraftforge.fml` 在 `fmlcore`、neoforge ≥1.20.6 的 `net.neoforged.fml` 在 `fancymodloader:loader` | 构件表按「**同族构件或运算**」补齐（forge 7 件 + neoforge 的 fancymodloader loader） |
+| **G6 门链结构盲区** | 本仓 `assert-skill-yarn-attest` / `assert-rules-api-names` / `assert-cross-layer-names` 只查映射层 | 把 G1–G5 做成一道**新门**（按语法位取词 + 同族构件或运算 + 棘轮豁免台账），挂 `test-scripts.mjs`；**A1–A28 当回归夹具** |
+
+**原型读数**（`extract-v2.mjs`，只读）：加行内面后，`TemplateManager`（frontmatter）、`NeoForgeRegistries`/`Entities`（行内）**全部被捞回** ⇒ G1 是这三个已知真缺陷漏判的**直接**成因。
+
+### 8.17 第六批 · A1–A28 修正落盘 + G1/G4 量具扩面（存量清单）
+
+**本批 = 执行 §8.16「修法」的一半：A 项落盘 + G1/G4 实现。**
+
+#### (1) A 项落盘（清单见 `DELIVERY_LOG.md` 本节第 1 块）
+
+16 个靶点 / 24 文件；A2 守卫经真跑验证生效；A16 修后 CLI 实跑单 public 类。A8（`gradlew` 执行位，需改 git 索引）、A22（已归档树改名）判**不动**；A6/A27 为负结果/方法学校准。
+
+#### (2) G1 / G4 已实现（量具 v3：`F:\MOD_TEST\nonfabric-skill-names-v3.mjs`）
+
+- **G1**：新增 `extractProseUnits()`，抽取面从「只认 java/kotlin 围栏」扩到三面 —— 围栏 + **行内 code span**（`\`Identifier\`` / `A.b`）+ **文件首 frontmatter**（只取 PascalCase，排除 `HTML/CSS/JSON` 之类全大写噪声）。文件名形（`AGENTS.md`）与占位符形（`method_XXXXX`）显式排除。
+- **G4**：E 腿（`data/_yarn-mojmap-pairs`）由**全档并集**改为**按版本分桶**（`yarn-mojmap-<ver>.json`；loose 包用并集）；命中改为**带腿标签** `A/C/D/Dqsl/E/Eonly`，仅靠 `Eonly`（全局 curated `MOJMAP_ONLY`）者另计 `attributedEonly` —— 「某版命中不得为另一版背书」这条落到了实现。
+- **读数**：v2 nowhere TYPE **1246** / MEMBER **1990** → v3 TYPE **2647** / MEMBER **2226**；crossPack TYPE **933→1983**。
+- **滤噪后**（去占位符/纯小写/长度<5/文件名形）：unique **539**，其中 G1/G4 **净增 26**（`F:\MOD_TEST\G14-inventory.txt`）。
+- **可直接认的跨装载器泄漏**（fabric 档出现 Forge/Neo 名）：`DeferredRegister`(39) `FMLJavaModLoadingContext`(36) `MinecraftForge`(19) `RegisterEvent`(26) `RegistryObject`(23) `ForgeRegistries`(18) `IEventBus`(21) `EventPriority`(20) `ExistingFileHelper`(22)；NeoForge `NeoForgeAddonPlugin`(39)。
+- **净增 26 条**：真候选 `DataComponentMap` / `MixinMinecraft` / `MixinGameSettings` / `ClientTickCallback` / `ServerTickCallback` / `ImpersonateClient` / `HttpServer` / `MinecraftExtension` / `BridgeMod` / `EntityRendererRegistry`；假阳 `AGENTS`/`CLAUDE`/`README`/`THIRD_PARTY_NOTICES` 与 `Properties`/`Minecraft`/`Message`/`Framebuffer`（名词回捞）。
+- **复现**：`node F:\MOD_TEST\nonfabric-skill-names-v3.mjs --root=<repo>` → `F:\MOD_TEST\nonfabric-scan-v3/`；对拍 `node F:\MOD_TEST\final-inventory.mjs`；v2 基线 `node F:\MOD_TEST\nonfabric-skill-names.mjs --root=<repo>`。
+
+#### (3) G2 / G3 / G5 是否要做（评估）
+
+- **G2 要做**：`FinishedRecipe`(A14) 这类「类存在、成员名/签名错」在现有面判不出 —— 需按 `javap-class.mjs` 原型升到**声明表级**（`X.Y` 判 Y 是否为 X 的声明成员；`extends B` 沿父链）。**下一批首选**。
+- **G3 已被大部分覆盖**：量具早已按**行级** `❌/✅` 切换 `blockNeg`（非整文件），§8.16 表里「整文件判 negBlock」的旧描述已不适用；残余仅「旧名落在 ✅ 正确方案段」（A1 形）需语义判，属**可选精修**。
+- **G5 要做**：A27（`SidedThreadGroups` 只在 `fmlcore`）与 §8.15 的构件拆分共同证明「只看 universal/mapped 会造假红」；须按「**同族构件或运算**」补件表。与 G2 同批。
+
+#### (4) 与 §8.16 的差异（口径更正）
+
+§8.16 表里写「G3 整文件判 negBlock」——**该描述对 v2 量具已不成立**（`:319-320` 本就是行级切换）。本节点名更正，避免后续按错描述改。

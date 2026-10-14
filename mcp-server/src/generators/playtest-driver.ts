@@ -2323,6 +2323,8 @@ const PLAYTEST_OBSERVATION_CONTRACT = {
   player: ["pos", "yaw", "pitch", "health", "food", "gameMode", "selectedSlot", "mainHand"],
   inventory: "摘要 + 命中",
   lastScan: "最近一次 scan（entities/blocks 命中表）",
+  nearby: "追踪范围（≈48 格）内的实体摘要（id/距离/坐标，最多 NEARBY_MAX 个）—— 0 条 ≠ 世界上没有该实体",
+  logTail: "runDir 下 logs/latest.log 的尾部 LOG_TAIL_MAX 行（分诊用）",
   lastStep: { intent: "string", ok: "boolean", postcondition: "string（判过后置条件时 = 该 kind）", failure: "string（步级失败原因，如 goto_timeout / param_not_number）", detail: "string" },
   lastStepNote: "ok:true ⇒ postcondition 非空、failure 空；ok:false ⇒ 二者恰一非空（判了后置条件没过 = postcondition 非空；步级失败 = failure 非空）",
   remainingBudget: "tick + 意图数 + 总时长",
@@ -3099,7 +3101,8 @@ public final class PlaytestQaDriver {
         // 与"世界"无关的步骤可以在进世界前跑（wait / newworld / cmd / mark / stop）；其余步骤等世界就绪。
         // 等待期间 stepTicks 不推进、但 ticks（预算）照走 ⇒ 超时仍是 fail-closed 判红，不静默。
         boolean worldIndependent = verb.equals("wait") || verb.equals("newworld") || verb.equals("cmd")
-            || verb.equals("mark") || verb.equals("stop");
+            || verb.equals("mark") || verb.equals("stop")
+            || verb.equals("touch") || verb.equals("waitfile");
         if (!worldIndependent && (player == null || client.world == null)) {
             return;
         }
@@ -3110,6 +3113,51 @@ public final class PlaytestQaDriver {
                         next();
                     }
                     break;
+                case "touch": {
+                    // 多客户端会合的信号端：写一个 marker 文件，给别的客户端 waitfile 等。
+                    if (stepTicks == 1) {
+                        Path mp = syncPath(rest);
+                        try {
+                            Path parent = mp.getParent();
+                            Files.createDirectories(parent == null ? Path.of(EVIDENCE_DIR) : parent);
+                            Files.writeString(mp, "round=" + roundNo + " at=" + Instant.now() + nl(), StandardCharsets.UTF_8);
+                            log("[QA] touch " + mp);
+                        } catch (IOException e) {
+                            finish(false, "touch 写失败：" + e);
+                            return;
+                        }
+                    }
+                    next();
+                    break;
+                }
+                case "waitfile": {
+                    // 多客户端会合的等待端：等另一个客户端的 touch marker 出现。
+                    // 与 waitfor 同口径 —— **等条件不等时间**；超时判红（不静默、不塌成通过）。
+                    String fpath = rest;
+                    String fopts = "";
+                    int sp5 = rest.indexOf(' ');
+                    if (sp5 > 0) {
+                        fpath = rest.substring(0, sp5);
+                        fopts = rest.substring(sp5 + 1);
+                    }
+                    int fmax = optI(fopts, "max", 1200);
+                    Path mp = syncPath(fpath);
+                    if (Files.exists(mp)) {
+                        log("[QA] waitfile " + mp + " -> OK after " + stepTicks + " tick");
+                        next();
+                        break;
+                    }
+                    if (stepTicks > fmax) {
+                        writeState(client, player);
+                        failIntent(client, player, "waitfile_timeout",
+                            "waitfile " + mp + "：" + fmax + " tick 内未出现（对面客户端没 touch？会合目录写错？）");
+                        return;
+                    }
+                    if (stepTicks % 20 == 1) {
+                        log("[QA] waitfile 等待中 " + stepTicks + "/" + fmax + " :: " + mp);
+                    }
+                    break;
+                }
                 case "mark":
                     log("[QA] mark: " + rest);
                     next();
@@ -3358,55 +3406,52 @@ public final class PlaytestQaDriver {
                         kind = rest.substring(0, sp2);
                         opts = rest.substring(sp2 + 1);
                     }
-                    boolean ok;
-                    String detail;
-                    if (kind.equals("scan_entities")) {
-                        ok = scanEntityFound;
-                        detail = scanEntityText;
-                    } else if (kind.equals("scan_blocks")) {
-                        ok = scanBlockFound;
-                        detail = scanBlockText;
-                    } else if (kind.equals("moved")) {
-                        double min = optF(opts, "min", 1.0);
-                        double d = Math.sqrt(Math.pow(player.getX() - moveStartX, 2) + Math.pow(player.getZ() - moveStartZ, 2));
-                        ok = d >= min;
-                        detail = "delta=" + fmt(d) + " min=" + fmt(min);
-                    } else if (kind.equals("inv")) {
-                        int slot = optI(opts, "slot", EXPECT_SLOT);
-                        String want = optS(opts, "item", EXPECT_ITEM);
-                        ItemStack st = player.getInventory().getStack(slot);
-                        observedItem = st.isEmpty() ? "" : Registries.ITEM.getId(st.getItem()).toString();
-                        ok = want.equals(observedItem);
-                        detail = "slot " + slot + " expect=" + want + " got=" + (observedItem.isEmpty() ? "(empty)" : observedItem);
-                        lastInvOk = ok;
-                        lastInvDetail = detail;
-                    } else if (kind.equals("inv_nonempty")) {
-                        // inventory{slot} 形态：只断言槽位非空（与 inv{contains} 的 item 相等判据分开，避免"期望硬编码"）
-                        int slot = optI(opts, "slot", EXPECT_SLOT);
-                        ItemStack st = player.getInventory().getStack(slot);
-                        observedItem = st.isEmpty() ? "" : Registries.ITEM.getId(st.getItem()).toString();
-                        ok = !st.isEmpty();
-                        detail = "slot " + slot + " got=" + (observedItem.isEmpty() ? "(empty)" : observedItem);
-                        lastInvOk = ok;
-                        lastInvDetail = detail;
-                    } else if (kind.equals("pos")) {
-                        double tol = optF(opts, "tol", 8);
-                        double tx = optF(opts, "x", player.getX());
-                        double tz = optF(opts, "z", player.getZ());
-                        double d = Math.sqrt(Math.pow(player.getX() - tx, 2) + Math.pow(player.getZ() - tz, 2));
-                        ok = d <= tol;
-                        detail = "dist=" + fmt(d) + " tol=" + fmt(tol);
-                    } else {
+                    // 求值器 = condEval（**唯一真源**，与 waitfor 共用；未知 kind 返回 null ⇒ 判红）
+                    Verdict av = condEval(player, kind, opts);
+                    if (av == null) {
                         finish(false, "未知 assert 类型：" + kind);
                         return;
                     }
-                    log("[QA] assert " + kind + " -> " + (ok ? "PASS" : "FAIL") + " :: " + detail);
-                    if (!ok) {
+                    log("[QA] assert " + kind + " -> " + (av.ok ? "PASS" : "FAIL") + " :: " + av.detail);
+                    if (!av.ok) {
                         writeState(client, player);
-                        failIntent(client, player, "assert_failed", "断言失败 " + kind + " :: " + detail);
+                        failIntent(client, player, "assert_failed", "断言失败 " + kind + " :: " + av.detail);
                         return;
                     }
                     next();
+                    break;
+                }
+                case "waitfor": {
+                    // 「等条件」而不是「等时间」：每 tick 轮询 condEval，超时**判红**（不静默、不塌成通过）。
+                    // 用途：压掉「用时间当同步」那类假红（并发写盘卡死 / CI 排队 / 老 JVM 慢启动）。
+                    // 语法与 assert 同形：waitfor <kind> <opts...> [max=<ticks>]（max 默认 600）。
+                    String kind = rest;
+                    String opts = "";
+                    int sp3 = rest.indexOf(' ');
+                    if (sp3 > 0) {
+                        kind = rest.substring(0, sp3);
+                        opts = rest.substring(sp3 + 1);
+                    }
+                    int waitMax = optI(opts, "max", 600);
+                    Verdict wv = condEval(player, kind, opts);
+                    if (wv == null) {
+                        finish(false, "未知 waitfor 类型：" + kind);
+                        return;
+                    }
+                    if (wv.ok) {
+                        log("[QA] waitfor " + kind + " -> OK after " + stepTicks + " tick :: " + wv.detail);
+                        next();
+                        break;
+                    }
+                    if (stepTicks > waitMax) {
+                        writeState(client, player);
+                        failIntent(client, player, "waitfor_timeout",
+                            "waitfor " + kind + "：" + waitMax + " tick 内条件未成立（最后读数 " + wv.detail + "）");
+                        return;
+                    }
+                    if (stepTicks % 20 == 1) {
+                        log("[QA] waitfor " + kind + " 等待中 " + stepTicks + "/" + waitMax + " :: " + wv.detail);
+                    }
                     break;
                 }
                 case "shot": {
@@ -4124,6 +4169,19 @@ public final class PlaytestQaDriver {
         return sb.toString();
     }
 
+    /**
+     * touch / waitfile 的路径解析：**绝对路径**（盘符 X: 或前导 /、UNC 双反斜杠）原样用，
+     * 否则落到 EVIDENCE_DIR 下。多客户端会合时由剧本里显式写**同一个共享目录的绝对路径**
+     * （驱动不猜、不做跨机同步 —— 跨机请自己挂共享盘）。
+     */
+    private static Path syncPath(String p) {
+        String t = p.trim();
+        if (t.matches("^[A-Za-z]:[\\\\/].*") || t.startsWith("/") || t.startsWith("\\\\")) {
+            return Path.of(t);
+        }
+        return Path.of(EVIDENCE_DIR, t);
+    }
+
     /** 兜底读法：<runDir>/logs/latest.log 的最后一条含 [CHAT] 的行（实测 /locate 的结果就落在这里）。 */
     private static String readLastChatLine(MinecraftClient client) {
         try {
@@ -4168,6 +4226,16 @@ public final class PlaytestQaDriver {
         lastIntentPost = "";
         lastIntentFailure = "";
         lastIntentDetail = "";
+        // A19：轮边界重置「破坏 / GUI 观测静态位」——否则第 2 轮起 blockBefore 非空会跳过取基准、
+        // guiOpened 等沿用上一轮的值（currentScreen 打开失败时会假绿），证据用的是上一轮的坐标与状态。
+        blockPosText = "";
+        blockBefore = "";
+        blockAfter = "";
+        targetPos = null;
+        guiOpened = false;
+        guiClicked = false;
+        guiClosed = false;
+        guiClass = "";
         log("[QA] ROUND " + roundNo + " START（steps=" + plan.length + "）");
     }
 
@@ -4428,6 +4496,140 @@ public final class PlaytestQaDriver {
     }
 
     /** 手写 JSON。**所有字符串值一律过 jsonEsc**（手拼 + 只替引号漏 \n 的历史事故：state.json 不可解析 / JSONL 被劈行）。 */
+    /**
+     * assert / waitfor 共用的**条件求值器（唯一真源）**。
+     * 返回 null = 未知 kind ⇒ 调用方判红（不静默）。
+     * **纪律**：只搬既有原语的表达式（玩家位置 / 背包槽 / 注册表 id / 实体遍历），
+     * 各档改写表按字面量匹配 ⇒ 条款一字未改，**不引入新的版本面**。
+     */
+    private static Verdict condEval(ClientPlayerEntity player, String kind, String opts) {
+        Verdict v = new Verdict();
+        v.kind = kind;
+        if (kind.equals("scan_entities")) {
+            v.ok = scanEntityFound;
+            v.detail = scanEntityText;
+        } else if (kind.equals("scan_blocks")) {
+            v.ok = scanBlockFound;
+            v.detail = scanBlockText;
+        } else if (kind.equals("moved")) {
+            double min = optF(opts, "min", 1.0);
+            double d = Math.sqrt(Math.pow(player.getX() - moveStartX, 2) + Math.pow(player.getZ() - moveStartZ, 2));
+            v.ok = d >= min;
+            v.detail = "delta=" + fmt(d) + " min=" + fmt(min);
+        } else if (kind.equals("inv")) {
+            int slot = optI(opts, "slot", EXPECT_SLOT);
+            String want = optS(opts, "item", EXPECT_ITEM);
+            ItemStack st = player.getInventory().getStack(slot);
+            observedItem = st.isEmpty() ? "" : Registries.ITEM.getId(st.getItem()).toString();
+            v.ok = want.equals(observedItem);
+            v.detail = "slot " + slot + " expect=" + want + " got=" + (observedItem.isEmpty() ? "(empty)" : observedItem);
+            lastInvOk = v.ok;
+            lastInvDetail = v.detail;
+        } else if (kind.equals("inv_nonempty")) {
+            // inventory{slot} 形态：只断言槽位非空（与 inv{contains} 的 item 相等判据分开，避免"期望硬编码"）
+            int slot = optI(opts, "slot", EXPECT_SLOT);
+            ItemStack st = player.getInventory().getStack(slot);
+            observedItem = st.isEmpty() ? "" : Registries.ITEM.getId(st.getItem()).toString();
+            v.ok = !st.isEmpty();
+            v.detail = "slot " + slot + " got=" + (observedItem.isEmpty() ? "(empty)" : observedItem);
+            lastInvOk = v.ok;
+            lastInvDetail = v.detail;
+        } else if (kind.equals("pos")) {
+            double tol = optF(opts, "tol", 8);
+            double tx = optF(opts, "x", player.getX());
+            double tz = optF(opts, "z", player.getZ());
+            double d = Math.sqrt(Math.pow(player.getX() - tx, 2) + Math.pow(player.getZ() - tz, 2));
+            v.ok = d <= tol;
+            v.detail = "dist=" + fmt(d) + " tol=" + fmt(tol);
+        } else {
+            return null;
+        }
+        return v;
+    }
+
+    /** 观测面 nearby 的条数上限（这是**读数**不是完整清单；要精确判据用 scan entities）。 */
+    private static final int NEARBY_MAX = 8;
+    /** 观测面 logTail 的预算：只解码日志尾部这么多字节、只保留最后这么多行。 */
+    private static final int LOG_TAIL_BYTES = 196608;
+    private static final int LOG_TAIL_MAX = 40;
+
+    /**
+     * 观测面：**追踪范围（≈48 格）内**的实体摘要。
+     * ⚠ 客户端看不见范围外的实体（口径见社区短文）⇒ 这里 0 条 **不等于**世界上没有该实体。
+     */
+    private static String nearbyJson() {
+        MinecraftClient client = mc;
+        if (client == null || client.player == null || client.world == null) {
+            return "[]";
+        }
+        StringBuilder sb = new StringBuilder("[");
+        try {
+            int n = 0;
+            for (net.minecraft.entity.Entity e : client.world.getEntities()) {
+                if (e == client.player) {
+                    continue;
+                }
+                double d = Math.sqrt(Math.pow(e.getX() - client.player.getX(), 2)
+                        + Math.pow(e.getY() - client.player.getY(), 2)
+                        + Math.pow(e.getZ() - client.player.getZ(), 2));
+                if (d > 48.0 || n >= NEARBY_MAX) {
+                    continue;
+                }
+                if (n > 0) {
+                    sb.append(", ");
+                }
+                sb.append("{\"id\": \"").append(jsonEsc(Registries.ENTITY_TYPE.getId(e.getType()).toString()))
+                        .append("\", \"d\": ").append(fmt(d))
+                        .append(", \"x\": ").append(e.getX())
+                        .append(", \"y\": ").append(e.getY())
+                        .append(", \"z\": ").append(e.getZ())
+                        .append("}");
+                n++;
+            }
+        } catch (Throwable t) {
+            return "[]";
+        }
+        return sb.append("]").toString();
+    }
+
+    /**
+     * 观测面：runDir 下 logs/latest.log 的尾部若干行（人 / LLM 分诊用）。
+     * 读法沿用 readLastChatLine 的容错纪律（按字节读 + 宽松解码，避免混合编码抛 MalformedInputException）；
+     * 只解码尾部 LOG_TAIL_BYTES 字节、只留最后 LOG_TAIL_MAX 行 —— 控制 state.json 体积。
+     */
+    private static String logTailJson() {
+        MinecraftClient client = mc;
+        if (client == null) {
+            return "[]";
+        }
+        try {
+            Path log = Path.of(client.runDirectory.getPath(), "logs", "latest.log");
+            if (!Files.exists(log)) {
+                return "[]";
+            }
+            byte[] all = Files.readAllBytes(log);
+            int from = Math.max(0, all.length - LOG_TAIL_BYTES);
+            String[] lines = new String(all, from, all.length - from, StandardCharsets.UTF_8).split("\\R", -1);
+            StringBuilder sb = new StringBuilder("[");
+            int start = Math.max(0, lines.length - LOG_TAIL_MAX);
+            int n = 0;
+            for (int i = start; i < lines.length; i++) {
+                if (lines[i].isEmpty()) {
+                    continue;
+                }
+                if (n > 0) {
+                    sb.append(", ");
+                }
+                sb.append("\"").append(jsonEsc(lines[i])).append("\"");
+                n++;
+            }
+            return sb.append("]").toString();
+        } catch (Exception e) {
+            log("[QA] logTail failed: " + e);
+            return "[]";
+        }
+    }
+
     private static String stateJson() {
         String q = "\"";
         return "{" + nl()
@@ -4441,6 +4643,8 @@ public final class PlaytestQaDriver {
             + "  " + q + "block" + q + ": {" + q + "pos" + q + ": " + q + jsonEsc(blockPosText) + q + ", " + q + "before" + q + ": " + q + jsonEsc(blockBefore) + q + ", " + q + "after" + q + ": " + q + jsonEsc(blockAfter) + q + "}," + nl()
             + "  " + q + "gui" + q + ": {" + q + "opened" + q + ": " + guiOpened + ", " + q + "class" + q + ": " + q + jsonEsc(guiClass) + q + ", " + q + "clicked" + q + ": " + guiClicked + ", " + q + "closed" + q + ": " + guiClosed + "}," + nl()
             + "  " + q + "plan" + q + ": {" + q + "steps" + q + ": " + PLAN.length + ", " + q + "done" + q + ": " + stepIdx + "}," + nl()
+            + "  " + q + "nearby" + q + ": " + nearbyJson() + "," + nl()
+            + "  " + q + "logTail" + q + ": " + logTailJson() + "," + nl()
             + "  " + q + "scan" + q + ": {" + q + "entities" + q + ": " + q + jsonEsc(scanEntityText) + q + ", " + q + "blocks" + q + ": " + q + jsonEsc(scanBlockText) + q
             + ", " + q + "nearest" + q + ": {" + q + "found" + q + ": " + scanNearestFound + ", " + q + "id" + q + ": " + q + jsonEsc(scanNearestId) + q
             + ", " + q + "x" + q + ": " + scanNearestX + ", " + q + "y" + q + ": " + scanNearestY + ", " + q + "z" + q + ": " + scanNearestZ + "}}," + nl()
@@ -4789,6 +4993,7 @@ const useLiteLoaderTable = platform === "liteloader" && version === "1.12.2";
 | \`goto x= z= tol= fly= max=\` / \`goto parsed …\` | 走到/飞到目标（\`parsed\` = 坐标取自上一 \`cmd\` 返回，正则抽 \`[x, ~, z]\`） |
 | \`scan radius= entities=<id,id> blocks=<id,id> stride=\` | 扫描周围实体/方块（村庄证据 = 村民 / 钟 / 干草块 / 堆肥桶）；\`scan.nearest\` 记**最近命中**的结构化坐标（find_and_goto 的底座） |
 | \`assert scan_entities \\| scan_blocks \\| inv slot= item= \\| inv_nonempty slot= \\| moved min= \\| pos tol= x= z=\` | 后置条件；失败即判红并落 state.json |
+| \`waitfor <kind> <opts…> max=<ticks>\` | **等条件，不等时间**：与 \`assert\` 共用同一求值器（kind 完全同集）；条件成立即下一步，**超时判红**（\`waitfor_timeout\`，不静默）。默认 \`max=600\` —— 治「用时间当同步」那类假红（并发写盘卡死 / CI 排队 / 老 JVM 慢启动） |
 | \`shot testId=<name>\` | 截图（先 \`setScreen(null)\`） |
 | \`break ticks=<n>\` | 俯视破脚下方块（断言**同坐标** id 变化） |
 | \`gui\` | 开背包 → 真实 \`mouseClicked(Click,boolean)\` → 关闭 |
@@ -4798,13 +5003,15 @@ const useLiteLoaderTable = platform === "liteloader" && version === "1.12.2";
 | \`intent <name> k=v…\` | **意图**：菜单校验 → 复用原语展开 → 类型化后置条件 → 证据；不在菜单/禁列/档位不符一律判红 |
 | \`waitintent max=<n>\` | **LLM 邮箱**：守候 \`<evidenceDir>/intent.json\`（扁平 JSON），每条执行完**停在本步继续守候** |
 | \`mark <text>\` | 往 qa.log 打自定义标记 |
+| \`touch <路径>\` | **多客户端会合（信号端）**：写一个 marker 文件（绝对路径原样用，否则落到 \`EVIDENCE_DIR\` 下）。多开客户端时各端 \`EVIDENCE_DIR\` 不同 ⇒ **要会合就得写同一个共享目录的绝对路径** |
+| \`waitfile <路径> max=<ticks>\` | **多客户端会合（等待端）**：等对面 \`touch\` 出的 marker 出现；**超时判红**（\`waitfile_timeout\`），默认 \`max=1200\`。与 \`waitfor\` 同口径：等条件，不等时间 |
 
 ${mode === "in_jvm_player_agent" ? `## 意图（in_jvm_player_agent 的玩法）
 
 - **菜单**：\`playtest/intent-menu.json\`（按 capabilityProfile=${profile} 过滤；禁列 kill/tnt/fill 永不出现）。driver 里同一份菜单落成 \`INTENT_MENU\` 常量 —— 不在菜单的意图名一律判红（防止 LLM 造词）。
 - **LLM 邮箱循环**：LLM 写 \`<evidenceDir>/intent.json\`（扁平一层：\`{"intent":"walk_to","x":10,"z":-20,"tol":3}\`）→ driver 消费（改名 \`intent.done.json\`）→ 执行 → 判后置条件 → 回写证据 → 继续守候。收尾写 \`{"intent":"stop"}\`（收本轮，不关游戏）。
 - **失败语义（2026-10-01 与交接验收对齐）**：邮箱形态下**后置条件失败不改会话状态**——记进 \`intents[]\` / \`intentLog\`（\`ok:false\`）后继续守候下一条；失败不得自动重试，只许按菜单 \`fallback\` 换意图（\`playtest_intent read\` 会把它落成 \`nextSteps\`）。协议违规（禁列 / 不在菜单 / 档位不符）与预算耗尽才判红停轮；脚本形态（plan 里的 \`intent\` 步骤）失败仍判红停轮。
-- **观测面**（LLM 每轮读 \`state.json\`）：\`intentState\`（profile / menu / mailbox / remainingTicks / active）、\`intents[]\`（本轮已执行意图的 {intent,params,ok,postcondition|failure,detail}；ok:true 只带 postcondition、ok:false 时失败原因在 \`failure\` 字段）、\`lastIntent\`、\`scan.nearest\`（结构化坐标）、\`goto.arrived\`、\`player\` 读数。
+- **观测面**（LLM 每轮读 \`state.json\`）：\`intentState\`（profile / menu / mailbox / remainingTicks / active）、\`intents[]\`（本轮已执行意图的 {intent,params,ok,postcondition|failure,detail}；ok:true 只带 postcondition、ok:false 时失败原因在 \`failure\` 字段）、\`lastIntent\`、\`scan.nearest\`（结构化坐标）、\`goto.arrived\`、\`player\` 读数、\`nearby\`（追踪范围 ≈48 格内的实体摘要；**0 条 ≠ 世界内没有该实体**）、\`logTail\`（latest.log 尾部 40 行）。
 - **类型化后置条件**（每意图一条，见菜单 \`postcondition.kind\`；find_and_goto 按形态发 \`reached_parsed_tol\` / \`block_found_and_reached\` / \`entity_found_and_reached\`）：walk_to = 距离 ≤ tol ∧ 位移 ≥ 起点→目标距离 − tol（防"本来就在那"假绿）；find_and_goto block = 最近命中 ∧ 到位 ∧ onGround ∧ 目标位仍是该方块；entity = 最近命中 ∧ 到位；interact = \`expect\` 必填……（未实现的 mine/place/interact 命中即判红，见菜单 executionNote）。
 - **单意图预算**：菜单 \`perIntentBudgetTicks\` 列即 driver 的判据（超限判红）；全局预算仍由 \`budgetTicks\` 兜底。` : ""}
 **内置剧本**（\`generate_playtest_driver scenario=\`）：

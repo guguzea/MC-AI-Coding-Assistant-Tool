@@ -108,7 +108,7 @@ IF 报错包含 "No resource bundling found"
 
 ```groovy
 plugins {
-    id 'fabric-loom' version '1.8'   // 与本档 scaffold/build.gradle:2 同值；旧示例写 1.3-SNAPSHOT 属 1.20.1 模板残留（见下方「Loom 版本口径」）
+    id 'fabric-loom' version '1.8.13'   // 与本档 scaffold/build.gradle 的 plugins 行同值（该文件 :12）；旧示例写 1.3-SNAPSHOT 属 1.20.1 模板残留（见下方「Loom 版本口径」）
     id 'maven-publish'
     id 'eclipse'
     id 'idea'

@@ -1,0 +1,193 @@
+---
+title: "org.bukkit.entity.Player"
+package: "org.bukkit.entity"
+source: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/entity/Player.html
+sourceType: javadoc
+fetchedWith: fetch-spigot-javadoc.mjs@1
+fetchedAt: 2026-10-14T12:59:21.517Z
+asOfVersion: "26.3-R0.1-SNAPSHOT"
+---
+
+**Interface Player**
+`public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginMessageRecipient`
+- `@NotNull String getName()`
+- `@NotNull String getDisplayName()`
+- `void setDisplayName(@Nullable String name)`
+- `@NotNull String getPlayerListName()`
+- `void setPlayerListName(@Nullable String name)`
+- `int getPlayerListOrder()`
+- `void setPlayerListOrder(int order)`
+- `@Nullable String getPlayerListHeader()`
+- `@Nullable String getPlayerListFooter()`
+- `void setPlayerListHeader(@Nullable String header)`
+- `void setPlayerListFooter(@Nullable String footer)`
+- `void setPlayerListHeaderFooter(@Nullable String header, @Nullable String footer)`
+- `void setCompassTarget(@NotNull Location loc)`
+- `@NotNull Location getCompassTarget()`
+- `@Nullable InetSocketAddress getAddress()`
+- `boolean isTransferred()`
+- `@NotNull CompletableFuture<byte[]> retrieveCookie(@NotNull NamespacedKey key)`
+- `void storeCookie(@NotNull NamespacedKey key, @NotNull byte[] value)`
+- `void transfer(@NotNull String host, int port)`
+- `void sendRawMessage(@NotNull String message)`
+- `void kickPlayer(@Nullable String message)`
+- `@Nullable BanEntry<PlayerProfile> ban(@Nullable String reason, @Nullable Date expires, @Nullable String source, boolean kickPlayer)`
+- `@Nullable BanEntry<PlayerProfile> ban(@Nullable String reason, @Nullable Instant expires, @Nullable String source, boolean kickPlayer)`
+- `@Nullable BanEntry<PlayerProfile> ban(@Nullable String reason, @Nullable Duration duration, @Nullable String source, boolean kickPlayer)`
+- `@Nullable BanEntry<InetAddress> banIp(@Nullable String reason, @Nullable Date expires, @Nullable String source, boolean kickPlayer)`
+- `@Nullable BanEntry<InetAddress> banIp(@Nullable String reason, @Nullable Instant expires, @Nullable String source, boolean kickPlayer)`
+- `@Nullable BanEntry<InetAddress> banIp(@Nullable String reason, @Nullable Duration duration, @Nullable String source, boolean kickPlayer)`
+- `void chat(@NotNull String msg)`
+- `boolean performCommand(@NotNull String command)`
+- `@Deprecated(since="1.16.1") boolean isOnGround()`
+- `boolean isSneaking()`
+- `void setSneaking(boolean sneak)`
+- `boolean isSprinting()`
+- `void setSprinting(boolean sprinting)`
+- `void saveData()`
+- `void loadData()`
+- `void setSleepingIgnored(boolean isSleeping)`
+- `boolean isSleepingIgnored()`
+- `@Nullable @Deprecated(since="1.20.4") Location getBedSpawnLocation()`
+- `@Nullable Location getRespawnLocation()`
+- `@Deprecated(since="1.20.4") void setBedSpawnLocation(@Nullable Location location)`
+- `void setRespawnLocation(@Nullable Location location)`
+- `@Deprecated(since="1.20.4") void setBedSpawnLocation(@Nullable Location location, boolean force)`
+- `void setRespawnLocation(@Nullable Location location, boolean force)`
+- `@NotNull @Experimental Collection<EnderPearl> getEnderPearls()`
+- `@NotNull @Experimental Input getCurrentInput()`
+- `@Deprecated(since="1.6.2") void playNote(@NotNull Location loc, byte instrument, byte note)`
+- `void playNote(@NotNull Location loc, @NotNull Instrument instrument, @NotNull Note note)`
+- `void playSound(@NotNull Location location, @NotNull Sound sound, float volume, float pitch)`
+- `void playSound(@NotNull Location location, @NotNull String sound, float volume, float pitch)`
+- `void playSound(@NotNull Location location, @NotNull Sound sound, @NotNull SoundCategory category, float volume, float pitch)`
+- `void playSound(@NotNull Location location, @NotNull String sound, @NotNull SoundCategory category, float volume, float pitch)`
+- `void playSound(@NotNull Location location, @NotNull Sound sound, @NotNull SoundCategory category, float volume, float pitch, long seed)`
+- `void playSound(@NotNull Location location, @NotNull String sound, @NotNull SoundCategory category, float volume, float pitch, long seed)`
+- `void playSound(@NotNull Entity entity, @NotNull Sound sound, float volume, float pitch)`
+- `void playSound(@NotNull Entity entity, @NotNull String sound, float volume, float pitch)`
+- `void playSound(@NotNull Entity entity, @NotNull Sound sound, @NotNull SoundCategory category, float volume, float pitch)`
+- `void playSound(@NotNull Entity entity, @NotNull String sound, @NotNull SoundCategory category, float volume, float pitch)`
+- `void playSound(@NotNull Entity entity, @NotNull Sound sound, @NotNull SoundCategory category, float volume, float pitch, long seed)`
+- `void playSound(@NotNull Entity entity, @NotNull String sound, @NotNull SoundCategory category, float volume, float pitch, long seed)`
+- `void stopSound(@NotNull Sound sound)`
+- `void stopSound(@NotNull String sound)`
+- `void stopSound(@NotNull Sound sound, @Nullable SoundCategory category)`
+- `void stopSound(@NotNull String sound, @Nullable SoundCategory category)`
+- `void stopSound(@NotNull SoundCategory category)`
+- `void stopAllSounds()`
+- `@Deprecated(since="1.6.2") void playEffect(@NotNull Location loc, @NotNull Effect effect, int data)`
+- `<T> void playEffect(@NotNull Location loc, @NotNull Effect effect, @Nullable T data)`
+- `boolean breakBlock(@NotNull Block block)`
+- `@Deprecated(since="1.6.2") void sendBlockChange(@NotNull Location loc, @NotNull Material material, byte data)`
+- `void sendBlockChange(@NotNull Location loc, @NotNull BlockData block)`
+- `void sendBlockChanges(@NotNull Collection<BlockState> blocks)`
+- `@Deprecated(since="1.20") void sendBlockChanges(@NotNull Collection<BlockState> blocks, boolean suppressLightUpdates)`
+- `void sendBlockDamage(@NotNull Location loc, float progress)`
+- `void sendBlockDamage(@NotNull Location loc, float progress, @NotNull Entity source)`
+- `void sendBlockDamage(@NotNull Location loc, float progress, int sourceId)`
+- `void sendEquipmentChange(@NotNull LivingEntity entity, @NotNull EquipmentSlot slot, @Nullable ItemStack item)`
+- `void sendEquipmentChange(@NotNull LivingEntity entity, @NotNull Map<EquipmentSlot, ItemStack> items)`
+- `void sendSignChange(@NotNull Location loc, @Nullable String[] lines) throws IllegalArgumentException`
+- `void sendSignChange(@NotNull Location loc, @Nullable String[] lines, @NotNull DyeColor dyeColor) throws IllegalArgumentException`
+- `void sendSignChange(@NotNull Location loc, @Nullable String[] lines, @NotNull DyeColor dyeColor, boolean hasGlowingText) throws IllegalArgumentException`
+- `@Experimental void sendBlockUpdate(@NotNull Location loc, @NotNull TileState tileState) throws IllegalArgumentException`
+- `void sendPotionEffectChange(@NotNull LivingEntity entity, @NotNull PotionEffect effect)`
+- `void sendPotionEffectChangeRemove(@NotNull LivingEntity entity, @NotNull PotionEffectType type)`
+- `void sendMap(@NotNull MapView map)`
+- `void sendHurtAnimation(float yaw)`
+- `void sendLinks(@NotNull ServerLinks links)`
+- `void addCustomChatCompletions(@NotNull Collection<String> completions)`
+- `void removeCustomChatCompletions(@NotNull Collection<String> completions)`
+- `void setCustomChatCompletions(@NotNull Collection<String> completions)`
+- `@Internal void updateInventory()`
+- `@Nullable GameMode getPreviousGameMode()`
+- `void setPlayerTime(long time, boolean relative)`
+- `long getPlayerTime()`
+- `long getPlayerTimeOffset()`
+- `boolean isPlayerTimeRelative()`
+- `void resetPlayerTime()`
+- `void setPlayerWeather(@NotNull WeatherType type)`
+- `@Nullable WeatherType getPlayerWeather()`
+- `void resetPlayerWeather()`
+- `int getExpCooldown()`
+- `void setExpCooldown(int ticks)`
+- `void giveExp(int amount)`
+- `void giveExpLevels(int amount)`
+- `float getExp()`
+- `void setExp(float exp)`
+- `int getLevel()`
+- `void setLevel(int level)`
+- `int getTotalExperience()`
+- `void setTotalExperience(int exp)`
+- `void sendExperienceChange(float progress)`
+- `void sendExperienceChange(float progress, int level)`
+- `boolean getAllowFlight()`
+- `void setAllowFlight(boolean flight)`
+- `@Deprecated(since="1.12.2") void hidePlayer(@NotNull Player player)`
+- `void hidePlayer(@NotNull Plugin plugin, @NotNull Player player)`
+- `@Deprecated(since="1.12.2") void showPlayer(@NotNull Player player)`
+- `void showPlayer(@NotNull Plugin plugin, @NotNull Player player)`
+- `boolean canSee(@NotNull Player player)`
+- `void hideEntity(@NotNull Plugin plugin, @NotNull Entity entity)`
+- `void showEntity(@NotNull Plugin plugin, @NotNull Entity entity)`
+- `boolean canSee(@NotNull Entity entity)`
+- `boolean isFlying()`
+- `void setFlying(boolean value)`
+- `void setFlySpeed(float value) throws IllegalArgumentException`
+- `void setWalkSpeed(float value) throws IllegalArgumentException`
+- `float getFlySpeed()`
+- `float getWalkSpeed()`
+- `@Deprecated(since="1.7.2") void setTexturePack(@NotNull String url)`
+- `void setResourcePack(@NotNull String url)`
+- `void setResourcePack(@NotNull String url, @Nullable byte[] hash)`
+- `void setResourcePack(@NotNull String url, @Nullable byte[] hash, @Nullable String prompt)`
+- `void setResourcePack(@NotNull String url, @Nullable byte[] hash, boolean force)`
+- `void setResourcePack(@NotNull String url, @Nullable byte[] hash, @Nullable String prompt, boolean force)`
+- `void setResourcePack(@NotNull UUID id, @NotNull String url, @Nullable byte[] hash, @Nullable String prompt, boolean force)`
+- `void addResourcePack(@NotNull UUID id, @NotNull String url, @Nullable byte[] hash, @Nullable String prompt, boolean force)`
+- `void removeResourcePack(@NotNull UUID id)`
+- `void removeResourcePacks()`
+- `@NotNull Scoreboard getScoreboard()`
+- `void setScoreboard(@NotNull Scoreboard scoreboard) throws IllegalArgumentException, IllegalStateException`
+- `@Nullable WorldBorder getWorldBorder()`
+- `void setWorldBorder(@Nullable WorldBorder border)`
+- `void sendHealthUpdate(double health, int foodLevel, float saturation)`
+- `void sendHealthUpdate()`
+- `boolean isHealthScaled()`
+- `void setHealthScaled(boolean scale)`
+- `void setHealthScale(double scale) throws IllegalArgumentException`
+- `double getHealthScale()`
+- `@Nullable Entity getSpectatorTarget()`
+- `void setSpectatorTarget(@Nullable Entity entity)`
+- `@Deprecated(since="1.8.7") void sendTitle(@Nullable String title, @Nullable String subtitle)`
+- `void sendTitle(@Nullable String title, @Nullable String subtitle, int fadeIn, int stay, int fadeOut)`
+- `void resetTitle()`
+- `void spawnParticle(@NotNull Particle particle, @NotNull Location location, int count)`
+- `void spawnParticle(@NotNull Particle particle, double x, double y, double z, int count)`
+- `<T> void spawnParticle(@NotNull Particle particle, @NotNull Location location, int count, @Nullable T data)`
+- `<T> void spawnParticle(@NotNull Particle particle, double x, double y, double z, int count, @Nullable T data)`
+- `void spawnParticle(@NotNull Particle particle, @NotNull Location location, int count, double offsetX, double offsetY, double offsetZ)`
+- `void spawnParticle(@NotNull Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ)`
+- `<T> void spawnParticle(@NotNull Particle particle, @NotNull Location location, int count, double offsetX, double offsetY, double offsetZ, @Nullable T data)`
+- `<T> void spawnParticle(@NotNull Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ, @Nullable T data)`
+- `void spawnParticle(@NotNull Particle particle, @NotNull Location location, int count, double offsetX, double offsetY, double offsetZ, double extra)`
+- `void spawnParticle(@NotNull Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ, double extra)`
+- `<T> void spawnParticle(@NotNull Particle particle, @NotNull Location location, int count, double offsetX, double offsetY, double offsetZ, double extra, @Nullable T data)`
+- `<T> void spawnParticle(@NotNull Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ, double extra, @Nullable T data)`
+- `<T> void spawnParticle(@NotNull Particle particle, @NotNull Location location, int count, double offsetX, double offsetY, double offsetZ, double extra, @Nullable T data, boolean force)`
+- `<T> void spawnParticle(@NotNull Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ, double extra, @Nullable T data, boolean force)`
+- `@NotNull AdvancementProgress getAdvancementProgress(@NotNull Advancement advancement)`
+- `int getClientViewDistance()`
+- `int getPing()`
+- `@NotNull String getLocale()`
+- `void updateCommands()`
+- `void openBook(@NotNull ItemStack book)`
+- `void openSign(@NotNull Sign sign)`
+- `void openSign(@NotNull Sign sign, @NotNull Side side)`
+- `void showDemoScreen()`
+- `boolean isAllowingServerListings()`
+- `@Experimental void clearDialog()`
+- `@Experimental void showDialog(@NotNull NamespacedKey dialog)`
+- `@Experimental void showDialog(@NotNull net.md_5.bungee.api.dialog.Dialog dialog)`
+- `@NotNull Player.Spigot spigot()`

@@ -174,6 +174,14 @@ function Sync-VersionDir {
             [void]$cursorSkillNames.Add([System.IO.Path]::GetFileNameWithoutExtension($skillFile.Name))
         }
     }
+    # A2：源集合为空（.cursor/skills 缺失 / 为空 / 改名）时，下面按白名单逐个 Remove-Item 的剪枝会把
+    # 宿主目录里的 skill / command 全部删光。Test-Path 只守「填充」，不守「剪枝」——这里显式兜住。
+    # 消息串必须 ASCII：本脚本 UTF-8 无 BOM，PowerShell 5.1 按 GBK 解码，中文紧贴收尾双引号时
+    # 会把那个引号吞成 GBK 尾字节 ⇒ 字符串永不闭合、后续整段被当代码（注释里的中文不受影响）。
+    $pruneAllowed = $cursorSkillNames.Count -gt 0
+    if (-not $pruneAllowed) {
+        Write-Host "[Skills] source set empty: skip host skill/command prune (avoid mass delete)" -ForegroundColor Red
+    }
     foreach ($hostSkills in @(
         @{ Path = "$Base\.continue\skills"; Kind = "dir" },
         @{ Path = "$Base\.opencode\skills"; Kind = "dir" },
@@ -183,7 +191,7 @@ function Sync-VersionDir {
     )) {
         if (-not (Test-Path $hostSkills.Path)) { continue }
         foreach ($item in Get-ChildItem $hostSkills.Path -Directory -ErrorAction SilentlyContinue) {
-            if (-not $cursorSkillNames.Contains($item.Name)) {
+            if ($pruneAllowed -and -not $cursorSkillNames.Contains($item.Name)) {
                 Remove-Item $item.FullName -Recurse -Force
                 Write-Host "  Removed extra skill: $($item.FullName)" -ForegroundColor DarkYellow
             }
@@ -193,7 +201,7 @@ function Sync-VersionDir {
     if (Test-Path $traeSkills) {
         foreach ($f in Get-ChildItem $traeSkills -Filter "*.md" -File -ErrorAction SilentlyContinue) {
             $n = [System.IO.Path]::GetFileNameWithoutExtension($f.Name)
-            if (-not $cursorSkillNames.Contains($n)) {
+            if ($pruneAllowed -and -not $cursorSkillNames.Contains($n)) {
                 Remove-Item $f.FullName -Force
                 Write-Host "  Removed extra skill: $($f.FullName)" -ForegroundColor DarkYellow
             }
@@ -203,7 +211,7 @@ function Sync-VersionDir {
     if (Test-Path $claudeCmds) {
         foreach ($f in Get-ChildItem $claudeCmds -Filter "*.md" -File -ErrorAction SilentlyContinue) {
             $stem = [System.IO.Path]::GetFileNameWithoutExtension($f.Name)
-            if (-not ($cursorSkillNames.Contains($stem) -or $cursorSkillNames.Contains("mc-$stem"))) {
+            if ($pruneAllowed -and -not ($cursorSkillNames.Contains($stem) -or $cursorSkillNames.Contains("mc-$stem"))) {
                 Remove-Item $f.FullName -Force
                 Write-Host "  Removed extra command: $($f.FullName)" -ForegroundColor DarkYellow
             }

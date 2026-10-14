@@ -52,6 +52,7 @@ import { inspectRuntime } from "../runtime-inspect/index.js";
 import { inspectPlaytestEvidence } from "../playtest-evidence/index.js";
 import { playtestIntent } from "../playtest-intent/index.js";
 import { callPlaytestBridge } from "../playtest-bridge/index.js";
+import { inspectPlaytestMulti } from "../playtest-multi/index.js";
 
 // ── Wave 工具 inputSchema（导出供 CLI list-tools / schema 驱动解析复用）────────
 export const queryRegistrySchema = z.object({
@@ -219,6 +220,20 @@ export const inspectPlaytestEvidenceSchema = z.object({
   crashReportsDir: z.string().optional(),
   screenshotsDir: z.string().optional().describe("截图根目录（默认 <evidenceDir>/screenshots；桥模式下截图在 <gameDir>/screenshots，须显式指定；仍须在授权根内）"),
 });
+export const inspectPlaytestMultiSchema = z.object({
+  evidenceRoot: z.string().optional().describe("父目录（绝对路径）：自动把它的直接子目录当客户端；与 clients 二选一"),
+  clients: z
+    .array(
+      z.object({
+        id: z.string().optional().describe("客户端别名（联合锚的键，必须唯一）"),
+        evidenceDir: z.string().describe("该客户端证据目录（绝对路径；须在授权根内）"),
+      }),
+    )
+    .optional()
+    .describe("显式客户端列表（硬顶 16 个）"),
+  expectMarkers: z.array(z.string()).optional().describe("会合 marker 名（相对 <evidenceRoot>/sync/）；给了就逐个判 present|absent"),
+  authorization: z.enum(["sandbox", "dev_instance"]).optional(),
+});
 export const playtestBridgeSchema = z.object({
   action: z.enum(["status", "execute", "await"]).describe("status=GET /status；execute=POST /execute；await=条件轮询"),
   command: z
@@ -255,9 +270,11 @@ export const playtestIntentSchema = z.object({
 export const PLAYTEST_INTENT_DESCRIPTION =
   "in_jvm_player_agent 的 LLM 接线面（2026-10-01 裁定 3A：独立工具，不复用桥）：action=read 读 <evidenceDir>/state.json（intentState / intents[] / lastIntent / scan.nearest / goto.arrived）+ 菜单 + 邮箱状态；action=write 把 {intent, ...params} 落到 <evidenceDir>/intent.json（driver 的 waitintent 步消费）。写前校验 fail-closed：意图名在菜单里 / 不在禁列 / 参数 ⊆ 声明 / 必填齐 / 不覆盖未消费件（除非 overwrite=true）。须 MC_SKILL_PLAYTEST_ALLOW=1 + MC_SKILL_PLAYTEST_ROOT（realpath 在根内）；不装桥、不跑游戏。";
 export const GENERATE_PLAYTEST_DRIVER_DESCRIPTION =
-  "Generate playtest driver（只吐文本，默认不写盘）。platform 与 version 必填（精确 MC 版本）。driverMode 默认 external_bridge（桥 HTTP 动作序列 + 后置条件 + 证据约定）——**若 (platform,version) ∈ 桥模板目标集（`playtest-bridge-mod.ts` 的 `BRIDGE_MOD_TARGETS` = forge {1.7.10,1.8.9,1.9.4,1.10.2,1.11.2,1.12.2} + rift 1.13.2 + modloader 1.6.4），另附赠自建「最小桥 mod」模板** `playtest/bridge/**`（forge/rift 出 `BridgeMod.java`+元数据，rift 附 `riftmod.json`、modloader 出 `mod_*.java`；**⚠️ 能力天花板 = 命令级**：桥发聊天包不是键位输入 ⇒ 读数/观察 + `/tp` `/setblock` 这类命令级操控可用（受实例 op 约束），**玩家物理路径（走位/跳跃/挖掘耗时/碰撞）测不了**，别当 driver 用；线协议逐键对齐 BlackBoxPro：/status 六键、/execute {id,status,message,data} + HTTP 恒 200、超时串 Timeout after 10000ms ⇒ playtest_bridge 工具面零改动；动作 4 个 query_player_state(含 health)/chat_command/screenshot/block_at；1.12.2 已 JDK 8 javac 对真 forgeBin 编译验证，1.7.10–1.11.2 只有 javadoc 出处、未编译验证；**rift 1.13.2 逐名有 1.13.2 MCP 快照出处（但 `Minecraft.getInstance()` 的 static 性证不出、`block_at` 只回 translation key）；modloader 1.6.4 只出「骨架」——本仓已实证三类出处（`setInGameHook` 注册 / `onTickInGame` 回调实名 / `getMinecraftInstance` 单例），MC 侧玩家与位置、聊天语义、截图、读方块 4 项仍无来源 ⇒ `/execute` 一律 fail-closed**；**不进 PLAYTEST_VERIFIED_TIER**）；temporary_client_tick_driver 在**`PLAYTEST_VERIFIED_TIER` 列出的档**（唯一真源，随逐档 javap 取证扩面——**不要按某版正文里数的档位当权威**；生成器按该数组现算并点名清单）产出**可编译的真 driver**——**解释器引擎**：动作序列是数据（scenario=smoke|village 或自定义 plan DSL：wait/look/fly/move/cmd/goto/scan/assert/shot/break/gui/mark），换场景只改剧本不改 Java；产物含 driver + plan.json + REVERT.md + README + actions.json；in_jvm_player_agent 在**同一批已验证档**上是**真执行器**（intent / waitintent 邮箱步族），表外档才退回结构壳（// TODO(未核实)）——它不是「全档结构壳」。不装桥、不跑游戏；无桥路线与坑位见社区短文 authored/ingame-playtest-automation。";
+  "Generate playtest driver（只吐文本，默认不写盘）。platform 与 version 必填（精确 MC 版本）。driverMode 默认 external_bridge（桥 HTTP 动作序列 + 后置条件 + 证据约定）——**若 (platform,version) ∈ 桥模板目标集（`playtest-bridge-mod.ts` 的 `BRIDGE_MOD_TARGETS` = forge {1.7.10,1.8.9,1.9.4,1.10.2,1.11.2,1.12.2} + rift 1.13.2 + modloader 1.6.4），另附赠自建「最小桥 mod」模板** `playtest/bridge/**`（forge/rift 出 `BridgeMod.java`+元数据，rift 附 `riftmod.json`、modloader 出 `mod_*.java`；**⚠️ 本桥（external_bridge）的能力天花板 = 命令级**：桥发聊天包不是键位输入 ⇒ 读数/观察 + `/tp` `/setblock` 这类命令级操控可用（受实例 op 约束），**玩家物理路径（走位/跳跃/挖掘耗时/碰撞）测不了**，别当 driver 用（**对照**：`temporary_client_tick_driver` / `in_jvm_player_agent` 是**玩家级**——真按键原语 forward/jump/sneak/attack/use + move/goto/break/gui，走位/跳跃/挖掘/GUI 交互都做得到；这句「测不了」只限定本桥）；线协议逐键对齐 BlackBoxPro：/status 六键、/execute {id,status,message,data} + HTTP 恒 200、超时串 Timeout after 10000ms ⇒ playtest_bridge 工具面零改动；动作 4 个 query_player_state(含 health)/chat_command/screenshot/block_at；1.12.2 已 JDK 8 javac 对真 forgeBin 编译验证，1.7.10–1.11.2 只有 javadoc 出处、未编译验证；**rift 1.13.2 逐名有 1.13.2 MCP 快照出处（但 `Minecraft.getInstance()` 的 static 性证不出、`block_at` 只回 translation key）；modloader 1.6.4 只出「骨架」——本仓已实证三类出处（`setInGameHook` 注册 / `onTickInGame` 回调实名 / `getMinecraftInstance` 单例），MC 侧玩家与位置、聊天语义、截图、读方块 4 项仍无来源 ⇒ `/execute` 一律 fail-closed**；**不进 PLAYTEST_VERIFIED_TIER**）；temporary_client_tick_driver 在**`PLAYTEST_VERIFIED_TIER` 列出的档**（唯一真源，随逐档 javap 取证扩面——**不要按某版正文里数的档位当权威**；生成器按该数组现算并点名清单）产出**可编译的真 driver**——**解释器引擎**：动作序列是数据（scenario=smoke|village 或自定义 plan DSL：wait/look/fly/move/cmd/goto/scan/assert/waitfor/shot/break/gui/mark/touch/waitfile；waitfor 与 assert 同一求值器但**轮询等条件**、超时判红，用来替掉「用时间当同步」的固定 wait），换场景只改剧本不改 Java；产物含 driver + plan.json + REVERT.md + README + actions.json；in_jvm_player_agent 在**同一批已验证档**上是**真执行器**（intent / waitintent 邮箱步族），表外档才退回结构壳（// TODO(未核实)）——它不是「全档结构壳」。不装桥、不跑游戏；无桥路线与坑位见社区短文 authored/ingame-playtest-automation。";
 export const INSPECT_PLAYTEST_EVIDENCE_DESCRIPTION =
   "读游玩自测证据目录（exit-code.txt / state.json / [QA] 段 / calls.jsonl / 截图），每件三态 present|absent|unreadable —— 缺件不得读成「没有失败」。须 MC_SKILL_PLAYTEST_ALLOW=1 + MC_SKILL_PLAYTEST_ROOT（目标 realpath 必须在根内）。可选 logsDir 委派 inspect_runtime；不并入 inspect_runtime 的只读禁令面。";
+export const INSPECT_PLAYTEST_MULTI_DESCRIPTION =
+  "多客户端**联合判读**（多会话；单客户端看 inspect_playtest_evidence）：给 clients[]（{id,evidenceDir}）或 evidenceRoot（扫它的直接子目录当客户端；**保留名 sync/ 跳过并在 autoSkipped 里留痕** —— 跳过不静默）⇒ 逐客户端三态 + 联合判绿 + 锚点 + 会合 marker。判绿三条**全要满足**：① 客户端数 ≥1（不给 = 没测，不判绿）；② 每个客户端 exit-code=0、state.json 与 qa.log 都 present、rounds.jsonl 末轮 ok≠false；③ 给了 expectMarkers 时每个 marker 都在 <evidenceRoot>/sync/ 下 present。缺件一律读作 absent|unreadable，**不得**读成「没有失败」。任一客户端目录 realpath 越出授权根 ⇒ 整体拒（不逐客户端放行）。须 MC_SKILL_PLAYTEST_ALLOW=1 + MC_SKILL_PLAYTEST_ROOT。会合原语在 driver 侧：剧本写 touch <共享目录绝对路径>/<name> 与 waitfile <同路径> max=<ticks>。";
 export const PLAYTEST_BRIDGE_DESCRIPTION =
   "调用 BlackBoxPro 桥（HTTP 恒 200；host 恒 127.0.0.1，端口默认 38081）。status 看 /status.ready（已进世界）；execute 发 /execute（桥原生超时是 failure +「Timeout after Nms」⇒ 本工具映射 PLAYTEST_TIMEOUT，不塌成空结果）；await 轮询 query_* 等条件成立（桥无 wait_until）。execute/await 须 confirmed=true + 授权（allow/root）。桥无鉴权且通配绑定 —— 只在本机使用。";
 export const localizeModSchema = z.object({
@@ -1092,6 +1109,16 @@ export function registerWaveExtensions(server: McpServer): void {
   );
 
   server.registerTool(
+    "inspect_playtest_multi",
+    {
+      title: "Inspect multi-client playtest evidence (joint verdict)",
+      description: INSPECT_PLAYTEST_MULTI_DESCRIPTION,
+      inputSchema: inspectPlaytestMultiSchema,
+    },
+    async (a): Promise<CallToolResult> => jsonResult(inspectPlaytestMulti(a)),
+  );
+
+  server.registerTool(
     "playtest_intent",
     {
       title: "Playtest intent (read observation / write intent mailbox)",
@@ -1174,6 +1201,7 @@ export const waveToolSchemas: Array<{ name: string; description: string; inputSc
   { name: "inspect_runtime", description: "日志型 runtime inspector。优先只读用户确认的 logsDir/crashReportsDir；否则在 projectPath 下有界探测 run/logs、runs/client/logs、build/run/logs。禁止向上走到盘符根、禁止全盘。默认只读文件尾部 N 行并设字节上限。复用 analyze_log / crash_analyze。不做 JDWP attach。", inputSchema: inspectRuntimeSchema },
   { name: "generate_playtest_driver", description: GENERATE_PLAYTEST_DRIVER_DESCRIPTION, inputSchema: generatePlaytestDriverSchema },
   { name: "inspect_playtest_evidence", description: INSPECT_PLAYTEST_EVIDENCE_DESCRIPTION, inputSchema: inspectPlaytestEvidenceSchema },
+  { name: "inspect_playtest_multi", description: INSPECT_PLAYTEST_MULTI_DESCRIPTION, inputSchema: inspectPlaytestMultiSchema },
   { name: "playtest_intent", description: PLAYTEST_INTENT_DESCRIPTION, inputSchema: playtestIntentSchema },
   { name: "playtest_bridge", description: PLAYTEST_BRIDGE_DESCRIPTION, inputSchema: playtestBridgeSchema },
 ];

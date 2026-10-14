@@ -1,0 +1,177 @@
+---
+title: "org.bukkit.Server"
+package: "org.bukkit"
+source: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Server.html
+sourceType: javadoc
+fetchedWith: fetch-spigot-javadoc.mjs@1
+fetchedAt: 2026-10-14T12:59:21.517Z
+asOfVersion: "26.3-R0.1-SNAPSHOT"
+---
+
+**Interface Server**
+`public interface Server extends PluginMessageRecipient`
+- `static final String BROADCAST_CHANNEL_ADMINISTRATIVE`
+- `static final String BROADCAST_CHANNEL_USERS`
+- `@NotNull String getName()`
+- `@NotNull String getVersion()`
+- `@NotNull String getBukkitVersion()`
+- `@NotNull Collection<? extends Player> getOnlinePlayers()`
+- `int getMaxPlayers()`
+- `void setMaxPlayers(int maxPlayers)`
+- `int getPort()`
+- `int getViewDistance()`
+- `int getSimulationDistance()`
+- `@NotNull String getIp()`
+- `@NotNull String getWorldType()`
+- `boolean getGenerateStructures()`
+- `int getMaxWorldSize()`
+- `boolean getAllowEnd()`
+- `boolean getAllowNether()`
+- `boolean isLoggingIPs()`
+- `@NotNull List<String> getInitialEnabledPacks()`
+- `@NotNull List<String> getInitialDisabledPacks()`
+- `@NotNull DataPackManager getDataPackManager()`
+- `@NotNull ServerTickManager getServerTickManager()`
+- `@NotNull Map<String,String> getCodeOfConducts()`
+- `@Nullable ResourcePack getServerResourcePack()`
+- `@NotNull String getResourcePack()`
+- `@NotNull String getResourcePackHash()`
+- `@NotNull String getResourcePackPrompt()`
+- `boolean isResourcePackRequired()`
+- `boolean hasWhitelist()`
+- `void setWhitelist(boolean value)`
+- `boolean isWhitelistEnforced()`
+- `void setWhitelistEnforced(boolean value)`
+- `@NotNull Set<OfflinePlayer> getWhitelistedPlayers()`
+- `void reloadWhitelist()`
+- `int broadcastMessage(@NotNull String message)`
+- `@NotNull String getUpdateFolder()`
+- `@NotNull File getUpdateFolderFile()`
+- `long getConnectionThrottle()`
+- `@Deprecated(since="1.18.1") int getTicksPerAnimalSpawns()`
+- `@Deprecated(since="1.18.1") int getTicksPerMonsterSpawns()`
+- `@Deprecated(since="1.18.1") int getTicksPerWaterSpawns()`
+- `@Deprecated(since="1.18.1") int getTicksPerWaterAmbientSpawns()`
+- `@Deprecated(since="1.18.1") int getTicksPerWaterUndergroundCreatureSpawns()`
+- `@Deprecated(since="1.18.1") int getTicksPerAmbientSpawns()`
+- `int getTicksPerSpawns(@NotNull SpawnCategory spawnCategory)`
+- `@Nullable Player getPlayer(@NotNull String name)`
+- `@Nullable Player getPlayerExact(@NotNull String name)`
+- `@NotNull List<Player> matchPlayer(@NotNull String name)`
+- `@Nullable Player getPlayer(@NotNull UUID id)`
+- `@NotNull PluginManager getPluginManager()`
+- `@NotNull BukkitScheduler getScheduler()`
+- `@NotNull ServicesManager getServicesManager()`
+- `@NotNull List<World> getWorlds()`
+- `@Nullable World createWorld(@NotNull WorldCreator creator)`
+- `boolean unloadWorld(@NotNull String name, boolean save)`
+- `boolean unloadWorld(@NotNull World world, boolean save)`
+- `@Nullable World getWorld(@NotNull String name)`
+- `@Nullable World getWorld(@NotNull UUID uid)`
+- `@NotNull WorldBorder createWorldBorder()`
+- `@Deprecated(since="1.6.2") @Nullable MapView getMap(int id)`
+- `@NotNull MapView createMap(@NotNull World world)`
+- `@NotNull ItemStack createExplorerMap(@NotNull World world, @NotNull Location location, @NotNull StructureType structureType)`
+- `@NotNull ItemStack createExplorerMap(@NotNull World world, @NotNull Location location, @NotNull StructureType structureType, int radius, boolean findUnexplored)`
+- `void reload()`
+- `void reloadData()`
+- `@NotNull Logger getLogger()`
+- `@Nullable PluginCommand getPluginCommand(@NotNull String name)`
+- `void savePlayers()`
+- `boolean dispatchCommand(@NotNull CommandSender sender, @NotNull String commandLine) throws CommandException`
+- `@Contract("null -> false") boolean addRecipe(@Nullable Recipe recipe)`
+- `@NotNull List<Recipe> getRecipesFor(@NotNull ItemStack result)`
+- `@Nullable Recipe getRecipe(@NotNull NamespacedKey recipeKey)`
+- `@Nullable Recipe getCraftingRecipe(@NotNull ItemStack[] craftingMatrix, @NotNull World world)`
+- `@NotNull ItemStack craftItem(@NotNull ItemStack[] craftingMatrix, @NotNull World world, @NotNull Player player)`
+- `@NotNull ItemStack craftItem(@NotNull ItemStack[] craftingMatrix, @NotNull World world)`
+- `@NotNull ItemCraftResult craftItemResult(@NotNull ItemStack[] craftingMatrix, @NotNull World world, @NotNull Player player)`
+- `@NotNull ItemCraftResult craftItemResult(@NotNull ItemStack[] craftingMatrix, @NotNull World world)`
+- `@NotNull Iterator<Recipe> recipeIterator()`
+- `void clearRecipes()`
+- `void resetRecipes()`
+- `boolean removeRecipe(@NotNull NamespacedKey key)`
+- `@NotNull Map<String,String[]> getCommandAliases()`
+- `int getSpawnRadius()`
+- `void setSpawnRadius(int value)`
+- `@Deprecated(since="1.19.3") boolean shouldSendChatPreviews()`
+- `boolean isEnforcingSecureProfiles()`
+- `boolean isAcceptingTransfers()`
+- `boolean getHideOnlinePlayers()`
+- `boolean getOnlineMode()`
+- `boolean getAllowFlight()`
+- `boolean isHardcore()`
+- `void shutdown()`
+- `int broadcast(@NotNull String message, @NotNull String permission)`
+- `@Deprecated(since="1.7.5") @NotNull OfflinePlayer getOfflinePlayer(@NotNull String name)`
+- `@NotNull OfflinePlayer getOfflinePlayer(@NotNull UUID id)`
+- `@NotNull PlayerProfile createPlayerProfile(@Nullable UUID uniqueId, @Nullable String name)`
+- `@NotNull PlayerProfile createPlayerProfile(@NotNull UUID uniqueId)`
+- `@NotNull PlayerProfile createPlayerProfile(@NotNull String name)`
+- `@NotNull Set<String> getIPBans()`
+- `@Deprecated(since="1.20.1") void banIP(@NotNull String address)`
+- `@Deprecated(since="1.20.1") void unbanIP(@NotNull String address)`
+- `void banIP(@NotNull InetAddress address)`
+- `void unbanIP(@NotNull InetAddress address)`
+- `@NotNull Set<OfflinePlayer> getBannedPlayers()`
+- `@NotNull <T extends BanList<?>> T getBanList(@NotNull BanList.Type type)`
+- `@NotNull Set<OfflinePlayer> getOperators()`
+- `@NotNull GameMode getDefaultGameMode()`
+- `void setDefaultGameMode(@NotNull GameMode mode)`
+- `@NotNull ConsoleCommandSender getConsoleSender()`
+- `@NotNull File getWorldContainer()`
+- `@NotNull OfflinePlayer[] getOfflinePlayers()`
+- `@NotNull Messenger getMessenger()`
+- `@NotNull HelpMap getHelpMap()`
+- `@NotNull Inventory createInventory(@Nullable InventoryHolder owner, @NotNull InventoryType type)`
+- `@NotNull Inventory createInventory(@Nullable InventoryHolder owner, @NotNull InventoryType type, @NotNull String title)`
+- `@NotNull Inventory createInventory(@Nullable InventoryHolder owner, int size) throws IllegalArgumentException`
+- `@NotNull Inventory createInventory(@Nullable InventoryHolder owner, int size, @NotNull String title) throws IllegalArgumentException`
+- `@Deprecated(since="1.21.4") @NotNull Merchant createMerchant(@Nullable String title)`
+- `@NotNull Merchant createMerchant()`
+- `int getMaxChainedNeighborUpdates()`
+- `@Deprecated(since="1.18.1") int getMonsterSpawnLimit()`
+- `@Deprecated(since="1.18.1") int getAnimalSpawnLimit()`
+- `@Deprecated(since="1.18.1") int getWaterAnimalSpawnLimit()`
+- `@Deprecated(since="1.18.1") int getWaterAmbientSpawnLimit()`
+- `@Deprecated(since="1.18.1") int getWaterUndergroundCreatureSpawnLimit()`
+- `@Deprecated(since="1.18.1") int getAmbientSpawnLimit()`
+- `int getSpawnLimit(@NotNull SpawnCategory spawnCategory)`
+- `boolean isPrimaryThread()`
+- `@NotNull String getMotd()`
+- `void setMotd(@NotNull String motd)`
+- `@NotNull ServerLinks getServerLinks()`
+- `@Nullable String getShutdownMessage()`
+- `@NotNull Warning.WarningState getWarningState()`
+- `@NotNull ItemFactory getItemFactory()`
+- `@NotNull EntityFactory getEntityFactory()`
+- `@Nullable ScoreboardManager getScoreboardManager()`
+- `@NotNull Criteria getScoreboardCriteria(@NotNull String name)`
+- `@Nullable CachedServerIcon getServerIcon()`
+- `@NotNull CachedServerIcon loadServerIcon(@NotNull File file) throws IllegalArgumentException, Exception`
+- `@NotNull CachedServerIcon loadServerIcon(@NotNull BufferedImage image) throws IllegalArgumentException, Exception`
+- `void setIdleTimeout(int threshold)`
+- `int getIdleTimeout()`
+- `int getPauseWhenEmptyTime()`
+- `void setPauseWhenEmptyTime(int seconds)`
+- `@NotNull ChunkGenerator.ChunkData createChunkData(@NotNull World world)`
+- `@NotNull BossBar createBossBar(@Nullable String title, @NotNull BarColor color, @NotNull BarStyle style, @NotNull BarFlag... flags)`
+- `@NotNull KeyedBossBar createBossBar(@NotNull NamespacedKey key, @Nullable String title, @NotNull BarColor color, @NotNull BarStyle style, @NotNull BarFlag... flags)`
+- `@NotNull Iterator<KeyedBossBar> getBossBars()`
+- `@Nullable KeyedBossBar getBossBar(@NotNull NamespacedKey key)`
+- `boolean removeBossBar(@NotNull NamespacedKey key)`
+- `@Nullable Entity getEntity(@NotNull UUID uuid)`
+- `@Nullable Advancement getAdvancement(@NotNull NamespacedKey key)`
+- `@NotNull Iterator<Advancement> advancementIterator()`
+- `@NotNull BlockData createBlockData(@NotNull Material material)`
+- `@NotNull BlockData createBlockData(@NotNull Material material, @Nullable Consumer<? super BlockData> consumer)`
+- `@NotNull BlockData createBlockData(@NotNull String data) throws IllegalArgumentException`
+- `@NotNull @Contract("null, null -> fail") BlockData createBlockData(@Nullable Material material, @Nullable String data) throws IllegalArgumentException`
+- `@Nullable <T extends Keyed> Tag<T> getTag(@NotNull String registry, @NotNull NamespacedKey tag, @NotNull Class<T> clazz)`
+- `@NotNull <T extends Keyed> Iterable<Tag<T>> getTags(@NotNull String registry, @NotNull Class<T> clazz)`
+- `@Nullable LootTable getLootTable(@NotNull NamespacedKey key)`
+- `@NotNull List<Entity> selectEntities(@NotNull CommandSender sender, @NotNull String selector) throws IllegalArgumentException`
+- `@NotNull StructureManager getStructureManager()`
+- `@Nullable <T extends Keyed> Registry<T> getRegistry(@NotNull Class<T> tClass)`
+- `@Deprecated(since="1.7.2") @NotNull UnsafeValues getUnsafe()`
+- `@NotNull Server.Spigot spigot()`

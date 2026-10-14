@@ -156,9 +156,9 @@ import { FabricDocStore } from "./fabric/store.js";
 import { NeoForgeDocStore } from "./neoforge/store.js";
 
 export const UNSUPPORTED_PLATFORM_MSG =
-  "平台不支持；Java 文档用 search_docs（forge/neoforge/fabric/quilt/liteloader/rift/modloader），基岩用 search_bedrock_docs";
+  "平台不支持；Java 文档用 search_docs（forge/neoforge/fabric/quilt/liteloader/rift/modloader），服务端插件用 search_docs platform=paper（正文）或 platform=spigot（Bukkit/Spigot 签名面），基岩用 search_bedrock_docs";
 export const UNSUPPORTED_PLATFORM_HINT =
-  "请使用 platform: forge、neoforge、fabric、quilt、liteloader、rift 或 modloader；基岩请用 search_bedrock_docs";
+  "请使用 platform: forge、neoforge、fabric、quilt、liteloader、rift、modloader、paper（服务端插件正文）或 spigot（Bukkit/Spigot 签名面）；基岩请用 search_bedrock_docs";
 
 /**
  * A-33：不支持平台的**唯一** store 实现（原先在 store.ts 与 forge/index.ts 各有一份拷贝）。
@@ -238,6 +238,21 @@ export function createDocStore(platform: Platform, dataDir: string): IDocStore {
   }
   if (platform === "bedrock") {
     return new FabricDocStore(dataDir, "stable", "bedrock-docs", "bedrock");
+  }
+  if (platform === "spigot") {
+    // 服务端面**签名层**（Javadoc）：Bukkit/Spigot API 的名字与签名。
+    // 与 paper 文档面**不同源**、不要混成一个 index —— 正文面回答「怎么写插件」，本面回答「这个方法到底叫什么」。
+    return new FabricDocStore(dataDir, "stable", "spigot-javadoc", "spigot");
+  }
+  if (platform === "paper-api") {
+    // Paper 的**签名层**（Javadoc）：`data/paper-api_stable/paper-javadoc/stable/`。
+    // 与 `paper` 的教程面（`paper-docs`）**同平台、不同树** —— `FabricDocStore` 单源，故各占一个平台 id。
+    return new FabricDocStore(dataDir, "stable", "paper-javadoc", "paper-api");
+  }
+  if (platform === "paper") {
+    // 服务端面（插件）：Paper 开发文档。本分支**不是镜像** —— 与 bedrock 同一通用形态：
+    // 伪版本 `stable` + 子目录 `paper-docs` + dirPrefix `paper`（三参与上方一行同构）。
+    return new FabricDocStore(dataDir, "stable", "paper-docs", "paper");
   }
   return new UnsupportedPlatformStore();
 }

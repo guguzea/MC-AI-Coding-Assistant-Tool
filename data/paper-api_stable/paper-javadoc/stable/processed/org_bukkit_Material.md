@@ -1,0 +1,2344 @@
+---
+title: "org.bukkit.Material"
+package: "org.bukkit"
+source: https://jd.papermc.io/paper/26.3/org/bukkit/Material.html
+sourceType: javadoc
+fetchedWith: fetch-spigot-javadoc.mjs@1
+fetchedAt: 2026-10-14T13:02:54.065Z
+asOfVersion: "26.3.build.178-stable"
+---
+
+**Enum Class Material**
+`public enum Material extends Enum<Material> implements Keyed, Translatable, Translatable`
+- `public static final Material ABANDONED_CAMP_MAP`
+- `public static final Material ACACIA_BOAT`
+- `public static final Material ACACIA_CHEST_BOAT`
+- `public static final Material AIR`
+- `public static final Material ALLAY_SPAWN_EGG`
+- `public static final Material AMETHYST_SHARD`
+- `public static final Material ANGLER_POTTERY_SHERD`
+- `public static final Material APPLE`
+- `public static final Material ARCHER_POTTERY_SHERD`
+- `public static final Material ARMADILLO_SCUTE`
+- `public static final Material ARMADILLO_SPAWN_EGG`
+- `public static final Material ARMOR_STAND`
+- `public static final Material ARMS_UP_POTTERY_SHERD`
+- `public static final Material ARROW`
+- `public static final Material AXOLOTL_BUCKET`
+- `public static final Material AXOLOTL_SPAWN_EGG`
+- `public static final Material BAKED_POTATO`
+- `public static final Material BAMBOO_CHEST_RAFT`
+- `public static final Material BAMBOO_RAFT`
+- `public static final Material BAT_SPAWN_EGG`
+- `public static final Material BEE_SPAWN_EGG`
+- `public static final Material BEEF`
+- `public static final Material BEETROOT`
+- `public static final Material BEETROOT_SEEDS`
+- `public static final Material BEETROOT_SOUP`
+- `public static final Material BIRCH_BOAT`
+- `public static final Material BIRCH_CHEST_BOAT`
+- `public static final Material BLACK_BUNDLE`
+- `public static final Material BLACK_CUSHION`
+- `public static final Material BLACK_DYE`
+- `public static final Material BLACK_HARNESS`
+- `public static final Material BLADE_POTTERY_SHERD`
+- `public static final Material BLAZE_POWDER`
+- `public static final Material BLAZE_ROD`
+- `public static final Material BLAZE_SPAWN_EGG`
+- `public static final Material BLUE_BUNDLE`
+- `public static final Material BLUE_CUSHION`
+- `public static final Material BLUE_DYE`
+- `public static final Material BLUE_EGG`
+- `public static final Material BLUE_HARNESS`
+- `public static final Material BOGGED_SPAWN_EGG`
+- `public static final Material BOLT_ARMOR_TRIM_SMITHING_TEMPLATE`
+- `public static final Material BONE`
+- `public static final Material BONE_MEAL`
+- `public static final Material BOOK`
+- `public static final Material BORDURE_INDENTED_BANNER_PATTERN`
+- `public static final Material BOW`
+- `public static final Material BOWL`
+- `public static final Material BREAD`
+- `public static final Material BREEZE_ROD`
+- `public static final Material BREEZE_SPAWN_EGG`
+- `public static final Material BREWER_POTTERY_SHERD`
+- `public static final Material BRICK`
+- `public static final Material BROWN_BUNDLE`
+- `public static final Material BROWN_CUSHION`
+- `public static final Material BROWN_DYE`
+- `public static final Material BROWN_EGG`
+- `public static final Material BROWN_HARNESS`
+- `public static final Material BRUSH`
+- `public static final Material BUCKET`
+- `public static final Material BUNDLE`
+- `public static final Material BURIED_ANCIENT_CITY_MAP`
+- `public static final Material BURIED_MINESHAFT_MAP`
+- `public static final Material BURIED_TREASURE_MAP`
+- `public static final Material BURIED_TRIAL_CHAMBERS_MAP`
+- `public static final Material BURN_POTTERY_SHERD`
+- `public static final Material CAMEL_HUSK_SPAWN_EGG`
+- `public static final Material CAMEL_SPAWN_EGG`
+- `public static final Material CARROT`
+- `public static final Material CARROT_ON_A_STICK`
+- `public static final Material CAT_SPAWN_EGG`
+- `public static final Material CAVE_SPIDER_SPAWN_EGG`
+- `public static final Material CHAINMAIL_BOOTS`
+- `public static final Material CHAINMAIL_CHESTPLATE`
+- `public static final Material CHAINMAIL_HELMET`
+- `public static final Material CHAINMAIL_LEGGINGS`
+- `public static final Material CHARCOAL`
+- `public static final Material CHERRY_BOAT`
+- `public static final Material CHERRY_CHEST_BOAT`
+- `public static final Material CHEST_MINECART`
+- `public static final Material CHICKEN`
+- `public static final Material CHICKEN_SPAWN_EGG`
+- `public static final Material CHORUS_FRUIT`
+- `public static final Material CLAY_BALL`
+- `public static final Material CLOCK`
+- `public static final Material COAL`
+- `public static final Material COAST_ARMOR_TRIM_SMITHING_TEMPLATE`
+- `public static final Material COCOA_BEANS`
+- `public static final Material COD`
+- `public static final Material COD_BUCKET`
+- `public static final Material COD_SPAWN_EGG`
+- `public static final Material COMMAND_BLOCK_MINECART`
+- `public static final Material COMPASS`
+- `public static final Material COOKED_BEEF`
+- `public static final Material COOKED_CHICKEN`
+- `public static final Material COOKED_COD`
+- `public static final Material COOKED_MUTTON`
+- `public static final Material COOKED_PORKCHOP`
+- `public static final Material COOKED_RABBIT`
+- `public static final Material COOKED_SALMON`
+- `public static final Material COOKIE`
+- `public static final Material COPPER_AXE`
+- `public static final Material COPPER_BOOTS`
+- `public static final Material COPPER_CHESTPLATE`
+- `public static final Material COPPER_GOLEM_SPAWN_EGG`
+- `public static final Material COPPER_HELMET`
+- `public static final Material COPPER_HOE`
+- `public static final Material COPPER_HORSE_ARMOR`
+- `public static final Material COPPER_INGOT`
+- `public static final Material COPPER_LEGGINGS`
+- `public static final Material COPPER_NAUTILUS_ARMOR`
+- `public static final Material COPPER_NUGGET`
+- `public static final Material COPPER_PICKAXE`
+- `public static final Material COPPER_SHOVEL`
+- `public static final Material COPPER_SPEAR`
+- `public static final Material COPPER_SWORD`
+- `public static final Material COW_SPAWN_EGG`
+- `public static final Material CREAKING_SPAWN_EGG`
+- `public static final Material CREEPER_BANNER_PATTERN`
+- `public static final Material CREEPER_SPAWN_EGG`
+- `public static final Material CROSSBOW`
+- `public static final Material CYAN_BUNDLE`
+- `public static final Material CYAN_CUSHION`
+- `public static final Material CYAN_DYE`
+- `public static final Material CYAN_HARNESS`
+- `public static final Material DANGER_POTTERY_SHERD`
+- `public static final Material DARK_OAK_BOAT`
+- `public static final Material DARK_OAK_CHEST_BOAT`
+- `public static final Material DEBUG_STICK`
+- `public static final Material DESERT_PYRAMID_MAP`
+- `public static final Material DESERT_VILLAGE_MAP`
+- `public static final Material DIAMOND`
+- `public static final Material DIAMOND_AXE`
+- `public static final Material DIAMOND_BOOTS`
+- `public static final Material DIAMOND_CHESTPLATE`
+- `public static final Material DIAMOND_HELMET`
+- `public static final Material DIAMOND_HOE`
+- `public static final Material DIAMOND_HORSE_ARMOR`
+- `public static final Material DIAMOND_LEGGINGS`
+- `public static final Material DIAMOND_NAUTILUS_ARMOR`
+- `public static final Material DIAMOND_PICKAXE`
+- `public static final Material DIAMOND_SHOVEL`
+- `public static final Material DIAMOND_SPEAR`
+- `public static final Material DIAMOND_SWORD`
+- `public static final Material DISC_FRAGMENT_5`
+- `public static final Material DOLPHIN_SPAWN_EGG`
+- `public static final Material DONKEY_SPAWN_EGG`
+- `public static final Material DRAGON_BREATH`
+- `public static final Material DRIED_KELP`
+- `public static final Material DROWNED_SPAWN_EGG`
+- `public static final Material DUNE_ARMOR_TRIM_SMITHING_TEMPLATE`
+- `public static final Material ECHO_SHARD`
+- `public static final Material EGG`
+- `public static final Material ELDER_GUARDIAN_SPAWN_EGG`
+- `public static final Material ELYTRA`
+- `public static final Material EMERALD`
+- `public static final Material ENCHANTED_BOOK`
+- `public static final Material ENCHANTED_GOLDEN_APPLE`
+- `public static final Material END_CRYSTAL`
+- `public static final Material ENDER_DRAGON_SPAWN_EGG`
+- `public static final Material ENDER_EYE`
+- `public static final Material ENDER_PEARL`
+- `public static final Material ENDERMAN_SPAWN_EGG`
+- `public static final Material ENDERMITE_SPAWN_EGG`
+- `public static final Material EVOKER_SPAWN_EGG`
+- `public static final Material EXPERIENCE_BOTTLE`
+- `public static final Material EXPLORER_POTTERY_SHERD`
+- `public static final Material EYE_ARMOR_TRIM_SMITHING_TEMPLATE`
+- `public static final Material FEATHER`
+- `public static final Material FERMENTED_SPIDER_EYE`
+- `public static final Material FIELD_MASONED_BANNER_PATTERN`
+- `public static final Material FILLED_MAP`
+- `public static final Material FIRE_CHARGE`
+- `public static final Material FIREWORK_ROCKET`
+- `public static final Material FIREWORK_STAR`
+- `public static final Material FISHING_ROD`
+- `public static final Material FLINT`
+- `public static final Material FLINT_AND_STEEL`
+- `public static final Material FLOW_ARMOR_TRIM_SMITHING_TEMPLATE`
+- `public static final Material FLOW_BANNER_PATTERN`
+- `public static final Material FLOW_POTTERY_SHERD`
+- `public static final Material FLOWER_BANNER_PATTERN`
+- `public static final Material FOX_SPAWN_EGG`
+- `public static final Material FRIEND_POTTERY_SHERD`
+- `public static final Material FROG_SPAWN_EGG`
+- `public static final Material FURNACE_MINECART`
+- `public static final Material GHAST_SPAWN_EGG`
+- `public static final Material GHAST_TEAR`
+- `public static final Material GLASS_BOTTLE`
+- `public static final Material GLISTERING_MELON_SLICE`
+- `public static final Material GLOBE_BANNER_PATTERN`
+- `public static final Material GLOW_BERRIES`
+- `public static final Material GLOW_INK_SAC`
+- `public static final Material GLOW_ITEM_FRAME`
+- `public static final Material GLOW_SQUID_SPAWN_EGG`
+- `public static final Material GLOWSTONE_DUST`
+- `public static final Material GOAT_HORN`
+- `public static final Material GOAT_SPAWN_EGG`
+- `public static final Material GOLD_INGOT`
+- `public static final Material GOLD_NUGGET`
+- `public static final Material GOLDEN_APPLE`
+- `public static final Material GOLDEN_AXE`
+- `public static final Material GOLDEN_BOOTS`
+- `public static final Material GOLDEN_CARROT`
+- `public static final Material GOLDEN_CHESTPLATE`
+- `public static final Material GOLDEN_HELMET`
+- `public static final Material GOLDEN_HOE`
+- `public static final Material GOLDEN_HORSE_ARMOR`
+- `public static final Material GOLDEN_LEGGINGS`
+- `public static final Material GOLDEN_NAUTILUS_ARMOR`
+- `public static final Material GOLDEN_PICKAXE`
+- `public static final Material GOLDEN_SHOVEL`
+- `public static final Material GOLDEN_SPEAR`
+- `public static final Material GOLDEN_SWORD`
+- `public static final Material GRAY_BUNDLE`
+- `public static final Material GRAY_CUSHION`
+- `public static final Material GRAY_DYE`
+- `public static final Material GRAY_HARNESS`
+- `public static final Material GREEN_BUNDLE`
+- `public static final Material GREEN_CUSHION`
+- `public static final Material GREEN_DYE`
+- `public static final Material GREEN_HARNESS`
+- `public static final Material GUARDIAN_SPAWN_EGG`
+- `public static final Material GUNPOWDER`
+- `public static final Material GUSTER_BANNER_PATTERN`
+- `public static final Material GUSTER_POTTERY_SHERD`
+- `public static final Material HAPPY_GHAST_SPAWN_EGG`
+- `public static final Material HEART_OF_THE_SEA`
+- `public static final Material HEART_POTTERY_SHERD`
+- `public static final Material HEARTBREAK_POTTERY_SHERD`
+- `public static final Material HOGLIN_SPAWN_EGG`
+- `public static final Material HONEY_BOTTLE`
+- `public static final Material HONEYCOMB`
+- `public static final Material HOPPER_MINECART`
+- `public static final Material HORSE_SPAWN_EGG`
+- `public static final Material HOST_ARMOR_TRIM_SMITHING_TEMPLATE`
+- `public static final Material HOWL_POTTERY_SHERD`
+- `public static final Material HUSK_SPAWN_EGG`
+- `public static final Material INK_SAC`
+- `public static final Material IRON_AXE`
+- `public static final Material IRON_BOOTS`
+- `public static final Material IRON_CHESTPLATE`
+- `public static final Material IRON_GOLEM_SPAWN_EGG`
+- `public static final Material IRON_HELMET`
+- `public static final Material IRON_HOE`
+- `public static final Material IRON_HORSE_ARMOR`
+- `public static final Material IRON_INGOT`
+- `public static final Material IRON_LEGGINGS`
+- `public static final Material IRON_NAUTILUS_ARMOR`
+- `public static final Material IRON_NUGGET`
+- `public static final Material IRON_PICKAXE`
+- `public static final Material IRON_SHOVEL`
+- `public static final Material IRON_SPEAR`
+- `public static final Material IRON_SWORD`
+- `public static final Material ITEM_FRAME`
+- `public static final Material JUNGLE_BOAT`
+- `public static final Material JUNGLE_CHEST_BOAT`
+- `public static final Material JUNGLE_PYRAMID_MAP`
+- `public static final Material KNOWLEDGE_BOOK`
+- `public static final Material LAPIS_LAZULI`
+- `public static final Material LAVA_BUCKET`
+- `public static final Material LEAD`
+- `public static final Material LEATHER`
+- `public static final Material LEATHER_BOOTS`
+- `public static final Material LEATHER_CHESTPLATE`
+- `public static final Material LEATHER_HELMET`
+- `public static final Material LEATHER_HORSE_ARMOR`
+- `public static final Material LEATHER_LEGGINGS`
+- `public static final Material LIGHT_BLUE_BUNDLE`
+- `public static final Material LIGHT_BLUE_CUSHION`
+- `public static final Material LIGHT_BLUE_DYE`
+- `public static final Material LIGHT_BLUE_HARNESS`
+- `public static final Material LIGHT_GRAY_BUNDLE`
+- `public static final Material LIGHT_GRAY_CUSHION`
+- `public static final Material LIGHT_GRAY_DYE`
+- `public static final Material LIGHT_GRAY_HARNESS`
+- `public static final Material LIME_BUNDLE`
+- `public static final Material LIME_CUSHION`
+- `public static final Material LIME_DYE`
+- `public static final Material LIME_HARNESS`
+- `public static final Material LINGERING_POTION`
+- `public static final Material LLAMA_SPAWN_EGG`
+- `public static final Material MACE`
+- `public static final Material MAGENTA_BUNDLE`
+- `public static final Material MAGENTA_CUSHION`
+- `public static final Material MAGENTA_DYE`
+- `public static final Material MAGENTA_HARNESS`
+- `public static final Material MAGMA_CREAM`
+- `public static final Material MAGMA_CUBE_SPAWN_EGG`
+- `public static final Material MANGROVE_BOAT`
+- `public static final Material MANGROVE_CHEST_BOAT`
+- `public static final Material MAP`
+- `public static final Material MELON_SEEDS`
+- `public static final Material MELON_SLICE`
+- `public static final Material MILK_BUCKET`
+- `public static final Material MINECART`
+- `public static final Material MINER_POTTERY_SHERD`
+- `public static final Material MOJANG_BANNER_PATTERN`
+- `public static final Material MOOSHROOM_SPAWN_EGG`
+- `public static final Material MOURNER_POTTERY_SHERD`
+- `public static final Material MULE_SPAWN_EGG`
+- `public static final Material MUSHROOM_STEW`
+- `public static final Material MUSIC_DISC_5`
+- `public static final Material MUSIC_DISC_11`
+- `public static final Material MUSIC_DISC_13`
+- `public static final Material MUSIC_DISC_BLOCKS`
+- `public static final Material MUSIC_DISC_BOUNCE`
+- `public static final Material MUSIC_DISC_CAT`
+- `public static final Material MUSIC_DISC_CHIRP`
+- `public static final Material MUSIC_DISC_CREATOR`
+- `public static final Material MUSIC_DISC_CREATOR_MUSIC_BOX`
+- `public static final Material MUSIC_DISC_FAR`
+- `public static final Material MUSIC_DISC_LAVA_CHICKEN`
+- `public static final Material MUSIC_DISC_MALL`
+- `public static final Material MUSIC_DISC_MELLOHI`
+- `public static final Material MUSIC_DISC_OTHERSIDE`
+- `public static final Material MUSIC_DISC_PIGSTEP`
+- `public static final Material MUSIC_DISC_PRECIPICE`
+- `public static final Material MUSIC_DISC_RELIC`
+- `public static final Material MUSIC_DISC_STAL`
+- `public static final Material MUSIC_DISC_STRAD`
+- `public static final Material MUSIC_DISC_TEARS`
+- `public static final Material MUSIC_DISC_WAIT`
+- `public static final Material MUSIC_DISC_WARD`
+- `public static final Material MUTTON`
+- `public static final Material NAME_TAG`
+- `public static final Material NAUTILUS_SHELL`
+- `public static final Material NAUTILUS_SPAWN_EGG`
+- `public static final Material NETHER_BRICK`
+- `public static final Material NETHER_STAR`
+- `public static final Material NETHERITE_AXE`
+- `public static final Material NETHERITE_BOOTS`
+- `public static final Material NETHERITE_CHESTPLATE`
+- `public static final Material NETHERITE_HELMET`
+- `public static final Material NETHERITE_HOE`
+- `public static final Material NETHERITE_HORSE_ARMOR`
+- `public static final Material NETHERITE_INGOT`
+- `public static final Material NETHERITE_LEGGINGS`
+- `public static final Material NETHERITE_NAUTILUS_ARMOR`
+- `public static final Material NETHERITE_PICKAXE`
+- `public static final Material NETHERITE_SCRAP`
+- `public static final Material NETHERITE_SHOVEL`
+- `public static final Material NETHERITE_SPEAR`
+- `public static final Material NETHERITE_SWORD`
+- `public static final Material NETHERITE_UPGRADE_SMITHING_TEMPLATE`
+- `public static final Material OAK_BOAT`
+- `public static final Material OAK_CHEST_BOAT`
+- `public static final Material OCEAN_MONUMENT_MAP`
+- `public static final Material OCELOT_SPAWN_EGG`
+- `public static final Material OMINOUS_BOTTLE`
+- `public static final Material OMINOUS_TRIAL_KEY`
+- `public static final Material ORANGE_BUNDLE`
+- `public static final Material ORANGE_CUSHION`
+- `public static final Material ORANGE_DYE`
+- `public static final Material ORANGE_HARNESS`
+- `public static final Material PAINTING`
+- `public static final Material PALE_OAK_BOAT`
+- `public static final Material PALE_OAK_CHEST_BOAT`
+- `public static final Material PANDA_SPAWN_EGG`
+- `public static final Material PAPER`
+- `public static final Material PARCHED_SPAWN_EGG`
+- `public static final Material PARROT_SPAWN_EGG`
+- `public static final Material PHANTOM_MEMBRANE`
+- `public static final Material PHANTOM_SPAWN_EGG`
+- `public static final Material PIG_SPAWN_EGG`
+- `public static final Material PIGLIN_BANNER_PATTERN`
+- `public static final Material PIGLIN_BRUTE_SPAWN_EGG`
+- `public static final Material PIGLIN_SPAWN_EGG`
+- `public static final Material PILLAGER_SPAWN_EGG`
+- `public static final Material PINK_BUNDLE`
+- `public static final Material PINK_CUSHION`
+- `public static final Material PINK_DYE`
+- `public static final Material PINK_HARNESS`
+- `public static final Material PITCHER_POD`
+- `public static final Material PLAINS_VILLAGE_MAP`
+- `public static final Material PLENTY_POTTERY_SHERD`
+- `public static final Material POISONOUS_POTATO`
+- `public static final Material POLAR_BEAR_SPAWN_EGG`
+- `public static final Material POPLAR_BOAT`
+- `public static final Material POPLAR_CHEST_BOAT`
+- `public static final Material POPPED_CHORUS_FRUIT`
+- `public static final Material PORKCHOP`
+- `public static final Material POTATO`
+- `public static final Material POTION`
+- `public static final Material POWDER_SNOW_BUCKET`
+- `public static final Material PRISMARINE_CRYSTALS`
+- `public static final Material PRISMARINE_SHARD`
+- `public static final Material PRIZE_POTTERY_SHERD`
+- `public static final Material PUFFERFISH`
+- `public static final Material PUFFERFISH_BUCKET`
+- `public static final Material PUFFERFISH_SPAWN_EGG`
+- `public static final Material PUMPKIN_PIE`
+- `public static final Material PUMPKIN_SEEDS`
+- `public static final Material PURPLE_BUNDLE`
+- `public static final Material PURPLE_CUSHION`
+- `public static final Material PURPLE_DYE`
+- `public static final Material PURPLE_HARNESS`
+- `public static final Material QUARTZ`
+- `public static final Material RABBIT`
+- `public static final Material RABBIT_FOOT`
+- `public static final Material RABBIT_HIDE`
+- `public static final Material RABBIT_SPAWN_EGG`
+- `public static final Material RABBIT_STEW`
+- `public static final Material RAISER_ARMOR_TRIM_SMITHING_TEMPLATE`
+- `public static final Material RAVAGER_SPAWN_EGG`
+- `public static final Material RAW_COPPER`
+- `public static final Material RAW_GOLD`
+- `public static final Material RAW_IRON`
+- `public static final Material RECOVERY_COMPASS`
+- `public static final Material RED_BUNDLE`
+- `public static final Material RED_CUSHION`
+- `public static final Material RED_DYE`
+- `public static final Material RED_HARNESS`
+- `public static final Material REDSTONE`
+- `public static final Material RESIN_BRICK`
+- `public static final Material RIB_ARMOR_TRIM_SMITHING_TEMPLATE`
+- `public static final Material ROTTEN_FLESH`
+- `public static final Material SADDLE`
+- `public static final Material SALMON`
+- `public static final Material SALMON_BUCKET`
+- `public static final Material SALMON_SPAWN_EGG`
+- `public static final Material SAVANNA_VILLAGE_MAP`
+- `public static final Material SCRAPE_POTTERY_SHERD`
+- `public static final Material SENTRY_ARMOR_TRIM_SMITHING_TEMPLATE`
+- `public static final Material SHAPER_ARMOR_TRIM_SMITHING_TEMPLATE`
+- `public static final Material SHEAF_POTTERY_SHERD`
+- `public static final Material SHEARS`
+- `public static final Material SHEEP_SPAWN_EGG`
+- `public static final Material SHELTER_POTTERY_SHERD`
+- `public static final Material SHIELD`
+- `public static final Material SHULKER_SHELL`
+- `public static final Material SHULKER_SPAWN_EGG`
+- `public static final Material SILENCE_ARMOR_TRIM_SMITHING_TEMPLATE`
+- `public static final Material SILVERFISH_SPAWN_EGG`
+- `public static final Material SKELETON_HORSE_SPAWN_EGG`
+- `public static final Material SKELETON_SPAWN_EGG`
+- `public static final Material SKULL_BANNER_PATTERN`
+- `public static final Material SKULL_POTTERY_SHERD`
+- `public static final Material SLIME_BALL`
+- `public static final Material SLIME_SPAWN_EGG`
+- `public static final Material SNIFFER_SPAWN_EGG`
+- `public static final Material SNORT_POTTERY_SHERD`
+- `public static final Material SNOUT_ARMOR_TRIM_SMITHING_TEMPLATE`
+- `public static final Material SNOW_GOLEM_SPAWN_EGG`
+- `public static final Material SNOWBALL`
+- `public static final Material SNOWY_VILLAGE_MAP`
+- `public static final Material SPECTRAL_ARROW`
+- `public static final Material SPIDER_EYE`
+- `public static final Material SPIDER_SPAWN_EGG`
+- `public static final Material SPIRE_ARMOR_TRIM_SMITHING_TEMPLATE`
+- `public static final Material SPLASH_POTION`
+- `public static final Material SPRUCE_BOAT`
+- `public static final Material SPRUCE_CHEST_BOAT`
+- `public static final Material SPYGLASS`
+- `public static final Material SQUID_SPAWN_EGG`
+- `public static final Material STICK`
+- `public static final Material STONE_AXE`
+- `public static final Material STONE_HOE`
+- `public static final Material STONE_PICKAXE`
+- `public static final Material STONE_SHOVEL`
+- `public static final Material STONE_SPEAR`
+- `public static final Material STONE_SWORD`
+- `public static final Material STRAY_SPAWN_EGG`
+- `public static final Material STRIDER_SPAWN_EGG`
+- `public static final Material STRING`
+- `public static final Material SUGAR`
+- `public static final Material SULFUR_CUBE_BUCKET`
+- `public static final Material SULFUR_CUBE_SPAWN_EGG`
+- `public static final Material SUSPICIOUS_STEW`
+- `public static final Material SWAMP_HUT_MAP`
+- `public static final Material SWEET_BERRIES`
+- `public static final Material TADPOLE_BUCKET`
+- `public static final Material TADPOLE_SPAWN_EGG`
+- `public static final Material TAIGA_VILLAGE_MAP`
+- `public static final Material TIDE_ARMOR_TRIM_SMITHING_TEMPLATE`
+- `public static final Material TIPPED_ARROW`
+- `public static final Material TNT_MINECART`
+- `public static final Material TORCHFLOWER_SEEDS`
+- `public static final Material TOTEM_OF_UNDYING`
+- `public static final Material TRADER_LLAMA_SPAWN_EGG`
+- `public static final Material TRIAL_KEY`
+- `public static final Material TRIDENT`
+- `public static final Material TROPICAL_FISH`
+- `public static final Material TROPICAL_FISH_BUCKET`
+- `public static final Material TROPICAL_FISH_SPAWN_EGG`
+- `public static final Material TURTLE_HELMET`
+- `public static final Material TURTLE_SCUTE`
+- `public static final Material TURTLE_SPAWN_EGG`
+- `public static final Material VEX_ARMOR_TRIM_SMITHING_TEMPLATE`
+- `public static final Material VEX_SPAWN_EGG`
+- `public static final Material VILLAGER_SPAWN_EGG`
+- `public static final Material VINDICATOR_SPAWN_EGG`
+- `public static final Material WANDERING_TRADER_SPAWN_EGG`
+- `public static final Material WARD_ARMOR_TRIM_SMITHING_TEMPLATE`
+- `public static final Material WARDEN_SPAWN_EGG`
+- `public static final Material WARM_OCEAN_RUINS_MAP`
+- `public static final Material WARPED_FUNGUS_ON_A_STICK`
+- `public static final Material WATER_BUCKET`
+- `public static final Material WAYFINDER_ARMOR_TRIM_SMITHING_TEMPLATE`
+- `public static final Material WHEAT_SEEDS`
+- `public static final Material WHITE_BUNDLE`
+- `public static final Material WHITE_CUSHION`
+- `public static final Material WHITE_DYE`
+- `public static final Material WHITE_HARNESS`
+- `public static final Material WILD_ARMOR_TRIM_SMITHING_TEMPLATE`
+- `public static final Material WIND_CHARGE`
+- `public static final Material WITCH_SPAWN_EGG`
+- `public static final Material WITHER_SKELETON_SPAWN_EGG`
+- `public static final Material WITHER_SPAWN_EGG`
+- `public static final Material WOLF_ARMOR`
+- `public static final Material WOLF_SPAWN_EGG`
+- `public static final Material WOODEN_AXE`
+- `public static final Material WOODEN_HOE`
+- `public static final Material WOODEN_PICKAXE`
+- `public static final Material WOODEN_SHOVEL`
+- `public static final Material WOODEN_SPEAR`
+- `public static final Material WOODEN_SWORD`
+- `public static final Material WOODLAND_MANSION_MAP`
+- `public static final Material WRITABLE_BOOK`
+- `public static final Material WRITTEN_BOOK`
+- `public static final Material YELLOW_BUNDLE`
+- `public static final Material YELLOW_CUSHION`
+- `public static final Material YELLOW_DYE`
+- `public static final Material YELLOW_HARNESS`
+- `public static final Material ZOGLIN_SPAWN_EGG`
+- `public static final Material ZOMBIE_HORSE_SPAWN_EGG`
+- `public static final Material ZOMBIE_NAUTILUS_SPAWN_EGG`
+- `public static final Material ZOMBIE_SPAWN_EGG`
+- `public static final Material ZOMBIE_VILLAGER_SPAWN_EGG`
+- `public static final Material ZOMBIFIED_PIGLIN_SPAWN_EGG`
+- `public static final Material ACACIA_BUTTON`
+- `public static final Material ACACIA_DOOR`
+- `public static final Material ACACIA_FENCE`
+- `public static final Material ACACIA_FENCE_GATE`
+- `public static final Material ACACIA_HANGING_SIGN`
+- `public static final Material ACACIA_LEAVES`
+- `public static final Material ACACIA_LOG`
+- `public static final Material ACACIA_PLANKS`
+- `public static final Material ACACIA_PRESSURE_PLATE`
+- `public static final Material ACACIA_SAPLING`
+- `public static final Material ACACIA_SHELF`
+- `public static final Material ACACIA_SIGN`
+- `public static final Material ACACIA_SLAB`
+- `public static final Material ACACIA_STAIRS`
+- `public static final Material ACACIA_TRAPDOOR`
+- `public static final Material ACACIA_WALL_HANGING_SIGN`
+- `public static final Material ACACIA_WALL_SIGN`
+- `public static final Material ACACIA_WOOD`
+- `public static final Material ACTIVATOR_RAIL`
+- `public static final Material ALLIUM`
+- `public static final Material AMETHYST_BLOCK`
+- `public static final Material AMETHYST_CLUSTER`
+- `public static final Material ANCIENT_DEBRIS`
+- `public static final Material ANDESITE`
+- `public static final Material ANDESITE_SLAB`
+- `public static final Material ANDESITE_STAIRS`
+- `public static final Material ANDESITE_WALL`
+- `public static final Material ANVIL`
+- `public static final Material ATTACHED_MELON_STEM`
+- `public static final Material ATTACHED_PUMPKIN_STEM`
+- `public static final Material AZALEA`
+- `public static final Material AZALEA_LEAVES`
+- `public static final Material AZURE_BLUET`
+- `public static final Material BAMBOO`
+- `public static final Material BAMBOO_BLOCK`
+- `public static final Material BAMBOO_BUTTON`
+- `public static final Material BAMBOO_DOOR`
+- `public static final Material BAMBOO_FENCE`
+- `public static final Material BAMBOO_FENCE_GATE`
+- `public static final Material BAMBOO_HANGING_SIGN`
+- `public static final Material BAMBOO_MOSAIC`
+- `public static final Material BAMBOO_MOSAIC_SLAB`
+- `public static final Material BAMBOO_MOSAIC_STAIRS`
+- `public static final Material BAMBOO_PLANKS`
+- `public static final Material BAMBOO_PRESSURE_PLATE`
+- `public static final Material BAMBOO_SAPLING`
+- `public static final Material BAMBOO_SHELF`
+- `public static final Material BAMBOO_SIGN`
+- `public static final Material BAMBOO_SLAB`
+- `public static final Material BAMBOO_STAIRS`
+- `public static final Material BAMBOO_TRAPDOOR`
+- `public static final Material BAMBOO_WALL_HANGING_SIGN`
+- `public static final Material BAMBOO_WALL_SIGN`
+- `public static final Material BARREL`
+- `public static final Material BARRIER`
+- `public static final Material BASALT`
+- `public static final Material BEACON`
+- `public static final Material BEDROCK`
+- `public static final Material BEE_NEST`
+- `public static final Material BEEHIVE`
+- `public static final Material BEETROOTS`
+- `public static final Material BELL`
+- `public static final Material BIG_DRIPLEAF`
+- `public static final Material BIG_DRIPLEAF_STEM`
+- `public static final Material BIRCH_BUTTON`
+- `public static final Material BIRCH_DOOR`
+- `public static final Material BIRCH_FENCE`
+- `public static final Material BIRCH_FENCE_GATE`
+- `public static final Material BIRCH_HANGING_SIGN`
+- `public static final Material BIRCH_LEAVES`
+- `public static final Material BIRCH_LOG`
+- `public static final Material BIRCH_PLANKS`
+- `public static final Material BIRCH_PRESSURE_PLATE`
+- `public static final Material BIRCH_SAPLING`
+- `public static final Material BIRCH_SHELF`
+- `public static final Material BIRCH_SIGN`
+- `public static final Material BIRCH_SLAB`
+- `public static final Material BIRCH_STAIRS`
+- `public static final Material BIRCH_TRAPDOOR`
+- `public static final Material BIRCH_WALL_HANGING_SIGN`
+- `public static final Material BIRCH_WALL_SIGN`
+- `public static final Material BIRCH_WOOD`
+- `public static final Material BLACK_BANNER`
+- `public static final Material BLACK_BED`
+- `public static final Material BLACK_CANDLE`
+- `public static final Material BLACK_CANDLE_CAKE`
+- `public static final Material BLACK_CARPET`
+- `public static final Material BLACK_CONCRETE`
+- `public static final Material BLACK_CONCRETE_POWDER`
+- `public static final Material BLACK_CONCRETE_SLAB`
+- `public static final Material BLACK_CONCRETE_STAIRS`
+- `public static final Material BLACK_GLAZED_TERRACOTTA`
+- `public static final Material BLACK_SHULKER_BOX`
+- `public static final Material BLACK_STAINED_GLASS`
+- `public static final Material BLACK_STAINED_GLASS_PANE`
+- `public static final Material BLACK_TERRACOTTA`
+- `public static final Material BLACK_WALL_BANNER`
+- `public static final Material BLACK_WOOL`
+- `public static final Material BLACK_WOOL_SLAB`
+- `public static final Material BLACK_WOOL_STAIRS`
+- `public static final Material BLACKSTONE`
+- `public static final Material BLACKSTONE_SLAB`
+- `public static final Material BLACKSTONE_STAIRS`
+- `public static final Material BLACKSTONE_WALL`
+- `public static final Material BLAST_FURNACE`
+- `public static final Material BLUE_BANNER`
+- `public static final Material BLUE_BED`
+- `public static final Material BLUE_CANDLE`
+- `public static final Material BLUE_CANDLE_CAKE`
+- `public static final Material BLUE_CARPET`
+- `public static final Material BLUE_CONCRETE`
+- `public static final Material BLUE_CONCRETE_POWDER`
+- `public static final Material BLUE_CONCRETE_SLAB`
+- `public static final Material BLUE_CONCRETE_STAIRS`
+- `public static final Material BLUE_GLAZED_TERRACOTTA`
+- `public static final Material BLUE_ICE`
+- `public static final Material BLUE_ORCHID`
+- `public static final Material BLUE_SHULKER_BOX`
+- `public static final Material BLUE_STAINED_GLASS`
+- `public static final Material BLUE_STAINED_GLASS_PANE`
+- `public static final Material BLUE_TERRACOTTA`
+- `public static final Material BLUE_WALL_BANNER`
+- `public static final Material BLUE_WOOL`
+- `public static final Material BLUE_WOOL_SLAB`
+- `public static final Material BLUE_WOOL_STAIRS`
+- `public static final Material BONE_BLOCK`
+- `public static final Material BOOKSHELF`
+- `public static final Material BRAIN_CORAL`
+- `public static final Material BRAIN_CORAL_BLOCK`
+- `public static final Material BRAIN_CORAL_FAN`
+- `public static final Material BRAIN_CORAL_WALL_FAN`
+- `public static final Material BREWING_STAND`
+- `public static final Material BRICK_SLAB`
+- `public static final Material BRICK_STAIRS`
+- `public static final Material BRICK_WALL`
+- `public static final Material BRICKS`
+- `public static final Material BROWN_BANNER`
+- `public static final Material BROWN_BED`
+- `public static final Material BROWN_CANDLE`
+- `public static final Material BROWN_CANDLE_CAKE`
+- `public static final Material BROWN_CARPET`
+- `public static final Material BROWN_CONCRETE`
+- `public static final Material BROWN_CONCRETE_POWDER`
+- `public static final Material BROWN_CONCRETE_SLAB`
+- `public static final Material BROWN_CONCRETE_STAIRS`
+- `public static final Material BROWN_GLAZED_TERRACOTTA`
+- `public static final Material BROWN_MUSHROOM`
+- `public static final Material BROWN_MUSHROOM_BLOCK`
+- `public static final Material BROWN_SHULKER_BOX`
+- `public static final Material BROWN_STAINED_GLASS`
+- `public static final Material BROWN_STAINED_GLASS_PANE`
+- `public static final Material BROWN_TERRACOTTA`
+- `public static final Material BROWN_WALL_BANNER`
+- `public static final Material BROWN_WOOL`
+- `public static final Material BROWN_WOOL_SLAB`
+- `public static final Material BROWN_WOOL_STAIRS`
+- `public static final Material BUBBLE_COLUMN`
+- `public static final Material BUBBLE_CORAL`
+- `public static final Material BUBBLE_CORAL_BLOCK`
+- `public static final Material BUBBLE_CORAL_FAN`
+- `public static final Material BUBBLE_CORAL_WALL_FAN`
+- `public static final Material BUDDING_AMETHYST`
+- `public static final Material BUSH`
+- `public static final Material CACTUS`
+- `public static final Material CACTUS_FLOWER`
+- `public static final Material CAKE`
+- `public static final Material CALCITE`
+- `public static final Material CALIBRATED_SCULK_SENSOR`
+- `public static final Material CAMPFIRE`
+- `public static final Material CANDLE`
+- `public static final Material CANDLE_CAKE`
+- `public static final Material CARROTS`
+- `public static final Material CARTOGRAPHY_TABLE`
+- `public static final Material CARVED_PUMPKIN`
+- `public static final Material CAULDRON`
+- `public static final Material CAVE_AIR`
+- `public static final Material CAVE_VINES`
+- `public static final Material CAVE_VINES_PLANT`
+- `public static final Material CHAIN_COMMAND_BLOCK`
+- `public static final Material CHERRY_BUTTON`
+- `public static final Material CHERRY_DOOR`
+- `public static final Material CHERRY_FENCE`
+- `public static final Material CHERRY_FENCE_GATE`
+- `public static final Material CHERRY_HANGING_SIGN`
+- `public static final Material CHERRY_LEAVES`
+- `public static final Material CHERRY_LOG`
+- `public static final Material CHERRY_PLANKS`
+- `public static final Material CHERRY_PRESSURE_PLATE`
+- `public static final Material CHERRY_SAPLING`
+- `public static final Material CHERRY_SHELF`
+- `public static final Material CHERRY_SIGN`
+- `public static final Material CHERRY_SLAB`
+- `public static final Material CHERRY_STAIRS`
+- `public static final Material CHERRY_TRAPDOOR`
+- `public static final Material CHERRY_WALL_HANGING_SIGN`
+- `public static final Material CHERRY_WALL_SIGN`
+- `public static final Material CHERRY_WOOD`
+- `public static final Material CHEST`
+- `public static final Material CHIPPED_ANVIL`
+- `public static final Material CHISELED_BOOKSHELF`
+- `public static final Material CHISELED_CINNABAR`
+- `public static final Material CHISELED_COPPER`
+- `public static final Material CHISELED_DEEPSLATE`
+- `public static final Material CHISELED_NETHER_BRICKS`
+- `public static final Material CHISELED_POLISHED_BLACKSTONE`
+- `public static final Material CHISELED_QUARTZ_BLOCK`
+- `public static final Material CHISELED_RED_SANDSTONE`
+- `public static final Material CHISELED_RESIN_BRICKS`
+- `public static final Material CHISELED_SANDSTONE`
+- `public static final Material CHISELED_STONE_BRICKS`
+- `public static final Material CHISELED_SULFUR`
+- `public static final Material CHISELED_TUFF`
+- `public static final Material CHISELED_TUFF_BRICKS`
+- `public static final Material CHORUS_FLOWER`
+- `public static final Material CHORUS_PLANT`
+- `public static final Material CINNABAR`
+- `public static final Material CINNABAR_BRICK_SLAB`
+- `public static final Material CINNABAR_BRICK_STAIRS`
+- `public static final Material CINNABAR_BRICK_WALL`
+- `public static final Material CINNABAR_BRICKS`
+- `public static final Material CINNABAR_SLAB`
+- `public static final Material CINNABAR_STAIRS`
+- `public static final Material CINNABAR_WALL`
+- `public static final Material CLAY`
+- `public static final Material CLOSED_EYEBLOSSOM`
+- `public static final Material COAL_BLOCK`
+- `public static final Material COAL_ORE`
+- `public static final Material COARSE_DIRT`
+- `public static final Material COBBLED_DEEPSLATE`
+- `public static final Material COBBLED_DEEPSLATE_SLAB`
+- `public static final Material COBBLED_DEEPSLATE_STAIRS`
+- `public static final Material COBBLED_DEEPSLATE_WALL`
+- `public static final Material COBBLESTONE`
+- `public static final Material COBBLESTONE_SLAB`
+- `public static final Material COBBLESTONE_STAIRS`
+- `public static final Material COBBLESTONE_WALL`
+- `public static final Material COBWEB`
+- `public static final Material COCOA`
+- `public static final Material COMMAND_BLOCK`
+- `public static final Material COMPARATOR`
+- `public static final Material COMPOSTER`
+- `public static final Material CONDUIT`
+- `public static final Material COPPER_BARS`
+- `public static final Material COPPER_BLOCK`
+- `public static final Material COPPER_BULB`
+- `public static final Material COPPER_CHAIN`
+- `public static final Material COPPER_CHEST`
+- `public static final Material COPPER_DOOR`
+- `public static final Material COPPER_GOLEM_STATUE`
+- `public static final Material COPPER_GRATE`
+- `public static final Material COPPER_LANTERN`
+- `public static final Material COPPER_ORE`
+- `public static final Material COPPER_TORCH`
+- `public static final Material COPPER_TRAPDOOR`
+- `public static final Material COPPER_WALL_TORCH`
+- `public static final Material CORNFLOWER`
+- `public static final Material CRACKED_DEEPSLATE_BRICKS`
+- `public static final Material CRACKED_DEEPSLATE_TILES`
+- `public static final Material CRACKED_NETHER_BRICKS`
+- `public static final Material CRACKED_POLISHED_BLACKSTONE_BRICKS`
+- `public static final Material CRACKED_STONE_BRICKS`
+- `public static final Material CRAFTER`
+- `public static final Material CRAFTING_TABLE`
+- `public static final Material CREAKING_HEART`
+- `public static final Material CREEPER_HEAD`
+- `public static final Material CREEPER_WALL_HEAD`
+- `public static final Material CRIMSON_BUTTON`
+- `public static final Material CRIMSON_DOOR`
+- `public static final Material CRIMSON_FENCE`
+- `public static final Material CRIMSON_FENCE_GATE`
+- `public static final Material CRIMSON_FUNGUS`
+- `public static final Material CRIMSON_HANGING_SIGN`
+- `public static final Material CRIMSON_HYPHAE`
+- `public static final Material CRIMSON_NYLIUM`
+- `public static final Material CRIMSON_PLANKS`
+- `public static final Material CRIMSON_PRESSURE_PLATE`
+- `public static final Material CRIMSON_ROOTS`
+- `public static final Material CRIMSON_SHELF`
+- `public static final Material CRIMSON_SIGN`
+- `public static final Material CRIMSON_SLAB`
+- `public static final Material CRIMSON_STAIRS`
+- `public static final Material CRIMSON_STEM`
+- `public static final Material CRIMSON_TRAPDOOR`
+- `public static final Material CRIMSON_WALL_HANGING_SIGN`
+- `public static final Material CRIMSON_WALL_SIGN`
+- `public static final Material CRYING_OBSIDIAN`
+- `public static final Material CUT_COPPER`
+- `public static final Material CUT_COPPER_SLAB`
+- `public static final Material CUT_COPPER_STAIRS`
+- `public static final Material CUT_RED_SANDSTONE`
+- `public static final Material CUT_RED_SANDSTONE_SLAB`
+- `public static final Material CUT_SANDSTONE`
+- `public static final Material CUT_SANDSTONE_SLAB`
+- `public static final Material CYAN_BANNER`
+- `public static final Material CYAN_BED`
+- `public static final Material CYAN_CANDLE`
+- `public static final Material CYAN_CANDLE_CAKE`
+- `public static final Material CYAN_CARPET`
+- `public static final Material CYAN_CONCRETE`
+- `public static final Material CYAN_CONCRETE_POWDER`
+- `public static final Material CYAN_CONCRETE_SLAB`
+- `public static final Material CYAN_CONCRETE_STAIRS`
+- `public static final Material CYAN_GLAZED_TERRACOTTA`
+- `public static final Material CYAN_SHULKER_BOX`
+- `public static final Material CYAN_STAINED_GLASS`
+- `public static final Material CYAN_STAINED_GLASS_PANE`
+- `public static final Material CYAN_TERRACOTTA`
+- `public static final Material CYAN_WALL_BANNER`
+- `public static final Material CYAN_WOOL`
+- `public static final Material CYAN_WOOL_SLAB`
+- `public static final Material CYAN_WOOL_STAIRS`
+- `public static final Material DAMAGED_ANVIL`
+- `public static final Material DANDELION`
+- `public static final Material DARK_OAK_BUTTON`
+- `public static final Material DARK_OAK_DOOR`
+- `public static final Material DARK_OAK_FENCE`
+- `public static final Material DARK_OAK_FENCE_GATE`
+- `public static final Material DARK_OAK_HANGING_SIGN`
+- `public static final Material DARK_OAK_LEAVES`
+- `public static final Material DARK_OAK_LOG`
+- `public static final Material DARK_OAK_PLANKS`
+- `public static final Material DARK_OAK_PRESSURE_PLATE`
+- `public static final Material DARK_OAK_SAPLING`
+- `public static final Material DARK_OAK_SHELF`
+- `public static final Material DARK_OAK_SIGN`
+- `public static final Material DARK_OAK_SLAB`
+- `public static final Material DARK_OAK_STAIRS`
+- `public static final Material DARK_OAK_TRAPDOOR`
+- `public static final Material DARK_OAK_WALL_HANGING_SIGN`
+- `public static final Material DARK_OAK_WALL_SIGN`
+- `public static final Material DARK_OAK_WOOD`
+- `public static final Material DARK_PRISMARINE`
+- `public static final Material DARK_PRISMARINE_SLAB`
+- `public static final Material DARK_PRISMARINE_STAIRS`
+- `public static final Material DAYLIGHT_DETECTOR`
+- `public static final Material DEAD_BRAIN_CORAL`
+- `public static final Material DEAD_BRAIN_CORAL_BLOCK`
+- `public static final Material DEAD_BRAIN_CORAL_FAN`
+- `public static final Material DEAD_BRAIN_CORAL_WALL_FAN`
+- `public static final Material DEAD_BUBBLE_CORAL`
+- `public static final Material DEAD_BUBBLE_CORAL_BLOCK`
+- `public static final Material DEAD_BUBBLE_CORAL_FAN`
+- `public static final Material DEAD_BUBBLE_CORAL_WALL_FAN`
+- `public static final Material DEAD_BUSH`
+- `public static final Material DEAD_FIRE_CORAL`
+- `public static final Material DEAD_FIRE_CORAL_BLOCK`
+- `public static final Material DEAD_FIRE_CORAL_FAN`
+- `public static final Material DEAD_FIRE_CORAL_WALL_FAN`
+- `public static final Material DEAD_HORN_CORAL`
+- `public static final Material DEAD_HORN_CORAL_BLOCK`
+- `public static final Material DEAD_HORN_CORAL_FAN`
+- `public static final Material DEAD_HORN_CORAL_WALL_FAN`
+- `public static final Material DEAD_TUBE_CORAL`
+- `public static final Material DEAD_TUBE_CORAL_BLOCK`
+- `public static final Material DEAD_TUBE_CORAL_FAN`
+- `public static final Material DEAD_TUBE_CORAL_WALL_FAN`
+- `public static final Material DECORATED_POT`
+- `public static final Material DEEPSLATE`
+- `public static final Material DEEPSLATE_BRICK_SLAB`
+- `public static final Material DEEPSLATE_BRICK_STAIRS`
+- `public static final Material DEEPSLATE_BRICK_WALL`
+- `public static final Material DEEPSLATE_BRICKS`
+- `public static final Material DEEPSLATE_COAL_ORE`
+- `public static final Material DEEPSLATE_COPPER_ORE`
+- `public static final Material DEEPSLATE_DIAMOND_ORE`
+- `public static final Material DEEPSLATE_EMERALD_ORE`
+- `public static final Material DEEPSLATE_GOLD_ORE`
+- `public static final Material DEEPSLATE_IRON_ORE`
+- `public static final Material DEEPSLATE_LAPIS_ORE`
+- `public static final Material DEEPSLATE_REDSTONE_ORE`
+- `public static final Material DEEPSLATE_TILE_SLAB`
+- `public static final Material DEEPSLATE_TILE_STAIRS`
+- `public static final Material DEEPSLATE_TILE_WALL`
+- `public static final Material DEEPSLATE_TILES`
+- `public static final Material DETECTOR_RAIL`
+- `public static final Material DIAMOND_BLOCK`
+- `public static final Material DIAMOND_ORE`
+- `public static final Material DIORITE`
+- `public static final Material DIORITE_SLAB`
+- `public static final Material DIORITE_STAIRS`
+- `public static final Material DIORITE_WALL`
+- `public static final Material DIRT`
+- `public static final Material DIRT_PATH`
+- `public static final Material DISPENSER`
+- `public static final Material DRAGON_EGG`
+- `public static final Material DRAGON_HEAD`
+- `public static final Material DRAGON_WALL_HEAD`
+- `public static final Material DRIED_GHAST`
+- `public static final Material DRIED_KELP_BLOCK`
+- `public static final Material DRIPSTONE_BLOCK`
+- `public static final Material DROPPER`
+- `public static final Material EMERALD_BLOCK`
+- `public static final Material EMERALD_ORE`
+- `public static final Material ENCHANTING_TABLE`
+- `public static final Material END_GATEWAY`
+- `public static final Material END_PORTAL`
+- `public static final Material END_PORTAL_FRAME`
+- `public static final Material END_ROD`
+- `public static final Material END_STONE`
+- `public static final Material END_STONE_BRICK_SLAB`
+- `public static final Material END_STONE_BRICK_STAIRS`
+- `public static final Material END_STONE_BRICK_WALL`
+- `public static final Material END_STONE_BRICKS`
+- `public static final Material ENDER_CHEST`
+- `public static final Material EXPOSED_CHISELED_COPPER`
+- `public static final Material EXPOSED_COPPER`
+- `public static final Material EXPOSED_COPPER_BARS`
+- `public static final Material EXPOSED_COPPER_BULB`
+- `public static final Material EXPOSED_COPPER_CHAIN`
+- `public static final Material EXPOSED_COPPER_CHEST`
+- `public static final Material EXPOSED_COPPER_DOOR`
+- `public static final Material EXPOSED_COPPER_GOLEM_STATUE`
+- `public static final Material EXPOSED_COPPER_GRATE`
+- `public static final Material EXPOSED_COPPER_LANTERN`
+- `public static final Material EXPOSED_COPPER_TRAPDOOR`
+- `public static final Material EXPOSED_CUT_COPPER`
+- `public static final Material EXPOSED_CUT_COPPER_SLAB`
+- `public static final Material EXPOSED_CUT_COPPER_STAIRS`
+- `public static final Material EXPOSED_LIGHTNING_ROD`
+- `public static final Material FARMLAND`
+- `public static final Material FERN`
+- `public static final Material FIRE`
+- `public static final Material FIRE_CORAL`
+- `public static final Material FIRE_CORAL_BLOCK`
+- `public static final Material FIRE_CORAL_FAN`
+- `public static final Material FIRE_CORAL_WALL_FAN`
+- `public static final Material FIREFLY_BUSH`
+- `public static final Material FLETCHING_TABLE`
+- `public static final Material FLOWER_POT`
+- `public static final Material FLOWERING_AZALEA`
+- `public static final Material FLOWERING_AZALEA_LEAVES`
+- `public static final Material FROGSPAWN`
+- `public static final Material FROSTED_ICE`
+- `public static final Material FURNACE`
+- `public static final Material GILDED_BLACKSTONE`
+- `public static final Material GLASS`
+- `public static final Material GLASS_PANE`
+- `public static final Material GLOW_LICHEN`
+- `public static final Material GLOWSTONE`
+- `public static final Material GOLD_BLOCK`
+- `public static final Material GOLD_ORE`
+- `public static final Material GOLDEN_DANDELION`
+- `public static final Material GRANITE`
+- `public static final Material GRANITE_SLAB`
+- `public static final Material GRANITE_STAIRS`
+- `public static final Material GRANITE_WALL`
+- `public static final Material GRASS_BLOCK`
+- `public static final Material GRAVEL`
+- `public static final Material GRAY_BANNER`
+- `public static final Material GRAY_BED`
+- `public static final Material GRAY_CANDLE`
+- `public static final Material GRAY_CANDLE_CAKE`
+- `public static final Material GRAY_CARPET`
+- `public static final Material GRAY_CONCRETE`
+- `public static final Material GRAY_CONCRETE_POWDER`
+- `public static final Material GRAY_CONCRETE_SLAB`
+- `public static final Material GRAY_CONCRETE_STAIRS`
+- `public static final Material GRAY_GLAZED_TERRACOTTA`
+- `public static final Material GRAY_SHULKER_BOX`
+- `public static final Material GRAY_STAINED_GLASS`
+- `public static final Material GRAY_STAINED_GLASS_PANE`
+- `public static final Material GRAY_TERRACOTTA`
+- `public static final Material GRAY_WALL_BANNER`
+- `public static final Material GRAY_WOOL`
+- `public static final Material GRAY_WOOL_SLAB`
+- `public static final Material GRAY_WOOL_STAIRS`
+- `public static final Material GREEN_BANNER`
+- `public static final Material GREEN_BED`
+- `public static final Material GREEN_CANDLE`
+- `public static final Material GREEN_CANDLE_CAKE`
+- `public static final Material GREEN_CARPET`
+- `public static final Material GREEN_CONCRETE`
+- `public static final Material GREEN_CONCRETE_POWDER`
+- `public static final Material GREEN_CONCRETE_SLAB`
+- `public static final Material GREEN_CONCRETE_STAIRS`
+- `public static final Material GREEN_GLAZED_TERRACOTTA`
+- `public static final Material GREEN_SHULKER_BOX`
+- `public static final Material GREEN_STAINED_GLASS`
+- `public static final Material GREEN_STAINED_GLASS_PANE`
+- `public static final Material GREEN_TERRACOTTA`
+- `public static final Material GREEN_WALL_BANNER`
+- `public static final Material GREEN_WOOL`
+- `public static final Material GREEN_WOOL_SLAB`
+- `public static final Material GREEN_WOOL_STAIRS`
+- `public static final Material GRINDSTONE`
+- `public static final Material HANGING_ROOTS`
+- `public static final Material HAY_BLOCK`
+- `public static final Material HEAVY_CORE`
+- `public static final Material HEAVY_WEIGHTED_PRESSURE_PLATE`
+- `public static final Material HONEY_BLOCK`
+- `public static final Material HONEYCOMB_BLOCK`
+- `public static final Material HOPPER`
+- `public static final Material HORN_CORAL`
+- `public static final Material HORN_CORAL_BLOCK`
+- `public static final Material HORN_CORAL_FAN`
+- `public static final Material HORN_CORAL_WALL_FAN`
+- `public static final Material ICE`
+- `public static final Material INFESTED_CHISELED_STONE_BRICKS`
+- `public static final Material INFESTED_COBBLESTONE`
+- `public static final Material INFESTED_CRACKED_STONE_BRICKS`
+- `public static final Material INFESTED_DEEPSLATE`
+- `public static final Material INFESTED_MOSSY_STONE_BRICKS`
+- `public static final Material INFESTED_STONE`
+- `public static final Material INFESTED_STONE_BRICKS`
+- `public static final Material IRON_BARS`
+- `public static final Material IRON_BLOCK`
+- `public static final Material IRON_CHAIN`
+- `public static final Material IRON_DOOR`
+- `public static final Material IRON_ORE`
+- `public static final Material IRON_TRAPDOOR`
+- `public static final Material JACK_O_LANTERN`
+- `public static final Material JIGSAW`
+- `public static final Material JUKEBOX`
+- `public static final Material JUNGLE_BUTTON`
+- `public static final Material JUNGLE_DOOR`
+- `public static final Material JUNGLE_FENCE`
+- `public static final Material JUNGLE_FENCE_GATE`
+- `public static final Material JUNGLE_HANGING_SIGN`
+- `public static final Material JUNGLE_LEAVES`
+- `public static final Material JUNGLE_LOG`
+- `public static final Material JUNGLE_PLANKS`
+- `public static final Material JUNGLE_PRESSURE_PLATE`
+- `public static final Material JUNGLE_SAPLING`
+- `public static final Material JUNGLE_SHELF`
+- `public static final Material JUNGLE_SIGN`
+- `public static final Material JUNGLE_SLAB`
+- `public static final Material JUNGLE_STAIRS`
+- `public static final Material JUNGLE_TRAPDOOR`
+- `public static final Material JUNGLE_WALL_HANGING_SIGN`
+- `public static final Material JUNGLE_WALL_SIGN`
+- `public static final Material JUNGLE_WOOD`
+- `public static final Material KELP`
+- `public static final Material KELP_PLANT`
+- `public static final Material LADDER`
+- `public static final Material LANTERN`
+- `public static final Material LAPIS_BLOCK`
+- `public static final Material LAPIS_ORE`
+- `public static final Material LARGE_AMETHYST_BUD`
+- `public static final Material LARGE_FERN`
+- `public static final Material LAVA`
+- `public static final Material LAVA_CAULDRON`
+- `public static final Material LEAF_LITTER`
+- `public static final Material LECTERN`
+- `public static final Material LEVER`
+- `public static final Material LIGHT`
+- `public static final Material LIGHT_BLUE_BANNER`
+- `public static final Material LIGHT_BLUE_BED`
+- `public static final Material LIGHT_BLUE_CANDLE`
+- `public static final Material LIGHT_BLUE_CANDLE_CAKE`
+- `public static final Material LIGHT_BLUE_CARPET`
+- `public static final Material LIGHT_BLUE_CONCRETE`
+- `public static final Material LIGHT_BLUE_CONCRETE_POWDER`
+- `public static final Material LIGHT_BLUE_CONCRETE_SLAB`
+- `public static final Material LIGHT_BLUE_CONCRETE_STAIRS`
+- `public static final Material LIGHT_BLUE_GLAZED_TERRACOTTA`
+- `public static final Material LIGHT_BLUE_SHULKER_BOX`
+- `public static final Material LIGHT_BLUE_STAINED_GLASS`
+- `public static final Material LIGHT_BLUE_STAINED_GLASS_PANE`
+- `public static final Material LIGHT_BLUE_TERRACOTTA`
+- `public static final Material LIGHT_BLUE_WALL_BANNER`
+- `public static final Material LIGHT_BLUE_WOOL`
+- `public static final Material LIGHT_BLUE_WOOL_SLAB`
+- `public static final Material LIGHT_BLUE_WOOL_STAIRS`
+- `public static final Material LIGHT_GRAY_BANNER`
+- `public static final Material LIGHT_GRAY_BED`
+- `public static final Material LIGHT_GRAY_CANDLE`
+- `public static final Material LIGHT_GRAY_CANDLE_CAKE`
+- `public static final Material LIGHT_GRAY_CARPET`
+- `public static final Material LIGHT_GRAY_CONCRETE`
+- `public static final Material LIGHT_GRAY_CONCRETE_POWDER`
+- `public static final Material LIGHT_GRAY_CONCRETE_SLAB`
+- `public static final Material LIGHT_GRAY_CONCRETE_STAIRS`
+- `public static final Material LIGHT_GRAY_GLAZED_TERRACOTTA`
+- `public static final Material LIGHT_GRAY_SHULKER_BOX`
+- `public static final Material LIGHT_GRAY_STAINED_GLASS`
+- `public static final Material LIGHT_GRAY_STAINED_GLASS_PANE`
+- `public static final Material LIGHT_GRAY_TERRACOTTA`
+- `public static final Material LIGHT_GRAY_WALL_BANNER`
+- `public static final Material LIGHT_GRAY_WOOL`
+- `public static final Material LIGHT_GRAY_WOOL_SLAB`
+- `public static final Material LIGHT_GRAY_WOOL_STAIRS`
+- `public static final Material LIGHT_WEIGHTED_PRESSURE_PLATE`
+- `public static final Material LIGHTNING_ROD`
+- `public static final Material LILAC`
+- `public static final Material LILY_OF_THE_VALLEY`
+- `public static final Material LILY_PAD`
+- `public static final Material LIME_BANNER`
+- `public static final Material LIME_BED`
+- `public static final Material LIME_CANDLE`
+- `public static final Material LIME_CANDLE_CAKE`
+- `public static final Material LIME_CARPET`
+- `public static final Material LIME_CONCRETE`
+- `public static final Material LIME_CONCRETE_POWDER`
+- `public static final Material LIME_CONCRETE_SLAB`
+- `public static final Material LIME_CONCRETE_STAIRS`
+- `public static final Material LIME_GLAZED_TERRACOTTA`
+- `public static final Material LIME_SHULKER_BOX`
+- `public static final Material LIME_STAINED_GLASS`
+- `public static final Material LIME_STAINED_GLASS_PANE`
+- `public static final Material LIME_TERRACOTTA`
+- `public static final Material LIME_WALL_BANNER`
+- `public static final Material LIME_WOOL`
+- `public static final Material LIME_WOOL_SLAB`
+- `public static final Material LIME_WOOL_STAIRS`
+- `public static final Material LODESTONE`
+- `public static final Material LOOM`
+- `public static final Material MAGENTA_BANNER`
+- `public static final Material MAGENTA_BED`
+- `public static final Material MAGENTA_CANDLE`
+- `public static final Material MAGENTA_CANDLE_CAKE`
+- `public static final Material MAGENTA_CARPET`
+- `public static final Material MAGENTA_CONCRETE`
+- `public static final Material MAGENTA_CONCRETE_POWDER`
+- `public static final Material MAGENTA_CONCRETE_SLAB`
+- `public static final Material MAGENTA_CONCRETE_STAIRS`
+- `public static final Material MAGENTA_GLAZED_TERRACOTTA`
+- `public static final Material MAGENTA_SHULKER_BOX`
+- `public static final Material MAGENTA_STAINED_GLASS`
+- `public static final Material MAGENTA_STAINED_GLASS_PANE`
+- `public static final Material MAGENTA_TERRACOTTA`
+- `public static final Material MAGENTA_WALL_BANNER`
+- `public static final Material MAGENTA_WOOL`
+- `public static final Material MAGENTA_WOOL_SLAB`
+- `public static final Material MAGENTA_WOOL_STAIRS`
+- `public static final Material MAGMA_BLOCK`
+- `public static final Material MANGROVE_BUTTON`
+- `public static final Material MANGROVE_DOOR`
+- `public static final Material MANGROVE_FENCE`
+- `public static final Material MANGROVE_FENCE_GATE`
+- `public static final Material MANGROVE_HANGING_SIGN`
+- `public static final Material MANGROVE_LEAVES`
+- `public static final Material MANGROVE_LOG`
+- `public static final Material MANGROVE_PLANKS`
+- `public static final Material MANGROVE_PRESSURE_PLATE`
+- `public static final Material MANGROVE_PROPAGULE`
+- `public static final Material MANGROVE_ROOTS`
+- `public static final Material MANGROVE_SHELF`
+- `public static final Material MANGROVE_SIGN`
+- `public static final Material MANGROVE_SLAB`
+- `public static final Material MANGROVE_STAIRS`
+- `public static final Material MANGROVE_TRAPDOOR`
+- `public static final Material MANGROVE_WALL_HANGING_SIGN`
+- `public static final Material MANGROVE_WALL_SIGN`
+- `public static final Material MANGROVE_WOOD`
+- `public static final Material MEDIUM_AMETHYST_BUD`
+- `public static final Material MELON`
+- `public static final Material MELON_STEM`
+- `public static final Material MOSS_BLOCK`
+- `public static final Material MOSS_CARPET`
+- `public static final Material MOSSY_COBBLESTONE`
+- `public static final Material MOSSY_COBBLESTONE_SLAB`
+- `public static final Material MOSSY_COBBLESTONE_STAIRS`
+- `public static final Material MOSSY_COBBLESTONE_WALL`
+- `public static final Material MOSSY_STONE_BRICK_SLAB`
+- `public static final Material MOSSY_STONE_BRICK_STAIRS`
+- `public static final Material MOSSY_STONE_BRICK_WALL`
+- `public static final Material MOSSY_STONE_BRICKS`
+- `public static final Material MOVING_PISTON`
+- `public static final Material MUD`
+- `public static final Material MUD_BRICK_SLAB`
+- `public static final Material MUD_BRICK_STAIRS`
+- `public static final Material MUD_BRICK_WALL`
+- `public static final Material MUD_BRICKS`
+- `public static final Material MUDDY_MANGROVE_ROOTS`
+- `public static final Material MUSHROOM_STEM`
+- `public static final Material MYCELIUM`
+- `public static final Material NETHER_BRICK_FENCE`
+- `public static final Material NETHER_BRICK_SLAB`
+- `public static final Material NETHER_BRICK_STAIRS`
+- `public static final Material NETHER_BRICK_WALL`
+- `public static final Material NETHER_BRICKS`
+- `public static final Material NETHER_GOLD_ORE`
+- `public static final Material NETHER_PORTAL`
+- `public static final Material NETHER_QUARTZ_ORE`
+- `public static final Material NETHER_SPROUTS`
+- `public static final Material NETHER_WART`
+- `public static final Material NETHER_WART_BLOCK`
+- `public static final Material NETHERITE_BLOCK`
+- `public static final Material NETHERRACK`
+- `public static final Material NOTE_BLOCK`
+- `public static final Material OAK_BUTTON`
+- `public static final Material OAK_DOOR`
+- `public static final Material OAK_FENCE`
+- `public static final Material OAK_FENCE_GATE`
+- `public static final Material OAK_HANGING_SIGN`
+- `public static final Material OAK_LEAVES`
+- `public static final Material OAK_LOG`
+- `public static final Material OAK_PLANKS`
+- `public static final Material OAK_PRESSURE_PLATE`
+- `public static final Material OAK_SAPLING`
+- `public static final Material OAK_SHELF`
+- `public static final Material OAK_SIGN`
+- `public static final Material OAK_SLAB`
+- `public static final Material OAK_STAIRS`
+- `public static final Material OAK_TRAPDOOR`
+- `public static final Material OAK_WALL_HANGING_SIGN`
+- `public static final Material OAK_WALL_SIGN`
+- `public static final Material OAK_WOOD`
+- `public static final Material OBSERVER`
+- `public static final Material OBSIDIAN`
+- `public static final Material OCHRE_FROGLIGHT`
+- `public static final Material OPEN_EYEBLOSSOM`
+- `public static final Material ORANGE_BANNER`
+- `public static final Material ORANGE_BED`
+- `public static final Material ORANGE_CANDLE`
+- `public static final Material ORANGE_CANDLE_CAKE`
+- `public static final Material ORANGE_CARPET`
+- `public static final Material ORANGE_CONCRETE`
+- `public static final Material ORANGE_CONCRETE_POWDER`
+- `public static final Material ORANGE_CONCRETE_SLAB`
+- `public static final Material ORANGE_CONCRETE_STAIRS`
+- `public static final Material ORANGE_GLAZED_TERRACOTTA`
+- `public static final Material ORANGE_POPLAR_LEAVES`
+- `public static final Material ORANGE_SHULKER_BOX`
+- `public static final Material ORANGE_STAINED_GLASS`
+- `public static final Material ORANGE_STAINED_GLASS_PANE`
+- `public static final Material ORANGE_TERRACOTTA`
+- `public static final Material ORANGE_TULIP`
+- `public static final Material ORANGE_WALL_BANNER`
+- `public static final Material ORANGE_WOOL`
+- `public static final Material ORANGE_WOOL_SLAB`
+- `public static final Material ORANGE_WOOL_STAIRS`
+- `public static final Material OXEYE_DAISY`
+- `public static final Material OXIDIZED_CHISELED_COPPER`
+- `public static final Material OXIDIZED_COPPER`
+- `public static final Material OXIDIZED_COPPER_BARS`
+- `public static final Material OXIDIZED_COPPER_BULB`
+- `public static final Material OXIDIZED_COPPER_CHAIN`
+- `public static final Material OXIDIZED_COPPER_CHEST`
+- `public static final Material OXIDIZED_COPPER_DOOR`
+- `public static final Material OXIDIZED_COPPER_GOLEM_STATUE`
+- `public static final Material OXIDIZED_COPPER_GRATE`
+- `public static final Material OXIDIZED_COPPER_LANTERN`
+- `public static final Material OXIDIZED_COPPER_TRAPDOOR`
+- `public static final Material OXIDIZED_CUT_COPPER`
+- `public static final Material OXIDIZED_CUT_COPPER_SLAB`
+- `public static final Material OXIDIZED_CUT_COPPER_STAIRS`
+- `public static final Material OXIDIZED_LIGHTNING_ROD`
+- `public static final Material PACKED_ICE`
+- `public static final Material PACKED_MUD`
+- `public static final Material PALE_HANGING_MOSS`
+- `public static final Material PALE_MOSS_BLOCK`
+- `public static final Material PALE_MOSS_CARPET`
+- `public static final Material PALE_OAK_BUTTON`
+- `public static final Material PALE_OAK_DOOR`
+- `public static final Material PALE_OAK_FENCE`
+- `public static final Material PALE_OAK_FENCE_GATE`
+- `public static final Material PALE_OAK_HANGING_SIGN`
+- `public static final Material PALE_OAK_LEAVES`
+- `public static final Material PALE_OAK_LOG`
+- `public static final Material PALE_OAK_PLANKS`
+- `public static final Material PALE_OAK_PRESSURE_PLATE`
+- `public static final Material PALE_OAK_SAPLING`
+- `public static final Material PALE_OAK_SHELF`
+- `public static final Material PALE_OAK_SIGN`
+- `public static final Material PALE_OAK_SLAB`
+- `public static final Material PALE_OAK_STAIRS`
+- `public static final Material PALE_OAK_TRAPDOOR`
+- `public static final Material PALE_OAK_WALL_HANGING_SIGN`
+- `public static final Material PALE_OAK_WALL_SIGN`
+- `public static final Material PALE_OAK_WOOD`
+- `public static final Material PEARLESCENT_FROGLIGHT`
+- `public static final Material PEONY`
+- `public static final Material PETRIFIED_OAK_SLAB`
+- `public static final Material PIGLIN_HEAD`
+- `public static final Material PIGLIN_WALL_HEAD`
+- `public static final Material PINK_BANNER`
+- `public static final Material PINK_BED`
+- `public static final Material PINK_CANDLE`
+- `public static final Material PINK_CANDLE_CAKE`
+- `public static final Material PINK_CARPET`
+- `public static final Material PINK_CONCRETE`
+- `public static final Material PINK_CONCRETE_POWDER`
+- `public static final Material PINK_CONCRETE_SLAB`
+- `public static final Material PINK_CONCRETE_STAIRS`
+- `public static final Material PINK_GLAZED_TERRACOTTA`
+- `public static final Material PINK_PETALS`
+- `public static final Material PINK_SHULKER_BOX`
+- `public static final Material PINK_STAINED_GLASS`
+- `public static final Material PINK_STAINED_GLASS_PANE`
+- `public static final Material PINK_TERRACOTTA`
+- `public static final Material PINK_TULIP`
+- `public static final Material PINK_WALL_BANNER`
+- `public static final Material PINK_WOOL`
+- `public static final Material PINK_WOOL_SLAB`
+- `public static final Material PINK_WOOL_STAIRS`
+- `public static final Material PISTON`
+- `public static final Material PISTON_HEAD`
+- `public static final Material PITCHER_CROP`
+- `public static final Material PITCHER_PLANT`
+- `public static final Material PLAYER_HEAD`
+- `public static final Material PLAYER_WALL_HEAD`
+- `public static final Material PODZOL`
+- `public static final Material POINTED_DRIPSTONE`
+- `public static final Material POLISHED_ANDESITE`
+- `public static final Material POLISHED_ANDESITE_SLAB`
+- `public static final Material POLISHED_ANDESITE_STAIRS`
+- `public static final Material POLISHED_BASALT`
+- `public static final Material POLISHED_BLACKSTONE`
+- `public static final Material POLISHED_BLACKSTONE_BRICK_SLAB`
+- `public static final Material POLISHED_BLACKSTONE_BRICK_STAIRS`
+- `public static final Material POLISHED_BLACKSTONE_BRICK_WALL`
+- `public static final Material POLISHED_BLACKSTONE_BRICKS`
+- `public static final Material POLISHED_BLACKSTONE_BUTTON`
+- `public static final Material POLISHED_BLACKSTONE_PRESSURE_PLATE`
+- `public static final Material POLISHED_BLACKSTONE_SLAB`
+- `public static final Material POLISHED_BLACKSTONE_STAIRS`
+- `public static final Material POLISHED_BLACKSTONE_WALL`
+- `public static final Material POLISHED_CINNABAR`
+- `public static final Material POLISHED_CINNABAR_SLAB`
+- `public static final Material POLISHED_CINNABAR_STAIRS`
+- `public static final Material POLISHED_CINNABAR_WALL`
+- `public static final Material POLISHED_DEEPSLATE`
+- `public static final Material POLISHED_DEEPSLATE_SLAB`
+- `public static final Material POLISHED_DEEPSLATE_STAIRS`
+- `public static final Material POLISHED_DEEPSLATE_WALL`
+- `public static final Material POLISHED_DIORITE`
+- `public static final Material POLISHED_DIORITE_SLAB`
+- `public static final Material POLISHED_DIORITE_STAIRS`
+- `public static final Material POLISHED_GRANITE`
+- `public static final Material POLISHED_GRANITE_SLAB`
+- `public static final Material POLISHED_GRANITE_STAIRS`
+- `public static final Material POLISHED_SULFUR`
+- `public static final Material POLISHED_SULFUR_SLAB`
+- `public static final Material POLISHED_SULFUR_STAIRS`
+- `public static final Material POLISHED_SULFUR_WALL`
+- `public static final Material POLISHED_TUFF`
+- `public static final Material POLISHED_TUFF_SLAB`
+- `public static final Material POLISHED_TUFF_STAIRS`
+- `public static final Material POLISHED_TUFF_WALL`
+- `public static final Material POPLAR_BUTTON`
+- `public static final Material POPLAR_DOOR`
+- `public static final Material POPLAR_FENCE`
+- `public static final Material POPLAR_FENCE_GATE`
+- `public static final Material POPLAR_HANGING_SIGN`
+- `public static final Material POPLAR_LOG`
+- `public static final Material POPLAR_PLANKS`
+- `public static final Material POPLAR_PRESSURE_PLATE`
+- `public static final Material POPLAR_SAPLING`
+- `public static final Material POPLAR_SHELF`
+- `public static final Material POPLAR_SIGN`
+- `public static final Material POPLAR_SLAB`
+- `public static final Material POPLAR_STAIRS`
+- `public static final Material POPLAR_TRAPDOOR`
+- `public static final Material POPLAR_WALL_HANGING_SIGN`
+- `public static final Material POPLAR_WALL_SIGN`
+- `public static final Material POPLAR_WOOD`
+- `public static final Material POPPY`
+- `public static final Material POTATOES`
+- `public static final Material POTENT_SULFUR`
+- `public static final Material POTTED_ACACIA_SAPLING`
+- `public static final Material POTTED_ALLIUM`
+- `public static final Material POTTED_AZALEA_BUSH`
+- `public static final Material POTTED_AZURE_BLUET`
+- `public static final Material POTTED_BAMBOO`
+- `public static final Material POTTED_BIRCH_SAPLING`
+- `public static final Material POTTED_BLUE_ORCHID`
+- `public static final Material POTTED_BROWN_MUSHROOM`
+- `public static final Material POTTED_CACTUS`
+- `public static final Material POTTED_CHERRY_SAPLING`
+- `public static final Material POTTED_CLOSED_EYEBLOSSOM`
+- `public static final Material POTTED_CORNFLOWER`
+- `public static final Material POTTED_CRIMSON_FUNGUS`
+- `public static final Material POTTED_CRIMSON_ROOTS`
+- `public static final Material POTTED_DANDELION`
+- `public static final Material POTTED_DARK_OAK_SAPLING`
+- `public static final Material POTTED_DEAD_BUSH`
+- `public static final Material POTTED_FERN`
+- `public static final Material POTTED_FLOWERING_AZALEA_BUSH`
+- `public static final Material POTTED_GOLDEN_DANDELION`
+- `public static final Material POTTED_JUNGLE_SAPLING`
+- `public static final Material POTTED_LILY_OF_THE_VALLEY`
+- `public static final Material POTTED_MANGROVE_PROPAGULE`
+- `public static final Material POTTED_OAK_SAPLING`
+- `public static final Material POTTED_OPEN_EYEBLOSSOM`
+- `public static final Material POTTED_ORANGE_TULIP`
+- `public static final Material POTTED_OXEYE_DAISY`
+- `public static final Material POTTED_PALE_OAK_SAPLING`
+- `public static final Material POTTED_PINK_TULIP`
+- `public static final Material POTTED_POPLAR_SAPLING`
+- `public static final Material POTTED_POPPY`
+- `public static final Material POTTED_RED_MUSHROOM`
+- `public static final Material POTTED_RED_TULIP`
+- `public static final Material POTTED_SPRUCE_SAPLING`
+- `public static final Material POTTED_TORCHFLOWER`
+- `public static final Material POTTED_WARPED_FUNGUS`
+- `public static final Material POTTED_WARPED_ROOTS`
+- `public static final Material POTTED_WHITE_TULIP`
+- `public static final Material POTTED_WITHER_ROSE`
+- `public static final Material POWDER_SNOW`
+- `public static final Material POWDER_SNOW_CAULDRON`
+- `public static final Material POWERED_RAIL`
+- `public static final Material PRISMARINE`
+- `public static final Material PRISMARINE_BRICK_SLAB`
+- `public static final Material PRISMARINE_BRICK_STAIRS`
+- `public static final Material PRISMARINE_BRICKS`
+- `public static final Material PRISMARINE_SLAB`
+- `public static final Material PRISMARINE_STAIRS`
+- `public static final Material PRISMARINE_WALL`
+- `public static final Material PUMPKIN`
+- `public static final Material PUMPKIN_STEM`
+- `public static final Material PURPLE_BANNER`
+- `public static final Material PURPLE_BED`
+- `public static final Material PURPLE_CANDLE`
+- `public static final Material PURPLE_CANDLE_CAKE`
+- `public static final Material PURPLE_CARPET`
+- `public static final Material PURPLE_CONCRETE`
+- `public static final Material PURPLE_CONCRETE_POWDER`
+- `public static final Material PURPLE_CONCRETE_SLAB`
+- `public static final Material PURPLE_CONCRETE_STAIRS`
+- `public static final Material PURPLE_GLAZED_TERRACOTTA`
+- `public static final Material PURPLE_SHULKER_BOX`
+- `public static final Material PURPLE_STAINED_GLASS`
+- `public static final Material PURPLE_STAINED_GLASS_PANE`
+- `public static final Material PURPLE_TERRACOTTA`
+- `public static final Material PURPLE_WALL_BANNER`
+- `public static final Material PURPLE_WOOL`
+- `public static final Material PURPLE_WOOL_SLAB`
+- `public static final Material PURPLE_WOOL_STAIRS`
+- `public static final Material PURPUR_BLOCK`
+- `public static final Material PURPUR_PILLAR`
+- `public static final Material PURPUR_SLAB`
+- `public static final Material PURPUR_STAIRS`
+- `public static final Material QUARTZ_BLOCK`
+- `public static final Material QUARTZ_BRICKS`
+- `public static final Material QUARTZ_PILLAR`
+- `public static final Material QUARTZ_SLAB`
+- `public static final Material QUARTZ_STAIRS`
+- `public static final Material RAIL`
+- `public static final Material RAW_COPPER_BLOCK`
+- `public static final Material RAW_GOLD_BLOCK`
+- `public static final Material RAW_IRON_BLOCK`
+- `public static final Material RED_BANNER`
+- `public static final Material RED_BED`
+- `public static final Material RED_CANDLE`
+- `public static final Material RED_CANDLE_CAKE`
+- `public static final Material RED_CARPET`
+- `public static final Material RED_CONCRETE`
+- `public static final Material RED_CONCRETE_POWDER`
+- `public static final Material RED_CONCRETE_SLAB`
+- `public static final Material RED_CONCRETE_STAIRS`
+- `public static final Material RED_GLAZED_TERRACOTTA`
+- `public static final Material RED_MUSHROOM`
+- `public static final Material RED_MUSHROOM_BLOCK`
+- `public static final Material RED_NETHER_BRICK_SLAB`
+- `public static final Material RED_NETHER_BRICK_STAIRS`
+- `public static final Material RED_NETHER_BRICK_WALL`
+- `public static final Material RED_NETHER_BRICKS`
+- `public static final Material RED_POPLAR_LEAVES`
+- `public static final Material RED_SAND`
+- `public static final Material RED_SANDSTONE`
+- `public static final Material RED_SANDSTONE_SLAB`
+- `public static final Material RED_SANDSTONE_STAIRS`
+- `public static final Material RED_SANDSTONE_WALL`
+- `public static final Material RED_SHRUB`
+- `public static final Material RED_SHULKER_BOX`
+- `public static final Material RED_STAINED_GLASS`
+- `public static final Material RED_STAINED_GLASS_PANE`
+- `public static final Material RED_TERRACOTTA`
+- `public static final Material RED_TULIP`
+- `public static final Material RED_WALL_BANNER`
+- `public static final Material RED_WOOL`
+- `public static final Material RED_WOOL_SLAB`
+- `public static final Material RED_WOOL_STAIRS`
+- `public static final Material REDSTONE_BLOCK`
+- `public static final Material REDSTONE_LAMP`
+- `public static final Material REDSTONE_ORE`
+- `public static final Material REDSTONE_TORCH`
+- `public static final Material REDSTONE_WALL_TORCH`
+- `public static final Material REDSTONE_WIRE`
+- `public static final Material REINFORCED_DEEPSLATE`
+- `public static final Material REPEATER`
+- `public static final Material REPEATING_COMMAND_BLOCK`
+- `public static final Material RESIN_BLOCK`
+- `public static final Material RESIN_BRICK_SLAB`
+- `public static final Material RESIN_BRICK_STAIRS`
+- `public static final Material RESIN_BRICK_WALL`
+- `public static final Material RESIN_BRICKS`
+- `public static final Material RESIN_CLUMP`
+- `public static final Material RESPAWN_ANCHOR`
+- `public static final Material ROOTED_DIRT`
+- `public static final Material ROSE_BUSH`
+- `public static final Material SAND`
+- `public static final Material SANDSTONE`
+- `public static final Material SANDSTONE_SLAB`
+- `public static final Material SANDSTONE_STAIRS`
+- `public static final Material SANDSTONE_WALL`
+- `public static final Material SCAFFOLDING`
+- `public static final Material SCULK`
+- `public static final Material SCULK_CATALYST`
+- `public static final Material SCULK_SENSOR`
+- `public static final Material SCULK_SHRIEKER`
+- `public static final Material SCULK_VEIN`
+- `public static final Material SEA_LANTERN`
+- `public static final Material SEA_PICKLE`
+- `public static final Material SEAGRASS`
+- `public static final Material SHELF_MUSHROOM`
+- `public static final Material SHORT_DRY_GRASS`
+- `public static final Material SHORT_GRASS`
+- `public static final Material SHROOMLIGHT`
+- `public static final Material SHULKER_BOX`
+- `public static final Material SKELETON_SKULL`
+- `public static final Material SKELETON_WALL_SKULL`
+- `public static final Material SLIME_BLOCK`
+- `public static final Material SMALL_AMETHYST_BUD`
+- `public static final Material SMALL_DRIPLEAF`
+- `public static final Material SMITHING_TABLE`
+- `public static final Material SMOKER`
+- `public static final Material SMOOTH_BASALT`
+- `public static final Material SMOOTH_QUARTZ`
+- `public static final Material SMOOTH_QUARTZ_SLAB`
+- `public static final Material SMOOTH_QUARTZ_STAIRS`
+- `public static final Material SMOOTH_RED_SANDSTONE`
+- `public static final Material SMOOTH_RED_SANDSTONE_SLAB`
+- `public static final Material SMOOTH_RED_SANDSTONE_STAIRS`
+- `public static final Material SMOOTH_SANDSTONE`
+- `public static final Material SMOOTH_SANDSTONE_SLAB`
+- `public static final Material SMOOTH_SANDSTONE_STAIRS`
+- `public static final Material SMOOTH_STONE`
+- `public static final Material SMOOTH_STONE_SLAB`
+- `public static final Material SNIFFER_EGG`
+- `public static final Material SNOW`
+- `public static final Material SNOW_BLOCK`
+- `public static final Material SOUL_CAMPFIRE`
+- `public static final Material SOUL_FIRE`
+- `public static final Material SOUL_LANTERN`
+- `public static final Material SOUL_SAND`
+- `public static final Material SOUL_SOIL`
+- `public static final Material SOUL_TORCH`
+- `public static final Material SOUL_WALL_TORCH`
+- `public static final Material SPAWNER`
+- `public static final Material SPONGE`
+- `public static final Material SPORE_BLOSSOM`
+- `public static final Material SPRUCE_BUTTON`
+- `public static final Material SPRUCE_DOOR`
+- `public static final Material SPRUCE_FENCE`
+- `public static final Material SPRUCE_FENCE_GATE`
+- `public static final Material SPRUCE_HANGING_SIGN`
+- `public static final Material SPRUCE_LEAVES`
+- `public static final Material SPRUCE_LOG`
+- `public static final Material SPRUCE_PLANKS`
+- `public static final Material SPRUCE_PRESSURE_PLATE`
+- `public static final Material SPRUCE_SAPLING`
+- `public static final Material SPRUCE_SHELF`
+- `public static final Material SPRUCE_SIGN`
+- `public static final Material SPRUCE_SLAB`
+- `public static final Material SPRUCE_STAIRS`
+- `public static final Material SPRUCE_TRAPDOOR`
+- `public static final Material SPRUCE_WALL_HANGING_SIGN`
+- `public static final Material SPRUCE_WALL_SIGN`
+- `public static final Material SPRUCE_WOOD`
+- `public static final Material STICKY_PISTON`
+- `public static final Material STONE`
+- `public static final Material STONE_BRICK_SLAB`
+- `public static final Material STONE_BRICK_STAIRS`
+- `public static final Material STONE_BRICK_WALL`
+- `public static final Material STONE_BRICKS`
+- `public static final Material STONE_BUTTON`
+- `public static final Material STONE_PRESSURE_PLATE`
+- `public static final Material STONE_SLAB`
+- `public static final Material STONE_STAIRS`
+- `public static final Material STONECUTTER`
+- `public static final Material STRAW_BED`
+- `public static final Material STRIPPED_ACACIA_LOG`
+- `public static final Material STRIPPED_ACACIA_WOOD`
+- `public static final Material STRIPPED_BAMBOO_BLOCK`
+- `public static final Material STRIPPED_BIRCH_LOG`
+- `public static final Material STRIPPED_BIRCH_WOOD`
+- `public static final Material STRIPPED_CHERRY_LOG`
+- `public static final Material STRIPPED_CHERRY_WOOD`
+- `public static final Material STRIPPED_CRIMSON_HYPHAE`
+- `public static final Material STRIPPED_CRIMSON_STEM`
+- `public static final Material STRIPPED_DARK_OAK_LOG`
+- `public static final Material STRIPPED_DARK_OAK_WOOD`
+- `public static final Material STRIPPED_JUNGLE_LOG`
+- `public static final Material STRIPPED_JUNGLE_WOOD`
+- `public static final Material STRIPPED_MANGROVE_LOG`
+- `public static final Material STRIPPED_MANGROVE_WOOD`
+- `public static final Material STRIPPED_OAK_LOG`
+- `public static final Material STRIPPED_OAK_WOOD`
+- `public static final Material STRIPPED_PALE_OAK_LOG`
+- `public static final Material STRIPPED_PALE_OAK_WOOD`
+- `public static final Material STRIPPED_POPLAR_LOG`
+- `public static final Material STRIPPED_POPLAR_WOOD`
+- `public static final Material STRIPPED_SPRUCE_LOG`
+- `public static final Material STRIPPED_SPRUCE_WOOD`
+- `public static final Material STRIPPED_WARPED_HYPHAE`
+- `public static final Material STRIPPED_WARPED_STEM`
+- `public static final Material STRUCTURE_BLOCK`
+- `public static final Material STRUCTURE_VOID`
+- `public static final Material SUGAR_CANE`
+- `public static final Material SULFUR`
+- `public static final Material SULFUR_BRICK_SLAB`
+- `public static final Material SULFUR_BRICK_STAIRS`
+- `public static final Material SULFUR_BRICK_WALL`
+- `public static final Material SULFUR_BRICKS`
+- `public static final Material SULFUR_SLAB`
+- `public static final Material SULFUR_SPIKE`
+- `public static final Material SULFUR_STAIRS`
+- `public static final Material SULFUR_WALL`
+- `public static final Material SUNFLOWER`
+- `public static final Material SUSPICIOUS_GRAVEL`
+- `public static final Material SUSPICIOUS_SAND`
+- `public static final Material SWEET_BERRY_BUSH`
+- `public static final Material TALL_DRY_GRASS`
+- `public static final Material TALL_GRASS`
+- `public static final Material TALL_SEAGRASS`
+- `public static final Material TARGET`
+- `public static final Material TERRACOTTA`
+- `public static final Material TEST_BLOCK`
+- `public static final Material TEST_INSTANCE_BLOCK`
+- `public static final Material TINTED_GLASS`
+- `public static final Material TNT`
+- `public static final Material TORCH`
+- `public static final Material TORCHFLOWER`
+- `public static final Material TORCHFLOWER_CROP`
+- `public static final Material TRAPPED_CHEST`
+- `public static final Material TRIAL_SPAWNER`
+- `public static final Material TRIPWIRE`
+- `public static final Material TRIPWIRE_HOOK`
+- `public static final Material TUBE_CORAL`
+- `public static final Material TUBE_CORAL_BLOCK`
+- `public static final Material TUBE_CORAL_FAN`
+- `public static final Material TUBE_CORAL_WALL_FAN`
+- `public static final Material TUFF`
+- `public static final Material TUFF_BRICK_SLAB`
+- `public static final Material TUFF_BRICK_STAIRS`
+- `public static final Material TUFF_BRICK_WALL`
+- `public static final Material TUFF_BRICKS`
+- `public static final Material TUFF_SLAB`
+- `public static final Material TUFF_STAIRS`
+- `public static final Material TUFF_WALL`
+- `public static final Material TURTLE_EGG`
+- `public static final Material TWISTING_VINES`
+- `public static final Material TWISTING_VINES_PLANT`
+- `public static final Material VAULT`
+- `public static final Material VERDANT_FROGLIGHT`
+- `public static final Material VINE`
+- `public static final Material VOID_AIR`
+- `public static final Material WALL_TORCH`
+- `public static final Material WARPED_BUTTON`
+- `public static final Material WARPED_DOOR`
+- `public static final Material WARPED_FENCE`
+- `public static final Material WARPED_FENCE_GATE`
+- `public static final Material WARPED_FUNGUS`
+- `public static final Material WARPED_HANGING_SIGN`
+- `public static final Material WARPED_HYPHAE`
+- `public static final Material WARPED_NYLIUM`
+- `public static final Material WARPED_PLANKS`
+- `public static final Material WARPED_PRESSURE_PLATE`
+- `public static final Material WARPED_ROOTS`
+- `public static final Material WARPED_SHELF`
+- `public static final Material WARPED_SIGN`
+- `public static final Material WARPED_SLAB`
+- `public static final Material WARPED_STAIRS`
+- `public static final Material WARPED_STEM`
+- `public static final Material WARPED_TRAPDOOR`
+- `public static final Material WARPED_WALL_HANGING_SIGN`
+- `public static final Material WARPED_WALL_SIGN`
+- `public static final Material WARPED_WART_BLOCK`
+- `public static final Material WATER`
+- `public static final Material WATER_CAULDRON`
+- `public static final Material WAXED_CHISELED_COPPER`
+- `public static final Material WAXED_COPPER_BARS`
+- `public static final Material WAXED_COPPER_BLOCK`
+- `public static final Material WAXED_COPPER_BULB`
+- `public static final Material WAXED_COPPER_CHAIN`
+- `public static final Material WAXED_COPPER_CHEST`
+- `public static final Material WAXED_COPPER_DOOR`
+- `public static final Material WAXED_COPPER_GOLEM_STATUE`
+- `public static final Material WAXED_COPPER_GRATE`
+- `public static final Material WAXED_COPPER_LANTERN`
+- `public static final Material WAXED_COPPER_TRAPDOOR`
+- `public static final Material WAXED_CUT_COPPER`
+- `public static final Material WAXED_CUT_COPPER_SLAB`
+- `public static final Material WAXED_CUT_COPPER_STAIRS`
+- `public static final Material WAXED_EXPOSED_CHISELED_COPPER`
+- `public static final Material WAXED_EXPOSED_COPPER`
+- `public static final Material WAXED_EXPOSED_COPPER_BARS`
+- `public static final Material WAXED_EXPOSED_COPPER_BULB`
+- `public static final Material WAXED_EXPOSED_COPPER_CHAIN`
+- `public static final Material WAXED_EXPOSED_COPPER_CHEST`
+- `public static final Material WAXED_EXPOSED_COPPER_DOOR`
+- `public static final Material WAXED_EXPOSED_COPPER_GOLEM_STATUE`
+- `public static final Material WAXED_EXPOSED_COPPER_GRATE`
+- `public static final Material WAXED_EXPOSED_COPPER_LANTERN`
+- `public static final Material WAXED_EXPOSED_COPPER_TRAPDOOR`
+- `public static final Material WAXED_EXPOSED_CUT_COPPER`
+- `public static final Material WAXED_EXPOSED_CUT_COPPER_SLAB`
+- `public static final Material WAXED_EXPOSED_CUT_COPPER_STAIRS`
+- `public static final Material WAXED_EXPOSED_LIGHTNING_ROD`
+- `public static final Material WAXED_LIGHTNING_ROD`
+- `public static final Material WAXED_OXIDIZED_CHISELED_COPPER`
+- `public static final Material WAXED_OXIDIZED_COPPER`
+- `public static final Material WAXED_OXIDIZED_COPPER_BARS`
+- `public static final Material WAXED_OXIDIZED_COPPER_BULB`
+- `public static final Material WAXED_OXIDIZED_COPPER_CHAIN`
+- `public static final Material WAXED_OXIDIZED_COPPER_CHEST`
+- `public static final Material WAXED_OXIDIZED_COPPER_DOOR`
+- `public static final Material WAXED_OXIDIZED_COPPER_GOLEM_STATUE`
+- `public static final Material WAXED_OXIDIZED_COPPER_GRATE`
+- `public static final Material WAXED_OXIDIZED_COPPER_LANTERN`
+- `public static final Material WAXED_OXIDIZED_COPPER_TRAPDOOR`
+- `public static final Material WAXED_OXIDIZED_CUT_COPPER`
+- `public static final Material WAXED_OXIDIZED_CUT_COPPER_SLAB`
+- `public static final Material WAXED_OXIDIZED_CUT_COPPER_STAIRS`
+- `public static final Material WAXED_OXIDIZED_LIGHTNING_ROD`
+- `public static final Material WAXED_WEATHERED_CHISELED_COPPER`
+- `public static final Material WAXED_WEATHERED_COPPER`
+- `public static final Material WAXED_WEATHERED_COPPER_BARS`
+- `public static final Material WAXED_WEATHERED_COPPER_BULB`
+- `public static final Material WAXED_WEATHERED_COPPER_CHAIN`
+- `public static final Material WAXED_WEATHERED_COPPER_CHEST`
+- `public static final Material WAXED_WEATHERED_COPPER_DOOR`
+- `public static final Material WAXED_WEATHERED_COPPER_GOLEM_STATUE`
+- `public static final Material WAXED_WEATHERED_COPPER_GRATE`
+- `public static final Material WAXED_WEATHERED_COPPER_LANTERN`
+- `public static final Material WAXED_WEATHERED_COPPER_TRAPDOOR`
+- `public static final Material WAXED_WEATHERED_CUT_COPPER`
+- `public static final Material WAXED_WEATHERED_CUT_COPPER_SLAB`
+- `public static final Material WAXED_WEATHERED_CUT_COPPER_STAIRS`
+- `public static final Material WAXED_WEATHERED_LIGHTNING_ROD`
+- `public static final Material WEATHERED_CHISELED_COPPER`
+- `public static final Material WEATHERED_COPPER`
+- `public static final Material WEATHERED_COPPER_BARS`
+- `public static final Material WEATHERED_COPPER_BULB`
+- `public static final Material WEATHERED_COPPER_CHAIN`
+- `public static final Material WEATHERED_COPPER_CHEST`
+- `public static final Material WEATHERED_COPPER_DOOR`
+- `public static final Material WEATHERED_COPPER_GOLEM_STATUE`
+- `public static final Material WEATHERED_COPPER_GRATE`
+- `public static final Material WEATHERED_COPPER_LANTERN`
+- `public static final Material WEATHERED_COPPER_TRAPDOOR`
+- `public static final Material WEATHERED_CUT_COPPER`
+- `public static final Material WEATHERED_CUT_COPPER_SLAB`
+- `public static final Material WEATHERED_CUT_COPPER_STAIRS`
+- `public static final Material WEATHERED_LIGHTNING_ROD`
+- `public static final Material WEEPING_VINES`
+- `public static final Material WEEPING_VINES_PLANT`
+- `public static final Material WET_SPONGE`
+- `public static final Material WHEAT`
+- `public static final Material WHITE_BANNER`
+- `public static final Material WHITE_BED`
+- `public static final Material WHITE_CANDLE`
+- `public static final Material WHITE_CANDLE_CAKE`
+- `public static final Material WHITE_CARPET`
+- `public static final Material WHITE_CONCRETE`
+- `public static final Material WHITE_CONCRETE_POWDER`
+- `public static final Material WHITE_CONCRETE_SLAB`
+- `public static final Material WHITE_CONCRETE_STAIRS`
+- `public static final Material WHITE_GLAZED_TERRACOTTA`
+- `public static final Material WHITE_SHULKER_BOX`
+- `public static final Material WHITE_STAINED_GLASS`
+- `public static final Material WHITE_STAINED_GLASS_PANE`
+- `public static final Material WHITE_TERRACOTTA`
+- `public static final Material WHITE_TULIP`
+- `public static final Material WHITE_WALL_BANNER`
+- `public static final Material WHITE_WOOL`
+- `public static final Material WHITE_WOOL_SLAB`
+- `public static final Material WHITE_WOOL_STAIRS`
+- `public static final Material WILDFLOWERS`
+- `public static final Material WITHER_ROSE`
+- `public static final Material WITHER_SKELETON_SKULL`
+- `public static final Material WITHER_SKELETON_WALL_SKULL`
+- `public static final Material YELLOW_BANNER`
+- `public static final Material YELLOW_BED`
+- `public static final Material YELLOW_CANDLE`
+- `public static final Material YELLOW_CANDLE_CAKE`
+- `public static final Material YELLOW_CARPET`
+- `public static final Material YELLOW_CONCRETE`
+- `public static final Material YELLOW_CONCRETE_POWDER`
+- `public static final Material YELLOW_CONCRETE_SLAB`
+- `public static final Material YELLOW_CONCRETE_STAIRS`
+- `public static final Material YELLOW_GLAZED_TERRACOTTA`
+- `public static final Material YELLOW_POPLAR_LEAVES`
+- `public static final Material YELLOW_SHULKER_BOX`
+- `public static final Material YELLOW_STAINED_GLASS`
+- `public static final Material YELLOW_STAINED_GLASS_PANE`
+- `public static final Material YELLOW_TERRACOTTA`
+- `public static final Material YELLOW_WALL_BANNER`
+- `public static final Material YELLOW_WOOL`
+- `public static final Material YELLOW_WOOL_SLAB`
+- `public static final Material YELLOW_WOOL_STAIRS`
+- `public static final Material ZOMBIE_HEAD`
+- `public static final Material ZOMBIE_WALL_HEAD`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_AIR`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_STONE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_GRASS`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_DIRT`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_COBBLESTONE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_WOOD`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_SAPLING`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_BEDROCK`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_WATER`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_STATIONARY_WATER`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_LAVA`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_STATIONARY_LAVA`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_SAND`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_GRAVEL`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_GOLD_ORE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_IRON_ORE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_COAL_ORE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_LOG`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_LEAVES`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_SPONGE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_GLASS`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_LAPIS_ORE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_LAPIS_BLOCK`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_DISPENSER`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_SANDSTONE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_NOTE_BLOCK`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_BED_BLOCK`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_POWERED_RAIL`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_DETECTOR_RAIL`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_PISTON_STICKY_BASE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_WEB`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_LONG_GRASS`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_DEAD_BUSH`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_PISTON_BASE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_PISTON_EXTENSION`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_WOOL`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_PISTON_MOVING_PIECE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_YELLOW_FLOWER`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_RED_ROSE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_BROWN_MUSHROOM`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_RED_MUSHROOM`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_GOLD_BLOCK`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_IRON_BLOCK`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_DOUBLE_STEP`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_STEP`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_BRICK`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_TNT`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_BOOKSHELF`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_MOSSY_COBBLESTONE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_OBSIDIAN`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_TORCH`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_FIRE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_MOB_SPAWNER`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_WOOD_STAIRS`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_CHEST`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_REDSTONE_WIRE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_DIAMOND_ORE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_DIAMOND_BLOCK`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_WORKBENCH`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_CROPS`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_SOIL`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_FURNACE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_BURNING_FURNACE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_SIGN_POST`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_WOODEN_DOOR`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_LADDER`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_RAILS`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_COBBLESTONE_STAIRS`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_WALL_SIGN`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_LEVER`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_STONE_PLATE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_IRON_DOOR_BLOCK`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_WOOD_PLATE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_REDSTONE_ORE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_GLOWING_REDSTONE_ORE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_REDSTONE_TORCH_OFF`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_REDSTONE_TORCH_ON`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_STONE_BUTTON`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_SNOW`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_ICE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_SNOW_BLOCK`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_CACTUS`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_CLAY`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_SUGAR_CANE_BLOCK`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_JUKEBOX`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_FENCE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_PUMPKIN`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_NETHERRACK`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_SOUL_SAND`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_GLOWSTONE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_PORTAL`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_JACK_O_LANTERN`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_CAKE_BLOCK`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_DIODE_BLOCK_OFF`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_DIODE_BLOCK_ON`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_STAINED_GLASS`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_TRAP_DOOR`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_MONSTER_EGGS`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_SMOOTH_BRICK`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_HUGE_MUSHROOM_1`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_HUGE_MUSHROOM_2`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_IRON_FENCE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_THIN_GLASS`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_MELON_BLOCK`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_PUMPKIN_STEM`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_MELON_STEM`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_VINE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_FENCE_GATE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_BRICK_STAIRS`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_SMOOTH_STAIRS`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_MYCEL`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_WATER_LILY`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_NETHER_BRICK`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_NETHER_FENCE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_NETHER_BRICK_STAIRS`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_NETHER_WARTS`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_ENCHANTMENT_TABLE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_BREWING_STAND`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_CAULDRON`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_ENDER_PORTAL`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_ENDER_PORTAL_FRAME`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_ENDER_STONE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_DRAGON_EGG`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_REDSTONE_LAMP_OFF`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_REDSTONE_LAMP_ON`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_WOOD_DOUBLE_STEP`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_WOOD_STEP`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_COCOA`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_SANDSTONE_STAIRS`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_EMERALD_ORE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_ENDER_CHEST`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_TRIPWIRE_HOOK`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_TRIPWIRE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_EMERALD_BLOCK`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_SPRUCE_WOOD_STAIRS`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_BIRCH_WOOD_STAIRS`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_JUNGLE_WOOD_STAIRS`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_COMMAND`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_BEACON`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_COBBLE_WALL`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_FLOWER_POT`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_CARROT`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_POTATO`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_WOOD_BUTTON`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_SKULL`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_ANVIL`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_TRAPPED_CHEST`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_GOLD_PLATE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_IRON_PLATE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_REDSTONE_COMPARATOR_OFF`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_REDSTONE_COMPARATOR_ON`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_DAYLIGHT_DETECTOR`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_REDSTONE_BLOCK`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_QUARTZ_ORE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_HOPPER`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_QUARTZ_BLOCK`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_QUARTZ_STAIRS`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_ACTIVATOR_RAIL`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_DROPPER`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_STAINED_CLAY`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_STAINED_GLASS_PANE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_LEAVES_2`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_LOG_2`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_ACACIA_STAIRS`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_DARK_OAK_STAIRS`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_SLIME_BLOCK`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_BARRIER`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_IRON_TRAPDOOR`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_PRISMARINE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_SEA_LANTERN`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_HAY_BLOCK`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_CARPET`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_HARD_CLAY`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_COAL_BLOCK`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_PACKED_ICE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_DOUBLE_PLANT`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_STANDING_BANNER`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_WALL_BANNER`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_DAYLIGHT_DETECTOR_INVERTED`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_RED_SANDSTONE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_RED_SANDSTONE_STAIRS`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_DOUBLE_STONE_SLAB2`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_STONE_SLAB2`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_SPRUCE_FENCE_GATE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_BIRCH_FENCE_GATE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_JUNGLE_FENCE_GATE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_DARK_OAK_FENCE_GATE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_ACACIA_FENCE_GATE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_SPRUCE_FENCE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_BIRCH_FENCE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_JUNGLE_FENCE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_DARK_OAK_FENCE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_ACACIA_FENCE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_SPRUCE_DOOR`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_BIRCH_DOOR`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_JUNGLE_DOOR`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_ACACIA_DOOR`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_DARK_OAK_DOOR`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_END_ROD`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_CHORUS_PLANT`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_CHORUS_FLOWER`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_PURPUR_BLOCK`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_PURPUR_PILLAR`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_PURPUR_STAIRS`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_PURPUR_DOUBLE_SLAB`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_PURPUR_SLAB`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_END_BRICKS`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_BEETROOT_BLOCK`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_GRASS_PATH`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_END_GATEWAY`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_COMMAND_REPEATING`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_COMMAND_CHAIN`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_FROSTED_ICE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_MAGMA`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_NETHER_WART_BLOCK`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_RED_NETHER_BRICK`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_BONE_BLOCK`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_STRUCTURE_VOID`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_OBSERVER`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_WHITE_SHULKER_BOX`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_ORANGE_SHULKER_BOX`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_MAGENTA_SHULKER_BOX`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_LIGHT_BLUE_SHULKER_BOX`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_YELLOW_SHULKER_BOX`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_LIME_SHULKER_BOX`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_PINK_SHULKER_BOX`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_GRAY_SHULKER_BOX`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_SILVER_SHULKER_BOX`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_CYAN_SHULKER_BOX`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_PURPLE_SHULKER_BOX`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_BLUE_SHULKER_BOX`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_BROWN_SHULKER_BOX`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_GREEN_SHULKER_BOX`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_RED_SHULKER_BOX`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_BLACK_SHULKER_BOX`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_WHITE_GLAZED_TERRACOTTA`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_ORANGE_GLAZED_TERRACOTTA`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_MAGENTA_GLAZED_TERRACOTTA`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_LIGHT_BLUE_GLAZED_TERRACOTTA`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_YELLOW_GLAZED_TERRACOTTA`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_LIME_GLAZED_TERRACOTTA`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_PINK_GLAZED_TERRACOTTA`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_GRAY_GLAZED_TERRACOTTA`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_SILVER_GLAZED_TERRACOTTA`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_CYAN_GLAZED_TERRACOTTA`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_PURPLE_GLAZED_TERRACOTTA`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_BLUE_GLAZED_TERRACOTTA`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_BROWN_GLAZED_TERRACOTTA`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_GREEN_GLAZED_TERRACOTTA`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_RED_GLAZED_TERRACOTTA`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_BLACK_GLAZED_TERRACOTTA`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_CONCRETE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_CONCRETE_POWDER`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_STRUCTURE_BLOCK`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_IRON_SPADE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_IRON_PICKAXE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_IRON_AXE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_FLINT_AND_STEEL`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_APPLE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_BOW`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_ARROW`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_COAL`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_DIAMOND`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_IRON_INGOT`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_GOLD_INGOT`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_IRON_SWORD`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_WOOD_SWORD`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_WOOD_SPADE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_WOOD_PICKAXE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_WOOD_AXE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_STONE_SWORD`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_STONE_SPADE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_STONE_PICKAXE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_STONE_AXE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_DIAMOND_SWORD`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_DIAMOND_SPADE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_DIAMOND_PICKAXE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_DIAMOND_AXE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_STICK`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_BOWL`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_MUSHROOM_SOUP`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_GOLD_SWORD`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_GOLD_SPADE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_GOLD_PICKAXE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_GOLD_AXE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_STRING`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_FEATHER`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_SULPHUR`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_WOOD_HOE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_STONE_HOE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_IRON_HOE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_DIAMOND_HOE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_GOLD_HOE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_SEEDS`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_WHEAT`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_BREAD`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_LEATHER_HELMET`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_LEATHER_CHESTPLATE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_LEATHER_LEGGINGS`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_LEATHER_BOOTS`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_CHAINMAIL_HELMET`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_CHAINMAIL_CHESTPLATE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_CHAINMAIL_LEGGINGS`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_CHAINMAIL_BOOTS`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_IRON_HELMET`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_IRON_CHESTPLATE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_IRON_LEGGINGS`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_IRON_BOOTS`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_DIAMOND_HELMET`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_DIAMOND_CHESTPLATE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_DIAMOND_LEGGINGS`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_DIAMOND_BOOTS`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_GOLD_HELMET`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_GOLD_CHESTPLATE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_GOLD_LEGGINGS`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_GOLD_BOOTS`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_FLINT`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_PORK`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_GRILLED_PORK`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_PAINTING`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_GOLDEN_APPLE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_SIGN`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_WOOD_DOOR`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_BUCKET`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_WATER_BUCKET`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_LAVA_BUCKET`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_MINECART`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_SADDLE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_IRON_DOOR`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_REDSTONE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_SNOW_BALL`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_BOAT`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_LEATHER`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_MILK_BUCKET`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_CLAY_BRICK`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_CLAY_BALL`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_SUGAR_CANE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_PAPER`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_BOOK`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_SLIME_BALL`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_STORAGE_MINECART`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_POWERED_MINECART`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_EGG`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_COMPASS`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_FISHING_ROD`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_WATCH`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_GLOWSTONE_DUST`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_RAW_FISH`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_COOKED_FISH`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_INK_SACK`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_BONE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_SUGAR`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_CAKE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_BED`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_DIODE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_COOKIE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_MAP`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_SHEARS`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_MELON`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_PUMPKIN_SEEDS`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_MELON_SEEDS`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_RAW_BEEF`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_COOKED_BEEF`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_RAW_CHICKEN`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_COOKED_CHICKEN`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_ROTTEN_FLESH`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_ENDER_PEARL`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_BLAZE_ROD`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_GHAST_TEAR`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_GOLD_NUGGET`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_NETHER_STALK`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_POTION`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_GLASS_BOTTLE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_SPIDER_EYE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_FERMENTED_SPIDER_EYE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_BLAZE_POWDER`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_MAGMA_CREAM`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_BREWING_STAND_ITEM`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_CAULDRON_ITEM`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_EYE_OF_ENDER`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_SPECKLED_MELON`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_MONSTER_EGG`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_EXP_BOTTLE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_FIREBALL`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_BOOK_AND_QUILL`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_WRITTEN_BOOK`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_EMERALD`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_ITEM_FRAME`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_FLOWER_POT_ITEM`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_CARROT_ITEM`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_POTATO_ITEM`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_BAKED_POTATO`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_POISONOUS_POTATO`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_EMPTY_MAP`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_GOLDEN_CARROT`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_SKULL_ITEM`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_CARROT_STICK`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_NETHER_STAR`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_PUMPKIN_PIE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_FIREWORK`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_FIREWORK_CHARGE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_ENCHANTED_BOOK`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_REDSTONE_COMPARATOR`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_NETHER_BRICK_ITEM`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_QUARTZ`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_EXPLOSIVE_MINECART`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_HOPPER_MINECART`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_PRISMARINE_SHARD`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_PRISMARINE_CRYSTALS`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_RABBIT`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_COOKED_RABBIT`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_RABBIT_STEW`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_RABBIT_FOOT`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_RABBIT_HIDE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_ARMOR_STAND`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_IRON_BARDING`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_GOLD_BARDING`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_DIAMOND_BARDING`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_LEASH`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_NAME_TAG`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_COMMAND_MINECART`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_MUTTON`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_COOKED_MUTTON`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_BANNER`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_END_CRYSTAL`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_SPRUCE_DOOR_ITEM`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_BIRCH_DOOR_ITEM`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_JUNGLE_DOOR_ITEM`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_ACACIA_DOOR_ITEM`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_DARK_OAK_DOOR_ITEM`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_CHORUS_FRUIT`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_CHORUS_FRUIT_POPPED`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_BEETROOT`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_BEETROOT_SEEDS`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_BEETROOT_SOUP`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_DRAGONS_BREATH`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_SPLASH_POTION`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_SPECTRAL_ARROW`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_TIPPED_ARROW`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_LINGERING_POTION`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_SHIELD`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_ELYTRA`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_BOAT_SPRUCE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_BOAT_BIRCH`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_BOAT_JUNGLE`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_BOAT_ACACIA`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_BOAT_DARK_OAK`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_TOTEM`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_SHULKER_SHELL`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_IRON_NUGGET`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_KNOWLEDGE_BOOK`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_GOLD_RECORD`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_GREEN_RECORD`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_RECORD_3`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_RECORD_4`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_RECORD_5`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_RECORD_6`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_RECORD_7`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_RECORD_8`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_RECORD_9`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_RECORD_10`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_RECORD_11`
+- `@Deprecated(since="1.13", forRemoval=true) public static final Material LEGACY_RECORD_12`
+- `@Deprecated(since="1.13", forRemoval=true) public static final String LEGACY_PREFIX`
+- `public final Class<?> data`
+- `public static Material[] values()`
+- `public static Material valueOf(String name)`
+- `@NotNull public @NotNull String translationKey()`
+- `@NotNull @Deprecated(forRemoval=true, since="1.20.5") public ItemRarity getItemRarity()`
+- `@NotNull @Deprecated(forRemoval=true, since="1.20.5") public @NotNull Multimap<Attribute, AttributeModifier> getItemAttributes(@NotNull @NotNull EquipmentSlot equipmentSlot)`
+- `public boolean isCollidable()`
+- `@Internal public int getId()`
+- `public boolean isLegacy()`
+- `@NotNull public @NotNull NamespacedKey getKey()`
+- `public int getMaxStackSize()`
+- `public short getMaxDurability()`
+- `@NotNull public @NotNull BlockData createBlockData()`
+- `@NotNull public @NotNull BlockData createBlockData(@Nullable @Nullable Consumer<? super BlockData> consumer)`
+- `@NotNull public @NotNull BlockData createBlockData(@Nullable @Nullable String data) throws IllegalArgumentException`
+- `@NotNull @Deprecated public @NotNull Class<? extends MaterialData> getData()`
+- `@Deprecated(since="1.6.2") @NotNull public @NotNull MaterialData getNewData(byte raw)`
+- `public boolean isBlock()`
+- `public boolean isEdible()`
+- `@Nullable public static @Nullable Material getMaterial(@NotNull @NotNull String name)`
+- `@Nullable public static @Nullable Material getMaterial(@NotNull @NotNull String name, boolean legacyName)`
+- `@Nullable public static @Nullable Material matchMaterial(@NotNull @NotNull String name)`
+- `@Nullable public static @Nullable Material matchMaterial(@NotNull @NotNull String name, boolean legacyName)`
+- `public boolean isRecord()`
+- `public boolean isSolid()`
+- `public boolean isAir()`
+- `@Deprecated(since="1.21.5") public boolean isEmpty()`
+- `@Deprecated(since="1.13", forRemoval=true) public boolean isTransparent()`
+- `public boolean isFlammable()`
+- `public boolean isBurnable()`
+- `public boolean isFuel()`
+- `public boolean isOccluding()`
+- `public boolean hasGravity()`
+- `public boolean isItem()`
+- `@Deprecated public boolean isInteractable()`
+- `public float getHardness()`
+- `public float getBlastResistance()`
+- `public float getSlipperiness()`
+- `@Nullable public @Nullable Material getCraftingRemainingItem()`
+- `@NotNull public @NotNull EquipmentSlot getEquipmentSlot()`
+- `@NotNull public @NotNull @Unmodifiable Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers()`
+- `@NotNull public @NotNull Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@NotNull @NotNull EquipmentSlot slot)`
+- `@Deprecated(since="1.20.6", forRemoval=true) @Nullable public @Nullable CreativeCategory getCreativeCategory()`
+- `@NotNull @Deprecated(forRemoval=true) public @NotNull String getTranslationKey()`
+- `@Nullable public @Nullable String getBlockTranslationKey()`
+- `@Nullable public @Nullable String getItemTranslationKey()`
+- `public boolean isCompostable()`
+- `public float getCompostChance()`
+- `@Nullable @Contract(pure=true) public @Nullable ItemType asItemType()`
+- `@Nullable @Contract(pure=true) public @Nullable BlockType asBlockType()`
+- `@Nullable public <T> T getDefaultData(@NotNull DataComponentType.Valued<T> type)`
+- `public boolean hasDefaultData(@NotNull DataComponentType type)`
+- `public @Unmodifiable @NotNull Set<DataComponentType> getDefaultDataTypes()`

@@ -13,7 +13,7 @@ mappings: mojmap
 
 ## 入口（语义基线，主档 neoforge 根同题 skill 为完整稿；NeoForge 1.21.1 以复核为准）
 
-1. **注册 SoundEvent**：`DeferredRegister.create(NeoForgeRegistries.SOUND_EVENTS, MOD_ID)` + `SoundEvent.createVariableRangeEvent(...)`（不要用已废弃构造），`register(modEventBus)` 挂 mod event bus。
+1. **注册 SoundEvent**：`DeferredRegister.create(Registries.SOUND_EVENT, MOD_ID)` + `SoundEvent.createVariableRangeEvent(...)`（不要用已废弃构造），`register(modEventBus)` 挂 mod event bus。（构件实测：`NeoForgeRegistries` 只装 NeoForge **自有**注册表，无 `SOUND_EVENTS`；本档真名是 vanilla 的 `Registries.SOUND_EVENT`。）
 2. **sounds.json**：`assets/<modid>/sounds.json`，每个 key 对应一个注册名；`sounds` 必须是数组（多文件随机取）；`"stream": true` 长音频流式读盘；`subtitle` 字幕文案。
 3. **SoundType**：方块破坏/放置/踩踏/脚步/落地音效，方块属性 `.sound(...)` 挂接。
 4. **播放**：服务端广播走 `Level#playSound`（附近玩家、排除指定玩家/可传 null 让所有人听）；客户端本地播放入口名以 `search_neoforge_docs` 复核。

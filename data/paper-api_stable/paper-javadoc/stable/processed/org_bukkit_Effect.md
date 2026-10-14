@@ -1,0 +1,140 @@
+---
+title: "org.bukkit.Effect"
+package: "org.bukkit"
+source: https://jd.papermc.io/paper/26.3/org/bukkit/Effect.html
+sourceType: javadoc
+fetchedWith: fetch-spigot-javadoc.mjs@1
+fetchedAt: 2026-10-14T13:00:27.472Z
+asOfVersion: "26.3.build.178-stable"
+---
+
+**Enum Class Effect**
+`public enum Effect extends Enum<Effect>`
+- `public static final Effect DISPENSER_DISPENSE`
+- `public static final Effect DISPENSER_FAIL`
+- `public static final Effect DISPENSER_PROJECTILE_LAUNCH`
+- `@Deprecated(since="1.19.3", forRemoval=true) public static final Effect DOOR_TOGGLE`
+- `@Deprecated(since="1.19.3", forRemoval=true) public static final Effect IRON_DOOR_TOGGLE`
+- `@Deprecated(since="1.19.3", forRemoval=true) public static final Effect TRAPDOOR_TOGGLE`
+- `@Deprecated(since="1.19.3", forRemoval=true) public static final Effect IRON_TRAPDOOR_TOGGLE`
+- `@Deprecated(since="1.19.3", forRemoval=true) public static final Effect FENCE_GATE_TOGGLE`
+- `@Deprecated(since="1.19.3", forRemoval=true) public static final Effect DOOR_CLOSE`
+- `@Deprecated(since="1.19.3", forRemoval=true) public static final Effect IRON_DOOR_CLOSE`
+- `@Deprecated(since="1.19.3", forRemoval=true) public static final Effect TRAPDOOR_CLOSE`
+- `@Deprecated(since="1.19.3", forRemoval=true) public static final Effect IRON_TRAPDOOR_CLOSE`
+- `@Deprecated(since="1.19.3", forRemoval=true) public static final Effect FENCE_GATE_CLOSE`
+- `@Deprecated(since="1.21", forRemoval=true) public static final Effect ENDEREYE_LAUNCH`
+- `public static final Effect FIREWORK_SHOOT`
+- `public static final Effect EXTINGUISH`
+- `public static final Effect RECORD_PLAY`
+- `public static final Effect RECORD_STOP`
+- `public static final Effect GHAST_SHRIEK`
+- `public static final Effect GHAST_SHOOT`
+- `public static final Effect ENDER_DRAGON_SHOOT`
+- `public static final Effect BLAZE_SHOOT`
+- `public static final Effect ZOMBIE_CHEW_WOODEN_DOOR`
+- `public static final Effect ZOMBIE_CHEW_IRON_DOOR`
+- `public static final Effect ZOMBIE_DESTROY_DOOR`
+- `public static final Effect WITHER_BREAK_BLOCK`
+- `public static final Effect WITHER_SPAWNED`
+- `public static final Effect WITHER_SHOOT`
+- `public static final Effect BAT_TAKEOFF`
+- `public static final Effect ZOMBIE_INFECT`
+- `public static final Effect ZOMBIE_CONVERTED_TO_VILLAGER`
+- `public static final Effect ENDER_DRAGON_DEATH`
+- `public static final Effect ANVIL_BREAK`
+- `public static final Effect ANVIL_USE`
+- `public static final Effect ANVIL_LAND`
+- `public static final Effect PORTAL_TRAVEL`
+- `public static final Effect CHORUS_FLOWER_GROW`
+- `public static final Effect CHORUS_FLOWER_DEATH`
+- `public static final Effect BREWING_STAND_BREW`
+- `public static final Effect END_PORTAL_CREATED_IN_OVERWORLD`
+- `public static final Effect PHANTOM_BITE`
+- `public static final Effect ZOMBIE_CONVERTED_TO_DROWNED`
+- `public static final Effect HUSK_CONVERTED_TO_ZOMBIE`
+- `public static final Effect GRINDSTONE_USE`
+- `public static final Effect BOOK_PAGE_TURN`
+- `public static final Effect SMITHING_TABLE_USE`
+- `public static final Effect POINTED_DRIPSTONE_LAND`
+- `public static final Effect POINTED_DRIPSTONE_DRIP_LAVA_INTO_CAULDRON`
+- `public static final Effect POINTED_DRIPSTONE_DRIP_WATER_INTO_CAULDRON`
+- `public static final Effect SKELETON_CONVERTED_TO_STRAY`
+- `public static final Effect CRAFTER_CRAFT`
+- `public static final Effect CRAFTER_FAIL`
+- `public static final Effect WIND_CHARGE_SHOOT`
+- `public static final Effect SULFUR_SPIKE_LAND`
+- `public static final Effect SPELL_POTION_SPLASH`
+- `public static final Effect INSTANT_POTION_SPLASH`
+- `public static final Effect COMPOSTER_FILL_ATTEMPT`
+- `public static final Effect LAVA_INTERACT`
+- `public static final Effect REDSTONE_TORCH_BURNOUT`
+- `public static final Effect END_PORTAL_FRAME_FILL`
+- `public static final Effect DRIPPING_DRIPSTONE`
+- `public static final Effect BONE_MEAL_USE`
+- `public static final Effect SMOKE_SHOOT`
+- `@Deprecated(since="26.2", forRemoval=true) public static final Effect STEP_SOUND`
+- `public static final Effect DESTROY_BLOCK_WITH_SOUND`
+- `public static final Effect POTION_BREAK`
+- `public static final Effect ENDER_SIGNAL`
+- `public static final Effect MOBSPAWNER_FLAMES`
+- `public static final Effect ENDER_DRAGON_BREATH`
+- `public static final Effect INSTANT_POTION_BREAK`
+- `public static final Effect ENDER_DRAGON_DESTROY_BLOCK`
+- `public static final Effect SPONGE_DRY`
+- `public static final Effect WHITE_SMOKE_SHOOT`
+- `public static final Effect BEE_GROWTH`
+- `public static final Effect TURTLE_EGG_PLACEMENT`
+- `public static final Effect SMASH_ATTACK`
+- `public static final Effect DESTROY_BLOCK`
+- `public static final Effect ENDER_DRAGON_EGG_TELEPORT`
+- `public static final Effect SHULKER_TELEPORT`
+- `public static final Effect CONSUME_EFFECT_TELEPORT`
+- `public static final Effect ENDERMAN_TELEPORT`
+- `public static final Effect DESTROY_PROGRESS`
+- `public static final Effect DESTROY_PROGRESS_WITH_SOUND`
+- `public static final Effect END_GATEWAY_SPAWN`
+- `public static final Effect ENDER_DRAGON_GROWL`
+- `public static final Effect ELECTRIC_SPARK`
+- `public static final Effect COPPER_WAX_ON`
+- `public static final Effect COPPER_WAX_OFF`
+- `public static final Effect OXIDISED_COPPER_SCRAPE`
+- `public static final Effect SCULK_CHARGE`
+- `public static final Effect SCULK_SHRIEK`
+- `public static final Effect BRUSH_BLOCK_COMPLETE`
+- `public static final Effect EGG_CRACK`
+- `@Deprecated(since="1.20.5", forRemoval=true) public static final Effect GUST_DUST`
+- `public static final Effect TRIAL_SPAWNER_SPAWN`
+- `public static final Effect TRIAL_SPAWNER_SPAWN_MOB_AT`
+- `public static final Effect TRIAL_SPAWNER_DETECT_PLAYER`
+- `public static final Effect TRIAL_SPAWNER_EJECT_ITEM`
+- `public static final Effect VAULT_ACTIVATE`
+- `public static final Effect VAULT_DEACTIVATE`
+- `public static final Effect VAULT_EJECT_ITEM`
+- `public static final Effect SPAWN_COBWEB`
+- `public static final Effect TRIAL_SPAWNER_DETECT_PLAYER_OMINOUS`
+- `public static final Effect TRIAL_SPAWNER_BECOME_OMINOUS`
+- `public static final Effect TRIAL_SPAWNER_SPAWN_ITEM`
+- `@Deprecated(since="26.2", forRemoval=true) public static final Effect CLICK2`
+- `@Deprecated(since="26.2", forRemoval=true) public static final Effect CLICK1`
+- `@Deprecated(since="26.2", forRemoval=true) public static final Effect BOW_FIRE`
+- `@Deprecated(since="26.2", forRemoval=true) public static final Effect SOUND_STOP_JUKEBOX_SONG`
+- `@Deprecated(since="26.2", forRemoval=true) public static final Effect ENDERDRAGON_SHOOT`
+- `@Deprecated(since="26.2", forRemoval=true) public static final Effect ZOMBIE_CONVERTED_VILLAGER`
+- `@Deprecated(since="26.2", forRemoval=true) public static final Effect SOUND_WITH_CHARGE_SHOT`
+- `@Deprecated(since="26.2", forRemoval=true) public static final Effect DRAGON_BREATH`
+- `@Deprecated(since="1.20.5", forRemoval=true) public static final Effect VILLAGER_PLANT_GROW`
+- `@Deprecated(since="26.2", forRemoval=true) public static final Effect SMOKE`
+- `@Deprecated(since="26.2", forRemoval=true) public static final Effect SHOOT_WHITE_SMOKE`
+- `@Deprecated(since="26.2", forRemoval=true) public static final Effect ENDERDRAGON_GROWL`
+- `@Deprecated(since="26.2", forRemoval=true) public static final Effect PARTICLES_SCULK_CHARGE`
+- `@Deprecated(since="26.2", forRemoval=true) public static final Effect PARTICLES_SCULK_SHRIEK`
+- `@Deprecated(since="26.2", forRemoval=true) public static final Effect PARTICLES_AND_SOUND_BRUSH_BLOCK_COMPLETE`
+- `@Deprecated(since="26.2", forRemoval=true) public static final Effect PARTICLES_EGG_CRACK`
+- `public static Effect[] values()`
+- `public static Effect valueOf(String name)`
+- `@Internal public int getId()`
+- `@NotNull @Deprecated public @NotNull Effect.Type getType()`
+- `@Nullable public @Nullable Class<?> getData()`
+- `@Internal public boolean isApplicable(Object obj)`
+- `@Internal @Nullable public static @Nullable Effect getById(int id)`

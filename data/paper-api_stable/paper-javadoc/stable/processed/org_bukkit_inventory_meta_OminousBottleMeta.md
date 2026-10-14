@@ -1,0 +1,16 @@
+---
+title: "org.bukkit.inventory.meta.OminousBottleMeta"
+package: "org.bukkit.inventory.meta"
+source: https://jd.papermc.io/paper/26.3/org/bukkit/inventory/meta/OminousBottleMeta.html
+sourceType: javadoc
+fetchedWith: fetch-spigot-javadoc.mjs@1
+fetchedAt: 2026-10-14T13:02:54.065Z
+asOfVersion: "26.3.build.178-stable"
+---
+
+**Interface OminousBottleMeta**
+`public interface OminousBottleMeta extends ItemMeta`
+- `boolean hasAmplifier()`
+- `int getAmplifier()`
+- `void setAmplifier(int amplifier)`
+- `@NotNull @NotNull OminousBottleMeta clone()`

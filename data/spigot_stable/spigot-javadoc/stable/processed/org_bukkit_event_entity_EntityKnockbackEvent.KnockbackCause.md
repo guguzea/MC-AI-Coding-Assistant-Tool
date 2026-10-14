@@ -1,0 +1,20 @@
+---
+title: "org.bukkit.event.entity.EntityKnockbackEvent.KnockbackCause"
+package: "org.bukkit.event.entity"
+source: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/event/entity/EntityKnockbackEvent.KnockbackCause.html
+sourceType: javadoc
+fetchedWith: fetch-spigot-javadoc.mjs@1
+fetchedAt: 2026-10-14T12:59:21.517Z
+asOfVersion: "26.3-R0.1-SNAPSHOT"
+---
+
+**Enum Class EntityKnockbackEvent.KnockbackCause**
+`public static enum EntityKnockbackEvent.KnockbackCause extends Enum<EntityKnockbackEvent.KnockbackCause>`
+- `public static final EntityKnockbackEvent.KnockbackCause DAMAGE`
+- `public static final EntityKnockbackEvent.KnockbackCause ENTITY_ATTACK`
+- `public static final EntityKnockbackEvent.KnockbackCause EXPLOSION`
+- `public static final EntityKnockbackEvent.KnockbackCause SHIELD_BLOCK`
+- `public static final EntityKnockbackEvent.KnockbackCause SWEEP_ATTACK`
+- `public static final EntityKnockbackEvent.KnockbackCause UNKNOWN`
+- `public static EntityKnockbackEvent.KnockbackCause[] values()`
+- `public static EntityKnockbackEvent.KnockbackCause valueOf(String name)`

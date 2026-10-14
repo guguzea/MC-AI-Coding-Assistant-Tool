@@ -29,7 +29,7 @@
  * **刻意不用的东西**：`TickEvent.Phase.END` / `TickEvent.Type.CLIENT` —— 语料里 `TickEvent.Phase`/`Type` 两页**只列 `valueOf`/`values`，不列常量名**，
  * 本仓不背书；而桥是**请求驱动**（HTTP 线程入队、tick 出队），不读 phase 也完全正确。
  *
- * **能力天花板 = 「命令级」（必须对用户写明，别让人误当 driver）**：10 个动作 + `chat_command` 发的是**聊天包**（不是键位输入）
+ * **本桥的能力天花板 = 「命令级」（必须对用户写明，别让人误当 driver —— driver 路线是「玩家级」：真按键原语 forward/jump/sneak/attack/use + 步骤 move/goto/break/gui）**：10 个动作 + `chat_command` 发的是**聊天包**（不是键位输入）
  * ⇒ ① 读数与观察可用（位置/血量/方块/背包/实体列表/当前界面/截图）；② **命令级操控**可用（`/tp` `/setblock` `/give` `/summon` …，受实例 op / 开作弊约束）；
  * ③ **玩家物理路径测不了**（走位 / 跳跃 / 挖掘耗时 / 碰撞——只有真按键才走得到）；④ GUI **点击**不可用（`query_screen` 只能观察界面）。
  * 部分动作**逐档 fail-closed**（1.7.10 聊天、1.9.4–1.12.2 `use_item`、rift 聊天+`use_item`）——见 `README.bridge.md` 的 await 矩阵。
@@ -348,7 +348,7 @@ import net.minecraft.client.Minecraft;
  * 协议与 \`playtest_bridge\` 一致：\`GET /status\`、\`POST /execute\`（body = \`{"action":"...","params":{...}}\`）。
  * **线程纪律**：HTTP 线程只入队；所有 Minecraft 调用都在客户端 tick 线程里做（HTTP 线程碰 MC 会崩）。
  * **不读 \`TickEvent.Phase\`**：语料不背书其枚举常量名，且请求驱动不需要（逐 tick 轮询队列即可）。
- * **能力天花板 = 命令级**：本桥发的是**聊天包**、不是键位输入 ⇒ 读数/观察/命令级操控可用（\`/tp\` \`/setblock\` …），
+ * **本桥的能力天花板 = 命令级**：本桥发的是**聊天包**、不是键位输入 ⇒ 读数/观察/命令级操控可用（\`/tp\` \`/setblock\` …），
  * **玩家物理路径（走位/跳跃/挖掘耗时/碰撞）测不了**。要玩家级验证请上用 driver 的档。
  *
  * 逐版本差异（出处见仓库 \`forge/${version}/knowledge/common/verified-api.md\`）：
@@ -644,7 +644,7 @@ function forgeReadme(version: string, modId: string): string {
 
 **隔离**：本模板**不在** \`PLAYTEST_VERIFIED_TIER\` 里、不参与 driver 派发 —— 桥是独立路线。
 
-## ⚠️ 能力天花板 = **命令级**（先读这条，别把它当 driver）
+## ⚠️ 本桥的能力天花板 = **命令级**（先读这条，别把它当 driver —— driver 路线是「玩家级」：走位 / 跳跃 / 挖掘 / GUI 交互都做得到）
 
 **这座桥**不是** driver。它有 10 个动作、发的是**聊天包**（不是键位输入），所以：
 
@@ -731,7 +731,7 @@ mc-skill playtest_bridge --action=await --condition=health_below --params='{"hea
 
 ## 边界（写清不吹）
 
-- **能力天花板 = 「命令级」**（见顶部那条）：10 个动作 + 发聊天包 ⇒ **做不了玩家物理路径**（走位 / 跳跃 / 挖掘耗时 / 碰撞）；\`/tp\` \`/setblock\` 这类**命令级**操控可用，但受实例权限（op / 是否开作弊）约束。
+- **本桥的能力天花板 = 「命令级」**（见顶部那条）：10 个动作 + 发聊天包 ⇒ **做不了玩家物理路径**（走位 / 跳跃 / 挖掘耗时 / 碰撞）；\`/tp\` \`/setblock\` 这类**命令级**操控可用，但受实例权限（op / 是否开作弊）约束。
 - **动作 10 个**，但**逐档可用性不同**（见下表）：不可用的动作**会返回带原因的 \`failure\`**，不是假绿 —— 例如本档的 \`use_item\`。
 - **\`block_at\` 在 1.7.10 不给注册名**（该档语料里取名方法无背书）⇒ 该档只能按**方块类简单名**断言，或只做冒烟级。
 - **\`block_at\` 在 1.8.9 用 \`Block#isAir(IBlockAccess,BlockPos)\`、1.9.4+ 用 \`Block#isAir(IBlockState,IBlockAccess,BlockPos)\`**（1.9.4 多一个参数，模板已逐档分开）。
@@ -866,7 +866,7 @@ import net.minecraft.util.ScreenShotHelper;
  * 最小游玩测试桥（**本档 = rift 1.13.2**；测完必须按 README.bridge.md 撤除，绝不提交）。
  *
  * 协议与 \`playtest_bridge\` 一致：\`GET /status\`、\`POST /execute\`。**HTTP 线程只入队，MC 调用全在 clientTick()（客户端 tick 线程）里做**。
- * **能力天花板 = 命令级**：本桥发的是聊天包、不是键位输入 ⇒ 读数/观察/命令级操控可用，**玩家物理路径（走位/跳跃/挖掘耗时/碰撞）测不了**。
+ * **本桥的能力天花板 = 命令级**：本桥发的是聊天包、不是键位输入 ⇒ 读数/观察/命令级操控可用，**玩家物理路径（走位/跳跃/挖掘耗时/碰撞）测不了**。
  *
  * 逐名出处（1.13.2 MCP 快照 20180921-1.13，见 \`rift/1.13.2/knowledge/common/bridge-api.md\`）：
  *   listener/clientTick 出处 = Rift corpus；MC 侧名字出处 = \`data/forge_1.13.2/mappings/**\` + \`extracted/config/constructors.txt\`。
@@ -1004,7 +1004,7 @@ function riftReadme(modId: string): string {
 
 **隔离**：不在 \`PLAYTEST_VERIFIED_TIER\`、不参与 driver 派发 —— 桥是独立路线。
 
-## ⚠️ 能力天花板 = **命令级**（先读这条，别把它当 driver）
+## ⚠️ 本桥的能力天花板 = **命令级**（先读这条，别把它当 driver —— driver 路线是「玩家级」：走位 / 跳跃 / 挖掘 / GUI 交互都做得到）
 
 只有 **10 个动作**（其中 \`query_chat_history\` 与 \`use_item\` 在本档 **fail-closed**）、发的是**聊天包**（不是键位输入）：
 
@@ -1089,7 +1089,7 @@ curl -s -X POST http://127.0.0.1:38081/execute -d '{"id":"2","action":"chat_comm
 
 ## 边界（写清不吹）
 
-- **能力天花板 = 命令级**（见上）；玩家物理路径测不了。
+- **本桥的能力天花板 = 命令级**（见上）；玩家物理路径测不了。
 - **动作 10 个**，但本档的 \`query_chat_history\` 与 \`use_item\` **fail-closed**（返回带原因的 failure，不是假绿）。
 - **\`getInstance()\` 的 static 性未证**（见上）⇒ 编译报 \`non-static method ... cannot be referenced from a static context\` 时，换该快照的单例访问式。
 - **\`block_at\` 回的是 translation key**，不是注册名。
@@ -1308,7 +1308,7 @@ POST /execute  → {"id":...,"status":"success"|"failure","message":"...","data"
 ## 边界（写清不吹）
 
 - **本产物 = 骨架**：\`/execute\` 十个动作全部 fail-closed（返回 \`TODO(未核实)\` 的 failure），**不是假绿**。
-- **能力天花板即便填完也是命令级**：桥发聊天包、不是键位输入 ⇒ 玩家物理路径测不了。
+- **本桥的能力天花板即便填完也是命令级**：桥发聊天包、不是键位输入 ⇒ 玩家物理路径测不了。
 - ModLoader 1.6.4 是**手动构建 + 手动安装**时代；**本仓不代跑编译、不代装 jar**（人在环）。
 - 若你不想补这些出处（10 个动作 + \`isInWorld\`）：更划算的替代是**离线解析存档（region/NBT）+ 人工驱动**（见 \`modloader/1.6.4/knowledge/common/safe-api.md\` 的结论段）。
 `;

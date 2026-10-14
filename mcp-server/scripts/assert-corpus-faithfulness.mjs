@@ -110,6 +110,13 @@ const LEDGER_DIRECTIVE = {
 };
 // B 层：逐树结构类别 raw/proc 篇数、变换类别计数、processed 重名数、该树 <<< 处数
 const LEDGER_TREES = {
+  // ── 2026-10-14 新增：服务端面**签名层**两棵树（Spigot/Bukkit 与 Paper 的 Javadoc）──
+  // 口径说明：这两棵树的 `raw` 是 **`.html`**、`processed` 是 `.md` ⇒ 与「同名孪生」比对**无孪生**，
+  // 因此 twin 类字段全 0、`noTwin` 等于两侧篇数（逐页 1:1，由 `assert-signature-face-integrity` 独立复核）。
+  // `dup: 0` 是**实测**：落盘用「包路径 `/`→`_`」的扁平唯一名（Java 包里有同名类，如 Bukkit 的三个 `Bed`；
+  // 嵌套布局会撞 A2 —— 这一条是门在 2026-10-14 抓出来的，已改布局而非改判据）。
+  "spigot_stable/spigot-javadoc/stable": { raw: 1396, proc: 1396, identical: 0, contentDiff: 1396, markerOnly: 0, fmOnly: 0, noTwin: 0, dup: 0, dir: 0, dirFenced: 0 },
+  "paper-api_stable/paper-javadoc/stable": { raw: 2116, proc: 2116, identical: 0, contentDiff: 2116, markerOnly: 0, fmOnly: 0, noTwin: 0, dup: 0, dir: 0, dirFenced: 0 },
   "fabric_1.14.4/fabric-wiki/1.14.4": { raw: 7, proc: 7, identical: 0, contentDiff: 7, markerOnly: 0, fmOnly: 0, noTwin: 0, dup: 0, dir: 0 },
   "fabric_1.16.5/fabric-wiki/1.16.5": { raw: 7, proc: 7, identical: 0, contentDiff: 7, markerOnly: 0, fmOnly: 0, noTwin: 0, dup: 0, dir: 0 },
   "fabric_1.17.1/fabric-wiki/1.17.1": { raw: 7, proc: 7, identical: 0, contentDiff: 7, markerOnly: 0, fmOnly: 0, noTwin: 0, dup: 0, dir: 0 },
@@ -180,6 +187,13 @@ const DEBT_ANGLE_LOSS = {
   "forge_javadoc/1.7.10": 98,
   "forge_javadoc/1.8.9": 549,
   "forge_javadoc/1.9.4": 698,
+  // 2026-10-14：服务端面**签名层**两棵树（其 raw 是 `.html`）。A5 的 `genericTokens(unesc(raw))` 对 HTML 侧
+  // 会产出**含标记的记号**（实测例 `SimpleRegistry<<span id="type-param-T">`），这类**天然不可能**存活进 Markdown
+  // —— 与上面 6 档 forge_javadoc（98–770 处）**同一性质**，按同一纪律登记为存量债务（存量台账 + 回归即红）。
+  // 已做的**收敛**：补抽「页头类声明 + `type-signature`」后 spigot 68→45、paper 354→293，
+  // 类级泛型已回到正文（实测 `**Interface BanEntry<T>**` / `public interface BanEntry<T>`）。
+  "spigot_stable/spigot-javadoc/stable": 45,
+  "paper-api_stable/paper-javadoc/stable": 293,
 };
 // A4 存量债务：正文里的上游中介名（相对 data 根路径:行号|该处名字）
 //      S7 之后剩下的这些都是「上游正文跨版本残留、本版映射里没有」的 intermediary，逐条点名保留。

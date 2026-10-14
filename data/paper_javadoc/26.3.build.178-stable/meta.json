@@ -1,0 +1,22 @@
+{
+  "face": "paper",
+  "base": "https://jd.papermc.io/paper/26.3",
+  "version": "26.3.build.178-stable",
+  "asOfVersion": "26.3.build.178-stable",
+  "fetchedWith": "fetch-spigot-javadoc.mjs@1",
+  "fetchedAt": "2026-10-14T13:02:54.065Z",
+  "counts": {
+    "typesInTypeIndex": 2116,
+    "indexEntries": 2116,
+    "rawOnDisk": 2116,
+    "processedOnDisk": 2116,
+    "orphans": 0,
+    "thisRun": {
+      "picked": 1016,
+      "offset": 1100,
+      "limit": 1100,
+      "failed": 0
+    }
+  },
+  "note": "签名面（API 名/签名/出处）。教程正文面另在 data/paper_stable/paper-docs/，两者不同源、不要混成一个 index。本档可**分块续抓**（--offset/--limit），index 与孤儿报告皆按整档重算 ⇒ 任意顺序重跑都收敛。"
+}

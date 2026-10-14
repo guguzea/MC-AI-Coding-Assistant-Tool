@@ -1,0 +1,141 @@
+---
+title: "Enums"
+slug: "paper/dev/command-api/arguments/enums"
+source: papermc/docs@main:src/content/docs/paper/dev/api/command-api/arguments/enums.mdx
+sourceUrl: "https://docs.papermc.io/paper/dev/command-api/arguments/enums/"
+fetchedWith: fetch-paper-docs.mjs
+fetchedAt: 2026-10-14T05:04:17.423Z
+license: CC-BY-SA-4.0（LICENSE-docs）
+---
+
+
+import EntityAnchorMp4 from "./assets/vanilla-arguments/entityanchor.mp4?url";
+import GameModeMp4 from "./assets/vanilla-arguments/gamemode.mp4?url";
+import HeightMapMp4 from "./assets/vanilla-arguments/heightmap.mp4?url";
+import ScoreboardDisplaySlotMp4 from "./assets/vanilla-arguments/scoreboarddisplayslot.mp4?url";
+import TemplateMirrorMp4 from "./assets/vanilla-arguments/templatemirror.mp4?url";
+import TemplateRotationMp4 from "./assets/vanilla-arguments/templaterotation.mp4?url";
+
+import Video from "/src/components/Video.astro";
+
+## Entity anchor argument
+The entity anchor argument has two valid inputs: `feet` and `eyes`. The resulting [](jd:paper:io.papermc.paper.entity.LookAnchor) is mainly used for methods like
+[](jd:paper:org.bukkit.entity.Entity#lookAt(io.papermc.paper.math.Position,io.papermc.paper.entity.LookAnchor)) or
+[](jd:paper:org.bukkit.entity.Player#lookAt(org.bukkit.entity.Entity,io.papermc.paper.entity.LookAnchor,io.papermc.paper.entity.LookAnchor)).
+
+### Example usage
+```java
+Commands.argument("anchor", ArgumentTypes.entityAnchor())
+    .executes(context -> {
+        final LookAnchor anchor = context.getArgument("anchor", LookAnchor.class);
+
+        context.getSource().getSender().sendRichMessage("You chose <aqua><anchor></aqua>!",
+            Placeholder.unparsed("anchor", anchor.name())
+        );
+        return Command.SINGLE_SUCCESS;
+    })
+```
+
+### In-game preview
+<Video src={EntityAnchorMp4} />
+
+
+## GameMode argument
+The game mode argument works the same way as the first argument of the Vanilla `/gamemode <gamemode>` command. It accepts any of the 4 valid game modes, returning
+a [](jd:paper:org.bukkit.GameMode) enum to use in code.
+
+### Example usage
+```java
+Commands.argument("mode", ArgumentTypes.gameMode())
+    .executes(context -> {
+        final GameMode mode = context.getArgument("mode", GameMode.class);
+        final Player player = context.getSource().getPlayerOrThrow();
+
+        player.setGameMode(mode);
+        player.sendRichMessage("Your gamemode has been set to <red><mode></red>!",
+            Placeholder.component("mode", Component.translatable(mode))
+        );
+        return Command.SINGLE_SUCCESS;
+    })
+```
+
+### In-game preview
+<Video src={GameModeMp4} />
+
+
+## HeightMap argument
+The [](jd:paper:org.bukkit.HeightMap) argument consists of the following, valid inputs: `motion_blocking`, `motion_blocking_no_leaves`, `ocean_floor`, and `world_surface`. It is often
+used for declaring relative positioning for data packs or the `/execute positioned over <height_map>` command. E.g. `world_surface`
+would mean that the Y coordinate of the surface of the world on the set X/Z values should be used.
+
+### Example usage
+```java
+Commands.argument("height_map", ArgumentTypes.heightMap())
+    .executes(context -> {
+        final HeightMap heightMap = context.getArgument("height_map", HeightMap.class);
+
+        context.getSource().getSender().sendRichMessage("You selected <gold><selection></gold>",
+            Placeholder.unparsed("selection", heightMap.name())
+        );
+        return Command.SINGLE_SUCCESS;
+    })
+```
+
+### In-game preview
+<Video src={HeightMapMp4} />
+
+
+## Scoreboard display slot argument
+This argument allows you to retrieve a [](jd:paper:org.bukkit.scoreboard.DisplaySlot) enum value from the user.
+
+### Example usage
+```java
+Commands.argument("slot", ArgumentTypes.scoreboardDisplaySlot())
+    .executes(context -> {
+        final DisplaySlot slot = context.getArgument("slot", DisplaySlot.class);
+
+        context.getSource().getSender().sendPlainMessage("You selected: " + slot.toString());
+        return Command.SINGLE_SUCCESS;
+    })
+```
+
+### In-game preview
+<Video src={ScoreboardDisplaySlotMp4} />
+
+
+## Template mirror argument
+Here, the user has 3 valid input possibilities: `front_back`, `left_right`, and `none`. You can retrieve the result of
+the argument as a [](jd:paper:org.bukkit.block.structure.Mirror) enum value.
+
+### Example usage
+```java
+Commands.argument("mirror", ArgumentTypes.templateMirror())
+    .executes(context -> {
+        final Mirror mirror = context.getArgument("mirror", Mirror.class);
+
+        context.getSource().getSender().sendPlainMessage("You selected: " + mirror.name());
+        return Command.SINGLE_SUCCESS;
+    })
+```
+
+### In-game preview
+<Video src={TemplateMirrorMp4} />
+
+
+## Template rotation argument
+For the template rotation argument, the user has 4 valid input possibilities: `180`, `clockwise_90`, `counterclockwise_90`, and `none`. You can retrieve the result
+of the argument as a [](jd:paper:org.bukkit.block.structure.StructureRotation) enum value.
+
+### Example usage
+```java
+Commands.argument("rotation", ArgumentTypes.templateRotation())
+    .executes(context -> {
+        final StructureRotation rotation = context.getArgument("rotation", StructureRotation.class);
+
+        context.getSource().getSender().sendPlainMessage("You selected: " + rotation.name());
+        return Command.SINGLE_SUCCESS;
+    })
+```
+
+### In-game preview
+<Video src={TemplateRotationMp4} />

@@ -1,0 +1,9 @@
+{
+  "version": "26.3-R0.1-SNAPSHOT",
+  "producerRev": "fetch-spigot-javadoc.mjs@1",
+  "count": 0,
+  "orphans": [],
+  "rawTotal": 1396,
+  "processedTotal": 1396,
+  "note": "有 raw/ 必有本文件（assert-javadoc-orphan-record 判据）。孤儿**只报告不代删**。rawTotal/processedTotal 是**整档**盘上计数（从磁盘扫），不是本轮增量。"
+}

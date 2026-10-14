@@ -1,0 +1,147 @@
+---
+title: "org.bukkit.Particle"
+package: "org.bukkit"
+source: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Particle.html
+sourceType: javadoc
+fetchedWith: fetch-spigot-javadoc.mjs@1
+fetchedAt: 2026-10-14T12:59:21.517Z
+asOfVersion: "26.3-R0.1-SNAPSHOT"
+---
+
+**Enum Class Particle**
+`public enum Particle extends Enum<Particle> implements Keyed, RegistryAware`
+- `public static final Particle POOF`
+- `public static final Particle EXPLOSION`
+- `public static final Particle EXPLOSION_EMITTER`
+- `public static final Particle FIREWORK`
+- `public static final Particle BUBBLE`
+- `public static final Particle SULFUR_BUBBLES`
+- `public static final Particle NOXIOUS_GAS`
+- `public static final Particle NOXIOUS_GAS_CLOUD`
+- `public static final Particle GEYSER`
+- `public static final Particle GEYSER_BASE`
+- `public static final Particle GEYSER_POOF`
+- `public static final Particle GEYSER_PLUME`
+- `public static final Particle SPLASH`
+- `public static final Particle FISHING`
+- `public static final Particle UNDERWATER`
+- `public static final Particle CRIT`
+- `public static final Particle ENCHANTED_HIT`
+- `public static final Particle SMOKE`
+- `public static final Particle LARGE_SMOKE`
+- `public static final Particle EFFECT`
+- `public static final Particle INSTANT_EFFECT`
+- `public static final Particle ENTITY_EFFECT`
+- `public static final Particle WITCH`
+- `public static final Particle DRIPPING_WATER`
+- `public static final Particle DRIPPING_LAVA`
+- `public static final Particle ANGRY_VILLAGER`
+- `public static final Particle HAPPY_VILLAGER`
+- `public static final Particle MYCELIUM`
+- `public static final Particle NOTE`
+- `public static final Particle PORTAL`
+- `public static final Particle ENCHANT`
+- `public static final Particle FLAME`
+- `public static final Particle LAVA`
+- `public static final Particle CLOUD`
+- `public static final Particle DUST`
+- `public static final Particle ITEM_SNOWBALL`
+- `public static final Particle ITEM_SLIME`
+- `public static final Particle HEART`
+- `public static final Particle ITEM`
+- `public static final Particle BLOCK`
+- `public static final Particle RAIN`
+- `public static final Particle ELDER_GUARDIAN`
+- `public static final Particle DRAGON_BREATH`
+- `public static final Particle END_ROD`
+- `public static final Particle DAMAGE_INDICATOR`
+- `public static final Particle SWEEP_ATTACK`
+- `public static final Particle FALLING_DUST`
+- `public static final Particle TOTEM_OF_UNDYING`
+- `public static final Particle SPIT`
+- `public static final Particle SQUID_INK`
+- `public static final Particle BUBBLE_POP`
+- `public static final Particle CURRENT_DOWN`
+- `public static final Particle BUBBLE_COLUMN_UP`
+- `public static final Particle NAUTILUS`
+- `public static final Particle DOLPHIN`
+- `public static final Particle SNEEZE`
+- `public static final Particle CAMPFIRE_COSY_SMOKE`
+- `public static final Particle CAMPFIRE_SIGNAL_SMOKE`
+- `public static final Particle COMPOSTER`
+- `public static final Particle FLASH`
+- `public static final Particle FALLING_LAVA`
+- `public static final Particle LANDING_LAVA`
+- `public static final Particle FALLING_WATER`
+- `public static final Particle DRIPPING_HONEY`
+- `public static final Particle FALLING_HONEY`
+- `public static final Particle LANDING_HONEY`
+- `public static final Particle FALLING_NECTAR`
+- `public static final Particle SOUL_FIRE_FLAME`
+- `public static final Particle ASH`
+- `public static final Particle CRIMSON_SPORE`
+- `public static final Particle WARPED_SPORE`
+- `public static final Particle SOUL`
+- `public static final Particle DRIPPING_OBSIDIAN_TEAR`
+- `public static final Particle FALLING_OBSIDIAN_TEAR`
+- `public static final Particle LANDING_OBSIDIAN_TEAR`
+- `public static final Particle REVERSE_PORTAL`
+- `public static final Particle WHITE_ASH`
+- `public static final Particle DUST_COLOR_TRANSITION`
+- `public static final Particle VIBRATION`
+- `public static final Particle FALLING_SPORE_BLOSSOM`
+- `public static final Particle SPORE_BLOSSOM_AIR`
+- `public static final Particle SMALL_FLAME`
+- `public static final Particle SNOWFLAKE`
+- `public static final Particle DRIPPING_DRIPSTONE_LAVA`
+- `public static final Particle FALLING_DRIPSTONE_LAVA`
+- `public static final Particle DRIPPING_DRIPSTONE_WATER`
+- `public static final Particle FALLING_DRIPSTONE_WATER`
+- `public static final Particle GLOW_SQUID_INK`
+- `public static final Particle GLOW`
+- `public static final Particle WAX_ON`
+- `public static final Particle WAX_OFF`
+- `public static final Particle ELECTRIC_SPARK`
+- `public static final Particle SCRAPE`
+- `public static final Particle SONIC_BOOM`
+- `public static final Particle SCULK_SOUL`
+- `public static final Particle SCULK_CHARGE`
+- `public static final Particle SCULK_CHARGE_POP`
+- `public static final Particle SHRIEK`
+- `public static final Particle CHERRY_LEAVES`
+- `public static final Particle PALE_OAK_LEAVES`
+- `public static final Particle RED_POPLAR_LEAVES`
+- `public static final Particle ORANGE_POPLAR_LEAVES`
+- `public static final Particle YELLOW_POPLAR_LEAVES`
+- `public static final Particle TINTED_LEAVES`
+- `public static final Particle EGG_CRACK`
+- `public static final Particle DUST_PLUME`
+- `public static final Particle WHITE_SMOKE`
+- `public static final Particle GUST`
+- `public static final Particle SMALL_GUST`
+- `public static final Particle GUST_EMITTER_LARGE`
+- `public static final Particle GUST_EMITTER_SMALL`
+- `public static final Particle TRIAL_SPAWNER_DETECTION`
+- `public static final Particle TRIAL_SPAWNER_DETECTION_OMINOUS`
+- `public static final Particle VAULT_CONNECTION`
+- `public static final Particle INFESTED`
+- `public static final Particle ITEM_COBWEB`
+- `public static final Particle DUST_PILLAR`
+- `@Experimental public static final Particle BLOCK_CRUMBLE`
+- `@Experimental public static final Particle TRAIL`
+- `public static final Particle OMINOUS_SPAWNING`
+- `public static final Particle RAID_OMEN`
+- `public static final Particle TRIAL_OMEN`
+- `public static final Particle BLOCK_MARKER`
+- `public static final Particle FIREFLY`
+- `public static final Particle SULFUR_CUBE_GOO`
+- `public static final Particle COPPER_FIRE_FLAME`
+- `public static final Particle PAUSE_MOB_GROWTH`
+- `public static final Particle RESET_MOB_GROWTH`
+- `public static Particle[] values()`
+- `public static Particle valueOf(String name)`
+- `@NotNull public Class<?> getDataType()`
+- `@NotNull public NamespacedKey getKeyOrThrow()`
+- `@Nullable public NamespacedKey getKeyOrNull()`
+- `public boolean isRegistered()`
+- `@NotNull @Deprecated(since="1.21.4") public NamespacedKey getKey()`

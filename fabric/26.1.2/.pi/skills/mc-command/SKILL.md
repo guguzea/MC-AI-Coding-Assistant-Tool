@@ -35,7 +35,8 @@ CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environm
 - `sendSuccess` 第一参是 `Supplier<Component>`（1.20+），第二参是否广播给其他管理员
 - 用 `Commands.literal` / `Commands.argument`，不要 `LiteralArgumentBuilder.literal`
 
-仅专用服：判断 `environment`（文档 dedicated 示例）。权限：`.requires(source -> source.hasPermission(2))` 一类 `Predicate<CommandSourceStack>`。
+仅专用服：判断 `environment`（文档 dedicated 示例）。权限：`.requires(source -> source.permissions().hasPermission(Permissions.COMMANDS_MODERATOR))` 一类 `Predicate<CommandSourceStack>`。
+（26.1.2 实测：`CommandSourceStack` **没有** `hasPermission(int)`（构件 javap 0 条）—— 老写法 `source.hasPermission(2)` 在本档编译不过；权限面是 `permissions()` → `PermissionSet#hasPermission(Permission)`，常量在 `net.minecraft.server.permissions.Permissions`。）
 
 ## 客户端命令
 

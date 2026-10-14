@@ -1,0 +1,15 @@
+---
+title: "io.papermc.paper.datapack.Datapack"
+package: "io.papermc.paper.datapack"
+source: https://jd.papermc.io/paper/26.3/io/papermc/paper/datapack/Datapack.html
+sourceType: javadoc
+fetchedWith: fetch-spigot-javadoc.mjs@1
+fetchedAt: 2026-10-14T13:00:27.472Z
+asOfVersion: "26.3.build.178-stable"
+---
+
+**Interface Datapack**
+`@NullMarked @NonExtendable public interface Datapack extends DiscoveredDatapack`
+- `boolean isEnabled()`
+- `void setEnabled(boolean enabled)`
+- `@Contract(pure=true, value="-> new") Component computeDisplayName()`
