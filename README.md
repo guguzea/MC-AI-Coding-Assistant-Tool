@@ -70,7 +70,7 @@ MC_skill/
 │   ├── batch-decompile.mjs      # 分批反编译（源码 → $MC_SKILL_CACHE，不入库）
 │   └── merge-verified-api.mjs   # 回填 catalog verifiedApi
 │
-├── mcp-server/                  # 本地 stdio MCP Server（87 个工具）
+├── mcp-server/                  # 本地 stdio MCP Server（88 个工具）
 │   ├── src/                     # 工具实现（api / docs / diagnostics / wave…）
 │   ├── scripts/                 # 文档抓取、语义索引、数据审计；含 build-library-catalog-from-authored.mjs
 │   └── data/                    # 随仓分发的 MCP 侧数据（非 MC_SKILL_DATA）
@@ -182,7 +182,7 @@ MC_skill/
 **配置本地 MCP Server：**
 
 > 将 [AUTO_SETUP.md](./AUTO_SETUP.md) 拖入当前 AI IDE / CLI。Agent 应识别宿主（Cursor / Claude Code / VS Code / Continue / Trae / OpenCode / Codex 等），编译 `mcp-server`，按该宿主格式生成配置草稿，**经你确认后合并**（不会静默覆盖）。  
-> 要求 **Node.js >= 22.5**（**22.5–22.12 与 23.0–23.3 必须加 `--experimental-sqlite` 启动**——内置 `node:sqlite` 在 22.13 / 23.4 起才默认开启；MCP/CLI 入口会在**任何 sqlite 使用之前**检测该窗口，命中即打印醒目指引并以非零码退出）；服务名 `MC-AI-Coding-Assistant-Tool`（stdio，87 个工具）。无 MCP 客户端时用 `node mcp-server/dist/cli.js`。
+> 要求 **Node.js >= 22.5**（**22.5–22.12 与 23.0–23.3 必须加 `--experimental-sqlite` 启动**——内置 `node:sqlite` 在 22.13 / 23.4 起才默认开启；MCP/CLI 入口会在**任何 sqlite 使用之前**检测该窗口，命中即打印醒目指引并以非零码退出）；服务名 `MC-AI-Coding-Assistant-Tool`（stdio，88 个工具）。无 MCP 客户端时用 `node mcp-server/dist/cli.js`。
 >
 
 ## 模组测试流程 loop：两段
@@ -371,7 +371,7 @@ MC_skill/
 
 ## MCP 工具使用注意
 
-本地 MCP 服务名：`MC-AI-Coding-Assistant-Tool`（**87** 个工具）。配置时请使用 **绝对路径** + `MC_SKILL_DATA` 指向本仓库 `data/`。要求 **Node.js >= 22.5**（Yarn 映射使用内置 `node:sqlite`；**22.5–22.12 与 23.0–23.3 需在 NODE_OPTIONS 或启动参数加 `--experimental-sqlite`，22.13+ / 23.4+ 无需**）。仓库 / Release **不含** `node_modules`，需自行 `npm ci && npm run build`（建议再跑 `npm run build:yarn-sqlite`）。
+本地 MCP 服务名：`MC-AI-Coding-Assistant-Tool`（**88** 个工具）。配置时请使用 **绝对路径** + `MC_SKILL_DATA` 指向本仓库 `data/`。要求 **Node.js >= 22.5**（Yarn 映射使用内置 `node:sqlite`；**22.5–22.12 与 23.0–23.3 需在 NODE_OPTIONS 或启动参数加 `--experimental-sqlite`，22.13+ / 23.4+ 无需**）。仓库 / Release **不含** `node_modules`，需自行 `npm ci && npm run build`（建议再跑 `npm run build:yarn-sqlite`）。
 
 **测试**：`cd mcp-server && npm test`（构建 + 全部单测：核心 / 脚本 / 数据审计 / Wave BCD / localize / update / CLI / 反编译 / 深 mixin / MCP 协议）。CI 语义：`.github/workflows/` 四支工作流的 job env 统一设 `MC_SKILL_SKIP_DOWNLOAD=1`，下载类工具在 CI 里诚实失败而非静默拉网络（该变量须在 mcp-server 内跑 `node test-decompile.mjs` 实测绿后方可依赖此语义）。CLI 另有两档独立门：`npm run test:cli:quick`（`mcp-server/scripts/assert-cli-quick.mjs`，快档，已进默认门链）与 `npm run test:cli:full`（`mcp-server/scripts/assert-cli-full.mjs`，全量档（权威名单跑时现取）：入口契约探针 + 真实调用 + 逐条豁免原因，**不默认跑**）。
 
@@ -382,7 +382,7 @@ MC_skill/
 ```bash
 (cd mcp-server && npm ci && npm run build)    # dist/ 不入库，必须自建
 node mcp-server/dist/cli.js --version                    # 应打印版本号（当前 package.json = 2.0.0）
-node mcp-server/dist/cli.js list-tools --names-only      # 应回 87 个工具名
+node mcp-server/dist/cli.js list-tools --names-only      # 应回 88 个工具名
 node mcp-server/dist/cli.js activate_platform_pack --action=list   # 应回本机已建档的平台 / 版本
 node mcp-server/dist/cli.js diagnose_data_paths          # 各平台应为 found；empty / not_found = MC_SKILL_DATA 没指对
 ```
@@ -763,7 +763,7 @@ Cursor 主路径是 **tools**；协议层仍注册 Prompt/Resource，工具兜�
 
 Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；Forge 1.12.2–1.20.4 与 Fabric 主档均含 `mc-events`（2026-08 D-1 补齐，经 `FABRIC_SKILL_DONORS` 回填的薄档带 DONOR_SKILL 横幅）。代码模式示范见 `community_knowledge/patterns/`（也可经 `mcskill://patterns/README` 读取）。
 
-## MCP/CLI TOOLS:87
+## MCP/CLI TOOLS:88
 
 服务名：`MC-AI-Coding-Assistant-Tool`。
 
@@ -1028,6 +1028,7 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 | `check_dependencies`  | 根据 `build.gradle` / `mods.toml` / `fabric.mod.json` / `quilt.mod.json` / `litemod.json` / `riftmod.json` / 基岩 manifest 提示依赖问题：loader 判定（quilt/fabric/forge/neoforge/liteloader/rift/modloader/bedrock）、库模组识别（catalog 接线）、冲突/陷阱检测。返回 `detectedLibraries`（含 `supportedVersions` 反编译验证版本窗口与 `manifestSummary` 版本/加载器摘要，数据来自 `library-catalog.ts` + `data/lib-manifests/all.json`）。 | 命中类：`ok` + `detectedLibraries`；**启发式 + catalog ⇒ 未收录的库会漏**（不是完整 Gradle 解析） | —                                                        |
 | `inspect_playtest_evidence` | 读游玩自测证据（exit-code / state.json / `[QA]` 段 / calls.jsonl / 截图），每件三态 `present\|absent\|unreadable`；须 `MC_SKILL_PLAYTEST_ALLOW=1` + `MC_SKILL_PLAYTEST_ROOT`（realpath 硬边界）。可选委派 `inspect_runtime` 读日志。 | **三态**：每件 `present` / `absent` / `unreadable`；**缺件不得读成"没有失败"** | —                                                        |
 | `inspect_playtest_multi` | 多客户端**联合判读**（多会话）：`clients[]`（{id,evidenceDir}）或 `evidenceRoot`（扫直接子目录当客户端；保留名 `sync/` 跳过并在 `autoSkipped` 里留痕）。逐客户端三态 + 联合判绿 + 锚点（state.json 的 `at` / plan.txt mtime / rounds 末轮）+ 会合 marker。 | **联合 fail-closed**：客户端数 ≥1 ∧ 每个 exit-code=0 ∧ state 与 qa 都 present ∧ rounds 末轮 ok≠false ∧（给了 `expectMarkers` 时）每个 marker 都 present；任一客户端目录 realpath 越出授权根 ⇒ **整体拒** | `NO_CLIENTS` · `CLIENT_NOT_GREEN` · `MARKERS_MISSING` · `OUTSIDE_AUTHORIZED_ROOT` · `DUPLICATE_CLIENT_ID` |
+| `generate_paper_plugin` | 生成 Paper 插件工程骨架（**服务端面**，独立于模组面：`gradlew runServer` / Bukkit 抽象层 / `plugin.yml`+`onEnable`；逐档 javap 改写表零适用）。**只吐文本**、默认 dry-run，落盘由 `write=true` 控制；**不写仓库、不建平台树**。 | **不凭记忆补**：`paperApiVersion` 不给 ⇒ 生成一个会在依赖解析期**显式报错**的占位符（不静默取 `latest`）；`plugin.yml` 的 `api-version` 默认 `TODO-未核实`（写错会导致加载期拒绝）；**不产出二进制**（gradle wrapper jar 须自备）。`pluginName` / `packageName` 非法即拒。 | `pluginName 不是合法 Java 标识符` · `packageName 不是合法 Java 包名` |
 | `playtest_intent` | 游玩自测**意图邮箱**（`in_jvm_player_agent` 真执行器的 LLM 侧接线）：`action=read\|write`；write 写 `<evidenceDir>/intent.json`（driver 的 `waitintent` 步消费并改名 `intent.done.json`）。校验顺序：confirmed → 禁列（kill/tnt/fill）→ 菜单（`intent-menu.json`）→ 参数白名单 → 必填 → 邮箱占用（overwrite 覆盖）。须 `MC_SKILL_PLAYTEST_ALLOW=1` + `MC_SKILL_PLAYTEST_ROOT`。失败码：`CONFIRMATION_REQUIRED` / `INTENT_FORBIDDEN` / `INTENT_NOT_IN_MENU` / `PARAM_NOT_DECLARED` / `MISSING_REQUIRED_PARAM` / `MAILBOX_BUSY` / `MENU_NOT_FOUND`。 | 写侧六段校验；**非法在写侧就拒**，不进执行器。失败形态三档：邮箱形态失败 = 数据（继续守候）／协议违规 = 写侧拒／脚本形态 = 判红停轮 | `CONFIRMATION_REQUIRED` · `INTENT_FORBIDDEN` · `INTENT_NOT_IN_MENU` · `PARAM_NOT_DECLARED` · `MISSING_REQUIRED_PARAM` · `MAILBOX_BUSY` · `MENU_NOT_FOUND` |
 | `playtest_bridge` | 调 BlackBoxPro 桥（host 恒 `127.0.0.1`，端口默认 38081）：`status` 看 `/status.ready`（已进世界）；`execute` 发 `/execute`（原生超时 ⇒ `PLAYTEST_TIMEOUT`）；`await` 轮询 `query_*` 等条件（桥无 `wait_until`）。`execute`/`await` 须 `confirmed=true` + 授权。桥无鉴权且通配绑定 —— 只在本机用。 | **超时 ≠ 没失败**：原生超时映射 `PLAYTEST_TIMEOUT`，**不得塌成"没失败"**。`/status.ready` 不可信，判"在不在世界"看 `query_player_state` | `PLAYTEST_TIMEOUT`                                       |
 
@@ -1167,7 +1168,7 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 > `code-patterns` 只覆盖 forge / fabric / neoforge 三树（quilt / liteloader / rift / modloader / bedrock 无 `code-patterns/` → 该族 0 条）；其中 6 条是 `archived` 旧档，注册在册但 `read_knowledge_resource` 会回 `found:false` + 存档说明，不再给正文。
 
 
-### 独立 CLI（`node mcp-server/dist/cli.js`，87 工具全可用）
+### 独立 CLI（`node mcp-server/dist/cli.js`，88 工具全可用）
 
 flags-only（`--key value` / `--key=value` / 裸 `--flag`→true），输出统一 JSON 包装 `{success, tool, result|error}`，退出码 0=成功 / 1=工具错误 / 2=用法错误。全局 flag（不进工具 schema）：`--help`/`-h`、`--version`/`-V`（放在工具名之前、或整条命令没写工具名时打印 CLI 版本；`--version` 跟在工具名后面时是工具字段，而 `-V` 在那个位置会被当未知参数 exit 2）、`--json`（不改变工具输出，仅为兼容保留；只在交互式终端下影响 `--help` 的呈现）、`--compact`、`--fail-on-error`、`--quiet`（静音进度行与心跳，错误 / 警告 / 迁移提示照旧）、`--timeout <ms>`（到点 exit 1 + `errorKind:"timeout"`，退出码仍不越 0/1/2）、`--project <dir>`、`--file field=path`、`--raw [field]`（该字段完全按字面传，裸写则全局关闭 `@` 展开）、`--output-format json`（表达格式意图的规范入口，当前唯一合法值，其它值 exit 2）、`--stdin-json`（从 stdin 一次读入整个参数对象当基座，命令行同名字段恒胜；TTY 下、以及与 `@-` / `=-` / `--file f=-` 同现时一律 exit 2）；所有 string 字段支持文件输入——`--crashReport @./latest.txt` 读文件、`--crashReport=-` / `@-` 读 stdin（全进程一次）、`--file crashReport=./latest.txt` 等价写法，单文件与 `--stdin-json` 载荷共用约 8MB 上限。**加 `--fail-on-error` 时，`found:false` 与 `errors[]` 非空也升为退出码 1**。`--fail-on-error=false` **关闭**该行为（不要把写出 `=false` 当成开启）。布尔 flag 只接受 `true/false/1/0/yes/no/on/off`；`--flag=junk` 拒绝。
 
@@ -1178,7 +1179,7 @@ node mcp-server/dist/cli.js status --version 1.20.1            # 服务器状态
 node mcp-server/dist/cli.js query --className net.minecraft.world.entity.LivingEntity --methodName getMaxHealth --version 1.20.1
 node mcp-server/dist/cli.js convert --from mcp --to mojang --name getHealth --owner net.minecraft.world.entity.LivingEntity '--descriptor=()F'
 node mcp-server/dist/cli.js update --action check
-node mcp-server/dist/cli.js list-tools                          # 全部 87 个工具的 schema
+node mcp-server/dist/cli.js list-tools                          # 全部 88 个工具的 schema
 ```
 
 **通用 dispatch（v0.2+）**：除上述命令外，**任意 MCP 工具名可直接调用**（handler 自动收集，缺参时返回 zod 校验提示）：
@@ -1225,7 +1226,7 @@ node mcp-server/dist/cli.js get_community_doc_summary --id authored/lib-curios
 - **`get_server_status` 报 `buildStatus.buildRequired=true`**：`src` 比 `dist` 新，需重新 `npm run build`，然后**在宿主里重载 MCP**（只编 dist 不够，宿主进程仍跑旧代码）。
 - **反编译类工具报 `TOOLCHAIN_MISSING`**：需 Java 17+（VineFlower / tiny-remapper）；装 Temurin 17+ 后重启 MCP，或按返回指引设置 `JAVA_HOME`。
 - **`search_mod_code` 报 `NOT_DECOMPILED`**：源码尚未反编译（按设计不入库）；先按返回指引调 `decompile_mod_jar` / `get_minecraft_source`。
-- **无 MCP 客户端**：用独立 CLI `node mcp-server/dist/cli.js <工具名> --参数=值`（87 工具全可用）。
+- **无 MCP 客户端**：用独立 CLI `node mcp-server/dist/cli.js <工具名> --参数=值`（88 工具全可用）。
 
 ## 术语表
 

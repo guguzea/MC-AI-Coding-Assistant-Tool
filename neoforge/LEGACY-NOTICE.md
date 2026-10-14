@@ -21,6 +21,14 @@
 - 这三棵树**不计入** pack 覆盖统计（`scripts/assert-pack-meta-coverage.mjs` 的 58 档判据是
   「目录内有 `AGENTS.md` 或 `.cursor/rules`」，三棵树两者都没有）。
 - 以上四条由 `mcp-server/scripts/assert-legacy-isolation.mjs` 钉住，抽掉 trap 即红。
+- **元数据文件名与自报版本不符（A22，已知不修）**：本目录 `scaffold/` 自报
+  `minecraft_version=1.20.4` / `neoforge_version=20.4.237`，却发
+  `src/main/resources/META-INF/neoforge.mods.toml`；而 `neoforge.mods.toml` 这个字面量在
+  1.20.4 对应的 FML loader `2.0.17` 里**不存在**（`3.0.45` = 1.20.6 才引入，`2.0.17` 只有
+  `mods.toml`）⇒ 若有人照它建 1.20.4 工程，元数据会被静默忽略（modId/版本/依赖全丢）。
+  **处置 = 不修**：W6 裁定「标 Archived 保留结构」，改名即动冻结快照；本目录也不进检索面。
+  要 NeoForge scaffold 请走 `neoforge/<精确版本>/scaffold/` —— 1.20.4 档发的是 `mods.toml`
+  （与 FML 2.0.x 一致），1.20.6+ 才发 `neoforge.mods.toml`。
 
 > 2026-08 审计标注（B-1）：本目录是「单一 1.20.4 包」时代的遗物（约 3885 个文件），保留仅作历史参考。
 

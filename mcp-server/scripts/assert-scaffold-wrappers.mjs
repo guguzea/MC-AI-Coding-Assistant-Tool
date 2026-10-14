@@ -74,6 +74,8 @@ for (const plat of PLATFORMS) {
 }
 
 const jarsOnDisk = [];
+/** 各 gradle 档的 `gradlew`（相对 ROOT），供执行位检查一次性查 git 索引 */
+const gradlewRels = [];
 for (const dir of packDirs) {
   const metaPath = path.join(dir, 'pack.meta.json');
   if (!existsSync(metaPath)) continue;
@@ -93,6 +95,7 @@ for (const dir of packDirs) {
     if (!existsSync(abs)) { failures.push(`${scRel}: missing ${f}`); continue; }
     if (statSync(abs).size === 0) failures.push(`${scRel}: ${f} is empty`);
   }
+  if (existsSync(path.join(sc, 'gradlew'))) gradlewRels.push(`${scRel}/gradlew`);
 
   const propsV = propsVersion(sc);
   const declared = meta.scaffold.gradle;
@@ -131,6 +134,39 @@ if (jarsOnDisk.length) {
   } catch (e) {
     if (String(e.message).includes('not a git repository')) {
       infos.push('git 不可用（fixture 树）→ 跳过 VCS 状态两项检查');
+    } else {
+      throw e;
+    }
+  }
+}
+
+// ── 执行位（A8）：`gradlew` 必须以便携的 100755 记录在案 ──────────────────────────
+//
+// 本仓 `core.fileMode=false` ⇒ 44 个 gradlew 长期是 100644：Linux/macOS clone 后 `./gradlew`
+// 直接 Permission denied，而 Windows 侧因 fileMode=false 看不出差异（真缺陷，不是平台口味）。
+// 这条只查**索引/提交树里的模式位**（`git ls-files -s`），不查磁盘属性（Windows 上不可靠）。
+if (gradlewRels.length) {
+  try {
+    const out = execFileSync('git', ['-C', ROOT, 'ls-files', '-s', '--', ...gradlewRels],
+      { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
+    const modeOf = new Map();
+    for (const l of out.split('\n')) {
+      const m = l.match(/^(\d{6}) \w+ \d+\t(.*)$/);
+      if (m) modeOf.set(m[2].replace(/\\/g, '/'), m[1]);
+    }
+    for (const rel of gradlewRels) {
+      const mode = modeOf.get(rel);
+      if (mode === undefined) failures.push(`${rel}: not tracked by git (a clone would lack it)`);
+      else if (mode !== '100755') {
+        failures.push(
+          `${rel}: git 模式 ${mode}，应为 100755（Linux/macOS clone 后 ./gradlew 会 Permission denied；` +
+            `修：git update-index --chmod=+x -- <path>，再提交）`,
+        );
+      }
+    }
+  } catch (e) {
+    if (String(e.message).includes('not a git repository')) {
+      infos.push('git 不可用（fixture 树）→ 跳过 gradlew 执行位检查');
     } else {
       throw e;
     }
