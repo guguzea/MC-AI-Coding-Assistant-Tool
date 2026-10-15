@@ -2,7 +2,7 @@
 
 你是一个专门协助 Minecraft 模组开发的 AI 编程助手。
 
-## 人在环（禁止当无人值守流水线）
+## 人在环
 
 模组开发不是确定性流水线。**创意设计（做什么内容）、性能权衡、调试策略**必须由用户拍板，**不可代劳**。**版本兼容取舍与 API 选择**默认也由用户拍板；用户不想或没有能力决定时**可以代劳**，但必须遵守下方「代劳决策解释模板」，不得默默执行：
 
@@ -86,14 +86,69 @@
 
 - **语料（正文面）**：`data/paper_stable/paper-docs/stable/`（PaperMC 官方开发文档的 `paper/dev` 面，实测 **67 页**；旁挂 `meta.json` 与 `symbols.json`，后者含 **140 个唯一 `jd:paper:` fqcn**）。产出者是 `mcp-server/scripts/fetch-paper-docs.mjs`（**默认 dry-run**，`--extract` 才落盘）。
   ⚠️ **取数路线是环境约束，别照抄别的 `fetch-*-docs`**：本机网络 `git clone https://github.com/papermc/docs` 会被 **RST**（实测 `RPC failed` / `expected 'packfile'`）⇒ 只能走 **codeload tarball** + `tar -xzf`。
-- **许可（两套，必须分开看）**：上游仓库**代码** = BSD 2-Clause；**文档正文** = **CC BY-SA 4.0**（署名 + **ShareAlike**）。⇒ `data/paper_main/**` 及其衍生文本**必须以 CC BY-SA 4.0 分发并署名 PaperMC**，**不得**与本项目 MIT 代码许可混写。记账在 `THIRD_PARTY_NOTICES.md`。
+- **许可（两套，必须分开看）**：上游仓库**代码** = BSD 2-Clause；**文档正文** = **CC BY-SA 4.0**（署名 + **ShareAlike**）。⇒ `data/paper_stable/**` 及其衍生文本**必须以 CC BY-SA 4.0 分发并署名 PaperMC**，**不得**与本项目 MIT 代码许可混写。记账在 `THIRD_PARTY_NOTICES.md`。
 - **版本轴在 Javadoc，不在正文**：Paper 文档**不按 MC 版本分目录**（故落伪版本 `data/paper_stable/paper-docs/stable/`，**不套**真 MC 版本号）；版本面走 `jd.papermc.io/paper/` —— 实测 **302 → `…/paper/26.3/`**，历史档 `paper/1.21.4` · `1.20.6` · `1.20.1` 均 **200**。
 - **签名面（两个**独立平台 id**：`spigot` 与 `paper-api`）**：`data/spigot_stable/spigot-javadoc/stable/`（**1396 类**）与 `data/paper-api_stable/paper-javadoc/stable/`（**2116 类**，含 `io.papermc.paper.*` 这类 Paper 专有类）。**为什么签名面各占一个平台 id**：`FabricDocStore` 是**单源**（只读一个 `source` 子目录），同平台第二棵树不会进检索；而目录前缀取 `paper-api` 能让 `versionDataDir` / `hasPrefixedIndex` / `resolvePlatformDataDir` 三处的 `${platform}_` 拼法**全自动对上** ⇒ **零特例分支**。产出者 `mcp-server/scripts/fetch-spigot-javadoc.mjs`（**默认 dry-run**；`type-search-index.js` 驱动机读类清单 + `member-signature` 抽签名；**分块续抓** `--offset/--limit`、**批并发** `--concurrency` 默认 8 —— 实测并发 15×：1.03 秒/类 → 0.07 秒/类）。
-  - **版本口径**：上游 javadoc **URL 无版本轴**（`/spigot/1.21.4/` 实测 404）⇒ 落**伪版本 `stable`**，真实版本串留在每页 `asOfVersion`（实测 Spigot `26.3-R0.1-SNAPSHOT` / Paper `26.3.build.178-stable`，取自 `index.html` 的 `<title>`；取数器**双向对钉**，不一致即拒）。
-  - **id 口径**：`stable/<完整包路径带斜杠>/<Class>`（如 `stable/org/bukkit/Bukkit`）—— **别拍成 `__`**：`processedFileFor` 只剥版本前缀（`fabric/store.ts:307`）⇒ 拍了就**静默读空**。
+  - **版本口径**：上游 javadoc **URL 无版本轴**（`/spigot/1.21.4/` 实测 404）⇒ 落**伪版本 `stable`**，真实版本串留在每页 `asOfVersion`（实测 Spigot `26.3-R0.1-SNAPSHOT` / Paper `26.3.build.178-stable`，取自 `index.html` 的 `<title>`；取数器**双向对钉**，不一致即拒）。复跑现役布局：`--version <上游真实串> --pseudo-version stable --out data/<face>_stable/<face>-javadoc/stable`（两个版本位 2026-10-15 拆开：`--version` 只管双向钉、`--pseudo-version` 只管档目录名与 `id` 前缀；后者缺省 = `--version`，但带后缀的真实串不在 store 白名单内 ⇒ 抓这两个面时**必须**显式给 `--pseudo-version stable`）。
+  - **id 口径（扁平唯一名，实测）**：`id` = `stable/` + 「包路径把 `.` 换成 `_`」+ `_` + `<Class>`；`processed` 相对路径 = 同 `id` 去掉 `stable/` 前缀 + `.md`（嵌套类保留 `.`）。例：`stable/org_bukkit_event_player_PlayerFishEvent.State` → `processed/org_bukkit_event_player_PlayerFishEvent.State.md`。**包路径一律不拍回嵌套目录**：Java 里同包名同类（如三个 `Bed`）会撞 `assert-corpus-faithfulness` 的 A2 判据（2026-10-14 实测 ⇒ 改布局而非放松判据，见 `mcp-server/scripts/assert-corpus-faithfulness.mjs:116-117`）；而 `processedFileFor` 只剥版本前缀（`mcp-server/src/docs-platform/fabric/store.ts:307`）⇒ 换个字面量就**静默读空**。（教程面 `paper-docs` 的正文名另用 `__` 连接，见 `mcp-server/scripts/fetch-paper-docs.mjs` 的 `bare` 口径，两个 face 不要互相套。）
   - **许可**：`SpigotMC/Spigot-API` = **GPL-3.0** 且 **2021-12-28 已归档** ⇒ **不抄源码**，只把 API 名字/签名（事实面）当检索对象。**SpigotMC Wiki 实测无任何开放许可**（仅 `© SpigotMC Pty. Ltd.`）⇒ **一律不入 `data/`**，只能走 `community_knowledge/links/`（仅标题/摘要/外链）—— 这就是 **Spigot 面无教程正文、只有签名面**的原因。
   - ⚠️ **`paper-api` 与 `paper` 不是同一许可**：`data/paper-api_stable/paper-javadoc/`（签名面）随上游 Paper/Spigot 条款；`data/paper_stable/paper-docs/`（教程面）是 **CC BY-SA 4.0**。2026-10-14 起两棵树分属不同平台 id 与**不同目录**，不要按"同目录子树"理解。
 - **禁止用模组平台的形式装它**：载体是 `runServer`（不是 `runClient`）、API 是 Bukkit 抽象层（插件代码不碰 `net.minecraft.*`）、生命周期是 `plugin.yml` + `onEnable`（不是 `@Mod` + 事件总线）；逐档 javap 改写表在插件侧**零适用**。⇒ 要支持就**单开一条服务端面**（判据走服务端日志/事件），不得挂进现有 8 棵平台树。
+
+**规则载体（服务端面**自己**的形状，**不是**上面「第二步」那套 `.cursor/rules/00–10.mdc`）**：
+
+- **位置与扩展名**：`paper/<ver>/rules/<NN>-<topic>.md`（**不带** `.cursor/`、**用 `.md` 不是 `.mdc`**）+ 同档 `paper/<ver>/rules.meta.json`。
+  **为什么不套模组形状**：模组那套 `00–10` 的条款集（Mixin / 注册表 / 客户端事件 / 数据生成）对插件**大半不适用**，硬套会造出一棵假档 —— 与「别为填一个版本号克隆树」同一类错误。本面只写**服务端有的**（事件 / 命令 / 物品栏 / 权限 / 调度器 / `plugin.yml` / 配置 / PDC / Adventure / 实测陷阱）。
+- **不走 `activate_platform_pack session`**：那是模组知识包加载器；本面用 `search_docs platform=paper|paper-api|spigot` + 本目录的规则文件。
+- **写作纪律（可机械检）**：
+  1. 每条 API 论断必须带**出处指针** `<语料文件名>.md:<行号>`（可写短名，按**后缀**解析到三个语料面之一），且**行号在界内、不是空行**；
+  2. 语料证不出的（含所有"通识性"道理）**必须写进「未核实」段**，不许写成结论 —— 两个签名面的 processed 页**只有签名、没有描述散文**，所以"该怎么用"这类话**没有出处就是编造**；
+  3. **不复述教程原文**（`data/paper_stable/paper-docs/` 是 **CC BY-SA 4.0**，复述会把 ShareAlike 义务引到本树）；只写结论 + 指针。
+- **守护门**：`mcp-server/scripts/assert-server-rules-integrity.mjs`（挂 `test-scripts.mjs` 的 `REAL_RUN_GATES`；带投毒自证 **6/6**：①引到不存在的文件 ②行号越界 ③指向空行 ④完全无「未核实」 ⑤**只在行文里提该词（无标题）** ⑥**有标题但空段**）。⚠ 别指望 `assert-rules-api-names.mjs`（只收 `.mdc`）或 `assert-rules-match-tool.mjs`（quilt 专属）代管本面 —— 二者实测**扫不到**这里。
+- ⚠ **「未核实」的判据是"真标题 + 至少一条"**，不是"文中出现过该词"（首版就是这么弱的判据，2026-10-15 改）。写这一面时别只提一句就当交代了。
+
+### 服务端面的自动测试 loop 怎么用（`generate_playtest_server_driver`）
+
+**面向**：服务端插件（Paper/Bukkit）。与模组面那套（`generate_playtest_driver` + 桥 mod）**不是一回事** —— 判据全在**服务端侧**，不需要客户端（需要玩家参与的场景见下面「无人值守」）。
+
+**一条最小闭环**：
+
+1. `generate_paper_plugin` 生成工程骨架；`generate_playtest_server_driver --evidenceDir <目录>` 生成 driver + `plan.example.txt`
+2. 把 driver 注册进插件（生成器在 `onEnable` 里留了注入位 `// PlaytestQaServerDriver.register(this);`）
+3. **编译 classpath 实测 6 件**：`paper-api` · `adventure-api` · `adventure-key` · `org.jetbrains:annotations` · `guava` · **`net.md-5:bungeecord-chat`**（后三件是被新 API 逐个逼出来的：`@NotNull` 注解 / `Material.getItemAttributes` 的 `Multimap` / `sendMessage(Component)` 的 `BaseComponent`）。⚠ **`bungeecord-chat` 在 Maven Central 是 404，须走 `repo.papermc.io/repository/maven-public`**。JDK 底线 **25**。
+4. 写 `plan.txt`（放证据目录里），起服 ⇒ driver 在 `onEnable` 里读它、按步执行
+5. 看证据：`exit-code.txt`（**仅 0 算过**）· `qa.log`（含 `[QA] DONE`）· `rounds.jsonl`（`ok:true`）· `state.json`（`driverKind:"server"`）
+
+**plan 的 verb**：`mark` · `cmd` · `assert marker path=…` · `wait ticks=N` · `stop`。⚠ **两个坑（都实测过）**：
+
+- **`cmd` 不是事件触发器** —— 它走 `Bukkit.dispatchCommand`，**不派发 `ServerCommandEvent`**（`paper/26.3/rules/09-traps.md` 的 **T8**，三条路对照都跑过）。要验事件链用 `callEvent` 或真触发源。
+- **`stop` 只是收工**：driver 会另调 `Bukkit.shutdown()` 停服；否则 runner 超时强杀（`rc=null err=ETIMEDOUT`）。
+
+**判据写法（推荐范式）**：探针在 `onEnable` 里跑检查，**每个通过的检查写一个 `<name>.ok` 文件**，plan 里用 `assert marker` 逐项断言 ⇒ **marker 缺席 = 该检查没过**，不靠日志措辞判断。
+
+**无人值守（含"需要玩家"的场景）**：真客户端可以**自动连服**，参数是 **`--quickPlayMultiplayer <host:port>`**（`--server`/`--port` 在 NeoForge moddev 的 `client` 块里**不生效**）。完整配方与四个坑见 `paper/26.3/rules/09-traps.md` 的 **T9 附**。
+
+**起服务端实例的必备配置**（漏一项就白跑）：`online-mode=false` · **`white-list=false`** · `level-type` 与 `generator-settings` 要么都不设、要么都设对（**T3**）· 探针的 **`-Dmcskill.probe.dir=<证据目录>`** · 起客户端时的 **`JAVA_HOME`**。逐条表在 `paper/26.3/rules/09-traps.md`。
+
+**改文本文件一律走 Node**（`writeFileSync(f, txt, "utf8")`）：**PowerShell 5.1 的 `Set-Content -Encoding UTF8` 会写 UTF-8 BOM**，而 Gradle 的 Groovy 解析器**不接受 BOM** ⇒ `build.gradle` 第一个字符就编译失败（`Unexpected character: '' @ line 1, column 1`、770ms 报 `BUILD FAILED`）—— **症状伪装成"客户端连不上"**（客户端日志只有千余字节且不增长）。详见 `rules/09-traps.md` 的 **T10**。
+
+### ⚠⚠ 检索纪律：在 `data/**` 下按目录搜索**必须显式给 `glob`**
+
+**这是调用姿势问题，不是检索工具坏了**（2026-10-15 四组对照实测）：
+
+| 实验 | 路径 | `glob` | 结果 |
+|---|---|---|---|
+| A | `data/paper_stable/paper-docs/stable/processed` | **不传** | **0 命中**（假） |
+| C | 同上 | `*.md` | **44 命中** |
+| E | 同上 | `*`（裸星号） | **44 命中** |
+| D | `paper/26.3/rules`（**不在** `data/` 下） | 不传 | **10 命中**（正常） |
+
+同一目录、同一词（`Bukkit`）——⇒ **变量只有 `glob`**，与 pattern 是否含中文或 `|` 无关（含中文的 `MONITOR|EventPriority|监听器|priority` 带 `glob` 时照样命中 4 个文件）。**只在 `data/**` 下发作**（`data/` 下疑似有默认过滤或整目录剪枝；**具体机制未核实**，此处只报实测）。另已排除 `.gitignore`：`git check-ignore -v <该面文件>` = **exit 1（未忽略）**。
+
+**两条规矩**：
+
+1. **在 `data/**` 下做目录搜索，必须显式给 `glob`**（`*.md` 或 `*`）。不给就可能拿到**假的 0 命中**。
+2. **做否定性断言（"本仓没有 X"）之前，必须逐文件复核** —— 不能只凭一次目录搜索。2026-10-15 我据一次假 0 命中把「`MONITOR` 只能观测不能改」写成"本仓无从核实"，而官方在 `data/paper_stable/paper-docs/stable/processed/api__event-api__event-listeners.md:100-103` 有**逐字说明**（"The `MONITOR` priority is used to monitor the event, but not change it."）。**假否定比"未核实"更糟：它会把有出处的结论删掉。**
 
 已核实边界（引用前先核，别外推）：driver **真代码**覆盖 = `PLAYTEST_VERIFIED_TIER`（`mcp-server/src/generators/playtest-driver.ts`，**唯一真源、随逐档 javap 取证扩面 —— 正文不数档**；逐版本清单直接读该表）。
 
@@ -439,6 +494,7 @@ Decision: 选择注册方式
 | `inspect_playtest_multi` | 多客户端**联合判读**（多会话）：给 `clients[]` 或 `evidenceRoot`（扫直接子目录当客户端；保留名 `sync/` 跳过并在 `autoSkipped` 里留痕）⇒ 逐客户端三态 + 联合判绿 + 锚点 + 会合 marker。判绿三条**全要满足**（客户端数 ≥1 / 全员 exit-code=0 且 state 与 qa 都 present 且 rounds 末轮 ok≠false / `expectMarkers` 全 present）；任一目录 realpath 越出授权根 ⇒ 整体拒。会合原语在 driver 侧：`touch` + `waitfile`。 |
 | `playtest_bridge` | 调 `127.0.0.1:38081` 的桥：`status` / `execute` / `await`；超时映射 `PLAYTEST_TIMEOUT`；`execute`/`await` 须 `confirmed=true` + 授权；桥无鉴权，只在本机用。**桥件可以是 BlackBoxPro 预编译件，也可以是本仓 `generate_playtest_driver driverMode=external_bridge` 附赠的自建最小桥**（8 目标 = `forge 1.7.10–1.12.2` + `rift 1.13.2` + `modloader 1.6.4`；线协议逐键一致 ⇒ 本工具不分叉；`await` 的 5 个 condition 分别落 `query_inventory_slot` / `query_player_state` / `query_nearby_entities` / `query_chat_history` / `/status`，**动作名与 `params` 键名以本工具源码 `probe()` 为准**）。 |
 | `generate_paper_plugin` | 生成 Paper 插件工程骨架 —— **服务端面，独立于模组面**（载体 `gradlew runServer` 而非 `runClient`；API 是 Bukkit/Paper 抽象层而非 `net.minecraft.*`；生命周期 `plugin.yml`+`onEnable` 而非 `@Mod`+事件总线；逐档 javap 改写表对本面**零适用**）。**只吐文本**、默认 dry-run，落盘由 `write=true` 控制 —— **不写仓库、不建平台树、不进任何模组面 scaffold 门**。已核实：依赖坐标 `io.papermc.paper:paper-api` 在 `repo.papermc.io` 存在；未核实：版本串（不给则生成解析期报错的占位符，不静默取 latest）、JDK 主版本、`plugin.yml` 的 `api-version`（默认 `TODO-未核实`）。**不产出二进制**（gradle wrapper jar 自备）。证据等级 = **结构壳**，未构建未运行。 |
+| `generate_playtest_server_driver` | 生成**服务端面**（Paper/Bukkit）游玩自测驱动 —— 与客户端 driver 是「**证据契约逐字复用、执行面另造**」：`state.json` / `exit-code.txt`（**仅 0\|1**）/ `qa.log` / `rounds.jsonl` / `plan.txt` 同名同目录 ⇒ 判读侧 `inspect_playtest_evidence` / `inspect_playtest_multi` **零改动**；而服务端**没有客户端** ⇒ `move`/`goto`/`break`/`gui`/`jump`/`look`/`shot`/`scan` 等玩家级原语**一概不生成**（生成了就是死代码）。只支持 `wait` / `mark` / `stop` / `touch` / `waitfile` / `cmd` / `assert`（assert 仅 `player_count` / `world_count` / `marker`）——**客户端专属步骤或未知 kind 一律判红**，不静默跳过。注入点**新造**（本仓此前零实现）：`JavaPlugin#onEnable` + `Bukkit.getScheduler().runTaskTimer`（同步调度、主线程）。每个 Bukkit API 名都对着本仓签名语料核过。**只吐文本**、默认 dry-run；证据等级 = **结构壳**（未编译未运行）。**不声称**进 `PLAYTEST_VERIFIED_TIER`。 |
 | `detect_mod_project` / `activate_platform_pack` | 探测工程；`session` 加载规则/Skill 索引（默认 00/01/09），`write` 写入用户工程（见根 README「规则包加载」） |
 | `query_loader_api` / `search_loader_api` / `ingest_loader_api` | **`query_loader_api` 是兼容工具（每次调用响应带兼容警告，优先用语义搜索）**：加载器/模组 API 逐签名摘要（必填 platform+minecraftVersion；覆盖以已 ingest 的档为界）。**不是** `query_api`。`ingest_loader_api` 把用户自备 jar 抽成摘要，只写 `$MC_SKILL_CACHE/loader-api-summaries` overlay，禁止写仓库 `data/`。**同一平台多套构件时用 `library` 选键位**：`platform=fabric` 的候选键是 `<ver>-fabric-api`（API 库）与 `<ver>-fabric`（**加载器本体**）—— 不传 `library` 时按候选顺序取第一个，拿 fabric-loader jar 却漏传 `library=fabric` 会**覆盖掉 API 摘要**；后缀不在候选里 ⇒ `INVALID_INPUT` 并列出候选（不新造键名、不猜）。 |
 | `search_forge_docs` / `get_forge_doc_*` / `list_forge_versions` | Forge 文档。先 `list_forge_versions`；**1.12.2 用这套**，不要用 `query_api`。与 `search_docs({platform:"forge"})` 等价 （`list_*_versions` 列的是**本仓库已入库**档位，不在清单 ≠ 上游没有文档） |
@@ -493,7 +549,7 @@ Decision: 选择注册方式
   cd mcp-server && npm ci && npm run build
   ```
   （Node 需 >= 22.5；Yarn 映射可再 `npm run build:yarn-sqlite`。配置宿主见 `AUTO_SETUP.md`：先识别 IDE/CLI，再按该宿主的文件与顶层键合并草稿，不要默认写 Cursor 的 `mcp.json`。）
-- **无 MCP 客户端时**：可用独立 CLI 调用任意工具——`node mcp-server/dist/cli.js <工具名> --参数=值`（通用 dispatch，88 工具全可用；如 `search_docs` / `check_dependencies` / `analyze_mod_jar` / `resolve_lib_skills`）。工程类工具可加 `--project <dir>`（映射到 `projectPath`）。工具输出始终为 JSON；`--json` 不改变工具输出，仅为兼容保留；它只在交互式终端下影响 `--help` 的呈现（人读摘要 → 机器可读 schema），表达格式意图用 `--output-format json`（当前唯一合法值）。
+- **无 MCP 客户端时**：可用独立 CLI 调用任意工具——`node mcp-server/dist/cli.js <工具名> --参数=值`（通用 dispatch，89 工具全可用；如 `search_docs` / `check_dependencies` / `analyze_mod_jar` / `resolve_lib_skills`）。工程类工具可加 `--project <dir>`（映射到 `projectPath`）。工具输出始终为 JSON；`--json` 不改变工具输出，仅为兼容保留；它只在交互式终端下影响 `--help` 的呈现（人读摘要 → 机器可读 schema），表达格式意图用 `--output-format json`（当前唯一合法值）。
 - **CLI 双入口（2026-09-17 提级）**：**工具线** = 上面的 `dist/cli.js`（与 MCP 同一份 `toolHandlers`）；**仓库线** = `node mcp-server/bin/mc-skill-scripts.mjs <lib|corpus|cloth|gate> <命令>`（薄壳转发 `scripts/` 与 `mcp-server/scripts/` 的既有脚本）。仓库线属**维护侧**作业（批量反编译、摘要重建、G1 门、注入标记回填），MCP 工具面不暴露；两者互不分叉；冒烟门 `assert-cli-smoke`（test-core §S16）。安装/链接 mcp-server 包后，两入口的 bin 名分别为 mc-skill 与 mc-skill-scripts。
 - **`get_server_status` 返回 `buildStatus.buildRequired=true`**：src 有比 dist 更新的修改，需重新 `npm run build`，然后**重载宿主 MCP**（只编 dist 不够， AI IDE 进程仍跑旧代码）。
 - **反编译工具报 `TOOLCHAIN_MISSING`**：需要 Java 17+（VineFlower/tiny-remapper）；安装 Temurin 17+ 后重启 MCP，或按返回指引操作。

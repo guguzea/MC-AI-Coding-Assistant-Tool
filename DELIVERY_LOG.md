@@ -8,6 +8,52 @@
 
 ---
 
+## 2026-10-15 · G2/G5 上马 + 修 A8（含门）+ A22 补句 + 扩面后新问题排查（维护档）
+
+**第 0 块 · 结论**：按令做四件。**G5**（量具 D 腿按「同族摘要或运算」补齐）—— 发现量具一直只读 `<ver>-<platform>.json`（loader），而 Fabric API 在 `<ver>-fabric-api.json`（从未读）⇒ `EntityRendererRegistry`/`ScreenRegistry`/`ClientSidePacketRegistry`/`UseItemCallback` 等被**假判 nowhere**；补后 nowhere TYPE **2647→2351**。**G2**（类→声明方法）上马，出 `merged-member-mismatch.tsv` 296 行，但**只到方法级 + 按简单名匹配** ⇒ 高频项（`Properties.of` 121 / `Builder.of` 57）全是撞名假阳，现状定位为「候选发现器」。**G3 补完**（prose 单元按所在行判负例）再降到 **1655**：fabric 各档的「禁编名单」把 `ItemEvents` 等列进去，旧面把负例当推荐。**A8 已修**：44 个 `gradlew` 索引模式 `100644→100755`（`git update-index --chmod=+x`，**未提交**），并给 `assert-scaffold-wrappers` 加执行位检查（正反两向验过：`100644` 红 / 恢复绿）。**A22 按令不动树**，只给 `neoforge/LEGACY-NOTICE.md` 补一段说明。**扩面后没有发现新的真缺陷** —— 把新冒候选逐条读出处行，全部落在「跨装载器对照表 / 负例清单 / frontmatter 触发词 / 示例类名」四类。门：wrapper（新检查）/ scripts-parse / legacy-isolation 全绿。
+
+### 1. 改了哪些文件
+
+- **A8（代码/配置）**：`git update-index --chmod=+x -- <44 个 gradlew>`（**只动索引模式位**，未 add/commit/push；`git diff --cached --summary` 44 条 mode change）。
+- **A8（门）** `mcp-server/scripts/assert-scaffold-wrappers.mjs`：新增「gradlew 执行位」检查段（读 `git ls-files -s` 的 100755；非 git 树跳 info）+ 收集 `gradlewRels`。
+- **A22** `neoforge/LEGACY-NOTICE.md`：新增一条 bullet（自报 1.20.4 却发 `neoforge.mods.toml`、FML 2.0.17 无该字面量 ⇒ 会被静默忽略；**处置=不修**，要走 `neoforge/<精确版本>/scaffold/`）。**树本身未动**。
+- 台账：`doc/name-provenance-audit.md` §8.18；本文件本节。
+- 便签（`F:\MOD_TEST\`，不入库）：`fix-a8.mjs`、`neg-test-a8.mjs`、`probe-g5.mjs`、`mk-gauge-v4.mjs`、`patch-v4-scope.mjs`、`patch-v4-ctx.mjs`、`patch-v4-g3.mjs`、`triage-v4.mjs`、`triage-v4b.mjs`、`show-name.mjs`、`write-gfinal.mjs`；**产物** `nonfabric-skill-names-v4.mjs` + `nonfabric-scan/` + `G-final.md`。
+
+### 2. 判据与反证
+
+- **反证 1（A8 门两向）**：`git update-index --chmod=-x -- forge/1.20.1/scaffold/gradlew` → 门红（报 `git 模式 100644，应为 100755`）；`--chmod=+x` 复原 → 门绿（43 gradle-mode packs）。
+- **反证 2（G5 的因）**：全库扫摘要 —— `EntityRendererRegistry` 只出现在 `*-fabric-api.json`（8 档），`-fabric.json` 里没有；补读后该名从 nowhere 消失。
+- **反证 3（新面是假阳不是真缺陷）**：`show-name.mjs` 打出每条的**出处行**（G1 的 prose 单元补了 `ctxLine`）⇒ `ScreenRegistry` 14 处全是「不要抄邻版 `ScreenRegistry`」/「❌抄 `ScreenRegistry.register`」/anti-patterns；`ItemEvents` 19 处全是「禁编名单」/「不要编造」；`ClientSidePacketRegistry` 18 处全是「已移除 / 不要用」。⇒ **没有一条是推荐用法**。
+- **反证 4（G2 的假阳性质）**：`Properties.of`(121) 是 vanilla 正确写法；摘要里的 `Properties` 是另一个同名类 ⇒ 简单名撞名。判 G2 现状不可直接当缺陷用。
+
+### 3. 验证台账
+
+| 项 | 读数 |
+| --- | --- |
+| `git ls-files -s`（gradlew） | 44 条全 `100755`（此前 44×`100644`） |
+| `assert-scaffold-wrappers` | ok（43 gradle-mode packs）；负例红/恢复绿两向 |
+| `assert-scripts-parse` | ok（227 个跟踪脚本可解析） |
+| `assert-legacy-isolation` | ok + selftest 13/13（A22 只加文档，隔离面未变） |
+| 量具 v4（全仓） | nowhere TYPE **1655** / MEMBER **1903**；crossPack TYPE 1054；G2 296；豁免 27632 |
+
+### 4. 数据侧变更
+
+- **无**。A8 动的是 **git 索引模式位**（非文件内容）；A22 只加一段文档；G2/G5 只改 scratch 量具与产物。
+
+### 5. 未做清单
+
+- **G2 未做 FQCN 解析**：`X.y` 的 X 现按简单名匹配 ⇒ 假阳高。改法（下一批）：把 X 解析到具体类再判成员；摘要 `fields` 恒 0 ⇒ 字段级仍做不了，需构件。
+- **残余假阳面未做**：`## 禁止` 小节标题型负例（token 行本身无负例词，ctxLine 判据漏）；frontmatter 触发词与正文同权重（建议落低置信桶）；`Mod*` 占位类名未进 `PLACEHOLDER`。
+- **G5 剩余面**：forge ≥1.17 的 `net.minecraftforge.fml`（在 `fmlcore`）与 neoforge ≥1.20.6 的 `net.neoforged.fml`（在 fancymodloader `loader`）**没有入库摘要** ⇒ 这两族 FML 名仍落 nowhere，需补摘要或走构件。
+- **A8 未提交**：索引已改，提交权归用户。
+
+### 6. 自我更正
+
+- 上一轮我把 G3 判为「已被量具现有行级 `❌/✅` 切换大部分覆盖、属可选精修」——**判轻了**。本轮实测：G3 对**新加的 prose 面**完全没有生效，fabric 各档「禁编名单」里的真 API 名被当推荐用法 ⇒ 假红 ~700 条。已补（prose 单元按 `ctxLine` 判负例），nowhere TYPE 从 2351 降到 1655。**口径更正已写进 §8.18**。
+- 我上一轮对 G2 的评估「需按 `javap-class.mjs` 原型升到声明表级」**方向对但低估了撞名问题**：只用摘要（简单名）做不出来可用判据，必须先解 FQCN。
+
+
 ## 2026-10-13 · 修 A1–A28 + G1/G4 量具扩面（维护档）
 
 **第 0 块 · 结论**：按令「先修复 A1–A28」，把上一轮复核成立的判据逐条落盘（**16 个靶点 / 24 个文件**，含 18 个 `mc-structure` 技能）。A2 的守卫在**真跑**里首次生效（某档 `.cursor/skills` 为空 ⇒ 打 `source set empty: skip host skill/command prune`，未误删——**旧行为会删光该宿主目录**）。A16 四个 forge 档「一个文件两个 public 顶层类」改为单 public 类（实跑 CLI：4 档均 `[MyPacket]` + 单 `suggestedPath`）。A19 driver 轮边界补 9 个观测静态位重置。随后按令扩量具：**G1** 抽取面加「行内 code span + frontmatter」，**G4** E 腿（mojmap 派生表）由全档并集改为**按版本分桶**并给命中加腿标签；跑出存量清单（nowhere TYPE **1246→2647**；滤噪后 unique 539，其中 G1/G4 净增 **26**）。**A8 / A22 / A27 判为「要你拍板」或「无需改」**。门：镜像 / powershell / authoring-lint / rules×5 / test-core / test-assistant-gaps **全绿**；`test-scripts` 与 `test-wave-bcd` 各一红，**经核为并发会话在制品**（`data/paper_*`+`spigot_*` 未登记语料基线；新工具致 A-27 计数 358→371），与本轮无关。未提交（侧线约束：不 add/commit/push）。
@@ -124,6 +170,397 @@
 
 - **本批开局我用常量池代理判 A7，得出了「与报告相反」的结论**；改字节码后推翻自己。记录在此，作为「**代理不等于判据**」的第 3 个实例（前两个见 §8.14 的宽松核验器、§8.15 的 mapped 件残缺）。
 - 外审 A12 的「80 文件」我**最初读成「照抄即编译不过」并准备按此定性**，实测 205 处**围栏 0** 后才改口 —— 外审这条的**存在性对、定性偏高**，两件事分开记。
+
+---
+
+## 2026-10-15 · **T9 突破**：真 26.3 客户端接入 ⇒ 玩家类事件全部验成（维护档）
+
+**第 0 块 · 结论**：上一节把「玩家类事件」判死（协议级机器人连不上）。本节**正面突破** —— 用本机 `F:/MC_GAME/neoforge-26.3`（NeoForge moddev 工程，内含 **26.3 客户端件**）起**真客户端**连入 26.3 服务端，**5 项一次性全部验成**：`PlayerJoinEvent` 自发派发 · `InventoryOpenEvent` · **`InventoryClickEvent`（人工点击）** · `InventoryCloseEvent` · **真人玩家的权限判定**。已全部写进规则文件。
+
+### 1. 改了哪些文件
+
+- `paper/26.3/rules/{00,01,03,04}.md`：各加「已真机核」段并**删掉对应未核实项**；`00-face` 修掉一处**过时陈述**（仍写着"仍未验：GUI 交互事件 · 自发派发 · PDC 跨重启"）
+- `paper/26.3/rules/09-traps.md`：**T9 重写为「先判死、后突破」**，含四个坑的报错原文与处方 + **一张「起服务端实例的必备配置清单」**
+- `DELIVERY_LOG.md`：本节
+- **不进仓库**：`%TEMP%/t9v3.mjs`（起服务端+客户端的脚本）· `%TEMP%/t9_client_only.mjs` · `paper-26.3/probe/playtest/VerifyProbe.java`（探针再扩）
+
+### 2. 判据与反证
+
+**验成的 5 项（marker 内容即判据）**：
+
+| 项 | 实测 |
+|---|---|
+| `PlayerJoinEvent` | `getPlayer().getName()` = **`Dev`** —— **真·自发派发**（服务端登录流程里自己调的，不是 `callEvent`） |
+| `InventoryOpenEvent` | 派发 · `getPlayer()` = `Dev`（`HumanEntity`，与签名一致） |
+| **`InventoryClickEvent`** | 派发（**人工点击**）· `getAction()` = `PICKUP_ALL` · `getClickedInventory()`/`getCurrentItem()` 非 null |
+| `InventoryCloseEvent` | 派发 |
+| **真人权限判定** | 非 op 玩家（`isOp()=false`）：`default: true` → **`true`** · `default: op` → **`false`** |
+
+**更硬的原始证据**（服务端日志，不是我的 marker）：
+
+```
+[22:19:27] Dev[/127.0.0.1:50472] logged in with entity id 21 at ([minecraft:overworld]14.5, 64.0, -2.5)
+[22:21:18] v-inv-click :: getAction()=NOTHING
+[22:21:59] v-inv-click :: getAction()=PICKUP_ALL
+[22:22:00] v-inv-click :: getAction()=PLACE_ALL
+```
+⇒ **同一批日志里 `getAction()` 出现三个不同值** ⇒ 它**不是常量占位**，是**按玩家实际操作**返回 —— 这是"它真在反映点击"的判据。**用户那几下点击就是判据本身。**
+
+**突破踩的四个坑**（逐个都有报错原文，已进 `09-traps.md`）：① `gradlew.bat` 不在 PATH 且 `cmd /c` 不解析 cwd 下相对可执行名（`'gradlew.bat' is not recognized…`）→ 绝对路径；② gradlew 吃 **JVM 8**（`Gradle requires JVM 17 or later…`）→ 显式 `JAVA_HOME=G:\jdk25\…`；③ `build.gradle` 的 `programArguments` 注入 `--server/--port` **没能自动进服**（客户端停主菜单、日志无 `Connecting`）→ **人工点**（或 `--quickPlayMultiplayer`）；④ 服务端 **`white-list=true`**（客户端弹 `You are not whitelisted on this server!`）→ `white-list=false`。
+
+### 3. 验证台账
+
+- 证据目录 `F:/MC_GAME/paper-26.3/evidence-t9/` **共 20 个 marker**（含 `PlayerJoinEvent` 两项与 `v-pdc-persist` / `v-pdc-chunk` ⇒ 世界/区块 PDC 跨重启在带客户端这次运行里同样成立）
+- 服务端侧 12 项既有检查在**带客户端的这次运行里仍全 PASS**
+- `assert-server-rules-integrity` **rc=0**：规则 10 篇 · 出处 **38 处**全部可解析且行号在界内 · 每篇均有「未核实」段；投毒 **6/6**
+- 十篇「未核实」段结构审计：**无标题 0 篇 · 空段 0 篇**
+- **进程清理**：按**命令行**区分（不再按路径前缀），杀 **21 个**（测试服务端 + 测试客户端 + 全部 Gradle daemon），**端口 25565 已释放**，剩 1 个非测试的 Gradle 工具链进程**未动**
+- `F:/MC_GAME/neoforge-26.3/build.gradle` **已从备份还原**
+
+### 5. 未做清单
+
+- **仍真未核实**：`TileState` 的 PDC 跨重启 · 官方 `api__pdc.md:226`/`:228` 那条「**数据不会自动跨 holder 复制**」（放成方块）· `ItemMeta` 自身成员 · 其余物品栏事件类与其余事件 getter · Brigadier 跨版本差异（缺第二版件）· **`default: permission` 字面量 · op 玩家**的判定对照 · `MiniMessage` 解析 / 发玩家的文本组件 · 跨平台/跨版本可复现性 · 服务端自测强度分级的形状
+- **`InventoryClickEvent` 的"自动化"没做**：本档**不做 UI 自动化**，该项靠**人工点**（判据已拿到，但复现需要人）
+- 143 个删除的跟踪文件**仍待用户裁定**
+- 未做任何 git 操作。
+
+### 6. 自我更正
+
+- **更正上一节的判死口径**：上一节写的「**这个版本上没有可用的机器人客户端**」**只对"协议级机器人"成立**（`mineflayer` 数据停在 775 < 服务端 777）。**真客户端一直可用**（本机 `neoforge-26.3` 里就有 26.3 客户端件，且 `run/` 早就有 `saves`/`screenshots` ⇒ 跑成过）。⇒ **"没有机器人"≠"验不了"**，我把这两件事混成了一件事，并且**是用户指出 F 盘有客户端我才去找的**。
+- **我误杀了客户端**：清理命令用 `Get-Process java | Where-Object { $_.Path -like 'G:\jdk25*' }`，而**客户端也是用 JDK 25 起的**（为修坑 ② ）⇒ 过滤器同时命中它。**教训：按"路径前缀"杀 java 区分不了服务端与客户端，要按命令行**（`-jar paper-…` vs `runClient`）。本轮清理已按新口径做。
+- **`white-list=true` 是我写实例配置时漏的**（一路只动了 `level-type` 那几个）⇒ 已在 `09-traps.md` 立「起服务端实例的必备配置清单」防复发。
+- **修掉 `00-face.md` 一处过时陈述**：它仍写着"仍未验：GUI 交互事件 · 事件自发派发的时机 · PDC 跨重启持久性"，而这三项现在**都验过了** —— 该行已更正。
+
+---
+
+## 2026-10-16 · T3 找到**权威源**（件内 datapack JSON）+ 服务端面自动测试 loop **写入文档**（维护档）
+
+**第 0 块 · 结论**：两件。① **T3（flat 的 `generator-settings`）不再"没有出处"** —— 权威源**就在服务端件里**（`data/minecraft/worldgen/flat_level_generator_preset/classic_flat.json`，第一方 datapack JSON），并**用权威值重跑验证通过**；② **服务端面自动测试 loop 的用法此前没写进任何文档**（`README.md` 只记了模组面的 `generate_playtest_driver`）⇒ 已在 `AGENTS.md` 立「**服务端面的自动测试 loop 怎么用**」小节，并在 `README.md` 的工具表里指向它。
+
+### 1. 改了哪些文件
+
+- `paper/26.3/rules/09-traps.md`：T3 段**新增「权威格式来源」**（件内 JSON 全文 + 其余 9 个预设名单）
+- `AGENTS.md`：新增小节「**服务端面的自动测试 loop 怎么用**」（最小闭环 5 步 / plan verb / 两个坑 / 判据范式 / 无人值守配方 / 起实例必备配置 / BOM 坑）
+- `README.md`：`generate_playtest_server_driver` 那行**指向** AGENTS 的该小节
+- `DELIVERY_LOG.md`：本节
+- **不进仓库**：`%TEMP%/t3_flat_test.mjs`（T3 测试脚本，已改用权威值）
+
+### 2. 判据与反证
+
+- **权威源是"件里带的"**：`jar tf paper-26.3.jar` 命中 **10 个** `flat_level_generator_preset/*.json`（+1 个 `tags/.../visible.json`）；抽出 `classic_flat.json` 得全文 —— **`generator-settings` 就填它的 `settings` 对象**（**不含外层 `display`**）。
+- **权威值实测**（`level-type=minecraft\:flat` + 上面那份 settings）：
+  - 世界**真是全新建的** = `true`（`No existing world data, creating new world`）
+  - **`No key layers` 消失** = `false`（不再出现）
+  ⇒ **T3 正解成立**（`Done (27.367s)`）。
+- ⚠ **权威源比"从签名推"多给三个字段**：我先前靠 `javap` 的字段名推出 `layers`+`biome`，**能跑通**，但**推不出** `features` / `lakes` / `structure_overrides` —— 那三个只在 datapack JSON 里。**这就是"权威源"的价值所在。**
+- **文档缺口的判定**：对 `AGENTS.md` / `README.md` / `DELIVERY_LOG.md` 搜 `playtest`，命中的**全是模组面**（`generate_playtest_driver` / 桥 mod / 通道 A/B 授权），**服务端面的 loop 一条使用说明都没有** ⇒ 属于"未记录的偏离"，已补。
+
+### 3. 验证台账
+
+- T3 复跑：`java` 正常自停服 · `No key layers` 不再出现 · `server.properties` 已还原
+- `assert-server-rules-integrity` **rc=0**：规则 10 篇 · 出处全部可解析（含本轮新增的件内 JSON 路径，非 `文件:行` 形式，不计入引文数）· 每篇均有「未核实」段；投毒 **6/6** + 1 例干净必绿
+- 十篇「未核实」段结构审计：**无标题 0 篇 · 空段 0 篇**
+- 门批：10 门 + `test-core`/`test-cli`/`test-scripts` **全 0**
+
+### 5. 未做清单
+
+- **`Entity` / `ItemStack` 的 PDC 跨重启** · 官方 `api__pdc.md:226`/`:228`「不自动跨 holder 复制」仍未验
+- **`default:` 数字类写法** · `runTaskTimerAsynchronously` · `onTabComplete` 形参名的跨版本一致性
+- 仍真未核实：`ItemMeta` 自身成员 · 其余事件 getter · `plugin.yml` 极长尾字段 · **Adventure 发给玩家的渲染** · 跨平台/跨版本可复现性 · 服务端强度分级形状
+- 143 个删除的跟踪文件**仍待用户裁定** · 未做任何 git 操作
+
+### 6. 自我更正
+
+- **更正 T3 此前"没有出处、猜格式就是编造"的定性**：**出处一直在件里** —— 我先前只在 `javap` 的**签名**里找，没去翻**同一只件里的 datapack JSON**。⇒ 教训：**"签名面没有"≠"件里没有"**（与"签名页只列本类声明的成员"同类）。
+- **更正本节之前对"文档是否已记"的默认**：我在此前多节里写过 T9/T10 与配置清单，**但都写在规则载体（`paper/26.3/rules/`）里，没写进 `AGENTS.md`/`README.md` 这两个"有关文档"** ⇒ 按用户口径，"更新到有关文档"这两处此前**都没做到**。
+
+---
+
+## 2026-10-15 · 服务端面**无人值守真机批次** + 未核实再关 5 项（维护档）
+
+**第 0 块 · 结论**：把「有玩家参与」的场景做成**无人值守**（真 26.3 客户端**自动连服**，无人工步骤）并跑通，**又关掉 5 项未核实**：op 玩家判定 · 异步入口 · `TileState` PDC 跨重启 · `default: permission`（**验到不成立**）· 文本组件落点。全过程由**两个进程两阶段**完成（Run A 带客户端 + 阶段2 只起服读回），`build.gradle` **自动还原且无 BOM**。**一处工具链自伤（BOM）另立 T10。**
+
+### 1. 改了哪些文件
+
+- `paper/26.3/rules/{04,05,07}.md`：各加「已真机核」段（op 玩家两身份对照 · 异步入口线程名判据 · `TileState` 跨重启 + 四种 holder 一览）
+- `paper/26.3/rules/04-permissions.md`：**`default: permission` 从「未验」改成「验到不成立」**（附 ERROR 原文与栈帧）
+- `paper/26.3/rules/{02,06,08,09}.md`：清掉**陈旧的空「未核实」段**（与 08 那处同款；06 删段、02/09 换成真条目）
+- `paper/26.3/rules/09-traps.md`：新增 **T10**（UTF-8 BOM）与 **T9 附**（无人值守做成 + `--server`/`--port` 不生效）
+- `paper/26.3/rules.meta.json`：新增 `serverRound3`
+- `DELIVERY_LOG.md`：本节
+- **不进仓库**：`F:/MC_GAME/paper-26.3/probe/playtest/VerifyProbe.java` · `%TEMP%/{t9_auto,phase2,inject_probe,strip_bom,mm_and_brig,t12_matrix}.mjs`
+
+### 2. 判据与反证
+
+- **无人值守的关键参数**：`--quickPlayMultiplayer 127.0.0.1:25565`（注入 `build.gradle` 的 `client()` 之后）。**`--server`/`--port` 那一对在 moddev 的 `client` 块里没能自动进服**（客户端停在主菜单、日志无 `Connecting`）⇒ **换成 `--quickPlayMultiplayer` 才成**。
+- **七条实测**（marker 内容即判据）：`v-player-join`（`name=Dev · declared=true · oponly=true · isOp=true`）· `v-scheduler-async`（回调线程 `Craft Scheduler Thread - 3` ≠ 主线程 `Server thread`）· `pdc-tilestate-phase1` / **`v-pdc-tilestate`（读回 `tilestate-cross-restart`）** · `v-pdc-persist` / `v-pdc-chunk`（同轮重验）· `v-pdc-itemstack` · `v-text-sent`（落点 true）· `v-inv-open`/`v-inv-close`。
+- **`default: permission` 的否定结论**（这是本轮最硬的一条）：Bukkit 打 ERROR `Permission node 'mcskill.probe.permnode' … is invalid`，栈为 `Permission.loadPermission(Permission.java:303)` ← `loadPermissions(:240)` ← `PluginDescriptionFile.getPermissions(:945)`；探针 `getPermission(...)` 返回 **null** ⇒ 权限**不注册**。**与"`PermissionDefault` 只有四个常量"完全自洽**。
+- **op 玩家两向对照**：同一玩家 `Dev`，先非 op（`oponly=false`）后 op（`oponly=true`）⇒ `default: op` 的语义**两个方向都验了**。
+- 🔴 **工具链自伤（T10）**：清理注入时用了 **PowerShell 的 `Set-Content -Encoding UTF8`**（**PS 5.1 会写 BOM**）⇒ `build.gradle` 开头多个 `EF BB BF` ⇒ Gradle 报 `Unexpected character: '' @ line 1, column 1`、**770ms 就 BUILD FAILED** ⇒ `gradlew runClient` 根本没启动（客户端日志只 1095 字节且不增长）。**症状像"客户端连不上"，实际是"构建脚本没编译过"** —— 我为此绕了三轮。**处方**：改文本一律走 Node（`writeFileSync(f, txt, "utf8")` 不写 BOM）；排查"客户端起不来"先跑 `gradlew help`（几秒钟，能把"构建脚本坏"与别的问题分开）。
+- ⚠ **同轮我两次把英文双引号写进字符串**（Java 的 `没有"第五个值"`、JSON 的 `"没验到"`/`"验过了"`）⇒ 都改成中文引号。**这条已第二次栽在同一处。**
+
+### 3. 验证台账
+
+- `assert-server-rules-integrity` **rc=0**：规则 10 篇 · 出处 **41 处**全部可解析且行号在界内 · 每篇均有「未核实」段；投毒 **6/6** + 1 例干净必绿
+- 十篇「未核实」段结构审计：**无标题 0 篇 · 空段 0 篇**
+- 真机两阶段：Run A（服务端 45s 就绪 → `op Dev` → 客户端自动连服 → 18 个 marker 全 PASS）· 阶段2（15s 就绪 → 读回类 marker 全 PASS → plan `stop` → 优雅退出）
+- 收尾核验：`build.gradle` 首 3 字节 **`2f 2f 20`（无 BOM）** · 仍含 `quickPlayMultiplayer` = **false** · 证据目录 `evidence-auto/` **24 个 marker**
+
+### 5. 未做清单
+
+- **`09-traps.md` 的 T3（flat 正解）**仍未验 —— 需要一个**正确的 `generator-settings` 格式**，而本档**没有它的出处**；猜格式就是编造，故不做
+- **`Entity` / `ItemStack` 的 PDC 跨重启**未验（前者要实体真被存盘，后者要落盘容器）
+- 官方 `api__pdc.md:226` / `:228` 那条「**数据不会自动跨 holder 复制**」未验
+- **`default:` 更冷门的写法**（数字等）未验 · `runTaskTimerAsynchronously` 未单独试 · `onTabComplete` 形参名的跨版本一致性未核
+- 仍真未核实：`ItemMeta` 自身成员 · 其余事件 getter · `plugin.yml` 极长尾字段 · **Adventure 发给玩家的渲染** · 跨平台/跨版本可复现性 · 服务端强度分级形状
+- 143 个删除的跟踪文件**仍待用户裁定** · 未做任何 git 操作
+
+### 6. 自我更正
+
+- **更正我此前对 `default: permission` 的定性**：我把它写成「未验的第五个字面量」—— **错**。`PermissionDefault` 只有四个常量，而真机给出的是**否定结论**（非法字面量、权限不注册）。**"未验"与"验到不成立"是两种状态，不能混写。**
+- **更正"客户端那条路要下 200 MB"的判断**：本机 `F:/MC_GAME/neoforge-26.3`（NeoForge moddev 工程）**本来就带 26.3 客户端件**，`runClient` 还用 `run/` 跑过（有 `saves`/`screenshots`）⇒ **不需要下载**。**是用户指出 F 盘有客户端我才去找的** —— 我先前只查了 `.minecraft` 那几处就下了结论。
+- **更正"要赌 OpenGL"**：实测 `Render thread` / `TextureAtlas` / NeoForge class transform 全在 ⇒ **本机图形环境能起 26.3 客户端**，不是赌。
+- **更正上一节里"该做而没做"的那条**：已核实的事实**已全部落进规则文件**（本节）——该项关闭。
+
+---
+
+## 2026-10-15 · 服务端面规则载体：**清剩余未核实** + 自建模板安全门（维护档）
+
+**第 0 块 · 结论**：把「未核实」里**可核的那批**逐条核完 —— 本轮**关掉/推进 11 项**（含 **5 项彻底关闭**：08 的 adventure 版本依据与真签名、08 的 `MiniMessage` 签名、00 的历史档、09 的 T1/T2、09 的 T5）。**并新建一道门**（`assert-generator-template-safety.mjs`）—— 它**首版是错的**（假阳性机器），已重写。门：**10 门 + `test-core`/`test-cli` 全 0**（后两者首红复跑均 0，环境偶发）· S4 **P===K=82/82**。
+
+### 1. 改了哪些文件
+
+- `paper/26.3/rules/{00,03,04,05,06,07,08,09}.md`：各加「已核」段并**删掉对应未核实项**
+- `paper/26.3/rules.meta.json`：`compileDeps` **5 件 → 6 件**（补 `net.md-5:bungeecord-chat` 与取件口）
+- **新建** `mcp-server/scripts/assert-generator-template-safety.mjs`（T7）
+- `mcp-server/test-scripts.mjs`：新门挂进 S4 `REAL_RUN_GATES`
+- `mcp-server/scripts/_lib/script-write-guard-check.mjs`：新门登记"只写 tmpdir"豁免
+- `DELIVERY_LOG.md`：本节
+
+### 2. 判据与反证
+
+- **08 的"版本选择依据"** —— 走 `paper-api` 的 **POM**（⚠ jar 里**没有** `META-INF/maven/**/pom.xml`，实测解不出；但 **repo 上有**）⇒ **`net.kyori:adventure-bom = 5.2.0 [import]`** ⇒ 我取的 `<latest>` **正是它期望的**。
+- **08 的真签名** —— `jd.adventure.kyori.net` **HTTP 000 不可达** ⇒ 改**从 jar `javap`**：`Component`（接口 + 3 常量 + `empty/newline/space/join/toComponent`）· `Audience#sendMessage` **5 个重载** · `MiniMessage`（接口 + 2 个 `miniMessage()` + 8 个 `deserialize` + 6 个 `deserializeToTree`）。
+- **03 的两次"父类"** —— `InventoryOpenEvent.md:14` / `InventoryCloseEvent.md:14` 都是 `HumanEntity getPlayer()`；而 **`getView()` 搜 0 命中** ⇒ 在父类 `InventoryEvent`。**这是本档第三次撞上"签名页只列本类声明的成员"。**
+- **04/06 的官方 vs 实测差异** —— 官方 `getting-started__plugin-yml.md:152-153` 说字面量是 **`op`/`notop`**（无空格），我真机测的是 **`not op`（带空格）也生效**。**两种写法没同时对照**，已两边都写明「按官方写 `notop` 更稳」。
+- **09 T1/T2** —— JDK 21 × `paper-api-1.21.4-R0.1-20250925.065901-231` → **rc=0**；JDK 17/16/8 → `cannot access Bukkit`。⚠ **矩阵里 `javac(21) × paper-api-26.3 → rc=0` 是我脚本的污染**（classpath 把两个 paper-api 都放了，字典序让 1.21.4 先解析）⇒ 那行**无效**，已在 `09-traps.md` 里自注。
+- **09 T5** —— `api.papermc.io/v2` **410 sunset** · `v3` **403** · **`fill.papermc.io/v3` 200**（唯一可用口）。另：`bungeecord-chat` 在 **Maven Central 404** ⇒ **须走 `repo.papermc.io`**（200 · 168,064 B）。
+- **T7 的门本身**：判据从"启发式"改成"**用编译器**"（见第 6 块）。
+
+### 3. 验证台账
+
+- `assert-generator-template-safety` **rc=0**（`tsc --noEmit -p tsconfig.json` 对 2 个生成器模块零错）；投毒 **1/1 必红 + 1 例对照必绿**
+- `assert-script-write-guard` **rc=0**：205 文件 · 违规 0（新豁免生效）
+- `test-scripts` **rc=0**；S4 自印 **盘上 82 / 可达 82（P===K）** · N/M/Y = 57/43/10
+- `assert-server-rules-integrity` **rc=0**：规则 10 篇 · 出处 **37 处**全部可解析且行号在界内 · 每篇均有「未核实」段（投毒 6/6）
+- 十篇「未核实」段结构审计：**无标题 0 篇 · 空段 0 篇**
+- `test-core` / `test-cli` **rc=0**（**首跑红，复跑均 0** —— 红因是环境偶发：`test-cli` 的 `get_server_status` lag 门 >4000ms；`test-core` 的 `architectury-patterns.json` ENOENT 噪音）
+
+### 5. 未做清单
+
+- **真机批次未跑**（件已齐）：`sendMessage(Component)` 的落点 · `ItemStack`/`Chunk`/`TileState` 的 PDC 跨重启 · 「数据不会自动跨 holder 复制」· **T3 的 flat 正解**
+- **仍真未核实**：T3（flat + 合法 `generator-settings`）· 跨平台/跨版本可复现性 · `plugin.yml` 的 `default: permission` 字面量 · `ItemMeta` 自身成员（只核了入口）· 其余事件 getter · `Brigadier` 跨版本差异（缺第二个版本的件）
+- **真不可核**（T9：协议 777 无客户端）：`PlayerJoinEvent` · GUI 交互事件 · 权限对真人玩家的判定
+- **"客户端"那条路**：本机 `.minecraft` **只有启动器数据、`versions/` 不存在**（没装任何版本）；但 **Mojang 清单可达且 `26.3` 是 release**（client 件 41,483,720 B · sha1 已知 · JDK 25）⇒ **技术可行，但要下 client + assets + libraries（200 MB 量级）并赌 OpenGL 能起**。**已报给用户等裁定，未擅自开工。**
+- 143 个删除的跟踪文件**仍待用户裁定**
+- 未做任何 git 操作。
+
+### 6. 自我更正
+
+- **更正 T7 那道门的首版（我自己写的，错得很典型）**：首版判据是**正则**找「成对反引号」，扫真模块报 **73 处** —— 逐条看**全是 TS 注释里的合法 markdown 反引号** ⇒ **假阳性机器**。**根因是我判断错了**：反引号在 TS 里是否危险取决于**它在不在模板字面量内**，而这点**词法上无法与"闭定界符"区分**，**只有解析器知道**。⇒ 改为**用编译器本身**，并且**不依赖 dist**（因为这类缺陷的表现就是"dist 是坏的/旧的"，要先构建再检查的门**恰好在需要它的时刻跑不了**）。
+- **同轮又抓到我一个调用错误**：`tsc --noEmit <files>` **绕过 `tsconfig.json`** ⇒ 报假错 `project-files.ts(496,14): error TS2802`，而 `npm run build` 是 0 错。主流程改为 `-p tsconfig.json`。
+- **更正我上一轮的判断**「08 的真机文本组件是『件不够』」：**件现在够了**（`bungeecord-chat` 已从 Paper repo 取到）⇒ 该项的状态从"件不够"变成"**件齐但没跑**"。**两种"未验"不能混为一谈。**
+
+---
+
+## 2026-10-15 · 服务端面真机侧验证**第二轮**（机器人可行性判定 + 又验掉 5 项）（维护档）
+
+**第 0 块 · 结论**：用户问"能不能加 1-2 个机器人玩家来验剩下的未核实项"。**实测结论分两半**：① **机器人这条路被堵死** —— 服务端协议号 **777**，而 mineflayer 的协议数据最高 **775**（`minecraft:data` 里 `26.3` 只在版本**名**列表、**无协议数据**）⇒ 连不进去；② **但换个角度能验掉 5 项** —— 那批项里有一半**根本不需要玩家**。**+5 项全过**，另把 T8 从"推断"抬成"实测"。
+
+**为什么这是有价值的负结果而不是白跑**：先前的说法是"需要玩家在线才造得出"，那是**笼统的**。实测把边界画清楚了：**「需要玩家」= 具体指需要真客户端连接，而本项目版本目前没有可用的自动化客户端** —— 哪些项受此限、哪些不受，现在逐项可分。
+
+### 1. 改了哪些文件
+
+- `paper/26.3/rules/{01,03,04,07,09}.md`：各加「真机侧已验证」段（**取代**对应未核实项），`09` 新增 **T9**（无可用机器人）并给 **T8** 补第三条腿
+- `paper/26.3/rules.meta.json`：新增 `serverRound2` 与 `noClientForVersion`；`realMachineVerified` 标注"两轮"
+- `DELIVERY_LOG.md`：本节
+- **不进仓库**：`F:/MC_GAME/paper-26.3/probe/playtest/VerifyProbe.java`（探针，二轮扩充）· `%TEMP%/run_probe2.mjs`（两阶段 runner）· **`F:/MOD_TEST/bot/`**（mineflayer + Server List Ping 探针；未成功使用，保留供后续版本）
+
+### 2. 判据与反证
+
+- **机器人可行性（先判可行性，不先写代码）**：`mineflayer 4.39.0`（**MIT** ✔ 通道 C 许可条件）装到 `F:\MOD_TEST\bot`（91 依赖）→ 写 Server List Ping 探针读服务端自报协议 → **`version.name = Paper 26.3` · `version.protocol = 777`**；对照 `minecraft-data`：`26.1`=775 / `1.21.11`=774 / `1.21.9`=773，**已知最高 775**，`mcData("26.3")` 返回空 ⇒ **无数据、连不上**。
+- **+5 项实测**（`F:/MC_GAME/paper-26.3/evidence/`）：
+  - `v-perm-declared.ok` —— `plugin.yml` 声明两条权限（`default: true` / `default: op`），运行时**从 `PluginManager` 问回来**：**均注册**（非 null）、**映射正确**（`TRUE`/`OP`）
+  - `v-event-tick.ok` —— `ServerTickStartEvent` **每 tick 自发派发**，**全程无玩家**
+  - `v-pdc-persist.ok` —— **两阶段**：阶段1 写 `"cross-restart"` + 优雅停服；阶段2 **新进程、同世界**读回 `"cross-restart"` ✔
+  - `v-event-stdin.ok` —— **stdin 控制台路径真的会派发** `ServerCommandEvent`
+  - T8 三条路完整对照：`dispatchCommand` ✘ · stdin ✔ · `callEvent` ✔
+- ⚠ **一条测试设计缺陷（记下来）**：stdin 探针**首跑没命中**。原因是它在 `Done (` 之后 **3000ms** 才敲，而那个 plan 只有 10 步（≈0.5s 就跑到 `stop`）⇒ **命令到得太晚、服务端已在关停**。改成 200ms + plan 加 `wait ticks=40` 后命中。**「没验到」≠「验到没有」—— 前者要查测试，后者才是结论。**
+- ⚠ **两处我自己的错（都已修）**：`rules.meta.json` 里**两次**把英文双引号写进 JSON 字符串（`serverRound2` 的 `"没验到"`、`noClientForVersion` 的 `"验过了"`）⇒ 两次非法 JSON。**中文引号更安全**，这条已进本档的既有教训。
+
+### 3. 验证台账
+
+- `assert-server-rules-integrity` **rc=0**：规则 10 篇 · 出处 **34 处**全部可解析且行号在界内 · 每篇均有「未核实」段；投毒 **6/6** + 1 例干净必绿
+- 十篇「未核实」段结构审计：**无标题 0 篇 · 空段 0 篇**
+- 真机两阶段：**`java exit=0` × 2**（自停服生效）· `exit-code.txt=0` · 全部 marker `PASS`
+- 门：`assert-rule-ledger` · `assert-script-write-guard` · `assert-authoring-lint` · `assert-corpus-faithfulness` · `assert-index-consistency` · `assert-signature-face-integrity` · `assert-skill-mirrors` · `assert-doc-absence-claims` · `test-core` —— **全 rc=0**；`test-cli` **首红复跑绿**（红因是 `get_server_status` 的 lag 门 >4000ms 无输出，网络类偶发）
+
+### 5. 未做清单
+
+- **一切需要真玩家的项**：`PlayerJoinEvent` · `InventoryOpenEvent`/`ClickEvent`/`CloseEvent` · GUI 交互 · 权限对**真人玩家**的最终判定 —— **仍无法验**（T9：协议 777 无客户端）。**不得读作"验过了"。**
+- `plugin.yml` 的 `default:` **除 `true`/`op` 外**的其余字面量未逐验
+- `Entity`/`ItemStack`/`Chunk`/`TileState` 的 **PDC 跨重启**未验（只验了 `World`）
+- `api__pdc.md:226/:228` 那条「数据不会自动跨 holder 复制」未验
+- 仍真未核实：`02` 的 Brigadier 跨版本差异 · `03` 的 `ItemMeta`/data-component 面 · `05` 的 `Consumer<? super BukkitTask>` 重载实参 · `06` 的 `plugin.yml` 其余字段 · `08` 的 **Adventure 全部签名** · `01` 的其余事件 getter · `09` 的 T1–T3/T5/T7 · Paper 历史档 · 服务端强度分级形状
+- 143 个删除的跟踪文件**仍待用户裁定**
+- 未做任何 git 操作。
+
+### 6. 自我更正
+
+- **更正我上一轮的表述**「这批项**需要玩家在线才造得出**」：**笼统了**。实测把边界画清 —— 需要的是**真客户端连接**（而本项目版本目前没有自动化客户端），不是"在线"这个状态本身；因此 `plugin.yml` 权限字面量、tick 自发事件、PDC 跨重启这三类**不需要玩家也能验**，我上一轮把它们一起归进"造不出来"是**判断过粗**。
+- **更正 T8 的论证强度**：上一轮它的结论"该事件只在**控制台输入**路径派发"里，"控制台输入会派发"那半是**推断**（只证明了监听器没坏）。本轮从 stdin 实测补上了这半，**结论现在是三条路各跑过一遍**。
+
+---
+
+## 2026-10-15 · 服务端面**真机侧验证**（权限/物品栏/PDC/事件）+ 未核实项上移（维护档）
+
+**第 0 块 · 结论**：把 `paper/26.3/rules/**` 里"只有真机才能验"的那批「未核实」拿去**在真 Paper 26.3-190 上跑** —— **权限 / 物品栏 / PDC / 事件派发 四项全过**，**6 项从「未核实」删除并上移进正文**。全程 **6 项门 + 出处门 + 投毒自证全绿**。副产品两条硬结论：① `World instanceof PersistentDataHolder` = **true**（印证"签名页只列本类声明的成员"这个推断）；② **`Bukkit.dispatchCommand` 不触发 `ServerCommandEvent`**（隔离实验判定，记为 `09-traps.md` 的 **T8**）。
+
+### 1. 改了哪些文件
+
+- `paper/26.3/rules/{00,01,03,04,07,09}.md`：各加「真机侧已验证」段（**取代**对应未核实项）+ `09-traps.md` 新增 **T8**、**T6 移出未核实**（红/绿两侧的停服行为各跑出一次）
+- `paper/26.3/rules.meta.json`：新增 `evidenceDiscipline.realMachineVerified` 与 `compileDeps`
+- `DELIVERY_LOG.md`：本节
+- **不进仓库**（一次性验证件，落在授权根与 `%TEMP%`）：`F:/MC_GAME/paper-26.3/probe/playtest/VerifyProbe.java`（探针）· `%TEMP%/run_probe.mjs`（生成→编译→打包→起服→收 marker 的 runner）
+
+### 2. 判据与反证
+
+- **探针的判据设计**：每个检查**通过才写** `<证据目录>/<name>.ok`（失败写 `.FAIL`）；再由服务端 driver 的 `assert marker` 逐项断言 ⇒ **marker 缺席就是没过**，不靠日志措辞判断。
+- **四项实测结果**（`F:/MC_GAME/paper-26.3/evidence/`）：
+  - `v-permission.ok` —— 四个 `PermissionDefault` 的 `getValue(boolean)` **真值表全对**（`TRUE`(t,t) `FALSE`(f,f) `OP`(t,f) `NOT_OP`(f,t)）+ `Permission` ctor/`getDefault` 往返 + `getChildren()` 返回 `java.util.Map`
+  - `v-inventory.ok` —— `createInventory(null,9).getSize()==9` · `getHolder()==null` · `setItem`→`getItem` 往返成立 · **九格填满后 `addItem` 返回 1 项**
+  - `v-pdc.ok` —— **`World instanceof PersistentDataHolder` == true** · `STRING` 往返 · **`BOOLEAN` 往返 = `true`**（泛型 `<Byte,Boolean>`，读写用 `Boolean`）· `remove` 生效
+  - `v-event.ok` —— `registerEvents` + `@EventHandler` + `callEvent` 派发链跑通
+- **T8 的隔离实验（这是把"现象"变成"结论"的关键）**：`cmd say probe-event` 返回 **true**（命令真执行）但监听器**收不到**；把触发换成**手动 `callEvent`** 后**同一份监听器立刻收到** ⇒ 排除"注册链坏了"，**差异只能归因于派发路径**：该事件只在**控制台输入**路径派发。
+- **T6 的证伪**：首轮 `assert marker` 判红 ⇒ **不停服**（服务端挂着直到 runner 240 秒超时强杀，`java rc=null err=ETIMEDOUT`）；第二轮四项全绿 ⇒ `stop` 生效 ⇒ **`java rc=0` 优雅退出**。**"判红不停服"从"代码里写的"变成"实测过的"。**
+- ⚠ **编译 classpath 实测是 5 件不是 1 件**：探针逼出来的两件 —— `org.jetbrains:annotations`（报 `CompletionFailure: class file for org.jetbrains.annotations.NotNull not found`）与 `guava`（报 `class file for com.google.common.collect.Multimap not found`，来自 `Material.getItemAttributes` 的返回类型）。⇒ `paper-api + adventure-api + adventure-key + annotations + guava`。
+
+### 3. 验证台账
+
+- `assert-server-rules-integrity` **rc=0**：规则 10 篇 · 出处 **34 处**（29 → 34）全部可解析且行号在界内 · 每篇均有「未核实」段；投毒 **6/6** + 1 例干净必绿
+- 十篇「未核实」段结构审计：**无标题 0 篇 · 空段 0 篇**（判据是「真标题 + 标题下 ≥1 条」）
+- 真机证据：`exit-code.txt=0` · `qa.log` 含 `[QA] DONE` · `rounds.jsonl` `{"round":1,"ok":true,"steps":11,"done":10,"detail":"stop"}` · `state.json` 199 B · 四个 `*.ok` marker
+- 门：`assert-rule-ledger` · `assert-script-write-guard` · `assert-authoring-lint` · `assert-corpus-faithfulness` · `assert-index-consistency` · `assert-signature-face-integrity` · `assert-skill-mirrors` · `assert-doc-absence-claims` · `test-core` · `test-cli` —— **全 rc=0**
+
+### 5. 未做清单
+
+- **GUI 交互事件**（打开/点击/关闭）未验 —— **本轮一次都没有玩家加入**，造不出来
+- **事件"自发"派发的时机**（玩家加入/方块变更时服务端何时调监听器）未验 —— 本轮验的是**手动派发**路径
+- **PDC 跨重启持久性**未验 —— 只在同一进程内做了读写往返
+- **`05-scheduler.md` 的 `Consumer<? super BukkitTask>` 重载实参写法**未在真机试过（本轮 driver 走的是 `Runnable` 重载）
+- 仍真未核实：`02` 的 Brigadier 跨版本差异与 `plugin.yml` 权限节点语义 · `03` 的 `InventoryOpenEvent`/`CloseEvent` getter 与 `ItemMeta`/data-component 面 · `06` 的 `plugin.yml` 其余字段 · `08` 的 **Adventure 全部签名** · `01` 的其余事件 getter · `09` 的 T1–T3/T5/T7 · Paper 历史档 · 服务端强度分级形状
+- 143 个删除的跟踪文件**仍待用户裁定**（`data/paper_main` 137 + 两个签名面残留 6；都在 `HEAD` 里，`git restore` 可完整恢复）
+- 未做任何 git 操作。
+
+### 6. 自我更正
+
+- **更正本节之前的一条设计假设**：我原以为驱动器的 `cmd` verb 能当事件触发器（探针首版就是这么写的）—— **错**，见 T8。**是实测推翻了我的假设，不是我事先想到了。**
+- **更正早前的表述**「本次真机跑只验了 driver 的 7 个 verb」：现在**权限 / 物品栏 / PDC / 事件派发**这四类也在真机上验过了；仍只验 7 个 verb 的是**驱动动作面**，两者不是一回事。
+- **更正本会话早前关于编译依赖的说法**（当时说「classpath = paper-api + adventure-api + adventure-key，3 件」）：探针实测暴露**第 4、5 件**（`jetbrains annotations`、`guava`）⇒ 已写入 `rules.meta.json` 的 `compileDeps`。
+
+---
+
+## 2026-10-15 · 服务端面规则载体：「未核实」逐条核对 + 检索纪律（`data/**` 须给 glob）（维护档）
+
+**第 0 块 · 结论**：把 `paper/26.3/rules/**` 里**全部**「未核实」项逐条拿去核（两个签名面 + **教程面 = PaperMC 官方文档 67 页**）。**验掉并上移 11 项**（出处 16 → 27 处），**纠错 1 处字段名**，并**推翻我自己上一轮的一个否定性结论**（「`MONITOR` 只能观测」我说"本仓无从核实" —— **错**，官方有逐字说明）。根因是**检索调用姿势**：在 `data/**` 下按目录搜索**没给 `glob`** ⇒ 拿到**假的 0 命中**。**判据与门的两处缺陷也在本轮修掉**。门：出处门 + 8 门 + `test-core`/`test-cli`/`test-scripts` **全 0**。
+
+### 1. 改了哪些文件
+
+- `paper/26.3/rules/**`（10 篇）：验过的项**从「未核实」删除并上移进正文**；未过的**保留**并补上验证证据
+- `paper/26.3/rules.meta.json`：新增 `evidenceDiscipline.searchTrap`（检索陷阱的四组对照 + 两条规矩）
+- `mcp-server/scripts/assert-server-rules-integrity.mjs`：`CITE_RE` 的文件名类**补 `-`**
+- `AGENTS.md`：新增「⚠⚠ 检索纪律：在 `data/**` 下按目录搜索**必须显式给 `glob`**」小节（含对照表与两条规矩）
+- `DELIVERY_LOG.md`：本节
+
+### 2. 判据与反证
+
+- **11 项验掉并上移**（原「未核实」→ 出处）：`onTabComplete` 签名（`JavaPlugin.md:31`，并记下**第 3 形参是 `alias` 不是 `label`**）· `Permissible#hasPermission` 两重载（`Permissible.md:15-16`）· `PersistentDataType` 常量（`:15/:19/:20/:22`，**`BOOLEAN` 的表示类型是 `Byte`**）· `InventoryClickEvent` 三读数（`:17/:23/:27`，**三者可空性不同**）· 事件 getter（**纠正**：`getPlayer()` 在**父类** `PlayerEvent.md:15`）· **MONITOR 语义**（`api__event-api__event-listeners.md:100-103`）· 优先级顺序（`:96-98`）· **异步回调可调什么**（`api__scheduler.md:88-92` 官方 caution 原文）· tick 单位（`api__scheduler.md:70`）· `saveDefaultConfig()` 语义（`api__plugin-configs.md:55/:58-59`）· PDC 挂载对象 10 个（`api__pdc.md:232+`）
+- **纠错**：**`hard-depend` 不是 `plugin.yml` 的字段名** —— 官方是 **`depend`**/`softdepend`（`getting-started__plugin-yml.md:225-241`）；同页补上 `load`（`:112`，`STARTUP`/`POSTWORLD`，默认 `POSTWORLD`）、`libraries`（`:121`）、`provides`（`:252`）与加载顺序原文（`:206-208`）
+- **假否定（本轮最重要的教训）**：我上一轮据"教程面搜 `MONITOR|EventPriority|priority` → 0 命中"断言"本仓无从核实"。**四组对照实测**：同一目录同一词（`Bukkit`）—— ① **不传 `glob` → 0 命中（假）**；② `glob="*.md"` → **44 命中**；③ `glob="*"` → **44 命中**；④ 反证：`paper/26.3/rules` **不传 `glob` → 10 命中（正常）**。⇒ **变量只有 `glob`，且只在 `data/**` 下发作**（机制未核实）；`.gitignore` 已排除（`git check-ignore` exit 1）。
+- **门的两处缺陷**：① `CITE_RE` 的字符类 `[A-Za-z0-9_]` **不含 `-`** ⇒ 教程面页名（`api__plugin-configs.md` 等，大量带连字符）被**截断成尾部**而误报；② 我写的 `api__pdc.md:232-274` / `api__plugin-configs.md:53-61` **区间太宽**（含空行）⇒ 收窄到具体行（门该这么严）。
+
+### 3. 验证台账
+
+- `assert-server-rules-integrity` **rc=0**：规则 10 篇 · 出处 **27 处**全部可解析且行号在界内 · 每篇均有「未核实」段；`--require` 亦 rc=0
+- 投毒自证：**6/6 畸形必红 + 1 例干净必绿**（regex 改动后已复证）
+- 十篇「未核实」段结构审计：**无标题 0 篇 · 空段 0 篇**
+- 门：`assert-rule-ledger` · `assert-script-write-guard` · `assert-authoring-lint` · `assert-corpus-faithfulness` · `assert-index-consistency` · `assert-signature-face-integrity` · `assert-skill-mirrors` · `assert-doc-absence-claims` · `test-core` · `test-cli` · `test-scripts` —— **全 rc=0**
+
+### 5. 未做清单
+
+- **真机侧验证未做**：权限 / 物品栏 / PDC / 事件派发 / GUI 在**真服务端**上的行为，本档仍留在「未核实」（本轮只用了两个语料面，**没起服**）
+- **仍真未核实（保留）**：其余事件 getter · Brigadier 跨版本差异 · 命令权限节点的 `default:` 字面量 · `Permission` 的 children 在 `plugin.yml` 的写法 · `plugin.yml` 其余字段 · **Adventure 全部签名**（不在本仓签名面内）· `Consumer` 重载实参写法 · `09-traps` 的 T1–T7 相关 · Paper 历史档 · 服务端强度分级形状
+- 143 个删除的跟踪文件**仍待用户裁定**
+- 未做任何 git 操作。
+
+### 6. 自我更正
+
+- **更正本节之前的结论**：`01-events.md` 与 `rules.meta.json` 里"MONITOR 语义在本仓无从核实"**作废** —— 官方有逐字说明（出处见第 2 块）。错因是检索姿势（少给 `glob`），不是语料缺失。
+- **更正上一节（规则载体）第 5 块**里"`hard-depend` 与加载顺序的语义未核实"的**字段名部分**：`hard-depend` 这个字段**不存在**，官方是 `depend`（结论"被依赖者先加载"保持）。
+- **更正我上一轮给用户的答复**："为什么搜不到"当时我未定论；现经四组对照判定为**我的调用姿势问题**（`data/**` 下未给 `glob`），**不是检索工具坏了** —— 见 `AGENTS.md` 新增的检索纪律小节。
+
+---
+
+## 2026-10-15 · 服务端面**真机跑通** + **规则载体**（`paper/26.3/rules/`）+ 专属出处门（维护档）
+
+**第 0 块 · 结论**：三件。① **服务端面首次真机跑通** —— 真 Paper 26.3-190 起服 → 插件真加载并 `onEnable` → driver 跑完 10 步 → `exit-code=0` / `qa.log` 含 `[QA] DONE` / `rounds.jsonl ok:true`，`generate_playtest_server_driver` 证据等级 **结构壳 → 真构件编译验证 → 真机跑通**；② 新建**服务端面规则载体** `paper/26.3/`（`rules.meta.json` + 10 篇），并把它**自己的**约定写进 `AGENTS.md`（位置/扩展名/写作纪律/守护门）；③ 新建**专属出处门** `assert-server-rules-integrity.mjs`（投毒 **6/6**）+ 挂链 + ledger 登记。
+
+### 1. 改了哪些文件
+
+- **新建** `paper/26.3/rules.meta.json` 与 `paper/26.3/rules/{00-face,01-events,02-commands,03-inventory-gui,04-permissions,05-scheduler,06-plugin-yml-config,07-pdc,08-adventure,09-traps}.md`
+- **新建** `mcp-server/scripts/assert-server-rules-integrity.mjs`
+- `mcp-server/src/generators/playtest-server-driver.ts`：`stop` 步骤收工后调 `stopServer()`（`runTaskLater(plugin, …, 20L)` → `Bukkit.shutdown()`）
+- `mcp-server/test-scripts.mjs`：新门挂进 `REAL_RUN_GATES`
+- `mcp-server/scripts/assertion-ledger.json`：登记 `server-rules-integrity-gate`
+- `AGENTS.md`：服务端面小节补「规则载体」约定（含"别指望既有两道规则面门代管"的实测理由）
+- `DELIVERY_LOG.md`：本节
+
+### 2. 判据与反证
+
+- ✅ **真机跑通（最高档，可复现命令在下方第 3 块）**：`Loading/Enabling … enabled` → `[QA] ROUND 1 START` → 10 步全执行 → `[QA] DONE stop` → `Disabling/disabled` → **`java rc=0`**。**修前是 `rc=null err=ETIMEDOUT`**（driver 的 `stop` 只收工不停服 ⇒ runner 超时强杀）。
+- ✅ **classpath 三件是实测**：只放 `paper-api` 时 javac 报 `class file for net.kyori.adventure.key.Namespaced not found`（Paper 侧 `CommandSender` 继承 Adventure 的 `Audience`）；补 `adventure-api 5.2.0` + `adventure-key 5.2.0` 后过。
+- ✅ **JDK 底线 25 是实测**：JDK 21 编 `paper-api-26.3.build.178-stable.jar` 报 `class file has wrong version 69.0, should be 65.0`（69−44=25）。
+- ✅ **`api-version: '26.3'` 被 Paper 26.3-190 接受**（真机跑无加载期报错）—— 此前是 `TODO-未核实` 占位，现为实测真值。
+- ✅ **`No key layers in MapLike[{}]` 成因是我自己（两轮对照）**：`level-type=minecraft\:flat` + 空 `generator-settings` ⇒ 建新世界时报该错；撤掉 `level-type` 后（世界**同样**全新建：日志仍有 `No existing world data, creating new world`）该错消失 ⇒ 是**配置**问题，与插件/驱动无关。
+- ✅ **出处门是活的**：投毒 **6/6** —— ①引到不存在的文件 ②行号越界 ③指向空行 ④完全无「未核实」 ⑤**只在行文里提该词（无标题）** ⑥**有标题但空段**，各自必红；另有干净必绿对照。
+- ⚠️ **两处自伤（已修，如实记）**：① 服务端 driver 生成器的 **Java 模板体内写了反引号**（反引号包裹 `stop`）⇒ **终止 TS 模板字面量**，`error TS1005` ×2 + 连带 javac `reached end of file while parsing`（本文件内一律不出现反引号这条纪律，我违反了两次）；② 我的命令模式用 `Select-Object -First N` **截断 PowerShell 管道**，把语义构建器在写 manifest 之前掐死 ⇒ `sha256` 与台账脱钩、`assert-index-consistency` G4 判红。
+- ⚠️ **门的覆盖错觉（本会话第三次）**：规则文件落盘后 6 道规则面门全绿，但实测 `assert-rules-api-names.mjs:174` 只收 `.mdc`、`assert-rules-match-tool.mjs` 是 quilt 专属 ⇒ **绿是"未覆盖"不是"通过"**，故自建专属门并把这条写进 `AGENTS.md`。
+
+### 3. 验证台账
+
+- `assert-server-rules-integrity.mjs` **rc=0**：规则 **10 篇** · 出处 **16 处**全部可解析到三个语料面之一且行号在界内且非空 · 每篇均有「未核实」段；`--require` 亦 rc=0
+- 投毒自证：**6/6 畸形必红 + 干净必绿**（temp 假根，不碰仓库）；计数由门**动态算并自印**（首版把 "4/4" 硬编码在文案里，加例后输出对不上）
+- 「未核实」段审计（10 篇逐一扫）：**无标题 0 篇 · 空段 0 篇**；顺带审出 `05-scheduler.md` 的弃用行号**漏了两条**（原写 `:31/:37/:43/:46`，实际六个入口各一条 ⇒ `:31/:34/:37/:40/:43/:46`）
+- 服务端发行件：`fill.papermc.io/v3`（`api.papermc.io/v2` 实测 **410 sunset**）取 `paper-26.3-190.jar` · size **55152206** · sha256 **`db0fd325…` 比对 True**
+- 真机跑产物：`F:\MC_GAME\paper-26.3\evidence\` 五件齐 —— `exit-code.txt=0` · `qa.log` 含 `[QA] DONE` · `rounds.jsonl` `{"round":1,"ok":true,"steps":10,"done":9,"detail":"stop"}` · `state.json` 198 B（`driverKind:"server"` / `server:{onlinePlayers:0, worlds:3}`）
+- 门链与相邻门复跑结果见本节提交时的门批（`test-core` / `test-scripts` / `assert-rule-ledger` / `assert-corpus-faithfulness` / `assert-index-consistency` / `assert-signature-face-integrity`）
+
+### 5. 未做清单
+
+- **"该怎么用"式的道理本档一概不写**：两个签名面的 processed 页**只有签名、没有描述散文**（实测 `org_bukkit_event_EventHandler.md` 无描述段）⇒ 语料证不出的（含 `MONITOR` 只能观测这类通识）**一律进「未核实」段**；`08-adventure.md` 因 Adventure 不在本仓签名面内而**只给指针、不给签名**。
+- **规则载体未进任何语料台账**（`LEDGER_TREES` / `corpus-semantics-baseline` 只登记 `processed` 树）。
+- **`paper/26.3/` 只有当前一档**（javadoc 站历史档实测 200 可达但本仓未落）。
+- **`09-traps.md` 的三处未验**：T3 的"正解"（设 flat + 给合法 `generator-settings`）没试 · T4 修法（控制台改 ASCII / 显式设编码）未实施 · T6 的"不停服"分支未单独真机复现。
+- **143 个删除的跟踪文件仍待裁定**：`data/paper_main`（137）+ `data/paper_javadoc`（3）+ `data/spigot_javadoc`（3）—— 三者**都在 `HEAD` 里**（`git ls-tree` 实测 137/3/3），`git restore <path>` 可完整恢复；内容与现行落点重复/悬空，但**删除本身应由用户确认**。
+- 未做任何 git 操作。
+
+### 6. 自我更正
+
+- 更正**我本轮先前给用户的口头结论**「6 道规则面门全绿」—— 那 6 个绿是**未覆盖**（门扫 `.mdc` / quilt 专属），**不能读作通过**；同理此前多处"门绿"若门扫不到目标，都只算 `absent`。
+- 更正**本节之前的说法**「服务端面 11 个文件的出处纪律无人守护」的细节：不是"没有规则面门"，而是**既有两道规则面门的作用域不覆盖本面**（源码位置已在上文点名）。
+- 更正**更早一节**（服务端面签名层）第 5 块称"两个新面专属门未建"的**适用范围**：签名面的门在更后一节已建；本节建的是**规则面**的门 —— 两者是**两个不同的面**，别互相顶替。
+- 更正**本节第 1/2/3 块写下的"投毒 4/4"**：判据升级后实为 **6/6**（原 4 条仍成立，另加 ⑤⑥ 两例）。根因是我**加了投毒例却没改自印文案** —— 已把门的计数改为**动态算**，并同步 `AGENTS.md` / `assertion-ledger.json` / `test-scripts.mjs` 三处。
+- **判据本身的更正（用户指出）**：本门首版对「未核实」**只测词是否出现过**（`/未核实/`）—— 太弱，一句话顺带提一次也能过。已改为**真标题（`^#{1,4} … 未核实`）+ 标题下至少一条**，并补两例投毒钉住这个强度；同轮还修了**夹具自身**（首版的「未核实」段只放一个孤立 `-`，判据升级后它自己成了空段 ⇒ 连"干净应绿"都红 —— **是夹具过时不是门失效**）。
 
 ---
 

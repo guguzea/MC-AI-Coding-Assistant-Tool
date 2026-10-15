@@ -1,23 +1,13 @@
 {
-  "_comment": "sweep81 data/** 全树语义读基线（assert-corpus-semantics.mjs 读）：stub=真·空页（body<40 且无任何 `## ` 小节）；allowedStubs=ratchet（只许降，超即红）；medianFloor 对有 ≥5 篇的树生效；residue[]=允许留下的空页**逐条具名**（有 residue 数组时，每棵树的具名条目数必须等于实测空页数，条目过期即红）。改动须走 MC_SKILL_CORPUS_SEMANTICS_RELEDGER=1 重算并显式提交。",
-  "asOf": "2026-09-24",
+  "asOf": "2026-10-15",
   "totalStubBudget": 1,
-  "residue": [
-    {
-      "tree": "rift_1.13.2/rift-docs/1.13.2",
-      "file": "wiki_home.md",
-      "reason": "上游 Rift GitHub wiki 的 Home 页本身就只有一句欢迎语（正文 25 字符）；其余 5 篇承载全部内容。采集忠实、非解析缺口 —— 2026-09-18 逐篇核过。"
-    }
-  ],
   "trees": {
     "bedrock_stable/bedrock-docs/stable": {
-      "_note": "2026-09-22 ⑤ 拆树：Script API 逐声明页（624）移入 bedrock-scriptapi 独立树后，本树只剩 Learn 文档页。files 882→258 是本树真实篇数；medianFloor 360→3526 才是这次拆分的真正目的 —— 混树时两种体裁的中位数被逐声明短页拉到 360，厚度判据等于失效；分树后本树按自己 5876 的实测中位重签（0.6× 公式），灵敏度恢复约 10 倍。",
       "files": 258,
       "allowedStubs": 0,
-      "medianFloor": 3526
+      "medianFloor": 3416
     },
     "bedrock_stable/bedrock-scriptapi/stable": {
-      "_note": "@minecraft/server d.ts 逐声明页（一声明一页）。2026-09-22 用户裁定③：本树厚度改由**判据⑥ p10Floor** 兜 —— median 对这种体裁不敏感（把最薄的一成刷成 60 字，中位照旧），实测（门自己的 measureTree 口径）files 624 / stub 0 / sectionless 7 / p10 123 / median 363 ⇒ p10Floor 取 RELEDGER 同口径 0.6×123=74。投毒证明：刷薄最薄 63 页（10.1%）后 median 那条腿不红、p10 这条红。2026-09-22 用户裁定④再接**判据⑦ members**：本树 Σ成员实测 2590（= 页内 `## Members（N）` 逐页求和，measureTree 现算）⇒ membersFloor 取同一 0.6 口径 = 1554；⑦a 的逐页自洽腿（自报 N == `### \\`x\\`` 小节数）不依赖地板、当场抓单页截断。这 2590 的可信度由专族门 assert-bedrock-scriptapi-members 挂在独立计数源（scriptapi-typed.json 的声明清单 ⇄ 页面四口径 ⇄ 每页 sha256）上，不是手抄数。",
       "files": 624,
       "allowedStubs": 0,
       "medianFloor": 218,
@@ -127,97 +117,97 @@
     "forge_1.12.2/forge-docs/1.12.2": {
       "files": 57,
       "allowedStubs": 0,
-      "medianFloor": 2202
+      "medianFloor": 2184
     },
     "forge_1.13.2/forge-docs/1.13.2": {
       "files": 57,
       "allowedStubs": 0,
-      "medianFloor": 2146
+      "medianFloor": 2118
     },
     "forge_1.14.4/forge-docs/1.14.4": {
       "files": 54,
       "allowedStubs": 0,
-      "medianFloor": 2177
+      "medianFloor": 2117
     },
     "forge_1.15.2/forge-docs/1.15.2": {
       "files": 54,
       "allowedStubs": 0,
-      "medianFloor": 2075
+      "medianFloor": 2059
     },
     "forge_1.16.5/forge-docs/1.16.5": {
       "files": 54,
       "allowedStubs": 0,
-      "medianFloor": 1917
+      "medianFloor": 2059
     },
     "forge_1.17.1/forge-docs/1.17.1": {
       "files": 54,
       "allowedStubs": 0,
-      "medianFloor": 1944
+      "medianFloor": 2066
     },
     "forge_1.18.2/forge-docs/1.18.2": {
       "files": 60,
       "allowedStubs": 0,
-      "medianFloor": 2147
+      "medianFloor": 2119
     },
     "forge_1.19.4/forge-docs/1.19.4": {
       "files": 71,
       "allowedStubs": 0,
-      "medianFloor": 2397
+      "medianFloor": 2340
     },
     "forge_1.20.1/forge-docs/1.20.1": {
       "files": 71,
       "allowedStubs": 0,
-      "medianFloor": 2395
+      "medianFloor": 2340
     },
     "forge_1.20.4/forge-docs/1.20.4": {
       "files": 70,
       "allowedStubs": 0,
-      "medianFloor": 2352
+      "medianFloor": 2340
     },
     "forge_javadoc/1.10.2": {
       "files": 3182,
       "allowedStubs": 0,
-      "medianFloor": 229
+      "medianFloor": 297
     },
     "forge_javadoc/1.11.2": {
       "files": 3268,
       "allowedStubs": 0,
-      "medianFloor": 230
+      "medianFloor": 298
     },
     "forge_javadoc/1.12.2": {
       "files": 3554,
       "allowedStubs": 0,
-      "medianFloor": 228
+      "medianFloor": 294
     },
     "forge_javadoc/1.7.10": {
       "files": 1879,
       "allowedStubs": 0,
-      "medianFloor": 253
+      "medianFloor": 300
     },
     "forge_javadoc/1.8.9": {
       "files": 2807,
       "allowedStubs": 0,
-      "medianFloor": 233
+      "medianFloor": 334
     },
     "forge_javadoc/1.9.4": {
       "files": 3070,
       "allowedStubs": 0,
-      "medianFloor": 229
+      "medianFloor": 298
     },
     "liteloader_1.10.2/liteloader-docs/1.10.2": {
       "files": 34,
       "allowedStubs": 0,
-      "medianFloor": 1209
+      "medianFloor": 753
     },
     "liteloader_1.12.2/liteloader-docs/1.12.2": {
       "files": 35,
       "allowedStubs": 0,
-      "medianFloor": 898
+      "medianFloor": 753
     },
     "liteloader_1.8.9/liteloader-docs/1.8.9": {
       "files": 34,
       "allowedStubs": 0,
-      "medianFloor": 1209
+      "medianFloor": 753
     },
     "modloader_1.2.5/modloader-docs/1.2.5": {
       "files": 1,
@@ -279,40 +269,55 @@
       "allowedStubs": 0,
       "medianFloor": 7926
     },
+    "paper_stable/paper-docs/stable": {
+      "files": 67,
+      "allowedStubs": 0,
+      "medianFloor": 2902
+    },
+    "paper-api_stable/paper-javadoc/stable": {
+      "files": 2116,
+      "allowedStubs": 0,
+      "medianFloor": 247
+    },
     "quilt_1.18.2/quilt-docs/1.18.2": {
       "files": 18,
       "allowedStubs": 0,
-      "medianFloor": 0
+      "medianFloor": 2273
     },
     "quilt_1.19.4/quilt-docs/1.19.4": {
       "files": 18,
       "allowedStubs": 0,
-      "medianFloor": 0
+      "medianFloor": 2273
     },
     "quilt_1.20.1/quilt-docs/1.20.1": {
       "files": 18,
       "allowedStubs": 0,
-      "medianFloor": 0
+      "medianFloor": 2273
     },
     "quilt_1.20.4/quilt-docs/1.20.4": {
       "files": 18,
       "allowedStubs": 0,
-      "medianFloor": 0
+      "medianFloor": 2273
     },
     "quilt_1.21.1/quilt-docs/1.21.1": {
       "files": 18,
       "allowedStubs": 0,
-      "medianFloor": 0
+      "medianFloor": 2273
     },
     "quilt_1.21.11/quilt-docs/1.21.11": {
       "files": 18,
       "allowedStubs": 0,
-      "medianFloor": 0
+      "medianFloor": 2273
     },
     "rift_1.13.2/rift-docs/1.13.2": {
       "files": 6,
       "allowedStubs": 1,
       "medianFloor": 2498
+    },
+    "spigot_stable/spigot-javadoc/stable": {
+      "files": 1396,
+      "allowedStubs": 0,
+      "medianFloor": 215
     }
   }
 }

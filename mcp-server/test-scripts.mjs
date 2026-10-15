@@ -2239,6 +2239,20 @@ const REAL_RUN_GATES = [
     // 依赖可选的语料包 ⇒ 缺面时**降级并吼**（否则 CI 上恒红、挂不进链）；强口径手跑 `--require`。
     // 自带投毒自证：4/4 畸形必红、干净必绿（活门，不是橡皮章）。
     "./scripts/assert-signature-face-integrity.mjs",
+    // 2026-10-15：服务端面 driver 的**真构件编译腿**（JDK 25 + 真 paper-api 构件件做一次真 javac）。
+    // 与客户端那条 `assert-playtest-driver-compiles.mjs` 同范式：**依赖是本机可选资产** ⇒ 缺件时
+    // 降级并吼（rc=0）、`--require` 走 fail-closed（rc=2）—— 否则在没装 paper-api 的机器上会恒红而挂不进链。
+    "./scripts/assert-playtest-server-driver-compiles.mjs",
+    // 2026-10-15：吐 Java 的生成器模块**必须能过 TypeScript 语法检查**（不依赖 dist，
+    // 所以"dist 是坏的/旧的"时它仍然能跑 —— 这正是它存在的理由）。判据用**编译器本身**，
+    // 不是启发式（首版启发式实测 73 处**全是注释里的合法反引号**，已废弃，见文件头）。
+    "./scripts/assert-generator-template-safety.mjs",
+    // 2026-10-15：服务端面**规则载体**（paper/<ver>/rules/*.md）的出处门。
+    // 为什么不靠既有规则面门：`assert-rules-api-names.mjs:174` 只收 `.mdc`（本面用 `.md`）、
+    // `assert-rules-match-tool.mjs` 是 quilt 专属 —— 二者实测**扫不到**本面（详见 AGENTS 服务端面小节）。
+    // 依赖可选的语料包 ⇒ 缺面降级并吼；强口径手跑 `--require`。
+    // 自带投毒自证 6/6（含"只在行文里提『未核实』不算"与"有标题但空段"两例）。
+    "./scripts/assert-server-rules-integrity.mjs",
     // 2026-09-28：镜像面今天真漂过一次（`fabric/1.17.1/.cursor/skills/mc-particle.md` 改了源稿、7 面没跟），
     // 而它从前只由 `npm test` 覆盖 ⇒ 收口跑 test-scripts 的那一轮看不见。挂进默认链（实测整道门 1.8 s）。
     "./scripts/assert-skill-mirrors.mjs",

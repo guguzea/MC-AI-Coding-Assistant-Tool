@@ -792,6 +792,22 @@
       "closedAt": "2026-10-14"
     },
     {
+      "id": "server-rules-integrity-gate",
+      "claim": "服务端面规则载体（`paper/<ver>/rules/*.md`）必须有**自己的**出处门。**不能指望现有规则面门代管**（2026-10-15 对源码实测）：`assert-rules-api-names.mjs:174` 只收 `.mdc`（`filter((x) => /\\.mdc$/.test(x))`）而本面用 `.md`；`assert-rules-match-tool.mjs` 是 **quilt 专属**（自印「90 个 quilt 源文件 / 632 条断言 / 10 档 quilt」）。⇒ 缺门时本面「每条论断带 `文件:行` 出处、且不许出现自由编造的 API 名」这条纪律**无人守护**（改错一处不会有任何门报警）。",
+      "author": "2026-10-15 服务端面规则载体（paper/26.3/rules）+ 对两道既有规则面门扫描面的实测",
+      "evidence": "判绿实测：规则 10 篇 · 出处 16 处全部可解析到三个语料面之一（短名按后缀匹配，`org_bukkit_*` 跨两面重名时**至少一面成立即过**）· 行号在界内 · 无空行 · 每篇均有**真标题**的「未核实」小节且**标题下至少一条**。投毒自证（temp 假根，**不碰仓库**）：**6/6** 畸形必红 —— ①引到不存在的文件 ②行号越界 ③指向空行 ④完全无「未核实」 ⑤只在行文里提该词（无标题） ⑥有标题但空段；另有干净必绿对照。判据升级史：首版对「未核实」只测 `/未核实/`（**词出现即过**，太弱），2026-10-15 改为「真标题 + ≥1 条」并补 ⑤⑥ 两例投毒；同轮还修了**夹具自身**（首版夹具的「未核实」段只放一个孤立 `-`，判据升级后它自己成了空段 ⇒ 连「干净应绿」都红）。缺件默认**降级并吼**（语料面是可选数据包，CI 上没有 `data/`），`--require` 走 fail-closed（rc=2）。",
+      "evidenceRefs": [
+        "mcp-server/scripts/assert-server-rules-integrity.mjs",
+        "paper/26.3/rules.meta.json",
+        "AGENTS.md"
+      ],
+      "status": "closed",
+      "gates": [
+        "assert-server-rules-integrity.mjs"
+      ],
+      "closedAt": "2026-10-15"
+    },
+    {
       "id": "convert-yarn-requires-yarn-data",
       "claim": "convert_mapping 的 to=yarn 只在该档**确实**是 yarn-tiny（fabric 侧 Yarn 名）时才可答：否则 fail(resultKind=YARN_DATA_UNAVAILABLE) 并指路 query_api。另：era 与命中来源矛盾（era=yarn-tiny 而 source=csv）时不得报 confidence:high（降为 medium + notes 说明）。",
       "author": "原审查§3（恒等式伪转换）+ 计划 v2 W4-5 + 2026-09-20 执行",

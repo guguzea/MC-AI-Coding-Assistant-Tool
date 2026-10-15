@@ -40,7 +40,7 @@ Follow each package’s license as published on npm（`@xenova/transformers` 为
 - 含义：类名与方法签名以 Mojang/Forge 游戏内容为事实来源，但**页面排版与 javadoc 注释出自该镜像**；需要官方一手 Javadoc 时请回到 `docs.minecraftforge.net`，本仓库只提供离线检索。
 - License: follow upstream Forge terms for the API content; mirror page chrome follows the mirror's own publication
 
-## Paper（服务端插件）documentation extracts（`data/paper_main/`）— **正文为 CC BY-SA 4.0**
+## Paper（服务端插件）documentation extracts（`data/paper_stable/paper-docs/stable/`）— **正文为 CC BY-SA 4.0**
 
 - Source: **PaperMC 官方开发文档**（`https://docs.papermc.io/`），文档仓 = `https://github.com/papermc/docs`（Starlight/Astro）
 - Fetcher: `mcp-server/scripts/fetch-paper-docs.mjs`（**默认 dry-run**，`--extract` 才落盘）
@@ -50,10 +50,11 @@ Follow each package’s license as published on npm（`@xenova/transformers` 为
 - **许可（两套，必须分开看）**：
   - 仓库**代码** = **BSD 2-Clause**（上游 `LICENSE`）
   - **文档正文** = **Creative Commons Attribution-ShareAlike 4.0 International（CC BY-SA 4.0）**（上游 `LICENSE-docs`）
-- ⚠️ **ShareAlike 义务**：本仓 `data/paper_main/**` 是对上游正文的**提取/改编**，因此该子树及其衍生文本必须
+- ⚠️ **ShareAlike 义务**：本仓 `data/paper_stable/**`（正文在 `data/paper_stable/paper-docs/stable/`）是对上游正文的**提取/改编**，因此该子树及其衍生文本必须
   **以 CC BY-SA 4.0 分发，并署名 PaperMC**；**不得**与本项目 `LICENSE`（MIT）或其他 `data/` 子树混为同一许可。
-  单独取用 `data/paper_main/**` 时必须保留本节的署名与许可声明。
-- 版本口径：Paper 文档**不按 MC 版本分目录**（是"当前"文档）⇒ 落 `paper_main`，**不套** `data/<platform>_<ver>/` 形状；
+  单独取用 `data/paper_stable/**` 时必须保留本节的署名与许可声明。
+- 版本口径：Paper 文档**不按 MC 版本分档**（是"当前"文档）⇒ 落 `data/paper_stable/paper-docs/stable/`（**伪版本 `stable`**；目录名须服从
+  `versionDataDir` 的 `<platform>_<ver>/<source>/<ver>` 拼法，先例 = `data/bedrock_stable/bedrock-docs/stable/`）；
   版本轴另由 Javadoc（`jd.papermc.io/paper/`）承担。
 
 ### Spigot / Bukkit 与 Paper API —— **签名面**（Javadoc；平台 id `spigot` 与 `paper-api`，落 `data/spigot_stable/` · `data/paper-api_stable/paper-javadoc/`）
@@ -66,6 +67,7 @@ Follow each package’s license as published on npm（`@xenova/transformers` 为
 - **版本口径**：上游 javadoc **URL 没有版本轴**（`/spigot/1.21.4/` 实测 404；Paper 侧 `jd.papermc.io/paper/26.3/` 有）
   ⇒ 落**伪版本 `stable`**，真实版本串留在 `asOfVersion`（实测 Spigot = `26.3-R0.1-SNAPSHOT`、
   Paper = `26.3.build.178-stable`，均取自站点 `index.html` 的 `<title>`；取数器对二者做**双向对钉**，不一致即拒）
+  复跑现役布局：`--version <上游真实串> --pseudo-version stable --out data/<face>_stable/<face>-javadoc/stable`
 - 许可与边界：
   - `SpigotMC/Spigot-API` 仓 = **GPL-3.0**（`LICENCE.txt`；仓库 **2021-12-28 已归档**，About 标注 "OUTDATED - SEE hub.spigotmc.org/stash"）
     ⇒ **本仓不抄其源码**；只把 **API 名字 / 签名**（事实面）当检索对象，与本仓 `loader-api` 同一条线。

@@ -754,3 +754,37 @@ neoforge ≥1.20.6 各档，`artifact-map2.json` 的主件是 `neoforge-<ver>-me
 #### (4) 与 §8.16 的差异（口径更正）
 
 §8.16 表里写「G3 整文件判 negBlock」——**该描述对 v2 量具已不成立**（`:319-320` 本就是行级切换）。本节点名更正，避免后续按错描述改。
+
+### 8.18 第七批 · G5/G2/G3 上马 + 修 A8（含门）+ A22 补句
+
+#### (1) 逐轮读数（nowhere 行数）
+
+| 版本 | 加了什么 | nowhere TYPE | MEMBER | crossPack TYPE |
+| --- | --- | ---: | ---: | ---: |
+| v2 | 原始 | 1246 | 1990 | 933 |
+| v3 | G1（行内 code span + frontmatter）+ G4（E 腿按版本分桶） | 2647 | 2226 | 1983 |
+| v4a | G5（同族摘要或运算）+ G2（类→声明方法） | 2351 | 2021 | 1482 |
+| v4 | G3 补完（prose 单元按所在行判负例） | **1655** | **1903** | 1054 |
+
+工具 `F:\MOD_TEST\nonfabric-skill-names-v4.mjs`；产物与四类假阳清单见 `F:\MOD_TEST\G-final.md`。
+
+#### (2) G5 的因（**重要，否定了一个长期假红面**）
+
+量具 D 腿一直只读 `mcp-server/data/loader-api-summaries/<ver>-<platform>.json` = **loader**，而 **Fabric API 在 `<ver>-fabric-api.json`**（另有 quilt 的 `-qsl` 作 summAlt）。⇒ `EntityRendererRegistry` / `ScreenRegistry` / `ClientSidePacketRegistry` / `UseItemCallback` / `UseBlockCallback` / `ItemEvents` / `AttackEntityCallback` 等**成批**被假判 nowhere（实测这些名只出现在 `*-fabric-api.json`）。改法 = 「本档 loader 摘要 ⊕ 同族摘要」或运算（fabric→`-fabric-api`；neoforge 1.20.1→`-forge`）。**剩余面**：forge ≥1.17 的 FML 在 `fmlcore`、neoforge ≥1.20.6 的在 fancymodloader `loader`，两者**都无入库摘要** ⇒ 那两族 FML 名仍会落 nowhere。
+
+#### (3) G2 现状与局限
+
+`merged-member-mismatch.tsv` 296 行 / 29 unique。**只到方法级**（摘要 `fields` 恒 0）且**按简单名匹配** ⇒ 高频全是撞名假阳：`Properties.of`(121) / `Builder.of`(57) / `Properties.create`(23) / `Component.translatable`(10) 都是**正确写法**（同名类撞车）。⇒ G2 现在是**候选发现器**，改法 = 先把 `X.y` 的 X 解析到具体 FQCN，再判声明成员。
+
+#### (4) G3 补完（口径更正）
+
+§8.16 表把 G3 描述为「negBlock 从整文件降到带 ❌/错误标记的**块**」，§8.17(3) 又判它「已被大部分覆盖、属可选精修」。**两句都不够**：现有 `❌/✅` 行级切换只对**围栏面**生效，**新加的 prose 面（行内 code / frontmatter）压根没跑负例判据**。实测：fabric 各档「禁编名单（非本档 Fabric API）：`ItemEvents` / `BlockEvents` / …」、「不要用已移除的 `ClientSidePacketRegistry`」、「不要在这里抄邻版 `ScreenRegistry`」全被当推荐用法。补法 = prose 单元带 `ctxLine`（所在原行），行内命中 `NEG_PROSE`（比块级多 `禁编|禁用` 与 `无\x60`）即整单元跳过 ⇒ nowhere TYPE 2351→1655、豁免行 21427→27632。
+
+#### (5) 扩面之后有没有新问题 —— **没有新的真缺陷**
+
+新冒候选逐条读出处行后，四类全非知识错误：① 跨装载器对照表（`porting/*`、`agent/default.md` 的「与 Forge 的映射」列）；② 负例清单（G3 已判掉大半，残余 `## 禁止` 小节标题型漏判）；③ **frontmatter 触发词**（G1 自引入；`RoughlyEnoughItems`/`ForgeEnergy`/`FluidType`/`PublishedApi` 等）；④ 示例占位类名（`ModBlockEntities`/`ModCapabilities`/`ModifyBlockMessage`，现有 `PLACEHOLDER` 不覆盖 `Mod*`）。逐条复核过的可疑项（rift/modloader 的 `DeferredRegister`、neoforge 的 `NeoForgeAddonPlugin` 等）**全是禁用说明**。
+
+#### (6) A8 / A22
+
+- **A8 已修**：44 个 `gradlew` 索引模式 `100644→100755`（`git update-index --chmod=+x`，未提交）；`assert-scaffold-wrappers` 加执行位检查（负例红 / 恢复绿两向验过）。此前该门只查文件齐 / props⇄meta / jar 有效 / git 跟踪，**不查执行位**。
+- **A22**：按「不动归档树」处置 —— 只在 `neoforge/LEGACY-NOTICE.md` 补一段（自报 1.20.4 却发 `neoforge.mods.toml`、FML 2.0.17 无该字面量 ⇒ 会被静默忽略；要走 `neoforge/<精确版本>/scaffold/`）。

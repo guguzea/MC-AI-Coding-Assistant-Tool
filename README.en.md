@@ -74,7 +74,7 @@ MC_skill/
 │   ├── batch-decompile.mjs      # batch decompilation (sources → $MC_SKILL_CACHE, not committed)
 │   └── merge-verified-api.mjs   # writes verifiedApi back into the catalog
 │
-├── mcp-server/                  # local stdio MCP Server (88 tools)
+├── mcp-server/                  # local stdio MCP Server (89 tools)
 │   ├── src/                     # tool implementations (api / docs / diagnostics / wave…)
 │   ├── scripts/                 # doc fetching, semantic indexing, data audits; includes build-library-catalog-from-authored.mjs
 │   └── data/                    # MCP-side data shipped with the repo (not MC_SKILL_DATA)
@@ -182,7 +182,7 @@ To list what is already indexed on this machine: `node mcp-server/dist/cli.js ac
 **Configuring the local MCP server:**
 
 > Drop [AUTO_SETUP.md](./AUTO_SETUP.md) into your AI IDE / CLI. The agent should detect the host (Cursor / Claude Code / VS Code / Continue / Trae / OpenCode / Codex, etc.), build `mcp-server`, produce a config draft in that host's format, and **merge it only after you confirm** (it never overwrites silently).  
-> Requires **Node.js >= 22.5** (**22.5–22.12 and 23.0–23.3 must be started with `--experimental-sqlite`** — the built-in `node:sqlite` is only on by default from 22.13 / 23.4; the MCP/CLI entry point probes for that window before any sqlite use and, if it hits, prints a loud pointer and exits non-zero). Service name `MC-AI-Coding-Assistant-Tool` (stdio, 88 tools). With no MCP client available, use `node mcp-server/dist/cli.js`.
+> Requires **Node.js >= 22.5** (**22.5–22.12 and 23.0–23.3 must be started with `--experimental-sqlite`** — the built-in `node:sqlite` is only on by default from 22.13 / 23.4; the MCP/CLI entry point probes for that window before any sqlite use and, if it hits, prints a loud pointer and exits non-zero). Service name `MC-AI-Coding-Assistant-Tool` (stdio, 89 tools). With no MCP client available, use `node mcp-server/dist/cli.js`.
 >
 
 ## Mod testing loop: two halves
@@ -370,7 +370,7 @@ Three layers (details in the MCP tool sections **§7 / §7.5** below):
 
 ## Notes on using the MCP tools
 
-The local MCP service is named `MC-AI-Coding-Assistant-Tool` (**88** tools). Configure it with an **absolute path** and point `MC_SKILL_DATA` at this repo's `data/`. Requires **Node.js >= 22.5** (the Yarn mappings use the built-in `node:sqlite`; **22.5–22.12 and 23.0–23.3 need `--experimental-sqlite` in NODE_OPTIONS or the launch arguments, 22.13+ / 23.4+ do not**). The repo / Release **does not** include `node_modules`, so you must run `npm ci && npm run build` yourself (running `npm run build:yarn-sqlite` afterwards is recommended).
+The local MCP service is named `MC-AI-Coding-Assistant-Tool` (**89** tools). Configure it with an **absolute path** and point `MC_SKILL_DATA` at this repo's `data/`. Requires **Node.js >= 22.5** (the Yarn mappings use the built-in `node:sqlite`; **22.5–22.12 and 23.0–23.3 need `--experimental-sqlite` in NODE_OPTIONS or the launch arguments, 22.13+ / 23.4+ do not**). The repo / Release **does not** include `node_modules`, so you must run `npm ci && npm run build` yourself (running `npm run build:yarn-sqlite` afterwards is recommended).
 
 **Tests**: `cd mcp-server && npm test` (build + all unit suites: core / scripts / data audit / Wave BCD / localize / update / CLI / decompile / deep mixin / MCP protocol). CI semantics: the job env of all four workflows under `.github/workflows/` sets `MC_SKILL_SKIP_DOWNLOAD=1` uniformly, so download-based tools fail honestly in CI instead of silently hitting the network (that variable may only be relied on after `node test-decompile.mjs` passes inside `mcp-server`). The CLI also has two separate gates: `npm run test:cli:quick` (`mcp-server/scripts/assert-cli-quick.mjs`, fast tier, wired into the default gate chain) and `npm run test:cli:full` (`mcp-server/scripts/assert-cli-full.mjs`, full tier — the authoritative list is taken at run time: entry contract probes + real calls + per-item waiver reasons, **not run by default**).
 
@@ -1100,7 +1100,7 @@ These templates are **agent step checklists** (human in the loop): once the crea
 
 > `code-patterns` only covers the forge / fabric / neoforge trees (quilt / liteloader / rift / modloader / bedrock have no `code-patterns/` → 0 for that family); 6 of them are `archived` legacy entries — registered by name, but `read_knowledge_resource` returns `found:false` plus an archive note instead of a body.
 
-### Standalone CLI (`node mcp-server/dist/cli.js`, all 88 tools available)
+### Standalone CLI (`node mcp-server/dist/cli.js`, all 89 tools available)
 
 Flags-only (`--key value` / `--key=value` / bare `--flag` → true), output always wrapped as JSON `{success, tool, result|error}`, exit codes 0 = success / 1 = tool error / 2 = usage error. Global flags (not part of any tool schema): `--help`/`-h`, `--version`/`-V` (printed before the tool name, or when the whole command has no tool name; when `--version` follows the tool name it is the tool's own field, while `-V` in that position is treated as an unknown argument and exits 2), `--json` (does not change tool output, kept only for compatibility; it affects how `--help` is rendered in an interactive terminal), `--compact`, `--fail-on-error`, `--quiet` (silences progress lines and heartbeats; errors / warnings / migration hints still print), `--timeout <ms>` (exits 1 on expiry with `errorKind:"timeout"`, and the exit code still stays within 0/1/2), `--project <dir>`, `--file field=path`, `--raw [field]` (that field is passed completely literally; writing it bare disables the global `@` expansion), `--output-format json` (the canonical way to express an output-format intent; the only legal value today, anything else exits 2), `--stdin-json` (reads a whole argument object from stdin as a base, with same-named command-line fields always winning; under a TTY, and when it appears together with `@-` / `=-` / `--file f=-`, it always exits 2); every string field supports file input — `--crashReport @./latest.txt` reads a file, `--crashReport=-` / `@-` reads stdin (once per process), and `--file crashReport=./latest.txt` is equivalent, with single files and `--stdin-json` payloads sharing an ~8MB limit. **With `--fail-on-error`, `found:false` and a non-empty `errors[]` are also promoted to exit code 1**. `--fail-on-error=false` **turns that behaviour off** (do not read writing `=false` as enabling it). Boolean flags only accept `true/false/1/0/yes/no/on/off`; `--flag=junk` is rejected.
 
@@ -1111,7 +1111,7 @@ node mcp-server/dist/cli.js status --version 1.20.1            # server status (
 node mcp-server/dist/cli.js query --className net.minecraft.world.entity.LivingEntity --methodName getMaxHealth --version 1.20.1
 node mcp-server/dist/cli.js convert --from mcp --to mojang --name getHealth --owner net.minecraft.world.entity.LivingEntity '--descriptor=()F'
 node mcp-server/dist/cli.js update --action check
-node mcp-server/dist/cli.js list-tools                          # schemas for all 88 tools
+node mcp-server/dist/cli.js list-tools                          # schemas for all 89 tools
 ```
 
 **Generic dispatch (v0.2+)**: besides the commands above, **any MCP tool name can be called directly** (handlers are collected automatically, and missing arguments return the zod validation message):
@@ -1155,7 +1155,7 @@ The troubleshooting data lives in the dedicated tables below; this section is an
 - **`get_server_status` reports `buildStatus.buildRequired=true`**: `src` is newer than `dist`; rebuild with `npm run build`, then **reload MCP in the host** (compiling dist alone is not enough — the host process still runs the old code).
 - **A decompilation tool returns `TOOLCHAIN_MISSING`**: Java 17+ is required (VineFlower / tiny-remapper); install Temurin 17+ and restart MCP, or set `JAVA_HOME` per the returned instructions.
 - **`search_mod_code` returns `NOT_DECOMPILED`**: the sources have not been decompiled yet (not committed by design); follow the returned instructions to call `decompile_mod_jar` / `get_minecraft_source` first.
-- **No MCP client**: use the standalone CLI `node mcp-server/dist/cli.js <tool> --key=value` (all 88 tools are callable).
+- **No MCP client**: use the standalone CLI `node mcp-server/dist/cli.js <tool> --key=value` (all 89 tools are callable).
 
 ## Glossary
 

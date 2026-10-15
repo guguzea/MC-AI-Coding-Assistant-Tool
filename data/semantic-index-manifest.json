@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-10-14T16:12:34.646Z",
+  "built_at": "2026-10-15T03:29:29.627Z",
   "embedMode": "hybrid",
   "entries": [
     {
@@ -657,10 +657,22 @@
       "path": "paper-api_stable/paper-javadoc/stable/semantic/db.sqlite",
       "chunks": 3631,
       "embedded": 3169,
-      "built_at": "2026-10-14T16:12:34.581Z",
+      "built_at": "2026-10-15T03:29:29.359Z",
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
-      "sha256": "3f685b860e5683a68bdcfe6bc227334bc390fb883b328aa90977832e0f03df6d"
+      "sha256": "9aed191320fe75b351086f8ecceddd286321f67761c377b9e0efe535412e14cb"
+    },
+    {
+      "platform": "paper",
+      "version": "stable",
+      "source": "paper-docs",
+      "path": "paper_stable/paper-docs/stable/semantic/db.sqlite",
+      "chunks": 1155,
+      "embedded": 709,
+      "built_at": "2026-10-15T03:16:19.013Z",
+      "model": "Xenova/all-MiniLM-L6-v2",
+      "schemaVersion": "1",
+      "sha256": "b3dee34067ec3b703f8ffe0d1b2914e20db4fea7251d15c728f6e7fc3a157239"
     },
     {
       "platform": "quilt",
@@ -753,10 +765,10 @@
       "path": "spigot_stable/spigot-javadoc/stable/semantic/db.sqlite",
       "chunks": 2195,
       "embedded": 1789,
-      "built_at": "2026-10-14T16:10:43.445Z",
+      "built_at": "2026-10-15T03:27:27.356Z",
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
-      "sha256": "b99e7af8bd1650bb9c948a304350a9db551b64beed2b604d51e114321689ddd0"
+      "sha256": "e08eac9eca78278fb42ae5a23acf519535f8f15b9fd500cf150e1dbf06afafdb"
     }
   ]
 }

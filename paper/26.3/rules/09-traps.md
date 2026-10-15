@@ -1,0 +1,260 @@
+# 09 — 实测陷阱（**全部是 2026-10-15 本次真机跑踩出来的**）
+
+本文件与其余规则的区别：**每条都有一次实测的对照**，不是推断。判据都写明"怎么证伪"。
+
+## T1 · JDK 底线是 **25**，不是 21
+
+- **症状**：`bad class file: …/org/bukkit/Bukkit.class  class file has wrong version 69.0, should be 65.0`
+- **根因**：class file version 69 = Java 25（Java N ⇒ 44+N）
+- **证伪**：换 JDK 21 编 `paper-api-26.3.build.178-stable.jar` 必复现；换 JDK 25 即过
+
+## T2 · classpath **只放 `paper-api` 编不过**
+
+- **症状**：`class file for net.kyori.adventure.key.Namespaced not found`
+- **根因**：Paper 侧 `CommandSender` 继承 Adventure 的 `Audience`
+- **修**：加 `adventure-api` + `adventure-key`
+- **证伪**：只给 paper-api 编必复现（本次两次复现）
+
+## T3 · `level-type=minecraft:flat` + 空 `generator-settings` ⇒ 建世界报错
+
+- **症状**：`[ERROR]: No key layers in MapLike[{}]`，出现在 `No existing world data, creating new world` 的**下一行**
+- **根因**：flat 生成器的 codec 要 MapLike 里有 `layers` 键，空 `generator-settings` 给了 `{}`
+- **证伪（已做，两轮对照）**：
+  - 第 1 轮：`level-type=minecraft\:flat` + 空 settings ⇒ **有**该 ERROR
+  - 第 2 轮：撤掉 `level-type`（默认），**世界同样全新建**（日志仍有 `No existing world data, creating new world`）⇒ 该 ERROR **消失**
+  - ⇒ 是**配置**引起的，与插件/驱动无关。要设 flat 就同时给合法 `generator-settings`
+
+## T4 · `plugin.getLogger().info(中文)` 在 Windows 控制台**乱码**
+
+- **症状**：控制台显示 `[QA] �չ���ͣ����plan �� stop ���裩`
+- **根因**：走**平台控制台编码**，不是 UTF-8
+- **边界（重要）**：**证据件不受影响** —— `qa.log` 由 `Files.write(…, StandardCharsets.UTF_8)` 直写，实测 `[QA] DONE stop` 可读正常；判读器认的 `[QA] DONE` / `[QA] ERROR` 是 ASCII ⇒ **判读链无碍**
+- **修法方向**（未实施）：控制台只打 ASCII，或显式设 Java 的编码
+
+## T5 · 服务端发行件的取件口已换代
+
+- **症状**：`api.papermc.io/v2/...` → **HTTP 410**，body `{"ok":false,"error":"sunset","message":"This API version has been sunset and is no longer available…"}`
+- **修**：走 `https://fill.papermc.io/v3/projects/paper/versions/<ver>/builds`（实测 200，且带 `sha256`）
+- **实测值**：`paper-26.3-190.jar` · size `55152206` · sha256 `db0fd325…`（哈希比对 **True**）
+
+## T6 · 自测 driver 的 `stop` 语义：**停服 vs 不停服**是可观测差别
+
+- **第 1 轮**（driver `stop` 只收工、不停服）：runner 300 秒超时强杀 ⇒ **`java rc=null err=ETIMEDOUT`**（证据完整，但"跑完还挂着"不是能用的语义）
+- **第 2 轮**（`stop` 收工后 `runTaskLater(…, 20L)` 再 `Bukkit.shutdown()`）：**`java rc=0`**，日志出现 `Disabling …` → `… disabled`
+- **设计**：只有 `stop` 停服；**plan 跑完 / 判红不停服**（留现场给人查看）——差异是刻意的
+
+## T7 · 写**本仓生成器**时的坑（不是插件坑，但会让整档编不出来）
+
+- 生成器模块把 Java 源码放在 **TS 模板字面量**里 ⇒ **模板体内出现反引号会直接终止字面量**：实测 `error TS1005: ';' expected`，并连带 javac `reached end of file while parsing`。
+- 同理 `${…}` 会被当插值、`\n` 会被吃掉。
+- **处方**：模板体内一律不出现反引号；用 `(char) 92` / `(char) 34` 表达反斜杠与双引号；换行用 Java 侧 `System.lineSeparator()`。本次两处都是这么修的。
+
+## T8 · `dispatchCommand` **不触发** `ServerCommandEvent`（2026-10-15 实测 + 隔离实验）
+
+**现象**：驱动器 `cmd` verb 底层是 `Bukkit.dispatchCommand(consoleSender, "say probe-event")`。
+它**返回 `true`（命令真的执行了）**，但**已注册的 `ServerCommandEvent` 监听器什么都收不到**。
+
+**隔离实验**（关键 —— 只看上面一条无法区分"注册链坏了"还是"派发路径不同"）：
+把触发方式从 `dispatchCommand` 换成**手动** `Bukkit.getPluginManager().callEvent(new ServerCommandEvent(Bukkit.getConsoleSender(), "say probe-event"))`，
+**同一份监听器代码立刻收到**（marker `v-event.ok` = `ServerCommandEvent 收到: say probe-event`）。
+⇒ 排除"注册链坏了"，**差异只能归因于派发路径**。
+
+**第三条腿：把"控制台输入路径"从推断变成实测**（2026-10-15 二轮）。上一步只证明了"监听器没坏"，**还没证明**"控制台输入真的会派发它"。于是从**服务端 stdin** 敲一条命令（runner 直接 `child.stdin.write("say stdin-probe\n")`）：
+
+```
+[PROBE] PASS v-event-stdin :: ServerCommandEvent 收到（**stdin 控制台路径**）: say stdin-probe
+```
+
+⇒ **三条路各跑过一次**，结论才是被证过的：
+
+| 触发方式 | `ServerCommandEvent` 是否派发 |
+|---|---|
+| `Bukkit.dispatchCommand(consoleSender, …)`（＝ driver 的 `cmd` verb） | **否**（命令执行、返回 `true`，监听器收不到） |
+| **服务端 stdin**（控制台输入路径） | **是** ✔ |
+| 手动 `callEvent(...)` | **是** ✔ |
+
+⚠ **首跑踩到的坑（测试设计，值得记）**：stdin 探针原来在 `Done (` 之后 **3000ms** 才敲，而那个 plan 只有 10 步（≈0.5s 就跑到 `stop`）⇒ **命令到得太晚、服务端已在关停**，`v-event-stdin.ok` 没出现。**那是测试设计缺陷，不是"控制台输入不派发"的负结果** —— 改成 `Done` 后 200ms 敲入、并给 plan 加 `wait ticks=40` 留窗口后即命中。⇒ **"没验到"与"验到没有"必须分清：前者要查测试，后者才是结论。**
+
+**处方**：
+- **别拿 `cmd`（或任何 `dispatchCommand`）当事件触发器** —— 那是两条路。要验事件链，用 `callEvent` 或造真实触发源。
+- 反过来：**`cmd` 本身没问题**（返回 `true`、命令真执行），它只是**不是**事件触发器。
+
+**证伪方式**：起服 → plan 走 `cmd say probe-event` → 看 `v-event.ok` 出现否。**实测记录**：首轮**没出现**（判红），换手动 `callEvent` 后出现。
+
+## T9 · 协议级机器人连不上，但**真客户端可以**（2026-10-15：先判死、后突破）
+
+**结论（已更新）**：**别用"没有机器人"当"验不了"** —— 真客户端的路走得通，见下。
+
+### 第一半：协议级机器人（`mineflayer`）**确实连不上**
+
+```
+Server List Ping → version.name = Paper 26.3 · version.protocol = 777
+minecraft-data（mineflayer 的协议数据源）：26.1 = 775 · 1.21.11 = 774 · 1.21.9 = 773
+                                           26.3 只在版本**名**列表里、**没有协议数据**
+                                           ⇒ 已知最高 = 775
+```
+⇒ 服务端 **777** > 客户端数据 **775** ⇒ **连不进去**（服务端拒协议不匹配的登录，不是降级就行）。`mineflayer 4.39.0`（MIT）装在 `F:\MOD_TEST\bot`，**探针成功、机器人无数据**。
+
+### 第二半：**真 26.3 客户端可以**（这是突破）
+
+**来源**：本机 `F:\MC_GAME\neoforge-26.3` 是 NeoForge moddev 工程（`minecraft_version=26.3`），它的
+`build/moddev/artifacts/minecraft-patched-26.3.0.43-beta-merged.jar`（47.5 MB）**含 `net/minecraft/client/main/Main.class`** ⇒ **就是一个 26.3 客户端**。
+
+**起它踩到的四个坑（逐个都记着，下次一次过）**：
+
+| # | 坑 | 报错原文 / 现象 | 处方 |
+|---|---|---|---|
+| 1 | `gradlew.bat` **不在 PATH**，`cmd /c gradlew.bat` 也不解析 cwd 下相对可执行名 | `'gradlew.bat' is not recognized as an internal or external command` | 用**绝对路径** |
+| 2 | gradlew 默认吃 **JVM 8** | `Gradle requires JVM 17 or later to run. Your build is currently configured to use JVM 8.` | 显式 **`JAVA_HOME=G:\jdk25\…`**（NeoForge 26.3 要 JDK 25） |
+| 3 | 客户端进服参数：往 `build.gradle` 的 `client()` 后注入 `programArguments.addAll '--server','127.0.0.1','--port','25565'` **没能自动进服**（客户端仍停在主菜单） | 日志里**没有** `Connecting to…` | **让人手点进服**（或改用 `--quickPlayMultiplayer`）——**本档不依赖它**，人工点就够了 |
+| 4 | 服务端 `white-list=true` | 客户端弹 `You are not whitelisted on this server!` | `server.properties` 置 **`white-list=false`**（或把用户名写进 `whitelist.json`） |
+
+⚠ **第 4 条是我自己漏的**：写服务端实例配置时只动了 `level-type` 那几个，**漏了白名单**。⇒ **起服务端实例的必备配置清单**（照这张核）：`online-mode=false` · **`white-list=false`** · `level-type` · `generator-settings` · 以及**探针的 `-Dmcskill.probe.dir`**。
+
+### 起服务端实例的「必备配置清单」（免得再逐个踩）
+
+| 项 | 值 | 漏了会怎样 |
+|---|---|---|
+| `online-mode` | `false` | 离线客户端进不来（要真账号） |
+| **`white-list`** | **`false`** | **客户端被拒：`You are not whitelisted on this server!`** |
+| `level-type` + `generator-settings` | 要么都不设，要么都设对（见 **T3**） | 建新世界报 `No key layers in MapLike[{}]` |
+| `-Dmcskill.probe.dir` | 证据目录的**绝对路径** | marker 落到服务端工作目录，断言找不到（**与"功能不工作"是两回事**） |
+| `JAVA_HOME`（起客户端时） | `G:\jdk25\…` | Gradle 报 JVM 8 |
+
+## T9 的旧正文（保留：协议级机器人的取证细节）
+
+**结论**：想验「GUI 交互事件」「`PlayerJoinEvent`」这类**必须有玩家**的项，**本轮造不出来**。**不是没试，是试了发现路是堵的**：
+
+```
+Server List Ping → version.name = Paper 26.3 · version.protocol = 777
+minecraft-data（mineflayer 的协议数据源）：26.1 = 775 · 1.21.11 = 774 · 1.21.9 = 773
+                                           26.3 在版本**名**列表里，但 mcData("26.3") = 没有协议数据
+                                           ⇒ 已知最高 = 775
+```
+
+⇒ 服务端说 **777**、客户端数据最高 **775** ⇒ **连不进去**（且服务端会拒协议不匹配的登录，不是"降级连"就行）。
+
+**我试到哪一步**：`mineflayer 4.39.0`（**MIT** ✔ 通道 C 许可条件满足）已装到 `F:\MOD_TEST\bot`（依赖 91 包），并写了 Server List Ping 探针读出了上面那两行 —— **探针成功、机器人无数据**。
+
+**处方**：要验玩家类事件，只能等 mineflayer/`minecraft-data` 补 777 数据，或**用真客户端手连**（本仓不代跑客户端）。**别用"没有玩家"当"验证过了"** —— 那批项**仍是未核实**。
+
+## T10 · **UTF-8 BOM 会让 `build.gradle` 直接编不过**（2026-10-15 实测 · **我自己踩的**）
+
+**报错原文**（Gradle 配置阶段，**770ms 就失败**）：
+
+```
+Could not compile build file '…/build.gradle'.
+> startup failed:
+build file '…/build.gradle': 1: Unexpected character: '' @ line 1, column 1.
+1 error
+BUILD FAILED in 770ms
+```
+
+⇒ **`build.gradle` 开头多了一个 UTF-8 BOM（`EF BB BF`）**，而 Gradle 的 Groovy 解析器**不接受 BOM**。
+
+**我是怎么把它弄出来的**：清理注入时用了 **PowerShell 的 `Set-Content -Encoding UTF8`** —— **PowerShell 5.1 的 `-Encoding UTF8` 会写 BOM**（`-Encoding utf8NoBOM` 才是无 BOM 写法）。
+
+**症状为什么难认**：`gradlew runClient` 只吐 **1095 字节**就停，`java` 侧看不到、客户端日志不增长 —— **看起来像"客户端连不上"，实际是"构建脚本压根没编译过"**。我为此绕了三轮（先猜 `--server` 参数不对、再猜 Gradle daemon 被我的批量杀进程弄坏）。
+
+**处方**：
+- **改文本文件一律走 Node**（`readFileSync(f,'utf8')` → 去掉 `\uFEFF` → `writeFileSync(f, txt, 'utf8')`），**不要用 PowerShell 的 `Set-Content -Encoding UTF8`**；
+- 排查"客户端起不来"时，**先跑一次 `gradlew help`** —— 它只做配置阶段、几秒钟，能立刻把"构建脚本坏"与"别的问题"分开；
+- 判据：`gradlew help` 应 `BUILD SUCCESSFUL`；失败时**读 `What went wrong`**，不要停在"输出很短"这个表象上。
+
+## T9 附 · 「有玩家参与」的**无人值守**已做成（2026-10-15）
+
+**结论**：用 **`--quickPlayMultiplayer 127.0.0.1:25565`**（现代 MC 的自动进服参数）**可以无人值守**。实测日志：
+
+```
+[客户端] [minecraft/ConnectScreen]: Connecting to 127.0.0.1, 25565
+[服务端] System chat: Dev joined the game
+[服务端] Dev[/127.0.0.1:55926] logged in with entity id 108 at ([minecraft:overworld]27.3, 56.3, 44.9)
+[PROBE] PASS v-player-join · v-inv-open · v-inv-close       ← 三项全自动
+```
+
+| 事件 | 无人值守？ |
+|---|---|
+| `PlayerJoinEvent` | ✅ 能（`--quickPlayMultiplayer`） |
+| `InventoryOpenEvent` / `InventoryCloseEvent` | ✅ 能（插件开 / 定时关） |
+| **`InventoryClickEvent`** | ❌ **不能** —— 需要一次**点击**。三条路：① 人工点（判据已取得）② UI 自动化（**本档不做**）③ 客户端侧 mod 发点击包（可行，未做） |
+
+⚠ 注：`--server`/`--port` 那一对**在 moddev 的 `client` 块里没能自动进服**（客户端停主菜单、日志无 `Connecting`）；**`--quickPlayMultiplayer` 才行**。
+
+## 未核实（明写 —— 本档不含通识推断，凡没实测的一律在此）
+
+- **本档全部实测都在同一台机 / 同一网络**（Windows 11 + JDK 25 + Paper 26.3-190），**跨平台/跨版本的可复现性未核**。
+- **`gradlew runClient` 的自动进服只在一种参数下验过**（`--quickPlayMultiplayer`）；`--server`/`--port` 那一对在 moddev 的 `client` 块里**没能自动进服**（现象见 **T9 附**）。
+
+## T3 的**权威格式来源**（2026-10-16 补）
+
+不靠猜、也不靠 wiki：**服务端件里就带着第一方 datapack JSON**：
+
+```
+data/minecraft/worldgen/flat_level_generator_preset/classic_flat.json     （实测件内 10 个预设）
+```
+
+`classic_flat.json` 全文（**`paper-26.3.jar` 里原文**）：
+
+```json
+{
+  "display": "minecraft:grass_block",
+  "settings": {
+    "biome": "minecraft:plains",
+    "features": false,
+    "lakes": false,
+    "layers": [
+      { "block": "minecraft:bedrock",     "height": 1 },
+      { "block": "minecraft:dirt",        "height": 2 },
+      { "block": "minecraft:grass_block", "height": 1 }
+    ],
+    "structure_overrides": "minecraft:villages"
+  }
+}
+```
+
+⇒ **`generator-settings` 就填它的 `settings` 对象**（**不含外层 `display`**）。⚠ 我先前从 `javap` 的字段名**推**出来的最小形式（只有 `layers`+`biome`）**能跑通**，但**推不出** `features` / `lakes` / `structure_overrides` 这三个字段 —— **这正是"权威源"比"从签名推"多给的东西**。
+
+**件里其余 9 个预设**（可直接借用其 `settings`）：`bottomless_pit` · `desert` · `overworld` · `redstone_ready` · `snowy_kingdom` · `the_void` · `tunnelers_dream` · `water_world`（+ `visible` 标签列出前 9 个可见项）。
+
+## T3 的正解（**已验，2026-10-15**）
+
+**权威结构从哪来**：不是猜的、也不是抄的 —— 是 **`javap` 消费 `generator-settings` 的那个类**（`paper-26.3.jar` 里就有）：
+
+```java
+public static final Codec<FlatLevelGeneratorSettings> CODEC;
+private final List<FlatLayerInfo> layersInfo;   // ← 报错原文点名的必填键就是 "layers"
+private final Holder<Biome> biome;
+private boolean decoration;
+private final List<Holder<PlacedFeature>> lakes;
+// FlatLayerInfo：private final Holder<Block> block;   private final int height;
+```
+
+**用的 settings**（`server.properties` 里 `:` 要转义）：
+
+```
+level-type=minecraft\:flat
+generator-settings={"layers":[{"block":"minecraft:bedrock","height":1},{"block":"minecraft:dirt","height":2},{"block":"minecraft:grass_block","height":1}],"biome":"minecraft:plains"}
+```
+
+**判定（两个条件缺一不可）**：
+
+| 条件 | 实测 |
+|---|---|
+| 世界**真是全新建的**（否则测不到那段代码） | `No existing world data, creating new world` = **true** |
+| `No key layers` 消失 | **false**（不再出现） |
+
+⇒ **原「T3 的正解未验」关闭**。键名 `layers` 来自**报错原文**，`block`/`height`/`biome` 来自**字段名** —— 三者经这次跑一并验过。
+- **本档全部实测都在同一台机 / 同一网络**（Windows 11 + JDK 25 + Paper 26.3-190），**跨平台/跨版本的可复现性未核**。
+
+## 已核掉的旧未核实项（2026-10-15，逐条带证据）
+
+| 原项 | 结果 |
+|---|---|
+| **T1/T2**：更低版本 `paper-api` 能否在 JDK 21 上编 | ✅ **能**。取 `paper-api-1.21.4-R0.1-20250925.065901-231`（2.44 MB · 从 `repo.papermc.io` 的 SNAPSHOT metadata 解出精确件名），**JDK 21 编得过 `rc=0`**；JDK 25 也过。**JDK 17/16/8 全 `cannot access Bukkit`**（太老，读不了 class file） |
+| **T4**：控制台编码修法 | ✅ **部分**。给 JVM 传 **`-Dfile.encoding=UTF-8`** 后**日志里含可读中文**（判据：子进程 stdout 按 UTF-8 解出的文本含 CJK）。⚠ 这**不是"控制台显示"那一半** —— 我看到的 `��` 是 PowerShell 显示层 |
+| **T5**：替代取件口 | ✅ **已探**：`api.papermc.io/v2` → **HTTP 410 sunset** · `v3` → **403** · **`fill.papermc.io/v3` → 200**（**唯一可用口**）；`fill-data.papermc.io/` 根 **404**（只有具体对象路径可用）。**附带一条更普适的**：`net.md-5:bungeecord-chat` 在 **Maven Central 404**，**须走 `repo.papermc.io/repository/maven-public`**（实测 200 · 168,064 B）⇒ **Central 缺的 Paper 系依赖去 Paper repo 找** |
+| **T7**：加门抓"模板体内反引号" | ✅ **已建并挂链**：`mcp-server/scripts/assert-generator-template-safety.mjs`（已进 S4 `REAL_RUN_GATES`，S4 自印 P===K=82/82） |
+
+⚠ **T1/T2 的矩阵里有一行是我脚本的污染，不能当证据**：`javac(21) × paper-api-26.3 → rc=0` —— 那次 classpath 把**两个** paper-api 都放进去了，字典序让 `paper-api-1.21.4-old.jar` **先被解析** ⇒ 掩盖了"26.3 需 JDK 25"。**"26.3 需 JDK 25"这条结论不受影响，但那行无效。**
+
+> **T6 已移出未核实 —— 2026-10-15 真机两侧都跑出来了**：判红时**不停服**这条是**实测**的，不是"代码里写的"猜测。证据：探针首轮 `assert marker` 判红 ⇒ 驱动**没有**调停服、服务端一直挂着，直到 runner 的 240 秒超时把它强杀（`java rc=null err=ETIMEDOUT`）；第二轮四项全绿 ⇒ `stop` 生效 ⇒ **`java rc=0` 优雅退出**。**红/绿两侧的停服行为各跑出一次。**

@@ -101,7 +101,14 @@ const LEDGER_SUM = {
   // 顶层 51533→51516 / 31857→31858。**含页脚签名（`Additional resources`）的 chunk 254→1**；净 chunk 只减 17
   // 是因为其余 chrome 原本附着在正文 chunk 上（内容被清掉、chunk 本体还在）⇒ 「254」是污染面读数，不是待删块数。
   // 重签路径 = 本门 `MC_SKILL_INDEX_RELEDGER=1`，但该分支**只打印新台账不落盘** ⇒ 数字须按打印值手抄。
-  entries: 61, chunks: 51516, embedded: 31858,
+  // ⑧（2026-10-15 服务端面三个索引面建档）：`paper`（Paper 开发文档 67 页散文）+
+  // `paper-api`（Paper Javadoc 2116 类）+ `spigot`（Bukkit/Spigot Javadoc 1396 类）各建一个语义库。
+  // **来源已核**（门要求「先核来源再登记」）：三面都在 `SEARCH_DOC_PLATFORMS` 内、各有专属取数器
+  // （`fetch-paper-docs.mjs` / `fetch-spigot-javadoc.mjs`）、许可已记账于 `THIRD_PARTY_NOTICES.md`
+  // （`paper` 教程面 = CC BY-SA 4.0；两个签名面随上游 Paper/Spigot 条款）。
+  // 守恒校验：61+3=64 · 51516+3631+1155+2195=58497 · 31858+3169+709+1789=37525（与实扫逐字相符）。
+  // 重签路径 = `MC_SKILL_INDEX_RELEDGER=1`（该分支只打印不落盘 ⇒ 按打印值手抄，见 :103 既有口径）。
+  entries: 64, chunks: 58497, embedded: 37525,
   perPlatform: {
     "bedrock": { entries: 2, chunks: 15173, embedded: 4541 },
     "fabric": { entries: 27, chunks: 7935, embedded: 5898 },
@@ -109,8 +116,11 @@ const LEDGER_SUM = {
     "liteloader": { entries: 3, chunks: 464, embedded: 384 },
     "modloader": { entries: 3, chunks: 6, embedded: 2 },
     "neoforge": { entries: 9, chunks: 18877, embedded: 14169 },
+    "paper": { entries: 1, chunks: 1155, embedded: 709 },
+    "paper-api": { entries: 1, chunks: 3631, embedded: 3169 },
     "quilt": { entries: 6, chunks: 1784, embedded: 1349 },
     "rift": { entries: 1, chunks: 47, embedded: 29 },
+    "spigot": { entries: 1, chunks: 2195, embedded: 1789 },
   },
 };
 // A5 存量债务：有 chunks 但嵌入层为 0（语义检索静默退化成纯 FTS）

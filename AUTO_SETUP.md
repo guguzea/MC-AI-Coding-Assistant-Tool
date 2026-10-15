@@ -29,7 +29,7 @@
 |----|------|----------------|----------|
 | **Rules** | 写代码时的平台约束 | 打开对应模组工程 / 读 `AGENTS.md` | `forge\|fabric\|neoforge\|quilt\|liteloader\|rift\|modloader/<ver>/` 或扁平 `bedrock/` |
 | **Skills** | 斜杠命令 / Skill 面板里的任务手册 | IDE **扫描** `技能名/SKILL.md` | 用户全局或**模组项目**根，不是本仓库根 |
-| **MCP 工具** | 运行时查询文档 / API / 映射 / 诊断（**88** 个工具） | 宿主拉起 **stdio** 子进程 `node dist/index.js` | 各 IDE 自己的 MCP 配置文件 |
+| **MCP 工具** | 运行时查询文档 / API / 映射 / 诊断（**89** 个工具） | 宿主拉起 **stdio** 子进程 `node dist/index.js` | 各 IDE 自己的 MCP 配置文件 |
 
 本仓库 `mcp-server/` 提供的是 **本地 stdio MCP**，不是 HTTP/SSE 远程服务。配置里必须是 `command` + `args`（或等价的 command 数组），**不要**写成 `url`。
 
@@ -40,7 +40,7 @@
 ## 目标
 
 1. 编译本仓库的本地 MCP Server。
-2. 按**当前宿主**生成并合并 MCP 配置，使 Agent 能调用 **88** 个工具。
+2. 按**当前宿主**生成并合并 MCP 配置，使 Agent 能调用 **89** 个工具。
 3. （可选）按 Step 6 把平台 Skill 装到用户全局目录或**模组项目**（不要装进 `MC_skill` 仓库根）。
 
 工具覆盖：
@@ -118,7 +118,7 @@ for (const f of process.argv.slice(1)) {
 
 **配置写到哪里：**
 
-- **推荐默认：用户级 / 全局**，这样打开任意模组工程都能用这 88 个工具。`args` 与 `MC_SKILL_DATA` 仍指向 **本仓库**（`MC_skill`），不要改成模组工程路径。
+- **推荐默认：用户级 / 全局**，这样打开任意模组工程都能用这 89 个工具。`args` 与 `MC_SKILL_DATA` 仍指向 **本仓库**（`MC_skill`），不要改成模组工程路径。
 - **项目级**（`.mcp.json`、`.cursor/mcp.json`、`.trae/mcp.json` 等）只在用户明确要求「只给这个仓库用」时写。
 - **不要**把带本机绝对路径的 MCP 配置提交进 `MC_skill` 仓库。
 - 用户的**模组工程**可以放项目级 MCP（路径仍指向本仓库的 `dist/index.js` 与 `data/`）。
@@ -163,7 +163,7 @@ npm run build:yarn-sqlite
 ```bash
 cd mcp-server
 node dist/cli.js --version                      # 应打印版本号（当前 package.json = 2.0.0）
-node dist/cli.js list-tools --names-only        # 应回 88 个工具名
+node dist/cli.js list-tools --names-only        # 应回 89 个工具名
 node dist/cli.js activate_platform_pack --action=list   # 应回本机已建档的平台 / 版本
 node dist/cli.js diagnose_data_paths            # 各平台应为 found；empty / not_found = MC_SKILL_DATA 没指对
 ```
@@ -452,7 +452,7 @@ Cline 常见：`%APPDATA%\Code\User\globalStorage\saoudrizwan.claude-dev\setting
    - forge / fabric / neoforge 至少一侧为 `found`（未下载的平台可以是 `not_found`，要如实告诉用户）。
 3. **`list_doc_versions`**（或当前平台的 `list_*_versions`）应返回版本数组。
 
-可选：工具列表里应能看到本服务，数量 **88**（实测 `list-tools` = 88；**工具数与顺序一律以 `list-tools` 为准，不按文件分解计数** —— schema 声明与注册可跨文件，per-file 口径对不齐，见 `mcp-server/test-cli.mjs` 的 F6 判据）。对不上先 `npm run build`，不要改服务名。
+可选：工具列表里应能看到本服务，数量 **89**（实测 `list-tools` = 89；**工具数与顺序一律以 `list-tools` 为准，不按文件分解计数** —— schema 声明与注册可跨文件，per-file 口径对不齐，见 `mcp-server/test-cli.mjs` 的 F6 判据）。对不上先 `npm run build`，不要改服务名。
 
 > **这一步验的是环境，不是功能。** 环境通了不代表模组能玩：交付任何模组改动前，须按根 `AGENTS.md`「游玩测试要求（交付门槛）」把 L0 构建 → L1 结构静态 → L2 数据 → L3 GameTest → L4 真机冒烟 → L5 场景 → L6 服务端/多人 → L7 回归 逐层测到与改动面相称的那一层，并把证据（`exit-code.txt` / `state.json` / 截图 / 日志）写进交付底稿的「怎么验」块（表单 `REPORT-FORMAT.md`，落点 `DELIVERY_LOG.md`）。给人读的摘要表见 `README.md`「测试要求：交付前必须测到什么程度」。
 
@@ -607,7 +607,7 @@ npx @modelcontextprotocol/inspector node dist/index.js
 
 ## CLI 兜底（宿主没有 MCP，或配置尚未生效）
 
-88 个工具均可：
+89 个工具均可：
 
 ```bash
 cd mcp-server
@@ -664,4 +664,4 @@ node dist/cli.js <工具名> --key=value
 - 服务名必须是 **`MC-AI-Coding-Assistant-Tool`**
 - 本服务是 **stdio**，不要配成 HTTP `url`
 - 验收靠调用 `get_server_status` / `diagnose_data_paths`，不要只描述点击路径
-- 无 MCP 宿主时用 CLI，不要假装已经连上 88 个工具
+- 无 MCP 宿主时用 CLI，不要假装已经连上 89 个工具

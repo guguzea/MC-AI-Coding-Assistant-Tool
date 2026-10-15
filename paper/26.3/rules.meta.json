@@ -1,0 +1,40 @@
+{
+  "face": "server",
+  "platform": "paper",
+  "asOfVersion": "26.3.build.178-stable",
+  "upstream": {
+    "javadoc": "https://jd.papermc.io/paper/26.3/",
+    "docs": "https://docs.papermc.io/",
+    "server": "https://fill.papermc.io/v3/projects/paper"
+  },
+  "carrier": "runServer",
+  "lifecycle": "plugin.yml + JavaPlugin#onEnable",
+  "notTheModFace": {
+    "why": "载体 runServer（无客户端）/ API 是 Bukkit 抽象层（不碰 net.minecraft.*）/ 生命周期 plugin.yml+onEnable / 逐档 javap 改写表零适用 —— 四处都对不上，故本面不挂进 8 棵模组平台树。",
+    "mapping": "本档对应模组面的 00–10 规则树，但**条款集不同**：只写服务端有的东西（事件/命令/物品栏/权限/调度器/plugin.yml/配置/PDC/Adventure），不写 Mixin/注册表/客户端渲染。"
+  },
+  "evidenceDiscipline": {
+    "rule": "每条规则的一行出处都指到本仓语料；语料证不出的东西**明写未核实**，不写成通识。",
+    "signatureFaces": [
+      "data/spigot_stable/spigot-javadoc/stable/processed/<fqcn 扁平化>.md（Spigot/Bukkit，asOfVersion 26.3-R0.1-SNAPSHOT）",
+      "data/paper-api_stable/paper-javadoc/stable/processed/（Paper 专有类，asOfVersion 26.3.build.178-stable）"
+    ],
+    "tutorialFace": "data/paper_stable/paper-docs/stable/（67 页，**CC BY-SA 4.0**）",
+    "noRecopy": "本档**不复述教程原文**（避免 ShareAlike 义务外溢），只写结论 + 出处指针；要读原文用 search_docs platform=paper。",
+    "corpusIsSignatureOnly": "⚠ 两个签名面的 processed 页**只有签名、没有描述散文**（实测：org_bukkit_event_EventHandler.md 无描述段）⇒ 凡『某某该怎么用』的道理，本档只有在**本次实测**过的情况下才写，且标明测试条件。**但教程面（data/paper_stable/paper-docs/）是 PaperMC 官方文档全文，有散文** —— 语义类问题应去那里找，别因为签名面没描述就断言『本仓无从核实』。⚠ 又一条：**签名页只列本类声明的成员** —— `World` 页搜 `PersistentDataContainer` 0 命中，而它其实**继承** `PersistentDataHolder`（真机实测 `World instanceof PersistentDataHolder` = true）。**「签名页查不到」≠「没有这个方法」。**",
+    "realMachineVerified": "2026-10-15 真机侧验证（Paper 26.3-190 / JDK 25）：探针 `VerifyProbe` 注入插件 `onEnable`，**每个通过的检查写一个 marker 文件**，再由服务端 driver 的 `assert marker` 逐项断言（marker 缺席 = 该检查没过）。**首轮四项全过**（二轮 +5 项，见 `serverRound2`）：权限（4 个 PermissionDefault 真值表 + Permission ctor/getDefault/getChildren）· 物品栏（createInventory/setItem+getItem 往返/getHolder=null/addItem 溢出返回 1 项）· PDC（World instanceof PersistentDataHolder / STRING+BOOLEAN 往返 / remove）· 事件派发（registerEvents + @EventHandler + callEvent）。证据：`exit-code.txt=0` · `rounds.jsonl ok:true steps=11 done=10` · 四个 `*.ok` marker。探针与 runner 是**一次性验证件**，落在授权根 `F:/MC_GAME/paper-26.3/` 下，**不进仓库**。",
+    "compileDeps": "服务端插件**真构件编译**的 classpath 实测是 **6 件**（不是 1 件）：`paper-api` + `adventure-api` + `adventure-key` + **`org.jetbrains:annotations`** + **`guava`** + **`net.md-5:bungeecord-chat`**。这些件是探针**逐个逼出来**的（每碰一类新 API 就暴露一件）：`@NotNull` 注解 → annotations；`Material.getItemAttributes` 的 `Multimap` 返回类型 → guava；`sendMessage(Component)` → **`cannot access BaseComponent`** → bungeecord-chat。**取件口**：`paper-api`/`bungeecord-chat` 走 `repo.papermc.io/repository/maven-public`（**bungeecord-chat 在 Maven Central 是 404**），Adventure 系走 Maven Central。JDK 底线 **25**（paper-api 26.3 的 class file 69.0）；**但更低版本的 `paper-api` 用 JDK 21 也编得过**（实测 `1.21.4-R0.1-…-231` + JDK 21 → rc=0）。",
+    "serverRound2": "2026-10-15 真机侧验证**第二轮**（Paper 26.3-190 / JDK 25）—— 专攻首轮说『造不出来』的那批，**+5 项全过**：① `plugin.yml` 的 `permissions:`/`default:` 字面量（声明 `true`/`op` 两条，运行时**从 PluginManager 问**回来：均注册、映射正确）② **自发派发**（`ServerTickStartEvent` 每 tick 派发，**全程无玩家**）③ **PDC 跨重启**（**两阶段**：阶段1 写值 + 优雅停服；阶段2 新进程同世界读回 `cross-restart` ✔）④ **stdin 控制台路径派发**（runner 直接写 `child.stdin`）—— 给 T8 补上『控制台输入真的会派发』这条直接证据 ⑤ T8 三条路完整对照（dispatchCommand ✘ / stdin ✔ / callEvent ✔）。**没验成的**：stdin 探针首跑没命中，查出来是**测试设计缺陷**（`Done` 后 3s 才敲，而 plan 仅 10 步 ≈0.5s 已跑到 `stop`）—— 改成 200ms + plan 加 `wait ticks=40` 后命中。**「没验到」≠「验到没有」。**",
+    "serverRound3": "2026-10-15 真机**无人值守**批次（真 26.3 客户端自动进服）—— 七条结论：① **无人值守做成**（`--quickPlayMultiplayer 127.0.0.1:25565` ⇒ 客户端自动连服，实测日志 `Connecting to 127.0.0.1, 25565`）② `PlayerJoinEvent` / `InventoryOpenEvent` / `InventoryCloseEvent` **无人工步骤自动派发** ③ **op 玩家判定**（控制台 `op Dev` 后 `isOp=true` 且 `default: op` 的权限变 true，与非 op 那次形成**两向对照**）④ **异步入口**（回调线程名 `Craft Scheduler Thread - N - PaperQaServer`，主线程名 `Server thread`）⑤ **`TileState` 的 PDC 跨重启**（两阶段读回 `tilestate-cross-restart`；`World`/`Chunk` 同轮重验）⑥ **`default: permission` 验到不成立**（Bukkit 判 invalid、权限不注册，有 ERROR 原文与三条栈帧）⑦ `sendMessage(Component)` 发到控制台日志的**落点 = true**。工具链副产物：`build.gradle` 被 PowerShell 的 `Set-Content -Encoding UTF8` 写入 **UTF-8 BOM** ⇒ Gradle 报 `Unexpected character: '' @ line 1, column 1`（见 `rules/09-traps.md` 的 **T10**）。",
+    "noClientForVersion": "⚠ **这个版本上没有可用的机器人客户端**（2026-10-15 实测，见 `rules/09-traps.md` 的 **T9**）：Server List Ping 读到 `version.protocol = **777**`，而 mineflayer 的协议数据源 `minecraft-data` 已知最高 = **775**（26.1）—— `26.3` 只在版本**名**列表里、**没有协议数据** ⇒ **连不进去**（服务端会拒协议不匹配的登录，不是降级就能连）。⇒ 一切**需要真玩家**的项（`PlayerJoinEvent` · `InventoryOpenEvent`/`ClickEvent`/`CloseEvent` · GUI 交互 · 权限对真人玩家的判定）**仍无法验**，**不得读作「验过了」**。已试到：`mineflayer 4.39.0`（MIT，通道 C 许可条件满足）装在 `F:/MOD_TEST/bot`，依赖 91 包；Server List Ping 探针**成功**（读出了 777）、机器人**无数据**。",
+    "searchTrap": "⚠⚠ **在 `data/**` 下按目录搜索会返回假的 0 命中 —— 根因是我的调用姿势（少给 `glob`），不是搜索工具坏了**（2026-10-15 四组对照实测）。对照（同一目录 `data/paper_stable/paper-docs/stable/processed`，同一词 `Bukkit`）：① 不传 `glob` → **0 命中**；② `glob=\"*.md\"` → **44 命中**；③ `glob=\"*\"`（裸星号）→ **44 命中**。反证「不是无 glob 就坏」：对 **`paper/26.3/rules`** 不传 `glob` 搜 `未核实` → **10 命中正常**。⇒ **变量只有 `glob`（与 pattern 是否含中文/`|` 无关），且只在 `data/**` 下发作**（`data/` 下疑似有默认过滤/整目录剪枝；**具体机制未核实**，我只报实测）。**规矩两条**：① 在 `data/**` 下做目录搜索**必须显式给 `glob`**（`*.md` 或 `*`）；② **做否定性断言前必须逐文件复核** —— 我据那次假 0 命中把『MONITOR 只能观测』写成『本仓无从核实』，是错的：官方在 `api__event-api__event-listeners.md:100-103` 有逐字说明。"
+  },
+  "measuredThisSession": {
+    "asOf": "2026-10-15",
+    "jdkFloor": "JDK 25（paper-api 的 class file version = 69.0 ⇒ 69−44 = 25；JDK 21 编报 class file has wrong version 69.0, should be 65.0）",
+    "classpath": "至少三件：paper-api + adventure-api + adventure-key（只放 paper-api 时报 class file for net.kyori.adventure.key.Namespaced not found）",
+    "pluginYmlApiVersion": "api-version: '26.3' 被 Paper 26.3-190 接受（真机跑，无加载期报错）",
+    "serverJarSource": "只能走 fill.papermc.io/v3；api.papermc.io/v2 已 sunset（HTTP 410，body {\"ok\":false,\"error\":\"sunset\"}）",
+    "playtestDriverVerified": "generate_playtest_server_driver 已到**真机跑通**档：真 Paper 26.3-190 起服 → 插件加载并 onEnable → driver 跑完 10 步 → exit-code=0 / qa.log 含 [QA] DONE / rounds.jsonl ok:true"
+  }
+}

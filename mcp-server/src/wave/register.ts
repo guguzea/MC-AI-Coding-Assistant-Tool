@@ -54,6 +54,7 @@ import { playtestIntent } from "../playtest-intent/index.js";
 import { callPlaytestBridge } from "../playtest-bridge/index.js";
 import { inspectPlaytestMulti } from "../playtest-multi/index.js";
 import { generatePaperPlugin } from "../generators/paper-plugin.js";
+import { generatePlaytestServerDriver } from "../generators/playtest-server-driver.js";
 
 // ── Wave 工具 inputSchema（导出供 CLI list-tools / schema 驱动解析复用）────────
 export const queryRegistrySchema = z.object({
@@ -235,6 +236,10 @@ export const inspectPlaytestMultiSchema = z.object({
   expectMarkers: z.array(z.string()).optional().describe("会合 marker 名（相对 <evidenceRoot>/sync/）；给了就逐个判 present|absent"),
   authorization: z.enum(["sandbox", "dev_instance"]).optional(),
 });
+export const generatePlaytestServerDriverSchema = z.object({
+  evidenceDir: z.string().describe("证据目录（**绝对路径**，须在授权根内）；与客户端 driver 同语义"),
+  packageName: z.string().optional().describe("Java 包名，默认 playtest（与客户端 driver 一致，判读器无感）"),
+});
 export const generatePaperPluginSchema = z.object({
   pluginName: z.string().describe("插件名（同时作 plugin.yml 的 name 与主类名），须是合法 Java 标识符"),
   packageName: z.string().describe("Java 包名，如 com.example.myplugin"),
@@ -286,6 +291,8 @@ export const INSPECT_PLAYTEST_EVIDENCE_DESCRIPTION =
   "读游玩自测证据目录（exit-code.txt / state.json / [QA] 段 / calls.jsonl / 截图），每件三态 present|absent|unreadable —— 缺件不得读成「没有失败」。须 MC_SKILL_PLAYTEST_ALLOW=1 + MC_SKILL_PLAYTEST_ROOT（目标 realpath 必须在根内）。可选 logsDir 委派 inspect_runtime；不并入 inspect_runtime 的只读禁令面。";
 export const INSPECT_PLAYTEST_MULTI_DESCRIPTION =
   "多客户端**联合判读**（多会话；单客户端看 inspect_playtest_evidence）：给 clients[]（{id,evidenceDir}）或 evidenceRoot（扫它的直接子目录当客户端；**保留名 sync/ 跳过并在 autoSkipped 里留痕** —— 跳过不静默）⇒ 逐客户端三态 + 联合判绿 + 锚点 + 会合 marker。判绿三条**全要满足**：① 客户端数 ≥1（不给 = 没测，不判绿）；② 每个客户端 exit-code=0、state.json 与 qa.log 都 present、rounds.jsonl 末轮 ok≠false；③ 给了 expectMarkers 时每个 marker 都在 <evidenceRoot>/sync/ 下 present。缺件一律读作 absent|unreadable，**不得**读成「没有失败」。任一客户端目录 realpath 越出授权根 ⇒ 整体拒（不逐客户端放行）。须 MC_SKILL_PLAYTEST_ALLOW=1 + MC_SKILL_PLAYTEST_ROOT。会合原语在 driver 侧：剧本写 touch <共享目录绝对路径>/<name> 与 waitfile <同路径> max=<ticks>。";
+export const GENERATE_PLAYTEST_SERVER_DRIVER_DESCRIPTION =
+  "生成**服务端面**（Paper/Bukkit）游玩自测驱动。与客户端 driver **证据契约逐字复用**（state.json / exit-code.txt **仅 0|1** / qa.log / rounds.jsonl / plan.txt，同名同目录 ⇒ inspect_playtest_evidence 与 inspect_playtest_multi **零改动**），但**执行面另造**：服务端没有客户端 ⇒ move/goto/break/gui/jump/look/shot/scan/fly/land/newworld/intent 等玩家级原语**一概不生成**（生成了就是死代码；传了**判红**、不静默跳过），取代它们的是**服务端观测面**。只支持 wait/mark/stop/touch/waitfile/cmd/assert（assert 仅 player_count / world_count / marker，未知 kind 判红）。注入点是**新造**的（本仓此前零实现）：JavaPlugin#onEnable + Bukkit.getScheduler().runTaskTimer（同步调度、主线程）。每个 Bukkit API 名都对着本仓签名语料核过（data/spigot_stable/spigot-javadoc/stable/processed/*.md）；其中 dispatchCommand throws CommandException，生成物里已捕获。**只吐文本**、默认 dry-run，落盘由 write=true 控制。证据等级 = **结构壳**（未编译未运行；真构件编译需同版本 paper-api 件，本生成器不代下）。**不声称**进入 PLAYTEST_VERIFIED_TIER —— 那条目带 mappings 字段，服务端面无 mappings，不硬塞。";
 export const GENERATE_PAPER_PLUGIN_DESCRIPTION =
   "生成 Paper 插件工程骨架 —— **服务端面，独立于模组面**（载体 gradlew runServer 而非 runClient；API 是 Bukkit/Paper 抽象层而非 net.minecraft.*；生命周期 plugin.yml+onEnable 而非 @Mod+事件总线；逐档 javap 改写表对本面**零适用**）。**只返回文本**（files 映射）、默认 dry-run，落盘由 write=true 控制 —— **不写仓库、不建平台树、不进任何模组面 scaffold 门**。已核实：依赖坐标 io.papermc.paper:paper-api 在 repo.papermc.io 真实存在（maven-metadata.xml HTTP 200）。未核实：① 版本串（maven <latest>=26.3-pre-2.build.0-alpha 与 Javadoc asOfVersion=26.3.build.178-stable 形状不同）⇒ paperApiVersion 不给则生成解析期报错的占位符；② JDK 主版本；③ plugin.yml 的 api-version（默认留 TODO-未核实）。**不产出二进制**（gradle wrapper jar 须使用者自备）。证据等级 = 结构壳，未构建未运行；返回的 notes[] 逐条列出未核实项。";
 export const PLAYTEST_BRIDGE_DESCRIPTION =
@@ -1144,6 +1151,18 @@ export function registerWaveExtensions(server: McpServer): void {
       jsonResult(maybeWriteGeneratorResult(generatePaperPlugin(a))),
   );
 
+  // 服务端面 driver —— 与客户端 driver 的关系是「证据契约复用、执行面另造」。
+  server.registerTool(
+    "generate_playtest_server_driver",
+    {
+      title: "Generate playtest driver (server-side / Paper)",
+      description: GENERATE_PLAYTEST_SERVER_DRIVER_DESCRIPTION,
+      inputSchema: generatePlaytestServerDriverSchema,
+    },
+    async (a): Promise<CallToolResult> =>
+      jsonResult(maybeWriteGeneratorResult(generatePlaytestServerDriver(a))),
+  );
+
   server.registerTool(
     "playtest_intent",
     {
@@ -1229,6 +1248,7 @@ export const waveToolSchemas: Array<{ name: string; description: string; inputSc
   { name: "inspect_playtest_evidence", description: INSPECT_PLAYTEST_EVIDENCE_DESCRIPTION, inputSchema: inspectPlaytestEvidenceSchema },
   { name: "inspect_playtest_multi", description: INSPECT_PLAYTEST_MULTI_DESCRIPTION, inputSchema: inspectPlaytestMultiSchema },
   { name: "generate_paper_plugin", description: GENERATE_PAPER_PLUGIN_DESCRIPTION, inputSchema: generatePaperPluginSchema },
+  { name: "generate_playtest_server_driver", description: GENERATE_PLAYTEST_SERVER_DRIVER_DESCRIPTION, inputSchema: generatePlaytestServerDriverSchema },
   { name: "playtest_intent", description: PLAYTEST_INTENT_DESCRIPTION, inputSchema: playtestIntentSchema },
   { name: "playtest_bridge", description: PLAYTEST_BRIDGE_DESCRIPTION, inputSchema: playtestBridgeSchema },
 ];

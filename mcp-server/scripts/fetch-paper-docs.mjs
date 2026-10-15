@@ -15,8 +15,11 @@
  * **不得与 MIT 代码许可混写**。要绕开 ShareAlike 就只有"只做签名面"这一条路。
  *
  * ## 落点口径
- * Paper 文档**不按 MC 版本分目录**（就是"当前"文档）⇒ 落 `data/paper_main/`，
- * **不套** 现有 8 平台的 `data/<platform>_<ver>/` 形状（硬套 = 造一条假版本轴）。
+ * Paper 文档**不按 MC 版本分档**（就是"当前"文档）⇒ 落 `data/paper_stable/paper-docs/stable/`
+ * （伪版本 `stable`；先例 = `data/bedrock_stable/bedrock-docs/stable/`）。**目录名必须服从
+ * `versionDataDir` 的 `<platform>_<ver>/<source>/<ver>` 拼法**（`src/docs-platform/fabric/store.ts:420`；
+ * 平台目录由 `resolvePlatformDataDir` 按 `${platform}_${ver}` 扫，`src/docs-platform/store.ts:87-92`）
+ * ⇒ 是 `paper_stable` 不是 `paper_main`，store 因此**零特判**。
  * 版本面另由 Javadoc（`jd.papermc.io/paper/`，实测 302 需跟跳转）承担。
  *
  * ## 用法
@@ -146,13 +149,14 @@ if (!EXTRACT) {
 }
 
 // ── 落盘：**照 bedrock_stable 的形状**（非版本伪版本 + FabricDocStore 可读）────────
-//   data/paper_main/paper-docs/main/
+//   data/paper_stable/paper-docs/stable/
 //     index-l0.json      ← 7 字段，与 data/forge_1.20.1/forge-docs/1.20.1/index-l0.json 同集
 //     processed/<id>.md  ← 正文；FabricDocStore 用「id 去 <version>/ 前缀」拼 processed/<bare>.md
 //     （semantic/ 本脚本不产 —— 语义索引由 npm run build:semantic-index 补）
-const dest = OUT ? path.resolve(OUT) : path.join(CACHE, "paper_main");
+//   meta.json / symbols.json 落 `--out` 那一层（即 data/paper_stable/），不在 <source>/<ver>/ 下
+const dest = OUT ? path.resolve(OUT) : path.join(CACHE, "paper_stable");
 // 伪版本：Paper 文档不分 MC 版本（先例 = bedrock 的 "stable"）。
-// ⚠ **必须是 `stable`，不能自造字面量**：`fabric/store.ts:307` 的正文前缀剥离正则是
+// ⚠ **必须是 `stable`，不能自造字面量**：`src/docs-platform/fabric/store.ts:307` 的正文前缀剥离正则是
 // `/^(?:\d+\.\d+(?:\.\d+)?|stable)\//`，白名单只有「数值版本」与 `stable`。
 // 用别的字面量（实测想过 `main`）⇒ 正文会被算成 `processed/main/<slug>.md` 而读空。
 const VERSION = "stable";
@@ -203,7 +207,7 @@ fs.writeFileSync(
   JSON.stringify(
     {
       platform: "paper",
-      shape: "paper_main（不跟 MC 版本 —— Paper 文档是「当前」文档；版本轴由 Javadoc 承担）",
+      shape: "paper_stable（不跟 MC 版本 —— Paper 文档是「当前」文档；版本轴由 Javadoc 承担）",
       storeLayout: `${SUBDIR}/${VERSION}/`,
       source: "https://github.com/papermc/docs",
       fetchedWith: "fetch-paper-docs.mjs",
@@ -235,7 +239,7 @@ fs.writeFileSync(
   JSON.stringify(
     {
       platform: "paper",
-      shape: "paper_main（不跟 MC 版本 —— Paper 文档是「当前」文档；版本轴由 Javadoc 承担）",
+      shape: "paper_stable（不跟 MC 版本 —— Paper 文档是「当前」文档；版本轴由 Javadoc 承担）",
       source: "https://github.com/papermc/docs",
       fetchedWith: "fetch-paper-docs.mjs",
       fetchedAt,

@@ -7,13 +7,17 @@
  * 两者不同源、不同口径，**不要混成一个 index**：正文面回答"怎么写插件"，签名面回答"这个方法到底叫
  * 什么、参数是什么、哪个版本有"。本仓红线「禁止凭训练记忆补 API 名」靠的就是这一面。
  *
- * ## 落点（照 `data/forge_javadoc/<ver>/` 的既有先例，**无 subdir、无重复版本层**）
- *   data/<face>_javadoc/<ver>/
- *     raw/<pkg>/<Class>.html        ← 原样留底（**只许 .md/.html**，不许 tmp 残件）
- *     processed/<pkg>/<Class>.md    ← frontmatter(source/sourceType/fetchedWith/fetchedAt) + 签名正文
+ * ## 落点（必须服从 `versionDataDir` 的 `<platform>_<ver>/<source>/<ver>` 拼法 —— **不是** `data/<face>_javadoc/<ver>/`）
+ *   data/<face>_stable/<face>-javadoc/stable/
+ *     ← 现役两棵：`data/paper-api_stable/paper-javadoc/stable/` · `data/spigot_stable/spigot-javadoc/stable/`
+ *     raw/<包路径 `.`→`_` 连接>_<Class>.html   ← 原样留底（**只许 .md/.html**，不许 tmp 残件）
+ *     processed/<同 index id 去 `stable/` 前缀>.md ← frontmatter(source/sourceType/fetchedWith/fetchedAt/asOfVersion) + 签名正文
  *     index-l0.json                 ← 字段集与 forge_javadoc 同：id/version/label/url/tags/priority/sectionCount
- *     meta.json                     ← 本脚本加：出处、as-of 版本串、计数
+ *     meta.json                     ← 本脚本加：出处、as-of 版本串、计数（**现役两棵树未入库本文件**，重跑即补回）
  *     _orphan-report.json           ← 孤儿留痕（有 raw/ 必有它，见 assert-javadoc-orphan-record 的判据）
+ *   ⚠ **扁平唯一名，不拍嵌套目录**：包路径 `.`→`_`、嵌套类保留 `.`（同包名同类会让嵌套布局撞 A2 判据，
+ *   见 `assert-corpus-faithfulness.mjs:116-117`）；store 的 `processedFileFor` 只剥版本前缀
+ *   （`src/docs-platform/fabric/store.ts:307`）⇒ id 与磁盘相对路径必须同名同形。
  *
  * ## 为什么用 `type-search-index.js` 而不是解 HTML 目录
  * Javadoc 9+ 自动生成 `type-search-index.js`（**紧凑 JSON**）：
@@ -24,7 +28,7 @@
  * - **Paper**：URL 自带版本轴（`jd.papermc.io/paper/26.3/`，实测 200；`1.21.4` / `1.20.6` / `1.20.1` 亦 200）。
  * - **Spigot**：URL **没有**版本轴（`/spigot/1.21.4/` → 实测 **404**）。版本串只能从页面自身读 ——
  *   `overview-summary.html` 实测含 **`26.3-R0.1-SNAPSHOT`**（`deprecated-list.html` 同）。
- *   ⇒ 本脚本**从页面读版本并写进 meta.json 的 `asOfVersion`**，作为该档的钉值；档目录名用 `--version` 显式指定，
+ *   ⇒ 本脚本**从页面读版本并写进 meta.json 的 `asOfVersion`**，作为该档的钉值；**上游真实版本串**由 `--version` 显式给，
  *   且**必须与读到的 asOfVersion 一致**（不一致即拒，防"目录名写着 A、正文其实出自 B"—— 这正是
  *   `assert-javadoc-build-provenance.mjs` 第 5-7 行记的那类不可核缺陷）。
  *
@@ -32,7 +36,18 @@
  *   node scripts/fetch-spigot-javadoc.mjs --list                    # 只出清单与计数
  *   node scripts/fetch-spigot-javadoc.mjs --packages org.bukkit     # 限定包（探针用）
  *   node scripts/fetch-spigot-javadoc.mjs --face paper --base https://jd.papermc.io/paper/26.3 \
- *        --version 26.3 --out ../../data/paper_javadoc/26.3 --fetch
+ *   # 现役两棵树的重跑形态（伪版本 `stable` + 真实版本串留每页 `asOfVersion`）：
+ *   node scripts/fetch-spigot-javadoc.mjs --face paper --base https://jd.papermc.io/paper/26.3 \
+ *        --version 26.3.build.178-stable --pseudo-version stable \
+ *        --out ../../data/paper-api_stable/paper-javadoc/stable --fetch
+ *   node scripts/fetch-spigot-javadoc.mjs --face spigot \
+ *        --version 26.3-R0.1-SNAPSHOT --pseudo-version stable \
+ *        --out ../../data/spigot_stable/spigot-javadoc/stable --fetch
+ *   # 两个版本位分工（2026-10-15 拆分）：`--version` = **上游真实版本串**，只与页面 `asOfVersion` 双向钉；
+ *   #   `--pseudo-version` = **档目录名 + index 的 `id`/`version` 前缀**（缺省 = `--version`）。**注意**：缺省值也要过白名单，
+ *   #   而 Spigot/Paper 的真实串（`26.3-R0.1-SNAPSHOT` / `26.3.build.178-stable`）**不在**白名单内 ⇒ 抓本仓两个面时**必须**显式给
+ *   #   `--pseudo-version stable`（不给就 fail-closed 拒，而不是像 2026-10-14 之前那样写出 store 读不到的 id）。
+ *   #   后者必须落在 store 的前缀白名单（数值版本 / `stable`）内，且仓库内落点目录名必须与它同名 —— 两条都 fail-closed。
  *   # --fetch 才落盘；不加 = dry-run（只打印，不写任何文件、不建目录）
  */
 
@@ -56,7 +71,8 @@ const opt = (f) => {
 
 const FACE = opt("--face") || "spigot";
 const BASE = (opt("--base") || (FACE === "paper" ? "https://jd.papermc.io/paper/26.3" : "https://hub.spigotmc.org/javadocs/spigot")).replace(/\/+$/, "");
-const VERSION = opt("--version"); // 必填：档目录名 + 与 asOfVersion 双向钉
+const VERSION = opt("--version"); // 必填：**上游真实版本串**，只与页面 asOfVersion 双向钉
+const PSEUDO = opt("--pseudo-version") || VERSION; // 档目录名 + index 的 id/version 前缀（缺省 = VERSION；带后缀的真实串过不了白名单 ⇒ 那时必须显式给）
 const OUT = opt("--out");
 const FETCH = has("--fetch");
 const LIST = has("--list");
@@ -83,7 +99,7 @@ async function get(url) {
 }
 
 console.log(`面 = ${FACE} · base = ${BASE}`);
-if (!VERSION && !LIST) throw new Error("必须显式给 --version（档目录名；会与页面读到的版本串双向对钉）");
+if (!VERSION && !LIST) throw new Error("必须显式给 --version（上游真实版本串；会与页面读到的 asOfVersion 双向对钉）");
 
 // ── ① 类清单：来自站点自身的 type-search-index.js ───────────────────────────────
 /**
@@ -215,9 +231,25 @@ if (LIST || !FETCH) {
 }
 if (!OUT) throw new Error("--fetch 必须同时给 --out（显式落点）");
 
+/**
+ * PSEUDO（档目录名 + index 的 id/version 前缀）必须落在 store 的前缀白名单里。
+ * 白名单**逐字照抄** `src/docs-platform/fabric/store.ts:307` 的正则：只认「数值版本」与 `stable`。
+ * 违反的后果不是报错而是**静默读空**（id 前缀剥不掉 ⇒ `processedFileFor` 拼出 `<pseudo>/…md`）。
+ */
+const STORE_PREFIX_WHITELIST = /^(?:\d+\.\d+(?:\.\d+)?|stable)$/;
+if (!STORE_PREFIX_WHITELIST.test(PSEUDO)) {
+  throw new Error(
+    `--pseudo-version=${PSEUDO} 不在 store 白名单（数值版本 / stable）⇒ 会写出读不到的 id（src/docs-platform/fabric/store.ts:307）。`,
+  );
+}
+
 const dest = path.resolve(OUT);
 if (!dest.startsWith(REPO)) {
-  console.log(`⚠ 落点在仓库外（${dest}）—— 正式语料应落 data/<face>_javadoc/<ver>/`);
+  console.log(`⚠ 落点在仓库外（${dest}）—— 正式语料应落 data/<face>_stable/<face>-javadoc/stable/`);
+} else if (path.basename(dest) !== PSEUDO) {
+  // 仓库内落点必须与 id 前缀同名：`versionDataDir` 拼死 `<platform>_<ver>/<source>/<ver>`
+  // （`src/docs-platform/fabric/store.ts:420`）⇒ 目录名与 id 前缀不一致 = "目录写着 A、正文出自 B"的不可核档。
+  throw new Error(`落点目录名 ${path.basename(dest)} 与 --pseudo-version=${PSEUDO} 不一致（仓库内两处必须同名）。`);
 }
 const rawDir = path.join(dest, "raw");
 const procDir = path.join(dest, "processed");
@@ -297,8 +329,8 @@ async function fetchOne(t) {
     rawRel: `${pkgPath}/${cls}.html`,
     procRel: `${pkgPath}/${cls}.md`,
     entry: {
-      id: `${VERSION}/${pkgPath.replace(/\//g, "_")}/${cls}`,
-      version: VERSION,
+      id: `${PSEUDO}/${pkgPath.replace(/\//g, "_")}/${cls}`,
+      version: PSEUDO,
       label: `${t.p}.${cls}`,
       url,
       tags: [FACE, "javadoc", t.p],
@@ -369,7 +401,7 @@ fs.writeFileSync(
   path.join(dest, "_orphan-report.json"),
   JSON.stringify(
     {
-      version: VERSION,
+      version: PSEUDO,
       producerRev: PRODUCER_REV,
       count: orphan.length,
       orphans: orphan,
@@ -391,7 +423,7 @@ fs.writeFileSync(
     {
       face: FACE,
       base: BASE,
-      version: VERSION,
+      version: PSEUDO,
       asOfVersion,
       fetchedWith: PRODUCER_REV,
       fetchedAt,
@@ -405,7 +437,8 @@ fs.writeFileSync(
       },
       note:
         "签名面（API 名/签名/出处）。教程正文面另在 data/paper_stable/paper-docs/，两者不同源、不要混成一个 index。" +
-        "本档可**分块续抓**（--offset/--limit），index 与孤儿报告皆按整档重算 ⇒ 任意顺序重跑都收敛。",
+        "本档可**分块续抓**（--offset/--limit），index 与孤儿报告皆按整档重算 ⇒ 任意顺序重跑都收敛。" +
+        "复跑现役形态：--version <上游真实串> --pseudo-version stable --out data/<face>_stable/<face>-javadoc/stable。",
     },
     null,
     2,

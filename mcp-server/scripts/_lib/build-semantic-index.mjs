@@ -63,6 +63,9 @@ const SOURCES = {
   // （`data/<platform>_<ver>/<source>/<ver>/`），所以直接加白名单即可被 `--all` / `--platform=` 认到。
   // 注意：本面是**签名面**（每页是类声明 + 成员签名列表），语义编码对「按名字找类」帮助有限、
   // 对「按意图找类」（如"怎么给玩家发消息"→ `Player#sendMessage`）才有增量。
+  // 服务端面**教程层**（Paper 开发文档 67 页）。正文是**散文** ⇒ 语义检索对它收益最大
+  // （与下面两个签名层相反：签名面每页是类声明 + 成员签名列表，精确名字命中为主）。
+  paper: ["paper-docs"],
   spigot: ["spigot-javadoc"],
   "paper-api": ["paper-javadoc"],
 };

@@ -148,6 +148,20 @@ export const SCRIPT_WRITE_GUARD_NON_WRITERS = new Map([
   // `$MC_SKILL_CACHE || os.tmpdir()` 的一次性目录，仓库全程只读**（与上面那批 selftest 门同范式）。
   // 依据锚定那个落点表达式：一旦改成仓库内路径，本豁免即失效（重签或改道 write-guard 的 scratch* 出口）。
   ["mcp-server/scripts/assert-playtest-driver-compiles.mjs", /process\.env\.MC_SKILL_CACHE \|\| os\.tmpdir\(\)/],
+  // 2026-10-15：**服务端面**真构件编译腿。与上一条同范式、同落点机制 —— 夹具（生成的 Java、javac 输出）
+  // 一律落在 `$MC_SKILL_CACHE || %TEMP%/mc-skill-cache` 的一次性目录，**仓库全程只读**
+  // （`paper-api` 构件件也只从本机 cache 目录读，不下载、不写仓库）。
+  // 依据锚定那个落点表达式：一旦改成仓库内路径，本豁免即失效（重签或改道 write-guard 的 scratch 出口）。
+  ["mcp-server/scripts/assert-playtest-server-driver-compiles.mjs", /process\.env\.MC_SKILL_CACHE \|\| join\(process\.env\.TEMP/],
+  // 2026-10-15：服务端面**规则载体**的出处门。`--selftest` 造 5 篇假规则 + 1 个假语料面来验四条判据，
+  // 全部落在 **OS tmpdir 的 "server-rules-" 前缀**下（`finally` 里 `rmSync` 收）；**门模式对仓库全程只读**
+  // （只 `readFileSync` 扫 `paper/<ver>/rules/*.md` 与三个语料面）。依据正则锚定那个 `mkdtempSync` 前缀：
+  // 夹具落点一旦改到仓库内，本豁免即失效（重签或改道 write-guard）。
+  ["mcp-server/scripts/assert-server-rules-integrity.mjs", /mkdtempSync\(join\(tmpdir\(\), "server-rules-"/],
+  // 2026-10-15：生成器**模板安全**门（改用编译器判定后）。`--selftest` 造一个"模板体里写反引号"的
+  // 临时 `.ts` 交给 tsc 编，落点锚定 `mkdtempSync(join(tmpdir(), "gen-tsc-"))`；主流程对仓库**只读**
+  // （`tsc --noEmit` 不写盘）。落点若改到仓库内，本豁免即失效。
+  ["mcp-server/scripts/assert-generator-template-safety.mjs", /mkdtempSync\(join\(tmpdir\(\), "gen-tsc-"/],
 ]);
 /**
  * 会写仓库但本轮不收口的债务（并发代理 owns / 自带显式 --write 闸门未改道 / 新文件只靠 --force）。
@@ -156,12 +170,13 @@ export const SCRIPT_WRITE_GUARD_NON_WRITERS = new Map([
 export const SCRIPT_WRITE_GUARD_DEBT = new Map([
   // 2026-10-14：服务端面**签名层**取数器（Spigot/Bukkit 与 Paper Javadoc）。
   // **默认 dry-run**（`if (LIST || !FETCH) { …process.exit(0) }`），只有显式 `--fetch` 才落盘；
-  // 产物是 `data/<face>_javadoc/<ver>/{raw,processed,index-l0.json,_orphan-report.json}` 语料，
+  // 产物是 `data/<face>_stable/<face>-javadoc/stable/{raw,processed,index-l0.json,meta.json,_orphan-report.json}` 语料，
+  // （现役两棵 = `paper-api_stable/paper-javadoc/stable/` · `spigot_stable/spigot-javadoc/stable/`），
   // 与本仓 `fetch-forge-javadoc.js` 同一条生产者线。依据锚定 `--fetch` 这道闸门：
   // 闸门一被删（变成默认落盘）本豁免即失效，逼改道 write-guard。
   ["mcp-server/scripts/fetch-spigot-javadoc.mjs", /"--fetch"/],
   // 2026-10-14：服务端面语料提取器。**默认 dry-run**（`if (!EXTRACT) process.exit(0)`），只有显式
-  // `--extract` 才落盘；未走 write-guard 的 `emit` 是有意为之 —— 它的产物是 `data/paper_main/**` 语料，
+  // `--extract` 才落盘；未走 write-guard 的 `emit` 是有意为之 —— 它的产物是 `data/paper_stable/**` 语料，
   // 与本仓既有 fetch-*-docs 同一条生产者线（那些也都在本清单/豁免面内）。依据锚定 `--extract` 这道闸门：
   // 闸门一被删（变成默认落盘）本豁免即失效，逼改道 write-guard。
   ["mcp-server/scripts/fetch-paper-docs.mjs", /"--extract"/],
