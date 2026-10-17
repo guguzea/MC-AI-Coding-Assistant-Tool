@@ -111,7 +111,26 @@ Bukkit.getConsoleSender().sendMessage(net.kyori.adventure.text.Component.text("P
 
 ## 未核实（明写）
 
-- **发给玩家 / `ChatType.Bound` 签名消息 / 可点击·悬停组件**仍未验 —— 已验的是「发到**控制台日志**」（见上「真机落点」段）与 `MiniMessage` 的**解析**（见下）。
+- **`ChatType.Bound` 签名消息 / 可点击·悬停组件**仍未验 —— 已验的是「控制台日志」（见上「真机落点」段）、`MiniMessage` 的**解析**（见下）与「**发给真人玩家**」（见下）。
+
+## 发给真人玩家（**已真机核，2026-10-16 · 判据在客户端侧**）
+
+探针在 `PlayerJoinEvent` 里发两条：
+
+```java
+p.sendMessage(Component.text("PROBE-CHAT-PLAIN-LANDED"));                                   // 明文组件
+p.sendMessage(MiniMessage.miniMessage().deserialize("<red>PROBE-CHAT-MM-LANDED</red>"));    // MiniMessage 解析后
+```
+
+**客户端日志**逐字（`auto-client.log`）：
+
+```
+[09:27:39] [Render thread/INFO] [minecraft/ChatComponent]: [System] [CHAT] PROBE-CHAT-PLAIN-LANDED
+[09:27:39] [Render thread/INFO] [minecraft/ChatComponent]: [System] [CHAT] PROBE-CHAT-MM-LANDED
+```
+
+⇒ **两条都到达了真人客户端**（`<red>…</red>` 的标签被解析后发出，客户端只看到纯文本内容）⇒ 「发给玩家」与「`MiniMessage` 渲染」两项**一并验成**。
+⚠ **判据放在客户端侧**是刻意的：服务端只能说"我发出去了"，**只有客户端日志能证明"到了"**（实测服务端日志里**没有**这两条 ⇒ 拿服务端日志当判据会得到假否定）。
 
 ## `MiniMessage` 解析行为（**已核，2026-10-15 · 纯 JVM，不用起服**）
 

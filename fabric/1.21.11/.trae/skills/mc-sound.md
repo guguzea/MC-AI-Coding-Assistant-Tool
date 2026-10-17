@@ -20,7 +20,17 @@ mappings: yarn
 
 - 音频：**OGG Vorbis** + **单声道（Mono）**（页面警告：多声道影响距离处理）。
 - 放置：`resources/assets/<modid>/sounds/<name>.ogg`；`sounds.json` 位于 `resources/assets/<modid>/sounds.json`；`subtitle` 关联 `lang` 语言文件。
-- 注册（页内代码块原文）：`Registry.register(BuiltInRegistries.SOUND_EVENT, Identifier.fromNamespaceAndPath(MOD_ID, "metal_whistle"), SoundEvent.createVariableRangeEvent(Identifier.fromNamespaceAndPath(MOD_ID, "metal_whistle")))`——本版 **`Identifier.fromNamespaceAndPath` + `SoundEvent.createVariableRangeEvent`** 口径（1.21.1 页为 `SoundEvent.of` 且代码块截取缺损）。
+- 注册：上游页给的是 **mojmap 层**写法，本档两套名都留（各有用）——按你工程的 `mappings` 行取其中一套，**两套不可混在同一个工程里**。
+- **mojmap 层**（上游页原文；适用 `loom.officialMojangMappings()` 工程）：`Registry.register(BuiltInRegistries.SOUND_EVENT, Identifier.fromNamespaceAndPath(MOD_ID, "metal_whistle"), SoundEvent.createVariableRangeEvent(Identifier.fromNamespaceAndPath(MOD_ID, "metal_whistle")))`
+- **Yarn 层**（适用 `net.fabricmc:yarn` 工程，即本仓 scaffold 的钉法）：`Registry.register(Registries.SOUND_EVENT, Identifier.of(MOD_ID, "metal_whistle"), SoundEvent.of(Identifier.of(MOD_ID, "metal_whistle")))`
+- ⚠️ 同一工程只编译它 `mappings` 那一层（实测：Yarn 工程编不过官方名，mojmap 工程编不过 Yarn 名）。
+
+| 上游页（mojmap）名 | Yarn 等价 | 依据 |
+| --- | --- | --- |
+| `BuiltInRegistries` | `Registries`（另有 `BuiltinRegistries`，**小写 i**） | `net.minecraft.registry.Registries` |
+| `Identifier.fromNamespaceAndPath(a, b)` | `Identifier.of(a, b)` | javap @ yarn 1.21.11+build.6 |
+| `SoundEvent.createVariableRangeEvent(id)` | `SoundEvent.of(id)` | javap @ yarn 1.21.11+build.6 |
+
 - 条目多时用 helper 类：一个方法注册全部、一个方法初始化。
 
 ## 播放（using-sounds 页核实）
@@ -60,4 +70,4 @@ IF 流式/自定义声道/混音 → 三路线机制对照 + search_fabric_docs�
 
 ## 下一步
 
-- `get_doc_full`（三个 sounds 页 id）/ `search_fabric_docs`（version=1.21.11）复核后输出示例；禁止抄 1.21.1 旧口径（`SoundEvent.of`/`SoundSource` 页名）或 26.1.2 专属措辞冒充本版。
+- `get_doc_full`（三个 sounds 页 id）/ `search_fabric_docs`（version=1.21.11）复核后输出示例；上游页是 mojmap 层，本档保留其官方名并同给 Yarn 等价——**按工程 `mappings` 行取用、两套不要混**；也不得拿 26.1.2 专属措辞（其 `Identifier` 是去混淆后的官方名）冒充本版。

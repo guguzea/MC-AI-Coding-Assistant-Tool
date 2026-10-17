@@ -55,7 +55,7 @@
       "type.setRegistryName": "04-entity.mdc:194"
     },
     "forge/1.15.2": {
-      "SimpleCookingRecipeBuilder": "07-datagen.mdc:329",
+      "SimpleCookingRecipeBuilder": "07-datagen.mdc:332",
       "doesNotBlockMovement": "02-block.mdc:97",
       "event.getRegistry": "02-block.mdc:164",
       "getRegistry": "02-block.mdc:164",

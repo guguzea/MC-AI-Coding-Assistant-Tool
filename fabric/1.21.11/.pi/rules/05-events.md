@@ -26,7 +26,7 @@ description: 05 — 事件系统
 | `EventPriority` | Fabric **Phase**（`Event.DEFAULT_PHASE`），不是 Forge 的优先级枚举 |
 | `event.setCanceled(true)` | 返回 `ActionResult` / `boolean`；不是 `CanceledEvent` |
 
-不要编造 `EntityEvents` / `PlayerTickEvents` / `EntityTickEvents` / `AttackEvents`。`BlockEvents` / `ItemEvents` **不是**编造名：`net.fabricmc.fabric.api.event.player.BlockEvents` / `.ItemEvents` 经 `query_loader_api` 命中（found:true）。本档可写的具名成员只有其嵌套回调 `BlockEvents$UseItemOnCallback.useItemOn` / `BlockEvents$UseWithoutItemCallback.useWithoutItem` / `ItemEvents$UseOnCallback.useOn` / `ItemEvents$UseCallback.use`（返回均为 `class_1269` = `ActionResult`）。两者的 `Event` 静态常量名在本仓库三条 oracle 下都不可枚举（`query_loader_api` 摘要 schema 不存字段；yarn 映射表不含 `net/fabricmc/**`，Fabric API 自身不混淆；本档 fabric-docs / fabric-wiki 0 命中）→ 禁止写 `BlockEvents.<常量>` 之类的示例，拿不到名字就留 `// TODO(未核实)`。
+不要编造 `EntityEvents` / `PlayerTickEvents` / `EntityTickEvents` / `AttackEvents`。`BlockEvents` / `ItemEvents` **不是**编造名：`net.fabricmc.fabric.api.event.player.BlockEvents` / `.ItemEvents` 经 `query_loader_api` 命中（found:true）。本档可写的具名成员：嵌套回调 `BlockEvents$UseItemOnCallback.useItemOn` / `BlockEvents$UseWithoutItemCallback.useWithoutItem` / `ItemEvents$UseOnCallback.useOn` / `ItemEvents$UseCallback.use`（返回均为 `class_1269` = `ActionResult`），以及 `Event` 静态常量 `BlockEvents.USE_ITEM_ON` / `BlockEvents.USE_WITHOUT_ITEM`、`ItemEvents.USE_ON` / `ItemEvents.USE`（javap @ `fabric-events-interaction-v0-5.3.6+3434d6d95d.jar` 逐字核实；该版本为 intermediary 轴）。
 
 ---
 
@@ -50,7 +50,7 @@ IF 处理方块破坏
 
 IF 处理方块右键（含尝试放置）
   → UseBlockCallback.EVENT
-  → 真正「方块已放置」后逻辑通常要 Mixin Block.place；BlockEvents 的 Event 常量名不可枚举 // TODO(未核实)：不要写 BlockEvents.<常量> 示例
+  → 真正「方块已放置」后逻辑通常要 Mixin Block.place；`BlockEvents` 只有 `USE_ITEM_ON`（手里有物品右键）与 `USE_WITHOUT_ITEM`（空手右键）两个常量，没有「已放置」事件
 
 IF 处理物品使用（不对准方块）
   → UseItemCallback.EVENT
@@ -211,7 +211,7 @@ modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_versi
 - ❌ 在客户端 lambda 里改服务端世界数据 — 用 `world.isClient` 区分，写世界只在服务端
 - ❌ 忘记处理返回值 — `ActionResult` / `boolean` 决定是否取消或消费（本档 Yarn 无 `TypedActionResult`：映射表 `classes` 0 行；口径同 `03-item.mdc` 与 `verified-api-1.21.11.md`）
 - ❌ 把 `PlayerBlockBreakEvents.BEFORE` 当成 `ActionResult` — 它是 `boolean`
-- ❌ 用 `PlayerTickEvents` — 不是本档 Fabric API（`BlockEvents` / `ItemEvents` 是真类，但本档可写的只有其嵌套回调 `BlockEvents$UseItemOnCallback` / `$UseWithoutItemCallback` / `ItemEvents$UseOnCallback` / `$UseCallback`；两者的 `Event` 常量名未核实，禁止给常量名示例）
+- ❌ 用 `PlayerTickEvents` — 不是本档 Fabric API（`BlockEvents` / `ItemEvents` 是真类：嵌套回调 `BlockEvents$UseItemOnCallback` / `$UseWithoutItemCallback` / `ItemEvents$UseOnCallback` / `$UseCallback`；常量 `BlockEvents.USE_ITEM_ON` / `USE_WITHOUT_ITEM`、`ItemEvents.USE_ON` / `USE` 已核实）
 
 ## 扩展点
 

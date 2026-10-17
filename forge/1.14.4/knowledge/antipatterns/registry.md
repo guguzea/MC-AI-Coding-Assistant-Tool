@@ -56,7 +56,7 @@ ITEMS.register("my_block", () -> new BlockItem(MY_BLOCK.get(), ...));
 ```java
 // ❌ 忘记
 public static final DeferredRegister<Block> BLOCKS =
-    DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);
+    new DeferredRegister<>(ForgeRegistries.BLOCKS, MOD_ID);
 public static final RegistryObject<Block> MY_BLOCK = BLOCKS.register("my_block", ...);
 // mod 构造函数中没有：BLOCKS.register(modEventBus)
 ```

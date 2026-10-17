@@ -115,7 +115,7 @@ IF 需要客户端触发服务端逻辑
 
 服务端推送 → 客户端更新：
   SynchedEntityData（实体属性）
-  getUpdateTag() / ClientboundBlockEntityDataPacket.create()（方块数据）
+  getUpdateTag() / getUpdatePacket()（方块数据；构件实证：1.17.1 official 的 ClientboundBlockEntityDataPacket 无 create()）
   SimpleChannel 消息（自定义数据）
 
 客户端查询 → 服务端响应：

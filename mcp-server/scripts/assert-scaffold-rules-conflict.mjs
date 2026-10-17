@@ -362,9 +362,12 @@ const LEDGER = {
   // 3062→3065（+3 场合型丢弃行，来自这四族 `.cursor/rules` 侧的实证行改写——modloader 1.6.4
   // 04/05 勘误行、quilt 1.21.1 05-events 解禁行等）。技能面不在本门扫描面（只读 `.cursor/rules`，
   // 见头注），改技能不会动此数；crossLines / verdictSkipped / 判死分布 / conflicts 0 全部不变。
+  // 2026-10-16 重钉（全档构件核验轮，forge 1.15.2/1.17.1/1.18.2 + fabric 1.14.4/1.16.5 内容修复）：
+  // verdictSkipped 2341→2354（+13 行；来自这五档 `.cursor/rules` 侧把 MCP 层名改成 official 名 +
+  // 加「构件实证」注释行）；per-pack 判死分布与 conflicts 0 全部不变（reledger 实算逐档一致）。
   crossLines: 455,
   contextualSkipped: 3065,
-  verdictSkipped: 2341,
+  verdictSkipped: 2354,
   banned: 67,
   conflicts: 0,
 };

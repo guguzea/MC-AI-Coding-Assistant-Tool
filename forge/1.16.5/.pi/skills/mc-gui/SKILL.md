@@ -100,7 +100,9 @@ public class ClientSetup {
     @SubscribeEvent
     public static void init(FMLClientSetupEvent event) {
         event.enqueueWork(() ->
-            ScreenManager.registerFactory(MY_CONTAINER.get(), MyScreen::new)
+            // 构件实证（javap net.minecraft.client.gui.ScreenManager, 1.16.5-36.2.34_mapped_official_1.16.5）：
+            // 方法名是 register(...)；❌ registerFactory 是 MCP 层名（只有 1.14.4 / 1.15.2 用），本包编不过
+            ScreenManager.register(MY_CONTAINER.get(), MyScreen::new)
         );
     }
 }
@@ -150,7 +152,7 @@ int value = this.menu.dataSlots.get(0);
 
 ## 常见错误
 
-- ❌ `ScreenManager.registerFactory()` 放在服务端 → `FMLClientSetupEvent` 已经是客户端专用
+- ❌ `ScreenManager.register()` 放在服务端 → `FMLClientSetupEvent` 已经是客户端专用
 - ❌ `canInteractWith` 始终返回 true → 添加距离检查
 - ❌ 在 Container 构造函数中直接修改世界数据 → 使用 `detectAndSendChanges()`
 

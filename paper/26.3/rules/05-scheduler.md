@@ -54,7 +54,21 @@ Bukkit.getScheduler().runTask(plugin, (BukkitTask t) -> { /* … */ });
 
 ## 未核实
 
-- `runTaskTimerAsynchronously` 这一支本档未单独试（只试了 `runTaskAsynchronously`）。
+- **周期性异步任务**在服务端停服/插件禁用时的**收尾语义**（未取消的 task 会怎样）本档未核。
+
+## 异步**定时器**（**已真机核，2026-10-16**）
+
+```java
+Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, (BukkitTask task) -> { … }, 1L, 1L);
+```
+
+实测（marker `v-scheduler-async-timer.ok`）：
+
+```
+runTaskTimerAsynchronously 已回调第 **2** 次（重复成立）· 线程 = Craft Scheduler Thread - 3 - PaperQaServer（主线程 Server thread）
+```
+
+⇒ 这一支**重复执行**成立、且**同样不在主线程**（与上一节的 `runTaskAsynchronously` 同判据）。
 
 ## 异步入口（**已真机核，2026-10-15**）
 

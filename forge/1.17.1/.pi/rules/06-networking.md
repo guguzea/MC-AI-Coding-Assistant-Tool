@@ -101,7 +101,7 @@ IF 实现实体状态同步（属性修改）
   → 优先考虑 SynchedEntityData
 
 IF 实现方块实体数据同步
-  → 使用 getUpdateTag() / ClientboundBlockEntityDataPacket.create() 机制
+  → 使用 getUpdateTag() / getUpdatePacket() 机制（构件实证：javap @1.17.1-37.1.1_mapped_official 的 ClientboundBlockEntityDataPacket 无 create()）
   → 在 `getUpdateTag()` / `handleUpdateTag()` 中处理
 
 IF 需要玩家交互确认（如打开门）

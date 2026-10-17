@@ -182,9 +182,32 @@ public void generateItemModels(ItemModelGenerators itemModelGenerator) {
 - `BlockFamily` 分支：`blockStateModelGenerator.family(ModBlocks.RUBY_BLOCK).generateFor(ModBlocks.RUBY_FAMILY);`
 - 自定义模型走 `ModelTemplate` + `TextureSlot` + `TextureMapping`（参考文件逐字）：
   `new ModelTemplate(Optional.of(Identifier.fromNamespaceAndPath(ExampleMod.MOD_ID, "block/vertical_slab")), Optional.empty(), TextureSlot.BOTTOM, TextureSlot.TOP, TextureSlot.SIDE)`；
+  ⚠️ `Identifier.fromNamespaceAndPath(..)` 是 **mojmap 层**写法；本档 `scaffold` 钉 yarn，同处写 `Identifier.of(ExampleMod.MOD_ID, "block/vertical_slab")`（`fromNamespaceAndPath` ↔ `of`，javap @ yarn 1.21.11+build.6）。
   映射 `new TextureMapping().put(TextureSlot.TOP, ModelLocationUtils.getModelLocation(block, "_top"))`；页内说 `TextureMapping.cube()` 会把所有 `TextureSlot` 绑到同一个标识符。
 - 变体派发：页内说用 `MultiVariantGenerator.dispatch()` 造 `BlockModelDefinitionGenerator`，把各变体装进 `PropertyDispatch` 再 `.register()`（可控 uvlock / 旋转）。这三个类名在本档参考文件的 import 里逐字出现过。
-- ⚠️ 页面**正文措辞**与本档**参考代码**不完全一致：页内还点了 `registerSingleton`、`registerCubeAllModelTexturePool`、`BlockModelGenerators.registerSimpleItemModel()` 三个名字，它们在本次读到的参考文件里**未出现**。要用之前先 `get_fabric_doc_full(version="1.21.11", id="develop_data-generation_block-models")` 或核对本机 `BlockModelGenerators` 源码 ⇒ 现状按 `// TODO(未核实)` 处理。
+- ⚠️ 页面**正文措辞**与本档**参考代码**不完全一致，已按本档构件核实三个名字：① `registerSingleton(Block, TexturedModel.Factory)` 在 Yarn `BlockStateModelGenerator` 上是 **public**（可用）；② `registerCubeAllModelTexturePool(Block)` 也存在，返回 `BlockStateModelGenerator.BlockTexturePool`（该嵌套类在装了 FAPI 的 loom 工程里为 public，可直接链 `.family(BlockFamily)` / `.stairs` / `.slab` / `.fence` 等）；③ **`BlockModelGenerators` 在 Yarn 1.21.11 不存在**——它只存在于 mojmap（`net.minecraft.client.data.models.BlockModelGenerators`）；Yarn 侧同类叫 `BlockStateModelGenerator`，其方法名也不同（见下表与 Yarn 代码块）。`BlockModelGenerators.registerSimpleItemModel()` 这个名字在两侧都没有；Yarn 的物品模型入口是 `ItemModelGenerator#register(Item, Model)`。
+
+上面的代码块是 **mojmap 层**（照参考工程）。同一份 provider 落到本档 Yarn 工程要换成下面这组方法名（javap @ yarn 1.21.11+build.6 逐个核实；`BlockStateModelGenerator` 没有 `family(Block)` 入口，用 `registerCubeAllModelTexturePool` 拿 pool）：
+
+```java
+@Override
+public void generateBlockStateModels(BlockStateModelGenerator generator) {
+	generator.registerSimpleCubeAll(ModBlocks.STEEL_BLOCK);                          // ↔ createTrivialCube
+	generator.registerSingleton(ModBlocks.PIPE_BLOCK, TexturedModel.CUBE_BOTTOM_TOP); // ↔ createTrivialBlock(..., COLUMN_ALT)
+	generator.registerCubeAllModelTexturePool(ModBlocks.RUBY_BLOCK)
+			.stairs(ModBlocks.RUBY_STAIRS).slab(ModBlocks.RUBY_SLAB).fence(ModBlocks.RUBY_FENCE);
+	generator.registerDoor(ModBlocks.RUBY_DOOR);                                     // ↔ createDoor
+	generator.registerTrapdoor(ModBlocks.RUBY_TRAPDOOR);                             // ↔ createTrapdoor
+	// generator.registerOrientableTrapdoor(ModBlocks.RUBY_TRAPDOOR);
+}
+
+@Override
+public void generateItemModels(ItemModelGenerator generator) {
+	generator.register(ModItems.RUBY, Models.GENERATED);              // ↔ generateFlatItem(..., ModelTemplates.FLAT_ITEM)
+	generator.register(ModItems.GUIDITE_AXE, Models.HANDHELD);        // ↔ generateFlatItem(..., FLAT_HANDHELD_ITEM)
+	generator.registerDyeable(ModItems.LEATHER_GLOVES, 0xFFA06540);   // ↔ generateDyedItem
+}
+```
 
 
 ### ⚠️ 映射口径：本档语料是 mojmap
@@ -206,7 +229,8 @@ public void generateItemModels(ItemModelGenerators itemModelGenerator) {
 ## 本档未覆盖（禁止默写）
 
 - **`multipart` 形式的 blockstate**：本档四个页面与全部参考 JSON 只出现 `variants`，`multipart` 一次都没有 ⇒ 不许凭记忆写其键名。
-- **JSON 层 `uvlock` 的确切写法**：只在 datagen 页以「rotation, uvlock 选项」的中文式提及出现，JSON 里未给出 ⇒ `TODO(未核实)`。
+- **JSON 层 `uvlock`**：已按本档原版资源核实（客户端 jar `assets/minecraft/blockstates/*.json`，131 个文件带该键）——写法是在 variant 对象里加布尔键 `"uvlock": true`，可与 `"x"` / `"y"` 并列：
+  `{ "model": "minecraft:block/weathered_cut_copper_stairs_inner", "uvlock": true, "y": 270 }`。
 - **模型 JSON 的版本变更史**（哪个字段何时加入 / 废弃）：本档无对照表 ⇒ 不写。
 - **`BlockColors` / 染色注册入口**：block-models 页仅在 `tintindex` 一句里提到 `BlockColors`，没有注册代码 ⇒ 需要时读同档 `develop_data-generation_block-models.md` 之外的页（如 tinting 相关页）**现读现抄**，本档 corpus 是否含该页未逐一核对 ⇒ 不写。
 - **item model 的 select / property DSL 全貌**：参考文件里出现 `ItemModelUtils.select/when/rangeSelect/composite/plainModel`、`ItemModel.Unbaked`、`ContextDimension`、`Count`，但对应章节正文未在本次读取范围内展开 ⇒ 需要时读 `fabric-docs/1.21.11/processed/develop_data-generation_item-models.md`（已在盘上）后再写。

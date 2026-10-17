@@ -107,30 +107,46 @@
 - **守护门**：`mcp-server/scripts/assert-server-rules-integrity.mjs`（挂 `test-scripts.mjs` 的 `REAL_RUN_GATES`；带投毒自证 **6/6**：①引到不存在的文件 ②行号越界 ③指向空行 ④完全无「未核实」 ⑤**只在行文里提该词（无标题）** ⑥**有标题但空段**）。⚠ 别指望 `assert-rules-api-names.mjs`（只收 `.mdc`）或 `assert-rules-match-tool.mjs`（quilt 专属）代管本面 —— 二者实测**扫不到**这里。
 - ⚠ **「未核实」的判据是"真标题 + 至少一条"**，不是"文中出现过该词"（首版就是这么弱的判据，2026-10-15 改）。写这一面时别只提一句就当交代了。
 
-### 服务端面的自动测试 loop 怎么用（`generate_playtest_server_driver`）
+### 服务端面 loop（`generate_playtest_server_driver`）
 
-**面向**：服务端插件（Paper/Bukkit）。与模组面那套（`generate_playtest_driver` + 桥 mod）**不是一回事** —— 判据全在**服务端侧**，不需要客户端（需要玩家参与的场景见下面「无人值守」）。
+- **闭环**：`generate_paper_plugin` 出骨架 → `generate_playtest_server_driver --evidenceDir <dir>` 出 driver + `plan.example.txt` → 注册（`onEnable` 留了注入位）→ 写 `plan.txt` → 起服。
+- **classpath 6 件**（被逐类新 API 逼出来的）：`paper-api` · `adventure-api` · `adventure-key` · `org.jetbrains:annotations` · `guava` · `net.md-5:bungeecord-chat`。⚠ 末件 **Maven Central 404** ⇒ 走 `repo.papermc.io`。JDK **25**。
+- **plan verb**：`mark` · `cmd` · `assert marker path=…` · `wait ticks=N` · `stop`。⚠ `cmd`（`dispatchCommand`）**不派发** `ServerCommandEvent`（**T8**）；`stop` 只收工，driver 另调 `Bukkit.shutdown()`，否则 runner 超时强杀。
+- **判据范式**：探针每个通过的检查写 `<name>.ok`；plan 用 `assert marker` 断言 ⇒ **marker 缺席 = 没过**（别靠日志措辞）。
+- **证据**：`exit-code.txt`（**仅 0 算过**）· `qa.log`（含 `[QA] DONE`）· `rounds.jsonl`（`ok:true`）· `state.json`。
+- **起实例必备**：`online-mode=false` · **`white-list=false`** · `level-type`+`generator-settings`（**T3**）· **`-Dmcskill.probe.dir`** · 客户端侧 **`JAVA_HOME`**（逐条表与四个坑见 `rules/09-traps.md` 的 T9/T10）。
+- ⚠ **需玩家动作的项（放方块 / 点物品栏 / 破坏方块）走模组面**：`generate_playtest_driver platform=neoforge version=26.3 driverMode=temporary_client_tick_driver`（档位权威 = `PLAYTEST_VERIFIED_TIER`；动作含 `use` / `gui` / `break`）。装配三处 `EVIDENCE_DIR` · `EXPECT_ITEM` · `EXPECT_SLOT` + 客户端加 `PlaytestQaDriver.register();`；`WORLD` 留空时用 **`--quickPlayMultiplayer <host:port>`** 进世界。
+- **改文本文件走 Node**（`writeFileSync(f, txt, "utf8")`）：PS 5.1 的 `Set-Content -Encoding UTF8` **写 BOM** ⇒ `build.gradle` 编不过（**T10**）。
 
-**一条最小闭环**：
+### 判据放接收端
 
-1. `generate_paper_plugin` 生成工程骨架；`generate_playtest_server_driver --evidenceDir <目录>` 生成 driver + `plan.example.txt`
-2. 把 driver 注册进插件（生成器在 `onEnable` 里留了注入位 `// PlaytestQaServerDriver.register(this);`）
-3. **编译 classpath 实测 6 件**：`paper-api` · `adventure-api` · `adventure-key` · `org.jetbrains:annotations` · `guava` · **`net.md-5:bungeecord-chat`**（后三件是被新 API 逐个逼出来的：`@NotNull` 注解 / `Material.getItemAttributes` 的 `Multimap` / `sendMessage(Component)` 的 `BaseComponent`）。⚠ **`bungeecord-chat` 在 Maven Central 是 404，须走 `repo.papermc.io/repository/maven-public`**。JDK 底线 **25**。
-4. 写 `plan.txt`（放证据目录里），起服 ⇒ driver 在 `onEnable` 里读它、按步执行
-5. 看证据：`exit-code.txt`（**仅 0 算过**）· `qa.log`（含 `[QA] DONE`）· `rounds.jsonl`（`ok:true`）· `state.json`（`driverKind:"server"`）
+`sendMessage(Component)` 发**控制台** ⇒ 判据在**服务端日志**；发**玩家** ⇒ 判据在**客户端日志**（`[ChatComponent]: [System] [CHAT] …`）。实测发玩家时**服务端日志里没有**该串 ⇒ 判据放错会得假否定。
 
-**plan 的 verb**：`mark` · `cmd` · `assert marker path=…` · `wait ticks=N` · `stop`。⚠ **两个坑（都实测过）**：
+### 工具的"没有"先别当真
 
-- **`cmd` 不是事件触发器** —— 它走 `Bukkit.dispatchCommand`，**不派发 `ServerCommandEvent`**（`paper/26.3/rules/09-traps.md` 的 **T8**，三条路对照都跑过）。要验事件链用 `callEvent` 或真触发源。
-- **`stop` 只是收工**：driver 会另调 `Bukkit.shutdown()` 停服；否则 runner 超时强杀（`rc=null err=ETIMEDOUT`）。
+- `javap` 看不到**形参名**（两版 `paper-api` 均无 `MethodParameters`）⇒ 比形参名要走该版本 javadoc。
+- `data/**` 下**不给 `glob`** 的目录搜索会假 0 命中。
+- **签名页只列本类声明的成员**；**签名面没有 ≠ 件里没有**（flat 的权威格式在件内 datapack JSON）。
 
-**判据写法（推荐范式）**：探针在 `onEnable` 里跑检查，**每个通过的检查写一个 `<name>.ok` 文件**，plan 里用 `assert marker` 逐项断言 ⇒ **marker 缺席 = 该检查没过**，不靠日志措辞判断。
 
-**无人值守（含"需要玩家"的场景）**：真客户端可以**自动连服**，参数是 **`--quickPlayMultiplayer <host:port>`**（`--server`/`--port` 在 NeoForge moddev 的 `client` 块里**不生效**）。完整配方与四个坑见 `paper/26.3/rules/09-traps.md` 的 **T9 附**。
+同一件事「文本组件到没到」，**判据放的位置不同，结论会相反**：
 
-**起服务端实例的必备配置**（漏一项就白跑）：`online-mode=false` · **`white-list=false`** · `level-type` 与 `generator-settings` 要么都不设、要么都设对（**T3**）· 探针的 **`-Dmcskill.probe.dir=<证据目录>`** · 起客户端时的 **`JAVA_HOME`**。逐条表在 `paper/26.3/rules/09-traps.md`。
+| 发往哪里 | 有效判据 | 拿错地方会怎样 |
+|---|---|---|
+| **控制台** | **服务端日志** —— `sendMessage(Component)` 的标记串出现在服务端输出里 | — |
+| **真人玩家** | **客户端日志** —— `[ChatComponent]: [System] [CHAT] <标记串>` | 实测**服务端日志里没有**那两条 ⇒ 拿服务端日志当判据会得到**假否定** |
 
-**改文本文件一律走 Node**（`writeFileSync(f, txt, "utf8")`）：**PowerShell 5.1 的 `Set-Content -Encoding UTF8` 会写 UTF-8 BOM**，而 Gradle 的 Groovy 解析器**不接受 BOM** ⇒ `build.gradle` 第一个字符就编译失败（`Unexpected character: '' @ line 1, column 1`、770ms 报 `BUILD FAILED`）—— **症状伪装成"客户端连不上"**（客户端日志只有千余字节且不增长）。详见 `rules/09-traps.md` 的 **T10**。
+**规矩**：验证一条链路时，**判据要放在链路的接收端**（或接收端能观测到的地方）。只放在**发送端**能证明"发出去了"，**证明不了"到了"**。
+
+### ⚠ 取证工具有盲区：`javap` **看不到形参名**
+
+比 **形参类型** 用 `javap` 就够；比 **形参名** 不行 —— 实测 `paper-api` 的**两版件都没有 `MethodParameters` 属性**，`javap -v` 只给类型。⇒ 跨版本比形参名**只能走该版本的 javadoc**（Paper 官方 `jd.papermc.io/paper/<ver>/…`，实测 HTTP 200 可达）。
+
+**同类**（工具报的"没有"未必是真没有，先怀疑调用姿势或工具覆盖面）：
+
+- `data/**` 下**不给 `glob`** 的目录搜索 ⇒ 假 0 命中（见下条）
+- **签名页只列本类声明的成员** ⇒ `World` 页搜 `PersistentDataContainer` 0 命中，而它其实**继承** `PersistentDataHolder`
+- **签名面没有** ≠ **件里没有** ⇒ flat 的权威格式一直在服务端件的 datapack JSON 里，不在签名里
 
 ### ⚠⚠ 检索纪律：在 `data/**` 下按目录搜索**必须显式给 `glob`**
 

@@ -95,7 +95,21 @@ commands:
 
 ## 未核实
 
-- `plugin.yml` 里**少数极长尾字段**（如 `folia-supported` 等）本档未逐条核 —— 官方页 8.28 KB 很长，本档已摘：`name`/`main`/`version`/`description`/`author(s)`/`website`/`api-version`/`prefix`/`load`/`depend`/`softdepend`/`provides`/`libraries`/`permissions`/`default-permission`/`commands`（含全部子字段）。
+- 下面两个 **Paper 专有**字段本档**未在真机试过**（只核了官方页确有该节）。
+- `plugin.yml` 的**极长尾**（本档未覆盖的写法，如自定义 `permissions` 的 `children` 树）未逐条核。
+
+## 先前**漏记**的四个字段（**官方出处已核，2026-10-16 · 逐节扫 `###` 标题**）
+
+对官方页扫出全部 `###` 小节标题后，发现本档先前漏了这四个：
+
+| 行 | 字段 | 说明 |
+|---|---|---|
+| `:85` | **`contributors`** | 与 `author`（`:78`）/ `authors` 并列的**第三个署名位** |
+| `:243` | **`loadbefore`** | 与 `depend`（`:225`）/ `softdepend`（`:237`）/ `provides`（`:250`）同族 —— **本插件要先于它加载**（方向与 `depend` 相反） |
+| `:162` | **`paper-plugin-loader`** | **Paper 专有**（Paper 在 `plugin.yml` 上的扩展） |
+| `:173` | **`paper-skip-libraries`** | **Paper 专有** —— 跳过 `libraries`（`:120`）的解析/下载 |
+
+⇒ 至此官方页的 `###` 小节**全部覆盖**：`name*` `version*` `main*` `description` `author/authors` `contributors` `website` `api-version` `load` `prefix` `libraries` `permissions` `default-permission` `paper-plugin-loader` `paper-skip-libraries` `depend` `softdepend` `loadbefore` `provides`（`*` = 必填）。
 
 ## 其余字段（**官方出处已核，2026-10-15**）
 

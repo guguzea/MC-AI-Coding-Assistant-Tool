@@ -51,7 +51,7 @@ Block#use (Server) ──► creates IContainerProvider ──► openGui (Serve
                                                                     ▼
                                                           Container + ContainerScreen
                                                                     │
-                                                          ScreenManager.registerFactory()
+                                                          ScreenManager.register()
                                                                     │
                                                                     ▼
                                                                 Renders Screen
@@ -104,7 +104,10 @@ public class ClientSetup {
     @SubscribeEvent
     public static void init(FMLClientSetupEvent event) {
         event.enqueueWork(() ->
-            ScreenManager.registerFactory(MyContainerTypes.MY_CONTAINER.get(), MyScreen::new)
+            // 构件实证（javap net.minecraft.client.gui.ScreenManager, 1.16.5-36.2.34_mapped_official_1.16.5）：
+            // 方法名是 register(ContainerType<? extends M>, ScreenManager$IScreenFactory<M,U>)
+            // ❌ registerFactory 是 MCP 层名（只有 1.14.4 / 1.15.2 的 snapshot 通道才是它），本包编不过
+            ScreenManager.register(MyContainerTypes.MY_CONTAINER.get(), MyScreen::new)
         );
     }
 }
@@ -156,7 +159,7 @@ public class MyBlock extends Block {
 ## Common errors
 
 - ❌ Opening a Container on the server without a registered `ContainerType` → crash
-- ❌ `ScreenManager.registerFactory()` called on server → `FMLClientSetupEvent` already prevents this, but guard with `@OnlyIn(Dist.CLIENT)`
+- ❌ `ScreenManager.register()` called on server → `FMLClientSetupEvent` already prevents this, but guard with `@OnlyIn(Dist.CLIENT)`
 - ❌ Container not implementing `canInteractWith` properly → any player can access
 - ❌ Modifying world state in `Container` constructor → too early, use `detectAndSendChanges()`
 - ❌ ContainerData set from client → must be set server-side only

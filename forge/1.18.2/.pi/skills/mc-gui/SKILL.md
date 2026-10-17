@@ -103,7 +103,7 @@ public class MyBlock extends Block implements EntityBlock {
     public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
         return new SimpleMenuProvider(
             (id, inv, player) -> new MyMenu(id, inv, player),
-            Component.literal("My Menu")
+            new TextComponent("My Menu")   // 构件实证（javap @1.18.2-40.1.80_mapped_parchment）：1.18.2 无 Component.literal（1.19+ 才有），用 new TextComponent(...)
         );
     }
 

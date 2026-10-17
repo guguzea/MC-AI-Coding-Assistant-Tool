@@ -25,24 +25,15 @@ dependencies {
 
 ## 创建 REI 插件
 
-```java
-// 1. 创建插件类
-public class MyModPlugin implements REIPluginClient {
-    @Override
-    public void registerEntries(RegisterClientPluginsEvent event) {
-        // 注册条目
-    }
-}
-```
+**本档没有已核实的 REI 插件 API**：旧稿的 `REIPluginClient` / `RegisterClientPluginsEvent` 在已核实的 REI 构件（21.11.816 / 17.0.807）里 **0 命中**；本档同样 **未核实**。动手前必须让用户自备该版本 jar，走 `ingest_loader_api` 入库后逐签名回填。
+
+现代 REI 的真实接口是 `me.shedaniel.rei.api.client.plugins.REIClientPlugin`，注册方法是 `registerEntries(EntryRegistry)`；入口键 `rei_client`。这套形状**不许**直接搬到本档，除非你已用该版本 jar 核实过。
 
 ```json
-// fabric.mod.json
+// fabric.mod.json（入口键按现代 REI 的 fabric.mod.json 逐字核实；旧档同键未核实）
 {
   "entrypoints": {
     "rei_client": ["com.example.examplemod.MyModPlugin"]
-  },
-  "depends": {
-    "roughlyenoughitems": ">=9.1.618"
   }
 }
 ```

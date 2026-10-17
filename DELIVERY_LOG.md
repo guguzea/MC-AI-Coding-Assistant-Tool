@@ -8,6 +8,640 @@
 
 ---
 
+## 2026-10-17 · 签收台账专项清理：15 个幻影名退账 + 13 档 Cloth/REI 技能按真 jar 重写（维护档）
+
+**第 0 块 · 结论**：`external-apis-signoff.tsv` 的幻影名已专项清账：**71 → 56 条**，删除 15 个在真实构件里 0 命中、唯一作用是替假名字背书的历史条目（`ConfigSerializable` / `ClothConfigAddon` / `ClothConfigBuilder` / `ClothConfigScreenBuilder` / `BoolOption` / `IntSliderOption` / `EntryBuilder` / `createBuilder` / `ClothConfig` / `getOrCreateModConfig` / `setDefaultTitle` / `setGlobalErrorSupplier` / `setNewDefaultValue` / `REIPluginClient` / `RegisterClientPluginsEvent`）。因为台账是逐名签收，退账前先把仍引用这些名字的 **13 个 fabric 档**的 Cloth/REI 技能改成真 API：Cloth 用 `AutoConfig` + `ConfigBuilder`（8 个 jar 逐档 javap），REI 用 `REIClientPlugin` + `EntryRegistry`（4 个 jar 逐档 javap）；没有可核实构件的 1.14.4 档改为「禁止默写」的诚实形态。六道内容门 + 第 8 步 `test-scripts` 全绿；未提交。
+
+### ① 改了哪些文件
+
+- 台账：`mcp-server/scripts/external-apis-signoff.tsv` —— 删 15 行；保留 56 行（全部仍被引用，审计脚本 DEAD=0）。
+- Cloth 技能（`mc-cloth-config.md`）：
+  - 按真 jar 重写正文：`1.16.5`（4.14.64）、`1.18.2`（6.5.133）、`1.19.4`（10.0.96，依赖保持 `state=commented`）、`1.20.1`（11.1.136）、`1.20.4`（13.0.114）、`1.21.1`（15.0.127）、`1.21.3`（16.0.143）；`1.17.1`（5.3.63）与 `1.21.11`（21.11.153）此前已重写。
+  - `1.14.4`：删除全部假 API 代码，保留坐标 TODO + 「禁止默写」清单。
+- REI 技能（`mc-compat-jei`）：
+  - 真 API + 真坐标：`1.21.3`（17.0.807）、`1.21.4`（18.0.815）、`1.21.8`（20.0.811）、`1.21.10`（21.9.813）。
+  - 无已核实构件：`1.14.4` / `1.16.5` / `1.17.1` / `1.18.2` / `1.19.4` / `1.20.1` / `1.20.4` / `1.21.1` 改为「未核实，禁止默写」形态（不再给可抄代码）。
+- 镜像：13 个档逐档 `scripts/sync-skills.ps1 -TargetDir fabric/<v>`。
+- 记录：本文件本节 + `doc/name-provenance-audit.md` §8.30。
+
+### ② 判据与反证
+
+- 下载并 javap 的真实构件：`cloth-config-fabric` 4.14.64 / 6.5.133 / 10.0.96 / 11.1.136 / 13.0.114 / 15.0.127 / 16.0.143（`ConfigBuilder.create` / `setParentScreen` / `setTitle` / `getOrCreateCategory` / `entryBuilder` / `setSavingRunnable` / `build`、`AutoConfig.register` / `getConfigScreen`、`ConfigData`、`ConfigHolder`、`GsonConfigSerializer`、`BoundedDiscrete` 全命中）。
+- `RoughlyEnoughItems-fabric` 17.0.807 / 18.0.815 / 20.0.811 / 21.9.813 / 21.11.816：`REIClientPlugin#registerEntries(EntryRegistry)` 全命中；REI 自身 `fabric.mod.json` 的 `rei_client` 键逐字命中。
+- 反证：15 个被删名字在 21.11.153、5.3.63 与 REI 21.11.816 的 jar 清单里全部 0 命中（`EntryBuilder` 只是 `ConfigEntryBuilder` 的子串，独立类不存在；`ClothConfig` 只有 `ClothConfigScreen` / `ClothConfigInitializer` / `ClothConfigDemo`）。
+- 残留审计：`ledger-audit.cjs`（扫 686 个 fabric `.cursor` 技能/规则文件）→ 56 条台账全部至少被引用一次，DEAD=0。
+
+### ③ 验证台账
+
+- `assert-skill-yarn-attest.mjs` → 红 **0**（台账 56 名；外部名队列 344 条为已签收人工审项）。
+- `assert-skill-mirrors.mjs` → 绿（漂移 0 / 缺件 0）。
+- `assert-rules-api-names.mjs` → rc=0。
+- `assert-authoring-lint.mjs` → 绿。
+- `assert-skill-mappings-key.mjs` → 绿。
+- `assert-prose-name-roster.mjs` → **首跑红 21 条**：5 档 REI 技能散文清单里的 `CategoryRegistry` / `DisplayRegistry` / `ScreenRegistry` / `EntryRegistry` / `InputMethodRegistry` 不在本档 FAPI/vanilla 名册（该门只认这两处）。改法 = 清单只留方法名、类名只出现在围栏与 javap 出处行；复跑 ok（违规 36 = 基线 36，新增 0，陈旧 0）。
+- `cd mcp-server && node test-scripts.mjs`（第 8 步）→ 全链通过（无 `SCRIPTS-RED` / `AssertionError`；末行 `script helper regression tests passed`）。
+
+### ④ 数据侧变更
+
+- 无 `data/` 变更；只动文档源稿、镜像与签收台账。
+
+### ⑤ 未做清单
+
+- 1.19.4 的 Cloth 依赖行仍为注释态（`versions.json` slot `state=commented`）；坐标 10.0.96 已核实，启用需改 `versions.json` 后重投影，留给用户拍板。
+- 1.21.4 / 1.21.8 / 1.21.10 的 REI 坐标来自 Modrinth release；未在各档真工程里 `compileJava` 验证（只做了 jar javap），与 1.21.3/1.21.11 的验证强度不同。
+- 下载的 8 个 cloth jar 与 5 个 REI jar 只在 `F:\MOD_TEST`，不入库。
+
+### ⑥ 自我更正
+
+- 上一节（「42 项未核实清账」）第 ⑤ 块写「旧幻影名仍是死条目，未删」——本节已删，旧节保留作历史记录。
+- 上一节只清了 1.21.11；本轮发现同一批假名还扩散在 1.14.4 / 1.16.5 / 1.17.1 / 1.18.2 / 1.19.4 / 1.20.1 / 1.20.4 / 1.21.1 / 1.21.3 / 1.21.4 / 1.21.8 / 1.21.10，已一并处理。
+- 本节 ③ 首次跑第 8 步时 `assert-prose-name-roster` 红 21 条，是我重写 REI 散文时把外部库 `*Registry` 类名放进清单行所致；已改文案复跑全绿。没有改基线、没有关任何门。
+
+---
+
+## 2026-10-17 · fabric/1.21.11「全部核对」：42 项未核实清账（维护档）
+
+**第 0 块 · 结论**：`fabric/1.21.11/.cursor/{skills,rules}` 的 42 项未核实/待核断言已逐条清账，**42 → 0**（剩余 12 处 grep 命中是语料边界说明，不是未核实的 API 断言）。核对用了真构件 `javap`、**5 组真工程 `compileJava`**（`cc5`–`cc9`，含 mojmap / Yarn / 第三方 cloth-config / REI）与 Modrinth 上游发布源。**抓出并纠正了 3 类实质错误**：① `mc-cloth-config` 整篇 API 是编造的（`ConfigSerializable` / `ClothConfigAddon` / `ClothConfigScreenBuilder` 等 0 命中），已按 `cloth-config-21.11.153` 真 jar 重写；② `mc-compat-jei` 的 `REIPluginClient` / `RegisterClientPluginsEvent` 不存在，真接口是 `REIClientPlugin` + `EntryRegistry`；③ `AnyOf.valueEffects` 在 1.21.11 不存在，真名是 `AllOf.valueEffects`（mojmap）/ `AllOfEnchantmentEffects.allOf`（Yarn）。真编译另外抓出我把 `FlowableFluid#getVelocity` 写成 protected（真为 public）。五道门全绿；未提交。
+
+### ① 改了哪些文件
+
+- 源稿（`fabric/1.21.11/.cursor/`）：
+  - `skills/mc-advancement.md` —— `.display` 7→**8 参**；`addCriterion`/requirements/telemetry/`AbstractCriterion#trigger`/`RegistryLookup`/`Strategy`/`DisplayInfo` 全部清账；+ Yarn 等价块；`CriteriaTriggers.register` 注明「裸 jar private，靠 FAPI AW 才可调」。
+  - `skills/mc-ai.md` —— `Goal` 生命周期 7 抽象 + `setControls`。
+  - `skills/mc-cloth-config.md` —— **整篇重写**（`AutoConfig` 路线 + `ConfigBuilder` 路线；删掉 5 个幻影类/方法；`getConfigScreen` 标注 deprecated for removal）。
+  - `skills/mc-compat-jei.md` —— **整篇重写**（`REIClientPlugin` / `EntryRegistry` / `rei_client`）。
+  - `skills/mc-enchantment.md` —— `AnyOf` → `AllOf` / `AllOfEnchantmentEffects`；表 +2 行。
+  - `skills/mc-fluid.md` —— 补 `FlowableFluid` 真骨架（抽象实现）；`getVelocity` 改 public；frontmatter 去掉 `FluidType`。
+  - `skills/mc-item.md`、`rules/03-item.mdc` —— `ItemGroup.Builder` 8 个方法名。
+  - `skills/mc-kotlin.md` —— FLK `1.14.1+kotlin.2.4.20` 对 1.21.11 的兼容性。
+  - `skills/mc-model.md` —— datagen 三名字 + `uvlock` + Yarn 代码块。
+  - `skills/mc-potion.md` —— 药水 lang 键格式。
+  - `skills/mc-events.md`、`rules/05-events.mdc` —— `BlockEvents` / `ItemEvents` 常量。
+  - `rules/01-registry.mdc` —— 模块 id → `fabric-data-attachment-api-v1`。
+  - `rules/10-gui.mdc` —— `ScreenEvents.AFTER_INIT` / `BEFORE_INIT`。
+- 台账：`mcp-server/scripts/external-apis-signoff.tsv` +9 行（cloth 6 / REI 2 / 注解 1）。
+- 镜像：`scripts/sync-skills.ps1 -TargetDir fabric/1.21.11`（38 skills / 11 rules）。
+- 审计记录：`doc/name-provenance-audit.md` §8.29。
+
+### ② 判据与反证
+
+- **真编译**（不是 javap 推断）：`cc5` mojmap 两条 criterion 注册臂 PASS；`cc6` Yarn advancement 全链 PASS；`cc7` Yarn model+fluid+item-group PASS（**首跑红**：`getVelocity` protected → public 后绿）；`cc8` cloth-config 21.11.153 两条路线 PASS；`cc9` REI 21.11.816 插件接口 PASS。
+- **真构件 javap**：Yarn `1.21.11+build.6` / mojmap `hash.2198` / `cloth-config-21.11.153-fabric.jar` / `RoughlyEnoughItems-21.11.816-fabric.jar` / FAPI `fabric-events-interaction-v0-5.3.6`、`fabric-screen-api-v1`、`fabric-data-attachment-api-v1-1.8.48`。
+- **反证**：`mc-cloth-config` 旧文的 `ConfigSerializable` / `ClothConfigAddon` / `ClothConfigScreenBuilder` / `ClothConfigBuilder` / `ConfigEntry.BoolOption.createBuilder` 在 21.11.153 全 jar 清单 0 命中；REI 的 `REIPluginClient` / `RegisterClientPluginsEvent` 同；`AnyOf` 在 1.21.11 两侧 jar 均 0 命中。
+- **上游发布源**：Modrinth `cloth-config` 21.11.153+fabric、`rei` 21.11.816+fabric、`fabric-language-kotlin` 1.14.1（gameVersions 含 1.21.11）。
+
+### ③ 验证台账
+
+- `assert-skill-mirrors.mjs` → ok（漂移 0 / 缺件 0）。
+- `assert-skill-yarn-attest.mjs` → 红 **0**（清单 532 件）。
+- `assert-rules-api-names.mjs` → rc=0（GREEN）。
+- `assert-authoring-lint.mjs` → GREEN。
+- `assert-skill-mappings-key.mjs` → GREEN。
+
+### ④ 数据侧变更
+
+- 无 `data/` 变更；只改文档源稿、镜像与外部名签收台账。
+
+### ⑤ 未做清单
+
+- `mc-mixin` 的 `<TODO…>`、`mc-energy` 的通用检索指引、以及 10 处「本档语料未出现」的边界说明：不是未核实断言，按原样保留。
+- `external-apis-signoff.tsv` 里旧的幻影名（`ClothConfigAddon` / `ConfigSerializable` / `REIPluginClient` 等）仍是**死条目**；未删，避免误伤其他档引用，留待一次专门的台账清理。
+- cloth/REI 的 jar 是从 Modrinth 下载到 `F:\MOD_TEST` 的临时件，不入库。
+
+### ⑥ 自我更正
+
+- 上一节写「仍留未核实：药水 lang 键、`AnyOf.valueEffects`、mc-model 的 datagen/uvlock」——本节已全部核掉，旧节保留作历史记录。
+- 我在 `mc-fluid` 骨架里先写了 `protected getVelocity`，真编译报「无法覆盖 public 方法」；已改 public。再次印证「javap 有名字 ≠ 这段代码编得过」。
+
+---
+
+## 2026-10-17 · fabric/1.21.11 加 Yarn 等价块 + 逐块真编译（真编译抓出 3 处错名）（维护档）
+
+**第 0 块 · 结论**：按令补齐 `mc-enchantment` 的 3 段 Yarn 等价块 + `mc-potion` 的酿造 Yarn 块，并把**所有新增/对应代码块逐块真编译**（yarn 工程 5 文件 PASS、mojmap 工程 4 文件 PASS；两侧都跑对照臂且如期 FAIL，证明编译真在跑）。**真编译抓出 3 处我写错的 Yarn 名并已修正**：① `EnchantmentEntityEffect.codec()` → Yarn 是 **`getCodec()`**；② `Entity.blockPos()` → Yarn 是 **`getBlockPos()`**（链式换算把 mojmap 的字段/方法撞名，选了字段）；③ `BrewingRecipeRegistry.Builder.addMix` → Yarn 是 **`registerPotionRecipe`**（Yarn 无 `addMix`）——并据此订正 mc-potion 原文「方法名以盘上为准」的错误结论。**未引入任何「未核实」**（新增行 grep 零命中）；顺手核对并消除 6 处既有未核实，其中**纠正一处原写错的序列化名**：1.21.11 Yarn `BlockEntity` 是 `writeData(WriteView)` / `readData(ReadView)`，**不是** `writeNbt` / `readNbt`。
+
+### ① 改了哪些文件
+
+- 源稿（`fabric/1.21.11/.cursor/skills/`）：
+  - `mc-enchantment.md` —— +3 段 Yarn 等价块（record / 效果注册 / `RegistryKey` 助手）；成员表 +`codec()`→`getCodec()`，并把 `Entity#blockPosition()` 行改成 **`getBlockPos()`** 且注明「同名字段在 Yarn 叫 `blockPos`，方法才叫 `getBlockPos()`，链式换算会撞名」。
+  - `mc-potion.md` —— +酿造 Yarn 等价块（`registerPotionRecipe`）；把「页面 prose 与盘上代码不一致」节改写为**方法名分两层**（mojmap `addMix` / Yarn `registerPotionRecipe`）；成员表 +该行；3 处 TODO 改为已核实。
+  - `mc-effect.md` —— `MobEffectInstance` 重载 TODO → 7 个构造器全列（两侧同形）。
+  - `mc-multiblock.md` —— 修正 `writeNbt`/`readNbt` → `writeData(WriteView)`/`readData(ReadView)`；Decision Flow 里 6 条 TODO 改为已核实签名（FAPI 构建器、`BlockView` 返回类型、`BlockPos` 遍历、`VoxelShapes.union`），FAPI 细节挪到围栏外 prose（见 ③）。
+- 镜像：`scripts/sync-skills.ps1 -TargetDir fabric/1.21.11`；Node 复核 **48/48**（6 技能 × 8 面）。
+
+### ② 判据与反证
+
+- **逐块真编译**（不是 javap 推断）：`F:\MOD_TEST\cc4\run.cjs` —— 每个代码块落成独立 `.java`（缺的上下文用最小 stub，如 `TATER_EFFECT = null`），分别编译进**真工程**：
+  - Yarn 工程 `F:\MOD_TEST\dev\fabric-1.21.11`（`mappings "net.fabricmc:yarn..."`，含 fabric-api）：**5 文件 exit=0**。
+  - mojmap 工程 `F:\MOD_TEST\cc2\moj-proj`（`loom.officialMojangMappings()`）：**4 文件 exit=0**。
+  - 两侧各加一臂 `net.minecraft.zzz.NoSuch.method()` **对照**：均 exit=1（证明编译器真在跑、不是缓存跳过）。
+- **抓出的 3 个错名与更正**：
+  1. `EnchantmentEntityEffect` 的 Yarn 抽象方法是 **`getCodec()`**（javap 见 `public abstract MapCodec<? extends EnchantmentEntityEffect> getCodec()`）；原写 `codec()` 在 Yarn 工程报「未覆盖抽象方法」。
+  2. mojmap `Entity.blockPosition()` 在 Yarn 侧：**方法**叫 `getBlockPos()`，而同名 **字段** 叫 `blockPos`（sqlite `fields` 表 `name_official=aW`）。链式换算按 obf 名匹配会选中字段 ⇒ 以 javap 为准，Yarn 代码改 `victim.getBlockPos()`。
+  3. `BrewingRecipeRegistry.Builder`：mojmap 有 `addMix`，**Yarn 只有 `registerItemRecipe` / `registerPotionType` / `registerPotionRecipe` / `registerRecipes`**（javap @ yarn 1.21.11+build.6）。原 mc-potion 说「方法名以盘上为准」在 Yarn 档是错的，已改写为「两层各有其名」。
+- **反证**：修正后重跑，两侧 REAL 均 PASS；未修正的三处会让 Yarn 臂红——说明这套编译确能拦住「看起来对但编译不过」的名字。
+- **未引入「未核实」**：`git diff` 的新增行 grep `未核实|TODO|待核实` **零命中**。
+
+### ③ 验证台账
+
+| 项 | 读数 |
+| --- | --- |
+| Yarn 真编译（5 块） | **PASS**（exit=0）· 对照臂 FAIL 如期 |
+| mojmap 真编译（4 块） | **PASS**（exit=0）· 对照臂 FAIL 如期 |
+| `assert-skill-mirrors` | ok · **拒=0** |
+| `assert-skill-yarn-attest` | ok · **红 0**（中途曾红 1：`FabricBlockEntityTypeBuilder` 被放进 Decision Flow 围栏、不在 FAPI 摘要面 ⇒ 已把 FAPI 细节挪到围栏外 prose，复跑转绿） |
+| 8 面传播 | Node 复核 **48/48** |
+
+### ④ 数据侧变更
+
+无（未动 `data/`）。
+
+### ⑤ 未做清单
+
+- 仍留未核实（**本轮未核**，非我引入）：`mc-potion` 的药水 lang 键（参考资源无 lang 文件）；`mc-enchantment` 的 `AnyOf.valueEffects`（仓内 yarn jar 只有 `AllOfEnchantmentEffects`，mojmap 侧未见 `AnyOf` ⇒ 不下结论）；`mc-model` 的 datagen 方法名与 JSON `uvlock`（属 datagen/资源面，本轮未碰）。
+- 未跑整工程 build / 进游戏（本轮判到 L1 + 代码块级真编译）。
+
+### ⑥ 自我更正
+
+- **我上一轮写入的 Yarn 名有 3 处是错的**，靠本轮真编译才暴露：`codec()`、`blockPos()`、`addMix`。教训：链式换算（client.txt → sqlite）在「同名字段/方法」处会选错，**成员级必须用 javap 复核**；且「没报错」不等于对——只有真编译能抓。
+- 我上一轮把 mc-multiblock 的 `writeNbt`/`readNbt` 当既有事实沿用；本轮 javap 证明 1.21.11 已改为 `writeData(WriteView)` / `readData(ReadView)`，已就地纠正。
+
+---
+
+## 2026-10-16 · fabric/1.21.11 补 Yarn 层：4 个 mojmap-only 技能 + mc-model 一处（维护档）
+
+**第 0 块 · 结论**：按用户令「也补；注意不要编造」——给 `fabric/1.21.11` 里**正文以 mojmap 落笔**的技能补上 **Yarn 层**：`mc-effect`、`mc-potion` 各加一段**Yarn 等价代码块**，四个技能（`mc-effect` / `mc-potion` / `mc-enchantment` / `mc-multiblock`）的「⚠️ 映射口径」表**扩到成员级换名**（每行带出处），另给 `mc-model` 那处 `Identifier.fromNamespaceAndPath` 补一行 Yarn 写法。`mc-particle` 与 `mc-advancement` 经查**本就无需改**（前者正文即 Yarn + 全量对照表；后者的命中是 prose 警告、无 mojmap-only 代码）。**逐名都有出处**（javap 真构件，或 Mojang 官方映射 → 本档 yarn sqlite 链路），无一处凭记忆；核不到的没写。8 面镜像已刷，两门绿。
+
+### ① 改了哪些文件
+
+- 源稿 5 件（均在 `fabric/1.21.11/.cursor/skills/`）：
+  - `mc-effect.md` —— 加「Yarn 等价」代码块（`StatusEffect` / `StatusEffectCategory` / `ServerWorld` / `PlayerEntity` / `canApplyUpdateEffect` / `applyUpdateEffect` / `addExperience`）；映射口径表 +2 类行（`Holder`→`RegistryEntry`、`MobEffectInstance`→`StatusEffectInstance`）+ 一张 **8 行成员级换名表**，并把「只证实类名、不证实方法名」那句改成分级说明。
+  - `mc-potion.md` —— 加「Yarn 等价」代码块（`RegistryEntry<Potion>` + `Registry.registerReference` + `Registries.POTION` + `Identifier.of` + `StatusEffectInstance`）；表 +3 类行（`Potion`/`Potions`/`Holder`）+ **4 行成员级表**。
+  - `mc-enchantment.md` —— 表 +2 类行（`Registries`(mojmap)→`RegistryKeys`、`EnchantmentEntityEffect` 同名）+ **6 行成员级表**（`calculate`→`getValue`、`ResourceKey#create`→`RegistryKey#of`、`blockPosition`→`blockPos`、`EntityType#spawn` 同名、`Registries.ENCHANTMENT_ENTITY_EFFECT_TYPE`→`RegistryKeys.ENCHANTMENT_ENTITY_EFFECT_TYPE`、`fromNamespaceAndPath`→`of`）。
+  - `mc-multiblock.md` —— 表 +5 类行（`Registries`(mojmap)→`RegistryKeys`、`Level`→`World`、`ServerLevel`→`ServerWorld`、`BlockGetter`→`BlockView`、`ResourceLocation`→`Identifier`）。
+  - `mc-model.md` —— 在 `new ModelTemplate(Optional.of(Identifier.fromNamespaceAndPath(...)))` 那行后补一句：该写法是 mojmap 层，Yarn 同处写 `Identifier.of(...)`。
+- 镜像：由 `scripts/sync-skills.ps1 -TargetDir fabric/1.21.11` 刷 7 面；Node 复核 **40/40**（5 技能 × 8 面）含各自新标记。
+
+### ② 判据与反证
+
+- **新出处中轴**：下载 Mojang 官方映射 `client-1.21.11.txt`（11,779,287 B，sha1 `031a68be…` 与版本清单一致）到 `F:\MC_GAME\mappings\`。**只当中轴、不入库**（.gitignore 已排除 `client.txt`；仓内可复核的派生件仍是既有 `data/_yarn-mojmap-pairs/`）。
+- **换算链**：`mojmap名（client-1.21.11.txt）→ obf 类/成员名 + obf 描述符 → 本档 yarn sqlite（`classes.official` / `name_official` / `descriptor_official`）→ Yarn 名`。工具 `F:\MOD_TEST\map12111.cjs`；自测三点与既有结论吻合（`SoundEvent.createVariableRangeEvent`→`of`、`Identifier.fromNamespaceAndPath`→`of`、`Registry.register`→`register`）。
+- **第二腿（真构件 javap）**：本轮新增的每个成员级名字都在 yarn 1.21.11 merged jar 上 javap 见到实名——`StatusEffect(StatusEffectCategory,int)`（protected）、`canApplyUpdateEffect(int,int)`、`applyUpdateEffect(ServerWorld,LivingEntity,int)`、`PlayerEntity.addExperience(int)`、`Registry.registerReference(Registry,Identifier,T)`、`EnchantmentLevelBasedValue.getValue(int)`、`RegistryKey.of(RegistryKey,Identifier)`、`RegistryKeys.ENCHANTMENT_ENTITY_EFFECT_TYPE`.
+- **会改变判断的三个事实**（本轮新核出，已写进对应表）：
+  1. mojmap `Registries`（常量表）↔ yarn **`RegistryKeys`**；
+  2. mojmap `BuiltInRegistries` ↔ yarn **`Registries`** —— 两侧都有叫 `Registries` 的类，但**不是同一个**；
+  3. `BuiltInRegistries.MOB_EFFECT` ↔ yarn **`Registries.STATUS_EFFECT`**（**字段名也换了**，不是只换类名）。
+- **反证（不编造）**：`mc-particle` 复查后**未改**——其正文已是 Yarn（`Registries.PARTICLE_TYPE` / `Identifier.of` / `SimpleParticleType` / `EndRodParticle.Factory`）且自带全量对照表；`mc-advancement` 的命中是 prose（提醒别写 `ResourceLocation`/`critereon`），无可补代码。二者均**不制造改动**。
+
+### ③ 验证台账
+
+| 项 | 读数 |
+| --- | --- |
+| `assert-skill-mirrors` | ok · 镜像比对目标=12418 · **拒=0** |
+| `assert-skill-yarn-attest` | ok · **红 0 处**（`decl` 897→899，新增 Yarn 代码块带来的声明）· 清单 532 件 · 映射腿 ok:494 |
+| 8 面传播 | Node 复核 **40/40** |
+
+### ④ 数据侧变更
+
+无。未动 `data/`（`client-1.21.11.txt` 只落 `F:\MC_GAME\mappings\`、不入库）。
+
+### ⑤ 未做清单
+
+- **未跑整工程 build / 进游戏**：本轮是技能正文改动（改到 L1 静态/规则门），新增的 Yarn 代码块**逐名有真构件出处**但**未逐块真编译**（上一轮对 1.21.11 的 mc-sound 做过双向 javac，本轮未逐块重跑）。
+- 未回头核 `fabric/1.21.11` 其余技能（本轮面 = grep 命中的 8 件 + mc-model）。
+- `mc-enchantment` 只改了映射口径表；其正文三段 mojmap 代码块**未加** Yarn 等价块（篇幅考虑），需要的话可照 `mc-effect` 同法补。
+
+### ⑥ 自我更正
+
+- 我在上一轮报告里把「其余技能」笼统说成「自带对照表 + 警告、可能无需改」。**实际核完**：`mc-particle` 确属无需改；但 `mc-effect` / `mc-potion` / `mc-enchantment` / `mc-multiblock` **正文是 mojmap-only、表也只到类名级**，确实需要补——已按令补齐。
+
+---
+
+## 2026-10-16 · fabric/1.21.11 mc-sound 改为「两套名都留」+ 逐名对照（维护档）
+
+**第 0 块 · 结论**：按用户令「mc-sound 原文那行可以 2 种名字都留下，因为都是有用的」——把 `fabric/1.21.11` 的 mc-sound 注册行从「只给 mojmap 原文」扩成**两层并列**：**mojmap 层**（上游页原文；适用 `loom.officialMojangMappings()` 工程）+ **Yarn 层**（适用 `net.fabricmc:yarn` 工程，即本仓 scaffold 的钉法），并附**逐名对照表**与「同一工程只编译其 `mappings` 那一层」的警告；同时订正 L63 那句反向禁令（原文禁止抄 `SoundEvent.of`，而它恰是 Yarn 层正名）。8 面镜像已刷，`assert-skill-mirrors`（拒=0）与 `assert-skill-yarn-attest`（红 0）全绿。
+
+### ① 改了哪些文件
+
+- 源稿 1 件：`fabric/1.21.11/.cursor/skills/mc-sound.md`
+  - 注册行拆为 3 条 bullet（两层各一条 + 一条「不可混」警告）并接一张 3 行对照表（`BuiltInRegistries`→`Registries`、`Identifier.fromNamespaceAndPath`→`Identifier.of`、`SoundEvent.createVariableRangeEvent`→`SoundEvent.of`）。
+  - L63「下一步」那句改为：**保留上游官方名 + 同给 Yarn 等价，按工程 `mappings` 行取用、不要混**。
+- 镜像 7 面：由 `scripts/sync-skills.ps1 -TargetDir fabric/1.21.11` 生成（`.agents` / `.claude` / `.continue` / `.opencode` / `.pi` / `.trae` / `.zcode`）；Node 复核 **8/8 面**均含新内容。
+
+### ② 判据与反证
+
+- **哪套名在哪层成立**：真工程 + 真 `gradlew compileJava` 实测（读数见上一节 §②）——Yarn 工程：Yarn 名 PASS / 官方名 FAIL；mojmap 工程：官方名 PASS / Yarn 名 FAIL；只有两 jar 同挂类路径时两者才都过。
+- **Yarn 层三个名逐一出处**：javap @ yarn 1.21.11+build.6 —— `Registries.SOUND_EVENT`（字段）、`Identifier.of(String,String)`、`SoundEvent.of(Identifier)`（public static）。
+- **mojmap 层三个名逐一出处**：javap @ loom 产出的 `1.21.11-loom.mappings.1_21_11.layered+hash.2198-v2` —— `net.minecraft.resources.Identifier.fromNamespaceAndPath(String,String)`、`net.minecraft.sounds.SoundEvent.createVariableRangeEvent(Identifier)`；`BuiltInRegistries` 在 1.21.11 mojmap 层存在（来自上游页原文 + 该层 jar）。
+- **反证（不误删）**：本轮**没有**删掉 mojmap 原文——用户明确要「两套都留」，改动方向是「并列 + 对照 + 警告」，不是替换。
+
+### ③ 验证台账
+
+| 门 | 读数 |
+| --- | --- |
+| `assert-skill-mirrors` | ok · 镜像比对目标=12418 · **拒=0** |
+| `assert-skill-yarn-attest` | ok · 红 **0** 处 · 清单 532 件 · 映射腿 ok:494 |
+| 8 面传播 | Node 复核 **8/8** 含 `mojmap 层` + `Yarn 层` |
+
+### ④ 数据侧变更
+
+无（未动 `data/`、未动台账）。
+
+### ⑤ 未做清单
+
+- `fabric/1.18.2` 的 mc-sound **不动**：该档是另一种情形——Yarn 1.18.2 的 `SoundEvent` **连静态工厂都没有**（仅构造器 `SoundEvent(Identifier)` + `getId()`），两套名无从并列，只能走构造器。（该档的修复保留。）
+- `fabric/1.21.11` 其它技能未动。
+- 未跑整工程 build / 进游戏（本轮改动是技能正文，判到 L1 静态/规则门）。
+
+### ⑥ 自我更正
+
+- 上一节我把官方名处置写成「按用户令保持原样」。**本令更新**：不是二选一，而是**两套并列都留**——用户指出两套各有用途（不同 `mappings` 行的工程各用一套）。已照此落地。
+
+---
+
+## 2026-10-16 · 复核「1.21.11 两种名都编译」：真因是类路径挂了两个 jar（维护档）
+
+**第 0 块 · 结论**：用户转述另一 agent 的结论「1.21.11 两种名都能编译」。我用**真工程 + 真 Gradle** 实测，结论是**都对、但各在自己那一侧**：**同一个工程里只能编译一种**，由工程 `mappings` 行决定；「两种都编译」只在**把 yarn 与 mojmap 两个映射 jar 同时挂进同一类路径**时才成立——那也是最可能的复现来源。本仓库自己的 `fabric/1.21.11/scaffold` 钉 **yarn**（`build.gradle:21`），故 mc-sound 原文的官方名在该 scaffold 里**编译不过**；Fabric 文档参考工程钉 `loom.officialMojangMappings()`（`data/fabric_1.21.11/reference/1.21.11/build.gradle:8`），官方名在那边编译过。**本轮未改仓库任何源稿/镜像/数据**，只写本节与审计记录。
+
+### ① 改了哪些文件
+
+- 仅 `DELIVERY_LOG.md`（本节）与 `doc/name-provenance-audit.md`（§8.25）。
+- `fabric/1.21.11` 保持上一轮的还原态（`git status -- fabric/1.21.11` 为空），未动任何档。
+
+### ② 判据与反证
+
+**四臂真 Gradle 实验**（工程 `F:\MOD_TEST\dev\fabric-1.21.11`，JDK 21，`gradlew compileJava`）：
+
+| 工程 mappings | 测试内容 | 结果 |
+| --- | --- | --- |
+| yarn（工程原样） | 基线（不改源） | PASS |
+| yarn | `SoundEvent.of(Identifier.of(..))` + `Registries.SOUND_EVENT` | **PASS** |
+| yarn | `SoundEvent.createVariableRangeEvent(Identifier.fromNamespaceAndPath(..))` + `BuiltInRegistries` | **FAIL**（`程序包 net.minecraft.core 不存在` / `net.minecraft.resources 不存在` / `net.minecraft.sounds 不存在`） |
+| yarn | 对照：`SoundEvent.definitelyNotAMethod()` | FAIL（如期） |
+
+**mojmap 侧两臂**（同一工程复制一份，只把 `mappings` 一行换成 `loom.officialMojangMappings()`，并清掉自带源以免用它的 yarn 名干扰归因）：
+
+| 工程 mappings | 测试内容 | 结果 |
+| --- | --- | --- |
+| officialMojangMappings | Yarn 名 | **FAIL**（`程序包 net.minecraft.registry 不存在` / `net.minecraft.sound 不存在`） |
+| officialMojangMappings | 官方名 | **PASS** |
+| officialMojangMappings | 对照：bogus 符号 | FAIL（如期） |
+
+**「两种都能编译」的来历**（javac 三档对拍，同一对测试文件）：
+
+| 类路径 | Yarn 名 | 官方名 |
+| --- | --- | --- |
+| 只挂 yarn jar | PASS | FAIL |
+| 只挂 mojmap jar | FAIL | PASS |
+| **两个 jar 都挂** | **PASS** | **PASS** |
+
+⇒ 两个映射 jar 同时进类路径时，`net.minecraft.util.Identifier`（yarn）与 `net.minecraft.resources.Identifier`（mojmap）**同时可见**，两种写法都过。真工程里类路径只会有其中一个（由 `mappings` 行决定），所以现实中只有一种能过。
+
+**官方名在 1.21.11 确实存在**（独立佐证）：loom 已用 `officialMojangMappings()` 产出 `1.21.11-loom.mappings.1_21_11.layered+hash.2198-v2`，javap 得 `net.minecraft.resources.Identifier.fromNamespaceAndPath(String,String)` 与 `net.minecraft.sounds.SoundEvent.createVariableRangeEvent(Identifier)` 都在——只是不在 yarn 工程里。
+
+### ③ 验证台账
+
+- 真 Gradle 四臂 + 复制工程三臂 + javac 三档对拍；**所有对照臂（bogus 符号）如期失败** ⇒ 编译确在真跑，不是缓存/跳过。
+- 工程出处：`F:\MOD_TEST\dev\fabric-1.21.11\build.gradle:21`（yarn）、`data/fabric_1.21.11/reference/1.21.11/build.gradle:8`（officialMojangMappings）。
+- 本轮不动仓内文件，故无需重跑门（无源稿/镜像/规则改动）。
+
+### ④ 数据侧变更
+
+无。
+
+### ⑤ 未做清单
+
+- `fabric/1.21.11` 的 mc-sound **按用户令保持原样**（官方名原文），未改。
+- 未改其它任何档。
+
+### ⑥ 自我更正
+
+- 我上一节把官方名笼统写成「编译不过」。**精确说法**：在**本仓 scaffold（yarn）**里编译不过；在 **mojmap 工程**里能过。措辞在此更正；核心结论（两种名各属一层、同一工程不可混）不变。
+- 我此前对「两种都能编译」这一转述的第一反应是「不可能」——**实测证明它成立，只是成立条件是类路径同时挂两个映射 jar**，而非同一工程可混用。
+
+---
+
+## 2026-10-16 · 按用户令还原 fabric/1.21.11 的 mc-sound（1.21.11 是过渡档，不更改）（维护档）
+
+**第 0 块 · 结论**：按用户令「1.21.11 是过渡档，你先看看实际编译的时候用的是什么名字，不用更改」——已用 `git checkout --` 把 `fabric/1.21.11` 的 **8 面 mc-sound 全部还原**到原文（`git status -- fabric/1.21.11` 现为空）。该令要的核查结果抄在此：**实际编译用的是 Yarn 名** —— 真工程 `F:\MOD_TEST\dev\fabric-1.21.11` 与 `F:\MC_GAME\fabric-1.21.11` 的 `build.gradle` 都挂 `mappings "net.fabricmc:yarn:${yarn_mappings}:v2"`（`yarn_mappings=1.21.11+build.6`），其源码通篇 `Identifier.of(...)` / `Registries.*`（全工程零命中 `BuiltInRegistries` / `ResourceLocation`），与该档 yarn jar 的 javap 读数（`SoundEvent.of(Identifier)` / `Identifier.of` / `Registries.SOUND_EVENT`）一致。**`fabric/1.18.2` 的修复与本令无关，保留**——那是照抄编译不过的硬缺陷，且不在「过渡档」范围。
+
+### ① 改了哪些文件
+
+- 还原 8 件（内容回滚至 `HEAD`）：`fabric/1.21.11/.cursor/skills/mc-sound.md` + 7 面镜像（`.agents` / `.claude` / `.continue` / `.opencode` / `.pi` / `.trae` / `.zcode`）——即上一节点名的那 8 件。
+- 未动：`fabric/1.18.2`（保留本轮修复）、`fabric/26.1.2`（本就正确）、`fabric/1.21.11` 里其它技能。
+
+### ② 判据与反证
+
+- 判据 = **真工程**（不是文档、不是映射库推断）：`F:\MOD_TEST\dev\fabric-1.21.11\build.gradle:21`、`F:\MC_GAME\fabric-1.21.11\build.gradle:31` 均为 `mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"`；两工程 `gradle.properties` 均 `yarn_mappings=1.21.11+build.6`。工程源码实际写 `Identifier.of(...)`（`ModBlocks.java:20` / `ModPayloads.java:15`）与 `Registries.BLOCK|ITEM|ENTITY_TYPE|SCREEN_HANDLER`（`ModBlocks.java:16` / `ModItems.java:16` / `ModBlockEntities.java:16` / `ModMenus.java:15`）。
+- **反证**：全工程 grep **零命中** `BuiltInRegistries` / `ResourceLocation` / `fromNamespaceAndPath`；javap 该档 yarn merged jar 得 `SoundEvent.of(Identifier)`、`Identifier.of(String,String)`、`Registries.SOUND_EVENT`、`Registry.register(Registry,Identifier,T)`。⇒ 该档编译面就是 Yarn 名。
+- **保留的事实（不改文件，但留档）**：正因如此，`mc-sound` 原文那行（官方名）在钉 yarn 的 scaffold 里**编译不过**；同档其它技能对同类情况的做法是「引官方名原文 + `| BuiltInRegistries | Registries |` 名对照表 + 口径警告」（如 `mc-enchantment.md:19` 明写「禁止把官方名当 Yarn 名直接写」），而 `mc-sound` 原文把官方名写成「本版口径」且无警告。此观察留待用户日后裁定，本轮不动。
+
+### ③ 验证台账
+
+- `git status --porcelain -- fabric/1.21.11` = **空**（8 件全部回到 `HEAD`）。
+- 还原令源稿与镜像同时回到基线，故镜像一致性无需重刷（该档上一轮 `assert-skill-mirrors` 基线即绿）。
+- `fabric/1.18.2` 侧未动，其上轮四条门读数（mirror / yarn-attest / rules-api-names / scaffold-conflict，全绿）继续有效。
+
+### ④ 数据侧变更
+
+无。
+
+### ⑤ 未做清单
+
+- 用户令范围内的 `fabric/1.21.11` 其它技能（`mc-effect` / `mc-enchantment` / `mc-potion` / `mc-multiblock` / `mc-particle`）**未动**。
+- 上一节里 `fabric/1.21.11` 的 mc-sound 改写**已全部撤回**；该节其余内容（1.18.2 修复、逐档溯源、双向 javac）仍然有效。
+
+### ⑥ 自我更正
+
+- 本节点名并更正上一节《fabric 声音族溯源收尾》：该节对 `fabric/1.21.11` 做的 mc-sound 改写**已撤回**（用户裁定该档为过渡档、不更改）；对 `fabric/1.18.2` 的修复**不在撤回范围**，仍有效。
+- 我此前把「门/证据发现缺陷」直接等同于「应当改文」。这次被用户纠正：**证据只提供事实，「改不改」由用户拍板**，尤其对「过渡档」这类带产品意图的档。以后同类发现先报事实与选项，不径自改。
+
+---
+
+## 2026-10-16 · fabric 声音族溯源收尾：1.18.2 无 `SoundEvent.of` + 1.21.11 把 mojmap 名当本版口径（维护档）
+
+**第 0 块 · 结论**：把上轮挂账的 fabric `SoundEvent.of` 悬案查到底。**真构件实测**（javap @ yarn merged jar）证实 `SoundEvent.of(Identifier)` 在 **1.14.4 / 1.16.5 / 1.17.1 / 1.18.2 都不存在**（该族只有构造器 + `getId()`），**从 1.19.4 起才有** ⇒ `fabric/1.18.2` 的 mc-sound 骨架是真缺陷（照抄编译不过），已按 1.14.4/1.16.5 同法改为 `new SoundEvent(new Identifier(...))`。另查出 **`fabric/1.21.11` 的 mc-sound 整条注册行是 mojmap 名混进 yarn 档**（`BuiltInRegistries` / `Identifier.fromNamespaceAndPath` / `SoundEvent.createVariableRangeEvent` 三个在 yarn 1.21.11 全不存在），已改回 Yarn 名并补映射口径披露。**26.1.2 经查无误**（去混淆档，那三个官方名在真 jar 里都在），不动。2 档 × 8 面镜像已刷。**测到 L1（静态/规则门），绿**：mirror / yarn-attest / rules-api-names / scaffold-conflict 四门全绿；**L0 编译未跑**（须用户工程或授权沙箱，人在环）。
+
+### ① 改了哪些文件
+
+- 源稿 2 件：
+  - `fabric/1.18.2/.cursor/skills/mc-sound.md` —— L19 `SoundEvent.of(new Identifier(...))` → `new SoundEvent(new Identifier(...))`，并加一行 javap 出处注释。
+  - `fabric/1.21.11/.cursor/skills/mc-sound.md` —— L23 注册行由 mojmap 名改为 Yarn 名（`Registries.SOUND_EVENT` / `Identifier.of(...)` / `SoundEvent.of(...)`）；L24 新增「⚠️ 映射口径」披露，点名上游页三个 mojmap 名与本档 Yarn 名的对应；L63 订正一句**反向禁令**（原文禁止抄 `SoundEvent.of`，而它恰是 1.21.11 的 Yarn 正名）。
+- 镜像 16 件：上述两档各 8 面（`.cursor` / `.agents` / `.claude` / `.continue` / `.opencode` / `.pi` / `.trae` / `.zcode`），由 `scripts/sync-skills.ps1 -TargetDir fabric/1.18.2|fabric/1.21.11` 生成；`findstr` 复核 8/8 面均已带新文。
+
+### ② 判据与反证
+
+判据 = **真构件 javap**（不用语料、不用记忆），且按「该档钉的映射层 + 该档真构件」逐档判：
+
+- `SoundEvent.of` 存在性的**双档判据**：① 仓内 `data/fabric_<ver>/mappings/yarn-mappings.sqlite` 的 `methods`（`owner_named = net/minecraft/sound/SoundEvent`，注意 owner 是**斜杠形**）；② 真 yarn merged jar 的 `javap`。
+  - 1.14.4 / 1.16.5 / 1.17.1 / 1.18.2：sqlite 只有 `getId()` ⇒ 无 `of`；1.18.2 jar javap 进一步给出 `public SoundEvent(Identifier)` 与「仅 `getId()`」⇒ 改法成立。
+  - 1.19.4 起：sqlite 出现 `of(Identifier)` 等三个重载 ⇒ 原样正确，不动。
+- 1.21.11 的 mojmap 名混入：`javap @ yarn 1.21.11+build.6` 实测 —— `Identifier` 有 `of(String,String)` / `of(String)` / `tryParse`，**无 `fromNamespaceAndPath`**；`SoundEvent` 有 `public static of(Identifier)`，**无 `createVariableRangeEvent`**；yarn 侧的注册表类是 `Registries` / `BuiltinRegistries`（**小写 i**），不是 `BuiltInRegistries`。⇒ 上游页（mojmap 层）原文那三个名在 yarn 工程里全部编译不过。
+- **反证一（特意证伪「1.21.11 该保留官方名」）**：`fabric/26.1.2` 写同样三个名却**正确**——26.1.2 是**去混淆档**（`data/fabric_26.1.2/mappings` 为空、无 yarn），真 jar（`minecraft-merged-deobf-26.1.2.jar`）javap 实测 `Identifier.fromNamespaceAndPath(String,String)` 与 `SoundEvent.createVariableRangeEvent(Identifier)` 都在。⇒ 同一串名字在两档得相反结论，判据只能是「该档映射层 + 真构件」。
+- **反证二（判一处「疑似」为假）**：`fabric/1.16.5/AGENTS.md:86` 出现 `BuiltInRegistries.ITEM`，读原文 = **显式 `❌ 1.16.5 错误写法` 反例段**（:84 起，:81 才是正确写法 `Registry.ITEM`），非缺陷。
+
+### ③ 验证台账
+
+| 门 | 读数 |
+| --- | --- |
+| `assert-skill-mirrors` | ok · 镜像比对目标=12418 · **拒=0** |
+| `assert-skill-yarn-attest` | ok · 清单 532 件（判 494 + 26.1.2 放行 38）· 映射腿 ok:494 · 未入清单 0 |
+| `assert-rules-api-names` | **红=0 豁免=0** 未执法腿=0（档=14 · 判名 3987） |
+| `assert-scaffold-rules-conflict` | 47 档 · ❌ 455 行 · 判死 67 · **scaffold 冲突 0** · 台账 checked |
+
+真构件出处（本机路径）：`C:\Users\zzrCN\.gradle\caches\fabric-loom\minecraftMaven\net\minecraft\minecraft-merged\1.18.2-net.fabricmc.yarn.1_18_2.1.18.2+build.4-v2\*.jar`、`…\minecraft-merged\1.21.11-net.fabricmc.yarn.1_21_11.1.21.11+build.6-v2\*.jar`、`…\minecraft-merged-deobf\26.1.2\minecraft-merged-deobf-26.1.2.jar`。
+
+**双向 javac 实测**（`F:\MOD_TEST\cc\run.bat`，`-cp` = 上述真 yarn jar，JDK 21；正反两臂都跑）：
+
+| 臂 | 源码 | 期望 | 实测 |
+| --- | --- | --- | --- |
+| A | 1.18.2 `new SoundEvent(new Identifier("x","y"))` | PASS | **PASS** |
+| B | 1.18.2 原骨架 `SoundEvent.of(new Identifier(...))` | FAIL | **FAIL**（`找不到符号 方法 of(Identifier) 位置: 类 SoundEvent`） |
+| C | 1.21.11 `SoundEvent.of(Identifier.of("x","y"))` | PASS | **PASS** |
+| D | 1.21.11 原骨架 `SoundEvent.createVariableRangeEvent(Identifier.fromNamespaceAndPath(...))` | FAIL | **FAIL**（`找不到符号 方法 fromNamespaceAndPath(String,String) 位置: 类 Identifier`） |
+
+⇒ 修复后的两行**真编译通过**；被替换掉的两行**真编译不过**（编译器点名的正是所判缺名）。这是调用点级证明，**不等于整工程 build**（见第五块）。
+
+### ④ 数据侧变更
+
+无。未动 `data/`，未增删档，未动任何台账 JSON —— 本轮两处改动都落在**技能面**，不在 `assert-scaffold-rules-conflict` 的扫描面（`.cursor/rules`）内，故该门读数与台账零漂移。
+
+### ⑤ 未做清单
+
+- **整工程 L0 / 进游戏 L4 未跑**：两处改动经「映射库 + javap 真构件 + **调用点双向 javac**」判名与判编译，但**未在用户工程里整工程 build、未真进游戏**。按阶梯本改动面（技能正文骨架）的最低层是 L1（结构/静态），已绿；整工程 L0 与 L4 须在用户工程或授权沙箱里跑（人在环，不代跑）。
+- **1.21.11 同档其余技能未逐行复核**：`mc-effect` / `mc-enchantment` / `mc-potion` / `mc-multiblock` / `mc-particle` 同样引用 mojmap 名，但各自**自带 `| BuiltInRegistries | Registries |` 名对照表 + 口径披露**（抽查 `mc-enchantment.md:19` 明写「禁止把官方名当 Yarn 名直接写」）⇒ 本轮未逐行判它们是否也该改，留待下轮。
+- 承上轮未变：legacy forge 1.7.10–1.11.2 的 MCP 可读名、quilt QSL 面，仍不可验。
+
+### ⑥ 自我更正
+
+- 上轮我把 `SoundEvent.of` 悬案记为「fabric 1.18.2 待看」。本轮查明 **1.18.2 确为真缺陷并已修**。
+- 同时**发现上轮漏掉的同类、更严重一处**：1.21.11 整行 mojmap 混入。上轮 gauge 的判据停在「这个名字存不存在」，**`BuiltInRegistries` 一类「类名级 + 层错」不在其射程**，故漏报 —— 又一次「门窄于问题」的实例，已记入审计文档。
+- **更正我一度提出的错误推断**：我按记忆推「26.1.2 是 mojmap ⇒ 该用 `ResourceLocation`，写 `Identifier` 是错的」。**该推断错误**：26.1.2 真 jar 里类名**就是 `Identifier`**（Mojang 已把 `ResourceLocation` 改名），`ResourceLocation` 反而 MISS。已按真构件结论判 26.1.2 **正确、不改**。
+
+---
+
+## 2026-10-16 · 覆盖面再扩到 neoforge 全族 + 按用户指示下载缺件到 F:\MC_GAME（维护档）
+
+**第 0 块 · 结论**：按用户指示「验不了的应该没下载，搞到 `F:\MC_GAME` 里去」办完：① 先在盘上找——**大部分不需要下载**（legacy forge 目录自带 `mcp-<ver>.zip`、loom 有 **26.x 未混淆 merged jar**、fabric sqlite 带 **`name_official`（mojmap）列**）；② 真缺的只有 **neoforge 1.20.6 / 1.21.5 的 MC 映射**与 **legacy 1.7.10–1.11.2 的 MCP 名**；③ 前者已下载到 `F:\MC_GAME\mappings\client-1.20.6.txt` / `client-1.21.5.txt`，后者**官方 maven 给不出**（只有 `csrg`/`srg`，无 `methods.csv`）。覆盖面 **24 → 35 档**（forge 11 + fabric 14 + neoforge 10），**neoforge 全族 0 处真缺陷**（唯一 1 行是文档里显式标注的 ❌ 下一跳反例）。
+
+### 1. 改了哪些文件
+
+- 本轮**未改仓内知识文件**；新增便签（`F:\MOD_TEST\`）：`build-roster-extra.mjs`、`build-roster-mojang.mjs`、`fetch-mappings.mjs`、`roster-map-*.json`（新增 10 份）。
+- **写到用户指定目录** `F:\MC_GAME\mappings\`：`client-1.20.6.txt`(9.4 MB)、`client-1.21.5.txt`(10.2 MB)；下载过程中 5 个 MCP 404 页面已删除。
+- 台账：`doc/name-provenance-audit.md` §8.23；本文件本节。
+
+### 2. 判据与反证
+
+- **不必下载的**：`fabric-loom\26.1.2\minecraft-merged.jar`（26.x 已去混淆 ⇒ 名直接可读）⇒ 覆盖 fabric 26.1.2 与 neoforge 26.1；`data/fabric_<ver>/mappings/yarn-mappings.sqlite` 的 `classes.official` + `methods.name_official` ⇒ 拼出 **mojmap roster**，覆盖 **neoforge 8 档**（1.20.1/1.20.4/1.21.1/1.21.3/1.21.8/1.21.10/1.21.11/26.1）。
+- **必须下载的**：neoforge 1.20.6 / 1.21.5（那两个 MC 版本没有 fabric sqlite）⇒ 已下 Mojang `client_mappings`。(1.20.6 首次 TLS 握手失败，重试成功。)
+- **下不到的**：legacy **1.7.10–1.11.2 的 MCP 可读名** —— `maven.minecraftforge.net/de/oceanlabs/mcp/mcp/<ver>/` 只发布 `csrg`/`srg`（映射快照），**没有** `conf/methods.csv`（该文件在 MCP 发行包 `mcp-<ver>.zip` 里，由第三方站分发，且仓内同名 zip 只有 4–393 个条目、无 csv）。⇒ 这 5 档**仍不可验**。
+- **反证（neoforge 干净且不是因为没解析上）**：`GAUGE_VERBOSE` 实测 10 个 `roster-map-neoforge-*.json` **全部被 absorb**；roster 是真名（1.20.6 = 8206 类/57242 成员，1.21.5 = 9148/64190）。跑出的唯一一行 `neoforge 1.20.6 ResourceLocation.fromNamespaceAndPath` 经读原文 = `// ❌ 下一跳（1.21+）才有` 的**负例**，文档还自己标了本档语料该名 0 命中 ⇒ **假阳**。
+
+### 3. 验证台账
+
+| 项 | 读数 |
+| --- | --- |
+| 构件覆盖面 | **35 档**：forge 11（9 mapped jar + 1.12.2/1.13.2 映射库）、fabric 14（3 jar + 10 映射库 + 26.1.2 merged jar）、neoforge 10（8 映射库 official 列 + 2 下载映射 + 26.1 merged jar） |
+| 仍不可验 | forge **1.7.10–1.11.2**（MCP 可读名 maven 不给）、forge 1.21.1(draft)、quilt 的 QSL API 面、liteloader/rift/modloader/bedrock |
+| v12 候选 | 74 行（forge 35 / fabric 38 / **neoforge 1**） |
+| 门 | 本轮未改仓内文件 ⇒ 未复跑门（上节全绿读数仍有效） |
+
+### 4. 数据侧变更
+
+- 无（下载件落在用户指定目录 `F:\MC_GAME`，不动仓库）。
+
+### 5. 未做清单
+
+- fabric 侧 38 行**未逐条裁决**（按同档语料核过：多数是**父链缺失型假阳**——映射库 roster 无 `super`，如 `ClientPlayerEntity.playSound` 实为 `Entity` 声明；或 **mojmap↔yarn 口径差异**），**但其中 `fabric 1.18.2 SoundEvent.of` 需要单独看**：1.14.4/1.16.5 我已按构件改成构造器，1.18.2 是否同改要再核 yarn 1.18.2。
+- forge 1.7.10–1.11.2 若要验，需要 MCP 发行包（第三方站）——本机/官方源都没有。
+
+### 6. 自我更正
+
+- 上节说「fabric 1.18.2+ 只有 intermediary 的 merged jar，无 yarn」⇒ **不完整**：`data/fabric_<ver>/mappings/yarn-mappings.sqlite` 本身就是完整 yarn 名录；`26.1.2` 的 merged jar 因 26.x 已去混淆而可读。已按此扩面。
+
+## 2026-10-16 · 追问收口：覆盖面再扩（仓库映射库）+ 改动点编译验证（维护档）
+
+**第 0 块 · 结论**：针对「未验档其实盘上有 / 混层怕改错 / 能不能编译进游戏」三问，做完三件事：① 覆盖面**从 12 档扩到 24 档**——除 jar 外改吃**仓库自带 `data/*/mappings/yarn-mappings.sqlite`**（fabric 全族 yarn 名、legacy forge 经 `searge_methods` 换 MCP 名、quilt 复用同版本 fabric 名）；② 对**每一处改动调用点跑真 javac**（jar 即该档 scaffold 钉的通道）⇒ **15/15 编译通过**；③ 逐档核对「通道 vs 我改的名字」，确认是**按档改**而非全局替换（1.14.4/1.13.2 的 MCP 写法**未动**）。
+
+### 1. 改了哪些文件
+
+- 本轮**未改仓内知识文件**（只做验证与记账）。新增便签（`F:\MOD_TEST\`，不入库）：`build-roster-map.mjs`、`nonfabric-skill-names-v12.mjs`、`compile-check.mjs`（含 15 个真实调用点）+ `roster-map-*.json`（17 份）。
+- 台账：`doc/name-provenance-audit.md` §8.22；本文件本节。
+
+### 2. 判据与反证
+
+- **覆盖面（实物）**：`F:\MC_GAME\_oracle-jars\` 有 quilt-QSL 15 / fabric-api 6 / liteloader 4 / modloader / mc 3，但**无 neoforge**；`neoformruntime\artifacts\minecraft_*_client.jar` 是**未映射件**。真正的扩面来自**仓库映射库**：`fabric_*` 14 档（22k–50k 方法/档，yarn 名）、`forge_1.7.10–1.13.2`（SRG；仅 1.12.2/1.13.2 有 `searge_methods` 可换 MCP 名，1.7.10–1.11.2 连 `methods.csv` 都没有 ⇒ **仍不可验**）。
+- **反证 ①（扩面后确有新面）**：v12 = **73 行**（v11 47 + 26 fabric/legacy 新行）。逐条对着同档语料核：**新行里零语料的只有 2 条**（`1.18.2 version-changes/1.21.x.md` 的 `createBlocks/createItems`，是**讲 1.21 迁移**的正确写法），其余全是①**父链缺失型假阳**（映射库 roster 无 `super`，如 `ClientPlayerEntity.playSound` 其实是 `Entity` 声明）②**mojmap↔yarn 口径差异**（`Component.literal` 对 `Text.literal`，语料有据）③既知负例/迁移行。⇒ **扩面没有挖出新的、可坐实的缺陷**。
+- **反证 ②（改动点真能编译）**：`compile-check.mjs` 对 15 个改动调用点（含 6 档）用**该档通道的 mapped jar** 跑 `javac` —— **15/15 PASS**（`ScreenManager.register`、`RegistryKey.create`、`MobSpawnInfo.Builder`、`LootTable.lootTable`、`RandomValueRange.between`、`RenderType.entityTranslucent`、`TextComponent`/`TranslatableComponent`、`BlockEntity.getUpdatePacket`、`SoundEvent(Identifier)`、`TypedActionResult(ActionResult,T)`）。
+- **反证 ③（是按档改，不是全局替换）**：各档 `scaffold/gradle.properties` 的通道决定名字 —— 1.13.2/1.14.4 = `snapshot`(MCP) ⇒ 其 `registerFactory` 等**正确、未动**；1.15.2/1.16.5/1.17.1/1.20.1 = `official`；1.18.2/1.19.4/1.20.4 = `parchment`（成员名同 official）；fabric = yarn。**只改后四类**。
+- **反证 ④（有争议的两处已具名）**：`RegistryKey.get`、`RenderType.getEntityTranslucent` 的上游 primer **写的就是这两个 MCP 名**；我按**构件**改成 `create`/`entityTranslucent` 并在原行加注。⇒ 若项目口径是「语料优先」，这两处应回退为语料名 + 标注 —— **这是口径裁定，不是事实裁定**。
+
+### 3. 验证台账
+
+| 项 | 读数 |
+| --- | --- |
+| 构件覆盖面 | **24 档**：forge 9（mapped jar）+ fabric 13（3 jar + 10 映射库）+ forge 1.12.2/1.13.2（映射库）；quilt 借同版本 fabric |
+| 仍不可验 | forge 1.7.10–1.11.2、forge 1.21.1(draft)、**neoforge 全族**、fabric 26.1.2、quilt 的 QSL API 面、liteloader/rift/modloader/bedrock |
+| v12 候选 | 73 行（新 26 行；零语料仅 2 条且为迁移文档） |
+| **改动点编译** | **15/15 PASS**（javac + 该档 mapped jar） |
+| 门 | 镜像 / 规则名 / 13 内容门 / conflict 台账 / **第 8 步** 全绿 |
+
+### 4. 数据侧变更
+
+- 无（本轮只读）。
+
+### 5. 未做清单
+
+- **未跑整树 gradle 构建、未起游戏**：改动全在 rules/skills/knowledge **正文**（示例文本），非工程源码；「整工程可构建 / 可进世界」属 L0/L4，须在用户工程或授权沙箱跑（人在环）。
+- 仍未逐条裁决 v12 那 26 条新行（已分类：父链假阳 / 口径差异 / 迁移负例，**无一坐实**）。
+- neoforge 与 legacy 1.7.10–1.11.2 若要验，需要用户指路 mapped jar（本机缓存里没找到）。
+
+### 6. 自我更正
+
+- 上节我说「未验档本机无 jar」⇒ **不够准确**：① `_oracle-jars` 另有 quilt/liteloader/fabric-api 实物；② 更关键的是**仓库映射库本身就是完整成员名录**，足以覆盖 fabric 全族与 1.12.2/1.13.2。已按此扩面。
+
+## 2026-10-16 · 修 1.16.5 三处 + 构件核验推到全档（forge 9 档 + fabric 3 档）（维护档）
+
+**第 0 块 · 结论**：先修掉上轮查出的 **forge/1.16.5 三处**（`ScreenManager.registerFactory`→`register`、`RegistryKey.get`→`create`、`MobSpawnInfo/BiomeGenerationSettings.builder()`→`new …Builder()`），再把「构件核验」**推到全部能验的档**：new 量具从**真构件 mapped jar 的 class 文件**抽出「全类成员 + 超类」（自带父链，覆盖 vanilla），跑出 **64 行**候选，逐条用 javap/roster 裁决后又修 **forge 1.15.2 / 1.17.1 / 1.18.2 + fabric 1.14.4 / 1.16.5 共 5 档**。修后量具 **64 → 47 行**，剩下 47 行**全部**是已解释的假阳。门：15 道内容门 + 镜像 + 规则名 + **第 8 步全绿**。
+
+### 1. 改了哪些文件
+
+**forge/1.16.5（上轮查出的三处）**
+- `.cursor/rules/10-gui.mdc:54,107,159` + `.cursor/skills/mc-gui/SKILL.md:103,153`：`ScreenManager.registerFactory` → `register`（+ 构件实证注释）。
+- `code-patterns/04-world-patterns.md:26,27`：`MobSpawnInfo.builder()` → `new MobSpawnInfo.Builder()`；`BiomeGenerationSettings.builder()` → `new BiomeGenerationSettings.Builder()`。
+- `.cursor/skills/mc-dimension/SKILL.md:48,67`、`.cursor/skills/mc-worldgen/SKILL.md:20`、`knowledge/version-changes/1.16.x.md:21,27,51,52`：`RegistryKey.get(` → `RegistryKey.create(`（:67 那条「未核实」改成已核实结论）。
+
+**推到全档后新修（构件实证）**
+- `forge/1.15.2`：`.cursor/skills/mc-gui/SKILL.md:125`、`.cursor/rules/10-gui.mdc:56,113,171` → `register`；`.cursor/rules/07-datagen.mdc` 战利品 DSL 改 official 名（`LootTable.lootTable().withPool(` / `LootPool.lootPool().add(` / `ItemLootEntry.lootTableItem(` / `.apply(` / `RandomValueRange.between(`）；`knowledge/version-changes/1.15.x.md:24` → `RenderType.entityTranslucent`。
+- `forge/1.17.1`：`.cursor/rules/10-gui.mdc:166` + `.cursor/skills/mc-gui/SKILL.md:110` → `new TextComponent(...)` / `new TranslatableComponent(...)`；`.cursor/rules/06-networking.mdc:100` + `08-client-server.mdc:118` → `getUpdatePacket()`。
+- `forge/1.18.2`：`.cursor/skills/mc-gui/SKILL.md:106` + `.cursor/rules/10-gui.mdc:164` → `new TextComponent(...)`。
+- `fabric/1.14.4`：`.cursor/skills/mc-sound.md:19` → `new SoundEvent(new Identifier(...))`；`.cursor/skills/mc-item.md:122` + `.cursor/rules/03-item.mdc:169` → `new TypedActionResult<>(ActionResult.SUCCESS, …)`。
+- `fabric/1.16.5`：`.cursor/skills/mc-sound.md:19` → `new SoundEvent(new Identifier(...))`。
+- 镜像：`sync-skills.ps1 -TargetDir` 刷了 forge/1.15.2 · 1.16.5 · 1.17.1 · 1.18.2 + fabric/1.14.4 · 1.16.5 六档。
+- 门侧：`mcp-server/scripts/assert-scaffold-rules-conflict.mjs` 台账重钉（`verdictSkipped` 2341→2354）+ `mcp-server/scripts/data/scaffold-banned-symbols.json` 重生成（锚点 +3）。
+- 便签与产物（`F:\MOD_TEST\`，不入库）：`classfile.mjs`（最小 class 文件解析器）、`build-roster.mjs`、`nonfabric-skill-names-v11.mjs`、`triage-v10.mjs`、`javap1165*.mjs`、`roster-*.json`（12 份）。
+- 台账：`doc/name-provenance-audit.md` §8.21；本文件本节。
+
+### 2. 判据与反证
+
+- **反证 1（解析器可信）**：`classfile.mjs` 的输出与 `javap -p` 在四个抽查点上**逐字一致** —— `ScreenManager`(有 register / 无 registerFactory)、`RegistryKey`(有 create / 无 get)、`AbstractBlock`(有 use / 无 onBlockActivated)、`Component`(1.17.1 无 literal/translatable)。静态方法与构造器都在（`Ingredient.of`、`TypedActionResult(ActionResult,T)` 均取到）。
+- **反证 2（roster ≠ api-index 子集）**：`data/forge_1.16.5/extracted/api-index.json` 是**子集**（`Block` 只 62 个方法、`use`/`onBlockActivated` 皆无）⇒ 「查无」不能当不存在。roster 是**完整名录**，故 v11 用 roster、v10 的 api-index 只作兜底。
+- **反证 3（fabric 侧真的错）**：两个 fabric 树的 pin 是 `1.14.4+build.18` / `1.16.5+build.10`，与手上两个 yarn mapped jar **同 build**；javap 两者 `SoundEvent` 都只有构造器 ⇒ `SoundEvent.of` 确为缺陷。`TypedActionResult` 同理（只有 `TypedActionResult(ActionResult, T)`）。
+- **反证 4（父链生效）**：v11 后 `Properties.*`(20 行) 全部解析到 `net.minecraftforge.common.property.Properties`（文档本意是 `Block.Properties`）⇒ 该类级解析错配是**假阳主因**，不是 API 缺陷。
+- **反证 5（门是先红后绿的）**：`assert-scaffold-rules-conflict` 先因我加的 ❌ 注释把 `addLootPool`/`addFunction` 判死面扩大而红 → 改写注释后 only `verdictSkipped` 漂移 → 按 RELEDGER 实算值重钉后绿（逐档判死分布**未变**，实算一致）。
+
+### 3. 验证台账
+
+| 项 | 读数 |
+| --- | --- |
+| 量具 | 64 → **47 行**（修掉 17 行；余 47 全为已解释假阳） |
+| 构件覆盖 | forge 9 档（1.13.2/1.14.4/1.15.2/1.16.5/1.17.1/1.18.2/1.19.4/1.20.1/1.20.4）+ fabric 3 档（1.14.4/1.16.5/1.17.1） |
+| assert-skill-mirrors | ok（比对目标 12418 · 拒 0） |
+| assert-rules-api-names | 红 0 豁免 0 |
+| 13 道内容门 | 全 GREEN rc=0 |
+| assert-scaffold-rules-conflict | 47 档 · 判死 67 · 冲突 0 · 台账 checked |
+| **第 8 步 `test-scripts.mjs`** | **rc=0** · 未执法腿 0 · script helper regression passed |
+
+### 4. 数据侧变更
+
+- `mcp-server/scripts/data/scaffold-banned-symbols.json` 重生成（判死符号锚点整体 +3 行，来自 1.15.2 `07-datagen.mdc` 的注释与改写）。
+
+### 5. 未做清单
+
+- **未验档**（本机无对应命名层 mapped jar）：forge 1.7.10–1.12.2、forge 1.21.1、**neoforge 全族**（`neoformruntime` 只有**未映射**的 `minecraft_*_client.jar`）、fabric 1.17.1 以外的 1.18.2+（只有 intermediary 的 merged jar，无 yarn mapped）、quilt / liteloader / rift / modloader / bedrock。这些档的 G2 仍只用 loader 摘要 + 语料，**不构成缺陷证据**。
+- 余下 47 行假阳未清（`Properties.*` 20、`LivingEntity.registerAttributes` 6「不要写」、`Entity.getSlotForHand` 4 ❌ 反例、1.12.2 六行、迁移文档 3 行、`FabricBlockSettings.of` 6（FAPI 不在 MC jar）、`MixinBootstrap.init` 1、`BlockState.with` 1（档内已自带更正说明））。
+- 量具`判据仍缺：**参数类型校验**（只判方法名存在）、**层内一致性**（不判「文档名与该档通道是否同层」）。
+
+### 6. 自我更正
+
+- 我上一轮把「1.16.5 只有一点点问题」当成全局结论，是**判据太窄**：只查 loader 摘要（约 1000 个 loader 类）且只认 `Cls.member(` 一种写法。这一轮换真构件 + 加 `#` 记法 + 推到 6 档，才把 1.15.2/1.17.1/1.18.2 + fabric 两档的同类问题挖出来。
+- 一并更正：我一度把 `Block#use`(1.16.5) 当疑点，真构件证明它**是对的**（`AbstractBlock#use`），错报根因是 api-index 子集缺该方法。
+
+## 2026-10-16 · G2 父链上马 + 修 3 处内容问题（含镜像同步）（维护档）
+
+**第 0 块 · 结论**：**G2 推到「父链成员」**——摘要没有 `superclass` 字段（`modifiers` 只有 public、`methods` 只收**声明**方法），继承来的成员会假红；改从**真构件 sources jar** 抽继承表（`hier-<platform>-<version>.json`）并沿链查找，自检两向证明代码路径是活的（1.16.5 的 `FMLCommonSetupEvent` 继承 `ParallelDispatchEvent#enqueueWork` ⇒ 压制；1.15.2/1.14.4 无此方法 ⇒ 仍判红；假成员对照恒 false）。**同时修掉上轮查出的 3 处内容问题**（共 4 行 / 3 文件）。量具读数：修前 36 行 → **修后 33 行**（被修的三行全清）。两个改动档镜像已同步；**15 道门全绿**。
+
+### 1. 改了哪些文件
+
+- `forge/1.14.4/.cursor/skills/mc-blockentity/SKILL.md`：:144 正述 + :151 代码，`ClientRegistry.bindTileEntityRenderer` → `bindTileEntitySpecialRenderer`（且第一参 `MY_TE.get()` → `MyTE.class`）。
+- `forge/1.14.4/knowledge/antipatterns/registry.md`：:59 ❌ 示例 `DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID)` → `new DeferredRegister<>(ForgeRegistries.BLOCKS, MOD_ID)`。
+- `forge/1.15.2/.cursor/rules/04-entity.mdc`：:92 `IF 在 FMLCommonSetupEvent.enqueueWork() 中注册` → `IF 在 FMLCommonSetupEvent 回调里 DeferredWorkQueue.runLater() 注册`。
+- 镜像：`scripts/sync-skills.ps1 -TargetDir forge/1.14.4` 与 `-TargetDir forge/1.15.2` 各刷一次（35 skills / 11 rules / 7 套投影树；`knowledge/` 不在镜像面，无需刷）。
+- 便签与产物（`F:\MOD_TEST\`，不入库）：`hier.mjs`、`mk-gauge-v8.mjs`、`nonfabric-skill-names-v8.mjs`、`pre-fix-verify.mjs`、`run-gates.mjs`。
+- 台账：`doc/name-provenance-audit.md` §8.20；本文件本节。
+
+### 2. 判据与反证
+
+- **反证 1（父链真的在跑，不是空转）**：`node nonfabric-skill-names-v8.mjs --probe-chain` 三档读数 —— `[1.16.5] enqueueWork viaChain=true (expect true) OK` / `[1.15.2] =false OK` / `[1.14.4] =false OK`；每档另加假成员对照恒 `false`（防过度压制）。继承链实测：1.16.5 = `FMLCommonSetupEvent → ParallelDispatchEvent → ModLifecycleEvent → Event`；1.15.2/1.14.4 = `FMLCommonSetupEvent → ModLifecycleEvent → Event`（无 ParallelDispatchEvent）。
+- **反证 2（36 行里本没有继承成员假阳）**：加父链后**修前**仍是 36 行 —— 说明上轮报的 1.16.5 两条 `enqueueWork` 使用（`mc-worldgen/SKILL.md:19`、`version-changes/1.16.x.md:34`）**本来就没被判过**（接收者是 `event` 不是类名），它们**本就正确**（`ParallelDispatchEvent.enqueueWork` 在 1.16.5 存在）。
+- **反证 3（真构件签名，1.14.4）**：`ClientRegistry` 源文件全量只有 `bindTileEntitySpecialRenderer(Class<T> tileEntityClass, TileEntityRenderer<? super T> specialRenderer)` + `registerKeyBinding` + `registerEntityShader`/`getEntityShader`；`DeferredRegister` 只有 `public DeferredRegister(IForgeRegistry<T> reg, String modid)`，其类 javadoc 自用 `new DeferredRegister<>(ForgeRegistries.ITEMS, MODID)`。
+- **反证 4（真构件签名，1.15.2/1.16.5）**：1.15.2 jar 内 `enqueueWork` 只出现在 `NetworkEvent`（`ctx.get().enqueueWork(...)` 语境），`FMLCommonSetupEvent` 只有构造器、无 `ParallelDispatchEvent` 类；`DeferredWorkQueue` 有 `public static CompletableFuture<Void> runLater(Runnable)`。1.16.5 jar 内 `FMLCommonSetupEvent extends ParallelDispatchEvent`、`ParallelDispatchEvent.enqueueWork(Runnable)` 存在 ⇒ 1.16.5 的 `event.enqueueWork(...)` 写法正确，未改。
+- **反证 5（修后读数）**：重跑 v8，`merged-member-mismatch.tsv` **36 → 33 行**；`bindTileEntityRenderer` / `FMLCommonSetupEvent.enqueueWork` / 1.14.4 `DeferredRegister.create` 三行消失。残留的 `DeferredRegister.create`（`forge/1.14.4/knowledge/version-changes/1.19.x.md:12`）读原文 = `// ✅ 推荐方式（1.19.4+）`，是迁移说明，**不是缺陷**。
+
+### 3. 验证台账
+
+| 门 | 读数 |
+| --- | --- |
+| assert-skill-mirrors | ok（扫档 57 / 比对目标 12418 / 拒 0） |
+| assert-rules-api-names | 红 0 豁免 0 |
+| assert-prose-name-roster / rule-ban-vs-example / rule-java-shapes / rule-internal-refs / rule-ledger / scaffold-rules-conflict | 全 GREEN rc=0 |
+| assert-authoring-lint / legacy-isolation / scripts-parse | GREEN rc=0 |
+| forge 专项（blockshape-family / 1204-material / 1182-registry-consts / at-example） | 全 GREEN rc=0 |
+| 量具 | 36 → 33 行；父链自检 3/3 档 OK + 对照 3/3 false |
+
+### 4. 数据侧变更
+
+- 无。
+
+### 5. 未做清单
+
+- **父链覆盖边界**：继承表只从**本机有真构件**的档抽（本轮 = `forge 1.14.4 / 1.15.2 / 1.16.5` 三个 sources jar）。其余档 `hier-*.json` 缺席 ⇒ 退回 v7 行为（只判直接声明成员）。要扩面须为那些档补真构件 sources jar。
+- 假阳面仍按令**未清**：`Properties.*`（同名类遮蔽 23 行）、`FabricBlockSettings.of`（映射不全 6 行）、`SoundEvent.createVariableRangeEvent`（遮蔽 3 行）、迁移文档 3 行、`MixinBootstrap.init` 1 行。
+- G2 仍缺 **vanilla 成员的父链**（只对 loader/平台摘要里的类有继承表）。
+
+### 6. 自我更正
+
+- 上一轮我把 1.16.5 的两处 `enqueueWork` 报成「未定案」，暗示可能是缺陷；本轮用真构件坐实它们**本来就对**（`ParallelDispatchEvent` 1.16.5 存在），错报来源是「摘要无继承关系」这一条被我当成了「方法不存在」。父链就是为消掉这类误报上的。
+
+## 2026-10-16 · G2 升到 FQCN 解析 + 假阳面自查 + 查出 3 处内容问题（维护档）
+
+**第 0 块 · 结论**：**G2 继续**并升到 **FQCN 级**：接收者只用「同文件 `import` 精确名」或「本档摘要里唯一的顶层简单名」解析，且**跳过限定名尾巴**（`BlockBehaviour.Properties.of(` 的接收者是 `BlockBehaviour` 不是 `Properties`）⇒ 假阳从 **296 → 36**（11 个 unique）。**假阳面按令只查不清**：阅读后确认残余全是三类——① 同名类遮蔽（`Properties`/`SoundEvent` 命中摘要里同名的 forge 类）；② **映射不全**（`FabricBlockSettings.of` 被报是因为 sources jar 里它显示为未映射的 `method_9637`——**实测该类在 1.18.2 确有此方法**，见第 2 块）；③ 迁移文档正文（`DeferredRegister.createBlocks` 出现在 1.21 迁移页里）。**查出 3 处新的内容问题**（都用真构件核过，见下）。门：`assert-scaffold-wrappers` / `assert-scripts-parse` / `assert-legacy-isolation` 仍绿；**未改仓内任何知识文件**（按令先报）。
+
+### 1. 改了哪些文件
+
+- **无仓内知识文件改动**（本轮 = 量具升级 + 只读核查）。
+- 便签与产物（`F:\MOD_TEST\`，不入库）：`nonfabric-skill-names-v5/v6/v7.mjs`（G2 三代：FQCN 索引 → 仅 import → 兜底+限定名跳过）、`triage-g2v2.mjs`、`zipreader.mjs`、`dump-jar.mjs`、`check-fbs*.mjs`、`bound-defects.mjs`、`probe-g2verify.mjs`。
+- 台账：`doc/name-provenance-audit.md` §8.19；本文件本节。
+
+### 2. 判据与反证（逐条真构件）
+
+- **反证 1（`FabricBlockSettings.of` 不是缺陷，是映射不全）**：1.18.2 的 sources jar 里静态工厂显示为 `method_9637`/`method_9639`/`method_9617`/`copyOf`（未映射），而 1.20.1 里同族显示为可读的 `of`。读 1.18.2 sources 正文：`public static FabricBlockSettings method_9637(class_3614 material)` ⇒ **`of(Material)` 在 1.18.2 确实存在**（`class_3614` = `Material`）⇒ 文档写法正确，原 flag 是 sources jar 的中间名未映射所致。
+- **反证 2（`ClientRegistry`，1.14.4 真身）**：`forge-1.14.4-28.2.26-sources.jar` 的 `ClientRegistry.java` 只有 `bindTileEntitySpecialRenderer(Class<T>, TileEntityRenderer<? super T>)` / `registerKeyBinding` / `registerEntityShader` / `getEntityShader` —— **无 `bindTileEntityRenderer`**；官方 1.14.4 文档同页也写 `ClientRegistry#bindTileEntitySpecialRenderer`（且说明「传 tile entity **类**」）。
+- **反证 3（`enqueueWork`，1.15.2 真身）**：`forge-1.15.2-31.2.50-sources.jar` 的 `FMLCommonSetupEvent` = `extends ModLifecycleEvent`、**只有构造器**；javadoc 指向 `net.minecraftforge.fml.DeferredWorkQueue`。全 jar 搜 `Parallel` = **0 条**（无 `ParallelDispatchEvent`）。**但**本仓 `data/forge_1.15.2` 官方页提到 `ParallelDispatchEvent#enqueueWork` ⇒ 官方文档与钉住的构件不一致（可能文档取自更晚的 1.15.x 构建）⇒ 本条按「未定案」处理，不当成已坐实。
+- **反证 4（`DeferredRegister.create`，1.14.4 真身）**：同 sources jar 的 `DeferredRegister.java` 只有 `DeferredRegister(IForgeRegistry<T>, String)` 与 `register(...)`，javadoc 示例用 `new DeferredRegister<>(...)` ⇒ 1.14.4 **无 `create`**。
+
+### 3. 验证台账
+
+| 项 | 读数 |
+| --- | --- |
+| G2（v7：兜底+限定名跳过） | 36 行 / 11 unique（v1 简单名 296 → v2 FQCN 147 → v7 36） |
+| G2 unique 归因 | 遮蔽 8 / 映射不全 1（已证存在）/ 迁移文档 2 / 负例 1 |
+| nowhere（v7，同 v4） | TYPE 1655 / MEMBER 1903（本轮未再动抽取面） |
+| 门 | wrapper / scripts-parse / legacy-isolation 全绿 |
+
+### 4. 数据侧变更
+
+- 无。
+
+### 5. 未做清单
+
+- **3 处内容问题未改**（按令「告诉我」）——见第 6 块与 §8.19(4)。
+- 假阳面三处**按令不清**：`## 禁止` 小节标题型负例、frontmatter 触发词、`Mod*` 占位类名。
+- G2 仍缺：**父链成员**（`extends` 后继承的方法判不出）、**vanilla 成员数据**（摘要只有 loader/平台类）⇒ G2 只能覆盖「loader API 自己的成员」。
+
+### 6. 自我更正
+
+- 上一轮我把 G2「只按简单名」的假阳率估成「高频全是假阳」，方向对；本轮补一刀：**假阳的第二大成因是「输入映射不全」**（sources jar 里的 `method_NNNN`），这类假阳无法靠改判据消除，只能靠「同一方法名在任一版本里可读」做交叉推断。已写进 §8.19。
+
 ## 2026-10-15 · G2/G5 上马 + 修 A8（含门）+ A22 补句 + 扩面后新问题排查（维护档）
 
 **第 0 块 · 结论**：按令做四件。**G5**（量具 D 腿按「同族摘要或运算」补齐）—— 发现量具一直只读 `<ver>-<platform>.json`（loader），而 Fabric API 在 `<ver>-fabric-api.json`（从未读）⇒ `EntityRendererRegistry`/`ScreenRegistry`/`ClientSidePacketRegistry`/`UseItemCallback` 等被**假判 nowhere**；补后 nowhere TYPE **2647→2351**。**G2**（类→声明方法）上马，出 `merged-member-mismatch.tsv` 296 行，但**只到方法级 + 按简单名匹配** ⇒ 高频项（`Properties.of` 121 / `Builder.of` 57）全是撞名假阳，现状定位为「候选发现器」。**G3 补完**（prose 单元按所在行判负例）再降到 **1655**：fabric 各档的「禁编名单」把 `ItemEvents` 等列进去，旧面把负例当推荐。**A8 已修**：44 个 `gradlew` 索引模式 `100644→100755`（`git update-index --chmod=+x`，**未提交**），并给 `assert-scaffold-wrappers` 加执行位检查（正反两向验过：`100644` 红 / 恢复绿）。**A22 按令不动树**，只给 `neoforge/LEGACY-NOTICE.md` 补一段说明。**扩面后没有发现新的真缺陷** —— 把新冒候选逐条读出处行，全部落在「跨装载器对照表 / 负例清单 / frontmatter 触发词 / 示例类名」四类。门：wrapper（新检查）/ scripts-parse / legacy-isolation 全绿。
@@ -230,6 +864,115 @@
 - **我误杀了客户端**：清理命令用 `Get-Process java | Where-Object { $_.Path -like 'G:\jdk25*' }`，而**客户端也是用 JDK 25 起的**（为修坑 ② ）⇒ 过滤器同时命中它。**教训：按"路径前缀"杀 java 区分不了服务端与客户端，要按命令行**（`-jar paper-…` vs `runClient`）。本轮清理已按新口径做。
 - **`white-list=true` 是我写实例配置时漏的**（一路只动了 `level-type` 那几个）⇒ 已在 `09-traps.md` 立「起服务端实例的必备配置清单」防复发。
 - **修掉 `00-face.md` 一处过时陈述**：它仍写着"仍未验：GUI 交互事件 · 事件自发派发的时机 · PDC 跨重启持久性"，而这三项现在**都验过了** —— 该行已更正。
+
+---
+
+## 2026-10-16 · 仍真未核实：**再关 5 项** + 1 项未验成（维护档）
+
+**第 0 块 · 结论**：把剩余「未核实」里**能核的**逐条核完 —— **关掉 5 项**（含 **2 条否定结论**），**1 项仍未验成**（Entity 的 PDC 跨重启，本轮拿到**新的、更硬的证伪点**）。核法分两批：**不用起服的**（`ItemMeta` 成员全文 / `plugin.yml` 漏记字段 / `onTabComplete` 跨版本）与**真机两阶段**（发玩家文本 / 异步定时器 / 跨 holder / 数字字面量 / Entity 重试）。
+
+### 1. 改了哪些文件
+
+- `paper/26.3/rules/02-commands.md`：`onTabComplete` **跨版本对照表**（26.3 语料 vs 1.21.4 官方 javadoc ⇒ **都是 `alias`**）+ 取法留痕
+- `paper/26.3/rules/03-inventory-gui.md`：**`ItemMeta` 成员全貌** + **弃用迁移表**（`localizedName`→显示名线 · `customModelData`→`CustomModelDataComponent` · `fireResistant`→1.21.2 · `damageResistant`→26.1）
+- `paper/26.3/rules/04-permissions.md`：**`default:` 只吃四个字面量**（`0` 与 `permission` 两条否定结论并列）
+- `paper/26.3/rules/05-scheduler.md`：**异步定时器**（重复 + 线程名）
+- `paper/26.3/rules/06-plugin-yml-config.md`：**先前漏记的四个字段**（`contributors` · `loadbefore` · **`paper-plugin-loader`** · **`paper-skip-libraries`**）⇒ 官方页 `###` 小节**全覆盖**
+- `paper/26.3/rules/07-pdc.md`：**「不自动跨 holder 复制」的可做形态**（已验）+ **Entity 跨重启**（仍未验成，含新证据）
+- `paper/26.3/rules/08-adventure.md`：**发给真人玩家**（明文 + `MiniMessage`）已验
+- `paper/26.3/rules.meta.json`：新增 `serverRound4`
+- `DELIVERY_LOG.md`：本节
+- **不进仓库**：`F:/MC_GAME/paper-26.3/probe/playtest/VerifyProbe.java`（探针，再扩五组）· `%TEMP%/{t9_auto,phase2}.mjs`
+
+### 2. 判据与反证
+
+- **`ItemMeta` 成员**：语料 `ItemMeta.md:12` 的声明就是 `extends Cloneable, ConfigurationSerializable, **PersistentDataHolder**` ⇒ 物品 PDC 从 `getItemMeta()` 拿（与 07 自洽）；并逐条抄出**四条已废弃线**带 `since` ⇒ 关掉"自身成员未核"。
+- **`plugin.yml`**：对官方页扫**全部 `###` 小节标题**（23 个）比对 ⇒ 漏了四个（含两个 **Paper 专有**）⇒ 至此全覆盖。
+- **`onTabComplete` 形参名**：`javap -v` 实测**两版件都没有 `MethodParameters` 属性** ⇒ 看不到形参名 ⇒ 改走 **1.21.4 的 Paper 官方 javadoc**（HTTP 200）：`…, String alias, …`，**与 26.3 一致**；`onCommand` 的 `label` 也是**两版都不同**于它。
+- **发给玩家**：客户端日志逐字 `[ChatComponent]: [System] [CHAT] PROBE-CHAT-PLAIN-LANDED` 与 `…PROBE-CHAT-MM-LANDED`；⚠ **服务端日志里没有这两条**（实测 `[发玩家] 服务端日志里出现 = false`）⇒ **判据必须放客户端侧**，放服务端会得到**假否定**。
+- **异步定时器**：回调**第 2 次**出现（重复成立）· 线程 = `Craft Scheduler Thread - 0/-3 - PaperQaServer` ≠ `Server thread`。
+- **跨 holder**：`ItemStack`（PDC 键 `on-item`）→ `world.dropItem` → **`Item` 实体侧的该键 = null**，承载的 stack 侧仍是 `on-item`。⚠ 范围 = `ItemStack`→`Item` 实体，**不是**官方那条"放成方块"。
+- **`default: 0`**：Bukkit 打 `Permission node 'mcskill.probe.numlit' … is invalid`、`getPermission` 返回 null ⇒ **非法**（与 `default: permission` 同款）。
+- ⚠ **Entity 跨重启仍未验成**：第二轮补了上一版指出的缺陷（写 PDC 后 **plan 等 10 分钟**让自动存盘跑过；阶段2 用**延时 100 tick** 的任务按类型找回）⇒ 结果 **`世界里的实体数=0`**。**原因未定**（区块未加载 vs 真没落盘，本档**未区分**）⇒ 不写结论。
+
+### 3. 验证台账
+
+- 真机：Run B（服务端 60s 就绪 → `op Dev` → 客户端**自动连服** → 五组新 marker）· 阶段2（45s 就绪 → 读回）
+- 新增 marker：`v-chat-sent.ok` · `v-scheduler-async-timer.ok` · `v-pdc-crossholder.ok` · `pdc-entity-persist-phase1.ok` · **`v-perm-numeric-lit.FAIL`** · **`v-pdc-entity-persist.FAIL`**
+- `assert-server-rules-integrity` **rc=0**：规则 10 篇 · 出处全部可解析 · 每篇均有「未核实」段；投毒 **6/6**
+- 十篇「未核实」段结构审计：**无标题 0 篇 · 空段 0 篇**；门批 10 门 + `test-core`/`test-cli`/`test-scripts` 全 0
+
+### 5. 未做清单
+
+- **`Entity` 的 PDC 跨重启**（第二轮仍未验成，见上）· 官方那条「放成方块」的**原形态**
+- `default:` 的**大小写/空白变体**未逐验 · `ChatType.Bound` 签名消息 · 可点击/悬停组件
+- **周期异步任务在停服/插件禁用时的收尾语义**未核 · `onTabComplete` 的行为契约未核 · `ItemMeta` 的极长尾成员未逐条抄
+- **跨平台/跨版本可复现性**（单机不可核）· **服务端自测强度分级的形状**（设计任务）
+- 143 个删除的跟踪文件**仍待用户裁定** · 未做任何 git 操作
+
+### 6. 自我更正
+
+- **更正我先前把 `default: 0` 当"待验写法"的定性**：它是**否定结论**（非法）。至此 `default:` 的边界清楚了：**只吃 `true`/`false`/`op`/`not op`**。
+- **更正"发玩家文本组件要用服务端日志核"的默认**：**服务端日志里没有那两条**（实测 false）—— 若沿用上一轮"落点在服务端日志"的判据，会把它误判成**未送达**。**判据要跟着链路走**：发控制台的判据在服务端、发玩家的判据在客户端。
+- **更正"A 形态验过 = 官方那条也验过"的等价性**：「跨 holder 不复制」我验的是 `ItemStack`→`Item` 实体，**官方讲的"放成方块"是另一形态**，本轮**明确不声称**等价。
+
+---
+
+## 2026-10-16 · **「要玩家点击」的项做成全自动** + 官方原形态 PDC 验成（维护档）
+
+**第 0 块 · 结论**：把「需要玩家一次点击/放置」的项**做成无人值守全自动**（真 26.3 客户端内由驱动器自己完成真实放置），并据此**验成官方 `api__pdc.md:226/:228` 那条原形态**（带 PDC 的 `ItemStack` 放成方块 ⇒ 方块那侧**不自动复制**，`v-pdc-place.ok`）。过程中挖出**三层根因**（每层都有字节码或运行时证据）、立成 **T11**。**另修两处工程缺陷**：drivder 重装会覆盖 `EXPECT_ITEM`；剧本以 `stop` 结尾会让**四件证据不落盘**。
+
+### 1. 改了哪些文件
+
+- `paper/26.3/rules/07-pdc.md`：**官方原形态**从「未核实」移出，新增「官方原形态『放成方块不自动复制』（已真机核）」段
+- `paper/26.3/rules/09-traps.md`：新增 **T11**（让客户端"自己点一下"的三条坑与处方）
+- `paper/26.3/rules/00-face.md`：能力分级表 —— GUI 行补「driver 自点」；**新增「放置（右键放置方块）E4（driver 自放）」**；跨 holder 行**拆成"官方原形态 E4"与"另一形态 E3"**
+- `DELIVERY_LOG.md`：本节
+- **不进仓库**：`mcp-server/src/generators/playtest-driver.ts`（**动作键/`use` 步/`gui` 步/26.x 改写规则**，见下）· `%TEMP%/{regen,combo,run_build}.mjs` · `F:/MC_GAME/paper-26.3/probe/playtest/VerifyProbe.java`
+
+### 2. 判据与反证
+
+**验成**（marker 原文）：
+
+```
+PASS v-pdc-place
+方块 = CHEST · 手上物品侧 = on-item · 放置出的方块（TileState）侧 = null ⇒ **没有复制**（与官方 :226/:228 一致）
+```
+⚠ marker 文案里"真人右键放置"是**旧措辞** —— 本轮实际是**驱动器自动放置**（已在本节与规则里改准）。
+
+**三层根因（逐层证据）**：
+
+| 层 | 现象 | 证据 | 处方 |
+|---|---|---|---|
+| 1 | 按住 `useKey` 20 tick，**箱子一动不动**、服务端零事件 | javap：`KeyMapping.setDown(boolean)` 字节码**只有** `putfield isDown`（**不推 `clickCount`**）；而 `Minecraft.handleKeybinds()` 对 use/attack/pickItem 是 `consumeClick()` | 走真入口 `KeyMapping.click(client.options.keyX.getKey())` |
+| 2 | 补真入口后**仍不触发** | 我推断"`handleKeybinds` 没跑（后台窗口）"⇒ **被自己的诊断推翻**：`winActive=true` | 改走 `gameMode.useItemOn/useItem`（`gameMode`/`hitResult` 是 public 字段；`startUseItem()` 是 private） |
+| 3 | `useItemOn` 返回 **`Fail`**、**静默不发包** | ① 先排除其唯一早期 Fail（世界边界）：实测 `inBorder=true`（`6e7@0,0`）⇒ 不成立；② 真因 = **26.x 客户端预测**（`startPrediction` → `performUseItemOn`）：放置位与玩家碰撞箱重叠即 Fail；③ **转视角无效**：20 条诊断的 `loc` 一字不差 ⇒ `client.hitResult` **冻住**，刷新它的 `Minecraft.pick(float)` 是 **private** | **自算射线** `player.pick(4.5, 1.0f, false)`（`Entity.pick` 是 **public**）⇒ 交 `useItemOn`。**非造包**：就是游戏内部那套射线 |
+
+**成功后同一轮的诊断**：20 条里 **13 条 `Success[swingSource=PREDICTED, itemContext=ItemContext[wasItemInteraction=true, heldItemTransformedTo=1 minecraft:chest]]`**。
+
+**另两处工程缺陷（都已修）**：
+- **`EXPECT_ITEM` 每次重装被覆盖**（生成器给占位、且无 CLI 参数）⇒ 在 `regen.mjs` 里加**安装后补丁**（实测 `state.json` 的 `expect`/`itemId` 已是真值）。
+- **剧本末行 `stop` ⇒ 四件证据不落盘**（`qa.log`/`rounds.jsonl`/`exit-code.txt` 全无，脚本白等 720s）⇒ 去掉 `stop`，本轮实测 **`[QA] DONE :: PLAN 全部 8 步完成`** 且四件齐。
+
+### 3. 验证台账
+
+- 组合 loop（服务端探针 + 真 26.3 客户端 `--quickPlayMultiplayer` 自动进服 + 驱动器按自定义 `plan.txt` 执行）：**多轮全绿**，每轮**自动收尾**（杀进程 + 还原 `build.gradle`）
+- 本轮 driver：`assert inv -> PASS`（`slot 0 = minecraft:chest`）· `use` 步执行 · `shot` 落盘 · `[QA] DONE`
+- 服务端：`[PROBE] PASS v-pdc-place` · `evidence-auto` 里 `v-pdc-place.ok` ✅
+- **T7 门本轮抓到我 6 次**同款根因（在 Java 模板字面量里写反引号 ⇒ `TS1005`）—— 门在干活
+- 生成器四处修正：**新增 `use` 步**（俯角按实测改为扫描式）· `case "gui"` 改"等屏出现"（连服档自设屏不生效）· **动作键改真入口** · **`use` 走客户端交互 API + 自算射线**
+
+### 5. 未做清单
+
+- 同族：**`break`/`attack`** 也走 `handleKeybinds` ⇒ 在本环境同样不触发（修法同款：`gameMode.startDestroyBlock/continueDestroyBlock`）—— **未做**
+- `Entity` 的 PDC 跨重启（两轮未验成，原因未定）· `ChatType.Bound` 可点击组件的**点击侧**
+- **143 个删除的跟踪文件仍待用户裁定** · 未做任何 git 操作
+
+### 6. 自我更正
+
+- **更正 marker 措辞**：`v-pdc-place` 的文案写着"真人右键放置"，而本轮**是驱动器自动放的** —— 已在规则里标注，探针文案待下次重编时改。
+- **更正我连续两次的推断**：① "后台窗口 ⇒ `handleKeybinds` 没跑" —— 被 `winActive=true` 推翻；② "世界边界太小" —— 被 `inBorder=true`（`6e7`）推翻。**两次都是靠"让程序自己打印关键判据"纠正的**，不是靠猜。
+- **记一笔反复犯的**：在 Java 模板字面量里写反引号（**六次**，每次都被 T7 门拦住）—— 处方已写进模板注释本身。
 
 ---
 

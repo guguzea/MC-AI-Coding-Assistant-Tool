@@ -31,17 +31,24 @@ dependencies {
 
 ## 创建 REI 插件
 
+插件接口是 `REIClientPlugin`（`me.shedaniel.rei.api.client.plugins.REIClientPlugin`）；`registerEntries` 的参数是 `EntryRegistry`（javap @ `RoughlyEnoughItems-fabric-17.0.807.jar`）。
+
 ```java
-// 1. 创建插件类
-public class MyModPlugin implements REIPluginClient {
+package com.example.examplemod;
+
+import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
+import me.shedaniel.rei.api.client.registry.entry.EntryRegistry;
+
+public class MyModPlugin implements REIClientPlugin {
     @Override
-    public void registerEntries(RegisterClientPluginsEvent event) {
-        // 注册条目
+    public void registerEntries(EntryRegistry registry) {
+        // 注册/修改条目；不需要就留空
     }
 }
 ```
 
-> **未核实**：`REIPluginClient` / `registerEntries(RegisterClientPluginsEvent)` 这组签名本轮未对上游 javadoc 复核（REI 的 API 站未取到；yarn 映射只覆盖原版类，帮不上）。本代理只改了坐标，**没有**据此改名；落地前请按 REI 官方文档复核插件接口与入口点键名。
+- 接口方法全部是 `default`，只覆写用得到的：`registerCategories` / `registerDisplays` / `registerScreens` / `registerEntries`（参数各自是 REI 的注册表接口）。
+- `registerEntries` 的参数是 REI 的条目注册表接口（**不是** `RegisterClientPluginsEvent`）；常用方法 `addEntry(EntryStack<?>)` / `addEntries(Collection)` / `removeEntry(EntryStack<?>)`。
 
 ```json
 // fabric.mod.json
@@ -54,6 +61,8 @@ public class MyModPlugin implements REIPluginClient {
   }
 }
 ```
+
+- 入口点键 **`rei_client`** 由 REI 自己的 `fabric.mod.json` 逐字证实（21.11.816 构件同键）。
 
 ## 常见错误
 

@@ -53,7 +53,7 @@ Block#use (Server) ──► creates ITextComponent ──► openContainer (Ser
                                                        ▼
                                               Container + ContainerScreen pair
                                                        │
-                                               ScreenManager.registerFactory()
+                                               ScreenManager.register()
                                                        │
                                                        ▼
                                                    Renders Screen
@@ -110,7 +110,8 @@ public static final RegistryObject<ContainerType<MyContainer>> MY_CONTAINER =
 public class ClientSetup {
     @SubscribeEvent
     public static void init(FMLClientSetupEvent event) {
-        ScreenManager.registerFactory(MyContainers.MY_CONTAINER.get(), MyScreen::new);
+        // 构件实证（javap net.minecraft.client.gui.ScreenManager, 1.15.2-31.2.50_mapped_official_1.15.2）：方法名是 register(...)；❌ registerFactory 是 MCP 层名
+        ScreenManager.register(MyContainers.MY_CONTAINER.get(), MyScreen::new);
     }
 }
 ```
@@ -168,7 +169,7 @@ public class MyBlock extends Block {
 ## Common errors
 
 - ❌ Opening a Container on the server without a registered `ContainerType` → crash
-- ❌ `ScreenManager.registerFactory()` called on server → `FMLClientSetupEvent` already prevents this, but guard with `@OnlyIn(Dist.CLIENT)`
+- ❌ `ScreenManager.register()` called on server → `FMLClientSetupEvent` already prevents this, but guard with `@OnlyIn(Dist.CLIENT)`
 - ❌ `transferStackInSlot` not implemented → Shift-click does nothing
 - ❌ Modifying world state in `Container` constructor → too early, use `onContainerOpened()`
 - ❌ Data set from client → must be set server-side only

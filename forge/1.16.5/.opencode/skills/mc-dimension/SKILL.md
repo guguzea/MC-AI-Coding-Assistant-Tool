@@ -45,7 +45,7 @@ Forge 侧的连带变化：**Forge 的 `DimensionManager` 类已被移除**，�
 页面 §Referencing a Dimension 逐字给出的四条：
 
 - 维度 / 世界现在通过 `RegistryKey<World>` 实例来引用，**不再**是 `DimensionType`。
-- 取一个 `RegistryKey<World>`：`RegistryKey.get(Registry.DIMENSION_REGISTRY, new ResourceLocation(MODID, "registry_name_here"))`
+- 取一个 `RegistryKey<World>`：`RegistryKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(MODID, "registry_name_here"))`（页面原文写 `get`；构件实证 javap @1.16.5-36.2.34_mapped_official：方法名是 `create`，`RegistryKey` 上没有 `get`）
 - 从世界里取该 key：`World#dimension`
 - 在服务端取某个 `World`：`MinecraftServer#getWorld`，参数是一个 `RegistryKey<World>`。
 
@@ -64,7 +64,7 @@ Forge 侧的连带变化：**Forge 的 `DimensionManager` 类已被移除**，�
 - **传送与跨维度逻辑**：本档 processed 全量对 `teleport` / `IPortal` / `DimensionTeleport` **零命中**。触发词里的 teleport 本篇给不出任何 API ⇒ 需要传送先 `search_forge_docs(version=1.16.5, query="teleport")`；查不到就保持未核实，禁止用邻版记忆写 `changeDimension` / `ITeleporter`。
 - **维度 JSON 的字段面**（`type` / `generator` / `forge:dimension_data` 等）：页面只说「在 `data/modid/dimension/` 建 JSON」「把生物群系注册名写进维度 JSON」，**没有给出任何一个 JSON 键** ⇒ 一律 `TODO(未核实)`，禁止按 1.18+ / NeoForge 的 schema 默写。
 - **`DimensionType` 的构造参数**（logical height、bed works、piglins、effects 等）与 **`ChunkGenerator` 的构造面**：本档页面对维度侧未给出任何构造代码。
-- **`RegistryKey.get` 的确切重载与包名**：页面出现的就是上面那两行调用，没有 import、没有签名展开 ⇒ 需要逐签名核对时走用户自备 1.16.5 jar（`query_loader_api` / `get_minecraft_source`）。
+- **`RegistryKey` 的方法名（已核实）**：构件实证（javap @1.16.5-36.2.34_mapped_official_1.16.5.jar）——`net.minecraft.util.RegistryKey` 上取 key 的方法名是 `create(RegistryKey<? extends Registry<T>>, ResourceLocation)`（另有 `createRegistryKey(ResourceLocation)`），**没有 `get`**；页面写的 `get` 是过时名，本档正文已按 `create` 更正。
 - **原版 `DIMENSION_REGISTRY` 常量是否即本档版本的确切键名**：只在页面这一行调用里出现过，未在任何注册表总表里核对 ⇒ 保守当未核实。
 - **`mc-worldgen` / `mc-structure` 的内容**：本档无对应正文页，别拿它们当维度证据。
 

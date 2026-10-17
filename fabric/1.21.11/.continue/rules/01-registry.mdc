@@ -93,8 +93,8 @@ IF 一个物品有 Fabric API Capability
 
 IF 附加数据（Attachment）
   → `AttachmentRegistry.create` / `createPersistent` / `createDefaulted` / `builder` + `AttachmentSyncPredicate.all / targetOnly / allButTarget`（FQCN `net.fabricmc.fabric.api.attachment.v1.*`，见 `1.21.11-fabric-api.json`：6 类，**无** `GlobalAttachments`）
-  → 该页未写模块 id，`fabric-attachment-api-v1` 本档 **未核实**；依赖按 `fabric-api` 实测，不要照抄
-  → 摘要首参为 intermediary `class_2960`，Yarn 名以该版映射为准，禁止默写
+  → 模块 id 是 **`fabric-data-attachment-api-v1`**（不是 `fabric-attachment-api-v1`）：按本档构件 `fabric-data-attachment-api-v1-1.8.48+eed0806f3e.jar` 的 `fabric.mod.json` 逐字核实（`id` 字段与 jar 名同形）；聚合 `fabric-api` 已含该模块
+  → 摘要首参为 intermediary `class_2960`，Yarn 名以该版映射为准（`Identifier`），禁止默写
   → 不要用 NeoForge `NeoForgeRegistries.ATTACHMENT_TYPES` / `getData` / `setData`；不要用 Forge Capability
 ```
 

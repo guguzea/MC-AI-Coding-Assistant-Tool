@@ -50,7 +50,32 @@
 
 ## 未核实（明写）
 
-- **Paper 的 data-component 线**（新式设置物品显示的方式）本档**未核** —— 上表只覆盖**旧的 `ItemMeta` 字符串写法**。
+- `ItemMeta` 的**极长尾成员**（`:70` 之后的行）本档未逐条抄 —— 上表已覆盖主线（显示名 / 附魔 / flags / tooltip / model / 伤害类型）。
+
+## `ItemMeta` 的成员全貌（**已核，2026-10-16**）
+
+声明（`ItemMeta.md:12`）：`public interface ItemMeta extends Cloneable, ConfigurationSerializable, **PersistentDataHolder**`
+⇒ **它本身就是 `PersistentDataHolder`** ⇒ 物品的 PDC 从 `getItemMeta()` 拿（与 `07-pdc.md` 一致）。
+
+**显示名有两条线，别混**：
+
+| 线 | 成员 | 出处 |
+|---|---|---|
+| 旧（`display_name`） | `hasDisplayName` · `@NotNull getDisplayName` · `setDisplayName(@Nullable)` | `:13-15` |
+| **新（`item_name`）** | `hasItemName` · `@NotNull getItemName` · `setItemName(@Nullable)` | `:16-18` |
+
+**已废弃的线（逐条带 `since`）**：
+
+| 成员 | 弃用标记 | 取代者（出处） |
+|---|---|---|
+| `has/get/setLocalizedName` | **`since="1.20.5", forRemoval=true`** | 显示名线（`:13-18`） |
+| `has/get/setCustomModelData` | **`since="1.21.5"`** | **`CustomModelDataComponent`**：`has/get/setCustomModelDataComponent`（`:27-30`） |
+| `is/setFireResistant` | `since="1.21.2"` | —（`:61-62`） |
+| `getDamageResistant` | **`since="26.1"`** | `getDamageResistances()` / `setDamageResistant(Collection)`（`:65-67`） |
+
+**其它可用族**（`:31-70`）：`Enchantable` · 附魔族（`hasEnchant` / `getEnchantLevel` / `addEnchant(…, boolean ignoreLevelRestriction)` / `removeEnchant(s)` / `hasConflictingEnchant`）· `ItemFlag` 族 · **`isHideTooltip`/`setHideTooltip`** · **`TooltipStyle`**（`NamespacedKey`）· **`ItemModel`**（`NamespacedKey`）· `isUnbreakable` · `EnchantmentGlintOverride` · `isGlider` · `DamageType` 一族。
+
+⚠ **一条范式**：这页是「**签名面能给出"哪条线已废弃 + 何时"**」的样板 —— 找替代 API 时**先看 `@Deprecated(since=…)`**，比翻教程快。
 
 ## `ItemMeta` 的显示名与 Lore（**已核，2026-10-15**）
 

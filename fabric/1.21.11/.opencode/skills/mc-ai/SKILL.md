@@ -80,7 +80,7 @@ public static AttributeSupplier.Builder createCubeAttributes() {
 
 - **`targetSelector`**：本档语料（页面正文 + `reference/1.21.11` 全部 .java/.md）**零出现**。frontmatter 的触发词写了它，但本档没有对应正文 ⇒ 需要目标选择器/攻击型 Goal 时改走 `search_fabric_docs version=1.21.11`（`query=entity ai` / `targetSelector`）或 `get_minecraft_source`，零命中就停，禁止按 Forge 档或记忆补 `NearestAttackableTargetGoal` 一类名字。
 - **`Brain` / Activity / Sensor / Memory 模块**：本档语料零出现（frontmatter 提到 Brain，但本档官方文档没有该章节）⇒ 不写。
-- **自定义 `Goal` 子类**：`Goal` 基类本身、其生命周期方法（能否开始/结束/是否需要 tick 之类）在本档语料未出现 ⇒ `TODO(未核实)`。
+- **自定义 `Goal` 子类**：语料没给，但本档构件已核实（javap @ yarn 1.21.11+build.6，`net.minecraft.entity.ai.goal.Goal`）——抽象方法 `canStart()` / `shouldContinue()` / `canStop()` / `start()` / `stop()` / `shouldRunEveryTick()` / `tick()`，以及 `setControls(EnumSet<Goal.Control>)`；mojmap 侧同名（`net.minecraft.world.entity.ai.goal.Goal`）。`Goal.Control` 的常量集合本件未逐枚举，用前先看该枚举。
 - **Goal 的移除、优先级冲突行为、`goalSelector` 的类型与获取方式以外的 API**：页内只演示 `addGoal(int, Goal)` ⇒ 其余不猜。
 - **实体注册与渲染**：走同页的 `:::registerclass` / `:::types` 与渲染章节，见 `mc-entity`，本件不复制。
 

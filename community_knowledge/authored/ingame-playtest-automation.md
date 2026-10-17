@@ -433,6 +433,32 @@ NeoForge 1.20.1 无官方 MDK pin（原返回 `MDK_NOT_PINNED`）⇒ 按**兼容
 
 
 
+### 让客户端「自己动一下」：三个坑（编号 81–83，2026-10-16 · neoforge 26.3 真机实测）
+
+**场景**：无桥 driver 要在客户端里完成一次**真实右键放置**（服务端必须收到 `BlockPlaceEvent`）。三次失败、逐层定位：
+
+- **81 · `setDown` 驱动不了「动作键」**（javap 字节码）
+  `KeyMapping.setDown(boolean)` 的字节码**只有** `putfield isDown` —— **不推 `clickCount`**；而 `Minecraft.handleKeybinds()` 对 `keyUse` / `keyAttack` / `keyPickItem` 用的是 `while (options.keyX.consumeClick())` ⇒ **只 setDown 永远不会触发**物品使用 / 攻击。
+  ⚠ 陷阱在于：**移动键是好的**（`LocalPlayer` 直接读 `isDown()`）⇒ **只测「能不能走路」会误判整条输入链可用**。
+  **处方**：动作键走真入口 `KeyMapping.click(client.options.keyX.getKey())`（`getKey()` = 当前绑定键，尊重玩家改键）。
+- **82 · 补了真入口仍不触发 ⇒ 别急着归因窗口焦点**
+  我怀疑「`handleKeybinds` 没跑（后台窗口）」—— **被我自己加的诊断推翻**：`client.isWindowActive() = true`。
+  **处方**：动作改走**更下层**的交互 API：`MultiPlayerGameMode.useItemOn(LocalPlayer, InteractionHand, BlockHitResult)` / `useItem(Player, InteractionHand)`（`Minecraft.gameMode` / `hitResult` 是 **public 字段**；`Minecraft.startUseItem()` 是 **private**，调不到）。
+- **83 · 客户端预测会「静默否决」⇒ 判据必须落在客户端**
+  `useItemOn` 返回 `Fail`（`InteractionResult$Fail` 是**空 record**，无原因字段）⇒ **不发包**、**服务端零痕迹**（无事件、无日志）。
+  ① 先排除 `useItemOn` 的**唯一早期 Fail**（世界边界 `isWithinBounds`）：诊断打出 `inBorder = true`（`6e7@0,0`）⇒ 不成立；
+  ② 真因是 **26.x 的客户端预测**（`startPrediction` → `performUseItemOn`）：**放置位与玩家碰撞箱重叠**即判 Fail；
+  ③ **「转视角再交互」不可靠** —— 实测 20 条诊断的命中 `loc` **一字不差** ⇒ `client.hitResult` 在该运行时**是冻住的**，而刷新它的 `Minecraft.pick(float)` 是 **private**。
+  **处方**：**自算射线** `player.pick(4.5, 1.0f, false)`（`Entity.pick(double,float,boolean)` 是 **public**，`LocalPlayer` 继承）⇒ 拿新鲜 `BlockHitResult` 交给 `useItemOn`，并回填 `client.hitResult`。**这不是造包** —— 用的就是游戏内部那套射线投射。
+  **结果**：20 条诊断里 **13 条** `Success[swingSource=PREDICTED, … heldItemTransformedTo=1 minecraft:chest]` ⇒ 服务端 `BlockPlaceEvent` ⇒ 官方 `api__pdc.md:226/:228` 那条「放成方块不自动复制 PDC」的**原形态验成**。
+- **84 · 同族（未做，处方同款）**：`attack` / `break` 也读 `consumeClick()` ⇒ 同一坑。修法：创造模式用 `gameMode.destroyBlock(BlockPos)`（即时破坏、无状态机）；生存用 `startDestroyBlock` + 每 tick `continueDestroyBlock` + `stopDestroyBlock`。
+
+**三条可迁移的通用规矩**：
+
+1. **判据要放在链路的接收端** —— 发控制台 ⇒ 服务端日志；发真人玩家 ⇒ **客户端日志**；客户端动作 ⇒ **客户端返回值**（放服务端只能证明「发出去了」）。
+2. **「工具报的没有」先怀疑调用姿势** —— `setDown` 看着像「按下去了」，其实什么都没推。
+3. **让程序打印关键判据** —— 我这轮两次推断（窗口焦点、世界边界）都是**被自己加的诊断行推翻**的；**别靠猜**。
+
 ## 真机台账（自根 `README.md` 并入 · 逐字归档；2026-10-08 首并，2026-10-11 二次清理）
 
 > **为什么在本文**：根 `README.md` 原先自带一份「后半 loop 真机矩阵」+ 40 条「已核实边界」，与本文的坑位清单是**同一本账的两份副本**（本文 L236 那条「详细口径单源」即自我声明）。2026-10-08 把副本并入此处并去重：逐格读数、取证过程、历史来回全在这一节，README 留一行一判据的紧凑矩阵与判据契约（T0–T4）。

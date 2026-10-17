@@ -16,7 +16,7 @@ mappings: yarn
 
 Cloth Config 是 Fabric 侧广泛使用的**第三方**配置库（不是 Fabric 官方组件，也没有「官方推荐」这一说），提供类型安全的配置系统与配置 GUI。
 
-本包未把它的 API 摘要入库（`$MC_SKILL_CACHE/loader-api-summaries` 里没有 fabric-cloth-config 条目）⇒ 下面所有类名 / 方法名都属**未核实**，动手前须让用户用自己的 cloth-config jar 跑一次 `ingest_loader_api` 入库，再逐签名回填；依赖坐标与仓库行则是实取上游核实过的（见「添加依赖」下的依据句）。
+本件下列类名/方法名已按本档构件 `cloth-config-fabric-5.3.63.jar` 逐条 `javap` 核实。它仍不属于 loader API；升级 cloth 版本后要按新 jar 重核。
 
 ## 添加依赖
 
@@ -35,7 +35,7 @@ dependencies {
 ```
 
 
-> 本档取 5.3.63：pom 里 fabric-api 依赖为 0.37.1+1.17（旧稿的 6.0.46 上游 404）。Cloth 是第三方库，其 **API 面**（ConfigBuilder / ConfigEntryBuilder 等签名）本包未走 `ingest_loader_api` 入库 ⇒ 写代码前仍须自备 jar 入库逐签名核对，版本号已核实不代表 API 面已核实。
+> 本档取 5.3.63：pom 里 fabric-api 依赖为 0.37.1+1.17（旧稿的 6.0.46 上游 404）。Cloth 是第三方库，其 API 面已按该 jar javap 核实到本件所列范围。
 
 > 版本怎么定（一手判据，实取 `maven.shedaniel.me/.../cloth-config-fabric/maven-metadata.xml`，126 条）：
 > cloth 的版本号形态**从来不带 `+<MC>` 后缀**；MC 线绑在「该版 pom 里 fabric-api 依赖的后缀」上。对照：
@@ -44,64 +44,74 @@ dependencies {
 > `14.0.x → >=1.20.5`｜`15.0.x → >=1.21`｜`16.0.x → >=1.21.2`｜`17.0.x / 18.0.x → >=1.21.4`｜`19.0.x → >=1.21.6`｜`20.0.x / 21.11.x → >=1.21.9`｜`26.1.x → >=26.1`｜`26.2.x → >=26.2`。
 > 换 MC 线时必须按上表重新核，不许把别档的版本号抄过来。
 
-## 基本配置
+## 路线 A：注解 + AutoConfig（推荐，代码最少）
 
 ```java
-// 1. 创建配置选项类
-public class ModConfig {
-    private final ConfigBuilder builder;
+import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.ConfigData;
+import me.shedaniel.autoconfig.ConfigHolder;
+import me.shedaniel.autoconfig.annotation.Config;
+import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 
-    public ModConfig() {
-        builder = ConfigBuilder.create()
-            .title(new LiteralText("My Mod Config"))
-            .setDefaultTitle("My Mod Config")
-            .setSavingRunnable(() -> {
-                // 保存配置
-            });
+@Config(name = "examplemod")               // 注解方法名就是 name()
+public class ModConfig implements ConfigData {
+    public boolean enableFeature = true;   // 本件自造示例字段，没有任何 MC 符号出处
 
-        ConfigCategory general = builder.getOrCreateCategory("general");
-
-        general.addEntry(ConfigEntryBuilder.create()
-            .startBooleanToggle(new LiteralText("Enable Feature"), true)
-            .setSaveConsumer(value -> enableFeature = value) // enableFeature 为上面本件自造的示例字段，禁止当 API
-            .build()
-        );
-
-        general.addEntry(ConfigEntryBuilder.create()
-            .startIntSlider(new LiteralText("Value"), 10, 1, 100)
-            .setSaveConsumer(value -> this.value = value)
-            .build()
-        );
-    }
-
-    public boolean enableFeature = true; // 示例配置字段名：本件自造的 ModConfig 字段，没有任何 MC/Cloth 符号叫 enableFeature
     public int value = 10;
-
-    public ConfigBuilder getBuilder() {
-        return builder;
-    }
 }
+
+// ModInitializer#onInitialize()
+public static final ConfigHolder<ModConfig> HOLDER =
+        AutoConfig.register(ModConfig.class, GsonConfigSerializer::new);
 ```
 
-## 配置屏幕入口
+- 5.3.63 的 `AutoConfig.register(Class<T extends ConfigData>, ConfigSerializer.Factory<T>)` → `ConfigHolder<T>`；`ConfigHolder` 有 `getConfig()` / `save()` / `load()` / `setConfig(T)` / `resetToDefault()`。
+- 配置屏幕：`AutoConfig.getConfigScreen(ModConfig.class, parent).get()`（返回 `Supplier<Screen>`；5.3.63 未标弃用）。
+
+## 路线 B：手动 ConfigBuilder（自定义 GUI）
 
 ```java
-public class ExampleModClient implements ClientModInitializer {
-    @Override
-    public void onInitializeClient() {
-        ClothConfig.initialize();
-        // 注册配置屏幕
-        ClothConfig.getOrCreateModConfig("examplemod",
-            () -> new ModConfig().getBuilder().setParentScreen(null).build());
-    }
+import me.shedaniel.clothconfig2.api.ConfigBuilder;
+import me.shedaniel.clothconfig2.api.ConfigCategory;
+import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.text.LiteralText;
+
+public static Screen buildScreen(Screen parent, ModConfig config) {
+    ConfigBuilder builder = ConfigBuilder.create()
+            .setParentScreen(parent)
+            .setTitle(new LiteralText("My Mod Config"));
+
+    ConfigCategory general = builder.getOrCreateCategory(new LiteralText("General"));
+    ConfigEntryBuilder entries = builder.entryBuilder();
+
+    general.addEntry(entries.startBooleanToggle(new LiteralText("Enable Feature"), config.enableFeature) // enableFeature 本件自造示例字段，没有任何 MC 符号出处
+            .setDefaultValue(true)
+            .setSaveConsumer(v -> config.enableFeature = v) // enableFeature 同上：本件自造示例字段，没有任何 MC 符号出处
+            .build());
+
+    general.addEntry(entries.startIntSlider(new LiteralText("Value"), config.value, 1, 100)
+            .setDefaultValue(10)
+            .setSaveConsumer(v -> config.value = v)
+            .build());
+
+    builder.setSavingRunnable(() -> { /* 写盘 */ });
+    return builder.build();
 }
 ```
+
+已核实的签名（`javap` @ `cloth-config-fabric-5.3.63.jar`）：
+
+- `ConfigBuilder.create()`；实例方法 `setParentScreen(Screen)` / `setTitle(Text)` / `getOrCreateCategory(Text)` / `entryBuilder()` / `setSavingRunnable(Runnable)` / `build() → Screen`。
+- `ConfigCategory#addEntry(AbstractConfigListEntry)`。
+- `ConfigEntryBuilder.create()`；`startBooleanToggle(Text, boolean)` → `BooleanToggleBuilder`；`startIntSlider(Text, int, int, int)` → `IntSliderBuilder`；两者都有 `setDefaultValue(...)` / `setSaveConsumer(Consumer<...>)` / `build()`。
 
 ## 常见错误
 
 - ❌忘记 `exclude group: "net.fabricmc.fabric-api"` — 依赖冲突
-- ❌在服务端创建 ConfigScreen — ConfigScreen 是客户端的
+- ❌在服务端创建 ConfigScreen — 配置屏幕是客户端的
 - ❌忘记在 `fabric.mod.json` 中声明 cloth-config 依赖
+- ❌写 `ClothConfig.initialize()` / `ClothConfig.getOrCreateModConfig(...)` / `builder.setDefaultTitle(...)` — 这三个名字在 5.3.63 里 0 命中
 
 ## 扩展点
 

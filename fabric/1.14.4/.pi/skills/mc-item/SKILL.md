@@ -119,7 +119,8 @@ public class MySpecialItem extends Item {
             player.getStackInHand(hand).damage(1, player,
                 (p) -> p.sendToolBreakStatus(hand));
         }
-        return TypedActionResult.success(player.getStackInHand(hand));
+        // 构件实证（javap @yarn 1.14.4+build.18）：TypedActionResult 只有构造器 TypedActionResult(ActionResult, T)，无静态 success()
+        return new TypedActionResult<>(ActionResult.SUCCESS, player.getStackInHand(hand));
     }
 }
 ```

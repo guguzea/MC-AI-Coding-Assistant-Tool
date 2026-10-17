@@ -89,7 +89,7 @@ IF 使用 DeferredRegister + modEventBus
   → ✅ 正确：在 mod 构造函数中通过 modEventBus 完成
   → 属性系统已在 modEventBus 阶段就绪
 
-IF 在 FMLCommonSetupEvent.enqueueWork() 中注册
+IF 在 FMLCommonSetupEvent 回调里 DeferredWorkQueue.runLater() 注册
   → ⚠️ 可用但不推荐：已有 DeferredRegister 方案更简洁
 ```
 

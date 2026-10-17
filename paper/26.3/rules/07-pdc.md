@@ -109,7 +109,7 @@ public interface PersistentDataHolder
 
 ## 未核实
 
-- **`Entity` 的 PDC 跨重启**未验：探针自己 `spawnEntity(..., EntityType.ZOMBIE)` 后**能读写它的 PDC**（marker `pdc-entity-phase1.ok`）；但**跨重启那半没验成** —— 重启后 `spawn` 的是**另一只**实体、读不到旧值（marker `v-pdc-entity-scope` 如实记为「**只验了可读写，未验跨重启**」）。要真验得让那只实体**被存盘**（例如放过若干 tick 再停服，而不是紧接着 `stop`）。
+- **`Entity` 的 PDC 跨重启**——**仍未验成**，且已试到第二轮（2026-10-16）。第二轮把上一版指出的缺陷补上了（写 PDC 后让 plan **等 10 分钟**，让自动存盘跑过一次），阶段2 用**延时 100 tick 的任务**按类型找回实体 —— 结果：**`世界里的实体数=0`**（marker `v-pdc-entity-persist.FAIL`）⇒ **连"找回实体"这一步都没做到**。⚠ **原因未定**：可能是**区块未加载**（`World#getEntities()` 只返回已加载区块里的实体）⇒ 也可能是**实体确实没落盘** —— **两者本档未区分**，故不写结论。要真验得先解决"阶段2 如何保证那只实体所在的区块被加载"。
 - **`ItemStack` 的 PDC 跨重启**未验（**同进程读写 + 经 `Inventory` 往返已验**）。
 
 ## `TileState` 的 PDC 跨重启（**已真机核，2026-10-15 · 两阶段**）
@@ -130,4 +130,38 @@ public interface PersistentDataHolder
 | **`TileState`** | ✔ | **✔ `"tilestate-cross-restart"`** |
 | `ItemStack`（经 `ItemMeta`） | ✔（含**放进容器再取回**仍在） | 未验 |
 | `Entity` | ✔ | 未验（如实） |
-- 官方 `api__pdc.md:226` / `:228` 那条「**数据不会自动跨 holder 复制**」**未验**。
+- （官方原形态**已验**，见下节；`ItemStack` → `Item` 实体的**可做形态**另见其后的段。）
+
+## 「不会自动跨 holder 复制」的**可做形态**（**已真机核，2026-10-16**）
+
+官方那条讲的是"放成**方块**"，而放方块要真实放置动作 ⇒ 本档改做一个**同类但不同形态**的等价检查：**ItemStack → 掉落后的 `Item` 实体**。
+
+```java
+ItemStack it = new ItemStack(Material.STONE);
+// 给 it 的 ItemMeta 的 PDC 写 key = "on-item"
+org.bukkit.entity.Item e = world.dropItem(loc, it);     // 掉出来
+// 实体自身（不是它承载的 stack）的 PDC 里查同一个 key
+```
+
+实测（marker `v-pdc-crossholder.ok`）：
+
+```
+Item 实体侧的该键 = **null**，而它承载的 stack 侧 = "on-item"
+```
+
+⇒ **数据没有自动跨 holder 复制**（stack 上的键**没有**漏到它变成的实体上）。
+⚠ **范围如实标注**：这是 **`ItemStack` → `Item` 实体**，**不是**官方那条「放成方块」（**那条另见下节，已验**）。
+
+## 官方原形态「放成方块不自动复制」（**已真机核，2026-10-16**）
+
+**官方原文**：`api__pdc.md:226` / `:228` —— 带 PDC 的 `ItemStack` **放成方块**（带 `TileState`）后，**数据不会自动复制到方块那侧**。
+
+**怎么做的**：探针在 `PlayerJoinEvent` 里把 **带 PDC（键 `probe-place` = `"on-item"`）的箱子**塞进玩家主手；然后由**驱动器自己在客户端里完成一次真实放置**（不是人点，见下）⇒ 服务端 `BlockPlaceEvent` 处理器同时读两侧：
+
+```
+PASS v-pdc-place
+方块 = CHEST · 手上物品侧 = on-item · 放置出的方块（TileState）侧 = null ⇒ **没有复制**（与官方 :226/:228 一致）
+```
+（marker 文案里那句"真人右键放置"是**旧版措辞**，本轮实际是**驱动器自动放置** —— 见下「放置是怎么自动做成的」。）
+
+⚠ **这条为什么以前做不到**：放置需要**真实放置动作**，而驱动器原有的"按键"路径在本档**不触发**物品使用（`setDown` 不推 `clickCount`；且 `client.hitResult` 在连服档**是冻住的**）⇒ 三次失败后定位到根因并改走**客户端交互 API + 自算射线**。完整三条坑与处方见 `09-traps.md` 的 **T11**。

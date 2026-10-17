@@ -86,7 +86,24 @@ Permission q = Bukkit.getPluginManager().getPermission("mcskill.probe.oponly");
 
 ## 未核实（明写 —— 这里最容易被通识带偏）
 
-- **`default:` 更冷门的写法**（数字 `0`/`1` 之类）本档未验。
+- `default:` 的**大小写/空白变体**（如 `TRUE`、`not  op`）本档未逐验 —— 已验的是 `true`/`op`/`false`/`not op` 四个**规范写法**。
+
+## `default:` **只吃四个字面量**（2026-10-16 第二个否定结论）
+
+我先前把 `default: permission` 与 `default: 0` 都列成"未验"。真机跑下来**两条都是否定结论**：
+
+```
+[ERROR]: Permission node 'mcskill.probe.permnode'  in plugin description file for PaperQaServer v1.0.0 is invalid
+[ERROR]: Permission node 'mcskill.probe.numlit'    in plugin description file for PaperQaServer v1.0.0 is invalid
+```
+
+| `plugin.yml` 里写的 | 结果 |
+|---|---|
+| `default: 0`（**数字写法**） | ❌ **非法** ⇒ 权限不注册（marker `v-perm-numeric-lit.FAIL`） |
+| `default: permission` | ❌ **非法** ⇒ 权限不注册（marker `v-perm-permission-lit.FAIL`） |
+| `default: true` / `op` / `false` / `not op` | ✅ 四条全部注册且映射正确 |
+
+⇒ **`default:` 只接受那四种规范写法** —— 与「`PermissionDefault` 只有四个常量」**完全自洽**。**别写数字、别写 `permission`。**
 
 ## `default: permission` —— **验到它不成立**（2026-10-15）
 

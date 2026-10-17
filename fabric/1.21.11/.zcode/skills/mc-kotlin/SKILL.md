@@ -61,7 +61,7 @@ tasks.processResources {
 ```
 
 > **fabric-language-kotlin 坐标口径**：原写 `1.10.0+kotlin.1.9.20`，上游 `https://maven.fabricmc.net/net/fabricmc/fabric-language-kotlin/maven-metadata.xml`（111 个版本，lastUpdated 20260907124859）里没有这一号——`1.10.0` 只与 `kotlin.1.9.0` 配对，`kotlin.1.9.20` 从 `1.10.11` 起才有。现改为该表的 `<latest>` `1.14.1+kotlin.2.4.20`。
-> **未核实**：`1.14.1+kotlin.2.4.20` 与本档 MC 1.21.11 的官方兼容矩阵（语料 Kotlin 教程页只说「按官方 README 取合适版本」，本次 GitHub 不可达未读取）；`kotlin("jvm")` 版本号按 FLK 后缀同名对齐。
+> **兼容矩阵已核**：Modrinth `project/fabric-language-kotlin/version?game_versions=["1.21.11"]` 的 `1.14.1+kotlin.2.4.20` 条目 `gameVersions` 逐字含 `1.21.11`（`versionType=release`），所以该版本可用于本档；同表当前最新是 `1.14.2+kotlin.2.4.21`（也含 1.21.11）。`kotlin("jvm")` 版本号按 FLK 后缀同名对齐（`2.4.20` / `2.4.21`），不要改用别的 Kotlin 小版本。
 
 ### 2. fabric.mod.json 中的 Kotlin 依赖
 

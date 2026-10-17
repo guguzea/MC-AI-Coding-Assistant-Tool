@@ -141,14 +141,14 @@ TileEntity 持有 `IIntArray`（或手写同步字段），通过 `NetworkHooks.
 
 ## TileEntityRenderer（TER，客户端）
 
-1.14 用 `ClientRegistry.bindTileEntityRenderer`，不要 `EntityRenderersEvent.RegisterRenderers`（1.17+）。
+1.14 用 `ClientRegistry.bindTileEntitySpecialRenderer`（本档方法名带 `Special`，第一参传 TileEntity **类**），不要 `bindTileEntityRenderer`（1.16+ 才有）/ `EntityRenderersEvent.RegisterRenderers`（1.17+）。
 
 ```java
 @Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientSetup {
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
-        ClientRegistry.bindTileEntityRenderer(MY_TE.get(), MyTER::new);
+        ClientRegistry.bindTileEntitySpecialRenderer(MyTE.class, MyTER::new);
     }
 }
 ```

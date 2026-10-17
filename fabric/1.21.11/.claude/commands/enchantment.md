@@ -51,7 +51,38 @@ public record LightningEnchantmentEffect(LevelBasedValue amount) implements Ench
 }
 ```
 
-- 页内对 `amount` 的说明：一个随附魔等级缩放的值，本例用等级决定闪电条数；取值入口 `LevelBasedValue#calculate(int level)`。
+**Yarn 等价**（本档 `scaffold` 钉 yarn；逐名出处见文末映射口径表）：
+
+```java
+public record LightningEnchantmentEffect(EnchantmentLevelBasedValue amount) implements EnchantmentEntityEffect {
+	public static final MapCodec<LightningEnchantmentEffect> CODEC = RecordCodecBuilder.mapCodec(instance ->
+			instance.group(
+					EnchantmentLevelBasedValue.CODEC.fieldOf("amount").forGetter(LightningEnchantmentEffect::amount)
+			).apply(instance, LightningEnchantmentEffect::new)
+	);
+
+	@Override
+	public void apply(ServerWorld serverLevel, int level, EnchantmentEffectContext context, Entity target, Vec3d pos) {
+		if (target instanceof LivingEntity victim) {
+			if (context.owner() != null && context.owner() instanceof PlayerEntity player) {
+				float numStrikes = this.amount.getValue(level);
+
+				for (float i = 0; i < numStrikes; i++) {
+					BlockPos position = victim.getBlockPos();
+						EntityType.LIGHTNING_BOLT.spawn(serverLevel, position, SpawnReason.TRIGGERED);
+					}
+				}
+			}
+		}
+
+		@Override
+		public MapCodec<? extends EnchantmentEntityEffect> getCodec() {
+			return CODEC;
+		}
+	}
+```
+
+- 页内对 `amount` 的说明：一个随附魔等级缩放的值，本例用等级决定闪电条数；取值入口 `LevelBasedValue#calculate(int level)`（Yarn：`EnchantmentLevelBasedValue#getValue(int)`）。
 - 本档版本的生成原因是 `EntitySpawnReason.TRIGGERED`（该参考文件的 import `net.minecraft.world.entity.EntitySpawnReason`）。
 - 该文件的 import 面：`com.mojang.serialization.MapCodec`、`com.mojang.serialization.codecs.RecordCodecBuilder`、`net.minecraft.core.BlockPos`、`net.minecraft.server.level.ServerLevel`、`net.minecraft.world.entity.Entity`、`net.minecraft.world.entity.EntitySpawnReason`、`net.minecraft.world.entity.EntityType`、`net.minecraft.world.entity.LivingEntity`、`net.minecraft.world.entity.player.Player`、`net.minecraft.world.item.enchantment.EnchantedItemInUse`、`net.minecraft.world.item.enchantment.LevelBasedValue`、`net.minecraft.world.item.enchantment.effects.EnchantmentEntityEffect`、`net.minecraft.world.phys.Vec3`。
 
@@ -73,7 +104,23 @@ public class ModEnchantmentEffects {
 }
 ```
 
-页内要求在主类（含 `onInitialize()`）里调用 `registerModEnchantmentEffects()`。注册入口固定为 `Registry.register(BuiltInRegistries.ENCHANTMENT_ENTITY_EFFECT_TYPE, Identifier, MapCodec)`；禁止 `new` 完就丢（`01-registry.mdc`）。
+**Yarn 等价**：
+
+```java
+public class ModEnchantmentEffects {
+	public static MapCodec<LightningEnchantmentEffect> LIGHTNING_EFFECT = register("lightning_effect", LightningEnchantmentEffect.CODEC);
+
+	private static <T extends EnchantmentEntityEffect> MapCodec<T> register(String id, MapCodec<T> codec) {
+		return Registry.register(Registries.ENCHANTMENT_ENTITY_EFFECT_TYPE, Identifier.of(ExampleMod.MOD_ID, id), codec);
+	}
+
+	public static void registerModEnchantmentEffects() {
+		ExampleMod.LOGGER.info("Registering EnchantmentEffects for" + ExampleMod.MOD_ID);
+	}
+}
+```
+
+页内要求在主类（含 `onInitialize()`）里调用 `registerModEnchantmentEffects()`。注册入口固定为 `Registry.register(BuiltInRegistries.ENCHANTMENT_ENTITY_EFFECT_TYPE, Identifier, MapCodec)`（Yarn：`Registry.register(Registries.ENCHANTMENT_ENTITY_EFFECT_TYPE, Identifier, MapCodec)`）；禁止 `new` 完就丢（`01-registry.mdc`）。
 
 ## 第三步：`ResourceKey<Enchantment>`
 
@@ -92,6 +139,20 @@ public class ModEnchantments {
 		return ResourceKey.create(Registries.ENCHANTMENT, id);
 	}
 	// :::key-helper
+}
+```
+
+**Yarn 等价**：
+
+```java
+public class ModEnchantments {
+	public static final RegistryKey<Enchantment> THUNDERING = key("thundering");
+	public static final RegistryKey<Enchantment> REPULSION_CURSE = key("repulsion_curse");
+
+	private static RegistryKey<Enchantment> key(String path) {
+		Identifier id = Identifier.of(ExampleMod.MOD_ID, path);
+		return RegistryKey.of(RegistryKeys.ENCHANTMENT, id);
+	}
 }
 ```
 
@@ -196,7 +257,7 @@ register(context, ModEnchantments.THUNDERING,
 
 ## 多效果（Multiple Effects）
 
-页内：`withEffect` 可以链式追加多个效果，但那样每个效果都要各自写条件；想共享条件与目标，用 `AllOf` 合并成单个效果（上面 `AllOf.entityEffects(...)` 即是）。页内警告：**方法取决于效果类型**——例如 `EnchantmentValueEffect` 要改用 `AnyOf.valueEffects`；不同类型仍要额外的 `withEffect` 调用。`AnyOf` 与 `EnchantmentValueEffect` 在本档参考文件里只以页内文字出现，没有可抄 import ⇒ `// TODO(未核实)`：用之前先 `get_fabric_doc_full` 核对或用 `get_minecraft_source` 查签名。
+页内：`withEffect` 可以链式追加多个效果，但那样每个效果都要各自写条件；想共享条件与目标，用 `AllOf` 合并成单个效果（上面 `AllOf.entityEffects(...)` 即是）。页内下一句写「`EnchantmentValueEffect` 要改用 `AnyOf.valueEffects`」——**这句在本档构件里不成立**：1.21.11 的两层映射都没有 `AnyOf` 这个附魔效果类；正确名是 `AllOf.valueEffects(EnchantmentValueEffect...)`（mojmap `net.minecraft.world.item.enchantment.effects.AllOf`，javap 核实），Yarn 对应 `AllOfEnchantmentEffects.allOf(EnchantmentValueEffect...)`（返回 `AllOfEnchantmentEffects.ValueEffects`）。不同类型仍要额外的 `withEffect` 调用。
 
 ## 进附魔台：`non_treasure` 标签
 
@@ -296,11 +357,27 @@ public class ExampleModEnchantmentTagProvider extends FabricTagProvider<Enchantm
 | `BootstrapContext` | `Registerable` | 1.21.1–1.21.11 | join（`net.minecraft.registry.Registerable`） |
 | `RegistrySetBuilder` | `RegistryBuilder` | 1.19.4–1.21.11 | join（`net.minecraft.registry.RegistryBuilder`） |
 | `ApplyEntityImpulse` | `ApplyImpulseEnchantmentEffect` | 1.21.11（本档起） | join（`net.minecraft.enchantment.effect.entity.ApplyImpulseEnchantmentEffect`） |
+| `AllOf` | `AllOfEnchantmentEffects` | 1.21.11（javap 两侧） | mojmap `...enchantment.effects.AllOf`；Yarn `net.minecraft.enchantment.effect.AllOfEnchantmentEffects` |
+| `EnchantmentValueEffect` | `EnchantmentValueEffect` | 1.21.11（javap 两侧，包路径不同） | mojmap `...enchantment.effects`；Yarn `...enchantment.effect`（单数） |
 | `PlaySoundEffect` | `PlaySoundEnchantmentEffect` | 1.21.1–1.21.11 | join（`net.minecraft.enchantment.effect.entity.PlaySoundEnchantmentEffect`） |
 | `ConstantFloat` | `ConstantFloatProvider` | 1.17.1–1.21.11 | join（`net.minecraft.util.math.floatprovider.ConstantFloatProvider`） |
 | `LootItemEntityPropertyCondition` | `EntityPropertiesLootCondition` | 1.16.5–1.21.11 | join（`net.minecraft.loot.condition.EntityPropertiesLootCondition`） |
+| `Registries`（常量表） | `RegistryKeys` | 1.19.4–1.21.11 | chain（mojmap `net.minecraft.core.registries.Registries` → yarn `net.minecraft.registry.RegistryKeys`）— **与 `BuiltInRegistries` 是两回事，别把两个 `Registries` 当同一个** |
+| `EnchantmentEntityEffect` | `EnchantmentEntityEffect` | 1.21.1–1.21.11 | chain（两侧同名，包路径均 `net.minecraft.enchantment.effect`） |
 
-- 上表「Yarn 对应名」只由本档 `mappings/yarn-mappings.sqlite` 证实**类名存在与其包路径**，**不证实**方法名、参数与返回值。逐签名以 Yarn 源码为准：`get_minecraft_source`（需 JDK 17+）或 IDE `./gradlew genSources`。
+**成员级换名**（上面三段代码块用到的）：
+
+| mojmap | Yarn | 依据 |
+| --- | --- | --- |
+| `LevelBasedValue#calculate(int)` | `EnchantmentLevelBasedValue#getValue(int)` | javap @ yarn 1.21.11+build.6 |
+| `ResourceKey#create(RegistryKey, Identifier)` | `RegistryKey#of(RegistryKey, Identifier)` | javap @ 同上 |
+| `Entity#blockPosition()` | `Entity#getBlockPos()` | javap @ 同上（**注意**：mojmap 的同名字段 `blockPosition` 在 yarn 叫 `blockPos`（字段）、方法才叫 `getBlockPos()`——链式换算会撞名，以 javap 为准） |
+| `EnchantmentEntityEffect#codec()` | `EnchantmentEntityEffect#getCodec()` | javap @ 同上（Yarn 抽象方法名带 `get` 前缀） |
+| `EntityType#spawn(...)` | `EntityType#spawn(...)`（两侧同名） | chain（同上） |
+| `Registries.ENCHANTMENT_ENTITY_EFFECT_TYPE` | `RegistryKeys.ENCHANTMENT_ENTITY_EFFECT_TYPE`（字段名同） | javap @ 同上 |
+| `Identifier.fromNamespaceAndPath(a,b)` | `Identifier.of(a,b)` | javap @ 同上 |
+
+- 类名级行由本档 `mappings/yarn-mappings.sqlite` 证实**存在与包路径**；成员级行另以 **javap 真构件**或 **`client-1.21.11.txt`（Mojang 官方映射）→ 本档 yarn sqlite 的链路**核实过（中轴文件不入库）。未列出的签名仍须 `get_minecraft_source`（需 JDK 17+）或 `./gradlew genSources` 核实。
 - 反过来，mojmap 侧这些名在本档 Yarn 映射里 **0 命中** ⇒ 抄进 Yarn 工程必编译失败。
 - 未列入上表的 `Fabric API` / `Mixin` / 示例工程自造类名不在 vanilla 映射内，按语料原样用。
 
@@ -308,7 +385,7 @@ public class ExampleModEnchantmentTagProvider extends FabricTagProvider<Enchantm
 
 - **附魔本体直接 `Registry.register(BuiltInRegistries.ENCHANTMENT, ...)`**：本档两页都没这种写法（只有效果类型走 `Registry.register`，附魔走 `ResourceKey` + `Registries.ENCHANTMENT` bootstrap）。
 - **`Enchantments` 类的可用条件/效果组件清单**：页内只给外链（mcsrc），正文不列成员 ⇒ 需要时先 `get_fabric_doc_full` 或 `get_minecraft_source` 核实，禁止按记忆补。
-- **`AnyOf.valueEffects` / `EnchantmentValueEffect` 的 import 与签名**：只有页内一句话，参考文件未出现 ⇒ 未核实。
+- **`EnchantmentValueEffect` 的 import 与签名**：已按构件核实——mojmap `net.minecraft.world.item.enchantment.effects.EnchantmentValueEffect`（`float process(int, RandomSource, float)` / `MapCodec<? extends EnchantmentValueEffect> codec()`），Yarn `net.minecraft.enchantment.effect.EnchantmentValueEffect`（`float apply(int, Random, float)` / `getCodec()`）。**`AnyOf` 在 1.21.11 不存在**；用 `AllOf.valueEffects(...)`（mojmap）/ `AllOfEnchantmentEffects.allOf(...)`（Yarn）。
 - **展示台/村民交易之外的其它标签**（除 `NON_TREASURE`、`CURSE` 外）本档语料未出现 ⇒ 不猜。
 - **`ResourceLocation` 这个类名**：本档参考文件用 `net.minecraft.resources.Identifier`；`ResourceLocation` 是邻版（1.21.1 档）写法，禁止混进本工程。
 - **盔甲/工具的可附魔性（enchantability）** 与 **`MobEffect` 状态效果**：本件不覆盖，分别走同档 `develop_items_custom-armor.md` / `develop_entities_effects.md`（`mc-effect`）。

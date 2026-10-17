@@ -107,7 +107,7 @@ public class MyBlock extends Block implements EntityBlock {
     public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
         return new SimpleMenuProvider(
             (id, inv, player) -> new MyMenu(id, inv, player),
-            Component.translatable("block." + MOD_ID + ".my_block")
+            new TranslatableComponent("block." + MOD_ID + ".my_block")   // 构件实证（javap @1.17.1-37.1.1_mapped_official）：1.17 无 Component.translatable（1.19+ 才有）
         );
     }
 

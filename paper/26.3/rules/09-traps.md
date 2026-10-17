@@ -180,6 +180,24 @@ BUILD FAILED in 770ms
 
 ⚠ 注：`--server`/`--port` 那一对**在 moddev 的 `client` 块里没能自动进服**（客户端停主菜单、日志无 `Connecting`）；**`--quickPlayMultiplayer` 才行**。
 
+## T11 · 让客户端「自己点一下」的**三条坑**（2026-10-16 实测 · 逐层定位 · 已解决）
+
+**目标**：让驱动器在客户端里**自动完成一次真实右键放置**（⇒ 服务端 `BlockPlaceEvent` ⇒ 验官方 `api__pdc.md:226/:228`）。
+
+| # | 现象 | 根因（证据） | 处方 |
+|---|---|---|---|
+| 1 | 按住 `useKey` 20 tick，**手里箱子一动不动**、服务端**零事件** | `KeyMapping.setDown(boolean)` 的字节码**只有** `putfield isDown` —— **不推 `clickCount`**；而 `Minecraft.handleKeybinds()` 对 use/attack/pickItem 是 `while (options.keyX.consumeClick())` ⇒ **只 setDown 永不触发**（移动键没事，它读 `isDown()`） | 走真入口：静态 `KeyMapping.click(client.options.keyX.getKey())`（`getKey()` = 当前绑定键，尊重改键）。attack 另需 `setDown(true)` 保持 —— 继续破坏靠 `isDown()` |
+| 2 | 补上 `KeyMapping.click` 后**仍然没放出去**；推断"`handleKeybinds` 没跑"，**被自己的诊断推翻**（`winActive=true`） | 动作键需要走**更下层**的交互 API | `MultiPlayerGameMode.useItemOn(LocalPlayer, InteractionHand, BlockHitResult)` / `useItem(Player, InteractionHand)`（`Minecraft.gameMode`/`hitResult` 是 **public 字段**；vanilla 的 `Minecraft.startUseItem()` 是 **private** 调不到） |
+| 3 | `useItemOn` 返回 **`Fail`** ⇒ **静默**、不发包 | ① 先排除其**唯一早期 Fail**（世界边界）：实测 `inBorder=true`（`6e7@0,0`）⇒ 不成立；② 真因是 **26.x 客户端预测**（`startPrediction` → `performUseItemOn`）：**放置位与玩家碰撞箱重叠**即判 Fail；③ **转视角无效**——实测 20 条诊断的 `loc` **一字不差** ⇒ `client.hitResult` 在该运行时**是冻住的**，而刷新它的 `Minecraft.pick(float)` 是 **private** | **自算射线**：`player.pick(4.5, 1.0f, false)`（`Entity.pick(double,float,boolean)` 是 **public**，`LocalPlayer` 继承）⇒ 拿新鲜 `BlockHitResult` 交给 `useItemOn`，并回填 `client.hitResult`。**这不是造包**：用的就是游戏内部那套射线投射 |
+
+**结果**（同一轮）：20 条诊断里 **13 条 `Success[swingSource=PREDICTED, … heldItemTransformedTo=1 minecraft:chest]`** ⇒ 服务端 `BlockPlaceEvent` ⇒ **`v-pdc-place.ok`** ✅
+
+**三条通用教训**：
+
+- **`setDown` 只能驱动"读 `isDown()` 的"输入**（移动/潜行/冲刺）；**"读 `consumeClick()` 的"动作键**（use / attack / pickItem）必须走 `KeyMapping.click(...)` 或直接调交互 API。
+- **"改视角再交互"在连服档不可靠** —— `hitResult` 可能是陈旧的；**要新鲜命中就自己 `pick()`**。
+- **客户端预测会静默否决**：`Fail` 就**不发包** ⇒ 服务端**什么痕迹都没有**（无事件、无日志）⇒ **判据里必须带客户端侧的返回值**，否则只能对着"什么都没有"无限猜。
+
 ## 未核实（明写 —— 本档不含通识推断，凡没实测的一律在此）
 
 - **本档全部实测都在同一台机 / 同一网络**（Windows 11 + JDK 25 + Paper 26.3-190），**跨平台/跨版本的可复现性未核**。

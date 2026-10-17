@@ -674,6 +674,109 @@ export function rewriteForNeoForge26xx(java: string, version: string): string {
   let s = rewriteForForge(java, version);
   s = apply26xxShared(s, version);
   s = deForgeToNeoForge26xx(s, version);
+
+  // ⚠⚠ **动作键必须走真实输入入口**（2026-10-16 修 · 对 26.3 客户端件 javap 实测）：
+  //   `KeyMapping.setDown(boolean)` 的字节码**只有** `putfield isDown` —— **不推 `clickCount`**；
+  //   而 `Minecraft.handleKeybinds()` 对 use / attack / pickItem 是 `while (options.keyX.consumeClick())`
+  //   ⇒ **只 setDown 永远不会触发**这些动作。（移动键没事，因为它是读 `isDown()`。）
+  //   实测证据：按住 useKey 20 tick 后，主手那个箱子**仍在原位**、服务端**0 个 BlockPlaceEvent**、
+  //   连 `.FAIL` 都没有（=处理器压根没被调用）。
+  //   真入口是静态 `KeyMapping.click(InputConstants$Key)`（键鼠处理器调的就是它，它会推 `clickCount`）。
+  //   取键用 `getKey()`（**当前绑定键**，尊重玩家改键；`getDefaultKey()` 只是出厂值）。
+  //   注：`click` 之后按键会处于按下态 ⇒ 立刻补一次 `setDown(false)` 免得卡住。
+  const CLICK = (k: string) =>
+    `net.minecraft.client.KeyMapping.click(client.options.${k}.getKey()); client.options.${k}.setDown(false);`;
+  // use / pickItem：**瞬时动作**，点一下即可（evaluate 时把 down==true 换成 click）
+  for (const k of ["keyUse", "keyPickItem"]) {
+    s = s.replaceAll(
+      `client.options.${k}.setDown(down);`,
+      `if (down) { ${CLICK(k)} } else client.options.${k}.setDown(false);`,
+    );
+    s = s.replaceAll(`client.options.${k}.setDown(true);`, CLICK(k));
+  }
+  // attack：**点一下发起** 之后还要**保持 isDown** —— 继续破坏靠的是 `isDown()`，不是 consumeClick
+  //（这也是 `break` 证明能工作的前提；只补 click 会让破坏停在第 1 tick）。
+  // ⚠ **顺序要紧**：先跑"字面 true"那条，再跑"变量 down"那条 —— 反过来会让第二条**命中第一条刚插入的文本**
+  //   （实测踩过：生成物里出现 `click(attack); click(attack);` 重复）。
+  s = s.replaceAll(
+    "client.options.keyAttack.setDown(true);",
+    `net.minecraft.client.KeyMapping.click(client.options.keyAttack.getKey()); client.options.keyAttack.setDown(true);`,
+  );
+  s = s.replaceAll(
+    "client.options.keyAttack.setDown(down);",
+    `if (down) { net.minecraft.client.KeyMapping.click(client.options.keyAttack.getKey()); client.options.keyAttack.setDown(true); } else client.options.keyAttack.setDown(false);`,
+  );
+
+  // ⚠⚠ **动作键那条路在本环境不通**（2026-10-16 实测）：把 KeyMapping.click 补进去之后，
+  //   主手那个箱子**仍然没放出去**（截图里热栏仍有箱子、服务端 0 个 BlockPlaceEvent）。
+  //   推断（有 javap 支撑，但**未直接测**）：`Minecraft.handleKeybinds()` —— 所有 `consumeClick()` 动作的
+  //   唯一入口 —— **在这个环境里没有跑**。线索：客户端是以**后台/隐藏窗口**起的，而 `Minecraft` 上有
+  //   `public boolean isWindowActive()`；移动键不受影响是因为 `LocalPlayer` 直接读 `isDown()`。
+  //   ⇒ `use` 改走**客户端交互 API**（这正是 vanilla `startUseItem()` 内部做的事，而 `startUseItem()` 本身是 private 不可调）。
+  //   javap 实测（neoforge-26.3 merged 件）：`Minecraft.gameMode`(public 字段·MultiPlayerGameMode) /
+  //   `hitResult`(public 字段·HitResult) / `MultiPlayerGameMode.useItemOn(LocalPlayer, InteractionHand, BlockHitResult)`
+  //   / `useItem(Player, InteractionHand)` / `InteractionHand.MAIN_HAND` / `BlockHitResult extends HitResult` 全部 ✓。
+  //   （仍在 `if (stepTicks <= ut)` 里 ⇒ 一秒内会发多次；手上只有一个物品，第一次成功后其余自然是空放。）
+  // ⚠⚠ **同族修法：attack / break**（2026-10-16）：`attack` 也读 `consumeClick()` ⇒ 与 use 同款根因，
+  //   本环境同样**不会触发**（实测：内置破坏证明的 `keyAttack.setDown(true)` 一路无效）。
+  //   改用交互 API：创造模式 `MultiPlayerGameMode.destroyBlock(BlockPos)` **即时破坏、无状态机**
+  //   （javap 实测 public）；生存若要"挖一会儿"则用 `startDestroyBlock` + 每 tick `continueDestroyBlock` +
+  //   `stopDestroyBlock`（本档未做，留作处方）。命中同样**自算射线**（`client.hitResult` 在连服档是冻住的）。
+  //   ⚠ 用 `client.player`（不是 `player`）：这段文本在 `press(Minecraft client, …)` 帮助函数里也要成立。
+  const ATTACK_DO = `{ net.minecraft.world.phys.HitResult _ahr = client.player.pick(4.5, 1.0f, false); `
+    + `if (_ahr instanceof net.minecraft.world.phys.BlockHitResult) { `
+    + `client.gameMode.destroyBlock(((net.minecraft.world.phys.BlockHitResult) _ahr).getBlockPos()); } }`;
+  // ⚠ 顺序：**先替 if-form**（它把 plain form 当成子串包含），再替剩下的 plain form（阶段机那两处）。
+  s = s.replaceAll(
+    `if (down) { net.minecraft.client.KeyMapping.click(client.options.keyAttack.getKey()); client.options.keyAttack.setDown(true); } else client.options.keyAttack.setDown(false);`,
+    `if (down) { ${ATTACK_DO} } else client.options.keyAttack.setDown(false);`,
+  );
+  s = s.replaceAll(
+    "net.minecraft.client.KeyMapping.click(client.options.keyAttack.getKey()); client.options.keyAttack.setDown(true);",
+    ATTACK_DO,
+  );
+
+  s = s.replaceAll(
+    'press(client, "use", true);',
+    `{ // ⚠ **扫描式瞄准**（2026-10-16 第三次修）：实测固定角度都会打到"紧贴玩家"的方块
+       //   （60° ⇒ bpos 贴脚边；35° ⇒ bpos 在玩家旁 0.7 格）⇒ 放置位与玩家碰撞箱重叠 ⇒
+       //   26.x 客户端预测恒判 Fail（ret=Fail[]、不发包、服务端一无所知）。
+       //   ⇒ 在按住的这些 tick 里**轮换俯角(10/25/40/55)与朝向(+12°/tick)**，让射线扫到"离玩家 ≥2 格"的面。
+       // ⚠ 本段是**改写之后**注入的 ⇒ 必须用 Mojang 名（setXRot，不是 yarn 的 setPitch —— 踩过一次）
+       player.setXRot((float) (10 + (stepTicks % 4) * 15));
+       player.setYRot((player.getYRot() + 12.0f) % 360.0f);
+       // ⚠ **用游戏自己的射线投射拿新鲜命中**（2026-10-16 第四次修 · javap 实证 public）：
+       //   实测 client.hitResult 是**冻住的**（20 tick 轮换俯角/朝向，20 条诊断的 loc 一字不差），
+       //   而 26.3 里刷新它的是 **private void Minecraft.pick(float)**（private ⇒ 调不到）
+       //   ⇒ 改用 Entity.pick(double, float, boolean)（public，LocalPlayer 继承）自己算一次 ——
+       //   它就是游戏内部那套射线投射（眼位 + 视向量 + 4.5 格），**不是造包、不是伪造命中**。
+       net.minecraft.world.phys.HitResult _hr = player.pick(4.5, 1.0f, false);
+       client.hitResult = _hr;   // 回填，保持客户端状态一致（hitResult 是 public 非 final 字段）
+       String _hit = (_hr == null ? "null" : _hr.getType().name());
+       Object _ret = (_hr instanceof net.minecraft.world.phys.BlockHitResult)
+         ? client.gameMode.useItemOn(player, net.minecraft.world.InteractionHand.MAIN_HAND, (net.minecraft.world.phys.BlockHitResult) _hr)
+         : client.gameMode.useItem(player, net.minecraft.world.InteractionHand.MAIN_HAND);
+       // 诊断一行（本轮的目的就是让它说话）：命中类型 / 调用返回 / 命中点 / 窗口是否活动 / 当前是否有屏
+       // ⚠ 26.3 **没有 Minecraft.screen 字段**（要走 client.gui.screen()，本档 tier 注释里写明过）
+       // ⚠ 本模板字面量内部**不许出现反引号**（会提前终止 ⇒ TS1005，已踩四次）
+       // ⚠ 加打**世界边界**：javap 实测 useItemOn 里**唯一的早期 Fail** 是
+       //   !level.getWorldBorder().isWithinBounds(hitResult.getBlockPos()) ⇒ 若客户端侧边界未初始化/过小，
+       //   任何离 (0,0) 稍远的交互都会被客户端自己拒掉（且**静默**，服务端什么都看不到）。
+       // ⚠ 本模板内**一律不写反引号**（第五次踩：会提前终止模板字面量 ⇒ TS1005）。
+       String _bpos = "-", _bin = "-", _bsize = "-";
+       if (_hr instanceof net.minecraft.world.phys.BlockHitResult) {
+         net.minecraft.core.BlockPos _bp = ((net.minecraft.world.phys.BlockHitResult) _hr).getBlockPos();
+         _bpos = String.valueOf(_bp);
+         _bin = String.valueOf(client.level.getWorldBorder().isWithinBounds(_bp));
+         _bsize = String.valueOf(client.level.getWorldBorder().getSize())
+           + "@" + client.level.getWorldBorder().getCenterX() + "," + client.level.getWorldBorder().getCenterZ();
+       }
+       log("[QA] use diag: hit=" + _hit + " ret=" + _ret
+         + " loc=" + (_hr == null ? "-" : String.valueOf(_hr.getLocation()))
+         + " winActive=" + client.isWindowActive()
+         + " screen=" + (client.gui.screen() == null ? "null" : client.gui.screen().getClass().getSimpleName())
+         + " bpos=" + _bpos + " inBorder=" + _bin + " border=" + _bsize); }`,
+  );
   return s;
 }
 
@@ -3508,27 +3611,68 @@ public final class PlaytestQaDriver {
                     break;
                 }
                 case "gui": {
-                    if (stepTicks == 1) {
-                        client.setScreen(new InventoryScreen(player));
+                    // ⚠ 本步**不自设屏**（2026-10-16 第二次改）。
+                    //   第一版「tick 1 设一次、tick 25 查」在**连服**档判红；
+                    //   第二版「每 tick 重设、窗口 60 tick」**仍判红**（driver 自印：
+                    //   [QA] gui: 60 tick 后 currentScreen 仍为 null）⇒ 证明**不是收尾窗口**，
+                    //   而是**该档下自设屏不生效**（自设屏是**单机**设计假设）。
+                    //   ⇒ 改成**等一个屏出现**：服务端开容器（插件的 openInventory）后客户端会显示它，
+                    //   那时的屏是**服务端给的**，点它才算真实玩家行为。
+                    //   点法：容器 GUI 的槽位不在正中，故按几个候选点试 mouseClicked，取**第一个返回 true**的。
+                    //   ⚠ 本段注释**不许出现反引号**（会终止外层 TS 模板字面量 ⇒ TS1005，已踩一次）。
+                    //   ⚠ 时序：**屏一出现就点**（从第 5 tick 起每 tick 查），不能等到窗口末尾才查 ——
+                    //   服务端开的容器可能几秒后就被它自己关掉（本仓探针就在 60 tick 后 closeInventory），
+                    //   等到 120 tick 才看就必然看到 null（首版如此，会白跑）。
+                    if (stepTicks >= 5 && client.currentScreen != null) {
+                        guiOpened = true;
+                        guiClass = client.currentScreen.getClass().getSimpleName();
+                        // ⚠ **这一句必须与首版逐字相同**（new Click(client.getWindow().getScaledWidth() / 2.0,
+                        //   client.getWindow().getScaledHeight() / 2.0, new MouseInput(0, 0)), false）——
+                        //   26.x 的屏幕点击改写**只认这个字面形状**。我先试过 p[0]/p[1]、再试过 px/py 变量，
+                        //   **两次都被绕过**（生成物里构造器被吃掉 ⇒ 客户端编译报
+                        //   「无法将 ContainerEventHandler 中的方法 mouseClicked 应用到给定类型」）。
+                        //   ⇒ 本次只改**外层控制流**（等屏出现，不再自设屏），**不动这一句**。
+                        try {
+                            guiClicked = client.currentScreen.mouseClicked(
+                                new Click(client.getWindow().getScaledWidth() / 2.0, client.getWindow().getScaledHeight() / 2.0, new MouseInput(0, 0)), false);
+                        } catch (Throwable t) {
+                            log("[QA] gui click threw " + t);
+                        }
+                        client.currentScreen.close();
+                        guiClosed = client.currentScreen == null;
+                        log("[QA] gui class=" + guiClass + " clicked=" + guiClicked + " closed=" + guiClosed);
+                        next();
+                        break;
                     }
-                    if (stepTicks >= 25) {
-                        if (client.currentScreen != null) {
-                            guiOpened = true;
-                            guiClass = client.currentScreen.getClass().getSimpleName();
-                            try {
-                                guiClicked = client.currentScreen.mouseClicked(
-                                    new Click(client.getWindow().getScaledWidth() / 2.0, client.getWindow().getScaledHeight() / 2.0, new MouseInput(0, 0)), false);
-                            } catch (Throwable t) {
-                                log("[QA] gui click threw " + t);
-                            }
-                            client.currentScreen.close();
-                            guiClosed = client.currentScreen == null;
-                            log("[QA] gui class=" + guiClass + " clicked=" + guiClicked + " closed=" + guiClosed);
-                        }
-                        if (!guiOpened) {
-                            failIntent(client, player, "gui_failed", "GUI 证明失败：InventoryScreen 未能打开");
-                            return;
-                        }
+                    if (stepTicks >= 120) {
+                        log("[QA] gui: 120 tick 内没有屏出现（服务端没开容器？或该档不支持）");
+                        failIntent(client, player, "gui_failed", "GUI 证明失败：120 tick 内没有屏出现");
+                        return;
+                    }
+                    break;
+                }
+                case "use": {
+                    // 右键使用（放置/交互）。范式抄 case "break"：先清屏 + 俯视，再**短按** useKey。
+                    // ⚠ 用**短按**（默认 4 tick）而不是长按：长按会连续触发使用 ⇒ 连放多个方块。
+                    // ⚠ 必须**俯视到能瞄到可放置面**：不俯视时准星前方不一定有方块。
+                    // ⚠ 本段注释不许出现反引号（会终止外层 TS 模板字面量 ⇒ TS1005，**已踩三次**）。
+                    int ut = optI(rest, "ticks", 4);
+                    if (stepTicks == 1) {
+                        client.setScreen(null);
+                        // ⚠ **俯角 35°**（2026-10-16 二次修，实测数据驱动）：
+                        //   90° ⇒ 射线打脚下那格 ⇒ 放置位置 = 玩家自己所占格 ⇒ 与实体碰撞、放不了；
+                        //   60° ⇒ 落点正好**贴着玩家脚边**（实测 bpos=(-63,96,53)，玩家在 (-62.3,97,54)）
+                        //          ⇒ 26.x 的**客户端预测**（MultiPlayerGameMode.startPrediction →
+                        //          performUseItemOn）本地就判 **Fail**、**不发包** ⇒ 服务端一个事件都收不到；
+                        //   35° ⇒ 水平距离 ≈ 眼高 1.62 / tan35° ≈ 2.3 格 ⇒ 落在**离玩家 2 格开外**的方块顶面，
+                        //          预测通过、才真的发包。注：break 步骤用 90° 是对的（挖脚下），用途不同。
+                        player.setPitch(35.0f);
+                    }
+                    if (stepTicks <= ut) {
+                        press(client, "use", true);
+                    } else {
+                        press(client, "use", false);
+                        log("[QA] use: 已短按 useKey " + ut + " tick（俯角 60°，射线落前方约 1 格的方块顶面）");
                         next();
                     }
                     break;

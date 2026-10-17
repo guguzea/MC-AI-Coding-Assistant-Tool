@@ -16,7 +16,8 @@ mappings: yarn
 private static final SoundEvent MY_SOUND = Registry.register(
     Registry.SOUND_EVENT,
     new Identifier(MOD_ID, "my_sound"),
-    SoundEvent.of(new Identifier(MOD_ID, "my_sound"))
+    // 构件实证（javap @yarn 1.16.5+build.10 的 net.minecraft.sound.SoundEvent）：只有构造器 SoundEvent(Identifier)，没有静态 of()
+    new SoundEvent(new Identifier(MOD_ID, "my_sound"))
 );
 
 // 2. 播放声音

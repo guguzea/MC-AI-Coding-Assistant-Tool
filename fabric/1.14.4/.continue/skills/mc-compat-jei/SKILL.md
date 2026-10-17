@@ -15,37 +15,21 @@ mappings: yarn
 
 Fabric 主要使用 **REI（Roughly Enough Items）** 作为物品管理器。JEI 主要在 Forge 中使用。
 
+**本档没有已核实的 REI 坐标与插件 API**：`maven.shedaniel.me` 的 `RoughlyEnoughItems-fabric/maven-metadata.xml` 最低版本是 `6.0.277-alpha`，没有 1.14.4 档的构件可取证。⇒ 本档不提供可抄的插件代码；动手前必须让用户自备该版本 jar，走 `ingest_loader_api` 入库后逐签名回填。
+
 ## 添加 REI 依赖
 
 ```groovy
 dependencies {
-    modImplementation "com.github.shedaniel:RoughlyEnoughItems:TODO(未核实)" // 第三方库：maven.shedaniel.me me/shedaniel/RoughlyEnoughItems-fabric/maven-metadata.xml（读，451 版，最低 6.0.277-alpha，无 9.1.618，无 1.14.4 档）未取证；REI 非加载器 API，方法签名须由用户自备 jar 走 ingest_loader_api 核实
+    modImplementation "com.github.shedaniel:RoughlyEnoughItems:TODO(未核实)" // 本档无已核实坐标：REI 从 6.0.277-alpha 起才有构件，属更高 MC 线；禁止抄别的版本档
 }
 ```
 
-## 创建 REI 插件
+## 本档禁止默写
 
-```java
-// 1. 创建插件类
-public class MyModPlugin implements REIPluginClient {
-    @Override
-    public void registerEntries(RegisterClientPluginsEvent event) {
-        // 注册条目
-    }
-}
-```
-
-```json
-// fabric.mod.json
-{
-  "entrypoints": {
-    "rei_client": ["com.example.examplemod.MyModPlugin"]
-  },
-  "depends": {
-    "roughlyenoughitems": "*"  // 1.14.4 时代 REI 版本未取证，见上方依赖注
-  }
-}
-```
+- 本档没有可抄的 REI 插件类：插件接口名、注册方法名、参数类型都必须先有该版本 jar 的 javap 或 `ingest_loader_api` 摘要。
+- 旧稿里的 `REIPluginClient` / `RegisterClientPluginsEvent` 在已核实的 REI 构件（如 21.11.816）里 **0 命中**，本档同样 **未核实**，不要写。
+- 现代 REI 的真实接口是 `me.shedaniel.rei.api.client.plugins.REIClientPlugin`，入口键为 `rei_client`；但这套形状来自较高版本，**不许**直接搬到 1.14.4。
 
 ## 常见错误
 

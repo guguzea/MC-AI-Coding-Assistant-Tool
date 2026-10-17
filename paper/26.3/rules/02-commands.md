@@ -35,7 +35,18 @@ Paper 有自己的命令 API（`io.papermc.paper.command.brigadier.*`、`Command
 
 ## 未核实
 
-- `onTabComplete` 的**第 3 形参名**（26.3 是 `alias`）在**其它 Bukkit 版本**上是否同名本档未核 —— 只核了 26.3 一份。
+- `onTabComplete` 的**行为契约**（何时被调用、返回 `null` 与返回空列表的区别）本档未核 —— **签名面与教程面都给不出**这类语义。
+
+## `onTabComplete` 的跨版本对照（**已核，2026-10-16**）
+
+| 版本 | 出处 | 签名 |
+|---|---|---|
+| **26.3** | 语料 `JavaPlugin.md:31` | `@Nullable List<String> onTabComplete(CommandSender sender, Command command, **String alias**, String[] args)` |
+| **1.21.4** | Paper 官方 javadoc（`jd.papermc.io/paper/1.21.4/…/JavaPlugin.html`） | `@Nullable List<String> onTabComplete(CommandSender sender, Command command, **String alias**, String[] args)` |
+
+⇒ **形参名两版一致（都是 `alias`）**；与 `onCommand` 的 `label`（`JavaPlugin.md:30`）也**两版都不同**，这个"别名 vs 标签"的坑**跨版本成立**。
+
+⚠ **取法留痕**：`javap` **看不到形参名**（实测两版件**都没有 `MethodParameters` 属性**）⇒ 跨版本比形参名**只能走该版本的 javadoc**。本档两个版本都取了（26.3 走语料、1.21.4 走 Paper 官方 javadoc，后者实测 HTTP 200）。
 
 ## Brigadier 的跨版本差异（**已核，2026-10-15 · 两版件对比**）
 

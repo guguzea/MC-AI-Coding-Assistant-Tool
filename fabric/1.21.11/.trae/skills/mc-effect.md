@@ -37,6 +37,29 @@ public class TaterEffect extends MobEffect {
 }
 ```
 
+**Yarn 等价**（本档 `scaffold` 钉 yarn；同签名换名，逐名出处见文末映射口径表）：
+
+```java
+public class TaterEffect extends StatusEffect {
+	protected TaterEffect() {
+		super(StatusEffectCategory.BENEFICIAL, 0xe9b8b3);
+	}
+
+	@Override
+	public boolean canApplyUpdateEffect(int duration, int amplifier) {
+		return true;
+	}
+
+	@Override
+	public boolean applyUpdateEffect(ServerWorld level, LivingEntity entity, int amplifier) {
+		if (entity instanceof PlayerEntity) {
+			((PlayerEntity) entity).addExperience(1 << amplifier);
+		}
+		return super.applyUpdateEffect(level, entity, amplifier);
+	}
+}
+```
+
 - `shouldApplyEffectTickThisTick(int duration, int amplifier)` 每 tick 决定是否施加；`applyEffectTick(ServerLevel, LivingEntity, int amplifier)` 是效果本体。两者均返回 `boolean`。
 - 该参考文件的 import 面（照抄即用）：`net.minecraft.server.level.ServerLevel`、`net.minecraft.world.effect.MobEffect`、`net.minecraft.world.effect.MobEffectCategory`、`net.minecraft.world.entity.LivingEntity`、`net.minecraft.world.entity.player.Player`。
 
@@ -72,7 +95,7 @@ public class ExampleModEffects implements ModInitializer {
 | `particles` | `boolean` | 是否显示粒子 |
 | `icon` | `boolean` | 是否在 HUD 显示图标（物品栏总会显示） |
 
-`new MobEffectInstance(...)` 的确切重载形态本页未给出 ⇒ `// TODO(未核实)`：用 `search_fabric_docs(version=1.21.11)` 或 `get_minecraft_source` 核实后再写，禁止凭记忆补参数顺序。
+`new MobEffectInstance(...)` 的重载已核实（javap @ mojmap jar，共 7 个公开构造器）：`(Holder<MobEffect>)`、`(Holder<MobEffect>, int)`、`(Holder<MobEffect>, int, int)`、`(Holder<MobEffect>, int, int, boolean, boolean)`、`(Holder<MobEffect>, int, int, boolean, boolean, boolean)`、`(Holder<MobEffect>, int, int, boolean, boolean, boolean, MobEffectInstance)`、`(MobEffectInstance)`。Yarn 侧 `StatusEffectInstance(RegistryEntry<StatusEffect>, …)` 同形（javap @ yarn 1.21.11+build.6）。
 
 ## 资源与本地化
 
@@ -93,8 +116,23 @@ public class ExampleModEffects implements ModInitializer {
 | `ServerLevel` | `ServerWorld` | 1.14.4–1.21.11 | join（`net.minecraft.server.world.ServerWorld`） |
 | `Player` | `PlayerEntity` | 1.14.4–1.21.11 | join（`net.minecraft.entity.player.PlayerEntity`） |
 | `BuiltInRegistries` | `Registries` | 1.19.4–1.21.11 | join（`net.minecraft.registry.Registries`） |
+| `Holder` | `RegistryEntry` | 1.19.4–1.21.11 | chain（`client-1.21.11.txt` → 本档 yarn sqlite） |
+| `MobEffectInstance` | `StatusEffectInstance` | 1.14.4–1.21.11 | chain（同上） |
 
-- 上表「Yarn 对应名」只由本档 `mappings/yarn-mappings.sqlite` 证实**类名存在与其包路径**，**不证实**方法名、参数与返回值。逐签名以 Yarn 源码为准：`get_minecraft_source`（需 JDK 17+）或 IDE `./gradlew genSources`。
+**成员级换名**（上面两段代码块用到的；上表只到类名级）：
+
+| mojmap | Yarn | 依据 |
+| --- | --- | --- |
+| `MobEffect` 构造 `(MobEffectCategory, int)` | `StatusEffect(StatusEffectCategory, int)`（**protected**） | javap @ yarn 1.21.11+build.6 |
+| `MobEffect#shouldApplyEffectTickThisTick(int,int)` | `StatusEffect#canApplyUpdateEffect(int,int)` | javap @ 同上 |
+| `MobEffect#applyEffectTick(ServerLevel,LivingEntity,int)` | `StatusEffect#applyUpdateEffect(ServerWorld,LivingEntity,int)` | javap @ 同上 |
+| `MobEffectCategory.BENEFICIAL` | `StatusEffectCategory.BENEFICIAL` | javap @ 同上 |
+| `LivingEntity#addEffect(..)` | `LivingEntity#addStatusEffect(..)` | chain（`client-1.21.11.txt` → yarn sqlite） |
+| `Player#giveExperiencePoints(int)` | `PlayerEntity#addExperience(int)` | javap @ 同上 |
+| `Registry#registerForHolder(..)` | `Registry#registerReference(..)` | javap @ 同上 |
+| `BuiltInRegistries.MOB_EFFECT` | `Registries.STATUS_EFFECT`（**字段名也换了**） | javap @ 同上 |
+
+- 类名级「Yarn 对应名」由本档 `mappings/yarn-mappings.sqlite` 证实**存在与包路径**；成员级那些行另以 **javap 真构件**或 **`client-1.21.11.txt`（Mojang 官方映射）→ 本档 yarn sqlite 的链路**核实过（`client-1.21.11.txt` 只当中轴、不入库）。未列出的签名仍须 `get_minecraft_source`（需 JDK 17+）或 `./gradlew genSources` 核实。
 - 反过来，mojmap 侧这些名在本档 Yarn 映射里 **0 命中** ⇒ 抄进 Yarn 工程必编译失败。
 - 未列入上表的 `Fabric API` / `Mixin` / 示例工程自造类名不在 vanilla 映射内，按语料原样用。
 

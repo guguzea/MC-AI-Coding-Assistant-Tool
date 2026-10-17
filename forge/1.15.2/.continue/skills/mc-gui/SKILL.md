@@ -122,7 +122,9 @@ public class MyBlock extends Block {   // 方块实体：重写 hasTileEntity() 
 public class ClientSetup {
     @SubscribeEvent
     public static void init(FMLClientSetupEvent event) {
-        ScreenManager.registerFactory(MyContainers.MY_CONTAINER.get(), MyScreen::new);
+        // 构件实证（javap net.minecraft.client.gui.ScreenManager, 1.15.2-31.2.50_mapped_official_1.15.2）：
+        // 方法名是 register(ContainerType<? extends M>, ScreenManager$IScreenFactory<M,U>)；❌ registerFactory 是 MCP 层名
+        ScreenManager.register(MyContainers.MY_CONTAINER.get(), MyScreen::new);
     }
 }
 ```
@@ -152,7 +154,7 @@ public class MyScreen extends ContainerScreen<MyContainer> {
 
 ## 常见错误
 
-- ❌ `ScreenManager.registerFactory()` 放在服务端 → `FMLClientSetupEvent` 已经是客户端专用
+- ❌ `ScreenManager.register()` 放在服务端 → `FMLClientSetupEvent` 已经是客户端专用
 - ❌ `transferStackInSlot` 返回空导致物品丢失 → 始终实现完整的转移逻辑
 - ❌ `canInteractWith` 始终返回 true → 添加距离检查
 

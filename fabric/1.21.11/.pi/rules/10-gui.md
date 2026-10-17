@@ -147,7 +147,7 @@ Yarn 移位是 `quickMove`。客户端只用 `HandledScreens.register`。`Screen
 | 打开菜单流程 | `PlayerEntity.openHandledScreen`=method_17355（返回 `OptionalInt`） |
 | `VANILLA_SET` | `FeatureFlags.VANILLA_FEATURES`=field_40182，类型 `FeatureSet` |
 | `createMenu`（L60/74/80） | `createMenu`（**Yarn 同名**）：`createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) → ScreenHandler`。`LIVE:` `https://maven.fabricmc.net/docs/yarn-1.21.11+build.6/net/minecraft/screen/ScreenHandlerFactory.html`（HTTP 200；named / intermediary / official 三列描述符同为 `createMenu`） |
-| `ScreenEvents.AFTER_INIT` / `BEFORE_INIT`（本档 Decision Flow「给原版 Screen 加控件」+「Fabric Screen API（fabric-screen-api-v1）」段） | 常量名**未核实**（`query_loader_api` 摘要 schema 不存字段；本档 fabric-docs / fabric-wiki 全库 `ScreenEvents` 0 命中）。可写的只有嵌套接口 `ScreenEvents$AfterInit`（`afterInit(MinecraftClient, Screen, int, int)`）与 `Screens.getButtons(Screen) → List<ClickableWidget>`；用常量名前需 `get_minecraft_source` 复核 |
+| `ScreenEvents.AFTER_INIT` / `BEFORE_INIT`（本档 Decision Flow「给原版 Screen 加控件」+「Fabric Screen API（fabric-screen-api-v1）」段） | 常量名**已核实**：`net.fabricmc.fabric.api.client.screen.v1.ScreenEvents.BEFORE_INIT`（`Event<BeforeInit>`）与 `.AFTER_INIT`（`Event<AfterInit>`），javap @ `fabric-screen-api-v1` 构件逐字命中。嵌套接口 `ScreenEvents$AfterInit` 的 `afterInit(MinecraftClient, Screen, int, int)` 与 `Screens.getButtons(Screen) → List<ClickableWidget>` 同件可写 |
 
 ## NamedScreenHandlerFactory（普通打开）
 

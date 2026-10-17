@@ -23,8 +23,10 @@ public static final RegistryObject<Biome> MY_BIOME = BIOMES.register("my_biome",
         .skyColor(0x78a9ff)                            // 不是 withSkyColor
         .ambientLoopSound(SoundEvents.AMBIENT_BASALT_DELTAS_LOOP)  // 不是 setAmbientSound(AmbientSoundEvents.…)
         .build())
-        .mobSpawnSettings(MobSpawnInfo.builder().build())            // 不是 withMobSpawnSettings(consumer)
-        .generationSettings(BiomeGenerationSettings.builder().build())  // 不是 withGenerationSettings(consumer)
+        .mobSpawnSettings(new MobSpawnInfo.Builder().build())       // 不是 withMobSpawnSettings(consumer)
+                                                                    // 构件实证（javap @1.16.5-36.2.34_mapped_official）：MobSpawnInfo 上没有静态 builder()，只有 public 无参构造的 MobSpawnInfo$Builder
+        .generationSettings(new BiomeGenerationSettings.Builder().build())  // 不是 withGenerationSettings(consumer)
+                                                                    // 同上：BiomeGenerationSettings$Builder 是 public 无参构造，没有静态 builder()
         .build()
 );
 ```

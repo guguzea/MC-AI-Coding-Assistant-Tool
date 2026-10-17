@@ -17,7 +17,7 @@ mappings: mcp
 → 新增生物群系 → 数据包 JSON：data/<modid>/worldgen/biome/<name>.json（primer:162 原文）——Biome 注册表是 data-driven，不再走 Forge Registry（primer:160）
 → 向已有群系加 feature/structure → BiomeLoadingEvent（datapack 解析期、服务端启动前触发；primer:170-186）
 → 群系加入主世界 → BiomeManager#addAdditionalOverworldBiomes，在 FMLCommonSetupEvent 里 enqueueWork 调用保证线程安全（primer:211）
-→ 引用群系 → 一律 RegistryKey<Biome>（RegistryKey.get(Registry.BIOME_REGISTRY, ...)，primer:188；ForgeRegistry 的 Biome 注册表不含数据包群系，getRegistryName 可能为 null——primer:248-255）
+→ 引用群系 → 一律 RegistryKey<Biome>（RegistryKey.create(Registry.BIOME_REGISTRY, ...)，primer:188；构件实证：javap @1.16.5-36.2.34_mapped_official 的方法名是 create，primer 写的 get 是过时名；ForgeRegistry 的 Biome 注册表不含数据包群系，getRegistryName 可能为 null——primer:248-255）
 → 注册与生命周期 → mc-registry、01-registry.mdc
 ```
 

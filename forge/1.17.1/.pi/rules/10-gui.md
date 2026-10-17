@@ -167,7 +167,7 @@ public class MyBlock extends Block {
             BlockPos pos) {
         return new SimpleMenuProvider(
             (windowId, inv, player) -> new MyMenu(windowId, inv),
-            Component.literal("My Menu")
+            new TextComponent("My Menu")   // 构件实证（javap @1.17.1-37.1.1_mapped_official_1.17.1）：1.17 无 Component.literal（1.19+ 才有），用 new TextComponent(...)
         );
     }
 }

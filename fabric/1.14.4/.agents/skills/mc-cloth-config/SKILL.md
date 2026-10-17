@@ -16,101 +16,29 @@ mappings: yarn
 
 Cloth Config 是 Fabric 侧广泛使用的**第三方**配置库（不是 Fabric 官方组件，也没有「官方推荐」这一说），提供类型安全的配置系统与配置 GUI。
 
-本包未把它的 API 摘要入库（`$MC_SKILL_CACHE/loader-api-summaries` 里没有 fabric-cloth-config 条目）⇒ 下面所有类名 / 方法名都属**未核实**，动手前须让用户用自己的 cloth-config jar 跑一次 `ingest_loader_api` 入库，再逐签名回填；依赖坐标与仓库行则是实取上游核实过的（见「添加依赖」下的依据句）。
+**本档没有已核实的 Cloth Config 坐标与 API 面**：`maven.shedaniel.me` 的 `cloth-config-fabric/maven-metadata.xml`（126 条）最低版本是 `4.10.11`，落在 1.16 线；没有 1.14.4 档的构件可取证，本包也没有该库的 API 摘要。⇒ 本档不提供可抄的 Cloth 代码；动手前必须让用户自备该版本的 cloth-config jar，走 `ingest_loader_api` 入库后逐签名回填。
 
 ## 添加依赖
 
 ```groovy
 // build.gradle
 dependencies {
-    modApi "me.shedaniel.cloth:cloth-config-fabric:TODO(未核实)" { // 第三方库：maven.shedaniel.me cloth-config-fabric/maven-metadata.xml（读，126 版，最低 4.10.11，无 11.0.106，无 1.14.4 档）未取证；Cloth 非加载器 API，方法签名须由用户自备 jar 走 ingest_loader_api 核实
+    modApi "me.shedaniel.cloth:cloth-config-fabric:TODO(未核实)" { // 本档无已核实坐标：4.10.11 起才进 maven-metadata，属 1.16 线；禁止抄别的版本档
         exclude group: "net.fabricmc.fabric-api"
     }
 }
 ```
 
-## 基本配置
+## 本档禁止默写
 
-```java
-// 1. 创建配置选项类
-public class ModConfig implements ConfigSerializable {
-    @ConfigEntry.Gui.Excluded // ConfigEntry 是 Cloth Config 的注解，本档 MC 映射里没有这个名字
-    public ConfigBuilder builder = ConfigBuilder.create()
-        .title(new LiteralText("My Mod Config"))
-        .category(ConfigCategory.createBuilder()
-            .name(new LiteralText("General"))
-            .option(ConfigEntry.BoolOption.createBuilder(true) // ConfigEntry 是 Cloth Config 的注解，本档 MC 映射里没有这个名字
-                .name(new LiteralText("Enable Feature"))
-                .tooltip(new LiteralText("Enable or disable the feature"))
-                .build())
-            .option(ConfigEntry.IntSliderOption.createBuilder(10, 1, 100) // ConfigEntry 是 Cloth Config 的注解，本档 MC 映射里没有这个名字
-                .name(new LiteralText("Value"))
-                .build())
-            .build())
-        .save(() -> {
-            // 保存配置时的回调
-        });
-
-    public boolean enableFeature = true; // 示例配置字段名：本件自造的 ModConfig 字段，没有任何 MC/Cloth 符号叫 enableFeature
-    public int value = 10;
-
-    @Override
-    public ConfigSerializer<?> getSerializer() {
-        return builder.getSerializer();
-    }
-}
-```
-
-## 使用 ConfigBuilder
-
-```java
-public class MyConfigScreen extends ConfigScreen {
-    public MyConfigScreen(@Nullable Screen parent) {
-        super(parent, (me.shedaniel.clothconfig2.gui.ClothConfigScreenBuilder) null);
-    }
-
-    @Override
-    public void build(Screen parent, java.util.function.Consumer<AbstractConfigListEntry> consumer,
-                      ClothConfigBuilder builder) {
-        builder.setGlobalErrorSupplier(...);
-        builder.setSavingRunnable(() -> {
-            // 保存配置
-        });
-
-        builder.addLabel(new LiteralText("My Configuration")); // addLabel 是 Cloth ConfigBuilder 的方法，本档 MC 映射里没有
-        builder.addEntry(EntryBuilder.startBooleanToggle(
-                new TranslatableText("config.my_mod.enable_feature"))
-            .setDefaultValue(true)
-            .setSaveConsumer(v -> enableFeature = v) // enableFeature 为上面本件自造的示例字段，禁止当 API
-            .build());
-
-        builder.addEntry(EntryBuilder.startIntSlider(
-                new TranslatableText("config.my_mod.value"), 10, 100)
-            .setDefaultValue(50)
-            .setSaveConsumer(v -> value = v)
-            .build());
-    }
-}
-```
-
-## 配置屏幕入口
-
-```java
-public class ExampleModClient implements ClientModInitializer {
-    @Override
-    public void onInitializeClient() {
-        // 注册配置屏幕
-        ClothConfigAddon.setNewDefaultValue(
-            new Identifier(MOD_ID, "config"), new ModConfig()
-        );
-    }
-}
-```
+- 本档没有可抄的配置类 / 配置屏幕代码：任何类名与方法名都必须先有该版本 jar 的 javap 或 `ingest_loader_api` 摘要。
+- 常见于旧稿、但在本档构件范围内无法证实的历史名字（`ClothConfig` / `ClothConfigAddon` / `ClothConfigBuilder` / `ClothConfigScreenBuilder` / `ConfigSerializable` / `BoolOption` / `IntSliderOption` / `EntryBuilder` / `createBuilder` / `getOrCreateModConfig` / `setDefaultTitle` / `setGlobalErrorSupplier` / `setNewDefaultValue`）一律 **未核实**，不要写进工程。
+- 现代 Cloth（4.x 起）的真实 API 形状可参考 `fabric/1.16.5` / `1.17.1` 档的 `mc-cloth-config`，但**不许**把那些版本锁定值或签名直接搬到 1.14.4。
 
 ## 常见错误
 
 - ❌忘记 `exclude group: "net.fabricmc.fabric-api"` — 依赖冲突
-- ❌在服务端创建 ConfigScreen — ConfigScreen 是客户端的
+- ❌在服务端创建配置屏幕 — 配置屏幕是客户端的
 - ❌忘记在 `fabric.mod.json` 中声明 cloth-config 依赖
 
 ## 扩展点

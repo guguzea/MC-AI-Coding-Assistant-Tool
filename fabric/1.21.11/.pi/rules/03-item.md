@@ -138,7 +138,7 @@ public static void initialize() {
 - 创造栏常量在 `net.minecraft.item.ItemGroups`（**复数**），本档映射下 18 个常量全部具名（`INGREDIENTS` / `BUILDING_BLOCKS` / `COLORED_BLOCKS` / `COMBAT` / `FOOD_AND_DRINK` / `FUNCTIONAL` / `HOTBAR` 等），类型都是 `RegistryKey`。`ItemGroup`（单数）类里没有这些常量。
 - 回调参数类型是 `ItemGroup.Entries`（intermediary `class_7704`）；本档映射里**没有**顶层类 `ItemGroupEntries`。具名方法只有 `add(ItemConvertible)` / `add(ItemStack)` / `add(…, ItemGroup.StackVisibility)` / `addAll(Collection)` —— **没有** `remove` / `removeIf`，别照新版文档或 Forge 记忆写。`Item` 本身实现 `ItemConvertible`，直接传注册的 `Item` 字段即可。
 - Fabric API 侧另有 `FabricItemGroupEntries`，提供 `prepend` / `addAfter` / `addBefore`（入参 `ItemConvertible` 或 `ItemStack`）。
-- 自定义创造栏走 `FabricItemGroup.builder()`，返回 `ItemGroup.Builder`（intermediary `class_7913`）；builder 上逐个方法名本档未核实，写之前 `query_loader_api` 查 `net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup`。路线说明见官方 `develop_items_custom-creative-tabs`。
+- 自定义创造栏走 `FabricItemGroup.builder()`，返回 `ItemGroup.Builder`（intermediary `class_7913`）；builder 方法已按本档构件核实：`displayName(Text)` / `icon(Supplier<ItemStack>)` / `entries(ItemGroup.EntryCollector)` / `special()` / `noRenderedName()` / `noScrollbar()` / `texture(Identifier)` / `build() → ItemGroup`。注册：`Registry.register(Registries.ITEM_GROUP, Identifier.of(MOD_ID, "my_group"), builder.build())`。路线说明见官方 `develop_items_custom-creative-tabs`。
 - 移植提醒：26.1 起该事件改名 `modifyOutputEvent`（见 `fabric/26.1.2` 档 `develop_porting_fabric-api`），两版写法不要互抄。
 
 ## 常见错误

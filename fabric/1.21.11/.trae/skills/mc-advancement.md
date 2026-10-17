@@ -27,7 +27,7 @@ mappings_alt: mojmap
 1. 「Advancement Structure」一节列了 `DisplayInfo`、`AdvancementRequirements`、`AdvancementRewards`、`Strategy` 四个类型名——**这四个名字在本档任何参考文件的 import 面里都不存在**。盘上只有 `Advancement`、`AdvancementHolder`、`AdvancementType`；展示信息是 `.display(...)` 方法调用，奖励与 strategy 本档代码**一次都没写过**。
 2. 「Definitions」说 `playerPredicate` 「technically a `LootContextPredicate`」，而本档两份 criterion 代码的字段类型逐字是 `Optional<ContextAwarePredicate>`，`LootContextPredicate` 在本档语料里只出现在页面这句 prose 中。
 
-「One More Example」一节还写「We'll practice adding rewards」，但 `datagen-advancements:second-advancement` 标记段里**没有任何 reward 调用**，只有 `.parent(...)` + 两个 `.addCriterion(...)`。⇒ 奖励 API 一律 `TODO(未核实)`。
+「One More Example」一节还写「We'll practice adding rewards」，但 `datagen-advancements:second-advancement` 标记段里**没有任何 reward 调用**，只有 `.parent(...)` + 两个 `.addCriterion(...)`。奖励 API 不在语料里，已按本档构件补核（javap @ 1.21.11 两层映射）：`.rewards(AdvancementRewards.Builder)`；builder 侧 `AdvancementRewards.Builder.experience(int)` / `.loot(RegistryKey<LootTable>)` / `.recipe(RegistryKey<Recipe<?>>)` / `.function(Identifier)`，另有静态 `experience(int)` / `loot(...)` / `recipe(...)` / `function(...)` 与 `addLoot` / `addRecipe` / `setFunction` 链式形态（mojmap 名与 Yarn 名同名，仅 `Identifier` 层不同）。
 
 ## Provider：继承 FabricAdvancementProvider
 
@@ -78,11 +78,31 @@ AdvancementHolder getDirt = Advancement.Builder.advancement()
 		.save(consumer, ExampleMod.MOD_ID + ":get_dirt");
 ```
 
-- 建造入口是 `Advancement.Builder.advancement()`（静态）。
-- `.display(...)` 在本档是 **7 参**：icon（`Item`）、title（`Component`）、description（`Component`）、background（`Identifier`，子进度传 `null`）、`AdvancementType`、三个 `boolean`（toast / 播报聊天 / 是否提前隐藏）。本档出现的 `AdvancementType` 常量只有 `TASK`、`CHALLENGE`、`GOAL`；其余形态 ⇒ `TODO(未核实)`。
-- `.addCriterion(String name, TriggerInstance)`：第二个实参的类型页面与代码都未写出 ⇒ `TODO(未核实)`。本档出现的构造入口有 `InventoryChangeTrigger.TriggerInstance.hasItems(Item...)` 与 `ConsumeItemTrigger.TriggerInstance.usedItem(HolderLookup.RegistryLookup<Item>, Item)`。
-- `.save(Consumer<AdvancementHolder>, String)`：**页面 warning 原文**——「the function accepts the `Identifier` of the advancement in `String` format」。本档实参一律是拼接串 `ExampleMod.MOD_ID + ":get_dirt"`，不是 `Identifier` 对象。
-- `HolderLookup.RegistryLookup<Item>` 取自 `wrapperLookup.lookupOrThrow(Registries.ITEM)`。
+- 建造入口是 `Advancement.Builder.advancement()`（静态，mojmap；Yarn 是 `Advancement.Builder.create()`，另有 `createUntelemetered()`）。
+- `.display(...)` 在本档是 **8 参**（上面代码块数一下就是 8 个实参，此处旧写「7 参」已作废）：icon（`ItemLike` / `ItemStack`）、title（`Component`）、description（`Component`）、background（`Identifier`，子进度传 `null`）、`AdvancementType`、三个 `boolean`（toast / 播报聊天 / 是否提前隐藏）。`AdvancementType` 常量：`TASK`、`CHALLENGE`、`GOAL`（javap @ 1.21.11 两侧同名）。
+- `.addCriterion(String name, Criterion<?>)`（mojmap）／`.criterion(String, AdvancementCriterion<?>)`（Yarn）：第二个实参是 criterion 对象，不是 trigger 实例。本档可用的构造入口：`InventoryChangeTrigger.TriggerInstance.hasItems(Item...)` → Yarn `InventoryChangedCriterion.Conditions.items(ItemConvertible...)`；`ConsumeItemTrigger.TriggerInstance.usedItem(HolderLookup.RegistryLookup<Item>, Item)` → Yarn `ConsumeItemCriterion.Conditions.item(RegistryEntryLookup<Item>, ItemConvertible)`（另有 `any()` / `predicate(ItemPredicate.Builder)`）。
+- `.save(Consumer<AdvancementHolder>, String)`（mojmap）／`.build(Consumer<AdvancementEntry>, String)`（Yarn）：**页面 warning 原文**——「the function accepts the `Identifier` of the advancement in `String` format」。本档实参一律是拼接串 `ExampleMod.MOD_ID + ":get_dirt"`，不是 `Identifier` 对象。
+- `HolderLookup.RegistryLookup<Item>` 取自 `wrapperLookup.lookupOrThrow(Registries.ITEM)`；Yarn 对应 `RegistryEntryLookup<Item>` 取自 `wrapperLookup.getOrThrow(RegistryKeys.ITEM)`（`HolderLookup.Provider` ↔ `RegistryWrapper.WrapperLookup`）。
+
+对应的 Yarn 写法（已用真构件 `javac` 编过：`Advancement.Builder.create().display(...).criterion(...).build(...)` 全链通过）：
+
+```java
+AdvancementEntry getDirt = Advancement.Builder.create()
+		.display(
+				Items.DIRT,
+				Text.literal("Your First Dirt Block"),
+				Text.literal("Now make a house from it"),
+				Identifier.ofVanilla("textures/gui/advancements/backgrounds/adventure.png"),
+				AdvancementFrame.TASK,
+				true,
+				true,
+				false)
+		.criterion("got_dirt", InventoryChangedCriterion.Conditions.items(Items.DIRT))
+		.build(consumer, ExampleMod.MOD_ID + ":get_dirt");
+```
+
+- `Identifier.ofVanilla(...)` 是本档 Yarn 的「默认命名空间」工厂；**没有** `Identifier.withDefaultNamespace(...)`（javap @ yarn 1.21.11+build.6：工厂只有 `of` / `ofVanilla` / `tryParse` 等）。
+- `RegistryEntryLookup<Item> itemLookup = wrapperLookup.getOrThrow(RegistryKeys.ITEM);` 后可写 `ConsumeItemCriterion.Conditions.item(itemLookup, Items.APPLE)`。
 
 ## 多条件与父子
 
@@ -96,7 +116,7 @@ AdvancementHolder appleAndBeef = Advancement.Builder.advancement()
 		.save(consumer, ExampleMod.MOD_ID + ":apple_and_beef");
 ```
 
-`.parent(...)` 收的是一个已保存的 `AdvancementHolder`（本档传 `getDirt` / `breakBlockWithTool`）。多个 criterion 的「列表的列表」语义页面在 Structure 一节用 `AdvancementRequirements` 解释（每子列表至少满足一个），但本档代码里没有出现构造 requirements 的调用 ⇒ 该 API `TODO(未核实)`。
+`.parent(...)` 收的是一个已保存的 `AdvancementHolder`（本档传 `getDirt` / `breakBlockWithTool`）。多个 criterion 的「列表的列表」语义：`AdvancementRequirements` 的构造与工厂已按构件核实——Yarn `new AdvancementRequirements(List<List<String>>)`、静态 `allOf(Collection<String>)` / `anyOf(Collection<String>)`、`Advancement.Builder#requirements(AdvancementRequirements)`；若要按「全部满足 / 任一满足」自动生成，用 `Advancement.Builder#criteriaMerger(AdvancementRequirements.CriterionMerger.AND / OR)`（mojmap 同名接口是 `AdvancementRequirements.Strategy.AND / OR`，方法名 `requirements(Strategy)`）。
 
 ## 生成产物 JSON
 
@@ -122,7 +142,7 @@ AdvancementHolder appleAndBeef = Advancement.Builder.advancement()
 ```
 
 - 语言键、tab/根进度、`announce_to_chat` 一类字段在本档产物里**没出现**（toast / 播报是在 Java 侧设的）⇒ 手写 JSON 前必须 `get_fabric_doc_full` 或用 `validate_datapack_json` 复核，不要默写字段名。
-- `sends_telemetry_event: true` 由 Java 侧生成，本档代码未显式设置 ⇒ 其开关 API `TODO(未核实)`。
+- `sends_telemetry_event: true` 由 Java 侧生成；开关是 `Advancement.Builder#sendsTelemetryEvent()`（两侧同名）。类级工厂 `create()` 默认带遥测，`createUntelemetered()` 不带。
 
 ## 自定义 criterion：SimpleCriterionTrigger
 
@@ -158,7 +178,7 @@ public class UseToolCriterion extends SimpleCriterionTrigger<UseToolCriterion.Co
 import 面：`java.util.Optional`、`com.mojang.serialization.Codec`、`net.minecraft.advancements.criterion.ContextAwarePredicate`、`net.minecraft.advancements.criterion.SimpleCriterionTrigger`、`net.minecraft.server.level.ServerPlayer`。
 
 - 必须覆写 `codec()` 返回 `Codec<Conditions>`；`Conditions` 是实现 `SimpleCriterionTrigger.SimpleInstance` 的 record，须覆写 `player()`。
-- 代码注释里的 `AbstractCriterion#trigger` 说明玩家谓词由父类检查——`AbstractCriterion` 在本档**只出现在注释**中，未 import，其签名 `TODO(未核实)`。
+- 代码注释里的 `AbstractCriterion#trigger` 说明玩家谓词由父类检查——本档构件里两边同名：`AbstractCriterion#trigger(ServerPlayerEntity, Predicate<T>)` 是 **protected**（javap @ 1.21.11）。Yarn 的抽象方法是 `getConditionsCodec()`（mojmap 是 `codec()`），`Conditions` 实现的是 `AbstractCriterion.Conditions`（mojmap `SimpleCriterionTrigger.SimpleInstance`）。
 - `trigger(player, Conditions::requirementsMet)` 继承自父类，父类声明面本档不在盘上 ⇒ 不要写其余重载。
 
 ## 带参数的 criterion
@@ -194,10 +214,10 @@ public class ModCriteria {
 }
 ```
 
-- import `net.minecraft.advancements.CriteriaTriggers`；`register(String, T)` 的返回值直接赋给具体类型字段（泛型形态本档未写 ⇒ `TODO(未核实)`）。
+- import `net.minecraft.advancements.CriteriaTriggers`；签名是 `private static <T extends CriterionTrigger<?>> T register(String, T)`（javap @ 1.21.11 mojmap）——**单独一个原版 jar 里它是 private**，能编译是因为 Fabric API 的 `fabric-transitive-access-wideners-v1` 用 `transitive-accessible` 把它开了（实测：装 FAPI 的工程 `compileJava` 通过；去掉 FAPI 的裸 jar 不通过）。Yarn 侧同名类是 `net.minecraft.advancement.criterion.Criteria`，`register(String, T)` 同样靠该 AW 变 public。
 - `init()` 是空方法，只为「在正确时机初始化」而存在，需在 `ModInitializer#onInitialize()` 里调 `ModCriteria.init();`。
 - 触发示例（本档 `ExampleModDatagenAdvancement` 用 `PlayerBlockBreakEvents.AFTER.register(...)`，lambda 五参 `(level, player, blockPos, blockState, blockEntity)`）：`ModCriteria.USE_TOOL.trigger(serverPlayer);`、`ModCriteria.PARAMETERIZED_USE_TOOL.trigger(serverPlayer, usedCount);`，并先 `if (player instanceof ServerPlayer serverPlayer)` 收窄。
-- 在 provider 里挂自定义条件：`ModCriteria.USE_TOOL.createCriterion(new UseToolCriterion.Conditions(Optional.empty()))`、`ModCriteria.PARAMETERIZED_USE_TOOL.createCriterion(new ParameterizedUseToolCriterion.Conditions(Optional.empty(), 5))`。`createCriterion` 的返回类型本档未写 ⇒ `TODO(未核实)`。
+- 在 provider 里挂自定义条件：`ModCriteria.USE_TOOL.createCriterion(new UseToolCriterion.Conditions(Optional.empty()))`（Yarn 是 `create(...)`，`Criterion#create(T)` 是 default 方法）、`ModCriteria.PARAMETERIZED_USE_TOOL.createCriterion(new ParameterizedUseToolCriterion.Conditions(Optional.empty(), 5))`。返回类型是 criterion 对象（Yarn `AdvancementCriterion<T>`），可直接给 `.criterion(...)` / `.addCriterion(...)`。
 
 
 ### ⚠️ 映射口径：本档语料是 mojmap
@@ -212,7 +232,13 @@ public class ModCriteria {
 | `AdvancementHolder` | `AdvancementEntry` | 1.20.4–1.21.11 | join（`net.minecraft.advancement.AdvancementEntry`）· 本轮纠正（原写 `Advancement`） |
 | `CriteriaTriggers` | `Criteria` | 1.16.5–1.21.11 | join（`net.minecraft.advancement.criterion.Criteria`）· 本轮纠正（原写 `Criterion`） |
 | `ContextAwarePredicate` | `LootContextPredicate` | 1.20.1–1.21.11 | join（`net.minecraft.predicate.entity.LootContextPredicate`） |
-| `RegistryLookup` | 未核实 | **禁止猜**：Yarn 侧名字未经本档 sqlite 证实，走 `get_minecraft_source` 或 IDE `genSources` |
+| `HolderLookup.RegistryLookup` | `RegistryEntryLookup.RegistryLookup` | 1.21.11（javap 两侧） | 嵌套接口同名；`HolderLookup.Provider` ↔ `RegistryWrapper.WrapperLookup` |
+| `DisplayInfo` | `AdvancementDisplay` | 1.21.11（javap 两侧） | 类存在；只是本档参考文件没用到 |
+| `Criterion` | `AdvancementCriterion` | 1.21.11（javap 两侧） | `Advancement.Builder#criterion(String, AdvancementCriterion<?>)` |
+| `Advancement.Builder.advancement()` | `Advancement.Builder.create()` | 1.21.11（javap 两侧） | 另有 `recipeAdvancement()` ↔ `createUntelemetered()` |
+| `Advancement.Builder.addCriterion` | `Advancement.Builder.criterion` | 1.21.11（javap 两侧） | 第二参是 criterion 对象 |
+| `Advancement.Builder.save(Consumer, String)` | `Advancement.Builder.build(Consumer, String)` | 1.21.11（javap 两侧） | 实参仍是 `"modid:path"` 字符串 |
+| `AdvancementRequirements.Strategy` | `AdvancementRequirements.CriterionMerger` | 1.21.11（javap 两侧） | 常量 `AND` / `OR` |
 | `AdvancementType` | `AdvancementFrame` | 1.20.4–1.21.11 | join（`net.minecraft.advancement.AdvancementFrame`） |
 | `InventoryChangeTrigger` | `InventoryChangedCriterion` | 1.16.5–1.21.11 | join（`net.minecraft.advancement.criterion.InventoryChangedCriterion`） |
 | `ConsumeItemTrigger` | `ConsumeItemCriterion` | 1.16.5–1.21.11 | join（`net.minecraft.advancement.criterion.ConsumeItemCriterion`） |
@@ -224,11 +250,11 @@ public class ModCriteria {
 
 ## 本档未覆盖（禁止默写）
 
-- **奖励 API**（`AdvancementRewards` / 经验 / 掉落表 / 解锁配方）：页面 prose 提到类型名并宣称要演示 rewards，盘上代码零出现 ⇒ 整面不写。
-- **`Strategy`**（all / any 语义）：只有页面 prose 出现，代码无 ⇒ `TODO(未核实)`。
-- **`DisplayInfo`**：页面 prose 的名，盘上只有 `.display(...)` 七参调用；该类型在本档 import 面不存在。
+- **奖励 API**（`AdvancementRewards` / 经验 / 掉落表 / 解锁配方）：页面 prose 提到类型名并宣称要演示 rewards，盘上代码零出现；已按构件核实（见上），但本档语料没有调用示例。
+- **`Strategy`**（all / any 语义）：mojmap `AdvancementRequirements.Strategy.AND / OR`，Yarn `AdvancementRequirements.CriterionMerger.AND / OR`（javap @ 1.21.11）。
+- **`DisplayInfo`**：mojmap 类存在（`net.minecraft.advancements.DisplayInfo`）；页面 prose 的名，盘上只用了 `.display(...)` 8 参调用。
 - 进度 tab / 根进度 / `advancement_tab`、图标 `ItemStack` 变体、`Component.translatable`、语言键：本档语料无（同档 `develop_data-generation_translations.md` 是另一主题，未在此引）。
-- `CriteriaTriggers.register` 的泛型签名、`SimpleCriterionTrigger` 除 `codec()` / `trigger(...)` / `SimpleInstance` 之外的成员、`AbstractCriterion` 本体：需 `query_loader_api(platform=fabric, minecraftVersion=1.21.11)` 或 `get_minecraft_source` 核实。
+- `CriteriaTriggers.register` / `Criteria.register` 的泛型签名已核实；`SimpleCriterionTrigger` 除 `codec()` / `trigger(...)` / `SimpleInstance` 之外的成员：可用 `get_minecraft_source` 继续读，本件只覆盖到上面这些。
 - 原版 criterion 触发器清单：页面只给外链 `https://minecraft.wiki/w/Advancement_definition#List_of_triggers` 与包名 `net.minecraft.advancements.criterion`，未列类名；本档代码只出现 `ConsumeItemTrigger`、`InventoryChangeTrigger`、`ContextAwarePredicate`、`SimpleCriterionTrigger` 四个。
 - 手写（非 datagen）进度 JSON 的完整 schema、`requirements` 的手写规则、`sends_telemetry_event` 的开关：本档无证据。
 - 映射口径提醒：本档 frontmatter 钉 `mappings: yarn`，而参考工程用 `mappings loom.officialMojangMappings()`，正文里的 `net.minecraft.*` 名因此是官方名。工程真用 Yarn 时须自行 `convert_mapping` 对照，禁止把上面的包名当 Yarn 名直写。
