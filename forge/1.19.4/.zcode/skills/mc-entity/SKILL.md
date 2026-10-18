@@ -34,7 +34,7 @@ ENTITY_TYPES.register(modEventBus);
 ## 实体类基础结构
 
 ```java
-public class MyEntity extends Mob {
+public class MyEntity extends PathfinderMob {
     protected MyEntity(EntityType<? extends MyEntity> type, Level level) {
         super(type, level);
         this.noPhysics = true;

@@ -134,12 +134,12 @@ public class MyBlock extends Block {
     }
 
     @Override
-    public void onPlace(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {
+    public void setPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         // 方块放置时的逻辑
     }
 
     @Override
-    public void wasExploded(BlockState state, World world, BlockPos pos, Explosion explosion) {
+    public void wasExploded(World world, BlockPos pos, Explosion explosion) {
         // 方块被爆炸破坏时的逻辑
     }
 }

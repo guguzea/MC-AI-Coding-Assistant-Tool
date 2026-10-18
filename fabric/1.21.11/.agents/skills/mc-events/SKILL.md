@@ -36,5 +36,5 @@ docsTool: search_fabric_docs
 ## 常见错误
 
 - 用 `@SubscribeEvent` / `@EventHandler`（Fabric 无此类注解，回调不会被注册）
-- 在客户端 lambda 里改服务端世界数据（用 `world.isClient` 区分）
+- 在客户端 lambda 里改服务端世界数据（用 `world.isClient()` 区分）
 - 忘记处理返回值；把 `PlayerBlockBreakEvents.BEFORE` 当成 `ActionResult`（它是 boolean）

@@ -12,6 +12,8 @@ mappings: yarn
 loader-api：`net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback`。Yarn：`CommandManager.literal`。三参：dispatcher、`CommandRegistryAccess`、`CommandManager.RegistrationEnvironment`。
 
 ```java
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.minecraft.server.command.CommandManager;
 CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
     dispatcher.register(
         CommandManager.literal("test_command")

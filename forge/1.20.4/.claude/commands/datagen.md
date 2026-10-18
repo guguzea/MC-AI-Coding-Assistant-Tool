@@ -226,14 +226,14 @@ public class ModItemTagsProvider extends ItemTagsProvider {
 ## 进度生成（AdvancementProvider）
 
 ```java
-public class ModAdvancementProvider extends AdvancementProvider {
+public class ModAdvancementProvider extends ForgeAdvancementProvider {
     // 本档语料的进度生成实名形态不是 AdvancementProvider 子类，而是 Forge 的扩展
     // `ForgeAdvancementProvider` + 子 provider 接口 `ForgeAdvancementProvider$AdvancementGenerator`，
     // 入口签名 `generate(HolderLookup.Provider registries, Consumer<Advancement> writer, ExistingFileHelper existingFileHelper)`，
     // 且 `#save` 在该页是三参 `(writer, name, existingFileHelper)`
     //（出处：data/forge_1.20.4/forge-docs/1.20.4/processed/datagen_server_advancements.md:8,20,31,42,61,70）
-    public ModAdvancementProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
-        super(output, registries, List.of(
+    public ModAdvancementProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries, ExistingFileHelper existingFileHelper) {
+        super(output, registries, existingFileHelper, List.of(
             // 每一项是实现 Consumer<Consumer<Advancement>> 的子 provider（见下方；本档构件无 FinishedRecipe，旧注释是 1.20.1 recipe-datagen 残留形）
             new ModAdvancementSubProvider()
         ));
@@ -241,9 +241,9 @@ public class ModAdvancementProvider extends AdvancementProvider {
 
     // FinishedAdvancement 在 forge 1.20.4 语料零命中；语料里 writer 的元素类型逐字是 `Advancement`
     //（出处：data/forge_1.20.4/forge-docs/1.20.4/processed/datagen_server_advancements.md:33,42）
-    private static class ModAdvancementSubProvider implements Consumer<Consumer<Advancement>> {
+    private static class ModAdvancementSubProvider implements ForgeAdvancementProvider.AdvancementGenerator {
         @Override
-        public void accept(Consumer<Advancement> consumer) {
+        public void generate(HolderLookup.Provider registries, Consumer<Advancement> consumer, ExistingFileHelper existingFileHelper) {
             // 根进度
             Advancement.Builder.advancement()
                 // TODO(未核实：FrameType / TASK 未在 forge 1.20.4 语料命中，需 search_forge_docs 复核或反编译)

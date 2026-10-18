@@ -27,7 +27,7 @@ description: 08 — 客户端 / 服务端分离
 ```
 IF 判断当前环境是否为客户端
   → FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT
-  → World.isClient（已在 World 实例上调用）
+  → World.isClient()（已在 World 实例上调用；本档 `isClient` 字段是 private，必须走方法）
 
 IF 需要在客户端执行初始化
   → 在 ClientModInitializer.onInitializeClient() 中执行
@@ -84,7 +84,7 @@ if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
 }
 
 // 在 World 实例上判断（更常用）
-if (world.isClient) {
+if (world.isClient()) {
     // 客户端逻辑
 } else {
     // 服务端逻辑

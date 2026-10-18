@@ -68,6 +68,10 @@ public class MyTool extends Item {
 **正确方案：**
 ```java
 public class MyTool extends Item {
+    public MyTool(Item.Settings settings) {
+        super(settings);
+    }
+
     @Override
     public void postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         stack.damage(1, attacker, attacker.getActiveHand());

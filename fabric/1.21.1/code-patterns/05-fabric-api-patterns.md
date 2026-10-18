@@ -122,14 +122,20 @@ public class ExampleScreen extends HandledScreen<ExampleScreenHandler> {
 
 ```java
 // 修改掉落表
+import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
+import net.minecraft.util.Identifier;
+import net.minecraft.loot.LootPool;
+import net.minecraft.loot.entry.ItemEntry;
+import net.minecraft.item.Items;
 LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
     // 1.21.x 是 loot.v3：参数为 RegistryKey + builder + source + registries
     if (key.getValue().equals(Identifier.of("minecraft", "entities/zombie"))) {
-        tableBuilder.pool(builder -> builder
-            .with(ItemEntry.builder(Items.DIAMOND)
-                .weight(1)
-                .quality(0)
-            )
+        tableBuilder.pool(
+            new LootPool.Builder()
+                .with(ItemEntry.builder(Items.DIAMOND)
+                    .weight(1)
+                    .quality(0)
+                )
         );
     }
 });

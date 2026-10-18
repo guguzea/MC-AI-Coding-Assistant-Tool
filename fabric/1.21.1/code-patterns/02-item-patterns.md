@@ -11,7 +11,7 @@ private static final Item MY_ITEM = Registry.register(
     Identifier.of(MOD_ID, "my_item"),
     new Item(new Item.Settings()
         .maxCount(64)
-        .maxDamageIfAbsent(100))  // 耐久（非工具）
+        .maxDamage(100))  // 耐久（非工具）
 );
 ```
 

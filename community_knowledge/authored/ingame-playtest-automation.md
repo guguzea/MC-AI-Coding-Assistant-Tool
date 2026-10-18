@@ -495,6 +495,24 @@ NeoForge 1.20.1 无官方 MDK pin（原返回 `MDK_NOT_PINNED`）⇒ 按**兼容
   **处方**：复跑前**重写/清掉**那份 `plan.txt`；组合跑时服务端剧本**不要写 `stop`**（只 `mark` + `wait ticks=N`），停服交给外部收尾。
   ⚠ **别搞混两份剧本**：服务端 driver 读 `<证据目录>/plan.txt`，客户端 driver 读 `--evidenceDir` 下自己的 `plan.txt`（本项目 `run/qa/plan.txt`）——改错一份等于没改。
 
+- **90 · 想在客户端里"点聊天里的可点击文本"：三件事，两件已解决（2026-10-17 实测）**
+  1. **移"内部鼠标"不会抢用户的 OS 光标**（这是最要紧的安全结论，javap 取证）：
+     `MouseHandler` 的 `xpos/ypos` 是**私有字段**，公开入口 `onMove(long win, double x, double y, double dx, double dy)` 的字节码**只有 `putfield`**，**整个类里没有任何 `glfwSetCursorPos` / `glfwSetInputMode` / `GLFW_CURSOR` 调用** ⇒ OS 光标不动。
+     而且因为我们是**直接调用** `onMove`（不等真实鼠标事件），**客户端不需要有焦点**，可以后台跑。
+     **写法**：`onMove` 收的是**原始坐标**，而 UI 命中的是**缩放后坐标** ⇒ `raw = guiScaled * Window#getGuiScale()`；
+     `dx/dy` 传 **0**（否则 `accumulatedDX/DY` 会在关屏后把视角带飞）。每个候选点都要**先移再点**（同一个 tick 内）。
+  2. **`ChatScreen` 的消息命中读的是真实鼠标位置，不是合成事件坐标**：合成事件点**底部输入框**（`y = height-8`）能命中 **5 次**（widget 用事件坐标），点**消息区** **0 次**；先移内部鼠标后消息区才出现命中（**7 次**）。
+  3. **已试尽，结论：`ChatScreen.mouseClicked` 到不了"消息命中"那条路径**（2026-10-17 收尾）。
+     决定性读数：命中的 **7 次全在同一个 y**（`h-12`，x 从 8 到 200 **整行**）；而消息带（`h-21 / -30 / -39`）**一次都不中**
+     ⇒ 那一行是**输入框（EditBox）带**，不是消息。把可点击消息**补发为最底行**也无效。
+     已排除的做法：合成事件坐标直接点（0 命中）· 先 `onMove` 移内部鼠标（消息带仍 0）· 换网格带（只多命中输入框）· 补发为最底行。
+     **最后一试也无效**：补 `screen.mouseMoved(x, y)`（Screen 自己缓存的坐标）后，命中**仍是那 7 个 `y=228`**，消息带 0。
+     **最终判定**：26.x 的**消息点击在渲染期的 `ActiveTextCollector` 里完成**，`mouseClicked` 到不了；
+     而 `ChatComponent` **实例不可达**（javap：`Gui` 只有 `openChatScreen/openChatAndAddText`、`Minecraft` 只有 `ChatListener`，
+     **没有 `getChat()`**）⇒ **收集器路线也断**。
+     ⇒ **无 mixin 的外部 tick driver 验不了 `ClickEvent` 的点击行为**；要验必须 mixin/ASM 注入 `ChatScreen#render`
+     （或注入 `getStyleAt`/`handleComponentClicked`）。**到此为止，别再花循环试坐标。**
+
 **三条可迁移的通用规矩**：
 
 1. **判据要放在链路的接收端** —— 发控制台 ⇒ 服务端日志；发真人玩家 ⇒ **客户端日志**；客户端动作 ⇒ **客户端返回值**（放服务端只能证明「发出去了」）。

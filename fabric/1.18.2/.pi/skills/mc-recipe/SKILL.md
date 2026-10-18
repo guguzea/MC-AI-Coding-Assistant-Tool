@@ -31,11 +31,13 @@ public class MyRecipeProvider extends FabricRecipeProvider {
             .pattern("A A")
             .pattern(" A ")
             .input('A', Items.DIAMOND)
-            .criterion("has_diamond", conditionsFromItem(Items.DIAMOND))
+            .criterion("has_diamond", InventoryChangedCriterion.Conditions.items(Items.DIAMOND))
             .offerTo(exporter);
     }
 }
 ```
+
+1.18.2 的 `RecipeProvider.conditionsFromItem` / `hasItem` 是 **private**，子类不能直接调；criterion 用 `InventoryChangedCriterion.Conditions.items(...)`（public static）。
 
 把产出换成你自己注册的物品时，形参名（`generator` / `exporter`）随你起 —— 它们是本例的局部名，不是 API 名。
 

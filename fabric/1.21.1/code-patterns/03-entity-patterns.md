@@ -42,7 +42,7 @@ SpawnRestriction.register(
 ## 实体类
 
 ```java
-public class MyEntity extends MobEntity {
+public class MyEntity extends PathAwareEntity {
     public MyEntity(EntityType<? extends MyEntity> type, World world) {
         super(type, world);
     }
@@ -53,7 +53,6 @@ public class MyEntity extends MobEntity {
         this.goalSelector.add(0, new SwimGoal(this));
         this.goalSelector.add(1, new WanderAroundFarGoal(this, 1.0));
         this.goalSelector.add(2, new LookAroundGoal(this));
-        this.goalSelector.add(3, new FollowParentGoal(this, 1.1));
 
         this.targetSelector.add(0, new ActiveTargetGoal<>(
             this, PlayerEntity.class, true

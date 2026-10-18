@@ -87,10 +87,10 @@ public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity atta
 
 **正确方案：**
 ```java
-// ✅ 使用 lambda 形式，Forge 自动获取正确的槽位
+// ✅ Consumer 收到的是持有者实体，不是槽位；这里只需要扣耐久
 @Override
 public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-    stack.hurtAndBreak(1, attacker, slot -> attacker.getItemBySlot(slot));
+    stack.hurtAndBreak(1, attacker, entity -> { });
     return true;
 }
 ```

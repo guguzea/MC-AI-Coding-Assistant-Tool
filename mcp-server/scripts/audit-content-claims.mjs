@@ -8,6 +8,8 @@
  * 用法：
  *   node mcp-server/scripts/audit-content-claims.mjs --packs fabric/1.21.11,fabric/1.19.4
  *   node mcp-server/scripts/audit-content-claims.mjs --all --compile
+ *   node mcp-server/scripts/audit-content-claims.mjs --all --complete   # 片段补全后编译
+ *   node mcp-server/scripts/audit-content-claims.mjs --packs fabric/1.21.11 --fragment path/to/Snippet.java
  *   node mcp-server/scripts/audit-content-claims.mjs --selftest
  *
  * 输出：temp/content-audit/report.json + 终端摘要。
@@ -22,7 +24,20 @@ import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
-const OUT_DIR = path.join(REPO, "temp", "content-audit");
+const OUT_DIR = process.env.AUDIT_OUT_DIR
+  ? path.resolve(process.env.AUDIT_OUT_DIR)
+  : path.join(REPO, "temp", "content-audit");
+// 【拒绝写仓库正文】fail-closed：允许写到仓库内**只有** temp/ 下（gitignore 产物）；
+// `AUDIT_OUT_DIR` 一旦指向仓库里 temp/ 之外（例如仓库根、fabric/、data/），当场拒跑。
+// 这道闸门就是 write-guard 清单里那条豁免的**依据**（摘掉它，豁免即失效，门会再红）。
+{
+  const rel = path.relative(REPO, OUT_DIR);
+  const inRepo = rel && !rel.startsWith("..") && !path.isAbsolute(rel);
+  const inTemp = inRepo && (rel === "temp" || rel.startsWith("temp" + path.sep));
+  if (inRepo && !inTemp) {
+    throw new Error(`【OUTLET-IN-REPO】拒绝把审计产物写进仓库正文：${OUT_DIR}（只允许 <repo>/temp/** 或仓库外路径）`);
+  }
+}
 const MODULES = "C:/Users/zzrCN/.gradle/caches/modules-2/files-2.1";
 const LOOM = "C:/Users/zzrCN/.gradle/caches/fabric-loom/minecraftMaven/net/minecraft";
 const EXTERNAL_ROOT = "F:/MOD_TEST";
@@ -59,6 +74,7 @@ const SUPPORT_JARS = [
   newestModuleJar("com.google.guava", "guava"),
   newestModuleJar("org.jetbrains", "annotations"),
   newestModuleJar("org.jspecify", "jspecify"),
+  newestModuleJar("org.slf4j", "slf4j-api"),
 ].filter((p) => p && fs.existsSync(p));
 
 // ---------------------------------------------------------------- ZIP (central directory only)
@@ -281,6 +297,8 @@ function artifactSet(platform, version) {
       add(findMerged(version, "loom.mappings"), "mojmap");
       expected = "yarn";
     }
+    // loader API（ModInitializer / FabricLoader 等）不在 FAPI 模块里，补一份最新 loader 件做类名索引。
+    add(newestJarIn(path.join(MODULES, "net.fabricmc", "fabric-loader")), "api");
   } else if (platform === "neoforge") {
     add(findNeoMerged(version), "mojmap");
     add(newestJarIn(path.join(MODULES, "net.neoforged.fancymodloader", "loader")), "api");
@@ -325,6 +343,9 @@ function buildIndex(jars) {
     for (const e of entries) {
       if (!e.name.endsWith(".class") || e.name.startsWith("META-INF/")) continue;
       const fqcn = classEntryName(e.name);
+      // 第三方 mod 的 shadowed / relocated 内部类会和 MC 简单名撞车
+      // （如 Cloth Config 内嵌 toml 的 Identifier），它们不是可 import 的公共 API。
+      if (/(?:^|\.)(?:shadowed|relocated|shaded)\./.test(fqcn)) continue;
       const simple = fqcn.split(".").pop().split("$").pop();
       const item = { jar, layer, fqcn, simple };
       if (!bySimple.has(simple)) bySimple.set(simple, []);
@@ -333,7 +354,7 @@ function buildIndex(jars) {
       byFqcn.get(fqcn).push(item);
     }
   }
-  return { bySimple, byFqcn, layers: new Set(jars.map((j) => j.layer)) };
+  return { bySimple, byFqcn, layers: new Set(jars.map((j) => j.layer)), classNames: [...byFqcn.keys()] };
 }
 
 function nestedEntries(jar, fqcnPrefix) {
@@ -623,7 +644,24 @@ function checkImports(file, parsed, inv, expected) {
     if (expected === "yarn" && /net\.minecraftforge|@SubscribeEvent|^\s*\/\/\s*Forge\b/m.test(f.content)) continue;
     const clean = stripCodeNoise(f.content);
     const imports = [...clean.matchAll(/^\s*import\s+(?:static\s+)?([\w.]+)\s*;/gm)].map((m) => m[1]);
+    const staticImports = new Set([...clean.matchAll(/^\s*import\s+static\s+([\w.]+)\s*;/gm)].map((m) => m[1]));
     const importedSimple = new Set(imports.map((x) => x.split(".").pop()));
+    // FAPI/QSL 的 import 面单独验：编译腿只覆盖「可编译」的块，包名错误（如
+    // ClientPlayNetworking 少 .client）在没有 import/class 的片段里会漏。
+    // 只在本档确实索引到该前缀的精确构件时才判（quilt 若没带 QSL 件则跳过）。
+    const apiPrefixes = ["net.fabricmc.fabric.api", "org.quiltmc.qsl"];
+    const prefixIndexed = (p) => inv.classNames.some((k) => k.startsWith(p + "."));
+    for (const fq of imports) {
+      if (staticImports.has(fq) || !/^[A-Z]/.test(fq.split(".").pop() || "")) continue;
+      const owner = apiPrefixes.find((p) => fq.startsWith(p + "."));
+      if (!owner || !prefixIndexed(owner)) continue;
+      const nested = fq.replace(/\.([A-Z][\w$]*)$/, "$$$1");
+      const hit = (inv.byFqcn.get(fq) || []).concat(inv.byFqcn.get(nested) || [])
+        .some((h) => h.layer === "fapi" || h.layer === "api");
+      if (hit) continue;
+      const idx = clean.split(/\r?\n/).findIndex((l) => l.includes(fq));
+      out.push(finding("api-import", file, f.startLine + Math.max(0, idx) + 1, simpleName(fq), "import 的 FAPI/QSL 类不在本档精确构件里", "fail", fq));
+    }
     const declared = new Set([...clean.matchAll(/\b(?:class|interface|enum|record)\s+([A-Z][A-Za-z0-9_$]*)/g)].map((m) => m[1]));
     const pkg = clean.match(/^\s*package\s+([\w.]+)\s*;/m)?.[1] || "";
     const bodyOnly = clean.split(/\r?\n/).filter((l) => !/^\s*import\s+/.test(l)).join("\n");
@@ -807,7 +845,7 @@ function compileOnce(src, imports, body, classpath, dir, tag) {
   const slash = (p) => p.replace(/\\/g, "/");
   const argFile = path.join(dir, "args-" + tag + ".txt");
   fs.writeFileSync(argFile, ['-proc:none', '-encoding', '"UTF-8"', '-cp', '"' + slash(classpath) + '"', '"' + slash(src) + '"'].join("\n"), "utf8");
-  const r = spawnSync(JAVAC, ["-J-Duser.language=en", "-J-Duser.country=US", "@" + argFile], { encoding: "utf8" });
+  const r = spawnSync(JAVAC, ["-J-Duser.language=en", "-J-Duser.country=US", "@" + argFile], { encoding: "utf8", timeout: 30000, killSignal: "SIGKILL" });
   if (r.status === 0) return "";
   const out = (r.stderr || "") + (r.stdout || "");
   return out.trim() || `exit=${r.status} signal=${r.signal} error=${r.error ? r.error.message : ""}`;
@@ -820,8 +858,183 @@ function summarizeJavac(err) {
   return (i >= 0 ? lines.slice(i, i + 4) : lines.slice(0, 6)).join(" | ");
 }
 
-function compileBlocks(file, parsed, jarPaths, inv) {
+// 只取第一条 error 的块：javac 常在 400 字符内接着报第二条次生错误
+// （如先报未知变量 MyNetworking，再报它的方法不存在），混在一起会误判成成员名缺陷。
+function firstErrorBlock(err) {
+  const lines = err.split(/\r?\n/);
+  const i = lines.findIndex((l) => /error:/.test(l));
+  if (i < 0) return err.slice(0, 400);
   const out = [];
+  for (let k = i; k < lines.length && out.length < 8; k++) {
+    if (k > i && /error:/.test(lines[k])) break;
+    out.push(lines[k]);
+  }
+  return out.join("\n");
+}
+
+// ---- 片段补全（--complete）：只补「可证明唯一」的东西，补过什么都会写进证据。
+// 1) import：简单名在本档 expected / api / fapi / external 层里只有一个 FQCN 时补；
+// 2) 常量：MOD_ID / MOD_NAME 未声明时替换成字面量；ExampleMod.LOGGER → LOGGER + slf4j 字段；
+// 3) wrapper 候选里的 @Override 去掉（片段方法本来就不覆写任何东西）。
+function completeText(lines) {
+  const text = lines.join("\n");
+  const notes = [];
+  let needLogger = false;
+  if (/\bMOD_ID\b/.test(text) && !/\bMOD_ID\s*=/.test(text)) {
+    notes.push('MOD_ID→"testmod"');
+  }
+  if (/\bMOD_NAME\b/.test(text) && !/\bMOD_NAME\s*=/.test(text)) {
+    notes.push('MOD_NAME→"Test Mod"');
+  }
+  if (/\bLOGGER\b/.test(text) && !/\bLOGGER\s*=/.test(text)) {
+    notes.push("LOGGER→slf4j");
+    needLogger = true;
+  }
+  const out = lines.map((line) => {
+    let s = line;
+    s = s.replace(/\b[A-Z][A-Za-z0-9_$]*\.MOD_ID\b/g, '"testmod"');
+    s = s.replace(/\b[A-Z][A-Za-z0-9_$]*\.MOD_NAME\b/g, '"Test Mod"');
+    s = s.replace(/\b[A-Z][A-Za-z0-9_$]*\.LOGGER\b/g, "LOGGER");
+    if (!/\bMOD_ID\s*=/.test(s)) s = s.replace(/\bMOD_ID\b/g, '"testmod"');
+    if (!/\bMOD_NAME\s*=/.test(s)) s = s.replace(/\bMOD_NAME\b/g, '"Test Mod"');
+    return s;
+  });
+  return { lines: out, notes, needLogger };
+}
+
+// 注释与字符串里的词不是标识符：`// Shift-click` 曾被补成 DensityFunctions.Shift，
+// 字符串里的类名也不该触发 import。
+function stripCommentsAndStrings(s) {
+  let out = "";
+  for (let i = 0; i < s.length; i++) {
+    const c = s[i];
+    const n = s[i + 1];
+    if (c === "/" && n === "/") {
+      while (i < s.length && s[i] !== "\n") i++;
+      out += "\n";
+    } else if (c === "/" && n === "*") {
+      i += 2;
+      while (i < s.length && !(s[i] === "*" && s[i + 1] === "/")) i++;
+      i++;
+      out += " ";
+    } else if (c === '"' || c === "'") {
+      const quote = c;
+      i++;
+      while (i < s.length && s[i] !== quote) {
+        if (s[i] === "\\") i++;
+        i++;
+      }
+      out += quote + quote;
+    } else {
+      out += c;
+    }
+  }
+  return out;
+}
+
+function autoImport(lines, imports, declared, inv, expected) {
+  const added = [];
+  const text = lines.join("\n");
+  const codeText = stripCommentsAndStrings(text);
+  const importedSimple = new Set(imports.map((x) => x.split(".").pop()));
+  const used = [...new Set(codeText.match(/\b[A-Z][A-Za-z0-9_$]*\b/g) || [])];
+  const jdkMap = {
+    List: "java.util.List", ArrayList: "java.util.ArrayList", Map: "java.util.Map", HashMap: "java.util.HashMap",
+    Set: "java.util.Set", HashSet: "java.util.HashSet", Optional: "java.util.Optional",
+    CompletableFuture: "java.util.concurrent.CompletableFuture", UUID: "java.util.UUID",
+    Objects: "java.util.Objects", Arrays: "java.util.Arrays", Collections: "java.util.Collections",
+    Stream: "java.util.stream.Stream", Collectors: "java.util.stream.Collectors",
+    Function: "java.util.function.Function", Supplier: "java.util.function.Supplier",
+    Consumer: "java.util.function.Consumer", Predicate: "java.util.function.Predicate",
+    Path: "java.nio.file.Path", Files: "java.nio.file.Files", IOException: "java.io.IOException",
+    Duration: "java.time.Duration", Instant: "java.time.Instant",
+  };
+  for (const u of used) {
+    // jdkMap 要先于 JDK_COMMON：后者里的 List/Map/CompletableFuture 等仍需 import。
+    if (jdkMap[u]) {
+      if (importedSimple.has(u) || declared.has(u)) continue;
+      const line = `import ${jdkMap[u]};`;
+      if (!imports.includes(line)) { imports.push(line); added.push(jdkMap[u]); }
+      continue;
+    }
+    if (JDK_COMMON.has(u) || importedSimple.has(u) || declared.has(u)) continue;
+    if (/^[A-Z][A-Z0-9_]*$/.test(u)) continue;
+    const layers = ["api", "fapi", "external"];
+    if (expected) layers.push(expected);
+    let distinct = [...new Set((inv.bySimple.get(u) || [])
+      .filter((h) => layers.includes(h.layer))
+      .map((h) => h.fqcn))];
+    // `Properties` 在 Forge 档有两个候选：BlockBehaviour.Properties（嵌套，示例真正要的）
+    // 与 net.minecraftforge.common.property.Properties。方块的上下文优先前者。
+    let preferred = null;
+    if (u === "Properties" && /\bBlock(?:Item)?\b/.test(codeText)) {
+      const nested = (inv.bySimple.get(u) || []).find((h) => /(?:^|\.)BlockBehaviour\$Properties$/.test(h.fqcn) && layers.includes(h.layer));
+      if (nested) preferred = nested.fqcn;
+    }
+    if (preferred) distinct = [preferred];
+    else {
+      // 顶层类优先；只有没有顶层同名类时才用嵌套类。
+      const topLevel = distinct.filter((f) => !f.includes("$"));
+      if (topLevel.length) distinct = topLevel;
+    }
+    // 同名多包时，非客户端片段优先非 .client. 的那个（BooleanProperty 这类）。
+    if (distinct.length > 1 && !/client/i.test(codeText)) {
+      const core = distinct.filter((f) => !/\.client\./i.test(f));
+      if (core.length === 1) distinct = core;
+    }
+    if (process.env.AUDIT_DEBUG_IMPORT === u) console.error(`[debug-import] ${u}: ${JSON.stringify(distinct)}`);
+    if (distinct.length !== 1) continue; // 歧义就不猜
+    const line = `import ${distinct[0].replace(/\$/g, ".")};`;
+    if (imports.some((i) => i.replace(/\s+/g, " ").trim() === line)) continue;
+    imports.push(line);
+    added.push(distinct[0]);
+  }
+  return added;
+}
+
+function injectLoggerCandidate(cand) {
+  const field = "  static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(\"testmod\");";
+  const m = cand.match(/\bclass\s+[A-Za-z_$][\w$]*[^{]*\{/);
+  if (!m) return null;
+  const i = cand.indexOf(m[0]) + m[0].length;
+  return cand.slice(0, i) + "\n" + field + cand.slice(i);
+}
+
+// 补全模式原先给每个片段挂上本档**全部** FAPI 模块 jar：javac 每次启动都要扫几十个件，
+// 冷缓存下单个片段就能卡十几秒。这里只保留「非 FAPI 底座 + 片段真正用到的类所在件」。
+function narrowClasspath(pool, inv, wanted, apiJars) {
+  const poolSet = new Set(pool);
+  const isOptionalApi = (j) => apiJars.has(j) && !/fabric-api-base/i.test(j);
+  const base = pool.filter((j) => !isOptionalApi(j));
+  const pick = new Set();
+  for (const raw of wanted) {
+    if (!raw) continue;
+    if (raw.endsWith(".*")) {
+      const prefix = raw.slice(0, -2) + ".";
+      for (const hs of inv.byFqcn.values()) {
+        const h = hs.find((x) => x.fqcn.startsWith(prefix) && poolSet.has(x.jar));
+        if (h) { pick.add(h.jar); break; }
+      }
+      continue;
+    }
+    const names = [raw, raw.replace(/\.([A-Z][\w$]*)$/, "$$$1")];
+    let hit = null;
+    for (const n of names) {
+      const hs = inv.byFqcn.get(n) || [];
+      hit = hs.find((h) => poolSet.has(h.jar));
+      if (hit) break;
+    }
+    if (hit) pick.add(hit.jar);
+  }
+  return [...new Set([...base, ...pick])];
+}
+
+function compileBlocks(file, parsed, jarPaths, inv, opts = {}) {
+  const out = [];
+  // 移植对照页本来就把另一个加载器的代码放在同一页，用单档类路径编译只会误报。
+  if (/[\\/]porting[\\/]/.test(file)) return out;
+  const complete = Boolean(opts.complete);
+  const expected = opts.expected || null;
   const jarPicks = new Map();
   // 全量缓存可能有 700+ 个 jar，逐个 import 只取「含该类的 jar」里最新的一个。
   const jarForImport = (fqcn) => {
@@ -839,48 +1052,105 @@ function compileBlocks(file, parsed, jarPaths, inv) {
     return null;
   };
   for (const f of parsed.fences) {
-    if (f.lang !== "java" || !/^\s*import\s+/m.test(f.content) || f.content.length < 40) continue;
-    if (!/\b(class|interface|enum|record)\s+[A-Z]/.test(f.content)) continue;
+    if (f.lang !== "java" || f.content.length < 40) continue;
+    // 反例块（❌/错误示例）本来就是故意写错的，不编译。
+    if (/❌|错误示例|反例|不要这样写|忘记导入/.test(f.content)) continue;
+    // 围栏前几行若说明这是「mojmap 原文 / 参考文件 / 上游写法」，它是移植对照，不按本档编译。
+    const lead = parsed.lines.slice(Math.max(0, f.startLine - 9), Math.max(0, f.startLine - 1)).join("\n");
+    if (/mojmap|Mojang|原文|参考文件|上游写法|移植对照/i.test(lead)) continue;
+    if (!complete) {
+      if (!/^\s*import\s+/m.test(f.content)) continue;
+      if (!/\b(class|interface|enum|record)\s+[A-Z]/.test(f.content)) continue;
+    } else if (!/\b(class|interface|enum|record)\s+[A-Z]/.test(f.content) && !/\w+\s*\([^)]*\)\s*\{/.test(f.content) && !/;/.test(f.content)) {
+      continue;
+    }
     const { imports, rest } = splitImports(f.content.replace(/^\s*package\s+[\w.]+\s*;/m, ""));
     // 教学片段里的 `get(...)` / `newSimpleChannel(...)` 是省略号占位，不是可编译代码。
-    if (/(\(\s*\.\.\.\s*\)|,\s*\.\.\.\s*[,)])/.test(rest)) {
+    if (/(\(\s*\.\.\.\s*\)|,\s*\.\.\.\s*[,)])/.test(rest.join("\n"))) {
       out.push(finding("compile", file, f.startLine, "javac", "片段含省略号占位，跳过编译", "unverifiable", "含 ... 占位"));
       continue;
     }
-    // 类路径按 import 面收窄：主构件 + 各 import 命中的 jar + 支撑库。
-    const fqcns = imports.map((l) => (l.match(/import\s+(?:static\s+)?([\w.$]+)/) || [])[1]).filter(Boolean);
-    const need = [...jarPaths, ...SUPPORT_JARS];
-    for (const fqcn of fqcns) {
-      const jar = jarForImport(fqcn);
-      if (jar) need.push(jar);
+    let body = rest;
+    const notes = [];
+    let needLogger = false;
+    let added = [];
+    const declared = new Set([...f.content.matchAll(/\b(?:class|interface|enum|record)\s+([A-Z][A-Za-z0-9_$]*)/g)].map((m) => m[1]));
+    if (complete) {
+      const done = completeText(rest);
+      body = done.lines;
+      notes.push(...done.notes);
+      needLogger = done.needLogger;
+      added = autoImport(body, imports, declared, inv, expected);
+      if (added.length) notes.push("补 import: " + added.map((x) => x.split(".").pop()).join(","));
+      // 补完还是没有任何可解析上下文（没有 import、没有可唯一推断的类、正文也没有本档 FQCN）⇒ 不值得编译
+      const hasFqcn = body.some((l) => [...l.matchAll(/\b((?:net\.minecraft|com\.mojang|net\.fabricmc|org\.quiltmc)\.[\w.$]+)\b/g)]
+        .some((m) => inv.byFqcn.has(m[1])));
+      if (!imports.length && !added.length && !hasFqcn) {
+        out.push(finding("compile", file, f.startLine, "javac", "片段无可解析类名，补全后仍无上下文", "unverifiable", notes.join("；") || "无 import / 无可推断类"));
+        continue;
+      }
     }
-    const classpath = [...new Set(need.filter(Boolean))].join(";");
+    const fqcns = imports.map((l) => (l.match(/import\s+(?:static\s+)?([\w.$]+)/) || [])[1]).filter(Boolean);
+    let classpath;
+    if (complete && opts.apiJars) {
+      const wanted = [...fqcns, ...added];
+      classpath = [...new Set([...narrowClasspath(jarPaths, inv, wanted, opts.apiJars), ...SUPPORT_JARS])].join(";");
+    } else {
+      const need = [...jarPaths, ...SUPPORT_JARS];
+      for (const fqcn of fqcns) {
+        const jar = jarForImport(fqcn);
+        if (jar) need.push(jar);
+      }
+      classpath = [...new Set(need.filter(Boolean))].join(";");
+    }
     const dir = fs.mkdtempSync(path.join(OUT_DIR, "javac-"));
     const src = path.join(dir, "Block.java");
-    const candidates = buildCandidates(rest);
+    let candidates = buildCandidates(body);
+    if (complete) {
+      candidates = candidates
+        .map((c) => (c.startsWith("class __Frag") ? c.replace(/@Override\s*/g, "") : c))
+        .map((c) => (needLogger ? injectLoggerCandidate(c) : c))
+        .filter(Boolean);
+    }
     let err = "";
     for (let i = 0; i < candidates.length; i++) {
       err = compileOnce(src, imports, candidates[i], classpath, dir, String.fromCharCode(97 + i));
       if (!err || !STRUCTURAL.test(err)) break;
       // 结构不合法 = 这个包装形状不对，换下一个候选；全都不行时保留最后一个错误给下面分类。
     }
+    const suffix = notes.length ? " | 补全: " + notes.join("；") : "";
     if (err) {
-      const missingClasses = [...new Set([...err.matchAll(/symbol:\s+class\s+([A-Z][A-Za-z0-9_$]*)/g)].map((m) => m[1]))]
-        .filter((n) => (inv.bySimple.get(n) || []).some((h) => h.layer === "yarn" && !h.fqcn.includes("$")));
       // 只看第一条 error：后面的错误常是上游符号没解析出来导致的次生噪音。
-      const firstErr = err.search(/error:/);
-      const primary = firstErr >= 0 ? err.slice(firstErr, firstErr + 400) : err;
+      const primary = firstErrorBlock(err);
+      // 缺失 import 只认第一条 error 提到的、且本档唯一可解析的类；歧义/不存在不判缺 import。
+      const missingClasses = [...new Set([...primary.matchAll(/symbol:\s+class\s+([A-Z][A-Za-z0-9_$]*)/g)].map((m) => m[1]))]
+        .filter((n) => {
+          const hits = (inv.bySimple.get(n) || []).filter((h) => h.layer === "yarn" && !h.fqcn.includes("$"));
+          return new Set(hits.map((h) => h.fqcn)).size === 1;
+        });
       const apiError = /does not override abstract method|is not abstract and does not override|incompatible types|has private access|cannot be applied|no suitable method|method does not override/.test(primary);
+      // 补全模式是在片段上编译：缺抽象方法实现 / 缺 super 构造属片段不完整，不判内容错。
+      const partialClass = complete && /is not abstract and does not override|does not override abstract method|constructor .* cannot be applied|actual and formal argument lists differ|missing return value|call to super must be first statement/.test(primary);
       // "cannot access X" 多半是依赖的 API 构件本身按另一套映射编译（缺对侧类），不是内容错；
       // 它还会连带产生 "method does not override" 之类的次生错误，优先按类路径缺口处理。
       const accessGap = /error: cannot access [A-Z]/.test(primary);
-      const gap = accessGap || (/package [\w.]+ does not exist|cannot find symbol|cannot access [A-Z]/.test(primary) && !missingClasses.length);
+      const fragGap = /__Frag/.test(primary); // 片段方法被放进包装类，this 类型不是原类
+      const gap = accessGap || fragGap || partialClass || (/package [\w.]+ does not exist|cannot find symbol|cannot access [A-Z]/.test(primary) && !missingClasses.length);
+      // 补全模式下，方法名/构造器签名错误落在已解析的类型上 ⇒ 是真缺陷（如 addGoal / registerGoals）。
+      // 例外：`this.foo()` / 裸 `foo()` 可能是片段所在外部类的方法，片段包装后必然报缺失，不判红。
+      const selfCall = /^\s*(?:this\.|super\.)?[A-Za-z_$][\w$]*\s*\(/m.test(primary);
+      const memberErr = !accessGap && !fragGap && !partialClass && !selfCall && /symbol:\s+method\s+[A-Za-z_$][\w$]*|no suitable method/.test(primary);
+      // 自动补的 import 可能有多个同名候选（如 Properties），成员错误可能是补错类导致，不判红。
+      const addedSimple = new Set(added.map((x) => x.split(".").pop()));
+      const autoMemberErr = memberErr && [...addedSimple].some((n) => new RegExp("\\b" + n + "\\b").test(primary));
       if (missingClasses.length) {
-        out.push(finding("compile", file, f.startLine, missingClasses.join(","), "javac 缺 import/可见性", "fail", summarizeJavac(err)));
-      } else if (apiError && !accessGap) {
-        out.push(finding("compile", file, f.startLine, "javac", "javac API 错误", "fail", summarizeJavac(err)));
+        out.push(finding("compile", file, f.startLine, missingClasses.join(","), "javac 缺 import/可见性", "fail", summarizeJavac(err) + suffix));
+      } else if (memberErr && !autoMemberErr) {
+        out.push(finding("compile", file, f.startLine, "javac", "javac 成员名/签名不存在", "fail", summarizeJavac(err) + suffix));
+      } else if (apiError && !accessGap && !fragGap && !partialClass && !selfCall) {
+        out.push(finding("compile", file, f.startLine, "javac", "javac API 错误", "fail", summarizeJavac(err) + suffix));
       } else {
-        out.push(finding("compile", file, f.startLine, "javac", gap ? "编译失败（类路径/依赖缺口）" : "编译失败（片段不完整/缺上下文）", "unverifiable", summarizeJavac(err)));
+        out.push(finding("compile", file, f.startLine, "javac", gap ? "编译失败（类路径/依赖缺口）" : "编译失败（片段不完整/缺上下文）", "unverifiable", summarizeJavac(err) + suffix));
       }
     }
     fs.rmSync(dir, { recursive: true, force: true });
@@ -893,10 +1163,16 @@ function compileBlocks(file, parsed, jarPaths, inv) {
 function selftest() {
   const fail = [];
   const fakeInv = {
-    layers: new Set(["yarn", "mojmap", "external"]),
+    layers: new Set(["yarn", "mojmap", "external", "fapi"]),
     byFqcn: new Map([
       ["net.minecraft.entity.ai.goal.Goal", [{ layer: "yarn", fqcn: "net.minecraft.entity.ai.goal.Goal", jar: "" }]],
+      ["net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking", [{ layer: "fapi", fqcn: "net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking", jar: "" }]],
     ]),
+    classNames: [
+      "net.minecraft.entity.ai.goal.Goal",
+      "net.minecraft.text.Text",
+      "net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking",
+    ],
     bySimple: new Map([
       ["Goal", [{ layer: "yarn", fqcn: "net.minecraft.entity.ai.goal.Goal", jar: "" }]],
       ["ConfigEntry", [{ layer: "external", fqcn: "me.shedaniel.autoconfig.annotation.ConfigEntry", jar: "" }]],
@@ -932,6 +1208,34 @@ function selftest() {
   // 4c) 全限定名用法不需要 import
   const fqcnUse = "import java.util.List;\npublic void f() { net.minecraft.text.Text.literal(\"x\"); }";
   if (checkImports("x.md", { fences: [{ lang: "java", content: fqcnUse, startLine: 1 }] }, fakeInv, "yarn").length) fail.push("fqcn use misread as missing import");
+  // 4e) FAPI 包名错误：旧包名 `api.networking.v1.ClientPlayNetworking` 不在精确件里
+  const badFapi = "import net.minecraft.text.Text;\nimport net.fabricmc.fabric.api.networking.v1.ClientPlayNetworking;\npublic class C { void f() { ClientPlayNetworking.send(null); } }";
+  const badFapiOut = checkImports("x.md", { fences: [{ lang: "java", content: badFapi, startLine: 1 }] }, fakeInv, "yarn");
+  if (!badFapiOut.some((f) => f.kind === "api-import" && f.status === "fail")) fail.push("bad FAPI package not detected");
+  const goodFapi = "import net.minecraft.text.Text;\nimport net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;\npublic class C { void f() { ClientPlayNetworking.send(null); } }";
+  if (checkImports("x.md", { fences: [{ lang: "java", content: goodFapi, startLine: 1 }] }, fakeInv, "yarn").length) fail.push("good FAPI package flagged");
+  // 4f) --complete 的补全单元：MOD_ID / LOGGER / 自动 import
+  const ct = completeText(["String id = MOD_ID;", "ExampleMod.LOGGER.info(\"x\");"]);
+  if (!/"testmod"/.test(ct.lines.join("\n"))) fail.push("MOD_ID completion");
+  if (!ct.needLogger) fail.push("LOGGER completion");
+  const autoImports = [];
+  const addedImports = autoImport(["Text.literal(\"x\");"], autoImports, new Set(), fakeInv, "yarn");
+  if (!addedImports.includes("net.minecraft.text.Text") || !autoImports.some((x) => x.includes("net.minecraft.text.Text"))) fail.push("auto import");
+  // JDK 常用类（CompletableFuture 在 JDK_COMMON 里）也必须补 import，不能被 JDK_COMMON 提前吞掉。
+  const jdkImports = [];
+  const jdkAdded = autoImport(["CompletableFuture<Void> f;"], jdkImports, new Set(), fakeInv, "yarn");
+  if (!jdkAdded.includes("java.util.concurrent.CompletableFuture")) fail.push("jdk map before JDK_COMMON");
+  // 注释/字符串里的词不触发自动 import（`// Shift-click` 曾被补成 DensityFunctions.Shift）。
+  const fakeInvShift = {
+    ...fakeInv,
+    bySimple: new Map([...fakeInv.bySimple, ["Shift", [{ layer: "yarn", fqcn: "net.minecraft.world.level.levelgen.DensityFunctions$Shift", jar: "" }]]]),
+  };
+  const commentImports = [];
+  const commentAdded = autoImport(["// Shift-click transfer logic", "String s = \"Shift\";", "public void f() { }"], commentImports, new Set(), fakeInvShift, "yarn");
+  if (commentAdded.length) fail.push("comment/string identifier auto-imported");
+  const codeImports = [];
+  const codeAdded = autoImport(["Shift value = null;"], codeImports, new Set(), fakeInvShift, "yarn");
+  if (!codeAdded.length) fail.push("code identifier not auto-imported");
   // 5) provenance
   const prov = checkProvenance("x.md", { prose: [{ line: 1, text: "> 本档正文的类名/签名只来自语料" }, { line: 2, text: "javap @ 1.21.11" }] });
   if (!prov.length) fail.push("provenance not detected");
@@ -960,13 +1264,15 @@ function selftest() {
 // ---------------------------------------------------------------- main
 
 function parseArgs(argv) {
-  const args = { packs: [], all: false, compile: false, selftest: false };
+  const args = { packs: [], all: false, compile: false, complete: false, selftest: false, fragment: null };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === "--selftest") args.selftest = true;
     else if (a === "--all") args.all = true;
     else if (a === "--compile") args.compile = true;
+    else if (a === "--complete") { args.compile = true; args.complete = true; }
     else if (a === "--packs") args.packs = (argv[++i] || "").split(",").map((x) => x.trim()).filter(Boolean);
+    else if (a === "--fragment") { args.fragment = argv[++i] || null; args.compile = true; args.complete = true; }
   }
   return args;
 }
@@ -1073,6 +1379,30 @@ function runPack(packDir, opts) {
   inv.mcpSimple = art.mcpNames ? new Set([...art.mcpNames].map((n) => n.split(".").pop())) : null;
   const pairs = loadPairs(version);
   const findings = [];
+  // 补全模式编译整档；单片段模式（--fragment）复用同一套构件与补全逻辑。
+  const compileJars = [...new Set([...art.jars.map((j) => j.jar), ...compileApi, ...ext])];
+  const compilePool = new Set(compileJars);
+  const apiJars = new Set();
+  for (const hs of inv.byFqcn.values()) {
+    for (const h of hs) if (h.layer === "fapi" && compilePool.has(h.jar)) apiJars.add(h.jar);
+  }
+  if (opts.fragment) {
+    const content = opts.fragment.replace(/^\s*package\s+[\w.]+\s*;/m, "");
+    const parsed = {
+      fences: [{ lang: "java", content, startLine: 1 }],
+      lines: content.split(/\r?\n/),
+      prose: [],
+      headings: [],
+      text: content,
+    };
+    findings.push(...compileBlocks("<fragment>", parsed, compileJars, inv, { complete: true, expected: art.expected, apiJars }));
+    return {
+      platform,
+      version,
+      artifacts: { expectedLayer: art.expected, jars: compileJars.map((jar) => ({ jar: path.relative(REPO, jar), layer: "compile" })) },
+      findings,
+    };
+  }
   const files = [];
   const pushMd = (p) => { if (fs.existsSync(p)) files.push(p); };
   const walkMd = (dir) => {
@@ -1086,6 +1416,7 @@ function runPack(packDir, opts) {
   walkMd(path.join(packDir, ".cursor", "skills"));
   walkMd(path.join(packDir, ".cursor", "rules"));
   walkMd(path.join(packDir, "knowledge"));
+  walkMd(path.join(packDir, "code-patterns"));
   for (const p of [path.join(packDir, "AGENTS.md"), path.join(packDir, "README.md")]) pushMd(p);
 
   // versions.json slot
@@ -1117,8 +1448,7 @@ function runPack(packDir, opts) {
     findings.push(...checkImports(file, parsed, inv, art.expected));
     findings.push(...checkLayerMixups(file, parsed, inv, pairs, art.expected));
     if (opts.compile && jars.length) {
-      const compileJars = [...new Set([...art.jars.map((j) => j.jar), ...compileApi, ...ext])];
-      findings.push(...compileBlocks(file, parsed, compileJars, inv));
+      findings.push(...compileBlocks(file, parsed, compileJars, inv, { complete: opts.complete, expected: art.expected, apiJars }));
     }
   }
   return {
@@ -1152,8 +1482,27 @@ function main() {
     if (fs.existsSync(path.join(REPO, "bedrock", ".cursor"))) packs.push(path.join(REPO, "bedrock"));
   }
   if (!packs.length) {
-    console.error("用法：--packs fabric/1.21.11,forge/1.20.1 | --all [--compile] | --selftest");
+    console.error("用法：--packs fabric/1.21.11,forge/1.20.1 | --all [--compile|--complete] | --packs <档> --fragment <片段.java> | --selftest");
     process.exitCode = 2;
+    return;
+  }
+  if (args.fragment) {
+    const fragmentPath = path.resolve(args.fragment);
+    if (!fs.existsSync(fragmentPath)) {
+      console.error("fragment not found:", fragmentPath);
+      process.exitCode = 2;
+      return;
+    }
+    const abs = path.isAbsolute(packs[0]) ? packs[0] : path.join(REPO, packs[0]);
+    if (!fs.existsSync(abs)) {
+      console.error("pack not found:", abs);
+      process.exitCode = 2;
+      return;
+    }
+    const r = runPack(abs, { jars, fragment: fs.readFileSync(fragmentPath, "utf8") });
+    const compileFindings = (r.findings || []).filter((f) => f.kind === "compile");
+    console.log(JSON.stringify({ pack: packs[0], fragment: args.fragment, findings: compileFindings }, null, 2));
+    process.exitCode = compileFindings.some((f) => f.status === "fail") ? 1 : 0;
     return;
   }
   const results = [];
@@ -1161,7 +1510,7 @@ function main() {
     const abs = path.isAbsolute(p) ? p : path.join(REPO, p);
     if (!fs.existsSync(abs)) { console.error("skip missing pack:", p); continue; }
     console.log("audit", path.relative(REPO, abs));
-    results.push(runPack(abs, { jars, compile: args.compile }));
+    results.push(runPack(abs, { jars, compile: args.compile, complete: args.complete }));
   }
   const report = { generatedAt: new Date().toISOString(), packs: results };
   const outFile = path.join(OUT_DIR, "report.json");

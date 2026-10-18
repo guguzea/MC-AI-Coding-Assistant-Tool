@@ -128,14 +128,14 @@ public class PrismarineLampBlock extends Block {
 
 ```java
 @Override
-public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-	if (!player.getAbilities().mayBuild) {
-		return InteractionResult.PASS;
+public ActionResult use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+	if (!player.getAbilities().allowModifyWorld) {
+		return ActionResult.PASS;
 	} else {
 		boolean activated = state.getValue(ACTIVATED);
-		world.setBlockAndUpdate(pos, state.setValue(ACTIVATED, !activated));
-		world.playSound(player, pos, SoundEvents.COMPARATOR_CLICK, SoundSource.BLOCKS, 1.0F, 1.0F);
-		return InteractionResult.SUCCESS;
+		world.setBlockState(pos, state.setValue(ACTIVATED, !activated));
+		world.playSound(player, pos, SoundEvents.COMPARATOR_CLICK, SoundCategory.BLOCKS, 1.0F, 1.0F);
+		return ActionResult.SUCCESS;
 	}
 }
 ```

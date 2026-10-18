@@ -107,13 +107,21 @@ AdvancementEntry getDirt = Advancement.Builder.create()
 ## 多条件与父子
 
 ```java
-final HolderLookup.RegistryLookup<Item> itemLookup = wrapperLookup.lookupOrThrow(Registries.ITEM);
-AdvancementHolder appleAndBeef = Advancement.Builder.advancement()
+final RegistryEntryLookup<Item> itemLookup = wrapperLookup.getOrThrow(RegistryKeys.ITEM);
+AdvancementEntry appleAndBeef = Advancement.Builder.create()
 		.parent(getDirt)
-		.display(/* 同上，background 传 null */)
-		.addCriterion("ate_apple", ConsumeItemTrigger.TriggerInstance.usedItem(itemLookup, Items.APPLE))
-		.addCriterion("ate_cooked_beef", ConsumeItemTrigger.TriggerInstance.usedItem(itemLookup, Items.COOKED_BEEF))
-		.save(consumer, ExampleMod.MOD_ID + ":apple_and_beef");
+		.display(
+				Items.APPLE,
+				Text.literal("Apple and Beef"),
+				Text.literal("Eat both"),
+				null,
+				AdvancementFrame.TASK,
+				true,
+				true,
+				false)
+		.criterion("ate_apple", ConsumeItemCriterion.Conditions.item(itemLookup, Items.APPLE))
+		.criterion("ate_cooked_beef", ConsumeItemCriterion.Conditions.item(itemLookup, Items.COOKED_BEEF))
+		.build(consumer, ExampleMod.MOD_ID + ":apple_and_beef");
 ```
 
 `.parent(...)` 收的是一个已保存的 `AdvancementHolder`（本档传 `getDirt` / `breakBlockWithTool`）。多个 criterion 的「列表的列表」语义：`AdvancementRequirements` 的构造与工厂已按构件核实——Yarn `new AdvancementRequirements(List<List<String>>)`、静态 `allOf(Collection<String>)` / `anyOf(Collection<String>)`、`Advancement.Builder#requirements(AdvancementRequirements)`；若要按「全部满足 / 任一满足」自动生成，用 `Advancement.Builder#criteriaMerger(AdvancementRequirements.CriterionMerger.AND / OR)`（mojmap 同名接口是 `AdvancementRequirements.Strategy.AND / OR`，方法名 `requirements(Strategy)`）。

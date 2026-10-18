@@ -63,7 +63,7 @@ public class MyBlock extends Block {
     @Override
     protected ActionResult onUse(BlockState state, World world,
                                  BlockPos pos, PlayerEntity player,
-                                 Hand hand, BlockHitResult hit) {
+                                 BlockHitResult hit) {
         if (!world.isClient) {
             // 服务端逻辑
             player.sendMessage(Text.literal("Clicked!"));
@@ -72,9 +72,9 @@ public class MyBlock extends Block {
     }
 
     @Override
-    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+    public BlockState onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         // 方块破坏逻辑
-        super.onBreak(world, pos, state, player);
+        return super.onBreak(world, pos, state, player);
     }
 
     @Override

@@ -1179,10 +1179,76 @@ loader-api 摘要的 class 形状 = `{fqcn,simpleName,pkg,modifiers,methods}` �
 - 档位覆盖：fabric 14、forge 15、neoforge 10、quilt 10、liteloader 3、rift 1、modloader 3、bedrock 1。fabric 14 档现在全部有本档游戏 jar；1.16.5 / 1.17.1 / 26.1.2 的 FAPI 也已有精确件（1.17.1 50 个模块，26.1.2 由 POM 解析）。
 - 编译支撑件补齐：`netty-buffer/common/codec`、`guava`、`org.jetbrains:annotations`、`org.jspecify:jspecify`（1.21.11 的 `PigEntity` 父链带 JSpecify 注解，缺它会让 javac 报 `cannot access Nullable`）。
 
+### 覆盖边界量化（本轮实测）
+
+| 平台 | java 围栏 | 含 import | 可编译（import+class） |
+| --- | --- | --- | --- |
+| fabric | 1394 | 78 | 32 |
+| forge | 2265 | 40 | 21 |
+| neoforge | 150 | 5 | 2 |
+| rift | 3 | 3 | 2 |
+| quilt / liteloader / modloader / bedrock | 0 | 0 | 0 |
+
+code 级检查（缺 import、层混用、真编译、FAPI import 存在性）只作用于含 import 的 126 个围栏；其余约 3686 个 java 围栏不含 import，只有 prose 级检查（不存在断言、矛盾、悬空引用、映射对照表）。这是内容形态的限制：多数示例是片段而非完整类，无法可靠判定裸简单名的归属。`knowledge/libs/**`、`common_skill/**`、`community_knowledge/**` 不在本审计器扫描面内；bedrock 的 JSON / Molang 由 `validate_bp_json` / `validate_addon_manifest` 等工具负责。
+
 ### 仍存边界（未静默）
 
 - **modloader 三档无 MCP 名表、无构件** ⇒ 只跑 provenance / contradiction / dangling（三档 `.cursor` 下 Java 围栏数均为 0，当前不损失 Java 面检出）。
 - **forge 1.7.10–1.11.2 无 mapped jar** ⇒ 只按 MCP 类名表判存在性与缺 import，不能真编译（F/D 盘只找到 Forge universal 件，没有 mapped MC jar；五档 Java 围栏数均为 0，当前不损失编译覆盖）。
 - **成员名（`initGoals` / `add`）仍只按 1.21.11 核过**，未做逐档 join；成员名缺陷靠真编译兜底。
+
+## §8.34 片段补全编译（`--complete` / `--fragment`）与三处可见性/构造器缺陷
+
+§8.33 的代码腿只编译「自带 import 且完整类」的 126 个围栏；其余约 3686 个 java 围栏只有 prose 级检查。本轮把「取片段 → 补全 → 编译」做成同一审计器的模式：
+
+- `--complete`：对每个 java 围栏补 `MOD_ID` / `MOD_NAME` 字面量、`ExampleMod.LOGGER` → `LOGGER` + slf4j 字段、按本档层唯一性自动补 import（JDK 常用类 + expected/api/fapi/external 层），再把片段包进 `class __Frag` 编译。`__Frag` 类型不匹配、缺抽象方法、缺 super 构造一律归「不可判定」；只有落在已解析类型上的成员名/签名错误、可见性错误才判红。
+- `--fragment <file> --packs <档>`：单片段入口，复用同一套补全与编译，输出 compile findings；退出码 1 = 有 fail。
+- 误报治理：跳过 `porting/`、反例块、前 8 行声明 mojmap/参考文件的块；只取**第一条 error 块**（javac 常在 400 字符内续报次生错误，曾把 `MyNetworking` 未知变量误判成成员名缺陷）；第三方 shadowed/relocated 类不进索引（Cloth Config 内嵌 toml 的 `Identifier` 曾让 `net.minecraft.util.Identifier` 变成歧义）；`jdkMap` 先于 `JDK_COMMON`（否则 `CompletableFuture` 永远不补 import）。
+- 类路径收窄：只保留非 FAPI 底座 + 片段真正用到的类所在 jar；此前每个片段挂全档 50+ 个 FAPI 模块，冷缓存下单次 javac 可卡十几秒。
+
+### 新抓到的内容缺陷（fabric/1.21.11）
+
+1. **`ItemGroups.INGREDIENTS` 是 private**：`ItemGroups` 的 18 个常量在本档构件里全部 `private static final`，示例却直接引用；改为 `RegistryKey.of(RegistryKeys.ITEM_GROUP, Identifier.ofVanilla("ingredients"))`，并改正文「常量全部具名、类型都是 RegistryKey」的错误说法。`javac` 复跑 fail=0。
+2. **`World.isClient` 是 private 字段**：1.21.10 / 1.21.11 的 `javap` 显示 `private final boolean isClient` + `public boolean isClient()`；1.21.3 / 1.21.4 / 1.21.8 及更早仍是 public 字段（所以不能全档替换）。改 1.21.11 的 rules 05/08、skills/mc-events、code-patterns 01/02 共 6 处为 `isClient()`。
+3. **`MyTool extends Item` 缺构造器**：1.21.11 的 `Item` 只有 `Item(Item.Settings)`，`knowledge/antipatterns/item.md` 的「正确方案」隐式 `super()` 编译失败；补 `MyTool(Item.Settings settings) { super(settings); }`。同一模式在 1.14.4–1.21.3 八个档的「正确方案」里都存在，已一并补。
+
+### 新抓到的内容缺陷（其他 fabric 档）
+
+4. **1.17.1 `.saturation(1.0f)` 不存在**：本档 `FoodComponent.Builder` 只有 `hunger(int)` / `saturationModifier(float)`；「正确方案」改为 `saturationModifier`。
+5. **1.18.2 `Screen.onClose()` 不存在**：本档 `Screen` 只有 `close()`（1.16.5 / 1.17.1 才有 `onClose()`，不能全档替换）；rules 10-gui 与 skills/mc-gui 两处改 `close()`。
+6. **1.18.2 `conditionsFromItem` / `hasItem` 是 private**：`RecipeProvider` 里这两个 helper 在 1.18.2 是 `private static`，子类不能调；1.19.4+ 才变 `protected`。示例改用 `InventoryChangedCriterion.Conditions.items(Items.DIAMOND)`（public static），并改正文。另：1.17.1 的 `RecipeProvider` 不在本档 project mapped jar 里，未复跑。
+7. **1.20.4 `renderBackground(DrawContext)` 不存在**：本档要求四参 `renderBackground(DrawContext, int, int, float)`；rules 10-gui 改为四参。
+8. **1.20.4 mc-model 的 mojmap 参考块**：`Level` / `Player` / `InteractionResult` / `InteractionHand` / `SoundSource` / `setBlockAndUpdate` / `mayBuild` 全是 mojmap；已按本档 Yarn 改为 `World` / `PlayerEntity` / `ActionResult` / `Hand` / `SoundCategory` / `setBlockState` / `allowModifyWorld`。
+9. **1.21.1 Block 回调签名**：`Block.onBreak` 返回 **`BlockState`**（不是 void）；`Block.onUse` 在本档**不再有 `Hand` 参数**；`Item.Settings` 没有 `maxDamageIfAbsent`（改 `maxDamage`）。code-patterns 01/02 已改。
+10. **1.21.1 实体基类**：`MyEntity extends Mob` 但用 `WanderAroundFarGoal`（要 `PathAwareEntity`）与 `FollowParentGoal`（要 `AnimalEntity`）；改为 `extends PathAwareEntity` 并删掉动物专用的 `FollowParentGoal`。
+11. **1.21.1 `LootTable.Builder.pool`**：本档签名是 `pool(LootPool.Builder)`，不是 `pool(Consumer<...>)`；示例改为 `new LootPool.Builder().with(...)`。
+12. **缺 import（不是内容错误，但示例不可直接编译）**：`mc-command` / `mc-fabric-api` 的 `CommandRegistrationCallback` 代码块补 `CommandManager` / `EntityArgumentType` / `ServerPlayerEntity` / `Text`；`code-patterns/05` 补 `Identifier` / `LootPool` / `ItemEntry` / `Items`。补 import 后 `checkImports` 会把整块当「完整块」检查，这也是它们此前未暴露的原因。
+
+### forge / neoforge / quilt 的复跑
+
+- `--all --complete`（43 包：forge 15 + neoforge 10 + quilt 10 + liteloader 3 + rift 1 + modloader 3 + bedrock 1）：`fail=81 / unverifiable=1278`。
+- 81 条的主因不是 81 个独立内容错误：`super.onLoad()` / `super.setRemoved()` / `super.load()` 等片段方法被包进 `__Frag` 后 `super` 指向 Object，属补全器误报（已把 `this.` / `super.` / 裸调用统一降为不可判定）；`Properties` 被补成 `net.minecraftforge.common.property.Properties`（已加 `BlockBehaviour.Properties` 上下文优先）；其余按根因修：`MyEntity extends Mob` → `PathfinderMob`（1.17.1–1.20.4 共 11 个文件）、`hurtAndBreak` 的 Consumer 收到的是实体不是槽位（1.19.4–1.20.4 三档）、`ForgeAdvancementProvider` 的构造参数与 `AdvancementGenerator` 接口（1.20.1/1.20.4）。
+- 复跑 `--packs forge/1.20.1 --complete`：`fail=2`（`super.trigger` 片段误报 + datagen provider 结构）→ 修完 **`fail=0 / unverifiable=182`**。
+- forge 1.13.2–1.16.5 / neoforge / quilt 未逐档复跑；这些档的 81 条里仍可能有真缺陷，不能按 1.20.1 的绿外推。
+
+### 本轮读数
+
+- `--packs fabric/1.21.11 --complete`：修前 `fail=17 / unverifiable=115` → 修完 `fail=0 / unverifiable=51`。
+- `--packs fabric/1.14.4 --complete`：`fail=0 / unverifiable=42`（修掉 `MyNetworking` 误报后）。
+- `--packs fabric/1.17.1,fabric/1.18.2 --complete`：`fail=0`（1.18.2 recipe / GUI / MyTool 修完）。
+- `--packs fabric/1.19.4,fabric/1.20.1,fabric/1.20.4,fabric/1.21.1,fabric/1.21.3,fabric/1.21.11 --complete`：`fail=0 / unverifiable=284`。
+- `--packs fabric/1.16.5,fabric/1.21.4 --complete`：`fail=0 / unverifiable=45`。
+- 至此 fabric 14 档全部复跑绿：1.14.4 / 1.16.5 / 1.17.1 / 1.18.2 / 1.19.4 / 1.20.1 / 1.20.4 / 1.21.1 / 1.21.3 / 1.21.4 / 1.21.11 为显式复跑；1.21.8 / 1.21.10 / 26.1.2 在本轮全量跑中本就 0 fail 且未改内容。
+- 全量 fabric `--all --complete`：修前 `fail=6 / unverifiable=512`；6 条已按上述根因修完。
+- `--fragment` 正反例：`!world.isClient` → fail（`isClient has private access in World`）；`!world.isClient()` → `findings: []`。
+- `--selftest`：21 臂。
+- 审计器仍未入门链、未提交。
+
+### 仍未覆盖
+
+- 片段没有 import 且没有任何可唯一解析的 MC/FAPI 类 ⇒ 跳过（无上下文）；`__Frag` 内的 `this` 成员、缺抽象方法/构造器的部分类归不可判定。
+- 编译腿不能替代真机 / GameTest：可见性、成员名、构造器能抓；逻辑、注册、事件时机抓不到。
+- 26.1.2 的 FAPI 模块件在 `modules-2` 是未 remap 件，`cannot access ... bad class file` 一律不可判定；本档没有做精确 remap 件接入。
+- forge 1.13.2–1.16.5 / neoforge / quilt 的全量复跑未做；只复跑了 forge 1.20.1。
 
 

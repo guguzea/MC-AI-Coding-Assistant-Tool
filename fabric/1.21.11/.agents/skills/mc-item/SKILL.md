@@ -109,15 +109,16 @@ public static final Item SUSPICIOUS_SUBSTANCE = Registry.register(
     new Item(new Item.Settings()));
 
 public static void initialize() {
-    ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS)
+    ItemGroupEvents.modifyEntriesEvent(
+            RegistryKey.of(RegistryKeys.ITEM_GROUP, Identifier.ofVanilla("ingredients")))
         .register(entries -> entries.add(SUSPICIOUS_SUBSTANCE));
 }
 ```
 
-`import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;` + `import net.minecraft.item.ItemGroups;`。本档实测边界：
+`import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;` + `import net.minecraft.item.ItemGroup;` + `import net.minecraft.registry.RegistryKey;` + `import net.minecraft.registry.RegistryKeys;` + `import net.minecraft.util.Identifier;`。本档实测边界：
 
 - `modifyEntriesEvent` 的入参是 `RegistryKey<ItemGroup>`，**不是** `ItemGroup` 实例。`query_loader_api` 给的签名：`Event<ModifyEntries> modifyEntriesEvent(class_5321<class_1761>)`，本档映射 `class_5321` = `RegistryKey`、`class_1761` = `ItemGroup`。
-- 创造栏常量在 `net.minecraft.item.ItemGroups`（**复数**），本档映射下 18 个常量全部具名（`INGREDIENTS` / `BUILDING_BLOCKS` / `COLORED_BLOCKS` / `COMBAT` / `FOOD_AND_DRINK` / `FUNCTIONAL` / `HOTBAR` 等），类型都是 `RegistryKey`。`ItemGroup`（单数）类里没有这些常量。
+- `net.minecraft.item.ItemGroups` 里的 18 个常量（`INGREDIENTS` / `BUILDING_BLOCKS` / `COLORED_BLOCKS` / `COMBAT` / `FOOD_AND_DRINK` / `FUNCTIONAL` / `HOTBAR` 等）在本档构件里**全是 private**，源码不能直接引用；要拿创造栏 key 就用 `RegistryKey.of(RegistryKeys.ITEM_GROUP, Identifier.ofVanilla("ingredients"))`（vanilla 路径名就是 `ingredients`）。`ItemGroup`（单数）类里没有这些常量。
 - 回调参数类型是 `ItemGroup.Entries`（intermediary `class_7704`）；本档映射里**没有**顶层类 `ItemGroupEntries`。具名方法只有 `add(ItemConvertible)` / `add(ItemStack)` / `add(…, ItemGroup.StackVisibility)` / `addAll(Collection)` —— **没有** `remove` / `removeIf`，别照新版文档或 Forge 记忆写。`Item` 本身实现 `ItemConvertible`，直接传注册的 `Item` 字段即可。
 - Fabric API 侧另有 `FabricItemGroupEntries`，提供 `prepend` / `addAfter` / `addBefore`（入参 `ItemConvertible` 或 `ItemStack`）。
 - 自定义创造栏走 `FabricItemGroup.builder()`，返回 `ItemGroup.Builder`（intermediary `class_7913`）；builder 方法已按本档构件核实：`displayName(Text)` / `icon(Supplier<ItemStack>)` / `entries(ItemGroup.EntryCollector)` / `special()` / `noRenderedName()` / `noScrollbar()` / `texture(Identifier)` / `build() → ItemGroup`。注册：`Registry.register(Registries.ITEM_GROUP, Identifier.of(MOD_ID, "my_group"), builder.build())`。路线说明见官方 `develop_items_custom-creative-tabs`。

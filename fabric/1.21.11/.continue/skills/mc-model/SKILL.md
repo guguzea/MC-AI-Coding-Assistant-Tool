@@ -139,7 +139,7 @@ public class PrismarineLampBlock extends Block {
 	}
 
 	@Override
-	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
 		builder.add(ACTIVATED);
 	}
 
@@ -152,7 +152,7 @@ public class PrismarineLampBlock extends Block {
 
 - 运行时改状态：`level.setBlockAndUpdate(pos, state.setValue(ACTIVATED, !activated))`；读值 `state.getValue(ACTIVATED)`。
 - 注册时：`BlockBehaviour.Properties.of().sound(SoundType.LANTERN).lightLevel(PrismarineLampBlock::getLuminance)`（本档键名是 `lightLevel`；邻档写作 `luminance`，禁止互抄）。
-- import 面（照抄即用）：`net.minecraft.world.level.block.Block`、`net.minecraft.world.level.block.state.BlockState`、`net.minecraft.world.level.block.state.StateDefinition`、`net.minecraft.world.level.block.state.properties.BooleanProperty`、`net.minecraft.world.level.block.state.BlockBehaviour`、`net.minecraft.world.level.block.RotatedPillarBlock`、`net.minecraft.world.level.block.SoundType`。
+- import 面（照抄即用）：`net.minecraft.world.level.block.Block`、`net.minecraft.world.level.block.state.BlockState`、`net.minecraft.state.StateManager`、`net.minecraft.world.level.block.state.properties.BooleanProperty`、`net.minecraft.world.level.block.state.BlockBehaviour`、`net.minecraft.world.level.block.RotatedPillarBlock`、`net.minecraft.world.level.block.SoundType`。
 
 ## 用 datagen 生成模型与 blockstate
 

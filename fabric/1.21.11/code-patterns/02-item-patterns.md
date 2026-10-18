@@ -111,7 +111,7 @@ public class MyWandItem extends Item {
 
     @Override
     public ActionResult use(World world, PlayerEntity user, Hand hand) {
-        if (!world.isClient) {
+        if (!world.isClient()) {
             // 服务端逻辑：消耗耐久、生成实体等
             user.getStackInHand(hand).damage(1, user, hand);
         }

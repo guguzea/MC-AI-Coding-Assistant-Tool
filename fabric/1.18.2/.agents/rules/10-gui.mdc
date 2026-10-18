@@ -54,7 +54,7 @@ public class MyScreen extends Screen {
         addDrawableChild(new ButtonWidget(width / 2 - 50, height / 2 + 20, 100, 20,
             new LiteralText("Click Me"), btn -> {
                 // 按钮点击逻辑
-                this.onClose();
+                this.close();
             }));
     }
 

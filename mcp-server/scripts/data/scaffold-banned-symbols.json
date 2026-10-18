@@ -9,7 +9,7 @@
     },
     "fabric/1.18.2": {
       "FabricBlockSettings.create": "02-block.mdc:151",
-      "offerShapedRecipe": "07-datagen.mdc:187"
+      "offerShapedRecipe": "07-datagen.mdc:189"
     },
     "fabric/1.19.4": {
       "FabricBlockSettings.create": "02-block.mdc:151",

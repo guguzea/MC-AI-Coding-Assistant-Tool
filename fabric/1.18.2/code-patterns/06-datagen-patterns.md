@@ -40,17 +40,19 @@ public class MyRecipeProvider extends FabricRecipeProvider {
             .pattern("A A")
             .pattern(" A ")
             .input('A', Items.DIAMOND)
-            .criterion("has_diamond", conditionsFromItem(Items.DIAMOND))
+            .criterion("has_diamond", InventoryChangedCriterion.Conditions.items(Items.DIAMOND))
             .offerTo(exporter);
 
         ShapelessRecipeJsonBuilder.create(MY_ITEM)
             .input(Items.DIAMOND)
             .input(Items.GOLD_INGOT)
-            .criterion("has_diamond", conditionsFromItem(Items.DIAMOND))
+            .criterion("has_diamond", InventoryChangedCriterion.Conditions.items(Items.DIAMOND))
             .offerTo(exporter);
     }
 }
 ```
+
+1.18.2 的 `RecipeProvider.conditionsFromItem` / `hasItem` 是 **private**，子类不能直接调；criterion 用 `InventoryChangedCriterion.Conditions.items(...)`（public static）。
 
 ## 模式 3：战利品表生成
 

@@ -41,7 +41,7 @@ public class MyButtonBlock extends Block {
     public ActionResult onUse(BlockState state, World world,
                                BlockPos pos, PlayerEntity player,
                                Hand hand, BlockHitResult hit) {
-        if (!world.isClient) {
+        if (!world.isClient()) {
             // 服务端逻辑
             return ActionResult.SUCCESS;
         }

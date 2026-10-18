@@ -39,7 +39,7 @@ public class MyScreen extends Screen {
     @Override
     protected void init() {
         addDrawableChild(new ButtonWidget(width / 2 - 50, height / 2, 100, 20,
-            new LiteralText("OK"), btn -> this.onClose()));
+            new LiteralText("OK"), btn -> this.close()));
     }
 }
 

@@ -28,6 +28,11 @@ dependencies {
 ### fabric-command-api-v2（命令系统）
 
 ```java
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.minecraft.server.command.CommandManager;
+import net.minecraft.command.argument.EntityArgumentType;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
     dispatcher.register(
         CommandManager.literal("mycommand")

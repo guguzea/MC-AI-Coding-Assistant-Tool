@@ -275,8 +275,26 @@ else { ((Container) live).getInventory().setItem(0, it); live.update(true, false
 3. **`ChatScreen.mouseClicked` 判定"点在哪条消息"用的是**真实鼠标位置**，不是合成事件的坐标**
    —— 实测对照：合成事件点**底部输入框**（`y = height - 8`）能命中 **5 次**（widget 命中用事件坐标）；
    点**消息区**（`y = height - 46` 起）**`hits = 0`**，120 个点全空。
-   ⇒ 要在消息区命中，得先**移动真实鼠标**（`MouseHandler` 坐标）再点，或先 `captureClickableText` 拿矩形、
-   再让鼠标落到那里。**别再盲扫坐标**（已扫 120 点、0 命中）。
+   ⇒ 要在消息区命中，得先**移动"内部鼠标"**再点。**正确写法**（javap 取证 · **不会动 OS 光标**）：
+
+   ```java
+   // MouseHandler.xpos/ypos 是私有字段；onMove 的字节码只有 putfield，类内无任何 glfwSetCursorPos ⇒ OS 光标不动
+   double gs = client.getWindow().getGuiScale();                 // 命中用缩放后坐标，onMove 收原始坐标
+   client.mouseHandler.onMove(client.getWindow().handle(), x * gs, y * gs, 0.0, 0.0);   // dx/dy=0：否则关屏后视角被带飞
+   screen.mouseClicked(new MouseButtonEvent(x, y, new MouseButtonInfo(0, 0)), false);
+   ```
+   **实测结论（2026-10-17 收尾 · 已试尽）**：命中的 **7 次全在同一个 y**（`h-12 = 228`，x 从 8 到 200 整行），
+   而**消息带**（`h-21 / h-30 / h-39` = 219/210/201）**一次都不中** ⇒ 那一行是 `ChatScreen` 的**输入框（EditBox）**带，
+   **不是消息**。把可点击消息**补发为最底行**也无效。
+   ⇒ **判定**：**`ChatScreen.mouseClicked` 到不了"消息命中"那条路径**（26.x 的消息点击走 **ActiveText 收集器**那一套），
+   所以"合成点击 + 猜坐标"这条路**结构上走不通**。
+   **再补一步也无效**（2026-10-18 收尾）：加上 **`screen.mouseMoved(x, y)`**（Screen 自己缓存的 mouseX/mouseY）
+   之后**仍然只命中 `y = 228` 那一行**（输入框带），消息带 **0**。
+   ⇒ 最终判定：26.x 的**消息点击在渲染期的 `ActiveTextCollector` 里完成**，`mouseClicked` 到不了；
+   而 **`ChatComponent` 实例不可达**（javap：`Gui` 只有 `openChatScreen/openChatAndAddText`、`Minecraft` 只有 `ChatListener`，
+   **都没有 `getChat()`**）⇒ **收集器路线也断**。
+   ⇒ **本 harness（无 mixin 的外部 tick driver）无法验证 `ClickEvent` 的点击行为**；要验得 **mixin/ASM 注入
+   `ChatScreen#render` 那段收集器**（或注入 `getStyleAt`）。这条结论到此为止，别再花循环试坐标。
 
 ## 未核实（明写 —— 本档不含通识推断，凡没实测的一律在此）
 

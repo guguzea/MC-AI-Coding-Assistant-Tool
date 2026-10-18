@@ -8,13 +8,75 @@
 
 ---
 
+## 2026-10-18 · 片段补全编译（`--complete` / `--fragment`）+ 全平台排查（维护档）
+
+**第 0 块 · 结论**：给独立审计器加了「取片段 → 补全 MOD_ID/LOGGER/import → 包进 `class __Frag` 编译」的 `--complete` 模式与单片段入口 `--fragment`；用它把 57 档跑了一遍，fabric 全量抓到 6 条真缺陷、forge/neo/quilt 全量抓到 81 条（其中大量是补全器误报，已按根因治理）。fabric 六条已全部修完，fabric 14 档复跑全绿；forge 单独复跑 1.20.1 到 `fail=0`；第 8 步门链最终 `exit 0`。审计器仍未入门链、未提交；forge 1.13.2–1.16.5 / neoforge / quilt 的全量复跑未做。
+
+### ① 改了哪些文件
+
+- `mcp-server/scripts/audit-content-claims.mjs`：新增 `--complete` / `--fragment`；补全单元 `completeText` / `autoImport` / `injectLoggerCandidate`；误报治理（第一条 error 块、shaded/relocated 过滤、`jdkMap` 先于 `JDK_COMMON`、嵌套类回退、`Properties` 上下文优先、`this./super./裸调用` 降级、自动补 import 的成员错误降级、`__Frag`/partialClass 降级）；类路径只收「非 FAPI 底座 + 片段真正用到的类所在 jar」；`AUDIT_OUT_DIR` 可指定输出目录；selftest 20→21 臂。
+- fabric 1.21.11：rules 05/08、skills mc-events/mc-item/mc-loottable/mc-advancement/mc-model、code-patterns 01/02、knowledge/antipatterns/item.md（`isClient()`、`ItemGroups` 常量改 `RegistryKey.of`、Item 构造器、`getOrThrow`/`AdvancementEntry`/`ConsumeItemCriterion`、`appendProperties`/`StateManager`、`LootTableEvents` import）。
+- fabric 1.21.1：code-patterns 01/02/03/05（`onBreak` 返回 `BlockState`、`onUse` 去 `Hand`、`maxDamageIfAbsent`→`maxDamage`、实体基类 `PathAwareEntity` 并删 `FollowParentGoal`、`LootTable.Builder.pool(LootPool.Builder)`、补 import）。
+- fabric 1.18.2：rules 10-gui / 07-datagen、skills mc-gui / mc-recipe、code-patterns 06-datagen、knowledge/antipatterns/item.md（`close()`、`InventoryChangedCriterion.Conditions.items`、Item 构造器）。
+- fabric 1.17.1 / 1.14.4 / 1.16.5 / 1.19.4 / 1.20.1 / 1.20.4 / 1.21.3：knowledge/antipatterns/item.md 的 `MyTool` 构造器；1.17.1 另有 `.saturation`→`.saturationModifier`。
+- fabric 1.19.4 / 1.20.1 / 1.20.4 / 1.21.1 / 1.21.3 / 1.21.4：mc-command / mc-fabric-api（+1.21.4 SKILL）补 `CommandRegistrationCallback`（v2）与 `CommandManager` / `EntityArgumentType` / `ServerPlayerEntity` / `Text` import；1.20.4 mc-model 的 mojmap 参考块改为 Yarn。
+- forge 1.17.1–1.20.4：rules 04-entity / skills mc-entity（+1.19.4 code-patterns 03）`MyEntity extends Mob`→`PathfinderMob`；1.19.4–1.20.4 knowledge/antipatterns/item.md 的 `hurtAndBreak` Consumer 改 `entity -> { }`；1.20.1/1.20.4 mc-datagen 的 `ForgeAdvancementProvider` 构造与 `AdvancementGenerator`。
+- 镜像：`scripts/sync-skills.ps1 -TargetDir` 重刷 fabric 1.18.2 / 1.19.4 / 1.20.1 / 1.20.4 / 1.21.1 / 1.21.3 / 1.21.4 / 1.21.11 与 forge 1.17.1 / 1.18.2 / 1.19.4 / 1.20.1 / 1.20.4；`assert-skill-mirrors` 最终 ok。
+- `mcp-server/scripts/data/scaffold-banned-symbols.json`：重钉 `fabric/1.18.2.offerShapedRecipe` 187→189（07-datagen.mdc 编辑后行号漂移），用 `MC_SKILL_SCAFFOLD_WRITE_SYMBOL_LEDGER=1 … --write` 重生成，diff 只有这一行。
+- 记录：本文件本节 + `doc/name-provenance-audit.md` §8.34。
+
+### ② 判据与反证
+
+- `ItemGroups.INGREDIENTS`：1.21.11 合并 jar `javap -p` 的 18 个常量全 `private static final`；`javap` 同时给出 `RegistryKeys.ITEM_GROUP` 为 `public static final`、`Identifier.ofVanilla` 存在。改后 `javac` 复跑 fail=0。
+- `World.isClient`：逐档 `javap` —— 1.16.5/1.17.1/1.18.2/1.19.4/1.20.1/1.20.4/1.21.1/1.21.3/1.21.4/1.21.8 是 `public final boolean isClient`；1.21.10/1.21.11 是 `private final boolean isClient` + `public boolean isClient()`。只改 1.21.11。
+- `Item` 构造器：1.21.11 `javap` 只有 `Item(Item.Settings)`；1.14.4–1.21.3 的「正确方案」同样隐式 `super()`，逐档补构造器后用本档构件复跑。
+- 1.17.1 `FoodComponent.Builder`：`javap` 只有 `hunger(int)` / `saturationModifier(float)`，没有 `saturation(float)`。
+- 1.18.2 `Screen` / `RecipeProvider`：`javap` 只给 `close()`；`conditionsFromItem(ItemConvertible)` 与 `hasItem` 都是 `private static`，`InventoryChangedCriterion$Conditions.items(ItemConvertible...)` 是 `public static`。1.19.4+ 才把 `conditionsFromItem` 变 `protected`。
+- 1.20.4 `Screen.renderBackground`：`javap` 只有 `(DrawContext,int,int,float)`；mc-model 的 mojmap 类名按本档 Yarn 映射逐名替换（`World.setBlockState` / `PlayerAbilities.allowModifyWorld` / `SoundCategory` 均有 `javap` 出处）。
+- 1.21.1 `Block`：`javap` 的 `onBreak` 返回 `BlockState`；`AbstractBlock.onUse` 五参无 `Hand`；`Item.Settings.max*` 只有 `maxCount`/`maxDamage`；`WanderAroundFarGoal`/`FollowParentGoal` 构造分别要 `PathAwareEntity`/`AnimalEntity`；`LootTable.Builder.pool` 要 `LootPool.Builder`。
+- forge 1.18.2–1.20.4：映射 jar 的 `PathfinderMob` 存在、`MeleeAttackGoal`/`WaterAvoidingRandomStrollGoal` 构造要它；`ItemStack.hurtAndBreak(int,T,Consumer<T>)` 的 Consumer 是实体；`ForgeAdvancementProvider` 构造四参、`AdvancementGenerator.generate(HolderLookup.Provider, Consumer<Advancement>, ExistingFileHelper)`。
+- 误报反证（写进 `--selftest`）：`MyNetworking` 未知变量后跟次生方法错误只取第一条 error；`__Frag` 的 `this.goalSelector` / `super.onLoad` / 裸 helper 调用降为不可判定；Cloth Config 的 shadowed `Identifier` 不进索引；`Properties` 在 Block 上下文优先 `BlockBehaviour.Properties`；`CompletableFuture` 先查 `jdkMap` 再查 `JDK_COMMON`。
+
+### ③ 验证台账
+
+- `node mcp-server/scripts/audit-content-claims.mjs --selftest` → `selftest OK`（21 臂）。
+- `--packs fabric/1.21.11 --complete`：`fail=17 / unverifiable=115` → `fail=0 / unverifiable=51`。
+- `--packs fabric/1.14.4 --complete`：`fail=0 / unverifiable=42`。
+- 全量 fabric `--all --complete`：`fail=6 / unverifiable=512`；6 条 = 1.17.1 saturation、1.18.2 recipe、1.18.2 GUI、1.21.1 block/item/entity。修完后 `--packs fabric/1.17.1,1.18.2 --complete` → `fail=0`；`--packs fabric/1.19.4,1.20.1,1.20.4,1.21.1,1.21.3,1.21.11 --complete` → `fail=0 / unverifiable=284`；`--packs fabric/1.16.5,1.21.4 --complete` → `fail=0 / unverifiable=45`。fabric 14 档至此全绿（1.21.8/1.21.10/26.1.2 全量跑本就 0 fail 且未改内容）。
+- 全量 forge/neo/quilt `--complete`（43 包）：`fail=81 / unverifiable=1278`；单独复跑 `--packs forge/1.20.1 --complete`，修完 `super.trigger` 片段误报与 datagen provider 结构后 `fail=0 / unverifiable=182`（中间读数 `fail=2`）。
+- `--fragment` 正反例：`!world.isClient` → fail（`isClient has private access in World`）；`!world.isClient()` → `findings: []`；`ItemGroups.INGREDIENTS` → fail；`RegistryKey.of(RegistryKeys.ITEM_GROUP, Identifier.ofVanilla("ingredients"))` → `findings: []`。
+- `assert-skill-mirrors` → ok；`assert-skill-yarn-attest` → ok；`assert-skill-mappings-key` → ok（均在内容改动后复跑）。
+- 第 8 步 `cd mcp-server && node test-scripts.mjs`：最终 `exit 0`（末行 `script helper regression tests passed`）。首跑在 `assert-scaffold-rules-conflict` 红：`fabric/1.18.2 offerShapedRecipe` 台账记 187、实测 189；按生成器重钉后单门 rc=0，再全链复跑绿。
+
+### ④ 数据侧变更
+
+- 无。`data/` 未改；只动审计脚本、fabric/forge 内容源稿、镜像与两份记录文档。
+
+### ⑤ 未做清单
+
+- forge 1.13.2–1.16.5 / neoforge / quilt 的 81 条 fail 未逐档复跑（只复跑 forge 1.20.1）；不能把 1.20.1 的绿外推到这些档。
+- 26.1.2 的 FAPI 模块件在 `modules-2` 是未 remap 件，completion 编译腿对它报 `cannot access ... bad class file`，归不可判定；未做精确 remap 件接入。
+- 1.17.1 的 `RecipeProvider` 不在本档 project mapped jar 里，`conditionsFromItem` 未用构件复核（1.18.2 已证 private）。
+- 审计器**未入门链**（未写进 `test-scripts.mjs` / `package.json`）——按用户「我说放再放」。
+- 第 8 步 `assert-playtest-driver-compiles` 的 quilt/1.18.2 红未修（非本轮改动面）；未提交（提交由用户执行）。
+
+### ⑥ 自我更正
+
+- 初次 `--complete` 的 17 条 fabric fail 里，`MyNetworking`（未知变量 + 次生方法错误）、`__Frag` 类型不匹配、`Properties` 补错类等是**补全器误报**，不是内容缺陷；已先在脚本侧治理，再按剩余 fail 修内容。
+- 初次 81 条 forge/neo/quilt fail 里，`super.onLoad` / `super.setRemoved` / `super.load` / `super.registerAttributes` 等片段方法占大头，属包装类没有真实父类的误报；治理后单独复跑 forge 1.20.1 先降到 2，再修 datagen 结构后到 0。**81 条不是「forge 1.20.1 一档的数字」，不能按 1.20.1 的 0 外推到其余档。**
+- 上一节说「`--all --compile` fail=0」只覆盖含 import 的 126 个围栏；本轮 `--complete` 把 3686 个无 import 围栏也补全编译，才抓出 `ItemGroups` 常量 private、`World.isClient` private、`onBreak` 返回类型等此前门禁看不到的缺陷。
+- `1.18.2 Screen.onClose` 不能像 1.16.5/1.17.1 一样保留：三档 `javap` 结果不同（1.16.5/1.17.1 有 `onClose()`，1.18.2 只有 `close()`），已按档分别处理。
+- 编辑 `fabric/1.18.2/07-datagen.mdc` 后漏同步判死符号台账，第 8 步首跑因锚点 187→189 红；这是台账漂移不是内容缺陷，已按 `assert-scaffold-rules-conflict` 的生成器重钉。
+
+---
+
 ## 2026-10-17 · 审计器扩到 8 平台 + FAPI 包名 / 缺 import 缺陷（维护档）
 
 **第 0 块 · 结论**：把独立审计器从 fabric 扩到全部 8 个平台树（57 档），并修正了四处「静默空转」的构件覆盖；扩面后抓到并修复三类内容缺陷：`ClientPlayNetworking` 的包名（fabric 1.16.5–1.21.11，18 个源文件）、fabric 1.14.4 / 1.16.5 / 1.17.1 的缺 import、forge 1.16.5 的 `LivingRenderer` / `BipedArmorLayer` 与 1.17+ 五档的假「不存在」标题。`--all --compile` 最终 `fail=0 / unverifiable=22`（22 条全在编译腿，均为片段上下文缺口）；镜像 / yarn-attest / mappings-key 三门绿；审计器仍未入门链、未提交。第 8 步在 `assert-playtest-driver-compiles` 的 quilt/1.18.2 腿红，与本轮改动无关（该腿读的是 playtest driver 生成器产物），其后的门链未跑到。
 
 ### ① 改了哪些文件
 
-- `mcp-server/scripts/audit-content-claims.mjs`：扩多平台构件面（`artifactSet` / `findForgeMapped` / `findNeoMerged` / `findDeobfMerged` / `loadMcpNames` / `exactApiJars`），编译类路径改为「本档精确 remapped FAPI + netty/guava/annotations/jspecify 支撑件」，并修 5 类误报（成员缺失、全限定名用法、跨层否定谓词、表格/❌ 行矛盾、javac 次生错误）。
+- `mcp-server/scripts/audit-content-claims.mjs`：扩多平台构件面（`artifactSet` / `findForgeMapped` / `findNeoMerged` / `findDeobfMerged` / `loadMcpNames` / `exactApiJars`），编译类路径改为「本档精确 remapped FAPI + netty/guava/annotations/jspecify 支撑件」，并修 5 类误报（成员缺失、全限定名用法、跨层否定谓词、表格/❌ 行矛盾、javac 次生错误）。另追加 `api-import` 静态检查：本档精确件索引到 `net.fabricmc.fabric.api` / `org.quiltmc.qsl` 前缀时，逐个核对 import 的类是否存在，覆盖「不可编译块里的包名错误」。
 - forge 规则 8 档 `08-client-server.mdc`（1.13.2 / 1.14.4 / 1.15.2 / 1.16.5 / 1.17.1 / 1.19.4 / 1.20.1 / 1.20.4）：删掉 `SidedThreadGroups`（1.13.2–1.16.5 在 `fml.common.thread`、1.17.1+ 在 `fml.util.thread`，两处包名都不该出现在示例里），改补 `Dist` / `DistExecutor` / `LogicalSide` / `FMLEnvironment` 的 import。
 - `forge/1.16.5/.cursor/skills/mc-entity/SKILL.md`：`LivingEntityRenderer` 的版本方向写反（1.16.5 叫 `LivingRenderer`，1.17+ 才改名为 `LivingEntityRenderer`），代码块 / Decision / 常见错误三处全部改回 `LivingRenderer`。
 - `forge/1.16.5/.cursor/rules/04-entity.mdc`、`forge/1.16.5/code-patterns/03-entity-patterns.md`：同一处的残留——渲染器示例仍写 `LivingEntityRenderer`，后者还把 1.17+ 的 `HumanoidArmorLayer` 写进 1.16.5（本档只有 `BipedArmorLayer`），一并改回。
@@ -37,9 +99,11 @@
 
 ### ③ 验证台账
 
-- `node mcp-server/scripts/audit-content-claims.mjs --selftest` → `selftest OK`（17 臂）。
+- `node mcp-server/scripts/audit-content-claims.mjs --selftest` → `selftest OK`（19 臂）。
 - `node mcp-server/scripts/audit-content-claims.mjs --all --compile` → `fail=0 / unverifiable=22`；57 档 = fabric 14 + forge 15 + neoforge 10 + quilt 10 + liteloader 3 + rift 1 + modloader 3 + bedrock 1。22 条全为 compile：缺 `MOD_ID` 等片段常量、跨加载器 porting 示例、含 `...` 占位、示例包 `com.example.examplemod`。
+- `node mcp-server/scripts/audit-content-claims.mjs --all`（新增 `api-import` 检查后）→ `fail=0 / unverifiable=0`；当前 57 档的 FAPI/QSL import 全部能在本档精确件里找到。
 - 覆盖读数：rift 1.13.2 读到 MCP 类名 4027 个（TSRG 解析修复前为 0）；liteloader 1.8.9 / 1.10.2 / 1.12.2 分别读到 2541 / 2980 / 3344 个（同版本 forge 表回退）；forge 1.7.10–1.11.2 分别 1836 / 2541 / 2941 / 2980 / 3122 个。
+- 覆盖边界实测（java 围栏 / 含 import / 可编译）：fabric 1394 / 78 / 32，forge 2265 / 40 / 21，neoforge 150 / 5 / 2，rift 3 / 3 / 2；quilt / liteloader / modloader / bedrock 均为 0。约 94% fabric、98% forge 的 java 围栏不含 import，因此 code 级检查只覆盖到少数块。
 - `node mcp-server/scripts/assert-skill-mirrors.mjs` → ok（57 档 / 12418 目标 / 漂移 0 / 孤儿 0 / 拒 0）。
 - `node mcp-server/scripts/assert-skill-yarn-attest.mjs` → ok（红 0；清单 532 件；队列 344 条为在册待人工审）。
 - `node mcp-server/scripts/assert-skill-mappings-key.mjs` → ok（1247 件源稿、571 件含围栏均已声明 mappings；冲突 0）。
@@ -1197,13 +1261,24 @@ write-guard=0 · test-core=0 · test-scripts=0
 **为什么先撤回、后又改成"只注入 26.x"**：把 `ChatScreen` 写进**跨目标共用**的模板后，`assert-playtest-driver-compiles` 当场红 —— 1.18/1.19 的包是 `gui.screen`（单数）、26.x 是 `gui.screens`；全限定名与裸名**两边都不通**（裸名没有 import）。
 ⇒ 改为**架构上正确的做法**：模板里只留**跨版本空实现**（`clickChat26xx` 里一行 log），真实现由 `rewriteForNeoForge26xx` **整段替换**（替换锚点是那行版本无关的 log）⇒ **四档 4/4 编译通过**、26.x 有真实现。
 
-**26.x 注入后的实测**（仍未拿到 marker）：
+**26.x 注入后的实测演进**（仍未拿到 marker，但每一步都有读数）：
 
 ```
-[QA] clickchat: screen=ChatScreen clicks=60 hits=0（判据看服务端 v-chat-click-executed）
+第 1 次：screen=ChatScreen clicks=60 hits=0     ← 消息区 0 命中（对照：底部 EditBox y=h-8 能命中 5 次）
+第 2 次：screen=ChatScreen clicks=60 hits=0     ← 加上 onMove（移"内部鼠标"）后仍 0：网格从 h-46 往上，跳过了 h-10…h-45
+第 3 次：screen=ChatScreen clicks=60 hits=7     ← 网格改成 h-12 起步长 3 ⇒ 打中聊天行了；但**服务端零命令**
 ```
-⇒ `ChatScreen` 开得住、**不再卡死**（`next()` 走到了 shot），但**消息区 0 命中**（对照：底部输入框 `y=h-8` 能命中 5 次）。
-**新事实**：`ChatScreen` 判定"点了哪条消息"用的是**真实鼠标位置**，合成事件的坐标对它无效 ⇒ 下一步必须先移动真实鼠标（或 `captureClickableText` 拿矩形后再移鼠标），**别再盲扫坐标**（已扫 120 点、0 命中）。
+
+**第 4 次（2026-10-18 收尾）**：补 **`screen.mouseMoved(x, y)`**（Screen 自己缓存的 mouseX/mouseY，`Screen` 的命中读的是它而不是 `MouseHandler`）
+⇒ **命中仍是那 7 个 `y=228`**（输入框带）、消息带 0 ⇒ **`ChatScreen.mouseClicked` 到不了消息命中路径**。
+而 **`ChatComponent` 实例不可达**（javap：`Gui` 只有 `openChatScreen/openChatAndAddText`、`Minecraft` 只有 `ChatListener`，**没有 `getChat()`**）
+⇒ **收集器路线也断** ⇒ **最终判定：本档（无 mixin 的外部 tick driver）验不了 `ClickEvent` 的点击行为**；要验必须 mixin/ASM 注入 `ChatScreen#render`。`clickchat` 步保留为诊断工具（26.x-only），**不进剧本**（长扫会烧整轮预算）。
+
+**两条新事实（都已写进 `09-traps.md` T15 与社区文档 90）**：
+1. **移"内部鼠标"不抢 OS 光标**（javap：`MouseHandler.xpos/ypos` 私有、`onMove` 只有 `putfield`、类内**无任何 `glfwSetCursorPos`**）；
+   写法要 `raw = guiScaled * Window#getGuiScale()`、`dx/dy` 传 0（否则关屏后视角被累积增量带飞）；因为**直接调用**，客户端**不需要有焦点**。
+2. `ChatScreen` 的消息命中读**真实鼠标位置**（不是合成事件坐标）；但**7 次命中仍未触发 `runCommand`** ⇒ 命中的不是那条带 `clickEvent` 的行
+   （把该消息**补发为最底行**已试，无效）⇒ **别猜坐标**，改用 `ChatComponent#captureClickableText(ActiveTextCollector, int, int, DisplayMode)`（javap 实测 **public**）。
 
 **下次的正解**：`ChatComponent#captureClickableText(ActiveTextCollector, int, int, DisplayMode)`（javap 实测 **public**）拿**精确矩形**；`ChatScreen` 的打开方式要按版本归一（例如复用模板已有的 `InventoryScreen` 同款 import 机制，或在各档 rewrite 里补一条替换）。
 

@@ -150,9 +150,9 @@ public class MyBlock extends Block {
     }
 
     @Override
-    public void onBlockExploded(World world, BlockPos pos, Explosion explosion) {
+    public void onExplosionDestroy(World world, BlockPos pos, Explosion explosion) {
         // 方块被爆炸破坏时的逻辑
-        // 注意：1.14.4 用 onBlockExploded，不是新的 wasExploded
+        // 1.14.4 的方法是 onExplosionDestroy；onBlockExploded / wasExploded 都不是本档签名
     }
 }
 ```

@@ -42,7 +42,7 @@ new Item(new Item.Settings().food(
 new Item(new Item.Settings().food(
     new FoodComponent.Builder()
         .hunger(4)  // ✅ 必须设置
-        .saturation(1.0f)
+        .saturationModifier(1.0f)
         .build())
 );
 ```
@@ -62,6 +62,10 @@ public class MyTool extends Item {
 **正确方案：**
 ```java
 public class MyTool extends Item {
+    public MyTool(Item.Settings settings) {
+        super(settings);
+    }
+
     @Override
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         stack.damage(1, attacker, (entity) -> {

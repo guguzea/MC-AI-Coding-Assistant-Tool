@@ -63,7 +63,7 @@ public class MyScreen extends Screen {
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        this.renderBackground(context);
+        this.renderBackground(context, mouseX, mouseY, delta);
         context.drawText(this.textRenderer, Text.literal("Hello Fabric!"),
             width / 2 - 50, height / 2 - 20, 0xFFFFFF, false);
         super.render(context, mouseX, mouseY, delta);

@@ -13,6 +13,7 @@ mappings: yarn
 - 改原版表：`net.fabricmc.fabric.api.loot.v3.LootTableEvents`（loader-api 已核）
 
 ```java
+import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
     // RegistryKey<LootTable> key；LootTable.Builder；RegistryWrapper.WrapperLookup
 });

@@ -66,9 +66,13 @@ public class MyTool extends Item {
 **正确方案：**
 ```java
 public class MyTool extends Item {
+    public MyTool(Item.Settings settings) {
+        super(settings);
+    }
+
     @Override
-    public boolean hitEntity(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        stack.damageItem(1, attacker);
+    public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+        stack.damage(1, attacker, entity -> { });
         return true;
     }
 }

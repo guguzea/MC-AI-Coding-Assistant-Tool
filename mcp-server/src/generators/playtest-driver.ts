@@ -760,12 +760,22 @@ export function rewriteForNeoForge26xx(java: string, version: string): string {
             //   dx/dy 传 0：避免累积增量在关屏后把视角带飞。
             double _gs = client.getWindow().getGuiScale();
             if (_gs <= 0.0) { _gs = 1.0; }
-            for (int _i = 0; _i < 60; _i++) {
-                int _x = 8 + (_i % 6) * 40;
-                int _y = _h - 46 - ((_i / 6) % 10) * 9;
+            // ⚠ 只扫**最底 4 行**（h-12 / -21 / -30 / -39，各 7 个 x）—— 消息从输入框上方开始、
+            //   每行 9 px；先把"最底行是不是我们那条"这件事问清楚（上一版 112 点扫全带、命中 7 次但
+            //   触发的不是带 clickEvent 的行，说明命中落在别的行上）。逐次记录命中坐标，便于对照。
+            int[] _ys = new int[] { _h - 12, _h - 21, _h - 30, _h - 39 };
+            for (int _i = 0; _i < 28; _i++) {
+                int _x = 8 + (_i % 7) * 32;
+                int _y = _ys[(_i / 7) % 4];
                 boolean _hit = false;
                 if (client.gui.screen() != null) {
+                    // ⚠ 三步缺一不可（2026-10-18）：
+                    //   ① onMove → 改 MouseHandler.xpos/ypos（不动 OS 光标）；
+                    //   ② **screen.mouseMoved(x,y)** → 改 **Screen 自己缓存的** mouseX/mouseY。
+                    //      Screen 的命中判定读的是后者（不是 MouseHandler），少了这步"消息带"永远 0 命中；
+                    //   ③ mouseClicked → 真正派发。
                     client.mouseHandler.onMove(client.getWindow().handle(), _x * _gs, _y * _gs, 0.0, 0.0);
+                    client.gui.screen().mouseMoved(_x, _y);
                     _hit = client.gui.screen().mouseClicked(
                         new net.minecraft.client.input.MouseButtonEvent(_x, _y, new net.minecraft.client.input.MouseButtonInfo(0, 0)), false);
                 }
