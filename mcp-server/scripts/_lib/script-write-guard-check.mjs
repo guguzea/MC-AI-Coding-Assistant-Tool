@@ -238,6 +238,10 @@ export const SCRIPT_WRITE_GUARD_DEBT = new Map([
   ["mcp-server/scripts/process-forge-docs.js", /const DATA_DIR = join\(__dirname, "\.\.", "\.\.", "data"/],
   ["mcp-server/scripts/tsrg-extractor.js", /const EXTRACTED = join\(__dirname, "\.\.", "\.\.", "data",/],
   ["mcp-server/scripts/fetch-embedding-model.mjs", /const cacheDir = join\(dataRoot, "_models"/],
+  // 内容断言审计（独立审计，不挂门链）：**对仓库面只读**，唯一落笔在 <repo>/temp/content-audit/report.json
+  // （temp/ 已被 .gitignore 覆盖）；脚本里的 `openSync(jar, "r")` 是**只读**打开 jar 取类清单/常量池。
+  // 依据正则咬住那句 OUT_DIR 定义 —— 落点一旦改到 temp/ 之外（或改成写 fabric/、data/），本豁免即失效。
+  ["mcp-server/scripts/audit-content-claims.mjs", /const OUT_DIR = path\.join\(REPO, "temp", "content-audit"\)/],
 ]);
 export const FS_MUTATION_PRIMITIVES = [
   "writeFileSync",

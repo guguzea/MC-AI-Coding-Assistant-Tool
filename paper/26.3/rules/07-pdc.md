@@ -109,8 +109,28 @@ public interface PersistentDataHolder
 
 ## 未核实
 
-- **`Entity` 的 PDC 跨重启**——**仍未验成**，且已试到第二轮（2026-10-16）。第二轮把上一版指出的缺陷补上了（写 PDC 后让 plan **等 10 分钟**，让自动存盘跑过一次），阶段2 用**延时 100 tick 的任务**按类型找回实体 —— 结果：**`世界里的实体数=0`**（marker `v-pdc-entity-persist.FAIL`）⇒ **连"找回实体"这一步都没做到**。⚠ **原因未定**：可能是**区块未加载**（`World#getEntities()` 只返回已加载区块里的实体）⇒ 也可能是**实体确实没落盘** —— **两者本档未区分**，故不写结论。要真验得先解决"阶段2 如何保证那只实体所在的区块被加载"。
-- **`ItemStack` 的 PDC 跨重启**未验（**同进程读写 + 经 `Inventory` 往返已验**）。
+- （`Entity` 跨重启**已验成**，见下节 —— 前几轮的 FAIL 是**判据取错了 API**，不是没落盘。）
+- （`ItemStack` 的跨重启**已验成**，见「`ItemStack` 的 PDC 跨重启」段 —— 关键坑是**必须写"活库存"**。）
+
+## `ItemStack` 的 PDC 跨重启（**已真机核，2026-10-17**）
+
+`ItemStack` 自己不会落盘，必须挂在**会落盘的容器**里 ⇒ 放进**箱子方块的库存**（箱子是 `TileState`，方块与库存一起随区块存盘）。
+
+| 阶段 | 动作 | 结果 |
+|---|---|---|
+| 1 | `setType(CHEST)` → **`getState(false)`（非快照）** → `((Chest) live).getBlockInventory().setItem(0, 带 PDC 的 STONE)` | `pdc-itemstack-persist-phase1.ok` |
+| **2**（新进程） | 读同一坐标的 CHEST → `getBlockInventory().getItem(0)` → 查 PDC | **读到 `"item-cross-restart"`** ⇒ `v-pdc-itemstack-persist.ok` |
+
+**marker 原文**：
+
+```
+PASS v-pdc-itemstack-persist / ItemStack 的 PDC **跨进程重启后仍读到** "item-cross-restart"
+  （经 CHEST 库存 · 方块=CHEST 物品=STONE hasMeta=true keys=[paperqaserver:probe-item-persist]）
+```
+
+⚠ **踩过的坑（第一次 FAIL 的原因）**：用 `block.getState()`（**快照**）拿 `Container#getInventory()` 再 `setItem`，
+**不会落到 TileEntity** ⇒ 重启后那格是**空的**（诊断原文：`方块=CHEST 物品=null`）。
+**正解**：`block.getState(false)`（非快照）+ **`Chest#getBlockInventory()`**（javap 实证存在）；非 `Chest` 的容器才退回 `Container#getInventory()` + `update(true,false)`。
 
 ## `TileState` 的 PDC 跨重启（**已真机核，2026-10-15 · 两阶段**）
 
@@ -121,16 +141,34 @@ public interface PersistentDataHolder
 
 ⚠ **必须配 `update(true,false)` 才算写回** —— 只改 `BlockState` 对象**不落盘**（官方 `api__pdc.md:254-263` 同样强调了这一步）。
 
-## 已验到的 holder 一览（2026-10-15）
+## `Entity` 的 PDC 跨重启（**已真机核，2026-10-17 · 两阶段**）
 
-| holder | 同进程往返 | **跨进程重启** |
+| 阶段 | 动作 | 结果 |
+|---|---|---|
+| 1 | **先 `world.getChunkAt(x>>4, z>>4)` 加载区块**（不加载 ⇒ `spawnEntity` 会把实体丢进未加载区块并**静默丢弃**）→ `spawnEntity(ARMOR_STAND)` → 写 PDC → 优雅停服（自动存盘） | `pdc-entity-persist-phase1.ok` |
+| **2**（新进程、同世界） | **`Chunk#getEntities()`**（不是 `World#getEntities()`） | **读到 `"entity-cross-restart"`** ⇒ `v-pdc-entity-persist.ok` |
+
+**诊断行（决定性）**：
+
+```
+[PROBE] entity diag: chunk=-4,3 chunkEntities=34 allWorldsEntities=0 spawn=-64,97,48
+```
+
+⇒ ⚠ **`Chunk#getEntities()` 返回 34，而 `World#getEntities()` 返回 0** —— 同一时刻、同一进程。**这就是前几轮"世界实体数=0"假否定的全部原因**：在无玩家的服务端里 `World#getEntities()` 不可靠，**查区块内实体必须用 `Chunk#getEntities()`**（并先 `chunk.load(true)`）。
+
+⚠ 另两条实测出来的必要条件：① **`EntityType` 选 ARMOR_STAND**（僵尸会白天自燃、掉落物会 despawn）；② **spawn 前必须加载区块**，否则实体被静默丢弃（返回非 null 但留不下）。
+
+## 已验到的 holder 一览（2026-10-17）
+
+| holder | 同进程往返 | **跨进程重启**（值 = marker 里读回的真值） |
 |---|---|---|
 | `World` | ✔ | **✔ `"cross-restart"`** |
 | `Chunk` | ✔ | **✔ `"chunk-cross-restart"`** |
 | **`TileState`** | ✔ | **✔ `"tilestate-cross-restart"`** |
-| `ItemStack`（经 `ItemMeta`） | ✔（含**放进容器再取回**仍在） | 未验 |
-| `Entity` | ✔ | 未验（如实） |
-- （官方原形态**已验**，见下节；`ItemStack` → `Item` 实体的**可做形态**另见其后的段。）
+| **`Entity`** | ✔ | **✔ `"entity-cross-restart"`**（必须 `Chunk#getEntities()` + `ARMOR_STAND` + spawn 前加载区块） |
+| **`ItemStack`**（经 `ItemMeta`） | ✔（含**放进容器再取回**仍在） | **✔ `"item-cross-restart"`**（经箱子**活库存** `getState(false)` + `getBlockInventory()`） |
+
+（官方原形态「放成方块不自动复制」见下节；`ItemStack` → `Item` 实体的**可做形态**见其后的段。）
 
 ## 「不会自动跨 holder 复制」的**可做形态**（**已真机核，2026-10-16**）
 

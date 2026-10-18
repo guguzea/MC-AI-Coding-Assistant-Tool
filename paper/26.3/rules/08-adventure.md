@@ -111,7 +111,35 @@ Bukkit.getConsoleSender().sendMessage(net.kyori.adventure.text.Component.text("P
 
 ## 未核实（明写）
 
-- **`ChatType.Bound` 签名消息 / 可点击·悬停组件**仍未验 —— 已验的是「控制台日志」（见上「真机落点」段）、`MiniMessage` 的**解析**（见下）与「**发给真人玩家**」（见下）。
+- **可点击/悬停组件的「点击行为」**仍未验 —— 组件**投递 + 客户端渲染**已验（`v-chat-clickable` / `v-chat-chattype-bound`）；**点下去会不会执行**要真实 UI 点击聊天行。
+  **已推进到的位置**（2026-10-17 实测，勿重踩）：驱动器**能打开 `ChatScreen`**（`screen=ChatScreen` 实测成立），
+  但 ① `stepTicks` 是**轮内 tick**（用它做步骤入口会自旋到 `budget exhausted`）；② `ChatScreen` 底部是**横跨整宽的输入框**（`y = height - 8` 起扫会全命中它，点了不发命令）。
+  **正解方向**：用 `ChatComponent#captureClickableText(ActiveTextCollector, int, int, DisplayMode)`（javap 实测 **public**）拿到**可点击文本的精确矩形**再点；`ChatScreen#handleComponentClicked` 是 **private** 不可用。
+  ⚠ 且**消息命中的判定用的是真实鼠标位置**（合成事件坐标无效）：实测点底部输入框能中（5 次）、点消息区 **0 次**（120 点全空）⇒ 还需先把真实鼠标移到目标处。详见 `09-traps.md` 的 **T15**。
+
+## `ChatType.Bound` 签名消息（**已真机核，2026-10-17 · 判据在客户端侧**）
+
+**javap 实测**（`adventure-api-5.2.0.jar`）：`ChatType.Bound` 是**接口**（`type()` / `name()` / `target()`），**不能 new** —— 要经
+`ChatType#bind(ComponentLike)` 或 `bind(ComponentLike, ComponentLike)` 造；发送用 Audience 的
+`sendMessage(Component, ChatType.Bound)`（`08` 第 70 行那条重载）。
+
+探针在 `PlayerJoinEvent` 里：
+
+```java
+net.kyori.adventure.chat.ChatType.Bound bound =
+    net.kyori.adventure.chat.ChatType.CHAT.bind(net.kyori.adventure.text.Component.text("ProbeName"));
+p.sendMessage(net.kyori.adventure.text.Component.text("PROBE-CHATTYPE-BOUND"), bound);
+```
+
+⇒ **服务端 marker `v-chat-chattype-bound.ok`**，**客户端日志**逐字：
+
+```
+[19:39:38] [Render thread/INFO] [minecraft/ChatComponent]: [System] [CHAT] **<ProbeName>** PROBE-CHATTYPE-BOUND
+```
+
+⇒ **bound 的 `name` 组件被客户端渲染成了前缀 `<ProbeName>`** —— 这就是「签名消息那条重载**真的把 ChatType 传到了客户端**」的判据（不是只发了条普通 system 消息）。
+
+⚠ **范围**：本项验的是**投递 + 渲染**；**点击行为**见上「未核实」。
 
 ## 发给真人玩家（**已真机核，2026-10-16 · 判据在客户端侧**）
 

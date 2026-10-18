@@ -736,6 +736,49 @@ export function rewriteForNeoForge26xx(java: string, version: string): string {
     ATTACK_DO,
   );
 
+  // ⚠ clickchat 的**真实现只注入到 26.x**（2026-10-17）：模板对四档共用，若在模板里 new ChatScreen，
+  //   1.18/1.19（gui.screen 单数包、无该类的同名路径）会编译失败 ⇒ 改为「模板留空实现，本档整段替换」。
+  //   替换锚点是那行**版本无关**的 log；本段是**改写之后**注入 ⇒ 全部写 Mojang 名。
+  //   ⚠ 本段注释不许出现反引号（会终止模板字面量 ⇒ TS1005）。
+  s = s.replaceAll(
+    'log("[QA] clickchat: 本档无实现（仅 26.x）");',
+    `{
+        try {
+            // ① 关掉可能开着的屏：探针在 PlayerJoinEvent 里 openInventory ⇒ 实测那时是 ContainerScreen
+            //    （点击只会落在容器上、点不到聊天行）
+            if (client.gui.screen() != null) { client.gui.screen().onClose(); }
+            // ② 开 ChatScreen —— 人类按 T 打开的就是它（实测 setScreen 生效，日志 screen=ChatScreen）
+            client.gui.setScreen(new net.minecraft.client.gui.screens.ChatScreen("", false));
+            String _sc = (client.gui.screen() == null ? "null" : client.gui.screen().getClass().getSimpleName());
+            int _h = client.getWindow().getGuiScaledHeight();
+            int _hits = 0;
+            // ③ 扫 60 点：**从 h-46 起**（底部 h-8 那一排是横跨整宽的 EditBox，点了不发命令）
+            // ⚠ 每个点都要**先把"内部鼠标坐标"移过去再点**：ChatScreen 判定"点了哪条消息"读的是
+            //   MouseHandler.xpos/ypos（getScaledXPos/YPos），**不是**合成事件里的 x/y（实测：输入框能用事件
+            //   坐标命中 5 次，消息区 120 点全 0）。onMove 的字节码只有 putfield xpos/ypos，
+            //   MouseHandler 里**没有任何 glfwSetCursorPos** ⇒ **不会动 OS 光标**。
+            //   dx/dy 传 0：避免累积增量在关屏后把视角带飞。
+            double _gs = client.getWindow().getGuiScale();
+            if (_gs <= 0.0) { _gs = 1.0; }
+            for (int _i = 0; _i < 60; _i++) {
+                int _x = 8 + (_i % 6) * 40;
+                int _y = _h - 46 - ((_i / 6) % 10) * 9;
+                boolean _hit = false;
+                if (client.gui.screen() != null) {
+                    client.mouseHandler.onMove(client.getWindow().handle(), _x * _gs, _y * _gs, 0.0, 0.0);
+                    _hit = client.gui.screen().mouseClicked(
+                        new net.minecraft.client.input.MouseButtonEvent(_x, _y, new net.minecraft.client.input.MouseButtonInfo(0, 0)), false);
+                }
+                if (_hit) { _hits++; log("[QA] clickchat hit at " + _x + "," + _y); }
+            }
+            log("[QA] clickchat: screen=" + _sc + " clicks=60 hits=" + _hits + "（判据看服务端 v-chat-click-executed）");
+            if (client.gui.screen() != null) { client.gui.screen().onClose(); }
+        } catch (Throwable _t) {
+            log("[QA] clickchat threw: " + _t);
+        }
+    }`,
+  );
+
   s = s.replaceAll(
     'press(client, "use", true);',
     `{ // ⚠ **扫描式瞄准**（2026-10-16 第三次修）：实测固定角度都会打到"紧贴玩家"的方块
@@ -3677,6 +3720,18 @@ public final class PlaytestQaDriver {
                     }
                     break;
                 }
+                case "clickchat": {
+                    // 见下方 clickChat26xx：本档为空实现（仅 26.x 有真实现）。
+
+                    // 08 的**点击行为**（2026-10-17）。**实现只在 26.x 注入**（见 rewriteForNeoForge26xx 对该
+                    // 空实现的替换）—— 其它档（1.18/1.19 的 gui.screen 单数包等）看到的是空实现，
+                    // 因此**不会**把跨目标编译弄红（这一点上一版踩过：模板里直接 new ChatScreen 让四档全红）。
+                    // 判据在**服务端**：组件 runCommand 被执行 ⇒ 客户端发 ServerboundChatCommandPacket
+                    // ⇒ 服务端 PlayerCommandPreprocessEvent ⇒ 探针落 v-chat-click-executed.ok。
+                    clickChat26xx(client);
+                    next();
+                    break;
+                }
                 case "newworld": {
                     String wn = optS(rest, "name", WORLD);
                     if (wn.isEmpty()) {
@@ -4461,6 +4516,16 @@ public final class PlaytestQaDriver {
         for (String k : new String[] { "forward", "back", "left", "right", "jump", "sneak", "attack", "use" }) {
             press(mc, k, false);
         }
+    }
+
+    /**
+     * clickchat 步的**跨版本空实现**。真实实现只由 rewriteForNeoForge26xx 注入（替换下面那行 log）——
+     * 这样 1.18/1.19 等目标（gui.screen 单数包、没有 ChatScreen 的同名路径）**天然编译通过**，
+     * 不会因为一条尚未打通的验证把四档编译弄红（上一版就是这么红的）。
+     * ⚠ 模板内注释**一律不写反引号**（会终止模板字面量 ⇒ TS1005，已踩八次）。
+     */
+    private static void clickChat26xx(MinecraftClient client) {
+        log("[QA] clickchat: 本档无实现（仅 26.x）");
     }
 
     private static void press(MinecraftClient client, String key, boolean down) {

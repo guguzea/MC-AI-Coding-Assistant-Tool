@@ -15,6 +15,7 @@ Fabric **没有** Forge Capability。本档 **没有** `ServerLivingEntityEvents
 依赖走 `fabric-api`（`fabric-entity-events-v1` + lifecycle）。
 
 ```java
+import net.minecraft.util.ActionResult;
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityCombatEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;

@@ -51,7 +51,7 @@ public static void onAttributes(EntityAttributeCreationEvent event) {
 
 ---
 
-## 错误：LivingEntityRenderer（不存在）
+## 错误：LivingEntityRenderer（1.16.5 不存在）
 
 **症状：** 编译错误
 
@@ -60,7 +60,7 @@ public static void onAttributes(EntityAttributeCreationEvent event) {
 public class MyEntityRenderer extends LivingEntityRenderer { ... }
 
 // ✅ 正确
-public class MyEntityRenderer extends LivingEntityRenderer<MyEntity, MyEntityModel<MyEntity>> { ... }
+public class MyEntityRenderer extends LivingRenderer<MyEntity, MyEntityModel<MyEntity>> { ... }
 ```
 
 ---

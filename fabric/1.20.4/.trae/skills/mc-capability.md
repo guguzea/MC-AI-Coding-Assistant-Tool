@@ -17,6 +17,7 @@ mappings: yarn
 ```java
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
+import net.minecraft.util.Identifier;
 
 public static final AttachmentType<Integer> CLICKS =
     AttachmentRegistry.create(new Identifier(MOD_ID, "clicks"));

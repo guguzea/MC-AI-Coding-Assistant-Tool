@@ -10,7 +10,7 @@ mappings_alt: mojmap
 
 # mc-effect
 
-> 本档正文的类名/签名只来自 `data/fabric_1.21.11` 本档语料：页面 `fabric-docs/1.21.11/processed/develop_entities_effects.md`，代码 `reference/1.21.11/src/main/java/com/example/docs/effect/{TaterEffect,ExampleModEffects}.java`。页内没有的签名一律留 `TODO(未核实)`，禁止用邻版（1.21.10 / 1.21.3 / 26.1.2）补全。
+> 本档正文的类名/签名来自 `data/fabric_1.21.11` 本档语料：页面 `fabric-docs/1.21.11/processed/develop_entities_effects.md`，代码 `reference/1.21.11/src/main/java/com/example/docs/effect/{TaterEffect,ExampleModEffects}.java`。正文里标了 `javap @ yarn 1.21.11+build.6` 的条目来自本档真构件；页内没有的签名先按本档真构件 javap 核，核不到才留 `TODO(未核实)`，禁止用邻版（1.21.10 / 1.21.3 / 26.1.2）补全。
 
 ## 基类与构造
 

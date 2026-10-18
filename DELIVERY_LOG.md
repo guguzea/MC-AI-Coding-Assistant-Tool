@@ -8,6 +8,235 @@
 
 ---
 
+## 2026-10-17 · 审计器扩到 8 平台 + FAPI 包名 / 缺 import 缺陷（维护档）
+
+**第 0 块 · 结论**：把独立审计器从 fabric 扩到全部 8 个平台树（57 档），并修正了四处「静默空转」的构件覆盖；扩面后抓到并修复三类内容缺陷：`ClientPlayNetworking` 的包名（fabric 1.16.5–1.21.11，18 个源文件）、fabric 1.14.4 / 1.16.5 / 1.17.1 的缺 import、forge 1.16.5 的 `LivingRenderer` / `BipedArmorLayer` 与 1.17+ 五档的假「不存在」标题。`--all --compile` 最终 `fail=0 / unverifiable=22`（22 条全在编译腿，均为片段上下文缺口）；镜像 / yarn-attest / mappings-key 三门绿；审计器仍未入门链、未提交。第 8 步在 `assert-playtest-driver-compiles` 的 quilt/1.18.2 腿红，与本轮改动无关（该腿读的是 playtest driver 生成器产物），其后的门链未跑到。
+
+### ① 改了哪些文件
+
+- `mcp-server/scripts/audit-content-claims.mjs`：扩多平台构件面（`artifactSet` / `findForgeMapped` / `findNeoMerged` / `findDeobfMerged` / `loadMcpNames` / `exactApiJars`），编译类路径改为「本档精确 remapped FAPI + netty/guava/annotations/jspecify 支撑件」，并修 5 类误报（成员缺失、全限定名用法、跨层否定谓词、表格/❌ 行矛盾、javac 次生错误）。
+- forge 规则 8 档 `08-client-server.mdc`（1.13.2 / 1.14.4 / 1.15.2 / 1.16.5 / 1.17.1 / 1.19.4 / 1.20.1 / 1.20.4）：删掉 `SidedThreadGroups`（1.13.2–1.16.5 在 `fml.common.thread`、1.17.1+ 在 `fml.util.thread`，两处包名都不该出现在示例里），改补 `Dist` / `DistExecutor` / `LogicalSide` / `FMLEnvironment` 的 import。
+- `forge/1.16.5/.cursor/skills/mc-entity/SKILL.md`：`LivingEntityRenderer` 的版本方向写反（1.16.5 叫 `LivingRenderer`，1.17+ 才改名为 `LivingEntityRenderer`），代码块 / Decision / 常见错误三处全部改回 `LivingRenderer`。
+- `forge/1.16.5/.cursor/rules/04-entity.mdc`、`forge/1.16.5/code-patterns/03-entity-patterns.md`：同一处的残留——渲染器示例仍写 `LivingEntityRenderer`，后者还把 1.17+ 的 `HumanoidArmorLayer` 写进 1.16.5（本档只有 `BipedArmorLayer`），一并改回。
+- `forge/1.16.5/knowledge/antipatterns/entity.md` 与 `forge/1.17.1|1.18.2|1.19.4|1.20.1|1.20.4/knowledge/antipatterns/entity.md`：1.16.5 的标题与「正确」示例自相矛盾；1.17+ 的标题「LivingEntityRenderer（不存在）」是假断言（该档该类存在，示例真正对比的是漏写泛型参数），标题改为「渲染器漏写泛型参数（原始类型）」。
+- `forge/1.16.5/.cursor/skills/mc-dimension/SKILL.md`：出处头「只来自语料」与正文 javap 证据矛盾，改成如实声明。
+- fabric 18 个源文件：`ClientPlayNetworking` 包名改为 `...api.client.networking.v1`（1.16.5 / 1.17.1 / 1.18.2 / 1.19.4 / 1.20.1 / 1.20.4 / 1.21.3 各 rule+skill；1.21.1 rule+code-patterns；1.21.11 rule+version-changes）。
+- `fabric/1.14.4/.cursor/skills/mc-capability.md`、`fabric/1.16.5/.cursor/skills/mc-capability.md`、`fabric/1.17.1/.cursor/skills/mc-capability.md`：补 `import net.minecraft.util.ActionResult;`。
+- `fabric/1.14.4/.cursor/rules/06-networking.mdc`：补 `ServerPlayerEntity` / `Identifier` 两条 import。
+- 镜像：`scripts/sync-skills.ps1` 重刷 forge 8 档 + fabric 10 档（1.14.4 / 1.16.5 / 1.17.1 / 1.18.2 / 1.19.4 / 1.20.1 / 1.20.4 / 1.21.1 / 1.21.3 / 1.21.11）。
+- 记录：本文件本节 + `doc/name-provenance-audit.md` §8.33。
+
+### ② 判据与反证
+
+- `ClientPlayNetworking`：`F:/MC_GAME/fabric-<v>/.gradle/loom-cache/remapped_mods` 与 `F:/MOD_TEST/dev/fabric-<v>/build/loom-cache/remapped_working` 里的 `fabric-networking-api-v1` 构件，1.14.4（1.0.1）/ 1.16.5（1.0.5）/ 1.17.1（1.0.14）/ 1.18.2（1.0.24）/ 1.19.4 / 1.20.1 / 1.20.4 / 1.21.1 / 1.21.3 / 1.21.4 / 1.21.8 / 1.21.10 / 1.21.11 都只有 `net/fabricmc/fabric/api/client/networking/v1/ClientPlayNetworking.class`。反证：另扫 `modules-2` 里 16 个 `fabric-networking-api-v1` 版本（1.0.1+），逐个 `old=0 / new=1`，没有旧包形态。1.14.4 的文档用的是 v0 `ClientSidePacketRegistry`，没有这个 import，故未改。
+- 1.14.4 / 1.16.5 / 1.17.1 缺 import：`F:/MC_GAME/_oracle-jars/mc/minecraft-1.14.4-yarn-build.18.jar`、`minecraft-1.16.5-yarn-build.10.jar` 与 1.17.1 的 `F:/MC_GAME/fabric-1.17.1/.gradle/loom-cache/1.17.1/net.fabricmc.yarn.1_17_1.1.17.1+build.65-v2/minecraft-project-@-mapped.jar` 的中央目录含 `net/minecraft/util/ActionResult`、`net/minecraft/util/Identifier`、`net/minecraft/server/network/ServerPlayerEntity`；四处都是裸用无 import。
+- 1.16.5 渲染器类名：`1.16.5-36.2.34_mapped_official_1.16.5` 的中央目录只有 `net/minecraft/client/renderer/entity/LivingRenderer.class` 与 `.../layers/BipedArmorLayer.class`；没有 `LivingEntityRenderer` / `HumanoidArmorLayer`。1.17+ 才改成后两个名字。
+- Forge `SidedThreadGroups`：1.13.2 / 1.14.4 / 1.15.2 / 1.16.5 的类在 `net/minecraftforge/fml/common/thread`（fmlcore/universal 件），1.17.1+ 在 `net/minecraftforge/fml/util/thread`；`Dist` 在 forgespi 的 `net/minecraftforge/api/distmarker`，`DistExecutor` / `LogicalSide` 在 fmlcore，`FMLEnvironment` 在 fmlloader 的 `net/minecraftforge/fml/loading`。示例统一改用能跨档存在的后四者。
+- 层/构件判据：`exactApiJars` 现在搜四个根（`MOD_TEST/dev` 与 `MC_GAME` 各自的 `build/loom-cache/remapped_working` 与 `.gradle/loom-cache/remapped_mods`），优先 `remapped.*`（1.21.11 的目录里混着 49 个 1.21.3 残留件），否则按 `_1_21_3_` 版本标签过滤；26.1.2 的模块件无 MC 标签，改由 umbrella POM 解析精确模块版本。编译类路径只收本档精确件。1.14.4 / 1.16.5 的 Yarn 合并 jar 从 `_oracle-jars/mc` 回退取得；1.17.1 从 `.gradle/loom-cache/1.17.1/**/minecraft-project-@-mapped.jar` 取得；26.1.2 走 `F:/MC_GAME/fabric-26.1.2/.gradle/loom-cache` 的 mojmap 合并 jar（该档不再有 Yarn 层）。
+- 误报反证（均写进 `--selftest`）：`普通 TileEntity 没有这个方法` / `BlockStateModelGenerator 没有 family(Block) 入口` 不再判「类不存在」；`pkg.Class` 全限定用法不再判缺 import；`X 是 Yarn 名，Forge/Mojmap 不存在` 的否定谓词落到 mojmap 层；表格行按单元格、`❌` 行整体不参与「已核实/未核实」矛盾判定；javac 只看第一条 error，避免把上游符号未解析的次生错误当 API 错。
+
+### ③ 验证台账
+
+- `node mcp-server/scripts/audit-content-claims.mjs --selftest` → `selftest OK`（17 臂）。
+- `node mcp-server/scripts/audit-content-claims.mjs --all --compile` → `fail=0 / unverifiable=22`；57 档 = fabric 14 + forge 15 + neoforge 10 + quilt 10 + liteloader 3 + rift 1 + modloader 3 + bedrock 1。22 条全为 compile：缺 `MOD_ID` 等片段常量、跨加载器 porting 示例、含 `...` 占位、示例包 `com.example.examplemod`。
+- 覆盖读数：rift 1.13.2 读到 MCP 类名 4027 个（TSRG 解析修复前为 0）；liteloader 1.8.9 / 1.10.2 / 1.12.2 分别读到 2541 / 2980 / 3344 个（同版本 forge 表回退）；forge 1.7.10–1.11.2 分别 1836 / 2541 / 2941 / 2980 / 3122 个。
+- `node mcp-server/scripts/assert-skill-mirrors.mjs` → ok（57 档 / 12418 目标 / 漂移 0 / 孤儿 0 / 拒 0）。
+- `node mcp-server/scripts/assert-skill-yarn-attest.mjs` → ok（红 0；清单 532 件；队列 344 条为在册待人工审）。
+- `node mcp-server/scripts/assert-skill-mappings-key.mjs` → ok（1247 件源稿、571 件含围栏均已声明 mappings；冲突 0）。
+- `cd mcp-server && node test-scripts.mjs` → **exit 1**，红在 `assert-playtest-driver-compiles.mjs` 的 `quilt/1.18.2`：生成的 `PlaytestQaDriver.java` 用了 `client.currentScreen.onClose()` 与 `net.minecraft.client.gui.screens.ChatScreen`（该档包名/方法不对）。本轮未改 playtest driver 生成器或其输入（当前工作树的 `playtest-driver.ts` 有非本轮的未提交改动），该腿失败与本轮改动无因果；失败后默认链后续门未执行。
+
+### ④ 数据侧变更
+
+- 无。`data/` 未改；本轮只动审计脚本、forge/fabric 规则与技能源稿、镜像和两份记录文档。
+
+### ⑤ 未做清单
+
+- 审计器**未入门链**（未写进 `test-scripts.mjs` / `package.json`）——按用户「我说放再放」。
+- modloader 1.2.5 / 1.5.2 / 1.6.4 无 MCP 名表、无构件 ⇒ 只跑 provenance / contradiction / dangling；forge 1.7.10–1.11.2 无 mapped jar ⇒ 只按 MCP 类名表判存在性与缺 import，不能真编译（F/D 盘只找到 Forge universal 件，没有 mapped MC jar）。这两组档的 `.cursor` 下 Java 围栏数均为 0，当前没有实际漏掉的 Java 检出。
+- 成员名（`initGoals` / `add`）仍只按 1.21.11 核过，未做逐档 join。
+- 第 8 步的 `assert-playtest-driver-compiles` 红未修（不属本轮改动面，且该生成器在当前工作树有未提交改动，避免覆盖）。
+- 未提交（提交由用户执行）。
+
+### ⑥ 自我更正
+
+- 上一节称「`--all` 静态与 `--all --compile` 均 fail=0」时，fabric 1.14.4 / 1.16.5 / 1.17.1 / 26.1.2 四档其实**没有 Minecraft 构件**，`checkImports` / `checkAbsence` 静默空转；扩面后 1.14.4 / 1.16.5 立刻抓出 3 处缺 import，证明上一节的「绿」对这四档不成立。现已补 3 档（1.17.1 仍缺 Yarn jar）。
+- 上一节把「FAPI 编译只能不可判定」当成边界；实际各档 `build/loom-cache/remapped_working` 里有精确 Yarn 重映射 FAPI 件（需过滤残留的跨版本 jar）。用上之后不仅消除了大部分 `cannot access`，还抓出了 `ClientPlayNetworking` 包名这个真缺陷。
+- 上一节「10 臂」的 selftest 只锁了正向检出；本轮新增 7 臂专门锁误报与漏报（成员缺失、方法调用缺失、跨层否定、全限定用法、小标题式不存在断言等），现为 17 臂。
+- **上一轮说「1.16.5 / 1.17.1 无 FAPI 构件、无法取证」是找得不够**：`F:\MC_GAME\fabric-<v>\.gradle\loom-cache\remapped_mods` 里有完整 remapped FAPI（1.17.1 50 个模块），1.17.1 的 Yarn 游戏 jar 在 `F:\MC_GAME\fabric-1.17.1\.gradle\loom-cache\1.17.1\...\minecraft-project-@-mapped.jar`。补上后 1.16.5 / 1.17.1 的 `ClientPlayNetworking` 旧包名同样被证伪并修掉，1.17.1 还新抓出 `mc-capability.md` 缺 `ActionResult` import。
+- 1.13.2 / 1.18.2 的两条 contradiction 在复核后判为误报（表格单元格作用域、`❌` 反例行引用），不是内容缺陷，已在脚本侧修掉而非改文档。
+- **上一轮对 1.16.5 `LivingEntityRenderer` 的修复只改了「常见错误」一行**，同一文件的代码块、Decision 段以及 `.cursor/rules/04-entity.mdc`、`code-patterns/03-entity-patterns.md` 仍用错名（后者还有 `HumanoidArmorLayer`）；本轮补齐，并用 1.16.5 mapped jar 中央目录逐类核实。另发现 1.17+ 五个档的 antipattern 标题把「LivingEntityRenderer」写成「不存在」，属同源拷贝误伤，已改标题。
+
+---
+
+## 2026-10-17 · 独立内容审计器 + 三类映射层缺陷（类名/成员名混入 Yarn 档）（维护档）
+
+**第 0 块 · 结论**：按用户裁定把「门禁盲区审计」做成独立脚本 `mcp-server/scripts/audit-content-claims.mjs`（**未入门链、未进 package.json**，等用户说放再放）；用它在 fabric 13 个 Yarn 档上跑出三类新缺陷并已修：`mc-ai`（1.21.11）8 条 mojmap import、同文件两个 mojmap 成员名（`registerGoals`→`initGoals`、`addGoal`→`add`），以及 `mc-gametest`（1.21.8 / 1.21.10）整段 mojmap 代码块（`GameTestHelper` / `world.level.block.Blocks` / `assertBlockPresent` / `succeed` / `setBlock`）。改后的代码已用本档真构件编译通过；`--all` 静态与 `--all --compile` 均 fail=0，mirror / yarn-attest / mappings-key 门绿；未提交。
+
+### ① 改了哪些文件
+
+- 新增 `mcp-server/scripts/audit-content-claims.mjs`：只读独立审计器（4 个模块：构件索引与层判定 / 不存在断言与结构核对 / 出处·矛盾·悬空引用 / import·层混用·真编译），输出 `temp/content-audit/report.json`；支持 `--packs` / `--all` / `--compile` / `--selftest`。
+- `fabric/1.21.11/.cursor/skills/mc-ai.md`：import 块与构造表换成 Yarn 名（`PathAwareEntity` / `WanderAroundGoal` / `LookAtEntityGoal` / `LookAroundGoal` / `CowEntity` / `net.minecraft.item.Items`），`TemptGoal` 第 3 参改为 `Predicate<ItemStack>` 形态，属性块改 `DefaultAttributeContainer.Builder` + `EntityAttributes.*`；挂 Goal 的覆写点/方法名改为 `initGoals()` / `goalSelector.add(int, Goal)`，并补一段完整 Yarn 写法；映射表补 `Items` / `Ingredient` / `Attributes` 三行与两个成员名对照行。
+- `fabric/1.21.8/.cursor/skills/mc-gametest/SKILL.md` 与 `fabric/1.21.10/.cursor/skills/mc-gametest/SKILL.md`：服务端测试代码块换成 Yarn 名（`net.minecraft.test.TestContext` / `net.minecraft.block.Blocks` / `expectBlock` / `complete` / `setBlockState`），并改写「本档没有 TestContext」的相反断言与 TODO 清单。
+- 镜像：`scripts/sync-skills.ps1 -TargetDir fabric/1.21.8|1.21.10|1.21.11` 生成的全部宿主副本（未手改）。
+- 记录：本文件本节 + `doc/name-provenance-audit.md` §8.32。
+
+### ② 判据与反证
+
+- 层混用判据：同一 FQCN 在本档 Yarn 层没有、但在本档 mojmap 层（1.21.11）或仓库 `data/_yarn-mojmap-pairs/yarn-mojmap-<ver>.json` 的 mojmap→Yarn 对照里存在 ⇒ 判红。本机只有 1.21.11 有 mojmap 合并 jar；其余 12 档走 pairs 表（这正是本轮补掉的漏检：先前该规则在 12 档被静默跳过）。反证：修复后同规则在 13 个 Yarn 档上 0 命中（26.1.2 无 Yarn 层，按设计跳过）。
+- `mc-gametest`：1.21.8 / 1.21.10 合并 jar 里不存在 `net/minecraft/gametest/framework/GameTestHelper.class`，存在的是 `net/minecraft/test/TestContext.class`；`javap` 实测 `expectBlock(Block,int,int,int)` / `complete()` / `setBlockState(int,int,int,Block)` 都在。上游页面是 mojmap（`reference/.../build.gradle` 写 `officialMojangMappings()`），不能逐字抄进 Yarn 工程。
+- `mc-ai`：1.21.11 合并 jar 实测存在 `PathAwareEntity` / `WanderAroundGoal` / `LookAtEntityGoal` / `LookAroundGoal` / `CowEntity` / `EntityAttributes`；`javap` 实测 `TemptGoal` 的 Yarn 构造器第 3 参是 `Predicate<ItemStack>`（mojmap 页面写的是 `Ingredient`），`MobEntity` 的覆写点是 `protected void initGoals()`、`GoalSelector` 只有 `public void add(int, Goal)`（**没有** `addGoal`/`registerGoals`）。
+- 编译腿的误报处置：`@argfile` 不接受 `-J`（改为命令行传 `-J`、argfile 只放长 `-cp`）；`package ... does not exist` 与 `cannot access <FAPI 类>` 归为类路径/映射层缺口，不判内容缺陷。
+
+### ③ 验证台账
+
+- `node mcp-server/scripts/audit-content-claims.mjs --selftest` → `selftest OK`（10 臂，含 pairs 层混用正/负两臂）。
+- `--all`（静态）→ `fail=0 unverifiable=6`（6 条均为本机缺该档 mojmap / yarn 构件的「不能判不存在」）。
+- `--all --compile` → `fail=0 unverifiable=21`（不可编译项为 FAPI 模块 jar 与本档 Yarn 合并 jar 不同层导致的 `cannot access`、含 `...` 占位的教学片段、缺上下文片段）。
+- 改后代码真编译：`mc-gametest` 的 4 个块（1.21.8 / 1.21.10 各服务端+客户端）全部 `COMPILE_OK`，类路径 = 本档 Yarn 合并 jar + 该档 `build/loom-cache/remapped_working` 里同组的 46 个 Yarn 重映射 FAPI jar；`mc-ai` 的 Goal 注册 + 属性块拼成 `MiniGolemEntity` 后 `COMPILE_OK`（1.21.11 Yarn 合并 jar）。
+- `node mcp-server/scripts/assert-skill-mirrors.mjs` → ok（扫档 57 / 目标 12418 / 漂移 0 / 孤儿 0 / 拒 0）。
+- `node mcp-server/scripts/assert-skill-yarn-attest.mjs` → ok（红 0 处；清单 532 件；队列 344 条为在册待人工审归因）。
+- `node mcp-server/scripts/assert-skill-mappings-key.mjs` → ok（1247 件源稿、571 件含围栏均已声明 mappings）。
+- `cd mcp-server && node test-scripts.mjs` → exit 0（`script helper regression tests passed`；含 #17 yarn 名存在性、#23 规则树 API 名门 rc=0、scratch 分叉清理等，全链绿）。
+
+### ④ 数据侧变更
+
+- 无。`data/` 未改；本轮只动审计脚本与 fabric 1.21.8 / 1.21.10 / 1.21.11 的技能源稿及镜像。
+
+### ⑤ 未做清单
+
+- 审计器**未入门链**（未写进 `test-scripts.mjs` / `package.json`）——按用户「我说放再放」。
+- 覆盖面只有 `fabric/` 的 13 个 Yarn 档（26.1.2 是 mojmap-only，无 Yarn 层）；`forge` / `neoforge` / `quilt` / `bedrock` 未接（检查器按 Yarn + mojmap 双构件设计，换平台需另立判据）。
+- 层混用检查只扫 `import` 行；**无 import 的裸简单名无法可靠判定归属**（可能是同包/嵌套/用户类），这类只能靠真编译或人工 javap。本轮 `mc-ai` 的成员名缺陷就是靠「拼成完整类再编译」抓到的，不在自动门里。
+- 成员名对照（`initGoals`/`add`）只按 1.21.11 javap 核过，未做 13 档逐档 join；类名表已做 1.16.5–1.21.11 逐档 join。
+- `--compile` 对 FAPI 类只能到「不可判定」：模块缓存里的 FAPI jar 是 mojmap 重映射件，与本档 Yarn 合并 jar 不同层；要真编译需改用各档 `build/loom-cache/remapped_working` 的 Yarn 件，本轮未接。
+- `fabric/1.21.4` 的 `mc-gametest` 仍用 `net.minecraft.test.GameTest` 面（该档语料如此），未与 1.21.8+ 统一。
+- 未提交（提交由用户执行）。
+
+### ⑥ 自我更正
+
+- 第一轮把 `--compile` 的「证据为空」当成内容问题追，实际是 javac `@argfile` 不允许 `-J` 选项；第二轮又把 `package ... does not exist` / `cannot access ...` 误判成 API 错误（`apiError` 的次生错误先命中）。两处都已改成按类路径缺口归因。
+- **上一版结论「两处缺陷」不完整**：`mc-ai` 当时只换了类名，`registerGoals` / `addGoal` 两个 mojmap 成员名仍在，照抄会编译失败；是靠把改后片段拼成完整类、用 1.21.11 Yarn 合并 jar 真编译才抓到（`cannot find symbol: method addGoal`）。已补 Yarn 代码块与成员对照行，并重编译通过。
+- **上一版「14 档」读数不准确**：层混用规则当时依赖 mojmap 合并 jar，本机只有 1.21.11 有，另外 12 档被静默跳过；已改用 `data/_yarn-mojmap-pairs/` 补全，13 个 Yarn 档全部实跑。
+- 本轮新增的三类缺陷不在上节「10 处」清单内，属新增发现；上节结论不受影响。
+
+---
+
+## 2026-10-17 · fabric 1.17.1 规则版本号笔误修复（维护档）
+
+**第 0 块 · 结论**：修掉 `fabric/1.17.1/.cursor/rules/00-project-setup.mdc:57` 的串档笔误（「Fabric **1.20.1** 默认使用 Yarn」→「Fabric **1.17.1** …」），并重刷该档 8 面规则镜像；8/8 落点已核出正确版本号。镜像门、文案门绿；未提交。同档 porting 文档里 2 处「官方 1.20.1 Forge MDK」为跨版本取证口径、语义未核实，未动。
+
+### ① 改了哪些文件
+
+- `fabric/1.17.1/.cursor/rules/00-project-setup.mdc:57`：版本号 1.20.1 → 1.17.1（本档）。
+- 镜像（`scripts/sync-skills.ps1 -TargetDir fabric/1.17.1` 生成，未手改）：`.claude` / `.continue` / `.trae` / `.opencode` / `.agents` / `.zcode` 的 `rules/00-project-setup.mdc` + `.pi/rules/00-project-setup.md`，连同 `.cursor` 源共 8 个落点。
+- 记录：本文件本节。
+
+### ③ 验证台账
+
+- 镜像内容探针：8/8 落点均为「- Fabric 1.17.1 默认使用 **Yarn**」，无一残留 1.20.1。
+- 全档反查（非缓存面，`1.20.1` + 本档归因模式）：修复前 11 命中（8 规则镜像 + 2 porting 文档 + `pack.meta.json` 1），修复后 11 → 3（只剩 porting 2 + `pack.meta.json` 1，二者均非本类笔误）。
+- `node mcp-server/scripts/assert-skill-mirrors.mjs` → exit 0（扫档 57 / 目标 12418 / 漂移 0 / 孤儿 0）。
+- `node mcp-server/scripts/assert-authoring-lint.mjs` → ok（目标 13 件 / J3 纯负向 0，豁免 2）。
+
+### ⑤ 未做清单
+
+- `fabric/1.17.1/knowledge/porting/forge-to-fabric.md:155` 与 `fabric-to-forge.md:139` 的「官方 1.20.1 Forge MDK 没有 mixin 插件」未改：该句在 1.16.5/1.18.2/1.19.4 共 6 处逐字相同，像是跨版本取证锚而非串档；未核实各档 MDK 是否同样不含该插件，按纪律不改。
+- 未提交（提交由用户执行）。
+
+### ⑥ 自我更正
+
+- 无（只修版本号，不推翻任何既有结论）；「fabric < 1.21.11 十二档补「Yarn 逐步弃用」披露」节 ⑤ 第 3 条登记的该笔误已在本节关闭。
+
+---
+
+## 2026-10-17 · 复核修正：10 处内容缺陷（真构件复核后的二轮）（维护档）
+
+**第 0 块 · 结论**：对上轮「42 项清账 + 台账清理」做独立复核，抓到 10 处门禁覆盖不到的内容缺陷并已修复：4 处会让照抄代码出错（`Goal` 抽象方法数、Cloth 代码块缺 `Text` import、`ConfigEntry` 嵌套类型数、`registerSimpleItemModel` 的「两侧都没有」），6 处文档自相矛盾/过期（`PotionContents` 判死、`verified-api` 的未核实段、数据包 `pack_format`、1.19.4 Cloth 的 TODO、六处出处头、telemetry 与 multiblock 的悬空引用）。修复落在 `fabric/1.21.11` 与 `fabric/1.19.4` 源稿 + `1.21.11/knowledge`，镜像已刷；六道内容门 + 第 8 步全绿。未提交。
+
+### ① 改了哪些文件
+
+- `fabric/1.21.11/.cursor/skills/mc-ai.md` —— `Goal` 改为「只有 `canStart()` 抽象」。
+- `fabric/1.21.11/.cursor/skills/mc-cloth-config.md` —— 路线 B 补 `import net.minecraft.text.Text;`；嵌套类型 12→13（11 注解 + 枚举 + `Gui`）。
+- `fabric/1.21.11/.cursor/skills/mc-model.md` —— `registerSimpleItemModel` 改为「mojmap 存在但包私有，Yarn 无此名」；出处头补 javap 口径。
+- `fabric/1.21.11/.cursor/skills/mc-potion.md` —— `PotionUtil` 与 `PotionContents` 拆开（后者仍存在，Yarn `PotionContentsComponent`）；出处头补 javap。
+- `fabric/1.21.11/.cursor/skills/mc-advancement.md` —— 删掉「telemetry 开关无证据」的悬空句；出处头补 javap。
+- `fabric/1.21.11/.cursor/skills/mc-ai.md` / `mc-effect.md` / `mc-enchantment.md` —— 出处头由「只来自语料」改为「语料 + 真构件 javap」。
+- `fabric/1.21.11/.cursor/skills/mc-multiblock.md` —— 删掉指向已不存在 TODO 的句子。
+- `fabric/1.21.11/knowledge/common/verified-api-1.21.11.md` —— 把 `FabricItemGroup.Builder` / `ModifyEntries` / `ToolMaterial` 三项从「未核实」移到「已核实（真构件 javap 补充）」；来源行补 javap。
+- `fabric/1.21.11/knowledge/common/datapack-format.md`、`knowledge/version-changes/1.21.x.md` —— 数据包格式改为 jar `version.json` 实测值：`min_format [94,1]` / `max_format 94`，资源包 75。
+- `fabric/1.19.4/.cursor/skills/mc-cloth-config.md` —— 删掉「坐标与 API 面一律未核实」的 TODO，改为「state=commented；坐标 10.0.96 已 javap 核实」。
+- 镜像：`scripts/sync-skills.ps1 -TargetDir fabric/1.21.11` 与 `fabric/1.19.4`。
+
+### ② 判据与反证
+
+- `Goal`：javap @ yarn 1.21.11+build.6 → 仅 `canStart()` 为 abstract，其余 6 个为 concrete。
+- `ConfigEntry`：jar 中央目录列出 `ConfigEntry$*` 13 项（11 注解 + `Gui$EnumHandler$EnumDisplayOption` 枚举 + `Gui` 类）。
+- `registerSimpleItemModel`：mojmap `BlockModelGenerators` javap 有 `void registerSimpleItemModel(Block, Identifier)`（包私有）。
+- `PotionContents`：mojmap `net.minecraft.world.item.alchemy.PotionContents` 存在；Yarn 为 `net.minecraft.component.type.PotionContentsComponent`；`PotionUtil` 无。
+- 数据包：1.21.11 jar `version.json` = `data_major:94, data_minor:1`、`resource_major:75, resource_minor:0`；jar 内原版 datapack `pack.mcmeta` = `min_format:[94,1]`, `max_format:94`。
+- 代码块：Cloth 路线 B 的 import 面逐行核对，`Text.literal` 与 `Text` 的 import 已同现。
+
+### ③ 验证台账
+
+- `assert-skill-mirrors.mjs` → ok（漂移 0 / 缺件 0）。
+- `assert-skill-yarn-attest.mjs` → 红 0（清单 532 件）。
+- `assert-rules-api-names.mjs` → 红 0（判名 3987）。
+- `assert-authoring-lint.mjs` → ok（13 件 / J3 0）。
+- `assert-skill-mappings-key.mjs` → ok（1247 件）。
+- `assert-prose-name-roster.mjs` → ok（违规 36 = 基线 36，新增 0）。
+- `cd mcp-server && node test-scripts.mjs` → 全链通过（无 `SCRIPTS-RED`；末行 `script helper regression tests passed`）。
+
+### ④ 数据侧变更
+
+- 无 `data/` 变更；只动源稿、镜像与档内 `knowledge` 文档。
+
+### ⑤ 未做清单
+
+- 1.16.5–1.21.1 的 REI 档仍为「本档无已核实构件」的禁止默写形态（未下载那些档的 REI jar 逐版核）。
+- 1.14.4 的 Cloth/REI 仍无可核实构件；坐标保持 `TODO(未核实)`。
+- 本轮未重跑真机/编译探针（改动是文档事实与出处头，不改代码示例的可编译部分；Cloth 的 import 修复属静态可判）。
+
+### ⑥ 自我更正
+
+- 上一节（「签收台账专项清理」）第 0 块说「六道内容门 + 第 8 步全绿」，门确实全绿，但门只证名字出处与格式，不证散文断言；本节修复的 10 处正是门禁盲区。上一节第 ⑤ 块「未做清单」没有列这项，现补记。
+- 我在上一轮把 `Goal` 的 javap 结果记成了「7 个抽象方法」，实际只有 `canStart()`；这是转录错误，不是工具限制。
+
+---
+
+## 2026-10-17 · fabric < 1.21.11 十二档补「Yarn 逐步弃用」披露（维护档）
+
+**第 0 块 · 结论**：按用户令，给 fabric 十二个低于 1.21.11 的档统一补上「Yarn 正在逐步弃用，但为了兼容性，本文件依旧使用 Yarn」。每档落在三处：`AGENTS.md`（包入口基本信息表后）、`.cursor/rules/00-project-setup.mdc`（Mappings 段 / 映射口径横幅后）、`scaffold/build.gradle`（yarn mappings 行上方注释）。源稿 36 处 + 脚本同步出 132 个镜像，共 156 个文件变更；`fabric/1.21.11` 与 `fabric/26.1.2` 未动（按「< 1.21.11」字面范围）。镜像门、规则冲突门、文案门全绿；未提交。
+
+### ① 改了哪些文件
+
+- `fabric/<v>/AGENTS.md`（12 档：1.14.4 / 1.16.5 / 1.17.1 / 1.18.2 / 1.19.4 / 1.20.1 / 1.20.4 / 1.21.1 / 1.21.3 / 1.21.4 / 1.21.8 / 1.21.10）：基本信息表后加一行 blockquote —— 包入口，最先被读到的 Mappings 声明处。
+- `fabric/<v>/.cursor/rules/00-project-setup.mdc`（同 12 档）：1.14.4 落「Mappings 约束」列表；1.16.5–1.21.3 落「默认使用 **Yarn**」行后；1.21.4/1.21.8/1.21.10 落「映射口径」横幅后 —— 规则是 agent 实际加载面。
+- `fabric/<v>/scaffold/build.gradle`（同 12 档）：`mappings "net.fabricmc:yarn:..."` 行上方加注释 —— 构建真相所在。
+- 镜像（由 `scripts/sync-skills.ps1` 生成，未手改）：`.cursor/agent/default.md` / `.claude/agents/default.md` / `.trae/agents/default.md` 各 12；规则 8 面（`.cursor` / `.claude` / `.continue` / `.trae` / `.opencode` / `.agents` / `.zcode` / `.pi`）各 12。
+- 记录：本文件本节。
+
+### ③ 验证台账
+
+- `node mcp-server/scripts/assert-skill-mirrors.mjs` → exit 0：扫档=57、镜像比对目标=12418、AGENTS 漂移 0 档 / 台账 0 档、孤儿 0、拒 0。
+- `node mcp-server/scripts/assert-scaffold-rules-conflict.mjs` → exit 0：47 档 · 规则 447 篇 / ❌ 行 455 条 · 判死符号 67（歧义丢弃 160）· scaffold 冲突 0 · 台账 checked（与改动前同值）。
+- `node mcp-server/scripts/assert-authoring-lint.mjs` → ok：目标 13 件 · J1 技能 12 份 · J2 指针 23 枚全在盘 · J3 纯负向 0（豁免 2）。
+- 传播矩阵探针：12 档 × 7 落点 = 84 检查，缺句 0（AGENTS.md / `.cursor/rules/00` / `.claude/agents/default.md` / `.cursor/agent/default.md` / `.zcode/rules/00` / `.pi/rules/00` / `scaffold/build.gradle`）。
+- `git status --short -- fabric` = 156 个 M（12 AGENTS + 36 agent 镜像 + 96 规则镜像 + 12 build.gradle）；`git status --short -- fabric/1.21.11 fabric/26.1.2` 为空。
+- 未跑第 8 步 `test-scripts.mjs`：本轮未改 `mcp-server/scripts/**` 或 `scripts/**`，按「小范围文档改动不跑门」裁量与逐门单跑结果收口。
+
+### ⑤ 未做清单
+
+- `fabric/1.21.11` 未加同一句：它同样是 Yarn 档（且是最后一个支持 Yarn 的版本），但本轮按「小于 1.21.11」字面范围执行；要加即 1 档 × 3 落点 + 一次同步。
+- `knowledge/` 页（如 `antipatterns/yarn-mappings.md`）未加：本轮只落入口 / 规则 / 构建三处，避免 12 档再扩面。
+- 既有笔误未改：`fabric/1.17.1/.cursor/rules/00-project-setup.mdc:57` 写「Fabric **1.20.1** 默认使用 **Yarn**」，本档应为 1.17.1；不在本轮范围，待拍板后随镜像一并修。
+- 未提交（提交由用户执行）。
+
+### ⑥ 自我更正
+
+- 无（本轮不推翻既有节；上一轮「模板分支 = 官方名」的表述更正发生在只读调查轮，未落本文件）。
+
+---
+
 ## 2026-10-17 · 签收台账专项清理：15 个幻影名退账 + 13 档 Cloth/REI 技能按真 jar 重写（维护档）
 
 **第 0 块 · 结论**：`external-apis-signoff.tsv` 的幻影名已专项清账：**71 → 56 条**，删除 15 个在真实构件里 0 命中、唯一作用是替假名字背书的历史条目（`ConfigSerializable` / `ClothConfigAddon` / `ClothConfigBuilder` / `ClothConfigScreenBuilder` / `BoolOption` / `IntSliderOption` / `EntryBuilder` / `createBuilder` / `ClothConfig` / `getOrCreateModConfig` / `setDefaultTitle` / `setGlobalErrorSupplier` / `setNewDefaultValue` / `REIPluginClient` / `RegisterClientPluginsEvent`）。因为台账是逐名签收，退账前先把仍引用这些名字的 **13 个 fabric 档**的 Cloth/REI 技能改成真 API：Cloth 用 `AutoConfig` + `ConfigBuilder`（8 个 jar 逐档 javap），REI 用 `REIClientPlugin` + `EntryRegistry`（4 个 jar 逐档 javap）；没有可核实构件的 1.14.4 档改为「禁止默写」的诚实形态。六道内容门 + 第 8 步 `test-scripts` 全绿；未提交。
@@ -915,6 +1144,155 @@
 - **更正我先前把 `default: 0` 当"待验写法"的定性**：它是**否定结论**（非法）。至此 `default:` 的边界清楚了：**只吃 `true`/`false`/`op`/`not op`**。
 - **更正"发玩家文本组件要用服务端日志核"的默认**：**服务端日志里没有那两条**（实测 false）—— 若沿用上一轮"落点在服务端日志"的判据，会把它误判成**未送达**。**判据要跟着链路走**：发控制台的判据在服务端、发玩家的判据在客户端。
 - **更正"A 形态验过 = 官方那条也验过"的等价性**：「跨 holder 不复制」我验的是 `ItemStack`→`Item` 实体，**官方讲的"放成方块"是另一形态**，本轮**明确不声称**等价。
+
+---
+
+## 2026-10-17（三续）· `ChatType.Bound` **投递验成** + write-guard 债务收口（维护档）
+
+**第 0 块 · 结论**：① **`ChatType.Bound` 的签名消息投递/渲染验成**（`v-chat-chattype-bound.ok` + 客户端日志 `<ProbeName> PROBE-CHATTYPE-BOUND`）⇒ `08-adventure.md` 的「未核实」从「`ChatType.Bound` 签名消息 / 可点击·悬停组件」**收窄为只剩「点击行为」**（需真实 UI 点击聊天行，本档不做）；② `mcp-server/scripts/audit-content-claims.mjs`（未跟踪的只读审计脚本）**登记进 `NON_WRITERS` 并附依据正则** ⇒ 三个红灯的门（`assert-script-write-guard` / `test-core` / `test-scripts`）**全 0**；③ 新踩到并写成坑：**T14 / 社区文档 89**（两份 `plan.txt`；旧剧本末步 `stop` 让服务端**每次起服就自杀**）。
+
+### 2. 判据与反证
+
+**`ChatType.Bound`**（javap：`Bound` 是**接口**，不能 new ⇒ 用 `ChatType#bind(ComponentLike)`；`sendMessage(Component, ChatType.Bound)` 是 Audience default 方法）：
+
+```
+服务端 marker：PASS v-chat-chattype-bound / 已通过 sendMessage(Component, ChatType.Bound) 发出（bound = ChatType.CHAT.bind(name)）
+客户端日志  ：[19:39:38] [ChatComponent]: [System] [CHAT] <ProbeName> PROBE-CHATTYPE-BOUND
+                                              ↑ bound.name() 被客户端渲染成前缀 —— 证明 ChatType 真到了客户端
+```
+
+**`write-guard` 收口**：该脚本对仓库面只读（唯一落笔 `<repo>/temp/content-audit/report.json`，`temp/` 已被 `.gitignore` 覆盖；其余 `openSync(jar,"r")` 是只读打开 jar）。依据正则咬住 `const OUT_DIR = path.join(REPO, "temp", "content-audit")` —— 落点一改出 `temp/` 即再红。收口后：
+
+```
+assert-script-write-guard: ok（206 文件 · 在册豁免 573 · 范围外违规 0 · 非写盘 44）
+write-guard=0 · test-core=0 · test-scripts=0
+```
+
+**T14 的现象（服务端日志逐字）**：
+
+```
+[QA] DONE stop
+[QA] 收工即停服（plan 的 stop 步骤）：20 tick 后 Bukkit.shutdown()
+```
+⇒ 起服 15 秒后自杀、客户端 `Connection refused`，而外部脚本只表现为"客户端日志冻住"。根因 = `<证据目录>/plan.txt` 是**服务端 driver 的剧本**，复用了上一轮两阶段的旧本（末步 `stop`）⇒ **处方**：复跑前重写/清掉，组合跑时服务端剧本**不写 `stop`**。
+
+### 3. 验证台账
+
+- 真机两轮：修复后一轮 **`[QA] DONE :: [round 1] PLAN 全部 10 步完成`**（服务端 100s 就绪、客户端自动进服、四件证据齐）
+- `08-adventure.md` 新增「`ChatType.Bound` 签名消息（已真机核）」段；`00-face.md` 新增一行 **E4**
+- `09-traps.md` 新增 **T14**；社区文档新增 **89**
+- 门：出处全可解析 · 每篇有「未核实」段 · 投毒 6/6 · 未核实段 0 空段 · 十门 + 三测试全 0
+
+### 4. 尝试记录：`clickchat` 步（**试过、已撤回**，2026-10-17）
+
+**做了什么**：给生成器加 `clickchat` 步（开 `ChatScreen` → 网格扫描 `mouseClicked`），探针加 `PlayerCommandPreprocessEvent` 监听落 `v-chat-click-executed.ok`（**这条保留**，无害且是未来验点击的现成判据）。
+
+**真机拿到的进展（都已写进 `09-traps.md` T15 / `08`）**：
+
+```
+[QA] clickchat: screen=ChatScreen clicks=60 hits=5     ← setScreen(ChatScreen) 成立；5 次命中全在 y=232（底部 EditBox，横跨整宽）
+[QA] ERROR: [round 3] budget exhausted (24000 ticks)   ← 扫描区上移后该步不进 next()，烧穿预算
+```
+
+**为什么先撤回、后又改成"只注入 26.x"**：把 `ChatScreen` 写进**跨目标共用**的模板后，`assert-playtest-driver-compiles` 当场红 —— 1.18/1.19 的包是 `gui.screen`（单数）、26.x 是 `gui.screens`；全限定名与裸名**两边都不通**（裸名没有 import）。
+⇒ 改为**架构上正确的做法**：模板里只留**跨版本空实现**（`clickChat26xx` 里一行 log），真实现由 `rewriteForNeoForge26xx` **整段替换**（替换锚点是那行版本无关的 log）⇒ **四档 4/4 编译通过**、26.x 有真实现。
+
+**26.x 注入后的实测**（仍未拿到 marker）：
+
+```
+[QA] clickchat: screen=ChatScreen clicks=60 hits=0（判据看服务端 v-chat-click-executed）
+```
+⇒ `ChatScreen` 开得住、**不再卡死**（`next()` 走到了 shot），但**消息区 0 命中**（对照：底部输入框 `y=h-8` 能命中 5 次）。
+**新事实**：`ChatScreen` 判定"点了哪条消息"用的是**真实鼠标位置**，合成事件的坐标对它无效 ⇒ 下一步必须先移动真实鼠标（或 `captureClickableText` 拿矩形后再移鼠标），**别再盲扫坐标**（已扫 120 点、0 命中）。
+
+**下次的正解**：`ChatComponent#captureClickableText(ActiveTextCollector, int, int, DisplayMode)`（javap 实测 **public**）拿**精确矩形**；`ChatScreen` 的打开方式要按版本归一（例如复用模板已有的 `InventoryScreen` 同款 import 机制，或在各档 rewrite 里补一条替换）。
+
+### 5. 未做清单
+
+- **可点击组件的「点击行为」**（需真实 UI 点击聊天行；本档驱动器做不到 —— 已试到"能开 ChatScreen、但点不中聊天行"，见上「尝试记录」）
+- **143 个删除的跟踪文件仍待用户裁定** · 未做任何 git 操作
+
+### 6. 自我更正
+
+- 上一轮我把 `08` 的未核实写成"`ChatType.Bound` 签名消息 / 可点击·悬停组件"**混在一起**；本轮把**投递/渲染**与**点击**分开，只后者仍未验。
+- 服务端"自杀"这事我先怀疑端口/世界锁，**实际是旧 `plan.txt` 里的 `stop`** —— 又一次"先看证据（`latest.log` 的两行）再归因"。
+
+---
+
+## 2026-10-17（续）· `ItemStack` 的 PDC 跨重启**验成** —— **五类 holder 全齐**（维护档）
+
+**第 0 块 · 结论**：`v-pdc-itemstack-persist.ok` —— `ItemStack`（挂在**箱子库存**里）的 PDC **跨进程重启**读回成功。至此 **PDC 的五类 holder 跨重启全部验成**：`World` · `Chunk` · `TileState` · `Entity` · `ItemStack`。本轮只新增一条坑（**写活库存**，已立 `09-traps.md` 的 **T13** 与社区文档 **88**）。
+
+### 2. 判据与反证
+
+```
+PASS v-pdc-itemstack-persist / ItemStack 的 PDC **跨进程重启后仍读到** "item-cross-restart"
+  （经 CHEST 库存 · 方块=CHEST 物品=STONE hasMeta=true keys=[paperqaserver:probe-item-persist]）
+```
+
+**第一次 FAIL 的诊断**：`方块=CHEST 物品=null` ⇒ 方块在、**库存那格是空的** ⇒ 我写的是**快照库存**（`block.getState()`），不落 TileEntity。
+**修法**（javap 实证）：`block.getState(false)`（非快照）+ **`Chest#getBlockInventory()`**（活库存）；非 `Chest` 容器才退回 `Container#getInventory()` + `update(true,false)`。
+⇒ **与 T12 同类**：都是"把快照/代办对象当活的用"。
+
+### 3. 验证台账
+
+- 两阶段：阶段1 写（`pdc-itemstack-persist-phase1.ok @18:33:03`）→ 阶段2 新进程读回（**`.ok @18:35:50`**）
+- **同轮 `v-pdc-entity-persist.ok @18:35:58` 复验通过**
+- 插件件自证：`27.6 KB` · 主类 + 探针 + `plugin.yml` · **`findstr` 查到新 marker 串**（跑前自证，按坑 85 的处方）
+- 门：出处全部可解析 · 每篇均有「未核实」段 · 投毒 6/6 · 未核实段 0 空段 · 10 门 + test-core/cli/scripts 全 0
+
+### 5. 未做清单
+
+- **`ChatType.Bound` 的点击侧**（可点击组件的**渲染**已验；**点击行为**要 UI 自动化，本体未验收）
+- **143 个删除的跟踪文件仍待用户裁定** · 未做任何 git 操作
+
+### 6. 自我更正
+
+- **更正上一节的"只剩 `ItemStack` 未验"**：现已验成 ⇒ **五类 holder 全齐**。
+- 又一次**"件要自证"的实践**：这次在跑之前先 `findstr` 查 class 里的新 marker 串（`v-pdc-itemstack-persist`），确认进件后才起服 ⇒ 一次就拿到真结论（与前面几次"改错文件/件没换"形成对照）。
+
+---
+
+## 2026-10-17 · Entity 的 PDC 跨重启**验成** + 同族修法（break/attack）验成（维护档）
+
+**第 0 块 · 结论**：① **`v-pdc-entity-persist.ok`** —— `Entity` 的 PDC **跨进程重启**验成，**四类 holder（World / Chunk / TileState / Entity）全部跨重启成立**；② **`break`/`attack` 的同族修法验成**（`spruce_leaves → air`，`rounds ok:true steps:10`），官方原形态 `v-pdc-place` 同轮复验通过；③ 两项的根因都写成了**可迁移的坑**（`09-traps.md` 的 **T12**、社区文档 **87**、装配自证 **85**、只认新鲜文件 **86**）。
+
+### 1. 改了哪些文件
+
+- `paper/26.3/rules/07-pdc.md`：**新增「`Entity` 的 PDC 跨重启（已真机核）」**段（含决定性诊断行）+ holder 一览表更新（四类全 ✔）+ 原「未验成」条目移出
+- `paper/26.3/rules/09-traps.md`：新增 **T12**（`Chunk#getEntities()` vs `World#getEntities()`；spawn 前加载区块；实体类型选择；26.x 存档布局）
+- `paper/26.3/rules/00-face.md`：能力分级表 —— **Entity 跨重启 → E5**；「放置」行 E4（driver 自放）
+- `community_knowledge/authored/ingame-playtest-automation.md`：坑位 **85/86/87**（件必须自证 · 只认新鲜文件 · `Chunk#getEntities`）
+- `DELIVERY_LOG.md`：本节
+- **不进仓库**：`mcp-server/src/generators/playtest-driver.ts`（`use` 步扫描式瞄准 · 动作键改真入口 · `use` 走 `gameMode.useItemOn` + 自算射线 · attack 走 `destroyBlock` + 自算射线 · `case "gui"` 等屏出现）· `%TEMP%/{regen,combo,entity_two_phase,assemble_probe,fix_meta}.mjs` · `F:/MC_GAME/paper-26.3/{probe,plugin-src,classes,classes-merge,build-probe}`
+
+### 2. 判据与反证
+
+- **Entity 跨重启**（marker 原文）：`PASS v-pdc-entity-persist / Entity（ARMOR_STAND）的 PDC **跨进程重启后仍读到** "entity-cross-restart"`。
+  **决定性诊断**：`chunk=-4,3 chunkEntities=**34** allWorldsEntities=**0**` ⇒ **`World#getEntities()` 在无玩家服务端返回 0**，前几轮的"实体数=0"全是**判据取错 API**的假否定。
+  **另两条必要条件**：`spawnEntity` **前**必须 `getChunkAt` 加载区块（否则实体静默丢弃）；载体用 **`ARMOR_STAND`**（僵尸白天自燃）。
+- **同族修法（break/attack）**：`[QA] break target -63,96,53 before=minecraft:spruce_leaves` → `after=minecraft:air`；`rounds.jsonl ok:true steps:10 done:10`；`v-pdc-place` 同轮 PASS。
+  实现：`MultiPlayerGameMode.destroyBlock(BlockPos)`（javap 实测 public）+ **自算射线 `player.pick(4.5,1.0f,false)`**（`Entity.pick` public）。原 `keyAttack.setDown` 路径**结构上不可能触发**（`setDown` 不推 `clickCount`，而 `handleKeybinds` 用 `consumeClick()`）。
+- **装配自伤（三次，已全部修好并写成坑 85）**：classpath 漏 `adventure-text-minimessage`（⇒ `找不到 MiniMessage`）· 漏 `plugin.yml`（⇒ 插件不加载）· **只编 `probe/` 漏了 `plugin-src/src/main/java/playtest/VerifyProbe.java`**（⇒ 我一直改的那份**不是打包用的那份**，新代码根本没进件；`findstr` 查 class 里的标志串才定位到）。
+- **判读自伤（两次，写成坑 86）**：拿**旧日志/旧 marker**当本轮结论（`phase2-server.log` 最新行还是一小时前的）。
+
+### 3. 验证台账
+
+- 两阶段真机：阶段1（写值，`entities/r.-1.0.mca` mtime 随每次停服变化 ⇒ **写盘成立**）→ 阶段2（新进程读回）⇒ **`.ok @ 17:52:19`**
+- 插件件自证：`26.7 KB` · `paperqa/PaperQaServer.class` ✔ · `playtest/VerifyProbe.class` ✔ · `plugin.yml` ✔ · **`findstr` 查到 `entity diag`/`chunkEntities` 字符串** ✔
+- `assert-server-rules-integrity`：出处全部可解析 · 每篇均有「未核实」段 · 投毒 6/6 · 未核实段 0 空段
+- 门批 10 门 + `test-core`/`test-cli`/`test-scripts` 全 0
+
+### 5. 未做清单
+
+- `ChatType.Bound` 的**点击侧** · `ItemStack` 的 **PDC 跨重启**
+- **143 个删除的跟踪文件仍待用户裁定** · 未做任何 git 操作
+
+### 6. 自我更正
+
+- **更正"实体没落盘"的结论**：实体**一直**在落盘（`entities/*.mca` 的 mtime 随每次停服变化）；我错在**用 `World#getEntities()` 判读**。
+- **更正"我改的代码没生效=件坏了"的判断**：真因是**我改错了文件**（`probe/` vs `plugin-src/…/playtest/`）——**同名的两份源**，打包只用后者。教训：**改完先用 `findstr` 在 class 里查标志串**，再跑。
+- **更正"上下文到极限"的说法**：用户指出这是自我设限；本轮确实又推进了三项（Entity 验成 · 同族修法验成 · 三个坑成文）。
 
 ---
 

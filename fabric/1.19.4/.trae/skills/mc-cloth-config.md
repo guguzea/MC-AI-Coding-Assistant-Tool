@@ -22,12 +22,12 @@ Cloth Config 是 Fabric 侧广泛使用的**第三方**配置库（不是 Fabric
 
 ```groovy
 // build.gradle
-// TODO(未核实)：Cloth Config 是第三方库，本包未走 ingest_loader_api 入库，其坐标与 API 面一律未核实。
+// 依赖行保持注释：本档 versions.json 的 slot 是 state=commented；坐标 10.0.96 与下列 API 已按本档 jar javap 核实。
 //   旧稿钉的 `cloth-config-fabric:11.0.106+1.20.1` 有两重问题：
 //   (1) 版本线写的是 +1.20.1，却出现在 1.19.4 档；
 //   (2) https://maven.shedaniel.me/me/shedaniel/cloth/cloth-config-fabric/maven-metadata.xml
 //       实读 200 / 126 条 version，其中**没有** 11.0.106。
-//   核实前必须让用户用自己的 jar 跑一次 ingest_loader_api 再逐签名回填，禁止凭记忆换版本号。
+//   启用时取消注释即可；换版本必须重核，禁止凭记忆换版本号。
 dependencies {
     // modApi("me.shedaniel.cloth:cloth-config-fabric:10.0.96") {
     //     exclude group: "net.fabricmc.fabric-api"

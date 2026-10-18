@@ -10,6 +10,8 @@
 | 注册 | Registry.register（search_fabric_docs query=registry version=1.21.10） |
 | 网络 | PayloadTypeRegistry + CustomPayload |
 
+> **Yarn 正在逐步弃用，但为了兼容性，本文件依旧使用 Yarn。**
+
 核实表：knowledge/common/verified-api-1.21.10.md。
 
 ## 配置（不落盘树级 mc-config）

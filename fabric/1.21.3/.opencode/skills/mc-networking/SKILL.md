@@ -38,7 +38,7 @@ public record MyPayload(int data) implements CustomPayload {
 ```java
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 
 PayloadTypeRegistry.playC2S().register(MyPayload.ID, MyPayload.CODEC);
 PayloadTypeRegistry.playS2C().register(MyPayload.ID, MyPayload.CODEC);

@@ -19,6 +19,8 @@
 | Mod 元数据 | fabric.mod.json |
 | Mixin 支持 | **需要显式 Mixin 插件配置**（1.14.x 不如新版本完善）|
 
+> **Yarn 正在逐步弃用，但为了兼容性，本文件依旧使用 Yarn。**
+
 ---
 
 ## Decision Flow：确认规则集适用性

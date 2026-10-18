@@ -64,7 +64,7 @@ EntityType.Builder.of(MyEntity::new, MobCategory.MONSTER)
 
 ---
 
-## 错误：LivingEntityRenderer（不存在）
+## 错误：渲染器漏写泛型参数（原始类型）
 
 **症状：** 编译错误
 

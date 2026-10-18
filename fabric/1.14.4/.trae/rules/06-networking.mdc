@@ -48,6 +48,8 @@ IF 工程 FAPI 已是 networking-api-v1
 
 ```java
 import io.netty.buffer.Unpooled;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;

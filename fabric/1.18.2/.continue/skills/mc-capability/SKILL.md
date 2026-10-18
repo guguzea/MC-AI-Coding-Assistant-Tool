@@ -18,6 +18,7 @@ Fabric **没有** Forge Capability。本档 **没有** `ServerLivingEntityEvents
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityCombatEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
+import net.minecraft.util.ActionResult;
 
 AttackEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
     return ActionResult.PASS;

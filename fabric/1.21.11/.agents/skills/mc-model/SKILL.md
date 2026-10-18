@@ -10,11 +10,11 @@ mappings_alt: mojmap
 
 # mc-model
 
-> 本档正文的类名 / JSON 字段 / 文件路径只来自 `data/fabric_1.21.11` 本档语料。实读页面：
+> 本档正文的类名 / JSON 字段 / 文件路径来自 `data/fabric_1.21.11` 本档语料 + 本档真构件 javap。实读页面：
 > `fabric-docs/1.21.11/processed/develop_blocks_block-models.md`、`fabric-docs/1.21.11/processed/develop_blocks_blockstates.md`、`fabric-docs/1.21.11/processed/develop_items_item-models.md`、`fabric-docs/1.21.11/processed/develop_data-generation_block-models.md`。
 > 代码 / JSON 真身（页面里的 `@[code](@/reference/...)` 转引目标，均已在盘上并逐字读过）：
 > `reference/1.21.11/src/main/java/com/example/docs/block/ModBlocks.java`、`reference/1.21.11/src/main/java/com/example/docs/block/custom/PrismarineLampBlock.java`、`reference/1.21.11/src/main/generated/assets/example-mod/blockstates/{condensed_oak_log,prismarine_lamp,steel_block}.json`、`reference/1.21.11/src/main/generated/assets/example-mod/models/block/{condensed_oak_log_horizontal,steel_block}.json`、`reference/1.21.11/src/client/java/com/example/docs/datagen/ExampleModModelProvider.java`。
-> 页内没有的签名一律留 `TODO(未核实)`，禁止用邻版（1.21.10 / 1.21.1 / 26.1.2）补全。
+> 页内没有的签名先按本档真构件 javap 核（正文里标 `javap @ yarn 1.21.11+build.6` 的条目即此来源）；核不到才留 `TODO(未核实)`，禁止用邻版（1.21.10 / 1.21.1 / 26.1.2）补全。
 >
 > ⚠️ 转引缺口：`develop_blocks_block-models.md` 的 `parent` / `display` / `elements` 三节是**未展开**的 `<!--@include: ../items/item-models.md#...-->` 标记（该 include 目标未落进本页正文）。本节对应字段取自同档已完整成文的 `develop_items_item-models.md`。
 > ⚠️ mappings：本档 frontmatter 记 `mappings: yarn`，但上述页面与参考文件正文一律用官方名（`RotatedPillarBlock`、`Identifier`、`BooleanProperty`）。按工程实际映射写，禁止两套名混写。
@@ -185,7 +185,7 @@ public void generateItemModels(ItemModelGenerators itemModelGenerator) {
   ⚠️ `Identifier.fromNamespaceAndPath(..)` 是 **mojmap 层**写法；本档 `scaffold` 钉 yarn，同处写 `Identifier.of(ExampleMod.MOD_ID, "block/vertical_slab")`（`fromNamespaceAndPath` ↔ `of`，javap @ yarn 1.21.11+build.6）。
   映射 `new TextureMapping().put(TextureSlot.TOP, ModelLocationUtils.getModelLocation(block, "_top"))`；页内说 `TextureMapping.cube()` 会把所有 `TextureSlot` 绑到同一个标识符。
 - 变体派发：页内说用 `MultiVariantGenerator.dispatch()` 造 `BlockModelDefinitionGenerator`，把各变体装进 `PropertyDispatch` 再 `.register()`（可控 uvlock / 旋转）。这三个类名在本档参考文件的 import 里逐字出现过。
-- ⚠️ 页面**正文措辞**与本档**参考代码**不完全一致，已按本档构件核实三个名字：① `registerSingleton(Block, TexturedModel.Factory)` 在 Yarn `BlockStateModelGenerator` 上是 **public**（可用）；② `registerCubeAllModelTexturePool(Block)` 也存在，返回 `BlockStateModelGenerator.BlockTexturePool`（该嵌套类在装了 FAPI 的 loom 工程里为 public，可直接链 `.family(BlockFamily)` / `.stairs` / `.slab` / `.fence` 等）；③ **`BlockModelGenerators` 在 Yarn 1.21.11 不存在**——它只存在于 mojmap（`net.minecraft.client.data.models.BlockModelGenerators`）；Yarn 侧同类叫 `BlockStateModelGenerator`，其方法名也不同（见下表与 Yarn 代码块）。`BlockModelGenerators.registerSimpleItemModel()` 这个名字在两侧都没有；Yarn 的物品模型入口是 `ItemModelGenerator#register(Item, Model)`。
+- ⚠️ 页面**正文措辞**与本档**参考代码**不完全一致，已按本档构件核实三个名字：① `registerSingleton(Block, TexturedModel.Factory)` 在 Yarn `BlockStateModelGenerator` 上是 **public**（可用）；② `registerCubeAllModelTexturePool(Block)` 也存在，返回 `BlockStateModelGenerator.BlockTexturePool`（该嵌套类在装了 FAPI 的 loom 工程里为 public，可直接链 `.family(BlockFamily)` / `.stairs` / `.slab` / `.fence` 等）；③ **`BlockModelGenerators` 在 Yarn 1.21.11 不存在**——它只存在于 mojmap（`net.minecraft.client.data.models.BlockModelGenerators`）；Yarn 侧同类叫 `BlockStateModelGenerator`，其方法名也不同（见下表与 Yarn 代码块）。`BlockModelGenerators.registerSimpleItemModel(Block, Identifier)` 在 mojmap 侧存在但为**包私有**（用户包不能直接调），Yarn 侧没有这个名；Yarn 的物品模型入口是 FAPI access widener 放开后的 `ItemModelGenerator#register(Item, Model)`。
 
 上面的代码块是 **mojmap 层**（照参考工程）。同一份 provider 落到本档 Yarn 工程要换成下面这组方法名（javap @ yarn 1.21.11+build.6 逐个核实；`BlockStateModelGenerator` 没有 `family(Block)` 入口，用 `registerCubeAllModelTexturePool` 拿 pool）：
 

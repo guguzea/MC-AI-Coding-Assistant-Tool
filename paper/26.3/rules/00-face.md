@@ -67,14 +67,15 @@ public final class MyPlugin extends JavaPlugin {
 | 事件·**玩家自发**（`PlayerJoinEvent`） | **E4** | `v-player-join.ok` |
 | 事件·控制台路径（stdin） | **E3** | `v-event-stdin.ok` |
 | PDC·同进程（World / ItemStack） | **E3** | `v-pdc.ok` · `v-pdc-itemstack.ok` |
-| PDC·**跨重启**（World / Chunk / **TileState**） | **E5** | `v-pdc-persist.ok` · `v-pdc-chunk.ok` · `v-pdc-tilestate.ok` |
+| PDC·**跨重启**（World / Chunk / **TileState** / Entity / **ItemStack**） | **E5** | `v-pdc-persist.ok` · `v-pdc-chunk.ok` · `v-pdc-tilestate.ok` · `v-pdc-entity-persist.ok` · **`v-pdc-itemstack-persist.ok`（2026-10-17）** |
 | PDC·跨 holder 不复制（**官方原形态**：放成方块带 `TileState`） | **E4** | `v-pdc-place.ok` —— 手上物品侧 `on-item`、放置出的方块侧 **`null`**（与 `api__pdc.md:226/:228` 一致） |
 | PDC·跨 holder 不复制（`ItemStack`→`Item` 实体形态） | **E3** | `v-pdc-crossholder.ok`（**另一形态**，与官方那条不等价） |
-| PDC·**Entity 跨重启** | **未达成** | `v-pdc-entity-persist.FAIL`（实体数=0，原因未定） |
+| PDC·**Entity 跨重启** | **E5** | `v-pdc-entity-persist.ok`（2026-10-17）· 判据关键：**用 `Chunk#getEntities()`**，`World#getEntities()` 在无玩家服务端返回 0（实测同一时刻 34 vs 0） |
 | 调度器·同步 `Consumer` 重载 | **E3** | `v-scheduler-consumer.ok` |
 | 调度器·**异步**（`runTaskAsynchronously` / `…TimerAsynchronously`） | **E3** | `v-scheduler-async.ok` · `v-scheduler-async-timer.ok` |
 | 文本组件·发控制台 | **E3** | `v-text-sent.ok`（落点 = 服务端日志） |
 | 文本组件·**发真人玩家**（明文 / `MiniMessage` / 可点击悬停） | **E4** | `v-chat-sent.ok` · `v-chat-clickable.ok`（落点 = **客户端日志**） |
+| 文本组件·**`ChatType.Bound` 签名消息** | **E4** | `v-chat-chattype-bound.ok` + 客户端 `[CHAT] <ProbeName> PROBE-CHATTYPE-BOUND`（bound 的 `name` 组件**被客户端渲染**）。**点击行为未验**（需真实 UI 点击聊天行） |
 | 命令·Brigadier 跨版本 | **E1** | 两版件类清单 + javadoc 形参名 |
 | `plugin.yml`·字段与加载顺序 | **E1** | 官方页逐节（`###` 全覆盖） |
 | 起实例必备配置 | **E3** | 各次真机跑（`09-traps.md` 的 T9/T10） |

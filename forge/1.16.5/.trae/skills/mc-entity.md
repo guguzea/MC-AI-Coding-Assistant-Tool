@@ -81,7 +81,7 @@ public class ClientSetup {
 }
 
 // 渲染器
-public class MyEntityRenderer extends LivingEntityRenderer<MyEntity, MyEntityModel<MyEntity>> {
+public class MyEntityRenderer extends LivingRenderer<MyEntity, MyEntityModel<MyEntity>> {
     public MyEntityRenderer(EntityRendererManager manager) {
         super(manager, new MyEntityModel<>(), 0.5f);
     }
@@ -97,7 +97,7 @@ public class MyEntityRenderer extends LivingEntityRenderer<MyEntity, MyEntityMod
 
 ```
 IF 基础渲染（无自定义模型）
-  → 直接使用空的 LivingEntityRenderer 或已有渲染器
+  → 直接使用空的 LivingRenderer 或已有渲染器
 
 IF 自定义 Biped 模型
   → BipedModel + HumanoidMobRenderer
@@ -112,7 +112,7 @@ IF 自定义任意模型
 - ❌ `EntityType.Builder.of()` 第一个参数是 `EntityType.IFactory<Entity>`（构造函数引用），不是 Entity 实例
 - ❌ `EntityType.Builder.build()` 接受 String 参数，不是 Direction
 - ❌ 忘记 `ENTITY_TYPES.register(modEventBus)`（实体不注册）
-- ❌ `LivingRenderer`（不存在）→ 正确：`LivingEntityRenderer`
+- ❌ `LivingEntityRenderer`（1.16.5 不存在；1.17+ 才把 `LivingRenderer` 改名为它）→ 本档正确：`LivingRenderer`
 
 ## 参考资料
 

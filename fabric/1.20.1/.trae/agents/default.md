@@ -22,6 +22,8 @@
 | Mod 元数据 | `fabric.mod.json` |
 | Mixin 支持 | **Loom 一流支持**（无需额外插件）|
 
+> **Yarn 正在逐步弃用，但为了兼容性，本文件依旧使用 Yarn。**
+
 ---
 
 ## Decision Flow：确认规则集适用性

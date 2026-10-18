@@ -139,6 +139,10 @@ public class ModKeyBindings {
 ## 示例：运行时物理端检测
 
 ```java
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.loading.FMLEnvironment;
+
 // 在代码中判断物理端
 if (FMLEnvironment.dist == Dist.CLIENT) {
     // 客户端代码

@@ -9,7 +9,7 @@ mappings: mcp
 
 # mc-dimension
 
-> 本档正文的类名 / 注册表名 / 路径只来自 `data/forge_1.16.5` 本档语料。实读页面：`forge-docs/1.16.5/processed/primer_1_16_5.md` 的 **§Dynamic Registries** 与 **§Dimensions/Worlds**（含 §Registration / §Referencing a Dimension / §Getting the Dimension Registry）以及 §Chunk Generators 里关于维度 JSON 的那一句。
+> 本档正文的类名 / 注册表名 / 路径来自 `data/forge_1.16.5` 本档语料，另有一部分取自本档真构件（正文标 `javap @1.16.5-36.2.34` 的条目）。实读页面：`forge-docs/1.16.5/processed/primer_1_16_5.md` 的 **§Dynamic Registries** 与 **§Dimensions/Worlds**（含 §Registration / §Referencing a Dimension / §Getting the Dimension Registry）以及 §Chunk Generators 里关于维度 JSON 的那一句。
 > 反查结果：本档 processed 全量命中 `dimension` 的只有 5 个文件——`primer_1_16_5.md`（唯一讲维度的页）、`advanced_accesstransformers.md`（AT 里 `[` 表示「数组的一维」，无关）、`datastorage_worldsaveddata.md`（`DimensionSavedDataManager`、按维度存盘，另一主题）、`datastorage_capabilities.md`（`null` 朝向举例提到「另一个维度」）、`tileentities_tesr.md`（「四维矩阵」措辞，无关）。
 > 页内没有的签名一律留 `TODO(未核实)`，禁止用邻版（1.14.4 / 1.15.2 / 1.17+ / NeoForge）补全。
 >

@@ -1063,3 +1063,126 @@ loader-api 摘要的 class 形状 = `{fqcn,simpleName,pkg,modifiers,methods}` �
 **门**：mirrors 绿、yarn-attest 红 0、rules-api-names rc=0、authoring-lint 绿、mappings-key 绿、prose-name-roster 绿（违规 36 = 基线 36，新增 0）、第 8 步 `test-scripts` 全链通过。
 
 **prose-name-roster 首跑红 21 条**：重写后的 REI 散文清单行列了 `CategoryRegistry` / `DisplayRegistry` / `ScreenRegistry` / `EntryRegistry` / `InputMethodRegistry`，该门只认本档 FAPI 摘要与 yarn vanilla 类名，外部库的 `*Registry` 名不在其中。改法 = 清单行只留方法名（`registerCategories` / `registerDisplays` / `registerScreens` / `registerEntries` / `registerInputMethods`），类名仍出现在围栏与 javap 出处行；没有改基线、没有关任何门。
+
+
+## §8.31 二轮复核：10 处门禁盲区内的内容缺陷
+
+对上轮 42 项清账做独立复核（真构件 javap + jar 中央目录 + jar 内 `version.json`/`pack.mcmeta`），抓到 10 处**门禁覆盖不到**的缺陷，已全部修正。
+
+**会让照抄代码出错的 4 处**：
+
+1. `fabric/1.21.11/.cursor/skills/mc-ai.md`：`Goal` 写成「7 个抽象方法」；javap @ yarn 1.21.11+build.6 实际只有 `canStart()` 抽象，其余 6 个是 concrete。已改为「只有 `canStart()` 抽象」。
+2. `fabric/1.21.11/.cursor/skills/mc-cloth-config.md` 路线 B：用了 `Text.literal` 但 import 面缺 `net.minecraft.text.Text`。已补。
+3. 同文件：`ConfigEntry` 嵌套类型写 12；jar 中央目录实际 13（11 注解 + `Gui$EnumHandler$EnumDisplayOption` 枚举 + `Gui` 类）。已改 13。
+4. `fabric/1.21.11/.cursor/skills/mc-model.md`：称 `BlockModelGenerators.registerSimpleItemModel()` 两侧都没有；mojmap `net.minecraft.client.data.models.BlockModelGenerators` 实有包私有 `void registerSimpleItemModel(Block, Identifier)`。已改为「mojmap 存在但包私有，Yarn 无此名」。
+
+**文档自相矛盾/过期的 6 处**：
+
+5. `fabric/1.21.11/.cursor/skills/mc-potion.md`：把 `PotionContents` 与 `PotionUtil` 一起判死；`PotionUtil` 确无，但 mojmap `net.minecraft.world.item.alchemy.PotionContents` 存在（Yarn `PotionContentsComponent`）。已拆开写。
+6. `fabric/1.21.11/knowledge/common/verified-api-1.21.11.md`：「未核实」段仍列 `FabricItemGroup.Builder` 方法名、`ItemGroupEvents.ModifyEntries` 方法名、`ToolMaterial` 六组件；三者已按真构件核实（8 个 builder 方法 / `modifyEntries(FabricItemGroupEntries)` / `incorrectBlocksForDrops,durability,speed,attackDamageBonus,enchantmentValue,repairItems`）。已移入「已核实（真构件 javap 补充）」。
+7. `fabric/1.21.11/knowledge/common/datapack-format.md` 与 `knowledge/version-changes/1.21.x.md`：数据包格式写「未核实」；1.21.11 jar 的 `version.json` 给出 `data_major=94, data_minor=1`，jar 内原版 datapack `pack.mcmeta` 是 `min_format:[94,1]` / `max_format:94`。已改为实测值。
+8. `fabric/1.19.4/.cursor/skills/mc-cloth-config.md`：TODO 说「坐标与 API 面一律未核实」，同文件 19/104/110 行又说 10.0.96 已 javap 核实。已改为「state=commented；坐标 10.0.96 已核实」。
+9. 六处出处头（`mc-advancement` / `mc-ai` / `mc-effect` / `mc-enchantment` / `mc-model` / `mc-potion`）声称「只来自语料」，但正文已有 `javap @ yarn 1.21.11+build.6` 的成员。已改为「语料 + 真构件 javap」，并说明 javap 条目标注方式。
+10. `mc-advancement.md` 的「telemetry 开关无证据」与同文件 145 行「开关是 `sendsTelemetryEvent()`」矛盾；`mc-multiblock.md` 指向已不存在的 Decision Flow TODO。两处已改写。
+
+**复核边界**：以上均只改源稿/档内 knowledge，不改代码逻辑；`fabric/1.21.11` 与 `fabric/1.19.4` 镜像已刷。六道内容门 + 第 8 步 `test-scripts` 复跑全绿（mirrors / yarn-attest 红 0 / rules-api-names 红 0 / authoring-lint ok / mappings-key ok / prose-name-roster 新增 0 / step8 通过）。
+
+
+## §8.32 独立审计器 `audit-content-claims` 与三类映射层缺陷
+
+门禁只证「名字有出处 / 存在于某层」，不证「这个 FQCN 属于本档映射层」。按用户裁定把这类盲区做成独立脚本 `mcp-server/scripts/audit-content-claims.mjs`（只读、**不入门链**），4 个模块：
+
+1. 构件索引：本档 Yarn / mojmap 合并 jar + FAPI 模块 + 外部库 jar（cloth / REI）的类名、嵌套类型、javap 成员。
+2. 断言核对：`不存在` 断言、Goal 抽象方法数、嵌套类型计数、映射对照表行、`versions.json` 坐标。
+3. 文档一致性：出处头、自相矛盾、悬空引用、版本字段。
+4. 代码面：import 缺漏、**映射层混用**（FQCN 不在本档 Yarn 层）、可选 `--compile`（javac 真编译 + 片段包装）。
+
+### 缺陷 A1：fabric/1.21.11 mc-ai 的 8 条 mojmap import
+
+`fabric/1.21.11/.cursor/skills/mc-ai.md` 的 import 块逐字抄自 mojmap 参考文件：`net.minecraft.world.entity.PathfinderMob`、`...ai.goal.LookAtPlayerGoal` / `RandomLookAroundGoal` / `RandomStrollGoal` / `TemptGoal`、`net.minecraft.world.entity.animal.cow.Cow`、`net.minecraft.world.item.Items` / `...crafting.Ingredient`。本档 frontmatter 是 `mappings: yarn`。
+
+**改动**：import 与构造表换 Yarn 名（`PathAwareEntity` / `LookAtEntityGoal` / `LookAroundGoal` / `WanderAroundGoal` / `CowEntity` / `net.minecraft.item.Items`）；`TemptGoal` 按 javap 改成第 3 参 `Predicate<ItemStack>` 的 `stack -> stack.isOf(Items.WHEAT)`；属性块改 `DefaultAttributeContainer.Builder` + `EntityAttributes.*`；映射表补 `Items` / `Ingredient` / `Attributes` 三行（这三行已用 `data/_yarn-mojmap-pairs/` 对 1.16.5–1.21.11 逐档 join 核过）。
+
+**出处**：1.21.11 合并 jar 中央目录存在 `entity/mob/PathAwareEntity`、`entity/ai/goal/{WanderAroundGoal,LookAtEntityGoal,LookAroundGoal,TemptGoal}`、`entity/passive/CowEntity`、`item/Items`、`recipe/Ingredient`、`entity/attribute/EntityAttributes`；`javap` 给出 `TemptGoal(PathAwareEntity,double,Predicate<ItemStack>,boolean)`、`WanderAroundGoal(PathAwareEntity,double)`、`LookAtEntityGoal(MobEntity,Class<? extends LivingEntity>,float)`、`LookAroundGoal(MobEntity)`、`DefaultAttributeContainer$Builder.add(RegistryEntry<EntityAttribute>,double)`。
+
+### 缺陷 A2：同一文件的两个 mojmap 成员名（类名换对后仍抄不出）
+
+只换类名还不够：`registerGoals()` / `goalSelector.addGoal(int, Goal)` 都是 mojmap 成员名。1.21.11 Yarn 合并 jar 的 `javap`：`MobEntity` 只有 `protected void initGoals()`，`GoalSelector` 只有 `public void add(int, Goal)`；没有 `addGoal` / `registerGoals`。**这句话是拼成完整类真编译时抓到的**（`cannot find symbol: method addGoal`），import 检查与静态规则都看不到。
+
+**改动**：标题/正文/属性 TODO 改成 `initGoals()` + `add(int, Goal)`；新增一段完整 Yarn 写法（mojmap 原文块保留并标注）；映射表加两行成员对照，并注明「成员名只按 1.21.11 javap 核过，未做 13 档 join」。
+
+### 缺陷 B：fabric/1.21.8 与 1.21.10 mc-gametest 的整段 mojmap 代码
+
+两档服务端测试代码块用 `net.minecraft.gametest.framework.GameTestHelper`、`net.minecraft.world.level.block.Blocks`、`assertBlockPresent`、`succeed`、`setBlock`，并断言「本档没有 TestContext / expectBlock / complete」。这与本档 `mappings: yarn` 冲突，也与同文件末尾的映射表（`GameTestHelper → TestContext`）自相矛盾。
+
+**改动**：代码块换 `net.minecraft.test.TestContext` / `net.minecraft.block.Blocks` / `expectBlock` / `complete` / `setBlockState`；改写「本档没有 TestContext」的相反断言与 TODO 清单；保留 mojmap→Yarn 对照表并注明上游页面是 mojmap。
+
+**出处**：1.21.8 / 1.21.10 合并 jar 不存在 `net/minecraft/gametest/framework/GameTestHelper.class`，存在 `net/minecraft/test/TestContext.class`；`javap` 实测 `expectBlock(Block,int,int,int)`、`complete()`、`setBlockState(int,int,int,Block)`；FAPI `fabric-gametest-api-v1` 的 `CustomTestMethodInvoker` 方法参数在 intermediary 是 `class_4516`（即 `TestContext`），`@GameTest` 注解存在于 `net.fabricmc.fabric.api.gametest.v1`。
+
+**真编译**：上述 4 个块（1.21.8 / 1.21.10 × 服务端/客户端）用本档 Yarn 合并 jar + `F:/MOD_TEST/dev/fabric-<ver>/build/loom-cache/remapped_working` 里同组的 46 个 Yarn 重映射 FAPI jar，`javac` 全部 0 退出；`mc-ai` 的 Goal 注册 + 属性块拼成完整 `MiniGolemEntity` 后同样 0 退出。
+
+### 检出方法（可复用）
+
+`checkLayerMixups`：对每个 java 围栏的 `import net.minecraft.*`，在本档 Yarn 索引里查该 FQCN —— 有则跳过；Yarn 层没有、而 mojmap 层有（1.21.11）或 `data/_yarn-mojmap-pairs/yarn-mojmap-<ver>.json` 的 mojmap→Yarn 对照表里有 ⇒ 判红，并给出 Yarn 建议名。
+
+**本轮补掉的漏检**：该规则最初只认「本档 mojmap 合并 jar」，而本机只有 1.21.11 有；其余 12 个 Yarn 档被静默跳过。改用 pairs 表后，13 个 Yarn 档全部实跑（26.1.2 无 Yarn 层，按设计跳过）。
+
+### 本轮读数
+
+- `--all` 静态：fix 前 `fail=8`（A1）→ 补 A2/B 后 `fail=0 / unverifiable=6`（6 条为缺构件，不能判不存在）。
+- `--all --compile`：fix 前 `fail=6`（含 3 条 REI 路径未接 + 3 条 gametest）→ fix 后 `fail=0 / unverifiable=21`。
+- 已知边界：① 层混用检查只扫 `import` 行，无 import 的裸简单名无法可靠判归属，只能靠真编译或人工 javap；② FAPI 模块缓存 jar 是 mojmap 重映射件，与本档 Yarn 合并 jar 不同层，`cannot access <FAPI 类>` 一律归「不可判定」，要真编译须改用各档 `remapped_working` 的 Yarn 件；③ 含 `...` 占位的教学片段跳过编译。
+
+## §8.33 多平台扩面：FAPI 包名缺陷与构件覆盖修正
+
+§8.32 的检查器只覆盖 `fabric/`。本轮按用户要求扩到全部平台树，并修正了三处「看着绿、其实没判」的覆盖漏洞。
+
+### 构件面扩面（`artifactSet`）
+
+| 平台 | 判据构件 | 期望层 |
+| --- | --- | --- |
+| fabric / quilt（≤1.21.11） | 本档 Yarn 合并 jar + mojmap 合并 jar；缺失时依次回退 `F:/MC_GAME/_oracle-jars/mc/minecraft-<v>-yarn-build.*.jar`、`F:/MC_GAME/fabric-<v>/.gradle/loom-cache/<v>/**/minecraft-project-@-mapped.jar` | yarn |
+| fabric 26.x | `F:/MC_GAME/fabric-<v>/.gradle/loom-cache/minecraftMaven/**/*merged*.jar`（已去混淆）；FAPI 模块版本由 umbrella POM 解析 | mojmap |
+| neoforge | `F:/MOD_TEST/dev/neoforge-<v>/build/moddev/artifacts/*-merged.jar` + fancymodloader loader jar | mojmap |
+| forge / rift | `_mapped_official_` / `_mapped_parchment_`（mojmap）或 `_mapped_snapshot_`（MCP）+ fmlcore / forgespi / fmlloader | 随构件层 |
+| forge 1.7.10–1.11.2 / liteloader / modloader | 无 mapped jar 时读 `data/<platform>_<v>/mappings/joined.srg|tsrg` 的 MCP 类名表 | mcp |
+| bedrock | 无 Java 构件，只跑 provenance / contradiction / dangling 三项 | — |
+
+三个具体修正：
+
+1. **TSRG 解析**：`loadMcpNames` 原来只认 `joined.srg` 的 `CL:` 行，1.13.2 的 `joined.tsrg` 是「顶格 `obf named` + 缩进成员」格式，导致 rift 的 MCP 名表为 0。补 TSRG 解析后 rift/1.13.2 读到 4027 个类名。
+2. **同版本 forge 表回退**：liteloader / rift 没有自己的 `mappings/` 目录；MCP 名是 MC 版本属性，改为回退 `data/forge_<v>/mappings`（liteloader 三档分别读到 2541 / 2980 / 3344 个类名）。
+3. **精确 FAPI 件**：`helpers` 目录里可能残留上一次构建（另一 MC 版本）的 jar，且 `modules-2` 里是 intermediary 层件。改为搜四个根（`MOD_TEST/dev` 与 `MC_GAME` 各自的 `build/loom-cache/remapped_working` 与 `.gradle/loom-cache/remapped_mods`），优先 `remapped.*`，否则按版本标签过滤；26.1.2 的模块件无 MC 标签，改由 umbrella POM（`fabric-api-<ver>+26.1.2.pom`）解析精确模块版本。编译类路径只用本档精确 remapped 件，索引面才用全局件做类名存在性检查。
+
+### 缺陷 C：`ClientPlayNetworking` 的包名（fabric 1.16.5–1.21.11）
+
+九个档的 `06-networking` 规则 / `mc-networking` 技能 / 代码模式都写 `import net.fabricmc.fabric.api.networking.v1.ClientPlayNetworking`。本机 `fabric-<v>` 的 Loom 缓存（`build/loom-cache/remapped_working` 或 `.gradle/loom-cache/remapped_mods`）里，`fabric-networking-api-v1` 的类实际在 `net/fabricmc/fabric/api/client/networking/v1/ClientPlayNetworking.class`：1.14.4（1.0.1）/ 1.16.5（1.0.5）/ 1.17.1（1.0.14）/ 1.18.2（1.0.24）/ 1.19.4 / 1.20.1 / 1.20.4 / 1.21.1 / 1.21.3 / 1.21.4 / 1.21.8 / 1.21.10 / 1.21.11 全部一致。另扫 16 个 `fabric-networking-api-v1` 模块版本（1.0.1+ 起），全部 `old=0 / new=1`，没有旧包形态。
+
+**改动**：18 个源文件改成 `...api.client.networking.v1.ClientPlayNetworking`（1.16.5 / 1.17.1 / 1.18.2 / 1.19.4 / 1.20.1 / 1.20.4 / 1.21.3 各 rule+skill；1.21.1 rule+code-patterns；1.21.11 rule+version-changes）。1.14.4 的文档用 v0 `ClientSidePacketRegistry`，没有这个 import，未改。
+
+### 缺陷 D：fabric 1.14.4 / 1.16.5 / 1.17.1 的缺 import
+
+新增的 Yarn 构件让这三档第一次真正跑上 `checkImports`，抓出四处：
+
+- `fabric/1.14.4/.cursor/skills/mc-capability.md`：`AttackEntityCallback` 回调返回 `ActionResult.PASS`，但没有 `import net.minecraft.util.ActionResult;`（1.16.5 / 1.17.1 同文同缺）。
+- `fabric/1.14.4/.cursor/rules/06-networking.mdc`：`Identifier` 与 `ServerPlayerEntity` 都是裸用无 import。
+
+出处：`minecraft-1.14.4-yarn-build.18.jar` / `minecraft-1.16.5-yarn-build.10.jar` / 1.17.1 的 `minecraft-project-@-mapped.jar` 中央目录含 `net/minecraft/util/ActionResult`、`net/minecraft/util/Identifier`、`net/minecraft/server/network/ServerPlayerEntity`。
+
+### 缺陷 E：forge 1.16.5 渲染器类名（`LivingRenderer` / `BipedArmorLayer`）
+
+1.16.5 的 mapped jar（`forge-1.16.5-36.2.34_mapped_official_1.16.5.jar`）中央目录只有 `net/minecraft/client/renderer/entity/LivingRenderer.class` 与 `.../layers/BipedArmorLayer.class`；`LivingEntityRenderer` / `HumanoidArmorLayer` 是 1.17+ 的名字。该档四处写错：`skills/mc-entity/SKILL.md`（代码块 / Decision / 常见错误）、`.cursor/rules/04-entity.mdc` 渲染器示例、`code-patterns/03-entity-patterns.md` 示例（同时把 armor layer 写成 `HumanoidArmorLayer`）、`knowledge/antipatterns/entity.md`（标题与「正确」示例自相矛盾）。另 1.17.1 / 1.18.2 / 1.19.4 / 1.20.1 / 1.20.4 的 `knowledge/antipatterns/entity.md` 有一处同源拷贝误伤：标题写「LivingEntityRenderer（不存在）」，但该档该类存在，示例真正对比的是「原始类型 vs 带泛型」。标题已改为「渲染器漏写泛型参数（原始类型）」。
+
+### 本轮读数（57 档）
+
+- 静态 + 编译合计：`fail=0 / unverifiable=22`；22 条全在 `compile` 腿，成分为：缺上下文常量 `MOD_ID`、跨加载器 porting 示例（architectury / FabricLoader / NeoForge import 不在本档类路径）、含 `...` 占位片段、示例包 `com.example.examplemod`。
+- 档位覆盖：fabric 14、forge 15、neoforge 10、quilt 10、liteloader 3、rift 1、modloader 3、bedrock 1。fabric 14 档现在全部有本档游戏 jar；1.16.5 / 1.17.1 / 26.1.2 的 FAPI 也已有精确件（1.17.1 50 个模块，26.1.2 由 POM 解析）。
+- 编译支撑件补齐：`netty-buffer/common/codec`、`guava`、`org.jetbrains:annotations`、`org.jspecify:jspecify`（1.21.11 的 `PigEntity` 父链带 JSpecify 注解，缺它会让 javac 报 `cannot access Nullable`）。
+
+### 仍存边界（未静默）
+
+- **modloader 三档无 MCP 名表、无构件** ⇒ 只跑 provenance / contradiction / dangling（三档 `.cursor` 下 Java 围栏数均为 0，当前不损失 Java 面检出）。
+- **forge 1.7.10–1.11.2 无 mapped jar** ⇒ 只按 MCP 类名表判存在性与缺 import，不能真编译（F/D 盘只找到 Forge universal 件，没有 mapped MC jar；五档 Java 围栏数均为 0，当前不损失编译覆盖）。
+- **成员名（`initGoals` / `add`）仍只按 1.21.11 核过**，未做逐档 join；成员名缺陷靠真编译兜底。
+
+

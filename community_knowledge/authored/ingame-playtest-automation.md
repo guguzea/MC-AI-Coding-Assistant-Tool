@@ -453,6 +453,48 @@ NeoForge 1.20.1 无官方 MDK pin（原返回 `MDK_NOT_PINNED`）⇒ 按**兼容
   **结果**：20 条诊断里 **13 条** `Success[swingSource=PREDICTED, … heldItemTransformedTo=1 minecraft:chest]` ⇒ 服务端 `BlockPlaceEvent` ⇒ 官方 `api__pdc.md:226/:228` 那条「放成方块不自动复制 PDC」的**原形态验成**。
 - **84 · 同族（未做，处方同款）**：`attack` / `break` 也读 `consumeClick()` ⇒ 同一坑。修法：创造模式用 `gameMode.destroyBlock(BlockPos)`（即时破坏、无状态机）；生存用 `startDestroyBlock` + 每 tick `continueDestroyBlock` + `stopDestroyBlock`。
 
+- **85 · 改完探针后「件必须自证」，否则你在测空气**（2026-10-17 · 我在这上面绕了四次）
+  三条硬核验，缺一条都会得到**假结论**：
+  1. **`jar tf` 必须同时出现三样**：**插件主类**（如 `com/example/paperqa/PaperQaServer.class`）+ **`plugin.yml`** + **探针 class**。缺主类 ⇒ `InvalidPluginException: Cannot find main class …`；缺 `plugin.yml` ⇒ `does not contain a paper-plugin.yml or plugin.yml`。两者都表现为**插件不加载**，而探针不加载 ⇒ 所有 marker **一个都不会更新**（你会对着**旧文件**下结论）。
+  2. **classpath 必须含这两件**（都容易漏）：**`net.md-5:bungeecord-chat`**（缺 ⇒ `找不到 BaseComponent`）与 **`adventure-text-minimessage`**（缺 ⇒ `找不到 MiniMessage`）。**按 glob 自动找件时别用 `^paper-api|^adventure-api` 这种窄正则**——`adventure` 前缀有多个件。
+  3. **重建前先确认没有服务端占着那个 jar**：否则 `jar cf` **静默不生效**（文件时间戳都不变），你以为更新了、其实服务端加载的还是旧的。
+  ⚠ **装配产物要"合并"而不是"重编"**：主类源码可能在 `plugin-src/src/main/java/**`（生成器产出），而探针在 `probe/**`；只编一侧就会丢掉另一侧。稳妥做法 = **编探针到临时目录 → 与已有的 `classes/` 合并 + 拷 `plugin.yml` → 打包 → `jar tf` 自证**。
+
+- **86 · 判读只认"新鲜文件"**（同一轮 · 假结论的另一个来源）
+  服务端日志/marker 会被**上一次跑**的残留污染：`phase2-server.log` 里最新行还是 1 小时前的、`*.FAIL` 还是上一轮写的。⇒ **每次判读先 `Get-Item` 看时间戳**（或用带时间戳的唯一文件名），否则会把旧记录当成本轮结论。我这一轮因此**误判了两次**（报出"实体没落盘"、"插件没加载"）。
+
+- **87 · 「区块里的实体」必须用 `Chunk#getEntities()`，`World#getEntities()` 会给假否定**（2026-10-17）
+  同一时刻、同一进程的实测：
+  ```
+  [PROBE] entity diag: chunk=-4,3 chunkEntities=34 allWorldsEntities=0
+                              ↑ Chunk#getEntities()      ↑ World#getEntities()
+  ```
+  ⇒ **无玩家的服务端上 `World#getEntities()` 返回 0**。我拿它当判据，连续几轮把"已落盘"读成"没保存"。
+  **同项还踩出两条必要条件**：① `spawnEntity` **前**必须 `world.getChunkAt(x>>4, z>>4)` 加载区块（否则实体被丢进未加载区块并**静默丢弃**，返回值仍是非 null）；② 跨重启载体用 **`ARMOR_STAND`**（僵尸白天自燃、掉落物 despawn）。
+  **存档位置别找错**：26.x 是 `world/dimensions/<ns>/<dim>/{region,entities,data}`，不是老的 `world/entities/`。
+
+- **88 · 往容器里塞物品必须写「活库存」，`getState()` 是快照**（2026-10-17）
+  ```java
+  // ❌ 快照：改的是内存副本，不落 TileEntity ⇒ 重启后那格是空的（诊断原文：方块=CHEST 物品=null）
+  ((Container) block.getState()).getInventory().setItem(0, it); block.getState().update(true, false);
+  // ✅ 活库存（javap 实证：Block#getState(boolean) 与 Chest#getBlockInventory() 都存在）
+  BlockState live = block.getState(false);
+  if (live instanceof Chest) ((Chest) live).getBlockInventory().setItem(0, it);
+  ```
+  **这一条与 87 是同一类错的两种形态**：把「快照/代办对象」当「活的」用 —— 87 是 `World#getEntities()`（只覆盖已加载），88 是快照库存（不回写）。
+  ⇒ 到此 **PDC 的五类 holder 跨重启全部验成**：`World` · `Chunk` · `TileState` · `Entity`（`Chunk#getEntities()` + ARMOR_STAND + spawn 前加载区块）· `ItemStack`（经箱子**活库存**）。
+
+- **89 · 有两份 `plan.txt`；旧剧本里的 `stop` 让**每次起服都自杀**（2026-10-17）
+  **现象**：组合跑时服务端**就绪约 15 秒后自己停服** ⇒ 客户端 `Connection refused`（netty 栈）⇒ 外部脚本只表现为"客户端日志冻住、等不到裁决"。
+  **服务端日志逐字**（判据就这两行）：
+  ```
+  [QA] DONE stop
+  [QA] 收工即停服（plan 的 stop 步骤）：20 tick 后 Bukkit.shutdown()
+  ```
+  **根因**：插件里是**两份**东西 —— 探针 + **服务端 driver**；后者**每次起服**都读 `<证据目录>/plan.txt` 并照它跑，而那份是上一轮两阶段留下的旧剧本，**末步 `stop`**。
+  **处方**：复跑前**重写/清掉**那份 `plan.txt`；组合跑时服务端剧本**不要写 `stop`**（只 `mark` + `wait ticks=N`），停服交给外部收尾。
+  ⚠ **别搞混两份剧本**：服务端 driver 读 `<证据目录>/plan.txt`，客户端 driver 读 `--evidenceDir` 下自己的 `plan.txt`（本项目 `run/qa/plan.txt`）——改错一份等于没改。
+
 **三条可迁移的通用规矩**：
 
 1. **判据要放在链路的接收端** —— 发控制台 ⇒ 服务端日志；发真人玩家 ⇒ **客户端日志**；客户端动作 ⇒ **客户端返回值**（放服务端只能证明「发出去了」）。

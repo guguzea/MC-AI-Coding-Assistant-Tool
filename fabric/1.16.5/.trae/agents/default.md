@@ -20,6 +20,8 @@
 | Mixin 支持 | Loom 处理 Mixin；不要手写 Mixin Plugin / MixinBootstrap |
 | Fabric API | 0.42.x（`net.fabricmc.fabric-api:fabric-api:0.42.0+1.16`）|
 
+> **Yarn 正在逐步弃用，但为了兼容性，本文件依旧使用 Yarn。**
+
 ---
 
 ## Decision Flow：确认规则集适用性

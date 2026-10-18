@@ -14,9 +14,11 @@ mappings_alt: mojmap
 
 ## 先读这条：本档与邻档不同名（禁止互抄）
 
-本档服务端 game test 用 **Fabric API 自己的 `@GameTest`**（`net.fabricmc.fabric.api.gametest.v1.GameTest`）+ `CustomTestMethodInvoker` + 原版 `GameTestHelper`；参考类命名家族是本档 `ExampleMod*`（1.21.4 / 1.21.8 档叫 `FabricDocs*`）。
+本档服务端 game test 用 **Fabric API 自己的 `@GameTest`**（`net.fabricmc.fabric.api.gametest.v1.GameTest`）+ `CustomTestMethodInvoker` + 原版 `TestContext`（上游页写作 mojmap 的 `GameTestHelper`，映射见文末对照表）；参考类命名家族是本档 `ExampleMod*`（1.21.4 / 1.21.8 档叫 `FabricDocs*`）。
 
-`data/fabric_1.21.4` 的同名参考文件是**另一套**：`net.minecraft.test.GameTest` / `net.minecraft.test.TestContext` / `FabricGameTest` / `@GameTest(templateName = EMPTY_STRUCTURE)` / `expectBlock` / `complete`。⇒ 本档**没有** `TestContext`、`FabricGameTest`、`EMPTY_STRUCTURE`、`expectBlock`、`complete`，不要写。1.21.8 与本档 API 同形，但类名/命名空间/modId 前缀不同，同样禁止跨档抄。
+`data/fabric_1.21.4` 的同名参考文件是**另一套 FAPI 入口**：`net.minecraft.test.GameTest` / `FabricGameTest` / `@GameTest(templateName = EMPTY_STRUCTURE)`。1.21.8 与本档 API 同形，但类名/命名空间/modId 前缀不同，同样禁止跨档抄。
+
+⇒ 本档服务端入口是 FAPI 的**裸** `@GameTest` + `CustomTestMethodInvoker`；辅助类用 Yarn 名 `TestContext`（`expectBlock` / `complete` / `setBlockState`），不要写 mojmap 原名。
 
 ## Loom 侧装配（build.gradle）
 
@@ -71,30 +73,31 @@ package com.example.docs;
 
 import java.lang.reflect.Method;
 
-import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.test.TestContext;
+import net.minecraft.block.Blocks;
 
 import net.fabricmc.fabric.api.gametest.v1.CustomTestMethodInvoker;
 import net.fabricmc.fabric.api.gametest.v1.GameTest;
 
 public class ExampleModGameTest implements CustomTestMethodInvoker {
 	@GameTest
-	public void test(GameTestHelper context) {
-		context.assertBlockPresent(Blocks.AIR, 0, 0, 0);
-		context.succeed();
+	public void test(TestContext context) {
+		context.expectBlock(Blocks.AIR, 0, 0, 0);
+		context.complete();
 	}
 
 	@Override
-	public void invokeTestMethod(GameTestHelper context, Method method) throws ReflectiveOperationException {
-		context.setBlock(0, 0, 0, Blocks.AIR);
+	public void invokeTestMethod(TestContext context, Method method) throws ReflectiveOperationException {
+		context.setBlockState(0, 0, 0, Blocks.AIR);
 		method.invoke(this, context);
 	}
 }
 ```
 
-- 注解 `@GameTest` 来自 **`net.fabricmc.fabric.api.gametest.v1`**，本档示例为**裸用**（不带属性括号）；测试方法签名 `public void test(GameTestHelper context)`。
-- `GameTestHelper` 上本档只出现三个调用：`assertBlockPresent(Blocks.AIR, 0, 0, 0)`、`succeed()`、`setBlock(0, 0, 0, Blocks.AIR)`。实参顺序有差异：断言「方块在前」，放置「坐标在前」。其余方法 ⇒ `TODO(未核实)`。
-- `@Override invokeTestMethod(GameTestHelper context, Method method) throws ReflectiveOperationException` 是实现 `CustomTestMethodInvoker` 的钩子：本档在反射调用 `method.invoke(this, context)` 前先把 `(0,0,0)` 设为 `Blocks.AIR`。`Method` 为 `java.lang.reflect.Method`。
+- 上游参考页写的是 mojmap 名（`GameTestHelper` / `world.level.block.Blocks` / `assertBlockPresent` / `succeed` / `setBlock`）；本档 `mappings: yarn`，上面代码已换成 Yarn 名（`net.minecraft.test.TestContext` / `net.minecraft.block.Blocks` / `expectBlock` / `complete` / `setBlockState`），签名按 1.21.10 合并 jar javap 核实。
+- 注解 `@GameTest` 来自 **`net.fabricmc.fabric.api.gametest.v1`**，本档示例为**裸用**（不带属性括号）；测试方法签名 `public void test(TestContext context)`。
+- `TestContext` 上本档只出现三个调用：`expectBlock(Blocks.AIR, 0, 0, 0)`、`complete()`、`setBlockState(0, 0, 0, Blocks.AIR)`。实参顺序有差异：断言「方块在前」，放置「坐标在前」。其余方法 ⇒ `TODO(未核实)`。
+- `@Override invokeTestMethod(TestContext context, Method method) throws ReflectiveOperationException` 是实现 `CustomTestMethodInvoker` 的钩子：本档在反射调用 `method.invoke(this, context)` 前先把 `(0,0,0)` 设为 `Blocks.AIR`。`Method` 为 `java.lang.reflect.Method`。
 - 本档参考文件未出现 `GameTestRegistry` / `registerTestFunctions` / `@GameTestBatch` ⇒ 不写。
 
 ## 客户端 game test
@@ -157,7 +160,7 @@ tasks.register("runProductionClientGameTest", net.fabricmc.loom.task.prod.Client
 
 ### ⚠️ 映射口径：本档语料是 mojmap
 
-本文件下面引 `search_fabric_docs` / `get_fabric_doc_full` 抄来的类名是 **mojmap 原名** —— 因为本档语料本身是 mojmap：`data/fabric_1.21.10/reference/1.21.10/build.gradle` 写 `mappings loom.officialMojangMappings()`。
+本文件从 `search_fabric_docs` / `get_fabric_doc_full` 抄来的类名是 **mojmap 原名** —— 因为本档语料本身是 mojmap：`data/fabric_1.21.10/reference/1.21.10/build.gradle` 写 `mappings loom.officialMojangMappings()`。上面代码块已按本表换成 Yarn 名。
 但本档 `scaffold/gradle.properties` 钉的是 Yarn（工程默认映射按本档 `.cursor/rules/00-project-setup.mdc` 与 frontmatter 为准），**两套名不能混用**。
 
 | mojmap 名 | Yarn 名 | 适用版本（13 档逐档 join 实测） | 依据 |
@@ -171,9 +174,9 @@ tasks.register("runProductionClientGameTest", net.fabricmc.loom.task.prod.Client
 ## 本档未覆盖（禁止默写）
 
 - `@GameTest` 的属性面（超时、batch、structureName/templateName 等）：本档示例为裸注解，无属性证据。
-- `GameTestHelper` 除 `assertBlockPresent` / `succeed` / `setBlock` 之外的方法；`CustomTestMethodInvoker` 除 `invokeTestMethod` 之外的成员。
+- `TestContext` 除 `expectBlock` / `complete` / `setBlockState` 之外的方法；`CustomTestMethodInvoker` 除 `invokeTestMethod` 之外的成员。
 - `ClientGameTestContext` 除 `worldBuilder` / `takeScreenshot` 之外的方法。
-- `FabricGameTest`、`TestContext`、`EMPTY_STRUCTURE`（1.21.4 面）：本档语料零出现。
+- `FabricGameTest`、`EMPTY_STRUCTURE`（1.21.4 面）：本档语料零出现。
 - CI workflow YAML 正文（文件未落盘，见上节）。
 - `configureTests` 全量选项（页面只指向 Loom 文档 `./loom/fabric-api#tests`）。
 - 单元测试（Fabric Loader JUnit、`beforeAll` 注册表预热、崩溃日志样例）：同页前半属另一主题，本 Skill 未取；本档页面该处转引的是 `<<< @/public/assets/develop/automatic-testing/crash-report.log`，与本 Skill 无关。

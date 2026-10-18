@@ -32,7 +32,7 @@ public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos
 }
 ```
 
-其余环节本档**没有** Yarn 页面出处，只能按下面 Decision Flow 的 TODO 逐条核实；不许从记忆或邻档补。
+其余环节本档**没有** Yarn 页面出处，只能按下面 Decision Flow 的步骤逐条核（签名见下节「已核实签名」）；不许从记忆或邻档补。
 
 ## Decision Flow
 

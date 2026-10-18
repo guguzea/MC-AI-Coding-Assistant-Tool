@@ -15,6 +15,7 @@ Fabric **没有** Forge Capability，也 **没有** `ServerLivingEntityEvents`�
 不要用 1.20 的 `ItemGroupEvents` 当本档 API。依赖走 `fabric-api`。
 
 ```java
+import net.minecraft.util.ActionResult;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.event.server.ServerTickCallback;
 

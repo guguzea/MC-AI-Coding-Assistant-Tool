@@ -1,6 +1,6 @@
 # Fabric 1.21.11 已核实 API
 
-来源：本档 **1.21.11** 语料 + 本档映射表 + `query_loader_api`。禁止把 1.21.4 / 26.x 文档当本档，也不要把邻版 API 名补进未核实骨架。
+来源：本档 **1.21.11** 语料 + 本档映射表 + `query_loader_api` + 本档真构件 `javap`。禁止把 1.21.4 / 26.x 文档当本档，也不要把邻版 API 名补进未核实骨架。
 
 证据口径（每条都能在仓库里重跑）：
 
@@ -59,10 +59,13 @@
 
 ## 未核实（禁止默写）
 
-- `FabricItemGroup.Builder` 上逐个方法名（`displayName` / `icon` / `registerItems` 之类）—— 只核实到 `builder()` 与返回类型；要写先 `query_loader_api`。
-- `ItemGroupEvents.ModifyEntries` 的方法名（摘要表未收嵌套类）。
-- `ToolMaterial` record 六个组件的参数名（映射表只有 `comp_*`），含义顺序以官方 `develop_items_custom-tools` 页为准。
 - 语料里所有 `@[code transclude]` 占位（本档 raw 页未展开），不要当成「文档没给代码」→ 需要示例时回 CLI / 映射表核名。
+
+## 已核实（真构件 javap 补充）
+
+- `FabricItemGroup.builder()` → `ItemGroup.Builder`；builder 的 8 个方法 `displayName(Text)` / `icon(Supplier<ItemStack>)` / `entries(ItemGroup.EntryCollector)` / `special()` / `noRenderedName()` / `noScrollbar()` / `texture(Identifier)` / `build()`（javap @ yarn 1.21.11+build.6）。
+- `ItemGroupEvents.ModifyEntries` 的唯一方法是 `modifyEntries(FabricItemGroupEntries)`（FAPI `fabric-item-group-api-v1` 4.2.36 javap）。
+- `ToolMaterial` record 六组件 = `incorrectBlocksForDrops` / `durability` / `speed` / `attackDamageBonus` / `enchantmentValue` / `repairItems`（javap @ yarn 1.21.11+build.6）。
 
 ## 构建版本（LIVE 实查）
 

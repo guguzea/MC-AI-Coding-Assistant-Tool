@@ -10,7 +10,7 @@ mappings_alt: mojmap
 
 # mc-advancement
 
-> 本档正文的类名/签名只来自 `data/fabric_1.21.11` 本档语料：页面 `fabric-docs/1.21.11/processed/develop_data-generation_advancements.md`，代码 `reference/1.21.11/src/client/java/com/example/docs/datagen/ExampleModAdvancementProvider.java`、`.../datagen/ExampleModDataGenerator.java`、`reference/1.21.11/src/main/java/com/example/docs/advancement/{ExampleModDatagenAdvancement,UseToolCriterion,ParameterizedUseToolCriterion,ModCriteria}.java`、产物 `reference/1.21.11/src/main/generated/data/example-mod/advancement/get_dirt.json`。页内没有的签名一律留 `TODO(未核实)`，禁止用邻版（1.21.10 / 1.21.8 / 1.21.4 / 26.1.2）补全。
+> 本档正文的类名/签名来自 `data/fabric_1.21.11` 本档语料：页面 `fabric-docs/1.21.11/processed/develop_data-generation_advancements.md`，代码 `reference/1.21.11/src/client/java/com/example/docs/datagen/ExampleModAdvancementProvider.java`、`.../datagen/ExampleModDataGenerator.java`、`reference/1.21.11/src/main/java/com/example/docs/advancement/{ExampleModDatagenAdvancement,UseToolCriterion,ParameterizedUseToolCriterion,ModCriteria}.java`、产物 `reference/1.21.11/src/main/generated/data/example-mod/advancement/get_dirt.json`。正文里标了 `javap @ yarn 1.21.11+build.6` 的条目来自本档真构件；页内没有的签名先按本档真构件 javap 核，核不到才留 `TODO(未核实)`，禁止用邻版（1.21.10 / 1.21.8 / 1.21.4 / 26.1.2）补全。
 
 ## 先读这条：本档与 1.21.10 档不同名（禁止互抄）
 
@@ -256,7 +256,7 @@ public class ModCriteria {
 - 进度 tab / 根进度 / `advancement_tab`、图标 `ItemStack` 变体、`Component.translatable`、语言键：本档语料无（同档 `develop_data-generation_translations.md` 是另一主题，未在此引）。
 - `CriteriaTriggers.register` / `Criteria.register` 的泛型签名已核实；`SimpleCriterionTrigger` 除 `codec()` / `trigger(...)` / `SimpleInstance` 之外的成员：可用 `get_minecraft_source` 继续读，本件只覆盖到上面这些。
 - 原版 criterion 触发器清单：页面只给外链 `https://minecraft.wiki/w/Advancement_definition#List_of_triggers` 与包名 `net.minecraft.advancements.criterion`，未列类名；本档代码只出现 `ConsumeItemTrigger`、`InventoryChangeTrigger`、`ContextAwarePredicate`、`SimpleCriterionTrigger` 四个。
-- 手写（非 datagen）进度 JSON 的完整 schema、`requirements` 的手写规则、`sends_telemetry_event` 的开关：本档无证据。
+- 手写（非 datagen）进度 JSON 的完整 schema 与 `requirements` 的手写规则：本档无证据。`sends_telemetry_event` 的 Java 开关已核实（见上：`Advancement.Builder#sendsTelemetryEvent()`），生成件里该字段为 true。
 - 映射口径提醒：本档 frontmatter 钉 `mappings: yarn`，而参考工程用 `mappings loom.officialMojangMappings()`，正文里的 `net.minecraft.*` 名因此是官方名。工程真用 Yarn 时须自行 `convert_mapping` 对照，禁止把上面的包名当 Yarn 名直写。
 
 ## 相关

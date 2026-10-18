@@ -10,7 +10,7 @@ mappings_alt: mojmap
 
 # mc-potion
 
-> 本档正文的类名/签名只来自 `data/fabric_1.21.11` 本档语料：页面 `fabric-docs/1.21.11/processed/develop_items_potions.md`，代码 `reference/1.21.11/src/main/java/com/example/docs/potion/ExampleModPotions.java`；与本档 `mc-effect.md`（同域样板）互指。页内没有的签名一律留 `TODO(未核实)`，禁止用邻版（1.21.10 / 1.21.3 / 26.1.2）补全。
+> 本档正文的类名/签名来自 `data/fabric_1.21.11` 本档语料：页面 `fabric-docs/1.21.11/processed/develop_items_potions.md`，代码 `reference/1.21.11/src/main/java/com/example/docs/potion/ExampleModPotions.java`；与本档 `mc-effect.md`（同域样板）互指。正文里标了 `javap @ yarn 1.21.11+build.6` 的条目来自本档真构件；页内没有的签名先按本档真构件 javap 核，核不到才留 `TODO(未核实)`，禁止用邻版（1.21.10 / 1.21.3 / 26.1.2）补全。
 
 ## 方法名分两层：`addMix`（mojmap）/ `registerPotionRecipe`（Yarn）
 
@@ -160,7 +160,7 @@ public class ExampleModPotions implements ModInitializer {
 
 ## 本档未覆盖（禁止默写）
 
-- `PotionContents` / `PotionUtil`：本档 `processed/` 全量检索**零命中**，本档不存在这两个入口，不要写。
+- `PotionContents` / `PotionUtil`：本档 `processed/` 全量检索**零命中**。两者要分开看：`PotionUtil` 在 1.21.11 已无该类；`PotionContents` 仍存在（mojmap `net.minecraft.world.item.alchemy.PotionContents`，Yarn `net.minecraft.component.type.PotionContentsComponent`），只是本 Skill 不展开它的用法。
 - 可饮用的自定义药水物品（`PotionItem` / `use`）：本档药水页全程只注册 `Potion`。`use` 的返回类型（`TypedActionResult` / `ActionResult` 家族）出现在同档 `develop_items_custom-item-interactions.md`、`develop_events.md`、`develop_debugging.md`、`develop_blocks_block-containers.md`，要写必须先读那些页。
 - 酿造台方块 / 界面 / `BrewingStand`：本档语料零命中，无可引类名。
 - `BrewingRecipeRegistry.registerPotionRecipe` **已核实存在**（不是「未核实」）：javap @ yarn 1.21.11+build.6 的 `net.minecraft.recipe.BrewingRecipeRegistry$Builder` 有 `registerPotionRecipe(RegistryEntry<Potion>, Item, RegistryEntry<Potion>)`；mojmap 侧同名方法叫 `addMix`。两套名不要混。

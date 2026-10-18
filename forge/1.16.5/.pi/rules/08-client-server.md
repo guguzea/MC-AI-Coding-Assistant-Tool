@@ -175,7 +175,9 @@ public class MyEntity extends LivingEntity {
 ## 示例：运行时物理端检测
 
 ```java
-import net.minecraftforge.fml.util.thread.SidedThreadGroups;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.LogicalSide;
 
 // 在代码中判断物理端
 if (LogicalSide.CLIENT.equals(ctx.get().getDirection().getReceptionSide())) {

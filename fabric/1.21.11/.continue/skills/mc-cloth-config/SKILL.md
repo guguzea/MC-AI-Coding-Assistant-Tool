@@ -70,7 +70,7 @@ public static final ConfigHolder<ModConfig> HOLDER =
 - `AutoConfig.register(Class<T extends ConfigData>, ConfigSerializer.Factory<T>)` → `ConfigHolder<T>`（javap 核实）。
 - `ConfigHolder<T>`：`getConfig()` / `save()` / `load()` / `setConfig(T)` / `resetToDefault()` / `registerSaveListener(ConfigSerializeEvent.Save<T>)` / `registerLoadListener(...)`。
 - `ConfigData` 只有一个 default 方法 `validatePostLoad() throws ConfigData.ValidationException`，需要校验就覆写它。
-- `ConfigEntry.BoundedDiscrete` / `ConfigEntry.Gui.Excluded` 等注解都在 `me.shedaniel.autoconfig.annotation.ConfigEntry` 下；具体可用的注解只有 jar 里那 12 个嵌套类型（见 jar 清单）。
+- `ConfigEntry.BoundedDiscrete` / `ConfigEntry.Gui.Excluded` 等注解都在 `me.shedaniel.autoconfig.annotation.ConfigEntry` 下；该容器下 jar 里共 13 个嵌套类型（11 个注解 + `EnumDisplayOption` 枚举 + `Gui` 容器），具体见 jar 清单。
 
 ## 路线 B：手动 ConfigBuilder（自定义 GUI）
 
@@ -79,6 +79,7 @@ import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.text.Text;
 
 public static Screen buildScreen(Screen parent, ModConfig config) {
     ConfigBuilder builder = ConfigBuilder.create()

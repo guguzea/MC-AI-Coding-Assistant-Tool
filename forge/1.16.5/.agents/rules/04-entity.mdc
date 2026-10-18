@@ -237,7 +237,7 @@ public class ClientSetup {
 
 ```java
 // client/rendering/MyEntityRenderer.java
-public class MyEntityRenderer extends LivingEntityRenderer<MyEntity, MyEntityModel<MyEntity>> {
+public class MyEntityRenderer extends LivingRenderer<MyEntity, MyEntityModel<MyEntity>> {
     public MyEntityRenderer(EntityRendererManager manager) {
         super(manager, new MyEntityModel<>(), 0.5f);
     }

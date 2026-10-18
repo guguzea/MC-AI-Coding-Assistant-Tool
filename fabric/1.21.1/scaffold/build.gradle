@@ -34,6 +34,7 @@ repositories {
 
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    // Yarn 正在逐步弃用，但为了兼容性，本文件依旧使用 Yarn
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     // 开发期 loader：优先用 `loader_version_dev`（若有），否则回落到发布件声明下限 `loader_version`
     // （拆分原因：加 FLK 需抬开发期 loader，但不该抬高 fabric.mod.json 的玩家侧门槛）

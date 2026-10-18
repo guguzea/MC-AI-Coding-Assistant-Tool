@@ -81,10 +81,10 @@ public class ClientSetup {
     }
 }
 
-public class MyEntityRenderer extends LivingEntityRenderer<MyEntity, MyEntityModel<MyEntity>> {
+public class MyEntityRenderer extends LivingRenderer<MyEntity, MyEntityModel<MyEntity>> {
     public MyEntityRenderer(EntityRendererManager manager) {
         super(manager, new MyEntityModel<>(), 0.5f);
-        this.addLayer(new HumanoidArmorLayer<>(this,
+        this.addLayer(new BipedArmorLayer<>(this,
             new MyEntityModel<>(0.5f),
             new MyEntityModel<>(1.0f)));
     }

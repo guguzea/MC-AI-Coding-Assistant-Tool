@@ -55,6 +55,7 @@
 ### Mappings 约束
 
 - Fabric 1.16.5 默认使用 **Yarn**
+- **Yarn 正在逐步弃用，但为了兼容性，本文件依旧使用 Yarn。**
 - `mappings` 配置：`net.fabricmc:yarn:${yarn_mappings}:v2`
 - **禁止**切换到 MCP 或 Mojang（除非用户明确要求）
 - Yarn 映射使用 `class_XXXXX` / `method_XXXXX` / `field_XXXXX` 表示未解析的成员

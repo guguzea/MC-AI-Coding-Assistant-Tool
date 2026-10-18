@@ -198,6 +198,86 @@ BUILD FAILED in 770ms
 - **"改视角再交互"在连服档不可靠** —— `hitResult` 可能是陈旧的；**要新鲜命中就自己 `pick()`**。
 - **客户端预测会静默否决**：`Fail` 就**不发包** ⇒ 服务端**什么痕迹都没有**（无事件、无日志）⇒ **判据里必须带客户端侧的返回值**，否则只能对着"什么都没有"无限猜。
 
+## T12 · 查「区块里的实体」必须用 **`Chunk#getEntities()`**，`World#getEntities()` 会给假否定（2026-10-17）
+
+**现象**：实体明明已落盘、也明明在区块里，但 `world.getEntities()` 一直返回 **0** ⇒ 连续几轮判成「实体没保存」，其实是**判据取错 API**。
+
+**决定性诊断行**（同一时刻、同一进程）：
+
+```
+[PROBE] entity diag: chunk=-4,3 chunkEntities=34 allWorldsEntities=0 spawn=-64,97,48
+                            ↑ Chunk#getEntities()        ↑ World#getEntities()
+```
+
+⇒ **无玩家的服务端上 `World#getEntities()` 不可靠**（返回 0），**必须用 `Chunk#getEntities()`**（并先 `chunk.load(true)`）。
+
+**同一项上还踩出两条必要条件**：
+
+1. **`spawnEntity` 之前必须 `world.getChunkAt(x>>4, z>>4)` 加载区块** —— 否则实体被丢进未加载区块并**静默丢弃**（`spawnEntity` 仍返回非 null，你以为成功了）。
+2. **实体类型要选"不会自己消失"的**：僵尸会**白天自燃**、掉落物会 **despawn** ⇒ 跨重启测试用 **`ARMOR_STAND`**（不自燃、不 despawn、无 AI 走开）。
+
+**落盘位置也别找错**：26.x 的存档是**按维度分目录** —— `world/dimensions/<ns>/<dim>/{region,entities,data}`（不是老布局 `world/entities/`）。找不到时先看 `world/dimensions/`。
+
+## T13 · 往容器里塞物品必须写**活库存**，`getState()` 是**快照**（2026-10-17）
+
+**现象**：`block.setType(CHEST)` 后，用 `block.getState()` 拿到 `Container`、往 `getInventory().setItem(0, item)` 写，
+再 `update(true,false)` —— **重启后那格是空的**（诊断原文：`方块=CHEST 物品=null`）。方块在、库存内容没落盘。
+
+**原因**：`Block#getState()` 返回**快照**；在快照的 `Inventory` 上写，只改内存副本，不会写进 **TileEntity**。
+
+**正解**（javap 实证：`Block#getState(boolean)` 与 `Chest#getBlockInventory()` 都存在）：
+
+```java
+BlockState live = block.getState(false);              // ★ 非快照
+if (live instanceof Chest) ((Chest) live).getBlockInventory().setItem(0, it);   // ★ 活库存
+else { ((Container) live).getInventory().setItem(0, it); live.update(true, false); }
+```
+
+⇒ 与 **T12** 是同一类错误：**拿"快照/代办对象"当"活的"用**（T12 是 `World#getEntities()` 只覆盖已加载、T13 是快照库存不落盘）。
+
+## T14 · 有两份 `plan.txt`（服务端 / 客户端各一份），旧剧本里的 `stop` 会让**每次起服都自杀**（2026-10-17）
+
+**现象**：组合跑时服务端**就绪约 15 秒后自己停服**，客户端随即 `Connection refused`（netty 栈），而外部脚本只表现为"客户端日志冻住、等不到裁决"。
+
+**服务端日志逐字**（判据就这两行）：
+
+```
+[QA] mark: phase2-start
+[QA] DONE stop
+[QA] 收工即停服（plan 的 stop 步骤）：20 tick 后 Bukkit.shutdown()
+```
+
+**根因**：插件里有**两份**东西 —— **探针** + **服务端 driver**。后者在**每次起服**时读 `<证据目录>/plan.txt` 并照它执行；那份是上一轮两阶段跑留下的旧剧本，**末步是 `stop`** ⇒ driver 调 `Bukkit.shutdown()`。
+
+**处方**：
+
+- **复跑前重写（或清掉）`<证据目录>/plan.txt`**；跑"服务端 + 客户端"组合时，服务端剧本**不要写 `stop`**（只 `mark` + `wait ticks=N`），停服交给外部收尾（`stdin` 写 `stop` / 优雅 kill）。
+- ⚠ **别搞混两份剧本**：**服务端** driver 读 `<证据目录>/plan.txt`；**客户端** driver（`temporary_client_tick_driver`）读它自己的 `--evidenceDir` 下的 `plan.txt`（本项目是 `run/qa/plan.txt`）。两个目录、两份剧本，改错一份就等于没改。
+
+## T15 · 客户端 driver 里做「UI 点击」的两条硬约束（2026-10-17 实测）
+
+**背景**：要验 `ClickEvent` 的**点击行为**（服务端必须收到 `/probe-clickable`）。驱动器已经能
+**打开 `ChatScreen`**（`client.setScreen(new ChatScreen("", false))` 实测生效，日志 `screen=ChatScreen`），
+但下面两条把它卡住：
+
+1. **`stepTicks` 是「轮内 tick」，不是「步内 tick」** ⇒ **不能**用 `if (stepTicks == 1)` 做步骤入口。
+   实测：那样写这一步**永不进入**、每 tick 自旋，直到 `budget exhausted (24000 ticks)`；
+   用 `stepTicks % 2 == 0` 做节流则**整段一条日志都没有**。⇒ 步骤要么**一次调用做完再 `next()`**，
+   要么用**自己的静态计数器**，别读 `stepTicks`。
+2. **`ChatScreen` 底部是输入框（`EditBox`），横跨整宽** ⇒ 从 `y = height - 8` 起扫会**全部命中输入框**
+   （实测 `hits=5`、同一 y、跨 5 个 x），**点了也不发命令**。消息区在输入框**上方**（从 `height - 46` 起往上，每行 9 px）。
+
+**还没打通的那一步（下次从这继续）**：靠"网格猜坐标"不稳。**正解**是用游戏自己的命中 API ——
+`ChatComponent#captureClickableText(ActiveTextCollector, int, int, DisplayMode)`（**javap 实测 public**）：
+实现一个极小的 `ActiveTextCollector` 收集 `accept(...)` 的矩形，就能拿到**可点击文本的精确范围**再点。
+（`ChatScreen#handleComponentClicked(Style, boolean)` 是 **private**，调不到。）
+
+3. **`ChatScreen.mouseClicked` 判定"点在哪条消息"用的是**真实鼠标位置**，不是合成事件的坐标**
+   —— 实测对照：合成事件点**底部输入框**（`y = height - 8`）能命中 **5 次**（widget 命中用事件坐标）；
+   点**消息区**（`y = height - 46` 起）**`hits = 0`**，120 个点全空。
+   ⇒ 要在消息区命中，得先**移动真实鼠标**（`MouseHandler` 坐标）再点，或先 `captureClickableText` 拿矩形、
+   再让鼠标落到那里。**别再盲扫坐标**（已扫 120 点、0 命中）。
+
 ## 未核实（明写 —— 本档不含通识推断，凡没实测的一律在此）
 
 - **本档全部实测都在同一台机 / 同一网络**（Windows 11 + JDK 25 + Paper 26.3-190），**跨平台/跨版本的可复现性未核**。
