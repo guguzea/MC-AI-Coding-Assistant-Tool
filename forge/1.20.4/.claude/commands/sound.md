@@ -62,14 +62,18 @@ SOUNDS.register(modEventBus);
 用于自定义方块被破坏/放置/踩踏时的音效：
 
 ```java
+// 本档构件核实（javap @ forge-1.20.4-49.2.0_mapped_parchment_2024.02.25-1.20.4）：
+//   net.minecraft.world.level.block.SoundType(float, float, SoundEvent×5)  ← 5 个 SoundEvent 实参，无 Holder
+//   net.minecraft.sounds.SoundEvents.STONE_BREAK/STEP/PLACE/HIT/FALL 均为 public static final SoundEvent
+// 注意：本档声音常量类叫 SoundEvents；没有 net.minecraft.sounds.Sounds 这个类，也没有 .get()。
 public static final SoundType MY_BLOCK_SOUNDS = new SoundType(
     1.0f,   // volume
     1.0f,   // pitch
-    Sounds.MY_BREAK.get(),    // breakSound
-    Sounds.MY_STEP.get(),     // stepSound
-    Sounds.MY_PLACE.get(),    // placeSound
-    Sounds.MY_HIT.get(),      // hitSound
-    Sounds.MY_FALL.get()      // fallSound
+    SoundEvents.STONE_BREAK,   // breakSound
+    SoundEvents.STONE_STEP,    // stepSound
+    SoundEvents.STONE_PLACE,   // placeSound
+    SoundEvents.STONE_HIT,     // hitSound
+    SoundEvents.STONE_FALL     // fallSound
 );
 
 // 使用

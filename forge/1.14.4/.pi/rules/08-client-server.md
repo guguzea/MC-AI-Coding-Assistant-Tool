@@ -185,8 +185,15 @@ public class ModKeyBindings {
 
 ```java
 // entities/MyEntity.java（服务端设置，客户端自动同步）
+// 本档构件核实（javap @ forge-1.14.4-28.2.26_mapped_snapshot_20190719-1.14.3）：
+//   net.minecraft.network.datasync.EntityDataManager 是**非泛型**类
+//     public class EntityDataManager { public EntityDataManager(Entity); ... }
+//   泛型形参在 DataParameter<T> 上：
+//     public class DataParameter<T> { public DataParameter(int, IDataSerializer<T>); }
+//     public static <T> DataParameter<T> createKey(Class<? extends Entity>, IDataSerializer<T>)
+//   所以同步键的**字段类型**是 DataParameter<T>，实体持有者字段才是 EntityDataManager（无泛型）。
 public class MyEntity extends LivingEntity {
-    private static final EntityDataManager<Integer> DATA_CUSTOM =
+    private static final DataParameter<Integer> DATA_CUSTOM =
         EntityDataManager.createKey(MyEntity.class, DataSerializers.VARINT);
 
     @Override

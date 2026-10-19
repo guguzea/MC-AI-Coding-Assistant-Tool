@@ -35,6 +35,7 @@ public class ExampleModPotions implements ModInitializer {
 									ExampleModEffects.TATER,
 									3600,
 									0)));
+}
 ```
 
 该参考文件的 import 面（照抄即用）：`net.fabricmc.api.ModInitializer`、`net.fabricmc.fabric.api.registry.FabricBrewingRecipeRegistryBuilder`、`net.minecraft.core.Registry`、`net.minecraft.core.registries.BuiltInRegistries`、`net.minecraft.resources.ResourceLocation`、`net.minecraft.world.effect.MobEffectInstance`、`net.minecraft.world.item.Items`、`net.minecraft.world.item.alchemy.Potion`、`net.minecraft.world.item.alchemy.Potions`。

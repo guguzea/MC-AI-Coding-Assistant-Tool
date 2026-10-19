@@ -1251,4 +1251,206 @@ code 级检查（缺 import、层混用、真编译、FAPI import 存在性）�
 - 26.1.2 的 FAPI 模块件在 `modules-2` 是未 remap 件，`cannot access ... bad class file` 一律不可判定；本档没有做精确 remap 件接入。
 - forge 1.13.2–1.16.5 / neoforge / quilt 的全量复跑未做；只复跑了 forge 1.20.1。
 
+## §8.35 全档复跑（57 档）与 7 条 fail 修复
 
+首轮 `--all --complete`（fabric/forge/neoforge/quilt/liteloader/rift/modloader/bedrock，共 57 档）：`fail=7 / unverifiable=1818`。7 条全部落在 fabric/1.14.4（1）与 forge/1.14.4（2）/1.16.5（1）/1.17.1（1）/1.18.2（2）。
+
+1. **fabric/1.14.4 `hitEntity` / `damageItem` 不是 Yarn 名**：`knowledge/antipatterns/item.md:67` 的「正确方案」用了 Forge/MCP 名。本档 `minecraft-1.14.4-yarn-build.18.jar` javap：Item 是 `postHit(ItemStack, LivingEntity, LivingEntity)`，ItemStack 是 `damage(int, T, Consumer<T>)`。改为 `postHit` + `stack.damage(1, attacker, entity -> { })`。
+2. **forge/1.14.4 `onBlockExploded` 不存在**：`.cursor/rules/02-block.mdc:136`。本档 `_mapped_snapshot_20190719` javap：Block 只有 `onExplosionDestroy(World, BlockPos, Explosion)`；`onBlockExploded` 与 `wasExploded` 都不是本档签名。改方法名并改注释里的错误说法。
+3. **forge/1.14.4 `Biome.Builder` 没有 `build()`**：`code-patterns/04-world-patterns.md:5`。javap 显示 `Biome$Builder` 只有 surfaceBuilder/precipitation/category/depth/scale/temperature/downfall/waterColor/waterFogColor/parent，`Biome(Builder)` 是 protected。示例改为 `MyBiome extends Biome` + `super(new Biome.Builder()...)`，注册 `MyBiome::new`。
+4. **forge/1.16.5 `onPlace` 不存在、`wasExploded` 参数多一个**：`.cursor/rules/02-block.mdc:121`。本档构件里放置回调是 `setPlacedBy(World, BlockPos, BlockState, LivingEntity, ItemStack)`，`wasExploded` 是 3 参 `(World, BlockPos, Explosion)`。两处签名已改。
+5. **forge/1.17.1 `hurtAndBreak` 的 Consumer 收实体**：`knowledge/antipatterns/item.md:89`。javap：`hurtAndBreak(int, T, Consumer<T>)`，lambda 参数是持有者实体，不是 EquipmentSlot；`slot -> attacker.getItemBySlot(slot)` 编译失败。改为 `entity -> { }`，并改注释。
+6. **forge/1.18.2 两处 `Shift` 是注释被补成 import**：`mc-gui/SKILL.md:44`（`// Shift-click transfer logic`）与 `10-gui.mdc:75`（`// Shift-点击转移物品`）。补全器的 autoImport 把注释里的 `Shift` 当成类名，补了 `DensityFunctions.Shift`（private），于是报 `has private access` 并判红。autoImport 现在先剥离注释与字符串再取标识符；`--selftest` 加两臂（注释/字符串不补、代码里的仍补）。修正后这两块因 `MY_MENU` / `MyMenuTypes` 是片段外项目类，归 unverifiable，不再 fail。
+
+复跑读数：
+
+- `--packs fabric/1.14.4,forge/1.14.4,forge/1.16.5,forge/1.17.1,forge/1.18.2 --complete` → `fail=0 / unverifiable=615`。
+- 第二轮 `--all --complete`（57 档）→ `fail=0 / unverifiable=1821`。
+- `--selftest` → OK（23 臂）。
+- `assert-skill-mirrors` → ok；`assert-skill-yarn-attest` → ok；`assert-skill-mappings-key` → ok；`assert-scaffold-rules-conflict` → ok；第 8 步 `test-scripts.mjs` → exit 0。
+
+仍未覆盖：1821 条 unverifiable 是片段外上下文/类路径缺口（项目自定义类、缺抽象方法、`__Frag` 内 this/super），未逐条人工审；forge 1.16.5 的 `_mapped_official_` 构件实际是 MCP 类名，层标注偏差只影响 prose 层检查，不影响本轮 fail 判定。
+
+## §8.36 1821 条 unverifiable 分诊：4 类判据缺口 + 11 处内容缺陷
+
+> ⚠️ **本节末尾「4 类判据缺口已修」的说法当时是夸大的**：实测为 2 类完全修好（`-sourcepath`、MixinExtras）、2 类有残留（支撑件类 274→21、mojmap 判据只在有 mojmap 件的档成立）。3 个残留已在 **§8.38** 补掉并逐条复核，结论以 §8.38 为准。
+
+上一轮留下的 1821 条 `unverifiable` 按「首条 error」分 17 桶逐桶核完（逐档计数表见 `temp/unverifiable-triage-20261018.md`，**不随仓库发布**，gitignore）。**结论：没有成片的内容缺陷**；主产出是查明 4 类工具侧判据缺口。
+
+### 4 类判据缺口（工具侧）
+
+1. **加载器支撑件不在 classpath**。`@SubscribeEvent`(88 条) / `@Mixin`(87) / `Dist`(35) / `IEventBus`(15) / `Nullable`(17) / `JsonObject`(6) 一律 `cannot find symbol`。反证：这些类从不进 MC 合并 jar（实测 `forge-1.20.1-47.4.0_mapped_official_1.20.1.jar` 9723 条目里 `distmarker`/`eventbus`/`com/google/gson` 各 0 条），而 `javap -cp eventbus-6.0.5.jar net.minecraftforge.eventbus.api.SubscribeEvent` 证明它们真实存在。修法：`supportJarsFor()` 逐档按该版本 userdev `config.json` 的 `libraries` 取件（`1.15.2→eventbus 2.2.1 / 1.16.5→4.0.0 / 1.17.1→5.0.3 / 1.19.4→6.0.3 / 1.20.1→6.0.5 / 1.20.4→6.2.27`），单开 `support` 层只喂补全器、**不参与存在性判定**。
+
+2. **`javac` 缺省 `-sourcepath` = `-classpath`，去编 jar 内嵌 `.java`**。报错形态
+   `neoforge-…-merged.jar(/net/neoforged/neoforge/registries/DeferredRegister.java):35: error: package net.neoforged.bus.api does not exist`
+   把因果讲反了：该 merged.jar 20815 条目里 **7492 个 `.java`**，javac 顺着 classpath 把它们当成输入源码。四组对照（同一 jar、同一源）：原样 3648 条错误全来自 jar 内 `.java` → **只加空 `-sourcepath`、一个依赖都不补：exit 0** → 补 8 个依赖仍 1640 条同形态 → 依赖+空 sourcepath：exit 0。**补依赖治不了，钉死源码查找面才能。**
+
+3. **mojmap 参考围栏被当本档 Yarn 面编译**。`fabric/1.21.11` 4 条（`MobEffect`/`ResourceKey`/`AdvancementHolder`/`BlockModelGenerators`）。反证：四件都写 `### ⚠️ 映射口径：本档语料是 mojmap` + 逐名对照表；yarn 1.21.11 jar 实测 `MobEffect` 0 命中/`StatusEffect` 有、`ResourceKey` 0/`RegistryKey` 有、`AdvancementHolder` 0/`AdvancementEntry` 有、`BlockModelGenerators` 0/`BlockStateModelGenerator` 有。判据双条件（披露段 + 逐名对照表 + mojmap-only 名），**收紧而非放宽**：条数不变（仍 50），只是判读标注为「参考围栏」。
+
+4. **MixinExtras 注解不在 Mixin 本体里**。第二轮全量抓到唯一 1 条 **fail**：`fabric/1.21.1/code-patterns/04-mixin-patterns.md:157` 的 `@Local(ordinal = 0)` 被补成 Mixin 内部枚举 `LocalVariableDiscriminator$Context$Local`，报 `incompatible types: Context.Local cannot be converted to Annotation`。根因：`@Local`/`@Share`/`@Cancellable` 来自 **MixinExtras**（`io.github.llamalad7:mixinextras-*`），Mixin 本体没有。修法两条（都不动内容）：① `pickMixinextrasJar()` 把 `mixinextras-fabric`/`mixinextras-neoforge` 加进 fabric/quilt 支撑件（缓存实测 `0.3.5/0.4.1/0.5.4/0.5.5` 都含 `com/llamalad7/mixinextras/sugar/Local.class`）；② `isAnnotationEntry()` 在 class 文件层读 `ACC_ANNOTATION(0x2000)|ACC_INTERFACE(0x0200)`，先剔除「同名但不是注解」的嵌套类候选再挑唯一解（实测 `Local.class`=true、`LocalVariableDiscriminator$Context$Local.class`=false）。复跑：`fabric/1.21.1` 63→**52、`fail=0`**（原 fail 消失，未变成另一条 unverifiable）。
+
+### 11 处内容缺陷（6 类根因，逐条 javap）
+
+| 档 | 文件:行 | javap 反证 | 修法 |
+| --- | --- | --- | --- |
+| 1.14.4 | `mc-sound/SKILL.md:66-70` | `SoundEvents.BLOCK_STONE_*` 在；`Sounds` 类不存在；`SoundType(float,float,SoundEvent×5)` 收裸 `SoundEvent` | `SoundEvents.BLOCK_STONE_*` |
+| 1.19.4 | `mc-sound/SKILL.md:68-72` | `net.minecraft.sounds.Sounds` **找不到**；`SoundEvents.STONE_BREAK` 在 | `SoundEvents.STONE_*` |
+| 1.20.1 | `mc-sound/SKILL.md:68-72` | 同上 | 同上 |
+| 1.20.4 | `mc-sound/SKILL.md:68-72` | 同上 | 同上 |
+| 1.19.4 / 1.20.1 | `mc-recipe/SKILL.md:148-151` | `RecipeProvider(PackOutput)` **仅单参**，无 `(PackOutput,…)` 重载 | 构造器改单参 |
+| 1.17.1 | `code-patterns/01-block-patterns.md:15` | `BlockBehaviour$Properties` 只有 `of(Material)`/`of(Material,DyeColor)`/`of(Material,MaterialColor)`/`of(Material,Function)`，**无零参** | `of()` → `of(Material.STONE)` |
+| 1.20.1 / 1.20.4 | `code-patterns/04-world-patterns.md:30` | `Structure$StructureSettings` = `public final class … extends java.lang.Record` | `extends Structure` + `super(settings)` |
+| 1.14.4 | `08-client-server.mdc:185` / `03-entity-patterns.md:21` | `EntityDataManager` **非泛型**；泛型在 `DataParameter<T>` | `DataParameter<Integer>` |
+| 1.13.2 | `mc-recipe/SKILL.md:33` | `IRecipe extends IForgeRecipe`，**无类型形参** | `implements IRecipe` |
+
+**判为误报（不改内容）**：`Z` 桶 109 条逐条读围栏 = 反例 8 / 片段 96 / 伪代码 10；`M` 桶 51 条方法名候选全部核完 **0 条真缺陷**（`getUpdateTag`/`saveWithoutMetadata`/`load`/`setLevel`/`setRemoved`/`registerAttributes` 等 javap 逐档证**确实存在**，报错只因片段被包进 `class __Frag` 后 `super.xxx()` 宿主不是原类）。
+
+### 复跑读数
+
+- **全量 `--all --complete`（57 档）：`fail=0 / unverifiable=1685`**（基线 1821，**−136**；`info=0`，57 档全部跑过，35.4 min）。报告 `D:/mc-skill-temp/audit-triage-final-20261018/report.json`。降幅集中在 support 层补齐的档：`forge/1.20.1` / `1.20.4` / `1.17.1` 各 −11、`forge/1.19.4` −10、`forge/1.18.2` −9、`forge/1.16.5` −6、`fabric/1.21.1` −11（含 mixinextras 那条 fail），fabric 多数档 −5。
+- 定向（`support` 层生效后逐档 `--complete`，全 `fail=0`）：`forge/1.13.2` 63→**59**、`1.14.4` 140→**136**、`1.17.1` 165→**154**、`1.19.4` 168→**158**、`1.20.1` 183→**172**、`1.20.4` 180→**169**。
+- `--sourcepath` 修复：`neoforge/1.21.10` 2→**0**、`neoforge/1.21.11` 5→**3**（剩 3 条是 `ExampleMod.MODID`/`BLOCKS` 项目上下文）。
+- mojmap 分类：`fabric/1.21.11` 50→**45**、`1.21.10` 9→**5**、`1.21.4` 7→**4**、`1.21.8` 7→**4**，全 `fail=0`。
+
+### 仍未覆盖 / 已知边界
+
+- **13 条围栏未闭合**（`mc-potion*` 6 + `mc-item/SKILL.md` 7）：markdown 围栏边界写错（`mc-potion` 花括号 +1、`mc-item` 圆括号 −1），**不是 API 错**，本轮只记账不改。
+- **rift/1.13.2 的 3 条** `org.dimdev.rift.*`：本机无 rift 构件，不硬判。
+- **fabric/26.1.2 的 17 条**：FAPI 未 remap 件，`cannot access … bad class file` 一律不可判（与 §8.35 同边界）。
+- 剩余 **1685 条**全部保留 `unverifiable`（A 系上下文缺口 1009 / B 片段 95 / C1+C2 占位 222 / D 构件 21 / E 包装 1 / K 候选 128（含 7 条 REF 参考围栏）/ M 方法名 83 / T 构件 1 / Z 待读 125；合计 1685）。**`unverifiable` 不等于「无缺陷」**：其中能判的 11 处已修，4 类判据缺口里 2 类完全修好、2 类的残留已在 §8.38 补掉，其余是本档构件回答不了（上下文/片段）或本机没有能回答它的构件。
+- `--selftest` 23 臂→**55 条断言**，配 10 条投毒自证（删 `-sourcepath` / 指向仓库正文 / 不建空目录 / support 混进 API 层 / `supportJarsFor` 返回空 / `mergeSupportIndex` 掏空·不记 layer·不并 bySimple / runPack 不调它 / `pickImportCandidate` 不优先 API / mixinextras 缺失 / `@Local` 被认成非注解），全部变红、还原返绿。
+
+## §8.37 围栏未闭合修复：28 条（含审计器结构性盲区的 15 条）
+
+§8.36 把 13 条「围栏未闭合」记进未做清单；本轮修完，并由独立全仓扫描又找出**同类 15 条**，合计 **28 条**。全仓 `21385` 个 ```java 围栏现净深度全部为 0。
+
+### 两类形态与判据
+
+1. **potion ×6：花括号 +1**。围栏里 `public class ExampleModPotions implements ModInitializer {` 开了类，正文到字段 `0)));` 就闭栏，类的 `}` 丢了。出处（只读 `data/`）：类闭合 `}` 都在**列 0** —— `1.21.1` `ExampleModPotions.java` 开 15 / 闭 39；`1.21.4` `FabricDocsReferencePotions.java` 开 16 / 闭 40；`1.21.8` 同文件 开 18 / 闭 42；`1.21.10` `ExampleModPotions.java` 开 18 / 闭 42；`1.21.11` 开 19 / 闭 43。
+   ⚠️ `1.21.4` / `1.21.8` 的参考件**文件名不同**（`FabricDocsReferencePotions.java`，与 Skill 围栏里的类名一致）；按 `ExampleModPotions.java` 找会误报「不存在」（假否定）。
+
+2. **mc-item ×7：圆括号 −1**。需闭合的括号只有 3 个（`ITEMS.register(` / `new Item(` / `.food(`），而 `.build())` 已顺手闭了 `.food(`，后面却还有 `        )` / `    )` / `);` 三个 ⇒ 多一个。按缩进对齐（列 0 / 4 / 8）应删**列 8** 那行。
+
+3. **knowledge ×15：花括号 +1**。`public enum MyTier implements (IItemTier|Tier) {` 开了枚举，两条注释后直接闭栏，`}` 丢了。反证是**回归而非刻意截断**：`forge/1.14.4/knowledge/antipatterns/item.md:36-39` 与 `:45-48` 同段代码**带 `}`**。
+
+### 为什么审计器只报 13
+
+`audit-content-claims.mjs` 的 `if (/❌|错误示例|反例|不要这样写|忘记导入/.test(f.content)) continue;` 把反例围栏**整块跳过** ⇒ 那 15 条永远不进 javac。**审计器对「反例块的语法完整性」是结构性盲的**，这类缺陷只能靠独立的「围栏配平」扫描兜底。
+
+### 复跑读数
+
+- 12 个受影响档 `--complete`：`fail=0 / unverifiable=1155`，**条数与修前完全相同**。13 条里 12 条 claim 由 `编译失败（片段不完整/缺上下文）` 变为 `编译失败（类路径/依赖缺口）`（`fabric/1.21.11` 第二条行号 `:43`→`:44`）；1 条（`mc-potion.md:28`）修前修后都是 `mojmap 参考围栏`。
+- 证据示例：`fabric/1.21.1 mc-potion.md:27` → `ExampleModPotions is not abstract and does not override abstract method onInitialize() in ModInitializer`；`forge/1.19.4 mc-item:115` → `symbol: variable ITEMS`。
+- 15 条 knowledge 修完后**审计器读数不变**（仍在 `❌` 跳过面内），不充作「修好 N 条 finding」。
+- 全仓扫描（跳过 `data/`、`temp/`、投毒夹具）：`files=15258 · fences=35217 · java=21385 · bad=0`。独立复核（teammate）扫到 15262 / 35219 / 21387，`bad` **正好同一批 15 条**（同文件同行同深度），两个独立实现互证。
+- 门：`--selftest` OK（55 条断言）· `assert-skill-mirrors` ok · `assert-skill-yarn-attest` exit 0 · `assert-skill-mappings-key` ok · `assert-scaffold-rules-conflict` ok · `test-scripts.mjs` exit 0。
+
+### 未做
+
+- `bugfix_list.md:669` 孤儿围栏（裸 ``` 到 EOF 未闭）：该文件未被 git 跟踪、非内容源稿、mtime 2026-10-11，不属本轮面。
+- 投毒夹具 `mcp-server/_debug_gate_selftest/.../90-poison.mdc` 按设计不配平。
+- potion 围栏未补 `onInitialize()`（该围栏定位是「只展示字段」，方法体另有独立围栏）；剩余 `not abstract and does not override onInitialize` 属片段不完整，如实留 unverifiable。
+
+## §8.38 §8.36 四类缺口的收尾：补掉 3 个残留（并修掉自己引入的 1 个误判）
+
+§8.36 说「4 类判据缺口全部已修」是**夸大**。复核后实际：**2 类完全修好**（`-sourcepath` = `-classpath` 去编 jar 内嵌 `.java`；MixinExtras 注解不在 Mixin 本体）、**2 类有残留**（加载器支撑件 274→21；mojmap 参考围栏只在「本档 artifacts 真有 mojmap 层」时成立）。本节补掉 3 个残留。
+
+### 残留① `Collection` 4 条 / `BiConsumer` 6 条 —— `jdkMap` 漏项
+
+`mc-gametest` 的 `public static Collection<TestFunction> exampleTests()` 报 `symbol: class Collection`。查 `jdkMap` 23 个键：有 `Collections` 无 `Collection`，有 `Consumer` 无 `BiConsumer`。两者都是**不同的类**，纯漏项。只补报告里实证到的这两个（不从记忆加清单）。
+
+### 残留② `Nullable` 17 条 —— 多注解候选被「歧义不猜」挡住
+
+支撑件里同时有 `org.jetbrains.annotations.Nullable` / `org.jspecify.annotations.Nullable` / `javax.annotation.Nullable` ⇒ `distinct.length !== 1` ⇒ 永不补 import ⇒ javac 走不下去，片段里更深的真错误看不到。
+修法（**最终版 = 按本档 MC 真实引用择优**）：只在**注解位**（`@Name`）开择优 ——
+1. 先用 `isAnnotationEntry` 在 class 文件层确认「真是注解」；
+2. 只从**本轮真在编译类路径上**的候选里挑（`cpSet = jarPaths + auxJars`，与 `compileOnce` 同口径）；
+3. 按 `annotationRefCountsInJar` 统计的**本档 MC 件引用次数**择优（在 class 常量池里数 `L<fqcn>;`，按 jar 缓存，惰性触发）；
+4. 本档零引用或并列最高才退到包序 `ANNOTATION_PKG_ORDER`；仍定不下来返回 `null`（继续不猜）。
+
+**为什么改成按本档真实引用**：硬编码包序等于拿外部约定盖过本档实况。实测同一注解在各档的真实分布完全相反 ——
+
+| 档 | `org.jetbrains` | `org.jspecify` | `javax.annotation` |
+| --- | ---: | ---: | ---: |
+| forge/1.20.1 | 253 | 0 | 1406 |
+| forge/1.16.5 | 0 | 0 | 1143 |
+| forge/1.14.4 | 0 | 0 | 1000 |
+
+⇒ 旧档 MC 自己的主流注解是 **`javax.annotation.Nullable`**（jetbrains 为 0）。所以必须把 `com.google.code.findbugs:jsr305` 放进通用支撑件（只进编译面、不进存在性判定），否则「按真实引用择优」在那些档会退化成包序、等于失效。修前 `forge/1.16.5` 选 jetbrains（本档 0 引用），修后选 `javax.annotation.Nullable`（本档 1143 引用）——**`AUDIT_DEBUG_IMPORT=Nullable` 实测**。
+
+**读数：判据换了依据，数值不变** —— 全量 57 档仍是 `fail=0 / unverifiable=1685`，残留读数 `Collection` 0 / `BiConsumer` 0 / `Nullable` 0 / mojmap-only 0，`REF` 17，与硬编码包序版**逐档完全一致**（无任何档条数变化）。如实记账：这次改的是**依据的来源**（外部约定 → 本档构件），不是结论。
+
+**这是编译面择优，不是归属断言。**
+
+### 残留③ `fabric/1.21.10 mc-advancement:61` —— mojmap 判据缺第二出处
+
+`fabric/1.21.11` 的 artifacts 有 `layer=mojmap` 1 个 jar（loom layered 件）；`fabric/1.21.10` 只有 `yarn/api/fapi/external` ⇒ 层判据在该档**结构上永不成立**。
+第二出处：仓库自带 `data/_yarn-mojmap-pairs/yarn-mojmap-<ver>.json`（1.21.10 有 9476 对）。实测 `AdvancementHolder`/`MobEffect`/`ResourceKey`/`BlockModelGenerators` 是 mojmap-only，`Advancement`/`StatusEffect`/`RegistryKey`/`BlockStateModelGenerator` 两侧都有。
+
+### 本轮自己引入又修掉的误判（记在这里，别重犯）
+
+为让「纯类型声明位」的名字也能抽到（`AdvancementHolder getDirt = …` 后面跟空格，老三种抽取形态一个都抓不到），候选抽取放开成「全部大写标识符」。结果 `fabric/1.21.10 mc-gametest:71` 被误判成参考围栏 —— `import java.lang.reflect.Method;` 的 **`Method` 撞上 MC 里某个叫 `Method` 的 mojmap 类**，而那段是纯 Yarn 代码（`TestContext` yarn-only）。**误判后果是「不编译」，会掩盖真错误，比漏判更坏。**
+修法：① 剔除「显式从 `java.*`/`javax.*`/`jakarta.*`/`jdk.*`/`sun.*` import 的简单名」；② `JDK_COMMON` 补 `Method`/`Field`/`Constructor`/`Modifier`。修后 `fabric/1.21.10` 从 10 条回到 **9** 条。
+**教训：放宽启发式必须逐条复核新增结果 —— 那次总数只 +1，光看数字看不出来。**
+
+### 读数
+
+- 全量 57 档：**`fail=0 / unverifiable=1685`**（修前同为 1685）。只有 2 档条数变：`fabric/1.20.4` 41→42、`forge/1.20.1` 172→171。
+- 残留定向：`Collection` 4→**0**、`BiConsumer` 6→**0**、`Nullable` 17→**0**、mojmap-only 名仍报错 1→**0**。
+- `mojmap 参考围栏` 7→**17**（10 条是从「编译失败（类路径/依赖缺口）」改判，**不是新增 finding**）。**17 条逐条复核：各取其围栏原文列出触发的 mojmap-only 名，17/17 都有真触发名，0 条站不住。**
+- `--selftest` 55→**70 条断言**；**投毒自证 9 条全红、还原返绿**。其中一条是发现「假臂」的关键：首版撞名臂用 `Method` 断言，而 `Method` 已被 `JDK_COMMON` 兜住 ⇒ 去掉 import 过滤也不红（投毒报 `GREEN(BAD)`），改成拿 mojmap-only 名当被 import 目标才真测到机制。**教训：selftest 臂必须投毒验一次，不投毒的臂等于没写。**
+- 门：`assert-skill-mirrors` ok · `assert-skill-yarn-attest` exit 0 · `assert-skill-mappings-key` ok · `assert-scaffold-rules-conflict` ok · `test-scripts.mjs` exit 0。
+
+### 未做
+
+- `BiFunction` / `UnaryOperator` / `Comparator` / `Iterable` / `Runnable` 等 JDK 名未主动补进 `jdkMap`（判据是「报告里有实证才补」）。
+- 包序 `jetbrains > javax` 是编译面约定，不是归属断言；若日后要按「本档 MC 真实引用」择优，需逐档扫件内注解引用。
+- `isAnnotationFqcn` 只对注解位候选惰性调用，未给全索引建注解位图（上万类全量判定太贵）。
+
+## §8.39 P1 三条与 P2 三项的收尾（2026-10-20）
+
+### P1-A `declared` 取错文本（审计读数错，不是内容缺陷）
+
+`compileBlocks` 的 `declared` 原本扫**原始围栏文本**（`/\b(?:class|interface|enum|record)\s+([A-Z]\w*)/g`），于是围栏顶部
+「本档构件核实」注释里的 `public interface IRecipe` / `public class DataParameter<T>` 被当成「围栏内已声明」
+⇒ `autoImport` 跳过补 import ⇒ javac 报 `cannot find symbol`（`forge/1.13.2 mc-recipe:32`、`forge/1.14.4 08-client-server.mdc:182`）。
+
+修法：`declared` 改走 `stripCommentsAndStrings(f.content)`。selftest 新增 11k 三臂：注释里的声明不算、真声明仍算、字符串里的不算。
+
+### P1-B `Structure` 只改 extends 没实现抽象方法
+
+`javap` 实测 1.20.1 与 1.20.4 的 `Structure` 都有**两个**抽象方法：
+
+```
+protected abstract Optional<Structure$GenerationStub> findGenerationPoint(Structure$GenerationContext);
+public abstract StructureType<?> type();
+```
+
+只写 `extends` + 构造函数 ⇒ `MyStructure is not abstract and does not override abstract method type() in Structure`，**仍不能编译**。
+修法：两个 `04-world-patterns.md` 的围栏改成 `public abstract class MyStructure extends Structure`，注释里列出两个抽象方法签名与「具体子类必须实现」。
+未补真 `type()` 的理由：`StructureType.register` 在 1.20.1 是 **private**，写真 `type()` 还要配套 `Codec` 与注册链，会把这个围栏从「最小形态说明」撑成半篇教程。
+
+### P2 支撑件近似（编译面近似会让 unverifiable 被低估）
+
+| 项 | 老实现 | 实测真值 | 现在 |
+| --- | --- | --- | --- |
+| forge eventbus / forgespi | 前缀表，跨轴拿 2.2.1 顶 0.9.3 / 1.0.0 | 逐档实读 9 份 userdev `config.json`：1.13.2→0.9.3 / 1.14.4→1.0.0 / 1.15.2→2.2.1 / 1.16.5→4.0.0 / 1.17.1·1.18.2→5.0.3 / 1.19.4→6.0.3 / 1.20.1→6.0.5 / 1.20.4→6.2.27 | `FORGE_EVENTBUS_EXACT` + `pickModuleJarSameAxis()`：**跨轴一律不给**，同轴顶替记账 |
+| neoforge fancymodloader loader | `pickModuleJar(..., {})` ⇒ 全档取最新 12.0.8 | 1.20.4→2.0.17 / 1.20.6→3.0.45 / 1.21.1→4.0.43 / 1.21.3→5.0.8 / 1.21.5→7.0.13 / 1.21.8→9.0.18 / 1.21.10→10.0.32 / 1.21.11→10.0.36 / 26.1→11.0.15 | `NEO_LOADER_VER` 逐档钉；删掉无效的 `core` 调用（缓存无此 artifact，`@Mod` 实测在 `loader` 件里） |
+| mixinextras | 1.21.1 取最低 0.3.5（缺 `@Cancellable`） | 仅 4 档有本档出处：1.20.1/1.20.4→0.4.1、1.21.3/1.21.4→0.5.5 | 有出处用出处，无出处用**注解完整性下限 0.4.1**，并加 `mixinextrasHasAll()` 硬校验三件注解 |
+
+**近似记账**：新增 `SUPPORT_APPROX` 设施，报告顶层输出 `supportApproximations`（实测 **37 处**）并在控制台逐条打印 `[APPROX]`，不再静默。
+副产品修正：`Dist` 实测**在 1.13.2 自己的 MC 件里**（`forge-1.13.2-…mapped_snapshot….jar` 含 `net/minecraftforge/api/distmarker/Dist.class`），1.13.2 不需要借 forgespi；真正缺 Dist 的是 1.14.4 / 1.17.1 / 1.18.2 / 1.20.1 / 1.20.4。
+
+### 读数
+
+- 全量 57 档：`fail=0 / unverifiable=**1691**`（修前 1685）。
+- **+6 不是回归**：`forge/1.13.2` 59→63（+4）、`forge/1.14.4` 136→140（+4）、`forge/1.20.1` 171→170（−1）、`forge/1.20.4` 169→168（−1）。前两档的 +4 各自来自**撤掉跨轴 eventbus/forgespi 假支撑件后真实暴露的依赖缺口**——之前是靠 2.2.1 硬顶编过去的假绿。这正是 P2 要的效果：宁可多报 unverifiable，不要假绿。
+- P1 定向（前→后）：`IRecipe` 1→0、`DataParameter` 1→0、`type()@1.20.1` 1→0、`type()@1.20.4` 1→0。
+- P2：跨轴 eventbus 顶替 **0 处**；`supportApproximations` 37 处逐条可查。
+- `--selftest` 82→**94 条断言**；镜像已刷 2 档；门链全绿（`test-scripts.mjs` exit 0）。
+
+### 自我更正
+
+- 上一轮「11 处内容缺陷全部已修」**不成立**：`IRecipe` / `DataParameter` 的**内容**改动对（javap 可核），但**审计读数**没修掉。我当时只看「改动是否落地」，把「代码改了」当成「问题消了」。**同一个坑第三次**（前两次：未投毒的 selftest 假臂、`cpSet` 漏 `auxJars` 却自测全绿）。规矩改为：结论只能引用「修后重跑的定向读数」。
+- `Structure` 上轮只改 `extends` 就收工，**没 javap 核抽象方法**，造出一个仍不能编译的「正确方案」——那比不修更坏，因为它看起来已经修好。**内容源稿改动必须真编译一次**。
+- 记账设施第一次又只加在 fragment 分支（全量跑出 `supportApproximations: []`），已补两分支 + 源码接线臂（`approxSites < 2` 判红）。

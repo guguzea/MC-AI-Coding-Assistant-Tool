@@ -44,6 +44,7 @@ new SwordItem(MyTier.COPPER, 3, 1.6f, new Item.Properties());
 public enum MyTier implements Tier {
     COPPER(3, 1561, 8.0f, 4.0f, 15, ...);
     //                                  ^^^^^ 以为这个是总攻击伤害
+}
 ```
 
 **正确理解：**
@@ -52,6 +53,7 @@ public enum MyTier implements Tier {
     COPPER(3, 1561, 8.0f, 2.0f, 15, ...);
     //                                  ^^^^^ 这是额外攻击加成
 // 最终剑伤害 = 2.0 + 3.0 = 5.0
+}
 ```
 
 ---

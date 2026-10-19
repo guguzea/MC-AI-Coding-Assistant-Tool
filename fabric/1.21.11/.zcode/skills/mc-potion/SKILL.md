@@ -36,6 +36,7 @@ public class ExampleModPotions implements ModInitializer {
 									ExampleModEffects.TATER,
 									3600,
 									0)));
+}
 ```
 
 **Yarn 等价**（本档 `scaffold` 钉 yarn；换名后同结构，逐名出处见文末映射口径表）：
@@ -51,6 +52,7 @@ public class ExampleModPotions implements ModInitializer {
 									ExampleModEffects.TATER,
 									3600,
 									0)));
+}
 ```
 
 该参考文件的 import 面（照抄即用）：`net.minecraft.core.Holder`、`net.minecraft.core.Registry`、`net.minecraft.core.registries.BuiltInRegistries`、`net.minecraft.resources.Identifier`、`net.minecraft.world.effect.MobEffectInstance`、`net.minecraft.world.item.Items`、`net.minecraft.world.item.alchemy.Potion`、`net.minecraft.world.item.alchemy.Potions`、`net.fabricmc.api.ModInitializer`、`net.fabricmc.fabric.api.registry.FabricBrewingRecipeRegistryBuilder`、`com.example.docs.ExampleMod`、`com.example.docs.effect.ExampleModEffects`。

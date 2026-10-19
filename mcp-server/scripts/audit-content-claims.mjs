@@ -38,7 +38,8 @@ const OUT_DIR = process.env.AUDIT_OUT_DIR
     throw new Error(`【OUTLET-IN-REPO】拒绝把审计产物写进仓库正文：${OUT_DIR}（只允许 <repo>/temp/** 或仓库外路径）`);
   }
 }
-const MODULES = "C:/Users/zzrCN/.gradle/caches/modules-2/files-2.1";
+const CACHE_MODULES = "C:/Users/zzrCN/.gradle/caches/modules-2/files-2.1";
+const MODULES = CACHE_MODULES;
 const LOOM = "C:/Users/zzrCN/.gradle/caches/fabric-loom/minecraftMaven/net/minecraft";
 const EXTERNAL_ROOT = "F:/MOD_TEST";
 const JDK_BIN = "G:/graalvm-jdk-21_windows-x64_bin/graalvm-jdk-21.0.12+7.1/bin";
@@ -53,6 +54,8 @@ const JDK_COMMON = new Set([
   "Optional", "Objects", "Stream", "Collectors", "CompletableFuture", "Runnable", "Thread",
   "Consumer", "Supplier", "Function", "Predicate", "BiConsumer", "BiFunction", "UnaryOperator",
   "Record", "Enum", "Iterable", "Comparable", "CharSequence", "Number", "Throwable",
+  // java.lang.reflect 的常用名：MC 里也有叫 `Method` 的 mojmap 类，不排会撞（见 mojmapCandidateNames 注释）。
+  "Method", "Field", "Constructor", "Modifier",
 ]);
 
 // MC 的类型签名会引用 DFU / brigadier / netty 的接口（如 Registry implements Keyable、
@@ -65,17 +68,369 @@ function newestModuleJar(group, artifact) {
   return cands.sort((a, b) => fs.statSync(b).mtimeMs - fs.statSync(a).mtimeMs)[0] || null;
 }
 
-const SUPPORT_JARS = [
+// 【判据缺口，非内容缺陷】§ 支撑件：加载器的注解/事件总线/注入框架不在 MC 合并 jar 里，
+// 少了它们，`@SubscribeEvent` / `@Mixin` / `Dist` / `IEventBus` 一律报 cannot find symbol，
+// 被错误归成 "unverifiable（类路径缺口）" —— 那是工具侧缺口，不是内容不能判。
+// 逐档按该版本真实的 userdev config.json / loom remapClasspath.txt 取件（见 supportJarsFor）。
+function moduleVersionDirs(group, artifact) {
+  const base = path.join(CACHE_MODULES, group, artifact);
+  if (!fs.existsSync(base)) return [];
+  return fs.readdirSync(base).filter((d) => {
+    try { return fs.statSync(path.join(base, d)).isDirectory(); } catch { return false; }
+  });
+}
+
+// 版本串排序（1.20.1-47.4.10 > 1.20.1-47.4.0；6.2.33 > 6.0.5）。只用于在候选里挑最接近的。
+function verCmp(a, b) {
+  const pa = String(a).split(/[.+\-]/).map((x) => (/^\d+$/.test(x) ? Number(x) : x));
+  const pb = String(b).split(/[.+\-]/).map((x) => (/^\d+$/.test(x) ? Number(x) : x));
+  for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+    const x = pa[i], y = pb[i];
+    if (x === undefined) return -1;
+    if (y === undefined) return 1;
+    if (typeof x === "number" && typeof y === "number") { if (x !== y) return x - y; continue; }
+    const s = String(x).localeCompare(String(y));
+    if (s) return s;
+  }
+  return 0;
+}
+
+// 在模块缓存里按「版本前缀 + 版本序最近」拿一个 jar。前缀形如 `1.20.1-` / `6.`。
+function pickModuleJar(group, artifact, { prefix, exact, preferHigher } = {}) {
+  const base = path.join(CACHE_MODULES, group, artifact);
+  if (!fs.existsSync(base)) return null;
+  let vers = moduleVersionDirs(group, artifact);
+  if (exact) vers = vers.filter((v) => v === exact);
+  else if (prefix) vers = vers.filter((v) => v.startsWith(prefix));
+  if (!vers.length) return null;
+  vers.sort(verCmp);
+  const ordered = preferHigher === false ? vers : [...vers].reverse();
+  for (const v of ordered) {
+    const jar = newestJarIn(path.join(base, v));
+    if (jar) return jar;
+  }
+  return null;
+}
+
+// ---------------------------------------------------------------- 支撑件「近似」记账
+// 【为什么要有这一块】支撑件是「编译面近似」：本档真件缺盘时用邻近版本顶替，能让 javac 编过，
+// 但也可能让**本档其实没有的成员**编过 ⇒ 把真缺陷藏起来，使 unverifiable 降得比实际更多。
+// 所以每次顶替都**记账**，并随该档结果一起写进报告（`support.approximations`），不再静默。
+const SUPPORT_APPROX = new Map(); // "platform/version" -> [{artifact, want, got, kind}]
+function resetSupportApprox(platform, version) { SUPPORT_APPROX.set(`${platform}/${version}`, []); }
+function noteApprox(platform, version, artifact, want, got, kind) {
+  const key = `${platform}/${version}`;
+  if (!SUPPORT_APPROX.has(key)) SUPPORT_APPROX.set(key, []);
+  SUPPORT_APPROX.get(key).push({ artifact, want, got, kind });
+}
+function approximationsFor(platform, version) { return SUPPORT_APPROX.get(`${platform}/${version}`) || []; }
+
+// 精确版本优先；缺失时**只允许同一个 `major.minor.` 轴内**的最近版本；跨轴返回 null。
+// 跨轴顶替（如用 2.2.1 顶 0.9.3）会换掉整个 API 面，风险远大于少判几条 —— 一律不给。
+function pickModuleJarSameAxis(group, artifact, exact, platform, version, kind) {
+  if (!exact) return null;
+  const hit = pickModuleJar(group, artifact, { exact });
+  if (hit) return hit;
+  const parts = String(exact).split(".");
+  if (parts.length < 2 || !/^\d+$/.test(parts[0]) || !/^\d+$/.test(parts[1])) return null;
+  const axis = parts.slice(0, 2).join(".") + ".";
+  const near = pickModuleJar(group, artifact, { prefix: axis });
+  if (!near) {
+    if (platform) noteApprox(platform, version, artifact, exact, "(缺)", kind || "exact-missing");
+    return null;
+  }
+  if (platform) noteApprox(platform, version, artifact, exact, path.basename(near), kind || "same-axis");
+  return near;
+}
+
+// sponge-mixin 的版本目录形如 `0.8.2+build.24` / `0.9.2+mixin.0.8.2` / `0.15.4+mixin.0.8.7`：
+// **目录名里的第一段是 loader 侧的封装版本，不是 mixin 版本**。要按 `+mixin.X.Y.Z` 取，
+// 没写 `+mixin.` 的（早期只有 `+build.NN`）才把首段当 mixin 版本。
+// （首版按 `exact: "0.8.2"` 匹配，结果 `0.8.2+build.24` 永远命不中、全部 fallback 到它 —— 已修。）
+function mixinVersionOf(dirName) {
+  const m = String(dirName).match(/\+mixin\.(\d+\.\d+\.\d+)/);
+  if (m) return m[1];
+  const lead = String(dirName).match(/^(\d+\.\d+\.\d+)/);
+  return lead ? lead[1] : null;
+}
+function pickMixinJar(group, wantMixinVer) {
+  const base = path.join(CACHE_MODULES, group, "sponge-mixin");
+  if (!fs.existsSync(base)) return null;
+  let vers = moduleVersionDirs(group, "sponge-mixin").filter((v) => mixinVersionOf(v) === wantMixinVer);
+  if (!vers.length) return null;
+  // 同一个 mixin 版本可能有多个 loader 封装版本：取最高（本档 loader 越新，封装版本越高）。
+  vers = vers.sort(verCmp).reverse();
+  for (const v of vers) {
+    const jar = newestJarIn(path.join(base, v));
+    if (jar) return jar;
+  }
+  return null;
+}
+
+// Forge 档的支撑件：版本对应关系**逐档实读**各档 `forge-<ver>-userdev.jar` 里的 `config.json`
+// `libraries`（复跑脚本 `temp/probe/probe-userdev-coords.mjs`）：
+//   1.13.2 → eventbus 0.9.3 / forgespi 0.13.0 / 无 mixin
+//   1.14.4 → eventbus 1.0.0 / forgespi 1.5.0  / 无 mixin
+//   1.15.2 → 2.2.1 / 3.0.0 / mixin 0.8.2
+//   1.16.5 → 4.0.0 / 3.2.0 / 0.8.4
+//   1.17.1 → 5.0.3 / 4.0.10 / 0.8.4
+//   1.18.2 → 5.0.3 / 4.0.15-4.x / 0.8.5
+//   1.19.4 → 6.0.3 / 6.0.0 / 0.8.5
+//   1.20.1 → 6.0.5 / 7.0.1 / 0.8.5
+//   1.20.4 → 6.2.27 / 7.1.3 / 0.8.5
+// 【判据】只允许「同 major.minor 轴」的最近版本顶替，跨轴一律不给（见 pickModuleJarSameAxis）。
+// 表外版本（1.7.10–1.12.2）：那个年代没有独立 eventbus 件，宁缺勿错。
+const FORGE_EVENTBUS_EXACT = {
+  "1.13.2": "0.9.3",   // 缓存无 0.9.x ⇒ 不给（早先跨轴拿 2.2.1 顶，已撤）
+  "1.14.4": "1.0.0",   // 缓存无 1.0.x ⇒ 不给（同上）
+  "1.15.2": "2.2.1",
+  "1.16.5": "4.0.0",
+  "1.17.1": "5.0.3",   // 缓存无 5.0.3，同轴有 5.0.7 ⇒ 用 5.0.7（同 minor 线，记账）
+  "1.18.2": "5.0.3",   // 同上
+  "1.19.4": "6.0.3",
+  "1.20.1": "6.0.5",
+  "1.20.4": "6.2.27",
+};
+// forgespi 的真实坐标（同上逐档实读）。
+const FORGE_SPI_EXACT = {
+  "1.13.2": "0.13.0", "1.14.4": "1.5.0", "1.15.2": "3.0.0", "1.16.5": "3.2.0",
+  "1.17.1": "4.0.10", "1.18.2": "4.0.15-4.x", "1.19.4": "6.0.0", "1.20.1": "7.0.1", "1.20.4": "7.1.3",
+};
+// forgespi 的 Dist（net.minecraftforge.api.distmarker）只在 ≤6.0.0 的件里；7.x 已迁到 fmlcore。
+// 缓存实测：3.0.0 / 3.2.0 / 4.0.15-4.x / 6.0.0 带 Dist，7.0.1 / 7.1.3 不带。
+const FORGE_SPI_WITH_DIST = {
+  "1.13.2": "3.0.0",
+  "1.14.4": "3.0.0",
+  "1.15.2": "3.0.0",
+  "1.16.5": "3.2.0",
+  "1.17.1": "4.0.15-4.x",
+  "1.18.2": "4.0.15-4.x",
+  "1.19.4": "6.0.0",
+};
+// forge 档的 mixin 件（config.json 写 0.8.2 / 0.8.4 / 0.8.5）
+const FORGE_MIXIN_AXIS = {
+  "1.15.2": "0.8.2",
+  "1.16.5": "0.8.4",
+  "1.17.1": "0.8.4",
+  "1.18.2": "0.8.5",
+  "1.19.4": "0.8.5",
+  "1.20.1": "0.8.5",
+  "1.20.4": "0.8.5",
+};
+// fabric / quilt 档的 sponge-mixin：按 **mixin 版本**（不是 loader 封装版本）对应。
+// 出处逐档实读：1.14.4 `remapClasspath.txt` 的 `0.8.2+build.24`；1.16.5 `0.9.2+mixin.0.8.2`；
+// 1.17.1 `0.10.7+mixin.0.8.4`；1.18.2 / 1.19.4 `0.12.5+mixin.0.8.5`；
+// 1.20.1 / 1.20.4 `0.15.4+mixin.0.8.7`；1.21.x / 26.1.2 按 loader 0.19.5 声明的 `0.17.4+mixin.0.8.7`。
+const FABRIC_MIXIN_VER = {
+  "1.14.4": "0.8.2",
+  "1.16.5": "0.8.2",
+  "1.17.1": "0.8.4",
+  "1.18.2": "0.8.5",
+  "1.19.4": "0.8.5",
+  "1.20.1": "0.8.7",
+  "1.20.4": "0.8.7",
+  "1.21.1": "0.8.7",
+  "1.21.3": "0.8.7",
+  "1.21.4": "0.8.7",
+  "1.21.8": "0.8.7",
+  "1.21.10": "0.8.7",
+  "1.21.11": "0.8.7",
+  "26.1.2": "0.8.7",
+};
+// neoforge 档：bus / mergetool 的版本按 MC 线分。出处为各档 `*.module` 元数据实读
+// （1.20.4 → bus 7.2.0 / mergetool 2.0.2；1.21.x → bus 8.0.5 / mergetool 2.0.0）。
+const NEO_BUS_VER = {
+  "1.20.1": "7.2.0",
+  "1.20.4": "7.2.0",
+  "1.20.6": "7.2.0",
+  "1.21.1": "8.0.5",
+  "1.21.3": "8.0.5",
+  "1.21.5": "8.0.5",
+  "1.21.8": "8.0.5",
+  "1.21.10": "8.0.5",
+  "1.21.11": "8.0.5",
+  "26.1": "8.0.5",
+  "26.2": "8.0.5",
+};
+const NEO_MERGETOOL_VER = {
+  "1.20.4": "2.0.2",
+  "1.20.6": "2.0.2",
+  "1.21.1": "2.0.0",
+  "1.21.3": "2.0.0",
+  "1.21.5": "2.0.0",
+  "1.21.8": "2.0.0",
+  "1.21.10": "2.0.0",
+  "1.21.11": "2.0.0",
+  "26.1": "2.0.0",
+  "26.2": "2.0.0",
+};
+// fancymodloader:loader 的**逐档真值**（实读各档构建产物的 classpath / nfrt manifest，
+// 复跑脚本 `temp/probe/probe-perpack-versions.mjs`）：
+//   1.20.4→2.0.17 / 1.20.6→3.0.45 / 1.21.1→4.0.43 / 1.21.3→5.0.8 / 1.21.5→7.0.13 /
+//   1.21.8→9.0.18 / 1.21.10→10.0.32 / 1.21.11→10.0.36 / 26.1→11.0.15
+// 早先是 `pickModuleJar(..., "loader", {})` ⇒ 所有档一律取到最新 12.0.8（跨 8 个大版本）。
+const NEO_LOADER_VER = {
+  "1.20.4": "2.0.17",
+  "1.20.6": "3.0.45",
+  "1.21.1": "4.0.43",
+  "1.21.3": "5.0.8",
+  "1.21.5": "7.0.13",
+  "1.21.8": "9.0.18",
+  "1.21.10": "10.0.32",
+  "1.21.11": "10.0.36",
+  "26.1": "11.0.15",
+  "26.2": "11.0.15",
+};
+
+// 这些「支撑件」不参与「本档有没有这个名字」的存在性判定（它们不是 MC/加载器 API 面），
+// 只用于让 javac 能解析注解与基类接口，避免把 can-find 判成 cannot-find。
+// 【Mixinextras 的版本判据】只有 4 档有**本档实测出处**（`build/tmp/javadoc/javadoc.options`
+// 里解析出的真实坐标，脚本 `temp/probe/probe-perpack-versions.mjs`）：
+//   fabric 1.20.1 → 0.4.1；1.20.4 → 0.4.1；1.21.3 → 0.5.5；1.21.4 → 0.5.5
+// 其余档本机**没有出处**，不猜具体版本，统一用「注解完整性下限」0.4.1
+// （`@Local` / `@Share` / `@Cancellable` 三件齐全；0.3.5 没有 `@Cancellable`，早先取最低版本因此漏注解，已修）。
+// 记账口径：用下限时记 `kind=mixinextras-floor`，让报告能看出这不是本档真值。
+const MIXINEXTRAS_EXACT = {
+  "1.20.1": "0.4.1",
+  "1.20.4": "0.4.1",
+  "1.21.3": "0.5.5",
+  "1.21.4": "0.5.5",
+};
+const MIXINEXTRAS_FLOOR = "0.4.1";
+const MIXINEXTRAS_NEEDED = [
+  "com/llamalad7/mixinextras/sugar/Local.class",
+  "com/llamalad7/mixinextras/sugar/Share.class",
+  "com/llamalad7/mixinextras/sugar/Cancellable.class",
+];
+function mixinextrasHasAll(jar) {
+  let names;
+  try { names = new Set(zipEntries(jar).map((e) => e.name)); } catch { return false; }
+  return MIXINEXTRAS_NEEDED.every((n) => names.has(n));
+}
+function pickMixinextrasJar(platform, version) {
+  const group = platform === "neoforge" ? "mixinextras-neoforge" : "mixinextras-fabric";
+  const base = path.join(CACHE_MODULES, "io.github.llamalad7", group);
+  if (!fs.existsSync(base)) return null;
+  const jarOf = (v) => (v ? newestJarIn(path.join(base, v)) : null);
+  const exact = MIXINEXTRAS_EXACT[version];
+  if (exact) {
+    const j = jarOf(exact);
+    if (j && mixinextrasHasAll(j)) return j;
+    noteApprox(platform, version, group, exact, j ? "(缺注解，改下限)" : "(缺件，改下限)", "mixinextras");
+  } else {
+    noteApprox(platform, version, group, "(无本档出处)", MIXINEXTRAS_FLOOR, "mixinextras-floor");
+  }
+  // 下限：取 ≥ MIXINEXTRAS_FLOOR 里最低的、且三件注解齐全的版本。
+  const vers = moduleVersionDirs("io.github.llamalad7", group)
+    .filter((v) => verCmp(v, MIXINEXTRAS_FLOOR) >= 0)
+    .sort(verCmp);
+  for (const v of vers) {
+    const j = jarOf(v);
+    if (j && mixinextrasHasAll(j)) return j;
+  }
+  return null;
+}
+
+function supportJarsFor(platform, version) {
+  const out = [];
+  const push = (j) => { if (j && fs.existsSync(j) && !out.includes(j)) out.push(j); };
+  // `push(pick(...)) || push(fallback)` 是错的：push 返回 undefined ⇒ `||` 右边**永远执行**，
+  // 结果两个都进（首版 fabric 1.14.4 同时拿到 0.8.2 与 0.8.7 两件）。改用显式 if 选一支。
+  const pickFirst = (...jars) => { for (const j of jars) if (j && fs.existsSync(j)) return j; return null; };
+  if (platform === "forge" || platform === "rift") {
+    // 表外档（1.7.10 / 1.8.9 / 1.9.4 / 1.10.2 / 1.11.2 / 1.12.2）：那个年代没有独立 eventbus 件，
+    // 宁缺勿错 —— 硬塞一个 6.x 会让 javac 用错 API 面（首版就回落到 6.2.33）。
+    const ebExact = FORGE_EVENTBUS_EXACT[version];
+    if (ebExact) push(pickModuleJarSameAxis("net.minecraftforge", "eventbus", ebExact, platform, version, "eventbus"));
+    // forgespi：先放本档真件（0.13.0/1.5.0 缓存缺 ⇒ 不给，不跨轴顶）。
+    const spiExact = FORGE_SPI_EXACT[version];
+    if (spiExact) push(pickModuleJarSameAxis("net.minecraftforge", "forgespi", spiExact, platform, version, "forgespi"));
+    // `net.minecraftforge.api.distmarker.Dist` 在 ≤6.0.0 的 forgespi 里（7.x 已迁 fmlcore）。
+    // 只有**本档真件缺 Dist** 时才补一件带 Dist 的（记账，且这是 2 常量枚举，形状风险最小）：
+    //   1.13.2 的 Dist 就在它自己的 MC 件里（实测 `forge-1.13.2-…mapped_snapshot…jar` 内含）⇒ 不需要；
+    //   1.14.4 的真件 forgespi 1.5.0 不在盘，MC 件也不含 Dist ⇒ 只能借 3.0.0（唯一记账的跨轴项）。
+    const needDist = new Set(["1.14.4", "1.17.1", "1.18.2", "1.20.1", "1.20.4"]);
+    if (needDist.has(version)) {
+      const distJar = pickModuleJar("net.minecraftforge", "forgespi", { prefix: "6." });
+      if (distJar && !out.includes(distJar)) {
+        push(distJar);
+        if (FORGE_SPI_EXACT[version] !== "6.0.0") {
+          noteApprox(platform, version, "forgespi(Dist)", FORGE_SPI_EXACT[version] || "(无)", path.basename(distJar), "dist-substitute");
+        }
+      }
+    }
+    const mixinExact = FORGE_MIXIN_AXIS[version];
+    // 只给 config.json 里**真有 mixin** 的档：1.13.2 / 1.14.4 的 config 没有 mixin 件，
+    // 硬塞 0.8.x 会让 javac 认下本档不存在的 `@Mixin`（早先就是无条件兜底 0.8.，已修）。
+    if (mixinExact) {
+      push(pickFirst(
+        pickModuleJar("org.spongepowered", "mixin", { exact: mixinExact }),
+        (() => {
+          const near = pickModuleJar("org.spongepowered", "mixin", { prefix: mixinExact.split(".").slice(0, 2).join(".") + "." });
+          if (near) noteApprox(platform, version, "mixin", mixinExact, path.basename(near), "same-axis");
+          return near;
+        })(),
+      ));
+    }
+    push(pickModuleJar("net.minecraftforge", "fmlcore", { prefix: version + "-" }));
+    push(pickModuleJar("net.minecraftforge", "fmlloader", { prefix: version + "-" }));
+    // @Mod 注解在 1.13.2–1.16.5 的 universal 件里；1.17+ 在 javafmllanguage。
+    push(pickModuleJar("net.minecraftforge", "javafmllanguage", { prefix: version + "-" }));
+    const uni = path.join(
+      "C:/Users/zzrCN/.gradle/caches/forge_gradle/maven_downloader/net/minecraftforge/forge",
+    );
+    if (fs.existsSync(uni)) {
+      const d = fs.readdirSync(uni).filter((x) => x.startsWith(version + "-")).sort(verCmp).pop();
+      if (d) {
+        const j = fs.readdirSync(path.join(uni, d)).find((f) => f.endsWith("-universal.jar"));
+        if (j) push(path.join(uni, d, j));
+      }
+    }
+  } else if (platform === "neoforge") {
+    push(pickFirst(pickModuleJar("net.neoforged", "bus", { exact: NEO_BUS_VER[version] }),
+      pickModuleJar("net.neoforged", "bus", { prefix: "8." })));
+    push(pickFirst(pickModuleJar("net.neoforged", "mergetool", { exact: NEO_MERGETOOL_VER[version] }),
+      pickModuleJar("net.neoforged", "mergetool", { prefix: "2.0." })));
+    // fancymodloader 的 loader 按档钉版本（早先 `{}` 让所有档都取最新 12.0.8，那是跨大版本错件）。
+    // `core` 这个 artifact 在本机缓存里**不存在**（缓存只有 bootstraplauncher/earlydisplay/loader/
+    // securejarhandler/spi），原来那行是无效调用；`@Mod` 实测在 `loader` 件里，删掉不补。
+    push(pickModuleJarSameAxis("net.neoforged.fancymodloader", "loader", NEO_LOADER_VER[version], platform, version, "loader"));
+    push(pickModuleJar("org.spongepowered", "mixin", { prefix: "0.8." }));
+  } else if (platform === "fabric" || platform === "quilt") {
+    push(pickFirst(pickMixinJar("net.fabricmc", FABRIC_MIXIN_VER[version]), pickMixinJar("net.fabricmc", "0.8.7")));
+    // MixinExtras：`@Local` / `@Share` / `@Cancellable` 这些注解的本体。
+    push(pickMixinextrasJar(platform, version));
+  } else if (platform === "liteloader" || platform === "modloader") {
+    push(pickFirst(pickModuleJar("org.spongepowered", "mixin", { prefix: "0.7." }),
+      pickModuleJar("org.spongepowered", "mixin", { prefix: "0.8." })));
+  }
+  return out;
+}
+
+// 与本档无关的「通用支撑」：JDK 之外 MC 类型签名会引用的库。逐档取「能被本档 MC 件解析」的版本太贵，
+// 这里只在**编译面**加，且**不进存在性索引**（buildIndex 只吃 pack jars + fapi + external）。
+const GENERIC_SUPPORT_JARS = [
   "C:/Users/zzrCN/.gradle/caches/modules-2/files-2.1/com.mojang/datafixerupper/10.0.21/b6b2ae770c02e0c1eb90f9985b151e9085a38d0b/datafixerupper-10.0.21.jar",
   "C:/Users/zzrCN/.gradle/caches/modules-2/files-2.1/com.mojang/brigadier/1.3.11/3373d1e7bf00c8b99bed1ea4efb8c47344e4a887/brigadier-1.3.11.jar",
+  // @Nullable：1.13.2 起 MC 用 org.jetbrains.annotations；javac 缺它只报 warning，
+  // 但补 import 候选里 `Nullable` 同时存在于 annotations 与 jspecify ⇒ 只放 annotations 才唯一。
+  newestModuleJar("org.jetbrains", "annotations"),
+  // Gson：JsonObject / JsonElement 在 forge/neoforge 的 patch 里逐字出现。
+  newestModuleJar("com.google.code.gson", "gson"),
   newestModuleJar("io.netty", "netty-buffer"),
   newestModuleJar("io.netty", "netty-common"),
   newestModuleJar("io.netty", "netty-codec"),
   newestModuleJar("com.google.guava", "guava"),
-  newestModuleJar("org.jetbrains", "annotations"),
   newestModuleJar("org.jspecify", "jspecify"),
+  // JSR-305：`javax.annotation.Nullable` 是**旧档 MC 自己的主流注解**（实测 mapped 件里
+  // forge/1.14.4 1000 处、1.16.5 1143 处、1.20.1 1406 处）。不把它放上编译类路径，
+  // 「按本档真实引用择优」就只能退到包序 —— 那等于择优失效。只进编译面，不进存在性判定。
+  newestModuleJar("com.google.code.findbugs", "jsr305"),
   newestModuleJar("org.slf4j", "slf4j-api"),
 ].filter((p) => p && fs.existsSync(p));
+
+// 兼容旧名：默认（无逐档参数）时的回退集合 —— 单测/无 pack 上下文会用它。
+const SUPPORT_JARS = GENERIC_SUPPORT_JARS;
 
 // ---------------------------------------------------------------- ZIP (central directory only)
 
@@ -334,9 +689,61 @@ function classEntryName(name) {
   return name.replace(/\.class$/, "").replace(/\//g, ".");
 }
 
+// 判断一个 class 条目是不是 `@interface`（注解）：读 class 文件的 access_flags 看
+// ACC_ANNOTATION(0x2000) / ACC_INTERFACE(0x0200)。用 zipEntries 已拿到的 compSize 定位太绕，
+// 这里走 readEntry（复用 audit 自己的 zip 读取器）。失败一律返回 false（宁可不用，不可错用）。
+function isAnnotationEntry(jar, entry) {
+  try {
+    const buf = readEntry(jar, entry);
+    // class 文件：magic(4) minor(2) major(2) cp_count(2) then constant pool; access_flags 在
+    // 「constant pool 之后」。这里走最省事的路径：用 javap 太贵，改为解析常量池跳过。
+    if (buf.readUInt32BE(0) !== 0xCAFEBABE) return false;
+    let p = 8;
+    const cpCount = buf.readUInt16BE(p); p += 2;
+    for (let k = 1; k < cpCount; k++) {
+      const tag = buf[p]; p += 1;
+      switch (tag) {
+        case 7: case 8: case 16: case 19: case 20: p += 2; break;      // Class/String/Module/Package
+        case 15: p += 3; break;                                        // MethodHandle
+        case 3: case 4: case 9: case 10: case 11: case 12: case 17: case 18: p += 4; break;
+        case 5: case 6: p += 8; k++; break;                            // Long/Double 占两槽
+        default: {                                                     // Utf8(1) 与未知
+          const len = buf.readUInt16BE(p); p += 2 + len; break;
+        }
+      }
+    }
+    const access = buf.readUInt16BE(p);
+    return (access & 0x2000) !== 0 && (access & 0x0200) !== 0;
+  } catch {
+    return false;
+  }
+}
+
+// 按 FQCN 惰性判断「这个类是不是注解」。只对真正用在注解位（`@Name`）的少数候选调用，
+// 不遍历全索引（一个 pack 上万类，全量判太贵）。zip 条目表与判定结果都按 jar 缓存。
+const _zipEntryIndexCache = new Map();
+const _annotationFqcnCache = new Map();
+function zipEntryIndexOf(jar) {
+  if (!_zipEntryIndexCache.has(jar)) {
+    const m = new Map();
+    try { for (const e of zipEntries(jar)) m.set(e.name, e); } catch { /* 读不动就当空表 */ }
+    _zipEntryIndexCache.set(jar, m);
+  }
+  return _zipEntryIndexCache.get(jar);
+}
+function isAnnotationFqcn(jar, fqcn) {
+  const key = jar + "\u0000" + fqcn;
+  if (_annotationFqcnCache.has(key)) return _annotationFqcnCache.get(key);
+  const entry = zipEntryIndexOf(jar).get(fqcn.split(".").join("/") + ".class");
+  const ans = entry ? isAnnotationEntry(jar, entry) : false;
+  _annotationFqcnCache.set(key, ans);
+  return ans;
+}
+
 function buildIndex(jars) {
   const bySimple = new Map();
   const byFqcn = new Map();
+  const annotationFqcns = new Set();
   for (const { jar, layer } of jars) {
     let entries;
     try { entries = zipEntries(jar); } catch { continue; }
@@ -352,9 +759,29 @@ function buildIndex(jars) {
       bySimple.get(simple).push(item);
       if (!byFqcn.has(fqcn)) byFqcn.set(fqcn, []);
       byFqcn.get(fqcn).push(item);
+      // 只对「嵌套类」查注解位（顶层类不需要这条判据，也省掉大量 readEntry）。
+      if (fqcn.includes("$") && isAnnotationEntry(jar, e)) annotationFqcns.add(fqcn);
     }
   }
-  return { bySimple, byFqcn, layers: new Set(jars.map((j) => j.layer)), classNames: [...byFqcn.keys()] };
+  return { bySimple, byFqcn, layers: new Set(jars.map((j) => j.layer)), classNames: [...byFqcn.keys()], annotationFqcns };
+}
+
+// support 索引合进主索引：**只**往 bySimple / byFqcn 追加，并把 "support" 记进 inv.layers。
+// 单独抽成函数是为了让 selftest 能对「合没合、合到哪一层」投毒（内联时毒不动）。
+// 语义边界：support 层**不参与** checkAbsence 的存在性判定，也不抢 API 面同名候选；
+//           它只为 autoImport 提供 FQCN（见 autoImport 的 layers 顺序）。
+function mergeSupportIndex(inv, supportIdx) {
+  for (const [k, v] of supportIdx.bySimple) {
+    if (!inv.bySimple.has(k)) inv.bySimple.set(k, []);
+    inv.bySimple.get(k).push(...v);
+  }
+  for (const [k, v] of supportIdx.byFqcn) {
+    if (!inv.byFqcn.has(k)) inv.byFqcn.set(k, []);
+    inv.byFqcn.get(k).push(...v);
+  }
+  for (const n of supportIdx.byFqcn.keys()) if (!inv.classNames.includes(n)) inv.classNames.push(n);
+  inv.layers.add("support");
+  return inv;
 }
 
 function nestedEntries(jar, fqcnPrefix) {
@@ -839,12 +1266,28 @@ function buildCandidates(rest) {
   return [...new Set(cands)];
 }
 
+// 【判据缺口修复】`-sourcepath` 缺省 = `-classpath`。NeoForge 的 `*-merged.jar` 同时打包
+// `.class` 与 `.java`（21.10.64 = 20815 条目里 7492 个 .java），javac 会顺着 classpath 把
+// 同名 `.java` 当**输入源码**重新编译，于是报出
+//   `neoforge-…-merged.jar(/net/neoforged/neoforge/registries/DeferredRegister.java):35:
+//    error: package net.neoforged.bus.api does not exist`
+// —— 它抱怨的是「jar 里那份源码缺依赖」，不是「你这段代码错」。这类错误此前被归成
+// `cannot access` / 类路径缺口，全部落到 unverifiable，把真实内容缺陷一起埋了。
+// 三组对照实测（同一 jar、同一源）：只补依赖仍 1640 条同形态错误；**只加空 -sourcepath 就 exit 0**。
+const EMPTY_SOURCEPATH = path.join(OUT_DIR, "_empty-sourcepath");
 function compileOnce(src, imports, body, classpath, dir, tag) {
   fs.mkdirSync(dir, { recursive: true });
+  fs.mkdirSync(EMPTY_SOURCEPATH, { recursive: true });
   fs.writeFileSync(src, "package zzclaim;\n" + imports.join("\n") + "\n" + body, "utf8");
   const slash = (p) => p.replace(/\\/g, "/");
   const argFile = path.join(dir, "args-" + tag + ".txt");
-  fs.writeFileSync(argFile, ['-proc:none', '-encoding', '"UTF-8"', '-cp', '"' + slash(classpath) + '"', '"' + slash(src) + '"'].join("\n"), "utf8");
+  fs.writeFileSync(argFile, [
+    '-proc:none',
+    '-encoding', '"UTF-8"',
+    '-sourcepath', '"' + slash(EMPTY_SOURCEPATH) + '"',
+    '-cp', '"' + slash(classpath) + '"',
+    '"' + slash(src) + '"',
+  ].join("\n"), "utf8");
   const r = spawnSync(JAVAC, ["-J-Duser.language=en", "-J-Duser.country=US", "@" + argFile], { encoding: "utf8", timeout: 30000, killSignal: "SIGKILL" });
   if (r.status === 0) return "";
   const out = (r.stderr || "") + (r.stdout || "");
@@ -932,17 +1375,119 @@ function stripCommentsAndStrings(s) {
   return out;
 }
 
-function autoImport(lines, imports, declared, inv, expected) {
+// 从同名候选里挑「本档 API 面」的 FQCN 集合。support 层是**后备**：
+// 只有当 API 面（expected / api / fapi / external）一个候选都没有时才启用。
+// 抽成函数是为了 selftest 能对「support 混进存在性层」投毒（内联时毒不动）。
+function pickImportCandidate(hits, expected) {
+  const apiLayers = ["api", "fapi", "external"];
+  if (expected) apiLayers.push(expected);
+  const fromApi = [...new Set(hits.filter((h) => apiLayers.includes(h.layer)).map((h) => h.fqcn))];
+  if (fromApi.length) return fromApi;
+  return [...new Set(hits.filter((h) => h.layer === "support").map((h) => h.fqcn))];
+}
+
+// 【注解位择优】`@Nullable` 这类名字在支撑件里有多个同名注解（jetbrains / jspecify / javax），
+// 「歧义就不猜」会把 `@Nullable` 永远留成 cannot find symbol（实测 17 条），javac 走不下去，
+// 就看不到片段里更深层的真错误。这里在**注解位**（`@Name`）放弃一刀切的「不猜」：
+//   ① 先剔掉「同名但不是注解」的候选（用 isAnnotationFqcn 在 class 文件层读 ACC_ANNOTATION）；
+//   ② 仍多于 1 时，**按本档 MC 件里的真实引用计数择优**（见 annotationRefCountsInJar）；
+//   ③ 本档一个都没引用（或引用数并列最高）时，才退到包序 ANNOTATION_PKG_ORDER；
+//   ④ 还定不下来 ⇒ 返回 null，仍按老规矩「不猜」。
+// 注意：这是**编译面**择优（让 javac 能继续），**不是**对某个注解归属的断言。
+// 为什么改成「按本档真实引用」：同一份 MC 不同档的注解习惯不同 ——
+// forge/1.20.1 的 mapped jar 里 `javax/annotation/Nullable` 落 1406 个 class、
+// `org/jetbrains/annotations/Nullable` 253 个，硬编码包序等于拿外部约定盖过本档实况。
+const ANNOTATION_PKG_ORDER = [
+  "org.jetbrains.annotations.",
+  "javax.annotation.",
+  "jakarta.annotation.",
+  "org.jspecify.annotations.",
+  "edu.umd.cs.findbugs.annotations.",
+];
+// 纯函数，selftest 可脱开真 jar 投毒。
+// refCount: (fqcn) => number，本档 MC 件里该注解被引用的次数（缺省 0）。
+function pickAnnotationCandidate(fqcns, isAnn, refCount) {
+  const uniqAll = [...new Set(fqcns)];
+  if (uniqAll.length <= 1) return null;
+  let uniq = uniqAll.filter((f) => isAnn(f));
+  if (!uniq.length) return null;           // 一个真注解都没有 ⇒ 不猜
+  if (uniq.length === 1) return uniq[0];
+  const rc = (f) => (refCount ? Number(refCount(f)) || 0 : 0);
+  // ② 按本档真实引用计数择优：唯一最高且 > 0 ⇒ 就它。
+  const max = Math.max(...uniq.map(rc));
+  if (max > 0) {
+    const top = uniq.filter((f) => rc(f) === max);
+    if (top.length === 1) return top[0];
+    uniq = top;                            // 并列最高 ⇒ 在并列这一档里再用包序，别越档瞎挑
+  }
+  // ③ 本档没引用 / 并列 ⇒ 包序
+  for (const pkg of ANNOTATION_PKG_ORDER) {
+    const p = uniq.filter((f) => f.startsWith(pkg));
+    if (p.length === 1) return p[0];
+  }
+  return null;                             // ④ 还歧义 ⇒ 不猜
+}
+
+// 【本档真实引用计数】在 pack 自己的 MC 件里数某个注解的引用次数：
+// class 文件常量池里注解以 `L<fqcn with />;` 形式出现，直接数字节串即可（不必解析 class）。
+// 只统计被问到的 FQCN；结果按 jar 缓存，且只在「注解位确实歧义」时才触发（罕见）。
+const _annRefCountCache = new Map(); // jar -> Map<fqcn, count>
+function annotationRefCountsInJar(jar, fqcns) {
+  let m = _annRefCountCache.get(jar);
+  if (!m) { m = new Map(); _annRefCountCache.set(jar, m); }
+  const missing = [...fqcns].filter((f) => !m.has(f));
+  if (!missing.length) return m;
+  const needles = missing.map((f) => ({ fqcn: f, needle: "L" + f.split(".").join("/") + ";" }));
+  for (const n of needles) m.set(n.fqcn, 0);
+  let entries;
+  try { entries = zipEntries(jar); } catch { return m; }
+  for (const e of entries) {
+    if (!e.name.endsWith(".class")) continue;
+    let buf;
+    try { buf = readEntry(jar, e); } catch { continue; }
+    const s = buf.toString("latin1");
+    for (const n of needles) {
+      let idx = 0, c = 0;
+      while ((idx = s.indexOf(n.needle, idx)) >= 0) { c++; idx += n.needle.length; }
+      if (c) m.set(n.fqcn, m.get(n.fqcn) + c);
+    }
+  }
+  return m;
+}
+// 把「本档 MC 件集合」包成一个 (fqcn) => 总引用次数 的函数。
+function makeAnnotationRefCounter(refJars) {
+  const jars = (refJars || []).filter((j) => j && fs.existsSync(j));
+  if (!jars.length) return null;
+  return (fqcn) => {
+    let total = 0;
+    for (const jar of jars) total += annotationRefCountsInJar(jar, [fqcn]).get(fqcn) || 0;
+    return total;
+  };
+}
+
+function autoImport(lines, imports, declared, inv, expected, opts = {}) {
+  // opts.annRef: (fqcn) => 本档 MC 件里的引用次数；opts.isOnCp: (jar) => 该 jar 是否在本轮编译类路径上。
+  // 【为什么必须要 isOnCp】引用计数挑出来的注解可能来自**不在编译类路径上的 jar**（例如 fabric 的
+  // api 层 loader 件不进 compileJars）—— 那样的 import 补进去只会换来 `package does not exist`。
+  const annRef = opts.annRef || null;
+  const isOnCp = opts.isOnCp || null;
   const added = [];
   const text = lines.join("\n");
   const codeText = stripCommentsAndStrings(text);
   const importedSimple = new Set(imports.map((x) => x.split(".").pop()));
   const used = [...new Set(codeText.match(/\b[A-Z][A-Za-z0-9_$]*\b/g) || [])];
+  // 只对「出现在注解位」的名字开注解择优（`@Foo` / `@Foo(...)`）。
+  const annUsed = new Set([...codeText.matchAll(/@\s*([A-Z][A-Za-z0-9_$]*)/g)].map((m) => m[1]));
   const jdkMap = {
     List: "java.util.List", ArrayList: "java.util.ArrayList", Map: "java.util.Map", HashMap: "java.util.HashMap",
     Set: "java.util.Set", HashSet: "java.util.HashSet", Optional: "java.util.Optional",
     CompletableFuture: "java.util.concurrent.CompletableFuture", UUID: "java.util.UUID",
     Objects: "java.util.Objects", Arrays: "java.util.Arrays", Collections: "java.util.Collections",
+    // 【补漏】`Collection` 与 `Collections` 是两个类：早先只收了复数，单数漏了，
+    // 于是 `Collection<TestFunction>` 报 cannot find symbol（实测 4 条，全在 mc-gametest）。
+    Collection: "java.util.Collection",
+    // 【补漏】同理：`BiConsumer` 与 `Consumer` 是不同接口，早先只收了 Consumer（实测 6 条）。
+    BiConsumer: "java.util.function.BiConsumer",
     Stream: "java.util.stream.Stream", Collectors: "java.util.stream.Collectors",
     Function: "java.util.function.Function", Supplier: "java.util.function.Supplier",
     Consumer: "java.util.function.Consumer", Predicate: "java.util.function.Predicate",
@@ -959,16 +1504,16 @@ function autoImport(lines, imports, declared, inv, expected) {
     }
     if (JDK_COMMON.has(u) || importedSimple.has(u) || declared.has(u)) continue;
     if (/^[A-Z][A-Z0-9_]*$/.test(u)) continue;
-    const layers = ["api", "fapi", "external"];
-    if (expected) layers.push(expected);
-    let distinct = [...new Set((inv.bySimple.get(u) || [])
-      .filter((h) => layers.includes(h.layer))
-      .map((h) => h.fqcn))];
+    // support 层排在最后：只有当本档 API 面（expected / api / fapi / external）里没有同名候选时，
+    // 才让加载器支撑件（@SubscribeEvent / @Mixin / Dist / Nullable / JsonObject…）补位。
+    // 层的挑选抽成 pickImportCandidate()，selftest 才能对「support 混进存在性层」投毒。
+    let distinct = pickImportCandidate(inv.bySimple.get(u) || [], expected);
     // `Properties` 在 Forge 档有两个候选：BlockBehaviour.Properties（嵌套，示例真正要的）
     // 与 net.minecraftforge.common.property.Properties。方块的上下文优先前者。
     let preferred = null;
     if (u === "Properties" && /\bBlock(?:Item)?\b/.test(codeText)) {
-      const nested = (inv.bySimple.get(u) || []).find((h) => /(?:^|\.)BlockBehaviour\$Properties$/.test(h.fqcn) && layers.includes(h.layer));
+      // 只用 pickImportCandidate 挑出来的那批（已按 API 面优先 / support 后备过滤过）。
+      const nested = (inv.bySimple.get(u) || []).find((h) => /(?:^|\.)BlockBehaviour\$Properties$/.test(h.fqcn) && distinct.includes(h.fqcn));
       if (nested) preferred = nested.fqcn;
     }
     if (preferred) distinct = [preferred];
@@ -981,6 +1526,31 @@ function autoImport(lines, imports, declared, inv, expected) {
     if (distinct.length > 1 && !/client/i.test(codeText)) {
       const core = distinct.filter((f) => !/\.client\./i.test(f));
       if (core.length === 1) distinct = core;
+    }
+    // 反例：Mixin 本体里那个同名枚举 `LocalVariableDiscriminator$Context$Local` 不是注解，
+    // 补进去会让 `@Local(...)` 报 `Context.Local cannot be converted to Annotation` —— 必须先剔掉
+    // 「同名但不是注解」的嵌套类候选（本仓踩过：fabric/1.21.1 的 04-mixin-patterns.md）。
+    if (distinct.length > 1) {
+      const topOrAnnotation = distinct.filter((f) => !f.includes("$") || inv.annotationFqcns.has(f));
+      if (topOrAnnotation.length) distinct = topOrAnnotation;
+    }
+    // 注解位择优（判据见 pickAnnotationCandidate 注释）：`@Nullable` 的多注解候选不再一律放弃；
+    // 优先按**本档 MC 件的真实引用计数**挑（annRef 由 compileBlocks 从 opts.refJars 造出来）。
+    if (distinct.length > 1 && annUsed.has(u)) {
+      let hits = (inv.bySimple.get(u) || []).filter((h) => distinct.includes(h.fqcn));
+      // 只留「本轮真在编译类路径上」的候选：不在 CP 上的 import 进来只会 `package does not exist`。
+      // 全都不在 CP 上 ⇒ 空集 ⇒ 下面一个都不挑，保持歧义（让 javac 报真错，不拿假 import 掩盖）。
+      if (isOnCp) hits = hits.filter((h) => isOnCp(h.jar));
+      if (hits.length === 1) {
+        // 收窄到一个：必须是**真注解**（class 文件层读 ACC_ANNOTATION）才用。
+        if (isAnnotationFqcn(hits[0].jar, hits[0].fqcn)) distinct = [hits[0].fqcn];
+      } else if (hits.length > 1) {
+        const chosen = pickAnnotationCandidate(hits.map((h) => h.fqcn), (f) => {
+          const h = hits.find((x) => x.fqcn === f);
+          return h ? isAnnotationFqcn(h.jar, h.fqcn) : false;
+        }, annRef);
+        if (chosen) distinct = [chosen];
+      }
     }
     if (process.env.AUDIT_DEBUG_IMPORT === u) console.error(`[debug-import] ${u}: ${JSON.stringify(distinct)}`);
     if (distinct.length !== 1) continue; // 歧义就不猜
@@ -1029,12 +1599,93 @@ function narrowClasspath(pool, inv, wanted, apiJars) {
   return [...new Set([...base, ...pick])];
 }
 
+// 「映射口径：本档语料是 mojmap」披露段：标题 + 至少一条逐名对照行才算（防只提一句就放行）。
+// ⚠️ = U+26A0 + U+FE0F 两个码点，`?` 只作用于后一个 ⇒ 要写成 `(?:⚠️?\s*)?` 才能带/不带都匹配。
+function hasMojmapDisclosure(parsed) {
+  const text = parsed.text || "";
+  if (!/###\s*(?:⚠️?\s*)?映射口径[^\n]*mojmap/i.test(text)) return false;
+  // 披露段里必须有真实的 mojmap→yarn 对照行（表格行：`| mojmap 名 | Yarn 名 |`）。
+  return /\|\s*mojmap\s*名\s*\|\s*Yarn\s*名\s*\|/i.test(text);
+}
+
+// 围栏里出现的全部「像类名」的标识符（大写开头、非 JDK 常用名）。
+// 【为什么要抽全部大写标识符】早先只抽 `Name<` / `Name.` / `extends|new Name` 三种形态，
+// **漏掉纯类型声明位**：`AdvancementHolder getDirt = ...` 里的 `AdvancementHolder` 后面跟的是空格，
+// 一个都抽不到 ⇒ mojmap 参考围栏判不出来（实测残留 `fabric/1.21.10 mc-advancement:61` 就是这个）。
+// 抽全量后由调用方按各自的出处判「是不是只属于 mojmap 侧」，成本只是几百个字符串。
+function mojmapCandidateNames(content) {
+  const code = stripCodeNoise(content);
+  // 【防撞名】显式从 JDK 包 import 进来的简单名，不可能是本档 mojmap 类。
+  // 反例（实测误判）：`import java.lang.reflect.Method;` 的 `Method` 与 MC 里某个叫 `Method`
+  // 的 mojmap 类同名 ⇒ 会把一段纯 Yarn 代码判成「mojmap 参考围栏」而不编译，
+  // 那是**掩盖**真错误（`fabric/1.21.10 mc-gametest:71` 就是这么被错判的）。
+  const jdkImported = new Set();
+  for (const m of code.matchAll(/^\s*import\s+(?:static\s+)?((?:java|javax|jakarta|jdk|sun)\.[\w.$]+)\s*;/gm)) {
+    jdkImported.add(m[1].split(".").pop().split("$").pop());
+  }
+  const names = new Set();
+  for (const m of code.matchAll(/\b[A-Z][A-Za-z0-9_$]*\b/g)) names.add(m[0]);
+  return [...names].filter((n) => !JDK_COMMON.has(n) && !jdkImported.has(n));
+}
+
+// 围栏里是否出现了「只存在于 mojmap 层、本档 expected 层查无」的类名。
+// 只认能证的：该简单名在 mojmap 层有、在 yarn 层一个都没有；歧义/两边都有 ⇒ 不算。
+function fenceUsesMojmapOnlyNames(content, inv) {
+  for (const n of mojmapCandidateNames(content)) {
+    const hits = inv.bySimple.get(n) || [];
+    const inMoj = hits.some((h) => h.layer === "mojmap");
+    const inYarn = hits.some((h) => h.layer === "yarn");
+    if (inMoj && !inYarn) return true;
+  }
+  return false;
+}
+
+// 【第二判据】上面那条靠「本档 artifacts 里真的有一个 mojmap 层」。但并非每档都有：
+// 实测 fabric/1.21.11 有 loom layered 件（mojmap 层 1 个 jar）⇒ 判得出来；
+// fabric/1.21.10 的 artifacts 只有 yarn/api/fapi/external ⇒ 判据结构上永不成立，
+// 于是 1.21.10 的 mojmap 参考围栏会被当本档 Yarn 面编译（实测残留 1 条：mc-advancement:61）。
+// 兜底出处用仓库自带的 `data/_yarn-mojmap-pairs/yarn-mojmap-<ver>.json`（Mojang client.txt ⋈
+// yarn-mappings.sqlite 的派生对照，逐件 sha 钉在 provenance 里；只读）。
+// 判据与上面一致：该简单名在 mojmap 侧有、在 yarn 侧一个都没有。
+const _pairsSimpleCache = new WeakMap();
+function pairsSimpleIndex(pairs) {
+  if (_pairsSimpleCache.has(pairs)) return _pairsSimpleCache.get(pairs);
+  const moj = new Set();
+  const yarn = new Set();
+  for (const k of pairs.moj2yarn.keys()) moj.add(k.split(".").pop().split("$").pop());
+  for (const k of pairs.yarn2moj.keys()) yarn.add(k.split(".").pop().split("$").pop());
+  const idx = { moj, yarn };
+  _pairsSimpleCache.set(pairs, idx);
+  return idx;
+}
+function fenceUsesMojmapOnlyNamesViaPairs(content, pairs) {
+  if (!pairs || !pairs.moj2yarn || !pairs.yarn2moj) return false;
+  const idx = pairsSimpleIndex(pairs);
+  for (const n of mojmapCandidateNames(content)) {
+    if (idx.moj.has(n) && !idx.yarn.has(n)) return true;
+  }
+  return false;
+}
+
 function compileBlocks(file, parsed, jarPaths, inv, opts = {}) {
   const out = [];
   // 移植对照页本来就把另一个加载器的代码放在同一页，用单档类路径编译只会误报。
   if (/[\\/]porting[\\/]/.test(file)) return out;
   const complete = Boolean(opts.complete);
   const expected = opts.expected || null;
+  // 注解位择优用的「本档真实引用计数」：**惰性**建（只有真出现注解歧义时才去扫件），
+  // 扫的是 opts.refJars（= 本档 artifacts 里的 MC/api 件，不含支撑件）。
+  let _annRef;
+  const annRef = (fqcn) => {
+    if (_annRef === undefined) _annRef = makeAnnotationRefCounter(opts.refJars);
+    return _annRef ? _annRef(fqcn) : 0;
+  };
+  // 「这个 jar 在本轮编译类路径上吗」—— 注解择优只能从 CP 上有的候选里挑。
+  // ⚠️ 口径必须与 compileOnce 一致：classpath = jarPaths（或 narrow 后的子集）**+ auxJars**。
+  // 漏掉 auxJars 会把**支撑件**（注解就在里面）全判成「不在 CP 上」，等于把注解择优关掉 ——
+  // 我第一次就是这么把 `@Nullable` 又修回 cannot find symbol 的（靠 AUDIT_DEBUG_IMPORT 才发现）。
+  const cpSet = new Set([...jarPaths, ...(opts.auxJars || SUPPORT_JARS)]);
+  const isOnCp = (jar) => cpSet.has(jar);
   const jarPicks = new Map();
   // 全量缓存可能有 700+ 个 jar，逐个 import 只取「含该类的 jar」里最新的一个。
   const jarForImport = (fqcn) => {
@@ -1058,6 +1709,21 @@ function compileBlocks(file, parsed, jarPaths, inv, opts = {}) {
     // 围栏前几行若说明这是「mojmap 原文 / 参考文件 / 上游写法」，它是移植对照，不按本档编译。
     const lead = parsed.lines.slice(Math.max(0, f.startLine - 9), Math.max(0, f.startLine - 1)).join("\n");
     if (/mojmap|Mojang|原文|参考文件|上游写法|移植对照/i.test(lead)) continue;
+    // 【分类缺口】文件级 mojmap 披露：Fabric 的 skills 明文写「本档语料是 mojmap」并附逐名对照表，
+    // 但它们同时给同一段代码的 Yarn 等价块。前者里 `MobEffect` / `ResourceKey` /
+    // `AdvancementHolder` / `BlockModelGenerators` 这些名字**本档 Yarn 层根本没有**，
+    // 拿 Yarn 类路径编译必然 cannot find symbol —— 那不是内容缺陷，是把参考面当本档面编译。
+    // 判据（只认能证的那一种）：文件含「映射口径…mojmap」披露段 **且** 该围栏出现
+    // 「只在 mojmap 侧、本档 Yarn 侧查无」的类名 ⇒ 判为参考围栏，不编译、留 unverifiable。
+    // 两个出处：① 本档 artifacts 真有 mojmap 层（按层判）；② 没有 mojmap 层时退到
+    //           `data/_yarn-mojmap-pairs` 的名字对照表（见 fenceUsesMojmapOnlyNamesViaPairs）。
+    const mojmapOnly = expected === "yarn" && hasMojmapDisclosure(parsed) &&
+      (fenceUsesMojmapOnlyNames(f.content, inv) || fenceUsesMojmapOnlyNamesViaPairs(f.content, opts.pairs));
+    if (mojmapOnly) {
+      out.push(finding("compile", file, f.startLine, "javac", "mojmap 参考围栏（本档 Yarn 层无该类名），不按本档编译", "unverifiable",
+        "文件含「映射口径：本档语料是 mojmap」披露段；围栏内的类名只存在于 mojmap 侧"));
+      continue;
+    }
     if (!complete) {
       if (!/^\s*import\s+/m.test(f.content)) continue;
       if (!/\b(class|interface|enum|record)\s+[A-Z]/.test(f.content)) continue;
@@ -1074,13 +1740,23 @@ function compileBlocks(file, parsed, jarPaths, inv, opts = {}) {
     const notes = [];
     let needLogger = false;
     let added = [];
-    const declared = new Set([...f.content.matchAll(/\b(?:class|interface|enum|record)\s+([A-Z][A-Za-z0-9_$]*)/g)].map((m) => m[1]));
+    // 【P1 修复】`declared` 必须走「去注释去字符串」后的代码文本，不能拿原始围栏文本。
+    // 反例（实测）：围栏顶部写了元件核实注释
+    //   `//   IRecipe 是**非泛型**接口：public interface IRecipe extends IForgeRecipe`
+    //   `//     public class DataParameter<T> { ... }`
+    // 原实现把注释里的 `public interface IRecipe` / `public class DataParameter` 当成
+    // 「围栏内已声明」⇒ autoImport 跳过补 import ⇒ javac 报 `cannot find symbol IRecipe`
+    // （forge/1.13.2 mc-recipe:32）与 `cannot find symbol DataParameter`
+    // （forge/1.14.4 08-client-server.mdc:182）—— 这是**审计读数错**，不是内容缺陷。
+    const declared = new Set(
+      [...stripCommentsAndStrings(f.content).matchAll(/\b(?:class|interface|enum|record)\s+([A-Z][A-Za-z0-9_$]*)/g)].map((m) => m[1]),
+    );
     if (complete) {
       const done = completeText(rest);
       body = done.lines;
       notes.push(...done.notes);
       needLogger = done.needLogger;
-      added = autoImport(body, imports, declared, inv, expected);
+      added = autoImport(body, imports, declared, inv, expected, { annRef, isOnCp });
       if (added.length) notes.push("补 import: " + added.map((x) => x.split(".").pop()).join(","));
       // 补完还是没有任何可解析上下文（没有 import、没有可唯一推断的类、正文也没有本档 FQCN）⇒ 不值得编译
       const hasFqcn = body.some((l) => [...l.matchAll(/\b((?:net\.minecraft|com\.mojang|net\.fabricmc|org\.quiltmc)\.[\w.$]+)\b/g)]
@@ -1091,12 +1767,15 @@ function compileBlocks(file, parsed, jarPaths, inv, opts = {}) {
       }
     }
     const fqcns = imports.map((l) => (l.match(/import\s+(?:static\s+)?([\w.$]+)/) || [])[1]).filter(Boolean);
+    // opts.auxJars = 本档的加载器支撑件（eventbus/mixin/distmarker/gson…）。默认回退到通用集合，
+    // 保持 selftest / 无 pack 上下文的调用方行为不变。
+    const auxJars = opts.auxJars || SUPPORT_JARS;
     let classpath;
     if (complete && opts.apiJars) {
       const wanted = [...fqcns, ...added];
-      classpath = [...new Set([...narrowClasspath(jarPaths, inv, wanted, opts.apiJars), ...SUPPORT_JARS])].join(";");
+      classpath = [...new Set([...narrowClasspath(jarPaths, inv, wanted, opts.apiJars), ...auxJars])].join(";");
     } else {
-      const need = [...jarPaths, ...SUPPORT_JARS];
+      const need = [...jarPaths, ...auxJars];
       for (const fqcn of fqcns) {
         const jar = jarForImport(fqcn);
         if (jar) need.push(jar);
@@ -1257,6 +1936,366 @@ function selftest() {
   // 10) 反向：mojmap 档里的 Yarn 名
   const rev = checkLayerMixups("x.md", { fences: [{ lang: "java", content: "import net.minecraft.item.ItemStack;", startLine: 3 }] }, fakeInv, mixPairs, "mojmap");
   if (!rev.length || rev[0].status !== "fail" || !/net\.minecraft\.world\.item\.ItemStack/.test(rev[0].evidence)) fail.push("reverse layer-mixup not detected");
+  // 11) 支撑件（support 层）——本轮新增判据的三条臂。
+  // 11a) autoImport 只在「本档 API 面没有同名候选」时才用 support 层补；
+  //      这一臂钉住 @SubscribeEvent 这类「本档确实有、但不在 MC 合并 jar 里」的名字能补出来。
+  const fakeInvSupport = {
+    ...fakeInv,
+    bySimple: new Map([
+      ...fakeInv.bySimple,
+      ["SubscribeEvent", [{ layer: "support", fqcn: "net.minecraftforge.eventbus.api.SubscribeEvent", jar: "" }]],
+    ]),
+  };
+  const supImports = [];
+  const supAdded = autoImport(["@SubscribeEvent public void f() { }"], supImports, new Set(), fakeInvSupport, "mojmap");
+  if (!supAdded.includes("net.minecraftforge.eventbus.api.SubscribeEvent")) fail.push("support-layer auto import");
+  // 11b) 若本档 API 面已有同名候选，support 层不得抢位（否则 MC 自己的类会被加载器注解顶掉）。
+  const fakeInvSupportConflict = {
+    ...fakeInv,
+    bySimple: new Map([
+      [...fakeInv.bySimple],
+      ["Text", [
+        { layer: "yarn", fqcn: "net.minecraft.text.Text", jar: "" },
+        { layer: "support", fqcn: "com.example.support.Text", jar: "" },
+      ]],
+    ]),
+  };
+  const conImports = [];
+  const conAdded = autoImport(["Text.literal(\"x\");"], conImports, new Set(), fakeInvSupportConflict, "yarn");
+  if (conAdded.some((x) => x.startsWith("com.example.support."))) fail.push("support layer overrode API layer");
+  // 11c) support 层必须**不进**存在性判定：某个名字只在 support 里时，
+  //      `checkAbsence` 不能据此判 fail（它只回答「本档 MC/加载器构件里有没有」，不回答「这个库装没装」）。
+  //      这里用「support 层有 SubscribeEvent 但 expected=yarn 的 bySimple 里同层没有 yarn 命中」构造。
+  const absSupport = checkAbsence("x", "x.md", 1, "- `SubscribeEvent` 在本档不存在", fakeInvSupport, "yarn");
+  if (absSupport.some((f) => f.status === "fail")) fail.push("support layer must not satisfy existence check");
+  // 11c-2) support 索引必须真的建得起来：拿真实支撑件跑一遍 buildIndex，
+  //         `org.spongepowered.asm.mixin.Mixin` 必须在 support 层可查（补全器靠它补 @Mixin）。
+  //         （投毒：把 supportJarsFor 改成返回 [] 或把 buildIndex 的 support 索引删掉 -> 本臂红）
+  const supportProbeJars = supportJarsFor("fabric", "1.21.11");
+  if (!supportProbeJars.length) fail.push("supportJarsFor(fabric,1.21.11) must resolve jars");
+  else {
+    const sIdx = buildIndex(supportProbeJars.map((jar) => ({ jar, layer: "support" })));
+    const mixinHits = (sIdx.byFqcn.get("org.spongepowered.asm.mixin.Mixin") || []).filter((h) => h.layer === "support");
+    if (!mixinHits.length) fail.push("support index must expose Mixin annotation");
+    // 11c-3) mergeSupportIndex 必须把 support 记进 layers、并让 bySimple/byFqcn 查得到；
+    //        投毒（把函数体掏空 / 不 add layer）本臂红。
+    const mergedInv = mergeSupportIndex(
+      { bySimple: new Map(), byFqcn: new Map(), layers: new Set(), classNames: [] },
+      sIdx,
+    );
+    if (!mergedInv.layers.has("support")) fail.push("mergeSupportIndex must record support layer");
+    if (!(mergedInv.byFqcn.get("org.spongepowered.asm.mixin.Mixin") || []).length) fail.push("mergeSupportIndex must merge byFqcn");
+    if (!(mergedInv.bySimple.get("Mixin") || []).length) fail.push("mergeSupportIndex must merge bySimple");
+    if (!mergedInv.classNames.includes("org.spongepowered.asm.mixin.Mixin")) fail.push("mergeSupportIndex must merge classNames");
+  }
+  // 11d) `-sourcepath` 必须被钉成**空目录**（否则 javac 会去编译 classpath 里 jar 的内嵌 .java）。
+  //      只 grep 那一行不够 —— 还得钉住它解析出来的落点：必须在本轮 OUT_DIR 下、
+  //      且目录名带 `_empty-sourcepath`（投毒：指到仓库里任何有 .java 的目录即红）。
+  const compileSrc = fs.readFileSync(fileURLToPath(import.meta.url), "utf8");
+  if (!/'-sourcepath', '"' \+ slash\(EMPTY_SOURCEPATH\) \+ '"'/.test(compileSrc)) fail.push("javac -sourcepath not pinned to empty dir");
+  {
+    const rel = path.relative(OUT_DIR, EMPTY_SOURCEPATH);
+    if (rel.startsWith("..") || path.isAbsolute(rel)) fail.push("EMPTY_SOURCEPATH must live under OUT_DIR");
+    if (!/_empty-sourcepath/.test(path.basename(EMPTY_SOURCEPATH))) fail.push("EMPTY_SOURCEPATH must be a dedicated empty dir");
+    if (!/mkdirSync\(EMPTY_SOURCEPATH/.test(compileSrc)) fail.push("EMPTY_SOURCEPATH must be created before javac runs");
+  }
+  // 11d-2) pickImportCandidate 的优先级必须钉死：support 只在 API 面**全空**时补位。
+  //        投毒（把 support 塞进 apiLayers / 去掉 API 优先）本臂红。
+  const fakeHitsBoth = [
+    { layer: "yarn", fqcn: "net.minecraft.text.Text", jar: "" },
+    { layer: "support", fqcn: "com.example.SupportText", jar: "" },
+  ];
+  const pickedBoth = pickImportCandidate(fakeHitsBoth, "yarn");
+  if (!pickedBoth.includes("net.minecraft.text.Text")) fail.push("pickImportCandidate must prefer API layer");
+  if (pickedBoth.includes("com.example.SupportText")) fail.push("pickImportCandidate must not co-mingle support layer");
+  const pickedSupportOnly = pickImportCandidate([{ layer: "support", fqcn: "com.example.SupportText", jar: "" }], "yarn");
+  if (!pickedSupportOnly.includes("com.example.SupportText")) fail.push("pickImportCandidate must fall back to support layer");
+  // 11d-3) runPack 必须**真的**把 support 索引合进 inv（不是建了索引就丢掉）。
+  //        投毒（把 mergeSupportIndex 调用删掉 / 换成 buildIndex）本臂红。
+  if (!/mergeSupportIndex\(inv, buildIndex\(auxJars\.map/.test(compileSrc)) {
+    fail.push("runPack must merge support index into inv");
+  }
+  // 11e) mojmap 参考围栏识别：**三臂**。
+  //   (a) 有披露段 + 围栏含 mojmap-only 名 ⇒ 认；
+  //   (b) 有 mojmap-only 名但**没有**披露段 ⇒ 不认（否则会真放松判据）；
+  //   (c) 有披露段但围栏里全是两层都有的名字 ⇒ 不认（披露段不该替真缺陷背锅）。
+  {
+    const invMix = {
+      ...fakeInv,
+      bySimple: new Map([
+        ...fakeInv.bySimple,
+        ["MobEffect", [{ layer: "mojmap", fqcn: "net.minecraft.world.effect.MobEffect", jar: "" }]],
+        ["StatusEffect", [{ layer: "yarn", fqcn: "net.minecraft.entity.effect.StatusEffect", jar: "" }]],
+      ]),
+    };
+    const disclosureText = "### ⚠️ 映射口径：本档语料是 mojmap\n\n| mojmap 名 | Yarn 名 | 适用版本 |\n| --- | --- | --- |\n| MobEffect | StatusEffect | 1.21.11 |";
+    const parsedWithDisclosure = { text: disclosureText, lines: disclosureText.split("\n"), fences: [], prose: [], headings: [] };
+    const parsedNoDisclosure = { text: "普通页", lines: ["普通页"], fences: [], prose: [], headings: [] };
+    if (!hasMojmapDisclosure(parsedWithDisclosure)) fail.push("mojmap disclosure not detected");
+    if (hasMojmapDisclosure(parsedNoDisclosure)) fail.push("mojmap disclosure false positive");
+    // 只有标题、没有逐名对照表 ⇒ 必须**不**认（防「提一句就放行」）。
+    if (hasMojmapDisclosure({ text: "### 映射口径：本档语料是 mojmap" })) fail.push("mojmap disclosure must require per-name table");
+    if (!fenceUsesMojmapOnlyNames("public class T extends MobEffect { }", invMix)) fail.push("mojmap-only name not detected");
+    if (fenceUsesMojmapOnlyNames("public class T extends StatusEffect { }", invMix)) fail.push("yarn name misread as mojmap-only");
+    // 两层都有的名字不算 mojmap-only
+    const invBoth = {
+      ...fakeInv,
+      bySimple: new Map([
+        ...fakeInv.bySimple,
+        ["Text2", [
+          { layer: "mojmap", fqcn: "net.minecraft.network.chat.Component", jar: "" },
+          { layer: "yarn", fqcn: "net.minecraft.text.Text", jar: "" },
+        ]],
+      ]),
+    };
+    if (fenceUsesMojmapOnlyNames("public class T extends Text2 { }", invBoth)) fail.push("both-layer name misread as mojmap-only");
+  }
+  // 11e) 逐档支撑件解析：至少三种平台能解析出非空集合，且不存在的版本不崩。
+  const supForge = supportJarsFor("forge", "1.20.1");
+  const supFabric = supportJarsFor("fabric", "1.21.11");
+  if (!Array.isArray(supForge) || !Array.isArray(supFabric)) fail.push("supportJarsFor must return arrays");
+  if (!supFabric.length) fail.push("supportJarsFor(fabric, 1.21.11) resolved nothing");
+  const supBogus = supportJarsFor("forge", "0.0.0");
+  if (!Array.isArray(supBogus)) fail.push("supportJarsFor must survive unknown version");
+  // 11f) MixinExtras：`@Local` / `@Share` / `@Cancellable` 不在 Mixin 本体里。
+  //      三臂：① 能解析到 mixinextras 件；② 该件里 `com.llamalad7.mixinextras.sugar.Local`
+  //      被认成注解（`isAnnotationEntry` 的 class 文件解析器要真的读得出 ACC_ANNOTATION）；
+  //      ③ 同名嵌套类不是注解时必须被剔掉（否则 `@Local(...)` 会被补成
+  //      `LocalVariableDiscriminator$Context$Local`，报 Context.Local cannot be converted to Annotation）。
+  {
+    const mx = pickMixinextrasJar("fabric", "1.21.1");
+    if (!mx) fail.push("mixinextras jar not resolved for fabric/1.21.1");
+    else {
+      const mxIdx = buildIndex([{ jar: mx, layer: "support" }]);
+      if (!mxIdx.byFqcn.has("com.llamalad7.mixinextras.sugar.Local")) fail.push("mixinextras Local missing from index");
+      const hit = (mxIdx.byFqcn.get("com.llamalad7.mixinextras.sugar.Local") || [])[0];
+      if (!hit || !isAnnotationEntry(hit.jar, { name: "com/llamalad7/mixinextras/sugar/Local.class", method: 0, compSize: 0, localOff: 0 })) {
+        // 用 buildIndex 拿不到 zipEntries 的 entry 形状；换 zipEntries 直接取。
+        const fp = zipEntries(mx).find((z) => z.name === "com/llamalad7/mixinextras/sugar/Local.class");
+        if (!fp || !isAnnotationEntry(mx, fp)) fail.push("mixinextras @Local not recognised as annotation");
+      }
+      // 反向：Mixin 本体那个同名枚举必须被判成「不是注解」。
+      const mxMixin = pickMixinJar("net.fabricmc", "0.8.7");
+      if (mxMixin) {
+        const enumEntry = zipEntries(mxMixin).find((z) => z.name === "org/spongepowered/asm/mixin/injection/modify/LocalVariableDiscriminator$Context$Local.class");
+        if (enumEntry && isAnnotationEntry(mxMixin, enumEntry)) fail.push("Context$Local must not be flagged as annotation");
+      }
+    }
+  }
+  // 11g) jdkMap 补漏：`Collection` 与 `Collections` 是两个类，`BiConsumer` 与 `Consumer` 是两个接口。
+  //      早先只收了复数/单数各一个，导致 `Collection<TestFunction>` / `BiConsumer<A,B>` 报
+  //      cannot find symbol（实测 4 + 6 条）。这条臂把「同族成对必须都在」钉住。
+  {
+    const src = fs.readFileSync(new URL(import.meta.url), "utf8");
+    const i = src.indexOf("const jdkMap = {");
+    const blk = i >= 0 ? src.slice(i, src.indexOf("\n  };", i)) : "";
+    for (const must of ["Collection:", "Collections:", "BiConsumer:", "Consumer:"]) {
+      if (!blk.includes(must)) fail.push("jdkMap missing " + must);
+    }
+    // 逻辑面再用一次：直接验两个键映射到不同 FQCN（防止被写成同一个）。
+    if (/Collection:\s*"java\.util\.Collections"/.test(blk)) fail.push("jdkMap Collection must not alias Collections");
+  }
+  // 11h) 注解位择优选支（纯函数，脱开真 jar 可投毒）。六臂：
+  //      ① **本档真实引用计数优先**：jspecify 被引 9 次、jetbrains 1 次 ⇒ 选 jspecify（压过包序）；
+  //      ② 本档零引用 ⇒ 退包序，命中 jetbrains；
+  //      ③ 引用数并列最高 ⇒ 在并列档里用包序（不许越档挑零引用的那个）；
+  //      ④ 一个真注解 + 一个非注解 ⇒ 选那个真注解；
+  //      ⑤ 全不是注解 ⇒ null（不许乱补）；
+  //      ⑥ 两个真注解、零引用、且都不在包序里 ⇒ null（仍按「不猜」）。
+  {
+    const JET = "org.jetbrains.annotations.Nullable";
+    const JSP = "org.jspecify.annotations.Nullable";
+    const JAV = "javax.annotation.Nullable";
+    const isAnnAll = () => true;
+    // ① 引用计数优先（方向与包序相反，能证明「不是靠包序」）
+    const p1 = pickAnnotationCandidate([JET, JSP], isAnnAll, (f) => (f === JSP ? 9 : 1));
+    if (p1 !== JSP) fail.push("annotation tiebreak must follow pack ref count: " + p1);
+    // ② 零引用 ⇒ 包序
+    const p2 = pickAnnotationCandidate([JET, JSP], isAnnAll, () => 0);
+    if (p2 !== JET) fail.push("annotation tiebreak must fall back to pkg order: " + p2);
+    // ③ 引用数并列最高 ⇒ 只在并列档里用包序，**不许越档**挑零引用的那个。
+    //    构造：最高并列的是 jspecify 与 javax（各 5），jetbrains 为 0 但包序最靠前。
+    //    正确 = javax（并列档里按包序）；错解 = jetbrains（越档用了零引用的）。
+    const p3 = pickAnnotationCandidate([JET, JSP, JAV], isAnnAll, (f) => (f === JET ? 0 : 5));
+    if (p3 !== JAV) fail.push("annotation tiebreak must stay within the tie group: " + p3);
+    // ④ 剔非注解
+    const p4 = pickAnnotationCandidate(
+      ["org.spongepowered.asm.mixin.injection.modify.LocalVariableDiscriminator$Context$Local", "com.llamalad7.mixinextras.sugar.Local"],
+      (f) => f === "com.llamalad7.mixinextras.sugar.Local",
+    );
+    if (p4 !== "com.llamalad7.mixinextras.sugar.Local") fail.push("annotation tiebreak must drop non-annotation: " + p4);
+    // ⑤ 全非注解
+    if (pickAnnotationCandidate(["a.Foo", "b.Foo"], () => false) !== null) fail.push("annotation tiebreak must not guess when none is annotation");
+    // ⑥ 零引用 + 包序都没命中
+    if (pickAnnotationCandidate(["com.x.Foo", "com.y.Foo"], isAnnAll, () => 0) !== null) fail.push("annotation tiebreak must not guess when pkg order misses");
+    // ⑦ 编译类路径过滤：引用计数偏向 jspecify，但 jspecify 不在 CP 上 ⇒ 必须退回 jetbrains。
+    //    （否则补进来的 import 只会换来 `package does not exist`。）
+    {
+      const jetJar = newestModuleJar("org.jetbrains", "annotations");
+      const jspJar = newestModuleJar("org.jspecify", "jspecify");
+      if (!jetJar || !jspJar) fail.push("annotation CP arm: support jars missing");
+      else {
+        const cpInv = {
+          ...fakeInv,
+          bySimple: new Map([
+            ...fakeInv.bySimple,
+            ["Nullable", [
+              { jar: jetJar, layer: "support", fqcn: "org.jetbrains.annotations.Nullable", simple: "Nullable" },
+              { jar: jspJar, layer: "support", fqcn: "org.jspecify.annotations.Nullable", simple: "Nullable" },
+            ]],
+          ]),
+        };
+        const cpImports = [];
+        autoImport(["@Nullable String s;"], cpImports, new Set(), cpInv, "yarn", {
+          annRef: (f) => (f === "org.jspecify.annotations.Nullable" ? 9 : 1),
+          isOnCp: (jar) => jar === jetJar, // 只把 jetbrains 放进「类路径」
+        });
+        const got = cpImports[0] || "";
+        if (!got.includes("org.jetbrains.annotations.Nullable")) {
+          fail.push("annotation CP filter must drop off-classpath candidate, got: " + got);
+        }
+      }
+    }
+  }
+  // 11k) 【P1】注释里的 `public class X` / `public interface X` **不得**抑制 X 的 import。
+  //      反例（实测两处）：forge/1.13.2 mc-recipe:32 的围栏注释写着
+  //        `//   IRecipe 是**非泛型**接口：public interface IRecipe extends IForgeRecipe`
+  //      forge/1.14.4 08-client-server.mdc:182 的注释写着
+  //        `//     public class DataParameter<T> { public DataParameter(int, IDataSerializer<T>); }`
+  //      ⇒ 老实现把注释里的声明当成「围栏内已声明」⇒ 跳过补 import ⇒ 报 cannot find symbol。
+  //      这条臂钉住：declared 必须取「去注释去字符串」后的文本。
+  {
+    const fenceWithComment = [
+      "// 本档构件核实（javap @ forge-1.13.2）：",
+      "//   IRecipe 是**非泛型**接口：public interface IRecipe extends IForgeRecipe",
+      "public class MyRecipe implements IRecipe {",
+      "  @Override public boolean matches(IInventory inv, World world) { return false; }",
+      "}",
+    ].join("\n");
+    const declOf = (text) => new Set([...stripCommentsAndStrings(text).matchAll(/\b(?:class|interface|enum|record)\s+([A-Z][A-Za-z0-9_$]*)/g)].map((m) => m[1]));
+    const d = declOf(fenceWithComment);
+    if (d.has("IRecipe")) fail.push("commented-out 'public interface IRecipe' must not count as declared");
+    if (!d.has("MyRecipe")) fail.push("real 'public class MyRecipe' must count as declared");
+    // 反向：真实声明（非注释）仍要被认出来，别把这条臂修成永远「没声明」。
+    const realDecl = declOf("public class DataParameter<T> {\n  public DataParameter(int i) {}\n}");
+    if (!realDecl.has("DataParameter")) fail.push("real code declaration must still be declared");
+    // 字符串里的 class 名同样不算（`String s = "public class Fake {}"`）。
+    if (declOf('String s = "public class Fake {}";').has("Fake")) fail.push("class name inside string literal must not count as declared");
+  }
+  // 11l) 支撑件「同轴顶替」判据：跨 major.minor 轴一律不给（早先跨轴顶替把 0.9.3 顶成 2.2.1）。
+  {
+    // 5.0.3 在缓存里没有，但同轴有 5.0.7 ⇒ 应当拿到 5.0.7（并记账，不静默）。
+    resetSupportApprox("forge", "1.17.1");
+    const got = pickModuleJarSameAxis("net.minecraftforge", "eventbus", "5.0.3", "forge", "1.17.1", "eventbus");
+    const ap = approximationsFor("forge", "1.17.1");
+    if (got && !/5\.0\./.test(path.basename(path.dirname(path.dirname(got))))) fail.push("same-axis eventbus should resolve on the 5.0.x line, got " + got);
+    if (got && !ap.length) fail.push("same-axis substitution must be recorded as an approximation");
+    // 0.9.3 没有 0.9.x 同轴件 ⇒ 必须返回 null（不许跨轴拿 2.2.1）。
+    resetSupportApprox("forge", "1.13.2");
+    const none = pickModuleJarSameAxis("net.minecraftforge", "eventbus", "0.9.3", "forge", "1.13.2", "eventbus");
+    if (none !== null) fail.push("cross-axis eventbus must NOT be substituted, got " + none);
+    // 而且这种「本档真件缺」也要记账（缺口是事实，得让人看见）。
+    if (!approximationsFor("forge", "1.13.2").length) fail.push("missing exact eventbus must be recorded");
+    // neoforge loader 逐档真值必须真的存在（缓存里 2.0.17 … 12.0.8 全在）。
+    for (const [ver, want] of Object.entries(NEO_LOADER_VER)) {
+      const p = pickModuleJar("net.neoforged.fancymodloader", "loader", { exact: want });
+      if (!p) fail.push(`fancymodloader loader ${want} for neoforge/${ver} not resolvable`);
+    }
+    // mixinextras 的注解完整性下限：拿到的件必须三件注解齐全（0.3.5 缺 @Cancellable）。
+    for (const [plas, ver] of [["fabric", "1.21.1"], ["fabric", "1.21.11"], ["fabric", "1.20.1"]]) {
+      resetSupportApprox(plas, ver);
+      const mx = pickMixinextrasJar(plas, ver);
+      if (!mx) fail.push(`mixinextras not resolved for ${plas}/${ver}`);
+      else if (!mixinextrasHasAll(mx)) fail.push(`mixinextras for ${plas}/${ver} missing @Local/@Share/@Cancellable: ${path.basename(mx)}`);
+    }
+    // 记账必须从**整档**分支真的流出去（第一次只加在 fragment 分支 ⇒ 全量报告里是空数组）。
+    const src3 = fs.readFileSync(new URL(import.meta.url), "utf8");
+    const approxSites = (src3.match(/supportApproximations: approximationsFor\(platform, version\)/g) || []).length;
+    if (approxSites < 2) fail.push("supportApproximations must be returned from BOTH runPack branches (found " + approxSites + ")");
+    // 【接线臂·必测源码实文】上面那些臂只测「函数对不对」，测不到「compileBlocks 里到底调的是谁」。
+    // 投毒验证时发现：把 declared 改回 f.content、把 near 改成跨轴前缀、把 mixinextrasHasAll 改恒 true，
+    // 这些臂**全都不红** —— 因为臂自己又算了一遍正确逻辑。所以这里直接钉源码里那几处**必须是哪一行**。
+    // ⚠️ 比对串必须拆成两段拼出来，**不能整串写在臂的源码里**：如果整串出现，臂的源码自己也含有它，
+    //    投毒把实现行改掉后 `src3.includes(needle)` 仍从臂这一行找到 ⇒ 臂永远绿（假臂）。
+    //    这是 11k 连续三次假绿的真正原因 —— 前两次我在改「比对串取多长」，改错了方向。
+    const ND = (a, b) => a.concat(b);
+    const mustContain = [
+      ["declared 必须走 stripCommentsAndStrings", ND("stripCommentsAndStrings(f.content)", ".matchAll(")],
+      ["同轴顶替必须用 axis 前缀", ND("{ prefix: ", "axis }")],
+      ["mixinextras 必须做注解完整性校验", ND("MIXINEXTRAS_NEEDED", ".every(")],
+      ["同轴顶替必须记账", ND("kind || ", "\"same-axis\"")],
+      ["fancymodloader loader 必须按档钉版本", ND("NEO_LOADER_VER", "[version]")],
+    ];
+    for (const [what, needle] of mustContain) {
+      if (!src3.includes(needle)) fail.push("wiring: " + what);
+    }
+    // 反查：老写法必须已经不在（它是「所有档取最新 12.0.8」的病根）。
+    if (/fancymodloader",\s*"loader",\s*\{\}\s*\)/.test(src3)) {
+      fail.push("wiring: 不许再有无版本前缀的 fancymodloader loader 调用");
+    }
+  }
+  //      ① 1.21.10 表里 `AdvancementHolder` 是 mojmap-only（该档实测就是靠这条兜底）；
+  //      ② `Advancement` 两侧同名 ⇒ 不算；
+  //      ③ 表为 null ⇒ false（不崩）；
+  //      ④ `MobEffect` 是 mojmap-only、`StatusEffect` 不是。
+  {
+    const pr = loadPairs("1.21.10");
+    if (!pr) fail.push("yarn-mojmap-pairs for 1.21.10 not loadable");
+    else {
+      const wrap = (decl) => `public class T { ${decl} }`;
+      if (!fenceUsesMojmapOnlyNamesViaPairs(wrap("AdvancementHolder h;"), pr)) fail.push("pairs: AdvancementHolder must be mojmap-only");
+      if (fenceUsesMojmapOnlyNamesViaPairs(wrap("Advancement a;"), pr)) fail.push("pairs: Advancement must not be mojmap-only");
+      if (!fenceUsesMojmapOnlyNamesViaPairs(wrap("MobEffect m;"), pr)) fail.push("pairs: MobEffect must be mojmap-only");
+      if (fenceUsesMojmapOnlyNamesViaPairs(wrap("StatusEffect s;"), pr)) fail.push("pairs: StatusEffect must not be mojmap-only");
+    }
+    if (fenceUsesMojmapOnlyNamesViaPairs("public class T { AdvancementHolder h; }", null)) fail.push("pairs: null table must be false");
+    // 撞名臂：① 显式从 java.* import 的名字不许进候选（机制臂：拿一个 mojmap-only 名当被 import 目标）；
+    //         ② `Method` 这类常用 java.lang.reflect 名必须被 JDK_COMMON 兜住。
+    {
+      const synthetic = "import java.lang.AdvancementHolder;\npublic class T { AdvancementHolder h; }";
+      if (mojmapCandidateNames(synthetic).includes("AdvancementHolder")) {
+        fail.push("candidate names must exclude java.* imported names");
+      }
+      const reflectLike = "public class T { Method m; }";
+      if (mojmapCandidateNames(reflectLike).includes("Method")) fail.push("JDK_COMMON must cover Method");
+      const gametestLike = "package com.example.docs;\nimport java.lang.reflect.Method;\nimport net.minecraft.test.TestContext;\npublic class T { TestContext c; Method m; }";
+      if (pr && fenceUsesMojmapOnlyNamesViaPairs(gametestLike, pr)) fail.push("pairs: java.lang.reflect.Method must not trigger mojmap-only");
+    }
+    // 接线臂：光有函数不够，两处 compileBlocks 调用必须真的把 pairs 与 refJars 都传进去
+    //         （pairs 缺 ⇒ mojmap 兜底永不生效；refJars 缺 ⇒ 注解择优退化成包序）。
+    const src2 = fs.readFileSync(new URL(import.meta.url), "utf8");
+    const wiredPairs = (src2.match(/auxJars, pairs, refJars: art\.jars\.map/g) || []).length;
+    if (wiredPairs < 2) fail.push("compileBlocks must receive pairs+refJars (found " + wiredPairs + " call sites)");
+    // cpSet 必须把 auxJars 算进编译类路径 —— 漏了会把支撑件（注解就在里面）全判成「不在 CP 上」，
+    // 等于把注解择优静默关掉（我第一次就踩了，靠 AUDIT_DEBUG_IMPORT 才看出来）。
+    if (!/const cpSet = new Set\(\[\.\.\.jarPaths, \.\.\.\(opts\.auxJars \|\| SUPPORT_JARS\)\]\)/.test(src2)) {
+      fail.push("cpSet must include auxJars");
+    }
+  }
+  // 11j) 本档引用计数真的能读出来：拿 forge/1.20.1 的 mapped 件实测
+  //      `javax.annotation.Nullable` 与 `org.jetbrains.annotations.Nullable` 都被引用过（都 > 0），
+  //      且 javax 的计数**高于** jetbrains（实测 1406 class vs 253 class ⇒ 计数只会更大）。
+  //      这条臂同时钉住「annotationRefCountsInJar 真的在扫件、不是永远返回 0」。
+  {
+    const refJars = artifactSet("forge", "1.20.1").jars.map((j) => j.jar).filter((p) => fs.existsSync(p));
+    if (!refJars.length) fail.push("forge/1.20.1 artifacts not found for ref-count arm");
+    else {
+      const counter = makeAnnotationRefCounter(refJars);
+      const jet = counter("org.jetbrains.annotations.Nullable");
+      const javax = counter("javax.annotation.Nullable");
+      if (!(jet > 0)) fail.push("ref count: jetbrains Nullable should be > 0, got " + jet);
+      if (!(javax > 0)) fail.push("ref count: javax Nullable should be > 0, got " + javax);
+      if (!(javax > jet)) fail.push("ref count: javax (" + javax + ") should exceed jetbrains (" + jet + ")");
+      // 择优方向必须跟着本档实况走：本档 javax 多 ⇒ 选 javax
+      const picked = pickAnnotationCandidate(
+        ["org.jetbrains.annotations.Nullable", "javax.annotation.Nullable"],
+        () => true,
+        counter,
+      );
+      if (picked !== "javax.annotation.Nullable") fail.push("annotation tiebreak must follow real ref counts, got " + picked);
+      if (!makeAnnotationRefCounter([])) { /* 空集合返回 null 是设计 */ } else fail.push("ref counter with no jars must be null");
+    }
+  }
   console.log(fail.length ? "selftest FAIL: " + fail.join(" | ") : "selftest OK");
   process.exitCode = fail.length ? 1 : 0;
 }
@@ -1382,6 +2421,16 @@ function runPack(packDir, opts) {
   // 补全模式编译整档；单片段模式（--fragment）复用同一套构件与补全逻辑。
   const compileJars = [...new Set([...art.jars.map((j) => j.jar), ...compileApi, ...ext])];
   const compilePool = new Set(compileJars);
+  // 【工具侧缺口修复】加载器注解/事件总线/注入框架/通用库只进**编译类路径**，不进存在性索引：
+  //   · 进存在性索引会把「本档 MC 构件里没有这个类」和「本档根本没装这个库」混为一谈；
+  //   · 但补全器必须知道这些名字的唯一 FQCN，否则 @SubscribeEvent / @Mixin / Dist / Nullable
+  //     这些「本档确实有、只是不在 MC 合并 jar 里」的名字永远补不出来 —— 单开一个 support 层。
+  // 这两步抽成 mergeSupportIndex()，selftest 才投得动毒。
+  // 支撑件的「近似顶替」从这里开始记账，随该档结果写进报告（见 supportApproximations）。
+  resetSupportApprox(platform, version);
+  const supportJars = supportJarsFor(platform, version);
+  const auxJars = [...new Set([...supportJars, ...GENERIC_SUPPORT_JARS])];
+  mergeSupportIndex(inv, buildIndex(auxJars.map((jar) => ({ jar, layer: "support" }))));
   const apiJars = new Set();
   for (const hs of inv.byFqcn.values()) {
     for (const h of hs) if (h.layer === "fapi" && compilePool.has(h.jar)) apiJars.add(h.jar);
@@ -1395,11 +2444,12 @@ function runPack(packDir, opts) {
       headings: [],
       text: content,
     };
-    findings.push(...compileBlocks("<fragment>", parsed, compileJars, inv, { complete: true, expected: art.expected, apiJars }));
+    findings.push(...compileBlocks("<fragment>", parsed, compileJars, inv, { complete: true, expected: art.expected, apiJars, auxJars, pairs, refJars: art.jars.map((j) => j.jar) }));
     return {
       platform,
       version,
       artifacts: { expectedLayer: art.expected, jars: compileJars.map((jar) => ({ jar: path.relative(REPO, jar), layer: "compile" })) },
+      supportApproximations: approximationsFor(platform, version),
       findings,
     };
   }
@@ -1448,7 +2498,7 @@ function runPack(packDir, opts) {
     findings.push(...checkImports(file, parsed, inv, art.expected));
     findings.push(...checkLayerMixups(file, parsed, inv, pairs, art.expected));
     if (opts.compile && jars.length) {
-      findings.push(...compileBlocks(file, parsed, compileJars, inv, { complete: opts.complete, expected: art.expected, apiJars }));
+      findings.push(...compileBlocks(file, parsed, compileJars, inv, { complete: opts.complete, expected: art.expected, apiJars, auxJars, pairs, refJars: art.jars.map((j) => j.jar) }));
     }
   }
   return {
@@ -1460,6 +2510,9 @@ function runPack(packDir, opts) {
       mcpNames: art.mcpNames ? art.mcpNames.size : 0,
       external: ext.length,
     },
+    // 支撑件近似顶替必须随「整档」结果一起出去 —— 只写在 fragment 分支里等于没记
+    // （第一次就是只加在 fragment 分支，全量跑出来 supportApproximations 是空数组）。
+    supportApproximations: approximationsFor(platform, version),
     findings,
   };
 }
@@ -1513,6 +2566,17 @@ function main() {
     results.push(runPack(abs, { jars, compile: args.compile, complete: args.complete }));
   }
   const report = { generatedAt: new Date().toISOString(), packs: results };
+  // 支撑件近似记账的**汇总**（审计器可回归比较；不只在单档里可见）。
+  const approxAll = results.flatMap((r) => (r.supportApproximations || []).map((a) => ({ ...a, pack: `${r.platform}/${r.version}` })));
+  if (approxAll.length) {
+    report.supportApproximations = approxAll;
+    console.log(`\n支撑件近似顶替 ${approxAll.length} 处（会让 unverifiable 可能被低估，逐条见 report.supportApproximations）：`);
+    for (const a of approxAll) {
+      console.log(`  [APPROX] ${a.pack} ${a.artifact}: 本档 ${a.want} → 实取 ${a.got} (${a.kind})`);
+    }
+  } else {
+    report.supportApproximations = [];
+  }
   const outFile = path.join(OUT_DIR, "report.json");
   fs.writeFileSync(outFile, JSON.stringify(report, null, 2), "utf8");
   const all = results.flatMap((r) => r.findings.map((f) => ({ ...f, pack: `${r.platform}/${r.version}` })));

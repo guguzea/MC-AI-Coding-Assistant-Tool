@@ -57,6 +57,7 @@ public enum MyTier implements Tier {
     //                                  ^^^^^ 以为这个是总攻击伤害
 
 // 实际效果：4.0 + 3.0 = 7.0（因为剑有 +3.0f 内置加成）
+}
 ```
 
 **正确理解：**
@@ -66,6 +67,7 @@ public enum MyTier implements Tier {
     //                                  ^^^^^ 这是额外攻击加成
 
 // 最终剑伤害 = 2.0 + 3.0 = 5.0
+}
 ```
 
 **说明：** `Tier` 构造函数的第 4 个参数（对应 `getAttackDamageBonus()`）是**额外加成**，剑的 3.0f 基础伤害由 `SwordItem` 内部自动加上。

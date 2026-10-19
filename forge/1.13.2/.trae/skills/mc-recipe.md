@@ -30,7 +30,10 @@ mappings: mcp
 ## 2. 实现 IRecipe 类（stub）
 
 ```java
-public class MyRecipe implements IRecipe<IInventory> {
+// 本档构件核实（javap @ forge-1.13.2-25.0.223_mapped_snapshot_20180921-1.13）：
+//   IRecipe 是**非泛型**接口：public interface IRecipe extends IForgeRecipe
+//   （泛型形参是 1.14+ 才加的；本档写 IRecipe<IInventory> 会报 type IRecipe does not take parameters）
+public class MyRecipe implements IRecipe {
   private Ingredient input;
   private ItemStack output;
 

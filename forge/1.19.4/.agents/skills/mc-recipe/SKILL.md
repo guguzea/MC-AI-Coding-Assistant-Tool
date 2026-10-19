@@ -145,10 +145,11 @@ public class MyMod {
 > 注意：官方文档未覆盖自定义 Serializer 的 DataGen 流程，以下方案基于社区最佳实践。
 
 ```java
+// 本档构件核实（javap @ forge-1.19.4-45.4.0_mapped_parchment_2023.06.26-1.19.4）：
+//   RecipeProvider 只有单参构造 public RecipeProvider(PackOutput) —— 没有 (PackOutput, …) 重载。
 public class MyRecipeProvider extends RecipeProvider {
-    public MyRecipeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries,
-                            CompletableFuture<HolderLookup.Provider> builtins) {
-        super(output, registries);
+    public MyRecipeProvider(PackOutput output) {
+        super(output);
     }
 
     @Override

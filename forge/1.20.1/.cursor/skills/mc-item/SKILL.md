@@ -127,7 +127,6 @@ public static final RegistryObject<Item> GOLDEN_APPLE = ITEMS.register("golden_a
             .fast()            // 快速食用
             .meat()            // 肉类（可喂食狼）
             .build())
-        )
     )
 );
 ```

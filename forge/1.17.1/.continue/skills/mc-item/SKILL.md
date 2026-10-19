@@ -126,7 +126,6 @@ public static final RegistryObject<Item> GOLDEN_APPLE = ITEMS.register("golden_a
             .fast()
             .meat()
             .build())
-        )
     )
 );
 ```

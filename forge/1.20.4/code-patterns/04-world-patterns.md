@@ -28,7 +28,21 @@ public static final RegistryObject<Biome> MY_BIOME = BIOMES.register("my_biome",
 ## 自定义结构
 
 ```java
-public class MyStructure extends Structure.StructureSettings {
-    // 继承 StructureSettings 配置生成参数
+// 本档构件核实（javap @ forge-1.20.4-49.2.0_mapped_parchment_2024.02.25-1.20.4）：
+//   Structure$StructureSettings 是 `public final class … extends java.lang.Record` —— final，不能继承。
+//   Structure 自身是 abstract，且带**两个** abstract 方法：
+//     protected abstract Optional<GenerationStub> findGenerationPoint(GenerationContext ctx);
+//     public abstract StructureType<?> type();
+//   ⇒ 自定义结构必须把这两个都实现；只写构造函数的裸子类编不过
+//      （`MyStructure is not abstract and does not override abstract method type() in Structure`）。
+//   下面给最小可编译形态：先声明 abstract，把这两个方法交给具体子类实现。
+public abstract class MyStructure extends Structure {
+    protected MyStructure(StructureSettings settings) {
+        super(settings);
+    }
+
+    // 具体子类必须实现：
+    //   @Override protected Optional<GenerationStub> findGenerationPoint(GenerationContext ctx) { ... }
+    //   @Override public StructureType<?> type() { return MY_STRUCTURE_TYPE.get(); }
 }
 ```

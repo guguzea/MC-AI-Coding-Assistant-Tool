@@ -49,6 +49,7 @@ public enum MyTier implements IItemTier {
     //                                  ^^^^^ 以为这个是总攻击伤害
 
 // 实际效果：4.0 + 3.0 = 7.0（因为剑有 +3.0f 内置加成）
+}
 ```
 
 **正确理解：**
@@ -58,6 +59,7 @@ public enum MyTier implements IItemTier {
     //                                  ^^^^^ 这是额外攻击加成
 
 // 最终剑伤害 = 2.0 + 3.0 = 5.0
+}
 ```
 
 ---

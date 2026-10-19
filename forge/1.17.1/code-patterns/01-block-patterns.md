@@ -13,8 +13,12 @@
 public static final DeferredRegister<Block> BLOCKS =
     DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);
 
+// 本档构件核实（javap @ forge-1.17.1-37.1.1_mapped_official_1.17.1）：
+//   BlockBehaviour$Properties 只有 of(Material) / of(Material, DyeColor) /
+//   of(Material, MaterialColor) / of(Material, Function<BlockState, MaterialColor>) 四个重载，
+//   **没有零参 of()**（零参 of() 是 1.19.4+ 才有的；本档下列写法会报 no suitable method found for of()）。
 public static final RegistryObject<Block> STONE_BLOCK = BLOCKS.register("stone_block",
-    () -> new Block(BlockBehaviour.Properties.of()
+    () -> new Block(BlockBehaviour.Properties.of(Material.STONE)
         .color(MaterialColor.STONE)
         .strength(1.5f, 6.0f)
         .requiresCorrectToolForDrops()
