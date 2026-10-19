@@ -30,7 +30,7 @@ jobs:
       MC_SKILL_SKIP_DOWNLOAD: "1"
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           persist-credentials: false
 
