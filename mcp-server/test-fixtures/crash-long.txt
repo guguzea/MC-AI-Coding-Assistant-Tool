@@ -209,5 +209,5 @@ A detailed walkthrough of the error, its code path and all known details is as f
 -- Uptime --
 	JVM uptime: 12345 ms
 
--- FML --
+-- Fabric --
 	Fabric Loader: fabric-loader-0.15.11

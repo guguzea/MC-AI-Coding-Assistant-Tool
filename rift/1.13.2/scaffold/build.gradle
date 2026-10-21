@@ -1,5 +1,6 @@
 // Verified working recipe (2026-10-05, real Gradle build + real client launch on this machine).
-// Working instance: E:\MC_GAME\rift-1.13.2  |  JDK: G:\zulu8.96.0.205-ca-jdk8.0.504-win_x64  |  Gradle 4.9
+// Working instance: <本地 Rift 1.13.2 实例>  |  JDK: Zulu 8.0.504（**必须 Java 8**）  |  Gradle 4.9
+// （维护机绝对路径不入库；实测读数与取证记录见 pack.meta.json 的 provenance.build）
 //
 // !! READ THE TWO TRAPS BEFORE TRUSTING THIS FILE !!
 //  1) The ForgeGradle below is NOT net.minecraftforge.gradle -- it is DimensionalDevelopment's

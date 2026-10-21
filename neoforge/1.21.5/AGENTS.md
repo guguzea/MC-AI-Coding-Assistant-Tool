@@ -10,11 +10,11 @@
 | 平台 | NeoForge 1.21.5 |
 | Java | **21** |
 | Mappings | mojmap |
-| 入口 | `@Mod` + `public ExampleMod(IEventBus modEventBus)` |
+| 入口 | `@Mod` + `public ExampleMod(IEventBus modEventBus, ModContainer modContainer)`（单参也合法；以该档 MDK 为准） |
 | 元数据 | neoforge.mods.toml |
 | 资源 id | `ResourceLocation` |
 | 网络 | RegisterPayloadHandlersEvent + PayloadRegistrar（以 networking 页为准） |
-| 文档 | https://docs.neoforged.net/docs/1.21.5/ |
+| 文档 | 走 `search_neoforge_docs version=1.21.5`（版本根索引页 404，子页才存在） |
 
 类名必须能在 `knowledge/common/verified-api-1.21.5.md` 或 `search_neoforge_docs` 该版页面找到。
 

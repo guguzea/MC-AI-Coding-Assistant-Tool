@@ -338,7 +338,9 @@ function buildWritePlan(opts: {
       });
     }
     if (opts.includeSkills) {
-      // v1：八宿主均可 Stub。若某宿主日后要求技能必须自包含，列入此集合，不写残缺 stub。
+      // v1：九宿主均可 Stub。若某宿主日后要求技能必须自包含，列入此集合，不写残缺 stub。
+      // （dsh 与 codex 共用 .agents/skills：两个宿主在同一次 write 里会各产生一条同 rel 的 create op，
+      //   落盘内容逐字节相同，manifest 里 hostFiles 分别记账 —— 与既有的 opencode+codex 同形。）
       const HOSTS_REQUIRE_INLINE_SKILLS = new Set<PackHost>([]);
       if (HOSTS_REQUIRE_INLINE_SKILLS.has(host)) {
         skipped.push({ rel: layout.skillsDir, reason: "SKILL_STUB_UNSUPPORTED" });

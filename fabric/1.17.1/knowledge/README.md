@@ -48,7 +48,7 @@ knowledge/
 │   ├── forge-to-fabric.md       # Forge → Fabric（Fabric 独有）
 │   └── fabric-to-forge.md        # Fabric → Forge（Fabric 独有）
 └── version-changes/                # 版本变更记录
-    └── 1.20.x.md                  # 1.20.x 变更（升级参考用）
+    └── 1.17.x.md                  # 1.17.x 变更（升级参考用）
 ```
 
 ## 使用方式
@@ -66,4 +66,4 @@ knowledge/
 | 网络通信问题 | `antipatterns/networking.md` |
 | Forge 项目迁移到 Fabric | `porting/forge-to-fabric.md` |
 | Fabric 项目迁移到 Forge | `porting/fabric-to-forge.md` |
-| MC 1.20.x 变更 | `version-changes/1.20.x.md` |
+| MC 1.17.x 变更 | `version-changes/1.17.x.md` |

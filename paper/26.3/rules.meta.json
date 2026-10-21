@@ -1,7 +1,7 @@
 {
   "face": "server",
   "platform": "paper",
-  "asOfVersion": "26.3.build.178-stable",
+  "asOfVersion": "26.3.build.195-stable",
   "upstream": {
     "javadoc": "https://jd.papermc.io/paper/26.3/",
     "docs": "https://docs.papermc.io/",
@@ -17,7 +17,7 @@
     "rule": "每条规则的一行出处都指到本仓语料；语料证不出的东西**明写未核实**，不写成通识。",
     "signatureFaces": [
       "data/spigot_stable/spigot-javadoc/stable/processed/<fqcn 扁平化>.md（Spigot/Bukkit，asOfVersion 26.3-R0.1-SNAPSHOT）",
-      "data/paper-api_stable/paper-javadoc/stable/processed/（Paper 专有类，asOfVersion 26.3.build.178-stable）"
+      "data/paper-api_stable/paper-javadoc/stable/processed/（Paper 专有类，asOfVersion 26.3.build.195-stable）"
     ],
     "tutorialFace": "data/paper_stable/paper-docs/stable/（67 页，**CC BY-SA 4.0**）",
     "noRecopy": "本档**不复述教程原文**（避免 ShareAlike 义务外溢），只写结论 + 出处指针；要读原文用 search_docs platform=paper。",
@@ -31,13 +31,13 @@
     "serverRound6": "2026-10-17 两项验成 + 三个坑成文。① **Entity 的 PDC 跨重启验成**：marker v-pdc-entity-persist.ok（ARMOR_STAND · 两阶段）—— 决定性诊断行 chunk=-4,3 chunkEntities=**34** allWorldsEntities=**0** ⇒ **World#getEntities() 在无玩家服务端返回 0**，前几轮的「实体数=0」全是**判据取错 API** 的假否定；另两条必要条件：spawnEntity 前必须 getChunkAt 加载区块（否则实体被静默丢弃）、载体用 ARMOR_STAND（僵尸白天自燃）。⇒ 四类 holder（World/Chunk/TileState/Entity）**全部跨重启成立**。② **同族修法（break/attack）验成**：[QA] break before=minecraft:spruce_leaves → after=minecraft:air，rounds ok:true steps:10；实现 = MultiPlayerGameMode.destroyBlock(BlockPos)（javap public）+ **自算射线 player.pick(4.5,1.0f,false)**（Entity.pick public）。③ 三个坑写进 09-traps.md 的 **T12** 与社区文档 **85/86/87**：件必须自证（jar tf 三要素 + findstr 查 class 标志串）· 只认新鲜文件（看时间戳）· Chunk#getEntities() vs World#getEntities()。④ 我的三处自伤（已修）：classpath 漏 adventure-text-minimessage · 漏 plugin.yml · **改错同名源文件**（probe/playtest/VerifyProbe.java vs 打包用的 plugin-src/src/main/java/playtest/VerifyProbe.java）。⑤ 未做：ChatType.Bound 的点击侧、ItemStack 的 PDC 跨重启。",
     "serverRound7": "2026-10-17（续）ItemStack 的 PDC 跨重启验成 ⇒ PDC 的五类 holder 跨重启全齐（World / Chunk / TileState / Entity / ItemStack）。marker：v-pdc-itemstack-persist.ok（经 CHEST 库存 · 方块=CHEST 物品=STONE hasMeta=true keys=[paperqaserver:probe-item-persist]）；同轮 v-pdc-entity-persist.ok 复验通过。新坑（09-traps.md 的 T13 与社区文档 88）：往容器里塞物品必须写活库存 —— block.getState() 是快照，改它的 getInventory().setItem 不落 TileEntity（第一次 FAIL 的诊断原文：方块=CHEST 物品=null）；正解 = block.getState(false) + Chest#getBlockInventory()（javap 实证两者都存在），非 Chest 容器才退回 Container#getInventory() + update(true,false)。⇒ 与 T12 同类：都是把快照/代办对象当活的用。未做：ChatType.Bound 的点击侧。",
     "serverRound8": "2026-10-17（三续）ChatType.Bound 投递验成 + write-guard 债务收口。① marker v-chat-chattype-bound.ok @19:39:34；客户端日志 [ChatComponent]: [System] [CHAT] <ProbeName> PROBE-CHATTYPE-BOUND⇒ bound.name() 被客户端渲染成前缀，证明 ChatType 真到了客户端（javap：Bound 是接口，用 ChatType#bind(ComponentLike) 造；sendMessage(Component, ChatType.Bound) 是 Audience default 方法）。⇒ 08-adventure.md 的未核实从「ChatType.Bound 签名消息 / 可点击·悬停组件」收窄为只剩「点击行为」（需真实 UI 点击聊天行，本档不做）。② 未跟踪的只读审计脚本 mcp-server/scripts/audit-content-claims.mjs 登记进 NON_WRITERS 并附依据正则（唯一落笔 temp/content-audit/report.json；openSync 以 r 模式只读打开 jar）⇒ write-guard / test-core / test-scripts 三个红灯全 0（206 文件 · 在册豁免 573 · 范围外违规 0 · 非写盘 44）。③ 新坑 T14 / 社区文档 89：有两份 plan.txt（服务端 driver 读证据目录下的 plan.txt，客户端 driver 读 run/qa/plan.txt）；旧服务端剧本末步 stop ⇒ 起服 15 秒后 Bukkit.shutdown()、客户端 Connection refused，外部脚本只表现为客户端日志冻住⇒ 复跑前必须重写或清掉该剧本，组合跑时服务端剧本不写 stop。④ 未做：可点击组件的点击行为。",
-    "noClientForVersion": "⚠ **这个版本上没有可用的机器人客户端**（2026-10-15 实测，见 `rules/09-traps.md` 的 **T9**）：Server List Ping 读到 `version.protocol = **777**`，而 mineflayer 的协议数据源 `minecraft-data` 已知最高 = **775**（26.1）—— `26.3` 只在版本**名**列表里、**没有协议数据** ⇒ **连不进去**（服务端会拒协议不匹配的登录，不是降级就能连）。⇒ 一切**需要真玩家**的项（`PlayerJoinEvent` · `InventoryOpenEvent`/`ClickEvent`/`CloseEvent` · GUI 交互 · 权限对真人玩家的判定）**仍无法验**，**不得读作「验过了」**。已试到：`mineflayer 4.39.0`（MIT，通道 C 许可条件满足）装在 `F:/MOD_TEST/bot`，依赖 91 包；Server List Ping 探针**成功**（读出了 777）、机器人**无数据**。",
+    "noBotClientForVersion": "⚠ **这个版本上没有可用的协议级机器人客户端**（2026-10-15 实测，见 `rules/09-traps.md` 的 **T9**）：Server List Ping 读到 `version.protocol = **777**`，而 mineflayer 的协议数据源 `minecraft-data` 已知最高 = **775**（26.1）—— `26.3` 只在版本**名**列表里、**没有协议数据** ⇒ **连不进去**（服务端会拒协议不匹配的登录，不是降级就能连）。⇒ 机器人路线连不进去；真客户端路线已在 `serverRound3`+ 打通，玩家类项见 `00-face.md` 的能力表。已试到：`mineflayer 4.39.0`（MIT，通道 C 许可条件满足）装在 `F:/MOD_TEST/bot`，依赖 91 包；Server List Ping 探针**成功**（读出了 777）、机器人**无数据**。",
     "searchTrap": "⚠⚠ **在 `data/**` 下按目录搜索会返回假的 0 命中 —— 根因是我的调用姿势（少给 `glob`），不是搜索工具坏了**（2026-10-15 四组对照实测）。对照（同一目录 `data/paper_stable/paper-docs/stable/processed`，同一词 `Bukkit`）：① 不传 `glob` → **0 命中**；② `glob=\"*.md\"` → **44 命中**；③ `glob=\"*\"`（裸星号）→ **44 命中**。反证「不是无 glob 就坏」：对 **`paper/26.3/rules`** 不传 `glob` 搜 `未核实` → **10 命中正常**。⇒ **变量只有 `glob`（与 pattern 是否含中文/`|` 无关），且只在 `data/**` 下发作**（`data/` 下疑似有默认过滤/整目录剪枝；**具体机制未核实**，我只报实测）。**规矩两条**：① 在 `data/**` 下做目录搜索**必须显式给 `glob`**（`*.md` 或 `*`）；② **做否定性断言前必须逐文件复核** —— 我据那次假 0 命中把『MONITOR 只能观测』写成『本仓无从核实』，是错的：官方在 `api__event-api__event-listeners.md:100-103` 有逐字说明。"
   },
   "measuredThisSession": {
     "asOf": "2026-10-15",
     "jdkFloor": "JDK 25（paper-api 的 class file version = 69.0 ⇒ 69−44 = 25；JDK 21 编报 class file has wrong version 69.0, should be 65.0）",
-    "classpath": "至少三件：paper-api + adventure-api + adventure-key（只放 paper-api 时报 class file for net.kyori.adventure.key.Namespaced not found）",
+    "classpath": "实测 6 件（见 compileDeps）：paper-api + adventure-api + adventure-key + org.jetbrains:annotations + guava + net.md-5:bungeecord-chat（只放 paper-api 时报 class file for net.kyori.adventure.key.Namespaced not found）",
     "pluginYmlApiVersion": "api-version: '26.3' 被 Paper 26.3-190 接受（真机跑，无加载期报错）",
     "serverJarSource": "只能走 fill.papermc.io/v3；api.papermc.io/v2 已 sunset（HTTP 410，body {\"ok\":false,\"error\":\"sunset\"}）",
     "playtestDriverVerified": "generate_playtest_server_driver 已到**真机跑通**档：真 Paper 26.3-190 起服 → 插件加载并 onEnable → driver 跑完 10 步 → exit-code=0 / qa.log 含 [QA] DONE / rounds.jsonl ok:true"

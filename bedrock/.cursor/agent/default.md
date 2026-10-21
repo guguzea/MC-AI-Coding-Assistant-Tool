@@ -27,7 +27,12 @@
 | AI 助手 | 读取路径 |
 |---------|---------|
 | Cursor | `.cursor/rules/*.mdc` + `.cursor/skills/` |
-| OpenCode / Codex / ZCode | `AGENTS.md` |
+| Claude Code | `.claude/rules/` + `.claude/skills/` + `.claude/agents/` + `.claude/commands/` |
+| Continue | `.continue/rules/` + `.continue/skills/` |
+| Trae | `.trae/rules/` + `.trae/skills/` + `.trae/agents/` |
+| OpenCode | `.opencode/rules/` + `.opencode/skills/` |
+| ZCode | `.zcode/rules/` + `.zcode/skills/` |
+| DSH | `.agents/skills/` |
 | Pi | `.pi/rules/*.md`（+ `AGENTS.md`） |
 
 当上述路径不存在时，降级读取本文件和 `.cursor/`。

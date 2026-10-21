@@ -86,7 +86,11 @@ export function detectMinecraftVersionFromIncludedSubprojects(opts: {
   const re = /include\s*\(?\s*['"]([^'"]+)['"]/g;
   let m: RegExpExecArray | null;
   while ((m = re.exec(settings))) {
-    const name = m[1].replace(/\\/g, "/").split("/")[0]?.trim();
+    // 2026-10-21 修正（审查 mcp-core F-6）：Gradle 项目路径的前导 `:` 是**根标记**，不是目录名。
+    // 原实现不剥它 ⇒ `include ':common'` 得到 ":common"，拼出 `...\:common\gradle.properties`
+    // （Windows 非法段）⇒ existsSync false ⇒ 多模块工程（Architectury 标准写法）版本探测恒 unknown。
+    // 多段路径（`include ':core:sub'`）取首段，同样先剥前导冒号。
+    const name = m[1].replace(/^:+/, "").replace(/\\/g, "/").split("/")[0]?.trim();
     if (!name || name === "." || name === "..") continue;
     if (PROJECT_SCAN_SKIP_DIRS.has(name)) continue;
     names.push(name);

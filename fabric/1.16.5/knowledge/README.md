@@ -41,7 +41,7 @@ knowledge/
 │   ├── forge-to-fabric.md       # Forge → Fabric（Fabric 独有）
 │   └── fabric-to-forge.md        # Fabric → Forge（Fabric 独有）
 └── version-changes/                # 版本变更记录
-    └── 1.20.x.md
+    └── 1.16.x.md
 ```
 
 ## 使用方式

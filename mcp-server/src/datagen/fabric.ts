@@ -23,6 +23,13 @@ export type FabricProviderType =
   | "particle"
   | "sound";
 
+/**
+ * DataGeneratorEntrypoint 入口类。**本文件里唯一的 public 顶层类必须是它**：
+ * ① 一条 Java 源文件只能有一个 public 顶层类；② fabric-loader 的 DefaultLanguageAdapter 用
+ * `Class.getDeclaredConstructor().newInstance()` 实例化 entrypoint（实测 0.19.5 的
+ * DefaultLanguageAdapter.class 常量池无 setAccessible）⇒ 包私有类会 IllegalAccessException。
+ * 故 provider 类降为同文件的包私有顶层类，文件名取本类名（write-helper 按顶层类型改名）。
+ */
 function entrypoint(modId: string, pascalName: string, providerClass: string): string {
   return `
 // fabric.mod.json entrypoints["fabric-datagen"] = ["com.example.${modId}.datagen.${pascalName}DataGenerator"]
@@ -58,6 +65,9 @@ export function generateFabric(
   idStyle: FabricIdStyle = "ResourceLocation",
   recipeTwoLayer = false,
   tagBuilderUsesLookup = false,
+  // 1.21.4 起模型 datagen 从旧包换到 client 包（旧包→新包，逐档证据见 generateFabric21 的 model 分支）。
+  // 默认 false = 保持旧包 ⇒ 既有 8 参调用（≤1.21.3）的产物逐字不变。
+  modelProviderClient = false,
 ): string {
   const pascalName = classBase || toPascalCase(modId);
   if (version26) return generateFabric261(providerType, modId, targetName, pascalName);
@@ -69,6 +79,7 @@ export function generateFabric(
     idStyle,
     recipeTwoLayer,
     tagBuilderUsesLookup,
+    modelProviderClient,
   );
 }
 
@@ -80,6 +91,7 @@ function generateFabric21(
   idStyle: FabricIdStyle = "ResourceLocation",
   recipeTwoLayer = false,
   tagBuilderUsesLookup = false,
+  modelProviderClient = false,
 ): string {
   const header = `// Fabric Datagen 1.21.x — DataGeneratorEntrypoint + fabric-datagen（${modId}:${targetName}）
 package com.example.${modId}.datagen;
@@ -99,8 +111,8 @@ import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.world.item.Items;
-
-public class ${pascalName}RecipeProvider extends FabricRecipeProvider {
+${entrypoint(modId, pascalName, `${pascalName}RecipeProvider`)}
+class ${pascalName}RecipeProvider extends FabricRecipeProvider {
     public ${pascalName}RecipeProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
         super(output, registriesFuture);
     }
@@ -125,7 +137,6 @@ public class ${pascalName}RecipeProvider extends FabricRecipeProvider {
         return "${pascalName}RecipeProvider";
     }
 }
-${entrypoint(modId, pascalName, `${pascalName}RecipeProvider`)}
 `;
       }
       return `${header}import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
@@ -133,8 +144,8 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.world.item.Items;
-
-public class ${pascalName}RecipeProvider extends FabricRecipeProvider {
+${entrypoint(modId, pascalName, `${pascalName}RecipeProvider`)}
+class ${pascalName}RecipeProvider extends FabricRecipeProvider {
     public ${pascalName}RecipeProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
         super(output, registriesFuture);
     }
@@ -153,14 +164,13 @@ public class ${pascalName}RecipeProvider extends FabricRecipeProvider {
         return "${pascalName}RecipeProvider";
     }
 }
-${entrypoint(modId, pascalName, `${pascalName}RecipeProvider`)}
 `;
     }
     case "loottable":
       return `${header}import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
-
-public class ${pascalName}BlockLootTableProvider extends FabricBlockLootTableProvider {
+${entrypoint(modId, pascalName, `${pascalName}BlockLootTableProvider`)}
+class ${pascalName}BlockLootTableProvider extends FabricBlockLootTableProvider {
     public ${pascalName}BlockLootTableProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registryLookup) {
         super(output, registryLookup);
     }
@@ -170,7 +180,6 @@ public class ${pascalName}BlockLootTableProvider extends FabricBlockLootTablePro
         // dropSelf for ${modId}:${targetName}
     }
 }
-${entrypoint(modId, pascalName, `${pascalName}BlockLootTableProvider`)}
 `;
     case "tag":
       return `${header}import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -180,8 +189,8 @@ import net.minecraft.tags.TagKey;
 ${fabricIdImport(idStyle)}
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-
-public class ${pascalName}ItemTagProvider extends FabricTagProvider.ItemTagProvider {
+${entrypoint(modId, pascalName, `${pascalName}ItemTagProvider`)}
+class ${pascalName}ItemTagProvider extends FabricTagProvider.ItemTagProvider {
     public static final TagKey<Item> EXAMPLE =
         TagKey.create(Registries.ITEM, ${fabricIdFactory(idStyle, modId, targetName)});
 
@@ -194,19 +203,47 @@ public class ${pascalName}ItemTagProvider extends FabricTagProvider.ItemTagProvi
         ${tagBuilderUsesLookup ? "valueLookupBuilder" : "getOrCreateTagBuilder"}(EXAMPLE).add(Items.DIRT);
     }
 }
-${entrypoint(modId, pascalName, `${pascalName}ItemTagProvider`)}
 `;
     case "blockstate":
-    case "itemmodel":
+    case "itemmodel": {
+      // 模型 datagen 的包名在 **1.21.4** 换过一次（两处独立来源、逐档同向）：
+      //   Fabric API 侧：net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider（1.21.1 / 1.21.3）
+      //     → net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider（1.21.4+）
+      //   vanilla 侧：net.minecraft.data.models[.model].{BlockModelGenerators,ItemModelGenerators,ModelTemplates}
+      //     → net.minecraft.client.data.models[.model].*（1.21.4+）
+      // 证据①（Fabric API 摘要的 fqcn 字段）：
+      //   mcp-server/data/loader-api-summaries/1.21.1-fabric-api.json 与 1.21.3-fabric-api.json
+      //     ⇒ net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider
+      //   mcp-server/data/loader-api-summaries/1.21.4-fabric-api.json
+      //     ⇒ net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider
+      // 证据②（yarn↔mojmap 对照的 mojFqcn 字段）：
+      //   data/_yarn-mojmap-pairs/yarn-mojmap-1.21.1.json / -1.21.3.json
+      //     ⇒ net.minecraft.data.models.BlockModelGenerators / net.minecraft.data.models.model.ModelTemplates
+      //   data/_yarn-mojmap-pairs/yarn-mojmap-1.21.4.json
+      //     ⇒ net.minecraft.client.data.models.BlockModelGenerators / ...client.data.models.model.ModelTemplates
+      // modelProviderClient=false（默认）保持旧包 ⇒ 既有 8 参调用的产物逐字不变。
+      const modelPkg = modelProviderClient
+        ? {
+            provider: "net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider",
+            models: "net.minecraft.client.data.models",
+          }
+        : {
+            provider: "net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider",
+            models: "net.minecraft.data.models",
+          };
+      // ⚠️ P0 回归修正（2026-10-21）：修 §四 #16 包名分叉时，这段重写 import 把
+      // `import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;` 整行挤掉了 —— 行数不变、
+      // tsc 不报（模板是字符串），但生成物里 FabricDataOutput 未定义 ⇒ javac 必红。
+      // HEAD 版第 201 行原有一行，属本轮误删。该 import 两条分叉共用同一 FQCN（不随 1.21.4 改包）。
       return `${header}import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
-import net.minecraft.data.models.BlockModelGenerators;
-import net.minecraft.data.models.ItemModelGenerators;
-import net.minecraft.data.models.model.ModelTemplates;
+import ${modelPkg.provider};
+import ${modelPkg.models}.BlockModelGenerators;
+import ${modelPkg.models}.ItemModelGenerators;
+import ${modelPkg.models}.model.ModelTemplates;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
-
-public class ${pascalName}ModelProvider extends FabricModelProvider {
+${entrypoint(modId, pascalName, `${pascalName}ModelProvider`)}
+class ${pascalName}ModelProvider extends FabricModelProvider {
     public ${pascalName}ModelProvider(FabricDataOutput output) {
         super(output);
     }
@@ -221,15 +258,15 @@ public class ${pascalName}ModelProvider extends FabricModelProvider {
         ${providerType === "itemmodel" ? "gen.generateFlatItem(Items.APPLE, ModelTemplates.FLAT_ITEM); // TODO: 换成已注册物品" : "// blockstate：物品模型可留空"}
     }
 }
-${entrypoint(modId, pascalName, `${pascalName}ModelProvider`)}
 `;
+    }
     case "advancement":
       return `${header}import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
 import java.util.function.Consumer;
 import net.minecraft.advancements.AdvancementHolder;
-
-public class ${pascalName}AdvancementProvider extends FabricAdvancementProvider {
+${entrypoint(modId, pascalName, `${pascalName}AdvancementProvider`)}
+class ${pascalName}AdvancementProvider extends FabricAdvancementProvider {
     public ${pascalName}AdvancementProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registryLookup) {
         super(output, registryLookup);
     }
@@ -239,7 +276,6 @@ public class ${pascalName}AdvancementProvider extends FabricAdvancementProvider 
         // TODO: Advancement.Builder 写入 consumer；search_fabric_docs develop_data-generation_advancements
     }
 }
-${entrypoint(modId, pascalName, `${pascalName}AdvancementProvider`)}
 `;
     case "particle":
     case "sound":
@@ -285,8 +321,8 @@ import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.world.item.Items;
-
-public class ${pascalName}RecipeProvider extends FabricRecipeProvider {
+${entrypoint(modId, pascalName, `${pascalName}RecipeProvider`)}
+class ${pascalName}RecipeProvider extends FabricRecipeProvider {
     public ${pascalName}RecipeProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
         super(output, registriesFuture);
     }
@@ -309,12 +345,11 @@ public class ${pascalName}RecipeProvider extends FabricRecipeProvider {
         return "${pascalName}RecipeProvider";
     }
 }
-${entrypoint(modId, pascalName, `${pascalName}RecipeProvider`)}
 `;
     case "loottable":
       return `${header}import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootSubProvider;
-
-public class ${pascalName}BlockLootTableProvider extends FabricBlockLootSubProvider {
+${entrypoint(modId, pascalName, `${pascalName}BlockLootTableProvider`)}
+class ${pascalName}BlockLootTableProvider extends FabricBlockLootSubProvider {
     protected ${pascalName}BlockLootTableProvider(FabricPackOutput dataOutput, CompletableFuture<HolderLookup.Provider> registryLookup) {
         super(dataOutput, registryLookup);
     }
@@ -324,7 +359,6 @@ public class ${pascalName}BlockLootTableProvider extends FabricBlockLootSubProvi
         // dropSelf for ${modId}:${targetName}
     }
 }
-${entrypoint(modId, pascalName, `${pascalName}BlockLootTableProvider`)}
 `;
     case "tag":
       return `${header}import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
@@ -333,8 +367,8 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-
-public class ${pascalName}ItemTagProvider extends FabricTagsProvider.ItemTagsProvider {
+${entrypoint(modId, pascalName, `${pascalName}ItemTagProvider`)}
+class ${pascalName}ItemTagProvider extends FabricTagsProvider.ItemTagsProvider {
     public static final TagKey<Item> EXAMPLE =
         TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("${modId}", "${targetName}"));
 
@@ -347,35 +381,44 @@ public class ${pascalName}ItemTagProvider extends FabricTagsProvider.ItemTagsPro
         valueLookupBuilder(EXAMPLE).add(Items.DIRT);
     }
 }
-${entrypoint(modId, pascalName, `${pascalName}ItemTagProvider`)}
 `;
     case "blockstate":
     case "itemmodel":
-      return `${header}import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
+      return `${header}import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
-
-public class ${pascalName}ModelProvider extends FabricModelProvider {
+${entrypoint(modId, pascalName, `${pascalName}ModelProvider`)}
+class ${pascalName}ModelProvider extends FabricModelProvider {
     public ${pascalName}ModelProvider(FabricPackOutput output) {
         super(output);
     }
 
+    // 26.1.2 的 FabricModelProvider 抽象方法就是这两个（本仓 data/fabric_26.1.2 语料实测：
+    // generateBlockStateModels 16 处、registerModels 0 处）。
+    // 2026-10-21 修正：原文写「全档语料 grep registerModels = 0」——说大了。
+    // registerModels 在 NeoForge 26.1 语料里确有（65 处，是 NeoForge 的 ModelProvider 抽象方法）；
+    // 只是 Fabric 侧没有。两平台方法名不同，别互相套。
+    // ⚠ 本段在 Java 模板字面量内 ⇒ 注释里禁止出现反引号（会终止 TS 模板串）。
     @Override
-    public void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
-        ${providerType === "blockstate" ? "blockModels.createTrivialCube(Blocks.STONE); // TODO: 换成已注册方块" : "itemModels.generateFlatItem(Items.APPLE, ModelTemplates.FLAT_ITEM); // TODO: 换成已注册物品"}
+    public void generateBlockStateModels(BlockModelGenerators gen) {
+        ${providerType === "blockstate" ? "gen.createTrivialCube(Blocks.STONE); // TODO: 换成已注册方块" : "// itemmodel：方块状态可留空"}
+    }
+
+    @Override
+    public void generateItemModels(ItemModelGenerators gen) {
+        ${providerType === "itemmodel" ? "gen.generateFlatItem(Items.APPLE, ModelTemplates.FLAT_ITEM); // TODO: 换成已注册物品" : "// blockstate：物品模型可留空"}
     }
 }
-${entrypoint(modId, pascalName, `${pascalName}ModelProvider`)}
 `;
     case "advancement":
       return `${header}import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
 import java.util.function.Consumer;
 import net.minecraft.advancements.AdvancementHolder;
-
-public class ${pascalName}AdvancementProvider extends FabricAdvancementProvider {
+${entrypoint(modId, pascalName, `${pascalName}AdvancementProvider`)}
+class ${pascalName}AdvancementProvider extends FabricAdvancementProvider {
     public ${pascalName}AdvancementProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registryLookup) {
         super(output, registryLookup);
     }
@@ -385,7 +428,6 @@ public class ${pascalName}AdvancementProvider extends FabricAdvancementProvider 
         // TODO: search_fabric_docs version=26.1.2 develop_data-generation_advancements
     }
 }
-${entrypoint(modId, pascalName, `${pascalName}AdvancementProvider`)}
 `;
     case "particle":
     case "sound":

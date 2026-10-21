@@ -8,7 +8,7 @@
     "gradle": "4.9",
     "provenance": {
       "text": "house",
-      "build": "2026-10-05 真构建+真机：E:\\MC_GAME\\rift-1.13.2（JDK 8 = G:\\zulu8.96.0.205-ca-jdk8.0.504-win_x64，Gradle 4.9 wrapper）。gradlew build → BUILD SUCCESSFUL in 1m 29s，18 actionable tasks 全 executed（含 :reobfJar），产物 build/libs/ExampleMod-1.0.0.jar（10 entries，含 riftmod.json + pack.mcmeta + ExampleMod.class）；gradlew runClient → 客户端起来（LWJGL 3.1.6 / OpenAL / Created: 1024x512 textures-atlas / Narrator），停在主菜单。关键取证：Rift 用的不是 net.minecraftforge.gradle 而是 DimensionalDevelopment 自己的 FG 分支（该 jar 7 个 plugin 描述符含 tweaker-client；FG 3.0.197 只有 6 个且没有，且全 jar 无 tweakClass 字符串 ⇒ FG3 这条路整条不存在），坐标只能从 JitPack 取 com.github.DimensionalDevelopment:ForgeGradle:70d441a286。六个坑见 code-patterns/gradle-recipe.md §3"
+      "build": "2026-10-05 真构建+真机：本地 Rift 1.13.2 实例（JDK 8 = Zulu 8.0.504，Gradle 4.9 wrapper；维护机绝对路径已脱敏、不入库，读数与证据保留）。gradlew build → BUILD SUCCESSFUL in 1m 29s，18 actionable tasks 全 executed（含 :reobfJar），产物 build/libs/ExampleMod-1.0.0.jar（10 entries，含 riftmod.json + pack.mcmeta + ExampleMod.class）；gradlew runClient → 客户端起来（LWJGL 3.1.6 / OpenAL / Created: 1024x512 textures-atlas / Narrator），停在主菜单。关键取证：Rift 用的不是 net.minecraftforge.gradle 而是 DimensionalDevelopment 自己的 FG 分支（该 jar 7 个 plugin 描述符含 tweaker-client；FG 3.0.197 只有 6 个且没有，且全 jar 无 tweakClass 字符串 ⇒ FG3 这条路整条不存在），坐标只能从 JitPack 取 com.github.DimensionalDevelopment:ForgeGradle:70d441a286。六个坑见 code-patterns/gradle-recipe.md §3"
     },
     "buildVerified": true,
     "gaps": [

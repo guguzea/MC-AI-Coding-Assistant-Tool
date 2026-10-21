@@ -49,6 +49,7 @@ Decision: 本规则集是否适用？
 | Trae AI | `.trae/rules/*.mdc` + `.trae/skills/` |
 | OpenCode | `AGENTS.md` + `.opencode/skills/` |
 | Codex | `AGENTS.md` + `.agents/skills/` |
+| DSH | `AGENTS.md` + `.agents/skills/` |
 | ZCode | `AGENTS.md` + `.zcode/skills/` |
 | Pi | `.pi/rules/*.md`（+ `AGENTS.md`） |
 

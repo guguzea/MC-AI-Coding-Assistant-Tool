@@ -71,7 +71,7 @@ dependencies {
 }
 ```
 
-> **注意**：`fabric.mod.json` 中 `depends` 应使用 `"fabric": "*"` 而非 `"fabric-api": "*"`（1.14-1.16.x 规范）。
+> **注意**：`fabric.mod.json` 中 `depends` 应使用 `"fabric": "*"` 而非 `"fabric-api": "*"`（1.14–1.17.1 规范；`fabric-api` id 从 0.59.1 起才切换）。
 
 ---
 ## 步骤 2：入口类迁移

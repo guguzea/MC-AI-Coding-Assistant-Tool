@@ -67,6 +67,18 @@ for (const rel of files) {
   }
 }
 
+// 扫描面地板（2026-10-21，审查 F-5）：`files` 来自 `git ls-files`；一旦 git 不可用 / 不在仓库里 /
+// ROOT 解析错，它会拿到空数组并**照常打印 ok**（"ok (0 个跟踪文档…)"）—— 这正是「门报的 0
+// 不等于没问题」那条教训。地板取 1000（实测 2548 件），只挡扫描面塌缩，不挡正常增减。
+const FLOOR_DOCS = 1000;
+if (files.length < FLOOR_DOCS) {
+  console.error(
+    `assert-no-invalid-api-shapes: 扫描面塌缩 —— 只拿到 ${files.length} 个跟踪文档（地板 ${FLOOR_DOCS}）` +
+      ` ⇒ 本门这一轮**没有验证任何东西**，判红而不是 ok。先确认在 git 仓库内运行、ROOT 解析正确。`,
+  );
+  process.exit(1);
+}
+
 if (failures.length) {
   console.error(`assert-no-invalid-api-shapes: ${failures.length} violation(s)`);
   for (const f of failures) console.error(`  ${f}`);

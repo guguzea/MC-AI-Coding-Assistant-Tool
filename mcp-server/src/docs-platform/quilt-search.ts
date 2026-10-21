@@ -14,7 +14,7 @@ import {
 import { resolveDataDir } from "../utils/path.js";
 import { semanticSearch } from "./semantic/search.js";
 import { mergeSemanticResults, mergeSemanticResultsWithPool, poolFieldsOf, semanticAllowedIds, joinSearchWarnings, withDocsFallbackFields, annotateVerbatim, limitWindowOf, limitClampWarning, type SearchResultLike } from "./search-utils.js";
-import { missingSemanticDbWarning, semanticStaleSearchWarning } from "./semantic/status.js";
+import { missingSemanticDbWarning, semanticDbAbsent, semanticStaleSearchWarning } from "./semantic/status.js";
 import { filterFabricFallbackHits, isFabricExclusiveContent, isFabricExclusiveHit, isQslSpecificQuery } from "./quilt-fallback-filter.js";
 
 export const QUILT_EXCLUSIVE_WARNING =
@@ -268,7 +268,8 @@ export async function searchQuiltDocs(args: {
         platform: "quilt",
         fallback: null,
         warning: joinSearchWarnings(
-          missingSemanticDbWarning(semanticHits === null),
+          // 2026-10-21 修正（审查 mcp-docs F-4）：见 neoforge 侧同款说明 —— null 不等于缺库。
+          missingSemanticDbWarning(semanticDbAbsent(dataRoot, "quilt", detailedRes.resolvedVersion, "quilt-docs")),
           semanticStaleSearchWarning(dataRoot, "quilt", detailedRes.resolvedVersion, "quilt-docs"),
           QUILT_CURRENT_SITE_WARNING,
           limitClampWarning(limitWindow),

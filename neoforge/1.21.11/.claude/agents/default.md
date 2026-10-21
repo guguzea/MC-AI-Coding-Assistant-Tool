@@ -14,7 +14,7 @@
 | 入口 | `@Mod` + `IEventBus + 可选 ModContainer（以 MDK 为准）` |
 | 元数据 | neoforge.mods.toml |
 | 网络 | `RegisterPayloadHandlersEvent` + `PayloadRegistrar` |
-| 文档 | https://docs.neoforged.net/docs/1.21.11/ |
+| 文档 | 走 `search_neoforge_docs version=1.21.11`（版本根索引页 404，子页才存在） |
 | MDK | download_official_mdk 精确 1.21.11 |
 
 1.21.11 文档把 ResourceLocation 换成 Identifier。Primer 26.1 才是下一跳。

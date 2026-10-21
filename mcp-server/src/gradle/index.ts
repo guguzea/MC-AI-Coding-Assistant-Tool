@@ -258,15 +258,26 @@ export function diagnoseGradle(query: GradleQuery): GradleResult {
     } else {
       warnings.push("gradle.properties 中缺少 minecraft_version 或 forge_version");
     }
-    if (!buildGradle.includes("mappings channel")) {
-      warnings.push("未找到 mappings 配置，建议使用 parchment 映射以获得参数名提示");
+    // 2026-10-21 修正（审查 mcp-ops F-19）：原判据把「本仓 scaffold 的写法」当成硬判据 ——
+    // ① copyIdeResources = true 被写成「是必需的」并判 error/warning：它只是 IDE 资源同步开关，
+    //    官方 MDK 与 ForgeGradle 文档都没把它列为必填（本仓也没记一手出处）；缺它工程照样编得过。
+    // ② includes("mappings channel") 只认 Groovy 旧写法：Kotlin DSL 的 mappings { channel = ... }
+    //    会被假报「未找到 mappings 配置」。
+    // => 两处都降级为建议（suggestions），且 mappings 判据兼容 Kotlin DSL 形态。
+    const hasMappingsGroovy = buildGradle.includes("mappings channel");
+    const hasMappingsKotlin = /mappings\s*\{[^}]*channel\s*=/.test(buildGradle);
+    if (!hasMappingsGroovy && !hasMappingsKotlin) {
+      suggestions.push(
+        "未检出 mappings 配置（Groovy `mappings channel` 或 Kotlin DSL `mappings { channel = ... }`）；如需参数名提示可加 parchment",
+      );
     } else if (buildGradlerIncludesParchment(buildGradle)) {
       suggestions.push("已配置 Parchment 映射，这是推荐配置");
     }
     if (!buildGradle.includes("copyIdeResources")) {
-      warnings.push("copyIdeResources = true 是必需的，否则资源文件不会在 IDE 中更新");
+      // 建议而非必需：不影响编译，只影响 IDE 里改资源后是否自动同步。
+      suggestions.push("可选：copyIdeResources = true 可让 IDE 内改的资源文件自动同步（非必需）");
     } else if (buildGradle.includes("copyIdeResources = false")) {
-      errors.push("copyIdeResources 应设为 true，否则 IDE 中修改资源文件不会生效");
+      suggestions.push("copyIdeResources = false：IDE 内改的资源文件不会自动同步（不影响编译）");
     }
     if (buildGradle.includes("finalizedBy 'reobfJar'") || buildGradle.includes("jar.finalizedBy")) {
       // OK

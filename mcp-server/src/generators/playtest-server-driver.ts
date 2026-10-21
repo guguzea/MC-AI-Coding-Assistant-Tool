@@ -192,7 +192,19 @@ public final class PlaytestQaServerDriver {
             return;
         }
         if (verb.equals("touch")) {
+            if (rest.trim().isEmpty()) {
+                finish(false, "touch 缺路径（空路径一律判红，不落到证据目录本身）");
+                return;
+            }
             Path mp = syncPath(rest);
+            if (isEvidenceDirItself(mp)) {
+                finish(false, "touch 目标就是证据目录本身（path=. 或尾斜杠）⇒ 判红");
+                return;
+            }
+            if (Files.isDirectory(mp)) {
+                finish(false, "touch 的 path 是目录，不是 marker 文件 ⇒ 判红");
+                return;
+            }
             Path parent = mp.getParent();
             if (parent != null) {
                 Files.createDirectories(parent);
@@ -211,7 +223,20 @@ public final class PlaytestQaServerDriver {
                 fopts = rest.substring(fs + 1);
             }
             int fmax = optI(fopts, "max", 1200);
+            if (fpath.trim().isEmpty()) {
+                // fail-closed：空路径会让 syncPath("") 落到 EVIDENCE_DIR 本身（恒存在）⇒ 等待端会立即通过
+                finish(false, "waitfile 缺路径（空路径一律判红，不落到证据目录本身）");
+                return;
+            }
             Path mp = syncPath(fpath);
+            if (isEvidenceDirItself(mp)) {
+                finish(false, "waitfile 目标就是证据目录本身（path=. 或尾斜杠）⇒ 判红");
+                return;
+            }
+            if (Files.isDirectory(mp)) {
+                finish(false, "waitfile 的 path 是目录，不是 marker 文件 ⇒ 判红");
+                return;
+            }
             if (Files.exists(mp)) {
                 log("[QA] waitfile " + mp + " -> OK after " + stepTicks + " tick");
                 next();
@@ -271,8 +296,22 @@ public final class PlaytestQaServerDriver {
                 ok = n >= min;
                 detail = "worlds=" + n + " min=" + min;
             } else if (kind.equals("marker")) {
-                Path mp = syncPath(optS(opts, "path", ""));
-                ok = mp.toString().length() > 0 && Files.exists(mp);
+                String mpath = optS(opts, "path", "");
+                if (mpath.trim().isEmpty()) {
+                    // fail-closed：漏写 path= 时 syncPath("") 落到证据目录本身（register() 刚建、恒存在）⇒ 必须判红
+                    finish(false, "assert marker 缺 path= 参数（空路径一律判红）");
+                    return;
+                }
+                Path mp = syncPath(mpath);
+                if (isEvidenceDirItself(mp)) {
+                    finish(false, "assert marker 的 path 指向证据目录本身（path=. 或尾斜杠）⇒ 判红");
+                    return;
+                }
+                if (Files.isDirectory(mp)) {
+                    finish(false, "assert marker 的 path 是目录，不是 marker 文件 ⇒ 判红");
+                    return;
+                }
+                ok = Files.exists(mp);
                 detail = "marker=" + mp + " exists=" + ok;
             } else {
                 finish(false, "未知 assert 类型（服务端侧只支持 player_count / world_count / marker）: " + kind);
@@ -304,6 +343,15 @@ public final class PlaytestQaServerDriver {
             return Paths.get(t);
         }
         return EVIDENCE_DIR.resolve(t);
+    }
+
+    /** 空路径的另一种形态：path=. 或 path=./ 规范化后就是证据目录本身 ⇒ 同样判红。 */
+    private static boolean isEvidenceDirItself(Path p) {
+        try {
+            return p.toAbsolutePath().normalize().equals(EVIDENCE_DIR.toAbsolutePath().normalize());
+        } catch (RuntimeException e) {
+            return false;
+        }
     }
 
     private static int optI(String opts, String key, int dflt) {

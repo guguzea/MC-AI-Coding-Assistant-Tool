@@ -26,7 +26,7 @@ public final class MyPlugin extends JavaPlugin {
 - **classpath 至少三件**：`paper-api` + `adventure-api` + `adventure-key`。只放 `paper-api` 时报 `class file for net.kyori.adventure.key.Namespaced not found`（Paper 侧 `CommandSender` 继承 Adventure 的 `Audience`）。
 - **`plugin.yml` 的 `api-version: '26.3'` 被 Paper 26.3-190 接受**（真机跑，无加载期报错）。
 - **服务端发行件**只能走 `fill.papermc.io/v3` —— `api.papermc.io/v2` 已 **sunset**（HTTP **410**，body `{"ok":false,"error":"sunset"}`）。
-- 依赖坐标 `io.papermc.paper:paper-api`（`repo.papermc.io`）；版本串 `26.3.build.178-stable` **与 Javadoc 站 `asOfVersion` 逐字相符**，且是 maven 版本列表里的真实条目。
+- 依赖坐标 `io.papermc.paper:paper-api`（`repo.papermc.io`）；版本串是 maven 版本列表里的真实条目；Javadoc 站 `asOfVersion` 会随上游发布前移，引用前先重取（当前抓取值记在 `rules.meta.json`）。
 
 ## 本档的证据口径（重要）
 

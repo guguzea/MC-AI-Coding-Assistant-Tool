@@ -1037,7 +1037,56 @@ function generateSettingsGradleContent(modId: string): string {
   );
 }
 
+/**
+ * Parchment 的版本串是**日期**，且**按 MC 版本各不相同**（artifact 名里带 MC 版本：
+ * `parchment-<mc>`）⇒ 钉死一个日期必然在某些档取不到构件。
+ *
+ * 旧实现钉的是 `2024.01.20`，该版本上游**从未发布**：`maven.parchmentmc.org/org/parchmentmc/data/`
+ * 下 26 个 `parchment-<mc>` artifact 逐个读 `maven-metadata.xml` 无一含它，
+ * `.../parchment-1.20.1/2024.01.20/` 直连 **404** ⇒ 生成的 build.gradle 在依赖解析阶段即失败
+ * （`Could not find org.parchmentmc.data:parchment-<mc>:2024.01.20`）。
+ *
+ * 下表 = 各 MC 版本**最新正式版**，2026-10-20 实测。源：
+ * `https://maven.parchmentmc.org/org/parchmentmc/data/parchment-<mc>/maven-metadata.xml`，
+ * 取最新一条**非 `-nightly-SNAPSHOT`** 的版本。**表外一律不 emit parchment 行**
+ * （1.14.4 / 1.15.2 / 1.20.5 上游无正式版构件，26.x 另见下），只留 officialMojangMappings()。
+ * 表会随上游发版变旧，但旧坐标仍可解析（同一 MC 版本的早期 Parchment 不会下架）⇒ 只会少参数名，不会造出坏构建。
+ */
+const PARCHMENT_RELEASE_BY_MC: Readonly<Record<string, string>> = {
+  "1.16.5": "2022.03.06",
+  "1.17": "2021.07.21",
+  "1.17.1": "2021.12.12",
+  "1.18.1": "2022.03.06",
+  "1.18.2": "2022.11.06",
+  "1.19.2": "2022.11.27",
+  "1.19.3": "2023.06.25",
+  "1.19.4": "2023.06.26",
+  "1.20.1": "2023.09.03",
+  "1.20.2": "2023.12.10",
+  "1.20.3": "2023.12.31",
+  "1.20.4": "2024.04.14",
+  "1.20.6": "2024.06.16",
+  "1.21": "2024.11.10",
+  "1.21.1": "2024.11.17",
+  "1.21.3": "2024.12.07",
+  "1.21.4": "2025.03.23",
+  "1.21.5": "2025.06.15",
+  "1.21.6": "2025.06.29",
+  "1.21.7": "2025.07.18",
+  "1.21.8": "2025.09.14",
+  "1.21.9": "2025.10.05",
+  "1.21.10": "2025.10.12",
+  "1.21.11": "2025.12.20",
+};
+
 function generateRootBuildGradleContent(mcVersion: string): string {
+  // P1-R4-3：26.x 的目标 jar 已是去混淆官方名，且上游无 `parchment-<mc>` 构件
+  // ⇒ 只 emit officialMojangMappings()，不再拼一条编译期必失败的 parchment 依赖。
+  // 2026-10-20 扩到全部档：parchment 版本串按 MC 版本各不相同（见 PARCHMENT_RELEASE_BY_MC），
+  // 表外（含 1.14.4 / 1.15.2 / 1.20.5）同样不 emit，绝不 emit 未核实的坐标。
+  const parchmentRelease = isMcVersion26OrAbove(mcVersion)
+    ? undefined
+    : PARCHMENT_RELEASE_BY_MC[mcVersion.trim()];
   return [
     "plugins {",
     "    id 'architectury-plugin' version '3.4'",
@@ -1056,18 +1105,48 @@ function generateRootBuildGradleContent(mcVersion: string): string {
     "        minecraft \"com.mojang:minecraft:${rootProject.minecraft_version}\"",
     "        mappings loom.layered {",
     "            officialMojangMappings()",
-    // P1-R4-3：26.x 的目标 jar 已是去混淆官方名，且上游无 `parchment-<mc>` 构件
-    // ⇒ 只 emit officialMojangMappings()，不再拼一条编译期必失败的 parchment 依赖。
-    ...(isMcVersion26OrAbove(mcVersion)
-      ? []
-      : ["            parchment(\"org.parchmentmc.data:parchment-${rootProject.minecraft_version}:2024.01.20@zip\")"]),
+    ...(parchmentRelease
+      ? [
+          `            parchment("org.parchmentmc.data:parchment-\${rootProject.minecraft_version}:${parchmentRelease}@zip")`,
+        ]
+      : []),
     "        }",
     "    }",
     "}",
   ].join("\n");
 }
 
-function generateCommonBuildGradle(modId: string): string {
+/**
+ * Architectury / fabric-loader 的版本串**按 MC 版本各不相同**（2026-10-21 审查 mcp-ops F-11）。
+ *
+ * 原实现把 `dev.architectury:architectury:9.2.14` 与 `net.fabricmc:fabric-loader:0.15.0`
+ * 写死在模板里 —— 那是 1.20.x 时代的串，给 1.21.x / 26.x 的目标生成工程会拿到不匹配的
+ * Architectury。与 `PARCHMENT_RELEASE_BY_MC` 同口径：**查不到就 emit `// TODO(未核实)`，
+ * 绝不写死一个不相关的坐标**。
+ *
+ * ⚠ 表内值只覆盖**本仓已核实**的档；新增档必须先核 maven 再补表，不得按邻居档推。
+ */
+const ARCHITECTURY_API_BY_MC: Readonly<Record<string, string>> = {
+  "1.20.1": "9.2.14",
+};
+const FABRIC_LOADER_BY_MC: Readonly<Record<string, string>> = {
+  "1.20.1": "0.15.0",
+};
+
+/** 查表；表外返回 undefined（调用方 emit TODO 注释，不 emit 坐标）。 */
+function coordinateFor(table: Readonly<Record<string, string>>, mcVersion: string): string | undefined {
+  return table[mcVersion.trim()];
+}
+
+function generateCommonBuildGradle(modId: string, mcVersion?: string): string {
+  const arch = mcVersion ? coordinateFor(ARCHITECTURY_API_BY_MC, mcVersion) : undefined;
+  const deps = arch
+    ? ["    modApi 'dev.architectury:architectury:" + arch + "'"]
+    : [
+        "    // TODO(未核实)：本档（" + (mcVersion ?? "未给版本") + "）的 dev.architectury:architectury 版本串未核，",
+        "    // 请查 https://maven.architectury.dev/dev/architectury/architectury/maven-metadata.xml 后填入，",
+        "    // 不要照抄 1.20.x 时代的 9.2.14（版本串随 MC 版本变化）。",
+      ];
   return [
     `architectury {`,
     `    common("fabric", "forge", "neoforge") {`,
@@ -1076,19 +1155,35 @@ function generateCommonBuildGradle(modId: string): string {
     `}`,
     "",
     "dependencies {",
-    "    modApi 'dev.architectury:architectury:9.2.14'",
+    ...deps,
     "}",
   ].join("\n");
 }
 
-function generateFabricBuildGradle(): string {
+function generateFabricBuildGradle(mcVersion?: string): string {
+  const loader = mcVersion ? coordinateFor(FABRIC_LOADER_BY_MC, mcVersion) : undefined;
+  const arch = mcVersion ? coordinateFor(ARCHITECTURY_API_BY_MC, mcVersion) : undefined;
+  // 与 common 侧同口径：表外不 emit 写死坐标，改成可执行的 TODO 指引。
+  const deps = [
+    "    modApi project(':common')",
+    ...(loader
+      ? ["    modImplementation 'net.fabricmc:fabric-loader:" + loader + "'"]
+      : [
+          "    // TODO(未核实)：本档 fabric-loader 版本串未核（查 https://maven.fabricmc.net/net/fabricmc/fabric-loader/maven-metadata.xml），",
+          "    // 不要照抄 0.15.0。",
+        ]),
+    ...(arch
+      ? ["    modImplementation 'dev.architectury:architectury-fabric:" + arch + "'"]
+      : [
+          "    // TODO(未核实)：本档 dev.architectury:architectury-fabric 版本串未核，",
+          "    // 查 https://maven.architectury.dev/dev/architectury/architectury-fabric/maven-metadata.xml。",
+        ]),
+  ];
   return [
     "architectury { platformSetupLoomIde() fabric() }",
     "",
     "dependencies {",
-    "    modApi project(':common')",
-    "    modImplementation 'net.fabricmc:fabric-loader:0.15.0'",
-    "    modImplementation 'dev.architectury:architectury-fabric:9.2.14'",
+    ...deps,
     "}",
   ].join("\n");
 }
@@ -1131,8 +1226,8 @@ function buildArchitecturySkeleton(root: string, modId: string, mcVersion: strin
   files["build.gradle"] = generateRootBuildGradleContent(mcVersion);
   files["gradle.properties"] = `minecraft_version=${mcVersion}\nneoforge_version=${neoforgeVersion}\nloom.platform=fabric\n`;
 
-  files["common/build.gradle"] = generateCommonBuildGradle(modId);
-  files["fabric/build.gradle"] = generateFabricBuildGradle();
+  files["common/build.gradle"] = generateCommonBuildGradle(modId, mcVersion);
+  files["fabric/build.gradle"] = generateFabricBuildGradle(mcVersion);
   files["neoforge/build.gradle"] = generateNeoForgeBuildGradle();
   files[join("common/src/main/resources", "architectury.common.json")] = generateArchitecturyCommonJson(modId);
 
@@ -1522,6 +1617,11 @@ export async function portProject(args: unknown) {
     const recommendedActions: { action: string; files: string[]; reason: string; searchPattern?: string }[] = [];
     const safe = candidates.filter((c) => c.status === "safe_to_move");
     const review = candidates.filter((c) => c.status === "review_required");
+    // 2026-10-21 修正（审查 mcp-ops F-12）：`determineCandidateStatus` 产出**三档**，而原实现只消费
+    // 前两档 ⇒ status="has_loader_calls"（只有 import 型 loader 引用、无非 import 命中）的文件
+    // **既不在 move 清单、也不在 expectplatform 清单**，只能自己在 candidates[] 里翻 —— 属静默丢条目。
+    // 这里补第三档：import 型 loader 引用同样需要抽象（否则移到 common 后在另一侧编不过）。
+    const importOnly = candidates.filter((c) => c.status === "has_loader_calls");
 
     if (safe.length > 0) {
       recommendedActions.push({
@@ -1535,6 +1635,18 @@ export async function portProject(args: unknown) {
         action: "generate_expectplatform",
         files: review.map((c) => c.relPath),
         reason: "包含 Loader API 调用，需先通过 @ExpectPlatform 抽象后再移动到 common 模块",
+        searchPattern: "FabricLoader.getInstance() | FMLPaths | DistExecutor",
+      });
+    }
+    if (importOnly.length > 0) {
+      // 与上一档同 action（都是"先抽象再移"），但 reason 点明差异：这批**只有 import 命中**、
+      // 没有方法调用命中 ⇒ 静态证据更弱，抽象时需人工确认该 import 是否真的跨平台用得上。
+      recommendedActions.push({
+        action: "generate_expectplatform",
+        files: importOnly.map((c) => c.relPath),
+        reason:
+          "仅含 Loader API 的 import（未检出方法调用），同样需 @ExpectPlatform 抽象后再移动；" +
+          "因静态证据较弱，请人工确认该 import 是否真为跨平台所需",
         searchPattern: "FabricLoader.getInstance() | FMLPaths | DistExecutor",
       });
     }

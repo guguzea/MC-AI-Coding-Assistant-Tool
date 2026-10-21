@@ -38,7 +38,7 @@ plugins {
 **正确配置：**
 ```groovy
 plugins {
-    id 'fabric-loom' version '1.8'  // ✅ 与本档 scaffold/build.gradle:2 同值；旧写法 1.3-SNAPSHOT 是 1.20.1 模板残留
+    id 'fabric-loom' version '1.8.13'  // ✅ 与本档 scaffold/build.gradle:12 同值；旧写法 1.3-SNAPSHOT 是 1.20.1 模板残留
 }
 ```
 
@@ -120,7 +120,7 @@ loom {
 | 检查项 | 方法 |
 |--------|------|
 | Fabric Maven 是否配置 | 检查 repositories 中是否有 maven.fabricmc.net |
-| Loom 版本 | 检查 `fabric-loom` 插件版本，本档取 scaffold/build.gradle:2 的 `1.8`（裸 `1.8` 能否解析见 未核实 项）|
+| Loom 版本 | 检查 `fabric-loom` 插件版本，本档取 scaffold/build.gradle:12 的 `1.8.13`（metadata 无裸 `1.8`）|
 | 依赖类型 | API 使用 modApi，实现使用 modImplementation |
 | 映射变更 | 执行 `./gradlew clean genSources` |
 | 版本一致性 | gradle.properties 中的版本与 build.gradle 一致 |

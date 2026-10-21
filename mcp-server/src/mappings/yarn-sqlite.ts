@@ -1242,6 +1242,7 @@ export function convertYarnMember(
   from: MappingLayer,
   to: MappingLayer,
   memberName: string,
+  prefer?: MappingDbPreference | null,
 ): {
   found: boolean;
   converted: string | null;
@@ -1252,7 +1253,7 @@ export function convertYarnMember(
   /** L77 ①：classes.official 同条件真池条数 */
   candidatesTotal?: number;
 } {
-  const dbPath = resolveMappingDbPath(version);
+  const dbPath = resolveMappingDbPath(version, prefer);
   if (!dbPath) {
     return {
       found: false,
@@ -1266,7 +1267,7 @@ export function convertYarnMember(
   }
 
   if (from === "mojang" || from === "obfuscated") {
-    const db = getYarnDb(version);
+    const db = getYarnDb(version, prefer);
     if (db) {
       const officialHits = db
         .prepare("SELECT named, intermediary, official FROM classes WHERE official = ? ORDER BY named LIMIT 2")
@@ -1290,7 +1291,7 @@ export function convertYarnMember(
   }
 
   // A4d：同上——Linkie 扩展名已 early-return，此处必在支持面。
-  const row = lookupYarnClass(version, memberName, (from === "parchment" ? "mcp" : from) as LookupLayer);
+  const row = lookupYarnClass(version, memberName, (from === "parchment" ? "mcp" : from) as LookupLayer, prefer);
   if (!row) {
     return {
       found: false,
@@ -1308,7 +1309,7 @@ export function convertYarnMember(
   // yarn-tiny 库的 named 列是 Yarn 名：跨层到 mcp/parchment 若返回 yarn 名即假成功，拒绝。
   // F131：from 侧同理——lookupYarnClass 对 mcp/parchment 输入会回落到 named 列，
   // 命中即把 Yarn 名当 MCP/Parchment 名用，故两侧一律拒绝（成员级 MCP 走 CSV/searge，不经此路）。
-  const era = getMappingEra(version);
+  const era = getMappingEra(version, prefer);
   const mcpLayerSide = to === "mcp" || to === "parchment" ? "to" : from === "mcp" || from === "parchment" ? "from" : null;
   if (era === "yarn-tiny" && mcpLayerSide) {
     const layer = mcpLayerSide === "to" ? to : from;

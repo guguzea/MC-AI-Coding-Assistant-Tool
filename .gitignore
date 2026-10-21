@@ -40,6 +40,9 @@ agent-tools/
 check-sources.txt
 临时文件*.md
 
+# LiteLoader ARR 源码树：只作本地对照，不再入库（见 THIRD_PARTY_NOTICES.md）
+ll-src/
+
 # Local jar scratch (do not commit)
 temp/
 temp/mod-jars/
@@ -85,6 +88,10 @@ mcp-server/--only=*/
 # 会话缓存 / 提交信息草稿（本地工作文件）
 _tmp_session.json
 .gitcommitmsg.txt
+# 一次性调试脚本（2026-10-21 审查 mcp-tests-debug F-1：`mcp-server/.tmp-sv.mjs` 曾因缺此前缀规则而入库）
+.tmp-*
+mcp-server/.tmp-*
+
 
 # 本地代码索引
 .codegraph/
@@ -134,3 +141,26 @@ mcp-server/docs/handoff-playtest-next.md
 R147-1379.verdicts.tsv
 V2.0.0-RELEASE-NOTES.md
 DEEP_RESEARCH_REPO_AUDIT.md
+scratch-tmp/cls-out.txt
+scratch-tmp/f-drive.txt
+scratch-tmp/final-out.txt
+scratch-tmp/final2-out.txt
+scratch-tmp/inter-out.txt
+scratch-tmp/mc-game.txt
+scratch-tmp/out1.txt
+scratch-tmp/out2.txt
+scratch-tmp/out3.txt
+scratch-tmp/out4.txt
+scratch-tmp/probe-f-drive.mjs
+scratch-tmp/probe-fabric-api-datagen.mjs
+scratch-tmp/probe-final.mjs
+scratch-tmp/probe-final2.mjs
+scratch-tmp/probe-git.ps1
+scratch-tmp/probe-mc-game.mjs
+scratch-tmp/probe-tagprovider.mjs
+scratch-tmp/probe-temp-audit.mjs
+scratch-tmp/probe-yarn-cls.mjs
+scratch-tmp/probe-yarn-datagen.mjs
+scratch-tmp/probe-yarn-inter.mjs
+scratch-tmp/tag-out.txt
+scratch-tmp/temp-audit.txt

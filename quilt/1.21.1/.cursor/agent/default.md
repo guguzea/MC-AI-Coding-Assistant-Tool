@@ -26,6 +26,7 @@
 |---------|---------|
 | Cursor | `.cursor/rules/*.mdc` + `.cursor/skills/` |
 | OpenCode / Codex / ZCode | `AGENTS.md` |
+| DSH | `AGENTS.md` + `.agents/skills/` |
 | Pi | `.pi/rules/*.md`（+ `AGENTS.md`） |
 
 当上述路径不存在时，降级读取本文件和 `.cursor/`。

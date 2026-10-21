@@ -182,7 +182,7 @@ MC_skill/
 
 **配置本地 MCP Server：**
 
-> 将 [AUTO_SETUP.md](./AUTO_SETUP.md) 拖入当前 AI IDE / CLI。Agent 应识别宿主（Cursor / Claude Code / VS Code / Continue / Trae / OpenCode / Codex 等），编译 `mcp-server`，按该宿主格式生成配置草稿，**经你确认后合并**（不会静默覆盖）。  
+> 将 [AUTO_SETUP.md](./AUTO_SETUP.md) 拖入当前 AI IDE / CLI。Agent 应识别宿主（Cursor / Claude Code / VS Code / Continue / Trae / OpenCode / Codex / DSH 等），编译 `mcp-server`，按该宿主格式生成配置草稿，**经你确认后合并**（不会静默覆盖）。  
 > 要求 **Node.js >= 22.5**（**22.5–22.12 与 23.0–23.3 必须加 `--experimental-sqlite` 启动**——内置 `node:sqlite` 在 22.13 / 23.4 起才默认开启；MCP/CLI 入口会在**任何 sqlite 使用之前**检测该窗口，命中即打印醒目指引并以非零码退出）；服务名 `MC-AI-Coding-Assistant-Tool`（stdio，89 个工具）。无 MCP 客户端时用 `node mcp-server/dist/cli.js`。
 >
 
@@ -474,7 +474,7 @@ node mcp-server/bin/mc-skill-scripts.mjs gate run lib-ownership # 跑一道门�
 
 构建期缺模型：警告并降级 FTS5-only（不 exit 1）。`diagnose_data_paths.semantic` 报告各文档树旁 db 是否存在。
 
-**数据与模型位置**：语义库在 `data/{platform}_{ver}/{source}/{ver}/semantic/db.sqlite`（跳过 `forge_javadoc`），当前 **61** 个（实算：`find data -type f -name db.sqlite -path "*/semantic/*"`；不含 `db.sqlite.tmp-*` / `-journal` 残渣，`forge_javadoc` 树本就没有语义库）；嵌入模型在 `data/_models/Xenova/all-MiniLM-L6-v2`（transformers.js，**唯一允许远程拉模型的入口**）。构建：`npm run fetch:embedding-model`；`npm run build:semantic-index -- --all`（可 `--platform` / `--version` / `--source` / `--no-embed` / `--force`；可中断续跑）。产物清单：`data/semantic-index-manifest.json`。
+**数据与模型位置**：语义库在 `data/{platform}_{ver}/{source}/{ver}/semantic/db.sqlite`（跳过 `forge_javadoc`），当前 **64** 个（实算：`find data -type f -name db.sqlite -path "*/semantic/*"`；不含 `db.sqlite.tmp-*` / `-journal` 残渣，`forge_javadoc` 树本就没有语义库）；嵌入模型在 `data/_models/Xenova/all-MiniLM-L6-v2`（transformers.js，**唯一允许远程拉模型的入口**）。构建：`npm run fetch:embedding-model`；`npm run build:semantic-index -- --all`（可 `--platform` / `--version` / `--source` / `--no-embed` / `--force`；可中断续跑）。产物清单：`data/semantic-index-manifest.json`。
 
 #### Agent 怎么调用（两条入口、两步走、一个字段）
 
@@ -570,7 +570,7 @@ node mcp-server/dist/cli.js search_forge_docs --version=1.14.4 --query="entity g
 |----------|------|
 | `list` | 已建档平台 / 版本 |
 | `session` | **不写盘**、不依赖项目根。返回该档 `AGENTS.md`、规则正文、Skill **索引**（`name` / `description` / `relPosix` / `absPath`）。默认只注入规则 **00 / 01 / 09**；`topics` 与 `task` **追加**到底座（并集，永不替换）；`skillNames` 与 `task` 建议名去重后注入 `skillBodies`（总条数上限 8）。`topics` 永不注入 Skill 正文。库 Skill 不进 `nextReads`，只有显式 `skillNames` 才注入库正文。`includeAllRules=true` 才灌 00–10 规则全文。ok=true 且带「仅底座」warning = 包可用但规则未按任务扩展（`rulesMode=base`，含 `next` 对象）。包存在但缺 00/01/09 文件 → `ok:false` + `PACK_INCOMPLETE`（不是 `PACK_NOT_FOUND`）。库 Skill 仍读 `knowledge/libs/`。 |
-| `write` | 写入**用户模组工程**的 IDE 目录。`hosts` 必填（`cursor` / `claude` / … / `all`）。默认 `dryRun`。不要再用 `includeSkills`，改用 `writeSkillStubs`（二者都未传时默认 **true**，写入 stub，提示去读知识库路径，不是 Skill 全文）。`includeSkillBodies` 才写全文。目标不能是本知识库（**整棵仓库树**均拒绝，含版本子目录）。**破坏性变更（2026-08）**：设置 `MC_SKILL_PROJECT_ROOT` 时它是**硬边界**——`projectPath` 必须落在其内，否则拒绝（`PATH_OUTSIDE_ALLOWLIST`，响应带 `breakingChange: true` 与 `allowRoot`）；此前 `projectPath` 可覆盖 env。迁移：把 env 指向包含目标工程的目录，或改用其内的 projectPath。 |
+| `write` | 写入**用户模组工程**的 IDE 目录。`hosts` 必填（`cursor` / `claude` / … / `dsh` / `all`）。默认 `dryRun`。不要再用 `includeSkills`，改用 `writeSkillStubs`（二者都未传时默认 **true**，写入 stub，提示去读知识库路径，不是 Skill 全文）。`includeSkillBodies` 才写全文。目标不能是本知识库（**整棵仓库树**均拒绝，含版本子目录）。**破坏性变更（2026-08）**：设置 `MC_SKILL_PROJECT_ROOT` 时它是**硬边界**——`projectPath` 必须落在其内，否则拒绝（`PATH_OUTSIDE_ALLOWLIST`，响应带 `breakingChange: true` 与 `allowRoot`）；此前 `projectPath` 可覆盖 env。迁移：把 env 指向包含目标工程的目录，或改用其内的 projectPath。 |
 | `deactivate` | 按清单撤写 |
 
 **不能**开关 Cursor/Claude 等 Skill 扫描器。重载 MCP 不会让设置页出现条目。
@@ -734,14 +734,14 @@ Cursor 主路径是 **tools**；协议层仍注册 Prompt/Resource，工具兜�
 
 ## Agent Skills（**35** 个 Forge 唯一名 + 平台扩展，多 IDE 镜像）
 
-路径示例：`forge/1.20.1/.agents/skills/<name>/`（另有 `.cursor` / `.continue` / `.opencode` / `.zcode` 等宿主镜像）。Wave D 新增 skill 曾用 `scripts/_oneoff/propagate-wave-d-skills.mjs` 同步（一次性，勿再跑），日常镜像用 `scripts/sync-skills.ps1 -All`。
+路径示例：`forge/1.20.1/.agents/skills/<name>/`（另有 `.cursor` / `.continue` / `.opencode` / `.zcode` 等宿主镜像；DSH 与 Codex 共用 `.agents/skills`，不另建镜像目录）。Wave D 新增 skill 曾用 `scripts/_oneoff/propagate-wave-d-skills.mjs` 同步（一次性，勿再跑），日常镜像用 `scripts/sync-skills.ps1 -All`。
 
 > 库模组 Skill（`mc-config` / `mc-geckolib` / `mc-curios` / `mc-patchouli` 等）**不落盘**：源稿在根目录 `knowledge/libs/<group>/mc-<name>/SKILL.md`（`all-platforms` / `fabric-only` / `neo-only` / `forge-only` / `bedrock-only`），按 AGENTS.md「库模组 Skill」解析规则使用；`propagate-wave-d-skills.mjs` 与平台 `.cursor/skills` **不再包含库项**。当前库源稿（现扫 `find knowledge/libs -name SKILL.md`）：all-platforms 20 + fabric-only 10 + forge-only 2 + neo-only 2（Curios/KFF 镜像）+ bedrock-only 2 = **36 份** / **34 唯一 skillId**（口径：份数 = 各组 `mc-*/SKILL.md` 数；唯一 skillId 按目录名去重与按 frontmatter `name:` 去重**同数** 34，差额来自 `mc-curios` / `mc-kotlin-for-forge` 在 forge-only 与 neo-only 各一份镜像）。与本文 §7.5「② 库 Skill 源稿」行及 `knowledge/libs/README.md`「当前清单」一致。
 
 | 平台/版本 | 数量 | 结构 | 说明 |
 |-----------|------|------|------|
 | `forge/1.12.2`–`1.20.4` 主档 | **35** | 目录（每 skill 一目录） | 15 核心 + 19 Wave D + `mc-events`（2026-08 D-1 补齐；1.7.10 为诚实 stub） |
-| `forge/1.15.2` / `forge/1.17.1` | **35** / **34** | 目录 | 1.17.1 有 `mc-events`、无 `mc-capability`（与 1.20.1 集合不同） |
+| `forge/1.15.2` / `forge/1.17.1` | **35** / **35** | 目录 | 1.17.1 有 `mc-events`、无 `mc-capability`（与 1.20.1 集合不同） |
 | `forge/1.7.10` | **3 规则 + 3 技能** | 目录 | 仅 00/01/09 + `mc-item` / `mc-registry` / `mc-events`（stub：无 05 规则，事件 API 未核实禁止生成） |
 | `forge/1.8.9` · `1.9.4` · `1.10.2` · `1.11.2` | **3 规则 + 0 技能** | 只有 `rules/` | 四档各 00/01/09，`.cursor/skills` **目录不存在** ⇒ 0 技能是**按设计**（短规则树只做「不得把现代 API 抄进早期档」的门），不是漏建。实测（`readdir <pack>/.cursor/rules` 计 `*.mdc`、`.cursor/skills` 计条目）；禁止拿 1.12.2 的 00–10 或 35 技能顶替 |
 | `forge/1.21.1` | **0 规则 + 0 技能**（draft） | 只有 `AGENTS.md` + `pack.meta.json` | 实测该目录**连 `.cursor/` 都没有** ⇒ session 必回 `PACK_NOT_FOUND`，也不在 `list_forge_versions`。登记为按设计，禁止为凑一个版本号克隆一棵新树，也禁止用 NeoForge 1.21.1 或 Forge 1.20.4 顶上 |
@@ -1151,9 +1151,15 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 
 ### 知识暴露（MCP Resources）
 
-通过 `registerResource` 注册 `mcskill://` URI（支持 resources 的客户端）；`list_knowledge_resources` / `read_knowledge_resource` 工具兜底。
+**登记共 293 条**（由 `list_knowledge_resources` 枚举；复核：`node mcp-server/dist/cli.js list_knowledge_resources`）。按 URI 族：
 
-**实测共 293 条**（由 `list_knowledge_resources` 枚举；复核：`node mcp-server/dist/cli.js list_knowledge_resources`）。按 URI 族：
+⚠ **293 条 ≠ 293 条都走 `registerResource`** —— 三条路分开投递，别按「全都能在客户端 Resources 面板里看到」理解：
+
+| 投递路径 | 条数 | 说明 |
+| --- | --- | --- |
+| `registerResource`（MCP Resources） | **133** | code-patterns 116 + skill 12 + 固定 5 |
+| `registerPrompt`（MCP Prompts） | **61** | `mcskill://workflow/*` 另走 prompt 面 |
+| **只走工具、不注册** | **99** | `mcskill://community/*` 既无 resource 也无 prompt，只能经 `list_knowledge_resources` / `read_knowledge_resource` 取 |
 
 | URI 族 | 条数 | 内容 |
 | --- | --- | --- |

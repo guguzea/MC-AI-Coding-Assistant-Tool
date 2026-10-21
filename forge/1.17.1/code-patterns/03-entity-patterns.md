@@ -16,7 +16,7 @@ public static final RegistryObject<EntityType<MyEntity>> MY_ENTITY = ENTITY_TYPE
 );
 
 // 实体类
-public class MyEntity extends LivingEntity {
+public class MyEntity extends PathfinderMob {
     private static final EntityDataAccessor<Integer> DATA_HEALTH =
         SynchedEntityData.defineId(MyEntity.class, EntityDataSerializers.INT);
 

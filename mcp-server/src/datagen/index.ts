@@ -355,6 +355,8 @@ export function generateDatagen(query: DatagenQuery): DatagenResult {
       // 语料实测分界 = 1.21.8：fabric_1.21.8/1.21.10/1.21.11/26.1.2 的 tags 页只有
       // valueLookupBuilder（各 4 档文件命中），1.20.4/1.21.1/1.21.3/1.21.4 只有 getOrCreateTagBuilder。
       isMcVersionAtLeast(ver, "1.21.8"),
+      // 模型 datagen 的包名分界 = 1.21.4（旧包 → client 包；两处独立证据见 fabric.ts 的 model 分支）。
+      isMcVersionAtLeast(ver, "1.21.4"),
     );
     if (ver !== "1.21.11" && !isMcVersionFamily(ver, "26.1")) {
       code = prependDocsReview(code, "search_fabric_docs", ver);
@@ -409,7 +411,9 @@ export function generateDatagen(query: DatagenQuery): DatagenResult {
       };
     }
     code = prependDocsReview(
-      generateNeoForge21(providerType as NeoForge21ProviderType, modId, targetName, classBase),
+      // 2026-10-21 修正（审查 mcp-generators F-15）：本分支复用 1.21.x 模板，必须把产物头注的档位
+      // 显式改成 1.20.6 —— 否则 1.20.6 的产物第一行自称 "// Recipe Provider — NeoForge 1.21.x"。
+      generateNeoForge21(providerType as NeoForge21ProviderType, modId, targetName, classBase, "1.20.6"),
       "search_neoforge_docs",
       "1.20.6",
     );

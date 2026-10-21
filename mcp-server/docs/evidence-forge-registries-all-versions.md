@@ -55,7 +55,7 @@
 
 ```powershell
 # 单档复核（jar 在 D:\mc-skill-temp）
-& "C:\Users\zzrCN\.gradle\jdks\eclipse_adoptium-17-amd64-windows\jdk-17.0.18+8\bin\javap.exe" -p -classpath D:\mc-skill-temp\forge-1.20.4-49.2.9-universal.jar net.minecraftforge.registries.ForgeRegistries
+& "<home>\.gradle\jdks\eclipse_adoptium-17-amd64-windows\jdk-17.0.18+8\bin\javap.exe" -p -classpath D:\mc-skill-temp\forge-1.20.4-49.2.9-universal.jar net.minecraftforge.registries.ForgeRegistries
 # 与本文清单比对：字段名序列必须一致（数量见上表）
 ```
 

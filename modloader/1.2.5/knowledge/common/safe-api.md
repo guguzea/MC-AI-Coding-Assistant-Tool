@@ -4,7 +4,7 @@
 
 ## 构件 javap 复核——官方 zip 已入库
 
-**构件**：`ModLoader 1.2.5.zip`（mcarchive 官方归档；本机留档 `F:\MC_GAME\_oracle-jars\modloader\`，1.6.2 / 1.5.2 同批）+ JDK21 `javap` 实测（`BaseMod.class` / `ModLoader.class`）：
+**构件**：`ModLoader 1.2.5.zip`（mcarchive 官方归档；本机留档 `<本地构件留档>\modloader\`，1.6.2 / 1.5.2 同批（维护机路径不入库；按 mcarchive 官方 zip 名自取））+ JDK21 `javap` 实测（`BaseMod.class` / `ModLoader.class`）：
 
 | 接口（构件逐字） | 方法 |
 |------|------|

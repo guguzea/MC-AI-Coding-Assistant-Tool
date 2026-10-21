@@ -135,6 +135,6 @@ public class ExampleMod implements ClientTickable, ItemAdder, BlockAdder {
 - **一个 jar 一份 `riftmod.json`**：两个 `riftmod.json` 打在一个 jar 里会被其中一个盖掉 ⇒ 要多 mod 就分 jar，或把自己的类名**追加**进同一份 `listeners` 数组。
 - **listener 不在 `listeners[]` 里就永远不会被回调**：类写了、jar 装了、日志没报错，就是没进数组。
 - **注册时机不是你能选的**：`registerItems()` 什么时候被调用、和其他 `registerX` 的先后，**javap 看不出来**（要 mixin 导出或真机日志）⇒ 别靠猜顺序写依赖。
-- **MC 侧类型全部未核**：本档所有 `net.minecraft.*` 名字来自 `forge_1.13.2` 映射（本档 scaffold 钉的是同一个 `snapshot_20180921`），**不是**对 1.13.2 构件 javap 出来的。
+- **MC 侧类型**：桥点名过的 `net.minecraft.*` 已对真构件 javap 核过（见 `../knowledge/common/bridge-api.md` §3/§4）；**未被点名的**名字仍未核。
 - **`libs/` 里只能放一份 rift jar**：两份同 id 会 `DuplicateModException`（见 `gradle-recipe.md` 坑 6）。
 - 改 listener 方法名之前先看 `../knowledge/common/verified-api.md`（javap 真构件表）——本档 wiki 抓取表 `listeners.md` 的接口名与方法名已与之 100% 对账一致，但**签名精度以真构件表为准**。

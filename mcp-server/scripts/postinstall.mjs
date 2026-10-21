@@ -62,6 +62,22 @@ const PKG_ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 /** 解压目标：<pkg>/data/ —— 与 Release zip 里的 data/ 内容一一对应 */
 const DATA_DIR = join(PKG_ROOT, "data");
 
+/**
+ * npm 包自带的 7 个顶层项（`files` 含 `data` ⇒ 随包分发）。
+ * Release zip 里**没有**它们 ⇒ 下载平台数据时必须保住它们。
+ * 尤其 `mdk-checksums.json`：`checksumsPath()`（src/mdk/index.ts:92-94）读的正是
+ * `<包根>/data/mdk-checksums.json` —— 丢了它等于 MDK 校验链彻底断掉。
+ */
+const PACKAGED_DATA_ENTRIES = [
+  "mdk-checksums.json",
+  "bedrock-script-api-pin.json",
+  "wrapper-jars.json",
+  "lib-api-summaries",
+  "lib-coords",
+  "lib-manifests",
+  "loader-api-summaries",
+];
+
 const REPO = (process.env.MC_SKILL_UPDATE_REPO || "guguzea/MC-AI-Coding-Assistant-Tool").trim();
 
 /** 与 src/update/hosts.ts:19 的 ALLOWED_GITHUB_HOSTS 同形（精确集合，无后缀通配）。 */
@@ -568,6 +584,10 @@ async function* readCentralDirectory(filePath, cdOffset, expected) {
   for await (const chunk of stream) {
     buf = buf.length ? Buffer.concat([buf, chunk]) : chunk;
     for (;;) {
+      // 已解析够条目数 ⇒ 停。**不能**继续读：中央目录之后还有 EOCD（22 B）
+      // 与可能的 zip64 记录，留在 buf 里会被末尾的「残留字节」检查误判为损坏。
+      // （2026-10-21 实测修：PowerShell Compress-Archive 造的合法 zip 也会被误判。）
+      if (seen >= expected) break;
       if (buf.length < 46) break;
       if (buf.readUInt32LE(0) !== 0x02014b50) {
         throw new Error(`中央目录在第 ${seen}/${expected} 条中断（签名不符：截断或伪造）`);
@@ -593,7 +613,13 @@ async function* readCentralDirectory(filePath, cdOffset, expected) {
       yield { name, method, compSize, localOffset };
     }
   }
-  if (buf.length) throw new Error("中央目录尾部有残留字节（zip 可能已损坏）");
+  // 残留检查：只有**条目数不足**才是真损坏。
+  // （原实现是「buf 非空即判红」，但 buf 里剩下的正是 EOCD 与其后的合法字节 ——
+  //   2026-10-21 实测：PowerShell Compress-Archive 造的合法 zip 会被误判为「已损坏」，
+  //   导致所有用户下载 data 后解压失败。改为按条目数判定。）
+  if (seen < expected) {
+    throw new Error(`中央目录条目数不足：解出 ${seen}/${expected} 条（zip 可能被截断）`);
+  }
 }
 
 /**
@@ -681,12 +707,34 @@ async function assertHostAllowlistNotDrifted() {
   }
 }
 
-async function dataDirLooksPopulated() {
+/**
+ * 「平台数据是否已就位」判据（2026-10-21 修订）。
+ *
+ * **原判据是错的**：旧实现是「`data/` 目录非空 ⇒ 跳过下载」。但 npm 包**自带**
+ * `data/`（127 个小文件：mdk-checksums.json、lib-api-summaries/、loader-api-summaries/、
+ * lib-manifests/、lib-coords/、wrapper-jars.json、bedrock-script-api-pin.json）
+ * ⇒ 目录天然非空 ⇒ `--data` 永远被跳过，平台数据永远下不来。
+ *
+ * **正确判据**：平台数据的特征是存在**平台目录**（`forge_*` / `fabric_*` / `neoforge_*` /
+ * `quilt_*` / `bedrock_*` / `paper_*` / `spigot_*` / `liteloader*` / `rift*` / `modloader*`），
+ * 而包内自带的那些是**文件与少数小目录**（`lib-api-summaries` 等），两者不重叠。
+ * ⇒ 判「有没有平台目录」，而不是「目录非不非空」。
+ *
+ * 与包内自带项不重叠的实测依据：包内 7 个顶层项 = mdk-checksums.json /
+ * bedrock-script-api-pin.json / wrapper-jars.json / lib-api-summaries/ / lib-coords/ /
+ * lib-manifests/ / loader-api-summaries/；平台目录一律是 `<平台>_<版本>` 形态。
+ */
+const PLATFORM_DIR_RE = /^(forge|fabric|neoforge|quilt|bedrock|paper|spigot|liteloader|rift|modloader|common)_/i;
+
+function dataDirLooksPopulated() {
+  let entries;
   try {
-    return readdirSync(DATA_DIR).length > 0;
+    entries = readdirSync(DATA_DIR, { withFileTypes: true });
   } catch {
     return false;
   }
+  // 只要存在任一平台目录 ⇒ 平台数据已就位（那 7 个自带项不算）。
+  return entries.some((e) => e.isDirectory() && PLATFORM_DIR_RE.test(e.name));
 }
 
 /**
@@ -728,7 +776,7 @@ async function main() {
   }
 
   if (await dataDirLooksPopulated()) {
-    info(`${DATA_DIR} 已存在且非空，跳过下载（如需强制重下，请先删除该目录）。`);
+    info(`${DATA_DIR} 下已有平台数据目录，跳过下载（如需强制重下，请先删除该目录下的平台目录）。`);
     return;
   }
 
@@ -783,13 +831,58 @@ async function main() {
     warn(`未找到校验和（无 asset digest 也无 SHA256SUMS 资产）——${zip.name} **未经 sha256 校验**就已落盘`);
   }
 
-  // 先解到暂存目录，再整体改名 ⇒ 中途失败不会在 DATA_DIR 留半份数据。
+  // 先解到暂存目录，再**逐个顶层项**并入 DATA_DIR（2026-10-21 修订）。
+  //
+  // 旧实现是「rmSync(DATA_DIR) + renameSync(staging, DATA_DIR)」——整目录替换。
+  // 但 npm 包**自带** `data/`（127 个小文件：mdk-checksums.json、lib-api-summaries/、
+  // loader-api-summaries/、lib-manifests/、lib-coords/、wrapper-jars.json、
+  // bedrock-script-api-pin.json）⇒ 整目录替换会把它们**全删掉**，其中
+  // `mdk-checksums.json` 正是 `checksumsPath()`（<包根>/data/mdk-checksums.json）要读的那份
+  // ⇒ 删了等于把 MDK 校验链彻底打断。
+  //
+  // 平台数据（Release zip）与包内自带项**顶层不重叠**（平台目录 vs 那 7 项）
+  // ⇒ 可以安全「逐项并入」：同名则覆盖（平台目录重下时刷新），不同名则新增。
+  // 这样既保住包内自带项，又不丢原子性（平台目录的替换仍是 rename 级）。
   const stagingDir = `${DATA_DIR}.staging-${release.tag_name}`;
   rmSync(stagingDir, { recursive: true, force: true });
   try {
     await extractZip(zipPath, stagingDir);
-    rmSync(DATA_DIR, { recursive: true, force: true });
-    renameSync(stagingDir, DATA_DIR);
+    mkdirSync(DATA_DIR, { recursive: true });
+    let merged = 0;
+    let kept = 0;
+    for (const name of readdirSync(stagingDir)) {
+      const from = join(stagingDir, name);
+      const to = join(DATA_DIR, name);
+      // 目标已存在 ⇒ 先移到 .old 再 rename 新内容进去（rename 同卷是原子的）。
+      // 目标不存在 ⇒ 直接 rename。
+      if (existsSync(to)) {
+        const backup = `${to}.old-${release.tag_name}`;
+        rmSync(backup, { recursive: true, force: true });
+        renameSync(to, backup);
+        try {
+          renameSync(from, to);
+        } catch (e) {
+          renameSync(backup, to); // 回滚：不让用户落到「没有平台数据」的状态
+          throw e;
+        }
+        rmSync(backup, { recursive: true, force: true });
+        merged++;
+      } else {
+        renameSync(from, to);
+        merged++;
+      }
+    }
+    // 包内自带项（那 7 项）不在 zip 里 ⇒ 它们应当仍原样在 DATA_DIR 下。
+    for (const name of PACKAGED_DATA_ENTRIES) {
+      if (existsSync(join(DATA_DIR, name))) kept++;
+    }
+    if (kept < PACKAGED_DATA_ENTRIES.length) {
+      warn(
+        `包内自带项有 ${PACKAGED_DATA_ENTRIES.length - kept}/${PACKAGED_DATA_ENTRIES.length} 项不在 ${DATA_DIR} 下` +
+          `（缺：${PACKAGED_DATA_ENTRIES.filter((n) => !existsSync(join(DATA_DIR, n))).join(", ")}）`,
+      );
+    }
+    info(`已并入平台数据 ${merged} 个顶层项；包内自带项保留 ${kept}/${PACKAGED_DATA_ENTRIES.length} 项`);
   } catch (err) {
     rmSync(stagingDir, { recursive: true, force: true });
     throw err;
@@ -798,6 +891,9 @@ async function main() {
   }
 
   info(`data 资产就绪：${DATA_DIR}`);
+  info("该目录同时含两类内容：");
+  info("  · 平台数据（本次下载）—— forge_*/fabric_*/neoforge_* 等平台目录");
+  info("  · 包内自带的小文件 —— mdk-checksums.json（MDK 校验链的 pin 表）、lib-api-summaries/ 等");
   info(`请在 MCP 客户端配置里设置 MC_SKILL_DATA=${DATA_DIR}`);
   info("校验：node <pkg>/dist/cli.js --version 之后运行 diagnose_data_paths 查看各平台数据目录状态。");
 }

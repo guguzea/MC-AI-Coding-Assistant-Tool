@@ -172,7 +172,10 @@ const VERSION_DB: Record<string, VersionInfo> = {
   },
   "1.14.4": {
     version: "1.14.4",
-    forgeVersion: "26.x",
+    // 2026-10-21 修正（审查 mcp-core F-3）：原写 "26.x" 是 1.14.2 那一档的前缀。
+    // 复算依据：files.minecraftforge.net/…/forge/index_1.14.4.html 里 `1.14.4-<build>` 共 197 个，
+    // min=28.0.1 / max=28.2.30，前缀集合 = {28.0, 28.1, 28.2}，**不含 26.x**。
+    forgeVersion: "28.x",
     recommendation: "ForgeGradle 3 项目结构，资源加载 API 完全重构",
     keyChanges: [
       "项目结构完全重写（ForgeGradle 2.x → 3.x）",

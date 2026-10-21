@@ -21,7 +21,7 @@ public class ExampleModClient implements ClientModInitializer {
 
         // 1.18.2 的注册类是 net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry
         // （public static void register(EntityType<? extends E>, EntityRendererFactory<E>)，
-        //   证据 M:/mcp-server/data/loader-api-summaries/1.18.2-fabric-api.json:581）；
+        //   证据 mcp-server/data/loader-api-summaries/1.18.2-fabric-api.json:581）；
         // 本档牛模型类实名 net.minecraft.client.render.entity.model.CowEntityModel
         // （net...entity.model.CowModel 与 net...entity.renderer.AnimalsRenderer 在 1.18.2 都不存在），
         // 原版也没有 net.minecraft.client.render.entity.EntityRendererRegistry 这一类。

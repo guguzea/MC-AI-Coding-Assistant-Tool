@@ -45,7 +45,7 @@
 │   ├── skills/
 │   └── agents/
 ├── .claude/ / .continue/ / .trae/
-├── .opencode/ / .agents/ / .zcode/ / .pi/   # OpenCode / Codex / ZCode / Pi（代表版本已支持）
+├── .opencode/ / .agents/ / .zcode/ / .pi/   # OpenCode / Codex / ZCode / Pi（代表版本已支持；DSH 与 Codex 共用 .agents/）
 ├── scaffold/                # 可选：Gradle 骨架
 ├── code-patterns/           # 可选
 └── knowledge/               # antipatterns / common / porting / version-changes

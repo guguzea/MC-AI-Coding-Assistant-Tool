@@ -84,7 +84,7 @@ graph LR
 
 ## 三步开始
 
-1. **装上它**：按 [AUTO_SETUP.md](AUTO_SETUP.md) 编译并接入你的 AI 宿主（Cursor / Claude Code / VS Code / Continue / Trae / OpenCode / Codex 等）。需要 Node.js 22.5 或更高。
+1. **装上它**：按 [AUTO_SETUP.md](AUTO_SETUP.md) 编译并接入你的 AI 宿主（Cursor / Claude Code / VS Code / Continue / Trae / OpenCode / Codex / DSH 等）。需要 Node.js 22.5 或更高。
 2. **让它认识你的模组工程**：宿主里打开工程即可，AI 会按 [AGENTS.md](AGENTS.md) 判断平台和精确版本，再把对应规则装进当前对话。
 3. **干活**：查文档、生成代码、查崩溃、让它进游戏自己测——都是直接提问。涉及写文件、跑 Gradle、拷 jar、上传发布这类动作，它会先给你看清单再等你确认。
 
@@ -162,7 +162,7 @@ graph LR
 
 ## 多 IDE 支持
 
-另外,DSH的支持正在做(DSH看起来非常自由,我打算深度定制一下)
+另外,DSH的支持已经加上(DSH看起来非常自由,我打算深度定制一下)
 
 ```
 平台/版本/
@@ -171,7 +171,7 @@ graph LR
 ├── .continue/   → Continue.dev
 ├── .trae/       → Trae AI
 ├── .opencode/   → OpenCode（skills；规则读 AGENTS.md）
-├── .agents/     → Codex（skills；规则读 AGENTS.md）
+├── .agents/     → Codex / DSH（skills；规则读 AGENTS.md）
 ├── .zcode/      → ZCode（skills；规则读 AGENTS.md）
 └── .pi/         → Pi（rules/*.md）
 ```

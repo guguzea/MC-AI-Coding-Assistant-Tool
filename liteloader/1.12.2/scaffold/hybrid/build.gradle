@@ -40,7 +40,8 @@ minecraft {
 }
 
 repositories {
-    maven { url = 'https://files.minecraftforge.net/maven' }
+    // 旧域 files.minecraftforge.net/maven 已 301 到新主机；此处这是**工程依赖**仓库（与上面 buildscript 的插件仓库不同作用域，不是重复）
+    maven { url = 'https://maven.minecraftforge.net/' }
     // LiteLoader 本体（com.mumfrey:liteloader:1.12.2-SNAPSHOT）
     maven { url = 'http://repo.mumfrey.com/content/repositories/snapshots/' }
     // mixin 0.7.4-SNAPSHOT 只在上游 spongepowered 仓（LiteLoader versions.json 里声明的 url）
@@ -72,12 +73,15 @@ processResources {
     inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version
 
+    // 本 scaffold 的 resources 下只有 litemod.json（LiteLoader 侧元数据），没有 mcmod.info
+    // ⇒ 展开对象必须是 litemod.json，否则该 from{} 恒空（原写 include 'mcmod.info' 即此空操作）。
+    // mcmod.info 是可选的（Forge 侧靠 @Mod 注解发现，见 HYBRID.md「元数据」节）。
     from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
+        include 'litemod.json'
         expand 'version': project.version, 'mcversion': project.minecraft.version
     }
     from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
+        exclude 'litemod.json'
     }
 }
 

@@ -58,14 +58,30 @@ export interface DeepValidateInput {
 
 export interface ResolvedValidationJar {
   jarPath: string;
-  mapping?: "yarn" | "mojmap" | "official" | "unknown";
+  /**
+   * jar 的映射层。`intermediary` = 两步 yarn remap 的**中间件**
+   * （`minecraft-<v>-yarn-step1.jar`，official→intermediary），**不是**最终 yarn 层 ——
+   * 拿它按 Yarn 名核 AT/AW/Mixin 会得到假「成员不存在（可能是映射层不匹配）」。
+   */
+  mapping?: "yarn" | "mojmap" | "official" | "intermediary" | "unknown";
   /** 仅当显式传入的 jarPath 不存在时设置 */
   error?: string;
+}
+
+/**
+ * 两步 yarn remap 的中间产物（`java-pipeline.ts` 的 official→intermediary 腿，
+ * 与最终 `minecraft-<v>-yarn.jar` 并列写在 `remapped/`）。
+ * 文件名里带 `-yarn` ⇒ 只按子串判层会把它误标成 yarn 层。
+ */
+function isIntermediaryRemapArtifact(fileName: string): boolean {
+  return /-step1(?:\.|$)/i.test(fileName);
 }
 
 /** 从文件名推断映射层（T2 约定：minecraft-<version>-<mapping>.jar）。 */
 export function inferMappingFromName(jarPath: string): ResolvedValidationJar["mapping"] {
   const name = basename(jarPath).toLowerCase();
+  // D-2：step1 必须先判 —— 它同时含 "-yarn"，后判会被 "yarn" 吃掉。
+  if (isIntermediaryRemapArtifact(name)) return "intermediary";
   if (name.includes("-yarn")) return "yarn";
   if (name.includes("-mojmap")) return "mojmap";
   if (name.includes("-client")) return "official";
@@ -90,10 +106,15 @@ export function findCachedClientJar(version: string): ResolvedValidationJar | nu
   const root = resolveCacheRoot();
   const jars: Array<{ jarPath: string; mapping: ResolvedValidationJar["mapping"] }> = [];
 
+  // D-2：两步 yarn remap 的中间件 `minecraft-<v>-yarn-step1.jar`（intermediary 层）与最终
+  // `minecraft-<v>-yarn.jar` 并列在 remapped/，两件 rank 同为 0、versionIsExactSegment 同为真 ⇒
+  // 稳定排序保留 readdir 次序，step1 会胜出（实测）。**中间件不是任何一层可用名**（既非 yarn 也非
+  // mojmap），只能用它冒充 yarn 层去核 Yarn 名 ⇒ 一律不进候选；只剩中间件时报 CACHE_MISS（fail-closed），
+  // 好过拿它给出假「成员不存在」。
   const remappedFlat = join(root, "remapped");
   if (existsSync(remappedFlat)) {
     for (const f of readdirSync(remappedFlat)) {
-      if (f.endsWith(".jar") && versionSegmentMatch(f, version)) {
+      if (f.endsWith(".jar") && !isIntermediaryRemapArtifact(f) && versionSegmentMatch(f, version)) {
         jars.push({ jarPath: join(remappedFlat, f), mapping: inferMappingFromName(f) });
       }
     }
@@ -101,13 +122,15 @@ export function findCachedClientJar(version: string): ResolvedValidationJar | nu
   const remappedVer = join(root, "remapped", version);
   if (existsSync(remappedVer)) {
     for (const f of readdirSync(remappedVer)) {
-      if (f.endsWith(".jar")) jars.push({ jarPath: join(remappedVer, f), mapping: inferMappingFromName(f) });
+      if (f.endsWith(".jar") && !isIntermediaryRemapArtifact(f)) {
+        jars.push({ jarPath: join(remappedVer, f), mapping: inferMappingFromName(f) });
+      }
     }
   }
   const jarsDir = join(root, "jars");
   if (existsSync(jarsDir)) {
     for (const f of readdirSync(jarsDir)) {
-      if (f.endsWith(".jar") && versionSegmentMatch(f, version)) {
+      if (f.endsWith(".jar") && !isIntermediaryRemapArtifact(f) && versionSegmentMatch(f, version)) {
         jars.push({ jarPath: join(jarsDir, f), mapping: inferMappingFromName(f) });
       }
     }
@@ -124,7 +147,8 @@ export function findCachedClientJar(version: string): ResolvedValidationJar | nu
   // —— 真因是缓存缺 vanilla jar，应报 CACHE_MISS 而不是把脏结论当验证结果。
   // 这里显式判：vanilla 组为空 ⇒ 返回 null ⇒ 上层走 cacheMissActionable（CACHE_MISS）。
   if (!jars.some((j) => isVanillaClientJar(j.jarPath))) return null;
-  const rank: Record<string, number> = { yarn: 0, mojmap: 1, official: 2, unknown: 3 };
+  // intermediary 排在最后：候选已在收集阶段排除 step1，这条只是兜底（显式 jarPath 仍可带 intermediary）。
+  const rank: Record<string, number> = { yarn: 0, mojmap: 1, official: 2, unknown: 3, intermediary: 4 };
   jars.sort((a, b) => {
     const vanillaDiff = Number(isVanillaClientJar(b.jarPath)) - Number(isVanillaClientJar(a.jarPath));
     if (vanillaDiff !== 0) return vanillaDiff;

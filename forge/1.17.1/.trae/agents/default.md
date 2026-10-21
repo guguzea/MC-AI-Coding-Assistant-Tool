@@ -14,7 +14,7 @@
 | 注册模式 | `DeferredRegister`（推荐）/ `RegistryEvent.Register`（备选） |
 | Java 版本 | **Java 16**（本档语料 `gettingstarted.md:14`；官方 1.17.1-37.1.1 MDK `build.gradle:21` = `JavaLanguageVersion.of(16)`） |
 | Gradle | **Gradle 7.2 + ForgeGradle `5.1.+`**（本包 `scaffold/build.gradle:10` 与官方 1.17.1-37.1.1 MDK 同值；MDK `gradle-wrapper.properties:3` = `gradle-7.2-bin.zip`。「ForgeGradle 4.x」是 1.16.5 档的 scaffold 口径，不是本档） |
-| Mappings | **official**（`20210624.103621`） |
+| Mappings | **official**（`mapping_version=1.17.1`；`20210624.103621` 是 MCP snapshot 的时间戳，不是本档通道值 —— 见下同文差异表） |
 | 构建工具 | ForgeGradle（`build.gradle`） |
 
 ---
@@ -48,6 +48,7 @@ Decision: 本规则集是否适用？
 | Trae AI | `.trae/rules/*.mdc` + `.trae/skills/` |
 | OpenCode | `AGENTS.md` + `.opencode/skills/` |
 | Codex | `AGENTS.md` + `.agents/skills/` |
+| DSH | `AGENTS.md` + `.agents/skills/` |
 | ZCode | `AGENTS.md` + `.zcode/skills/` |
 | Pi | `.pi/rules/*.md`（+ `AGENTS.md`） |
 

@@ -86,7 +86,7 @@ In plain words (in case the diagram does not render):
 
 ## Three steps to start
 
-1. **Install it**: build it and wire it into your AI host following [AUTO_SETUP.md](AUTO_SETUP.md) (Cursor / Claude Code / VS Code / Continue / Trae / OpenCode / Codex, and others). Node.js 22.5 or newer is required.
+1. **Install it**: build it and wire it into your AI host following [AUTO_SETUP.md](AUTO_SETUP.md) (Cursor / Claude Code / VS Code / Continue / Trae / OpenCode / Codex / DSH, and others). Node.js 22.5 or newer is required.
 2. **Let it see your mod project**: open the project in your host. The agent identifies the platform and the exact version per [AGENTS.md](AGENTS.md), then loads the matching rule set into the conversation.
 3. **Ask for what you need**: look up docs, generate code, triage a crash, or let it playtest inside the game. Anything that writes files, runs Gradle, copies jars, or uploads a release is shown to you first and waits for your confirmation.
 
@@ -164,7 +164,7 @@ The whole toolset is also callable from a terminal or a script, with uniform JSO
 
 ## Multi-IDE support
 
-DSH support is in the works — it looks flexible enough that I want to customise it deeply.
+DSH support has landed — it looks flexible enough that I want to customise it deeply.
 
 ```
 platform/version/
@@ -173,7 +173,7 @@ platform/version/
 ├── .continue/   → Continue.dev
 ├── .trae/       → Trae AI
 ├── .opencode/   → OpenCode (skills; rules read from AGENTS.md)
-├── .agents/     → Codex (skills; rules read from AGENTS.md)
+├── .agents/     → Codex / DSH (skills; rules read from AGENTS.md)
 ├── .zcode/      → ZCode (skills; rules read from AGENTS.md)
 └── .pi/         → Pi (rules/*.md)
 ```

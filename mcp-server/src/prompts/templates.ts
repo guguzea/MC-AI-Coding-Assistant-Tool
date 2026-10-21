@@ -6,7 +6,7 @@ export const WORKFLOW_HITL =
   "【人在环】模组开发不是确定性流水线。创意设计、版本兼容取舍、API 选择、性能权衡、调试策略由用户决定。写盘、运行 Gradle、拷贝 jar、上传发布须用户确认后执行；Agent 给步骤与草稿，不代跑这些高风险操作。";
 
 /**
- * W5-3②（2026-09-20）：16 个工作流模板共用的「清单+确认」措辞单源。
+ * W5-3②（2026-09-20）：各工作流模板共用的「清单+确认」措辞单源（**条数不在此写死** —— 曾写「16 个」而模板数已增，属会腐烂的计数）。
  * 改前同一句话在 16 个 body 里逐字硬编码重复（改一次措辞要改 16 处）；现改引常量，
  * 渲染文本与改前**逐字相同**（纯去重，零行为变化）。
  */
@@ -19,7 +19,8 @@ export const WORKFLOW_ERA_GUARD =
 export const WORKFLOW_TEMPLATES: Record<string, { title: string; body: string }> = {
   "mc-new-block": {
     title: "新方块工作流",
-    body: `1. 确认平台与精确 MC 版本。从零工程：download_official_mdk（dryRun 先看；26.1.x/26.2 须选 buildPlugin）。已有工程不要下 MDK。
+    body: `${WORKFLOW_HITL}
+1. 确认平台与精确 MC 版本。从零工程：download_official_mdk（dryRun 先看；26.1.x/26.2 须选 buildPlugin）。已有工程不要下 MDK。
 2. 先 activate_platform_pack action=session（可 task=mc-new-block），用返回的 rules / skillBodies；禁止 Read 平台/<ver>/.cursor。不要默认 Forge 1.20：
    - Forge：DeferredRegister（该版规则）
    - NeoForge：该档 DeferredRegister / DeferredBlock / DeferredHolder；禁止 RegistryObject 冒充 1.20.4+ Neo；禁止 NeoForgeAddonPlugin
@@ -69,7 +70,8 @@ export const WORKFLOW_TEMPLATES: Record<string, { title: string; body: string }>
   },
   "mc-port-mod": {
     title: "移植模组",
-    body: `1. analyze_porting_path
+    body: `${WORKFLOW_HITL}
+1. analyze_porting_path
 2. 与用户确认 targetPlatform / targetVersion
 3. port_project dryRun=true 逐步执行
 4. get_migration_guide 查路线摘要`,
@@ -125,7 +127,7 @@ export const WORKFLOW_TEMPLATES: Record<string, { title: string; body: string }>
     title: "游戏内游玩测试（桥 / 无桥 driver / 意图会话 → 观察 → 回灌）",
     body: `${WORKFLOW_HITL}
 【适用】agent 写完模组代码后的"进游戏真跑"闭环：桥驱动真实玩家 → 观察（截图 / 查询）→ 判读 → 回灌修复。构建与装 jar 沿用 mc-ingame-iterate 1–3；执行权按根 AGENTS.md「人在环例外：游玩自测（三通道）」。
-1. 前置：确认平台 / 精确 MC 版本 / 授权实例路径；先跑 preflight（桥 jar + 依赖记账 sha256、端口、绑定地址、EULA）。
+1. 前置：确认平台 / 精确 MC 版本 / 授权实例路径；先按 **preflight 清单**逐项自查（桥 jar + 依赖记账 sha256、端口、绑定地址、EULA —— 这是**人工步骤清单**，不是工具名；清单见仓库根 README.md 的桥装配段与 community_knowledge/authored/ingame-playtest-automation.md）。
 2. 驱动：playtest_bridge 只连 127.0.0.1（桥无鉴权 + 通配绑定，勿外网暴露）；用 /status 的 ready 等"已进世界"；动作序列由 generate_playtest_driver（driverMode=external_bridge）产出；复合动作用 batch + delay；"等条件成立"用 action=await（桥无 wait_until；超时映射 PLAYTEST_TIMEOUT，不得塌成"没失败"）。
 2b. 无桥路线（桥不覆盖的档）：generate_playtest_driver 出进程内 driver —— temporary_client_tick_driver（确定性剧本 + plan.txt 热载）或 in_jvm_player_agent（意图会话：agent 用 playtest_intent write/read 经 <evidenceDir>/intent.json 邮箱逐条下意图，失败按 nextSteps 换意图；真执行器限已验证档）。三条路线的逐步教程见仓库根 README「后半 loop 教程」；口径与坑位见 community_knowledge/authored/ingame-playtest-automation.md。
 3. 观察：screenshot 落 screenshots/blackboxpro/<player>/<testId>/ + query_* 快照 + calls.jsonl；判读用"两遍法"（先看改动方向，再整帧像玩家一样读）；跨查询非原子 ⇒ 断言只认条件，不认两条读数相等。
@@ -218,7 +220,8 @@ Java 前置：本机需 Java 17+（Temurin/Adoptium https://adoptium.net/temurin
   },
   "mc-config": {
     title: "配置工作流",
-    body: `${WORKFLOW_ERA_GUARD}
+    body: `${WORKFLOW_HITL}
+${WORKFLOW_ERA_GUARD}
 1. 确认平台与版本。generate_config 的 loader 与 version 必填。树级不要新写 mc-config Skill：读 knowledge/libs/all-platforms/mc-config/SKILL.md。
 2. 分支：
    - Forge：ForgeConfigSpec
@@ -230,7 +233,8 @@ Java 前置：本机需 Java 17+（Temurin/Adoptium https://adoptium.net/temurin
   },
   "mc-gametest": {
     title: "GameTest 工作流",
-    body: `${WORKFLOW_ERA_GUARD}
+    body: `${WORKFLOW_HITL}
+${WORKFLOW_ERA_GUARD}
 1. 确认平台与 MC 版本。GameTest 不是所有加载器都有同一套 API。LiteLoader / Rift / ModLoader / 基岩无现代 GameTest：停止，不要吐 @GameTest / generate_datagen 测试骨架。
 2. Forge/NeoForge：先 activate_platform_pack action=session（可 task=mc-gametest），用返回的 rules / skillBodies；禁止 Read 平台/<ver>/.cursor。再用 search_*_docs 核类名，禁止默记 1.20.1。
 3. Fabric：Fabric GameTest / 该版 wiki；核不到则 stub，不要编 Forge GameTest。
@@ -381,7 +385,8 @@ Java 前置：本机需 Java 17+（Temurin/Adoptium https://adoptium.net/temurin
   },
   "mc-setup-env": {
     title: "开发环境搭建",
-    body: `1. detect_mod_project 确定平台和版本。不要默认 Forge 1.20.1。
+    body: `${WORKFLOW_HITL}
+1. detect_mod_project 确定平台和版本。不要默认 Forge 1.20.1。
 2. Forge/NeoForge：download_official_mdk（dryRun）拿推荐 JDK / Gradle / mappings；对照 gradle.properties、build.gradle 与规则 00。
 3. Fabric/Quilt：对照 fabric.mod.json / quilt.mod.json 与 gradle.properties 的 Loom、Yarn/Mojmap、Java toolchain。26.1 用 implementation，不要 modImplementation。
 4. 输出：建议 JDK、runClient/runServer、映射选择、gradle.properties 修正清单。

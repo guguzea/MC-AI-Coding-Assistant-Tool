@@ -1,19 +1,19 @@
 # LiteLoader 1.12.2 — Agent 总纲
 
-纯客户端加载器。纯净工程**没有 Gradle**（`scaffold/pure`）；只有混合 `liteloader_forge` 才有 Gradle。**不要**把 Forge `RegistryEvent` 改名交差。
+以客户端为主的加载器；源码另有 dedicated-server 通道（`LiteLoaderTweakerServer` / `ServerPluginChannels`），但服务端权限面是上游半成品（`PermissionsManagerServer` 空实现），本仓不为它出服务端脚手架。纯净工程**没有 Gradle**（`scaffold/pure`）；只有混合 `liteloader_forge` 才有 Gradle。**不要**把 Forge `RegistryEvent` 改名交差。
 
 ## 两套入口
 
 | 判定 | 读什么 |
 |------|--------|
 | 有 litemod.json / LiteMod，**无** javafml / @Mod | 只读本目录 |
-| 两边都有，且 `apply plugin: 'net.minecraftforge.gradle.liteloader'` | 先读 [HYBRID.md](HYBRID.md)，再读 `forge/1.12.2` 的 01–03 + 本目录 05/08 |
-| 分别 apply 标准 Forge 插件 **和** 另一个 LiteLoader 插件 | **拒绝**生成构建文件 |
-| 两边元数据都在但无该专用插件 | **询问用户**，禁止默默当 Forge |
+| 两边都有（`litemod.json` / `LiteMod` 且 `javafml` / `@Mod`） | 先读 [HYBRID.md](HYBRID.md)，再读 `forge/1.12.2` 的 01–03 + 本目录 05/08 |
+| 分别 apply 标准 Forge 插件 **和** `net.minecraftforge.gradle.liteloader` | **拒绝**生成构建文件（该插件不含 Forge；混合配方见 HYBRID.md） |
+| 两边元数据都在但构建脚本无法判断 | **询问用户**，禁止默默当 Forge |
 
 Java 8。映射：混合工程钉 `mappings = 'stable_39'`（社区 1.12.2 常见兼容值，来自当时 FG/LiteLoader 文档，不要臆造 snapshot）。
 
-已核实 API（hempflower 镜像 / LiteMod 源码 + GitLab 1.12.2 打开）：
+已核实 API（GitLab 1.12.2 分支 + 真构件 javap；见 `knowledge/common/verified-api.md`）：
 
 - `LiteMod`: `getVersion()`, `init(File)`, `upgradeSettings(...)`
 - `Listener.getName()`
@@ -32,6 +32,7 @@ Java 8。映射：混合工程钉 `mappings = 'stable_39'`（社区 1.12.2 常�
 |---------|---------|
 | Cursor | `.cursor/rules/*.mdc` + `.cursor/skills/` |
 | OpenCode / Codex / ZCode | `AGENTS.md` |
+| DSH | `AGENTS.md` + `.agents/skills/` |
 | Pi | `.pi/rules/*.md`（+ `AGENTS.md`） |
 
 当上述路径不存在时，降级读取本文件和 `.cursor/`。

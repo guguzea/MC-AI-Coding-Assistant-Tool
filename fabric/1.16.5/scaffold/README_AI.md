@@ -222,7 +222,7 @@ MinecraftClient client = MinecraftClient.getInstance();
 }
 ```
 
-- 1.16.5 的依赖键是 **`fabric`**，不是 1.17+ 的 `fabric-api`（本档 `fabric.mod.json:23` 现状）。
+- 1.16.5 的依赖键是 **`fabric`**，不是 1.18.2 起（`fabric-api` ≥0.59.1）的 `fabric-api`（本档 `fabric.mod.json:23` 现状）。
 - `java` 是 `>=8`，与 `build.gradle` 的 `release = 8` 和 `mixins.json` 的 `JAVA_8` 对齐。
 - `${...}` 由 `build.gradle:46-64` 的 `processResources { filesMatching(...) { expand ... } }` 在构建期替换；该 glob 现含 `fabric.mod.json`、`pack.mcmeta`、**`examplemod.mixins.json`** 三件 —— 少了第三件的话 `examplemod.mixins.json:4` 的 `"package": "${maven_group}.${mod_id}.mixin"` 不会被展开，Mixin 运行期按字面量找包，两个 mixin 全部失效。
 - 手工预览展开结果：`./gradlew processResources` 后读 `build/resources/main/` 下同名文件，而不是直接改展开后的产物。

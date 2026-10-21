@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-10-15T03:29:29.627Z",
+  "built_at": "2026-10-21T02:12:56.367Z",
   "embedMode": "hybrid",
   "entries": [
     {
@@ -679,60 +679,60 @@
       "version": "1.18.2",
       "source": "quilt-docs",
       "path": "quilt_1.18.2/quilt-docs/1.18.2/semantic/db.sqlite",
-      "chunks": 297,
-      "embedded": 223,
-      "built_at": "2026-09-21T03:57:18.731Z",
+      "chunks": 298,
+      "embedded": 224,
+      "built_at": "2026-10-21T02:12:21.646Z",
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
-      "sha256": "82ff4623a77841d5140355906747f32d352424f233d94fe5d87c160cf7fab1b6"
+      "sha256": "477f49f72e2ad17fa368878046a711e314980c1ff5d49fb6c61abc8f90406261"
     },
     {
       "platform": "quilt",
       "version": "1.19.4",
       "source": "quilt-docs",
       "path": "quilt_1.19.4/quilt-docs/1.19.4/semantic/db.sqlite",
-      "chunks": 297,
-      "embedded": 225,
-      "built_at": "2026-09-21T03:57:29.496Z",
+      "chunks": 298,
+      "embedded": 226,
+      "built_at": "2026-10-21T02:12:29.543Z",
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
-      "sha256": "76ceabc3de1b00fd0f4052f6c6df54b5837a9f37d3a2cacffcd41b7386901037"
+      "sha256": "03a825bd6612f566056dfa8bc33790f7f3f056596a3413f11725db7918e549e4"
     },
     {
       "platform": "quilt",
       "version": "1.20.1",
       "source": "quilt-docs",
       "path": "quilt_1.20.1/quilt-docs/1.20.1/semantic/db.sqlite",
-      "chunks": 297,
-      "embedded": 225,
-      "built_at": "2026-09-21T03:57:39.573Z",
+      "chunks": 298,
+      "embedded": 226,
+      "built_at": "2026-10-21T02:12:38.364Z",
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
-      "sha256": "b7cd528c54b375f85ffe164de3dbd60276509a1474badb7c5cbc4d5c145e85fe"
+      "sha256": "b74fe4833e4006360ab0bac6682b0415d5b55c8bea4cee299ad73345a43176fb"
     },
     {
       "platform": "quilt",
       "version": "1.20.4",
       "source": "quilt-docs",
       "path": "quilt_1.20.4/quilt-docs/1.20.4/semantic/db.sqlite",
-      "chunks": 297,
-      "embedded": 225,
-      "built_at": "2026-09-21T03:57:51.136Z",
+      "chunks": 298,
+      "embedded": 226,
+      "built_at": "2026-10-21T02:12:47.980Z",
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
-      "sha256": "4c8b5facd58d1dab6d127df9153515041d432967a57d0211906b148962cce994"
+      "sha256": "ea89864f4eb4bff88175778adb2901c8a92131d16ea7ccf110576eca77106f6b"
     },
     {
       "platform": "quilt",
       "version": "1.21.1",
       "source": "quilt-docs",
       "path": "quilt_1.21.1/quilt-docs/1.21.1/semantic/db.sqlite",
-      "chunks": 300,
-      "embedded": 227,
-      "built_at": "2026-09-21T03:58:06.790Z",
+      "chunks": 302,
+      "embedded": 229,
+      "built_at": "2026-10-21T02:11:54.089Z",
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
-      "sha256": "b7e78b5ea621b9a24a3b22f4748cd2bc24538368931fc3034f07234800d7e798"
+      "sha256": "82ff6c25b5f256f865a51ea200588c104ecbbab99385e2081822025eac2aa746"
     },
     {
       "platform": "quilt",
@@ -741,10 +741,10 @@
       "path": "quilt_1.21.11/quilt-docs/1.21.11/semantic/db.sqlite",
       "chunks": 296,
       "embedded": 224,
-      "built_at": "2026-09-21T03:58:19.090Z",
+      "built_at": "2026-10-21T02:12:56.337Z",
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
-      "sha256": "75740031329a19bbf028488ac4144dec0f4690b4412a5894fb6c69b7054cb883"
+      "sha256": "46054ea79aaead5f95c90b12de7d09ab73fb9e4ffc0be5f71d26bf240b33b562"
     },
     {
       "platform": "rift",

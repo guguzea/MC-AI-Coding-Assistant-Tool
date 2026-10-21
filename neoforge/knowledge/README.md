@@ -45,8 +45,7 @@ knowledge/
 │   ├── 02-version-migration.md
 │   └── 03-real-world-examples.md
 └── version-changes/                # 版本变更记录
-    ├── 1.20.x.md
-    └── 1.19.x.md
+    └── 1.20.x.md
 ```
 
 ## 使用方式
@@ -64,7 +63,7 @@ knowledge/
 | 事件不触发 | `antipatterns/events.md` |
 | 客户端/服务端数据不同步 | `antipatterns/networking.md` |
 | Gradle 构建错误 | `antipatterns/gradle.md` |
-| 从旧版迁移 | `version-changes/1.19.x.md` |
+| 从旧版迁移 | `version-changes/1.20.x.md` |
 | 跨平台移植 | `porting/00-porting-guide.md` |
 
 ## 阶段里程碑

@@ -61,7 +61,7 @@ mod_description=Example mod description.\nAdd lines as needed.
 
 | 项目 | Forge 1.20.1 | NeoForge 1.20.4 |
 |------|---------------|------------------|
-| 元数据文件 | `mods.toml` | `neoforge.mods.toml` |
+| 元数据文件 | `mods.toml` | 1.20.4 = `mods.toml`；1.20.6+ = `neoforge.mods.toml` |
 | 入口模式 | `@Mod` 注解类 | `@Mod` + 构造注入 `IEventBus`（禁止 `BuildPlugin` + `init(IEventBus)`） |
 | 包名空间 | `net.minecraftforge` | `net.neoforged` |
 | 事件总线 | `MinecraftForge.EVENT_BUS` | `NeoForge.EVENT_BUS` |
@@ -112,7 +112,7 @@ public static final DeferredHolder<Item, Item> MY_ITEM = ITEMS.register("my_item
 ```java
 // 在 DeferredRegister 声明区域添加：
 public static final DeferredRegister<EntityType<?>> ENTITY_TYPES =
-    DeferredRegister.create(NeoForgeRegistries.ENTITY_TYPES, MOD_ID);
+    DeferredRegister.create(net.minecraft.core.registries.Registries.ENTITY_TYPE, MOD_ID);
 
 // 注册实体类型
 public static final DeferredHolder<EntityType<?>, EntityType<MyEntity>> MY_ENTITY = ENTITY_TYPES.register("my_entity",
@@ -139,7 +139,7 @@ public class MyBlock extends Block implements EntityBlock {
 
 // 注册方块实体类型
 public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES =
-    DeferredRegister.create(NeoForgeRegistries.BLOCK_ENTITY_TYPES, MOD_ID);
+    DeferredRegister.create(net.minecraft.core.registries.Registries.BLOCK_ENTITY_TYPE, MOD_ID);
 ```
 
 ---
@@ -225,7 +225,7 @@ description='''多行描述'''  # 模组描述
 
 [[dependencies.${mod_id}]]
 modId="neoforge"               # 必须依赖 NeoForge
-mandatory=true              # 是否强制依赖
+type="required"             # 依赖类型：required / optional / incompatible
 versionRange="${neoforge_version_range}"
 ordering="NONE"             # 加载顺序：NONE / BEFORE / AFTER
 side="BOTH"                 # 加载侧：BOTH / CLIENT / SERVER

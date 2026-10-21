@@ -4,7 +4,7 @@
 
 - **抓取日**：
 - **源**：`data/quilt_<ver>/quilt-docs/<ver>/processed/qsl-readme.md`（QSL README）+ wiki 概念页 `qsl-qfapi`（该 wiki 为 SPA，入库正文可能只有导航壳，**方法名以 README 图表为准**）
-- ⚠️ **F115（实测；用户裁定路线 A 同步）**：上面这个「源」目录就是**语料侧副本**——`data/quilt_1.21.1/quilt-docs/1.21.1/processed/qsl-verified.md` 由 `scripts/index-qsl-verified.mjs` 从本文件机械复制（emitCopy，0 手改）。此前副本曾滞留本文件 `:3` 已撤回的旧断言（「QSL 已于 2025-12 停更」/ `11.0.0-alpha.3+0.102.0-1.21`），检索命中会把它当正文端出；**已按路线 A 用生成器全量刷新**：6 档 processed 与各自源稿逐字节一致，虚构横幅不再出现在任何 snippet / get_doc_full。语料按「上游原样」原则不改写——本文件是唯一编辑真值，data 侧副本只准由生成器刷新；新增断言先改这里再跑生成器。
+- ⚠️ **F115（实测；用户裁定路线 A 同步）**：上面这个「源」目录就是**语料侧副本**——`data/quilt_1.21.1/quilt-docs/1.21.1/processed/qsl-verified.md` 由 `scripts/index-qsl-verified.mjs` 从本文件机械复制（emitCopy，0 手改）。此前副本曾滞留本文件 `:3` 已撤回的旧断言（「QSL 已于 2025-12 停更」/ `11.0.0-alpha.3+0.102.0-1.21`），检索命中会把它当正文端出；**已按路线 A 用生成器全量刷新**：6 档 processed 与各自源稿逐字节一致。⚠️ 措辞更正（勿再读成「横幅已消失」）：该页 **仍含**「QSL 已于 2025-12 停更」与 `11.0.0-alpha.3` 字样（语料受「上游原样」保护、不改写），但同句已带 `// TODO(未核实)` 撤回标记、不作依据 ⇒ 只当背景。语料按「上游原样」原则不改写——本文件是唯一编辑真值，data 侧副本只准由生成器刷新；新增断言先改这里再跑生成器。
 - **禁止**编 `QuiltRegistry.register()`。
 - **02–10 仍读** `fabric/<同一 MC 版本>`。本表不是完整模组教程。本计划不写 Quilt 26.x。
 

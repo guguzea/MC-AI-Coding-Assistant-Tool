@@ -1,6 +1,6 @@
 {
   "name": "examplehybrid",
-  "version": "1.0.0",
-  "mcversion": "1.12.2",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
   "revision": 1
 }

@@ -9,13 +9,32 @@
  *   - `assert-rules-match-tool.mjs` 是 **quilt 专属**（自印「90 个 quilt 源文件 / 10 档 quilt」）。
  * ⇒ 本面 11 个文件的「出处纪律」此前**无人守护**（改错一个 `文件:行` 不会有任何门报警）。
  *
- * ## 判据（四正一毒，全部机械可检）
+ * ## 判据（四正三补，全部机械可检）
  * ① **出处可解析**：每个 `<name>.md:<line>` 的 `<name>` 必须能在三个语料面里找到同名文件
  *    —— 解析不到 = 编造嫌疑（**这是本门存在的首要理由**）。
  * ② **行号在界内**：`1 ≤ start ≤ end ≤ 文件行数`。
  * ③ **不是空行**：被引的每一行都要有内容（指向空气行 = 出处失效）。
  * ④ **每篇必须有「未核实」段**：本面的写作纪律是"语料证不出的明写未核实"；
  *    缺这一段说明作者没做区分，**判红**（不是风格问题，是可追溯性问题）。
+ *
+ * ## 三条补腿（2026-10-21 补；对应审查 F-13 的「出处门盲区」）
+ * 首版的文法 `CITE_RE` **只收 `<name>.md:<line>`**。实测本面另有 **141 处裸行号**
+ * （表格里写 `:29`、正文里写 "见 ```:147-164```"）与 **23 处只写文件名**的提法
+ * —— 它们**内容可以全对，但改错不会有任何门报警**（2026-10-20 审查已把这条立成 P2）。
+ * 补腿之后判据是：
+ * ⑤ **裸行号要能解析**：`:NN` / `:NN-MM` 按**两段式**解析 —— 先取**同一小节内**最近出现的
+ *    语料文件名（标题行重置），本节没有则退到**全文**最近的那一个；解析不到 / 越界 /
+ *    **起行是空行** 三者任一即红。⚠ 起行判空是**刻意只判起行**：多段落区间天然跨空行，
+ *    若照 ③ 的全行判空会逼作者把语义区间改写成"紧贴的非空行"，那是改内容迁就门。
+ *    投毒自证里"裸行号指向空行必红"这一臂钉的就是起行。
+ * ⑥ **自引要显式**：`本文件:NN` 是**指向本篇规则文件自身**的引法（不是语料件）；
+ *    行号对本篇正文核（越界/起行空同样判红）。**裸行号不许用来做自引** —— 否则
+ *    "同一个 `:55` 到底是语料第 55 行还是本篇第 55 行"永远说不清，两段式解析也会把它
+ *    静默算进语料（那是**假绿**，比漏检更糟）。
+ * ⑦ **只写文件名也得解析得到**：行内每个 `.md` 提法要么落在三个语料面，要么是本档
+ *    同级规则件（`paper/<ver>/rules/*.md`，即兄弟篇互指）；两者都不是 ⇒ 编造文件名。
+ * ⚠ **围栏代码块不参与 ⑤⑥⑦**：``` 里的 `:1` 是 JSON 的 `"height":1`，
+ *    扫进来会造出假红（2026-10-21 实测 `09-traps.md:352` 就是这么被误报的）。
  *
  * ## 缺件降级（照本仓既定范式）
  * 语料面是**可选数据包**（`data/` 不进 git）⇒ 缺面默认**降级并吼**、`--require` fail-closed（rc=2）。
@@ -49,6 +68,32 @@ export const CORPUS_FACES = [
  * 而误报"解析不到"（2026-10-15 实测）。
  */
 export const CITE_RE = /([A-Za-z0-9_-]+\.md):(\d+)(?:-(\d+))?/g;
+/**
+ * **只写文件名**（不带行号）的提法。与 `CITE_RE` 的差别只看「后面有没有 `:行号`」。
+ *
+ * ⚠ 左边界排除 `[A-Za-z0-9_.\/-]`：否则 `a@1.2.3/x.md` 会被切出中间段，
+ *   右边界排除 `[A-Za-z0-9_-]`：否则 `net.md-5` 会被截成 `net.md`（实测踩到）。
+ */
+export const NAME_RE = /(?<![A-Za-z0-9_.\/-])([A-Za-z0-9_-]+\.md)(?![A-Za-z0-9_-])/g;
+/**
+ * **裸行号** `:NN` / `:NN-MM`（前面没有紧跟文件名）。
+ *
+ * 左边界把 `:` 也排除掉，免得 `:::` 这种告示牌语法被当成行号；后面的否定环视排除
+ * `[A-Za-z0-9_.\/-]` 是为了不咬进 `12:34` 这种时间戳与 URL 端口。
+ */
+export const BARE_REF_RE = /(?<![A-Za-z0-9_.\/:\/-]):(\d+)(?:-(\d+))?/g;
+/**
+ * **自引** `本文件:NN` / `本文件:NN-MM`（指向本篇规则文件自己，不是语料件）。
+ *
+ * 为什么单开一条：裸行号与自引在字面上无法区分（都是 `:55`），而两者的**判定对象
+ * 完全不同**（语料件 vs 本篇正文）。若允许裸行号做自引，两段式解析会把它静默算进
+ * 语料 —— 那是**假绿**。故自引必须显式写 `本文件:`，裸行号一律按语料解释。
+ */
+export const SELF_REF_RE = /本文件\s*:\s*(\d+)(?:-(\d+))?/g;
+/**
+ * 自引也可以写成 `本文件 :NN`（中间带空格）—— `SELF_REF_RE` 的 `\s*:` 已容忍；
+ * 这里再容忍 `本文件` 与 `:` 之间夹一个空格且冒号后带空格的形态（写作习惯差异）。
+ */
 /**
  * 每篇必须有的「未核实」**小节**（写作纪律的可检形式）。
  *
@@ -95,6 +140,22 @@ export function buildCorpusIndex(dataRoot = DATA) {
 }
 
 /**
+ * 取「同档兄弟规则件」的文件名集合（`paper/<ver>/rules/*.md`）。
+ *
+ * 用途 = 判据 ⑦ 的第二条腿：规则之间**互相点名**是合法引用形态（`见 `04-permissions.md` 的…`），
+ * 它们本来就不该出现在语料面里。若不认这一态，每一条兄弟互指都会被判成「编造文件名」。
+ * 只收**同一档**（同一个 `rules/` 目录），不收别的档 —— 跨档点名在服务端面没有先例。
+ */
+export function collectSiblingRuleNames(abs) {
+  const dir = dirname(abs);
+  if (!existsSync(dir)) return [];
+  return readdirSync(dir, { withFileTypes: true })
+    .filter((f) => f.isFile() && f.name.endsWith(".md"))
+    .map((f) => f.name)
+    .sort();
+}
+
+/**
  * 解析一处出处引用 → 候选列表。
  * 规则：**精确名优先**；无精确则按**后缀**匹配（`PluginManager.md` ⇒ `…_PluginManager.md`）。
  */
@@ -105,7 +166,49 @@ export function resolveCite(name, corpus) {
 }
 
 /**
- * 判一篇规则文件的四条件。
+ * 切出「参与引用判定」的行：返回 `[{no, text, inFence}]`。
+ *
+ * ⚠ **围栏代码块里的内容一律不判引用**（`inFence=true`）。理由不是"偷懒"，是**实测**：
+ * `09-traps.md:352` 的 `generator-settings` JSON 里有 `"height":1`，不排除的话
+ * `BARE_REF_RE` 会把它读成"裸行号 `:1`"，再去本节最近的文件名（`api__pdc.md`）里找
+ * 第 1 行 —— 那是**假红**。围栏里的东西是**被引原文**，不是引用本身。
+ *
+ * 围栏判定按 CommonMark 的 ``` 与 ~~~ 两种；闭合行本身也标 `inFence`（对齐常见渲染器）。
+ */
+export function splitJudgeLines(text) {
+  const raw = text.split(/\r?\n/);
+  const out = [];
+  let fence = false;
+  for (let i = 0; i < raw.length; i++) {
+    const line = raw[i];
+    const isFenceMark = /^\s*(```|~~~)/.test(line);
+    if (isFenceMark) {
+      out.push({ no: i + 1, text: line, inFence: true });
+      fence = !fence;
+      continue;
+    }
+    out.push({ no: i + 1, text: line, inFence: fence });
+  }
+  return out;
+}
+
+/**
+ * 判一处 `:start[-end]` 在某个候选件里成不成立。
+ * @returns {string|null} null = 成立；否则是**为什么红**（用于拼理由，可自查）。
+ *
+ * ⚠ **只判起行是否为空**（不是判每一行）：多段落区间（如 `getting-started__plugin-yml.md:137-153`
+ * 覆盖 `### permissions` 到下一小节）**天然跨空行** —— 照判据 ③ 的全行判空会逼作者
+ * 把语义正确的区间改写成"紧贴的非空行"，那是**改内容迁就门**。起行非空才是"这条指针
+ * 真的落在东西上"的必要条件；③ 仍按全行判空（显式 `文件:行` 是强声明，标准更严）。
+ */
+function judgeRange(lines, start, end) {
+  if (start < 1 || end < start || end > lines.length) return "越界(共" + lines.length + "行)";
+  if (!String(lines[start - 1] ?? "").trim()) return "起行是空行";
+  return null;
+}
+
+/**
+ * 判一篇规则文件的四条件 + 三条补腿。
  * @returns {string[]} problems（空数组 = 通过）
  */
 export function judgeRuleFile({ file, abs }, corpus) {
@@ -170,6 +273,94 @@ export function judgeRuleFile({ file, abs }, corpus) {
       problems.push(`${file}: 出处 \`${key}\` 在任何候选面里都不成立 —— ${cands.length} 个候选：${detail.join(" / ")}`);
     }
   }
+
+  // ⑤⑥⑦ 三条补腿（2026-10-21）：裸行号 / 自引 / 只写文件名。
+  // 全部只在**非围栏行**上跑 —— 围栏里是被引原文，不是引用（见 splitJudgeLines 的注释）。
+  const judgeLines = splitJudgeLines(text);
+  const rulesSiblings = new Set(collectSiblingRuleNames(abs));
+  // ⑤ 的两段式上下文：小节内最近文件名 → 全文最近文件名。
+  let secCtx = null; // 本节内最近出现的语料文件名（遇标题重置）
+  let docCtx = null; // 全文最近出现的语料文件名（不重置，作为本节没提时的兜底）
+  for (const { no, text: line, inFence } of judgeLines) {
+    if (inFence) continue;
+    // 标题行重置「本节」上下文（但不动 docCtx）
+    if (/^#{1,6}\s/.test(line)) secCtx = null;
+
+    // 先把本行所有 token 按列位置排好，才能让「行内先后」决定上下文继承顺序。
+    //
+    // ⚠ **自引的行号段必须先"吃掉"**，否则 `本文件 :99-169` 里的 `:99-169`
+    //    会同时被 `SELF_REF_RE` 与 `BARE_REF_RE` 匹配到 ⇒ 同一条引用被判两次：
+    //    一次按自引（对、绿）、一次按裸行号继承语料（错、红）—— 那是**假红**
+    //    （2026-10-21 实测：`07-pdc.md:97` 就是这么报出来的）。
+    //    规则：**自引区间内的裸行号一律跳过**（它已经被更具体的文法消费了）。
+    const selfSpans = [];
+    for (const m of line.matchAll(SELF_REF_RE)) {
+      selfSpans.push([m.index, m.index + m[0].length]);
+    }
+    const inSelfSpan = (i) => selfSpans.some(([a, b]) => i >= a && i < b);
+
+    const evts = [];
+    for (const m of line.matchAll(NAME_RE)) evts.push({ kind: "name", idx: m.index, name: m[1] });
+    for (const m of line.matchAll(SELF_REF_RE)) evts.push({ kind: "self", idx: m.index, s: Number(m[1]), e: m[2] ? Number(m[2]) : Number(m[1]) });
+    for (const m of line.matchAll(BARE_REF_RE)) {
+      if (inSelfSpan(m.index)) continue;
+      evts.push({ kind: "bare", idx: m.index, raw: m[0], s: Number(m[1]), e: m[2] ? Number(m[2]) : Number(m[1]) });
+    }
+    evts.sort((a, b) => a.idx - b.idx);
+
+    for (const e of evts) {
+      if (e.kind === "name") {
+        // ⑦ 只写文件名：要么是语料件，要么是同档兄弟规则件
+        const isCorpus = resolveCite(e.name, corpus).length > 0;
+        const isSibling = rulesSiblings.has(e.name);
+        if (!isCorpus && !isSibling) {
+          problems.push(
+            `${file}:${no}: 文件名 \`${e.name}\` 解析不到 —— 三个语料面里没有它（含后缀匹配），也不是同档兄弟规则件（编造文件名嫌疑）`,
+          );
+          continue;
+        }
+        // 兄弟规则件不做语料上下文（它是本档内部互指，不是语料出处）
+        if (isCorpus) {
+          secCtx = e.name;
+          docCtx = e.name;
+        }
+        continue;
+      }
+
+      if (e.kind === "self") {
+        // ⑥ 自引：行号对**本篇正文**核
+        const bad = judgeRange(lines, e.s, e.e);
+        if (bad) problems.push(`${file}:${no}: 自引 \`本文件:${e.s}${e.e !== e.s ? "-" + e.e : ""}\` ${bad} —— 自引的行号必须落在本篇正文的非空行上`);
+        continue;
+      }
+
+      // ⑤ 裸行号：两段式解析
+      const ctx = secCtx ?? docCtx;
+      if (!ctx) {
+        problems.push(
+          `${file}:${no}: 裸行号 \`${e.raw}\` 前面（本节与全文）都没有语料文件名可继承 —— 出处无从解析；请写成 \`<文件名>.md:${e.s}\`，指向本篇自身则写 \`本文件:${e.s}\``,
+        );
+        continue;
+      }
+      const cands = resolveCite(ctx, corpus);
+      const detail = [];
+      let ok = false;
+      for (const c of cands) {
+        const bad = judgeRange(readFileSync(c.abs, "utf8").split(/\r?\n/), e.s, e.e);
+        if (bad) {
+          detail.push(`${c.face}:${bad}`);
+          continue;
+        }
+        ok = true;
+        break;
+      }
+      if (!ok) {
+        problems.push(
+          `${file}:${no}: 裸行号 \`${e.raw}\` 继承的 \`${ctx}\` 不成立 —— ${detail.join(" / ")}（裸行号按「本节内最近文件名 → 全文最近文件名」继承；也可直接写全 \`<文件名>.md:${e.s}\`）`,
+        );
+      }
+    }
+  }
   return problems;
 }
 
@@ -205,6 +396,21 @@ if (SELFTEST) {
       // 2026-10-15 用户指出判据太弱后补的两例：词在但无标题 / 有标题但空段
       ["06-word-only.md", "# x\n出处 FakeClass.md:5\n\n本档某处未核实。\n", 1, "只在行文里提该词（无标题）应红"],
       ["07-empty-section.md", "# x\n出处 FakeClass.md:5\n\n## 未核实\n\n", 1, "有「未核实」标题但一条都没有应红"],
+      // ── 2026-10-21 补腿 ⑤⑥⑦ 的自证臂（对应审查 F-13「出处门盲区」）──────────────
+      // ⑤ 裸行号：本节内继承最近文件名，解析不到 / 越界 / 起行空 都算红。
+      ["08-bare-ok.md", `# x\n出处 FakeClass.md 的 \`:5\`${OK_SECTION}`, 0, "裸行号继承本节文件名应绿"],
+      ["09-bare-blank.md", `# x\n出处 FakeClass.md 的 \`:6\`${OK_SECTION}`, 1, "裸行号指向空行应红"],
+      ["10-bare-noctx.md", `# x\n出处见 \`:5\`${OK_SECTION}`, 1, "裸行号前无任何文件名应红"],
+      ["11-bare-oor.md", `# x\n出处 FakeClass.md 的 \`:99\`${OK_SECTION}`, 1, "裸行号越界应红"],
+      ["12-bare-docfallback.md", `# a\n出处 FakeClass.md:5\n\n## b\n裸 \`:5\`\n${OK_SECTION}`, 0, "本节没提文件名时退到全文最近（两段式第二段）应绿"],
+      // ⑦ 只写文件名：语料件可，兄弟规则件可，其余红。
+      ["13-sibling-ok.md", `# x\n见 \`01-ok.md\` 的写法${OK_SECTION}`, 0, "指同档兄弟规则件应绿"],
+      ["14-name-ghost.md", `# x\n见 \`NoSuchPage.md\`${OK_SECTION}`, 1, "指向既非语料也非兄弟的文件名应红"],
+      // ⑥ 自引：行号对本篇正文核。
+      ["15-self-ok.md", `# x\n出处 FakeClass.md:5\n\n自引 本文件:2\n${OK_SECTION}`, 0, "自引落在本篇非空行应绿"],
+      ["16-self-oor.md", `# x\n出处 FakeClass.md:5\n\n自引 本文件:99\n${OK_SECTION}`, 1, "自引越界应红"],
+      // 围栏不参与判引用：JSON 的 \`"height":1\` 不是裸行号。
+      ["17-fence-not-a-ref.md", `# x\n出处 FakeClass.md:5\n\n\`\`\`\n{"height":1}\n\`\`\`\n${OK_SECTION}`, 0, "围栏代码块里的 \`:1\` 不算裸行号（防假红）"],
     ];
     let bad = 0;
     let poisons = 0;

@@ -54,7 +54,7 @@
     "firstParagraph": "- search_docs({platform:\"quilt\", version:\"1.21.11\"})：`data/quilt_1.21.11` 已入库（quilt-docs/1.21.11 + L0–L2）。 - **禁止**编 `QuiltRegistry.register()`。 - **02–10 仍读** `fabric/1.21.11`。",
     "sections": [],
     "source": "quilt-docs",
-    "sha256": "6f34f848f5d705bd7b2fb2db4c100a7ea700ec1fb373ecdae1d5ab9888206cf6"
+    "sha256": "2d28a5c3500aedac9b65184b3f72e0ca3c4f5233e4d19c73d212cc0189c15db2"
   },
   {
     "id": "1.21.11/wiki-getting-started",

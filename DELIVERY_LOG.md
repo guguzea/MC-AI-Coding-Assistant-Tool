@@ -6,6 +6,543 @@
 - 只追加，不改写历史节。要更正旧节，写进新节第 6 块「自我更正」并点名旧节。
 - 夜跑、交接、事后抽查读本文件，不依赖聊天记录。夜批（阶 1）的队列与抽查记账仍在 [`NIGHT_BATCH.md`](./NIGHT_BATCH.md)，本文件不顶替它。
 
+## 2026-10-21 · 清两条 P2 文档残留（README 技能数 / AGENTS 出处）（维护档）
+
+**第 0 块 · 结论**：按当前磁盘重核上一轮列的 P2 清单，大部分已被并行会话修掉；本轮只收剩下两条文档残留 —— `README.md:744` 的 `35 / 34` 改为 `35 / 35`（两档实测均 35），`AGENTS.md:64` 的 playtest 载体出处补上实现文件 `src/playtest-evidence/index.ts:52-91`。`undefined/temp/fix-datagen-backup` 是备份目录，未动；其余约 90 条 P2 未逐条复审。
+
+### ① 改了哪些文件
+
+- `README.md:744`：`forge/1.15.2` / `forge/1.17.1` 的技能数由 `35 / 34` 改为 `35 / 35`。
+- `AGENTS.md:64`：「载体（双变量形状，镜像 `src/utils/project-sandbox.ts:66-94`）」改为「写盘根守卫同款：`…project-sandbox.ts:66-94`；playtest 侧实现见 `src/playtest-evidence/index.ts:52-91`」。
+
+### ② 判据与反证
+
+- 技能数：`forge/1.15.2/.cursor/skills`、`forge/1.17.1/.cursor/skills`、`forge/1.20.1/.cursor/skills` 实扫均为 **35** 个目录；原 `34` 过期。
+- 出处：`playtest-evidence/index.ts:52-91` 的 `authorize()` 逐行含 `MC_SKILL_PLAYTEST_ALLOW`、`MC_SKILL_PLAYTEST_ROOT`、`isAbsolute`、`nativeReal` 与 `isInsideReal` ⇒ 是双变量 + realpath 边界的真实落点；`project-sandbox.ts:66-94` 只是同款形状的写盘根守卫（`MC_SKILL_ALLOW_WRITE` / `MC_SKILL_PROJECT_ROOT`），不是 playtest 环境变量的实现处。
+- 镜像面：全仓搜「载体（双变量形状」只命中根 `AGENTS.md` 一处，无需刷宿主镜像。
+
+### ③ 验证台账
+
+- 逐文件读盘确认技能目录数 = 35/35/35。
+- `git diff --check -- README.md AGENTS.md` → 无空白错误。
+- 并行会话成果复核：`git grep zzrCN` = **0**；`README.md:477` = **64**；`README.en.md` 无 `86`；`%SystemDrive%/` 已不存在；`test-mdk-npm-form` 已进 `npm test` 链。
+
+### ④ 数据侧变更
+
+- **无**。`data/` 0 改动。
+
+### ⑤ 未做清单
+
+- `undefined/temp/fix-datagen-backup` **未删**：内容是备份，不是垃圾，删除需用户确认。
+- 其余 P2（各 scope 报告里约 90 条）未逐条复审；目前工作区有 600+ 个并行会话改动，不宜在同一批里展开。
+- 未提交。
+
+### ⑥ 自我更正
+
+- 上一轮「P2 残留」清单已过期：`zzrCN` 30 处、`README.md:477` 的 61、`README.en.md` 的 86、`%SystemDrive%/`、`test-mdk-npm-form` 未入链这五项都已被并行会话修掉；本轮以当前磁盘为准重核，不再沿用旧读数。
+
+---
+
+## 2026-10-21 · 清 P0-1 修复后的过期交叉引用（维护档）
+
+**第 0 块 · 结论**：`forge/1.19.4/code-patterns/03-entity-patterns.md:11` 原写「邻档 1.18.2:24 与 1.20.1:19 写成 `extends LivingEntity`」，而这两档已分别改为 `CreatureEntity` / `PathfinderMob` ⇒ 该断言已过期，改为不点名邻档的通用规则。纯文档、无功能影响。
+
+### ① 改了哪些文件
+
+- `forge/1.19.4/code-patterns/03-entity-patterns.md`：删掉过期的邻档行号引用，保留「有 AI Goal 必须 `extends Mob`（1.17+ 写 `PathfinderMob`）」与 `Mob#registerGoals` 的判据。
+
+### ② 判据与反证
+
+- 相邻两档现状：`forge/1.18.2/code-patterns/03-entity-patterns.md` 与 `forge/1.20.1/...` 的类声明均为 `extends PathfinderMob`（探针逐文件读盘）；`forge/1.14.4` / `1.15.2` 为 `extends CreatureEntity`。
+- 全 `forge/` 目录重搜 `1.18.2:24` / `1.20.1:19` / 「写成 extends LivingEntity」→ **0 命中**（仅本文件这一处，已删）。
+
+### ③ 验证台账
+
+- `node temp/check-fixes-20261021.mjs` → 六档实体基类均 FIXED；1.19.4 不再出现过期断言（余下 `LivingEntity` 命中为 `LivingEntityRenderer` 与本行规则本身）。
+- 本次未改代码、未改 `data/`；`code-patterns/` 不在 `sync-skills.ps1` 的镜像面，无需刷镜像。
+
+### ④ 数据侧变更
+
+- **无**。`data/` 0 改动。
+
+### ⑤ 未做清单
+
+- P2 残留仍未动（README 计数、`AGENTS.md:64` 出处、`%SystemDrive%/` 等）。
+- 未提交。
+
+### ⑥ 自我更正
+
+- 上一节只核了「六档基类写对」，没核「改完后别处对旧写法的引用」；这类交叉引用应在修 P0 时一并扫，已补扫 `forge/` 全目录。
+
+---
+
+## 2026-10-21 · 彻底修 P1-9 prefer 透传 + P1-18 空路径 fail-closed + 补 26.1.2 pack.mcmeta（维护档）
+
+**第 0 块 · 结论**：把两处「部分修」补成彻底修 —— `convertYarnMember` 现在接 `prefer` 并一路透传到 `resolveMappingDbPath` / `getYarnDb` / `lookupYarnClass` / `getMappingEra`；两个 playtest driver 的 `touch` / `waitfile`（服务端另含 `assert marker`）对空路径、「路径规范化后就是证据目录本身」、以及「path 是目录」一律判红。另补 `fabric/26.1.2/scaffold/.../pack.mcmeta`（`pack_format=84`，取自 26.1.2 client jar 的 `version.json`）。`tsc --noEmit`、`npm run build`、`test-w3-low.mjs`、`test-core.mjs` 全绿；未提交。
+
+### ① 改了哪些文件
+
+- `mcp-server/src/mappings/yarn-sqlite.ts`：`convertYarnMember` 增加可选 `prefer` 参数；内部 4 处调用（`resolveMappingDbPath` / `getYarnDb` / `lookupYarnClass` / `getMappingEra`）全部透传。可选参数保持旧调用形状不变。
+- `mcp-server/src/mappings/convert.ts:1011-1017`：类级腿改为 `getMappingEra(version, prefer)` + `convertYarnMember(..., prefer)`，删掉原「部分修」注释。
+- `mcp-server/src/generators/playtest-server-driver.ts`：`touch` / `waitfile` / `assert marker` 增加「空路径」「指向证据目录本身」「path 是目录」三类判红；新增 `isEvidenceDirItself(Path)`（`toAbsolutePath().normalize()` 比较）。
+- `mcp-server/src/generators/playtest-driver.ts`：客户端 `touch` / `waitfile` 同款守卫（`touch_missing_path` / `touch_evidence_dir` / `touch_path_is_dir` / `waitfile_evidence_dir` / `waitfile_path_is_dir`），新增同名 helper。helper 里的 `Path.of` 走既有 `applyJava8LibSwaps`。
+- `fabric/26.1.2/scaffold/src/main/resources/pack.mcmeta`（新增）：`{"pack":{"description":"Example Mod resources","pack_format":84}}`。
+- `mcp-server/dist/**`：`npm run build` 重建（gitignored）。
+- 探针只落 `temp/`（`check-fixes-20261021.mjs`、`extract-drivers.mjs`、`check-driver-output.mjs` 与生成物），未入受管面。
+
+### ② 判据与反证
+
+- **P1-9**：四个内层函数本来就接 `prefer`（`resolveMappingDbPath:151`、`getYarnDb:246`、`lookupYarnClass:695`、`getMappingEra:396`），缺的只是 `convertYarnMember` 这一个入口参数 ⇒ 改动面收敛在 2 文件。反证：`resolveMappingDbPath` 的 forge→fabric 回落逻辑未动（`:168-198`），prefer 指定但库不可用时行为与改动前一致。
+- **P1-18**：`syncPath("")` 返回 `EVIDENCE_DIR.resolve("")`，与 `EVIDENCE_DIR` 是同一路径；`path=.` 规范化后同样相等 ⇒ 旧实现 `Files.exists(...)` 恒真。现在两侧先判空、再判 `isEvidenceDirItself`、再判 `Files.isDirectory`，服务端走 `finish(false, ...)`（写 `exit-code.txt=1`），客户端走 `failIntent(...)`。目录判据是复核时补的同族洞：`waitfile ..` 或把会合目录当 marker 传，旧实现同样立即 PASS；`touch` 写目录会抛 IOException，现在也提前判红。`sub/../marker.txt` 规范化后是真文件，不误伤。
+- **26.1.2 pack_format**：读 `temp/review-2026-10-20/evidence/plat-fabric/jars/client-26.1.2.jar` 内 `version.json` → `pack_version.resource_major = 84`、`resource_minor = 0`；同法读 1.21.11 jar 得 75，与该档既有 `pack.mcmeta` 一致 ⇒ 派生口径可复核。
+
+### ③ 验证台账
+
+- `cd mcp-server && npx tsc --noEmit` → **无输出（通过）**。
+- `cd mcp-server && npm run build` → **通过**（dist 已刷新）。
+- `node test-w3-low.mjs` → **ok**（含 F131 / F178 / W4-5 三条 mapping 腿）。
+- `node test-core.mjs` → **core regression tests passed**。
+- `generate_playtest_driver`（fabric 1.21.11 / 1.14.4）→ 生成物含 `isEvidenceDirItself` 与 `touch_missing_path` / `touch_path_is_dir` / `waitfile_evidence_dir` / `waitfile_path_is_dir`；1.14.4 档 `Path.of` 已换 `Paths.get`、`Files.writeString` 已换 `Files.write`。
+- `generate_playtest_server_driver` → 生成物含 `isEvidenceDirItself`、`touch 缺路径`、`waitfile 缺路径`、`touch 的 path 是目录`、`waitfile 的 path 是目录`、`assert marker 的 path 是目录`、`assert marker 的 path 指向证据目录本身`。
+- Java 路径语义独立复算（JDK 25 直接跑 `temp/PathCheck.java`）：`""` / `.` / `./` 与证据目录相等；`marker.txt` / `sub/../marker.txt` / `..` 不等 ⇒ 前置判据与目录判据都不误伤正常文件。
+- 生成的两份 Java 用 JDK 25 `javac -proc:none` 语法体检：**无语法错误**；仅缺依赖符号（未给 classpath，预期）。
+- `fabric/26.1.2/scaffold/src/main/resources/pack.mcmeta` → JSON 解析通过。
+
+### ④ 数据侧变更
+
+- **`data/` 0 改动**。
+- 仓库内新增 = `fabric/26.1.2/scaffold/src/main/resources/pack.mcmeta`（未跟踪，属 scaffold 源文件不是 `data/`）；`dist/` 为构建产物（gitignored）。
+
+### ⑤ 未做清单
+
+- **未加生成物级回归臂**：仓内没有「生成器输出产物」的单元测试 harness，本轮只做生成物抽查；建议后续给 playtest 生成器加一条「空路径必红」的断言臂。
+- **P2 残留未动**：`README.md` 的 61/64、35/34，`README.en.md` 的 86（2 处），`AGENTS.md:64` 出处路径，`test-mdk-npm-form` 未进 `npm test`，仓根 `%SystemDrive%/` 与 `undefined/temp/` 残件。
+- **未提交**；**用过 MCP 工具前需重载宿主**（dist 已重建，但宿主进程仍跑旧代码）。
+
+### ⑥ 自我更正
+
+- 第一版 helper 的 Javadoc 用了反引号（`` `path=.` ``），而它位于 TypeScript 模板字符串内 ⇒ 反引号提前闭合模板，`tsc` 报 14 处语法错；去掉反引号后通过。生成器里的 Java 注释不得使用反引号，这条以前只在别处踩过。
+
+---
+
+## 2026-10-20 · ll-src 移出 git 索引（维护档）
+
+**第 0 块 · 结论**：按用户指示执行 `git rm -r --cached ll-src`，`ll-src/` 的 370 个文件已从 git 索引移除（工作区 370 个文件保留），`.gitignore` 新增 `ll-src/`；`THIRD_PARTY_NOTICES.md` 与 `verified-api.md` 的措辞同步改为「未跟踪的本地副本」。`git ls-files ll-src` = 0、`git diff --cached --name-only -- ll-src` = 370；`test-scripts.mjs` exit 0；`data/` 未改；未提交。**注意：只改了当前索引/工作树，旧提交与远端历史仍含该树；彻底从公开历史移除需要改写历史 + 强推，未执行。**
+
+### ① 改了哪些文件
+
+- **索引**：`git rm -r --cached ll-src`，370 个文件状态为 `D`（staged deletion），工作区文件本体未删。
+- `.gitignore`：在「Local-only audit / scratch artefacts」段后新增 `ll-src/`（`git check-ignore -v ll-src/liteloader.properties` 命中该行）。
+- `THIRD_PARTY_NOTICES.md`：把「本仓保留该树只作本地对照」改为「该树已从 git 索引移除（`.gitignore` 的 `ll-src/` 排除），工作区里的副本只作本地对照」；来源/版权/边界三段保留。
+- `liteloader/1.12.2/knowledge/common/verified-api.md:4`：改为「`ll-src/` 已从 git 索引移除、只存在于本机工作区」。
+- 记录：本节 + `doc/name-provenance-audit.md` §8.43 的补记。**未改** `data/`；未提交。
+
+### ② 判据与反证
+
+- `git ls-files ll-src | find /c /v ""` → **0**（索引里已无该树）。
+- `git diff --cached --name-only -- ll-src | find /c /v ""` → **370**（删除已进暂存区）。
+- 工作区递归计数 → **370** 个文件仍在（没有误删本地副本）。
+- `git check-ignore -v ll-src/liteloader.properties` → `.gitignore:44:ll-src/`（规则确实命中，且不是只在索引里删掉、下次又被 `git add .` 加回来）。
+- `git status --short data` → 空（未碰 `data/`）。
+- 全仓脚本/测试扫描 `ll-src` 引用：只有 `DELIVERY_LOG` / `doc` / `THIRD_PARTY_NOTICES` / `temp` 报告，没有门或脚本依赖 `git ls-files ll-src`。
+- **边界**：`git rm --cached` 只改当前索引，旧提交仍含 370 个文件；远端 `main` 上的历史也仍可读到。若目标是「公开仓历史里也不再有」，需要 `git filter-repo`/BFG 改写历史并强推，属破坏性操作，未做。
+
+### ③ 验证台账
+
+- `git ls-files ll-src` → **0**；`git diff --cached --name-only -- ll-src` → **370**；工作区 → **370**。
+- `git check-ignore -v ll-src/liteloader.properties` → **命中 `.gitignore:44:ll-src/`**。
+- `git status --short data` → **空**。
+- `cd mcp-server && node test-scripts.mjs` → **exit 0**（`script helper regression tests passed`、`本轮未执法腿=0`）。
+- 4 条 `--hygiene` info 按用户指示**不改**，仍在 `temp/content-audit/hygiene.json`。
+
+### ④ 数据侧变更
+
+- **仓库内无**。`data/` 0 改动；`ll-src/` 工作区文件未删；新增的只有 `.gitignore` 一行与两份措辞更新。
+- 索引侧变更 = 370 条 staged deletion，等待用户提交。
+
+### ⑤ 未做清单
+
+- **未改写 git 历史、未强推**：旧提交与远端历史仍含 `ll-src/`。要从公开历史彻底移除，需单独授权并执行 `git filter-repo`/BFG + force push（会改写所有提交哈希）。
+- **未删除工作区副本**：`ll-src/` 仍在本地，供本地对照；若用户要连本地一起删，需另行确认。
+- **未提交**：370 条删除 + `.gitignore` + 文档改动都在工作区/暂存区，提交归用户。
+- 4 条 `--hygiene` info 按用户指示保留，不修。
+
+### ⑥ 自我更正
+
+- 上一节 §8.43 写「本仓保留该树只作本地对照」，描述的是**登记时**的状态；本节已把索引移除，措辞改成「工作区未跟踪副本」。两节按时间先后读，后者为准。
+- `git rm --cached` 不是「从历史删除」；如果只看 `git status` 绿了就以为公开仓不再有该源码，是错的。本节的 ② 把「索引 0 / 暂存 370 / 工作区 370 / 历史仍含」四个读数分开记，避免混读。
+
+---
+
+## 2026-10-20 · ll-src 版权登记 + 审计器 `--hygiene` 模式（维护档）
+
+**第 0 块 · 结论**：给 `ll-src/` 补了来源/版权/边界登记（`THIRD_PARTY_NOTICES.md` 新增一节，并改正 `verified-api.md` 的相反自述），明确「All Rights Reserved、不得再分发、本登记不授予权利」；给审计器新增不入门的 `--hygiene` 模式，覆盖本机绝对路径、NeoForge 废弃元数据键、`NeoForgeRegistries` 字段存在性（真 jar javap）、「未核实」段里的撤回声明与漂移的 `total` 读数。全树 `--hygiene` 读数 `fail=0 / info=4`（3149 文件），`--selftest` OK、`test-scripts.mjs` exit 0；未改 `data/`、未提交。
+
+### ① 改了哪些文件
+
+- `THIRD_PARTY_NOTICES.md`：新增「LiteLoader 1.12.2 源码树（`ll-src/`）」节——来源（`develop.liteloader.com` 的 `1.12.2` 分支、`brand=1.12.2-SNAPSHOT-r4CC2BB0-b4-4`）、版权（文件头 `Copyright (C) 2012-16 Adam Mummery-Smith` / `All Rights Reserved`，327/363 Java 文件逐字带该头）、许可与边界（上游无开放许可；不得进 Release / `data/` zip / npm 包；不得把源码复制进 scaffold/生成器/文档）、权利人要求即移除。另在 `:239` 的 `1.12.2-liteloader.json` 那句许可说明后加指针，避免读者把「本地副本」读成「已获授权」。
+- `liteloader/1.12.2/knowledge/common/verified-api.md:4`：把「许可证禁止把 loader 源码再分发进本仓库」改成「上游未给开放许可（`All Rights Reserved`）；`ll-src/` 只是本地对照副本，见根 `THIRD_PARTY_NOTICES.md` 同名节；不得再分发」——与 `ll-src/` 实际在库的状态不再自相矛盾。
+- `mcp-server/scripts/audit-content-claims.mjs`：
+  - 新增 `--hygiene [--packs <档>]` 模式与 `runHygiene()`；默认扫 `fabric/ forge/ neoforge/ quilt/ liteloader/ rift/ modloader/ bedrock/ paper/`，跳过镜像目录与 `build/.gradle/run/data/temp`。
+  - 新增 5 类检测器：`hygiene-abs-path`（只扫 `scaffold/**` 与 `README_AI.md`；现代平台 fail、legacy 平台 info）、`hygiene-metadata`（NeoForge `mandatory=true`；根归档 scaffold 记 info）、`hygiene-registry`（`NeoForgeRegistries[.Keys].FIELD` 对真 jar 的 `javap` 字段表）、`hygiene-unverified`（`## 未核实` 段里出现「已验成 / 已核 / 取代」的撤回声明）、`hygiene-total`（规则/知识里「实测 … total:N」的非零读数，info）。
+  - `neoForgeRegistryFields()` 从 Gradle modules 缓存的 `neoforge-*-universal.jar`、`F:/MOD_TEST/dev/**/*-merged.jar`、`temp/**` 三类落点取件，同时解析 `NeoForgeRegistries` 与嵌套 `NeoForgeRegistries$Keys`；找不到 jar 时返回空集（不猜、不判红）。
+  - 新增 17 条 `selftestHygiene()` 臂（正例/反例/归档/占位符/无 jar）。
+- 记录：本节 + `doc/name-provenance-audit.md` §8.43。**未改** `data/`；未提交 git。
+
+### ② 判据与反证
+
+- **`ll-src` 事实**：`git ls-files ll-src` = 370；`ll-src/liteloader.properties` 的 `brand=1.12.2-SNAPSHOT-r4CC2BB0-b4-4`；`363` 个 Java 中 `327` 个文件头逐字含 `All Rights Reserved`，其余无独立许可头（按同一项目版权处理）；上游站点页脚同样 `All Rights Reserved`。⇒ 登记只能记录来源/版权/边界，**不能把「已登记」说成「已获许可」**；这是本节最重要的限制。
+- **`--hygiene` 全树**：`fail=0 / info=4 / files=3149`，报告 `temp/content-audit/hygiene.json`。4 条 info = 3 条 quilt 规则里的 Fabric 回退 `total:14/16/15` 读数 + 1 条 rift `scaffold/build.gradle` 的本机工作目录注释（该档历史上要求本地自备 jar）。
+- **变异测试（证明检测器真的会红）**：临时在 `neoforge/1.21.1/scaffold/` 放一个含 `NeoForgeRegistries.ENTITY_TYPES`、`mandatory=true`、`C:\Users\probe\x` 和「未核实段里写已验成」的探针文件，`--hygiene --packs neoforge/1.21.1` 逐条报出 4 个 fail（`hygiene-registry` / `hygiene-metadata` / `hygiene-abs-path` / `hygiene-unverified`）；探针已删除，复跑全树回到 fail=0。
+- **误报修正**：`已核例子` / `已核掉` / `没有未核实项` 不再当撤回声明（负向前瞻 + 显式排除）；`NeoForgeRegistries.Keys.ATTACHMENT_TYPES` 不再被截成字段 `K`（嵌套类单独 javap）；`Keys.XXX` 占位符不判（占位符集合）；`total:0` 不报（只报非零实测读数）。
+- **不写 `data/`**：`--hygiene` 的报告固定写 `temp/content-audit/hygiene.json`，与既有 `report.json` 同目录；`git status --short data` 为空。
+
+### ③ 验证台账
+
+- `node mcp-server/scripts/audit-content-claims.mjs --selftest` → **selftest OK**（新增 hygiene 17 臂）。
+- `node mcp-server/scripts/audit-content-claims.mjs --hygiene` → **fail=0 / unverifiable=0 / info=4**（files=3149），报告 `temp/content-audit/hygiene.json`。
+- 变异探针 `--hygiene --packs neoforge/1.21.1` → **fail=4**，四条检测器各中一条；删除探针后复跑 → fail=0。
+- `cd mcp-server && node test-scripts.mjs` → **exit 0**（`script helper regression tests passed`、`本轮未执法腿=0`）。
+- `git status --short data` → **空**。
+
+### ④ 数据侧变更
+
+- **仓库内无**。`data/` 0 改动；`ll-src/` 未增删文件；新增的只有审计报告 `temp/content-audit/hygiene.json`（gitignore 的 temp 产物）。
+- 未跑任何会写 `data/` 的生成器（`index-qsl-verified.mjs --write` / `build:semantic-index` 等）。
+
+### ⑤ 未做清单
+
+- **`ll-src` 的法律状态未变**：登记不等于授权；上游仍是 `All Rights Reserved`。若权利人要求移除，需删除 `ll-src/` 并清理依赖它的对照记录；是否改为 `git rm --cached` 仍由用户拍板。
+- **4 条 info 未修**：3 条 quilt 的 Fabric 回退 `total` 读数、1 条 rift 本机路径；它们不判红，但会随语料/机器漂移，后续可清。
+- **`--hygiene` 未入门链**（用户此前裁定「我说放再放」）。本轮只提供可手跑的模式与自检，不挂 `test-scripts` / `package.json`。
+- 未实现的检测器：跨文件版本串冲突（如两个文件写不同的 26.2 build 号）、JSON/TOML schema、上游 URL 存活检查；这些需要额外网络或 schema 源，未在本轮扩大。
+- **未提交 git**（提交归用户）。
+
+### ⑥ 自我更正
+
+- 第一版绝对路径正则只允许单个反斜杠，而 JSON 里的真实路径是 `\\`，自检立刻红；改成 `[\\/]+` 后正例才过。这说明新增检测器必须先用自检夹具钉住，不能只看「全树跑了一遍没红」。
+- 第一版「未核实撤回」检测器把 `已核例子`、`已核掉`、以及「本文件没有未核实项」都判红；已加负向前瞻与排除词。第二版又发现 `NeoForgeRegistries.Keys` 被截成字段 `K`、`Keys.XXX` 占位符被当真；已改为嵌套类单独 javap + 占位符集合。
+- 第一版 `neoForgeRegistryFields()` 只看 `F:/MOD_TEST/dev/neoforge-<neo_version>`，而 dev 目录名是 MC 版本（`neoforge-1.21.1`），导致字段表为空、检测器静默跳过；已改为从 Gradle modules 缓存的 universal 件、dev 的 merged 件与 `temp` 里的 review 构件三处取件，并用探针证明会红。
+
+---
+
+## 2026-10-20 · 版本档审查问题核对与修复（维护档）
+
+**第 0 块 · 结论**：按 `temp/review-2026-10-20/` 的版本档报告逐条回到真构件/官方源核对，修了 Forge 6 档实体基类、4 档构造器注入、5 档 `mods.toml` 依赖键，Fabric 的 Mixin 页/`fabric-api` id/3 档缺失 `pack.mcmeta`/计数与钉值，Quilt 的 `RegistryEntryAddCallback`、跨档交叉引用、`total` 漂移与语料页描述，Legacy 的混合工程判据与 Rift 自相矛盾，NeoForge 的 26.3 正式版、`NeoForgeRegistries` 假字段、`mandatory`、元数据文件名、9 份本机路径，Paper 的 8 处「已验却仍写未验」与版本串，Bedrock 的 beta/rc 串与 8 面镜像表。`data/` 未改；门链 8 项全绿、`test-scripts.mjs` exit 0；未提交。
+
+### ① 改了哪些文件
+
+- **Forge（15 件）**：`1.14.4`/`1.15.2` 实体基类 `LivingEntity`→`CreatureEntity`；`1.17.1`/`1.18.2`/`1.20.1`/`1.20.4` →`PathfinderMob`（均先 javap 真 mapped jar）；`1.15.2`/`1.16.5`/`1.17.1`/`1.18.2` 的 `knowledge/antipatterns/registry.md` 构造器注入改 `FMLJavaModLoadingContext.get()`；`1.14.4`/`1.16.5`/`1.17.1`/`1.18.2`/`1.20.1` 的 `mods.toml` 依赖键改 `[[dependencies.${mod_id}]]`。
+- **Fabric（约 20 件）**：`1.16.5` 移植页删掉 `ExampleMixinPlugin`/`MixinBootstrap` 错误段、`JAVA_16`→`JAVA_8`，版本变更表同改；`1.17.1` `fabric.mod.json` 的 `fabric-api`→`fabric`；`1.21.4`/`1.21.8`/`1.21.10` 新增 `pack.mcmeta`（46/64/69）；`1.17.1`/`1.18.2`/`1.19.4`/`1.20.4`/`1.21.1` 的核实表计数 5→6 档；`1.16.5`/`1.17.1` knowledge README 的版本文件名；`1.21.3`/`1.18.2` loom 钉值表述；4 个 scaffold Java 的 `M:/` 前缀。
+- **Quilt（约 38 件）**：`1.21.1` `RegistryEntryAddCallback`→`RegistryEntryAddedCallback`；`1.18.2`/`1.19.4`/`1.20.1` 的 `05-events.mdc` 改为「名字只来自本档 `qsl-verified.md`」；5 档 `mc-events`/`mc-networking` 的「2025-12 停更」加粗断言改成 `// TODO(未核实)` 口径；1.21.8/1.21.10 的「1.21.11 语料树没有 `qsl-verified` 页」改成与磁盘一致；10 个规则文件的 `total:4`/`total:3` 去掉数字（实测六个档 CLI 均为 `total=11`）；1.21.3/1.21.4 的重复 ② 编号；1.21.1 与 1.21.3/1.21.4 的语料页描述统一；1.21.11 的 `lastUpdated` 改 2026-09-04；5 档 AGENTS 的 Yarn 口径。
+- **Legacy（14 件）**：根 `AGENTS.md` 第 4 步混合工程判据改为「两边元数据都在」而不是 `net.minecraftforge.gradle.liteloader`（同目录 `HYBRID.md:28` 已推翻该插件）；`liteloader/1.12.2/AGENTS.md` 同步并补 dedicated-server 通道；`liteloader/1.8.9`/`1.10.2` 的 AGENTS/pack.meta/verified-api 与构件表口径对齐；`modloader/1.2.5`/`1.5.2` 同款文案；`rift/1.13.2` 的 MC 侧「已核/未核」三处矛盾、`listeners.md` 转义反引号与残缺括号。
+- **NeoForge（约 31 件）**：`26.1/scaffold/build.gradle` 把 26.3 改成有正式版（`26.3.0.95`）、26.2 去掉漂移 build 号；`26.1/AGENTS.md`、`verified-api-26.1.md`、`porting/02` 同改；根 `neoforge/scaffold/README_AI.md` 的 `NeoForgeRegistries.ENTITY_TYPES`/`BLOCK_ENTITY_TYPES`→`Registries.ENTITY_TYPE`/`BLOCK_ENTITY_TYPE`、`mandatory=true`→`type="required"`、1.20.4 元数据文件名；`neoforge.mods.toml` 两处依赖键；knowledge README 的 `1.19.x` 死链、code-patterns README 的目录、glossary 的 settings.gradle 计数、entity 的 `this.level`、networking 的 1.20.6/1.21.1 分界与 `PacketDistributor` 版本注记、porting 的三处措辞；9 档 AGENTS 的文档链接与构造器形参；9 份 `.vscode/launch.json` 的 `<home>\…` 全部换成 `${workspaceFolder}`。
+- **Paper（10 件）**：`rules.meta.json` 的 `asOfVersion` 178→195、classpath 3→6 件、`noClientForVersion`→`noBotClientForVersion` 并补「真客户端已打通」；`00-face` 的「逐字相符」、`04-permissions` 的 `default: permission` 旧句、`07-pdc` 三处、`03-inventory-gui` 两处、`02-commands` 两处、`08-adventure`、`06-plugin-yml-config`、`09-traps` 的过期「未验」句。
+- **Bedrock（3 件）**：`00-project-setup.mdc`/`01-manifest.mdc` 的 beta/rc 串按 npm `dist-tags` 重取（beta `2.13.0-beta.1.26.70-preview.20`、rc `2.12.0-rc.1.26.70-preview.20`）并补回被删空的引用对象；`bedrock/AGENTS.md` 的 IDE 表补到 8 面镜像。
+- 所有改动过的 `.cursor/rules` / `.cursor/skills` / `AGENTS.md` 均按档跑 `scripts/sync-skills.ps1 -TargetDir <平台>/<档>` 刷镜像；Quilt 9 档、Legacy 5 档、NeoForge 9 档、Bedrock 1 档（含 1.20.4 未变的档只刷受影响面）。
+- 记录：本节 + `doc/name-provenance-audit.md` §8.42。**未改** `data/`；未提交 git。
+
+### ② 判据与反证
+
+- **Forge 实体基类**：真 mapped jar javap —— 1.20.1 `Mob` 有 `protected void registerGoals()`，`PathfinderMob extends Mob`，`LivingEntity` 两者都没有；1.15.2/1.14.4 的 `MobEntity` 有 `registerGoals()`，`CreatureEntity extends MobEntity`。⇒ 原 `extends LivingEntity` 会让 `registerGoals()` 编译不过，原 `extends Mob` 在 1.15.2/1.14.4 也不成立。
+- **NeoForge 注册表**：`javap -p` 20.4.251 的 `NeoForgeRegistries` 12 个静态字段、21.11.45 的 10 个字段，两档都**没有** `ENTITY_TYPES` / `BLOCK_ENTITY_TYPES`；真名是 vanilla `Registries.ENTITY_TYPE` / `Registries.BLOCK_ENTITY_TYPE`。
+- **26.3 正式版**：`neoforge-maven-metadata.xml` 的 `<release>=26.3.0.95`，26.3 非 beta 版本 18 个；原注释「上游无正式版」为假。
+- **Quilt 日期**：`quilt-loader/maven-metadata.xml` 的 `<lastUpdated>=20260904212919`（2026-09-04），原 `2026-08-30` 核不到。
+- **Quilt `total`**：CLI `search_docs platform=quilt query="QSL registry key"` 对 1.18.2/1.19.4/1.20.1/1.20.4/1.21.1/1.21.3/1.21.4/1.21.8/1.21.10/1.21.11 实测均为 `total=11`；规则里写死的 4/3 已漂移，故删数字只留字段名并注明非契约。
+- **Quilt 语料页**：1.21.11 的 `data/.../qsl-verified.md` 与源稿同为 1226 B、sha256 `6f34f848f5d705bd`，页内不含 2025-12/11.0.0-alpha.3；1.21.1 的源稿与语料同为 6431 B、sha `016dee819d747c55`，页内含旧字样但带 `// TODO(未核实)` 撤回标记。⇒ 「语料树没有该页」与「虚构横幅已清除」两种说法都不成立，已改成磁盘实况。
+- **Paper**：`jd.papermc.io/paper/26.3/` 现页 `26.3.build.195-stable`；`api__command-api__*` 实测 22 个文件（4 个 index）；`noClientForVersion` 全文无消费者，改名后 `JSON.parse` 通过。
+- **Bedrock**：npm `dist-tags` 实测 `latest=2.10.0`、`beta=2.13.0-beta.1.26.70-preview.20`、`rc=2.12.0-rc.1.26.70-preview.20`；`2.10.0-beta.1.26.44-stable` 仍在 `versions` 里，故 `[1,26,44]` 默认值的依据本身真实，只是旧一代。
+- **混合工程**：`liteloader/1.12.2/HYBRID.md:28` 已用 javap 证明 `LiteloaderPlugin extends UserVanillaBasePlugin`，该插件给 vanilla+LiteLoader、不带 Forge；真配方是 `net.minecraftforge.gradle.forge` + `deobfCompile com.mumfrey:liteloader`。⇒ 根纲按插件判混合会把可编译工程推进「询问用户」分支。
+- **反证**：改 `neoforge/scaffold/README_AI.md` 的注册表字段前，先用两档 universal jar 的 `javap` 字段表否定 `ENTITY_TYPES`；改 Paper 的 `asOfVersion` 前先抓官方页；改 Quilt `total` 前先逐档跑 CLI。没有把「审查报告这么说」当唯一依据。
+
+### ③ 验证台账
+
+- `node mcp-server/scripts/assert-skill-mirrors.mjs` → **ok**（扫档=57 / 镜像比对目标=12418 / AGENTS 漂移 0 档 / frontmatter 78 规则 + 1257 技能正文）。
+- `node mcp-server/scripts/assert-skill-yarn-attest.mjs` → **ok**（清单 532 件；红 0；队列 344 为已签收待审记账）。
+- `node mcp-server/scripts/assert-skill-mappings-key.mjs` → **ok**（1247 件 Skill 源稿，围栏 571 件均声明非空 mappings）。
+- `node mcp-server/scripts/assert-scaffold-rules-conflict.mjs` → **ok**（47 档 · 447 篇 / 455 条 ❌ · 判死符号 67 · 冲突 0）。
+- `node mcp-server/scripts/assert-server-rules-integrity.mjs` → **ok**（规则 10 篇 · 出处 46 处全部可解析且行号在界内）。
+- `node mcp-server/scripts/assert-bedrock-script-api-pin.mjs` → **ok**（模板钉值 2.10.0 / 文档快照 2.9.0 分歧已登记）。
+- `node mcp-server/scripts/assert-qsl-verified-sync.mjs` → **ok**（10/10 档源稿与 processed 归一化一致）。
+- `node mcp-server/scripts/audit-content-claims.mjs --selftest` → **OK**。
+- `cd mcp-server && node test-scripts.mjs` → **exit 0**（`script helper regression tests passed`、`本轮未执法腿=0`）。
+- `git status --short data` → **空**（`data/` 未被本轮改动）。
+
+### ④ 数据侧变更
+
+- **仓库内无**。`data/` 0 改动；`pack.mcmeta` 三件是 `fabric/<ver>/scaffold/src/main/resources/` 下的新增源文件，不是 `data/`。
+- 本轮曾给 5 档 `qsl-verified.md` 加 javap 出处构件备注，导致 `assert-qsl-verified-sync` 判红（1.21.11 processed 与源稿不一致）。按「不写 `data/`」的约束**回退该 P3 改动**，没有跑 `index-qsl-verified.mjs --write`；回退后门绿。
+- 未跑语义索引重建（`build:semantic-index` 会写 `data/`）；quilt 1.21.1 的 stale 警告仍在，属未做项。
+
+### ⑤ 未做清单
+
+- **`ll-src/` 合规 P0 未处理**：370 个 tracked 文件是 Adam Mummery-Smith「All Rights Reserved」的 LiteLoader 全量源码，`THIRD_PARTY_NOTICES.md` 未登记，且与同仓两处「许可证禁止再分发」自述冲突。处置需要用户拍板（`git rm -r --cached ll-src` + `.gitignore` + notice，或保留入库但补来源/版权/边界登记）；本轮不动 git 索引。
+- **Gradle 构建残件未清**：quilt 10 档 × 9 件、fabric/neoforge 若档、forge/1.20.1 的 `.gradle/` 与 `build/reports` 仍在工作树（多数被 `.gitignore` 覆盖，未入库）。清理属仓库卫生，未擅自删。
+- **Quilt P3 未做**：`quilt.mod.json` 的 `quilt_loader.versions="*"`（官方模板 `>=0.19.1`）；`gradle.properties` 未抽 `loom_version`/`quilt_loader_version`；5 档 `qsl-verified` 的 javap 出处构件备注（回退）。
+- **Paper 出处门盲区未改**：`assert-server-rules-integrity.mjs` 的 `CITE_RE` 仍只收 `<file>.md:<line>`，23 处「只有文件名」与约 60 处「裸行号」仍逃检；本轮内容已人工补核，门未扩。
+- **审计器未入门链**（用户裁定「我说放再放」）；本轮没有新增检测器，改进建议见下节。
+- **未提交 git**（提交归用户）。
+
+### ⑥ 自我更正
+
+- 第一次跑 `test-scripts.mjs` 时它报 `assert-qsl-verified-sync` 红：我给 `quilt/<ver>/knowledge/common/qsl-verified.md` 加了一行 javap 出处，而 1.21.11 的 `data/.../processed/qsl-verified.md` 是机械派生件。正确做法有两条（改派生件或回退），按「本轮不写 `data/`」选了回退；没有把「源稿改了」当成「派生件会自动跟上」。
+- 审查报告的 P0 计数自相矛盾（总报告 §一写 `P0 ×3`，§三列 6 档），本轮按磁盘与 javap 逐档重核，不按报告的分级数字下结论。
+- 上一轮 §8.41 只修了 loader 解析，没修内容；本轮把「脚本读数绿」与「内容断言真」分开记：审计器 `fail=0` 不等于散文/元数据正确，后者只能靠真构件与上游页核。
+
+---
+
+## 2026-10-20 · fabric/quilt loader 逐档化 + 注解位保护（维护档）
+
+**第 0 块 · 结论**：fabric 的 loader 不再按文件 mtime 取 0.10.5，已按各档 scaffold 的 `loader_version` 逐档钉住（1.14.4=0.3.7.111 … 1.21.11=0.19.5）；quilt 不再拿 fabric-loader 顶替，统一用各档 scaffold 钉的 `org.quiltmc:quilt-loader:0.31.0-beta.4`。同时把 loom-cache 里混进 fapi 层的 loader 件剔掉，并加了「注解位只剩普通类时不许补 import」的保护；fabric+quilt 24 档定向 `fail=0/unverifiable=432`（fabric 432 / quilt 0，与基线逐档一致），全量 57 档 `fail=0/unverifiable=1704`，逐档内容读数 0 变化。改动只有审计脚本 + 2 份记录文档；未改内容/`data/`；未提交。
+
+### ① 改了哪些文件
+
+- `mcp-server/scripts/audit-content-claims.mjs`：
+  - 新增 `FABRIC_LOADER_VER`（14 档）与 `QUILT_LOADER_VER`（10 档，均 0.31.0-beta.4）。
+  - `artifactSet()` 的 fabric/quilt 分支：`newestJarIn(...fabric-loader)` → 按平台分流 `pickModuleJarSameAxis`；fabric 走 `net.fabricmc:fabric-loader`，quilt 走 `org.quiltmc:quilt-loader`。缺件只记账，不跨轴顶替。
+  - 新增 `isLoaderJarPath()`；`exactApiJars()` 与 runPack 的全局 FAPI 兜底都剔掉 `fabric-loader-*` / `quilt-loader-*`（含 `remapped.*` 与 `net_fabricmc_yarn_…-fabric-loader-…` 这两种 Loom 命名）。
+  - `autoImport()` 新增注解位保护：`@Foo` 位置只剩一个候选时，必须 `inv.annotationFqcns` 或 class 文件 `ACC_ANNOTATION` 证明它是注解，否则不补 import。
+  - `compileOnce()` 对 `ETIMEDOUT` 重试一次（30s → 120s），避免大 classpath 的偶发超时把 unverifiable 读数抬高。
+  - selftest 新增：fabric 1.21.11/1.14.4/1.17.1 的 loader 断言（1.14.4 允许「有本档件」或「缺件+记账」两态）、quilt 10 档均须 quilt-loader、`isLoaderJarPath` 正负例、`exactApiJars` 剔 loader 臂、注解位非注解不补臂。
+- **未改**内容源稿 / `.cursor/` / `data/` / `scaffold`；无镜像需刷。
+- 记录：本节 + `doc/name-provenance-audit.md` §8.41。
+
+### ② 判据与反证
+
+**修前**：全量报告里 14 个 fabric 档的 api loader 全是 `fabric-loader-0.10.5+build.213.jar`（`newestJarIn` 按 mtime 取到的最旧件），而各档 scaffold 的真值是 0.3.7.111 / 0.11.2 / … / 0.19.5；10 个 quilt 档同样拿 fabric-loader，而不是 `quilt-loader-0.31.0-beta.4`（quilt-loader 0.31 自带 `net.fabricmc.api.ModInitializer`，见各档 scaffold 注释）。
+
+**修后**（定向报告 `D:\mc-skill-temp\audit-fabric-quilt-loader-fix2\report.json` 的 `artifacts.jars`，api 层）：
+
+| 档 | loader |
+| --- | --- |
+| fabric 1.14.4 / 1.16.5 / 1.17.1 | 0.3.7.111 / 0.11.2 / 0.11.2（1.17.1 精确 0.11.7 缺盘，同轴 0.11.2 并记 `loader` 近似） |
+| fabric 1.18.2 / 1.19.4 / 1.20.1 / 1.20.4 | 0.14.24 / 0.14.21 / 0.15.11 / 0.15.11 |
+| fabric 1.21.1 / 1.21.3 | 0.16.9 / 0.16.9 |
+| fabric 1.21.4 / 1.21.8 / 1.21.10 / 1.21.11 / 26.1.2 | 0.19.5 |
+| quilt 1.18.2 … 1.21.11（10 档） | `quilt-loader-0.31.0-beta.4` |
+
+**fapi 层污染的反证**：修前 1.18.2/1.19.4 的 fapi 层出现 `net_fabricmc_yarn_…-fabric-loader-0.14.24.jar`/`-0.16.9.jar`，1.14.4 出现 `…/fabric-loader/0.10.5…jar`。`isLoaderJarPath` 现已覆盖 `-fabric-loader-`、`.fabric-loader-`、`remapped.…` 三种命名；定向报告里 fapi 层的 loader 件为 **0**。
+
+**注解位保护的反证**：第一次只把 1.14.4 的 loader 从 fapi 剔掉、未补 0.3.7.111 时，`@Environment(EnvType.CLIENT)` 被补成 MC 的 `RealmsClient$Environment`，javac 报 `Environment cannot be converted to Annotation`，产生 1 条 **fail**（不是 unverifiable）。修法两层：① 从 maven.fabricmc.net 取到本档 `fabric-loader-0.3.7.111.jar` 放进本机 Gradle 缓存（未入仓）；② 即使缺件，注解位也拒绝补普通类，让 javac 报 cannot find symbol，按工具缺口记 unverifiable。
+
+**超时反证**：全量跑出现过 `neoforge/1.20.4` 的 `ETIMEDOUT`（1705，比上一轮多 1）；定向重跑同档为 3，确认是 30s 超时抖动。`compileOnce` 加一次 120s 重试后，最终全量回到 **1704**，与上一轮 NeoForge-only 全量逐档 0 差异。
+
+### ③ 验证台账
+
+- fabric+quilt 定向 24 档 `--complete`：**`fail=0 / unverifiable=432`**，报告 `D:\mc-skill-temp\audit-fabric-quilt-loader-fix2\report.json`；fabric 432 / quilt 0，逐档与修前完全一致；loader 逐档见②表；fapi 层 loader 件 0。
+- 全量 57 档 `--all --complete`（retry 版）：**`fail=0 / unverifiable=1704`**，报告 `D:\mc-skill-temp\audit-full-fabric-quilt-loader3-20261020\report.json`；与上一轮 NeoForge-only 全量逐档 **0 差异**（仅 artifacts 的 loader 件变了）。
+- `supportApproximations` 顶层 **40 条**：`mixinextras-floor 16 / eventbus 5 / forgespi 4 / dist-substitute 5 / same-axis 7 / loader 1 / forge-compat 1 / loader-floor 1`。
+- `node mcp-server/scripts/audit-content-claims.mjs --selftest` → **OK**。
+- `cd mcp-server && node test-scripts.mjs` → **exit 0**（`script helper regression tests passed`，`本轮未执法腿=0`）。
+- 门：`assert-skill-mirrors` ok（57 档 / 12418）· `assert-skill-yarn-attest` ok（532 件）· `assert-skill-mappings-key` ok（1247 件）· `assert-scaffold-rules-conflict` ok（47 档 / 67 符号）。
+
+### ④ 数据侧变更
+
+- **仓库内无**。`data/` 只读、0 改动；无内容源稿改动。
+- **本机 Gradle 缓存**：从 `https://maven.fabricmc.net` 取 `fabric-loader-0.3.7.111.jar`（121200 B，SHA1 `2e8a8dbfdad3c5c6da9843ba33ed8e957c22b1d0`）放进 `<home>\.gradle\caches\modules-2\files-2.1\net.fabricmc\fabric-loader\0.3.7.111\…`。**未入仓、不是仓库数据**；代码不依赖它（缺件时记账并保持 unverifiable）。
+
+### ⑤ 未做清单
+
+- quilt 的 FAPI 仍走全局模块做「类名存在性」检查，没有本档精确 remap FAPI 可作编译面；这是 FAPI 侧缺口，不是本轮 loader 面。
+- 1.17.1 的精确 `fabric-loader:0.11.7` 本机缓存没有 jar，现用同轴 0.11.2 顶替并记账；未去上游补该件。
+- 本轮没有改任何内容源稿；全量 1704 条 unverifiable 未逐条重判（沿用既有分诊结论）。
+- 审计器仍未入门链；未提交 git（提交归用户）。
+
+### ⑥ 自我更正
+
+- 上一节把「fabric loader 仍用 `newestJarIn`」列为残留，本轮已修；同一类缺陷在 NeoForge 与 fabric/quilt 上都存在，说明「支撑件逐档」不能只改 `supportJarsFor`，`artifactSet` 的 api 层同样要逐档。
+- 第一次剔掉 fapi 层 loader 后没有补 1.14.4 真件，`@Environment` 被误补成 `RealmsClient$Environment`，产生 **fail=1**；这不是内容缺陷，是补全器在注解位「只有一个普通类候选」时仍敢补。已加保护并补真件，两态都覆盖。
+- 全量读数曾因一次 javac 30s 超时变成 1705（`neoforge/1.20.4`），定向重跑为 3。已在 `compileOnce` 加一次 120s 重试；最终全量 1704 与上一轮逐档 0 差异。**结论引用的是 retry 版全量报告，不是那次带超时的 1705。**
+
+---
+
+## 2026-10-20 · DSH 适配第二轮：文档面 + 档内表 + profile MCP 行 + 插件调研（维护档）
+
+**第 0 块 · 结论**：文档面把 dsh 补进 12 个活文档（含新增 `AUTO_SETUP.md` 4.12 小节，带实测可用的 profile YAML 片段）；29 档档内 `AGENTS.md` 的 IDE 表各加一行 DSH 并逐档重刷 87 个镜像；仓库外把 `mcp-mcskill` 行写进 `~/.dsh/profiles/desktop/cordis.patch.yml`，DSH 里已实测可用（`mcp__mcskill__*` 可调，`tools/list` = 89）。另产出一份原生插件调研件 `doc/dsh-plugin-design.md`（未实施）。门链 6/6 rc=0；未提交。
+
+### ① 改了哪些文件
+
+**文档面（12 个文件，两批）**
+
+- `AUTO_SETUP.md`：五张表加 dsh 行（Step 0 识别表 / Step 4 宿主速查 / Step 5 重载表 / Step 6 Skill 发现表 / Step 6 Skill 目标目录表）；**新增 `### 4.12 DSH（DeepSeek Harness）`**（实测可用 YAML 片段 + 4 条要点：不是 `mcpServers` JSON / `cwd` 必显式写 / `env` 必显式写（清洗 `/KEY|PASSWORD|SECRET|TOKEN/i` 与全部 `DSH_*`）/ 工具名 `mcp__mcskill__<tool>`、89 个工具）；原 :481 散文补 DSH + 「frontmatter 要 `name` + 非空 `description`」。
+- `README.md`（:185 宿主列举 / :573 `hosts` 枚举 / :737 共用 `.agents/skills` 说明）、`README.en.md`（:184 / :569 / :716）。
+- `README_human.md`（:87 / :174 / :165）、`README_human.en.md`（:89 / :176 / :167）—— 含把「DSH 支持正在做」改为「已经加上」（本轮落地后该句已失实；「打算深度定制」括号原样保留）。
+- `CONTRIBUTING.md` / `CONTRIBUTING.en.md` :48（活文档布局块，注明 DSH 与 Codex 共用 `.agents/`）、`knowledge/libs/README.md` :3（镜像列举）。
+- `mcp-server/README.md`（:3 宿主列举 / :58 DSH 例外子句 / :356-357 `--hosts=dsh` 示例）。
+- `mcp-server/CHANGELOG.md` :5（`Unreleased` 加一条）。**根 `CHANGELOG.md` 未动**：它自述是「版本索引」且明写未发版的工作树改动记在 `mcp-server/CHANGELOG.md`。
+
+**平台档面（116 个文件）**
+
+- 29 档 `AGENTS.md` 各 +1 行 `| DSH | \`AGENTS.md\` + \`.agents/skills/\` |`（20 档 8 行长表插在 Codex 行后；9 档 4 行简表插在 `OpenCode / Codex / ZCode` 行后、Pi 行前）。
+- 87 个镜像 = 29 ×（`.cursor/agent/default.md`、`.claude/agents/default.md`、`.trae/agents/default.md`），逐档用 `scripts/sync-skills.ps1 -TargetDir <平台>/<档>` 重刷（未用 `-All`）。
+- `git diff --numstat` 这 116 件全部 `1 0`；逐档邻接校验 0 违规；87/87 镜像与源稿 sha256 一致。
+
+**模板与新建**
+
+- `scripts/_oneoff/generate-five-platform-trees.mjs` 的 `IDE` 常量加 DSH 行 —— 否则将来 `--write` 重跑会把那 9 份简表的 DSH 行抹掉。
+- 新建 `doc/dsh-plugin-design.md`（原生 DSH 插件调研件，**未实施**）。
+
+**仓库外（用户机器配置）**
+
+- `~/.dsh/profiles/desktop/cordis.patch.yml` 追加 `mcp-mcskill` 行（`@deepseek-ai/dsh-mcp-client`，`serverName: mcskill`，显式 `cwd` + `env.MC_SKILL_DATA`/`MC_SKILL_COMMUNITY`）。改前备份：`cordis.patch.yml.bak-mcskill-20261020-144841`。
+
+### ② 判据与反证
+
+- **镜像不变式（本轮新做的反证）**：给 `bedrock/AGENTS.md` 加一行**但不刷镜像** ⇒ `assert-skill-mirrors` **rc=1** 并逐条点名：`AGENTS.md mirrors out of sync in bedrock: bedrock\.cursor\agent\default.md, bedrock\.claude\agents\default.md, bedrock\.trae\agents\default.md (run scripts/sync-skills.ps1 -TargetDir <pack>)`；把源稿复原后 rc=0（`实测 AGENTS 漂移 0 档`）。⇒ 29 档这次重刷不是可选动作。
+- **文档面与档内表没有机器门**（实测 grep：`AUTO_SETUP` 在 `mcp-server/scripts/*.mjs` 0 命中、在 `test-core`/`test-scripts` 0 命中）⇒ 判据只有 grep 复核：两批文档各自逐处判定「是/不是宿主列举」并报出未补处的理由；档内表按 29 档清单逐条对齐 + 邻接校验。
+- **DSH profile 行**：用 DSH 自己的 `loadProfile` + `composeEntries` 复算 ⇒ `userPatches=6`、`skippedBundles=[]`、`mcp-mcskill` 行在场且 `serverName/cwd/env` 与预期逐字一致（无 YAML 解析错、无兼容门拦截）。
+
+### ③ 验证台账
+
+as-of 2026-10-20，Node **v24.21.0**（DSH 自带 runtime），`MC_SKILL_DATA` 指向仓库 `data/`：
+
+- 门链 **6/6 rc=0**：`test-platform-pack` · `test-w3-low` · `assert-skill-mirrors`（扫档=57 / 镜像比对目标=12418 / AGENTS 漂移 0 档 / frontmatter 查 78 规则 + 1257 技能正文） · `assert-config-platform-face`（59 档 AGENTS.md 逐档表态一致） · `test-core` · `test-scripts`（`script helper regression tests passed`、`本轮未执法腿=0`）。
+- **MCP 真握手**（用 profile 里那条配置的原样 command/args/cwd/env 起进程）：`initialize` ok（serverInfo `MC-AI-Coding-Assistant-Tool` 2.0.0 / protocol `2025-06-18`）；`tools/list` = **89**；`activate_platform_pack` / `search_docs` / `search_fabric_docs` / `diagnose_data_paths` / `get_server_status` 均在列。
+- **HMR 已在会话内生效**（实测调用）：`mcp__mcskill__get_server_status` 返回服务状态；`mcp__mcskill__diagnose_data_paths` 返回 `resolvedDataDir=<仓库>/data`；`mcp__mcskill__activate_platform_pack action=list` 返回已建档档位。
+- 文档面 12 件：BOM=false、U+FFFD=0；`AUTO_SETUP.md` 保持全 CRLF（700/0），新插入 29 行逐行 CRLF。
+
+### ④ 数据侧变更
+
+（省略：未动 `data/**`，未改任何台账数值。）
+
+### ⑤ 未做清单
+
+- **根 `AGENTS.md` 超预算未处理**（用户指示「后面处理」）：100232 B > DSH 指令预算 65536 B，尾部约 22 KB（工具边界 / 工具不可用排查 / 游玩测试要求 / 作者规范 / 交付汇报）在 DSH 下读不到。
+- **19 个非 neoforge 档整张 IDE 表都不存在**（forge 1.7.10–1.11.2 与 1.21.1、fabric 1.21.4 / 1.21.8 / 1.21.10、quilt 1.21.3–1.21.11、liteloader 1.8.9 / 1.10.2、modloader 1.2.5 / 1.5.2），neoforge 全族与 fabric/26.1.2 同样无该表 —— 用户只批 29 处，未动。
+- **原生插件未实施**，只有 `doc/dsh-plugin-design.md` 调研件（含 MVP 六文件清单与 6 条机械验收）。
+- **未跟踪目录 `%SystemDrive%/`**（内含 `ProgramData/SogouInput/**`，疑某脚本把 `%SystemDrive%` 当字面量拼路径）**开工前即存在**；按「删除类只做清单」未清理。
+- **未提交**：`git add/commit` 归用户。
+
+### ⑥ 自我更正
+
+- 上一轮我说「`engines.dsh` 写 `^0.2.0` 才不会被静默禁用」——**不准确**。本轮核到 `dsh-app-boot` 的 `unmetRequirements`：**不写 `engines.dsh` 不施加任何约束**（不会被禁用）；真正会出事的是**写错范围**（bundle 被静默跳过，只留一行 stderr + `skippedBundles`）。另：`peerDependencies` 里出现 `@deepseek-ai/dsh-*` 会多出一条版本腿，建议只写 `engines.dsh` + cordis peer。
+- 上一轮 ⑥ 已更正「dsh 复用 `.agents` 是为了不新增投影树」的说法；本轮补一条更准的边界：**平台档内的 `.agents/skills` 不会被 DSH 扫到**（项目根 = 最近 `.git` 祖先 + 发现深度一层），要吃平台包 skill 必须写进**目标模组工程**或走用户级根。
+
+---
+
+## 2026-10-20 · DSH 宿主接入：platform-pack 加 `dsh`（复用 .agents/skills，不新增投影树）（维护档）
+
+**第 0 块 · 结论**：给平台包写盘面加了第 9 个宿主 `dsh`（DeepSeek Harness）——`activate_platform_pack --hosts=dsh` 现在把 `AGENTS.md` marker + `.agents/skills/<name>/SKILL.md` stub 写进**用户模组工程**，而 DSH 的 skill 发现根 rank 200 恰好是 `<projectRoot>/.agents/skills`，所以零新增投影树、零门改动。用 DSH 安装体自带的 skill provider 对真写出来的工程跑 `list()/get()`：发现 **58** 个候选（项目级 35 + 用户级 23），`mc-block` 能取到正文。改的是 `mcp-server/**`（受管面），四套测试全绿；未提交。
+
+### ① 改了哪些文件
+
+- `mcp-server/src/platform-pack/hosts.ts:10` —— `PACK_HOSTS` 追加 `"dsh"`（`--hosts=all` 现展开 9 个宿主）。
+- `mcp-server/src/platform-pack/hosts.ts:17` —— `hosts 必填(...)` 错误串补 `dsh`。
+- `mcp-server/src/platform-pack/hosts.ts:74-77` —— `hostLayout` 新增 `case "dsh"` → `{ entryFile: "AGENTS.md", rulesExt: ".mdc", skillsDir: ".agents/skills" }`。**无 `rulesDir`**：DSH 指令链只认 `AGENTS.md`/`CLAUDE.md`（+ `.local.md`），明写不解释 `.claude/rules/`；skill 根 rank 200 = `<projectRoot>/.agents/skills`，与既有 `codex` 同形共用。
+- `mcp-server/src/wave/register.ts:607` —— `activate_platform_pack` 的 `hosts` schema describe 串补 `dsh`。
+- `mcp-server/src/platform-pack/write.ts:341-344` —— 注释「八宿主→九宿主」，并记 dsh/codex 共用 `skillsDir` 时同 rel 双 `create` op 的语义（落盘内容逐字节相同，`hostFiles` 分别记账）。
+- `mcp-server/test-platform-pack.mjs:17` —— import 补 `expandHosts`。
+- `mcp-server/test-platform-pack.mjs:197-234` —— 新增 dsh 用例块：`rulesDir === undefined`、`skillsDir === ".agents/skills"`、`entryBody` 指向 `.agents/skills` 且含 `host=dsh`、write 计划只含 `AGENTS.md` + `.agents/skills/**/SKILL.md`（不含 `.dsh/` 与 `rules/`），另加 `expandHosts(["all"])` 必须含 dsh。
+- **未改**：`scripts/sync-skills.ps1`、`mcp-server/scripts/assert-skill-mirrors.mjs`、`catalog.ts hostRoots/fillRoots`、任何 `.cursor` 源稿、任何投影树、`data/**` ⇒ 无需刷镜像。
+- **未改文档**（见第 ⑤ 块）：`AUTO_SETUP.md` 五张表 / `README.md` / `README.en.md` / `mcp-server/README.md`。
+
+### ② 判据与反证
+
+本轮未动既有门，但**新增了断言**，故做两臂投毒（只改 gitignored 的 `mcp-server/dist`，跑完 `tsc` 重建复原）：
+
+- 投毒①（skillsDir 换树）：`dist/platform-pack/hosts.js` 的 dsh case `".agents/skills"` → `".dsh/skills"` ⇒ `test-platform-pack.mjs` **红**：`AssertionError: actual '.dsh/skills' / expected '.agents/skills'`。
+- 投毒②（宿主摘除）：从 `PACK_HOSTS` 删掉 `"dsh"` ⇒ **红**在 `activate_platform_pack({hosts:["dsh"]}).ok === true`：实得 `ok:false` + `INVALID_INPUT 未知 host：dsh。允许：cursor, claude, continue, trae, opencode, codex, zcode, pi 或 all`。
+- 复原：`tsc` exit 0，`test-platform-pack` 回绿（`dsh host: AGENTS.md + .agents/skills, no .dsh tree: ok` / `all passed`）。
+- 对照（未投毒）：`test-w3-low` / `test-core` / `test-scripts` 三套 rc=0，既有宿主面无回归。
+
+### ③ 验证台账
+
+as-of 2026-10-20，本机 Node **v24.21.0**（= DSH 自带 runtime `D:\DeepSeek Harness\resources\runtime\primary-runtime\dependencies\node`）：
+
+- `cd mcp-server && node node_modules/typescript/bin/tsc` → **exit 0**。
+- `node test-platform-pack.mjs` → **exit 0**；新增行 `dsh host: AGENTS.md + .agents/skills, no .dsh tree: ok`，末行 `test-platform-pack: all passed`。
+- `node test-w3-low.mjs` → **exit 0**（`test-w3-low: ok`）。
+- `node test-core.mjs` → **exit 0**（其中 `docs-tool-tables: registered=89 README groups=15 rows=91 tools=89 AGENTS rows=42 tools=89 双向零差异`）。
+- `node test-scripts.mjs` → **exit 0**（`script helper regression tests passed`、`本轮未执法腿=0`）。
+- 端到端**真写** `--hosts=dsh --platform=forge --minecraftVersion=1.20.1`（`%TEMP%\mc-dsh-e2e-75484358`，`MC_SKILL_ALLOW_WRITE=1` + `--dry-run=false --confirm`）⇒ 落盘 `AGENTS.md`（1 个 `host=dsh` marker）+ `.agents/skills/` **35** 个 stub；**未**产生 `.dsh/`。
+- 端到端 `--hosts=all` 真写（`%TEMP%\mc-dsh-all-5b5d8540`）：`AGENTS.md` **4** 个 marker（`opencode`/`codex`/`zcode`/`dsh`），9 个宿主目录；随后 `--action=deactivate --hosts=dsh` ⇒ dsh marker 消失、codex marker 与 `.agents/skills/mc-block/SKILL.md` **保留**（共用树未被误删）。
+- DSH 侧发现（用 DSH 安装体自带的 `dsh-skill-filesystem` provider 对上面那个工程真跑 `list()/get()`）：候选 **58** = 项目级 rank 200 **35** + 用户级 rank 500 **23**；`mc-block` 命中项目树，`get()` 取回正文 **407 B**；顺带复现既有告警 `~/.agents/skills/scholar-notes` 因 `name: "学霸笔记"` 非 kebab-case 被丢弃。
+- `expandHosts(["all"])` → `["cursor","claude","continue","trae","opencode","codex","zcode","pi","dsh"]`（9 个，as-of 本轮 dist）。
+
+### ④ 数据侧变更
+
+（省略：未动 `data/**`，未改任何台账数值。）
+
+### ⑤ 未做清单
+
+- **文档面未写**：`AUTO_SETUP.md` 五张表（Step 0 识别表 :105-117 / 宿主速查 :238-253 / 重载表 :429-440 / Skill 发现表 :480-487 / Skill 目标目录表 :547-556）、`README.md:573`、`README.en.md:569`、`mcp-server/README.md:354-355` 的 dsh 行 —— 本轮只批了代码面（A），文档面待批。
+- **档内 AGENTS.md 未动**：29 份档内 `AGENTS.md` 的「IDE 加载优先级」表未加 DSH 行 —— 改档内 AGENTS.md 必须重刷三镜像（`assert-skill-mirrors`），另批。
+- **DSH profile 的 MCP 行未写**：`~/.dsh/profiles/desktop/cordis.patch.yml` 里插 `mcp-mcskill` 未做 —— 属用户机器配置；须显式写 `cwd` 与 `env.MC_SKILL_DATA`（DSH 会清洗 `/KEY|PASSWORD|SECRET|TOKEN/i` 与全部 `DSH_*`，且 `cwd` 默认 `""` 等于继承宿主 cwd）。
+- **根 `AGENTS.md` 超预算未处理**：100232 B > DSH 指令预算 65536 B，尾部约 22 KB（工具边界 / 工具不可用排查 / 游玩测试要求 / 作者规范 / 交付汇报）在 DSH 下读不到 —— 等拍板（瘦身 / 拆文件 / 接受）。
+- **未提交**：`git add/commit` 归用户。工作区里 `DELIVERY_LOG.md`、`doc/name-provenance-audit.md`、`mcp-server/scripts/audit-content-claims.mjs` 的既有改动不是本轮产生的。
+
+### ⑥ 自我更正
+
+- 上一轮把「dsh 复用 `.agents`」的理由写成「为了不新增投影树」。更准的口径：`hosts.ts` 管的是**写进用户模组工程**的落点，与仓库内 57 档那 7 套投影树（`sync-skills.ps1` 生成、`assert-skill-mirrors` 守）是**两套独立机制**；本轮确实零新增树，但理由是 DSH 的 rank 200 根正好是 `.agents/skills`，不是「为了省树」。
+- 补一条上一轮没说准的：平台档内的 `.agents/skills`（如 `forge/1.20.1/.agents/skills`）**不会被 DSH 扫到** —— DSH 项目根 = 最近 `.git` 祖先（= 仓库根）且发现深度只有一层；在 MC_skill 仓库根开会话时扫的是 `<repo>/.agents/skills`（不存在）。要吃到平台包 skill，必须靠 `--hosts=dsh` 写进**目标模组工程**，或走用户级根（`~/.dsh/skills` rank 400 / `~/.agents/skills` rank 500）。
+
+---
+
+## 2026-10-20 · NeoForge loader 逐档化 + 空构件守卫（维护档）
+
+**第 0 块 · 结论**：`artifactSet()` 的 NeoForge loader 不再无条件取最新件，已按 `NEO_LOADER_VER` 逐档钉住（1.21.1=4.0.43、1.20.4=2.0.17、26.1=11.0.15 等）；1.20.1 没有独立 loader 件，改为同版 Forge 兼容件回退并记账，不再拿 10.0.32 冒充。另加「`--complete` 下无构件不许静默收工」的守卫，并把 `resetSupportApprox` 移到 `artifactSet` 之前，保证 1.20.1 的两条近似真的写进报告。全量 57 档复跑 **`fail=0 / unverifiable=1704`**：1691 是既有读数，**+13 全部来自新守卫**（12 个无 Java 构件的旧档 + 基岩），逐档内容读数 0 变化。
+
+### ① 改了哪些文件
+
+- `mcp-server/scripts/audit-content-claims.mjs`（唯一代码改动）：
+  - `artifactSet()` 的 `neoforge` 分支：`newestJarIn(...fancymodloader/loader)` → `pickModuleJarSameAxis(..., NEO_LOADER_VER[version], ...)`。
+  - 同分支新增 1.20.1 回退：本机没有 `neoforge-1.20.1` merged 构件，退回同版 Forge mapped 件 + `findForgeSupportJars(1.20.1)`；记 `neoforge-merged`（`forge-compat`）。loader 本身不跨轴顶替，记 `fancymodloader:loader`（`loader-floor`）。
+  - `runPack()`：`resetSupportApprox(platform, version)` 从 `supportJarsFor` 前移到 `artifactSet` 前（否则 `artifactSet` 里记的近似会被清零）。
+  - `runPack()`：新增空构件守卫——`opts.compile && jars.length === 0` 时写一条 `unverifiable`（`symbol:"artifacts"`）。`--complete` 不再对无构件档静默返回 0 条。
+  - selftest 新增接线臂：① `artifactSet("neoforge","1.21.1")` 的 api loader 必须含 `4.0.43`；② 1.20.1 不许出现新版 loader 且必须记 `loader-floor`；③ 源码顺序必须 `resetSupportApprox` 在 `artifactSet` 之前（比对串拆两段拼，避免臂源码自匹配）。
+- **未改**任何内容源稿 / `.cursor/` / `data/` / `scaffold`；镜像无需刷（`assert-skill-mirrors` 仍 ok）。
+- 记录：本节 + `doc/name-provenance-audit.md` §8.40。
+
+### ② 判据与反证
+
+**修前证据**：`D:\mc-skill-temp\audit-full-final-20261020\report.json` 里 `neoforge/1.20.4`、`1.21.1`、`26.1` 的 `artifacts.jars` 全部是 `loader-10.0.32.jar`（`api` 层），而 `supportApproximations` 的 loader 计数是 **0**——逐档 loader 只进了 `support` 层，被 `api` 层在 `pickImportCandidate` / `narrowClasspath` 里顶掉，且没有任何记账。1.21.1 的真实 loader 是 4.0.43，差 8 个 major。
+
+**修后证据**：定向 10 档 `--complete` 报告 `D:\mc-skill-temp\audit-neoforge-loader-fix2\report.json` 的 `artifacts.jars` 逐档为：
+
+| 档 | loader |
+| --- | --- |
+| 1.20.4 | 2.0.17 |
+| 1.20.6 | 3.0.45 |
+| 1.21.1 | 4.0.43 |
+| 1.21.3 | 5.0.8 |
+| 1.21.5 | 7.0.13 |
+| 1.21.8 | 9.0.18 |
+| 1.21.10 | 10.0.32 |
+| 1.21.11 | 10.0.36 |
+| 26.1 | 11.0.15 |
+
+1.20.1：`forge-1.20.1-47.4.0_mapped_official_1.20.1.jar` + `fmlcore-1.20.1-47.4.18.jar` + `forge-1.20.1-47.4.18-universal.jar`，`supportApproximations` 两条（`forge-compat` / `loader-floor`）。
+
+**空构件守卫的反证**：全量对比脚本逐档 diff，1691 → 1704 的 13 条 delta 全部是 `symbol:"artifacts"`，档位为 `forge/1.7.10/1.8.9/1.9.4/1.10.2/1.11.2/1.12.2`、`liteloader/1.8.9/1.10.2/1.12.2`、`modloader/1.2.5/1.5.2/1.6.4`、`bedrock/stable`；**其他 44 档逐档 fail/unverifiable 完全不变**。这说明读数变化来自守卫，不是内容回归。
+
+**顺序反证**：如果把 `resetSupportApprox` 放回 `artifactSet` 之后，`artifactSet` 里 1.20.1 的 `forge-compat` / `loader-floor` 会被清零；selftest 的顺序臂直接钉 `resetIdx < artIdx`，不依赖运行时副作用。
+
+### ③ 验证台账
+
+- 定向 NeoForge 10 档 `--complete`：**`fail=0 / unverifiable=21`**，报告 `D:\mc-skill-temp\audit-neoforge-loader-fix2\report.json`；控制台逐条打印 1.20.1 的两条 `[APPROX]`。
+- 全量 57 档 `--all --complete`：**`fail=0 / unverifiable=1704`**，报告 `D:\mc-skill-temp\audit-full-loader-fix-20261020\report.json`，约 40 min；`supportApproximations` 顶层 **39 条**（既有 37 + 1.20.1 的 `forge-compat` / `loader-floor` 各 1）。
+- 全量逐档 diff（`audit-full-final-20261020` → `audit-full-loader-fix-20261020`）：仅上述 13 档各 +1（`artifacts` 守卫），其余 44 档 0 变化；**无新增 fail**。
+- `node mcp-server/scripts/audit-content-claims.mjs --selftest` → **OK**（最终代码，含新增三组接线臂）。
+- 门：`assert-skill-mirrors` ok（57 档 / 12418 镜像目标）· `assert-skill-yarn-attest` ok（532 件）· `assert-skill-mappings-key` ok（1247 件）· `assert-scaffold-rules-conflict` ok（47 档 / 67 符号）· `cd mcp-server && node test-scripts.mjs` → **exit 0**（`script helper regression tests passed`，`本轮未执法腿=0`）。
+- 本轮未改 `.cursor/rules` / `.cursor/skills`，因此未刷镜像、未重跑 `assert-rules-api-names`（沿用上一轮 green）。
+
+### ④ 数据侧变更
+
+- **无**。`data/` 只读、0 改动；本轮只改 1 个审计脚本 + 2 份记录文档。
+
+### ⑤ 未做清单
+
+- **fabric loader 仍是 `newestJarIn`**：`artifactSet` 的 fabric/quilt 分支与本轮修的 neoforge 同类，未按档钉 `loader_version`（scaffold 的 `gradle.properties` 有逐档值，但 26.1.2 缺该行）。本轮不扩大改动面；如要修，需要逐档解析 scaffold 配置并重跑 fabric 全量。
+- 1.20.1 的 `loader-floor` / `forge-compat` 仍是近似，没有找到本档独立 fancymodloader 件；已在报告记账，未伪造真件。
+- 全量报告里的 13 条 `symbol:"artifacts"` 是**工具侧缺口**（无 Java 构件 / 基岩不适用），不是内容缺陷，未逐条补构件。
+- 审计器仍未入门链（按硬约束不做）；未提交 git。
+
+### ⑥ 自我更正
+
+- 上一节（P1/P2）说「`supportApproximations` 37 处，含 loader 0」——**loader 0 只说明 support 层没记账，不代表 api 层没顶替**。真正的问题是 `artifactSet` 的 api 层无条件取最新件，报告 artifacts 里一直写着 10.0.32；本轮才把它改成逐档并让 1.20.1 的缺失显式记账（`loader-floor` 1 条）。
+- 上一节把 `mixinextras-floor` 写成 **10**，实际报告分项是 **16**（总数 37 是对的）；本轮报告 39 = 37 + 2，分项为 `mixinextras-floor 16 / eventbus 5 / forgespi 4 / dist-substitute 5 / same-axis 7 / forge-compat 1 / loader-floor 1`。
+- 用户指出「1691 是 P1 修复前生成的」后，本轮才拿到修复后的全量读数；但 **1691 → 1704 的差值不是 P1 带来的**，而是我新增空构件守卫带来的 13 条工具侧缺口。P1 的定向读数仍以 `audit-verify-final` 的 4 档为准；本轮全量逐档 diff 证明其余档未变化。
+
 ---
 
 ## 2026-10-20 · 收掉 P1 三条 + P2 三项（其中 P1 两条是「我上轮声称已修、实际没修」）（维护档）
@@ -1109,7 +1646,7 @@ public abstract StructureType<?> type();
 | `assert-rules-api-names` | **红=0 豁免=0** 未执法腿=0（档=14 · 判名 3987） |
 | `assert-scaffold-rules-conflict` | 47 档 · ❌ 455 行 · 判死 67 · **scaffold 冲突 0** · 台账 checked |
 
-真构件出处（本机路径）：`C:\Users\zzrCN\.gradle\caches\fabric-loom\minecraftMaven\net\minecraft\minecraft-merged\1.18.2-net.fabricmc.yarn.1_18_2.1.18.2+build.4-v2\*.jar`、`…\minecraft-merged\1.21.11-net.fabricmc.yarn.1_21_11.1.21.11+build.6-v2\*.jar`、`…\minecraft-merged-deobf\26.1.2\minecraft-merged-deobf-26.1.2.jar`。
+真构件出处（本机路径）：`<home>\.gradle\caches\fabric-loom\minecraftMaven\net\minecraft\minecraft-merged\1.18.2-net.fabricmc.yarn.1_18_2.1.18.2+build.4-v2\*.jar`、`…\minecraft-merged\1.21.11-net.fabricmc.yarn.1_21_11.1.21.11+build.6-v2\*.jar`、`…\minecraft-merged-deobf\26.1.2\minecraft-merged-deobf-26.1.2.jar`。
 
 **双向 javac 实测**（`F:\MOD_TEST\cc\run.bat`，`-cp` = 上述真 yarn jar，JDK 21；正反两臂都跑）：
 
@@ -2757,7 +3294,7 @@ PASS v-pdc-place
 
 - **forge 1.12.2 的 MCP 可读成员名核不了**：本机只有 SRG 具名件（`forgeBin` / universal）与**混淆** merged 件（本轮已把混淆件存档进 `_oracle-jars\mc\`，但它核不了名字）。类名级已覆盖（present 122 / 查无 45）
 - §8.10(4) 的**库类**（Cloth / REI / Gradle DSL）与 `Keyboard.KEY_G` 一类需相应库/依赖件 ⇒ **未核实**
-- `doc/name-provenance-audit.md` 仍是**未跟踪**文件（`??`）；仓根另有一个**不是本轮产物**的未跟踪目录 `ll-src/`，未触碰
+- `doc/name-provenance-audit.md` 仍是**未跟踪**文件（`??`）；仓根另有 `ll-src/` —— 本轮当时**未跟踪**（`??`）、未触碰。⚠️ **本条已过期（2026-10-20 追记）**：`ll-src/` 现已用 `git rm -r --cached` 移出索引（`git ls-files ll-src` = 0、`git check-ignore -v` 命中 `.gitignore` 的 `ll-src/`），工作区 370 个文件保留；处置记账见本文「2026-10-20 · ll-src 移出 git 索引」节。原句保留作当时读数
 - 未提交（提交归用户）
 
 ### 6. 自我更正
@@ -2933,7 +3470,7 @@ PASS v-pdc-place
    - `version-changes/*` 文档按宿主档构件核会假红（讲的是别的版本）——需拿被述版本构件重核，本轮未做（台账已单列该类）
    - 量具的**字段腿 / 库件腿**未补（本轮只用外部构件人工核）
    - 未 `git add/commit`（纪律：提交归用户）；未改任何 `data/**`、门、脚本
-   - `ll-src/`（LiteLoader 源码树，未跟踪）**非本轮产物**，未动
+   - `ll-src/`（LiteLoader 源码树）**非本轮产物**，未动。⚠️ **「未跟踪」已过期（2026-10-20 追记）**：当时是未跟踪（`??`），现已被 `git rm -r --cached` 移出索引 + `.gitignore` 排除，工作区保留；见本文「2026-10-20 · ll-src 移出 git 索引」节
 
 6. **自我更正**
    - 本会话早先版本（`verify-names.mjs` / `verify-names2.mjs`）报的 ABSENT 偏大：只拿**合并主件**核 ⇒ `SubscribeEvent`/`DeferredRegister`/`FMLJavaModLoadingContext`/`ScreenEvents`/Cloth 类全成假 ABSENT。v3 加「档内依赖件 + 全机库池」后改判 **560 行**为 PRESENT-LIB；**以 v3（`verify3.json`）为准**，v1/v2 的汇总数字作废。
@@ -3187,7 +3724,7 @@ PASS v-pdc-place
 **A. 规范本体删除（8 处，义务句由「分母 + 口径 + as-of」改为「分母 + 口径」）**
 
 - `WRITING-FOR-AGENTS.md:96`（§7 出处形状）／`REPORT-FORMAT.md:43`（§维护档 · 3 验证台账）／`.codebuddy/rules/实施计划要求.mdc:16`／`.github/PULL_REQUEST_TEMPLATE.md:26`／`bugfix_list.md:232`（追加规则③）／`CONTRIBUTING.md:232-233`（库数据链计数口径 A/B 的「（2026-09-24 复跑）」）／`CONTRIBUTING.en.md:232-233`（同构镜像）／`CONTRIBUTING.en.md:487,492`（未排期清单列规）／`CONTRIBUTING_LIST.md:5,10`（列规与表头）／`common_skill/mc-research/SKILL.md:8,31,35`（技能在教 as-of）。
-- 装机副本同步：`C:\Users\zzrCN\.agents\skills\mc-research\SKILL.md`（逐行 diff 后拷回，现已与源稿逐字一致）。
+- 装机副本同步：`<home>\.agents\skills\mc-research\SKILL.md`（逐行 diff 后拷回，现已与源稿逐字一致）。
 - 模板体同步：`mcp-server/src/prompts/templates.ts:668`（`mc-research` 工作流产出行「论断/出处/状态/as-of」→ 去 as-of），与源稿同改。
 
 **B. 面文清 as-of（我方动作时间戳）**
@@ -3773,7 +4310,7 @@ PASS v-pdc-place
 
 - `common_skill/mc-handoff/SKILL.md:14`（第 3 块「证据指针」）：加「本轮改动落在本仓库受管面时的追加义务 —— 逐字点名 `DELIVERY_LOG.md` 本轮那一节（含该档全部编号块与读数）与 `REPORT-FORMAT.md`，并写明走了哪一档」，同时写明**用户工程侧的交接不适用**（免得把本仓库路径塞进别人的模组工程交接）。
 - `common_skill/mc-handoff/SKILL.md:25`（规则段新增一条）：**交接合格的判据** —— 接手者只看文档能答出三件事（动了哪些文件 / 证据在哪个路径 / 下一轮按哪一档哪些块写），答不出即算缺件。写法按 `WRITING-FOR-AGENTS.md` §3（可检查且穷尽），不重复第 3 块的路径清单（§4「同一禁令别在多处原样重复」）。
-- `C:\Users\zzrCN\.agents\skills\mc-handoff\SKILL.md`（**工作区外**）：重拷刷新。实测读数是**本轮编辑之后**那一次：源稿 29 行 / sha `dcc25b28cd45` vs 装机 28 行 / `db1e21c9c8b4` ⇒ 不一致；重拷后两边同 sha `dcc25b28cd45`（口径 = `sha256(整份文件字节)` 前 12 位）。编辑前的两份是否一致 = `未核实`（没取过 sha）。依据 = `WRITING-FOR-AGENTS.md` §6「先改源稿，再拷贝刷新；不一致以源稿为准重拷」。
+- `<home>\.agents\skills\mc-handoff\SKILL.md`（**工作区外**）：重拷刷新。实测读数是**本轮编辑之后**那一次：源稿 29 行 / sha `dcc25b28cd45` vs 装机 28 行 / `db1e21c9c8b4` ⇒ 不一致；重拷后两边同 sha `dcc25b28cd45`（口径 = `sha256(整份文件字节)` 前 12 位）。编辑前的两份是否一致 = `未核实`（没取过 sha）。依据 = `WRITING-FOR-AGENTS.md` §6「先改源稿，再拷贝刷新；不一致以源稿为准重拷」。
 - 本文件与 `mcp-server/CHANGELOG.md`（第八十九批一条）：记账。
 
 ### 2. 判据与反证

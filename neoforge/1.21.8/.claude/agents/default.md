@@ -14,7 +14,7 @@
 | 入口 | `@Mod` + `public ExampleMod(IEventBus modEventBus)`（本档 scaffold `src/main/java/com/example/examplemod/ExampleMod.java:46` 实测单参；可选再加 `ModContainer modContainer`，以你实跑的 MDK 产物为准） |
 | 元数据 | neoforge.mods.toml |
 | 网络 | `RegisterPayloadHandlersEvent` + `PayloadRegistrar` |
-| 文档 | https://docs.neoforged.net/docs/1.21.8/ |
+| 文档 | 走 `search_neoforge_docs version=1.21.8`（版本根索引页 404，子页才存在） |
 | MDK | download_official_mdk 精确 1.21.8 |
 
 DataGen 拆成 GatherDataEvent.Client 与 Server（含 createDatapackRegistryObjects / createProvider）的分界**不晚于 1.21.5**、不是本档引入：本仓 raw 计数 `GatherDataEvent.Client` 在 1.21.3 = 0、1.21.5 = 33（`data/neoforge_1.21.5/neoforge-docs/1.21.5/processed/resources.md:92` 已拆；反例 `data/neoforge_1.21.3/neoforge-docs/1.21.3/processed/resources.md:113` 仍是裸 `GatherDataEvent`），与 `neoforge/1.21.5/knowledge/porting/02-version-migration.md` 同值。本档只沿用该已拆形态。

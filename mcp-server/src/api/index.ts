@@ -389,7 +389,7 @@ function startPreloader(version: string): Promise<void> {
         try {
           await lazyLoadVersionData(version, vData, dataDir);
         } catch (e) {
-          vData.lastError = (e as Error).message;
+          if (vData.lastError !== "INDEX_CORRUPT") vData.lastError = (e as Error).message;
           vData.loaded = false;
         }
       });
@@ -443,6 +443,9 @@ function startPreloader(version: string): Promise<void> {
           });
         } else if (msg.type === "error") {
           console.error(`${logPrefix} Worker preload failed:`, msg.errors);
+          // F-1：与 ready（:439-442）/ timeout（:397-403）同形 —— 只把 vData.worker 置 null 而**不 terminate**
+          // 会把 worker 线程句柄留着 ⇒ 主线程事件循环不空，CLI 打印完结果后**进程不退出**。
+          const w = vData.worker;
           vData.worker = null;
           vData.preloading = false;
           vData.lazyMode = true;
@@ -451,9 +454,17 @@ function startPreloader(version: string): Promise<void> {
             try {
               await lazyLoadVersionData(version, vData, dataDir);
             } catch (e) {
-              vData.lastError = (e as Error).message;
+              // F-2：lazyLoadVersionData 已把 lastError 钉成 "INDEX_CORRUPT" 再 throw，这里不得覆盖它。
+              if (vData.lastError !== "INDEX_CORRUPT") vData.lastError = (e as Error).message;
             }
           });
+          if (w) {
+            try {
+              w.terminate();
+            } catch {
+              /* ignore */
+            }
+          }
         }
       });
 
@@ -466,7 +477,7 @@ function startPreloader(version: string): Promise<void> {
           try {
             await lazyLoadVersionData(version, vData, dataDir);
           } catch (err) {
-            vData.lastError = (err as Error).message;
+            if (vData.lastError !== "INDEX_CORRUPT") vData.lastError = (err as Error).message;
           }
         });
       });
@@ -480,7 +491,7 @@ function startPreloader(version: string): Promise<void> {
           try {
             await lazyLoadVersionData(version, vData, dataDir);
           } catch (err) {
-            vData.lastError = (err as Error).message;
+            if (vData.lastError !== "INDEX_CORRUPT") vData.lastError = (err as Error).message;
           }
         });
       });
@@ -495,7 +506,7 @@ function startPreloader(version: string): Promise<void> {
         try {
           await lazyLoadVersionData(version, vData, dataDir);
         } catch (err) {
-          vData.lastError = (err as Error).message;
+          if (vData.lastError !== "INDEX_CORRUPT") vData.lastError = (err as Error).message;
         }
       });
     }

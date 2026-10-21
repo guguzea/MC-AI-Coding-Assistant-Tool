@@ -88,7 +88,7 @@ public MyBlockEntity(BlockPos pos, BlockState state) {
 @Override
 public void onLoad() {
     super.onLoad();
-    if (!this.level.isClientSide) {
+    if (!this.level().isClientSide) {
         // 安全访问
     }
 }

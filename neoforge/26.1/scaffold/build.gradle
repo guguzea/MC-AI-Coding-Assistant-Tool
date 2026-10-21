@@ -5,11 +5,11 @@
 //   https://maven.neoforged.net/releases/net/neoforged/neoforge/maven-metadata.xml 实际返回
 //   **1 771 个版本**（Reposilite 正常服务）。据此逐档确证 MC↔neo 映射（版本号四段 = <MC 三段>.<build>，
 //   由 pom 里 `net.neoforged:neoform:<MC 三段>-<n>` 依赖逐条核出）：
-//     MC 26.1.2 → 26.1.2.114（有正式版）  MC 26.2 → 26.2.0.88（有正式版）
+//     MC 26.1.2 → 26.1.2.114（有正式版）  MC 26.2 → 26.2 线已有正式版（以 maven 当前 release 为准）
 //     MC 26.1   → 26.1.0.19-beta（**上游无正式版**，该线只有 26.1.0.*-beta）
 //     MC 26.1.1 → 26.1.1.15-beta（**上游无正式版**）
-//     MC 26.3   → 26.3.0.43-beta（**上游无正式版**）
-//   ⇒ 「26.1 / 26.1.1 / 26.3 只有 beta」是上游事实，不是本仓漏抓；真机跑这三档只能用 beta 构件。
+//     MC 26.3   → 26.3.0.95（有正式版；当前 release 线）
+//   ⇒ 「26.1 / 26.1.1 只有 beta」是上游事实，不是本仓漏抓；真机跑这两档只能用 beta 构件。
 // 本档去混淆：无 mappings / parchment 配置；依赖用 implementation 而非 modImplementation。
 
 plugins {

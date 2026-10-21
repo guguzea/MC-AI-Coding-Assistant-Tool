@@ -107,6 +107,15 @@ Follow each package’s license as published on npm（`@xenova/transformers` 为
 - Fetcher: `mcp-server/scripts/fetch-liteloader-wiki.js`
 - License: follow LiteLoader project terms（该 wiki 的页面授权以其自述为准）
 
+## LiteLoader 1.12.2 源码树（`ll-src/`）
+
+- **Source**：`https://develop.liteloader.com/liteloader/LiteLoader` 的 `1.12.2` 分支；本机工作区的未跟踪树 370 个文件（363 个 `.java` + 资源/元数据），其中 `ll-src/liteloader.properties` 的 `brand=1.12.2-SNAPSHOT-r4CC2BB0-b4-4` 可作为该次取件的版本标识。
+- **Copyright**：文件头逐字为 `Copyright (C) 2012-16 Adam Mummery-Smith` + `All Rights Reserved`（363 个 Java 文件中 327 个带该头；其余文件无独立许可头，按同一项目版权处理）。上游站点页脚亦为 `Copyright © 2014-26 Adam Mummery-Smith` / `All Rights Reserved`。
+- **License / 边界**：上游**没有给出开放许可**，`All Rights Reserved` 不构成再分发授权。该树已从 git 索引移除（`.gitignore` 的 `ll-src/` 排除），工作区里的副本只作**本地对照**（类名/签名核对）；**不得**把它打进 GitHub Release、`data/` zip、npm 包或任何对外分发包，也**不得**把其中的源码复制进 scaffold / 生成器 / 文档正文。本登记只记录来源、版权与边界，**不授予任何权利，也不改变上游的 All Rights Reserved 状态**；若权利人要求移除，应删除工作区副本及依赖它的对照记录。
+- **与既有自述的关系**：`mcp-server/data/loader-api-summaries/1.12.2-liteloader.json` 的 `source` 字段写「许可证禁止把 loader 源码再分发进仓库」——该句描述的是上游条款；本节登记的本地副本是**已知的例外/风险项**，不是许可授权。二者不应被读成「已获许可」。
+- **可核对的派生事实**：`liteloader/1.12.2/knowledge/common/verified-api.md` 里的接口名/签名来自真构件 `liteloader-1.12.2-SNAPSHOT.jar` 的 `javap`；源码树只作交叉对照，不是可分发正文。
+- **⚠️ 树内含第三方服务凭据（2026-10-21 登记）**：`ll-src/com/mumfrey/liteloader/util/net/PastebinUpload.java:36` 有硬编码的 `PASTEBIN_API_KEY`，`ll-src/com/mumfrey/liteloader/util/net/LiteLoaderLogUpload.java` 同族另有一处。性质判定：① 属**上游源码原样内容**，不是本项目引入的凭据；② 该 dev key 随上游公开源码发布，上游自身未作秘密管理；③ `ll-src/` **已从 git 索引移除**（本节上文），因此该串**不随本仓库分发**。处置：**不修改上游源码**（改了就不再是与上游可对照的副本）、**不复制进任何生成物或文档**、**不实际使用**；若日后需要启用 LiteLoader 内建的日志上传能力，须由使用者自备自己的 key。本节登记即为此项的记录位。
+
 ## Fabric documentation and Wiki extracts
 
 - Fabric Docs: https://github.com/FabricMC/fabric-docs
@@ -236,7 +245,7 @@ Minecraft is a trademark of Mojang Synergies AB. This project is not affiliated 
 | `mcp-server/data/loader-api-summaries/` | 73 件 / **99,512,010 B**（旁证 `du -sm` → 95，按块进位，与精确字节不同口径） | 55 件 `<MC版本>-<加载器>.json` 签名摘要（类 44,567 / 方法 200,450 / **字段 0**）+ `index.json` + `README.md`（人工覆盖台账）+ `status.json` + `skipped-ingest.json` + `extracted-classes.json` + 5 份 `*-last.json` 运行快照 + `sidecar-templates/`（8 件 = 7 件 `.sidecar` + 该目录 `README.md`） | `scripts/fetch-loader-api-jars.mjs` 从**已解压 MDK 的 `gradle.properties` / `build.gradle` 读 maven 坐标**下 jar 到 `$MC_SKILL_CACHE/loader-jars`（jar 不入库）→ `scripts/decompile-loader-apis.mjs` 抽摘要写本目录 | 逐档 maven 坐标记在该目录 `README.md` 的覆盖表（例 `net.neoforged:neoforge:20.4.251`、`net.neoforged:forge:1.20.1-47.1.106`）+ 各 JSON 的 `sourceJarSha256` ⇒ **语料逐字**；各加载器自身条款按上面对应平台节处理 |
 | `mcp-server/data/lib-api-summaries/` | 48 件 JSON / **39,823,211 B**（旁证 `du -sm` → 39） | 库模组（Cloth Config / GeckoLib / Patchouli / CCA / Trinkets / JEI…）的类与包清单：classCount 合计 114,708 / methodCount 545,127 / 版本键 824 | `scripts/build-api-summaries.mjs` 读 `$MC_SKILL_CACHE/decompiled-mods/<modId>/<modVersion>/**/*.java`；库清单 = `mcp-server/src/diagnostics/library-catalog.ts` 的 `LIBRARY_CATALOG`（`modrinthSlug`），版本面由 `scripts/build-lib-manifest.mjs` 打 Modrinth API 得 | 各库自述许可随其发布物；**本仓没有这 48 个库的 license 文本副本**（`git ls-files data mcp-server/data | grep -ci license` → 0）⇒ **外部-only**，逐库回其 GitHub / Modrinth 页查 |
 
-- **供件人 = 维护者侧管道，不是用户上传物**：`loader-api-summaries` 的 55 件槽摘要里 **48 件 `source: "official"`**，7 件非 official（4 件 `qsl-github-java`、1 件 `official-raw`（rift）、1 件 `1.12.2-liteloader`、1 件 `1.6.4-modloader`）。其中 `1.12.2-liteloader.json` 的 `source` 字段本身就是一句许可说明（原文：**「GitLab 1.12.2 已打开接口（许可证禁止把 loader 源码再分发进仓库）」** ⇒ 该档摘要 classCount 只有 6，不是 jar 全量摘要）；`1.6.4-modloader.json` 写 `safe-api.md (MCP named / public ModLoader API)`（2 类）。
+- **供件人 = 维护者侧管道，不是用户上传物**：`loader-api-summaries` 的 55 件槽摘要里 **48 件 `source: "official"`**，7 件非 official（4 件 `qsl-github-java`、1 件 `official-raw`（rift）、1 件 `1.12.2-liteloader`、1 件 `1.6.4-modloader`）。其中 `1.12.2-liteloader.json` 的 `source` 字段本身就是一句许可说明（原文：**「GitLab 1.12.2 已打开接口（许可证禁止把 loader 源码再分发进仓库）」** ⇒ 该档摘要 classCount 只有 6，不是 jar 全量摘要；该句与 `ll-src/` 本地副本的关系见上文「LiteLoader 1.12.2 源码树」节，不要把副本读成许可授权）；`1.6.4-modloader.json` 写 `safe-api.md (MCP named / public ModLoader API)`（2 类）。
 - 用户自备 jar 那条腿**不进仓库**：`ingest_loader_api` 的摘要只写 `$MC_SKILL_CACHE/loader-api-summaries/` overlay。该目录 `sidecar-templates/README.md` 明写「官方**不会**下载这些 jar（许可 / 无 Gradle 坐标）……摘要只写 overlay，**禁止**提交进仓库 `data/`」；`mcp-server/test-core.mjs` 的 hygiene 腿把「`source: user_jar` 落进官方目录」判红（判据清单见该目录 `README.md` §失败不落盘）。
 - 摘要能力边界（影响署名判断）：**`fields` 恒为 0**（本轮 38 件实测合计 0）⇒ 这两族答不了静态字段名（如 `ForgeRegistries.BLOCKS` 一类），字段名仍须按根 `AGENTS.md` 的四档出处落笔。
 

@@ -8,14 +8,14 @@ version="${mod_version}"
 displayName="${mod_name}"
 description='''${mod_description}'''
 
-[[dependencies.examplemod]]
+[[dependencies.${mod_id}]]
 modId="forge"
 mandatory=true
 versionRange="${forge_version_range}"
 ordering="NONE"
 side="BOTH"
 
-[[dependencies.examplemod]]
+[[dependencies.${mod_id}]]
 modId="minecraft"
 mandatory=true
 versionRange="${minecraft_version_range}"

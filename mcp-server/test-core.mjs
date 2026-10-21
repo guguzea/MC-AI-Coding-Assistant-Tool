@@ -5590,7 +5590,11 @@ public class ExampleMod { }
 
   // W4-7 端到端差分：同一份 >200 行 fixture，crash_analyze 与 inspect_runtime 必须同 crashKind。
   const longCrashFixture = join(dirname(fileURLToPath(import.meta.url)), "test-fixtures", "crash-long.txt");
-  if (existsSync(longCrashFixture)) {
+  // 2026-10-21 修正（审查 mcp-tests-debug F-9）：原为 `if (existsSync(longCrashFixture)) { … }` ——
+  // 该夹具是**已跟踪**件（本不必守卫），一旦被误删/改名，整条 W4-7 端到端差分腿会**静默消失**
+  // 而不是报红（块内含唯一的两条实质断言）。改为硬前置：缺失即红。
+  assert.ok(existsSync(longCrashFixture), `crash-long.txt 缺失（已跟踪夹具，缺失即红）：${longCrashFixture}`);
+  {
     const longCrashBody = readFileSync(longCrashFixture, "utf8");
     assert.ok(longCrashBody.split(/\r?\n/).length > 200, "crash-long.txt 必须 >200 行");
     const direct = analyzeCrash({ crashReportPath: longCrashFixture, version: "1.20.1" });

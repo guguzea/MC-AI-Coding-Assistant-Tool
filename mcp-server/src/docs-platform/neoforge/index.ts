@@ -31,7 +31,7 @@ import {
 } from "../platform-data.js";
 import { semanticSearch } from "../semantic/search.js";
 import { mergeSemanticResultsWithPool, poolFieldsOf, semanticAllowedIds, joinSearchWarnings, withDocsFallbackFields, annotateVerbatim, limitWindowOf, limitClampWarning } from "../search-utils.js";
-import { missingSemanticDbWarning, semanticStaleSearchWarning } from "../semantic/status.js";
+import { missingSemanticDbWarning, semanticDbAbsent, semanticStaleSearchWarning } from "../semantic/status.js";
 import {
   findPrimer,
   isPrimerDocId,
@@ -135,7 +135,18 @@ export const listNeoForgeVersionsSchema = {
   description:
     "返回 data 目录下所有已加载的 NeoForge 文档版本列表（如 [\"26.1\", \"1.21.11\", \"1.20.4\", ...]）。" +
     "注意：1.20.1 版本使用 Forge 1.20.1 数据（100% API 兼容）。" +
-    "官方主文档不按版本分线（/docs/26.2/ 与 /docs/26.1/ 同样 404，现行是未版本化 /docs/）；26.2 构建已发布（maven 最新 26.2.0.75，2026-09-02 实读），迁移差异只见于 primer 26.2，本仓无 26.2 主文档树 ⇒ 用 26.1 + primer 26.2，勿把 26.1 克隆成 26.2。",
+    // 2026-10-21 修正（审查 mcp-docs F-10）：
+    // ① 原写「官方主文档不按版本分线」——把 Docusaurus「现行版走根路径」误读成「没有版本线」。
+    //    实测 /docs/26.2/ 与 /docs/26.1/ 确实 404、/docs/gettingstarted/ 200（现行未版本化存在），
+    //    但 /docs/1.20.6/gettingstarted/ 与 /docs/1.21.1/gettingstarted/ 均 200，后者页头逐字写
+    //    "NeoForged 1.21 - 1.21.1 … see the latest version (26.1)" ⇒ 站点**有**历史版本轴。
+    // ② 原写「maven 最新 26.2.0.75（2026-09-02 实读）」已过期：2026-10-20 读 maven-metadata.xml，
+    //    <release> 与 <latest> 均为 **26.3.0.95**（证据：evidence/web/maven.neoforged.net_…neoforge_maven-metadata.xml）。
+    //    26.2.0.75 仍存在，但已非最新。
+    "官方主文档：现行版走未版本化 /docs/（/docs/26.2/ 与 /docs/26.1/ 均 404），但**历史版本另有版本轴**" +
+    "（如 /docs/1.21.1/gettingstarted/ 实测 200，页头标注 1.21–1.21.1）。maven 最新 release = 26.3.0.95" +
+    "（2026-10-20 实读 maven-metadata.xml；彼时 26.2 线最新为 26.2.0.75，现已非最新）。" +
+    "迁移差异见 primer；本仓无 26.2 / 26.3 主文档树 ⇒ 用 26.1 + primer，勿把 26.1 克隆成 26.2/26.3。",
   inputSchema: z.object({}),
 } as const;
 
@@ -311,7 +322,9 @@ export async function searchNeoForgeDocs(args: {
               : undefined,
             primerHits.length ? "结果含 source=primer（迁移 Primer，不是 loader API 全文）" : undefined,
             version === "26.1" ? "NeoForge 26.1 官方无 /docs/26.1/，抓的是未版本化现行 /docs/（unversionedCurrent）。26.2 成为现行后禁止 --force 覆盖本树，也不要克隆成 26.2。" : undefined,
-            missingSemanticDbWarning(semanticHits === null && !resolution.mainDocsMissing),
+            // 2026-10-21 修正（审查 mcp-docs F-4）：`semanticHits === null` 同时表示「空查询被 C19 守卫挡住」
+              // 与「真缺库」⇒ 空查询会谎报缺库。改用显式存在性判定（与 forge 侧同口径）。
+              missingSemanticDbWarning(semanticDbAbsent(resolveDataDir(), "neoforge", resolution.resolved, "neoforge-docs") && !resolution.mainDocsMissing),
             limitClampWarning(limitWindow),
             // 补齐 stale 警告（此前仅 forge/search_docs 路径有，neoforge 独立路径缺失）
             semanticStaleSearchWarning(

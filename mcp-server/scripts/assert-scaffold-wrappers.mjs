@@ -261,6 +261,20 @@ if (process.env.SCAFFOLD_WRAPPER_GATE_INFO === '1' || process.env.MC_SKILL_WRAPP
   for (const i of infos) console.log(`  info: ${i}`);
 }
 
+// 扫描面地板（2026-10-21，审查 F-6）：本门此前**没有**「扫到了东西」的自证 —— packDirs 为空
+// 或一个 gradle 档都没扫到时，它会照常打印 ok。这与本仓地板惯例相悖（如 test-scripts.mjs 的
+// FLOOR_REAL_RUN/FLOOR_SELFTEST），也与「门报的 0 不等于真的没问题」同一条教训 ⇒ 直接判红。
+// 地板取 30（实测 43 档），只挡「扫描面塌缩」，不挡正常的档位增减。
+const FLOOR_GRADLE_PACKS = 30;
+if (packDirs.length === 0 || gradlePacks < FLOOR_GRADLE_PACKS) {
+  console.error(
+    `assert-scaffold-wrappers: 扫描面塌缩 —— packDirs=${packDirs.length} gradle-mode packs=${gradlePacks}` +
+      `（地板 ${FLOOR_GRADLE_PACKS}）⇒ 本门这一轮**没有验证任何东西**，判红而不是 ok。` +
+      ` 先确认 ROOT/PLATFORMS 解析正确、pack.meta.json 的 scaffold.mode 没被改掉。`,
+  );
+  process.exit(1);
+}
+
 if (failures.length) {
   console.error(`assert-scaffold-wrappers: ${failures.length} mismatch(es)`);
   for (const f of failures) console.error(`  ${f}`);

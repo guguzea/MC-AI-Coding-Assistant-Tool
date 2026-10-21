@@ -10,6 +10,7 @@
  *   node mcp-server/scripts/audit-content-claims.mjs --all --compile
  *   node mcp-server/scripts/audit-content-claims.mjs --all --complete   # 片段补全后编译
  *   node mcp-server/scripts/audit-content-claims.mjs --packs fabric/1.21.11 --fragment path/to/Snippet.java
+ *   node mcp-server/scripts/audit-content-claims.mjs --hygiene [--packs <档>]
  *   node mcp-server/scripts/audit-content-claims.mjs --selftest
  *
  * 输出：temp/content-audit/report.json + 终端摘要。
@@ -18,6 +19,7 @@
  */
 import fs from "node:fs";
 import path from "node:path";
+import os from "node:os";
 import zlib from "node:zlib";
 import crypto from "node:crypto";
 import { spawnSync } from "node:child_process";
@@ -38,9 +40,13 @@ const OUT_DIR = process.env.AUDIT_OUT_DIR
     throw new Error(`【OUTLET-IN-REPO】拒绝把审计产物写进仓库正文：${OUT_DIR}（只允许 <repo>/temp/** 或仓库外路径）`);
   }
 }
-const CACHE_MODULES = "C:/Users/zzrCN/.gradle/caches/modules-2/files-2.1";
+// 2026-10-21 修正（审查：已跟踪文件里带本机用户名/绝对路径）：原写死
+// `<home>/.gradle/...` 这类写死路径 ⇒ 换一台机器全断，且把维护者用户名与目录结构写进公开仓。
+// 现按 `GRADLE_USER_HOME`（Gradle 官方环境变量，缺省 `~/.gradle`）推导，零硬编码。
+const GRADLE_HOME = process.env.GRADLE_USER_HOME || path.join(os.homedir(), ".gradle");
+const CACHE_MODULES = path.join(GRADLE_HOME, "caches/modules-2/files-2.1").replace(/\\/g, "/");
 const MODULES = CACHE_MODULES;
-const LOOM = "C:/Users/zzrCN/.gradle/caches/fabric-loom/minecraftMaven/net/minecraft";
+const LOOM = path.join(GRADLE_HOME, "caches/fabric-loom/minecraftMaven/net/minecraft").replace(/\\/g, "/");
 const EXTERNAL_ROOT = "F:/MOD_TEST";
 const JDK_BIN = "G:/graalvm-jdk-21_windows-x64_bin/graalvm-jdk-21.0.12+7.1/bin";
 const JAVAP = fs.existsSync(path.join(JDK_BIN, "javap.exe")) ? path.join(JDK_BIN, "javap.exe") : "javap";
@@ -61,7 +67,7 @@ const JDK_COMMON = new Set([
 // MC 的类型签名会引用 DFU / brigadier / netty 的接口（如 Registry implements Keyable、
 // FriendlyByteBuf 继承 ByteBuf），javac 需要它们才能判定；否则会把真实错误埋进 "cannot access"。
 function newestModuleJar(group, artifact) {
-  const base = path.join("C:/Users/zzrCN/.gradle/caches/modules-2/files-2.1", group, artifact);
+  const base = path.join(CACHE_MODULES, group, artifact);
   if (!fs.existsSync(base)) return null;
   const cands = [];
   walk(base, 3, cands, (n) => n.endsWith(".jar") && !n.includes("-sources"));
@@ -282,6 +288,42 @@ const NEO_LOADER_VER = {
   "26.2": "11.0.15",
 };
 
+// fabric-loader 的逐档真值：实读各档 scaffold 的 `gradle.properties` 的 `loader_version`；
+// 26.1.2 的 gradle.properties 没有这一行，真值在 `scaffold/build.gradle` 的
+// `implementation "net.fabricmc:fabric-loader:0.19.5"`。早先所有档都取 newestJarIn，
+// 实际拿到 0.10.5（按文件 mtime 最新），与 1.21.x 的真值差 9 个 minor。
+const FABRIC_LOADER_VER = {
+  "1.14.4": "0.3.7.111",
+  "1.16.5": "0.11.2",
+  "1.17.1": "0.11.7",
+  "1.18.2": "0.14.24",
+  "1.19.4": "0.14.21",
+  "1.20.1": "0.15.11",
+  "1.20.4": "0.15.11",
+  "1.21.1": "0.16.9",
+  "1.21.3": "0.16.9",
+  "1.21.4": "0.19.5",
+  "1.21.8": "0.19.5",
+  "1.21.10": "0.19.5",
+  "1.21.11": "0.19.5",
+  "26.1.2": "0.19.5",
+};
+
+// Quilt 各档 scaffold 的 `build.gradle` 都钉同一个 `org.quiltmc:quilt-loader:0.31.0-beta.4`；
+// 它自带 `net.fabricmc.api.ModInitializer`（见各档 scaffold 注释），不能拿 fabric-loader 顶替。
+const QUILT_LOADER_VER = {
+  "1.18.2": "0.31.0-beta.4",
+  "1.19.4": "0.31.0-beta.4",
+  "1.20.1": "0.31.0-beta.4",
+  "1.20.4": "0.31.0-beta.4",
+  "1.21.1": "0.31.0-beta.4",
+  "1.21.3": "0.31.0-beta.4",
+  "1.21.4": "0.31.0-beta.4",
+  "1.21.8": "0.31.0-beta.4",
+  "1.21.10": "0.31.0-beta.4",
+  "1.21.11": "0.31.0-beta.4",
+};
+
 // 这些「支撑件」不参与「本档有没有这个名字」的存在性判定（它们不是 MC/加载器 API 面），
 // 只用于让 javac 能解析注解与基类接口，避免把 can-find 判成 cannot-find。
 // 【Mixinextras 的版本判据】只有 4 档有**本档实测出处**（`build/tmp/javadoc/javadoc.options`
@@ -377,7 +419,7 @@ function supportJarsFor(platform, version) {
     // @Mod 注解在 1.13.2–1.16.5 的 universal 件里；1.17+ 在 javafmllanguage。
     push(pickModuleJar("net.minecraftforge", "javafmllanguage", { prefix: version + "-" }));
     const uni = path.join(
-      "C:/Users/zzrCN/.gradle/caches/forge_gradle/maven_downloader/net/minecraftforge/forge",
+      path.join(GRADLE_HOME, "caches/forge_gradle/maven_downloader/net/minecraftforge/forge").replace(/\\/g, "/"),
     );
     if (fs.existsSync(uni)) {
       const d = fs.readdirSync(uni).filter((x) => x.startsWith(version + "-")).sort(verCmp).pop();
@@ -410,8 +452,16 @@ function supportJarsFor(platform, version) {
 // 与本档无关的「通用支撑」：JDK 之外 MC 类型签名会引用的库。逐档取「能被本档 MC 件解析」的版本太贵，
 // 这里只在**编译面**加，且**不进存在性索引**（buildIndex 只吃 pack jars + fapi + external）。
 const GENERIC_SUPPORT_JARS = [
-  "C:/Users/zzrCN/.gradle/caches/modules-2/files-2.1/com.mojang/datafixerupper/10.0.21/b6b2ae770c02e0c1eb90f9985b151e9085a38d0b/datafixerupper-10.0.21.jar",
-  "C:/Users/zzrCN/.gradle/caches/modules-2/files-2.1/com.mojang/brigadier/1.3.11/3373d1e7bf00c8b99bed1ea4efb8c47344e4a887/brigadier-1.3.11.jar",
+  // 2026-10-21：路径按 GRADLE_HOME 推导（原写死 C:/Users/<user>/.gradle/...）；
+  // 版本号与 sha 目录名保持原样 —— 那是构件身份，不是本机信息。
+  path.join(
+    CACHE_MODULES,
+    "com.mojang/datafixerupper/10.0.21/b6b2ae770c02e0c1eb90f9985b151e9085a38d0b/datafixerupper-10.0.21.jar",
+  ),
+  path.join(
+    CACHE_MODULES,
+    "com.mojang/brigadier/1.3.11/3373d1e7bf00c8b99bed1ea4efb8c47344e4a887/brigadier-1.3.11.jar",
+  ),
   // @Nullable：1.13.2 起 MC 用 org.jetbrains.annotations；javac 缺它只报 warning，
   // 但补 import 候选里 `Nullable` 同时存在于 annotations 与 jspecify ⇒ 只放 annotations 才唯一。
   newestModuleJar("org.jetbrains", "annotations"),
@@ -547,7 +597,7 @@ function findDeobfMerged(ver) {
 // 每个平台的可核构件不同：fabric/quilt = Yarn 合并 jar；forge = _mapped_ jar（official/parchment=mojmap，
 // snapshot=mcp）；neoforge = MDG 的 *-merged.jar；老 Forge/LiteLoader = mappings 里的 MCP 类名表。
 
-const FORGE_REPO = path.join("C:/Users/zzrCN/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge");
+const FORGE_REPO = path.join(GRADLE_HOME, "caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge");
 const NEO_DEV = "F:/MOD_TEST/dev";
 
 function newestJarIn(dir) {
@@ -591,7 +641,7 @@ function findForgeSupportJars(version) {
       if (jar) out.push(jar);
     }
   }
-  const uniBase = path.join("C:/Users/zzrCN/.gradle/caches/forge_gradle/maven_downloader/net/minecraftforge/forge");
+  const uniBase = path.join(GRADLE_HOME, "caches/forge_gradle/maven_downloader/net/minecraftforge/forge");
   if (fs.existsSync(uniBase)) {
     const d = fs.readdirSync(uniBase).filter((x) => x.startsWith(version + "-")).sort().pop();
     if (d) {
@@ -652,12 +702,48 @@ function artifactSet(platform, version) {
       add(findMerged(version, "loom.mappings"), "mojmap");
       expected = "yarn";
     }
-    // loader API（ModInitializer / FabricLoader 等）不在 FAPI 模块里，补一份最新 loader 件做类名索引。
-    add(newestJarIn(path.join(MODULES, "net.fabricmc", "fabric-loader")), "api");
+    // loader API（ModInitializer / FabricLoader 等）不在 FAPI 模块里，必须按档补：
+    //   · fabric 用该档 scaffold 钉的 fabric-loader；
+    //   · quilt 用 quilt-loader（0.31 起自带 net.fabricmc.api.ModInitializer），不能拿 fabric-loader 顶替。
+    // 都没有时只记账、不拿最新件顶替（newestJarIn 会按 mtime 拿到 0.10.5）。
+    if (platform === "quilt") {
+      const exact = QUILT_LOADER_VER[version];
+      const jar = pickModuleJarSameAxis("org.quiltmc", "quilt-loader", exact, platform, version, "loader");
+      if (!jar && !exact) noteApprox(platform, version, "quilt-loader", "(无本档表)", "(缺)", "loader-floor");
+      add(jar, "api");
+    } else {
+      const exact = FABRIC_LOADER_VER[version];
+      const jar = pickModuleJarSameAxis("net.fabricmc", "fabric-loader", exact, platform, version, "loader");
+      if (!jar && !exact) noteApprox(platform, version, "fabric-loader", "(无本档表)", "(缺)", "loader-floor");
+      add(jar, "api");
+    }
   } else if (platform === "neoforge") {
-    add(findNeoMerged(version), "mojmap");
-    add(newestJarIn(path.join(MODULES, "net.neoforged.fancymodloader", "loader")), "api");
-    expected = "mojmap";
+    const neoMerged = findNeoMerged(version);
+    if (neoMerged) {
+      add(neoMerged, "mojmap");
+      expected = "mojmap";
+    } else if (version === "1.20.1") {
+      // NeoForge 1.20.1 是 Forge 兼容层，本机没有它的 merged 构件；
+      // 退回同版 Forge mapped 件跑 MC/Forge 面，并记账。Neo 专属类若真缺仍会报出来。
+      const fm = findForgeMapped(version);
+      if (fm) { add(fm.jar, fm.layer); expected = fm.layer; }
+      for (const j of findForgeSupportJars(version)) add(j, "api");
+      noteApprox(platform, version, "neoforge-merged", "(无本档 merged)", fm ? "forge/" + version : "(缺)", "forge-compat");
+    } else {
+      noteApprox(platform, version, "neoforge-merged", "(无本档 merged)", "(缺)", "missing-merged");
+    }
+    // loader 也必须逐档钉版本。原先这里无条件取 newestJarIn，连 1.21.1 都拿到
+    // 1.21.10 的 10.0.32（差 8 个 major）；support 层虽然已经逐档，但 api 层优先级更高，
+    // 会把正确件顶掉。表里没有 1.20.1：该档走 Forge 兼容层、本机没有独立 loader 件，
+    // 这一档只记账、不拿跨轴件顶替（缺件好过错件）。
+    const loaderExact = NEO_LOADER_VER[version];
+    const loaderJar = pickModuleJarSameAxis(
+      "net.neoforged.fancymodloader", "loader", loaderExact, platform, version, "loader",
+    );
+    if (!loaderJar && !loaderExact) {
+      noteApprox(platform, version, "fancymodloader:loader", "(本档无独立 loader 件)", "(缺)", "loader-floor");
+    }
+    add(loaderJar, "api");
   } else if (platform === "forge" || platform === "rift") {
     const m = findForgeMapped(version);
     if (m) { add(m.jar, m.layer); expected = m.layer; }
@@ -1288,7 +1374,13 @@ function compileOnce(src, imports, body, classpath, dir, tag) {
     '-cp', '"' + slash(classpath) + '"',
     '"' + slash(src) + '"',
   ].join("\n"), "utf8");
-  const r = spawnSync(JAVAC, ["-J-Duser.language=en", "-J-Duser.country=US", "@" + argFile], { encoding: "utf8", timeout: 30000, killSignal: "SIGKILL" });
+  const javacArgs = ["-J-Duser.language=en", "-J-Duser.country=US", "@" + argFile];
+  // 30s 对 NeoForge merged 这类大 classpath 偶尔不够（全量跑出现过 ETIMEDOUT，
+  // 随后定向重跑同一片段又 exit 0）。超时只重试一次，且给更长上限；真挂死仍会判红。
+  let r = spawnSync(JAVAC, javacArgs, { encoding: "utf8", timeout: 30000, killSignal: "SIGKILL" });
+  if (r.error && r.error.code === "ETIMEDOUT") {
+    r = spawnSync(JAVAC, javacArgs, { encoding: "utf8", timeout: 120000, killSignal: "SIGKILL" });
+  }
   if (r.status === 0) return "";
   const out = (r.stderr || "") + (r.stdout || "");
   return out.trim() || `exit=${r.status} signal=${r.signal} error=${r.error ? r.error.message : ""}`;
@@ -1551,6 +1643,14 @@ function autoImport(lines, imports, declared, inv, expected, opts = {}) {
         }, annRef);
         if (chosen) distinct = [chosen];
       }
+    }
+    // 注解位只接受**真注解**：即使只剩一个候选，也不能把普通类补进 `@Environment` 这种位置。
+    // fabric/1.14.4 的 0.3.7.111 缺盘时，`@Environment` 只剩 MC 的 RealmsClient$Environment，
+    // 旧逻辑会补它 ⇒ javac 报 “Environment cannot be converted to Annotation”，把工具缺口判成 fail。
+    if (distinct.length === 1 && annUsed.has(u)) {
+      const h = (inv.bySimple.get(u) || []).find((x) => x.fqcn === distinct[0]);
+      const isAnn = h && ((inv.annotationFqcns && inv.annotationFqcns.has(h.fqcn)) || isAnnotationFqcn(h.jar, h.fqcn));
+      if (h && !isAnn) continue;
     }
     if (process.env.AUDIT_DEBUG_IMPORT === u) console.error(`[debug-import] ${u}: ${JSON.stringify(distinct)}`);
     if (distinct.length !== 1) continue; // 歧义就不猜
@@ -1915,6 +2015,17 @@ function selftest() {
   const codeImports = [];
   const codeAdded = autoImport(["Shift value = null;"], codeImports, new Set(), fakeInvShift, "yarn");
   if (!codeAdded.length) fail.push("code identifier not auto-imported");
+  // 注解位只剩一个**普通类**候选时也不许补：fabric/1.14.4 缺 loader 时 `@Environment`
+  // 曾把 MC 的 RealmsClient$Environment 补进来，javac 报 cannot be converted to Annotation。
+  const fakeInvNonAnn = {
+    ...fakeInv,
+    bySimple: new Map([...fakeInv.bySimple, ["Environment", [{
+      layer: "yarn", fqcn: "net.minecraft.client.realms.dto.RealmsClient$Environment", jar: "",
+    }]]]),
+  };
+  const envImports = [];
+  const envAdded = autoImport(["@Environment(EnvType.CLIENT) public void f() { }"], envImports, new Set(), fakeInvNonAnn, "yarn");
+  if (envAdded.some((x) => /Environment/.test(x))) fail.push("non-annotation must not be imported into annotation position");
   // 5) provenance
   const prov = checkProvenance("x.md", { prose: [{ line: 1, text: "> 本档正文的类名/签名只来自语料" }, { line: 2, text: "javap @ 1.21.11" }] });
   if (!prov.length) fail.push("provenance not detected");
@@ -1945,6 +2056,7 @@ function selftest() {
       ...fakeInv.bySimple,
       ["SubscribeEvent", [{ layer: "support", fqcn: "net.minecraftforge.eventbus.api.SubscribeEvent", jar: "" }]],
     ]),
+    annotationFqcns: new Set(["net.minecraftforge.eventbus.api.SubscribeEvent"]),
   };
   const supImports = [];
   const supAdded = autoImport(["@SubscribeEvent public void f() { }"], supImports, new Set(), fakeInvSupport, "mojmap");
@@ -2201,6 +2313,83 @@ function selftest() {
       const p = pickModuleJar("net.neoforged.fancymodloader", "loader", { exact: want });
       if (!p) fail.push(`fancymodloader loader ${want} for neoforge/${ver} not resolvable`);
     }
+    // artifactSet 的 api loader 也必须跟本档走。support 层虽然已经逐档，但 api 层优先；
+    // 原来 api 层无条件 newestJarIn，1.21.1 会拿到 1.21.10 的 10.0.32，把正确件顶掉。
+    {
+      const loaderOf = (ver) => artifactSet("neoforge", ver).jars
+        .filter((j) => /fancymodloader[\\/]loader/.test(j.jar))
+        .map((j) => j.jar);
+      const got211 = loaderOf("1.21.1");
+      if (!got211.some((p) => p.includes(NEO_LOADER_VER["1.21.1"]))) {
+        fail.push("neoforge artifactSet loader must use per-pack version: " + JSON.stringify(got211));
+      }
+      // 1.20.1 没有本档 fancymodloader 件：不许回落到新版，且必须记账。
+      resetSupportApprox("neoforge", "1.20.1");
+      const got201 = loaderOf("1.20.1");
+      if (got201.length) fail.push("neoforge 1.20.1 must not substitute a newer loader: " + JSON.stringify(got201));
+      if (!approximationsFor("neoforge", "1.20.1").some((a) => a.kind === "loader-floor")) {
+        fail.push("neoforge 1.20.1 missing loader must be recorded as an approximation");
+      }
+    }
+    // fabric / quilt loader 也必须逐档：
+    //   fabric 1.21.11 → 0.19.5；1.14.4 → 0.3.7.111；1.17.1 精确 0.11.7 缺盘，同轴 0.11.2 并记账。
+    //   quilt 全部 → org.quiltmc:quilt-loader:0.31.0-beta.4（不能拿 fabric-loader 顶）。
+    {
+      const jarOf = (plat, ver) => artifactSet(plat, ver).jars
+        .map((j) => j.jar)
+        .filter((p) => /(?:fabric-loader|quilt-loader)-/.test(path.basename(p)));
+      const f211 = jarOf("fabric", "1.21.11");
+      if (!f211.some((p) => p.includes("fabric-loader-" + FABRIC_LOADER_VER["1.21.11"]))) {
+        fail.push("fabric artifactSet loader must use per-pack version: " + JSON.stringify(f211));
+      }
+      // 1.14.4 的 0.3.7.111 可能只有 .pom（本机初始缓存即如此）；有 jar 就用本档，
+      // 没有就只记账、不许跨轴拿 0.10.5。这条臂在「补到 jar」与「没补到」两种机器上都成立。
+      resetSupportApprox("fabric", "1.14.4");
+      const f144 = jarOf("fabric", "1.14.4");
+      if (f144.some((p) => !p.includes("fabric-loader-" + FABRIC_LOADER_VER["1.14.4"]))) {
+        fail.push("fabric 1.14.4 must not use a cross-axis loader: " + JSON.stringify(f144));
+      }
+      if (!f144.length && !approximationsFor("fabric", "1.14.4").some((a) => a.artifact === "fabric-loader")) {
+        fail.push("fabric 1.14.4 missing loader must be recorded");
+      }
+      // 1.17.1 的 0.11.7 本机可能缺盘；有同轴 0.11.2 就顶上并记账，没有就保持缺件。
+      resetSupportApprox("fabric", "1.17.1");
+      const f171 = jarOf("fabric", "1.17.1");
+      const exact171 = f171.some((p) => p.includes("fabric-loader-" + FABRIC_LOADER_VER["1.17.1"]));
+      const near171 = f171.some((p) => p.includes("fabric-loader-0.11.2"));
+      if (!exact171 && !near171) fail.push("fabric 1.17.1 loader neither exact nor 0.11.x: " + JSON.stringify(f171));
+      if (!exact171 && !approximationsFor("fabric", "1.17.1").some((a) => a.artifact === "fabric-loader" && String(a.got).includes("0.11.2"))) {
+        fail.push("fabric 1.17.1 same-axis loader fallback must be recorded");
+      }
+      for (const ver of Object.keys(QUILT_LOADER_VER)) {
+        const q = jarOf("quilt", ver);
+        if (!q.some((p) => p.includes("quilt-loader-" + QUILT_LOADER_VER[ver]))) {
+          fail.push(`quilt/${ver} artifactSet must use quilt-loader ${QUILT_LOADER_VER[ver]}: ` + JSON.stringify(q));
+        }
+      }
+      // fapi 精确件里混进的 loader 必须被剔掉，否则旧档会拿 loom-cache 里的 0.10.5 顶。
+      if (exactApiJars("fabric", "1.14.4").some(isLoaderJarPath)) {
+        fail.push("exactApiJars must exclude fabric-loader jars");
+      }
+      // 1.18.2/1.19.4 的 loom 产物名形如
+      // `net_fabricmc_yarn_…-fabric-loader-0.14.24.jar`，分隔符是 `-` 不是 `.`/`/`。
+      for (const ver of ["1.18.2", "1.19.4"]) {
+        if (exactApiJars("fabric", ver).some(isLoaderJarPath)) {
+          fail.push(`exactApiJars ${ver} must exclude tagged fabric-loader jars`);
+        }
+      }
+      for (const n of [
+        "fabric-loader-0.10.5.jar",
+        "x.net.fabricmc-fabric-loader-0.14.24.jar",
+        "remapped.net.fabricmc.fabric-loader-0.10.5.jar",
+      ]) {
+        if (!isLoaderJarPath(n)) fail.push("isLoaderJarPath missed " + n);
+      }
+      if (isLoaderJarPath("fabric-resource-loader-v0-0.5.3.jar")) fail.push("isLoaderJarPath must not match fabric-resource-loader");
+      if (exactApiJars("quilt", "1.21.11").some(isLoaderJarPath)) {
+        fail.push("exactApiJars must exclude quilt-loader jars");
+      }
+    }
     // mixinextras 的注解完整性下限：拿到的件必须三件注解齐全（0.3.5 缺 @Cancellable）。
     for (const [plas, ver] of [["fabric", "1.21.1"], ["fabric", "1.21.11"], ["fabric", "1.20.1"]]) {
       resetSupportApprox(plas, ver);
@@ -2225,13 +2414,31 @@ function selftest() {
       ["mixinextras 必须做注解完整性校验", ND("MIXINEXTRAS_NEEDED", ".every(")],
       ["同轴顶替必须记账", ND("kind || ", "\"same-axis\"")],
       ["fancymodloader loader 必须按档钉版本", ND("NEO_LOADER_VER", "[version]")],
+      ["fabric loader 必须按档钉版本", ND("FABRIC_LOADER_VER", "[version]")],
+      ["quilt loader 必须走 quilt-loader", ND("pickModuleJarSameAxis(\"org.quiltmc\"", ", \"quilt-loader\"")],
     ];
     for (const [what, needle] of mustContain) {
       if (!src3.includes(needle)) fail.push("wiring: " + what);
     }
+    // 顺序臂：resetSupportApprox 必须在 artifactSet 之前，否则 artifactSet 里记的
+    // 「1.20.1 无独立 loader」会被随后那次清零抹掉（只改顺序也能让记账失声）。
+    {
+      const resetNeedle = ND("resetSupportApprox(platform, version", ");");
+      const artNeedle = ND("const art = artifactSet(platform, version", ");");
+      const resetIdx = src3.indexOf(resetNeedle);
+      const artIdx = src3.indexOf(artNeedle);
+      if (resetIdx < 0 || artIdx < 0 || resetIdx > artIdx) {
+        fail.push("wiring: resetSupportApprox must run before artifactSet");
+      }
+    }
     // 反查：老写法必须已经不在（它是「所有档取最新 12.0.8」的病根）。
     if (/fancymodloader",\s*"loader",\s*\{\}\s*\)/.test(src3)) {
       fail.push("wiring: 不许再有无版本前缀的 fancymodloader loader 调用");
+    }
+    // 反查：fabric 也不许再无条件取最新（mtime 最新是 0.10.5）。
+    {
+      const oldFabric = ND("newestJarIn(path.join(MODULES, \"net.fabricmc\", \"fabric-loader\"", "))");
+      if (src3.includes(oldFabric)) fail.push("wiring: fabric loader 不许再用 newestJarIn");
     }
   }
   //      ① 1.21.10 表里 `AdvancementHolder` 是 mojmap-only（该档实测就是靠这条兜底）；
@@ -2296,17 +2503,211 @@ function selftest() {
       if (!makeAnnotationRefCounter([])) { /* 空集合返回 null 是设计 */ } else fail.push("ref counter with no jars must be null");
     }
   }
+  selftestHygiene(fail);
   console.log(fail.length ? "selftest FAIL: " + fail.join(" | ") : "selftest OK");
   process.exitCode = fail.length ? 1 : 0;
+}
+
+// ---------------------------------------------------------------- hygiene（不挂门链）
+
+// 这些目录是生成物/镜像/外置数据，扫它们只会把同一个缺陷数成 8 份。
+const HYGIENE_SKIP_DIRS = new Set([
+  ".git", "node_modules", "build", ".gradle", "run", "data", "temp",
+  ".claude", ".continue", ".trae", ".opencode", ".agents", ".zcode", ".pi",
+]);
+
+function listHygieneFiles(root, out = []) {
+  if (!fs.existsSync(root)) return out;
+  for (const e of fs.readdirSync(root, { withFileTypes: true })) {
+    if (e.isDirectory()) {
+      if (HYGIENE_SKIP_DIRS.has(e.name)) continue;
+      listHygieneFiles(path.join(root, e.name), out);
+    } else {
+      out.push(path.join(root, e.name));
+    }
+  }
+  return out;
+}
+
+// 用户脚手架里出现维护机绝对路径 = 会被 `Copy-Item -Recurse` / `cp -r` 带进用户工程。
+// 只扫 `scaffold/**` 与 `README_AI.md`：knowledge/ 里的 `F:\MC_GAME\_oracle-jars` 是证据留档，不在此列。
+const HYGIENE_ABS_PATH_RE = /(?:[A-Za-z]:[\\/]+(?:Users|Documents and Settings)[\\/]+|(?:[D-Gd-g]):[\\/]+(?:mc-skill-temp|MC_GAME)[\\/]+)[^\s"'`<>)]*/;
+
+function hygieneAbsolutePath(file, lineNo, line, rel) {
+  if (!/(^|\/)scaffold\//.test(rel) && !/(^|\/)README_AI\.md$/.test(rel)) return [];
+  const m = line.match(HYGIENE_ABS_PATH_RE);
+  if (!m) return [];
+  const legacy = /^(?:rift|liteloader|modloader)\//.test(rel);
+  return [finding("hygiene-abs-path", file, lineNo, m[0].slice(0, 80), line.trim(),
+    legacy ? "info" : "fail",
+    legacy ? "本机路径（该档历史上要求本地自备 jar；仍不应写进 scaffold）" : "scaffold/README 里写死了维护机绝对路径")];
+}
+
+function hygieneNeoForgeMetadata(file, lineNo, line, rel) {
+  if (!/^neoforge\//.test(rel) || !/\.(?:toml|md)$/.test(rel)) return [];
+  if (/^\s*#/.test(line) || /不得|禁止|旧写法|已废弃|deprecated/i.test(line)) return [];
+  if (!/(?:^|\s)mandatory\s*=\s*true\b/.test(line)) return [];
+  const archived = /^neoforge\/scaffold\//.test(rel);
+  return [finding("hygiene-metadata", file, lineNo, "mandatory", line.trim(),
+    archived ? "info" : "fail",
+    "NeoForge 依赖字段是 type=\"required\"；mandatory 是已废弃键" + (archived ? "（根 scaffold 为归档件，见 LEGACY-NOTICE）" : ""))];
+}
+
+function hygieneStaleTotal(file, lineNo, line, rel) {
+  const normative = /\.cursor\/rules\/[^/]+\.mdc$/.test(rel) || /\/knowledge\/[^/]+\.md$/.test(rel);
+  if (!normative) return [];
+  if (!/实测[^\n]{0,120}total:[1-9]\d*/.test(line)) return [];
+  return [finding("hygiene-total", file, lineNo, "total", line.trim(), "info",
+    "实测 total 会随语料扩容漂移；删数字或标注「非契约」")];
+}
+
+// 「未核实」段里出现「已验成 / 已核 / 取代」= 该条是撤回声明，不是待验项。
+function hygieneUnverifiedRetractions(file, text) {
+  const out = [];
+  let inSection = false;
+  const lines = text.split(/\r?\n/);
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    if (/^#{1,6}\s+/.test(line)) {
+      inSection = /^#{1,6}\s*(?:未核实|未验|尚未核实)/.test(line);
+      continue;
+    }
+    if (!inSection) continue;
+    if (!/^\s*[-*]\s+/.test(line)) continue;
+    // 只认「这一项本身被验掉」；「已核例子 / 已核掉 / 已核实引用」是旁证或撤回段标题，不是撤回声明。
+    if (!/已验成|已真机核|已不再是未核实|取代|已核(?![例子范式掉实对过])/.test(line)) continue;
+    if (/没有未核实项|无未核实项/.test(line)) continue;
+    out.push(finding("hygiene-unverified", file, i + 1, "未核实", line.trim(), "fail",
+      "「未核实」段里的条目其实是撤回声明；应移到「已核掉的旧项」"));
+  }
+  return out;
+}
+
+function hygieneNeoForgeField(file, lineNo, line, fields) {
+  if (!fields || (!fields.outer.size && !fields.keys.size)) return [];
+  const placeholder = new Set(["XXX", "XX", "X", "YOUR_FIELD", "FIELD", "FOO", "BAR"]);
+  const out = [];
+  for (const m of line.matchAll(/NeoForgeRegistries(\.Keys)?\.([A-Z][A-Z0-9_]*)(?![A-Za-z0-9_])/g)) {
+    if (placeholder.has(m[2])) continue;
+    const set = m[1] ? fields.keys : fields.outer;
+    if (set.has(m[2])) continue;
+    out.push(finding("hygiene-registry", file, lineNo, m[2], line.trim(), "fail",
+      `NeoForgeRegistries${m[1] || ""} 没有字段 ${m[2]}；真名见 vanilla Registries`));
+  }
+  return out;
+}
+
+function javapStaticFields(jar, fqcn) {
+  const r = spawnSync(JAVAP, ["-p", "-cp", jar, fqcn], { encoding: "utf8", timeout: 60000 });
+  if (r.status !== 0 || !r.stdout) return null;
+  const fields = new Set();
+  for (const line of r.stdout.split(/\r?\n/)) {
+    const m = line.match(/^\s*public\s+static\s+final\s+.*?\b([A-Z][A-Z0-9_]*);\s*$/);
+    if (m) fields.add(m[1]);
+  }
+  return fields;
+}
+
+// 取本机真实 NeoForge universal/merged jar 的字段表；找不到 jar 就返回空集（不猜、不判红）。
+// universal 件在 Gradle modules 缓存里，merged 件在 dev 实例的 build/moddev 下；两者都含
+// `net.neoforged.neoforge.registries.NeoForgeRegistries`（universal 不含 net.minecraft，足够）。
+function neoForgeFieldJarCandidates() {
+  const out = [];
+  const roots = [
+    path.join(CACHE_MODULES, "net.neoforged", "neoforge"),
+    "F:/MOD_TEST/dev",
+    path.join(REPO, "temp"),
+  ];
+  for (const root of roots) {
+    if (!fs.existsSync(root)) continue;
+    walk(root, 6, out, (n) => /^neoforge-.*(?:universal|merged)\.jar$/.test(n) && !n.includes("-sources"));
+  }
+  return [...new Set(out)];
+}
+
+function neoForgeRegistryFields() {
+  const all = { outer: new Set(), keys: new Set() };
+  for (const jar of neoForgeFieldJarCandidates()) {
+    const outer = javapStaticFields(jar, "net.neoforged.neoforge.registries.NeoForgeRegistries");
+    if (outer) for (const f of outer) all.outer.add(f);
+    const keys = javapStaticFields(jar, "net.neoforged.neoforge.registries.NeoForgeRegistries$Keys");
+    if (keys) for (const f of keys) all.keys.add(f);
+  }
+  return all;
+}
+
+function runHygiene(args) {
+  const roots = args.packs && args.packs.length
+    ? args.packs.map((p) => path.join(REPO, p))
+    : ["fabric", "forge", "neoforge", "quilt", "liteloader", "rift", "modloader", "bedrock", "paper"]
+      .map((p) => path.join(REPO, p));
+  const files = roots.flatMap((r) => listHygieneFiles(r));
+  const findings = [];
+  const fieldUses = [];
+  for (const file of files) {
+    if (!/\.(?:md|mdc|json|toml|properties|gradle|java|txt|ya?ml)$/.test(file)) continue;
+    const rel = path.relative(REPO, file).replace(/\\/g, "/");
+    let text;
+    try { text = fs.readFileSync(file, "utf8"); } catch { continue; }
+    const lines = text.split(/\r?\n/);
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      findings.push(...hygieneAbsolutePath(file, i + 1, line, rel));
+      findings.push(...hygieneNeoForgeMetadata(file, i + 1, line, rel));
+      findings.push(...hygieneStaleTotal(file, i + 1, line, rel));
+      if (/^neoforge\//.test(rel) && /NeoForgeRegistries\.[A-Z]/.test(line)) {
+        for (const m of line.matchAll(/NeoForgeRegistries\.([A-Z][A-Z0-9_]*)/g)) {
+          fieldUses.push({ file, line: i + 1, token: m[1], text: line.trim() });
+        }
+      }
+    }
+    if (/\.(?:md|mdc)$/.test(file)) findings.push(...hygieneUnverifiedRetractions(file, text));
+  }
+  const fields = neoForgeRegistryFields();
+  for (const u of fieldUses) findings.push(...hygieneNeoForgeField(u.file, u.line, u.text, fields));
+  fs.mkdirSync(OUT_DIR, { recursive: true });
+  const outFile = path.join(OUT_DIR, "hygiene.json");
+  fs.writeFileSync(outFile, JSON.stringify({ generatedAt: new Date().toISOString(), roots: roots.map((r) => path.relative(REPO, r)), findings }, null, 2), "utf8");
+  const byStatus = { fail: 0, unverifiable: 0, info: 0 };
+  for (const f of findings) byStatus[f.status] = (byStatus[f.status] || 0) + 1;
+  console.log(`hygiene: fail=${byStatus.fail} unverifiable=${byStatus.unverifiable} info=${byStatus.info} (files=${files.length})`);
+  for (const f of findings.filter((x) => x.status === "fail")) {
+    console.log(`  [FAIL] ${f.file}:${f.line} ${f.kind} ${f.symbol} :: ${f.evidence}`);
+  }
+  console.log(`report: ${path.relative(REPO, outFile)}`);
+  process.exitCode = byStatus.fail ? 1 : 0;
+}
+
+function selftestHygiene(fail) {
+  const t = (name, ok) => { if (!ok) fail.push("hygiene: " + name); };
+  t("absolute path detected", hygieneAbsolutePath("x/scaffold/a.json", 1, "\"C:\\\\Users\\\\bob\\\\x\"", "neoforge/1.21.1/scaffold/a.json").length === 1);
+  t("absolute path outside scaffold ignored", hygieneAbsolutePath("x/knowledge/a.md", 1, "F:\\MC_GAME\\_oracle-jars\\x.jar", "forge/1.20.1/knowledge/a.md").length === 0);
+  t("legacy absolute path is info", hygieneAbsolutePath("x/scaffold/a.md", 1, "E:\\MC_GAME\\liteloader", "liteloader/1.12.2/scaffold/a.md")[0]?.status === "info");
+  t("neoforge mandatory detected", hygieneNeoForgeMetadata("x", 1, "mandatory=true", "neoforge/1.21.1/scaffold/src/main/resources/META-INF/neoforge.mods.toml").some((f) => f.status === "fail"));
+  t("archived mandatory is info", hygieneNeoForgeMetadata("x", 1, "mandatory=true", "neoforge/scaffold/README_AI.md")[0]?.status === "info");
+  t("commented mandatory ignored", hygieneNeoForgeMetadata("x", 1, "# mandatory=true", "neoforge/1.21.1/scaffold/a.md").length === 0);
+  t("stale total detected", hygieneStaleTotal("x", 1, "实测本版 total:11", "quilt/1.21.1/.cursor/rules/05-events.mdc").length === 1);
+  t("total:0 ignored", hygieneStaleTotal("x", 1, "实测本版 total:0", "quilt/1.21.1/.cursor/rules/05-events.mdc").length === 0);
+  t("retraction in unverified section detected", hygieneUnverifiedRetractions("x.md", "## 未核实\n\n- （X 已验成，见下节）").length === 1);
+  t("real unverified item not flagged", hygieneUnverifiedRetractions("x.md", "## 未核实\n\n- X 仍未验").length === 0);
+  t("verified example reference not flagged", hygieneUnverifiedRetractions("x.md", "## 未核实\n\n- 未逐个覆盖，已核例子见 01-events").length === 0);
+  t("no-unverified statement not flagged", hygieneUnverifiedRetractions("x.md", "## 未核实\n\n- 本文件当前没有未核实项；旧项均已核掉").length === 0);
+  const fields = { outer: new Set(["ATTACHMENT_TYPES"]), keys: new Set(["ATTACHMENT_TYPES"]) };
+  t("missing registry field detected", hygieneNeoForgeField("x.md", 1, "NeoForgeRegistries.ENTITY_TYPES", fields).length === 1);
+  t("present registry field accepted", hygieneNeoForgeField("x.md", 1, "NeoForgeRegistries.ATTACHMENT_TYPES", fields).length === 0);
+  t("nested Keys field accepted", hygieneNeoForgeField("x.md", 1, "NeoForgeRegistries.Keys.ATTACHMENT_TYPES", fields).length === 0);
+  t("placeholder field ignored", hygieneNeoForgeField("x.md", 1, "NeoForgeRegistries.Keys.XXX", fields).length === 0);
+  t("no jar means no field judgement", hygieneNeoForgeField("x.md", 1, "NeoForgeRegistries.ENTITY_TYPES", { outer: new Set(), keys: new Set() }).length === 0);
 }
 
 // ---------------------------------------------------------------- main
 
 function parseArgs(argv) {
-  const args = { packs: [], all: false, compile: false, complete: false, selftest: false, fragment: null };
+  const args = { packs: [], all: false, compile: false, complete: false, selftest: false, hygiene: false, fragment: null };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === "--selftest") args.selftest = true;
+    else if (a === "--hygiene") args.hygiene = true;
     else if (a === "--all") args.all = true;
     else if (a === "--compile") args.compile = true;
     else if (a === "--complete") { args.compile = true; args.complete = true; }
@@ -2348,7 +2749,7 @@ function locateExternal(pack) {
 
 // 26.x 的 FAPI 模块没有 MC 版本标签，但 umbrella POM 逐条列了精确模块版本。
 function resolveFapiFromPom(version) {
-  const base = "C:/Users/zzrCN/.gradle/caches/modules-2/files-2.1/net.fabricmc.fabric-api";
+  const base = path.join(CACHE_MODULES, "net.fabricmc.fabric-api");
   const umbrella = path.join(base, "fabric-api");
   if (!fs.existsSync(umbrella)) return [];
   for (const d of fs.readdirSync(umbrella).filter((x) => x.endsWith(`+${version}`))) {
@@ -2370,6 +2771,12 @@ function resolveFapiFromPom(version) {
   return [];
 }
 
+function isLoaderJarPath(f) {
+  // 同时覆盖 `fabric-loader-…jar` 与 `remapped.net.fabricmc.fabric-loader-…jar`；
+  // 后者是 Loom 产物，同样不该留在 fapi 层。
+  return /(?:^|[.\\/_-])(?:fabric-loader|quilt-loader)-[^\\/]+\.jar$/.test(f);
+}
+
 function exactApiJars(platform, version) {
   // 基准工程里 Loom 已把该档 FAPI 整套 remap 到本档 Yarn：版本精确、模块成套。
   // 全局 modules-2 缓存混着多个 MC 版本的 FAPI，拿来做类路径会张冠李戴。
@@ -2384,11 +2791,15 @@ function exactApiJars(platform, version) {
     if (!fs.existsSync(root)) continue;
     walk(root, 8, all, (n) => n.endsWith(".jar") && !n.includes("-sources"));
   }
+  // loader 不是 FAPI 模块：它在 artifactSet 里按档单独取。若把它留在 fapi 层，
+  // 旧档会从 loom-cache 里拿到错误版本（1.14.4 实测有 0.10.5 的 fabric-loader），
+  // 既污染存在性索引，也可能被当成可导入候选。
+  const fapiOnly = all.filter((f) => !isLoaderJarPath(f));
   // 同一目录里可能残留上一次构建（另一个 Minecraft 版本）的产物；有 remapped.* 就只认它。
-  const remapped = all.filter((f) => path.basename(f).startsWith("remapped."));
+  const remapped = fapiOnly.filter((f) => path.basename(f).startsWith("remapped."));
   if (remapped.length) return [...new Set(remapped)];
   const tag = "_" + version.replace(/\./g, "_") + "_";
-  const tagged = all.filter((f) => f.includes(tag));
+  const tagged = fapiOnly.filter((f) => f.includes(tag));
   if (tagged.length) return [...new Set(tagged)];
   if (/^26\./.test(version)) return resolveFapiFromPom(version);
   return [];
@@ -2399,6 +2810,9 @@ function runPack(packDir, opts) {
   const isBedrock = path.basename(packDir) === "bedrock" && fs.existsSync(path.join(packDir, "pack.meta.json"));
   const platform = isBedrock ? "bedrock" : path.basename(path.dirname(packDir));
   const version = isBedrock ? "stable" : path.basename(packDir);
+  // artifactSet 也可能产生近似记账（neoforge 1.20.1 没有独立 loader 件），
+  // 清零必须放在它之前，否则 artifactSet 里记的账会被 supportJarsFor 前这一步抹掉。
+  resetSupportApprox(platform, version);
   const art = artifactSet(platform, version);
   const jars = [...art.jars];
   let ext = [];
@@ -2407,7 +2821,7 @@ function runPack(packDir, opts) {
     const exact = exactApiJars(platform, version);
     const { fapi } = opts.jars;
     // 索引面：没有精确 remap 件时仍用全局模块做「类名存在性」检查（包名与映射无关）。
-    for (const j of (exact.length ? exact : fapi)) jars.push({ jar: j, layer: "fapi" });
+    for (const j of (exact.length ? exact : fapi).filter((f) => !isLoaderJarPath(f))) jars.push({ jar: j, layer: "fapi" });
     ext = locateExternal({ dir: packDir, version });
     for (const j of ext) jars.push({ jar: j, layer: "external" });
     // 编译面：只有本档精确 remap 的 FAPI 能配本档 Yarn jar；全局件是 intermediary 层，
@@ -2426,8 +2840,7 @@ function runPack(packDir, opts) {
   //   · 但补全器必须知道这些名字的唯一 FQCN，否则 @SubscribeEvent / @Mixin / Dist / Nullable
   //     这些「本档确实有、只是不在 MC 合并 jar 里」的名字永远补不出来 —— 单开一个 support 层。
   // 这两步抽成 mergeSupportIndex()，selftest 才投得动毒。
-  // 支撑件的「近似顶替」从这里开始记账，随该档结果写进报告（见 supportApproximations）。
-  resetSupportApprox(platform, version);
+  // 支撑件的「近似顶替」从 artifactSet 就开始记账，随该档结果写进报告（见 supportApproximations）。
   const supportJars = supportJarsFor(platform, version);
   const auxJars = [...new Set([...supportJars, ...GENERIC_SUPPORT_JARS])];
   mergeSupportIndex(inv, buildIndex(auxJars.map((jar) => ({ jar, layer: "support" }))));
@@ -2476,6 +2889,18 @@ function runPack(packDir, opts) {
     slot = j.slots?.[version]?.coord || null;
   } catch {}
 
+  // 没有构件却按「编译通过」沉默收工，是假绿。--complete 下必须留一条工具侧缺口。
+  if (opts.compile && !jars.length) {
+    findings.push({
+      kind: "compile",
+      file: path.relative(REPO, packDir),
+      line: 0,
+      symbol: "artifacts",
+      claim: "本档没有可解析的构件，--complete 编译被跳过",
+      status: "unverifiable",
+      evidence: "artifactSet 返回空",
+    });
+  }
   for (const file of files) {
     let parsed;
     try { parsed = parseMarkdown(file); } catch { continue; }
@@ -2520,6 +2945,7 @@ function runPack(packDir, opts) {
 function main() {
   const args = parseArgs(process.argv.slice(2));
   if (args.selftest) return selftest();
+  if (args.hygiene) return runHygiene(args);
   fs.mkdirSync(OUT_DIR, { recursive: true });
   const jars = collectJars();
   let packs = args.packs;
@@ -2535,7 +2961,7 @@ function main() {
     if (fs.existsSync(path.join(REPO, "bedrock", ".cursor"))) packs.push(path.join(REPO, "bedrock"));
   }
   if (!packs.length) {
-    console.error("用法：--packs fabric/1.21.11,forge/1.20.1 | --all [--compile|--complete] | --packs <档> --fragment <片段.java> | --selftest");
+    console.error("用法：--packs fabric/1.21.11,forge/1.20.1 | --all [--compile|--complete] | --hygiene [--packs <档>] | --packs <档> --fragment <片段.java> | --selftest");
     process.exitCode = 2;
     return;
   }

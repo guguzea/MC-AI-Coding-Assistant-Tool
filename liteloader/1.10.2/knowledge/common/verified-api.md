@@ -8,7 +8,7 @@
 
 ## 构件 javap 复核——整族接口已打通
 
-**构件**：`liteloader-1.10.2.jar`，md5 `8a7c21f32d77ee08b393dd3921ced8eb`（取自 `dl.liteloader.com/versions/com/mumfrey/liteloader/1.10.2/`；与 versions.json 的 RELEASE 记录逐字一致）。本机留档：`F:\MC_GAME\_oracle-jars\liteloader\`。
+**构件**：`liteloader-1.10.2.jar`，md5 `8a7c21f32d77ee08b393dd3921ced8eb`（取自 `dl.liteloader.com/versions/com/mumfrey/liteloader/1.10.2/`；与 versions.json 的 RELEASE 记录逐字一致）。本机留档：`<本地构件留档>\liteloader\`（维护机路径不入库；复现按上面的 jar 名 + md5 自取）。
 ⚠️ **本档发布件的 vanilla 参数类型是混淆名**（`bcx`/`ey`/`eq`/`bft`/`bdp`/`im` 等）⇒ 构件只证「类名 / 方法名 / 元数」，**vanilla 类型名一律不得据本构件写出**（本档无映射腿）。JDK21 `javap -p` 逐类实测：
 
 | 接口（构件逐字） | 方法（构件逐字；vanilla 参数为混淆名） |
@@ -23,7 +23,7 @@
 | `com.mumfrey.liteloader.ViewportListener` | `onViewportResized(bdp, int, int)` / `onFullScreenToggled(boolean)` |
 | `com.mumfrey.liteloader.core.CommonPluginChannelListener` | `List<String> getChannels()` |
 
-⇒ **tick 钩子出处已取得**（上表 `Tickable` 行）；的「不得新增 tick 相关名字」禁令据此**解除**。仍禁止把 1.12.2 文件整表照抄——引用只许来自本表与本节构件清单。运行行为（tick 频率、线程纪律）仍属实测面，未实测就标未实测。
+⇒ **tick 钩子出处已取得**（上表 `Tickable` 行）；该「不得新增 tick 相关名字」禁令据此**解除**。仍禁止把 1.12.2 文件整表照抄——引用只许来自本表与本节构件清单。运行行为（tick 频率、线程纪律）仍属实测面，未实测就标未实测。
 
 ### 历史记录（已被上节取代）
 

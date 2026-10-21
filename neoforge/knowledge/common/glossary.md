@@ -50,7 +50,7 @@
 : 注意：裸 `net.neoforged.gradle` 是 **旧 Forge 时代**的 NeoGradle，插件门户上最新只到 `6.0.21`；`net.minecraftforge.gradle` 则是 ForgeGradle，只属于 Forge 档。
 
 ### Foojay Toolchains
-: Gradle 插件，通过 `org.gradle.toolchains.foojay-resolver-convention` 自动下载正确的 Java JDK。本仓 8 份 `neoforge/<ver>/scaffold/settings.gradle` 钉 `1.0.0`（`26.1` 档 scaffold 只有 `README.md` / `build.gradle` / `src`，没有 settings.gradle）。
+: Gradle 插件，通过 `org.gradle.toolchains.foojay-resolver-convention` 自动下载正确的 Java JDK。本仓 9 份 `neoforge/<ver>/scaffold/settings.gradle` 均钉 `1.0.0`。
 
 ### userdev
 : NeoGradle 的特殊分类器 artifact，包含开发环境所需的 MCP 配置和反编译工具。

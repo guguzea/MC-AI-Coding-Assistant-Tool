@@ -1,8 +1,8 @@
 # Gradle 配方与实测坑位（rift 1.13.2）
 
-> **本配方已实测**：在 `E:\MC_GAME\rift-1.13.2` 真跑 `gradlew build`（BUILD SUCCESSFUL / 18 tasks）
+> **本配方已实测**：在本地 Rift 1.13.2 实例真跑 `gradlew build`（BUILD SUCCESSFUL / 18 tasks）
 > 与 `gradlew runClient`（LWJGL + OpenAL + 纹理图集 + Narrator 全部初始化，停在主菜单）。
-> JDK = Zulu 8.0.504（`G:\zulu8.96.0.205-ca-jdk8.0.504-win_x64`，**必须 Java 8**），Gradle 4.9。
+> JDK = Zulu 8.0.504（**必须 Java 8**），Gradle 4.9。（实例与 JDK 的维护机绝对路径不入库；实测读数见 `pack.meta.json` 的 `provenance.build`）
 
 ## 1. 头号结论：**Rift 用的不是 `net.minecraftforge.gradle`**
 

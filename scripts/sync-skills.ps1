@@ -250,11 +250,19 @@ function Sync-VersionDir {
     foreach ($rule in Get-ChildItem "$Base\.cursor\rules" -Filter "*.mdc" -ErrorAction SilentlyContinue) {
         [void]$cursorRuleNames.Add($rule.Name)
     }
+    # A2（规则面，与 :181 的 skills 面同款闸门）：源集合为空（.cursor/rules 存在但 *.mdc 为 0 /
+    # 全被改名或移走）时，下面两段按名字逐个 Remove-Item 的剪枝会把 6 宿主 + .pi 的镜像规则删光。
+    # 入口 :108-111 只在 .cursor/rules **不存在**时 return；目录在而为空时不 return —— 这里显式兜住。
+    # 消息串必须 ASCII（同 :179 的 GBK 陷阱）。
+    $pruneRulesAllowed = $cursorRuleNames.Count -gt 0
+    if (-not $pruneRulesAllowed) {
+        Write-Host "[Rules] source set empty: skip host rule prune (avoid mass delete)" -ForegroundColor Red
+    }
     foreach ($hostDir in @(".claude", ".continue", ".trae", ".opencode", ".agents", ".zcode")) {
         $p = "$Base\$hostDir\rules"
         if (-not (Test-Path $p)) { continue }
         foreach ($f in Get-ChildItem $p -Filter "*.mdc" -File -ErrorAction SilentlyContinue) {
-            if (-not $cursorRuleNames.Contains($f.Name)) {
+            if ($pruneRulesAllowed -and -not $cursorRuleNames.Contains($f.Name)) {
                 Remove-Item $f.FullName -Force
                 Write-Host "  Removed extra rule: $($f.FullName)" -ForegroundColor DarkYellow
             }
@@ -264,7 +272,7 @@ function Sync-VersionDir {
     if (Test-Path $piRules) {
         foreach ($f in Get-ChildItem $piRules -Filter "*.md" -File -ErrorAction SilentlyContinue) {
             $want = [System.IO.Path]::GetFileNameWithoutExtension($f.Name) + ".mdc"
-            if (-not $cursorRuleNames.Contains($want)) {
+            if ($pruneRulesAllowed -and -not $cursorRuleNames.Contains($want)) {
                 Remove-Item $f.FullName -Force
                 Write-Host "  Removed extra rule: $($f.FullName)" -ForegroundColor DarkYellow
             }

@@ -14,7 +14,7 @@ const { detectModProject } = await import("./dist/platform-pack/detect.js");
 const { activatePlatformPack } = await import("./dist/platform-pack/index.js");
 const { packWriteTestHooks } = await import("./dist/platform-pack/write.js");
 const { fabricRulesOverlay, inspectPack, coversMcVersion, FABRIC_SKILL_DONORS, wrapBanneredBody, parseFrontmatterMap, frontmatterDescription, listLibSkillIndex } = await import("./dist/platform-pack/catalog.js");
-const { upsertHostMarker, beginMarker, entryBody, hostLayout } = await import("./dist/platform-pack/hosts.js");
+const { upsertHostMarker, beginMarker, entryBody, hostLayout, expandHosts } = await import("./dist/platform-pack/hosts.js");
 const { stripUtf8Bom } = await import("./dist/utils/text.js");
 
 const savedRoot = process.env.MC_SKILL_PROJECT_ROOT;
@@ -192,6 +192,44 @@ delete process.env.MC_SKILL_ALLOW_WRITE;
   assert.ok(claudeRels.some((r) => r.includes(".claude/rules/mc-skill-")), claudeRels.slice(0, 8).join(","));
   rmSync(tmp, { recursive: true, force: true });
   console.log("opencode no rulesDir / claude rules path: ok");
+}
+
+{
+  // dsh（DeepSeek Harness）：指令面只认 AGENTS.md，skill 根 = .agents/skills（与 codex 共用）。
+  // 钉三件：① 无 rulesDir（DSH 不解释 <host>/rules）；② entryBody 指向 .agents/skills；
+  // ③ write 落盘只写 AGENTS.md marker + .agents/skills/<name>/SKILL.md，绝不写 .dsh 树。
+  assert.equal(hostLayout("dsh").rulesDir, undefined);
+  assert.equal(hostLayout("dsh").skillsDir, ".agents/skills");
+  assert.equal(hostLayout("dsh").entryFile, "AGENTS.md");
+  const dshBody = entryBody("dsh", "neoforge", "1.21.1");
+  assert.doesNotMatch(dshBody, /规则见.*\.cursor\/rules/);
+  assert.match(dshBody, /本宿主不落盘规则/);
+  assert.match(dshBody, /\.agents\/skills/);
+  assert.match(dshBody, /host=dsh/);
+  const dshTmp = mkdtempSync(join(tmpdir(), "mc-pack-dsh-"));
+  const dshPrev = activatePlatformPack({
+    action: "write",
+    platform: "neoforge",
+    minecraftVersion: "1.21.1",
+    hosts: ["dsh"],
+    projectPath: dshTmp,
+    writeSkillStubs: true,
+    dryRun: true,
+  });
+  assert.equal(dshPrev.ok, true, JSON.stringify(dshPrev).slice(0, 400));
+  const dshRels = (dshPrev.planned ?? []).map((p) => p.rel);
+  assert.ok(dshRels.includes("AGENTS.md"), dshRels.join(","));
+  assert.ok(
+    dshRels.some((r) => r.startsWith(".agents/skills/") && r.endsWith("/SKILL.md")),
+    dshRels.slice(0, 8).join(","),
+  );
+  assert.ok(!dshRels.some((r) => r.startsWith(".dsh/")), "dsh 不得写 .dsh 投影树");
+  assert.ok(!dshRels.some((r) => /\/rules\//.test(r)), "dsh 不得写 rules 目录");
+  // expandHosts("all") 必须认 dsh（否则 --hosts=all 会静默漏掉它）
+  const allHosts = expandHosts(["all"]);
+  assert.ok(Array.isArray(allHosts) && allHosts.includes("dsh"), JSON.stringify(allHosts).slice(0, 200));
+  rmSync(dshTmp, { recursive: true, force: true });
+  console.log("dsh host: AGENTS.md + .agents/skills, no .dsh tree: ok");
 }
 
 {

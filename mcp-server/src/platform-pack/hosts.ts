@@ -7,13 +7,14 @@ export const PACK_HOSTS = [
   "codex",
   "zcode",
   "pi",
+  "dsh",
 ] as const;
 
 export type PackHost = (typeof PACK_HOSTS)[number];
 
 export function expandHosts(raw: string[] | undefined): PackHost[] | { error: string } {
   if (!raw || raw.length === 0) {
-    return { error: "hosts 必填（cursor|claude|continue|trae|opencode|codex|zcode|pi，或 all）。禁止默认 Cursor。" };
+    return { error: "hosts 必填（cursor|claude|continue|trae|opencode|codex|zcode|pi|dsh，或 all）。禁止默认 Cursor。" };
   }
   const out: PackHost[] = [];
   const seen = new Set<string>();
@@ -70,6 +71,10 @@ export function hostLayout(host: PackHost): HostLayout {
       return { entryFile: "AGENTS.md", rulesExt: ".mdc", skillsDir: ".agents/skills" };
     case "zcode":
       return { entryFile: "AGENTS.md", rulesExt: ".mdc", skillsDir: ".zcode/skills" };
+    // DSH（DeepSeek Harness）：指令面只认 AGENTS.md/CLAUDE.md，不解释 <host>/rules；
+    // skill 发现根 rank 200 恰是 <projectRoot>/.agents/skills ⇒ 与 codex 共用同一棵树，不另造投影树。
+    case "dsh":
+      return { entryFile: "AGENTS.md", rulesExt: ".mdc", skillsDir: ".agents/skills" };
     case "pi":
       return { rulesDir: ".pi/rules", rulesExt: ".md", skillsDir: ".pi/skills", piDescription: true };
   }

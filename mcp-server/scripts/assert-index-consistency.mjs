@@ -107,8 +107,11 @@ const LEDGER_SUM = {
   // （`fetch-paper-docs.mjs` / `fetch-spigot-javadoc.mjs`）、许可已记账于 `THIRD_PARTY_NOTICES.md`
   // （`paper` 教程面 = CC BY-SA 4.0；两个签名面随上游 Paper/Spigot 条款）。
   // 守恒校验：61+3=64 · 51516+3631+1155+2195=58497 · 31858+3169+709+1789=37525（与实扫逐字相符）。
+  // 2026-10-21 重签（lead，qsl-verified 派生件重建后）：quilt 1784→1790 / 1349→1355（+6/+6），
+  // 顶层 58497→58503 / 37525→37531。原因是 `quilt/1.21.11` 源稿补了 javap 出处构件的字样后
+  // 重跑 `index-qsl-verified.mjs --write`，processed 页变长 ⇒ 多切出 6 个 chunk。
   // 重签路径 = `MC_SKILL_INDEX_RELEDGER=1`（该分支只打印不落盘 ⇒ 按打印值手抄，见 :103 既有口径）。
-  entries: 64, chunks: 58497, embedded: 37525,
+  entries: 64, chunks: 58503, embedded: 37531,
   perPlatform: {
     "bedrock": { entries: 2, chunks: 15173, embedded: 4541 },
     "fabric": { entries: 27, chunks: 7935, embedded: 5898 },
@@ -118,7 +121,7 @@ const LEDGER_SUM = {
     "neoforge": { entries: 9, chunks: 18877, embedded: 14169 },
     "paper": { entries: 1, chunks: 1155, embedded: 709 },
     "paper-api": { entries: 1, chunks: 3631, embedded: 3169 },
-    "quilt": { entries: 6, chunks: 1784, embedded: 1349 },
+    "quilt": { entries: 6, chunks: 1790, embedded: 1355 },
     "rift": { entries: 1, chunks: 47, embedded: 29 },
     "spigot": { entries: 1, chunks: 2195, embedded: 1789 },
   },

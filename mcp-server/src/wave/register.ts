@@ -286,7 +286,7 @@ export const playtestIntentSchema = z.object({
 export const PLAYTEST_INTENT_DESCRIPTION =
   "in_jvm_player_agent 的 LLM 接线面（2026-10-01 裁定 3A：独立工具，不复用桥）：action=read 读 <evidenceDir>/state.json（intentState / intents[] / lastIntent / scan.nearest / goto.arrived）+ 菜单 + 邮箱状态；action=write 把 {intent, ...params} 落到 <evidenceDir>/intent.json（driver 的 waitintent 步消费）。写前校验 fail-closed：意图名在菜单里 / 不在禁列 / 参数 ⊆ 声明 / 必填齐 / 不覆盖未消费件（除非 overwrite=true）。须 MC_SKILL_PLAYTEST_ALLOW=1 + MC_SKILL_PLAYTEST_ROOT（realpath 在根内）；不装桥、不跑游戏。";
 export const GENERATE_PLAYTEST_DRIVER_DESCRIPTION =
-  "Generate playtest driver（只吐文本，默认不写盘）。platform 与 version 必填（精确 MC 版本）。driverMode 默认 external_bridge（桥 HTTP 动作序列 + 后置条件 + 证据约定）——**若 (platform,version) ∈ 桥模板目标集（`playtest-bridge-mod.ts` 的 `BRIDGE_MOD_TARGETS` = forge {1.7.10,1.8.9,1.9.4,1.10.2,1.11.2,1.12.2} + rift 1.13.2 + modloader 1.6.4），另附赠自建「最小桥 mod」模板** `playtest/bridge/**`（forge/rift 出 `BridgeMod.java`+元数据，rift 附 `riftmod.json`、modloader 出 `mod_*.java`；**⚠️ 本桥（external_bridge）的能力天花板 = 命令级**：桥发聊天包不是键位输入 ⇒ 读数/观察 + `/tp` `/setblock` 这类命令级操控可用（受实例 op 约束），**玩家物理路径（走位/跳跃/挖掘耗时/碰撞）测不了**，别当 driver 用（**对照**：`temporary_client_tick_driver` / `in_jvm_player_agent` 是**玩家级**——真按键原语 forward/jump/sneak/attack/use + move/goto/break/gui，走位/跳跃/挖掘/GUI 交互都做得到；这句「测不了」只限定本桥）；线协议逐键对齐 BlackBoxPro：/status 六键、/execute {id,status,message,data} + HTTP 恒 200、超时串 Timeout after 10000ms ⇒ playtest_bridge 工具面零改动；动作 4 个 query_player_state(含 health)/chat_command/screenshot/block_at；1.12.2 已 JDK 8 javac 对真 forgeBin 编译验证，1.7.10–1.11.2 只有 javadoc 出处、未编译验证；**rift 1.13.2 逐名有 1.13.2 MCP 快照出处（但 `Minecraft.getInstance()` 的 static 性证不出、`block_at` 只回 translation key）；modloader 1.6.4 只出「骨架」——本仓已实证三类出处（`setInGameHook` 注册 / `onTickInGame` 回调实名 / `getMinecraftInstance` 单例），MC 侧玩家与位置、聊天语义、截图、读方块 4 项仍无来源 ⇒ `/execute` 一律 fail-closed**；**不进 PLAYTEST_VERIFIED_TIER**）；temporary_client_tick_driver 在**`PLAYTEST_VERIFIED_TIER` 列出的档**（唯一真源，随逐档 javap 取证扩面——**不要按某版正文里数的档位当权威**；生成器按该数组现算并点名清单）产出**可编译的真 driver**——**解释器引擎**：动作序列是数据（scenario=smoke|village 或自定义 plan DSL：wait/look/fly/move/cmd/goto/scan/assert/waitfor/shot/break/gui/mark/touch/waitfile；waitfor 与 assert 同一求值器但**轮询等条件**、超时判红，用来替掉「用时间当同步」的固定 wait），换场景只改剧本不改 Java；产物含 driver + plan.json + REVERT.md + README + actions.json；in_jvm_player_agent 在**同一批已验证档**上是**真执行器**（intent / waitintent 邮箱步族），表外档才退回结构壳（// TODO(未核实)）——它不是「全档结构壳」。不装桥、不跑游戏；无桥路线与坑位见社区短文 authored/ingame-playtest-automation。";
+  "Generate playtest driver（只吐文本，默认不写盘）。platform 与 version 必填（精确 MC 版本）。driverMode 默认 external_bridge（桥 HTTP 动作序列 + 后置条件 + 证据约定）——**若 (platform,version) ∈ 桥模板目标集（`playtest-bridge-mod.ts` 的 `BRIDGE_MOD_TARGETS` = forge {1.7.10,1.8.9,1.9.4,1.10.2,1.11.2,1.12.2} + rift 1.13.2 + modloader 1.6.4），另附赠自建「最小桥 mod」模板** `playtest/bridge/**`（forge/rift 出 `BridgeMod.java`+元数据，rift 附 `riftmod.json`、modloader 出 `mod_*.java`；**⚠️ 本桥（external_bridge）的能力天花板 = 命令级**：桥发聊天包不是键位输入 ⇒ 读数/观察 + `/tp` `/setblock` 这类命令级操控可用（受实例 op 约束），**玩家物理路径（走位/跳跃/挖掘耗时/碰撞）测不了**，别当 driver 用（**对照**：`temporary_client_tick_driver` / `in_jvm_player_agent` 是**玩家级**——真按键原语 forward/jump/sneak/attack/use + move/goto/break/gui，走位/跳跃/挖掘/GUI 交互都做得到；这句「测不了」只限定本桥）；线协议逐键对齐 BlackBoxPro：/status 六键、/execute {id,status,message,data} + HTTP 恒 200、超时串 Timeout after 10000ms ⇒ playtest_bridge 工具面零改动；动作 **10 个**（`query_player_state`(含 health)/`chat_command`/`screenshot`/`block_at`/`query_inventory_slot`/`query_inventory`/`query_nearby_entities`/`query_chat_history`/`use_item`/`query_screen`，与 `playtest-bridge-mod.ts` 的 `ACTIONS` 常量逐项一致；逐档可用性不同，不可用的返回带原因的 `failure`，不是假绿）；1.12.2 已 JDK 8 javac 对真 forgeBin 编译验证，1.7.10–1.11.2 只有 javadoc 出处、未编译验证；**rift 1.13.2 逐名有 1.13.2 MCP 快照出处（但 `Minecraft.getInstance()` 的 static 性证不出、`block_at` 只回 translation key）；modloader 1.6.4 只出「骨架」——本仓已实证三类出处（`setInGameHook` 注册 / `onTickInGame` 回调实名 / `getMinecraftInstance` 单例），MC 侧玩家与位置、聊天语义、截图、读方块 4 项仍无来源 ⇒ `/execute` 一律 fail-closed**；**不进 PLAYTEST_VERIFIED_TIER**）；temporary_client_tick_driver 在**`PLAYTEST_VERIFIED_TIER` 列出的档**（唯一真源，随逐档 javap 取证扩面——**不要按某版正文里数的档位当权威**；生成器按该数组现算并点名清单）产出**可编译的真 driver**——**解释器引擎**：动作序列是数据（scenario=smoke|village 或自定义 plan DSL：wait/look/fly/move/cmd/goto/scan/assert/waitfor/shot/break/gui/mark/touch/waitfile；waitfor 与 assert 同一求值器但**轮询等条件**、超时判红，用来替掉「用时间当同步」的固定 wait），换场景只改剧本不改 Java；产物含 driver + plan.json + REVERT.md + README + actions.json；in_jvm_player_agent 在**同一批已验证档**上是**真执行器**（intent / waitintent 邮箱步族），表外档才退回结构壳（// TODO(未核实)）——它不是「全档结构壳」。不装桥、不跑游戏；无桥路线与坑位见社区短文 authored/ingame-playtest-automation。";
 export const INSPECT_PLAYTEST_EVIDENCE_DESCRIPTION =
   "读游玩自测证据目录（exit-code.txt / state.json / [QA] 段 / calls.jsonl / 截图），每件三态 present|absent|unreadable —— 缺件不得读成「没有失败」。须 MC_SKILL_PLAYTEST_ALLOW=1 + MC_SKILL_PLAYTEST_ROOT（目标 realpath 必须在根内）。可选 logsDir 委派 inspect_runtime；不并入 inspect_runtime 的只读禁令面。";
 export const INSPECT_PLAYTEST_MULTI_DESCRIPTION =
@@ -604,7 +604,7 @@ export const activatePlatformPackSchema = z.object({
   hosts: z
     .array(z.string())
     .optional()
-    .describe("write/deactivate 必填：cursor|claude|continue|trae|opencode|codex|zcode|pi，或 all。禁止默认 Cursor"),
+    .describe("write/deactivate 必填：cursor|claude|continue|trae|opencode|codex|zcode|pi|dsh，或 all。禁止默认 Cursor"),
   topics: z
     .array(z.string())
     .optional()
@@ -705,7 +705,7 @@ export function registerWaveExtensions(server: McpServer): void {
       title: "Get workflow template (Prompt fallback)",
       description:
         "返回与 MCP Prompt 同名的工作流全文；Cursor 等仅支持 tools 时使用。" +
-        "仅在用户要完整流程（从零建模组、崩溃分诊、移植）时调用；给已有工程加方块/改代码不要调。" +
+        "仅在用户要走**完整流程**时调用（新建方块/物品/方块实体/实体/GUI/Mixin/世界生成/配置/GameTest/崩溃分诊/移植/从零构建/环境搭建/真机循环/发布/汉化/反编译研究等 17 场景，与根 AGENTS.md 逐字对齐）；纯改代码、补方法、查文档走规则 + Skill + `search_*_docs`，不要先调工作流。" +
         "模板是人在环步骤清单：创意/兼容/API/性能/调试由用户拍板；写盘、Gradle、拷 jar、上传须确认，不是无人值守编排器。",
       inputSchema: getWorkflowTemplateSchema,
     },
@@ -1213,7 +1213,7 @@ export const waveToolSchemas: Array<{ name: string; description: string; inputSc
   { name: "mixin_analyze", description: MIXIN_ANALYZE_DESCRIPTION, inputSchema: mixinAnalyzeSchema },
   { name: "audit_resources", description: "静态检查模型引用的纹理、孤儿纹理、modId 命名等问题。可传 resourceRoot，或 projectPath（从 fabric.mod.json / mods.toml 推 assets/<modid>）。", inputSchema: auditResourcesSchema },
   { name: "validate_datapack_json", description: "recipe / loot_table / advancement / tag 的精简 JSON 校验。minecraft:crafting_special_* 与 smithing_trim 等无 result 不报错；普通 crafting_shaped 缺 result 仍报。【边界】不是全 pack_format 官方 schema。", inputSchema: validateDatapackJsonSchema },
-  { name: "get_workflow_template", description: "返回与 MCP Prompt 同名的工作流全文；Cursor 等仅支持 tools 时使用。仅在用户要完整流程（从零建模组、崩溃分诊、移植）时调用；给已有工程加方块/改代码不要调。模板是人在环步骤清单：创意/兼容/API/性能/调试由用户拍板；写盘、Gradle、拷 jar、上传须确认，不是无人值守编排器。", inputSchema: getWorkflowTemplateSchema },
+  { name: "get_workflow_template", description: "返回与 MCP Prompt 同名的工作流全文；Cursor 等仅支持 tools 时使用。仅在用户要走**完整流程**时调用（新建方块/物品/方块实体/实体/GUI/Mixin/世界生成/配置/GameTest/崩溃分诊/移植/从零构建/环境搭建/真机循环/发布/汉化/反编译研究等 17 场景，与根 AGENTS.md 逐字对齐）；纯改代码、补方法、查文档走规则 + Skill + `search_*_docs`。模板是人在环步骤清单：创意/兼容/API/性能/调试由用户拍板；写盘、Gradle、拷 jar、上传须确认，不是无人值守编排器。", inputSchema: getWorkflowTemplateSchema },
   { name: "localize_mod", description: "自有模组 diff/draft_zh，或第三方 jar extract/pack_draft。无机器翻译；标 needsTranslation。无 en_us 时回退其它语言文件作源。默认只返回文本/files，不写盘。", inputSchema: localizeModSchema },
   { name: "list_knowledge_resources", description: "列出 mcskill:// 资源 URI；配合 read_knowledge_resource 读取正文。", inputSchema: listKnowledgeResourcesSchema },
   { name: "read_knowledge_resource", description: READ_KNOWLEDGE_RESOURCE_DESCRIPTION, inputSchema: readKnowledgeResourceSchema },
@@ -1251,4 +1251,7 @@ export const waveToolSchemas: Array<{ name: string; description: string; inputSc
   { name: "generate_playtest_server_driver", description: GENERATE_PLAYTEST_SERVER_DRIVER_DESCRIPTION, inputSchema: generatePlaytestServerDriverSchema },
   { name: "playtest_intent", description: PLAYTEST_INTENT_DESCRIPTION, inputSchema: playtestIntentSchema },
   { name: "playtest_bridge", description: PLAYTEST_BRIDGE_DESCRIPTION, inputSchema: playtestBridgeSchema },
+  // F-8（2026-10-20）：本工具一直在 wave 面注册，schema 条目却留在 `tool-registry.ts` 的 `indexToolSchemas` 里
+  // ⇒ 「index 清单 = index 注册」读代码会数错。移进本表使两表一一对应（42→43 条，与注册次数相等）。
+  { name: "resolve_lib_skills", description: RESOLVE_LIB_SKILLS_DESCRIPTION, inputSchema: resolveLibSkillsSchema },
 ];

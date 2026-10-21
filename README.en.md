@@ -181,7 +181,7 @@ To list what is already indexed on this machine: `node mcp-server/dist/cli.js ac
 
 **Configuring the local MCP server:**
 
-> Drop [AUTO_SETUP.md](./AUTO_SETUP.md) into your AI IDE / CLI. The agent should detect the host (Cursor / Claude Code / VS Code / Continue / Trae / OpenCode / Codex, etc.), build `mcp-server`, produce a config draft in that host's format, and **merge it only after you confirm** (it never overwrites silently).  
+> Drop [AUTO_SETUP.md](./AUTO_SETUP.md) into your AI IDE / CLI. The agent should detect the host (Cursor / Claude Code / VS Code / Continue / Trae / OpenCode / Codex / DSH, etc.), build `mcp-server`, produce a config draft in that host's format, and **merge it only after you confirm** (it never overwrites silently).  
 > Requires **Node.js >= 22.5** (**22.5–22.12 and 23.0–23.3 must be started with `--experimental-sqlite`** — the built-in `node:sqlite` is only on by default from 22.13 / 23.4; the MCP/CLI entry point probes for that window before any sqlite use and, if it hits, prints a loud pointer and exits non-zero). Service name `MC-AI-Coding-Assistant-Tool` (stdio, 89 tools). With no MCP client available, use `node mcp-server/dist/cli.js`.
 >
 
@@ -381,7 +381,7 @@ After installing (or on a fresh clone), run the four checks below; **go no furth
 ```bash
 cd mcp-server && npm ci && npm run build     # dist/ is not committed, you must build it
 node dist/cli.js --version                    # should print a version (package.json is currently 2.0.0)
-node dist/cli.js list-tools --names-only      # should return 86 tool names
+node dist/cli.js list-tools --names-only      # should return 89 tool names
 node dist/cli.js activate_platform_pack --action=list   # should return the platform/versions built on this machine
 node dist/cli.js diagnose_data_paths          # each platform should be found; empty / not_found = MC_SKILL_DATA is wrong
 ```
@@ -566,7 +566,7 @@ The `forge/<ver>/.cursor` tree in the knowledge base is **not** picked up by the
 |----------|------|
 | `list` | the platforms / versions already indexed |
 | `session` | **writes nothing**, does not depend on a project root. Returns that version's `AGENTS.md`, the rule bodies, and a Skill **index** (`name` / `description` / `relPosix` / `absPath`). By default only rules **00 / 01 / 09** are injected; `topics` and `task` are **added** to that base (union, never a replacement); `skillNames` and the names suggested by `task` are deduplicated and injected as `skillBodies` (8 entries max in total). `topics` never injects Skill bodies. Library Skills do not go into `nextReads`; only an explicit `skillNames` injects library bodies. `includeAllRules=true` pours in the full text of rules 00–10. `ok=true` with a "base only" warning means the pack is usable but the rules were not extended for the task (`rulesMode=base`, with a `next` object). If the pack exists but the 00/01/09 files are missing → `ok:false` + `PACK_INCOMPLETE` (not `PACK_NOT_FOUND`). Library Skills are still read from `knowledge/libs/`. |
-| `write` | writes into the **user's mod project** IDE directories. `hosts` is required (`cursor` / `claude` / … / `all`). DryRun by default. Do not use `includeSkills` any more; use `writeSkillStubs` instead (when neither is passed the default is **true**, which writes stubs pointing the agent at the knowledge-base path, not the full Skill text). `includeSkillBodies` writes full bodies. The target must not be this knowledge base (**the entire repo tree is rejected**, including version subdirectories). **Breaking change (2026-08)**: when `MC_SKILL_PROJECT_ROOT` is set it is a **hard boundary** — `projectPath` must fall inside it or the call is rejected (`PATH_OUTSIDE_ALLOWLIST`, with `breakingChange: true` and `allowRoot` in the response); before this, `projectPath` could override the env. Migration: point the env at a directory that contains the target project, or use a projectPath inside it. |
+| `write` | writes into the **user's mod project** IDE directories. `hosts` is required (`cursor` / `claude` / … / `dsh` / `all`). DryRun by default. Do not use `includeSkills` any more; use `writeSkillStubs` instead (when neither is passed the default is **true**, which writes stubs pointing the agent at the knowledge-base path, not the full Skill text). `includeSkillBodies` writes full bodies. The target must not be this knowledge base (**the entire repo tree is rejected**, including version subdirectories). **Breaking change (2026-08)**: when `MC_SKILL_PROJECT_ROOT` is set it is a **hard boundary** — `projectPath` must fall inside it or the call is rejected (`PATH_OUTSIDE_ALLOWLIST`, with `breakingChange: true` and `allowRoot` in the response); before this, `projectPath` could override the env. Migration: point the env at a directory that contains the target project, or use a projectPath inside it. |
 | `deactivate` | removes what was written, per the manifest |
 
 You **cannot** toggle Cursor's / Claude's Skill scanner. Reloading MCP will not make entries appear in the settings page.
@@ -713,7 +713,7 @@ The indexes and text under `data/` are generated by `mcp-server/scripts/`. Large
 
 ## Agent Skills (**35** unique Forge names + platform extensions, mirrored to multiple IDEs)
 
-Path example: `forge/1.20.1/.agents/skills/<name>/` (there are also host mirrors under `.cursor` / `.continue` / `.opencode` / `.zcode`). The Wave D skills were once synced with `scripts/_oneoff/propagate-wave-d-skills.mjs` (one-off, do not run again); for daily mirroring use `scripts/sync-skills.ps1 -All`.
+Path example: `forge/1.20.1/.agents/skills/<name>/` (there are also host mirrors under `.cursor` / `.continue` / `.opencode` / `.zcode`; DSH shares `.agents/skills` with Codex and gets no separate mirror directory). The Wave D skills were once synced with `scripts/_oneoff/propagate-wave-d-skills.mjs` (one-off, do not run again); for daily mirroring use `scripts/sync-skills.ps1 -All`.
 
 > Library Skills (`mc-config` / `mc-geckolib` / `mc-curios` / `mc-patchouli`, etc.) are **not written to disk**: the sources are in the root `knowledge/libs/<group>/mc-<name>/SKILL.md` (`all-platforms` / `fabric-only` / `neo-only` / `forge-only` / `bedrock-only`) and are used per the "library Skill" resolution rules in AGENTS.md; `propagate-wave-d-skills.mjs` and the platform `.cursor/skills` **no longer contain library entries**. Current library sources (scanned with `find knowledge/libs -name SKILL.md`): all-platforms 20 + fabric-only 10 + forge-only 2 + neo-only 2 (Curios/KFF mirrors) + bedrock-only 2 = **36 files** / **34 unique skillIds** (the measure: file count = number of `mc-*/SKILL.md` per group; the unique skillId count is **the same 34** whether you deduplicate by directory name or by frontmatter `name:`, and the difference comes from `mc-curios` / `mc-kotlin-for-forge` having one mirror each in forge-only and neo-only). This matches row "② library Skill sources" in §7.5 below and "current list" in `knowledge/libs/README.md`.
 
@@ -743,7 +743,7 @@ Path example: `forge/1.20.1/.agents/skills/<name>/` (there are also host mirrors
 
 Fabric additionally has `mc-fabric-api`, `mc-kotlin`, `mc-cloth-config`; Forge 1.12.2–1.20.4 and the Fabric main versions all have `mc-events` (filled in during 2026-08 D-1; the thin versions backfilled through `FABRIC_SKILL_DONORS` carry a DONOR_SKILL banner). Code pattern samples live in `community_knowledge/patterns/` (also readable via `mcskill://patterns/README`).
 
-## MCP/CLI TOOLS:86
+## MCP/CLI TOOLS:89
 
 Service name: `MC-AI-Coding-Assistant-Tool`.
 

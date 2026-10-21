@@ -8,6 +8,6 @@ description: 05 — Quilt 事件差异
 
 - QSL 生命周期/注册事件 ≠ `net.fabricmc.fabric.api.event.lifecycle`
 - **禁止** `QuiltRegistry.register()`；不要把 FAPI Registry 事件当 QSL
-- 本档 `qsl-verified.md` 写明 **未**打开 1.21 `RegistryEvents.java`。**禁止**把 Quilt 1.21.1 已核的 `getEntryAddEvent` / `ServerLifecycleEvents.STARTING` 抄进本档
-- 不清楚方法名 → `search_docs({platform:"quilt", version:"1.20.1"})`；实测本版 `ok:true` + `fallback:null` + `resolvedVersion:"1.20.1"` + `semantic:true` + `total:4`（命中本版 QSL 语料，本档无跨平台回退）。**quilt 检索不存在 `PLATFORM_DATA_MISSING` 路径**：本仓完全无语料的空洞档（如 1.21.2）返回 `ok:false` + `VERSION_NOT_FOUND` + `fallback:null`（载荷无 `total`），有树但本版缺 quilt-docs 页的档位则返回 `fallback:"quilt"`（同线语料）或 `fallback:"fabric"` + `sourcePlatform:"fabric"`（同版 Fabric 正文）⇒ 三条路径不得混写成一句「不回退」禁令。QSL 方法名一律 `query_loader_api`（先 `ingest_loader_api`）
+- 本档 QSL 名字只许来自本档 `qsl-verified.md`（已由 `6.3.0+1.20.1` 构件 javap 实证 `getEntryAddEvent` / `RegistryMonitor` / `ServerLifecycleEvents` 四字段）；不要拿 1.21.1 的条目当本档依据
+- 不清楚方法名 → `search_docs({platform:"quilt", version:"1.20.1"})`；实测本版 `ok:true` + `fallback:null` + `resolvedVersion:"1.20.1"` + `semantic:true` + `total`（非契约，随语料扩容变化；命中本版 QSL 语料，本档无跨平台回退）。**quilt 检索不存在 `PLATFORM_DATA_MISSING` 路径**：本仓完全无语料的空洞档（如 1.21.2）返回 `ok:false` + `VERSION_NOT_FOUND` + `fallback:null`（载荷无 `total`），有树但本版缺 quilt-docs 页的档位则返回 `fallback:"quilt"`（同线语料）或 `fallback:"fabric"` + `sourcePlatform:"fabric"`（同版 Fabric 正文）⇒ 三条路径不得混写成一句「不回退」禁令。QSL 方法名一律 `query_loader_api`（先 `ingest_loader_api`）
 - 通用 Mixin / 数据包问题可回退 Fabric 文档（已过滤 FAPI 专属类）

@@ -53,19 +53,19 @@ public interface PersistentDataHolder
 
 | 对象 | 取法 / 注意（官方原文要点） |
 |---|---|
-| `ItemStack` | `:239-240` **1.21.1+** 有只读视图 `ItemStack#getPersistentDataContainer()`；**1.21.4+** 用 `editPersistentDataContainer(Consumer)` 改（`:63`）；更早版本走 `ItemMeta` |
-| `ItemMeta` | `:273-274` `ItemMeta#getPersistentDataContainer()` |
-| `Chunk` | `:249` `Chunk#getPersistentDataContainer()` |
-| `World` | `:251` `World#getPersistentDataContainer()` |
-| `Entity` | `:253` `Entity#getPersistentDataContainer()` |
-| `TileState` | `:254-263` 要**先强转**成实现 `TileState` 的方块实体（不是所有方块都有），改完还要 **`.update()`** |
-| `Structure` / `GeneratedStructure` | `:265` / `:267` |
-| `Raid` | `:269` |
-| `OfflinePlayer` | `:271-272` **只读**（直接读盘，改需阻塞 IO —— `:198-201`） |
+| `ItemStack` | `api__pdc.md:239-240` **1.21.1+** 有只读视图 `ItemStack#getPersistentDataContainer()`；**1.21.4+** 用 `editPersistentDataContainer(Consumer)` 改（`api__pdc.md:63`）；更早版本走 `ItemMeta` |
+| `ItemMeta` | `api__pdc.md:273-274` `ItemMeta#getPersistentDataContainer()` |
+| `Chunk` | `api__pdc.md:249` `Chunk#getPersistentDataContainer()` |
+| `World` | `api__pdc.md:251` `World#getPersistentDataContainer()` |
+| `Entity` | `api__pdc.md:253` `Entity#getPersistentDataContainer()` |
+| `TileState` | `api__pdc.md:254-263` 要**先强转**成实现 `TileState` 的方块实体（不是所有方块都有），改完还要 **`.update()`** |
+| `Structure` / `GeneratedStructure` | `api__pdc.md:265` / `:267` |
+| `Raid` | `api__pdc.md:269` |
+| `OfflinePlayer` | `api__pdc.md:271-272` **只读**（直接读盘，改需阻塞 IO —— `api__pdc.md:198-201`） |
 
-⚠️ `Player` 不在 `:16-24` 的目录列表里 —— 但它是 `Entity` 的子类，按 `:253` 那条走（**这是我从官方列表推的，非官方逐字**）。
+⚠️ `Player` 不在 `api__pdc.md:16-24` 的目录列表里 —— 但它是 `Entity` 的子类，按 `api__pdc.md:253` 那条走（**这是我从官方列表推的，非官方逐字**）。
 
-⚠️ 官方另两条注意：`:225-229` **数据不会自动跨 holder 复制**（把 ItemStack 放成方块**不会**带走 PDC）；`:33-34` PDC 会随实体卸载而保存。
+⚠️ 官方另两条注意：`api__pdc.md:226` **数据不会自动跨 holder 复制**（把 ItemStack 放成方块**不会**带走 PDC）；`api__pdc.md:33-34` PDC 会随实体卸载而保存。
 
 ## 真机侧已验证（2026-10-15，Paper 26.3-190 / JDK 25）
 
@@ -94,7 +94,7 @@ public interface PersistentDataHolder
 
 ⇒ **世界 PDC 的写值**确实**跨进程重启**保住了（落盘 / 读回成立）。
 
-⚠ **范围说明**：验的是 **`World` 的 PDC**；**`Entity` / `ItemStack` / `Chunk` 的跨重启**未验（两者落盘路径不同，别把这条外推）。
+⚠ **范围说明**：本条验的是 **`World` 的 PDC**；`Entity` / `ItemStack` / `Chunk` 的跨重启已在 `本文件:99-169` 补验（两阶段 + 真机 marker），别把 World 的落盘路径外推。
 
 ## 其它 holder 的跨重启（**已真机核，2026-10-15 两阶段**）
 
@@ -105,9 +105,13 @@ public interface PersistentDataHolder
 
 ⚠ **选 `Chunk` 的理由**：它**由服务端自动存盘**，不需要玩家、也不需要放方块 ⇒ 是最干净的非 `World` holder 跨重启测试。
 
-⚠ **`ItemStack` 那行验的"跨 holder"形态要如实限定**：我验的是「**经 `Inventory` 往返**」，**不是**官方 `api__pdc.md:226`/`:228` 讲的那条「**把 ItemStack 放成方块**（带 TileState）不自动复制」—— **官方那条仍未验**。
+⚠ **`ItemStack` 那行验的"跨 holder"形态要如实限定**：我验的是「**经 `Inventory` 往返**」，**不是**官方 `api__pdc.md:226`/`:228` 讲的那条「**把 ItemStack 放成方块**（带 TileState）不自动复制」—— 官方那条已在 `本文件:197` 起的「官方原形态」节补验。
 
 ## 未核实
+
+- 本文件当前没有未核实项；旧项均已核掉，撤回记录见下两节。
+
+## 已核掉的旧未核实项
 
 - （`Entity` 跨重启**已验成**，见下节 —— 前几轮的 FAIL 是**判据取错了 API**，不是没落盘。）
 - （`ItemStack` 的跨重启**已验成**，见「`ItemStack` 的 PDC 跨重启」段 —— 关键坑是**必须写"活库存"**。）

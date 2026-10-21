@@ -2247,6 +2247,12 @@ const REAL_RUN_GATES = [
     // 所以"dist 是坏的/旧的"时它仍然能跑 —— 这正是它存在的理由）。判据用**编译器本身**，
     // 不是启发式（首版启发式实测 73 处**全是注释里的合法反引号**，已废弃，见文件头）。
     "./scripts/assert-generator-template-safety.mjs",
+    // 2026-10-21（P0 回归催生的新腿）：**产物级** Java 符号检查。
+    // 上面那道只跑 `tsc --noEmit`，而生成器吐的是**字符串模板** ⇒ 模板里少一行 import 它结构上抓不到。
+    // 本轮真实事故：`datagen/fabric.ts` 的 model 分支重写 import 块时把 `FabricDataOutput` 整行挤掉，
+    // 行数不变、tsc 不报，但生成物 javac 必红。本门实跑 10 个 (平台/版本/providerType) 产物，
+    // 收集未解析符号并逐条点名。依赖 dist ⇒ 缺件时降级并吼（rc=0），`--require` 走 fail-closed。
+    "./scripts/assert-generator-java-symbols.mjs",
     // 2026-10-15：服务端面**规则载体**（paper/<ver>/rules/*.md）的出处门。
     // 为什么不靠既有规则面门：`assert-rules-api-names.mjs:174` 只收 `.mdc`（本面用 `.md`）、
     // `assert-rules-match-tool.mjs` 是 quilt 专属 —— 二者实测**扫不到**本面（详见 AGENTS 服务端面小节）。
@@ -2426,6 +2432,17 @@ const SELFTEST_GATES = [
     "./scripts/assert-w55-hygiene-rulings.mjs",
     // 2026-09-21 W3-2：Java 形状判据的自证（未声明标识符 / super(null) / 构造实参不符必须当场红）。
     "./scripts/assert-rule-java-shapes.mjs",
+    // 2026-10-20（审查 §四 #15/#16/#17 的根因）：吐 Java 的生成器模块必须能过编译器，**且受守护模块
+    // 必须仍在 tsconfig include 的面内**。它原先只在 REAL_RUN_GATES（只跑主流程），没有 selftest ——
+    // 于是「include 被改成子集 ⇒ 静默变窄」这条没人钉。5 臂：模板反引号 / 未闭合模板 两记语法投毒 +
+    // 合法插值对照 + ①include 内语法错必红 + ②include 外语法错必绿（后者证明前者非恒红装饰）。
+    // 臂数与三桶计数一律由该门自印，此处不写死（沿用本数组既有规矩）。
+    "./scripts/assert-generator-template-safety.mjs",
+    // 2026-10-21：**产物级** Java 符号门（P0 回归催生）。判据纯函数 `findUnresolvedSymbols`；
+    // 自证覆盖「少一行 import / extends 未 import / 形参类型未 import」三种投毒，
+    // 以及两条「不该报」的对照（通配 import 弃权、java.lang 白名单）。
+    // ⚠ 例数一律以该门 `--selftest` 现印为准，此处不写死（本仓 test-harness R-2 会抓）。
+    "./scripts/assert-generator-java-symbols.mjs",
     // 2026-09-20 裁定③：mappings 键判据的自证（含围栏不声明 / alt 无披露块必须红）。
     "./scripts/assert-skill-mappings-key.mjs",
     // 2026-09-20 F-K1：verbatim 判据的自证（极性反转 / 子串放过 / 散文也判必须红）。

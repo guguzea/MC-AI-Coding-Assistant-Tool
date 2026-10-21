@@ -1,6 +1,6 @@
 # knowledge/libs — 库模组 Skill 源稿
 
-本目录是**所有库模组 Skill 的唯一源稿**，**不落盘**：各平台 `.cursor/skills`（及 .claude / .continue / .opencode / .agents / .zcode / .pi 镜像）**不再**写入库项。使用方（AGENTS 指引 / library-catalog / check_dependencies）按解析规则**直接读源稿**。
+本目录是**所有库模组 Skill 的唯一源稿**，**不落盘**：各平台 `.cursor/skills`（及 .claude / .continue / .opencode / .agents / .zcode / .pi 镜像；DSH 与 Codex 共用 .agents）**不再**写入库项。使用方（AGENTS 指引 / library-catalog / check_dependencies）按解析规则**直接读源稿**。
 
 **当前规模**：五组共 **36** 份 `mc-*/SKILL.md`（**34** 唯一 skillId；`mc-curios` / `mc-kotlin-for-forge` 在 forge-only 与 neo-only 各有一份镜像）。
 

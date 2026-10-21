@@ -53,7 +53,7 @@
     "firstParagraph": "- **抓取日**：2026-08-15 - **源**：`data/quilt_<ver>/quilt-docs/<ver>/processed/qsl-readme.md`（QSL README）+ wiki 概念页 `qsl-qfapi`（该 wiki 为 SPA，入库正文可能只有导航壳，**方法名以 README 图表为准**） - ⚠️ **F115（2026-09-13 实测；2026",
     "sections": [],
     "source": "quilt-docs",
-    "sha256": "016dee819d747c555134b06e98a8436585b1426c8f706f50db4816a03b2d556a"
+    "sha256": "4cc0c0afbef9d63e63f5cfe27fa2a627db69f740e9ed7cac7b2a1acf4bd78c32"
   },
   {
     "id": "1.21.1/wiki-getting-started",

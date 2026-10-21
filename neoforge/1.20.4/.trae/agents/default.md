@@ -14,7 +14,7 @@
 | 入口 | `@Mod` + `public ExampleMod(IEventBus modEventBus)` |
 | 元数据 | META-INF/mods.toml（官方 MDK 1.20.4 ExampleMod 注释仍写 mods.toml） |
 | 网络 | `RegisterPayloadHandlerEvent` + `IPayloadRegistrar` |
-| 文档 | https://docs.neoforged.net/docs/1.20.4/ |
+| 文档 | 走 `search_neoforge_docs version=1.20.4`（版本根索引页 404，子页才存在） |
 | MDK | NeoForgeMDKs/MDK-1.20.4-NeoGradle @ 8cd443623d2fd12ef8a6912d2af1296d8522faac 与 MDK-1.20.4-ModDevGradle @ ddfff1d83adca54ac44fe70a6f3b85d3033f0e3a |
 
 1.20.4 网络是 Payload 单数 Handler，不是把 Forge SimpleChannel 改包名。CustomPacketPayload 实现 write + id()，用 FriendlyByteBuf 构造器当 reader。

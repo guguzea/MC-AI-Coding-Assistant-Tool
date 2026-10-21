@@ -23,7 +23,7 @@ repositories {
 afterEvaluate { tasks.runClient { args '--tweakClass', 'com.mumfrey.liteloader.launch.LiteLoaderTweaker' } }
 ```
 
-完整可编译版见 `scaffold/hybrid/build.gradle`（**该文件即按上面这套配方实测建出 `E:\MC_GAME\liteloader-1.12.2` 并跑绿村庄整轮 16/16**）。
+完整可编译版见 `scaffold/hybrid/build.gradle`（**该文件即按上面这套配方在本地建出实例并跑绿村庄整轮 16/16**；维护机绝对路径不入库，实测记账见 `mcp-server/CHANGELOG.md` 与 `community_knowledge/authored/ingame-playtest-automation.md`）。
 
 > **⚠️ 已被推翻的说法（留档，勿照抄）**：本节原先写「唯一 Gradle 入口 = `apply plugin: 'net.minecraftforge.gradle.liteloader'`」并**禁止**改用 `forge` 插件 —— **错**。`LiteloaderPlugin extends UserVanillaBasePlugin`（javap 核过）⇒ 它给的是 **vanilla + LiteLoader、不带 Forge**，用它编译本目录的产物会报 `找不到符号: 程序包 net.minecraftforge.fml.common 不存在` 等 8 处；且 `minecraft.version` 必须逐字写 `'1.12.2'`（否则 `No ForgeGradle-compatible LiteLoader version found`）。证据与实测配方见社区短文坑 77 / 78。
 >

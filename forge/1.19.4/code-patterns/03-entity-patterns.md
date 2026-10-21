@@ -7,8 +7,7 @@
 
 > **1.19.4 关键差异**：
 > 1. 注册表常量是 `ForgeRegistries.ENTITY_TYPES`（1.18.2 档写作 `ForgeRegistries.ENTITIES`，改名在 1.19；两个名字都不可照抄邻档）。
-> 2. 有 AI Goal 的生物必须 `extends Mob`——`registerGoals()` / `goalSelector` / `createMobAttributes()` 都在 `Mob` 上；
->    邻档 1.18.2:24 与 1.20.1:19 写成 `extends LivingEntity` 却又重写 `registerGoals()`，在 1.19.4 索引里 `LivingEntity` 无 `registerGoals()`（`Mob#registerGoals` FOUND）。
+> 2. 有 AI Goal 的生物必须 `extends Mob`（1.17+ 的写法是 `extends PathfinderMob`，它继承 `Mob`）——`registerGoals()` / `goalSelector` / `createMobAttributes()` 都在 `Mob` 上；`LivingEntity` 没有 `registerGoals()`（`Mob#registerGoals` FOUND）。
 
 ## 基础生物实体
 

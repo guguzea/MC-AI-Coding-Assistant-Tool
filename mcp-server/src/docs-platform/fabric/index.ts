@@ -29,7 +29,7 @@ import {
 } from "../platform-data.js";
 import { semanticSearch } from "../semantic/search.js";
 import { mergeSemanticResultsWithPool, poolFieldsOf, joinSearchWarnings, withDocsFallbackFields, annotateVerbatim, limitWindowOf, limitClampWarning } from "../search-utils.js";
-import { missingSemanticDbWarning, semanticStaleSearchWarning } from "../semantic/status.js";
+import { missingSemanticDbWarning, semanticDbAbsent, semanticStaleSearchWarning } from "../semantic/status.js";
 import { knowledgeVersion } from "../../platform-pack/catalog.js";
 import {
   findFabricPorting,
@@ -475,8 +475,12 @@ export async function searchFabricDocs(
                   platform: "fabric",
                   source: "porting-extra",
                   sourceUsed: "porting-extra",
-                  // provenance 三件套（字段名与 quilt 回退路径一致）：平台仍是 Fabric，
+                  // 出处三件套（sourcePlatform / sourceIsRequestedVersion / sourceUsed）：平台仍是 Fabric，
                   // 但不是请求版本自己的正文 —— 调用方必须看 sourceIsRequestedVersion。
+                  // ⚠ 2026-10-21 修正（审查 mcp-docs F-13）：原文写「字段名与 quilt 回退路径一致」，**不成立** ——
+                  // quilt 的回退/改口路径只发 fallback / sourcePlatform / source_version，**从不发
+                  // sourceIsRequestedVersion**（全仓实测：该字段只出现在 fabric 面 4 处）。按本注释去 quilt
+                  // 侧找同名字段会找不到。
                   sourcePlatform: "fabric",
                   sourceIsRequestedVersion: false,
                   warning: extraWarn,
@@ -547,7 +551,12 @@ export async function searchFabricDocs(
     for (const src of sources) {
       const hits = await semanticSearch(query, "fabric", version, src, getDataRoot());
       if (hits === null) {
-        if (resolvedSource !== "all" || src === "fabric-docs") semanticMissing = true;
+        // 2026-10-21 修正（审查 mcp-docs F-4）：`hits === null` 同时表示「空查询被 C19 守卫有意挡住」
+        // 与「真缺库」⇒ 空查询会谎报「语义索引缺库」（而该档 db.sqlite 实存、非空查询 semantic:true）。
+        // 改判**库是否存在**，与 forge / neoforge / quilt 三处同口径（都用 semanticDbAbsent）。
+        if (resolvedSource !== "all" || src === "fabric-docs") {
+          if (semanticDbAbsent(getDataRoot(), "fabric", version, src)) semanticMissing = true;
+        }
       }
       else semanticRanked = true;
       if (hits) {

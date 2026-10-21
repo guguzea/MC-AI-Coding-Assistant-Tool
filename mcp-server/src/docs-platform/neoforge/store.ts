@@ -17,7 +17,7 @@
  */
 
 import { readFileSync, existsSync, readdirSync, statSync, type Dirent } from "fs";
-import { join, basename } from "path";
+import { join, basename, resolve, relative, isAbsolute } from "path";
 import {
   buildSymbolIndex,
   enhancedSearch,
@@ -136,7 +136,10 @@ export class IndexCorruptError extends Error {
 
 /**
  * 仅当请求版没有自己的 index-l0.json 时才使用。
- * 有独立树时必须从本表删除对应键。触发条件是「本仓已为 26.2 入库独立主文档语料」，不是「官方发布 26.2」——主文档站不按版本分线，/docs/26.2/ 与 /docs/26.1/ 同样 404。
+ * 有独立树时必须从本表删除对应键。触发条件是「本仓已为 26.2 入库独立主文档语料」，不是「官方发布 26.2」。
+ * （2026-10-21 修正，审查 mcp-docs F-10：原文写「主文档站不按版本分线」，把 Docusaurus「现行版走根路径」
+ *  误读成「没有版本线」—— /docs/26.2/ 与 /docs/26.1/ 确实 404，但 /docs/1.21.1/gettingstarted/ 实测 200，
+ *  站点**有**历史版本轴。落档口径不变：本仓只按「已入库独立语料」判，不按官方是否发布。）
  */
 export const VERSION_FALLBACK: Record<string, string | null> = {
   "26.2": "26.1",
@@ -359,8 +362,12 @@ export class NeoForgeDocStore {
     const cached = this.getCache(this.fileCache, cacheKey);
     if (cached !== undefined) return cached;
 
-    const path = join(versionDir, processedFile);
-    if (!existsSync(path)) {
+    // 越界守卫（与 fabric/store.ts:326-331、forge/store.ts:540-545 同款）：
+    // processedFile 来自 index-l2.json，join 会规范化 ".." ⇒ 不拦的话可把版本目录外任意文件内联进全文。
+    const versionRoot = resolve(versionDir);
+    const path = resolve(versionRoot, processedFile);
+    const rel = relative(versionRoot, path);
+    if (rel.startsWith("..") || isAbsolute(rel) || !existsSync(path)) {
       throw new DocNotFoundError(processedFile, basename(versionDir));
     }
     const data = readFileSync(path, "utf-8");

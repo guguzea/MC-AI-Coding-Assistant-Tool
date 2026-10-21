@@ -8,7 +8,7 @@
 ## 1. 两个**互相独立**的取证机制（结论一致）
 
 ### 机制 A —— 读一手源码（本机 Gradle 缓存，非下载）
-- 文件：`C:\Users\zzrCN\.gradle\caches\forge_gradle\maven_downloader\net\minecraftforge\forge\1.18.2-40.1.80\forge-1.18.2-40.1.80-sources.jar` 内 `net/minecraftforge/registries/ForgeRegistries.java`（157 行；`unzip -p` 到 stdout，**未写入仓库**）。
+- 文件：`<home>\.gradle\caches\forge_gradle\maven_downloader\net\minecraftforge\forge\1.18.2-40.1.80\forge-1.18.2-40.1.80-sources.jar` 内 `net/minecraftforge/registries/ForgeRegistries.java`（157 行；`unzip -p` 到 stdout，**未写入仓库**）。
 - 版本：**1.18.2-40.1.80**（来源 = 本仓 scaffold 真机构建留下的 ForgeGradle 缓存）。
 - 静态字段声明（`:57-:95`，逐字）与下 §2 名单同集；关键行：
   - `:58  public static final IForgeRegistry<Fluid> FLUIDS = RegistryManager.ACTIVE.getRegistry(Keys.FLUIDS);`
@@ -52,7 +52,7 @@
 
 ```powershell
 # 机制 A：读源（如果 Gradle 缓存还在）
-unzip -p "C:/Users/zzrCN/.gradle/caches/forge_gradle/maven_downloader/net/minecraftforge/forge/1.18.2-40.1.80/forge-1.18.2-40.1.80-sources.jar" net/minecraftforge/registries/ForgeRegistries.java
+unzip -p "<home>/.gradle/caches/forge_gradle/maven_downloader/net/minecraftforge/forge/1.18.2-40.1.80/forge-1.18.2-40.1.80-sources.jar" net/minecraftforge/registries/ForgeRegistries.java
 # 机制 B：读字节码（期望 fields=32、FLUIDTYPES|FLUID_TYPES 0 命中）
 "G:/JAVA17/jdk-17.0.12_windows-x64_bin/jdk-17.0.12/bin/javap.exe" -p -classpath "D:/mc-skill-temp/forge-jar/forge-1.18.2-40.3.12-universal.jar" net.minecraftforge.registries.ForgeRegistries
 # 构件可再下载（sha256 见 §1 机制 B）

@@ -367,12 +367,20 @@ function checkBlockItemIntegrity(
   javaFiles: Array<{ path: string; content: string }>,
   warnings: string[],
 ): void {
+  // 2026-10-21 修正（审查 mcp-core F-7）：标准 Forge 工程把 BLOCKS.register 放 ModBlocks.java、
+  // ITEMS.register 放 ModItems.java ⇒ 按**单文件**比对时，这种标准分文件布局下每个方块都会
+  // 假报「未找到对应的 ITEMS.register(...)」。与兄弟判据 checkBlockEntityReferences（P2-R3-2）
+  // 同形：item 名集合必须**跨全部 Java 文件**收集一次，再逐文件比对方块。
+  const globalItemNames = new Set<string>();
+  for (const { content } of javaFiles) {
+    for (const [itemName] of findItemRegistryNames(content)) globalItemNames.add(itemName);
+  }
+
   for (const { path, content } of javaFiles) {
     const blockNames = findBlockRegistryNames(content);
-    const itemNames = findItemRegistryNames(content);
 
     for (const [blockName] of blockNames) {
-      if (!itemNames.has(blockName)) {
+      if (!globalItemNames.has(blockName)) {
         warnings.push(
           `[${path}] 方块 '${blockName}' 注册了 Block 但未找到对应的 ITEMS.register('${blockName}', ...)。` +
             "如该方块不需要物品形态（如技术性方块），可忽略此提示",

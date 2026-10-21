@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 /**
- * ⚠ 一次性改写器：已执行过，勿再跑（会整文件覆盖 library-catalog.ts）。
+ * ⚠ 一次性归档脚本：已执行过，**勿再跑**（会整文件覆盖 library-catalog.ts，抹掉已 merge 的 verifiedApi）。
+ *    现行维护走 `node scripts/merge-verified-api.mjs --write`（见 assert-lib-ownership.mjs:197-201
+ *    记录的实际做法），本脚本只作历史留档。
  * build-library-catalog-from-authored.mjs
  *
  * 扫描 community_knowledge/authored/ 下 lib-*.md 与 library-integration*.md 的 frontmatter，

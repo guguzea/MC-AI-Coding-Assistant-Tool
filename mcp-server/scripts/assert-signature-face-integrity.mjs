@@ -30,8 +30,16 @@
  *     `rawTotal` / `processedTotal` 与**磁盘实扫**一致；`orphans` 里列出的路径**必须真不在** processed 侧。
  *
  * 退出码：0 = 全过；1 = 有问题。`--list N` 附带前 N 条问题样本。
+ *
+ * `--selftest`：**投毒自证**（干净必绿 + 4 臂畸形必红 + 真实面正对照）。
+ * 实现走**子进程**：在临时目录合成两面最小快照，再用本文件自己跑一遍（判据与真跑逐字相同），
+ * 只断言退出码 —— 零改动主流程，顺带把「缺面降级」也一起验了。**不碰仓库 `data/`**。
+ * 为什么要有它：`test-scripts.mjs:2240` 声称本门「4/4 畸形必红、干净必绿」；没有这段自证，
+ * 那句声称就大于可自证强度（2026-10-20 全仓审查 F-1）。
  */
-import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
+import { spawnSync } from "node:child_process";
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -98,6 +106,12 @@ function walk(root, ext) {
  * 硬要求两面都在会让本门在那些环境**恒红**，从而根本挂不进链（S4 门链普查要求每道门可达）。
  * ⇒ 默认：只查**存在的**面；一个面都不在就打「本次未验证」并 rc=0。`--require` 走强口径（缺面即红）。
  */
+// `--selftest` 必须在**缺面早退之前**：否则没装 data 的机器上 `--selftest` 会走「两面都不在 ⇒ 未验证 rc=0」，
+// 自证根本不跑（那正是「声称大于可自证强度」的成因）。
+if (process.argv.includes("--selftest")) {
+  process.exit(runSelftest());
+}
+
 const REQUIRE = process.argv.includes("--require");
 const present = FACES.filter((f) => existsSync(join(DATA_ROOT, f.versionDir)));
 const missing = FACES.filter((f) => !present.includes(f));
@@ -119,6 +133,132 @@ if (missing.length > 0) {
   } else {
     console.log(`⚠ 跳过不存在的面：${names} —— **未验证**，不是通过`);
   }
+}
+
+/**
+ * 合成一面最小快照（判据需要的四件：index-l0 / processed 页 / raw 页 / _orphan-report）。
+ * `mutate(files, ctx)` 就地改文件表以投毒；不传 = 干净。
+ */
+function selftestWriteFace(rootDir, spec, mutate) {
+  const d = join(rootDir, spec.versionDir);
+  rmSync(d, { recursive: true, force: true });
+  const page = {
+    source: `${spec.base}/org/example/Foo.html`,
+    sourceType: "javadoc",
+    asOfVersion: "1.0.0",
+    fetchedWith: spec.producerRev,
+  };
+  const fm = (o) => `---\n${Object.entries(o).map(([k, v]) => `${k}: ${v}`).join("\n")}\n---\n\nbody\n`;
+  const files = {
+    // id 形状 = `stable/<包路径把 . 与 / 都换成 _>_<Class>`（实测 spigot 档：`stable/org_bukkit_advancement_Advancement`）
+    "index-l0.json": JSON.stringify([{ id: "stable/org_example_Foo" }]),
+    "processed/org_example_Foo.md": fm(page),
+    "raw/org_example_Foo.html": "<html></html>",
+    "_orphan-report.json": JSON.stringify({
+      version: "stable",
+      producerRev: spec.producerRev,
+      count: 0,
+      orphans: [],
+      rawTotal: 1,
+      processedTotal: 1,
+    }),
+  };
+  if (mutate) mutate(files, { spec, page, fm });
+  for (const [rel, text] of Object.entries(files)) {
+    const p = join(d, rel);
+    mkdirSync(dirname(p), { recursive: true });
+    writeFileSync(p, text, "utf8");
+  }
+}
+
+/** 跑本文件一次（子进程），只取退出码。 */
+function selftestRun(dataRoot) {
+  const r = spawnSync(process.execPath, [fileURLToPath(import.meta.url)], {
+    env: { ...process.env, MC_SKILL_DATA: dataRoot },
+    encoding: "utf8",
+  });
+  return { status: r.status, stderr: (r.stderr ?? "").split("\n").filter((l) => l.trim()).slice(-2).join(" | ") };
+}
+
+function runSelftest() {
+  const base = process.env.TEMP || process.env.TMP || tmpdir();
+  const rootDir = mkdtempSync(join(base, "sig-face-selftest-"));
+  const poison = (files, { spec, page, fm }) => {
+    // ③ 盘上有、索引里没有
+    files["processed/org_example_Baz.md"] = fm({ ...page, source: page.source.replace(/Foo\.html$/, "Baz.html") });
+    files["raw/org_example_Baz.html"] = "<html></html>";
+    files["_orphan-report.json"] = JSON.stringify({
+      version: "stable",
+      producerRev: spec.producerRev,
+      count: 0,
+      orphans: [],
+      rawTotal: 2,
+      processedTotal: 2,
+    });
+  };
+  const cases = [
+    ["干净（正对照）", null, 0],
+    [
+      "① 索引里有、盘上没有",
+      (files) => {
+        files["index-l0.json"] = JSON.stringify([{ id: "stable/org_example_Foo" }, { id: "stable/org_example_Bar" }]);
+      },
+      1,
+    ],
+    ["③ 盘上有、索引里没有", poison, 1],
+    [
+      "① source 包路径与文件名不符",
+      (files, { page, fm }) => {
+        files["processed/org_example_Foo.md"] = fm({ ...page, source: page.source.replace(/Foo\.html$/, "Wrong.html") });
+      },
+      1,
+    ],
+    [
+      "⑤ 孤儿报告 count 与 orphans 不符",
+      (files, { spec }) => {
+        files["_orphan-report.json"] = JSON.stringify({
+          version: "stable",
+          producerRev: spec.producerRev,
+          count: 3,
+          orphans: [],
+          rawTotal: 1,
+          processedTotal: 1,
+        });
+      },
+      1,
+    ],
+  ];
+  let missed = 0;
+  let poisoned = 0;
+  for (const [name, mutate, want] of cases) {
+    // 两面都写：两面齐 ⇒ 不触发「缺面降级」，干净臂才是真绿
+    for (const spec of FACES) selftestWriteFace(rootDir, spec, spec.name === "spigot" ? mutate : null);
+    const { status, stderr } = selftestRun(rootDir);
+    const ok = want === 0 ? status === 0 : status !== 0;
+    if (want !== 0) poisoned++;
+    if (!ok) {
+      missed++;
+      console.error(`  ✗ selftest「${name}」应${want === 0 ? "绿" : "红"}实${status === 0 ? "绿" : "红"}${stderr ? " · " + stderr : ""}`);
+    }
+  }
+  // 真实数据正对照：面在盘时，真跑本应绿
+  let realChecked = 0;
+  if (FACES.some((f) => existsSync(join(DATA_ROOT, f.versionDir)))) {
+    realChecked = 1;
+    const { status, stderr } = selftestRun(DATA_ROOT);
+    if (status !== 0) {
+      missed++;
+      console.error(`  ✗ selftest 正对照：真实签名面本应绿，实得 rc=${status}${stderr ? " · " + stderr : ""}`);
+    }
+  }
+  rmSync(rootDir, { recursive: true, force: true });
+  console.log(
+    `\nassert-signature-face-integrity(selftest): ` +
+      (missed === 0
+        ? `OK（${poisoned}/${poisoned} 畸形必红 + 干净必绿${realChecked ? " + 真实面正对照绿" : ""}）`
+        : `${missed} 例不符`),
+  );
+  return missed === 0 ? 0 : 1;
 }
 
 for (const face of present) {

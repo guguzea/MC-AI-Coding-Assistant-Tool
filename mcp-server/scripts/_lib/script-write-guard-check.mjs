@@ -162,6 +162,13 @@ export const SCRIPT_WRITE_GUARD_NON_WRITERS = new Map([
   // 临时 `.ts` 交给 tsc 编，落点锚定 `mkdtempSync(join(tmpdir(), "gen-tsc-"))`；主流程对仓库**只读**
   // （`tsc --noEmit` 不写盘）。落点若改到仓库内，本豁免即失效。
   ["mcp-server/scripts/assert-generator-template-safety.mjs", /mkdtempSync\(join\(tmpdir\(\), "gen-tsc-"/],
+  // 2026-10-20：签名面门补 `--selftest`（FINAL §四 #13 要求「4/4 畸形必红 + 干净必绿」的自证臂）。
+  // `--selftest` 要合成"一面最小快照"（index-l0.json / processed 页 / raw 页 / _orphan-report.json）
+  // 供子进程门去判红判绿，夹具根 = OS tmpdir 的 "sig-face-selftest-" 前缀（`mkdtempSync` 建、`rmSync` 收）；
+  // **门模式与仓库两个真面（spigot 1396 / paper 2116）全程只读**。与上面 assert-skill-mirrors /
+  // assert-server-rules-integrity 是同一范式。依据正则咬住那个 mkdtemp 前缀 —— 夹具落点一旦改到
+  // 仓库内，本豁免即失效（重签或改道 write-guard 的 scratch 出口）。
+  ["mcp-server/scripts/assert-signature-face-integrity.mjs", /mkdtempSync\(join\(base, "sig-face-selftest-"\)/],
 ]);
 /**
  * 会写仓库但本轮不收口的债务（并发代理 owns / 自带显式 --write 闸门未改道 / 新文件只靠 --force）。

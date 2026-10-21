@@ -112,6 +112,7 @@ for (const f of process.argv.slice(1)) {
 | 工作区 `.trae/` 或 Trae 设置里的 MCP | Trae |
 | `opencode.json` / `.opencode/` | OpenCode |
 | `~/.codex/config.toml` 或 Codex CLI | Codex |
+| `~/.dsh/` 存在，或工具名形如 `mcp__<server>__<tool>` | DSH（DeepSeek Harness） |
 | Windsurf / Codeium | Windsurf |
 | Cline / Roo 侧栏 | Cline / Roo |
 | 没有 MCP 面板、只有终端 | 走 CLI 兜底 |
@@ -246,6 +247,7 @@ MC_SKILL_PROJECT_ROOT=<目标模组项目绝对路径>
 | Trae | 设置页 MCP，或 `.trae/mcp.json` | `mcpServers` | 产品变体路径不同，不确定就让用户粘贴 |
 | OpenCode | `opencode.json` 的 `mcp` | `command` **数组** + `environment` | **timeout ≥ 60000** |
 | Codex CLI | `~/.codex/config.toml` | `[mcp_servers.<名>]` | 不是 JSON |
+| DSH（DeepSeek Harness） | `~/.dsh/profiles/<profile>/cordis.patch.yml` | 顶层 **YAML 数组** + `- insert:` 行；字段 `serverName` / `transport: stdio` / `command` / `args` / `cwd` / `env` | **不是** `mcpServers` JSON；不要照抄 Cursor 形状 |
 | Windsurf | `~/.codeium/windsurf/mcp_config.json` | `mcpServers` | 路径含 `codeium` |
 | Cline / Roo | 扩展 `globalStorage` 下的 MCP json | 多为 `mcpServers` | 以扩展设置页为准 |
 | ZCode | **无独立 MCP 配置文件** | Skill 走 `.zcode/skills` | 不要伪造 Cursor `mcp.json`；工具用文末 CLI |
@@ -414,6 +416,34 @@ Cline 常见：`%APPDATA%\Code\User\globalStorage\saoudrizwan.claude-dev\setting
 
 打开该产品的 MCP / 连接 / 工具设置，把 **4.1 的 JSON 对象**交给用户粘贴。若界面要 `url`，说明本服务是 stdio 不是远程 HTTP。若只要 command 数组，用 OpenCode 那种 `["node", "<dist>"]`。
 
+### 4.12 DSH（DeepSeek Harness）
+
+配置落点是 profile 的 `cordis.patch.yml`（**顶层 YAML 数组**，追加一条 `insert` 项）。下面这份片段本机实测可用：
+
+```yaml
+# ~/.dsh/profiles/<profile>/cordis.patch.yml —— 顶层 YAML 数组，追加一条 insert 项
+- insert:
+    - id: mcp-mcskill
+      name: "@deepseek-ai/dsh-mcp-client"
+      config:
+        serverName: mcskill
+        transport: stdio
+        command: "D:/DeepSeek Harness/resources/runtime/primary-runtime/dependencies/node/bin/node.exe"
+        args:
+          - "<仓库根>/mcp-server/dist/index.js"
+        cwd: "<仓库根>/mcp-server"
+        env:
+          MC_SKILL_DATA: "<仓库根>/data"
+          MC_SKILL_COMMUNITY: "<仓库根>/community_knowledge"
+        toolCallTimeoutMs: 120000
+        failOnStartupError: false
+```
+
+- **不是** `mcpServers` JSON：DSH 不读 Cursor / Claude 那套形状，整份 patch 文件就是 YAML 数组。
+- **`cwd` 必须显式写**：缺省值是 `""`，等于继承宿主进程的 cwd —— 相对路径与依赖解析都会跟着漂。
+- **`env` 必须显式写**：DSH 会清洗子进程环境里匹配 `/KEY|PASSWORD|SECRET|TOKEN/i` 的变量与**全部** `DSH_*`，所以 `MC_SKILL_DATA` / `MC_SKILL_COMMUNITY` 不能指望从宿主环境继承。
+- 工具名形如 **`mcp__mcskill__<tool>`**（即 `mcp__<serverName>__<tool>`）；本机实测 `initialize` + `tools/list` = **89** 个工具。
+
 ---
 
 ## Step 5 — 合并、重载、用工具验收
@@ -437,6 +467,7 @@ Cline 常见：`%APPDATA%\Code\User\globalStorage\saoudrizwan.claude-dev\setting
 | Continue | 重载窗口；确认处于 Agent 模式 |
 | Trae | 重载窗口；设置 → MCP 看连接状态 |
 | OpenCode / Codex | 新开会话 |
+| DSH（DeepSeek Harness） | 改 patch 文件后 HMR 原地重连该 MCP server；不行则新开会话 |
 | Windsurf / Cline / Roo | 对应 MCP 面板 Restart |
 
 ### 验收（Agent 自己调工具，不要只让用户看 UI）
@@ -475,7 +506,7 @@ CLI 正常而 IDE 里没有工具 → 配置文件路径/键名/未重载。两�
 
 ### 各 IDE 如何发现 Skill（打开本仓库根时）
 
-必须是 `技能名/SKILL.md` 目录（Cursor / Claude / OpenCode 的 `name` 只允许 `[a-z0-9]+(-[a-z0-9]+)*`，须与文件夹名一致）。
+必须是 `技能名/SKILL.md` 目录（Cursor / Claude / OpenCode / DSH 的 `name` 只允许 `[a-z0-9]+(-[a-z0-9]+)*`，须与文件夹名一致；DSH 的 skill frontmatter 另要求 `name` + 非空 `description` 两项必填）。
 
 | IDE | 扫描方式 | 打开 `MC_skill` 根时 |
 |-----|----------|----------------------|
@@ -485,6 +516,7 @@ CLI 正常而 IDE 里没有工具 → 配置文件路径/键名/未重载。两�
 | Trae | 工作区根 `.trae/skills/{name}/SKILL.md` | 根上无；镜像还是扁平 `.md`，面板可能不认 |
 | OpenCode / Codex / Pi | 从 CWD **向上**找 `.opencode/skills` / `.agents/skills` / `.pi/skills` | 根上没有 → 空 |
 | ZCode | 项目 `.zcode/skills/` | 根上无 |
+| DSH（DeepSeek Harness） | 从 CWD **向上**找最近含 `.git` 的祖先作项目根，根下**深度一层**只认 `.dsh/skills` 与 `.agents/skills`（`<name>/SKILL.md` 或 `<name>.md`）；另读 `~/.dsh/skills` / `~/.agents/skills` 与 customSkillDirs | 根上无 `.dsh/skills` / `.agents/skills` → 空 |
 
 `scripts/sync-skills.ps1` 只把 Skill 镜像到**各平台版本目录**，从不写仓库根。Fabric `.cursor/skills/mc-*.md` 扁平文件对 Cursor 无效（靠 `.agents/skills/<name>/SKILL.md`）。库 Skill 在 `knowledge/libs/`（见该目录 `README.md`），默认不安装。
 
@@ -554,6 +586,7 @@ description: "[Forge 1.20.1] <从源 SKILL.md 复制的 description>"
 | Codex | `~/.agents/skills/` | `<项目>/.agents/skills/` |
 | ZCode | `~/.zcode/skills/` | `<项目>/.zcode/skills/` |
 | Pi | `~/.pi/agent/skills/` | `<项目>/.pi/skills/` |
+| DSH | `~/.dsh/skills/`（另读 `~/.agents/skills/`） | `<项目>/.agents/skills/`（与 Codex 共用同一棵树；`activate_platform_pack --hosts=dsh` 写这里） |
 
 库 Skill 默认不装。换平台/版本再跑本步骤覆盖。先列出路径与数量，确认后再写盘。完成后请用户重载 IDE，在 Skill 面板或斜杠命令里核对。
 

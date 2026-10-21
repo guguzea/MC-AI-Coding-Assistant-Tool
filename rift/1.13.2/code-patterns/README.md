@@ -2,7 +2,7 @@
 
 > 本目录收集 **Rift 1.13.2** 模组开发的代码片段。
 > **口径**：Rift 侧（`org.dimdev.rift.**`）的每个类名/签名都对真构件 `javap` 核过（出处 `../knowledge/common/verified-api.md`）；
-> **MC 侧（`net.minecraft.**`）没有对真构件核过**（本机无 1.13.2 构件）⇒ 凡涉及 MC 类型的地方都标了 `TODO(未核实)`，**别当已证**。
+> **MC 侧（`net.minecraft.**`）已对真构件 javap 核过**（见 `../knowledge/common/bridge-api.md` §3/§4，43/43 在盘）⇒ 桥点名过的 MC 类型可当已证；**未被点名的**仍标 `TODO(未核实)`。
 
 ## 目录
 

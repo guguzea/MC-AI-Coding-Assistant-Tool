@@ -1,7 +1,7 @@
 # mods.toml 解析回归夹具（S1 · F90/F98）
 
 这些 `mods.toml` 从公开模组 jar 的 `META-INF/mods.toml` 原样取出，只用作 TOML 解析器的回归夹具（元数据文本，非代码、非文档正文）。
-来源与 sha512 逐条登记如下；jar 取自 `mcp-server/data/lib-manifests/all.json` 的条目，下载落 `D:/mc-skill-temp/jars/`，取证见 `temp/PLAN-2026-09-08-销账-S1-jar取证.md`。
+来源与 sha512 逐条登记如下；jar 取自 `mcp-server/data/lib-manifests/all.json` 的条目，下载落 `<cache>/jars/`，取证见 `temp/PLAN-2026-09-08-销账-S1-jar取证.md`。
 
 | 夹具 | 夹具 sha256(12) | 来源 jar | slug | MC | loader | 期望 modId | versionType | 字节 | jar sha512 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |

@@ -2764,6 +2764,10 @@ import net.minecraft.util.math.BlockPos;
  * 进程内临时 QA 驱动（${mode} / ${platform} ${version}）。测完必须按同目录 REVERT.md 撤除。
  *
  * 签名出处 = javap 实测（${tier.mappings} 命名 jar，${tier.asOf}）：
+ * ⚠ 下面这 9 行列的是**模板原生档（Yarn 命名）**的符号；26.x 档正文经 apply26xxShared /
+ *    deForgeToNeoForge26xx 改写成 mojmap 名（如 ClientTickEvents → net.neoforged.neoforge.client.event.ClientTickEvent），
+ *    但这份清单不参与改写 ⇒ **26.x 产物读这 9 行会看到 Yarn 名，与正文不符**（2026-10-21 审查 mcp-generators F-4 登记）。
+ *    以正文为准：本清单只说明「这些签名当初是对着哪个 jar 的 javap 核的」，不是逐档别名表。
  *   ClientTickEvents.END_CLIENT_TICK : Event<EndTick>
  *   MinecraftClient.player / world / getFramebuffer() / runDirectory(File) / setScreen(Screen)
  *   ScreenshotRecorder.saveScreenshot(File, Framebuffer, Consumer<Text>)
@@ -3272,7 +3276,22 @@ public final class PlaytestQaDriver {
                 case "touch": {
                     // 多客户端会合的信号端：写一个 marker 文件，给别的客户端 waitfile 等。
                     if (stepTicks == 1) {
+                        if (rest.trim().isEmpty()) {
+                            failIntent(client, player, "touch_missing_path",
+                                "touch 缺路径（空路径一律判红，不写到证据目录本身）");
+                            return;
+                        }
                         Path mp = syncPath(rest);
+                        if (isEvidenceDirItself(mp)) {
+                            failIntent(client, player, "touch_evidence_dir",
+                                "touch 目标就是证据目录本身（path=. 或尾斜杠）⇒ 判红");
+                            return;
+                        }
+                        if (Files.isDirectory(mp)) {
+                            failIntent(client, player, "touch_path_is_dir",
+                                "touch 的 path 是目录，不是 marker 文件 ⇒ 判红");
+                            return;
+                        }
                         try {
                             Path parent = mp.getParent();
                             Files.createDirectories(parent == null ? Path.of(EVIDENCE_DIR) : parent);
@@ -3297,7 +3316,23 @@ public final class PlaytestQaDriver {
                         fopts = rest.substring(sp5 + 1);
                     }
                     int fmax = optI(fopts, "max", 1200);
+                    if (fpath.trim().isEmpty()) {
+                        // fail-closed：空路径会让 syncPath("") 落到 EVIDENCE_DIR 本身（恒存在）⇒ 等待端会立即通过
+                        failIntent(client, player, "waitfile_missing_path",
+                            "waitfile 缺路径（空路径一律判红，不落到证据目录本身）");
+                        return;
+                    }
                     Path mp = syncPath(fpath);
+                    if (isEvidenceDirItself(mp)) {
+                        failIntent(client, player, "waitfile_evidence_dir",
+                            "waitfile 目标就是证据目录本身（path=. 或尾斜杠）⇒ 判红");
+                        return;
+                    }
+                    if (Files.isDirectory(mp)) {
+                        failIntent(client, player, "waitfile_path_is_dir",
+                            "waitfile 的 path 是目录，不是 marker 文件 ⇒ 判红");
+                        return;
+                    }
                     if (Files.exists(mp)) {
                         log("[QA] waitfile " + mp + " -> OK after " + stepTicks + " tick");
                         next();
@@ -4391,6 +4426,15 @@ public final class PlaytestQaDriver {
         return Path.of(EVIDENCE_DIR, t);
     }
 
+    /** 空路径的另一种形态：path=. 或 path=./ 规范化后就是证据目录本身 ⇒ 同样判红。 */
+    private static boolean isEvidenceDirItself(Path p) {
+        try {
+            return p.toAbsolutePath().normalize().equals(Path.of(EVIDENCE_DIR).toAbsolutePath().normalize());
+        } catch (RuntimeException e) {
+            return false;
+        }
+    }
+
     /** 兜底读法：<runDir>/logs/latest.log 的最后一条含 [CHAT] 的行（实测 /locate 的结果就落在这里）。 */
     private static String readLastChatLine(MinecraftClient client) {
         try {
@@ -5013,7 +5057,10 @@ const useLiteLoaderTable = platform === "liteloader" && version === "1.12.2";
       );
     } else if (useFabric1201Table) {
       warnings.push(
-        `platform=${platform} version=1.20.1 档由 1.21.11 模板经改写表派生（GUI 点击一处差异，javap 实测：1.20.1 无 Click/MouseInput，mouseClicked 为 (double,double,int)）——**本档是派生态**（真机验证状态见 \`mcp-server/CHANGELOG.md\`）。`,
+        // 2026-10-21 修正（审查 mcp-generators F-8）：原文硬编码 `version=1.20.1`，
+        // 而该分支判定是 `version === "1.20.1" || version === "1.19.4"`（:4935）⇒ 1.19.4 的产物
+        // 会谎报自己是 1.20.1 档，读警告的人会按错的档位排查。改成实际 version。
+        `platform=${platform} version=${version} 档由 1.21.11 模板经改写表派生（GUI 点击一处差异，javap 实测：该档无 Click/MouseInput，mouseClicked 为 (double,double,int)）——**本档是派生态**（真机验证状态见 \`mcp-server/CHANGELOG.md\`）。`,
       );
     } else if (useFabricLegacyTable) {
       warnings.push(

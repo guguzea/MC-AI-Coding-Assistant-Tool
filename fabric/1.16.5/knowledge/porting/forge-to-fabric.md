@@ -11,7 +11,7 @@
 | Mod 配置 | `mods.toml` | `fabric.mod.json` |
 | 注册方式 | `DeferredRegister` + modEventBus | `Registry.register()` |
 | 注册时机 | `RegisterEvent` 自动触发 | `onInitialize()` 方法中执行 |
-| Mixin | `org.spongepowered.mixin` 插件 | **需要显式配置 Mixin Plugin**（1.16.x）|
+| Mixin | `org.spongepowered.mixin` 插件 | **Loom 自动处理**（不要手写 MixinBootstrap / MixinLauncher）|
 | 事件系统 | `@SubscribeEvent` + Forge 事件总线 | **Fabric 事件回调** |
 | Mappings | MCP（`func_XXXXX`） | Yarn（`method_XXXXX`）|
 | Java 版本 | Forge 1.16.5 需要 Java 8 | Fabric 1.16.5 需要 **Java 8**（Java 16 从 MC 1.17 起） |
@@ -71,7 +71,7 @@ dependencies {
 }
 ```
 
-> **注意**：`fabric.mod.json` 中 `depends` 应使用 `"fabric": "*"` 而非 `"fabric-api": "*"`（1.14-1.16.x 规范）。
+> **注意**：`fabric.mod.json` 中 `depends` 应使用 `"fabric": "*"` 而非 `"fabric-api": "*"`（1.14–1.17.1 规范；`fabric-api` id 从 0.59.1 起才切换）。
 
 ---
 ## 步骤 2：入口类迁移
@@ -178,7 +178,7 @@ ServerSidePacketRegistry.INSTANCE.register(new Identifier(MOD_ID, "player_join")
 ```
 
 ---
-## 步骤 6：Mixin 迁移（1.16.x 特殊要求）
+## 步骤 6：Mixin 迁移（Loom 自动处理）
 
 ```java
 // ❌ Forge mixin 配置 (build.gradle)
@@ -187,7 +187,7 @@ ServerSidePacketRegistry.INSTANCE.register(new Identifier(MOD_ID, "player_join")
 mixin { add sourceSets.main, "${mod_id}.refmap.json" }
 
 // ✅ Fabric 1.16.5 mixin 配置
-// 需要显式 Mixin Plugin（1.16.x 特殊要求）
+// Loom 自动处理 Mixin；不要手写 MixinBootstrap / MixinLauncher
 ```
 
 ```json
@@ -196,21 +196,13 @@ mixin { add sourceSets.main, "${mod_id}.refmap.json" }
   "required": true,
   "minVersion": "0.8",
   "package": "com.example.examplemod.mixin",
-  "compatibilityLevel": "JAVA_16",
+  "compatibilityLevel": "JAVA_8",
   "client": ["client.MyMixin"],
   "mixins": []
 }
 ```
 
-```java
-// ExampleMixinPlugin.java（1.16.x 必需）
-public class ExampleMixinPlugin {
-    public static void init() {
-        MixinBootstrap.init();
-        MixinLauncher.addPrimaryMixin("com.example.examplemod.mixin.ExampleMixin");
-    }
-}
-```
+不要新增 `ExampleMixinPlugin`，也不要调用 `MixinBootstrap` / `MixinLauncher`：Loom 已处理 Mixin。若从 Forge 带过来这两块，直接删除。
 
 ---
 ## 常见陷阱

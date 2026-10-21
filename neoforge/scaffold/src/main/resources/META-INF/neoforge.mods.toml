@@ -10,14 +10,14 @@ description='''${mod_description}'''
 
 [[dependencies.examplemod]]
 modId="neoforge"
-mandatory=true
+type="required"
 versionRange="${neoforge_version_range}"
 ordering="NONE"
 side="BOTH"
 
 [[dependencies.examplemod]]
 modId="minecraft"
-mandatory=true
+type="required"
 versionRange="${minecraft_version_range}"
 ordering="NONE"
 side="BOTH"

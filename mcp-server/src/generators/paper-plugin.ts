@@ -54,11 +54,20 @@ const UNPINNED = "UNPINNED-TODO-not-verified";
 export function generatePaperPlugin(opts: PaperPluginOptions): GeneratorResult {
   const pluginName = String(opts.pluginName ?? "").trim();
   const packageName = String(opts.packageName ?? "").trim();
+  // F-7（2026-10-20）：非法入参曾走 throw，与兄弟生成器不一致 —— 它们统一返回
+  // { code: null, errors: [...] }（结构化信封，由 write-helper 的 generatorRejectionAction 分类）。
+  // throw 会让 handler 无 try/catch 的路径变成 errorKind:"tool_failure" 的裸错误，机读方拿不到 errors[]。
   if (!IDENT_RE.test(pluginName)) {
-    throw new Error(`pluginName 不是合法 Java 标识符：${JSON.stringify(opts.pluginName)}`);
+    return {
+      code: null,
+      errors: [`pluginName 不是合法 Java 标识符：${JSON.stringify(opts.pluginName)}（须匹配标识符形态，如 MyPlugin）`],
+    };
   }
   if (!PKG_RE.test(packageName)) {
-    throw new Error(`packageName 不是合法 Java 包名：${JSON.stringify(opts.packageName)}`);
+    return {
+      code: null,
+      errors: [`packageName 不是合法 Java 包名：${JSON.stringify(opts.packageName)}（须为点分标识符，如 com.example.myplugin）`],
+    };
   }
   const toolchain = String(opts.javaToolchain ?? "21").trim();
   const apiVersion = opts.apiVersion ? String(opts.apiVersion).trim() : "TODO-未核实";

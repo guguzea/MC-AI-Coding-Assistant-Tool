@@ -32,7 +32,7 @@
 | `:112-113` | `load` | "when to load the plugin. This can be **`STARTUP`** or **`POSTWORLD`**. Will **default to `POSTWORLD`** if not specified." |
 | `:225-235` | **`depend`** | "A list of plugins that your plugin depends on to **__load__**" ⇒ **被依赖者先加载** |
 | `:237-241` | `softdepend` | "…depends on to have **__full functionality__**"（不是加载前提） |
-| `:121-123` | `libraries` | 从 **Maven Central** 下载并加进 classpath（"removes the need to shade and relocate"） |
+| `:120-123` | `libraries` | 从 **Maven Central** 下载并加进 classpath（"removes the need to shade and relocate"） |
 | `:252-254` | `provides` | 声明本插件**提供**某库/插件的功能（别名系统）；`(soft)depend` 它的插件会当它存在 |
 
 ⚠️ **纠错**：我先前把加载顺序那条写成 **`hard-depend`** —— **`plugin.yml` 里没有这个字段名**，官方是 **`depend`**（`:225`）。别照我先前那句记。
@@ -125,4 +125,4 @@ commands:
 | `:188-190` | `commands` | 命令段结构（`:189` `commands:` / `:190` `command:`） |
 
 ⚠ **一条"官方 vs 实测"对照，值得单独记**：官方 `:152-153` 说 `default` 的字面量是 **`op` / `notop`**（**无空格**）；而本档**真机实测**的是 **`not op`（带空格）也生效**（marker `v-perm-declared-more.ok`）。⇒ **我只实测了带空格那种**，两种写法是否都接受**未同时对照**（见 `04-permissions.md`）。
-- `Permission` 在 `plugin.yml` 里的 `default:` 字面量与 `PermissionDefault` 的映射 —— 见 `04-permissions.md` 的未核实段。
+- `Permission` 在 `plugin.yml` 里的 `default:` 字面量与 `PermissionDefault` 的映射 —— 见 `04-permissions.md` 的「`plugin.yml` 的权限声明」节（已真机核）。

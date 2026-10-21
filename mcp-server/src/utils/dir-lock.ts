@@ -52,7 +52,14 @@ function isLockOwner(lockDir: string): boolean {
   }
 }
 
-/** 持锁方心跳：续租 owner.at（同时刷新目录 mtime），防止长任务被误抢占。 */
+/**
+ * 持锁方心跳：续租 `owner.json` 的 `at` 字段，防止长任务被误判陈旧而抢占。
+ *
+ * ⚠ **不刷新锁目录自身的 mtime**（2026-10-21 修正：原注释写「同时刷新目录 mtime」，实测为假）：
+ * `writeOwner` 只 `writeFileSync(owner.json)` —— 覆写已有**文件**改的是文件 mtime，
+ * 不碰父目录 mtime（只有增删子项才动父目录 mtime）。陈旧判定也因此只看 `owner.json` 的
+ * `at`／pid，不看目录 mtime，两者口径一致。
+ */
 const lockHeartbeats = new Map<string, NodeJS.Timeout>();
 
 function lockHeartbeatKey(root: string, name: string): string {

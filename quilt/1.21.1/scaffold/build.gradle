@@ -3,7 +3,7 @@ plugins {
     //   最新 release = 1.15.1（lastUpdated 20260123082830，核对日期 2026-09-02）
     // ⚠️ 构建 JVM（跑 Gradle 的那个）必须是 **JDK 21+**：loom 1.15.1 的插件元数据声明 "requires at least JVM runtime
     //   version 21"（实测 2026-10-01）。本档 toolchain 也是 21 ⇒ 直接 JAVA_HOME=<jdk21> 即可，无需额外 toolchain 指路。
-    id 'org.quiltmc.loom' version '1.15.1'
+    id 'org.quiltmc.loom' version "${loom_version}"
     id 'maven-publish'
 }
 java { toolchain { languageVersion = JavaLanguageVersion.of(21) } }
@@ -16,7 +16,7 @@ dependencies {
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     // quilt-loader 取 maven.quiltmc.org/repository/release/org/quiltmc/quilt-loader/maven-metadata.xml
     //   最新 = 0.31.0-beta.4（lastUpdated 20260904212919，核对日期 2026-09-19）
-    modImplementation "org.quiltmc:quilt-loader:0.31.0-beta.4"
+    modImplementation "org.quiltmc:quilt-loader:${quilt_loader_version}"
     // 入口点（quilt.mod.json 的 entrypoints.main）用 quilt-loader 自带的 net.fabricmc.api.ModInitializer
     //   （@Deprecated 兼容接口，本进程内自带，无需额外依赖）。
     // ⚠️ quilt-loader 0.31 起 Quilt 原生 org.quiltmc.loader.api.entrypoint.ModInitializer 已删除（javap 实测 2026-10-01）；

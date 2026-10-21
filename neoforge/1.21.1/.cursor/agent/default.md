@@ -14,7 +14,7 @@
 | 入口 | `@Mod` + `public ExampleMod(IEventBus modEventBus)（可再加 ModContainer，以该版 MDK 为准）` |
 | 元数据 | neoforge.mods.toml |
 | 网络 | `RegisterPayloadHandlersEvent` + `PayloadRegistrar` |
-| 文档 | https://docs.neoforged.net/docs/1.21.1/ |
+| 文档 | 走 `search_neoforge_docs version=1.21.1`（版本根索引页 404，子页才存在） |
 | MDK | download_official_mdk platform=neoforge minecraftVersion=1.21.1 并传 buildPlugin |
 
 复数 Handlers 事件名的分界在 **1.20.5 / 1.20.6**，不是本档：本仓语料实测 1.20.4 仍是单数 `RegisterPayloadHandlerEvent`（`data/neoforge_1.20.4/neoforge-docs/1.20.4/processed/networking_payload.md:9`），1.20.6 已改复数 `RegisterPayloadHandlersEvent`（`data/neoforge_1.20.6/neoforge-docs/1.20.6/processed/networking_payload.md:9`，同页 :85 `registrar.playBidirectional(`）；本仓无 `data/neoforge_1.20.5` 主文档语料，故分界只钉到这一档距。本档 1.21.1 沿用复数形态。payload 用 CustomPacketPayload.Type + StreamCodec + playBidirectional/ToClient/ToServer。

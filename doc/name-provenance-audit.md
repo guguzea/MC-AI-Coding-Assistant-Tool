@@ -360,7 +360,7 @@
 
 #### (1) 「本机无构件」这句是错的（更正 §2 下半张表）
 
-用 `F:\MOD_TEST\scan-jars.mjs` 横扫 12 个根（`D:\mc-skill-temp`、`F:\MC_GAME`、`F:\MOD_TEST`、`F:\finish_MCMODS`、`D:\Minecraft`、`C:\Users\zzrCN\.gradle\caches\{minecraft,quilt-loom,modules-2}` 等），共约 3.6 万个 jar。**原判「无构件」的档里，以下其实有可用件**：
+用 `F:\MOD_TEST\scan-jars.mjs` 横扫 12 个根（`D:\mc-skill-temp`、`F:\MC_GAME`、`F:\MOD_TEST`、`F:\finish_MCMODS`、`D:\Minecraft`、`<home>\.gradle\caches\{minecraft,quilt-loom,modules-2}` 等），共约 3.6 万个 jar。**原判「无构件」的档里，以下其实有可用件**：
 
 | 档 | 找到的件（本机路径） | 能核什么 / 不能核什么 |
 | --- | --- | --- |
@@ -1454,3 +1454,138 @@ public abstract StructureType<?> type();
 - 上一轮「11 处内容缺陷全部已修」**不成立**：`IRecipe` / `DataParameter` 的**内容**改动对（javap 可核），但**审计读数**没修掉。我当时只看「改动是否落地」，把「代码改了」当成「问题消了」。**同一个坑第三次**（前两次：未投毒的 selftest 假臂、`cpSet` 漏 `auxJars` 却自测全绿）。规矩改为：结论只能引用「修后重跑的定向读数」。
 - `Structure` 上轮只改 `extends` 就收工，**没 javap 核抽象方法**，造出一个仍不能编译的「正确方案」——那比不修更坏，因为它看起来已经修好。**内容源稿改动必须真编译一次**。
 - 记账设施第一次又只加在 fragment 分支（全量跑出 `supportApproximations: []`），已补两分支 + 源码接线臂（`approxSites < 2` 判红）。
+
+## §8.40 NeoForge loader 逐档化与空构件守卫（2026-10-20）
+
+### 缺陷：api 层的 loader 顶掉了 support 层的逐档件
+
+`artifactSet()` 的 `neoforge` 分支原来无条件：
+
+```js
+add(newestJarIn(path.join(MODULES, "net.neoforged.fancymodloader", "loader")), "api");
+```
+
+`supportJarsFor()` 已经按 `NEO_LOADER_VER` 逐档取 loader，但 `api` 层在 `pickImportCandidate` / `narrowClasspath` 里优先，结果全档报告 artifacts 都写着 `loader-10.0.32.jar`（1.21.1 的真值是 4.0.43，差 8 个 major），而 `supportApproximations` 的 loader 计数是 0——错件没有任何记账。
+
+### 修法
+
+- `artifactSet()` 的 loader 改走 `pickModuleJarSameAxis("net.neoforged.fancymodloader", "loader", NEO_LOADER_VER[version], …)`；同轴替代/缺失由该函数记账。
+- `NEO_LOADER_VER` 没有 `1.20.1`：该档走 Forge 兼容层，本机也没有 `neoforge-1.20.1` merged 构件。1.20.1 退回同版 Forge mapped 件 + `findForgeSupportJars(1.20.1)`，记 `neoforge-merged`（`forge-compat`）；loader 本身不跨轴顶替，记 `fancymodloader:loader`（`loader-floor`）。
+- `runPack()` 的 `resetSupportApprox` 从 `supportJarsFor` 前移到 `artifactSet` 之前；否则 `artifactSet` 里的近似会被清零。
+- `runPack()` 新增守卫：`opts.compile && jars.length === 0` 时写一条 `unverifiable`（`symbol:"artifacts"`），不再把「没有构件」静默读成「0 条发现」。
+- selftest 新增三组接线臂：1.21.1 的 artifacts 必须含 4.0.43；1.20.1 不许出现新版 loader 且必须记 `loader-floor`；源码顺序必须 `resetSupportApprox` 在 `artifactSet` 前（比对串拆两段拼，防臂源码自匹配）。
+
+### 读数
+
+- 定向 NeoForge 10 档 `--complete`：`fail=0 / unverifiable=21`，报告 `D:\mc-skill-temp\audit-neoforge-loader-fix2\report.json`；逐档 loader = 2.0.17 / 3.0.45 / 4.0.43 / 5.0.8 / 7.0.13 / 9.0.18 / 10.0.32 / 10.0.36 / 11.0.15（1.20.1 无独立 loader，走 Forge 兼容件）。
+- 全量 57 档 `--all --complete`：`fail=0 / unverifiable=1704`，报告 `D:\mc-skill-temp\audit-full-loader-fix-20261020\report.json`；`supportApproximations` 39 条 = 既有 37 + 1.20.1 的两条。
+- 1691 → 1704 的 **+13 全部是新守卫**：`forge/1.7.10/1.8.9/1.9.4/1.10.2/1.11.2/1.12.2`、`liteloader/1.8.9/1.10.2/1.12.2`、`modloader/1.2.5/1.5.2/1.6.4`、`bedrock/stable` 各 +1（`symbol:"artifacts"`）；其余 44 档逐档 0 变化，无新增 fail。
+- `--selftest` OK；`assert-skill-mirrors` / `assert-skill-yarn-attest` / `assert-skill-mappings-key` / `assert-scaffold-rules-conflict` 全绿；`cd mcp-server && node test-scripts.mjs` exit 0。
+
+### 未做与更正
+
+- **fabric 的 loader 仍是 `newestJarIn`**（与本轮修的 neoforge 同类）：`artifactSet` 的 fabric/quilt 分支没有按档解析 scaffold 的 `loader_version`；本轮不扩大改动面。
+- 1.20.1 的 `forge-compat` / `loader-floor` 是近似，本机确实没有本档独立 fancymodloader 件；未伪造真件。
+- §8.39 写「37 处含 mixinextras-floor 10」：总数 37 对，分项实际是 **16**；本轮 39 的分项为 `mixinextras-floor 16 / eventbus 5 / forgespi 4 / dist-substitute 5 / same-axis 7 / forge-compat 1 / loader-floor 1`。
+- §8.39 的「loader 0」只说明 support 层没记账，不代表 api 层没顶替；真正的错件在 `artifactSet` 的 api 层，本轮才修掉。
+
+## §8.41 fabric/quilt loader 逐档化与注解位保护（2026-10-20）
+
+### 缺陷
+
+`artifactSet()` 的 fabric/quilt 分支对所有档执行：
+
+```js
+add(newestJarIn(path.join(MODULES, "net.fabricmc", "fabric-loader")), "api");
+```
+
+`newestJarIn` 按文件 mtime 取件，全量报告里 14 个 fabric 档的 api loader 全是 `fabric-loader-0.10.5+build.213.jar`，而各档 scaffold 的真值从 0.3.7.111 到 0.19.5；10 个 quilt 档也被塞了 fabric-loader，而 scaffold 钉的是 `org.quiltmc:quilt-loader:0.31.0-beta.4`。quilt-loader 0.31 自带 `net.fabricmc.api.ModInitializer`（各档 scaffold 注释写明），因此 quilt 档不能用 fabric-loader 顶替。
+
+### 修法
+
+- 新增 `FABRIC_LOADER_VER`（14 档，实读 `fabric/<ver>/scaffold/gradle.properties`；26.1.2 的该行缺失，真值取 `scaffold/build.gradle` 的 `fabric-loader:0.19.5`）。
+- 新增 `QUILT_LOADER_VER`（10 档，均 `0.31.0-beta.4`）。
+- `artifactSet()` 按平台分流：fabric → `net.fabricmc:fabric-loader`，quilt → `org.quiltmc:quilt-loader`，均走 `pickModuleJarSameAxis`；缺件只记账、不跨轴。
+- 新增 `isLoaderJarPath()`，在 `exactApiJars()` 与全局 FAPI 兜底里剔除 loader 件。它同时覆盖三种 Loom 命名：`fabric-loader-…jar`、`x.net.fabricmc-fabric-loader-…jar`、`remapped.net.fabricmc.fabric-loader-…jar`，且不误伤 `fabric-resource-loader-…`。
+- `autoImport()` 注解位保护：`@Foo` 位置只剩一个候选时，必须由 `inv.annotationFqcns` 或 class 文件 `ACC_ANNOTATION` 证明它是注解，否则不补。否则 1.14.4 缺 loader 时 `@Environment` 会被补成 MC 的 `RealmsClient$Environment`，javac 报 `Environment cannot be converted to Annotation`（把工具缺口误判成 fail）。
+- `compileOnce()` 对 `ETIMEDOUT` 重试一次（30s → 120s）；全量跑出现过一次 `neoforge/1.20.4` 超时（1705），定向重跑同档为 3，确认是超时抖动。
+
+### 读数
+
+- 定向 fabric+quilt 24 档 `--complete`：`fail=0 / unverifiable=432`（fabric 432 / quilt 0），报告 `D:\mc-skill-temp\audit-fabric-quilt-loader-fix2\report.json`；逐档与修前 0 差异；api loader 逐档为 fabric 0.3.7.111 / 0.11.2 / 0.11.2（1.17.1 缺 0.11.7，同轴顶替并记账）/ 0.14.24 / 0.14.21 / 0.15.11 / 0.15.11 / 0.16.9 / 0.16.9 / 0.19.5 ×5（1.21.4/1.21.8/1.21.10/1.21.11/26.1.2），quilt 全 0.31.0-beta.4。
+- 全量 57 档 `--all --complete`（retry 版）：`fail=0 / unverifiable=1704`，报告 `D:\mc-skill-temp\audit-full-fabric-quilt-loader3-20261020\report.json`；与 §8.40 的 NeoForge-only 全量逐档 **0 差异**（只有 artifacts 的 loader 件变了）。
+- `supportApproximations` 40 条：`mixinextras-floor 16 / eventbus 5 / forgespi 4 / dist-substitute 5 / same-axis 7 / loader 1 / forge-compat 1 / loader-floor 1`。
+- `--selftest` OK；`test-scripts.mjs` exit 0；四条轻量门全绿。
+
+### 未做与更正
+
+- **§8.40 把「fabric loader 仍是 `newestJarIn`」列为残留**，本节已修；同一缺陷在 NeoForge 与 fabric/quilt 上都存在，根因是「支撑件逐档」只改了 `supportJarsFor`，没改 `artifactSet` 的 api 层。
+- 1.14.4 的 `fabric-loader-0.3.7.111.jar` 本机原缓存只有 `.pom`；已从 `maven.fabricmc.net` 取到并放进本机 Gradle 缓存（未入仓）。代码对「有件」与「缺件」两态都成立：缺件时不跨轴、记 `loader`，注解位也不会误补普通类。
+- quilt 的 FAPI 仍走全局模块做存在性检查，没有本档精确 remap FAPI 作编译面；这是 FAPI 侧缺口，不是本轮 loader 面。
+- 1.17.1 的精确 `fabric-loader:0.11.7` 本机没有 jar，现用同轴 0.11.2 顶替并记账，未去上游补件。
+
+## §8.42 版本档内容断言修复（2026-10-20）
+
+### 这一节修的不是名字出处，而是「断言与真构件/上游页不一致」
+
+`temp/review-2026-10-20/` 的版本档报告给出了一批内容级问题；本轮逐条回到真 mapped jar、universal jar、maven metadata、npm dist-tags 与仓内派生件核对，只把核对成立的改动落盘。修复面按平台分组：
+
+- **Forge**：`1.14.4`/`1.15.2` 的实体基类 `LivingEntity` 改为 `CreatureEntity`，`1.17.1`/`1.18.2`/`1.20.1`/`1.20.4` 改为 `PathfinderMob`；四档 `registry.md` 的构造器注入改回 `FMLJavaModLoadingContext.get()`；五档 `mods.toml` 的依赖键从固定 `examplemod` 改为 `${mod_id}`。
+- **Fabric**：`1.16.5` 移植页删掉「必须手写 `ExampleMixinPlugin` / `MixinBootstrap`」错误段并改 `JAVA_8`；`1.17.1` `fabric.mod.json` 的 `fabric-api` 改 `fabric`；三档补 `pack.mcmeta`（46/64/69）；两处核实表计数 5→6 档；两处 loom 钉值表述；四处 `M:/` 前缀。
+- **Quilt**：`1.21.1` 的 `RegistryEntryAddCallback` 更正为 `RegistryEntryAddedCallback`；`1.18.2`/`1.19.4`/`1.20.1` 的事件规则改为以本档 `qsl-verified.md` 为名字来源；五档技能的「2025-12 停更」从加粗断言降为 `// TODO(未核实)`；1.21.8/1.21.10 的语料页断言按磁盘改正；十个规则文件的 `total:4`/`total:3` 去掉数字（CLI 实测十档均 11）；重复 ② 编号、语料页描述、`lastUpdated` 日期一并更正。
+- **Legacy**：根 `AGENTS.md` 与 `liteloader/1.12.2/AGENTS.md` 的混合工程判据从「apply `net.minecraftforge.gradle.liteloader`」改为「两边元数据都在」——`HYBRID.md:28` 已用 javap 证明该插件是 vanilla+LiteLoader，不含 Forge；Rift 的三处「MC 侧已核/未核」矛盾按 `bridge-api.md` 的 43/43 读数统一。
+- **NeoForge**：`26.1/scaffold/build.gradle` 的「26.3 上游无正式版」改为 `26.3.0.95` 有正式版；`README_AI.md` 的 `NeoForgeRegistries.ENTITY_TYPES`/`BLOCK_ENTITY_TYPES` 改为 vanilla `Registries.ENTITY_TYPE`/`BLOCK_ENTITY_TYPE`（两档 universal jar javap 均无该字段）；`mandatory=true` 改为 `type="required"`；1.20.4 元数据文件名、九档 AGENTS 的文档链接与构造器形参、九份 `launch.json` 的本机路径一并修。
+- **Paper / Bedrock**：Paper 的 `asOfVersion` 178→195，并回收八处「后文已验、前文仍写未验」的句子；Bedrock 的 beta/rc 串按 npm `dist-tags` 重取，IDE 表补到 8 面镜像。
+
+### 读法与反证
+
+- **Forge 实体基类**：真 mapped jar javap，1.20.1 的 `Mob` 有 `protected void registerGoals()`，`PathfinderMob extends Mob`；1.15.2/1.14.4 的 `MobEntity` 有 `registerGoals()`，`CreatureEntity extends MobEntity`。原写法在对应档都缺 `registerGoals()`。
+- **Quilt `total`**：CLI 对十档的 QSL 措辞查询均返回 `total=11`；规则里的 4/3 是旧语料读数，按根 `AGENTS.md` 的「total 非契约」删数字。
+- **Quilt 语料页**：1.21.11 的 processed 与源稿同为 1226 B、sha256 `6f34f848f5d705bd`，页内无旧断言；1.21.1 的 processed 与源稿同为 6431 B、sha `016dee819d747c55`，页内含旧字样但带 `// TODO(未核实)` 撤回标记。
+- **Paper**：官方 Javadoc 页现为 `26.3.build.195-stable`；`api__command-api__*` 实测 22 个文件（4 个 index）。
+- **门**：`assert-skill-mirrors` / `assert-skill-yarn-attest` / `assert-skill-mappings-key` / `assert-scaffold-rules-conflict` / `assert-server-rules-integrity` / `assert-bedrock-script-api-pin` / `assert-qsl-verified-sync` 全绿；`audit-content-claims --selftest` OK；`test-scripts.mjs` exit 0；`git status --short data` 空。
+
+### 未做与更正
+
+- 给五档 `qsl-verified.md` 加 javap 出处备注会让 1.21.11 的 processed 派生件失配（`assert-qsl-verified-sync` 红）。按「不写 `data/`」回退该 P3 改动，没有跑 `index-qsl-verified.mjs --write`。
+- `ll-src/` 的 ARR 源码合规问题、Gradle 构建残件、Quilt `quilt.mod.json` 的 `versions="*"`、Paper 出处门的裸行号盲区均未在本轮处理；它们是独立决策/独立门面，不在「按审查报告修内容」范围内。
+- 审计器仍未入门链；本轮没有新增检测器。审查报告本身存在 P0 计数不一致（总报告 §一 `P0 ×3` vs 磁盘 6 档），本轮按磁盘与 javap 重核，不按报告的分级数字下结论。
+
+## §8.43 `ll-src` 登记与审计器 `--hygiene`（2026-10-20）
+
+### `ll-src`：登记来源/版权/边界，但不改变许可状态
+
+`THIRD_PARTY_NOTICES.md` 新增「LiteLoader 1.12.2 源码树（`ll-src/`）」节：
+
+- 来源：`https://develop.liteloader.com/liteloader/LiteLoader` 的 `1.12.2` 分支；`ll-src/liteloader.properties` 的 `brand=1.12.2-SNAPSHOT-r4CC2BB0-b4-4`。
+- 版权：363 个 Java 文件中 327 个文件头逐字含 `Copyright (C) 2012-16 Adam Mummery-Smith` + `All Rights Reserved`；其余无独立许可头，按同一项目版权处理。
+- 边界：上游没有开放许可；`All Rights Reserved` 不构成再分发授权。该树只作本地对照，不得进 Release / `data/` zip / npm 包，不得把源码复制进 scaffold/生成器/文档。**登记不等于授权**；权利人要求即移除。
+- 同步改正 `liteloader/1.12.2/knowledge/common/verified-api.md:4` 的相反自述，避免「仓库里有源码」与「许可证禁止再分发」并列。
+
+### `--hygiene`：补审计器对「散文/元数据/脚手架卫生」的盲区
+
+新增 `node mcp-server/scripts/audit-content-claims.mjs --hygiene [--packs <档>]`，默认扫 9 个平台树，跳过镜像与生成物目录。五类检测器：
+
+| kind | 判据 | 状态 |
+| --- | --- | --- |
+| `hygiene-abs-path` | `scaffold/**` 或 `README_AI.md` 里出现 `C:\Users\…` / `D:\mc-skill-temp` / `F:\MC_GAME` | 现代平台 fail；legacy info |
+| `hygiene-metadata` | NeoForge `mandatory=true` | 版本档 fail；根归档 scaffold info |
+| `hygiene-registry` | `NeoForgeRegistries[.Keys].FIELD` 不在真 jar 的 `javap` 字段表 | fail（无 jar 时跳过） |
+| `hygiene-unverified` | `## 未核实` 段里的条目实际写「已验成/已核/取代」 | fail |
+| `hygiene-total` | 规则/知识里「实测 … total:N」（N>0） | info |
+
+`neoForgeRegistryFields()` 从 Gradle modules 缓存的 `neoforge-*-universal.jar`、`F:/MOD_TEST/dev/**/*-merged.jar` 与 `temp/**` 取件，解析 `NeoForgeRegistries` 与 `NeoForgeRegistries$Keys` 两个字段表；找不到 jar 返回空集，不猜。
+
+### 读数与反证
+
+- `--hygiene` 全树：`fail=0 / info=4 / files=3149`，报告 `temp/content-audit/hygiene.json`；4 条 info = 3 条 quilt Fabric 回退 `total` 读数 + 1 条 rift 本机路径。
+- 变异探针（临时文件，已删）：在 `neoforge/1.21.1/scaffold/` 同时写 `NeoForgeRegistries.ENTITY_TYPES`、`mandatory=true`、`C:\Users\probe\x`、未核实段「已验成」⇒ `--hygiene --packs neoforge/1.21.1` 报 4 个 fail，四类检测器各中一条；删除后复跑 fail=0。
+- `--selftest` OK（新增 17 条 hygiene 臂）；`test-scripts.mjs` exit 0；`git status --short data` 空。
+
+### 未做与更正
+
+- `ll-src` 仍是 ARR；登记只解决「来源/版权/边界有没有记录」，不解决「再分发有没有授权」。要彻底消除风险仍需权利人许可或移出公开仓。
+- `--hygiene` 未入门链；跨文件版本串冲突、JSON/TOML schema、上游 URL 存活检查未实现。
+- §8.42 末尾「本轮没有新增检测器」**已过时**：本节已加 `--hygiene` 与 5 类检测器；两节按时间先后读，后者为准。
+- 第一版检测器的假阳性（`已核例子` / `已核掉` / `Keys` 截成 `K` / `XXX` 占位符）都在自检臂里留了反例，避免下次改正则时静默复发。
+- **状态更新（用户指示）**：`ll-src/` 已用 `git rm -r --cached` 移出 git 索引（370 条 staged deletion），`.gitignore` 增加 `ll-src/`；工作区 370 个文件保留。`git ls-files ll-src` = 0，但旧提交与远端历史仍含该树；彻底从公开历史移除需改写历史 + 强推，未执行。`THIRD_PARTY_NOTICES.md` 与 `verified-api.md` 的措辞已同步为「未跟踪的本地副本」。

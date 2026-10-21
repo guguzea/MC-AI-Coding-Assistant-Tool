@@ -34,7 +34,7 @@ description: 01 — manifest.json
 - **文档快照值** = `data/bedrock-docs-status.json` 的 `scriptApiStable`（Learn 抓取时刻所载 stable，快照时曾为 `2.9.0`；随抓取更新、天然滞后）——`generate_addon_manifest` 的默认值取它。
 - **模板钉值** = `mcp-server/data/bedrock-script-api-pin.json` 的 `scaffoldDependency.version`（本仓给新工程的推荐值，按 npm registry `dist-tags` 一手复核推进；当前 `2.10.0`）。
 
-`bedrock/scaffold/BP/manifest.json` 必须与**模板钉值**逐字一致；`validate_addon_manifest` 对既不是钉值也不是快照值的依赖版本回 warning（不判错）。三者由 `mcp-server/scripts/assert-bedrock-script-api-pin.mjs` 看守，单侧改动即红（npm `dist-tags`：`latest` = `2.10.0`、`beta` = `2.11.0-beta.1.26.51-stable`）。**不要**凭记忆填版本号，也不要用 Yarn/`modImplementation`。两份 scaffold manifest 都带 `min_engine_version`（模板示例口径）；生成器的默认 mev 钉值（`[1,26,44]`）按既有裁定不改，输出附当前 stable 注记。
+`bedrock/scaffold/BP/manifest.json` 必须与**模板钉值**逐字一致；`validate_addon_manifest` 对既不是钉值也不是快照值的依赖版本回 warning（不判错）。三者由 `mcp-server/scripts/assert-bedrock-script-api-pin.mjs` 看守，单侧改动即红（npm `dist-tags`：`latest` = `2.10.0`、`beta` = `2.13.0-beta.1.26.70-preview.20`）。**不要**凭记忆填版本号，也不要用 Yarn/`modImplementation`。两份 scaffold manifest 都带 `min_engine_version`（模板示例口径）；生成器的默认 mev 钉值（`[1,26,44]`）按既有裁定不改，输出附当前 stable 注记。
 
 ## 文档
 

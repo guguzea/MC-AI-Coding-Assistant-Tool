@@ -3,7 +3,7 @@
  * 依据 docs.neoforged.net/docs/resources/（GatherDataEvent.Client / Server、createProvider、Identifier）。
  * 禁止套用 1.21 的 GatherDataEvent + addProvider + ResourceLocation。
  */
-import { toPascalCase } from "./common.js";
+import { toPascalCase, toUpperSnake } from "./common.js";
 
 function gatherClient(ctorRef: string): string {
   return `
@@ -168,24 +168,39 @@ public class ${pascalName}AdvancementGenerator implements AdvancementSubProvider
 
 export function generateParticle(modId: string, targetName: string, classBase?: string): string {
   const pascalName = classBase || toPascalCase(modId);
+  const upper = toUpperSnake(targetName);
   return `// ParticleDescriptionProvider — NeoForge 26.1
 package com.example.${modId}.datagen;
 
+import java.util.function.Supplier;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.common.data.ParticleDescriptionProvider;
+import net.neoforged.neoforge.client.data.ParticleDescriptionProvider;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class ${pascalName}ParticleDescriptionProvider extends ParticleDescriptionProvider {
+    // 粒子类型注册（出处 data/neoforge_26.1/neoforge-docs/26.1/processed/resources_client_particles.md:13-43 同形）；
+    // 须在 mod 主类构造器里把 PARTICLE_TYPES 注册到 mod 事件总线。
+    public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES =
+        DeferredRegister.create(BuiltInRegistries.PARTICLE_TYPE, "${modId}");
+
+    public static final Supplier<SimpleParticleType> ${upper} =
+        PARTICLE_TYPES.register("${targetName}", () -> new SimpleParticleType(false));
+
     public ${pascalName}ParticleDescriptionProvider(PackOutput output) {
         super(output);
     }
 
     @Override
     protected void addDescriptions() {
-        Identifier id = Identifier.fromNamespaceAndPath("${modId}", "${targetName}");
-        sprite(id, id);
+        // 26.1 的 datagen 方法是 spriteSet(ParticleType<?>, Identifier, ...)，没有 sprite(...)：
+        // 出处 resources_client_particles.md:265 / :269 / :281 三处逐字 spriteSet。
+        spriteSet(${upper}.get(), Identifier.fromNamespaceAndPath("${modId}", "${targetName}"));
     }
 ${gatherClient(`${pascalName}ParticleDescriptionProvider::new`)}
 }

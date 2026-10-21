@@ -61,8 +61,8 @@ public static final RegistryObject<Block> MY_BLOCK = BLOCKS.register("my_block",
 
 **正确方案：**
 ```java
-public ExampleMod(FMLJavaModLoadingContext context) {
-    IEventBus modEventBus = context.getModEventBus();
+public ExampleMod() {
+    IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
     BLOCKS.register(modEventBus);   // ← 必须
     ITEMS.register(modEventBus);   // ← 必须
 }

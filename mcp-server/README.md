@@ -1,10 +1,52 @@
 # MC MCP Server
 
-本地 **stdio** MCP Server，供各 MCP 宿主（Cursor / Claude Code / VS Code / Continue / Trae / OpenCode 等）查询 Minecraft 模组开发资料（Forge / Fabric / NeoForge）。配置格式对照见仓库根 [AUTO_SETUP.md](../AUTO_SETUP.md)，不要默认写成 Cursor 的 `mcp.json`。
+本地 **stdio** MCP Server，供各 MCP 宿主（Cursor / Claude Code / VS Code / Continue / Trae / OpenCode / DSH 等）查询 Minecraft 模组开发资料（Forge / Fabric / NeoForge）。配置格式对照见仓库根 [AUTO_SETUP.md](../AUTO_SETUP.md)，不要默认写成 Cursor 的 `mcp.json`。
 
 **要求：Node.js >= 22.5**（Yarn 映射使用内置 `node:sqlite`；**22.5–22.12 需加 `--experimental-sqlite` 启动参数或 NODE_OPTIONS，22.13+ 无需**）。
 
-仓库与 GitHub Release **均不含 `node_modules`**，需本地编译：
+## npm 安装
+
+```bash
+# 默认：只装代码与查库语料，不含平台数据
+npm install mc-ai-coding-assistant-tool
+
+# 需要平台数据（本地文档检索 / 平台 API 查询 / MDK 等）：安装时带上 --data
+npm install mc-ai-coding-assistant-tool --data
+```
+
+`--data` 由 npm 归一化成环境变量 `npm_config_data=true` 交给安装脚本；**不带它时安装脚本只打印提示、不联网、立即返回**。下载失败也**不会**让 `npm install` 失败 —— 代码包已完整装好，平台数据只是没到位。
+
+### 包里有什么、什么要走 Release
+
+npm 包约 **11.5 MB**（解压 149 MB），内容分两类：
+
+| 内容 | 位置 | 说明 |
+| --- | --- | --- |
+| **代码** | `dist/` | MCP Server 本体 |
+| **小体积语料** | `data/`（127 个文件） | `mdk-checksums.json`（MDK 校验链的 pin 表）、`lib-api-summaries/`、`loader-api-summaries/`、`lib-manifests/`、`lib-coords/`、`wrapper-jars.json`、`bedrock-script-api-pin.json` |
+| **平台数据** | **不在包里** | `forge_*` / `fabric_*` / `neoforge_*` / `quilt_*` / `bedrock_*` / `paper_*` 等 76 个平台目录，约 **1.8 GiB / 4.2 万文件** ⇒ 走 **GitHub Release** 的 `mc-skill-data-full-<tag>.zip` |
+
+平台数据体积远超 npm 单包上限，且数据发版节奏与代码发版节奏不同 ⇒ 分离分发。
+
+装完默认**代码与查库语料都在**（Modrinth 库查询、MDK pin 校验可用），但**平台文档与映射数据不在** ⇒ `search_*_docs` / `query_api`（查平台 API）/ `validate_project` 等依赖平台数据的工具会返回「数据缺失」类结构化错误，而不是崩溃。
+
+### 手动获取平台数据（兜底路径）
+
+1. 从 GitHub Release 下载 `mc-skill-data-full-<tag>.zip`
+2. 解压后把其中的**平台目录**（`forge_*` / `fabric_*` 等）合并进 npm 包的 `data/` 目录（即 `node_modules/mc-ai-coding-assistant-tool/data/`）
+   - ⚠️ **不要整目录覆盖**：包内自带的 `mdk-checksums.json` 等 7 项必须保留
+3. 设置 `MC_SKILL_DATA` 指向该目录
+
+### 安装后校验
+
+```bash
+npx mc-skill --version
+npx mc-skill diagnose_data_paths   # 列出各平台数据目录状态
+```
+
+### 仓库检出形态（与 npm 形态不同）
+
+从 GitHub 克隆本仓库时，**仓库与 GitHub Release 均不含 `node_modules`**，需本地编译：
 
 ```bash
 cd mcp-server
@@ -12,6 +54,8 @@ node -v   # 需 v22.5+
 npm ci
 npm run build
 ```
+
+此形态下 `data/` 已在仓库里，`MC_SKILL_DATA` 指向仓库根的 `data/` 即可，**不需要** `--data`。
 
 ## 能力概览
 
@@ -55,7 +99,7 @@ npm run build
 
 ### 2. MCP 配置（按宿主翻译）
 
-使用 **绝对路径**，`MC_SKILL_DATA` 指向仓库 `data/`。多数宿主（Cursor / Claude / Trae / Windsurf）顶层键为 `mcpServers`。下文示例里的 `<仓库根>` = 本仓库实际部署根的绝对路径（Windows 用正斜杠，如 `D:/MC_skill`）：
+使用 **绝对路径**，`MC_SKILL_DATA` 指向仓库 `data/`。多数宿主（Cursor / Claude / Trae / Windsurf）顶层键为 `mcpServers`（DSH 例外：走 `~/.dsh/profiles/<profile>/cordis.patch.yml` 的顶层 YAML 数组 + `- insert:` 行，字段 `serverName` / `transport: stdio` / `command` / `args` / `cwd` / `env`）。下文示例里的 `<仓库根>` = 本仓库实际部署根的绝对路径（Windows 用正斜杠，如 `D:/MC_skill`）：
 
 ```json
 {
@@ -353,6 +397,8 @@ node dist/cli.js activate_platform_pack --action=session --platform=fabric --min
 node dist/cli.js activate_platform_pack --action=session --platform=forge --minecraftVersion=1.12.2 --includeAllRules=true
 # 写入用户模组工程（hosts 必填；默认 dryRun）
 node dist/cli.js activate_platform_pack --action=write --platform=neoforge --minecraftVersion=1.21.1 --hosts=cursor --project <abs> --dry-run=false --confirm
+# dsh：与 codex 同形（AGENTS.md marker + .agents/skills/<name>/SKILL.md stub，无 rulesDir）
+node dist/cli.js activate_platform_pack --action=write --platform=neoforge --minecraftVersion=1.21.1 --hosts=dsh --project <abs> --dry-run=false --confirm
 node dist/cli.js ingest_loader_api --platform=liteloader --minecraftVersion=1.12.2 --jarPath=<abs> --mappingsVersion=mcp-1.12.2
 ```
 

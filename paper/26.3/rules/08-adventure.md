@@ -179,5 +179,5 @@ Component c = mm.deserialize("<red>hi</red> <bold>world</bold>");
 | `<gradient:red:blue>x</gradient>` | **`ok = true`** |
 | **未知标签** `<not_a_real_tag>` | **不抛异常**（静默接受） |
 
-⇒ 这**部分取代**了原「`MiniMessage` 的任何签名未验」那项（签名已 `javap` 出来，**解析行为现在也验了**）；但**发给玩家的渲染**仍未验。
+⇒ 这**部分取代**了原「`MiniMessage` 的任何签名未验」那项（签名已 `javap` 出来，**解析行为现在也验了**）；发给玩家的渲染见 `本文件:147-164`（已真机核）。
 - 「版本号与 BOM 相同」只验到**号相同**，**未验**运行时路径（编译通过之外的）

@@ -105,11 +105,13 @@
       "forge": "architectury { platformSetupLoomIde() forge() }"
     },
     "mappings": {
-      "note": "推荐使用 layered mappings + Parchment",
+      "note": "推荐使用 layered mappings + Parchment。⚠️ parchment 的版本串是**日期**且**按 MC 版本各不相同**（artifact 名里带 MC 版本：parchment-<mc>）⇒ 禁止钉一个固定日期。历史缺陷钉的 2024.01.20 上游从未发布（maven.parchmentmc.org 下 26 个 parchment-<mc> artifact 逐个读 maven-metadata.xml 无一含它；parchment-1.20.1 直连 404）⇒ 照抄生成的 build.gradle 在依赖解析阶段即失败。要加 parchment 必须先查 https://maven.parchmentmc.org/org/parchmentmc/data/parchment-<minecraft_version>/maven-metadata.xml 取最新一条非 -nightly-SNAPSHOT 版本；查不到就不要加这一行（只留 officialMojangMappings()，构建仍然成立）。port_project 生成的 build.gradle 由 mcp-server/src/porting/index.ts 的 PARCHMENT_RELEASE_BY_MC 表决定（2026-10-20 实测：1.19.4→2023.06.26、1.20.1→2023.09.03、1.20.4→2024.04.14、1.21.1→2024.11.17、1.21.11→2025.12.20 …），表外 MC 版本一律不 emit。",
       "example": [
         "mappings loom.layered {",
         "    officialMojangMappings()",
-        "    parchment(\"org.parchmentmc.data:parchment-${rootProject.minecraft_version}:2024.01.20@zip\")",
+        "    // 如需 Parchment（只补参数名/javadoc，方法/字段名与 official 一致）：",
+        "    // 按上面的 note 查本 MC 版本的日期版本，再放开下面这一行",
+        "    // parchment(\"org.parchmentmc.data:parchment-${rootProject.minecraft_version}:<查到的日期>@zip\")",
         "}"
       ]
     }

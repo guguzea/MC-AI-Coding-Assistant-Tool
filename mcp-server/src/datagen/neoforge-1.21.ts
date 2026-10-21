@@ -1,8 +1,8 @@
 import { toPascalCase, toUpperSnake } from "./common.js";
 
-export function generateRecipe(modId: string, targetName: string, classBase?: string): string {
+export function generateRecipe(modId: string, targetName: string, classBase?: string, versionLabel = "1.21.x"): string {
   const pascalName = classBase || toPascalCase(modId);
-  return `// Recipe Provider — NeoForge 1.21.x (${modId}:${targetName})
+  return `// Recipe Provider — NeoForge ${versionLabel} (${modId}:${targetName})
 package com.example.${modId}.datagen;
 
 import java.util.concurrent.CompletableFuture;
@@ -49,10 +49,10 @@ public class ${pascalName}RecipeProvider extends RecipeProvider {
 `;
 }
 
-export function generateBlockState(modId: string, targetName: string, classBase?: string): string {
+export function generateBlockState(modId: string, targetName: string, classBase?: string, versionLabel = "1.21.x"): string {
   const pascalName = classBase || toPascalCase(modId);
   const upperName = toUpperSnake(targetName);
-  return `// Block State Provider — NeoForge 1.21.x
+  return `// Block State Provider — NeoForge ${versionLabel}
 package com.example.${modId}.datagen;
 
 import net.minecraft.data.PackOutput;
@@ -89,10 +89,10 @@ public class ${pascalName}BlockStatesProvider extends BlockStateProvider {
 `;
 }
 
-export function generateItemModel(modId: string, targetName: string, classBase?: string): string {
+export function generateItemModel(modId: string, targetName: string, classBase?: string, versionLabel = "1.21.x"): string {
   const pascalName = classBase || toPascalCase(modId);
   const upperName = toUpperSnake(targetName);
-  return `// Item Model Provider — NeoForge 1.21.x
+  return `// Item Model Provider — NeoForge ${versionLabel}
 package com.example.${modId}.datagen;
 
 import net.minecraft.data.PackOutput;
@@ -128,10 +128,10 @@ public class ${pascalName}ItemModelProvider extends ItemModelProvider {
 `;
 }
 
-export function generateLootTable(modId: string, targetName: string, classBase?: string): string {
+export function generateLootTable(modId: string, targetName: string, classBase?: string, versionLabel = "1.21.x"): string {
   const pascalName = classBase || toPascalCase(modId);
   const upperName = toUpperSnake(targetName);
-  return `// Loot Table Provider — NeoForge 1.21.x
+  return `// Loot Table Provider — NeoForge ${versionLabel}
 package com.example.${modId}.datagen;
 
 import java.util.List;
@@ -194,10 +194,10 @@ class ${pascalName}BlockLoot extends BlockLootSubProvider {
 `;
 }
 
-export function generateTag(modId: string, targetName: string, classBase?: string): string {
+export function generateTag(modId: string, targetName: string, classBase?: string, versionLabel = "1.21.x"): string {
   const pascalName = classBase || toPascalCase(modId);
   const upperName = toUpperSnake(targetName);
-  return `// Block Tags Provider — NeoForge 1.21.x
+  return `// Block Tags Provider — NeoForge ${versionLabel}
 package com.example.${modId}.datagen;
 
 import java.util.concurrent.CompletableFuture;
@@ -244,9 +244,9 @@ public class ${pascalName}BlockTagsProvider extends BlockTagsProvider {
 `;
 }
 
-export function generateAdvancement(modId: string, targetName: string, classBase?: string): string {
+export function generateAdvancement(modId: string, targetName: string, classBase?: string, versionLabel = "1.21.x"): string {
   const pascalName = classBase || toPascalCase(modId);
-  return `// Advancement Provider — NeoForge 1.21.x (use NeoForge AdvancementProvider)
+  return `// Advancement Provider — NeoForge ${versionLabel} (use NeoForge AdvancementProvider)
 package com.example.${modId}.datagen;
 
 import java.util.List;
@@ -300,10 +300,10 @@ public class ${pascalName}AdvancementProvider extends AdvancementProvider {
 `;
 }
 
-export function generateParticle(modId: string, targetName: string, classBase?: string): string {
+export function generateParticle(modId: string, targetName: string, classBase?: string, versionLabel = "1.21.x"): string {
   const pascalName = classBase || toPascalCase(modId);
   const upper = toUpperSnake(targetName);
-  return `// ParticleType + ParticleDescriptionProvider — NeoForge 1.21.x
+  return `// ParticleType + ParticleDescriptionProvider — NeoForge ${versionLabel}
 package com.example.${modId}.datagen;
 
 import net.minecraft.core.particles.ParticleType;
@@ -347,10 +347,10 @@ public class ${pascalName}ParticleDescriptionProvider extends ParticleDescriptio
 `;
 }
 
-export function generateSound(modId: string, targetName: string, classBase?: string): string {
+export function generateSound(modId: string, targetName: string, classBase?: string, versionLabel = "1.21.x"): string {
   const pascalName = classBase || toPascalCase(modId);
   const upper = toUpperSnake(targetName);
-  return `// SoundEvent + SoundDefinitionsProvider — NeoForge 1.21.x
+  return `// SoundEvent + SoundDefinitionsProvider — NeoForge ${versionLabel}
 package com.example.${modId}.datagen;
 
 import net.minecraft.core.registries.Registries;
@@ -411,24 +411,31 @@ export function generateNeoForge21(
   modId: string,
   targetName: string,
   classBase?: string,
+  /**
+   * 头注里自称的档位（如 `1.21.x` / `1.20.6`）。2026-10-21 修正（审查 mcp-generators F-15）：
+   * 原头注把 `NeoForge 1.21.x` 写死，而 `datagen/index.ts` 的 1.20.6 recipe 分支**复用本模板**
+   * ⇒ 1.20.6 的产物会自称 1.21.x，误导使用者以为拿到的是 1.21.x 骨架。缺省保持 `1.21.x`
+   * （本模板的原生档），1.20.6 分支显式传 `1.20.6`。
+   */
+  versionLabel = "1.21.x",
 ): string {
   switch (providerType) {
     case "recipe":
-      return generateRecipe(modId, targetName, classBase);
+      return generateRecipe(modId, targetName, classBase, versionLabel);
     case "blockstate":
-      return generateBlockState(modId, targetName, classBase);
+      return generateBlockState(modId, targetName, classBase, versionLabel);
     case "itemmodel":
-      return generateItemModel(modId, targetName, classBase);
+      return generateItemModel(modId, targetName, classBase, versionLabel);
     case "loottable":
-      return generateLootTable(modId, targetName, classBase);
+      return generateLootTable(modId, targetName, classBase, versionLabel);
     case "tag":
-      return generateTag(modId, targetName, classBase);
+      return generateTag(modId, targetName, classBase, versionLabel);
     case "advancement":
-      return generateAdvancement(modId, targetName, classBase);
+      return generateAdvancement(modId, targetName, classBase, versionLabel);
     case "particle":
-      return generateParticle(modId, targetName, classBase);
+      return generateParticle(modId, targetName, classBase, versionLabel);
     case "sound":
-      return generateSound(modId, targetName, classBase);
+      return generateSound(modId, targetName, classBase, versionLabel);
     default:
       throw new Error(`Unknown NeoForge 1.21 provider: ${providerType}`);
   }

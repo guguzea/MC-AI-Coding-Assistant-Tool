@@ -28,10 +28,10 @@ public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command
 
 ## Paper 的 Brigadier / Command API
 
-Paper 有自己的命令 API（`io.papermc.paper.command.brigadier.*`、`Command API` 教程 20 页）。**本档只给指针，不给结论**：
+Paper 有自己的命令 API（`io.papermc.paper.command.brigadier.*`、`Command API` 教程 22 页）。**本档只给指针，不给结论**：
 
 - 签名面：`search_docs platform=paper-api --query "brigadier"`
-- 教程：`search_docs platform=paper --query "command"`（67 页里的 `api/command-api/**`，**CC BY-SA 4.0** —— 本档不复述其正文）
+- 教程：`search_docs platform=paper --query "command"`（67 页里的 `api/command-api/**`，**CC BY-SA 4.0**；实测 22 页，含 4 个 index —— 本档不复述其正文）
 
 ## 未核实
 
@@ -66,4 +66,4 @@ Paper 有自己的命令 API（`io.papermc.paper.command.brigadier.*`、`Command
 - 规模：**38 → 24**（26.3 比 1.21.4 **多 14 个类**）
 
 ⇒ **处方**：跨版本写命令面时，**别假定 `io.papermc.paper.command.brigadier` 的成员在各版本一样**；`argument/*` 那一族是新增的，用之前先对**目标版本**的件核一遍类名。
-- 命令**权限节点**的默认值语义（`permission-default` 的字典在 `PermissionDefault.md:13-16`，见 `04-permissions.md`，但"写在 plugin.yml 里怎么生效"本档未在真机验）
+- 命令**权限节点**的默认值语义（`permission-default` 的字典在 `PermissionDefault.md:13-16`，见 `04-permissions.md`，但"写在 plugin.yml 里怎么生效"已真机核，见 `04-permissions.md` 的「`plugin.yml` 的权限声明」节）

@@ -14,6 +14,8 @@ TRUE · FALSE · OP · NOT_OP
 
 ## 从 `PluginManager` 查权限（已核）
 
+`PluginManager.md`：
+
 | 行 | 签名 |
 |---|---|
 | `:29` | `@Nullable Permission getPermission(@NotNull String name)` |
@@ -141,4 +143,4 @@ Permission q = Bukkit.getPluginManager().getPermission("mcskill.probe.oponly");
 ⇒ **语义完全对**：`default: true` 对**普通玩家**成立；`default: op` 对**非 op 玩家**不成立。这同时说明前面那条「字面量 → `PermissionDefault` 枚举」的映射**真的作用到了运行时判定**上（不只是注册进 `PluginManager` 而已）。
 
 ⇒ 这**取代**了原「权限对真人玩家的最终判定未验」这一项。
-- **`default: permission`** 这个字面量**本档未验**（只验了上表四个）。
+- **`default: permission`**：见上「`default: permission` —— 验到它不成立」，不要当第五个字面量。

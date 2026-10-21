@@ -19,9 +19,9 @@ export interface VersionInfo {
   patch: number | null;
   /** 1.14–1.21.11：yarn 两步 remap 可用 */
   hasYarn: boolean;
-  /** 26.1+（major>=2）：去混淆，免 remap，仅 mojmap */
+  /** 26.1–26.3（实测已发布的 26.x 正式版）：去混淆，免 remap，仅 mojmap */
   unobfuscated: boolean;
-  /** 是否支持反编译管线（1.14–1.21.11 与 26.1+） */
+  /** 是否支持反编译管线（1.14–1.21.11 与 26.1–26.3） */
   supported: boolean;
 }
 
@@ -51,6 +51,22 @@ const MAX_RELEASED_PATCH_BY_MINOR: Readonly<Record<number, number>> = {
   19: 4,
   20: 6,
   21: 11,
+};
+
+/**
+ * 26.x 去混淆时代**已发布正式版**的 patch 上界（与上面 1.x 的 MAX_RELEASED_PATCH_BY_MINOR 同口径：
+ * 实测，不取整数猜测）。上界来自两套机制同日（2026-10-20）测量：
+ * - **LIVE**：GET `https://piston-meta.mojang.com/mc/game/version_manifest_v2.json`，
+ *   `type === "release"` 的 26.x 全集 = **26.1 / 26.1.1 / 26.1.2 / 26.2 / 26.3**（`latest.release = 26.3`）；
+ *   26.4 只到 snapshot（`26.4-snapshot-1…4`），2.x–25.x 与 27.x 根本不存在。
+ * - **CORPUS**：`https://meta.fabricmc.net/v2/versions/game` 的 stable 26x 为同一集合。
+ * 裸 minor（26.2 / 26.3）记 0 ⇒ 只放行「无 patch」与 `.0` 两种写法（与 1.x 侧对 `1.21.0` 的口径一致）。
+ * 新 minor 发布后必须重测再补，不允许用 `minor >= 1` 的开区间默认通过。
+ */
+const MAX_RELEASED_PATCH_BY_26X_MINOR: Readonly<Record<number, number>> = {
+  1: 2,
+  2: 0,
+  3: 0,
 };
 
 export function parseMinecraftVersion(input: string): VersionInfo {
@@ -104,8 +120,26 @@ export function parseMinecraftVersion(input: string): VersionInfo {
   const minor = Number(m[2]);
   const patch = m[3] !== undefined ? Number(m[3]) : null;
 
-  // 26.1+ 去混淆时代（版本号已改到 major>=2）；27+ 视为非法（guard，防止 "999.999" 放行）
-  if (major >= 2 && major <= 27) {
+  // 26.x 去混淆时代（版本号已改到 major>=2）。**只放行实测已发布的正式版**：
+  // 旧实现写 `major >= 2 && major <= 27`，把 2.x–25.x / 26.0 / 26.4 / 27.x 一律判成
+  // 「合法 + 支持 + 去混淆」——与同仓 `mappings/unobfuscated.ts` 的时代判据、
+  // 与官方 manifest（26.x 正式版只有 26.1–26.3）都相反。此处按实测收口。
+  if (major === 26) {
+    const maxPatch = MAX_RELEASED_PATCH_BY_26X_MINOR[minor];
+    if (maxPatch === undefined || (patch !== null && patch > maxPatch)) {
+      return {
+        version,
+        valid: true,
+        error:
+          `26.${minor}${patch !== null ? `.${patch}` : ""} 不是已发布的正式版：实测 26.x 正式版只有 26.1 / 26.1.1 / 26.1.2 / 26.2 / 26.3（支持区间：1.14–1.21.11 与 26.1–26.3）`,
+        major,
+        minor,
+        patch,
+        hasYarn: false,
+        unobfuscated: false,
+        supported: false,
+      };
+    }
     return {
       version,
       valid: true,
@@ -122,7 +156,8 @@ export function parseMinecraftVersion(input: string): VersionInfo {
     return {
       version,
       valid: true,
-      error: `无法识别的版本「${version}」`,
+      // 2.x–25.x（从来没有过）与 27.x（未发布）都落这里：语法合法，但不在支持面内。
+      error: `无法识别的版本「${version}」（支持区间：1.14–1.21.11 与 26.1–26.3）`,
       major,
       minor,
       patch,
@@ -141,8 +176,8 @@ export function parseMinecraftVersion(input: string): VersionInfo {
         valid: true,
         error:
           maxPatch === undefined
-            ? `1.${minor} 不在已发布且具备 yarn/mojmap 映射的 minor 列表内（支持区间：1.14–1.21.11 与 26.1+）`
-            : `1.${minor}.${patch} 不是已发布的正式版：实测 1.${minor} 最高只到 1.${minor}.${maxPatch}（支持区间：1.14–1.21.11 与 26.1+）`,
+            ? `1.${minor} 不在已发布且具备 yarn/mojmap 映射的 minor 列表内（支持区间：1.14–1.21.11 与 26.1–26.3）`
+            : `1.${minor}.${patch} 不是已发布的正式版：实测 1.${minor} 最高只到 1.${minor}.${maxPatch}（支持区间：1.14–1.21.11 与 26.1–26.3）`,
         major,
         minor,
         patch,
@@ -168,7 +203,7 @@ export function parseMinecraftVersion(input: string): VersionInfo {
       version,
       valid: true,
       error:
-        "1.14 以下版本无 yarn/mojmap 反编译支持（支持区间：1.14–1.21.11 与 26.1+）",
+        "1.14 以下版本无 yarn/mojmap 反编译支持（支持区间：1.14–1.21.11 与 26.1–26.3）",
       major,
       minor,
       patch,
@@ -181,7 +216,7 @@ export function parseMinecraftVersion(input: string): VersionInfo {
   return {
     version,
     valid: true,
-    error: `未知版本区间「${version}」（支持区间：1.14–1.21.11 与 26.1+）`,
+    error: `未知版本区间「${version}」（支持区间：1.14–1.21.11 与 26.1–26.3）`,
     major,
     minor,
     patch,

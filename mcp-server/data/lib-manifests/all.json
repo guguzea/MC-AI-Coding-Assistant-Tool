@@ -29385,7 +29385,7 @@
     ],
     "partial": true,
     "captureState": "capped",
-    "inheritedFrom": "C:/Users/zzrCN/OneDrive/桌面/MC_skill/mcp-server/data/lib-manifests/all.json@2026-09-16T15:00:38.617Z（48 slug / 2870 行）",
+    "inheritedFrom": "<repo>/mcp-server/data/lib-manifests/all.json@2026-09-16T15:00:38.617Z（48 slug / 2870 行）",
     "failureReason": "翻页触顶：前 30 页全是 100 个版本 ⇒ jei 上游版本数 ≥ 3000，本脚本拒绝静默截断（要收口就调大 MAX_PAGES 后重跑）",
     "capturedPages": 30
   },
@@ -30250,7 +30250,7 @@
     ],
     "partial": true,
     "captureState": "notfound",
-    "inheritedFrom": "C:/Users/zzrCN/OneDrive/桌面/MC_skill/mcp-server/data/lib-manifests/all.json@2026-09-16T15:00:38.617Z（48 slug / 2870 行）",
+    "inheritedFrom": "<repo>/mcp-server/data/lib-manifests/all.json@2026-09-16T15:00:38.617Z（48 slug / 2870 行）",
     "failureReason": "不在今日 slug 全集（catalog `modrinthSlug` / authored frontmatter 已不再点名该 slug）⇒ 生产者本轮不会去抓它｜上游已改名/下架时的候选源：`knowledge/libs/**` 的 frontmatter `modrinthSlug` 与 `mcp-server/src/diagnostics/library-catalog.ts` 的 `modrinthSlug`；本脚本**不自动改名**（改名是内容判断，留给人确认后落笔）"
   },
   {
@@ -30269,7 +30269,7 @@
     ],
     "partial": true,
     "captureState": "notfound",
-    "inheritedFrom": "C:/Users/zzrCN/OneDrive/桌面/MC_skill/mcp-server/data/lib-manifests/all.json@2026-09-16T15:00:38.617Z（48 slug / 2870 行）",
+    "inheritedFrom": "<repo>/mcp-server/data/lib-manifests/all.json@2026-09-16T15:00:38.617Z（48 slug / 2870 行）",
     "failureReason": "不在今日 slug 全集（catalog `modrinthSlug` / authored frontmatter 已不再点名该 slug）⇒ 生产者本轮不会去抓它｜上游已改名/下架时的候选源：`knowledge/libs/**` 的 frontmatter `modrinthSlug` 与 `mcp-server/src/diagnostics/library-catalog.ts` 的 `modrinthSlug`；本脚本**不自动改名**（改名是内容判断，留给人确认后落笔）"
   },
   {
@@ -30288,7 +30288,7 @@
     ],
     "partial": true,
     "captureState": "notfound",
-    "inheritedFrom": "C:/Users/zzrCN/OneDrive/桌面/MC_skill/mcp-server/data/lib-manifests/all.json@2026-09-16T15:00:38.617Z（48 slug / 2870 行）",
+    "inheritedFrom": "<repo>/mcp-server/data/lib-manifests/all.json@2026-09-16T15:00:38.617Z（48 slug / 2870 行）",
     "failureReason": "不在今日 slug 全集（catalog `modrinthSlug` / authored frontmatter 已不再点名该 slug）⇒ 生产者本轮不会去抓它｜上游已改名/下架时的候选源：`knowledge/libs/**` 的 frontmatter `modrinthSlug` 与 `mcp-server/src/diagnostics/library-catalog.ts` 的 `modrinthSlug`；本脚本**不自动改名**（改名是内容判断，留给人确认后落笔）"
   }
 ]

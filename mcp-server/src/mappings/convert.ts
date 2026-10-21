@@ -1009,11 +1009,16 @@ export function convertMapping(query: MappingQuery): MappingResult {
   }
 
   if (dbPath) {
-    const yarn = convertYarnMember(version, from, to, memberName);
+    // M-2：类级腿与成员级腿必须走同一份库。`prefer` 一路透传进 convertYarnMember（它内部
+    // 再传给 resolveMappingDbPath / getYarnDb / lookupYarnClass / getMappingEra）⇒ 返回的类行
+    // 与 mappingEra 同源；否则 prefer=forge 的档（实测 1.14.4 / 1.20.1）会出现
+    // 「mappingEra 说 mcp-csv / mcp-config-srg，而类行来自 fabric 的 yarn-tiny 库」。
+    const classEra = getMappingEra(version, prefer) ?? era;
+    const yarn = convertYarnMember(version, from, to, memberName, prefer);
     if (yarn.ambiguous) {
       return fail(query, {
         mappingType: "class",
-        mappingEra: era,
+        mappingEra: classEra,
         notes: yarn.notes,
         schemaVersion,
         ambiguous: true,
@@ -1035,7 +1040,7 @@ export function convertMapping(query: MappingQuery): MappingResult {
         mappingType: "class",
         memberKind: "class",
         fallbackUsed: false,
-        mappingEra: era,
+        mappingEra: classEra,
         official: yarn.row?.official ?? undefined,
         named: yarn.row?.named,
         intermediary: yarn.row?.intermediary,
@@ -1060,7 +1065,7 @@ export function convertMapping(query: MappingQuery): MappingResult {
           mappingType: "class",
           memberKind: "class",
           fallbackUsed: true,
-          mappingEra: era,
+          mappingEra: classEra,
           official: p.row.obf,
           named: p.row.yarnFqcn,
           notes: [...(yarn.notes ?? []), `${layerNote(p.total)}：${p.table} 命中 ${p.row.mojFqcn} → ${to === "yarn" ? p.row.yarnFqcn.replace(/\//g, ".") : p.row.obf}`],
@@ -1070,7 +1075,7 @@ export function convertMapping(query: MappingQuery): MappingResult {
       if (p.status === "ambiguous") {
         return fail(query, {
           mappingType: "class",
-          mappingEra: era,
+          mappingEra: classEra,
           ambiguous: true,
           candidatesTotal: p.rows.length,
           candidates: p.rows.map((r) => ({ name: r.yarnFqcn.replace(/\//g, "."), descriptor: r.mojFqcn, official: r.obf })),
@@ -1083,7 +1088,7 @@ export function convertMapping(query: MappingQuery): MappingResult {
       }
       return fail(query, {
         mappingType: "class",
-        mappingEra: era,
+        mappingEra: classEra,
         notes: [
           ...(yarn.notes ?? []),
           p.status === "no-table"
@@ -1095,7 +1100,7 @@ export function convertMapping(query: MappingQuery): MappingResult {
     }
     return fail(query, {
       mappingType: "class",
-      mappingEra: era,
+      mappingEra: classEra,
       notes: yarn.notes,
       schemaVersion,
     });

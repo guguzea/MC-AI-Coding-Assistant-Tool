@@ -4,7 +4,7 @@
 
 > ⚠️ **历史背景**：Risugami 自 **MC 1.6.2（2013 年）起停止更新 ModLoader**（FML FAQ 原文 "Risugami retired from updating ModLoader with the 1.6.2 minecraft release, in 2013"），**不存在官方 ModLoader 1.6.4 发布物**。本档基于公开 API 源码与 MCP 1.6.4 named 映射整理，仅供维护既有 1.6.4 整合/魔改包；新工程请用 Forge。
 >
-> **构件 javap 复核**：官方最后的发布物 **ModLoader 1.6.2**（mcarchive 官方归档；同批取到官方 1.5.2 / 1.2.5）已入库 `F:\MC_GAME\_oracle-jars\modloader\` 并逐类 `javap`；**mcarchive 版本清单独立证实存量最新就到 1.6.2**（无 1.6.4 条目）。下表带「构件复核」的行 = 名字/元数出自真构件，对本档按 **1.6.2 线**的 API 形态落笔。
+> **构件 javap 复核**：官方最后的发布物 **ModLoader 1.6.2**（mcarchive 官方归档；同批取到官方 1.5.2 / 1.2.5）已入库 `<本地构件留档>\modloader\`（维护机路径不入库；按 mcarchive 官方 zip 名自取）并逐类 `javap`；**mcarchive 版本清单独立证实存量最新就到 1.6.2**（无 1.6.4 条目）。下表带「构件复核」的行 = 名字/元数出自真构件，对本档按 **1.6.2 线**的 API 形态落笔。
 
 ## BaseMod（`mod_<Name> extends BaseMod`）
 
@@ -100,8 +100,8 @@
 ⇒ `/status` 可用（能证明桥进程活着），**`/execute` 十个动作一律 fail-closed**（返回带 `TODO(未核实)` 的 failure）。
 **这是刻意的**：宁可出骨架 + fail-closed，也不拿 1.7.10 / Fabric 的记忆填 1.6.4。骨架的 `ACTIONS` 字符串已列全 10 个动作名（形状对齐真桥，便于对照），但每个都只在 `Mc` 里 throw。
 
-**编译验证强度**：生成物已用 **JDK 8 `javac -encoding UTF-8`** 对 `BaseMod` / `ModLoader` + `Minecraft` **签名替身**编译通过（exit 0）。⚠️ **口径**：首次 exit 0 针对的是**旧回调签名**（`public void onTick()`）的产物，不代表现产物；回调实名更新（`onTickInGame(float, Minecraft)`）后双臂复跑——**未更新的旧替身对现产物报 2 errors**（替身须按本表 复核行补齐 `onTickInGame` / `getMinecraftInstance` / `Minecraft` 类），**补齐替身后 exit 0**（本机记录：`D:\mc-skill-temp\adjud2\mlcheck\` 的 `out-orig` / `out-fixed`）。
-⚠️ **替身只证签名形状、不证类存在**；**类存在性另有真构件**：`F:\MC_GAME\_oracle-jars\modloader\` 里的官方 1.2.5 / 1.5.2 / 1.6.2 zip 已逐类 `javap`（见本表 复核行）。
+**编译验证强度**：生成物已用 **JDK 8 `javac -encoding UTF-8`** 对 `BaseMod` / `ModLoader` + `Minecraft` **签名替身**编译通过（exit 0）。⚠️ **口径**：首次 exit 0 针对的是**旧回调签名**（`public void onTick()`）的产物，不代表现产物；回调实名更新（`onTickInGame(float, Minecraft)`）后双臂复跑——**未更新的旧替身对现产物报 2 errors**（替身须按本表 复核行补齐 `onTickInGame` / `getMinecraftInstance` / `Minecraft` 类），**补齐替身后 exit 0**（本机记录：`<本机临时目录>\mlcheck\` 的 `out-orig` / `out-fixed`；scratch 不入库）。
+⚠️ **替身只证签名形状、不证类存在**；**类存在性另有真构件**：`<本地构件留档>\modloader\` 里的官方 1.2.5 / 1.5.2 / 1.6.2 zip 已逐类 `javap`（见本表 复核行）。
 
 **要把它变成真桥**：在自备的 MCP 1.6.4 工作区里核出上表剩余 4 项（玩家字段 / 聊天语义 / 截图 / 读方块签名）+ 两个 boolean 语义，
 **只改 `Mc` 内部类**（回调名与签名已按构件实证填好），HTTP 半边一行不用动；清单见生成物 `README.bridge.md`。

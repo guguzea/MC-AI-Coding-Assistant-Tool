@@ -45,7 +45,7 @@ platform/version/
 │   ├── skills/
 │   └── agents/
 ├── .claude/ / .continue/ / .trae/
-├── .opencode/ / .agents/ / .zcode/ / .pi/   # OpenCode / Codex / ZCode / Pi (supported on representative versions)
+├── .opencode/ / .agents/ / .zcode/ / .pi/   # OpenCode / Codex / ZCode / Pi (supported on representative versions; DSH shares .agents/ with Codex)
 ├── scaffold/                # optional: Gradle skeleton
 ├── code-patterns/           # optional
 └── knowledge/               # antipatterns / common / porting / version-changes

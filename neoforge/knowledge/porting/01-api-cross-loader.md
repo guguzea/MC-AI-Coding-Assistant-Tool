@@ -149,7 +149,7 @@ modEventBus.addListener(MyMod::onRegistry);
 // 使用 Callback 接口
 ServerLifecycleEvents.SERVER_STOPPING.register(server -> { ... });
 
-// 或使用公会 API
+// 或使用 tick 事件 API
 ServerTickEvents.END_SERVER_TICK.register(server -> { ... });
 ```
 
@@ -159,7 +159,7 @@ ServerTickEvents.END_SERVER_TICK.register(server -> { ... });
 
 ### Forge / NeoForge
 
-Forge 1.17–1.20 仍用 `SimpleChannel`。NeoForge **1.21.1 起不要抄下面这段**（loader-api 未收录 `SimpleChannel`；官方是 Payload）。见 `neoforge/<ver>/.cursor/rules/06-networking.mdc`。
+Forge 1.17–1.20 仍用 `SimpleChannel`。NeoForge **1.20.4 起不要抄下面这段**（loader-api 未收录 `SimpleChannel`；官方是 Payload）。见 `neoforge/<ver>/.cursor/rules/06-networking.mdc`。
 
 ```java
 // Forge SimpleChannel（不要当 NeoForge 1.21+ 正文）
@@ -223,7 +223,7 @@ private static void onInitializeDataGenerator(FabricDataGenerator generator) {
 
 | NeoForge 功能 | Fabric 替代 |
 |---------------|-------------|
-| Capability | Entity Attachment API |
+| Capability | Fabric 1.20.1 无官方等价；用 CCA（第三方）或按具体版本查 Fabric API |
 | Fluid | FabricFluidAPI |
 | Particle | FabricParticlesAPI |
 | GUI Screen | ScreenHandler / HandledScreens |

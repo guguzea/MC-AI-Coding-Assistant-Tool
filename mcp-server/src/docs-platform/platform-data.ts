@@ -308,6 +308,34 @@ function ruleTreeVersions(platform: DocPlatform, repoRoot: string): { version: s
   }
 }
 
+/**
+ * 服务端面（插件）的规则载体：`<platform>/<ver>/rules/*.md` —— **不带** `.cursor/`、用 `.md` 不是 `.mdc`
+ * （见根 AGENTS.md「服务端面」段）。它与模组面的 `<ver>/.cursor/rules/*.mdc` 是**两套形状**，不能共用
+ * 同一段「draft / 空壳」文案：否则 `paper/26.3`（实有 10 条 `rules/*.md`）会被说成空壳。
+ */
+function serverRuleTreeVersions(platform: DocPlatform, repoRoot: string): string[] {
+  const dir = join(repoRoot, platform);
+  if (!existsSync(dir)) return [];
+  try {
+    return readdirSync(dir, { withFileTypes: true })
+      .filter((e) => e.isDirectory() && VERSION_LIKE.test(e.name))
+      .filter((e) => {
+        const rulesDir = join(dir, e.name, "rules");
+        try {
+          return readdirSync(rulesDir, { withFileTypes: true }).some((r) => r.isFile() && r.name.endsWith(".md"));
+        } catch {
+          return false;
+        }
+      })
+      .map((e) => e.name);
+  } catch {
+    return [];
+  }
+}
+
+/** 服务端面（插件）：规则载体与文档版本轴都与模组面不同（伪版本 `stable`，见 platforms.ts）。 */
+const SERVER_FACE_PLATFORMS = new Set<DocPlatform>(["paper", "spigot", "paper-api"]);
+
 function clipList(list: string[], max = 12): string {
   if (list.length <= max) return list.join(", ");
   return `${list.slice(0, max).join(", ")}…（共 ${list.length} 档）`;
@@ -366,6 +394,19 @@ export function buildListVersionsNotes(
     notes.push(
       `${noSemantic.length} 档缺语义索引 semantic/db.sqlite（${clipList(noSemantic)}）：这些档的检索只能按标题/标签/URL 与 L1 符号匹配，正文词项 0 命中不代表该 API 不存在；补齐在 mcp-server 执行 npm run build:semantic-index。`,
     );
+  }
+
+  if (SERVER_FACE_PLATFORMS.has(platform)) {
+    // 服务端面（插件）是独立面：规则在 `<platform>/<ver>/rules/*.md`、文档版本轴是伪版本 `stable`，
+    // 与模组面的 `<ver>/.cursor/rules/*.mdc` + 真 MC 版本轴**不是一套形状** ⇒ 不套下面的 drafts /
+    // treeOnly 文案（套了会把 `paper/26.3` 说成「空壳 draft」、把可用面说成 PACK_NOT_FOUND + 无语料）。
+    const serverRules = sortMcVersions(serverRuleTreeVersions(platform, repoRoot));
+    if (serverRules.length > 0) {
+      notes.push(
+        `服务端面（插件）的规则载体是 ${platform}/<ver>/rules/*.md（不带 .cursor/、用 .md 不是 .mdc），本仓现有 ${serverRules.length} 档（${clipList(serverRules)}）：本面独立于模组平台，不走 activate_platform_pack（${platform} 不在模组平台枚举内，会被判 INVALID_INPUT）；规则读该目录的 rules/，文档检索用 search_docs platform=${platform}。`,
+      );
+    }
+    return notes;
   }
 
   const trees = ruleTreeVersions(platform, repoRoot);

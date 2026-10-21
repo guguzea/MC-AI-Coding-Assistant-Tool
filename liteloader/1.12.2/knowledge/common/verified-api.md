@@ -1,7 +1,7 @@
 # LiteLoader 1.12.2 已核实客户端接口
 
 - **抓取日**：
-- **源**（只作本地参考，许可证禁止把 loader 源码再分发进本仓库）：https://develop.liteloader.com/liteloader/LiteLoader 分支 `1.12.2`
+- **源**（上游未给开放许可，`All Rights Reserved`）：https://develop.liteloader.com/liteloader/LiteLoader 分支 `1.12.2`。`ll-src/` 已从 git 索引移除、只存在于本机工作区（`.gitignore` 排除），来源/版权/边界登记见根 `THIRD_PARTY_NOTICES.md` 的「LiteLoader 1.12.2 源码树」节；**不得再分发**，也不要把工作区副本读成许可授权。
 - **构件 javap 复核**：真构件 `liteloader-1.12.2-SNAPSHOT.jar`（hybrid 工程 `deobfCompile` 解析件，本机 gradle 缓存；同目录有 sources jar）+ JDK21 `javap` 逐类实测。带「构件复核」的行 = 名字/签名出自构件本体，不再依赖源码腿。
 - 表外禁止输出。不要用 Fabric `ServerPlayNetworking` 或 1.20 Payload。
 

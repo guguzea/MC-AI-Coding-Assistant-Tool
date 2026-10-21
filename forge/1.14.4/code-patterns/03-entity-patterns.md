@@ -17,13 +17,13 @@ public static final RegistryObject<EntityType<MyEntity>> MY_ENTITY = ENTITY_TYPE
 );
 
 // 实体类
-public class MyEntity extends LivingEntity {
+public class MyEntity extends CreatureEntity {
     // 本档构件核实（javap @ forge-1.14.4-28.2.26_mapped_snapshot_20190719-1.14.3）：
     //   EntityDataManager 非泛型；泛型在 DataParameter<T> 上 —— 同步键字段类型写 DataParameter<T>。
     private static final DataParameter<Integer> DATA_HEALTH =
         EntityDataManager.createKey(MyEntity.class, DataSerializers.VARINT);
 
-    protected MyEntity(EntityType<?> type, World world) {
+    protected MyEntity(EntityType<? extends MyEntity> type, World world) {
         super(type, world);
     }
 

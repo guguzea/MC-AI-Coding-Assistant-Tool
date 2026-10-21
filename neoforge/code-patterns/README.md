@@ -1,7 +1,7 @@
 # NeoForge 1.20.4 代码模式库
 
 > 本目录为 AI 提供可直接引用的代码模式，按「功能」分类。
-> 参见 `../.cursor/rules/` 中的决策流文档以了解何时使用哪种模式。
+> 参见 `neoforge/<ver>/.cursor/rules/` 中的决策流文档以了解何时使用哪种模式。
 
 ```
 code-patterns/

@@ -61,7 +61,7 @@
 - **通道 B（用户 dev 实例）**：**一次授权一路径**；授权原文 + realpath + 时间戳写 `$MC_SKILL_CACHE/playtest-authorizations.json`（仓库外 ⇒ 不动 `.gitignore`）。
 - **通道 C（第三方桥）**：仅在已授权根内允许安装桥 mod 及其依赖；条件 = **宽松许可**（MIT / CC0 / Apache 等；无 license 的只可参考形态、不得抄代码）+ **记账**（来源 URL + 版本 + sha256）写进同一份授权记录。
 
-**载体（双变量形状，镜像 `src/utils/project-sandbox.ts:66-94`）**：`MC_SKILL_PLAYTEST_ALLOW=1` + `MC_SKILL_PLAYTEST_ROOT=<绝对路径>`；工具侧须带 `authorization:"sandbox"|"dev_instance"` + `confirmed:true`；目标 realpath 必须落在授权根内（Windows Junction 由 native realpath 解）。
+**载体（双变量形状，写盘根守卫同款：`src/utils/project-sandbox.ts:66-94`；playtest 侧实现见 `src/playtest-evidence/index.ts:52-91`）**：`MC_SKILL_PLAYTEST_ALLOW=1` + `MC_SKILL_PLAYTEST_ROOT=<绝对路径>`；工具侧须带 `authorization:"sandbox"|"dev_instance"` + `confirmed:true`；目标 realpath 必须落在授权根内（Windows Junction 由 native realpath 解）。
 
 **允许**：启停授权实例、跑授权根内 Gradle 任务、写该根 evidence 目录、读 logs / crash-reports、装桥及其依赖。
 **永久禁止**：上传发布；jar 进未授权目录；动正式实例（如 `D:\Minecraft\.minecraft`）；**代用户接受 EULA**（仅 `eula.txt` 已 `eula=true` 才运行）；改系统网络栈 / 证书库 / 防火墙。
@@ -273,17 +273,17 @@ id 'net.neoforged.gradle.userdev'
 
 ### 4. 检查 LiteLoader（含 Forge 混合）
 
-查找 `litemod.json`、`LiteMod` 实现、或 Gradle 插件 `net.minecraftforge.gradle.liteloader`。**必须在把任意 ForgeGradle 收成纯 Forge 之前做这一步。**残留 `fabric.mod.json` 不得把 LiteLoader / 混合工程判成 Fabric。
+查找 `litemod.json`、`LiteMod` 实现（`net.minecraftforge.gradle.liteloader` 是历史写法，用它判混合会判错，见 `liteloader/<ver>/HYBRID.md`）。**必须在把任意 ForgeGradle 收成纯 Forge 之前做这一步。**残留 `fabric.mod.json` 不得把 LiteLoader / 混合工程判成 Fabric。
 
 ```
 Decision:
 → IF 有 litemod.json / LiteMod，且没有 javafml mods.toml / @Mod
-    → 纯客户端：activate_platform_pack action=session（platform=liteloader，精确版本；主推 1.12.2）
-→ ELSE IF 两边元数据都在，且 apply plugin: 'net.minecraftforge.gradle.liteloader'
+    → LiteLoader 工程：activate_platform_pack action=session（platform=liteloader，精确版本；主推 1.12.2）。LiteLoader 以客户端为主，源码另有 dedicated-server 通道；本仓不为它出服务端脚手架
+→ ELSE IF 两边元数据都在（litemod.json / LiteMod 且 javafml mods.toml / @Mod）
     → 混合 liteloader_forge：先读 liteloader/<ver>/HYBRID.md；再 activate_platform_pack action=session platform=forge minecraftVersion=1.12.2 topics=["01","02","03"]。LiteLoader 的 05/08 用 session topics 追加。禁止直接 Read forge/1.12.2/.cursor 当加载器。
-→ ELSE IF 分别 apply 了 net.minecraftforge.gradle.forge 和另一个 LiteLoader 插件
-    → 拒绝：混合工程只允许 liteloader 专用插件
-→ ELSE IF 两边元数据都在但没有该专用插件
+→ ELSE IF 分别 apply 了 net.minecraftforge.gradle.forge 和 net.minecraftforge.gradle.liteloader
+    → 拒绝：`net.minecraftforge.gradle.liteloader` 给的是 vanilla + LiteLoader（不含 Forge）；混合配方见 HYBRID.md
+→ ELSE IF 两边元数据都在但构建脚本无法判断
     → 询问用户，禁止默默当 Forge
 ```
 
@@ -359,7 +359,7 @@ id 'net.minecraftforge.gradle'
 
 - **MCP**（Forge legacy `snapshot` 通道）— 仅 ≤1.20.4 的旧 Forge 工程；**不是** ForgeGradle 6 时代 1.20.x 的默认：官方 1.20.1-47.4.10 MDK `gradle.properties:35` 钉的是 `mapping_channel=official`
 - **Yarn**（Fabric 社区维护）— **仅 ≤1.21.11**（仍混淆的版本）
-- **Parchment**（**叠加在 official / mojmap 之上**的社区参数名与 javadoc 层，成员名与 official 相同；非 MCP 的带文档版）— `query_api` 的 Parchment 层仅约 ≤1.20.4 extracted；本仓 forge 1.19.4 / 1.20.1 / 1.20.4 三档 scaffold 的默认通道（偏离 MDK 默认，档面已登记）
+- **Parchment**（**叠加在 official / mojmap 之上**的社区参数名与 javadoc 层，成员名与 official 相同；非 MCP 的带文档版）— `query_api` 的 Parchment 层仅约 ≤1.20.4 extracted；本仓 forge 1.18.2 / 1.19.4 / 1.20.1 / 1.20.4 四档 scaffold 的默认通道（偏离 MDK 默认，档面已登记）
 - **Mojang / mojmap** — 官方可读名；FG6（1.20.x）MDK 默认通道 `official` 即此
 - **26.1+（去混淆）**：游戏 jar 已是 Mojang 名，**不再需要** Yarn / Intermediary remap；convert_mapping 拒绝 yarn；查文档用 search_neoforge_docs（默认 **26.1**）/ search_fabric_docs（先 `list_fabric_versions`，如 **26.1.2**）；**禁止**把 26.1 内容克隆成 26.2 冒充
 

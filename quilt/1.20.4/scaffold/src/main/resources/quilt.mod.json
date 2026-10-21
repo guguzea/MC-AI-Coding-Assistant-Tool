@@ -13,7 +13,7 @@
       "main": ["com.example.examplemod.ExampleMod"]
     },
     "depends": [
-      { "id": "quilt_loader", "versions": "*" },
+      { "id": "quilt_loader", "versions": ">=0.19.1" },
       { "id": "minecraft", "versions": "1.20.4" }
     ]
   }

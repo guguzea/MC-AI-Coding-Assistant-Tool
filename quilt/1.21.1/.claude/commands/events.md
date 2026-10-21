@@ -9,7 +9,7 @@ docsTool: search_docs
 
 # mc-events（Quilt 1.21.1）
 
-> ⚠️ **QSL 已于 2025-12 停更（`// TODO(未核实)`：原引官方 FAQ 已 404，无法复核）；本档 1.21 线只有 alpha 构件（`10.0.0-alpha.5+1.21.1`），无正式版。** `knowledge/common/qsl-verified.md` 的 lifecycle / registry 符号已由该 alpha 构件 javap 逐字实证；仍无正式版 ⇒ 默认不生成（要用须用户显式确认接受 alpha 依赖）。
+> ⚠️ **「2025-12 停更」原引官方 FAQ 已 404，属 `// TODO(未核实)`，不作依据；本档 1.21 线只有 alpha 构件（`10.0.0-alpha.5+1.21.1`），无正式版。** `knowledge/common/qsl-verified.md` 的 lifecycle / registry 符号已由该 alpha 构件 javap 逐字实证；仍无正式版 ⇒ 默认不生成（要用须用户显式确认接受 alpha 依赖）。
 
 事件一律用**同版 Fabric API**（02–10 读 fabric/1.21.1 overlay）：`net.fabricmc.fabric.api.event.lifecycle` 的 `ServerLifecycleEvents` / `ClientLifecycleEvents` 等，签名以 `fabric/1.21.1` 档为准。
 
