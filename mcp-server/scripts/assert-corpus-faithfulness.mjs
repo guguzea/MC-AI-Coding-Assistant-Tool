@@ -171,6 +171,8 @@ const LEDGER_TREES = {
   "neoforge_1.21.5/neoforge-docs/1.21.5": { raw: 72, proc: 72, identical: 0, contentDiff: 0, markerOnly: 0, fmOnly: 72, noTwin: 0, dup: 0, dir: 0 },
   "neoforge_1.21.8/neoforge-docs/1.21.8": { raw: 73, proc: 73, identical: 0, contentDiff: 0, markerOnly: 0, fmOnly: 73, noTwin: 0, dup: 0, dir: 0 },
   "neoforge_26.1/neoforge-docs/26.1": { raw: 77, proc: 77, identical: 0, contentDiff: 0, markerOnly: 0, fmOnly: 77, noTwin: 0, dup: 0, dir: 0 },
+  // 2026-10-23：新增 rift 1.13 树（5 页：去掉 26 B 的空壳 wiki_home，避免新增标题桩撞全局预算）。数字取自 RELEDGER 重算。
+  "rift_1.13/rift-docs/1.13": { raw: 5, proc: 5, identical: 0, contentDiff: 5, markerOnly: 0, fmOnly: 0, noTwin: 0, dup: 0, dir: 0 },
   "rift_1.13.2/rift-docs/1.13.2": { raw: 6, proc: 6, identical: 0, contentDiff: 6, markerOnly: 0, fmOnly: 0, noTwin: 0, dup: 0, dir: 0 },
 };
 // A5 存量债务：按树登记的泛型记号丢失数（今日为空；加工若吃掉签名才登记）

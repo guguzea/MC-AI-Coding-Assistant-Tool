@@ -3,6 +3,8 @@
   "pack-status": "ready",
   "platform": "rift",
   "minecraftVersion": "1.13.2",
+  "role": "community-branch-experimental",
+  "roleNote": "社区分支实验档：件是 1.13 的（profile.json inheritsFrom=1.13）；1.13.1/1.13.2 无原生件，只有 Chocohead newerer/newerest 社区分支 ⇒ 跨版本不保证。原生档见 rift/1.13。",
   "scaffold": {
     "mode": "reference",
     "gradle": "4.9",

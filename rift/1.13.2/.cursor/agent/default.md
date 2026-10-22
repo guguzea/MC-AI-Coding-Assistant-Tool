@@ -1,5 +1,8 @@
 # Rift 1.13.2 — Agent 总纲
 
+> **档位：社区分支实验档**（2026-10-23 用户裁定）。件仍是 **1.13 的件**（jar 内 `profile.json` 的 `inheritsFrom=1.13`）；1.13.1/1.13.2 **没有原生件**，只有 Chocohead 的 `newerer` / `newerest` 社区分支。⇒ **跨版本不保证**：本档任何「实测可用」只对该档成立，**不要**当 1.13 的结论用（原生档见 `rift/1.13`）。
+
+
 短命加载器。方法名 **只许** 来自 `knowledge/common/` 与已核实源码，**禁止**用 Fabric `ModInitializer` / `onInitialize` 记忆填写。
 
 - 元数据官方拼写：**`riftmod.json`**（兼容误写 `rift.mod.json`）

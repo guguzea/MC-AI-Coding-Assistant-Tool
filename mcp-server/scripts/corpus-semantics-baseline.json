@@ -1,5 +1,5 @@
 {
-  "asOf": "2026-10-15",
+  "asOf": "2026-10-23",
   "totalStubBudget": 1,
   "residue": [
     {
@@ -276,15 +276,15 @@
       "allowedStubs": 0,
       "medianFloor": 7926
     },
-    "paper_stable/paper-docs/stable": {
-      "files": 67,
-      "allowedStubs": 0,
-      "medianFloor": 2902
-    },
     "paper-api_stable/paper-javadoc/stable": {
       "files": 2116,
       "allowedStubs": 0,
       "medianFloor": 247
+    },
+    "paper_stable/paper-docs/stable": {
+      "files": 67,
+      "allowedStubs": 0,
+      "medianFloor": 2902
     },
     "quilt_1.18.2/quilt-docs/1.18.2": {
       "files": 18,
@@ -319,6 +319,11 @@
     "rift_1.13.2/rift-docs/1.13.2": {
       "files": 6,
       "allowedStubs": 1,
+      "medianFloor": 2498
+    },
+    "rift_1.13/rift-docs/1.13": {
+      "files": 5,
+      "allowedStubs": 0,
       "medianFloor": 2498
     },
     "spigot_stable/spigot-javadoc/stable": {

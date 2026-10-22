@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-10-22T15:39:26.564Z",
+  "built_at": "2026-10-22T16:19:10.916Z",
   "embedMode": "hybrid",
   "entries": [
     {
@@ -757,6 +757,18 @@
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
       "sha256": "b739a0e871801e4f7c8d09bd4e0be237f81c3d76df819df4aec08cc5e6a21de8"
+    },
+    {
+      "platform": "rift",
+      "version": "1.13",
+      "source": "rift-docs",
+      "path": "rift_1.13/rift-docs/1.13/semantic/db.sqlite",
+      "chunks": 46,
+      "embedded": 29,
+      "built_at": "2026-10-22T16:19:10.781Z",
+      "model": "Xenova/all-MiniLM-L6-v2",
+      "schemaVersion": "1",
+      "sha256": "2f1773b71b82ef8e3db12416066832d30fef70432a8a057e428a5a8b0ffb3517"
     },
     {
       "platform": "spigot",

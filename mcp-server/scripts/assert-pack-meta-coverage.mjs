@@ -72,7 +72,9 @@ for (const rel of packDirs) {
   }
 }
 
-const EXPECTED_PACKS = 58;
+// 2026-10-23：58 → 59（新增 rift/1.13 原生档；依据：Rift 原生线目标版本是 1.13，
+// 件内 profile.json 的 inheritsFrom=1.13，而 1.13.1/1.13.2 只有社区分支、无原生件）
+const EXPECTED_PACKS = 59;
 if (packDirs.length !== EXPECTED_PACKS) {
   errors.push(`pack 档数 ${packDirs.length} ≠ 基线 ${EXPECTED_PACKS}（新增/删除版本档必须同步本基线并注明依据）`);
 }

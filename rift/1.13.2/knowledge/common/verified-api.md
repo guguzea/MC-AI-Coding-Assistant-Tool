@@ -1,4 +1,4 @@
-# verified-api · rift 1.13.2（本档 **Rift 侧**的权威签名表）
+# verified-api · rift 1.13.2（**社区分支实验档** · 件是 1.13 的 · 跨版本不保证）
 
 > **性质**：本表是 **`javap` 对真构件**跑出来的，**不是 wiki 转述**。与 `listeners.md`（wiki 抓取）互为对照 ——逐条比对结果是 **39 个接口名 + 全部方法名 100% 对得上**（详见末节「对账结果」）。
 > **MC 侧不在本表**（本表只收 Rift 侧签名）。**更新**：本机已有 MC 1.13.2 真构件（`forgeBin-1.13.2-25.0.223_mapped_snapshot_20180921-1.13.jar`，forge 1.13.2 scaffold 编译遗留，与 rift scaffold 所钉 `snapshot_20180921` 同映射层）⇒ 桥所用 `net.minecraft.*` 已逐名 javap 核过（43/43 在盘；结果记在 `bridge-api.md` §3/§4，本表不重复）。`get_minecraft_source` 覆盖从 1.14 起、不含该档。

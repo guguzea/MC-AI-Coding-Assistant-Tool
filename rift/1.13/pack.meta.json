@@ -1,0 +1,38 @@
+{
+  "status": "ready",
+  "pack-status": "ready",
+  "platform": "rift",
+  "minecraftVersion": "1.13",
+  "scaffold": {
+    "mode": "reference",
+    "gradle": "4.9",
+    "provenance": {
+      "text": "house",
+      "build": "2026-10-23 本档**未走 Gradle 构建**（本机无 JDK 8，Gradle 4.9 + DimensionalDevelopment FG fork 只能 Java 8；且 piston-meta.mojang.com / libraries.minecraft.net 根路径不可达）。改为手工链路：BMCLAPI 镜像取 1.13 client → javac 21 `--release 8` 编探针 mod → JRE 8 + launchwrapper 1.12 手拼启动，日志见 F:/mc-skill-playtest/rift-1.13/run.log（维护机路径不入库）。"
+    },
+    "buildVerified": false,
+    "runtimeProbe": {
+      "verified": true,
+      "at": "2026-10-23",
+      "what": "Rift 1.0.4-106（件内 profile.json inheritsFrom=1.13）在 **MC 1.13** 上：tweakClass 生效 → mod 被加载 → **listener 真的被回调**",
+      "evidence": "run.log 关键行：`Calling tweak class org.dimdev.riftloader.launch.RiftLoaderClientTweaker` → `Loaded mod 'qaprobe'` → `Loading Rift!` → `[QA] registerBlocks` → `[QA] afterVanillaBootstrap`",
+      "crashPoint": "之后崩在 `UnsatisfiedLinkError: Failed to locate library: lwjgl.dll`（GL 阶段，缺 natives）—— **在 listener 派发之后**，不影响本结论",
+      "notCovered": [
+        "进主菜单 / 进世界（需 lwjgl natives + 186 MB assets，本轮未下）",
+        "ClientTickable#clientTick 的每 tick 回调（要进世界才有 tick；本轮只证到 registerBlocks / afterVanillaBootstrap）",
+        "Gradle 构建链（本档 buildVerified=false）",
+        "1.13.2 的对照复跑（该档既有记录：21 个 hook mixin target not found ⇒ listener 0 命中）"
+      ]
+    },
+    "gaps": [
+      "样板工程未经本档 Gradle 复跑：配方沿用 rift/1.13.2 档 2026-10-05 的真构建记录（同一条 Gradle 链），本档只把 minecraft.version 改成 1.13。",
+      "MC 侧（net.minecraft.*）名字**本档不提供**：1.13 的映射面与 1.13.2 不同，桥所用 43 个名字是按 forge 1.13.2 件核的，不能下移到 1.13。见 knowledge/common/bridge-api.md。",
+      "libs/ 需用户自备非 dev jar（rift-1.0.4-106.jar，140 331 B / sha256 D6A60EBC…）：jar 不入库。",
+      "mappings 用 snapshot_20180921：上游只发 -1.13 后缀，本档直接命中；1.13.2 档才需要手工丢 zip。",
+      "真机探针的 mod（qaprobe）只证明 listener 会被调用，不覆盖任何具体 listener 的业务语义。"
+    ]
+  },
+  "siblings": {
+    "1.13.2": "社区分支实验档（件同为 1.13 件，跨版本不保证）"
+  }
+}

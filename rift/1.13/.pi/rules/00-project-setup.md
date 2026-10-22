@@ -1,0 +1,17 @@
+---
+description: 00 — Rift 1.13 工程
+---
+
+# 00 — Rift 1.13 工程
+
+- `tweaker-client` + `RiftLoaderClientTweaker` + Java 8
+- `riftmod.json` 在 `src/main/resources`
+- **件就是 1.13 的件**：`libs/rift-1.0.4-106.jar`（**非 dev**，140 331 B，sha256 `D6A60EBC…`）。
+  该 jar 内 `profile.json` 的 `inheritsFrom` = `1.13` ⇒ 本档是**件与 MC 版本对齐**的档。
+  dev 件缺 `mixins.rift.refmap.json`，运行期 `InvalidMixinException: No refMap loaded`。
+- `minecraft { version = '1.13'; mappings = 'snapshot_20180921' }`
+  —— 该 snapshot 上游**只发 `-1.13` 后缀**（`mcp_snapshot-20180921-1.13`），正好对上；
+  **不需要**像 1.13.2 档那样手工把 zip 改名丢进 `libs/`。
+- Gradle 4.9；ForgeGradle 只能是 DimensionalDevelopment 的 fork（`com.github.DimensionalDevelopment:ForgeGradle:70d441a286`）
+- 1.13.1 / 1.13.2 **没有原生件**，只有 Chocohead 的 `newerer` / `newerest` 社区分支；
+  本档不要拿 `rift/1.13.2` 的运行结论当本档结论。

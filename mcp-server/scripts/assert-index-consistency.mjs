@@ -111,7 +111,8 @@ const LEDGER_SUM = {
   // 顶层 58497→58503 / 37525→37531。原因是 `quilt/1.21.11` 源稿补了 javap 出处构件的字样后
   // 重跑 `index-qsl-verified.mjs --write`，processed 页变长 ⇒ 多切出 6 个 chunk。
   // 重签路径 = `MC_SKILL_INDEX_RELEDGER=1`（该分支只打印不落盘 ⇒ 按打印值手抄，见 :103 既有口径）。
-  entries: 64, chunks: 58503, embedded: 37531,
+  // 2026-10-23：+ rift 1.13 一棵库（5 页 / 46 chunks / 29 embedded）。数字取自本门 MC_SKILL_INDEX_RELEDGER=1 重算。
+  entries: 65, chunks: 58549, embedded: 37560,
   perPlatform: {
     "bedrock": { entries: 2, chunks: 15173, embedded: 4541 },
     "fabric": { entries: 27, chunks: 7935, embedded: 5898 },
@@ -122,7 +123,8 @@ const LEDGER_SUM = {
     "paper": { entries: 1, chunks: 1155, embedded: 709 },
     "paper-api": { entries: 1, chunks: 3631, embedded: 3169 },
     "quilt": { entries: 6, chunks: 1790, embedded: 1355 },
-    "rift": { entries: 1, chunks: 47, embedded: 29 },
+    // 2026-10-23：rift 1.13 档入库 ⇒ 2 库（1.13: 5 页/46 块/29 嵌入；1.13.2: 6 页/47 块/29 嵌入）
+    "rift": { entries: 2, chunks: 93, embedded: 58 },
     "spigot": { entries: 1, chunks: 2195, embedded: 1789 },
   },
 };
