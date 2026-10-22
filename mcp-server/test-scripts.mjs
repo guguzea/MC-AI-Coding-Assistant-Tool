@@ -2257,7 +2257,8 @@ const REAL_RUN_GATES = [
     // 默认链只会照常打印 ok。各自补**内存**投毒臂（不 spawn ⇒ 不撞本沙箱的 spawnSync EPERM）。
     // 条数一律以各门 `--selftest` 现印为准，此处不写死（本数组既有规矩）。
     "./scripts/assert-sync-normalizers.mjs",
-    "./scripts/assert-cli-quick.mjs",    // 2026-10-15：服务端面**规则载体**（paper/<ver>/rules/*.md）的出处门。
+    "./scripts/assert-cli-quick.mjs",
+    // 2026-10-15：服务端面**规则载体**（paper/<ver>/rules/*.md）的出处门。
     // 为什么不靠既有规则面门：`assert-rules-api-names.mjs:174` 只收 `.mdc`（本面用 `.md`）、
     // `assert-rules-match-tool.mjs` 是 quilt 专属 —— 二者实测**扫不到**本面（详见 AGENTS 服务端面小节）。
     // 依赖可选的语料包 ⇒ 缺面降级并吼；强口径手跑 `--require`。
@@ -2549,6 +2550,12 @@ const SELFTEST_GATES = [
     // `L3` 落地门（2026-09-30 B8，台账 closed）的判据活性自证：处数=0 / 处数=2 / 两条 needle 各缺 /
     // 落错文件各必红，另两记正对照（唯一处 + 双 needle 绿、注释里的写法不计绿）；例数由该门 `--selftest` 末行自印。
     "./scripts/assert-iserror-anchor.mjs",
+    // 2026-10-21（审查 mcp-gates F-1/F-7/F-9）：这三道此前**没有**自证 —— 断言写歪/被改软时
+    // 默认链只会照常打印 ok。各自补**内存**投毒臂（不 spawn ⇒ 不撞本沙箱的 spawnSync EPERM 边界）。
+    // 条数一律以各门 `--selftest` 现印为准，此处不写死（本数组既有规矩）。
+    "./scripts/assert-signature-face-integrity.mjs",
+    "./scripts/assert-sync-normalizers.mjs",
+    "./scripts/assert-cli-quick.mjs",
   ];
 
 /**
