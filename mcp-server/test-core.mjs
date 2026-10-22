@@ -5046,6 +5046,179 @@ public class ExampleMod { }
     assert.ok(!/RecipeExporter|RegistryWrapper|offerTo\(/.test(out.code || ""), `${ver} 骨架禁止混映射`);
   }
 
+  // B 方案（2026-10-22）：mapping=yarn。逐档名字来源 = 本档 yarn-mappings.sqlite 的
+  // intermediary→named 反查 + 本档 <ver>-fabric-api.json 的抽象方法槽位；缺证档必须 fail-closed。
+  const yarn2111 = generateDatagen({
+    providerType: "recipe",
+    modId: "demo",
+    targetName: "x",
+    platform: "fabric",
+    version: "1.21.11",
+    mapping: "yarn",
+  });
+  assert.ok(yarn2111.code, JSON.stringify(yarn2111));
+  assert.ok(
+    yarn2111.code.includes("getRecipeGenerator(RegistryWrapper.WrapperLookup registries, RecipeExporter exporter)"),
+    yarn2111.code.slice(0, 700),
+  );
+  assert.ok(yarn2111.code.includes("RegistryEntryLookup<Item> items = registries.getOrThrow(RegistryKeys.ITEM)"));
+  assert.ok(yarn2111.code.includes("import net.minecraft.data.recipe.RecipeGenerator;"));
+  assert.ok(
+    !/HolderLookup|ResourceLocation|buildRecipes|createRecipeProvider|net\.minecraft\.data\.recipes/.test(yarn2111.code),
+    "yarn 骨架禁止混入 mojmap 名",
+  );
+
+  const yarn213 = generateDatagen({
+    providerType: "recipe",
+    modId: "demo",
+    targetName: "x",
+    platform: "fabric",
+    version: "1.21.3",
+    mapping: "yarn",
+  });
+  assert.ok(yarn213.code?.includes("import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;"), yarn213.code?.slice(0, 700));
+  assert.ok(!yarn213.code?.includes("net.minecraft.data.recipe.ShapedRecipeJsonBuilder"));
+
+  const yarn218tag = generateDatagen({
+    providerType: "tag",
+    modId: "demo",
+    targetName: "x",
+    platform: "fabric",
+    version: "1.21.8",
+    mapping: "yarn",
+  });
+  assert.ok(yarn218tag.code?.includes("valueLookupBuilder(EXAMPLE)"), yarn218tag.code?.slice(0, 700));
+  assert.ok(!yarn218tag.code?.includes("getOrCreateTagBuilder(EXAMPLE)"));
+
+  const yarn214model = generateDatagen({
+    providerType: "itemmodel",
+    modId: "demo",
+    targetName: "x",
+    platform: "fabric",
+    version: "1.21.4",
+    mapping: "yarn",
+  });
+  assert.ok(
+    yarn214model.code?.includes("net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider"),
+    yarn214model.code?.slice(0, 700),
+  );
+  assert.ok(yarn214model.code?.includes("import net.minecraft.client.data.BlockStateModelGenerator;"));
+
+  const yarn213model = generateDatagen({
+    providerType: "itemmodel",
+    modId: "demo",
+    targetName: "x",
+    platform: "fabric",
+    version: "1.21.3",
+    mapping: "yarn",
+  });
+  assert.ok(
+    yarn213model.code?.includes("net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider"),
+    yarn213model.code?.slice(0, 700),
+  );
+  assert.ok(yarn213model.code?.includes("import net.minecraft.data.client.BlockStateModelGenerator;"));
+
+  const yarn171 = generateDatagen({
+    providerType: "recipe",
+    modId: "demo",
+    targetName: "x",
+    platform: "fabric",
+    version: "1.17.1",
+    mapping: "yarn",
+  });
+  assert.ok(yarn171.code?.includes("FabricRecipesProvider"), yarn171.code?.slice(0, 700));
+  assert.ok(yarn171.code?.includes("generateRecipes(Consumer<RecipeJsonProvider> exporter)"));
+  assert.ok(yarn171.code?.includes("generator.addProvider("), "1.17.1 无 Pack，必须走 addProvider(Function)");
+
+  const yarn182tag = generateDatagen({
+    providerType: "tag",
+    modId: "demo",
+    targetName: "x",
+    platform: "fabric",
+    version: "1.18.2",
+    mapping: "yarn",
+  });
+  assert.ok(yarn182tag.code?.includes("import net.minecraft.tag.TagKey;"), yarn182tag.code?.slice(0, 700));
+  assert.ok(yarn182tag.code?.includes("generateTags()"));
+
+  const yarn218sound = generateDatagen({
+    providerType: "sound",
+    modId: "demo",
+    targetName: "x",
+    platform: "fabric",
+    version: "1.21.8",
+    mapping: "yarn",
+  });
+  assert.ok(yarn218sound.code?.includes("FabricSoundsProvider"), yarn218sound.code?.slice(0, 700));
+
+  for (const miss of ["1.14.4", "1.16.5", "1.21.5", "1.21.9", "26.1.2"]) {
+    const m = generateDatagen({
+      providerType: "recipe",
+      modId: "demo",
+      targetName: "x",
+      platform: "fabric",
+      version: miss,
+      mapping: "yarn",
+    });
+    assert.equal(m.code, null, `${miss} 必须 fail-closed`);
+    assert.ok(m.errors?.some((e) => /Yarn/.test(e)), `${miss}: ${JSON.stringify(m.errors)}`);
+  }
+
+  // 既有问题修复（2026-10-22）：sound provider 的档位边界 + recipe 两层工厂名的 Yarn 对照。
+  // 边界证据：1.21.8/1.21.10/1.21.11 的 fabric-api 摘要里有
+  // net.fabricmc.fabric.api.client.datagen.v1.provider.FabricSoundsProvider（configure(class_7225.class_7874, SoundExporter)），
+  // 1.21.1–1.21.4 无该类。
+  const fabSound218 = generateDatagen({
+    providerType: "sound",
+    modId: "demo",
+    targetName: "x",
+    platform: "fabric",
+    version: "1.21.8",
+  });
+  assert.ok(/extends FabricSoundsProvider/.test(fabSound218.code || ""), fabSound218.code?.slice(0, 600));
+  assert.ok(fabSound218.code?.includes("FabricSoundsProvider.SoundExporter"));
+  assert.ok(
+    fabSound218.warnings?.some((w) => /FabricSoundsProvider/.test(w) && /1\.21\.8/.test(w)),
+    JSON.stringify(fabSound218.warnings),
+  );
+  const fabSound211 = generateDatagen({
+    providerType: "sound",
+    modId: "demo",
+    targetName: "x",
+    platform: "fabric",
+    version: "1.21.1",
+  });
+  // 该档说明类**会提到** FabricSoundsProvider（说明"本档无"），所以判据要看是否真继承。
+  assert.ok(!/extends FabricSoundsProvider/.test(fabSound211.code || ""), "1.21.1 不得继承 1.21.8 才有的 provider");
+  assert.ok(fabSound211.code?.includes("SoundAssets"));
+  assert.ok(
+    fabSound211.warnings?.some((w) => /无 FabricSoundsProvider/.test(w)),
+    JSON.stringify(fabSound211.warnings),
+  );
+
+  const fabRecipeTwoLayerWarn = generateDatagen({
+    providerType: "recipe",
+    modId: "demo",
+    targetName: "x",
+    platform: "fabric",
+    version: "1.21.4",
+  });
+  assert.ok(
+    fabRecipeTwoLayerWarn.warnings?.some((w) => /getRecipeGenerator/.test(w) && /createRecipeProvider/.test(w)),
+    `1.21.3+ 的 mojmap 骨架必须说明 Yarn 侧工厂名：${JSON.stringify(fabRecipeTwoLayerWarn.warnings)}`,
+  );
+
+  // 默认（不传 mapping）必须仍是 Mojmap：既有产物逐字不变
+  const mojDefault = generateDatagen({
+    providerType: "recipe",
+    modId: "demo",
+    targetName: "x",
+    platform: "fabric",
+    version: "1.21.11",
+  });
+  assert.ok(mojDefault.code?.includes("createRecipeProvider(HolderLookup.Provider registryLookup, RecipeOutput exporter)"));
+  assert.ok(!mojDefault.code?.includes("getRecipeGenerator"), "默认路径不得变成 Yarn");
+
   const fab261Recipe = generateDatagen({
     providerType: "recipe",
     modId: "demo",

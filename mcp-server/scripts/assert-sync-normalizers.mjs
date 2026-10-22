@@ -29,12 +29,16 @@ const PS_FILE = join(repoRoot, "scripts", "sync-skills.ps1");
 const JS_FILE = join(here, "assert-skill-mirrors.mjs");
 const REL = "fabric/1.14.4";
 
-const psProbe = spawnSync(
-  "powershell.exe",
-  ["-NoProfile", "-Command", "$PSVersionTable.PSVersion.ToString()"],
-  { encoding: "utf8", windowsHide: true },
-);
-if (psProbe.status !== 0 || !/\d+\.\d+/.test(psProbe.stdout || "")) {
+// --selftest 先跑（2026-10-21，审查 mcp-gates F-7）：本门的自证必须在 powershell 探针**之前**，
+// 否则在无 powershell 的机器上会走 SKIP 早退，自证永远跑不到。
+const SELFTEST = process.argv.includes("--selftest");
+const psProbe = SELFTEST
+  ? { status: 0, stdout: "0.0" }
+  : spawnSync("powershell.exe", ["-NoProfile", "-Command", "$PSVersionTable.PSVersion.ToString()"], {
+      encoding: "utf8",
+      windowsHide: true,
+    });
+if (!SELFTEST && (psProbe.status !== 0 || !/\d+\.\d+/.test(psProbe.stdout || ""))) {
   // 统一 skip 标记（C3，2026-09-27）：缺依赖 ⇒ rc 仍 0（裁定：skip ≠ fail），但必须打成可 grep 的形状，
   // 否则一句散文式 "skip" 混在满屏绿里，门链收尾读不出"本轮有几道门根本没执法"。
   console.log("SKIP(no-powershell) gate=assert-sync-normalizers —— 本轮不执法，rc 仍 0（本 gate 依赖 Windows PowerShell 跑 scripts/sync-skills.ps1）");
@@ -137,6 +141,42 @@ function scanNonAsciiLiterals(text) {
     }
   }
   return hits;
+}
+
+// ── --selftest：判据活性自证（3 投毒必红 + 2 对照必绿）────────────────────────
+// 2026-10-21（审查 mcp-gates F-7）：本门此前**没有**任何自证 —— extractFn 的「改名/搬走即失明」
+// 与「无 BOM .ps1 里的非 ASCII 字面量」两条前提，写歪了也没人知道。这里用临时文件喂投毒样本，
+// **不 spawn powershell** ⇒ 在任何机器上都能跑。
+if (SELFTEST) {
+  const dir = mkdtempSync(join(tmpdir(), "mcskill-norm-self-"));
+  const arms = [];
+  const probeFn = (body) => {
+    const f = join(dir, "probe.ps1");
+    writeFileSync(f, body, "utf8");
+    const before = failures.length;
+    const got = extractFn(f, "Normalize-Content");
+    const pushed = failures.length - before;
+    failures.length = before;
+    return { got, pushed };
+  };
+  // 投毒①：文件里没有该函数 ⇒ 必须记一次失败（失明守卫活着）
+  { const r = probeFn("function Other { }\n"); arms.push(["投毒① 函数不存在必红", r.got === null && r.pushed > 0]); }
+  // 投毒②：顶格收尾大括号缺失 ⇒ 必须记一次失败
+  { const r = probeFn("function Normalize-Content {\n  $x = 1\n"); arms.push(["投毒② 收尾括号缺失必红", r.got === null && r.pushed > 0]); }
+  // 对照③：完好函数 ⇒ 抽出正文且零失败
+  { const r = probeFn("function Normalize-Content {\n  $x = 1\n}\n"); arms.push(["对照③ 完好函数必绿", !!r.got && r.pushed === 0]); }
+  // 投毒④：无 BOM .ps1 里的中文字符串字面量 ⇒ scanNonAsciiLiterals 必须命中
+  arms.push(["投毒④ 中文字面量必命中", scanNonAsciiLiterals("$s = '中文';").length > 0]);
+  // 对照⑤：纯 ASCII 行 ⇒ 不得命中
+  arms.push(["对照⑤ 纯 ASCII 不误报", scanNonAsciiLiterals("$s = 'ascii only';").length === 0]);
+  let badArms = 0;
+  for (const [name, ok] of arms) {
+    if (!ok) badArms++;
+    console.log("  " + (ok ? "✅" : "❌") + " " + name);
+  }
+  try { rmSync(dir, { recursive: true, force: true }); } catch { /* 临时目录清不掉不影响判定 */ }
+  console.log("assert-sync-normalizers(selftest): " + (arms.length - badArms) + "/" + arms.length + " 通过（3 投毒必红 + 2 对照必绿）");
+  process.exit(badArms === 0 ? 0 : 1);
 }
 
 let workDir = null;

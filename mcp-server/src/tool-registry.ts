@@ -204,6 +204,12 @@ export const generateDatagenSchema = z.object({
   targetName: z.string().describe("目标注册名（无 modId 前缀），如 my_block"),
   version: z.string().describe("Minecraft 版本，必填，禁止默认 1.20.1"),
   platform: z.enum(["forge", "neoforge", "fabric", "quilt"]).describe("loader 平台，必填，禁止默认 forge"),
+  mapping: z
+    .enum(["mojmap", "yarn"])
+    .optional()
+    .describe(
+      "仅 Fabric 生效：mojmap（默认，既有骨架）| yarn（Fabric 社区映射；覆盖 1.17.1/1.18.2/1.19.4/1.20.1/1.20.4/1.21.1/1.21.3/1.21.4/1.21.8/1.21.10/1.21.11，其余档 fail-closed 给拒因）",
+    ),
   write: z.boolean().optional().describe("默认 false。true 时写入 projectPath（须 confirmed + MC_SKILL_ALLOW_WRITE=1 + MC_SKILL_PROJECT_ROOT；projectPath 不能替代后者）"),
   confirmed: z.boolean().optional().describe("write=true 时必填 true"),
   projectPath: z.string().optional().describe("写入目标工程根（须在 MC_SKILL_PROJECT_ROOT 内）"),
@@ -414,6 +420,8 @@ const GENERATE_DATAGEN_DESC =
   "注意：platform 与 version 均必填。Forge 1.20.1（Consumer<FinishedRecipe>）与 1.20.4（仅 recipe，buildRecipes(RecipeOutput)）；" +
   "NeoForge 1.20.1 改口 search_neoforge_docs（禁止默写 Forge import）；NeoForge 1.20.4 / 1.20.6（均仅 recipe）/ 1.21.x / 26.1；" +
       "Fabric 精确档 1.21.1/1.21.3/1.21.4/1.21.8/1.21.10/1.21.11 与 26.1；Quilt 无足够 QSL 类名则 error。" +
+  "Fabric 另可传 mapping=yarn（默认 mojmap）：Yarn 骨架覆盖 1.17.1/1.18.2/1.19.4/1.20.1/1.20.4/1.21.1/1.21.3/1.21.4/1.21.8/1.21.10/1.21.11，" +
+  "其余档（1.14.4/1.16.5/1.21.2/1.21.5–1.21.7/1.21.9/26.1.2）fail-closed 并逐档给拒因。" +
   "其它 Forge 版本（含 1.12.2）返回 error。" +
   "返回完整的 Java 代码模板与 suggestedPath。" +
   "【边界】默认只返回 Java 模板文本；可选 write+confirmed 走沙箱写盘。不是所有 MC 版本的 DataGen API。Fabric/Quilt 改口文档，不生成 Forge DataGen。";
@@ -686,13 +694,14 @@ server.registerTool(
     description: GENERATE_DATAGEN_DESC,
     inputSchema: generateDatagenSchema,
   },
-  async ({ providerType, modId, targetName, version, platform, write, confirmed, projectPath }): Promise<CallToolResult> => {
+  async ({ providerType, modId, targetName, version, platform, mapping, write, confirmed, projectPath }): Promise<CallToolResult> => {
     const result = generateDatagen({
       providerType,
       modId,
       targetName,
       version,
       platform,
+      mapping,
     });
     const classBase = `${targetName.replace(/(^|_)([a-z])/g, (_, __, c: string) => c.toUpperCase()).replace(/_/g, "")}`;
     const wrapped = maybeWriteGeneratorResult(

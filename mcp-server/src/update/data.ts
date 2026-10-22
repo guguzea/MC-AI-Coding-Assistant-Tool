@@ -475,6 +475,21 @@ export async function applyDataUpdate(opts: DataApplyOpts): Promise<DataApplyRes
     const localAdditions = listLocalAdditions(dataDir, new Set(layout.mapped));
     steps.push(`localAdditions: ${localAdditions.length}`);
 
+    // 审查 mcp-ops F-2（2026-10-21）：dryRun 的早退在下方，而**下载**（:403 zip / :425 sums）、
+    // **SHA256**（:446）、**枚举中央目录**（:462）全都排在它之前 ⇒ dryRun **不是零代价**：
+    // 它照样把整包下进 cache，只是不写 data/。此前 steps 不披露这一点，用户会以为预览是纯读。
+    // 这不是功能缺失（listZipEntries 必须拿到 zip 才能算 filesToOverwrite），是**代价未披露** ⇒ 显式记账。
+    let previewCost = "（大小未知）";
+    try {
+      previewCost = `${statSync(zipPath).size} B`;
+    } catch {
+      /* 已在盘上；取不到就按未知报，不因此判红 */
+    }
+    steps.push(
+      `dryRun 代价披露：已把 data zip 下载进 cache（${previewCost}）并算过 SHA256 —— ` +
+        `枚举中央目录必须拿到 zip，故预览不是零网络/零磁盘；dryRun 只保证**不写 data/**。`,
+    );
+
     if (opts.dryRun) {
       return {
         ok: true,

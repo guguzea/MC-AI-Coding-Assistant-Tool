@@ -2,7 +2,12 @@
 /**
  * scripts/_lib/test-helpers.mjs
  * Node-native tests for the script helpers and the four target scripts.
- * Pure functions only — no network, no fs writes.
+ * 断言目标 = helper 的**纯函数**行为（本文件自己不联网、不写盘）。
+ * ⚠ 2026-10-21 修正（审查 mcp-gates F-14）：原文写「Pure functions only — no network, no fs writes」，
+ *   但本文件**静态 import** 了 6 个会碰 fs 的模块（../check-porting-updates.js、../probe-forge-versions.js、
+ *   ../fetch-forge-docs.js、../fetch-forge-javadoc.js、../mcp-csv-extractor.js、../validate-forge-build.js）——
+ *   那些模块**顶层**会 import fs。断言本身仍只读纯函数，但「no fs writes」这句描述的是**被测对象**，
+ *   不是本文件的可达面，写成现在这样避免被读成「本文件不可能触发 fs」。
  *
  * Usage:
  *   node scripts/_lib/test-helpers.mjs            (auto-runs as a test script)
@@ -584,7 +589,3 @@ test("htmlToMd converts tables, links and headings without tag residue", () => {
 //   node --test scripts/_lib/test-helpers.mjs
 //
 // Both honor the count summary written by the runner wrapper.
-
-
-
-

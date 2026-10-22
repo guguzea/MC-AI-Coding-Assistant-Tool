@@ -888,7 +888,7 @@ export function registerWaveExtensions(server: McpServer): void {
       title: "Check / apply MC_skill tooling+data updates",
       description:
         "检查 GitHub Release 是否有新版本；确认后可更新 tooling（git ff-only + npm build）与 data（zip+SHA256）。" +
-        "默认 channel=stable（忽略预发布）。apply 默认 dryRun；真写需 confirmed=true + MC_SKILL_ALLOW_WRITE=1 + MC_SKILL_PROJECT_ROOT=仓库根。",
+        "默认 channel=stable（忽略预发布）。apply 默认 dryRun；真写需 confirmed=true + MC_SKILL_ALLOW_WRITE=1 + MC_SKILL_PROJECT_ROOT=仓库根。**注意：data 侧 dryRun 只保证不写 data/ —— 它仍会把整包下进 cache 并算 SHA256（枚举中央目录必须拿到 zip），steps 里会披露实际下载量。**",
       inputSchema: mcSkillUpdateSchema,
     },
     async (args): Promise<CallToolResult> => jsonResult(await mcSkillUpdate(args)),

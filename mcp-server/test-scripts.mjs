@@ -2253,7 +2253,11 @@ const REAL_RUN_GATES = [
     // 行数不变、tsc 不报，但生成物 javac 必红。本门实跑 10 个 (平台/版本/providerType) 产物，
     // 收集未解析符号并逐条点名。依赖 dist ⇒ 缺件时降级并吼（rc=0），`--require` 走 fail-closed。
     "./scripts/assert-generator-java-symbols.mjs",
-    // 2026-10-15：服务端面**规则载体**（paper/<ver>/rules/*.md）的出处门。
+    // 2026-10-21（审查 mcp-gates F-7/F-9）：这两道此前**没有**自证 —— 断言写歪/被改软时
+    // 默认链只会照常打印 ok。各自补**内存**投毒臂（不 spawn ⇒ 不撞本沙箱的 spawnSync EPERM）。
+    // 条数一律以各门 `--selftest` 现印为准，此处不写死（本数组既有规矩）。
+    "./scripts/assert-sync-normalizers.mjs",
+    "./scripts/assert-cli-quick.mjs",    // 2026-10-15：服务端面**规则载体**（paper/<ver>/rules/*.md）的出处门。
     // 为什么不靠既有规则面门：`assert-rules-api-names.mjs:174` 只收 `.mdc`（本面用 `.md`）、
     // `assert-rules-match-tool.mjs` 是 quilt 专属 —— 二者实测**扫不到**本面（详见 AGENTS 服务端面小节）。
     // 依赖可选的语料包 ⇒ 缺面降级并吼；强口径手跑 `--require`。
@@ -2709,7 +2713,12 @@ function censusChain({ diskGates, blob, pkg, selfBlob, realRun, selftest, floorR
   const y0 = prod.yNames[0];
   assert.ok(y0, `Y=${prod.Y} 为空 ⇒ 本文件声称 spawn 了全部 ${prod.K} 道门，与 §S18/S19 数组长度矛盾`);
   const spawnedNow = selfBlob + `\nspawnSync(node, [fileURLToPath(new URL("./scripts/${y0}", import.meta.url))]);\n`;
-  const ctrlY = censusChain({ ...base, selfBlob: spawnedNow });
+  // ⚠ 2026-10-21 修正（F-7/F-9 挂载时暴露）：本对照证的是「Y 是**扫出来的**」这个**差分**性质，
+  // 不是 Y 的地板。此前沿用生产地板 ⇒ 只要合法加门把 prod.Y 压到 FLOOR_UNREF+1 以下，
+  // 这条对照就会自己红（本轮把 assert-sync-normalizers / assert-cli-quick 两道挂进 SELFTEST_GATES，
+  // 它们的文件名出现在本文件 ⇒ Y 由 10 降到 8，控制组算得 7 < 地板 8）。故对照组显式把地板降到 0，
+  // 只留差分断言；地板本身仍由生产调用守着（另有投毒②③④三记证地板能红）。
+  const ctrlY = censusChain({ ...base, selfBlob: spawnedNow, floorUnref: 0 });
   assert.equal(ctrlY.errors.length, 0, `把 ${y0} 挪进本文件 spawn 块被判红 ⇒ Y 退化成了等式：\n${ctrlY.errors.join("\n")}`);
   assert.equal(ctrlY.Y, prod.Y - 1, `Y 不随引用面变化（${prod.Y}→${ctrlY.Y}）⇒ Y 不是扫本文件源码算的`);
   assert.equal(ctrlY.Z, prod.Z + 1, `Z 不随引用面变化（${prod.Z}→${ctrlY.Z}）⇒ Z 不是扫本文件源码算的`);

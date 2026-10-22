@@ -28,6 +28,49 @@ const fail = (msg) => {
 };
 const run = (bin, args, opts = {}) => spawnSync(process.execPath, [bin, ...args], { encoding: "utf8", windowsHide: true, ...opts });
 
+/**
+ * 判据抽成纯函数（2026-10-21，审查 mcp-gates F-9）：本门全程 spawn 真跑，此前**没有**任何自证 ——
+ * 断言写歪 / 被改软时默认链只会照常打印 ok。把纯字符串判据抽出来，配 --selftest 投毒臂
+ * （**内存**跑，不 spawn ⇒ 不撞本沙箱的 spawnSync EPERM 边界）。
+ */
+/** L2 回归：仓库线 --help 必须自称 mc-skill-scripts，且不得自称 mc-skill。 */
+export function helpSelfNameProblems(helpText) {
+  const out = [];
+  const s = String(helpText);
+  if (!s.includes("mc-skill-scripts")) out.push("--help 未出现真实入口名 mc-skill-scripts");
+  if (/^\s*mc-skill lib/m.test(s)) out.push("--help 仍自称 mc-skill");
+  return out;
+}
+/** NP-8 回归：根 README 不得再写死「80 个工具」。 */
+export function readmeToolCountProblems(readme) {
+  return /（\*\*80\*\* 个工具）/.test(String(readme)) ? ["根 README 仍写 80 个工具"] : [];
+}
+/** S2 回归：update 文档不得仍是裸 mc-skill 调用式。 */
+export function updateDocCallFormProblems(doc) {
+  return /^CLI：`mc-skill /m.test(String(doc)) ? ["update 文档仍是裸 mc-skill 调用式"] : [];
+}
+
+// ── --selftest：判据活性自证（4 投毒必红 + 2 对照必绿）────────────────────────
+if (process.argv.includes("--selftest")) {
+  const arms = [
+    ["投毒① help 缺真实入口名", () => helpSelfNameProblems("Usage: mc-skill lib <cmd>").length > 0],
+    ["投毒② help 自称 mc-skill", () => helpSelfNameProblems("Usage: mc-skill-scripts\nmc-skill lib resolve").length > 0],
+    ["投毒③ README 写死 80 个工具", () => readmeToolCountProblems("当前（**80** 个工具）").length > 0],
+    ["投毒④ update 文档裸调用式", () => updateDocCallFormProblems("CLI：`mc-skill update`").length > 0],
+    ["对照① 正确 help 必须绿", () => helpSelfNameProblems("Usage: mc-skill-scripts lib <cmd>").length === 0],
+    ["对照② 正确 README 必须绿", () => readmeToolCountProblems("当前（**89** 个工具）").length === 0],
+  ];
+  let badArms = 0;
+  for (const [name, fn] of arms) {
+    let ok = false;
+    try { ok = fn(); } catch { ok = false; }
+    if (!ok) badArms++;
+    console.log("  " + (ok ? "✅" : "❌") + " " + name);
+  }
+  console.log("assert-cli-quick(selftest): " + (arms.length - badArms) + "/" + arms.length + " 通过（4 投毒必红 + 2 对照必绿）");
+  process.exit(badArms === 0 ? 0 : 1);
+}
+
 if (!fs.existsSync(TOOL_BIN)) fail(`工具线入口不存在（先 npm run build）：${TOOL_BIN}`);
 if (!fs.existsSync(SCRIPT_BIN)) fail(`仓库线入口不存在：${SCRIPT_BIN}`);
 
@@ -41,8 +84,7 @@ if (!bad) {
   }
   // 仓库线帮助须用真实入口名（L2 回归：曾自称 mc-skill）
   const sh = run(SCRIPT_BIN, ["--help"]).stdout ?? "";
-  if (!sh.includes("mc-skill-scripts")) fail("mc-skill-scripts --help 未出现真实入口名（L2 回归）");
-  if (/^\s*mc-skill lib/m.test(sh)) fail("mc-skill-scripts --help 仍自称 mc-skill（L2 回归）");
+  for (const prob of helpSelfNameProblems(sh)) fail(prob + "（L2 回归）");
 
   // ② 仓库线 9 组子命令 --help + 两条真跑
   for (const c of [
@@ -307,9 +349,9 @@ if (!bad) {
 
     // NP-8 / S2：文档面一致性（根 README 工具数、update 文档入口名）
     const rootReadme = fs.readFileSync(path.join(PKG, "..", "README.md"), "utf8");
-    if (/（\*\*80\*\* 个工具）/.test(rootReadme)) fail("根 README 仍写 80 个工具（NP-8 回归）");
+    for (const prob of readmeToolCountProblems(rootReadme)) fail(prob + "（NP-8 回归）");
     const updDoc = fs.readFileSync(path.join(PKG, "docs", "mc-skill-update.md"), "utf8");
-    if (/^CLI：`mc-skill /m.test(updDoc)) fail("update 文档仍是裸 mc-skill 调用式（S2 回归）");
+    for (const prob of updateDocCallFormProblems(updDoc)) fail(prob + "（S2 回归）");
   }
 }
 

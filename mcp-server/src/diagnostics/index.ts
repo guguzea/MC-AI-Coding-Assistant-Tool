@@ -167,7 +167,7 @@ export interface DetectedLibrary {
   matchReason: string;
   /**
    * ⚠ **不是「验证过的版本窗口」** —— 2026-10-21 修正（审查 mcp-ops F-17）：原文这么写，但实测
-   * 实测 catalog 里该字段的形态是 Modrinth 项目页的 `game_versions` 全集 —— **含 `1.20-pre5` /
+   * catalog 里该字段的形态是 Modrinth 项目页的 `game_versions` 全集 —— **含 `1.20-pre5` /
    * `1.20.2-pre2` 这类预发布串**（实测样本 57 个 token），显然不是「人工验证过的窗口」。
    * ⇒ 读作「**上游 Modrinth 声明的 game_versions 全集**」；本仓真验证过的版本只在 `verifiedApi`，
    * 且 verifiedApi 运行时不被消费（见 `evidence` 与 `mcp-server/CHANGELOG.md`）。

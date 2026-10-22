@@ -1,6 +1,13 @@
 {
   "asOf": "2026-10-15",
   "totalStubBudget": 1,
+  "residue": [
+    {
+      "tree": "rift_1.13.2/rift-docs/1.13.2",
+      "file": "wiki_home.md",
+      "reason": "上游 Rift GitHub wiki 的 Home 页本身就只有一句欢迎语（正文 25 字符）；其余 5 篇承载全部内容。采集忠实、非解析缺口 —— 2026-09-18 逐篇核过。"
+    }
+  ],
   "trees": {
     "bedrock_stable/bedrock-docs/stable": {
       "files": 258,

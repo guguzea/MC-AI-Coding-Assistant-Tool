@@ -215,7 +215,7 @@ export function judgeTrees(stats, baseline) {
         problems.push(`${s.tree}: Σ成员 ${s.members} < 地板 ${b.membersFloor}（成员列表成片消失，p10/median 未必动）`);
       }
     }
-    // 具名 residue（可选层）：允许留下的真·空页必须**逐条具名**，且条目过期（文件已不是空页）即红。
+    // 具名 residue：允许留下的真·空页必须**逐条具名**，且条目过期（文件已不是空页）即红。
     if (residueEnabled) {
       const named = baseline.residue.filter((r) => r && r.tree === s.tree);
       if (named.length !== s.stub) {
@@ -228,6 +228,15 @@ export function judgeTrees(stats, baseline) {
           problems.push(`${s.tree}: residue 过期 —— ${n.file} 已不是真·空页（删掉该条；ratchet 只许降）`);
         }
       }
+    } else if (s.stub > 0) {
+      // fail-closed（2026-10-21，审查 F-4 的第二半）：此前 residue 的**启用**本身无守卫 ——
+      // 基线里整段删掉 `residue` 就静默降级（实测：删段后本门照旧 rc=0），
+      // 这正是 a4bea628（一个加文档的提交）把该段顺手删掉却无人察觉的原因。
+      // 判据：**有真·空页就必须具名**；一段都没有才允许省略 residue。
+      problems.push(
+        `${s.tree}: 有 ${s.stub} 篇真·空页，但基线**没有** residue 段 ⇒ 具名层被静默关闭` +
+          `（fail-closed：有桩就必须逐条具名；确实没有桩才可省略该段）`,
+      );
     }
   }
   for (const tree of Object.keys(baseline.trees)) {
@@ -278,20 +287,36 @@ function selftest() {
     'a/good/1': { allowedStubs: 1, medianFloor: 100, files: 10 },
     'b/thin/1': { allowedStubs: 0, medianFloor: 500, files: 10 },
   };
+  /**
+   * 2026-10-21（审查 F-4 的第二半）：本门新增 fail-closed —— **有真·空页就必须具名 residue**。
+   * 故夹具凡带 stub>0，基线都要配 residue，否则会因「具名层被静默关闭」而红，
+   * 把原本要测的判据（超预算 / median / 全局预算 …）盖掉。下面给两种常用夹具各配一份具名基线。
+   */
+  const named = (budget = 10, tree = 'a/good/1') => ({
+    ...base(twoTrees, budget),
+    residue: [{ tree, file: 'processed/x.md', reason: 'fixture' }],
+  });
+  const namedBoth = (budget = 10) => ({
+    ...base({ 'a/good/1': { allowedStubs: 2, medianFloor: 0, files: 10 }, 'b/thin/1': { allowedStubs: 2, medianFloor: 0, files: 10 } }, budget),
+    residue: [
+      { tree: 'a/good/1', file: 'processed/x.md', reason: 'fixture' },
+      { tree: 'b/thin/1', file: 'processed/x.md', reason: 'fixture' },
+    ],
+  });
   const cases = [
-    ['good', two({ stub: 1, median: 400 }, { stub: 0, median: 600 }), base(twoTrees), true],
-    ['stub 超预算', two({ stub: 2, median: 400 }, { stub: 0, median: 600 }), base(twoTrees), false],
-    ['median 低于地板', two({ stub: 1, median: 400 }, { stub: 0, median: 499 }), base(twoTrees), false],
+    ['good（1 篇空页已具名 ⇒ 绿）', two({ stub: 1, median: 400, stubFiles: ['processed/x.md'] }, { stub: 0, median: 600 }), named(), true],
+    ['stub 超预算（具名 2 条 ⇒ 只该红在预算）', two({ stub: 2, median: 400, stubFiles: ['processed/x.md', 'processed/y.md'] }, { stub: 0, median: 600 }), { ...named(), residue: [{ tree: 'a/good/1', file: 'processed/x.md', reason: 'f' }, { tree: 'a/good/1', file: 'processed/y.md', reason: 'f' }] }, false],
+    ['median 低于地板（具名 ⇒ 只该红在 median）', two({ stub: 1, median: 400, stubFiles: ['processed/x.md'] }, { stub: 0, median: 499 }), named(), false],
     [
       '未登记树',
-      [...two({ stub: 1, median: 400 }, { stub: 0, median: 600 }), { tree: 'c/new/1', files: 10, stub: 0, median: 999 }],
-      base(twoTrees),
+      [...two({ stub: 1, median: 400, stubFiles: ['processed/x.md'] }, { stub: 0, median: 600 }), { tree: 'c/new/1', files: 10, stub: 0, median: 999 }],
+      named(),
       false,
     ],
     [
       '全局预算超',
-      two({ stub: 1, median: 600 }, { stub: 1, median: 600 }),
-      base({ 'a/good/1': { allowedStubs: 2, medianFloor: 0, files: 10 }, 'b/thin/1': { allowedStubs: 2, medianFloor: 0, files: 10 } }, 1),
+      two({ stub: 1, median: 600, stubFiles: ['processed/x.md'] }, { stub: 1, median: 600, stubFiles: ['processed/x.md'] }),
+      namedBoth(1),
       false,
     ],
     [

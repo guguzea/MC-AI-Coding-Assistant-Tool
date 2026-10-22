@@ -10,7 +10,7 @@ import {
   networkFailureNextSteps,
   type FetchFn,
 } from "./http.js";
-import { gitDescribeVsRemote, isNewer, looksLikePrereleaseTag } from "./semver.js";
+import { gitDescribeVsRemote, isDataRefreshOf, isNewer, looksLikePrereleaseTag } from "./semver.js";
 
 export type { FetchFn } from "./http.js";
 
@@ -401,7 +401,12 @@ export function dataNeedsUpdate(
   const vs = gitDescribeVsRemote(gitDescribe, remoteTag);
   if (vs === "ahead" || vs === "equal") return false;
   if (!localTag) return true;
-  if (localTag !== remoteTag) return isNewer(remoteTag, localTag);
+  if (localTag !== remoteTag) {
+    // data-refresh 特判（审查 mcp-ops F-1）：`compareSemver("V1.0.4-data-refresh","V1.0.4") = -1`
+    // ⇒ 不加这一条，data 侧永远判「不需要更新」，用户拿不到数据更新且无报错。见 isDataRefreshOf 注释。
+    if (isDataRefreshOf(localTag, remoteTag)) return true;
+    return isNewer(remoteTag, localTag);
+  }
   if (localAsset && localAsset !== remoteAsset) return true;
   return false;
 }

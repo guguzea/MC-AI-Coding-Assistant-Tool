@@ -222,7 +222,10 @@ public class MyItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
     @Override
     protected void configure(RegistryWrapper.WrapperLookup lookup) {
-        getOrCreateTagBuilder(MY_ITEM_TAG).add(MY_ITEM);
+        // 1.21.8 起 getOrCreateTagBuilder 已移除（本档 fabric-api 源码/javap 实测）：
+        // ItemTagProvider 继承 FabricValueLookupTagProvider，公开面是 valueLookupBuilder(TagKey)；
+        // 基类 FabricTagProvider 上另有 builder(TagKey)。
+        valueLookupBuilder(MY_ITEM_TAG).add(MY_ITEM);
     }
 }
 ```

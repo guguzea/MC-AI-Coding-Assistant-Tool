@@ -9,6 +9,7 @@ import { ownGet } from "../utils/own-record.js";
 import { normalizeModIdentifier, toJavaClassName } from "./common.js";
 import * as forge from "./forge-1.20.1.js";
 import { generateFabric, type FabricProviderType, type FabricIdStyle } from "./fabric.js";
+import { generateFabricYarn, fabricYarnGeneration, type FabricYarnProviderType } from "./fabric-yarn.js";
 import { generateNeoForge21, type NeoForge21ProviderType } from "./neoforge-1.21.js";
 import { generateNeoForge215, type NeoForge215ProviderType } from "./neoforge-1.21.5.js";
 import { generateNeoForge261, type NeoForge261ProviderType } from "./neoforge-26.1.js";
@@ -32,6 +33,12 @@ export interface DatagenQuery {
   targetName: string;
   version?: string;
   platform?: "forge" | "neoforge" | "fabric" | "quilt";
+  /**
+   * 骨架使用哪套映射（仅 Fabric 生效）。
+   * - 缺省/`mojmap`：既有 Mojmap 骨架（产物逐字不变）
+   * - `yarn`：Yarn 骨架，覆盖 1.17.1–1.21.11 中已核实档；缺证档 fail-closed
+   */
+  mapping?: "mojmap" | "yarn";
 }
 
 export interface DatagenResult {
@@ -164,6 +171,51 @@ function isFabricDatagenVersion(version: string): boolean {
   return FABRIC_DATAGEN_RECIPE_VERSIONS.has(v);
 }
 
+/**
+ * Fabric **Yarn** 骨架白名单（B 方案，2026-10-22）。
+ * 入选判据（两条都要）：① 该档有 `data/fabric_<ver>/mappings/yarn-mappings.sqlite`；
+ * ② 该档有 `mcp-server/data/loader-api-summaries/<ver>-fabric-api.json`，且 provider 的抽象方法槽位
+ * 能经 ① 的 intermediary→named 反查落到具体 Yarn 名。逐档证据见 fabric-yarn.ts 顶部注释。
+ *
+ * 不入选及原因（实测，不是外推）：
+ * - 1.14.4 / 1.16.5：聚合 `1.14.4-fabric-api.jar` 的 datagen 条目 = 0、`1.16.5-fabric-api.jar` = 1
+ *   （只有 FabricDataGeneratorTagBuilder）；那时 datagen 是独立模块 fabric-data-generation-api-v1，
+ *   本仓缓存里没有该模块构件 ⇒ 无签名可核。
+ * - 1.21.2 / 1.21.5 / 1.21.6 / 1.21.7 / 1.21.9：无 `data/fabric_<ver>` 目录（无 sqlite、无摘要）。
+ * - 26.1.2：已去混淆，无 Yarn（`isUnobfuscatedMcVersion`）。
+ */
+const FABRIC_YARN_DATAGEN_VERSIONS = new Set([
+  "1.17.1",
+  "1.18.2",
+  "1.19.4",
+  "1.20.1",
+  "1.20.4",
+  "1.21.1",
+  "1.21.3",
+  "1.21.4",
+  "1.21.8",
+  "1.21.10",
+  "1.21.11",
+]);
+
+const FABRIC_YARN_UNVERIFIED_REASONS: Record<string, string> = {
+  "1.14.4":
+    "1.14.4：实测该档没有 Fabric datagen provider 体系 —— fabric-api 聚合件是 POM-only（0.28.5+1.14 的 jar 仅 2140 B），" +
+    "独立模块 fabric-data-generation-api-v1 的 maven-metadata 最早版本是 1.0.0（fabric.mod.json requires fabricloader>=0.12.0，属 1.19 代），" +
+    "该档 jar 内 datagen 条目 = 0。",
+  "1.16.5":
+    "1.16.5：同上 —— fabric-api 聚合件 POM-only（0.42.0+1.16 的 jar 仅 2351 B，POM 无 datagen 依赖），" +
+    "该档聚合件里 datagen 只命中 1 个 FabricDataGeneratorTagBuilder；DataGeneratorEntrypoint/provider 体系从 1.17.1 才有。",
+  "1.21.2":
+    "1.21.2：本仓库无 data/fabric_1.21.2（无 yarn-mappings.sqlite、无 fabric-api 摘要），夹在 1.21.1 与 1.21.3 之间不能默认同签名。",
+  "1.21.5": "1.21.5：本仓库无 data/fabric_1.21.5（无 sqlite、无摘要），签名未核。",
+  "1.21.6": "1.21.6：本仓库无 data/fabric_1.21.6（无 sqlite、无摘要），签名未核。",
+  "1.21.7": "1.21.7：本仓库无 data/fabric_1.21.7（无 sqlite、无摘要），签名未核。",
+  "1.21.9": "1.21.9：本仓库无 data/fabric_1.21.9（无 sqlite、无摘要），不能按 1.21.8/1.21.10 外推。",
+  "26.1.2": "26.1.2：Minecraft 26.1+ 已去混淆，运行时即 Mojang 名，不存在 Yarn 映射；请用 mapping=mojmap（默认）。",
+};
+
+
 function prependDocsReview(code: string, tool: string, version: string): string {
   const line = `// 修改此骨架前必须用 ${tool}(version=${version}) 复核；禁止邻档 API。`;
   if (code.startsWith(line)) return code;
@@ -242,7 +294,7 @@ export function generateDatagen(query: DatagenQuery): DatagenResult {
       ],
     };
   }
-  if (platform === "fabric") {
+  if (platform === "fabric" && query.mapping !== "yarn") {
     if (!isFabricDatagenVersion(ver)) {
       return {
         code: null,
@@ -263,7 +315,11 @@ export function generateDatagen(query: DatagenQuery): DatagenResult {
   const neoClient = isNeoForge21ClientDatagen(platform, ver);
   const neo2111 = isNeoForge2111Datagen(platform, ver);
   const neo261 = isNeoForge261Platform(platform, ver);
-  if (providerType === "language" && !(platform === "neoforge" && neo261)) {
+  if (
+    providerType === "language" &&
+    !(platform === "neoforge" && neo261) &&
+    !(platform === "fabric" && query.mapping === "yarn")
+  ) {
     return {
       code: null,
       usedModId: query.modId,
@@ -342,6 +398,55 @@ export function generateDatagen(query: DatagenQuery): DatagenResult {
   let code: string;
   try {
     if (platform === "fabric") {
+    if (query.mapping === "yarn") {
+      // Yarn 骨架：白名单外的档一律 fail-closed，逐档给拒因（不猜签名）。
+      const yarnGen = fabricYarnGeneration(ver);
+      if (!yarnGen) {
+        return {
+          code: null,
+          usedModId: modId,
+          usedTargetName: targetName,
+          errors: [
+            `尚无 Fabric Yarn Datagen 模板覆盖 version=${ver}。` +
+              (ownGet(FABRIC_YARN_UNVERIFIED_REASONS, ver) ??
+                "本仓库对该档没有 yarn-mappings.sqlite 或 fabric-api 摘要，签名未核实。") +
+              ` 已核实可发 Yarn 骨架的档：${[...FABRIC_YARN_DATAGEN_VERSIONS].join(" / ")}。` +
+              `如需 Mojmap 骨架请省略 mapping（默认 mojmap）。`,
+          ],
+        };
+      }
+      code = generateFabricYarn({
+        providerType: providerType as FabricYarnProviderType,
+        modId,
+        targetName,
+        classBase,
+        version: ver,
+      });
+      warnings.push(
+        `Fabric ${ver}：Yarn 骨架（generate / RecipeExporter / RegistryWrapper.WrapperLookup / Identifier.of / TagKey.of），` +
+          `与 Mojmap 骨架不可混用；落笔前用 convert_mapping(from=yarn,to=mojmap) 复核。`,
+      );
+      if (ver === "1.17.1") {
+        warnings.push(
+          "1.17.1：入口是 FabricDataGenerator.addProvider(Function)（该档无 Pack）；tag 的 Tag.Identified 获取路径未核实，骨架里只留 TODO。",
+        );
+        if (providerType === "language") {
+          warnings.push("1.17.1：fabric-api 摘要无 FabricLanguageProvider，本档不生成 language 骨架（手写 lang JSON 即可）。");
+        }
+      }
+      if (providerType === "tag" && isMcVersionAtLeast(ver, "1.21.8")) {
+        warnings.push(
+          `Fabric ${ver}：tag 用 valueLookupBuilder（ItemTagProvider 在 1.21.8 起继承 FabricValueLookupTagProvider，源码实测），不是 getOrCreateTagBuilder。`,
+        );
+      }
+      if (providerType === "sound" && !isMcVersionAtLeast(ver, "1.21.8")) {
+        warnings.push(`Fabric ${ver}：无 FabricSoundsProvider（1.21.8 才新增），骨架只给资源路径说明。`);
+      }
+      if (providerType === "particle") {
+        warnings.push(`Fabric ${ver}：无独立 particle DataGen Provider（逐档摘要实测），请手写 particles JSON。`);
+      }
+      return { code, usedModId: modId, usedTargetName: targetName, warnings };
+    }
     // Mojmap：1.21.10→1.21.11 之间 ResourceLocation 改名为 Identifier（net.minecraft.resources）
     const idStyle: FabricIdStyle = ver === "1.21.11" || isMcVersionFamily(ver, "26.1") ? "Identifier" : "ResourceLocation";
     code = generateFabric(
@@ -357,14 +462,24 @@ export function generateDatagen(query: DatagenQuery): DatagenResult {
       isMcVersionAtLeast(ver, "1.21.8"),
       // 模型 datagen 的包名分界 = 1.21.4（旧包 → client 包；两处独立证据见 fabric.ts 的 model 分支）。
       isMcVersionAtLeast(ver, "1.21.4"),
+      // 1.21.8 起才有 FabricSoundsProvider（1.21.8–1.21.11 摘要实测；26.1 走另一分支）。
+      isMcVersionAtLeast(ver, "1.21.8"),
     );
     if (ver !== "1.21.11" && !isMcVersionFamily(ver, "26.1")) {
       code = prependDocsReview(code, "search_fabric_docs", ver);
       warnings.push(`Fabric ${ver} Datagen：骨架为 Mojmap 名，请 search_fabric_docs version=${ver} 复核。`);
     }
-    if (providerType === "particle" || providerType === "sound") {
+    if (providerType === "particle") {
       warnings.push(
-        `Fabric 无独立 ${providerType} DataGen Provider；骨架仅为资源路径注释，请 search_fabric_docs 手写 JSON。`,
+        `Fabric 无独立 particle DataGen Provider（逐档 fabric-api 摘要实测，1.14–26.1 均无）；请手写 particles JSON。`,
+      );
+    }
+    if (providerType === "sound") {
+      warnings.push(
+        isMcVersionAtLeast(ver, "1.21.8")
+          ? `Fabric ${ver}：sound 有 FabricSoundsProvider（client.datagen 包，configure(HolderLookup.Provider, SoundExporter)）；` +
+              `SoundTypeBuilder 的工厂请 query_loader_api 复核后再写。`
+          : `Fabric ${ver}：无 FabricSoundsProvider（1.21.8 才新增，摘要实测）；请手写 sounds.json。`,
       );
     }
     if (providerType === "tag") {
@@ -384,6 +499,12 @@ export function generateDatagen(query: DatagenQuery): DatagenResult {
       warnings.push(
         `Mojmap 骨架：buildRecipes。Yarn 工程整段换成 generate(RecipeExporter)（同类同名差异，非版本差异）；禁止同一文件混映射。本档名以 get_minecraft_source version=${ver} mapping=mojmap 为准，禁止读邻档规则。`,
       );
+      if (isMcVersionAtLeast(ver, "1.21.3")) {
+        warnings.push(
+          `Fabric ${ver} 两层：工厂方法 mojmap = createRecipeProvider(HolderLookup.Provider, RecipeOutput)，` +
+            `Yarn = getRecipeGenerator(RegistryWrapper.WrapperLookup, RecipeExporter)；内部无参方法 mojmap = buildRecipes，Yarn = generate。`,
+        );
+      }
       if (ver === "1.21.1") {
         warnings.push(
           `Fabric ${ver}：本档 recipe 为**单层**形态（RecipeProvider.buildRecipes(RecipeOutput) 带参，Mojang client.txt 实测）；1.21.3 起改为两层（createRecipeProvider + 无参 buildRecipes），不要跨版套用。`,

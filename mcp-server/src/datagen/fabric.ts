@@ -68,6 +68,9 @@ export function generateFabric(
   // 1.21.4 起模型 datagen 从旧包换到 client 包（旧包→新包，逐档证据见 generateFabric21 的 model 分支）。
   // 默认 false = 保持旧包 ⇒ 既有 8 参调用（≤1.21.3）的产物逐字不变。
   modelProviderClient = false,
+  // 1.21.8 起才有 FabricSoundsProvider（1.21.8/1.21.10/1.21.11 摘要实测）。
+  // 默认 false ⇒ 既有调用（未传该位）的 sound 产物逐字不变。
+  soundProviderAvailable = false,
 ): string {
   const pascalName = classBase || toPascalCase(modId);
   if (version26) return generateFabric261(providerType, modId, targetName, pascalName);
@@ -80,6 +83,7 @@ export function generateFabric(
     recipeTwoLayer,
     tagBuilderUsesLookup,
     modelProviderClient,
+    soundProviderAvailable,
   );
 }
 
@@ -92,6 +96,7 @@ function generateFabric21(
   recipeTwoLayer = false,
   tagBuilderUsesLookup = false,
   modelProviderClient = false,
+  soundProviderAvailable = false,
 ): string {
   const header = `// Fabric Datagen 1.21.x — DataGeneratorEntrypoint + fabric-datagen（${modId}:${targetName}）
 package com.example.${modId}.datagen;
@@ -277,12 +282,50 @@ class ${pascalName}AdvancementProvider extends FabricAdvancementProvider {
     }
 }
 `;
+    case "sound": {
+      // 1.21.8 起才有 FabricSoundsProvider（1.21.8/1.21.10/1.21.11 的 fabric-api 摘要实测：
+      // net.fabricmc.fabric.api.client.datagen.v1.provider.FabricSoundsProvider，
+      // 抽象方法 configure(class_7225.class_7874, SoundExporter)；1.21.1–1.21.4 无该类）。
+      if (!soundProviderAvailable) {
+        return `${header}
+/** 本档无 FabricSoundsProvider（1.21.8 才新增，摘要实测）。请手写 assets/${modId}/sounds.json。 */
+public final class ${pascalName}SoundAssets {
+    private ${pascalName}SoundAssets() {}
+}
+`;
+      }
+      return `${header}import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricSoundsProvider;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import net.minecraft.core.HolderLookup;
+${entrypoint(modId, pascalName, `${pascalName}SoundsProvider`)}
+class ${pascalName}SoundsProvider extends FabricSoundsProvider {
+    public ${pascalName}SoundsProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
+        super(output, registriesFuture);
+    }
+
+    // 摘要实测签名：configure(HolderLookup.Provider, SoundExporter)
+    // SoundExporter.add 的三个重载（参数仍是 intermediary）：
+    //   add(SoundEvent, SoundTypeBuilder) / add(Holder<SoundEvent>, SoundTypeBuilder) / add(Identifier, SoundTypeBuilder)
+    @Override
+    protected void configure(HolderLookup.Provider registryLookup, FabricSoundsProvider.SoundExporter exporter) {
+        // TODO: exporter.add(...)；SoundTypeBuilder 的工厂用 query_loader_api 复核后再写。
+    }
+
+    // 1.21.11 javap 实测：FabricSoundsProvider 未实现 DataProvider.getName，子类必须补。
+    @Override
+    public String getName() {
+        return "${pascalName}SoundsProvider";
+    }
+}
+`;
+    }
     case "particle":
-    case "sound":
       return `${header}
-/** 无独立 Fabric ${providerType} Provider。请手写 assets/${modId}/${providerType === "particle" ? "particles" : "sounds.json"} 并 search_fabric_docs。 */
-public final class ${pascalName}${providerType === "particle" ? "Particle" : "Sound"}Assets {
-    private ${pascalName}${providerType === "particle" ? "Particle" : "Sound"}Assets() {}
+/** 无独立 Fabric particle Provider（逐档 fabric-api 摘要实测，1.14–26.1 均无）。请手写 assets/${modId}/particles.json 与 particles/${targetName}.json。 */
+public final class ${pascalName}ParticleAssets {
+    private ${pascalName}ParticleAssets() {}
 }
 `;
     default:
@@ -429,12 +472,21 @@ class ${pascalName}AdvancementProvider extends FabricAdvancementProvider {
     }
 }
 `;
-    case "particle":
     case "sound":
+      // 26.1.2 摘要里确有 FabricSoundsProvider（client.datagen 包，configure(HolderLookup.Provider, SoundExporter)），
+      // 但**构造签名不在摘要里**（摘要只收 public 方法，该类构造未列）⇒ 不写骨架，避免编造。
       return `${header}
-/** 无独立 Fabric ${providerType} Provider。请手写资源 JSON 并 search_fabric_docs(version=26.1.2)。 */
-public final class ${pascalName}${providerType === "particle" ? "Particle" : "Sound"}Assets {
-    private ${pascalName}${providerType === "particle" ? "Particle" : "Sound"}Assets() {}
+/** 26.1.2 有 FabricSoundsProvider，但本仓摘要未列其构造签名（configure 已核，ctor 未核）。
+ *  手写 assets/${modId}/sounds.json，或用 get_minecraft_source / query_loader_api 复核构造后再写。 */
+public final class ${pascalName}SoundAssets {
+    private ${pascalName}SoundAssets() {}
+}
+`;
+    case "particle":
+      return `${header}
+/** 无独立 Fabric particle Provider（逐档摘要实测，26.1.2 亦无）。请手写资源 JSON 并 search_fabric_docs(version=26.1.2)。 */
+public final class ${pascalName}ParticleAssets {
+    private ${pascalName}ParticleAssets() {}
 }
 `;
     default:

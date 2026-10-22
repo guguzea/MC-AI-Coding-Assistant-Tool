@@ -727,6 +727,35 @@ function perFileSplitForms(docs) {
   console.log(`schema 拒绝 → fieldErrors ${j.fieldErrors.length} 条（含 enumValues）+ 散文串照旧`);
 }
 
+// B 方案（2026-10-22）：generate_datagen 的 mapping=yarn 必须从 CLI 面透传到生成器；
+// 缺证档必须 fail-closed（不进 dist 的兜底分支、不吞掉拒因）。
+{
+  const okArgs = [
+    "generate_datagen",
+    "--platform=fabric",
+    "--version=1.21.11",
+    "--providerType=recipe",
+    "--modId=demo",
+    "--targetName=x",
+    "--mapping=yarn",
+  ];
+  const r = run(okArgs);
+  const j = parseJson(r, "yarn-datagen-cli");
+  const okCode = j.result?.code ?? j.code;
+  if (r.status !== 0) throw new Error(`mapping=yarn 应 exit 0，实得 ${r.status}: ${JSON.stringify(j).slice(0, 300)}`);
+  if (!String(okCode || "").includes("getRecipeGenerator")) {
+    throw new Error(`mapping=yarn 未透传到生成器: ${JSON.stringify(j).slice(0, 300)}`);
+  }
+  const miss = run([...okArgs.slice(0, 2), "--version=1.16.5", ...okArgs.slice(3)]);
+  const jm = parseJson(miss, "yarn-datagen-cli-miss");
+  const missCode = jm.result?.code ?? jm.code;
+  const missErrors = jm.result?.errors ?? jm.errors;
+  if (missCode !== null || !Array.isArray(missErrors) || !missErrors.some((e) => /Yarn/.test(e))) {
+    throw new Error(`1.16.5 + mapping=yarn 必须 fail-closed 并点明 Yarn: ${JSON.stringify(jm).slice(0, 300)}`);
+  }
+  console.log("generate_datagen --mapping=yarn（成功档 + 缺证档）→ ok");
+}
+
 {
   const r = run(["get_forge_doc_full", "--id", "no-such-page-zz", "--version", "1.20.1"]);
   if (r.status !== 1) throw new Error(`expected exit 1 for tool failure, got ${r.status}:\n${r.stdout}`);

@@ -105,3 +105,20 @@ export function gitDescribeVsRemote(
   if (cmp === 0) return "equal";
   return "behind";
 }
+
+/**
+ * True if `remote` 是 `local` 的 **data-refresh 发布**（同版本号 + `-data-refresh` 后缀）。
+ *
+ * 为什么必须特判（审查 mcp-ops F-1，实测）：`compareSemver("V1.0.4-data-refresh","V1.0.4") = -1`
+ * —— semver 的 prerelease 排序规则把带后缀的判成**更旧**；而本模块的 `looksLikePrereleaseTag`
+ * 又**明确**把 `-data-refresh` 排除在预发布之外（视作正式版）。同一模块两处口径相反。
+ *
+ * 后果：data 侧的 `dataNeedsUpdate` 走 `isNewer(remoteTag, localTag)` ⇒ 永远返回 false
+ * ⇒ **用户拿不到数据更新，且没有任何报错**。故在此给具名判据，让两侧口径对齐、可单测。
+ */
+export function isDataRefreshOf(local: string, remote: string): boolean {
+  const l = stripV(local);
+  const r = stripV(remote);
+  if (!l || !r || !r.startsWith(l + "-")) return false;
+  return /^data-refresh/i.test(r.slice(l.length + 1));
+}
