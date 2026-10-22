@@ -208,7 +208,7 @@ export const generateDatagenSchema = z.object({
     .enum(["mojmap", "yarn"])
     .optional()
     .describe(
-      "仅 Fabric 生效：mojmap（默认，既有骨架）| yarn（Fabric 社区映射；覆盖 1.17.1/1.18.2/1.19.4/1.20.1/1.20.4/1.21.1/1.21.3/1.21.4/1.21.8/1.21.10/1.21.11，其余档 fail-closed 给拒因）",
+      "仅 Fabric 生效。默认按档：< 1.21.11 默认 yarn（为兼容；上游已转 Mojmap），1.21.11 与 26.1+ 默认 mojmap（1.21.11 为过渡档，两套并存）。显式传参优先；yarn 覆盖 1.17.1/1.18.2/1.19.4/1.20.1/1.20.4/1.21.1/1.21.3/1.21.4/1.21.8/1.21.10/1.21.11，其余档 fail-closed 给拒因",
     ),
   write: z.boolean().optional().describe("默认 false。true 时写入 projectPath（须 confirmed + MC_SKILL_ALLOW_WRITE=1 + MC_SKILL_PROJECT_ROOT；projectPath 不能替代后者）"),
   confirmed: z.boolean().optional().describe("write=true 时必填 true"),

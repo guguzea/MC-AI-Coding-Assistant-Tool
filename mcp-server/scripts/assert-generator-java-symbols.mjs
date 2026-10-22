@@ -51,7 +51,7 @@ export const MATRIX = [
   { platform: "fabric", version: "1.21.3", providerType: "recipe", mapping: "yarn" },
   { platform: "fabric", version: "1.21.4", providerType: "itemmodel", mapping: "yarn" },
   { platform: "fabric", version: "1.21.8", providerType: "tag", mapping: "yarn" },
-  { platform: "fabric", version: "1.21.8", providerType: "sound" },
+  { platform: "fabric", version: "1.21.8", providerType: "sound", mapping: "mojmap" },
   { platform: "fabric", version: "1.21.8", providerType: "sound", mapping: "yarn" },
   { platform: "fabric", version: "1.21.11", providerType: "recipe", mapping: "yarn" },
   { platform: "fabric", version: "1.21.11", providerType: "itemmodel", mapping: "yarn" },

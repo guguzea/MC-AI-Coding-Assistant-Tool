@@ -247,6 +247,13 @@ export function generateDatagen(query: DatagenQuery): DatagenResult {
     };
   }
   const ver = version.trim();
+  // 默认映射按仓库设计分档（2026-10-22 用户裁定）：
+  //   < 1.21.11 的 Fabric 档 → **yarn**（为兼容；上游 Fabric 已转 Mojmap）
+  //   1.21.11               → **mojmap**（过渡档，Yarn/Mojmap 并存，默认取去混淆侧）
+  //   26.1+                 → **mojmap**（已去混淆）
+  // 显式传 mapping 时以传参为准。
+  const effectiveMapping: "mojmap" | "yarn" =
+    query.mapping ?? (platform === "fabric" && !isMcVersionAtLeast(ver, "1.21.11") ? "yarn" : "mojmap");
   if (platform === "neoforge" && looksLikeNeoForgeBuildNumber(ver)) {
     return {
       code: null,
@@ -294,8 +301,24 @@ export function generateDatagen(query: DatagenQuery): DatagenResult {
       ],
     };
   }
-  if (platform === "fabric" && query.mapping !== "yarn") {
-    if (!isFabricDatagenVersion(ver)) {
+  if (platform === "fabric") {
+    if (effectiveMapping === "yarn") {
+      // Yarn 门也必须在 normalizeModIdentifier 之前早退（否则缺 modId 的探测式调用会崩）。
+      if (!fabricYarnGeneration(ver)) {
+        return {
+          code: null,
+          usedModId: query.modId,
+          usedTargetName: query.targetName,
+          errors: [
+            `尚无 Fabric Yarn Datagen 模板覆盖 version=${ver}。` +
+              (ownGet(FABRIC_YARN_UNVERIFIED_REASONS, ver) ??
+                "本仓库对该档没有 yarn-mappings.sqlite 或 fabric-api 摘要，签名未核实。") +
+              ` 已核实可发 Yarn 骨架的档：${[...FABRIC_YARN_DATAGEN_VERSIONS].join(" / ")}。` +
+              `如需 Mojmap 骨架请传 mapping=mojmap（1.21.11 与 26.1+ 默认即 Mojmap）。`,
+          ],
+        };
+      }
+    } else if (!isFabricDatagenVersion(ver)) {
       return {
         code: null,
         usedModId: query.modId,
@@ -318,7 +341,7 @@ export function generateDatagen(query: DatagenQuery): DatagenResult {
   if (
     providerType === "language" &&
     !(platform === "neoforge" && neo261) &&
-    !(platform === "fabric" && query.mapping === "yarn")
+    !(platform === "fabric" && effectiveMapping === "yarn")
   ) {
     return {
       code: null,
@@ -398,7 +421,7 @@ export function generateDatagen(query: DatagenQuery): DatagenResult {
   let code: string;
   try {
     if (platform === "fabric") {
-    if (query.mapping === "yarn") {
+    if (effectiveMapping === "yarn") {
       // Yarn 骨架：白名单外的档一律 fail-closed，逐档给拒因（不猜签名）。
       const yarnGen = fabricYarnGeneration(ver);
       if (!yarnGen) {

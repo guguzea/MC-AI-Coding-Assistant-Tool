@@ -5012,6 +5012,8 @@ public class ExampleMod { }
     targetName: "x",
     platform: "fabric",
     version: "1.21.1",
+    // 2026-10-22 起 < 1.21.11 默认 Yarn；本块测的是 Mojmap 单层形状，必须显式指定。
+    mapping: "mojmap",
   });
   assert.ok(fabOneLayer.code?.includes("void buildRecipes(RecipeOutput"), fabOneLayer.code?.slice(0, 500));
   assert.ok(!/createRecipeProvider\(/.test(fabOneLayer.code || ""), "N-11 1.21.1 必须仍是单层，不得提前两层化");
@@ -5032,6 +5034,8 @@ public class ExampleMod { }
       targetName: "x",
       platform: "fabric",
       version: ver,
+      // < 1.21.11 默认 Yarn；本循环测 Mojmap 两层形状，显式指定。
+      mapping: "mojmap",
     });
     const snippet = out.code?.slice(0, 700) ?? String(out.errors?.join(";"));
     assert.ok(out.code?.includes("createRecipeProvider(HolderLookup.Provider registryLookup, RecipeOutput exporter)"), `${ver}: ${snippet}`);
@@ -5174,6 +5178,7 @@ public class ExampleMod { }
     targetName: "x",
     platform: "fabric",
     version: "1.21.8",
+    mapping: "mojmap",
   });
   assert.ok(/extends FabricSoundsProvider/.test(fabSound218.code || ""), fabSound218.code?.slice(0, 600));
   assert.ok(fabSound218.code?.includes("FabricSoundsProvider.SoundExporter"));
@@ -5187,6 +5192,7 @@ public class ExampleMod { }
     targetName: "x",
     platform: "fabric",
     version: "1.21.1",
+    mapping: "mojmap",
   });
   // 该档说明类**会提到** FabricSoundsProvider（说明"本档无"），所以判据要看是否真继承。
   assert.ok(!/extends FabricSoundsProvider/.test(fabSound211.code || ""), "1.21.1 不得继承 1.21.8 才有的 provider");
@@ -5202,13 +5208,30 @@ public class ExampleMod { }
     targetName: "x",
     platform: "fabric",
     version: "1.21.4",
+    mapping: "mojmap",
   });
   assert.ok(
     fabRecipeTwoLayerWarn.warnings?.some((w) => /getRecipeGenerator/.test(w) && /createRecipeProvider/.test(w)),
     `1.21.3+ 的 mojmap 骨架必须说明 Yarn 侧工厂名：${JSON.stringify(fabRecipeTwoLayerWarn.warnings)}`,
   );
 
-  // 默认（不传 mapping）必须仍是 Mojmap：既有产物逐字不变
+  // 默认分档（2026-10-22 用户裁定）：< 1.21.11 默认 Yarn；1.21.11 与 26.1 默认 Mojmap。
+  const fabDefault1121 = generateDatagen({
+    providerType: "recipe",
+    modId: "demo",
+    targetName: "x",
+    platform: "fabric",
+    version: "1.21.1",
+  });
+  // 1.21.1 是**单层**：Yarn 侧方法名是 generate(RecipeExporter)，两层 getRecipeGenerator 从 1.21.3 才有。
+  assert.ok(fabDefault1121.code?.includes("void generate(RecipeExporter"), fabDefault1121.code?.slice(0, 500));
+  assert.ok(!fabDefault1121.code?.includes("buildRecipes"), "1.21.1 默认不得是 Mojmap 方法名");
+  assert.ok(
+    fabDefault1121.warnings?.some((w) => /Yarn/.test(w)),
+    `1.21.1 默认走 Yarn 时必须说明：${JSON.stringify(fabDefault1121.warnings)}`,
+  );
+
+  // 1.21.11 是过渡档：不传 mapping 时默认取 Mojmap 侧（既有产物逐字不变）
   const mojDefault = generateDatagen({
     providerType: "recipe",
     modId: "demo",
@@ -5232,14 +5255,26 @@ public class ExampleMod { }
   );
   assert.ok(!/RecipeExporter|RegistryWrapper|offerTo\(/.test(fab261Recipe.code || ""), "26.1 两层 Mojmap 骨架禁止 Yarn 名");
 
+  // 1.20.4：Fabric 侧**没有 Mojmap** recipe 模板（既有设计，只覆盖 1.21.x）；显式要 mojmap 才是 null。
   const fabNoNet = generateDatagen({
     providerType: "recipe",
     modId: "demo",
     targetName: "x",
     platform: "fabric",
     version: "1.20.4",
+    mapping: "mojmap",
   });
   assert.equal(fabNoNet.code, null);
+
+  // 同一档不传 mapping 时走默认 Yarn（< 1.21.11 的默认口径），必须给出单层 Yarn 骨架。
+  const fab1204Default = generateDatagen({
+    providerType: "recipe",
+    modId: "demo",
+    targetName: "x",
+    platform: "fabric",
+    version: "1.20.4",
+  });
+  assert.ok(fab1204Default.code?.includes("void generate(RecipeExporter"), fab1204Default.code?.slice(0, 400));
 
   const fab215 = generateDatagen({
     providerType: "recipe",
