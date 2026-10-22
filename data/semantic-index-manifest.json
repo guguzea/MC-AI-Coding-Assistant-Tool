@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-10-21T02:12:56.367Z",
+  "built_at": "2026-10-22T15:39:26.564Z",
   "embedMode": "hybrid",
   "entries": [
     {
@@ -489,10 +489,10 @@
       "path": "liteloader_1.12.2/liteloader-docs/1.12.2/semantic/db.sqlite",
       "chunks": 160,
       "embedded": 130,
-      "built_at": "2026-09-21T03:58:45.046Z",
+      "built_at": "2026-10-22T15:39:25.768Z",
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
-      "sha256": "0cb4330af81edcae3f377468b0cb4ede2814c0da075bf196e25254668fa081cb"
+      "sha256": "8bd8693e9adda249a3f6b1bf005bdd4e2b9c8e8684a86fb2ed474736066de3d0"
     },
     {
       "platform": "liteloader",

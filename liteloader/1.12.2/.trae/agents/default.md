@@ -26,6 +26,8 @@ Java 8。映射：混合工程钉 `mappings = 'stable_39'`（社区 1.12.2 常�
 
 完整表：`knowledge/common/verified-api.md`。缺名则拒绝臆造。`query_api` 无 1.12 Parchment 完整树。`diagnose_gradle` 对 liteloader 插件走轻量模式。
 
+扩面参考（**不是**可输出名单）：`knowledge/common/api-surface.md` —— 由真构件 `liteloader-1.12.2-SNAPSHOT.jar`（md5 `23fa4a38…`，**本机 ForgeGradle deobf 解析件**，不等于上游发布件 `1420785e…`）经 `javap` 直读的 73 个公开类型与 249 条成员签名，用于「查这个名字在不在」。证据等级与本表同级（构件直读、非源码推断），但**未经人工逐字复核**，两处冲突以 `verified-api.md` 为准；其中名字仍不得直接当已核实结论输出。
+
 ### 本规则集的 IDE 加载优先级
 
 | AI 助手 | 读取路径 |

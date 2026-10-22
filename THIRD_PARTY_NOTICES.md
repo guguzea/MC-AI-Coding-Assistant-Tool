@@ -114,6 +114,19 @@ Follow each package’s license as published on npm（`@xenova/transformers` 为
 - **License / 边界**：上游**没有给出开放许可**，`All Rights Reserved` 不构成再分发授权。该树已从 git 索引移除（`.gitignore` 的 `ll-src/` 排除），工作区里的副本只作**本地对照**（类名/签名核对）；**不得**把它打进 GitHub Release、`data/` zip、npm 包或任何对外分发包，也**不得**把其中的源码复制进 scaffold / 生成器 / 文档正文。本登记只记录来源、版权与边界，**不授予任何权利，也不改变上游的 All Rights Reserved 状态**；若权利人要求移除，应删除工作区副本及依赖它的对照记录。
 - **与既有自述的关系**：`mcp-server/data/loader-api-summaries/1.12.2-liteloader.json` 的 `source` 字段写「许可证禁止把 loader 源码再分发进仓库」——该句描述的是上游条款；本节登记的本地副本是**已知的例外/风险项**，不是许可授权。二者不应被读成「已获许可」。
 - **可核对的派生事实**：`liteloader/1.12.2/knowledge/common/verified-api.md` 里的接口名/签名来自真构件 `liteloader-1.12.2-SNAPSHOT.jar` 的 `javap`；源码树只作交叉对照，不是可分发正文。
+- **派生的签名面（2026-10-22 登记，三档）**：`liteloader/<1.12.2|1.10.2|1.8.9>/knowledge/common/api-surface.md` 是**入库**的签名面，由 `mcp-server/scripts/extract-liteloader-api-surface.mjs` 生成。**主路线是构件 `javap` 直读**（不是源码树推断），源码树只作 1.12.2 的交叉对照。三档的构件与核验值：
+
+  | 档 | 构件 | md5 | 与登记值对钉 | vanilla 类型 | 产物口径 |
+  |---|---|---|---|---|---|
+  | 1.12.2 | `liteloader-1.12.2-SNAPSHOT.jar`（本机 ForgeGradle **deobf 解析件**） | `23fa4a38…` | ❌ 不等于上游发布件 `1420785e…`（deobf 重打包所致） | MCP 可读 | 73 类型 / 249 签名 |
+  | 1.10.2 | `liteloader-1.10.2.jar`（`F:\MC_GAME\_oracle-jars\` 本机留档，亦可自 `dl.liteloader.com` 取回） | `8a7c21f3…` | ✅ 与 `versions.json` 的 RELEASE 记录逐字一致 | **混淆名**（`bcx`/`ey`/…） | 72 类型 / 230 签名 |
+  | 1.8.9 | `liteloader-1.8.9-20160414.153538-10.jar`（同上留档） | `12cbdc8c…` | ✅ 与本档 `verified-api.md` 登记值一致 | MCP 可读 | 70 类型 / 209 签名 |
+
+  它与上文「不得把源码复制进 scaffold / 生成器 / 文档正文」是同一件事的两个面，边界如下：
+  - **入库的**：类型名、成员签名（修饰符 / 返回类型 / 名 / 参数类型 / `throws`）、枚举常量名 —— 即「这个名字与这个形状存在」的事实，不含表达。构件路线**拿不到**形参名与注解 `default` 值（class 文件不带 `MethodParameters`、`javap` 不带 `-v`），这是它相对源码树的唯一信息损失，产物头部已写明。
+  - **不入库的**（脚本内写死，`--selftest` 4 例守着「注释 / 初始化值 / 方法体不得泄漏」）：注释与 javadoc 散文、方法体与 `default` 实现、字段与常量的初始化值、任何实现逻辑、以及**构件与源码树本身**。
+  - **证据等级**：构件路线与 `verified-api.md` 同源同级，但**未经人工逐字复核**；三份产物头部都写明「不得当作可输出给用户的已核实名单」，两处冲突以 `verified-api.md` 为准。1.10.2 的 vanilla 类型名是混淆名，该档只证「类名 / 方法名 / 元数」。
+  - **风险状态**：签名集合的版权地位在各法域仍有争议（**不存在**「签名不受版权保护」的定论）。本节登记的是**已知并接受的最小化派生**，**不构成再分发授权**，也不改变上游 ARR 状态；若权利人要求移除，删这三份 md 与生成器脚本即可，不动其它数据面。
 - **⚠️ 树内含第三方服务凭据（2026-10-21 登记）**：`ll-src/com/mumfrey/liteloader/util/net/PastebinUpload.java:36` 有硬编码的 `PASTEBIN_API_KEY`，`ll-src/com/mumfrey/liteloader/util/net/LiteLoaderLogUpload.java` 同族另有一处。性质判定：① 属**上游源码原样内容**，不是本项目引入的凭据；② 该 dev key 随上游公开源码发布，上游自身未作秘密管理；③ `ll-src/` **已从 git 索引移除**（本节上文），因此该串**不随本仓库分发**。处置：**不修改上游源码**（改了就不再是与上游可对照的副本）、**不复制进任何生成物或文档**、**不实际使用**；若日后需要启用 LiteLoader 内建的日志上传能力，须由使用者自备自己的 key。本节登记即为此项的记录位。
 
 ## Fabric documentation and Wiki extracts

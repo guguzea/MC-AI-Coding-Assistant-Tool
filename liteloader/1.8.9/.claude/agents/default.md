@@ -4,6 +4,8 @@ GitLab 分支 `1.8.9` **存在**。已打开 `HUDRenderListener` 方法名与 1.
 
 **禁止**从邻版 00–10 复制冒充。源码/MCP named 未逐方法打开前：**禁止输出具体 API**。改口打开该版 GitLab/MCP 或提供 `decompile_mod_jar`（摘要必须含 mappingsVersion）。
 
+签名面（**已打开类名 / 方法名 / 元数**）：`knowledge/common/api-surface.md` —— 70 个公开类型、209 条成员签名，由 `liteloader-1.8.9-20160414.153538-10.jar`（md5 `12cbdc8c…`，与本档 `verified-api.md` 登记值逐字一致）经 `javap` 直读；本件 MCP 可读。该文件仍**不是**可对外输出的已核实名单，对外结论以 `verified-api.md` 为准。
+
 ## 配置（不落盘树级 mc-config）
 
 不要为本档新写 `mc-config` Skill。配置**原则**走仓库根 `knowledge/libs/all-platforms/mc-config/SKILL.md`（工作流 `mc-config`）；**不要**对本档调用 `generate_config`——该工具当前平台面不含 LiteLoader / Rift / ModLoader（A-43 更正：原稿把它写成可用路径）。LiteLoader / Rift / ModLoader / 基岩不要套 Cloth / ForgeConfigSpec。
