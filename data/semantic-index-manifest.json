@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-10-22T16:19:10.916Z",
+  "built_at": "2026-10-23T08:15:57.171Z",
   "embedMode": "hybrid",
   "entries": [
     {
@@ -649,6 +649,66 @@
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
       "sha256": "6494a0378c1bdbbcd7ef232065f1a292728ac38297c47a4d9e56defe4c74dd35"
+    },
+    {
+      "platform": "paper-api",
+      "version": "1.12.2",
+      "source": "paper-javadoc",
+      "path": "paper-api_1.12.2/paper-javadoc/1.12.2/semantic/db.sqlite",
+      "chunks": 877,
+      "embedded": 0,
+      "built_at": "2026-10-23T08:08:23.068Z",
+      "model": "Xenova/all-MiniLM-L6-v2",
+      "schemaVersion": "1",
+      "sha256": "441c8d65d21f4592893d0b34693c7a93c70b8a4db8c70ddccc4a26bb88ee9687"
+    },
+    {
+      "platform": "paper-api",
+      "version": "1.16.5",
+      "source": "paper-javadoc",
+      "path": "paper-api_1.16.5/paper-javadoc/1.16.5/semantic/db.sqlite",
+      "chunks": 1746,
+      "embedded": 1365,
+      "built_at": "2026-10-23T08:09:06.926Z",
+      "model": "Xenova/all-MiniLM-L6-v2",
+      "schemaVersion": "1",
+      "sha256": "12b0d3d2ce3eda4e2f8f1092169915e26bef553ad2955aa84a286a4a23bad8b5"
+    },
+    {
+      "platform": "paper-api",
+      "version": "1.20.1",
+      "source": "paper-javadoc",
+      "path": "paper-api_1.20.1/paper-javadoc/1.20.1/semantic/db.sqlite",
+      "chunks": 2121,
+      "embedded": 1661,
+      "built_at": "2026-10-23T08:13:36.588Z",
+      "model": "Xenova/all-MiniLM-L6-v2",
+      "schemaVersion": "1",
+      "sha256": "440ab6309479f6c1684ce7e088f7a99e8908ba8667379d4e017f2d93c460aacd"
+    },
+    {
+      "platform": "paper-api",
+      "version": "1.21.1",
+      "source": "paper-javadoc",
+      "path": "paper-api_1.21.1/paper-javadoc/1.21.1/semantic/db.sqlite",
+      "chunks": 2737,
+      "embedded": 2169,
+      "built_at": "2026-10-23T08:14:44.884Z",
+      "model": "Xenova/all-MiniLM-L6-v2",
+      "schemaVersion": "1",
+      "sha256": "bc2debea5a0054182bdae0964e432b0ba755c955da077ed2ba7ab0cfe690d447"
+    },
+    {
+      "platform": "paper-api",
+      "version": "1.21.4",
+      "source": "paper-javadoc",
+      "path": "paper-api_1.21.4/paper-javadoc/1.21.4/semantic/db.sqlite",
+      "chunks": 3111,
+      "embedded": 2471,
+      "built_at": "2026-10-23T08:15:57.037Z",
+      "model": "Xenova/all-MiniLM-L6-v2",
+      "schemaVersion": "1",
+      "sha256": "e1eb7708ae6287707dab8cd8c80387b8617c898275bfca319cf3c8295a24dc3e"
     },
     {
       "platform": "paper-api",

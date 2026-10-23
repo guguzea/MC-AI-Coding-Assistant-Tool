@@ -1,0 +1,98 @@
+---
+title: "org.bukkit.Statistic"
+package: "org.bukkit"
+source: https://jd.papermc.io/paper/1.16.5/org/bukkit/Statistic.html
+sourceType: javadoc
+fetchedWith: fetch-spigot-javadoc.mjs@1
+fetchedAt: 2026-10-23T08:04:41.693Z
+asOfVersion: "1.16.5-R0.1-SNAPSHOT"
+---
+
+- `public static final Statistic DAMAGE_DEALT`
+- `public static final Statistic DAMAGE_TAKEN`
+- `public static final Statistic DEATHS`
+- `public static final Statistic MOB_KILLS`
+- `public static final Statistic PLAYER_KILLS`
+- `public static final Statistic FISH_CAUGHT`
+- `public static final Statistic ANIMALS_BRED`
+- `public static final Statistic LEAVE_GAME`
+- `public static final Statistic JUMP`
+- `public static final Statistic DROP_COUNT`
+- `public static final Statistic DROP`
+- `public static final Statistic PICKUP`
+- `public static final Statistic PLAY_ONE_MINUTE`
+- `public static final Statistic WALK_ONE_CM`
+- `public static final Statistic WALK_ON_WATER_ONE_CM`
+- `public static final Statistic FALL_ONE_CM`
+- `public static final Statistic SNEAK_TIME`
+- `public static final Statistic CLIMB_ONE_CM`
+- `public static final Statistic FLY_ONE_CM`
+- `public static final Statistic WALK_UNDER_WATER_ONE_CM`
+- `public static final Statistic MINECART_ONE_CM`
+- `public static final Statistic BOAT_ONE_CM`
+- `public static final Statistic PIG_ONE_CM`
+- `public static final Statistic HORSE_ONE_CM`
+- `public static final Statistic SPRINT_ONE_CM`
+- `public static final Statistic CROUCH_ONE_CM`
+- `public static final Statistic AVIATE_ONE_CM`
+- `public static final Statistic MINE_BLOCK`
+- `public static final Statistic USE_ITEM`
+- `public static final Statistic BREAK_ITEM`
+- `public static final Statistic CRAFT_ITEM`
+- `public static final Statistic KILL_ENTITY`
+- `public static final Statistic ENTITY_KILLED_BY`
+- `public static final Statistic TIME_SINCE_DEATH`
+- `public static final Statistic TALKED_TO_VILLAGER`
+- `public static final Statistic TRADED_WITH_VILLAGER`
+- `public static final Statistic CAKE_SLICES_EATEN`
+- `public static final Statistic CAULDRON_FILLED`
+- `public static final Statistic CAULDRON_USED`
+- `public static final Statistic ARMOR_CLEANED`
+- `public static final Statistic BANNER_CLEANED`
+- `public static final Statistic BREWINGSTAND_INTERACTION`
+- `public static final Statistic BEACON_INTERACTION`
+- `public static final Statistic DROPPER_INSPECTED`
+- `public static final Statistic HOPPER_INSPECTED`
+- `public static final Statistic DISPENSER_INSPECTED`
+- `public static final Statistic NOTEBLOCK_PLAYED`
+- `public static final Statistic NOTEBLOCK_TUNED`
+- `public static final Statistic FLOWER_POTTED`
+- `public static final Statistic TRAPPED_CHEST_TRIGGERED`
+- `public static final Statistic ENDERCHEST_OPENED`
+- `public static final Statistic ITEM_ENCHANTED`
+- `public static final Statistic RECORD_PLAYED`
+- `public static final Statistic FURNACE_INTERACTION`
+- `public static final Statistic CRAFTING_TABLE_INTERACTION`
+- `public static final Statistic CHEST_OPENED`
+- `public static final Statistic SLEEP_IN_BED`
+- `public static final Statistic SHULKER_BOX_OPENED`
+- `public static final Statistic TIME_SINCE_REST`
+- `public static final Statistic SWIM_ONE_CM`
+- `public static final Statistic DAMAGE_DEALT_ABSORBED`
+- `public static final Statistic DAMAGE_DEALT_RESISTED`
+- `public static final Statistic DAMAGE_BLOCKED_BY_SHIELD`
+- `public static final Statistic DAMAGE_ABSORBED`
+- `public static final Statistic DAMAGE_RESISTED`
+- `public static final Statistic CLEAN_SHULKER_BOX`
+- `public static final Statistic OPEN_BARREL`
+- `public static final Statistic INTERACT_WITH_BLAST_FURNACE`
+- `public static final Statistic INTERACT_WITH_SMOKER`
+- `public static final Statistic INTERACT_WITH_LECTERN`
+- `public static final Statistic INTERACT_WITH_CAMPFIRE`
+- `public static final Statistic INTERACT_WITH_CARTOGRAPHY_TABLE`
+- `public static final Statistic INTERACT_WITH_LOOM`
+- `public static final Statistic INTERACT_WITH_STONECUTTER`
+- `public static final Statistic BELL_RING`
+- `public static final Statistic RAID_TRIGGER`
+- `public static final Statistic RAID_WIN`
+- `public static final Statistic INTERACT_WITH_ANVIL`
+- `public static final Statistic INTERACT_WITH_GRINDSTONE`
+- `public static final Statistic TARGET_HIT`
+- `public static final Statistic INTERACT_WITH_SMITHING_TABLE`
+- `public static final Statistic STRIDER_ONE_CM`
+- `public static Statistic[] values()`
+- `public static Statistic valueOf&#8203;(String name)`
+- `@NotNull public @NotNull Statistic.Type getType()`
+- `public boolean isSubstatistic()`
+- `public boolean isBlock()`
+- `@NotNull public @NotNull NamespacedKey getKey()`

@@ -1,0 +1,265 @@
+---
+title: "org.bukkit.entity.Player"
+package: "org.bukkit.entity"
+source: https://jd.papermc.io/paper/1.20.1/org/bukkit/entity/Player.html
+sourceType: javadoc
+fetchedWith: fetch-spigot-javadoc.mjs@1
+fetchedAt: 2026-10-23T07:58:42.132Z
+asOfVersion: "1.20.1-R0.1-SNAPSHOT"
+---
+
+- `default @NotNull Identity identity()`
+- `@NotNull @UnmodifiableView @NotNull Iterable<? extends BossBar> activeBossBars()`
+- `@NotNull Component displayName()`
+- `void displayName(@Nullable Component displayName)`
+- `@NotNull @NotNull String getName()`
+- `@Deprecated @NotNull @NotNull String getDisplayName()`
+- `@Deprecated void setDisplayName(@Nullable @Nullable String name)`
+- `void playerListName(@Nullable Component name)`
+- `@NotNull Component playerListName()`
+- `@Nullable Component playerListHeader()`
+- `@Nullable Component playerListFooter()`
+- `@NotNull @Deprecated @NotNull String getPlayerListName()`
+- `@Deprecated void setPlayerListName(@Nullable @Nullable String name)`
+- `@Deprecated @Nullable @Nullable String getPlayerListHeader()`
+- `@Deprecated @Nullable @Nullable String getPlayerListFooter()`
+- `@Deprecated void setPlayerListHeader(@Nullable @Nullable String header)`
+- `@Deprecated void setPlayerListFooter(@Nullable @Nullable String footer)`
+- `@Deprecated void setPlayerListHeaderFooter(@Nullable @Nullable String header, @Nullable @Nullable String footer)`
+- `void setCompassTarget(@NotNull @NotNull Location loc)`
+- `@NotNull @NotNull Location getCompassTarget()`
+- `@Nullable @Nullable InetSocketAddress getAddress()`
+- `void sendRawMessage(@NotNull @NotNull String message)`
+- `@Deprecated void kickPlayer(@Nullable @Nullable String message)`
+- `void kick()`
+- `void kick(@Nullable Component message)`
+- `void kick(@Nullable Component message, @NotNull PlayerKickEvent.Cause cause)`
+- `@Nullable <E extends BanEntry<? super PlayerProfile>> E ban(@Nullable @Nullable String reason, @Nullable @Nullable Date expires, @Nullable @Nullable String source, boolean kickPlayer)`
+- `@Nullable <E extends BanEntry<? super PlayerProfile>> E ban(@Nullable @Nullable String reason, @Nullable @Nullable Instant expires, @Nullable @Nullable String source, boolean kickPlayer)`
+- `@Nullable <E extends BanEntry<? super PlayerProfile>> E ban(@Nullable @Nullable String reason, @Nullable @Nullable Duration duration, @Nullable @Nullable String source, boolean kickPlayer)`
+- `@Nullable @Nullable BanEntry<InetAddress> banIp(@Nullable @Nullable String reason, @Nullable @Nullable Date expires, @Nullable @Nullable String source, boolean kickPlayer)`
+- `@Nullable @Nullable BanEntry<InetAddress> banIp(@Nullable @Nullable String reason, @Nullable @Nullable Instant expires, @Nullable @Nullable String source, boolean kickPlayer)`
+- `@Nullable @Nullable BanEntry<InetAddress> banIp(@Nullable @Nullable String reason, @Nullable @Nullable Duration duration, @Nullable @Nullable String source, boolean kickPlayer)`
+- `void chat(@NotNull @NotNull String msg)`
+- `boolean performCommand(@NotNull @NotNull String command)`
+- `@Deprecated boolean isOnGround()`
+- `boolean isSneaking()`
+- `void setSneaking(boolean sneak)`
+- `boolean isSprinting()`
+- `void setSprinting(boolean sprinting)`
+- `void saveData()`
+- `void loadData()`
+- `void setSleepingIgnored(boolean isSleeping)`
+- `boolean isSleepingIgnored()`
+- `@Nullable @Nullable Location getBedSpawnLocation()`
+- `void setBedSpawnLocation(@Nullable @Nullable Location location)`
+- `void setBedSpawnLocation(@Nullable @Nullable Location location, boolean force)`
+- `@Deprecated void playNote(@NotNull @NotNull Location loc, byte instrument, byte note)`
+- `void playNote(@NotNull @NotNull Location loc, @NotNull @NotNull Instrument instrument, @NotNull @NotNull Note note)`
+- `void playSound(@NotNull @NotNull Location location, @NotNull @NotNull Sound sound, float volume, float pitch)`
+- `void playSound(@NotNull @NotNull Location location, @NotNull @NotNull String sound, float volume, float pitch)`
+- `void playSound(@NotNull @NotNull Location location, @NotNull @NotNull Sound sound, @NotNull @NotNull SoundCategory category, float volume, float pitch)`
+- `void playSound(@NotNull @NotNull Location location, @NotNull @NotNull String sound, @NotNull @NotNull SoundCategory category, float volume, float pitch)`
+- `void playSound(@NotNull @NotNull Entity entity, @NotNull @NotNull Sound sound, float volume, float pitch)`
+- `void playSound(@NotNull @NotNull Entity entity, @NotNull @NotNull String sound, float volume, float pitch)`
+- `void playSound(@NotNull @NotNull Entity entity, @NotNull @NotNull Sound sound, @NotNull @NotNull SoundCategory category, float volume, float pitch)`
+- `void playSound(@NotNull @NotNull Entity entity, @NotNull @NotNull String sound, @NotNull @NotNull SoundCategory category, float volume, float pitch)`
+- `void stopSound(@NotNull @NotNull Sound sound)`
+- `void stopSound(@NotNull @NotNull String sound)`
+- `void stopSound(@NotNull @NotNull Sound sound, @Nullable @Nullable SoundCategory category)`
+- `void stopSound(@NotNull @NotNull String sound, @Nullable @Nullable SoundCategory category)`
+- `void stopSound(@NotNull @NotNull SoundCategory category)`
+- `void stopAllSounds()`
+- `@Deprecated void playEffect(@NotNull @NotNull Location loc, @NotNull @NotNull Effect effect, int data)`
+- `<T> void playEffect(@NotNull @NotNull Location loc, @NotNull @NotNull Effect effect, @Nullable T data)`
+- `boolean breakBlock(@NotNull @NotNull Block block)`
+- `@Deprecated void sendBlockChange(@NotNull @NotNull Location loc, @NotNull @NotNull Material material, byte data)`
+- `void sendBlockChange(@NotNull @NotNull Location loc, @NotNull @NotNull BlockData block)`
+- `void sendBlockChanges(@NotNull @NotNull Collection<BlockState> blocks)`
+- `@Deprecated void sendBlockChanges(@NotNull @NotNull Collection<BlockState> blocks, boolean suppressLightUpdates)`
+- `void sendBlockDamage(@NotNull @NotNull Location loc, float progress)`
+- `void sendMultiBlockChange(@NotNull @NotNull Map<? extends Position,BlockData> blockChanges)`
+- `@Deprecated default void sendMultiBlockChange(@NotNull @NotNull Map<? extends Position,BlockData> blockChanges, boolean suppressLightUpdates)`
+- `void sendBlockDamage(@NotNull @NotNull Location loc, float progress, @NotNull @NotNull Entity source)`
+- `void sendBlockDamage(@NotNull @NotNull Location loc, float progress, int sourceId)`
+- `void sendEquipmentChange(@NotNull @NotNull LivingEntity entity, @NotNull @NotNull EquipmentSlot slot, @Nullable @Nullable ItemStack item)`
+- `void sendEquipmentChange(@NotNull @NotNull LivingEntity entity, @NotNull @NotNull Map<EquipmentSlot,ItemStack> items)`
+- `@Deprecated default void sendSignChange(@NotNull @NotNull Location loc, @Nullable List<? extends Component> lines) throws IllegalArgumentException`
+- `@Deprecated default void sendSignChange(@NotNull @NotNull Location loc, @Nullable List<? extends Component> lines, @NotNull @NotNull DyeColor dyeColor) throws IllegalArgumentException`
+- `@Deprecated default void sendSignChange(@NotNull @NotNull Location loc, @Nullable List<? extends Component> lines, boolean hasGlowingText) throws IllegalArgumentException`
+- `@Deprecated void sendSignChange(@NotNull @NotNull Location loc, @Nullable List<? extends Component> lines, @NotNull @NotNull DyeColor dyeColor, boolean hasGlowingText) throws IllegalArgumentException`
+- `@Deprecated void sendSignChange(@NotNull @NotNull Location loc, @Nullable @Nullable String[] lines) throws IllegalArgumentException`
+- `@Deprecated void sendSignChange(@NotNull @NotNull Location loc, @Nullable @Nullable String[] lines, @NotNull @NotNull DyeColor dyeColor) throws IllegalArgumentException`
+- `@Deprecated void sendSignChange(@NotNull @NotNull Location loc, @Nullable @Nullable String[] lines, @NotNull @NotNull DyeColor dyeColor, boolean hasGlowingText) throws IllegalArgumentException`
+- `@Experimental void sendBlockUpdate(@NotNull @NotNull Location loc, @NotNull @NotNull TileState tileState) throws IllegalArgumentException`
+- `void sendMap(@NotNull @NotNull MapView map)`
+- `void showWinScreen()`
+- `boolean hasSeenWinScreen()`
+- `void setHasSeenWinScreen(boolean hasSeenWinScreen)`
+- `@Nullable default BanEntry banPlayerFull(@Nullable @Nullable String reason)`
+- `@Nullable default BanEntry banPlayerFull(@Nullable @Nullable String reason, @Nullable @Nullable String source)`
+- `@Nullable default BanEntry banPlayerFull(@Nullable @Nullable String reason, @Nullable Date expires)`
+- `@Nullable default BanEntry banPlayerFull(@Nullable @Nullable String reason, @Nullable Date expires, @Nullable @Nullable String source)`
+- `@Nullable default BanEntry banPlayerIP(@Nullable @Nullable String reason, boolean kickPlayer)`
+- `@Nullable default BanEntry banPlayerIP(@Nullable @Nullable String reason, @Nullable @Nullable String source, boolean kickPlayer)`
+- `@Nullable default BanEntry banPlayerIP(@Nullable @Nullable String reason, @Nullable Date expires, boolean kickPlayer)`
+- `@Nullable default BanEntry banPlayerIP(@Nullable @Nullable String reason)`
+- `@Nullable default BanEntry banPlayerIP(@Nullable @Nullable String reason, @Nullable @Nullable String source)`
+- `@Nullable default BanEntry banPlayerIP(@Nullable @Nullable String reason, @Nullable Date expires)`
+- `@Nullable default BanEntry banPlayerIP(@Nullable @Nullable String reason, @Nullable Date expires, @Nullable @Nullable String source)`
+- `@Nullable default BanEntry banPlayerIP(@Nullable @Nullable String reason, @Nullable Date expires, @Nullable @Nullable String source, boolean kickPlayer)`
+- `@Deprecated void sendActionBar(@NotNull @NotNull String message)`
+- `@Deprecated void sendActionBar(char alternateChar, @NotNull @NotNull String message)`
+- `@Deprecated void sendActionBar(@NotNull @NotNull net.md_5.bungee.api.chat.BaseComponent... message)`
+- `@Deprecated default void sendMessage(@NotNull net.md_5.bungee.api.chat.BaseComponent component)`
+- `@Deprecated default void sendMessage(@NotNull @NotNull net.md_5.bungee.api.chat.BaseComponent... components)`
+- `@Deprecated default void sendMessage(net.md_5.bungee.api.ChatMessageType position, net.md_5.bungee.api.chat.BaseComponent... components)`
+- `@Deprecated void setPlayerListHeaderFooter(@Nullable @Nullable net.md_5.bungee.api.chat.BaseComponent[] header, @Nullable @Nullable net.md_5.bungee.api.chat.BaseComponent[] footer)`
+- `@Deprecated void setPlayerListHeaderFooter(@Nullable net.md_5.bungee.api.chat.BaseComponent header, @Nullable net.md_5.bungee.api.chat.BaseComponent footer)`
+- `@Deprecated void setTitleTimes(int fadeInTicks, int stayTicks, int fadeOutTicks)`
+- `@Deprecated void setSubtitle(net.md_5.bungee.api.chat.BaseComponent[] subtitle)`
+- `@Deprecated void setSubtitle(net.md_5.bungee.api.chat.BaseComponent subtitle)`
+- `@Deprecated void showTitle(@Nullable @Nullable net.md_5.bungee.api.chat.BaseComponent[] title)`
+- `@Deprecated void showTitle(@Nullable net.md_5.bungee.api.chat.BaseComponent title)`
+- `@Deprecated void showTitle(@Nullable @Nullable net.md_5.bungee.api.chat.BaseComponent[] title, @Nullable @Nullable net.md_5.bungee.api.chat.BaseComponent[] subtitle, int fadeInTicks, int stayTicks, int fadeOutTicks)`
+- `@Deprecated void showTitle(@Nullable net.md_5.bungee.api.chat.BaseComponent title, @Nullable net.md_5.bungee.api.chat.BaseComponent subtitle, int fadeInTicks, int stayTicks, int fadeOutTicks)`
+- `@Deprecated void sendTitle(@NotNull Title title)`
+- `@Deprecated void updateTitle(@NotNull Title title)`
+- `@Deprecated void hideTitle()`
+- `void sendHurtAnimation(float yaw)`
+- `void addCustomChatCompletions(@NotNull @NotNull Collection<String> completions)`
+- `void removeCustomChatCompletions(@NotNull @NotNull Collection<String> completions)`
+- `void setCustomChatCompletions(@NotNull @NotNull Collection<String> completions)`
+- `@Internal void updateInventory()`
+- `@Nullable @Nullable GameMode getPreviousGameMode()`
+- `void setPlayerTime(long time, boolean relative)`
+- `long getPlayerTime()`
+- `long getPlayerTimeOffset()`
+- `boolean isPlayerTimeRelative()`
+- `void resetPlayerTime()`
+- `void setPlayerWeather(@NotNull @NotNull WeatherType type)`
+- `@Nullable @Nullable WeatherType getPlayerWeather()`
+- `void resetPlayerWeather()`
+- `default void giveExp(int amount)`
+- `int getExpCooldown()`
+- `void setExpCooldown(int ticks)`
+- `void giveExp(int amount, boolean applyMending)`
+- `int applyMending(int amount)`
+- `void giveExpLevels(int amount)`
+- `float getExp()`
+- `void setExp(float exp)`
+- `int getLevel()`
+- `void setLevel(int level)`
+- `int getTotalExperience()`
+- `void setTotalExperience(int exp)`
+- `void sendExperienceChange(float progress)`
+- `void sendExperienceChange(float progress, int level)`
+- `boolean getAllowFlight()`
+- `void setAllowFlight(boolean flight)`
+- `void setFlyingFallDamage(@NotNull TriState flyingFallDamage)`
+- `@NotNull TriState hasFlyingFallDamage()`
+- `@Deprecated void hidePlayer(@NotNull @NotNull Player player)`
+- `void hidePlayer(@NotNull @NotNull Plugin plugin, @NotNull @NotNull Player player)`
+- `@Deprecated void showPlayer(@NotNull @NotNull Player player)`
+- `void showPlayer(@NotNull @NotNull Plugin plugin, @NotNull @NotNull Player player)`
+- `boolean canSee(@NotNull @NotNull Player player)`
+- `@Experimental void hideEntity(@NotNull @NotNull Plugin plugin, @NotNull @NotNull Entity entity)`
+- `@Experimental void showEntity(@NotNull @NotNull Plugin plugin, @NotNull @NotNull Entity entity)`
+- `@Experimental boolean canSee(@NotNull @NotNull Entity entity)`
+- `boolean isListed(@NotNull @NotNull Player other)`
+- `boolean unlistPlayer(@NotNull @NotNull Player other)`
+- `boolean listPlayer(@NotNull @NotNull Player other)`
+- `boolean isFlying()`
+- `void setFlying(boolean value)`
+- `void setFlySpeed(float value) throws IllegalArgumentException`
+- `void setWalkSpeed(float value) throws IllegalArgumentException`
+- `float getFlySpeed()`
+- `float getWalkSpeed()`
+- `@Deprecated void setTexturePack(@NotNull @NotNull String url)`
+- `@Deprecated void setResourcePack(@NotNull @NotNull String url)`
+- `@Deprecated void setResourcePack(@NotNull @NotNull String url, @Nullable @org.jetbrains.annotations.Nullable byte[] hash)`
+- `@Deprecated void setResourcePack(@NotNull @NotNull String url, @Nullable @org.jetbrains.annotations.Nullable byte[] hash, @Nullable @Nullable String prompt)`
+- `default void setResourcePack(@NotNull @NotNull String url, byte @Nullable [] hash, @Nullable Component prompt)`
+- `void setResourcePack(@NotNull @NotNull String url, @Nullable @org.jetbrains.annotations.Nullable byte[] hash, boolean force)`
+- `@Deprecated void setResourcePack(@NotNull @NotNull String url, @Nullable @org.jetbrains.annotations.Nullable byte[] hash, @Nullable @Nullable String prompt, boolean force)`
+- `void setResourcePack(@NotNull @NotNull String url, byte @Nullable [] hash, @Nullable Component prompt, boolean force)`
+- `@NotNull @NotNull Scoreboard getScoreboard()`
+- `void setScoreboard(@NotNull @NotNull Scoreboard scoreboard) throws IllegalArgumentException, IllegalStateException`
+- `@Nullable @Nullable WorldBorder getWorldBorder()`
+- `void setWorldBorder(@Nullable @Nullable WorldBorder border)`
+- `void sendHealthUpdate(double health, int foodLevel, float saturation)`
+- `void sendHealthUpdate()`
+- `boolean isHealthScaled()`
+- `void setHealthScaled(boolean scale)`
+- `void setHealthScale(double scale) throws IllegalArgumentException`
+- `double getHealthScale()`
+- `@Nullable @Nullable Entity getSpectatorTarget()`
+- `void setSpectatorTarget(@Nullable @Nullable Entity entity)`
+- `@Deprecated void sendTitle(@Nullable @Nullable String title, @Nullable @Nullable String subtitle)`
+- `@Deprecated void sendTitle(@Nullable @Nullable String title, @Nullable @Nullable String subtitle, int fadeIn, int stay, int fadeOut)`
+- `void resetTitle()`
+- `void spawnParticle(@NotNull @NotNull Particle particle, @NotNull @NotNull Location location, int count)`
+- `void spawnParticle(@NotNull @NotNull Particle particle, double x, double y, double z, int count)`
+- `<T> void spawnParticle(@NotNull @NotNull Particle particle, @NotNull @NotNull Location location, int count, @Nullable T data)`
+- `<T> void spawnParticle(@NotNull @NotNull Particle particle, double x, double y, double z, int count, @Nullable T data)`
+- `void spawnParticle(@NotNull @NotNull Particle particle, @NotNull @NotNull Location location, int count, double offsetX, double offsetY, double offsetZ)`
+- `void spawnParticle(@NotNull @NotNull Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ)`
+- `<T> void spawnParticle(@NotNull @NotNull Particle particle, @NotNull @NotNull Location location, int count, double offsetX, double offsetY, double offsetZ, @Nullable T data)`
+- `<T> void spawnParticle(@NotNull @NotNull Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ, @Nullable T data)`
+- `void spawnParticle(@NotNull @NotNull Particle particle, @NotNull @NotNull Location location, int count, double offsetX, double offsetY, double offsetZ, double extra)`
+- `void spawnParticle(@NotNull @NotNull Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ, double extra)`
+- `<T> void spawnParticle(@NotNull @NotNull Particle particle, @NotNull @NotNull Location location, int count, double offsetX, double offsetY, double offsetZ, double extra, @Nullable T data)`
+- `<T> void spawnParticle(@NotNull @NotNull Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ, double extra, @Nullable T data)`
+- `@NotNull @NotNull AdvancementProgress getAdvancementProgress(@NotNull @NotNull Advancement advancement)`
+- `int getClientViewDistance()`
+- `@NotNull Locale locale()`
+- `int getPing()`
+- `@NotNull @Deprecated @NotNull String getLocale()`
+- `boolean getAffectsSpawning()`
+- `void setAffectsSpawning(boolean affects)`
+- `int getViewDistance()`
+- `void setViewDistance(int viewDistance)`
+- `int getSimulationDistance()`
+- `void setSimulationDistance(int simulationDistance)`
+- `@Deprecated int getNoTickViewDistance()`
+- `@Deprecated void setNoTickViewDistance(int viewDistance)`
+- `int getSendViewDistance()`
+- `void setSendViewDistance(int viewDistance)`
+- `void updateCommands()`
+- `void openBook(@NotNull @NotNull ItemStack book)`
+- `@Deprecated void openSign(@NotNull @NotNull Sign sign)`
+- `void openSign(@NotNull @NotNull Sign sign, @NotNull @NotNull Side side)`
+- `void showDemoScreen()`
+- `boolean isAllowingServerListings()`
+- `@NotNull default HoverEvent<HoverEvent.ShowEntity> asHoverEvent(@NotNull UnaryOperator<HoverEvent.ShowEntity> op)`
+- `void setResourcePack(@NotNull @NotNull String url, @NotNull @NotNull String hash)`
+- `void setResourcePack(@NotNull @NotNull String url, @NotNull @NotNull String hash, boolean required)`
+- `void setResourcePack(@NotNull @NotNull String url, @NotNull @NotNull String hash, boolean required, @Nullable Component resourcePackPrompt)`
+- `@Nullable PlayerResourcePackStatusEvent.Status getResourcePackStatus()`
+- `@Nullable @Deprecated @Nullable String getResourcePackHash()`
+- `boolean hasResourcePack()`
+- `@NotNull PlayerProfile getPlayerProfile()`
+- `void setPlayerProfile(@NotNull PlayerProfile profile)`
+- `float getCooldownPeriod()`
+- `float getCooledAttackStrength(float adjustTicks)`
+- `void resetCooldown()`
+- `@NotNull <T> T getClientOption(@NotNull ClientOption<T> option)`
+- `@Nullable @Nullable Firework boostElytra(@NotNull @NotNull ItemStack firework)`
+- `void sendOpLevel(byte level)`
+- `@Deprecated(since="1.20.1") void addAdditionalChatCompletions(@NotNull Collection<String> completions)`
+- `@Deprecated(since="1.20.1") void removeAdditionalChatCompletions(@NotNull Collection<String> completions)`
+- `@Nullable @Nullable String getClientBrandName()`
+- `@Experimental void setRotation(float yaw, float pitch)`
+- `@Experimental void lookAt(double x, double y, double z, @NotNull LookAnchor playerAnchor)`
+- `@Experimental default void lookAt(@NotNull Position position, @NotNull LookAnchor playerAnchor)`
+- `@Experimental void lookAt(@NotNull Entity entity, @NotNull LookAnchor playerAnchor, @NotNull LookAnchor entityAnchor)`
+- `default void showElderGuardian()`
+- `void showElderGuardian(boolean silent)`
+- `int getWardenWarningCooldown()`
+- `void setWardenWarningCooldown(int cooldown)`
+- `int getWardenTimeSinceLastWarning()`
+- `void setWardenTimeSinceLastWarning(int time)`
+- `int getWardenWarningLevel()`
+- `void setWardenWarningLevel(int warningLevel)`
+- `void increaseWardenWarningLevel()`
+- `@NotNull @NotNull Player.Spigot spigot()`

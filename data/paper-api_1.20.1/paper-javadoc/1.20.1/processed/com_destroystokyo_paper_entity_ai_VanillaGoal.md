@@ -1,0 +1,279 @@
+---
+title: "com.destroystokyo.paper.entity.ai.VanillaGoal"
+package: "com.destroystokyo.paper.entity.ai"
+source: https://jd.papermc.io/paper/1.20.1/com/destroystokyo/paper/entity/ai/VanillaGoal.html
+sourceType: javadoc
+fetchedWith: fetch-spigot-javadoc.mjs@1
+fetchedAt: 2026-10-23T07:58:42.132Z
+asOfVersion: "1.20.1-R0.1-SNAPSHOT"
+---
+
+- `static final GoalKey<Creature> AVOID_ENTITY`
+- `static final GoalKey<Wolf> BEG`
+- `static final GoalKey<Mob> BREAK_DOOR`
+- `static final GoalKey<Creature> BREATH_AIR`
+- `static final GoalKey<Animals> BREED`
+- `static final GoalKey<Cat> CAT_LIE_ON_BED`
+- `static final GoalKey<Cat> CAT_SIT_ON_BLOCK`
+- `static final GoalKey<Dolphin> DOLPHIN_JUMP`
+- `static final GoalKey<Mob> EAT_BLOCK`
+- `static final GoalKey<Creature> FLEE_SUN`
+- `static final GoalKey<Mob> FLOAT`
+- `static final GoalKey<Creature> FOLLOW_BOAT`
+- `static final GoalKey<SchoolableFish> FOLLOW_FLOCK_LEADER`
+- `static final GoalKey<Mob> FOLLOW_MOB`
+- `static final GoalKey<Tameable> FOLLOW_OWNER`
+- `static final GoalKey<Animals> FOLLOW_PARENT`
+- `static final GoalKey<Creature> GOLEM_RANDOM_STROLL_IN_VILLAGE`
+- `static final GoalKey<Mob> INTERACT`
+- `static final GoalKey<Parrot> LAND_ON_OWNERS_SHOULDER`
+- `static final GoalKey<Mob> LEAP_AT`
+- `static final GoalKey<Llama> LLAMA_FOLLOW_CARAVAN`
+- `static final GoalKey<Mob> LOOK_AT_PLAYER`
+- `static final GoalKey<AbstractVillager> LOOK_AT_TRADING_PLAYER`
+- `static final GoalKey<Creature> MELEE_ATTACK`
+- `static final GoalKey<Creature> MOVE_BACK_TO_VILLAGE`
+- `static final GoalKey<Creature> MOVE_THROUGH_VILLAGE`
+- `static final GoalKey<Creature> MOVE_TOWARDS_RESTRICTION`
+- `static final GoalKey<Creature> MOVE_TOWARDS`
+- `static final GoalKey<Mob> OCELOT_ATTACK`
+- `static final GoalKey<IronGolem> OFFER_FLOWER`
+- `static final GoalKey<Mob> OPEN_DOOR`
+- `static final GoalKey<Creature> PANIC`
+- `static final GoalKey<Raider> PATHFIND_TO_RAID`
+- `static final GoalKey<Mob> RANDOM_LOOK_AROUND`
+- `static final GoalKey<AbstractHorse> RANDOM_STAND`
+- `static final GoalKey<Creature> RANDOM_STROLL`
+- `static final GoalKey<Creature> RANDOM_SWIMMING`
+- `static final GoalKey<RangedEntity> RANGED_ATTACK`
+- `static final GoalKey<Monster> RANGED_BOW_ATTACK`
+- `static final GoalKey<Monster> RANGED_CROSSBOW_ATTACK`
+- `static final GoalKey<Creature> REMOVE_BLOCK`
+- `static final GoalKey<Creature> RESTRICT_SUN`
+- `static final GoalKey<AbstractHorse> RUN_AROUND_LIKE_CRAZY`
+- `static final GoalKey<Tameable> SIT_WHEN_ORDERED_TO`
+- `static final GoalKey<Creature> STROLL_THROUGH_VILLAGE`
+- `static final GoalKey<Creeper> SWELL`
+- `static final GoalKey<Creature> TEMPT`
+- `static final GoalKey<AbstractVillager> TRADE_WITH_PLAYER`
+- `static final GoalKey<Creature> TRY_FIND_WATER`
+- `static final GoalKey<Mob> USE_ITEM`
+- `static final GoalKey<Creature> WATER_AVOIDING_RANDOM_FLYING`
+- `static final GoalKey<Creature> WATER_AVOIDING_RANDOM_STROLL`
+- `static final GoalKey<Zombie> ZOMBIE_ATTACK`
+- `static final GoalKey<IronGolem> DEFEND_VILLAGE`
+- `static final GoalKey<Creature> HURT_BY`
+- `static final GoalKey<Mob> NEAREST_ATTACKABLE`
+- `static final GoalKey<Raider> NEAREST_ATTACKABLE_WITCH`
+- `static final GoalKey<Raider> NEAREST_HEALABLE_RAIDER`
+- `static final GoalKey<Tameable> NON_TAME_RANDOM`
+- `static final GoalKey<Tameable> OWNER_HURT_BY`
+- `static final GoalKey<Tameable> OWNER_HURT`
+- `static final GoalKey<Mob> RESET_UNIVERSAL_ANGER`
+- `static final GoalKey<Fish> FISH_SWIM`
+- `static final GoalKey<Bee> BEE_ATTACK`
+- `static final GoalKey<Bee> BEE_BECOME_ANGRY`
+- `static final GoalKey<Bee> BEE_ENTER_HIVE`
+- `static final GoalKey<Bee> BEE_GO_TO_HIVE`
+- `static final GoalKey<Bee> BEE_GO_TO_KNOWN_FLOWER`
+- `static final GoalKey<Bee> BEE_GROW_CROP`
+- `static final GoalKey<Bee> BEE_HURT_BY_OTHER`
+- `static final GoalKey<Bee> BEE_LOCATE_HIVE`
+- `static final GoalKey<Bee> BEE_POLLINATE`
+- `static final GoalKey<Bee> BEE_WANDER`
+- `static final GoalKey<Cat> CAT_AVOID_ENTITY`
+- `static final GoalKey<Cat> CAT_RELAX_ON_OWNER`
+- `static final GoalKey<Cat> CAT_TEMPT`
+- `static final GoalKey<Dolphin> DOLPHIN_SWIM_TO_TREASURE`
+- `static final GoalKey<Dolphin> DOLPHIN_SWIM_WITH_PLAYER`
+- `static final GoalKey<Dolphin> PLAY_WITH_ITEMS`
+- `static final GoalKey<Fox> DEFEND_TRUSTED`
+- `static final GoalKey<Fox> FACEPLANT`
+- `static final GoalKey<Fox> FOX_BREED`
+- `static final GoalKey<Fox> FOX_EAT_BERRIES`
+- `static final GoalKey<Fox> FOX_FLOAT`
+- `static final GoalKey<Fox> FOX_FOLLOW_PARENT`
+- `static final GoalKey<Fox> FOX_LOOK_AT_PLAYER`
+- `static final GoalKey<Fox> FOX_MELEE_ATTACK`
+- `static final GoalKey<Fox> FOX_PANIC`
+- `static final GoalKey<Fox> FOX_POUNCE`
+- `static final GoalKey<Fox> FOX_SEARCH_FOR_ITEMS`
+- `static final GoalKey<Fox> FOX_STROLL_THROUGH_VILLAGE`
+- `static final GoalKey<Fox> PERCH_AND_SEARCH`
+- `static final GoalKey<Fox> SEEK_SHELTER`
+- `static final GoalKey<Fox> SLEEP`
+- `static final GoalKey<Fox> STALK_PREY`
+- `static final GoalKey<Ocelot> OCELOT_AVOID_ENTITY`
+- `static final GoalKey<Ocelot> OCELOT_TEMPT`
+- `static final GoalKey<Panda> PANDA_ATTACK`
+- `static final GoalKey<Panda> PANDA_AVOID`
+- `static final GoalKey<Panda> PANDA_BREED`
+- `static final GoalKey<Panda> PANDA_HURT_BY`
+- `static final GoalKey<Panda> PANDA_LIE_ON_BACK`
+- `static final GoalKey<Panda> PANDA_LOOK_AT_PLAYER`
+- `static final GoalKey<Panda> PANDA_PANIC`
+- `static final GoalKey<Panda> PANDA_ROLL`
+- `static final GoalKey<Panda> PANDA_SIT`
+- `static final GoalKey<Panda> PANDA_SNEEZE`
+- `static final GoalKey<PolarBear> POLAR_BEAR_ATTACK_PLAYERS`
+- `static final GoalKey<PolarBear> POLAR_BEAR_HURT_BY`
+- `static final GoalKey<PolarBear> POLAR_BEAR_MELEE_ATTACK`
+- `static final GoalKey<PolarBear> POLAR_BEAR_PANIC`
+- `static final GoalKey<PufferFish> PUFFERFISH_PUFF`
+- `static final GoalKey<Rabbit> EVIL_RABBIT_ATTACK`
+- `static final GoalKey<Rabbit> RABBIT_AVOID_ENTITY`
+- `static final GoalKey<Rabbit> RABBIT_PANIC`
+- `static final GoalKey<Rabbit> RAID_GARDEN`
+- `static final GoalKey<Squid> SQUID_FLEE`
+- `static final GoalKey<Squid> SQUID_RANDOM_MOVEMENT`
+- `static final GoalKey<Turtle> TURTLE_BREED`
+- `static final GoalKey<Turtle> TURTLE_GO_HOME`
+- `static final GoalKey<Turtle> TURTLE_GO_TO_WATER`
+- `static final GoalKey<Turtle> TURTLE_LAY_EGG`
+- `static final GoalKey<Turtle> TURTLE_PANIC`
+- `static final GoalKey<Turtle> TURTLE_RANDOM_STROLL`
+- `static final GoalKey<Turtle> TURTLE_TRAVEL`
+- `static final GoalKey<Wolf> WOLF_AVOID_ENTITY`
+- `static final GoalKey<Llama> LLAMA_ATTACK_WOLF`
+- `static final GoalKey<Llama> LLAMA_HURT_BY`
+- `static final GoalKey<SkeletonHorse> SKELETON_TRAP`
+- `static final GoalKey<Llama> TRADER_LLAMA_DEFEND_WANDERING_TRADER`
+- `static final GoalKey<Wither> WITHER_DO_NOTHING`
+- `static final GoalKey<Illager> RAIDER_OPEN_DOOR`
+- `static final GoalKey<AbstractSkeleton> SKELETON_MELEE`
+- `static final GoalKey<Blaze> BLAZE_ATTACK`
+- `static final GoalKey<Drowned> DROWNED_ATTACK`
+- `static final GoalKey<Drowned> DROWNED_GO_TO_BEACH`
+- `static final GoalKey<Creature> DROWNED_GO_TO_WATER`
+- `static final GoalKey<Drowned> DROWNED_SWIM_UP`
+- `static final GoalKey<RangedEntity> DROWNED_TRIDENT_ATTACK`
+- `static final GoalKey<Enderman> ENDERMAN_FREEZE_WHEN_LOOKED_AT`
+- `static final GoalKey<Enderman> ENDERMAN_LEAVE_BLOCK`
+- `static final GoalKey<Enderman> ENDERMAN_LOOK_FOR_PLAYER`
+- `static final GoalKey<Enderman> ENDERMAN_TAKE_BLOCK`
+- `static final GoalKey<Evoker> EVOKER_ATTACK_SPELL`
+- `static final GoalKey<Evoker> EVOKER_CASTING_SPELL`
+- `static final GoalKey<Evoker> EVOKER_SUMMON_SPELL`
+- `static final GoalKey<Evoker> EVOKER_WOLOLO_SPELL`
+- `static final GoalKey<Ghast> GHAST_LOOK`
+- `static final GoalKey<Ghast> GHAST_SHOOT_FIREBALL`
+- `static final GoalKey<Ghast> RANDOM_FLOAT_AROUND`
+- `static final GoalKey<Guardian> GUARDIAN_ATTACK`
+- `static final GoalKey<Illusioner> ILLUSIONER_BLINDNESS_SPELL`
+- `static final GoalKey<Illusioner> ILLUSIONER_MIRROR_SPELL`
+- `static final GoalKey<Raider> LONG_DISTANCE_PATROL`
+- `static final GoalKey<Phantom> PHANTOM_ATTACK_PLAYER`
+- `static final GoalKey<Phantom> PHANTOM_ATTACK_STRATEGY`
+- `static final GoalKey<Phantom> PHANTOM_CIRCLE_AROUND_ANCHOR`
+- `static final GoalKey<Phantom> PHANTOM_SWEEP_ATTACK`
+- `static final GoalKey<Ravager> RAVAGER_MELEE_ATTACK`
+- `static final GoalKey<Shulker> SHULKER_ATTACK`
+- `static final GoalKey<Shulker> SHULKER_DEFENSE_ATTACK`
+- `static final GoalKey<Shulker> SHULKER_NEAREST_ATTACK`
+- `static final GoalKey<Shulker> SHULKER_PEEK`
+- `static final GoalKey<Silverfish> SILVERFISH_MERGE_WITH_STONE`
+- `static final GoalKey<Silverfish> SILVERFISH_WAKE_UP_FRIENDS`
+- `static final GoalKey<Slime> SLIME_ATTACK`
+- `static final GoalKey<Slime> SLIME_FLOAT`
+- `static final GoalKey<Slime> SLIME_KEEP_ON_JUMPING`
+- `static final GoalKey<Slime> SLIME_RANDOM_DIRECTION`
+- `static final GoalKey<Spellcaster> SPELLCASTER_CASTING_SPELL`
+- `static final GoalKey<Spider> SPIDER_ATTACK`
+- `static final GoalKey<Spider> SPIDER`
+- `static final GoalKey<Strider> STRIDER_GO_TO_LAVA`
+- `static final GoalKey<Vex> VEX_CHARGE_ATTACK`
+- `static final GoalKey<Vex> VEX_COPY_OWNER`
+- `static final GoalKey<Vex> VEX_RANDOM_MOVE`
+- `static final GoalKey<Mob> VINDICATOR_BREAK_DOOR`
+- `static final GoalKey<Vindicator> VINDICATOR_JOHNNY_ATTACK`
+- `static final GoalKey<Vindicator> VINDICATOR_MELEE_ATTACK`
+- `static final GoalKey<Zombie> ZOMBIE_ATTACK_TURTLE_EGG`
+- `static final GoalKey<WanderingTrader> WANDER_TO_POSITION`
+- `static final GoalKey<Raider> HOLD_GROUND_ATTACK`
+- `static final GoalKey<Raider> OBTAIN_RAID_LEADER_BANNER`
+- `static final GoalKey<Raider> RAIDER_CELEBRATION`
+- `static final GoalKey<Raider> RAIDER_MOVE_THROUGH_VILLAGE`
+- `static final GoalKey<Creature> PARROT_WANDER`
+- `static final GoalKey<Mob> CLIMB_ON_TOP_OF_POWDER_SNOW`
+- `static final GoalKey<Wolf> WOLF_PANIC`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<PigZombie> ANGER`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<PigZombie> ANGER_OTHER`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Blaze> BLAZE_FIREBALL`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Cat> TEMPT_CHANCE`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Dolphin> DOLPHIN_PLAY_WITH_ITEMS`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Drowned> DROWNED_GOTO_BEACH`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Creature> DROWNED_GOTO_WATER`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Enderman> ENDERMAN_PICKUP_BLOCK`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Enderman> ENDERMAN_PLACE_BLOCK`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Enderman> PLAYER_WHO_LOOKED_AT_TARGET`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Evoker> EVOKER_CAST_SPELL`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Fox> FOX_DEFEND_TRUSTED`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Fox> FOX_FACEPLANT`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Fox> FOX_PERCH_AND_SEARCH`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Fox> FOX_SLEEP`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Fox> FOX_SEEK_SHELTER`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Fox> FOX_STALK_PREY`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Ghast> GHAST_ATTACK_TARGET`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Ghast> GHAST_IDLE_MOVE`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Ghast> GHAST_MOVE_TOWARDS_TARGET`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Spellcaster> SPELLCASTER_CAST_SPELL`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<TraderLlama> LLAMATRADER_DEFENDED_WANDERING_TRADER`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Panda> PANDA_HURT_BY_TARGET`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<PolarBear> POLARBEAR_ATTACK_PLAYERS`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<PolarBear> POLARBEAR_HURT_BY`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<PolarBear> POLARBEAR_MELEE`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<PolarBear> POLARBEAR_PANIC`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Rabbit> EAT_CARROTS`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Rabbit> KILLER_RABBIT_MELEE_ATTACK`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Rabbit> RABBIT_AVOID_TARGET`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Raider> RAIDER_HOLD_GROUND`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Raider> RAIDER_OBTAIN_BANNER`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Shulker> SHULKER_DEFENSE`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Shulker> SHULKER_NEAREST`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Silverfish> SILVERFISH_HIDE_IN_BLOCK`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Silverfish> SILVERFISH_WAKE_OTHERS`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Slime> SLIME_IDLE`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Slime> SLIME_NEAREST_PLAYER`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Slime> SLIME_RANDOM_JUMP`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Spider> SPIDER_MELEE_ATTACK`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Spider> SPIDER_NEAREST_ATTACKABLE_TARGET`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Squid> SQUID`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Turtle> TURTLE_GOTO_WATER`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Turtle> TURTLE_TEMPT`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Vex> VEX_COPY_TARGET_OF_OWNER`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<WanderingTrader> VILLAGERTRADER_WANDER_TO_POSITION`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<RangedEntity> ARROW_ATTACK`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Creature> AVOID_TARGET`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Monster> BOW_SHOOT`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Creature> BREATH`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Cat> CAT_SIT_ON_BED`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Monster> CROSSBOW_ATTACK`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Mob> DOOR_OPEN`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Mob> EAT_TILE`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Fish> FISH_SCHOOL`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Mob> FOLLOW_ENTITY`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<SkeletonHorse> HORSE_TRAP`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Creature> HURT_BY_TARGET`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Cat> JUMP_ON_BLOCK`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Mob> LEAP_AT_TARGET`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Llama> LLAMA_FOLLOW`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Creature> MOVE_TOWARDS_TARGET`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Mob> NEAREST_ATTACKABLE_TARGET`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Raider> NEAREST_ATTACKABLE_TARGET_WITCH`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Creature> NEAREST_VILLAGE`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Tameable> OWNER_HURT_BY_TARGET`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Tameable> OWNER_HURT_TARGET`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Parrot> PERCH`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Raider> RAID`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Creature> RANDOM_FLY`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Mob> RANDOM_LOOKAROUND`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Creature> RANDOM_STROLL_LAND`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Creature> RANDOM_SWIM`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Tameable> RANDOM_TARGET_NON_TAMED`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Tameable> SIT`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Creature> STROLL_VILLAGE`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<AbstractHorse> TAME`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Creature> WATER`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Dolphin> WATER_JUMP`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Creature> STROLL_VILLAGE_GOLEM`
+- `@Deprecated(forRemoval=true) @ScheduledForRemoval(inVersion="1.21") static final GoalKey<Mob> UNIVERSAL_ANGER_RESET`

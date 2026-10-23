@@ -1,0 +1,88 @@
+---
+title: "org.bukkit.entity.Entity"
+package: "org.bukkit.entity"
+source: https://jd.papermc.io/paper/1.16.5/org/bukkit/entity/Entity.html
+sourceType: javadoc
+fetchedWith: fetch-spigot-javadoc.mjs@1
+fetchedAt: 2026-10-23T08:04:41.693Z
+asOfVersion: "1.16.5-R0.1-SNAPSHOT"
+---
+
+- `@NotNull @NotNull Location getLocation()`
+- `@Contract("null -> null; !null -> !null") @Nullable @Nullable Location getLocation&#8203;(@Nullable @Nullable Location loc)`
+- `void setVelocity&#8203;(@NotNull @NotNull Vector velocity)`
+- `@NotNull @NotNull Vector getVelocity()`
+- `double getHeight()`
+- `double getWidth()`
+- `@NotNull @NotNull BoundingBox getBoundingBox()`
+- `boolean isOnGround()`
+- `boolean isInWater()`
+- `@NotNull @NotNull World getWorld()`
+- `void setRotation&#8203;(float yaw, float pitch)`
+- `boolean teleport&#8203;(@NotNull @NotNull Location location)`
+- `boolean teleport&#8203;(@NotNull @NotNull Location location, @NotNull @NotNull PlayerTeleportEvent.TeleportCause cause)`
+- `boolean teleport&#8203;(@NotNull @NotNull Entity destination)`
+- `boolean teleport&#8203;(@NotNull @NotNull Entity destination, @NotNull @NotNull PlayerTeleportEvent.TeleportCause cause)`
+- `@NotNull default CompletableFuture<Boolean> teleportAsync&#8203;(@NotNull @NotNull Location loc)`
+- `@NotNull default CompletableFuture<Boolean> teleportAsync&#8203;(@NotNull @NotNull Location loc, @NotNull @NotNull PlayerTeleportEvent.TeleportCause cause)`
+- `@NotNull @NotNull List<Entity> getNearbyEntities&#8203;(double x, double y, double z)`
+- `int getEntityId()`
+- `int getFireTicks()`
+- `int getMaxFireTicks()`
+- `void setFireTicks&#8203;(int ticks)`
+- `void remove()`
+- `boolean isDead()`
+- `boolean isValid()`
+- `@NotNull @NotNull Server getServer()`
+- `boolean isPersistent()`
+- `void setPersistent&#8203;(boolean persistent)`
+- `@Deprecated @Nullable @Nullable Entity getPassenger()`
+- `@Deprecated boolean setPassenger&#8203;(@NotNull @NotNull Entity passenger)`
+- `@NotNull @NotNull List<Entity> getPassengers()`
+- `boolean addPassenger&#8203;(@NotNull @NotNull Entity passenger)`
+- `boolean removePassenger&#8203;(@NotNull @NotNull Entity passenger)`
+- `boolean isEmpty()`
+- `boolean eject()`
+- `float getFallDistance()`
+- `void setFallDistance&#8203;(float distance)`
+- `void setLastDamageCause&#8203;(@Nullable @Nullable EntityDamageEvent event)`
+- `@Nullable @Nullable EntityDamageEvent getLastDamageCause()`
+- `@NotNull @NotNull UUID getUniqueId()`
+- `int getTicksLived()`
+- `void setTicksLived&#8203;(int value)`
+- `void playEffect&#8203;(@NotNull @NotNull EntityEffect type)`
+- `@NotNull @NotNull EntityType getType()`
+- `boolean isInsideVehicle()`
+- `boolean leaveVehicle()`
+- `@Nullable @Nullable Entity getVehicle()`
+- `void setCustomNameVisible&#8203;(boolean flag)`
+- `boolean isCustomNameVisible()`
+- `void setGlowing&#8203;(boolean flag)`
+- `boolean isGlowing()`
+- `void setInvulnerable&#8203;(boolean flag)`
+- `boolean isInvulnerable()`
+- `boolean isSilent()`
+- `void setSilent&#8203;(boolean flag)`
+- `boolean hasGravity()`
+- `void setGravity&#8203;(boolean gravity)`
+- `int getPortalCooldown()`
+- `void setPortalCooldown&#8203;(int cooldown)`
+- `@NotNull @NotNull Set<String> getScoreboardTags()`
+- `boolean addScoreboardTag&#8203;(@NotNull @NotNull String tag)`
+- `boolean removeScoreboardTag&#8203;(@NotNull @NotNull String tag)`
+- `@NotNull @NotNull PistonMoveReaction getPistonMoveReaction()`
+- `@NotNull @NotNull BlockFace getFacing()`
+- `@NotNull @NotNull Pose getPose()`
+- `@NotNull @NotNull Entity.Spigot spigot()`
+- `@NotNull default HoverEvent<HoverEvent.ShowEntity> asHoverEvent&#8203;(@NotNull UnaryOperator<HoverEvent.ShowEntity> op)`
+- `@Nullable @Nullable Location getOrigin()`
+- `boolean fromMobSpawner()`
+- `@NotNull @NotNull Chunk getChunk()`
+- `@NotNull CreatureSpawnEvent.SpawnReason getEntitySpawnReason()`
+- `boolean isInRain()`
+- `boolean isInBubbleColumn()`
+- `boolean isInWaterOrRain()`
+- `boolean isInWaterOrBubbleColumn()`
+- `boolean isInWaterOrRainOrBubbleColumn()`
+- `boolean isInLava()`
+- `boolean isTicking()`

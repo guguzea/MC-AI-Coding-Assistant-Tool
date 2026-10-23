@@ -1,0 +1,91 @@
+---
+title: "org.bukkit.Location"
+package: "org.bukkit"
+source: https://jd.papermc.io/paper/1.16.5/org/bukkit/Location.html
+sourceType: javadoc
+fetchedWith: fetch-spigot-javadoc.mjs@1
+fetchedAt: 2026-10-23T08:04:41.693Z
+asOfVersion: "1.16.5-R0.1-SNAPSHOT"
+---
+
+- `public Location&#8203;(World world, double x, double y, double z)`
+- `public Location&#8203;(World world, double x, double y, double z, float yaw, float pitch)`
+- `public void setWorld&#8203;(@Nullable @Nullable World world)`
+- `public boolean isWorldLoaded()`
+- `public World getWorld()`
+- `@NotNull public @NotNull Chunk getChunk()`
+- `@NotNull public @NotNull Block getBlock()`
+- `public void setX&#8203;(double x)`
+- `public double getX()`
+- `public int getBlockX()`
+- `public void setY&#8203;(double y)`
+- `public double getY()`
+- `public int getBlockY()`
+- `public void setZ&#8203;(double z)`
+- `public double getZ()`
+- `public int getBlockZ()`
+- `public void setYaw&#8203;(float yaw)`
+- `public float getYaw()`
+- `public void setPitch&#8203;(float pitch)`
+- `public float getPitch()`
+- `@NotNull public @NotNull Vector getDirection()`
+- `@NotNull public @NotNull Location setDirection&#8203;(@NotNull @NotNull Vector vector)`
+- `@NotNull public @NotNull Location add&#8203;(@NotNull @NotNull Location vec)`
+- `@NotNull public @NotNull Location add&#8203;(@NotNull @NotNull Vector vec)`
+- `@NotNull public @NotNull Location add&#8203;(double x, double y, double z)`
+- `@NotNull public @NotNull Location subtract&#8203;(@NotNull @NotNull Location vec)`
+- `@NotNull public @NotNull Location subtract&#8203;(@NotNull @NotNull Vector vec)`
+- `@NotNull public @NotNull Location subtract&#8203;(double x, double y, double z)`
+- `public double length()`
+- `public double lengthSquared()`
+- `public double distance&#8203;(@NotNull @NotNull Location o)`
+- `public double distanceSquared&#8203;(@NotNull @NotNull Location o)`
+- `@NotNull public @NotNull Location multiply&#8203;(double m)`
+- `@NotNull public @NotNull Location zero()`
+- `public boolean isChunkLoaded()`
+- `public boolean isGenerated()`
+- `@NotNull public @NotNull Location set&#8203;(double x, double y, double z)`
+- `@NotNull public @NotNull Location add&#8203;(@NotNull @NotNull Location base, double x, double y, double z)`
+- `@NotNull public @NotNull Location subtract&#8203;(@NotNull @NotNull Location base, double x, double y, double z)`
+- `@NotNull public @NotNull Location toBlockLocation()`
+- `public long toBlockKey()`
+- `@NotNull public @NotNull Location toCenterLocation()`
+- `@NotNull public @NotNull Location toHighestLocation()`
+- `@NotNull @Deprecated public @NotNull Location toHighestLocation&#8203;(@NotNull HeightmapType heightmap)`
+- `@NotNull public @NotNull Location toHighestLocation&#8203;(@NotNull @NotNull HeightMap heightMap)`
+- `public boolean createExplosion&#8203;(float power)`
+- `public boolean createExplosion&#8203;(float power, boolean setFire)`
+- `public boolean createExplosion&#8203;(float power, boolean setFire, boolean breakBlocks)`
+- `public boolean createExplosion&#8203;(@Nullable @Nullable Entity source, float power)`
+- `public boolean createExplosion&#8203;(@Nullable @Nullable Entity source, float power, boolean setFire)`
+- `public boolean createExplosion&#8203;(@NotNull @NotNull Entity source, float power, boolean setFire, boolean breakBlocks)`
+- `@NotNull public @NotNull Collection<Entity> getNearbyEntities&#8203;(double x, double y, double z)`
+- `@NotNull public @NotNull Collection<LivingEntity> getNearbyLivingEntities&#8203;(double radius)`
+- `@NotNull public @NotNull Collection<LivingEntity> getNearbyLivingEntities&#8203;(double xzRadius, double yRadius)`
+- `@NotNull public @NotNull Collection<LivingEntity> getNearbyLivingEntities&#8203;(double xRadius, double yRadius, double zRadius)`
+- `@NotNull public @NotNull Collection<LivingEntity> getNearbyLivingEntities&#8203;(double radius, @Nullable @Nullable Predicate<LivingEntity> predicate)`
+- `@NotNull public @NotNull Collection<LivingEntity> getNearbyLivingEntities&#8203;(double xzRadius, double yRadius, @Nullable @Nullable Predicate<LivingEntity> predicate)`
+- `@NotNull public @NotNull Collection<LivingEntity> getNearbyLivingEntities&#8203;(double xRadius, double yRadius, double zRadius, @Nullable @Nullable Predicate<LivingEntity> predicate)`
+- `@NotNull public @NotNull Collection<Player> getNearbyPlayers&#8203;(double radius)`
+- `@NotNull public @NotNull Collection<Player> getNearbyPlayers&#8203;(double xzRadius, double yRadius)`
+- `@NotNull public @NotNull Collection<Player> getNearbyPlayers&#8203;(double xRadius, double yRadius, double zRadius)`
+- `@NotNull public @NotNull Collection<Player> getNearbyPlayers&#8203;(double radius, @Nullable @Nullable Predicate<Player> predicate)`
+- `@NotNull public @NotNull Collection<Player> getNearbyPlayers&#8203;(double xzRadius, double yRadius, @Nullable @Nullable Predicate<Player> predicate)`
+- `@NotNull public @NotNull Collection<Player> getNearbyPlayers&#8203;(double xRadius, double yRadius, double zRadius, @Nullable @Nullable Predicate<Player> predicate)`
+- `@NotNull public <T extends Entity> @NotNull Collection<T> getNearbyEntitiesByType&#8203;(@Nullable @Nullable Class<? extends T> clazz, double radius)`
+- `@NotNull public <T extends Entity> @NotNull Collection<T> getNearbyEntitiesByType&#8203;(@Nullable @Nullable Class<? extends T> clazz, double xzRadius, double yRadius)`
+- `@NotNull public <T extends Entity> @NotNull Collection<T> getNearbyEntitiesByType&#8203;(@Nullable @Nullable Class<? extends T> clazz, double xRadius, double yRadius, double zRadius)`
+- `@NotNull public <T extends Entity> @NotNull Collection<T> getNearbyEntitiesByType&#8203;(@Nullable @Nullable Class<? extends T> clazz, double radius, @Nullable @Nullable Predicate<T> predicate)`
+- `@NotNull public <T extends Entity> @NotNull Collection<T> getNearbyEntitiesByType&#8203;(@Nullable @Nullable Class<? extends T> clazz, double xzRadius, double yRadius, @Nullable @Nullable Predicate<T> predicate)`
+- `@NotNull public <T extends Entity> @NotNull Collection<T> getNearbyEntitiesByType&#8203;(@Nullable @Nullable Class<? extends Entity> clazz, double xRadius, double yRadius, double zRadius, @Nullable @Nullable Predicate<T> predicate)`
+- `public boolean equals&#8203;(Object obj)`
+- `public int hashCode()`
+- `public String toString()`
+- `@NotNull public @NotNull Vector toVector()`
+- `@NotNull public @NotNull Location clone()`
+- `public void checkFinite() throws IllegalArgumentException`
+- `public static int locToBlock&#8203;(double loc)`
+- `@NotNull public @NotNull Map<String,&#8203;Object> serialize()`
+- `@NotNull public static @NotNull Location deserialize&#8203;(@NotNull @NotNull Map<String,&#8203;Object> args)`
+- `public static float normalizeYaw&#8203;(float yaw)`
+- `public static float normalizePitch&#8203;(float pitch)`

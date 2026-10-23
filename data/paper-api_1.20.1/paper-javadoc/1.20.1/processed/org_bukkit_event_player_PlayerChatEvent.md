@@ -1,0 +1,22 @@
+---
+title: "org.bukkit.event.player.PlayerChatEvent"
+package: "org.bukkit.event.player"
+source: https://jd.papermc.io/paper/1.20.1/org/bukkit/event/player/PlayerChatEvent.html
+sourceType: javadoc
+fetchedWith: fetch-spigot-javadoc.mjs@1
+fetchedAt: 2026-10-23T07:58:42.132Z
+asOfVersion: "1.20.1-R0.1-SNAPSHOT"
+---
+
+- `public PlayerChatEvent(@NotNull @NotNull Player player, @NotNull @NotNull String message)`
+- `public PlayerChatEvent(@NotNull @NotNull Player player, @NotNull @NotNull String message, @NotNull @NotNull String format, @NotNull @NotNull Set<Player> recipients)`
+- `public boolean isCancelled()`
+- `public void setCancelled(boolean cancel)`
+- `@NotNull public @NotNull String getMessage()`
+- `public void setMessage(@NotNull @NotNull String message)`
+- `public void setPlayer(@NotNull @NotNull Player player)`
+- `@NotNull public @NotNull String getFormat()`
+- `public void setFormat(@NotNull @NotNull String format)`
+- `@NotNull public @NotNull Set<Player> getRecipients()`
+- `@NotNull public @NotNull HandlerList getHandlers()`
+- `@NotNull public static @NotNull HandlerList getHandlerList()`

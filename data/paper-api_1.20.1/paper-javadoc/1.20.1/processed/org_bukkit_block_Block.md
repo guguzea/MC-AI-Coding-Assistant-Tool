@@ -1,0 +1,82 @@
+---
+title: "org.bukkit.block.Block"
+package: "org.bukkit.block"
+source: https://jd.papermc.io/paper/1.20.1/org/bukkit/block/Block.html
+sourceType: javadoc
+fetchedWith: fetch-spigot-javadoc.mjs@1
+fetchedAt: 2026-10-23T07:58:42.132Z
+asOfVersion: "1.20.1-R0.1-SNAPSHOT"
+---
+
+- `@Deprecated byte getData()`
+- `@NotNull @NotNull BlockData getBlockData()`
+- `@NotNull @NotNull Block getRelative(int modX, int modY, int modZ)`
+- `@NotNull @NotNull Block getRelative(@NotNull @NotNull BlockFace face)`
+- `@NotNull @NotNull Block getRelative(@NotNull @NotNull BlockFace face, int distance)`
+- `@NotNull @NotNull Material getType()`
+- `byte getLightLevel()`
+- `byte getLightFromSky()`
+- `byte getLightFromBlocks()`
+- `@NotNull @NotNull World getWorld()`
+- `int getX()`
+- `int getY()`
+- `int getZ()`
+- `@Deprecated default long getBlockKey()`
+- `@Deprecated static long getBlockKey(int x, int y, int z)`
+- `@Deprecated static int getBlockKeyX(long packed)`
+- `@Deprecated static int getBlockKeyY(long packed)`
+- `@Deprecated static int getBlockKeyZ(long packed)`
+- `boolean isValidTool(@NotNull @NotNull ItemStack itemStack)`
+- `@NotNull @NotNull Location getLocation()`
+- `@Contract("null -> null; !null -> !null") @Nullable @Nullable Location getLocation(@Nullable @Nullable Location loc)`
+- `@NotNull @NotNull Chunk getChunk()`
+- `void setBlockData(@NotNull @NotNull BlockData data)`
+- `void setBlockData(@NotNull @NotNull BlockData data, boolean applyPhysics)`
+- `void setType(@NotNull @NotNull Material type)`
+- `void setType(@NotNull @NotNull Material type, boolean applyPhysics)`
+- `@Nullable @Nullable BlockFace getFace(@NotNull @NotNull Block block)`
+- `@NotNull @NotNull BlockState getState()`
+- `@NotNull @NotNull BlockState getState(boolean useSnapshot)`
+- `@NotNull @NotNull Biome getBiome()`
+- `@NotNull @NotNull Biome getComputedBiome()`
+- `void setBiome(@NotNull @NotNull Biome bio)`
+- `boolean isBlockPowered()`
+- `boolean isBlockIndirectlyPowered()`
+- `boolean isBlockFacePowered(@NotNull @NotNull BlockFace face)`
+- `boolean isBlockFaceIndirectlyPowered(@NotNull @NotNull BlockFace face)`
+- `int getBlockPower(@NotNull @NotNull BlockFace face)`
+- `int getBlockPower()`
+- `boolean isEmpty()`
+- `boolean isLiquid()`
+- `boolean isBuildable()`
+- `boolean isBurnable()`
+- `boolean isReplaceable()`
+- `boolean isSolid()`
+- `boolean isCollidable()`
+- `double getTemperature()`
+- `double getHumidity()`
+- `@NotNull @NotNull PistonMoveReaction getPistonMoveReaction()`
+- `boolean breakNaturally()`
+- `boolean breakNaturally(@Nullable @Nullable ItemStack tool)`
+- `default boolean breakNaturally(boolean triggerEffect)`
+- `boolean breakNaturally(boolean triggerEffect, boolean dropExperience)`
+- `default boolean breakNaturally(@NotNull @NotNull ItemStack tool, boolean triggerEffect)`
+- `boolean breakNaturally(@NotNull @NotNull ItemStack tool, boolean triggerEffect, boolean dropExperience)`
+- `void tick()`
+- `void randomTick()`
+- `boolean applyBoneMeal(@NotNull @NotNull BlockFace face)`
+- `@NotNull @NotNull Collection<ItemStack> getDrops()`
+- `@NotNull @NotNull Collection<ItemStack> getDrops(@Nullable @Nullable ItemStack tool)`
+- `@NotNull @NotNull Collection<ItemStack> getDrops(@NotNull @NotNull ItemStack tool, @Nullable @Nullable Entity entity)`
+- `boolean isPreferredTool(@NotNull @NotNull ItemStack tool)`
+- `float getBreakSpeed(@NotNull @NotNull Player player)`
+- `boolean isPassable()`
+- `@Nullable @Nullable RayTraceResult rayTrace(@NotNull @NotNull Location start, @NotNull @NotNull Vector direction, double maxDistance, @NotNull @NotNull FluidCollisionMode fluidCollisionMode)`
+- `@NotNull @NotNull BoundingBox getBoundingBox()`
+- `@NotNull @NotNull VoxelShape getCollisionShape()`
+- `boolean canPlace(@NotNull @NotNull BlockData data)`
+- `@NotNull @Deprecated(forRemoval=true) BlockSoundGroup getSoundGroup()`
+- `@NotNull SoundGroup getBlockSoundGroup()`
+- `@NotNull @Deprecated(forRemoval=true) @NotNull String getTranslationKey()`
+- `default float getDestroySpeed(@NotNull @NotNull ItemStack itemStack)`
+- `default float getDestroySpeed(@NotNull @NotNull ItemStack itemStack, boolean considerEnchants)`

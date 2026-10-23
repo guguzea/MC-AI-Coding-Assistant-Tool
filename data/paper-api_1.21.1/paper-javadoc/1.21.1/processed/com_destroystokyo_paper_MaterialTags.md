@@ -1,0 +1,106 @@
+---
+title: "com.destroystokyo.paper.MaterialTags"
+package: "com.destroystokyo.paper"
+source: https://jd.papermc.io/paper/1.21.1/com/destroystokyo/paper/MaterialTags.html
+sourceType: javadoc
+fetchedWith: fetch-spigot-javadoc.mjs@1
+fetchedAt: 2026-10-23T08:04:53.899Z
+asOfVersion: "1.21.1-R0.1-SNAPSHOT"
+---
+
+- `public static final MaterialSetTag ARROWS`
+- `public static final MaterialSetTag BEDS`
+- `public static final MaterialSetTag BUCKETS`
+- `public static final MaterialSetTag COALS`
+- `public static final MaterialSetTag COBBLESTONE_WALLS`
+- `public static final MaterialSetTag COBBLESTONES`
+- `public static final MaterialSetTag CONCRETES`
+- `public static final MaterialSetTag CONCRETE_POWDER`
+- `public static final MaterialSetTag COOKED_FISH`
+- `public static final MaterialSetTag DOORS`
+- `public static final MaterialSetTag DYES`
+- `public static final MaterialSetTag FENCE_GATES`
+- `public static final MaterialSetTag FENCES`
+- `public static final MaterialSetTag FISH_BUCKETS`
+- `public static final MaterialSetTag GLASS`
+- `public static final MaterialSetTag GLASS_PANES`
+- `public static final MaterialSetTag GLAZED_TERRACOTTA`
+- `public static final MaterialSetTag STAINED_TERRACOTTA`
+- `public static final MaterialSetTag TERRACOTTA`
+- `public static final MaterialSetTag GOLDEN_APPLES`
+- `public static final MaterialSetTag HORSE_ARMORS`
+- `public static final MaterialSetTag INFESTED_BLOCKS`
+- `public static final MaterialSetTag MUSHROOM_BLOCKS`
+- `public static final MaterialSetTag MUSHROOMS`
+- `public static final MaterialSetTag MUSIC_DISCS`
+- `public static final MaterialSetTag ORES`
+- `public static final MaterialSetTag PISTONS`
+- `public static final MaterialSetTag POTATOES`
+- `public static final MaterialSetTag PRESSURE_PLATES`
+- `public static final MaterialSetTag PRISMARINE`
+- `public static final MaterialSetTag PRISMARINE_SLABS`
+- `public static final MaterialSetTag PRISMARINE_STAIRS`
+- `public static final MaterialSetTag PUMPKINS`
+- `public static final MaterialSetTag QUARTZ_BLOCKS`
+- `public static final MaterialSetTag RAW_FISH`
+- `public static final MaterialSetTag RED_SANDSTONES`
+- `public static final MaterialSetTag SANDSTONES`
+- `public static final MaterialSetTag SPONGES`
+- `public static final MaterialSetTag SHULKER_BOXES`
+- `public static final MaterialSetTag SKULLS`
+- `public static final MaterialSetTag SPAWN_EGGS`
+- `public static final MaterialSetTag STAINED_GLASS`
+- `public static final MaterialSetTag STAINED_GLASS_PANES`
+- `public static final MaterialSetTag TRAPDOORS`
+- `public static final MaterialSetTag WOODEN_DOORS`
+- `public static final MaterialSetTag WOODEN_FENCES`
+- `public static final MaterialSetTag WOODEN_TRAPDOORS`
+- `public static final MaterialSetTag WOODEN_GATES`
+- `public static final MaterialSetTag PURPUR`
+- `public static final MaterialSetTag SIGNS`
+- `public static final MaterialSetTag TORCH`
+- `public static final MaterialSetTag REDSTONE_TORCH`
+- `public static final MaterialSetTag SOUL_TORCH`
+- `public static final MaterialSetTag TORCHES`
+- `public static final MaterialSetTag LANTERNS`
+- `public static final MaterialSetTag RAILS`
+- `public static final MaterialSetTag SWORDS`
+- `public static final MaterialSetTag SHOVELS`
+- `public static final MaterialSetTag PICKAXES`
+- `public static final MaterialSetTag AXES`
+- `public static final MaterialSetTag HOES`
+- `public static final MaterialSetTag HELMETS`
+- `public static final MaterialSetTag HEAD_EQUIPPABLE`
+- `public static final MaterialSetTag CHESTPLATES`
+- `public static final MaterialSetTag CHEST_EQUIPPABLE`
+- `public static final MaterialSetTag LEGGINGS`
+- `public static final MaterialSetTag BOOTS`
+- `public static final MaterialSetTag ARMOR`
+- `public static final MaterialSetTag BOWS`
+- `public static final MaterialSetTag THROWABLE_PROJECTILES`
+- `public static final MaterialSetTag COLORABLE`
+- `public static final MaterialSetTag CORAL`
+- `public static final MaterialSetTag CORAL_FANS`
+- `public static final MaterialSetTag CORAL_BLOCKS`
+- `public static final MaterialSetTag ENCHANTABLE`
+- `public static final MaterialSetTag RAW_ORES`
+- `public static final MaterialSetTag DEEPSLATE_ORES`
+- `public static final MaterialSetTag RAW_ORE_BLOCKS`
+- `public static final MaterialSetTag OXIDIZED_COPPER_BLOCKS`
+- `public static final MaterialSetTag WEATHERED_COPPER_BLOCKS`
+- `public static final MaterialSetTag EXPOSED_COPPER_BLOCKS`
+- `public static final MaterialSetTag UNAFFECTED_COPPER_BLOCKS`
+- `public static final MaterialSetTag WAXED_COPPER_BLOCKS`
+- `public static final MaterialSetTag UNWAXED_COPPER_BLOCKS`
+- `public static final MaterialSetTag COPPER_BLOCKS`
+- `public static final MaterialSetTag FULL_COPPER_BLOCKS`
+- `public static final MaterialSetTag CUT_COPPER_BLOCKS`
+- `public static final MaterialSetTag CUT_COPPER_STAIRS`
+- `public static final MaterialSetTag CUT_COPPER_SLABS`
+- `public static final MaterialSetTag WOODEN_TOOLS`
+- `public static final MaterialSetTag STONE_TOOLS`
+- `public static final MaterialSetTag IRON_TOOLS`
+- `public static final MaterialSetTag GOLDEN_TOOLS`
+- `public static final MaterialSetTag DIAMOND_TOOLS`
+- `public static final MaterialSetTag NETHERITE_TOOLS`
+- `public MaterialTags()`

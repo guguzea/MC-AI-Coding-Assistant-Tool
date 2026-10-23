@@ -1,0 +1,17 @@
+---
+title: "org.bukkit.conversations.Conversable"
+package: "org.bukkit.conversations"
+source: https://jd.papermc.io/paper/1.16.5/org/bukkit/conversations/Conversable.html
+sourceType: javadoc
+fetchedWith: fetch-spigot-javadoc.mjs@1
+fetchedAt: 2026-10-23T08:04:41.693Z
+asOfVersion: "1.16.5-R0.1-SNAPSHOT"
+---
+
+- `boolean isConversing()`
+- `void acceptConversationInput&#8203;(@NotNull @NotNull String input)`
+- `boolean beginConversation&#8203;(@NotNull @NotNull Conversation conversation)`
+- `void abandonConversation&#8203;(@NotNull @NotNull Conversation conversation)`
+- `void abandonConversation&#8203;(@NotNull @NotNull Conversation conversation, @NotNull @NotNull ConversationAbandonedEvent details)`
+- `void sendRawMessage&#8203;(@NotNull @NotNull String message)`
+- `void sendRawMessage&#8203;(@Nullable @Nullable UUID sender, @NotNull @NotNull String message)`

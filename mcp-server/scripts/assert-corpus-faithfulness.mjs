@@ -117,6 +117,13 @@ const LEDGER_TREES = {
   // 嵌套布局会撞 A2 —— 这一条是门在 2026-10-14 抓出来的，已改布局而非改判据）。
   "spigot_stable/spigot-javadoc/stable": { raw: 1396, proc: 1396, identical: 0, contentDiff: 1396, markerOnly: 0, fmOnly: 0, noTwin: 0, dup: 0, dir: 0, dirFenced: 0 },
   "paper-api_stable/paper-javadoc/stable": { raw: 2116, proc: 2116, identical: 0, contentDiff: 2116, markerOnly: 0, fmOnly: 0, noTwin: 0, dup: 0, dir: 0, dirFenced: 0 },
+  // 2026-10-23：paper-api 五个历史档（按真 MC 版本分）。`dup: 0` 实测成立 —— 落盘改成扁平唯一名后，
+  // 不同包的同名类不再互相覆盖（首轮按嵌套目录落时 dup=13/38/55/62/65，已定位为生产者 bug 并修）。
+  "paper-api_1.12.2/paper-javadoc/1.12.2": { raw: 877, proc: 877, identical: 0, contentDiff: 877, markerOnly: 0, fmOnly: 0, noTwin: 0, dup: 0, dir: 0, dirFenced: 0 },
+  "paper-api_1.16.5/paper-javadoc/1.16.5": { raw: 1254, proc: 1254, identical: 0, contentDiff: 1254, markerOnly: 0, fmOnly: 0, noTwin: 0, dup: 0, dir: 0, dirFenced: 0 },
+  "paper-api_1.20.1/paper-javadoc/1.20.1": { raw: 1496, proc: 1496, identical: 0, contentDiff: 1496, markerOnly: 0, fmOnly: 0, noTwin: 0, dup: 0, dir: 0, dirFenced: 0 },
+  "paper-api_1.21.1/paper-javadoc/1.21.1": { raw: 1702, proc: 1702, identical: 0, contentDiff: 1702, markerOnly: 0, fmOnly: 0, noTwin: 0, dup: 0, dir: 0, dirFenced: 0 },
+  "paper-api_1.21.4/paper-javadoc/1.21.4": { raw: 1871, proc: 1871, identical: 0, contentDiff: 1871, markerOnly: 0, fmOnly: 0, noTwin: 0, dup: 0, dir: 0, dirFenced: 0 },
   "fabric_1.14.4/fabric-wiki/1.14.4": { raw: 7, proc: 7, identical: 0, contentDiff: 7, markerOnly: 0, fmOnly: 0, noTwin: 0, dup: 0, dir: 0 },
   "fabric_1.16.5/fabric-wiki/1.16.5": { raw: 7, proc: 7, identical: 0, contentDiff: 7, markerOnly: 0, fmOnly: 0, noTwin: 0, dup: 0, dir: 0 },
   "fabric_1.17.1/fabric-wiki/1.17.1": { raw: 7, proc: 7, identical: 0, contentDiff: 7, markerOnly: 0, fmOnly: 0, noTwin: 0, dup: 0, dir: 0 },
@@ -196,6 +203,13 @@ const DEBT_ANGLE_LOSS = {
   // 类级泛型已回到正文（实测 `**Interface BanEntry<T>**` / `public interface BanEntry<T>`）。
   "spigot_stable/spigot-javadoc/stable": 45,
   "paper-api_stable/paper-javadoc/stable": 293,
+  // 2026-10-23：paper-api 五个历史档，**同一性质**（raw 是 `.html`，`genericTokens(unesc(raw))` 产出带标记的
+  // 记号如 `List<<span class="type-param-T">`，天然存活不进 Markdown）。数字取自本门实扫，逐树精确核。
+  "paper-api_1.12.2/paper-javadoc/1.12.2": 83,
+  "paper-api_1.16.5/paper-javadoc/1.16.5": 103,
+  "paper-api_1.20.1/paper-javadoc/1.20.1": 110,
+  "paper-api_1.21.1/paper-javadoc/1.21.1": 315,
+  "paper-api_1.21.4/paper-javadoc/1.21.4": 343,
 };
 // A4 存量债务：正文里的上游中介名（相对 data 根路径:行号|该处名字）
 //      S7 之后剩下的这些都是「上游正文跨版本残留、本版映射里没有」的 intermediary，逐条点名保留。

@@ -1,0 +1,95 @@
+---
+title: "org.bukkit.Location"
+package: "org.bukkit"
+source: https://jd.papermc.io/paper/1.21.1/org/bukkit/Location.html
+sourceType: javadoc
+fetchedWith: fetch-spigot-javadoc.mjs@1
+fetchedAt: 2026-10-23T08:04:53.899Z
+asOfVersion: "1.21.1-R0.1-SNAPSHOT"
+---
+
+- `public Location(@UndefinedNullability World world, double x, double y, double z)`
+- `public Location(@UndefinedNullability World world, double x, double y, double z, float yaw, float pitch)`
+- `public void setWorld(@Nullable @Nullable World world)`
+- `public boolean isWorldLoaded()`
+- `@UndefinedNullability public World getWorld()`
+- `@NotNull public @NotNull Chunk getChunk()`
+- `@NotNull public @NotNull Block getBlock()`
+- `public void setX(double x)`
+- `public double getX()`
+- `public int getBlockX()`
+- `public void setY(double y)`
+- `public double getY()`
+- `public int getBlockY()`
+- `public void setZ(double z)`
+- `public double getZ()`
+- `public int getBlockZ()`
+- `public void setYaw(float yaw)`
+- `public float getYaw()`
+- `public void setPitch(float pitch)`
+- `public float getPitch()`
+- `@NotNull public @NotNull Vector getDirection()`
+- `@NotNull public @NotNull Location setDirection(@NotNull @NotNull Vector vector)`
+- `@NotNull public @NotNull Location add(@NotNull @NotNull Location vec)`
+- `@NotNull public @NotNull Location add(@NotNull @NotNull Vector vec)`
+- `@NotNull public @NotNull Location add(double x, double y, double z)`
+- `@NotNull public @NotNull Location subtract(@NotNull @NotNull Location vec)`
+- `@NotNull public @NotNull Location subtract(@NotNull @NotNull Vector vec)`
+- `@NotNull public @NotNull Location subtract(double x, double y, double z)`
+- `public double length()`
+- `public double lengthSquared()`
+- `public double distance(@NotNull @NotNull Location o)`
+- `public double distanceSquared(@NotNull @NotNull Location o)`
+- `@NotNull public @NotNull Location multiply(double m)`
+- `@NotNull public @NotNull Location zero()`
+- `public boolean isChunkLoaded()`
+- `public boolean isGenerated()`
+- `@NotNull public @NotNull Location set(double x, double y, double z)`
+- `@NotNull public @NotNull Location add(@NotNull @NotNull Location base, double x, double y, double z)`
+- `@NotNull public @NotNull Location subtract(@NotNull @NotNull Location base, double x, double y, double z)`
+- `@NotNull public @NotNull Location toBlockLocation()`
+- `@Deprecated(since="1.18.1") public long toBlockKey()`
+- `@NotNull public @NotNull Location toCenterLocation()`
+- `@NotNull public @NotNull Location toHighestLocation()`
+- `@NotNull public @NotNull Location toHighestLocation(@NotNull @NotNull HeightMap heightMap)`
+- `public boolean createExplosion(float power)`
+- `public boolean createExplosion(float power, boolean setFire)`
+- `public boolean createExplosion(float power, boolean setFire, boolean breakBlocks)`
+- `public boolean createExplosion(@Nullable @Nullable Entity source, float power)`
+- `public boolean createExplosion(@Nullable @Nullable Entity source, float power, boolean setFire)`
+- `public boolean createExplosion(@Nullable @Nullable Entity source, float power, boolean setFire, boolean breakBlocks)`
+- `@NotNull public @NotNull Collection<Entity> getNearbyEntities(double x, double y, double z)`
+- `@NotNull public @NotNull Collection<LivingEntity> getNearbyLivingEntities(double radius)`
+- `@NotNull public @NotNull Collection<LivingEntity> getNearbyLivingEntities(double xzRadius, double yRadius)`
+- `@NotNull public @NotNull Collection<LivingEntity> getNearbyLivingEntities(double xRadius, double yRadius, double zRadius)`
+- `@NotNull public @NotNull Collection<LivingEntity> getNearbyLivingEntities(double radius, @Nullable @Nullable Predicate<? super LivingEntity> predicate)`
+- `@NotNull public @NotNull Collection<LivingEntity> getNearbyLivingEntities(double xzRadius, double yRadius, @Nullable @Nullable Predicate<? super LivingEntity> predicate)`
+- `@NotNull public @NotNull Collection<LivingEntity> getNearbyLivingEntities(double xRadius, double yRadius, double zRadius, @Nullable @Nullable Predicate<? super LivingEntity> predicate)`
+- `@NotNull public @NotNull Collection<Player> getNearbyPlayers(double radius)`
+- `@NotNull public @NotNull Collection<Player> getNearbyPlayers(double xzRadius, double yRadius)`
+- `@NotNull public @NotNull Collection<Player> getNearbyPlayers(double xRadius, double yRadius, double zRadius)`
+- `@NotNull public @NotNull Collection<Player> getNearbyPlayers(double radius, @Nullable @Nullable Predicate<? super Player> predicate)`
+- `@NotNull public @NotNull Collection<Player> getNearbyPlayers(double xzRadius, double yRadius, @Nullable @Nullable Predicate<? super Player> predicate)`
+- `@NotNull public @NotNull Collection<Player> getNearbyPlayers(double xRadius, double yRadius, double zRadius, @Nullable @Nullable Predicate<? super Player> predicate)`
+- `@NotNull public <T extends Entity> @NotNull Collection<T> getNearbyEntitiesByType(@Nullable @Nullable Class<? extends T> clazz, double radius)`
+- `@NotNull public <T extends Entity> @NotNull Collection<T> getNearbyEntitiesByType(@Nullable @Nullable Class<? extends T> clazz, double xzRadius, double yRadius)`
+- `@NotNull public <T extends Entity> @NotNull Collection<T> getNearbyEntitiesByType(@Nullable @Nullable Class<? extends T> clazz, double xRadius, double yRadius, double zRadius)`
+- `@NotNull public <T extends Entity> @NotNull Collection<T> getNearbyEntitiesByType(@Nullable @Nullable Class<? extends T> clazz, double radius, @Nullable @Nullable Predicate<? super T> predicate)`
+- `@NotNull public <T extends Entity> @NotNull Collection<T> getNearbyEntitiesByType(@Nullable @Nullable Class<? extends T> clazz, double xzRadius, double yRadius, @Nullable @Nullable Predicate<? super T> predicate)`
+- `@NotNull public <T extends Entity> @NotNull Collection<T> getNearbyEntitiesByType(@Nullable @Nullable Class<? extends Entity> clazz, double xRadius, double yRadius, double zRadius, @Nullable @Nullable Predicate<? super T> predicate)`
+- `public boolean equals(Object obj)`
+- `public int hashCode()`
+- `public String toString()`
+- `@NotNull public @NotNull Vector toVector()`
+- `@NotNull public @NotNull Location clone()`
+- `public void checkFinite() throws IllegalArgumentException`
+- `public static int locToBlock(double loc)`
+- `@NotNull public @NotNull Map<String,Object> serialize()`
+- `@NotNull public static @NotNull Location deserialize(@NotNull @NotNull Map<String,Object> args)`
+- `public static float normalizeYaw(float yaw)`
+- `public static float normalizePitch(float pitch)`
+- `public double x()`
+- `public double y()`
+- `public double z()`
+- `public boolean isFinite()`
+- `@NotNull public @NotNull Location toLocation(@NotNull @NotNull World world)`

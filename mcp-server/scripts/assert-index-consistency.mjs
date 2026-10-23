@@ -111,8 +111,9 @@ const LEDGER_SUM = {
   // 顶层 58497→58503 / 37525→37531。原因是 `quilt/1.21.11` 源稿补了 javap 出处构件的字样后
   // 重跑 `index-qsl-verified.mjs --write`，processed 页变长 ⇒ 多切出 6 个 chunk。
   // 重签路径 = `MC_SKILL_INDEX_RELEDGER=1`（该分支只打印不落盘 ⇒ 按打印值手抄，见 :103 既有口径）。
-  // 2026-10-23：+ rift 1.13 一棵库（5 页 / 46 chunks / 29 embedded）。数字取自本门 MC_SKILL_INDEX_RELEDGER=1 重算。
-  entries: 65, chunks: 58549, embedded: 37560,
+  // 2026-10-23：+ rift 1.13 一棵库（5 页 / 46 chunks / 29 embedded）；
+  //             + paper-api 五个历史档（1.21.4/1.21.1/1.20.1/1.16.5/1.12.2，扁平落盘重抓后）。数字取自本门 RELEDGER=1 重算。
+  entries: 70, chunks: 69141, embedded: 45226,
   perPlatform: {
     "bedrock": { entries: 2, chunks: 15173, embedded: 4541 },
     "fabric": { entries: 27, chunks: 7935, embedded: 5898 },
@@ -121,7 +122,8 @@ const LEDGER_SUM = {
     "modloader": { entries: 3, chunks: 6, embedded: 2 },
     "neoforge": { entries: 9, chunks: 18877, embedded: 14169 },
     "paper": { entries: 1, chunks: 1155, embedded: 709 },
-    "paper-api": { entries: 1, chunks: 3631, embedded: 3169 },
+    // 2026-10-23：1 → 6（stable + 1.21.4/1.21.1/1.20.1/1.16.5/1.12.2）
+    "paper-api": { entries: 6, chunks: 14223, embedded: 10835 },
     "quilt": { entries: 6, chunks: 1790, embedded: 1355 },
     // 2026-10-23：rift 1.13 档入库 ⇒ 2 库（1.13: 5 页/46 块/29 嵌入；1.13.2: 6 页/47 块/29 嵌入）
     "rift": { entries: 2, chunks: 93, embedded: 58 },
@@ -134,6 +136,9 @@ const DEBT_FTS_ONLY = [
   // 阈值只管向量层是设计，登记在此是为了让「以后又多一个纯 FTS 库」必须被看见。
   "modloader|1.2.5|modloader-docs",
   "modloader|1.5.2|modloader-docs",
+  // 2026-10-23：paper-api 1.12.2 档整库退纯 FTS —— 该版 javadoc 页极薄（median 130 字符），
+  // 切出的块全部低于向量阈值（<200 字）⇒ 只有关键词层。这是版本本身的形态，不是抓取失败。
+  "paper-api|1.12.2|paper-javadoc",
 ];
 // A5 存量债务：整库空索引（该 source 在本仓库没有 processed/l0 正文）
 const DEBT_EMPTY_INDEX = [

@@ -119,8 +119,14 @@ export function measureTree(tree, dir) {
     bodies.push(bc);
     const hasSections = /^##\s/m.test(body);
     if (!hasSections) sectionless++;
+    // 签名面（`*-javadoc/`）的"正文"就是 `- ` <签名>`` 列表：标记接口只有 1 行 ⇒ bodyChars 天然 <40。
+    // 2026-10-23 加档实测：paper-api 1.21.4 有 32 页这种「一行签名」页，按 40 字判据全成 stub，
+    // 撞全局 totalStubBudget（=1）。对签名面改用**更强**的判据：**有没有签名行**。
+    // 真空白页（无签名行）仍会落到下面的 stub 分支 ⇒ 判据没有放宽，只是换了更贴合的度量。
+    const isJavadocFace = /-javadoc\//.test(tree);
+    const hasSigLine = /^- `[^`]+`$/m.test(body);
     if (bc < STUB_MIN) {
-      if (hasSections) thin++;
+      if (hasSections || (isJavadocFace && hasSigLine)) thin++;
       else {
         stub++;
         stubFiles.push(path.relative(dir, f).split(path.sep).join('/'));

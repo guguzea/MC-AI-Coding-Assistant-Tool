@@ -1,0 +1,97 @@
+---
+title: "org.bukkit.entity.HumanEntity"
+package: "org.bukkit.entity"
+source: https://jd.papermc.io/paper/1.21.4/org/bukkit/entity/HumanEntity.html
+sourceType: javadoc
+fetchedWith: fetch-spigot-javadoc.mjs@1
+fetchedAt: 2026-10-23T07:50:36.606Z
+asOfVersion: "1.21.4-R0.1-SNAPSHOT"
+---
+
+- `EntityEquipment getEquipment()`
+- `String getName()`
+- `PlayerInventory getInventory()`
+- `Inventory getEnderChest()`
+- `MainHand getMainHand()`
+- `@Deprecated(forRemoval=true, since="1.21") boolean setWindowProperty(InventoryView.Property prop, int value)`
+- `int getEnchantmentSeed()`
+- `void setEnchantmentSeed(int seed)`
+- `InventoryView getOpenInventory()`
+- `@Nullable InventoryView openInventory(Inventory inventory)`
+- `@Deprecated(since="1.21.4") @Nullable InventoryView openWorkbench(@Nullable Location location, boolean force)`
+- `@Deprecated(since="1.21.4") @Nullable InventoryView openEnchanting(@Nullable Location location, boolean force)`
+- `void openInventory(InventoryView inventory)`
+- `@Deprecated(since="1.21.4") @Nullable InventoryView openMerchant(Villager trader, boolean force)`
+- `@Deprecated(since="1.21.4") @Nullable InventoryView openMerchant(Merchant merchant, boolean force)`
+- `@Deprecated(since="1.21.4") @Nullable InventoryView openAnvil(@Nullable Location location, boolean force)`
+- `@Deprecated(since="1.21.4") @Nullable InventoryView openCartographyTable(@Nullable Location location, boolean force)`
+- `@Deprecated(since="1.21.4") @Nullable InventoryView openGrindstone(@Nullable Location location, boolean force)`
+- `@Deprecated(since="1.21.4") @Nullable InventoryView openLoom(@Nullable Location location, boolean force)`
+- `@Deprecated(since="1.21.4") @Nullable InventoryView openSmithingTable(@Nullable Location location, boolean force)`
+- `@Deprecated(since="1.21.4") @Nullable InventoryView openStonecutter(@Nullable Location location, boolean force)`
+- `void closeInventory()`
+- `void closeInventory(InventoryCloseEvent.Reason reason)`
+- `@Deprecated(since="1.9") ItemStack getItemInHand()`
+- `@Deprecated(since="1.9") void setItemInHand(@Nullable ItemStack item)`
+- `ItemStack getItemOnCursor()`
+- `void setItemOnCursor(@Nullable ItemStack item)`
+- `boolean hasCooldown(Material material)`
+- `int getCooldown(Material material)`
+- `void setCooldown(Material material, int ticks)`
+- `void setHurtDirection(float hurtDirection)`
+- `boolean isDeeplySleeping()`
+- `boolean hasCooldown(ItemStack item)`
+- `int getCooldown(ItemStack item)`
+- `void setCooldown(ItemStack item, int ticks)`
+- `int getSleepTicks()`
+- `@Deprecated(since="1.21.4") default @Nullable Location getPotentialBedLocation()`
+- `@Nullable Location getPotentialRespawnLocation()`
+- `@Nullable FishHook getFishHook()`
+- `boolean sleep(Location location, boolean force)`
+- `void wakeup(boolean setSpawnLocation)`
+- `void startRiptideAttack(int duration, float attackStrength, @Nullable ItemStack attackItem)`
+- `Location getBedLocation()`
+- `GameMode getGameMode()`
+- `void setGameMode(GameMode mode)`
+- `boolean isBlocking()`
+- `@Obsolete(since="1.20.4") boolean isHandRaised()`
+- `int getExpToLevel()`
+- `@Nullable Entity releaseLeftShoulderEntity()`
+- `@Nullable Entity releaseRightShoulderEntity()`
+- `float getAttackCooldown()`
+- `boolean discoverRecipe(NamespacedKey recipe)`
+- `int discoverRecipes(Collection<NamespacedKey> recipes)`
+- `boolean undiscoverRecipe(NamespacedKey recipe)`
+- `int undiscoverRecipes(Collection<NamespacedKey> recipes)`
+- `boolean hasDiscoveredRecipe(NamespacedKey recipe)`
+- `Set<NamespacedKey> getDiscoveredRecipes()`
+- `@Deprecated(since="1.12") @Nullable Entity getShoulderEntityLeft()`
+- `@Deprecated(since="1.12") void setShoulderEntityLeft(@Nullable Entity entity)`
+- `@Deprecated(since="1.12") @Nullable Entity getShoulderEntityRight()`
+- `@Deprecated(since="1.12") void setShoulderEntityRight(@Nullable Entity entity)`
+- `@Deprecated default void openSign(Sign sign)`
+- `void openSign(Sign sign, Side side)`
+- `@Obsolete(since="1.21.4") boolean dropItem(boolean dropAll)`
+- `default @Nullable Item dropItem(int slot)`
+- `default @Nullable Item dropItem(int slot, int amount)`
+- `@Nullable Item dropItem(int slot, int amount, boolean throwRandomly, @Nullable Consumer<Item> entityOperation)`
+- `default @Nullable Item dropItem(EquipmentSlot slot)`
+- `default @Nullable Item dropItem(EquipmentSlot slot, int amount)`
+- `@Nullable Item dropItem(EquipmentSlot slot, int amount, boolean throwRandomly, @Nullable Consumer<Item> entityOperation)`
+- `default @Nullable Item dropItem(ItemStack itemStack)`
+- `@Nullable Item dropItem(ItemStack itemStack, boolean throwRandomly, @Nullable Consumer<Item> entityOperation)`
+- `float getExhaustion()`
+- `void setExhaustion(float value)`
+- `float getSaturation()`
+- `void setSaturation(float value)`
+- `int getFoodLevel()`
+- `void setFoodLevel(int value)`
+- `int getSaturatedRegenRate()`
+- `void setSaturatedRegenRate(int ticks)`
+- `int getUnsaturatedRegenRate()`
+- `void setUnsaturatedRegenRate(int ticks)`
+- `int getStarvationRate()`
+- `void setStarvationRate(int ticks)`
+- `@Nullable Location getLastDeathLocation()`
+- `void setLastDeathLocation(@Nullable Location location)`
+- `@Nullable Firework fireworkBoost(ItemStack fireworkItemStack)`

@@ -40,6 +40,25 @@ const OUT_DIR = process.env.AUDIT_OUT_DIR
     throw new Error(`【OUTLET-IN-REPO】拒绝把审计产物写进仓库正文：${OUT_DIR}（只允许 <repo>/temp/** 或仓库外路径）`);
   }
 }
+// 【拒绝空白/点号尾随的段名】fail-closed：上面那道闸只比 `<repo>/temp/` 前缀，**认不出"差一个
+// 空格的同名兄弟"**。Win32 会把 `...\MC_skill \temp\content-audit` 的尾空格在 API 层吃掉，
+// 于是 mkdir 不报错、而是**另建一个顶层目录**（2026-10-18 实测：桌面多出一个只含 1 个 62 字节
+// 空报告的 `MC_skill `，与真仓库并存）。这里在解析结果的**每一段**上拦，命中即拒跑。
+// 只在 win32 上判：POSIX 的尾空格/尾点号是合法且**可区分**的名字，不存在这种静默改道。
+if (process.platform === "win32") {
+  const segs = OUT_DIR.split(path.sep);
+  for (let i = 1; i < segs.length; i++) {
+    const seg = segs[i];
+    if (!seg) continue; // 盘符后的根空段 / UNC 头
+    if (seg !== seg.trim() || /\.$/.test(seg)) {
+      const fixed = segs.map((s, k) => (k === i ? s.trim().replace(/\.+$/, "") : s)).join(path.sep);
+      throw new Error(
+        `【OUTLET-BLANK-NAME】拒绝把审计产物写到"首尾空白 / 尾随点号"的目录名下：段 #${i} = <${seg}>（Win32 会静默改道成另一个目录）` +
+          `；本意若是 ${OUT_DIR}，请改成 <${fixed}>`,
+      );
+    }
+  }
+}
 // 2026-10-21 修正（审查：已跟踪文件里带本机用户名/绝对路径）：原写死
 // `<home>/.gradle/...` 这类写死路径 ⇒ 换一台机器全断，且把维护者用户名与目录结构写进公开仓。
 // 现按 `GRADLE_USER_HOME`（Gradle 官方环境变量，缺省 `~/.gradle`）推导，零硬编码。

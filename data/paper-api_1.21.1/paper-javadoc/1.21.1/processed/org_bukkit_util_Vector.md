@@ -1,0 +1,85 @@
+---
+title: "org.bukkit.util.Vector"
+package: "org.bukkit.util"
+source: https://jd.papermc.io/paper/1.21.1/org/bukkit/util/Vector.html
+sourceType: javadoc
+fetchedWith: fetch-spigot-javadoc.mjs@1
+fetchedAt: 2026-10-23T08:04:53.899Z
+asOfVersion: "1.21.1-R0.1-SNAPSHOT"
+---
+
+- `protected double x`
+- `protected double y`
+- `protected double z`
+- `public Vector()`
+- `public Vector(int x, int y, int z)`
+- `public Vector(double x, double y, double z)`
+- `public Vector(float x, float y, float z)`
+- `@NotNull public @NotNull Vector add(@NotNull @NotNull Vector vec)`
+- `@NotNull public @NotNull Vector subtract(@NotNull @NotNull Vector vec)`
+- `@NotNull public @NotNull Vector multiply(@NotNull @NotNull Vector vec)`
+- `@NotNull public @NotNull Vector divide(@NotNull @NotNull Vector vec)`
+- `@NotNull public @NotNull Vector copy(@NotNull @NotNull Vector vec)`
+- `public double length()`
+- `public double lengthSquared()`
+- `public double distance(@NotNull @NotNull Vector o)`
+- `public double distanceSquared(@NotNull @NotNull Vector o)`
+- `public float angle(@NotNull @NotNull Vector other)`
+- `@NotNull public @NotNull Vector midpoint(@NotNull @NotNull Vector other)`
+- `@NotNull public @NotNull Vector getMidpoint(@NotNull @NotNull Vector other)`
+- `@NotNull public @NotNull Vector multiply(int m)`
+- `@NotNull public @NotNull Vector multiply(double m)`
+- `@NotNull public @NotNull Vector multiply(float m)`
+- `public double dot(@NotNull @NotNull Vector other)`
+- `@NotNull public @NotNull Vector crossProduct(@NotNull @NotNull Vector o)`
+- `@NotNull public @NotNull Vector getCrossProduct(@NotNull @NotNull Vector o)`
+- `@NotNull public @NotNull Vector normalize()`
+- `@NotNull public @NotNull Vector zero()`
+- `public boolean isZero()`
+- `public boolean isInAABB(@NotNull @NotNull Vector min, @NotNull @NotNull Vector max)`
+- `public boolean isInSphere(@NotNull @NotNull Vector origin, double radius)`
+- `public boolean isNormalized()`
+- `@NotNull public @NotNull Vector rotateAroundX(double angle)`
+- `@NotNull public @NotNull Vector rotateAroundY(double angle)`
+- `@NotNull public @NotNull Vector rotateAroundZ(double angle)`
+- `@NotNull public @NotNull Vector rotateAroundAxis(@NotNull @NotNull Vector axis, double angle) throws IllegalArgumentException`
+- `@NotNull public @NotNull Vector rotateAroundNonUnitAxis(@NotNull @NotNull Vector axis, double angle) throws IllegalArgumentException`
+- `public double getX()`
+- `public int getBlockX()`
+- `public double getY()`
+- `public int getBlockY()`
+- `public double getZ()`
+- `public int getBlockZ()`
+- `@NotNull public @NotNull Vector setX(int x)`
+- `@NotNull public @NotNull Vector setX(double x)`
+- `@NotNull public @NotNull Vector setX(float x)`
+- `@NotNull public @NotNull Vector setY(int y)`
+- `@NotNull public @NotNull Vector setY(double y)`
+- `@NotNull public @NotNull Vector setY(float y)`
+- `@NotNull public @NotNull Vector setZ(int z)`
+- `@NotNull public @NotNull Vector setZ(double z)`
+- `@NotNull public @NotNull Vector setZ(float z)`
+- `public boolean equals(Object obj)`
+- `public int hashCode()`
+- `@NotNull public @NotNull Vector clone()`
+- `public String toString()`
+- `@NotNull public @NotNull Location toLocation(@NotNull @NotNull World world)`
+- `@NotNull public @NotNull Location toLocation(@NotNull @NotNull World world, float yaw, float pitch)`
+- `@NotNull public @NotNull BlockVector toBlockVector()`
+- `@NotNull public @NotNull org.joml.Vector3f toVector3f()`
+- `@NotNull public @NotNull org.joml.Vector3d toVector3d()`
+- `@NotNull public @NotNull org.joml.Vector3i toVector3i(int roundingMode)`
+- `@NotNull public @NotNull org.joml.Vector3i toVector3i()`
+- `public void checkFinite() throws IllegalArgumentException`
+- `public static double getEpsilon()`
+- `@NotNull public static @NotNull Vector getMinimum(@NotNull @NotNull Vector v1, @NotNull @NotNull Vector v2)`
+- `@NotNull public static @NotNull Vector getMaximum(@NotNull @NotNull Vector v1, @NotNull @NotNull Vector v2)`
+- `@NotNull public static @NotNull Vector getRandom()`
+- `@NotNull public static @NotNull Vector fromJOML(@NotNull @NotNull org.joml.Vector3f vector)`
+- `@NotNull public static @NotNull Vector fromJOML(@NotNull @NotNull org.joml.Vector3d vector)`
+- `@NotNull public static @NotNull Vector fromJOML(@NotNull @NotNull org.joml.Vector3i vector)`
+- `@NotNull public static @NotNull Vector fromJOML(@NotNull @NotNull org.joml.Vector3fc vector)`
+- `@NotNull public static @NotNull Vector fromJOML(@NotNull @NotNull org.joml.Vector3dc vector)`
+- `@NotNull public static @NotNull Vector fromJOML(@NotNull @NotNull org.joml.Vector3ic vector)`
+- `@NotNull public @NotNull Map<String,Object> serialize()`
+- `@NotNull public static @NotNull Vector deserialize(@NotNull @NotNull Map<String,Object> args)`

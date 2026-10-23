@@ -1,0 +1,14 @@
+---
+title: "org.bukkit.block.data.type.TechnicalPiston.Type"
+package: "org.bukkit.block.data.type"
+source: https://jd.papermc.io/paper/1.16.5/org/bukkit/block/data/type/TechnicalPiston.Type.html
+sourceType: javadoc
+fetchedWith: fetch-spigot-javadoc.mjs@1
+fetchedAt: 2026-10-23T08:04:41.693Z
+asOfVersion: "1.16.5-R0.1-SNAPSHOT"
+---
+
+- `public static final TechnicalPiston.Type NORMAL`
+- `public static final TechnicalPiston.Type STICKY`
+- `public static TechnicalPiston.Type[] values()`
+- `public static TechnicalPiston.Type valueOf&#8203;(String name)`

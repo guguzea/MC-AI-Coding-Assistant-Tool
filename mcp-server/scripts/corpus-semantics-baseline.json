@@ -276,6 +276,31 @@
       "allowedStubs": 0,
       "medianFloor": 7926
     },
+    "paper-api_1.12.2/paper-javadoc/1.12.2": {
+      "files": 877,
+      "allowedStubs": 0,
+      "medianFloor": 100
+    },
+    "paper-api_1.16.5/paper-javadoc/1.16.5": {
+      "files": 1254,
+      "allowedStubs": 0,
+      "medianFloor": 207
+    },
+    "paper-api_1.20.1/paper-javadoc/1.20.1": {
+      "files": 1496,
+      "allowedStubs": 0,
+      "medianFloor": 196
+    },
+    "paper-api_1.21.1/paper-javadoc/1.21.1": {
+      "files": 1702,
+      "allowedStubs": 0,
+      "medianFloor": 188
+    },
+    "paper-api_1.21.4/paper-javadoc/1.21.4": {
+      "files": 1871,
+      "allowedStubs": 0,
+      "medianFloor": 185
+    },
     "paper-api_stable/paper-javadoc/stable": {
       "files": 2116,
       "allowedStubs": 0,

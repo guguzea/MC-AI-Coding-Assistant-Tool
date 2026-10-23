@@ -1,0 +1,15 @@
+---
+title: "org.bukkit.inventory.view.EnchantmentView"
+package: "org.bukkit.inventory.view"
+source: https://jd.papermc.io/paper/1.21.4/org/bukkit/inventory/view/EnchantmentView.html
+sourceType: javadoc
+fetchedWith: fetch-spigot-javadoc.mjs@1
+fetchedAt: 2026-10-23T07:50:36.606Z
+asOfVersion: "1.21.4-R0.1-SNAPSHOT"
+---
+
+- `@NotNull @NotNull EnchantingInventory getTopInventory()`
+- `int getEnchantmentSeed()`
+- `void setEnchantmentSeed(int seed)`
+- `@Nullable EnchantmentOffer @NotNull [] getOffers()`
+- `void setOffers(@Nullable EnchantmentOffer @NotNull [] offers) throws IllegalArgumentException`

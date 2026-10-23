@@ -1,0 +1,146 @@
+---
+title: "org.bukkit.entity.LivingEntity"
+package: "org.bukkit.entity"
+source: https://jd.papermc.io/paper/1.21.1/org/bukkit/entity/LivingEntity.html
+sourceType: javadoc
+fetchedWith: fetch-spigot-javadoc.mjs@1
+fetchedAt: 2026-10-23T08:04:53.899Z
+asOfVersion: "1.21.1-R0.1-SNAPSHOT"
+---
+
+- `double getEyeHeight()`
+- `double getEyeHeight(boolean ignorePose)`
+- `@NotNull @NotNull Location getEyeLocation()`
+- `@NotNull @NotNull List<Block> getLineOfSight(@Nullable @Nullable Set<Material> transparent, int maxDistance)`
+- `@NotNull @NotNull Block getTargetBlock(@Nullable @Nullable Set<Material> transparent, int maxDistance)`
+- `@Deprecated(forRemoval=true, since="1.19.3") @Nullable default @Nullable Block getTargetBlock(int maxDistance)`
+- `@Deprecated(forRemoval=true, since="1.19.3") @Nullable @Nullable Block getTargetBlock(int maxDistance, @NotNull TargetBlockInfo.FluidMode fluidMode)`
+- `@Nullable default BlockFace getTargetBlockFace(int maxDistance)`
+- `@Deprecated(forRemoval=true, since="1.19.3") @Nullable BlockFace getTargetBlockFace(int maxDistance, @NotNull TargetBlockInfo.FluidMode fluidMode)`
+- `@Nullable BlockFace getTargetBlockFace(int maxDistance, @NotNull @NotNull FluidCollisionMode fluidMode)`
+- `@Deprecated(forRemoval=true, since="1.19.3") @Nullable default TargetBlockInfo getTargetBlockInfo(int maxDistance)`
+- `@Deprecated(forRemoval=true, since="1.19.3") @Nullable TargetBlockInfo getTargetBlockInfo(int maxDistance, @NotNull TargetBlockInfo.FluidMode fluidMode)`
+- `@Nullable default @Nullable Entity getTargetEntity(int maxDistance)`
+- `@Nullable @Nullable Entity getTargetEntity(int maxDistance, boolean ignoreBlocks)`
+- `@Deprecated(forRemoval=true, since="1.19.3") @Nullable default TargetEntityInfo getTargetEntityInfo(int maxDistance)`
+- `@Nullable default @Nullable RayTraceResult rayTraceEntities(int maxDistance)`
+- `@Deprecated(forRemoval=true, since="1.19.3") @Nullable TargetEntityInfo getTargetEntityInfo(int maxDistance, boolean ignoreBlocks)`
+- `@Nullable @Nullable RayTraceResult rayTraceEntities(int maxDistance, boolean ignoreBlocks)`
+- `@NotNull @NotNull List<Block> getLastTwoTargetBlocks(@Nullable @Nullable Set<Material> transparent, int maxDistance)`
+- `@Nullable @Nullable Block getTargetBlockExact(int maxDistance)`
+- `@Nullable @Nullable Block getTargetBlockExact(int maxDistance, @NotNull @NotNull FluidCollisionMode fluidCollisionMode)`
+- `@Nullable @Nullable RayTraceResult rayTraceBlocks(double maxDistance)`
+- `@Nullable @Nullable RayTraceResult rayTraceBlocks(double maxDistance, @NotNull @NotNull FluidCollisionMode fluidCollisionMode)`
+- `int getRemainingAir()`
+- `void setRemainingAir(int ticks)`
+- `int getMaximumAir()`
+- `void setMaximumAir(int ticks)`
+- `@Nullable @Deprecated(forRemoval=true, since="1.20.4") @Nullable ItemStack getItemInUse()`
+- `@Deprecated(forRemoval=true, since="1.20.4") int getItemInUseTicks()`
+- `@Deprecated(forRemoval=true, since="1.20.4") void setItemInUseTicks(int ticks)`
+- `int getArrowCooldown()`
+- `void setArrowCooldown(int ticks)`
+- `int getArrowsInBody()`
+- `default void setArrowsInBody(int count)`
+- `void setArrowsInBody(int count, boolean fireEvent)`
+- `void setNextArrowRemoval(@org.jetbrains.annotations.Range(from=0L, to=2147483647L) int ticks)`
+- `int getNextArrowRemoval()`
+- `int getBeeStingerCooldown()`
+- `void setBeeStingerCooldown(int ticks)`
+- `int getBeeStingersInBody()`
+- `void setBeeStingersInBody(int count)`
+- `void setNextBeeStingerRemoval(@org.jetbrains.annotations.Range(from=0L, to=2147483647L) int ticks)`
+- `int getNextBeeStingerRemoval()`
+- `int getMaximumNoDamageTicks()`
+- `void setMaximumNoDamageTicks(int ticks)`
+- `double getLastDamage()`
+- `void setLastDamage(double damage)`
+- `int getNoDamageTicks()`
+- `void setNoDamageTicks(int ticks)`
+- `int getNoActionTicks()`
+- `void setNoActionTicks(int ticks)`
+- `@Nullable @Nullable Player getKiller()`
+- `void setKiller(@Nullable @Nullable Player killer)`
+- `boolean addPotionEffect(@NotNull @NotNull PotionEffect effect)`
+- `@Deprecated boolean addPotionEffect(@NotNull @NotNull PotionEffect effect, boolean force)`
+- `boolean addPotionEffects(@NotNull @NotNull Collection<PotionEffect> effects)`
+- `boolean hasPotionEffect(@NotNull @NotNull PotionEffectType type)`
+- `@Nullable @Nullable PotionEffect getPotionEffect(@NotNull @NotNull PotionEffectType type)`
+- `void removePotionEffect(@NotNull @NotNull PotionEffectType type)`
+- `@NotNull @NotNull Collection<PotionEffect> getActivePotionEffects()`
+- `boolean clearActivePotionEffects()`
+- `boolean hasLineOfSight(@NotNull @NotNull Entity other)`
+- `boolean hasLineOfSight(@NotNull @NotNull Location location)`
+- `boolean getRemoveWhenFarAway()`
+- `void setRemoveWhenFarAway(boolean remove)`
+- `@Nullable @Nullable EntityEquipment getEquipment()`
+- `void setCanPickupItems(boolean pickup)`
+- `boolean getCanPickupItems()`
+- `boolean isLeashed()`
+- `@NotNull @NotNull Entity getLeashHolder() throws IllegalStateException`
+- `boolean setLeashHolder(@Nullable @Nullable Entity holder)`
+- `boolean isGliding()`
+- `void setGliding(boolean gliding)`
+- `boolean isSwimming()`
+- `@Deprecated void setSwimming(boolean swimming)`
+- `boolean isRiptiding()`
+- `void setRiptiding(boolean riptiding)`
+- `boolean isSleeping()`
+- `boolean isClimbing()`
+- `void setAI(boolean ai)`
+- `boolean hasAI()`
+- `void attack(@NotNull @NotNull Entity target)`
+- `void swingMainHand()`
+- `void swingOffHand()`
+- `void playHurtAnimation(float yaw)`
+- `void setCollidable(boolean collidable)`
+- `boolean isCollidable()`
+- `@NotNull @NotNull Set<UUID> getCollidableExemptions()`
+- `@Nullable <T> T getMemory(@NotNull @NotNull MemoryKey<T> memoryKey)`
+- `<T> void setMemory(@NotNull @NotNull MemoryKey<T> memoryKey, @Nullable T memoryValue)`
+- `@Nullable @Nullable Sound getHurtSound()`
+- `@Nullable @Nullable Sound getDeathSound()`
+- `@NotNull @NotNull Sound getFallDamageSound(int fallHeight)`
+- `@NotNull @NotNull Sound getFallDamageSoundSmall()`
+- `@NotNull @NotNull Sound getFallDamageSoundBig()`
+- `@NotNull @NotNull Sound getDrinkingSound(@NotNull @NotNull ItemStack itemStack)`
+- `@NotNull @NotNull Sound getEatingSound(@NotNull @NotNull ItemStack itemStack)`
+- `boolean canBreatheUnderwater()`
+- `@NotNull @Deprecated(forRemoval=true, since="1.20.5") @Contract("-> fail") @NotNull EntityCategory getCategory()`
+- `void setInvisible(boolean invisible)`
+- `boolean isInvisible()`
+- `@Deprecated int getArrowsStuck()`
+- `@Deprecated void setArrowsStuck(int arrows)`
+- `int getShieldBlockingDelay()`
+- `void setShieldBlockingDelay(int delay)`
+- `float getSidewaysMovement()`
+- `float getUpwardsMovement()`
+- `float getForwardsMovement()`
+- `@Experimental void startUsingItem(@NotNull EquipmentSlot hand)`
+- `@Experimental void completeUsingActiveItem()`
+- `@NotNull ItemStack getActiveItem()`
+- `void clearActiveItem()`
+- `int getActiveItemRemainingTime()`
+- `void setActiveItemRemainingTime(@org.jetbrains.annotations.Range(from=0L, to=2147483647L) int ticks)`
+- `boolean hasActiveItem()`
+- `int getActiveItemUsedTime()`
+- `@NotNull EquipmentSlot getActiveItemHand()`
+- `@Obsolete(since="1.20.4") default int getItemUseRemainingTime()`
+- `@Obsolete(since="1.20.4") default int getHandRaisedTime()`
+- `@Obsolete(since="1.20.4") default boolean isHandRaised()`
+- `@NotNull @Obsolete(since="1.20.4") default EquipmentSlot getHandRaised()`
+- `boolean isJumping()`
+- `void setJumping(boolean jumping)`
+- `default void playPickupItemAnimation(@NotNull @NotNull Item item)`
+- `void playPickupItemAnimation(@NotNull @NotNull Item item, int quantity)`
+- `float getHurtDirection()`
+- `@Deprecated void setHurtDirection(float hurtDirection)`
+- `default void swingHand(@NotNull EquipmentSlot hand)`
+- `void knockback(double strength, double directionX, double directionZ)`
+- `void broadcastSlotBreak(@NotNull EquipmentSlot slot)`
+- `void broadcastSlotBreak(@NotNull EquipmentSlot slot, @NotNull @NotNull Collection<Player> players)`
+- `@NotNull @NotNull ItemStack damageItemStack(@NotNull @NotNull ItemStack stack, int amount)`
+- `void damageItemStack(@NotNull EquipmentSlot slot, int amount)`
+- `float getBodyYaw()`
+- `void setBodyYaw(float bodyYaw)`
+- `boolean canUseEquipmentSlot(@NotNull EquipmentSlot slot)`

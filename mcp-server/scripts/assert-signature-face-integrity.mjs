@@ -66,6 +66,14 @@ const FACES = [
     base: "https://jd.papermc.io/paper/26.3",
     producerRev: "fetch-spigot-javadoc.mjs@1",
   },
+  // 2026-10-23：paper-api 五个**按真 MC 版本**分的历史档（用户点名：必选 1.21.4/1.20.1 + 建议 1.21.1/1.16.5/1.12.2）。
+  // 不登记进 FACES 就没有出处门罩着 —— index↔盘双向、raw↔proc 1:1、asOfVersion 这些判据全落在 `stable` 上而已。
+  ...["1.21.4", "1.21.1", "1.20.1", "1.16.5", "1.12.2"].map((v) => ({
+    name: `paper-${v}`,
+    versionDir: `paper-api_${v}/paper-javadoc/${v}`,
+    base: `https://jd.papermc.io/paper/${v}`,
+    producerRev: "fetch-spigot-javadoc.mjs@1",
+  })),
 ];
 
 const problems = [];
@@ -149,13 +157,16 @@ function selftestWriteFace(rootDir, spec, mutate) {
     fetchedWith: spec.producerRev,
   };
   const fm = (o) => `---\n${Object.entries(o).map(([k, v]) => `${k}: ${v}`).join("\n")}\n---\n\nbody\n`;
+  // 夹具的 pseudo 前缀必须跟 spec 走（`stable` / `1.21.4`）：FACES 现在混着伪版本档与真版本档，
+  // 写死 `stable` 会让后者的正对照假红（2026-10-23 扩档时实测）。
+  const pseudo = spec.versionDir.split("/").pop();
   const files = {
-    // id 形状 = `stable/<包路径把 . 与 / 都换成 _>_<Class>`（实测 spigot 档：`stable/org_bukkit_advancement_Advancement`）
-    "index-l0.json": JSON.stringify([{ id: "stable/org_example_Foo" }]),
+    // id 形状 = `<pseudo>/<包路径把 . 与 / 都换成 _>_<Class>`（实测 spigot 档：`stable/org_bukkit_advancement_Advancement`）
+    "index-l0.json": JSON.stringify([{ id: `${pseudo}/org_example_Foo` }]),
     "processed/org_example_Foo.md": fm(page),
     "raw/org_example_Foo.html": "<html></html>",
     "_orphan-report.json": JSON.stringify({
-      version: "stable",
+      version: pseudo,
       producerRev: spec.producerRev,
       count: 0,
       orphans: [],
@@ -327,13 +338,18 @@ for (const face of present) {
   }
 
   // ── 判据③：索引差**双向**空 ─────────────────────────────────────────────
+  // id 前缀 = **该档的 pseudo 版本**，取 `versionDir` 最后一段（`stable` / `1.21.4`），不再写死 `stable`。
+  // 2026-10-23 加真版本档时踩到：此门原先把前缀硬编码成 `stable/`，五个新档 index id 是 `1.21.4/...`
+  // ⇒ 判据③对它们必然全红。改成按面取前缀（判据本身没收紧也没放松，只是不再假设「只有 stable」）。
+  const pseudo = face.versionDir.split("/").pop();
+  const pseudoRe = new RegExp(`^${pseudo.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}/`);
   const entries = JSON.parse(readFileSync(idxPath, "utf8"));
   const procSet = new Set(procFiles);
   const idToProc = new Map();
   for (const e of entries) {
-    const bare = String(e.id ?? "").replace(/^stable\//, "");
+    const bare = String(e.id ?? "").replace(pseudoRe, "");
     if (!bare || bare === e.id) {
-      push(face.name, `index 条目 id 形状不符（应以 stable/ 开头）：${e.id}`);
+      push(face.name, `index 条目 id 形状不符（应以 ${pseudo}/ 开头）：${e.id}`);
       continue;
     }
     const want = `${bare}.md`;
@@ -344,7 +360,7 @@ for (const face of present) {
   }
   const idSet = new Set(entries.map((e) => e.id));
   for (const rel of procFiles) {
-    const id = `stable/${rel.replace(/\.md$/, "")}`;
+    const id = `${pseudo}/${rel.replace(/\.md$/, "")}`;
     if (!idSet.has(id)) {
       push(face.name, `盘上有、索引里没有：processed/${rel} → id ${id}`);
     }
@@ -374,8 +390,8 @@ for (const face of present) {
       if (rep.count !== orphans.length) {
         push(face.name, `_orphan-report.count=${rep.count} ≠ orphans.length=${orphans.length}`);
       }
-      if (rep.version !== "stable") {
-        push(face.name, `_orphan-report.version=${rep.version} ≠ 档目录名 stable`);
+      if (rep.version !== pseudo) {
+        push(face.name, `_orphan-report.version=${rep.version} ≠ 档目录名 ${pseudo}`);
       }
       if (rep.producerRev !== face.producerRev) {
         push(face.name, `_orphan-report.producerRev=${rep.producerRev} ≠ 代码钉值 ${face.producerRev}`);

@@ -1,0 +1,124 @@
+---
+title: "org.bukkit.entity.Entity"
+package: "org.bukkit.entity"
+source: https://jd.papermc.io/paper/1.20.1/org/bukkit/entity/Entity.html
+sourceType: javadoc
+fetchedWith: fetch-spigot-javadoc.mjs@1
+fetchedAt: 2026-10-23T07:58:42.132Z
+asOfVersion: "1.20.1-R0.1-SNAPSHOT"
+---
+
+- `@NotNull @NotNull Location getLocation()`
+- `@Contract("null -> null; !null -> !null") @Nullable @Nullable Location getLocation(@Nullable @Nullable Location loc)`
+- `void setVelocity(@NotNull @NotNull Vector velocity)`
+- `@NotNull @NotNull Vector getVelocity()`
+- `double getHeight()`
+- `double getWidth()`
+- `@NotNull @NotNull BoundingBox getBoundingBox()`
+- `boolean isOnGround()`
+- `boolean isInWater()`
+- `@NotNull @NotNull World getWorld()`
+- `void setRotation(float yaw, float pitch)`
+- `@Experimental default boolean teleport(@NotNull @NotNull Location location, @NotNull @NotNull TeleportFlag @NotNull ... teleportFlags)`
+- `@Experimental boolean teleport(@NotNull @NotNull Location location, @NotNull @NotNull PlayerTeleportEvent.TeleportCause cause, @NotNull @NotNull TeleportFlag @NotNull ... teleportFlags)`
+- `boolean teleport(@NotNull @NotNull Location location)`
+- `boolean teleport(@NotNull @NotNull Location location, @NotNull @NotNull PlayerTeleportEvent.TeleportCause cause)`
+- `boolean teleport(@NotNull @NotNull Entity destination)`
+- `boolean teleport(@NotNull @NotNull Entity destination, @NotNull @NotNull PlayerTeleportEvent.TeleportCause cause)`
+- `@NotNull default CompletableFuture<Boolean> teleportAsync(@NotNull @NotNull Location loc)`
+- `@NotNull default CompletableFuture<Boolean> teleportAsync(@NotNull @NotNull Location loc, @NotNull @NotNull PlayerTeleportEvent.TeleportCause cause)`
+- `@NotNull @NotNull List<Entity> getNearbyEntities(double x, double y, double z)`
+- `int getEntityId()`
+- `int getFireTicks()`
+- `int getMaxFireTicks()`
+- `void setFireTicks(int ticks)`
+- `void setVisualFire(boolean fire)`
+- `boolean isVisualFire()`
+- `int getFreezeTicks()`
+- `int getMaxFreezeTicks()`
+- `void setFreezeTicks(int ticks)`
+- `boolean isFrozen()`
+- `boolean isFreezeTickingLocked()`
+- `void lockFreezeTicks(boolean locked)`
+- `void remove()`
+- `boolean isDead()`
+- `boolean isValid()`
+- `@NotNull @NotNull Server getServer()`
+- `boolean isPersistent()`
+- `void setPersistent(boolean persistent)`
+- `@Deprecated @Nullable @Nullable Entity getPassenger()`
+- `@Deprecated boolean setPassenger(@NotNull @NotNull Entity passenger)`
+- `@NotNull @NotNull List<Entity> getPassengers()`
+- `boolean addPassenger(@NotNull @NotNull Entity passenger)`
+- `boolean removePassenger(@NotNull @NotNull Entity passenger)`
+- `boolean isEmpty()`
+- `boolean eject()`
+- `float getFallDistance()`
+- `void setFallDistance(float distance)`
+- `void setLastDamageCause(@Nullable @Nullable EntityDamageEvent event)`
+- `@Nullable @Nullable EntityDamageEvent getLastDamageCause()`
+- `@NotNull @NotNull UUID getUniqueId()`
+- `int getTicksLived()`
+- `void setTicksLived(int value)`
+- `void playEffect(@NotNull @NotNull EntityEffect type)`
+- `@NotNull @NotNull EntityType getType()`
+- `@NotNull @NotNull Sound getSwimSound()`
+- `@NotNull @NotNull Sound getSwimSplashSound()`
+- `@NotNull @NotNull Sound getSwimHighSpeedSplashSound()`
+- `boolean isInsideVehicle()`
+- `boolean leaveVehicle()`
+- `@Nullable @Nullable Entity getVehicle()`
+- `void setCustomNameVisible(boolean flag)`
+- `boolean isCustomNameVisible()`
+- `@Experimental void setVisibleByDefault(boolean visible)`
+- `@Experimental boolean isVisibleByDefault()`
+- `void setGlowing(boolean flag)`
+- `boolean isGlowing()`
+- `void setInvulnerable(boolean flag)`
+- `boolean isInvulnerable()`
+- `boolean isSilent()`
+- `void setSilent(boolean flag)`
+- `boolean hasGravity()`
+- `void setGravity(boolean gravity)`
+- `int getPortalCooldown()`
+- `void setPortalCooldown(int cooldown)`
+- `@NotNull @NotNull Set<String> getScoreboardTags()`
+- `boolean addScoreboardTag(@NotNull @NotNull String tag)`
+- `boolean removeScoreboardTag(@NotNull @NotNull String tag)`
+- `@NotNull @NotNull PistonMoveReaction getPistonMoveReaction()`
+- `@NotNull @NotNull BlockFace getFacing()`
+- `@NotNull @NotNull Pose getPose()`
+- `boolean isSneaking()`
+- `void setSneaking(boolean sneak)`
+- `default void setPose(@NotNull @NotNull Pose pose)`
+- `void setPose(@NotNull @NotNull Pose pose, boolean fixed)`
+- `boolean hasFixedPose()`
+- `@NotNull @NotNull SpawnCategory getSpawnCategory()`
+- `@NotNull @NotNull Entity.Spigot spigot()`
+- `@NotNull Component teamDisplayName()`
+- `@NotNull default HoverEvent<HoverEvent.ShowEntity> asHoverEvent(@NotNull UnaryOperator<HoverEvent.ShowEntity> op)`
+- `@Nullable @Nullable Location getOrigin()`
+- `boolean fromMobSpawner()`
+- `@NotNull default @NotNull Chunk getChunk()`
+- `@NotNull CreatureSpawnEvent.SpawnReason getEntitySpawnReason()`
+- `boolean isUnderWater()`
+- `boolean isInRain()`
+- `boolean isInBubbleColumn()`
+- `boolean isInWaterOrRain()`
+- `boolean isInWaterOrBubbleColumn()`
+- `boolean isInWaterOrRainOrBubbleColumn()`
+- `boolean isInLava()`
+- `boolean isTicking()`
+- `@NotNull @NotNull Set<Player> getTrackedPlayers()`
+- `default boolean spawnAt(@NotNull @NotNull Location location)`
+- `boolean spawnAt(@NotNull @NotNull Location location, @NotNull CreatureSpawnEvent.SpawnReason reason)`
+- `boolean isInPowderedSnow()`
+- `double getX()`
+- `double getY()`
+- `double getZ()`
+- `float getPitch()`
+- `float getYaw()`
+- `boolean collidesAt(@NotNull @NotNull Location location)`
+- `boolean wouldCollideUsing(@NotNull @NotNull BoundingBox boundingBox)`
+- `@NotNull EntityScheduler getScheduler()`
+- `@NotNull @NotNull String getScoreboardEntryName()`

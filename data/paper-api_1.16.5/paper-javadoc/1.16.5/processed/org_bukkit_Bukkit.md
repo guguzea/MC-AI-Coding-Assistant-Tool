@@ -1,0 +1,161 @@
+---
+title: "org.bukkit.Bukkit"
+package: "org.bukkit"
+source: https://jd.papermc.io/paper/1.16.5/org/bukkit/Bukkit.html
+sourceType: javadoc
+fetchedWith: fetch-spigot-javadoc.mjs@1
+fetchedAt: 2026-10-23T08:04:41.693Z
+asOfVersion: "1.16.5-R0.1-SNAPSHOT"
+---
+
+- `@NotNull public static @NotNull Server getServer()`
+- `public static void setServer&#8203;(@NotNull @NotNull Server server)`
+- `@NotNull public static @NotNull String getName()`
+- `@NotNull public static @NotNull String getVersion()`
+- `@NotNull public static @NotNull String getBukkitVersion()`
+- `@NotNull public static @NotNull String getMinecraftVersion()`
+- `@NotNull public static @NotNull Collection<? extends Player> getOnlinePlayers()`
+- `public static int getMaxPlayers()`
+- `public static void setMaxPlayers&#8203;(int maxPlayers)`
+- `public static int getPort()`
+- `public static int getViewDistance()`
+- `@NotNull public static @NotNull String getIp()`
+- `@NotNull public static @NotNull String getWorldType()`
+- `public static boolean getGenerateStructures()`
+- `public static int getMaxWorldSize()`
+- `public static boolean getAllowEnd()`
+- `public static boolean getAllowNether()`
+- `public static boolean hasWhitelist()`
+- `public static void setWhitelist&#8203;(boolean value)`
+- `@NotNull public static @NotNull Set<OfflinePlayer> getWhitelistedPlayers()`
+- `public static void reloadWhitelist()`
+- `@Deprecated public static int broadcastMessage&#8203;(@NotNull @NotNull String message)`
+- `@Deprecated public static void broadcast&#8203;(@NotNull BaseComponent component)`
+- `@Deprecated public static void broadcast&#8203;(@NotNull @NotNull BaseComponent... components)`
+- `@NotNull public static @NotNull String getUpdateFolder()`
+- `@NotNull public static @NotNull File getUpdateFolderFile()`
+- `public static long getConnectionThrottle()`
+- `public static int getTicksPerAnimalSpawns()`
+- `public static int getTicksPerMonsterSpawns()`
+- `public static int getTicksPerWaterSpawns()`
+- `public static int getTicksPerAmbientSpawns()`
+- `public static int getTicksPerWaterAmbientSpawns()`
+- `@Nullable public static @Nullable Player getPlayer&#8203;(@NotNull @NotNull String name)`
+- `@Nullable public static @Nullable Player getPlayerExact&#8203;(@NotNull @NotNull String name)`
+- `@NotNull public static @NotNull List<Player> matchPlayer&#8203;(@NotNull @NotNull String name)`
+- `@Nullable public static @Nullable Player getPlayer&#8203;(@NotNull @NotNull UUID id)`
+- `@Nullable public static @Nullable UUID getPlayerUniqueId&#8203;(@NotNull @NotNull String playerName)`
+- `@NotNull public static @NotNull PluginManager getPluginManager()`
+- `@NotNull public static @NotNull BukkitScheduler getScheduler()`
+- `@NotNull public static @NotNull ServicesManager getServicesManager()`
+- `@NotNull public static @NotNull List<World> getWorlds()`
+- `@Nullable public static @Nullable World createWorld&#8203;(@NotNull @NotNull WorldCreator creator)`
+- `public static boolean unloadWorld&#8203;(@NotNull @NotNull String name, boolean save)`
+- `public static boolean unloadWorld&#8203;(@NotNull @NotNull World world, boolean save)`
+- `@Nullable public static @Nullable World getWorld&#8203;(@NotNull @NotNull String name)`
+- `@Nullable public static @Nullable World getWorld&#8203;(@NotNull @NotNull UUID uid)`
+- `@Nullable public static @Nullable World getWorld&#8203;(@NotNull @NotNull NamespacedKey worldKey)`
+- `@Deprecated @Nullable public static @Nullable MapView getMap&#8203;(int id)`
+- `@NotNull public static @NotNull MapView createMap&#8203;(@NotNull @NotNull World world)`
+- `@NotNull public static @NotNull ItemStack createExplorerMap&#8203;(@NotNull @NotNull World world, @NotNull @NotNull Location location, @NotNull @NotNull StructureType structureType)`
+- `@NotNull public static @NotNull ItemStack createExplorerMap&#8203;(@NotNull @NotNull World world, @NotNull @NotNull Location location, @NotNull @NotNull StructureType structureType, int radius, boolean findUnexplored)`
+- `public static void reload()`
+- `public static void reloadData()`
+- `@NotNull public static @NotNull Logger getLogger()`
+- `@Nullable public static @Nullable PluginCommand getPluginCommand&#8203;(@NotNull @NotNull String name)`
+- `public static void savePlayers()`
+- `public static boolean dispatchCommand&#8203;(@NotNull @NotNull CommandSender sender, @NotNull @NotNull String commandLine) throws CommandException`
+- `@Contract("null -> false") public static boolean addRecipe&#8203;(@Nullable @Nullable Recipe recipe)`
+- `@NotNull public static @NotNull List<Recipe> getRecipesFor&#8203;(@NotNull @NotNull ItemStack result)`
+- `@Nullable public static @Nullable Recipe getRecipe&#8203;(@NotNull @NotNull NamespacedKey recipeKey)`
+- `@NotNull public static @NotNull Iterator<Recipe> recipeIterator()`
+- `public static void clearRecipes()`
+- `public static void resetRecipes()`
+- `public static boolean removeRecipe&#8203;(@NotNull @NotNull NamespacedKey key)`
+- `@NotNull public static @NotNull Map<String,&#8203;String[]> getCommandAliases()`
+- `public static int getSpawnRadius()`
+- `public static void setSpawnRadius&#8203;(int value)`
+- `public static boolean getOnlineMode()`
+- `public static boolean getAllowFlight()`
+- `public static boolean isHardcore()`
+- `public static void shutdown()`
+- `public static int broadcast&#8203;(@NotNull Component message)`
+- `public static int broadcast&#8203;(@NotNull Component message, @NotNull @NotNull String permission)`
+- `@Deprecated public static int broadcast&#8203;(@NotNull @NotNull String message, @NotNull @NotNull String permission)`
+- `@Deprecated @NotNull public static @NotNull OfflinePlayer getOfflinePlayer&#8203;(@NotNull @NotNull String name)`
+- `@Nullable public static @Nullable OfflinePlayer getOfflinePlayerIfCached&#8203;(@NotNull @NotNull String name)`
+- `@NotNull public static @NotNull OfflinePlayer getOfflinePlayer&#8203;(@NotNull @NotNull UUID id)`
+- `@NotNull public static @NotNull Set<String> getIPBans()`
+- `public static void banIP&#8203;(@NotNull @NotNull String address)`
+- `public static void unbanIP&#8203;(@NotNull @NotNull String address)`
+- `@NotNull public static @NotNull Set<OfflinePlayer> getBannedPlayers()`
+- `@NotNull public static @NotNull BanList getBanList&#8203;(@NotNull BanList.Type type)`
+- `@NotNull public static @NotNull Set<OfflinePlayer> getOperators()`
+- `@NotNull public static @NotNull GameMode getDefaultGameMode()`
+- `public static void setDefaultGameMode&#8203;(@NotNull @NotNull GameMode mode)`
+- `@NotNull public static @NotNull ConsoleCommandSender getConsoleSender()`
+- `@NotNull public static @NotNull File getWorldContainer()`
+- `@NotNull public static @NotNull OfflinePlayer[] getOfflinePlayers()`
+- `@NotNull public static @NotNull Messenger getMessenger()`
+- `@NotNull public static @NotNull HelpMap getHelpMap()`
+- `@NotNull public static @NotNull Inventory createInventory&#8203;(@Nullable @Nullable InventoryHolder owner, @NotNull @NotNull InventoryType type)`
+- `@NotNull public static @NotNull Inventory createInventory&#8203;(@Nullable @Nullable InventoryHolder owner, @NotNull @NotNull InventoryType type, @NotNull Component title)`
+- `@Deprecated @NotNull public static @NotNull Inventory createInventory&#8203;(@Nullable @Nullable InventoryHolder owner, @NotNull @NotNull InventoryType type, @NotNull @NotNull String title)`
+- `@NotNull public static @NotNull Inventory createInventory&#8203;(@Nullable @Nullable InventoryHolder owner, int size) throws IllegalArgumentException`
+- `@NotNull public static @NotNull Inventory createInventory&#8203;(@Nullable @Nullable InventoryHolder owner, int size, @NotNull Component title) throws IllegalArgumentException`
+- `@Deprecated @NotNull public static @NotNull Inventory createInventory&#8203;(@Nullable @Nullable InventoryHolder owner, int size, @NotNull @NotNull String title) throws IllegalArgumentException`
+- `@NotNull public static @NotNull Merchant createMerchant&#8203;(@Nullable Component title)`
+- `@NotNull @Deprecated public static @NotNull Merchant createMerchant&#8203;(@Nullable @Nullable String title)`
+- `public static int getMonsterSpawnLimit()`
+- `public static int getAnimalSpawnLimit()`
+- `public static int getWaterAnimalSpawnLimit()`
+- `public static int getWaterAmbientSpawnLimit()`
+- `public static int getAmbientSpawnLimit()`
+- `public static boolean isPrimaryThread()`
+- `@NotNull public static Component motd()`
+- `@NotNull @Deprecated public static @NotNull String getMotd()`
+- `@Nullable public static Component shutdownMessage()`
+- `@Nullable @Deprecated public static @Nullable String getShutdownMessage()`
+- `@NotNull public static @NotNull Warning.WarningState getWarningState()`
+- `@NotNull public static @NotNull ItemFactory getItemFactory()`
+- `@NotNull public static @NotNull ScoreboardManager getScoreboardManager()`
+- `@Nullable public static @Nullable CachedServerIcon getServerIcon()`
+- `@NotNull public static @NotNull CachedServerIcon loadServerIcon&#8203;(@NotNull @NotNull File file) throws IllegalArgumentException, Exception`
+- `@NotNull public static @NotNull CachedServerIcon loadServerIcon&#8203;(@NotNull @NotNull BufferedImage image) throws IllegalArgumentException, Exception`
+- `public static void setIdleTimeout&#8203;(int threshold)`
+- `public static int getIdleTimeout()`
+- `@NotNull public static ChunkGenerator.ChunkData createChunkData&#8203;(@NotNull @NotNull World world)`
+- `@NotNull public static ChunkGenerator.ChunkData createVanillaChunkData&#8203;(@NotNull @NotNull World world, int x, int z)`
+- `@NotNull public static @NotNull BossBar createBossBar&#8203;(@Nullable @Nullable String title, @NotNull @NotNull BarColor color, @NotNull @NotNull BarStyle style, @NotNull @NotNull BarFlag... flags)`
+- `@NotNull public static @NotNull KeyedBossBar createBossBar&#8203;(@NotNull @NotNull NamespacedKey key, @Nullable @Nullable String title, @NotNull @NotNull BarColor color, @NotNull @NotNull BarStyle style, @NotNull @NotNull BarFlag... flags)`
+- `@NotNull public static @NotNull Iterator<KeyedBossBar> getBossBars()`
+- `@Nullable public static @Nullable KeyedBossBar getBossBar&#8203;(@NotNull @NotNull NamespacedKey key)`
+- `public static boolean removeBossBar&#8203;(@NotNull @NotNull NamespacedKey key)`
+- `@Nullable public static @Nullable Entity getEntity&#8203;(@NotNull @NotNull UUID uuid)`
+- `@NotNull public static @org.jetbrains.annotations.NotNull double[] getTPS()`
+- `@NotNull public static @org.jetbrains.annotations.NotNull long[] getTickTimes()`
+- `public static double getAverageTickTime()`
+- `@Nullable public static @Nullable Advancement getAdvancement&#8203;(@NotNull @NotNull NamespacedKey key)`
+- `@NotNull public static @NotNull Iterator<Advancement> advancementIterator()`
+- `@NotNull public static @NotNull BlockData createBlockData&#8203;(@NotNull @NotNull Material material)`
+- `@NotNull public static @NotNull BlockData createBlockData&#8203;(@NotNull @NotNull Material material, @Nullable @Nullable Consumer<BlockData> consumer)`
+- `@NotNull public static @NotNull BlockData createBlockData&#8203;(@NotNull @NotNull String data) throws IllegalArgumentException`
+- `@NotNull @Contract("null, null -> fail") public static @NotNull BlockData createBlockData&#8203;(@Nullable @Nullable Material material, @Nullable @Nullable String data) throws IllegalArgumentException`
+- `public static <T extends Keyed> Tag<T> getTag&#8203;(@NotNull @NotNull String registry, @NotNull @NotNull NamespacedKey tag, @NotNull @NotNull Class<T> clazz)`
+- `@NotNull public static <T extends Keyed> @NotNull Iterable<Tag<T>> getTags&#8203;(@NotNull @NotNull String registry, @NotNull @NotNull Class<T> clazz)`
+- `@Nullable public static @Nullable LootTable getLootTable&#8203;(@NotNull @NotNull NamespacedKey key)`
+- `@NotNull public static @NotNull List<Entity> selectEntities&#8203;(@NotNull @NotNull CommandSender sender, @NotNull @NotNull String selector) throws IllegalArgumentException`
+- `@Deprecated @NotNull public static @NotNull UnsafeValues getUnsafe()`
+- `@NotNull public static CommandMap getCommandMap()`
+- `public static void reloadPermissions()`
+- `public static boolean reloadCommandAliases()`
+- `public static boolean suggestPlayerNamesWhenNullTabCompletions()`
+- `@NotNull public static @NotNull String getPermissionMessage()`
+- `@NotNull public static PlayerProfile createProfile&#8203;(@NotNull @NotNull UUID uuid)`
+- `@NotNull public static PlayerProfile createProfile&#8203;(@NotNull @NotNull String name)`
+- `@NotNull public static PlayerProfile createProfile&#8203;(@Nullable @Nullable UUID uuid, @Nullable @Nullable String name)`
+- `public static int getCurrentTick()`
+- `public static boolean isStopping()`
+- `@NotNull public static MobGoals getMobGoals()`
+- `@NotNull public static DatapackManager getDatapackManager()`
+- `@NotNull public static Server.Spigot spigot()`

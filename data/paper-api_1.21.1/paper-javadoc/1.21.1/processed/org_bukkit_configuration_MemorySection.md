@@ -1,0 +1,89 @@
+---
+title: "org.bukkit.configuration.MemorySection"
+package: "org.bukkit.configuration"
+source: https://jd.papermc.io/paper/1.21.1/org/bukkit/configuration/MemorySection.html
+sourceType: javadoc
+fetchedWith: fetch-spigot-javadoc.mjs@1
+fetchedAt: 2026-10-23T08:04:53.899Z
+asOfVersion: "1.21.1-R0.1-SNAPSHOT"
+---
+
+- `protected final Map<String,org.bukkit.configuration.SectionPathData> map`
+- `protected MemorySection()`
+- `protected MemorySection(@NotNull @NotNull ConfigurationSection parent, @NotNull @NotNull String path)`
+- `@NotNull public @NotNull Set<String> getKeys(boolean deep)`
+- `@NotNull public @NotNull Map<String,Object> getValues(boolean deep)`
+- `public boolean contains(@NotNull @NotNull String path)`
+- `public boolean contains(@NotNull @NotNull String path, boolean ignoreDefault)`
+- `public boolean isSet(@NotNull @NotNull String path)`
+- `@NotNull public @NotNull String getCurrentPath()`
+- `@NotNull public @NotNull String getName()`
+- `@Nullable public @Nullable Configuration getRoot()`
+- `@Nullable public @Nullable ConfigurationSection getParent()`
+- `public void addDefault(@NotNull @NotNull String path, @Nullable @Nullable Object value)`
+- `@Nullable public @Nullable ConfigurationSection getDefaultSection()`
+- `public void set(@NotNull @NotNull String path, @Nullable @Nullable Object value)`
+- `@Nullable public @Nullable Object get(@NotNull @NotNull String path)`
+- `@Contract("_, !null -> !null") @Nullable public @Nullable Object get(@NotNull @NotNull String path, @Nullable @Nullable Object def)`
+- `@NotNull public @NotNull ConfigurationSection createSection(@NotNull @NotNull String path)`
+- `@NotNull public @NotNull ConfigurationSection createSection(@NotNull @NotNull String path, @NotNull @NotNull Map<?,?> map)`
+- `@Nullable public @Nullable String getString(@NotNull @NotNull String path)`
+- `@Contract("_, !null -> !null") @Nullable public @Nullable String getString(@NotNull @NotNull String path, @Nullable @Nullable String def)`
+- `public boolean isString(@NotNull @NotNull String path)`
+- `public int getInt(@NotNull @NotNull String path)`
+- `public int getInt(@NotNull @NotNull String path, int def)`
+- `public boolean isInt(@NotNull @NotNull String path)`
+- `public boolean getBoolean(@NotNull @NotNull String path)`
+- `public boolean getBoolean(@NotNull @NotNull String path, boolean def)`
+- `public boolean isBoolean(@NotNull @NotNull String path)`
+- `public double getDouble(@NotNull @NotNull String path)`
+- `public double getDouble(@NotNull @NotNull String path, double def)`
+- `public boolean isDouble(@NotNull @NotNull String path)`
+- `public long getLong(@NotNull @NotNull String path)`
+- `public long getLong(@NotNull @NotNull String path, long def)`
+- `public boolean isLong(@NotNull @NotNull String path)`
+- `@Nullable public @Nullable List<?> getList(@NotNull @NotNull String path)`
+- `@Contract("_, !null -> !null") @Nullable public @Nullable List<?> getList(@NotNull @NotNull String path, @Nullable @Nullable List<?> def)`
+- `public boolean isList(@NotNull @NotNull String path)`
+- `@NotNull public @NotNull List<String> getStringList(@NotNull @NotNull String path)`
+- `@NotNull public @NotNull List<Integer> getIntegerList(@NotNull @NotNull String path)`
+- `@NotNull public @NotNull List<Boolean> getBooleanList(@NotNull @NotNull String path)`
+- `@NotNull public @NotNull List<Double> getDoubleList(@NotNull @NotNull String path)`
+- `@NotNull public @NotNull List<Float> getFloatList(@NotNull @NotNull String path)`
+- `@NotNull public @NotNull List<Long> getLongList(@NotNull @NotNull String path)`
+- `@NotNull public @NotNull List<Byte> getByteList(@NotNull @NotNull String path)`
+- `@NotNull public @NotNull List<Character> getCharacterList(@NotNull @NotNull String path)`
+- `@NotNull public @NotNull List<Short> getShortList(@NotNull @NotNull String path)`
+- `@NotNull public @NotNull List<Map<?,?>> getMapList(@NotNull @NotNull String path)`
+- `@Nullable public <T> T getObject(@NotNull @NotNull String path, @NotNull @NotNull Class<T> clazz)`
+- `@Contract("_, _, !null -> !null") @Nullable public <T> T getObject(@NotNull @NotNull String path, @NotNull @NotNull Class<T> clazz, @Nullable T def)`
+- `@Nullable public <T extends ConfigurationSerializable> T getSerializable(@NotNull @NotNull String path, @NotNull @NotNull Class<T> clazz)`
+- `@Contract("_, _, !null -> !null") @Nullable public <T extends ConfigurationSerializable> T getSerializable(@NotNull @NotNull String path, @NotNull @NotNull Class<T> clazz, @Nullable T def)`
+- `@Nullable public @Nullable Vector getVector(@NotNull @NotNull String path)`
+- `@Contract("_, !null -> !null") @Nullable public @Nullable Vector getVector(@NotNull @NotNull String path, @Nullable @Nullable Vector def)`
+- `public boolean isVector(@NotNull @NotNull String path)`
+- `@Nullable public @Nullable OfflinePlayer getOfflinePlayer(@NotNull @NotNull String path)`
+- `@Contract("_, !null -> !null") @Nullable public @Nullable OfflinePlayer getOfflinePlayer(@NotNull @NotNull String path, @Nullable @Nullable OfflinePlayer def)`
+- `public boolean isOfflinePlayer(@NotNull @NotNull String path)`
+- `@Nullable public @Nullable ItemStack getItemStack(@NotNull @NotNull String path)`
+- `@Contract("_, !null -> !null") @Nullable public @Nullable ItemStack getItemStack(@NotNull @NotNull String path, @Nullable @Nullable ItemStack def)`
+- `public boolean isItemStack(@NotNull @NotNull String path)`
+- `@Nullable public @Nullable Color getColor(@NotNull @NotNull String path)`
+- `@Contract("_, !null -> !null") @Nullable public @Nullable Color getColor(@NotNull @NotNull String path, @Nullable @Nullable Color def)`
+- `public boolean isColor(@NotNull @NotNull String path)`
+- `@Nullable public @Nullable Location getLocation(@NotNull @NotNull String path)`
+- `@Contract("_, !null -> !null") @Nullable public @Nullable Location getLocation(@NotNull @NotNull String path, @Nullable @Nullable Location def)`
+- `public boolean isLocation(@NotNull @NotNull String path)`
+- `@Nullable public @Nullable ConfigurationSection getConfigurationSection(@NotNull @NotNull String path)`
+- `public boolean isConfigurationSection(@NotNull @NotNull String path)`
+- `protected boolean isPrimitiveWrapper(@Nullable @Nullable Object input)`
+- `@Nullable protected @Nullable Object getDefault(@NotNull @NotNull String path)`
+- `protected void mapChildrenKeys(@NotNull @NotNull Set<String> output, @NotNull @NotNull ConfigurationSection section, boolean deep)`
+- `protected void mapChildrenValues(@NotNull @NotNull Map<String,Object> output, @NotNull @NotNull ConfigurationSection section, boolean deep)`
+- `@NotNull public static @NotNull String createPath(@NotNull @NotNull ConfigurationSection section, @Nullable @Nullable String key)`
+- `@NotNull public static @NotNull String createPath(@NotNull @NotNull ConfigurationSection section, @Nullable @Nullable String key, @Nullable @Nullable ConfigurationSection relativeTo)`
+- `@NotNull public @NotNull List<String> getComments(@NotNull @NotNull String path)`
+- `@NotNull public @NotNull List<String> getInlineComments(@NotNull @NotNull String path)`
+- `public void setComments(@NotNull @NotNull String path, @Nullable @Nullable List<String> comments)`
+- `public void setInlineComments(@NotNull @NotNull String path, @Nullable @Nullable List<String> comments)`
+- `public String toString()`

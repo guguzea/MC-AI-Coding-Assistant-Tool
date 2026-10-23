@@ -1,0 +1,19 @@
+---
+title: "io.papermc.paper.event.player.PlayerPickItemEvent"
+package: "io.papermc.paper.event.player"
+source: https://jd.papermc.io/paper/1.20.1/io/papermc/paper/event/player/PlayerPickItemEvent.html
+sourceType: javadoc
+fetchedWith: fetch-spigot-javadoc.mjs@1
+fetchedAt: 2026-10-23T07:58:42.132Z
+asOfVersion: "1.20.1-R0.1-SNAPSHOT"
+---
+
+- `public PlayerPickItemEvent(@NotNull @NotNull Player player, int targetSlot, int sourceSlot)`
+- `public @org.jetbrains.annotations.Range(from=0L, to=8L) int getTargetSlot()`
+- `public void setTargetSlot(@org.jetbrains.annotations.Range(from=0L, to=8L) int targetSlot)`
+- `public @org.jetbrains.annotations.Range(from=0L, to=35L) int getSourceSlot()`
+- `public void setSourceSlot(@org.jetbrains.annotations.Range(from=0L, to=35L) int sourceSlot)`
+- `public boolean isCancelled()`
+- `public void setCancelled(boolean cancel)`
+- `@NotNull public @NotNull HandlerList getHandlers()`
+- `@NotNull public static @NotNull HandlerList getHandlerList()`

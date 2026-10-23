@@ -1,0 +1,85 @@
+---
+title: "org.bukkit.entity.HumanEntity"
+package: "org.bukkit.entity"
+source: https://jd.papermc.io/paper/1.20.1/org/bukkit/entity/HumanEntity.html
+sourceType: javadoc
+fetchedWith: fetch-spigot-javadoc.mjs@1
+fetchedAt: 2026-10-23T07:58:42.132Z
+asOfVersion: "1.20.1-R0.1-SNAPSHOT"
+---
+
+- `@NotNull EntityEquipment getEquipment()`
+- `@NotNull @NotNull String getName()`
+- `@NotNull @NotNull PlayerInventory getInventory()`
+- `@NotNull @NotNull Inventory getEnderChest()`
+- `@NotNull @NotNull MainHand getMainHand()`
+- `boolean setWindowProperty(@NotNull InventoryView.Property prop, int value)`
+- `int getEnchantmentSeed()`
+- `void setEnchantmentSeed(int seed)`
+- `@NotNull @NotNull InventoryView getOpenInventory()`
+- `@Nullable @Nullable InventoryView openInventory(@NotNull @NotNull Inventory inventory)`
+- `@Nullable @Nullable InventoryView openWorkbench(@Nullable @Nullable Location location, boolean force)`
+- `@Nullable @Nullable InventoryView openEnchanting(@Nullable @Nullable Location location, boolean force)`
+- `void openInventory(@NotNull @NotNull InventoryView inventory)`
+- `@Nullable @Nullable InventoryView openMerchant(@NotNull @NotNull Villager trader, boolean force)`
+- `@Nullable @Nullable InventoryView openMerchant(@NotNull @NotNull Merchant merchant, boolean force)`
+- `@Nullable @Nullable InventoryView openAnvil(@Nullable @Nullable Location location, boolean force)`
+- `@Nullable @Nullable InventoryView openCartographyTable(@Nullable @Nullable Location location, boolean force)`
+- `@Nullable @Nullable InventoryView openGrindstone(@Nullable @Nullable Location location, boolean force)`
+- `@Nullable @Nullable InventoryView openLoom(@Nullable @Nullable Location location, boolean force)`
+- `@Nullable @Nullable InventoryView openSmithingTable(@Nullable @Nullable Location location, boolean force)`
+- `@Nullable @Nullable InventoryView openStonecutter(@Nullable @Nullable Location location, boolean force)`
+- `void closeInventory()`
+- `void closeInventory(@NotNull InventoryCloseEvent.Reason reason)`
+- `@Deprecated @NotNull @NotNull ItemStack getItemInHand()`
+- `@Deprecated void setItemInHand(@Nullable @Nullable ItemStack item)`
+- `@NotNull @NotNull ItemStack getItemOnCursor()`
+- `void setItemOnCursor(@Nullable @Nullable ItemStack item)`
+- `boolean hasCooldown(@NotNull @NotNull Material material)`
+- `int getCooldown(@NotNull @NotNull Material material)`
+- `void setCooldown(@NotNull @NotNull Material material, int ticks)`
+- `void setHurtDirection(float hurtDirection)`
+- `boolean isDeeplySleeping()`
+- `int getSleepTicks()`
+- `@Nullable @Nullable Location getPotentialBedLocation()`
+- `@Nullable @Nullable FishHook getFishHook()`
+- `boolean sleep(@NotNull @NotNull Location location, boolean force)`
+- `void wakeup(boolean setSpawnLocation)`
+- `@NotNull @NotNull Location getBedLocation()`
+- `@NotNull @NotNull GameMode getGameMode()`
+- `void setGameMode(@NotNull @NotNull GameMode mode)`
+- `boolean isBlocking()`
+- `boolean isHandRaised()`
+- `@Deprecated @Nullable @Nullable ItemStack getItemInUse()`
+- `int getExpToLevel()`
+- `@Nullable @Nullable Entity releaseLeftShoulderEntity()`
+- `@Nullable @Nullable Entity releaseRightShoulderEntity()`
+- `float getAttackCooldown()`
+- `boolean discoverRecipe(@NotNull @NotNull NamespacedKey recipe)`
+- `int discoverRecipes(@NotNull @NotNull Collection<NamespacedKey> recipes)`
+- `boolean undiscoverRecipe(@NotNull @NotNull NamespacedKey recipe)`
+- `int undiscoverRecipes(@NotNull @NotNull Collection<NamespacedKey> recipes)`
+- `boolean hasDiscoveredRecipe(@NotNull @NotNull NamespacedKey recipe)`
+- `@NotNull @NotNull Set<NamespacedKey> getDiscoveredRecipes()`
+- `@Deprecated @Nullable @Nullable Entity getShoulderEntityLeft()`
+- `@Deprecated void setShoulderEntityLeft(@Nullable @Nullable Entity entity)`
+- `@Deprecated @Nullable @Nullable Entity getShoulderEntityRight()`
+- `@Deprecated void setShoulderEntityRight(@Nullable @Nullable Entity entity)`
+- `@Deprecated default void openSign(@NotNull Sign sign)`
+- `void openSign(@NotNull Sign sign, @NotNull Side side)`
+- `boolean dropItem(boolean dropAll)`
+- `float getExhaustion()`
+- `void setExhaustion(float value)`
+- `float getSaturation()`
+- `void setSaturation(float value)`
+- `int getFoodLevel()`
+- `void setFoodLevel(int value)`
+- `int getSaturatedRegenRate()`
+- `void setSaturatedRegenRate(int ticks)`
+- `int getUnsaturatedRegenRate()`
+- `void setUnsaturatedRegenRate(int ticks)`
+- `int getStarvationRate()`
+- `void setStarvationRate(int ticks)`
+- `@Nullable @Nullable Location getLastDeathLocation()`
+- `void setLastDeathLocation(@Nullable @Nullable Location location)`
+- `@Nullable @Nullable Firework fireworkBoost(@NotNull @NotNull ItemStack fireworkItemStack)`

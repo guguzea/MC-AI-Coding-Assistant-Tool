@@ -1,0 +1,14 @@
+---
+title: "org.bukkit.block.DecoratedPot"
+package: "org.bukkit.block"
+source: https://jd.papermc.io/paper/1.20.1/org/bukkit/block/DecoratedPot.html
+sourceType: javadoc
+fetchedWith: fetch-spigot-javadoc.mjs@1
+fetchedAt: 2026-10-23T07:58:42.132Z
+asOfVersion: "1.20.1-R0.1-SNAPSHOT"
+---
+
+- `void setSherd(@NotNull @NotNull DecoratedPot.Side side, @Nullable @Nullable Material sherd)`
+- `@NotNull @NotNull Material getSherd(@NotNull @NotNull DecoratedPot.Side side)`
+- `@NotNull @NotNull Map<DecoratedPot.Side,Material> getSherds()`
+- `@Deprecated @NotNull @NotNull List<Material> getShards()`

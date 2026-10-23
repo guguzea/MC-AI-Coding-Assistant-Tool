@@ -1,0 +1,16 @@
+---
+title: "io.papermc.paper.entity.EntitySerializationFlag"
+package: "io.papermc.paper.entity"
+source: https://jd.papermc.io/paper/1.21.4/io/papermc/paper/entity/EntitySerializationFlag.html
+sourceType: javadoc
+fetchedWith: fetch-spigot-javadoc.mjs@1
+fetchedAt: 2026-10-23T07:50:36.606Z
+asOfVersion: "1.21.4-R0.1-SNAPSHOT"
+---
+
+- `public static final EntitySerializationFlag FORCE`
+- `public static final EntitySerializationFlag MISC`
+- `public static final EntitySerializationFlag PASSENGERS`
+- `public static final EntitySerializationFlag PLAYER`
+- `public static EntitySerializationFlag[] values()`
+- `public static EntitySerializationFlag valueOf(String name)`

@@ -1,0 +1,47 @@
+---
+title: "org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason"
+package: "org.bukkit.event.entity"
+source: https://jd.papermc.io/paper/1.16.5/org/bukkit/event/entity/CreatureSpawnEvent.SpawnReason.html
+sourceType: javadoc
+fetchedWith: fetch-spigot-javadoc.mjs@1
+fetchedAt: 2026-10-23T08:04:41.693Z
+asOfVersion: "1.16.5-R0.1-SNAPSHOT"
+---
+
+- `public static final CreatureSpawnEvent.SpawnReason NATURAL`
+- `public static final CreatureSpawnEvent.SpawnReason JOCKEY`
+- `@Deprecated public static final CreatureSpawnEvent.SpawnReason CHUNK_GEN`
+- `public static final CreatureSpawnEvent.SpawnReason SPAWNER`
+- `public static final CreatureSpawnEvent.SpawnReason EGG`
+- `public static final CreatureSpawnEvent.SpawnReason SPAWNER_EGG`
+- `public static final CreatureSpawnEvent.SpawnReason LIGHTNING`
+- `public static final CreatureSpawnEvent.SpawnReason BUILD_SNOWMAN`
+- `public static final CreatureSpawnEvent.SpawnReason BUILD_IRONGOLEM`
+- `public static final CreatureSpawnEvent.SpawnReason BUILD_WITHER`
+- `public static final CreatureSpawnEvent.SpawnReason VILLAGE_DEFENSE`
+- `public static final CreatureSpawnEvent.SpawnReason VILLAGE_INVASION`
+- `public static final CreatureSpawnEvent.SpawnReason BREEDING`
+- `public static final CreatureSpawnEvent.SpawnReason SLIME_SPLIT`
+- `public static final CreatureSpawnEvent.SpawnReason REINFORCEMENTS`
+- `public static final CreatureSpawnEvent.SpawnReason NETHER_PORTAL`
+- `public static final CreatureSpawnEvent.SpawnReason DISPENSE_EGG`
+- `public static final CreatureSpawnEvent.SpawnReason INFECTION`
+- `public static final CreatureSpawnEvent.SpawnReason CURED`
+- `public static final CreatureSpawnEvent.SpawnReason OCELOT_BABY`
+- `public static final CreatureSpawnEvent.SpawnReason SILVERFISH_BLOCK`
+- `public static final CreatureSpawnEvent.SpawnReason MOUNT`
+- `public static final CreatureSpawnEvent.SpawnReason TRAP`
+- `public static final CreatureSpawnEvent.SpawnReason ENDER_PEARL`
+- `public static final CreatureSpawnEvent.SpawnReason SHOULDER_ENTITY`
+- `public static final CreatureSpawnEvent.SpawnReason DROWNED`
+- `public static final CreatureSpawnEvent.SpawnReason SHEARED`
+- `public static final CreatureSpawnEvent.SpawnReason EXPLOSION`
+- `public static final CreatureSpawnEvent.SpawnReason RAID`
+- `public static final CreatureSpawnEvent.SpawnReason PATROL`
+- `public static final CreatureSpawnEvent.SpawnReason BEEHIVE`
+- `public static final CreatureSpawnEvent.SpawnReason PIGLIN_ZOMBIFIED`
+- `public static final CreatureSpawnEvent.SpawnReason COMMAND`
+- `public static final CreatureSpawnEvent.SpawnReason CUSTOM`
+- `public static final CreatureSpawnEvent.SpawnReason DEFAULT`
+- `public static CreatureSpawnEvent.SpawnReason[] values()`
+- `public static CreatureSpawnEvent.SpawnReason valueOf&#8203;(String name)`

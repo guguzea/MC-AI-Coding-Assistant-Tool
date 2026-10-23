@@ -1,0 +1,98 @@
+---
+title: "org.bukkit.entity.LivingEntity"
+package: "org.bukkit.entity"
+source: https://jd.papermc.io/paper/1.16.5/org/bukkit/entity/LivingEntity.html
+sourceType: javadoc
+fetchedWith: fetch-spigot-javadoc.mjs@1
+fetchedAt: 2026-10-23T08:04:41.693Z
+asOfVersion: "1.16.5-R0.1-SNAPSHOT"
+---
+
+- `double getEyeHeight()`
+- `double getEyeHeight&#8203;(boolean ignorePose)`
+- `@NotNull @NotNull Location getEyeLocation()`
+- `@NotNull @NotNull List<Block> getLineOfSight&#8203;(@Nullable @Nullable Set<Material> transparent, int maxDistance)`
+- `@NotNull @NotNull Block getTargetBlock&#8203;(@Nullable @Nullable Set<Material> transparent, int maxDistance)`
+- `@Nullable default @Nullable Block getTargetBlock&#8203;(int maxDistance)`
+- `@Nullable @Nullable Block getTargetBlock&#8203;(int maxDistance, @NotNull TargetBlockInfo.FluidMode fluidMode)`
+- `@Nullable default BlockFace getTargetBlockFace&#8203;(int maxDistance)`
+- `@Nullable BlockFace getTargetBlockFace&#8203;(int maxDistance, @NotNull TargetBlockInfo.FluidMode fluidMode)`
+- `@Nullable default TargetBlockInfo getTargetBlockInfo&#8203;(int maxDistance)`
+- `@Nullable TargetBlockInfo getTargetBlockInfo&#8203;(int maxDistance, @NotNull TargetBlockInfo.FluidMode fluidMode)`
+- `@Nullable default @Nullable Entity getTargetEntity&#8203;(int maxDistance)`
+- `@Nullable @Nullable Entity getTargetEntity&#8203;(int maxDistance, boolean ignoreBlocks)`
+- `@Nullable default TargetEntityInfo getTargetEntityInfo&#8203;(int maxDistance)`
+- `@Nullable TargetEntityInfo getTargetEntityInfo&#8203;(int maxDistance, boolean ignoreBlocks)`
+- `@NotNull @NotNull List<Block> getLastTwoTargetBlocks&#8203;(@Nullable @Nullable Set<Material> transparent, int maxDistance)`
+- `@Nullable @Nullable Block getTargetBlockExact&#8203;(int maxDistance)`
+- `@Nullable @Nullable Block getTargetBlockExact&#8203;(int maxDistance, @NotNull @NotNull FluidCollisionMode fluidCollisionMode)`
+- `@Nullable @Nullable RayTraceResult rayTraceBlocks&#8203;(double maxDistance)`
+- `@Nullable @Nullable RayTraceResult rayTraceBlocks&#8203;(double maxDistance, @NotNull @NotNull FluidCollisionMode fluidCollisionMode)`
+- `int getRemainingAir()`
+- `void setRemainingAir&#8203;(int ticks)`
+- `int getMaximumAir()`
+- `void setMaximumAir&#8203;(int ticks)`
+- `int getArrowCooldown()`
+- `void setArrowCooldown&#8203;(int ticks)`
+- `int getArrowsInBody()`
+- `void setArrowsInBody&#8203;(int count)`
+- `int getMaximumNoDamageTicks()`
+- `void setMaximumNoDamageTicks&#8203;(int ticks)`
+- `double getLastDamage()`
+- `void setLastDamage&#8203;(double damage)`
+- `int getNoDamageTicks()`
+- `void setNoDamageTicks&#8203;(int ticks)`
+- `@Nullable @Nullable Player getKiller()`
+- `void setKiller&#8203;(@Nullable @Nullable Player killer)`
+- `boolean addPotionEffect&#8203;(@NotNull @NotNull PotionEffect effect)`
+- `@Deprecated boolean addPotionEffect&#8203;(@NotNull @NotNull PotionEffect effect, boolean force)`
+- `boolean addPotionEffects&#8203;(@NotNull @NotNull Collection<PotionEffect> effects)`
+- `boolean hasPotionEffect&#8203;(@NotNull @NotNull PotionEffectType type)`
+- `@Nullable @Nullable PotionEffect getPotionEffect&#8203;(@NotNull @NotNull PotionEffectType type)`
+- `void removePotionEffect&#8203;(@NotNull @NotNull PotionEffectType type)`
+- `@NotNull @NotNull Collection<PotionEffect> getActivePotionEffects()`
+- `boolean hasLineOfSight&#8203;(@NotNull @NotNull Entity other)`
+- `boolean hasLineOfSight&#8203;(@NotNull @NotNull Location location)`
+- `boolean getRemoveWhenFarAway()`
+- `void setRemoveWhenFarAway&#8203;(boolean remove)`
+- `@Nullable @Nullable EntityEquipment getEquipment()`
+- `void setCanPickupItems&#8203;(boolean pickup)`
+- `boolean getCanPickupItems()`
+- `boolean isLeashed()`
+- `@NotNull @NotNull Entity getLeashHolder() throws IllegalStateException`
+- `boolean setLeashHolder&#8203;(@Nullable @Nullable Entity holder)`
+- `boolean isGliding()`
+- `void setGliding&#8203;(boolean gliding)`
+- `boolean isSwimming()`
+- `void setSwimming&#8203;(boolean swimming)`
+- `boolean isRiptiding()`
+- `boolean isSleeping()`
+- `void setAI&#8203;(boolean ai)`
+- `boolean hasAI()`
+- `void attack&#8203;(@NotNull @NotNull Entity target)`
+- `void swingMainHand()`
+- `void swingOffHand()`
+- `void setCollidable&#8203;(boolean collidable)`
+- `boolean isCollidable()`
+- `@NotNull @NotNull Set<UUID> getCollidableExemptions()`
+- `@Nullable <T> T getMemory&#8203;(@NotNull @NotNull MemoryKey<T> memoryKey)`
+- `<T> void setMemory&#8203;(@NotNull @NotNull MemoryKey<T> memoryKey, @Nullable T memoryValue)`
+- `@NotNull @NotNull EntityCategory getCategory()`
+- `void setInvisible&#8203;(boolean invisible)`
+- `boolean isInvisible()`
+- `int getArrowsStuck()`
+- `void setArrowsStuck&#8203;(int arrows)`
+- `int getShieldBlockingDelay()`
+- `void setShieldBlockingDelay&#8203;(int delay)`
+- `@Nullable @Nullable ItemStack getActiveItem()`
+- `void clearActiveItem()`
+- `int getItemUseRemainingTime()`
+- `int getHandRaisedTime()`
+- `boolean isHandRaised()`
+- `@NotNull EquipmentSlot getHandRaised()`
+- `boolean isJumping()`
+- `void setJumping&#8203;(boolean jumping)`
+- `default void playPickupItemAnimation&#8203;(@NotNull @NotNull Item item)`
+- `void playPickupItemAnimation&#8203;(@NotNull @NotNull Item item, int quantity)`
+- `float getHurtDirection()`
+- `void setHurtDirection&#8203;(float hurtDirection)`

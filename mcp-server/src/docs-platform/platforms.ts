@@ -68,6 +68,13 @@ export const KNOWN_VERSIONS: Record<Platform, string[]> = {
   paper: ["stable"],
   // 签名面伪版本（同 bedrock 的 `stable` 先例）。上游真实版本串见各页 frontmatter 的 `asOfVersion`。
   spigot: ["stable"],
-  // Paper 签名层：同样伪版本 `stable`（目录 `data/paper-api_stable/paper-javadoc/stable/`）。
-  "paper-api": ["stable"],
+  // Paper 签名层：`stable` = 当前档（目录 `data/paper-api_stable/paper-javadoc/stable/`）；
+  // 其后是**按真 MC 版本**分的历史档（2026-10-23 加，用户点名：1.21.4 / 1.21.1 / 1.20.1 / 1.16.5 / 1.12.2）。
+  // 顺序不影响精确匹配（`--version=1.21.4` 直接命中同名目录），只影响"不指定版本时先找哪个" ⇒ 当前档在前。
+  //
+  // ⚠ 这五档**只有签名面，没有对应版本的规则树**（`paper/<ver>/rules/` 仍只有 26.3 一份）。
+  //   原因是不编造：Paper 的**教程正文**上游不按 MC 版本分（只有一份当前文档），javadoc 只有签名、
+  //   没有「怎么用」的散文 ⇒ 给 1.21.4 写一套规则，每条 API 论断都只能标「未核实」。宁可缺，不造。
+  //   若日后要加，必须先有该版本的教程正文作出处（届时按 `assert-server-rules-integrity` 逐条带指针）。
+  "paper-api": ["stable", "1.21.4", "1.21.1", "1.20.1", "1.16.5", "1.12.2"],
 };

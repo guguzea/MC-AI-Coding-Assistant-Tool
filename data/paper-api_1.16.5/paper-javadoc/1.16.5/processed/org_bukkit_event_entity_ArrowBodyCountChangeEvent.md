@@ -1,0 +1,20 @@
+---
+title: "org.bukkit.event.entity.ArrowBodyCountChangeEvent"
+package: "org.bukkit.event.entity"
+source: https://jd.papermc.io/paper/1.16.5/org/bukkit/event/entity/ArrowBodyCountChangeEvent.html
+sourceType: javadoc
+fetchedWith: fetch-spigot-javadoc.mjs@1
+fetchedAt: 2026-10-23T08:04:41.693Z
+asOfVersion: "1.16.5-R0.1-SNAPSHOT"
+---
+
+- `public ArrowBodyCountChangeEvent&#8203;(@NotNull @NotNull LivingEntity entity, int oldAmount, int newAmount, boolean isReset)`
+- `public boolean isReset()`
+- `public int getOldAmount()`
+- `public int getNewAmount()`
+- `public void setNewAmount&#8203;(int newAmount)`
+- `@NotNull public @NotNull LivingEntity getEntity()`
+- `public boolean isCancelled()`
+- `public void setCancelled&#8203;(boolean cancel)`
+- `@NotNull public @NotNull HandlerList getHandlers()`
+- `@NotNull public static @NotNull HandlerList getHandlerList()`

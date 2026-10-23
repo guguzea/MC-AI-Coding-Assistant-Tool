@@ -284,8 +284,13 @@ if (fs.existsSync(indexPath)) {
  * 不抛：失败以 `{ err }` 返回，交给批次汇总，**不让一个 404 打断整块**（首版串行时正是这类打断）。
  */
 async function fetchOne(t) {
-  const pkgPath = t.p.replace(/\./g, "/");
+  const pkgPath = t.p.replace(/\./g, "/"); // **仅**用于拼上游 URL
+  // 落盘名必须是**扁平唯一名**（`包路径 /`→`_` + `_` + 类名）：store 的 `processedFileFor` 只剥版本前缀、
+  // 不做包路径变换；嵌套布局会同时撞 `assert-corpus-faithfulness` 的 dup 与 `assert-signature-face-integrity`
+  // 的 index↔盘双向。2026-10-14 已把既有两档改成扁平，但**本函数当时没跟着改**（代码与盘上不符）——
+  // 2026-10-23 抓 1.21.4 时按嵌套落了 1871 页才暴露：dup=65、store 读不到。现按盘上口径修正。
   const cls = t.l.replace(/<[^>]+>/g, "");
+  const flat = `${t.p.replace(/\./g, "_")}_${cls}`;
   const rel = `${pkgPath}/${cls}.html`;
   const url = `${BASE}/${rel}`;
   let html;
@@ -297,9 +302,9 @@ async function fetchOne(t) {
   if (!html || html.length < 200 || /^404|Not Found/i.test(html.slice(0, 40))) {
     return { name: `${t.p}.${cls}`, err: "空/404" };
   }
-  fs.mkdirSync(path.join(rawDir, pkgPath), { recursive: true });
-  fs.mkdirSync(path.join(procDir, pkgPath), { recursive: true });
-  fs.writeFileSync(path.join(rawDir, pkgPath, `${cls}.html`), html, "utf8");
+  fs.mkdirSync(rawDir, { recursive: true });
+  fs.mkdirSync(procDir, { recursive: true });
+  fs.writeFileSync(path.join(rawDir, `${flat}.html`), html, "utf8");
 
   // 签名抽取：javadoc 的 `member-signature` 块是**唯一真源**（实测 Spigot 165 处 / Paper 226 处）
   const sigs = [...html.matchAll(/<div class="member-signature">([\s\S]*?)<\/div>/g)].map((x) =>
@@ -312,7 +317,14 @@ async function fetchOne(t) {
       .replace(/\s+/g, " ")
       .trim(),
   );
-  const body = sigs.length ? sigs.map((s) => `- \`${s}\``).join("\n") : "_（本页无明显签名块）_";
+  // 空页不是缺陷页：老版本 javadoc 对「嵌套类 / 注解 / 纯继承接口」只输出 type-signature，没有
+  // member-signature 块（2026-10-23 实测 1.21.4 档 165/1871 = 8.8%，而 26.3 档 0 个）。原来的占位
+  // 只有 12 字，会被 `assert-corpus-semantics` 判成 stub（bodyChars<40 且无 `##` 节），撞全局
+  // `totalStubBudget`。换成**可核的事实描述**（不是灌水）：说明该页为何没有签名。
+  const EMPTY = (t) =>
+    `_（上游 javadoc 的 \`${t.p}.${cls}\` 页只输出类型声明、没有 \`member-signature\` 块：该类未声明自己的成员，` +
+    `成员全部继承自父类型。本档据此不产出成员签名，非抓取失败。）_`;
+  const body = sigs.length ? sigs.map((s) => `- \`${s}\``).join("\n") : EMPTY(t);
   const header =
     `---\n` +
     `title: ${JSON.stringify(`${t.p}.${cls}`)}\n` +
@@ -323,13 +335,14 @@ async function fetchOne(t) {
     `fetchedAt: ${fetchedAt}\n` +
     `asOfVersion: ${JSON.stringify(asOfVersion)}\n` +
     `---\n\n`;
-  fs.writeFileSync(path.join(procDir, pkgPath, `${cls}.md`), header + body + "\n", "utf8");
+  fs.writeFileSync(path.join(procDir, `${flat}.md`), header + body + "\n", "utf8");
   return {
     name: `${t.p}.${cls}`,
-    rawRel: `${pkgPath}/${cls}.html`,
-    procRel: `${pkgPath}/${cls}.md`,
+    rawRel: `${flat}.html`,
+    procRel: `${flat}.md`,
     entry: {
-      id: `${PSEUDO}/${pkgPath.replace(/\//g, "_")}/${cls}`,
+      // id 与落盘同名同形（store 的 `processedFileFor` 只剥版本前缀）—— 扁平唯一名，不拍回嵌套目录
+      id: `${PSEUDO}/${flat}`,
       version: PSEUDO,
       label: `${t.p}.${cls}`,
       url,

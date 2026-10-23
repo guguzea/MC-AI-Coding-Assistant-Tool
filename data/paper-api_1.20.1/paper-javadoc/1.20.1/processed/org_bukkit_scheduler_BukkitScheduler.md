@@ -1,0 +1,45 @@
+---
+title: "org.bukkit.scheduler.BukkitScheduler"
+package: "org.bukkit.scheduler"
+source: https://jd.papermc.io/paper/1.20.1/org/bukkit/scheduler/BukkitScheduler.html
+sourceType: javadoc
+fetchedWith: fetch-spigot-javadoc.mjs@1
+fetchedAt: 2026-10-23T07:58:42.132Z
+asOfVersion: "1.20.1-R0.1-SNAPSHOT"
+---
+
+- `int scheduleSyncDelayedTask(@NotNull @NotNull Plugin plugin, @NotNull @NotNull Runnable task, long delay)`
+- `@Deprecated int scheduleSyncDelayedTask(@NotNull @NotNull Plugin plugin, @NotNull @NotNull BukkitRunnable task, long delay)`
+- `int scheduleSyncDelayedTask(@NotNull @NotNull Plugin plugin, @NotNull @NotNull Runnable task)`
+- `@Deprecated int scheduleSyncDelayedTask(@NotNull @NotNull Plugin plugin, @NotNull @NotNull BukkitRunnable task)`
+- `int scheduleSyncRepeatingTask(@NotNull @NotNull Plugin plugin, @NotNull @NotNull Runnable task, long delay, long period)`
+- `@Deprecated int scheduleSyncRepeatingTask(@NotNull @NotNull Plugin plugin, @NotNull @NotNull BukkitRunnable task, long delay, long period)`
+- `@Deprecated int scheduleAsyncDelayedTask(@NotNull @NotNull Plugin plugin, @NotNull @NotNull Runnable task, long delay)`
+- `@Deprecated int scheduleAsyncDelayedTask(@NotNull @NotNull Plugin plugin, @NotNull @NotNull Runnable task)`
+- `@Deprecated int scheduleAsyncRepeatingTask(@NotNull @NotNull Plugin plugin, @NotNull @NotNull Runnable task, long delay, long period)`
+- `@NotNull <T> @NotNull Future<T> callSyncMethod(@NotNull @NotNull Plugin plugin, @NotNull @NotNull Callable<T> task)`
+- `void cancelTask(int taskId)`
+- `void cancelTasks(@NotNull @NotNull Plugin plugin)`
+- `boolean isCurrentlyRunning(int taskId)`
+- `boolean isQueued(int taskId)`
+- `@NotNull @NotNull List<BukkitWorker> getActiveWorkers()`
+- `@NotNull @NotNull List<BukkitTask> getPendingTasks()`
+- `@NotNull @NotNull BukkitTask runTask(@NotNull @NotNull Plugin plugin, @NotNull @NotNull Runnable task) throws IllegalArgumentException`
+- `void runTask(@NotNull @NotNull Plugin plugin, @NotNull @NotNull Consumer<BukkitTask> task) throws IllegalArgumentException`
+- `@Deprecated @NotNull @NotNull BukkitTask runTask(@NotNull @NotNull Plugin plugin, @NotNull @NotNull BukkitRunnable task) throws IllegalArgumentException`
+- `@NotNull @NotNull BukkitTask runTaskAsynchronously(@NotNull @NotNull Plugin plugin, @NotNull @NotNull Runnable task) throws IllegalArgumentException`
+- `void runTaskAsynchronously(@NotNull @NotNull Plugin plugin, @NotNull @NotNull Consumer<BukkitTask> task) throws IllegalArgumentException`
+- `@Deprecated @NotNull @NotNull BukkitTask runTaskAsynchronously(@NotNull @NotNull Plugin plugin, @NotNull @NotNull BukkitRunnable task) throws IllegalArgumentException`
+- `@NotNull @NotNull BukkitTask runTaskLater(@NotNull @NotNull Plugin plugin, @NotNull @NotNull Runnable task, long delay) throws IllegalArgumentException`
+- `void runTaskLater(@NotNull @NotNull Plugin plugin, @NotNull @NotNull Consumer<BukkitTask> task, long delay) throws IllegalArgumentException`
+- `@Deprecated @NotNull @NotNull BukkitTask runTaskLater(@NotNull @NotNull Plugin plugin, @NotNull @NotNull BukkitRunnable task, long delay) throws IllegalArgumentException`
+- `@NotNull @NotNull BukkitTask runTaskLaterAsynchronously(@NotNull @NotNull Plugin plugin, @NotNull @NotNull Runnable task, long delay) throws IllegalArgumentException`
+- `void runTaskLaterAsynchronously(@NotNull @NotNull Plugin plugin, @NotNull @NotNull Consumer<BukkitTask> task, long delay) throws IllegalArgumentException`
+- `@Deprecated @NotNull @NotNull BukkitTask runTaskLaterAsynchronously(@NotNull @NotNull Plugin plugin, @NotNull @NotNull BukkitRunnable task, long delay) throws IllegalArgumentException`
+- `@NotNull @NotNull BukkitTask runTaskTimer(@NotNull @NotNull Plugin plugin, @NotNull @NotNull Runnable task, long delay, long period) throws IllegalArgumentException`
+- `void runTaskTimer(@NotNull @NotNull Plugin plugin, @NotNull @NotNull Consumer<BukkitTask> task, long delay, long period) throws IllegalArgumentException`
+- `@Deprecated @NotNull @NotNull BukkitTask runTaskTimer(@NotNull @NotNull Plugin plugin, @NotNull @NotNull BukkitRunnable task, long delay, long period) throws IllegalArgumentException`
+- `@NotNull @NotNull BukkitTask runTaskTimerAsynchronously(@NotNull @NotNull Plugin plugin, @NotNull @NotNull Runnable task, long delay, long period) throws IllegalArgumentException`
+- `void runTaskTimerAsynchronously(@NotNull @NotNull Plugin plugin, @NotNull @NotNull Consumer<BukkitTask> task, long delay, long period) throws IllegalArgumentException`
+- `@Deprecated @NotNull @NotNull BukkitTask runTaskTimerAsynchronously(@NotNull @NotNull Plugin plugin, @NotNull @NotNull BukkitRunnable task, long delay, long period) throws IllegalArgumentException`
+- `@NotNull Executor getMainThreadExecutor(@NotNull @NotNull Plugin plugin)`
