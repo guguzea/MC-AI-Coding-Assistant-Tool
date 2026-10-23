@@ -1,0 +1,12 @@
+Compiled from <spigot-api>
+public final class org.bukkit.WorldType extends java.lang.Enum<org.bukkit.WorldType> {
+  public static final org.bukkit.WorldType NORMAL;
+  public static final org.bukkit.WorldType FLAT;
+  public static final org.bukkit.WorldType LARGE_BIOMES;
+  public static final org.bukkit.WorldType AMPLIFIED;
+  static {};
+  public java.lang.String getName();
+  public static org.bukkit.WorldType getByName(java.lang.String);
+  public static org.bukkit.WorldType[] values();
+  public static org.bukkit.WorldType valueOf(java.lang.String);
+}

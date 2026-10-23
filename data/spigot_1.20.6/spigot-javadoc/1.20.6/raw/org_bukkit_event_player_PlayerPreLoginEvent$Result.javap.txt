@@ -1,0 +1,11 @@
+Compiled from <spigot-api>
+public final class org.bukkit.event.player.PlayerPreLoginEvent$Result extends java.lang.Enum<org.bukkit.event.player.PlayerPreLoginEvent$Result> {
+  public static final org.bukkit.event.player.PlayerPreLoginEvent$Result ALLOWED;
+  public static final org.bukkit.event.player.PlayerPreLoginEvent$Result KICK_FULL;
+  public static final org.bukkit.event.player.PlayerPreLoginEvent$Result KICK_BANNED;
+  public static final org.bukkit.event.player.PlayerPreLoginEvent$Result KICK_WHITELIST;
+  public static final org.bukkit.event.player.PlayerPreLoginEvent$Result KICK_OTHER;
+  public static org.bukkit.event.player.PlayerPreLoginEvent$Result[] values();
+  public static org.bukkit.event.player.PlayerPreLoginEvent$Result valueOf(java.lang.String);
+  static {};
+}

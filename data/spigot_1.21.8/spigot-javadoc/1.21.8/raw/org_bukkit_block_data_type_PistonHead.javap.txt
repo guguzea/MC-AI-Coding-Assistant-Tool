@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.data.type.PistonHead extends org.bukkit.block.data.type.TechnicalPiston {
+  public abstract boolean isShort();
+  public abstract void setShort(boolean);
+}

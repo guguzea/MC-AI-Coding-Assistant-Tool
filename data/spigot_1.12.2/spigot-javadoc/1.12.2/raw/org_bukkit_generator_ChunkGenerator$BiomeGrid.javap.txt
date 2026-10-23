@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.generator.ChunkGenerator$BiomeGrid {
+  public abstract org.bukkit.block.Biome getBiome(int, int);
+  public abstract void setBiome(int, int, org.bukkit.block.Biome);
+}

@@ -1,0 +1,34 @@
+---
+title: "org.bukkit.inventory.meta.components.BlocksAttacksComponent"
+package: "org.bukkit.inventory.meta.components"
+source: https://repo.papermc.io/repository/maven-public/org/spigotmc/spigot-api/1.21.8-R0.1-SNAPSHOT/spigot-api-1.21.8-R0.1-20250930.150928-11.jar
+sourceType: javap
+fetchedWith: extract-spigot-api-surface.mjs@1
+fetchedAt: 2026-10-23T15:58:53.605Z
+asOfVersion: "1.21.8-R0.1-SNAPSHOT"
+jarMd5: "b5fa33feaafaaf08dccdb2999aeff20e"
+---
+
+- `public interface org.bukkit.inventory.meta.components.BlocksAttacksComponent extends org.bukkit.configuration.serialization.ConfigurationSerializable`
+- `public abstract float getBlockDelaySeconds()`
+- `public abstract void setBlockDelaySeconds(float)`
+- `public abstract float getDisableCooldownScale()`
+- `public abstract void setDisableCooldownScale(float)`
+- `public abstract java.util.List<org.bukkit.inventory.meta.components.BlocksAttacksComponent$DamageReduction> getDamageReductions()`
+- `public abstract void setDamageReductions(java.util.List<org.bukkit.inventory.meta.components.BlocksAttacksComponent$DamageReduction>)`
+- `public abstract org.bukkit.inventory.meta.components.BlocksAttacksComponent$DamageReduction addDamageReduction(org.bukkit.damage.DamageType, float, float, float)`
+- `public abstract org.bukkit.inventory.meta.components.BlocksAttacksComponent$DamageReduction addDamageReduction(java.util.Collection<org.bukkit.damage.DamageType>, float, float, float)`
+- `public abstract org.bukkit.inventory.meta.components.BlocksAttacksComponent$DamageReduction addDamageReduction(org.bukkit.Tag<org.bukkit.damage.DamageType>, float, float, float)`
+- `public abstract boolean removeDamageReduction(org.bukkit.inventory.meta.components.BlocksAttacksComponent$DamageReduction)`
+- `public abstract float getItemDamageThreshold()`
+- `public abstract void setItemDamageThreshold(float)`
+- `public abstract float getItemDamageBase()`
+- `public abstract void setItemDamageBase(float)`
+- `public abstract float getItemDamageFactor()`
+- `public abstract void setItemDamageFactor(float)`
+- `public abstract org.bukkit.Sound getBlockSound()`
+- `public abstract void setBlockSound(org.bukkit.Sound)`
+- `public abstract org.bukkit.Sound getDisableSound()`
+- `public abstract void setDisableSound(org.bukkit.Sound)`
+- `public abstract org.bukkit.Tag<org.bukkit.damage.DamageType> getBypassedBy()`
+- `public abstract void setBypassedBy(org.bukkit.Tag<org.bukkit.damage.DamageType>)`

@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.event.EventHandler extends java.lang.annotation.Annotation {
+  public abstract org.bukkit.event.EventPriority priority();
+  public abstract boolean ignoreCancelled();
+}

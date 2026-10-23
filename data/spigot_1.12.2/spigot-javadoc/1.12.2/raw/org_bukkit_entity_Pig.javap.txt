@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Pig extends org.bukkit.entity.Animals,org.bukkit.entity.Vehicle {
+  public abstract boolean hasSaddle();
+  public abstract void setSaddle(boolean);
+}

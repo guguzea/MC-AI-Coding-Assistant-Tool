@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public final class org.bukkit.material.CocoaPlant$CocoaPlantSize extends java.lang.Enum<org.bukkit.material.CocoaPlant$CocoaPlantSize> {
+  public static final org.bukkit.material.CocoaPlant$CocoaPlantSize SMALL;
+  public static final org.bukkit.material.CocoaPlant$CocoaPlantSize MEDIUM;
+  public static final org.bukkit.material.CocoaPlant$CocoaPlantSize LARGE;
+  static {};
+  public static org.bukkit.material.CocoaPlant$CocoaPlantSize[] values();
+  public static org.bukkit.material.CocoaPlant$CocoaPlantSize valueOf(java.lang.String);
+}

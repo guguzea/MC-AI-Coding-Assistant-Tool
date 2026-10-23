@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public final class org.bukkit.entity.Warden$AngerLevel extends java.lang.Enum<org.bukkit.entity.Warden$AngerLevel> {
+  public static final org.bukkit.entity.Warden$AngerLevel CALM;
+  public static final org.bukkit.entity.Warden$AngerLevel AGITATED;
+  public static final org.bukkit.entity.Warden$AngerLevel ANGRY;
+  public static org.bukkit.entity.Warden$AngerLevel[] values();
+  public static org.bukkit.entity.Warden$AngerLevel valueOf(java.lang.String);
+  static {};
+}

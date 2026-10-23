@@ -1,0 +1,3 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Pillager extends org.bukkit.entity.Illager,org.bukkit.inventory.InventoryHolder {
+}

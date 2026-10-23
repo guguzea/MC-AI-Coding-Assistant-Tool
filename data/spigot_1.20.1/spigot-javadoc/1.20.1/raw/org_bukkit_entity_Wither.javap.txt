@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Wither extends org.bukkit.entity.Monster,org.bukkit.entity.Boss {
+  public abstract void setTarget(org.bukkit.entity.LivingEntity);
+  public abstract void setTarget(org.bukkit.entity.Wither$Head, org.bukkit.entity.LivingEntity);
+  public abstract org.bukkit.entity.LivingEntity getTarget(org.bukkit.entity.Wither$Head);
+  public abstract int getInvulnerabilityTicks();
+  public abstract void setInvulnerabilityTicks(int);
+}

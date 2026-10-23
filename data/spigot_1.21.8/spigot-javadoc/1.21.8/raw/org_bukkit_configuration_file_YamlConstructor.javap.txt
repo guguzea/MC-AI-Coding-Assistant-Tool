@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public class org.bukkit.configuration.file.YamlConstructor extends org.yaml.snakeyaml.constructor.SafeConstructor {
+  public org.bukkit.configuration.file.YamlConstructor();
+  public org.bukkit.configuration.file.YamlConstructor(org.yaml.snakeyaml.LoaderOptions);
+  public void flattenMapping(org.yaml.snakeyaml.nodes.MappingNode);
+  public java.lang.Object construct(org.yaml.snakeyaml.nodes.Node);
+}

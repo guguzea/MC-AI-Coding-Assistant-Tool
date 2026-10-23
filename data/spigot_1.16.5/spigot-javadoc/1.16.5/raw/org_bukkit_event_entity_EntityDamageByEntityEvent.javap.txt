@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.entity.EntityDamageByEntityEvent extends org.bukkit.event.entity.EntityDamageEvent {
+  public org.bukkit.event.entity.EntityDamageByEntityEvent(org.bukkit.entity.Entity, org.bukkit.entity.Entity, org.bukkit.event.entity.EntityDamageEvent$DamageCause, double);
+  public org.bukkit.event.entity.EntityDamageByEntityEvent(org.bukkit.entity.Entity, org.bukkit.entity.Entity, org.bukkit.event.entity.EntityDamageEvent$DamageCause, java.util.Map<org.bukkit.event.entity.EntityDamageEvent$DamageModifier, java.lang.Double>, java.util.Map<org.bukkit.event.entity.EntityDamageEvent$DamageModifier, ? extends com.google.common.base.Function<? super java.lang.Double, java.lang.Double>>);
+  public org.bukkit.entity.Entity getDamager();
+}

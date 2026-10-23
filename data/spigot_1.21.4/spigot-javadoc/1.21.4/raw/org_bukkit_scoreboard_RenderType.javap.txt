@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public final class org.bukkit.scoreboard.RenderType extends java.lang.Enum<org.bukkit.scoreboard.RenderType> {
+  public static final org.bukkit.scoreboard.RenderType INTEGER;
+  public static final org.bukkit.scoreboard.RenderType HEARTS;
+  public static org.bukkit.scoreboard.RenderType[] values();
+  public static org.bukkit.scoreboard.RenderType valueOf(java.lang.String);
+  static {};
+}

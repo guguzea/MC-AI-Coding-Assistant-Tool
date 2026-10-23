@@ -1,0 +1,15 @@
+Compiled from <spigot-api>
+public class org.bukkit.material.Sandstone extends org.bukkit.material.MaterialData {
+  public org.bukkit.material.Sandstone();
+  public org.bukkit.material.Sandstone(org.bukkit.SandstoneType);
+  public org.bukkit.material.Sandstone(int);
+  public org.bukkit.material.Sandstone(org.bukkit.Material);
+  public org.bukkit.material.Sandstone(int, byte);
+  public org.bukkit.material.Sandstone(org.bukkit.Material, byte);
+  public org.bukkit.SandstoneType getType();
+  public void setType(org.bukkit.SandstoneType);
+  public java.lang.String toString();
+  public org.bukkit.material.Sandstone clone();
+  public org.bukkit.material.MaterialData clone();
+  public java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+}

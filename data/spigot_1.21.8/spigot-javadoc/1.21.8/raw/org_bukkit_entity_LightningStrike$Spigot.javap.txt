@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public class org.bukkit.entity.LightningStrike$Spigot extends org.bukkit.entity.Entity$Spigot {
+  public org.bukkit.entity.LightningStrike$Spigot();
+  public boolean isSilent();
+}

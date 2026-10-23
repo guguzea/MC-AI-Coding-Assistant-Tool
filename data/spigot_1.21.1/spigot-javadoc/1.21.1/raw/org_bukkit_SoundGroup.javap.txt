@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public interface org.bukkit.SoundGroup {
+  public abstract float getVolume();
+  public abstract float getPitch();
+  public abstract org.bukkit.Sound getBreakSound();
+  public abstract org.bukkit.Sound getStepSound();
+  public abstract org.bukkit.Sound getPlaceSound();
+  public abstract org.bukkit.Sound getHitSound();
+  public abstract org.bukkit.Sound getFallSound();
+}

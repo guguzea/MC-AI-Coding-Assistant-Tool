@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public abstract class org.bukkit.conversations.PlayerNamePrompt extends org.bukkit.conversations.ValidatingPrompt {
+  public org.bukkit.conversations.PlayerNamePrompt(org.bukkit.plugin.Plugin);
+  protected boolean isInputValid(org.bukkit.conversations.ConversationContext, java.lang.String);
+  protected org.bukkit.conversations.Prompt acceptValidatedInput(org.bukkit.conversations.ConversationContext, java.lang.String);
+  protected abstract org.bukkit.conversations.Prompt acceptValidatedInput(org.bukkit.conversations.ConversationContext, org.bukkit.entity.Player);
+}

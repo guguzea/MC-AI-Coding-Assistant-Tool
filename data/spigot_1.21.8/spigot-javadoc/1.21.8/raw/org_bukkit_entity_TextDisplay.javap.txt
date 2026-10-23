@@ -1,0 +1,19 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.TextDisplay extends org.bukkit.entity.Display {
+  public abstract java.lang.String getText();
+  public abstract void setText(java.lang.String);
+  public abstract int getLineWidth();
+  public abstract void setLineWidth(int);
+  public abstract org.bukkit.Color getBackgroundColor();
+  public abstract void setBackgroundColor(org.bukkit.Color);
+  public abstract byte getTextOpacity();
+  public abstract void setTextOpacity(byte);
+  public abstract boolean isShadowed();
+  public abstract void setShadowed(boolean);
+  public abstract boolean isSeeThrough();
+  public abstract void setSeeThrough(boolean);
+  public abstract boolean isDefaultBackground();
+  public abstract void setDefaultBackground(boolean);
+  public abstract org.bukkit.entity.TextDisplay$TextAlignment getAlignment();
+  public abstract void setAlignment(org.bukkit.entity.TextDisplay$TextAlignment);
+}

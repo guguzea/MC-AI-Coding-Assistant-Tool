@@ -1,0 +1,12 @@
+Compiled from <spigot-api>
+public final class org.bukkit.Difficulty extends java.lang.Enum<org.bukkit.Difficulty> {
+  public static final org.bukkit.Difficulty PEACEFUL;
+  public static final org.bukkit.Difficulty EASY;
+  public static final org.bukkit.Difficulty NORMAL;
+  public static final org.bukkit.Difficulty HARD;
+  public static org.bukkit.Difficulty[] values();
+  public static org.bukkit.Difficulty valueOf(java.lang.String);
+  public int getValue();
+  public static org.bukkit.Difficulty getByValue(int);
+  static {};
+}

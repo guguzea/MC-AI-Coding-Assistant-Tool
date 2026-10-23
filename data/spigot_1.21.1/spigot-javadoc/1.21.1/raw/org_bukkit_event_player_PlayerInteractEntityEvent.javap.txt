@@ -1,0 +1,14 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.player.PlayerInteractEntityEvent extends org.bukkit.event.player.PlayerEvent implements org.bukkit.event.Cancellable {
+  protected org.bukkit.entity.Entity clickedEntity;
+  boolean cancelled;
+  public org.bukkit.event.player.PlayerInteractEntityEvent(org.bukkit.entity.Player, org.bukkit.entity.Entity);
+  public org.bukkit.event.player.PlayerInteractEntityEvent(org.bukkit.entity.Player, org.bukkit.entity.Entity, org.bukkit.inventory.EquipmentSlot);
+  public boolean isCancelled();
+  public void setCancelled(boolean);
+  public org.bukkit.entity.Entity getRightClicked();
+  public org.bukkit.inventory.EquipmentSlot getHand();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  static {};
+}

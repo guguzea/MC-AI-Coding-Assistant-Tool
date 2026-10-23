@@ -1,0 +1,15 @@
+Compiled from <spigot-api>
+public abstract class org.bukkit.event.player.PlayerBucketEvent extends org.bukkit.event.player.PlayerEvent implements org.bukkit.event.Cancellable {
+  public org.bukkit.event.player.PlayerBucketEvent(org.bukkit.entity.Player, org.bukkit.block.Block, org.bukkit.block.BlockFace, org.bukkit.Material, org.bukkit.inventory.ItemStack);
+  public org.bukkit.event.player.PlayerBucketEvent(org.bukkit.entity.Player, org.bukkit.block.Block, org.bukkit.block.Block, org.bukkit.block.BlockFace, org.bukkit.Material, org.bukkit.inventory.ItemStack);
+  public org.bukkit.event.player.PlayerBucketEvent(org.bukkit.entity.Player, org.bukkit.block.Block, org.bukkit.block.Block, org.bukkit.block.BlockFace, org.bukkit.Material, org.bukkit.inventory.ItemStack, org.bukkit.inventory.EquipmentSlot);
+  public org.bukkit.Material getBucket();
+  public org.bukkit.inventory.ItemStack getItemStack();
+  public void setItemStack(org.bukkit.inventory.ItemStack);
+  public final org.bukkit.block.Block getBlock();
+  public org.bukkit.block.Block getBlockClicked();
+  public org.bukkit.block.BlockFace getBlockFace();
+  public org.bukkit.inventory.EquipmentSlot getHand();
+  public boolean isCancelled();
+  public void setCancelled(boolean);
+}

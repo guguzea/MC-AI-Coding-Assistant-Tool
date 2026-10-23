@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.SculkSensor extends org.bukkit.block.TileState {
+  public abstract int getLastVibrationFrequency();
+  public abstract void setLastVibrationFrequency(int);
+}

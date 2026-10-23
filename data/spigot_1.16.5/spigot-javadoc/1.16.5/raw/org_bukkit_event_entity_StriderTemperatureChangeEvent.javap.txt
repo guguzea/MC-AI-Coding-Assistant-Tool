@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.entity.StriderTemperatureChangeEvent extends org.bukkit.event.entity.EntityEvent {
+  static {};
+  public org.bukkit.event.entity.StriderTemperatureChangeEvent(org.bukkit.entity.Strider, boolean);
+  public org.bukkit.entity.Strider getEntity();
+  public boolean isShivering();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  public org.bukkit.entity.Entity getEntity();
+}

@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.util.StructureSearchResult {
+  public abstract org.bukkit.generator.structure.Structure getStructure();
+  public abstract org.bukkit.Location getLocation();
+}

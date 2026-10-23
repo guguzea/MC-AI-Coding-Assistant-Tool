@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public final class org.bukkit.entity.FishHook$HookState extends java.lang.Enum<org.bukkit.entity.FishHook$HookState> {
+  public static final org.bukkit.entity.FishHook$HookState UNHOOKED;
+  public static final org.bukkit.entity.FishHook$HookState HOOKED_ENTITY;
+  public static final org.bukkit.entity.FishHook$HookState BOBBING;
+  public static org.bukkit.entity.FishHook$HookState[] values();
+  public static org.bukkit.entity.FishHook$HookState valueOf(java.lang.String);
+  static {};
+}

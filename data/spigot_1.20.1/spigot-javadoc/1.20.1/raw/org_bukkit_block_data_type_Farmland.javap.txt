@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.data.type.Farmland extends org.bukkit.block.data.BlockData {
+  public abstract int getMoisture();
+  public abstract void setMoisture(int);
+  public abstract int getMaximumMoisture();
+}

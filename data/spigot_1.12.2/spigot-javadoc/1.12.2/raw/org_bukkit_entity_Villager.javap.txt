@@ -1,0 +1,11 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Villager extends org.bukkit.entity.Ageable,org.bukkit.entity.NPC,org.bukkit.inventory.InventoryHolder,org.bukkit.inventory.Merchant {
+  public abstract org.bukkit.entity.Villager$Profession getProfession();
+  public abstract void setProfession(org.bukkit.entity.Villager$Profession);
+  public abstract org.bukkit.entity.Villager$Career getCareer();
+  public abstract void setCareer(org.bukkit.entity.Villager$Career);
+  public abstract void setCareer(org.bukkit.entity.Villager$Career, boolean);
+  public abstract org.bukkit.inventory.Inventory getInventory();
+  public abstract int getRiches();
+  public abstract void setRiches(int);
+}

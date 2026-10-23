@@ -1,0 +1,12 @@
+Compiled from <spigot-api>
+public final class org.bukkit.inventory.ItemFlag extends java.lang.Enum<org.bukkit.inventory.ItemFlag> {
+  public static final org.bukkit.inventory.ItemFlag HIDE_ENCHANTS;
+  public static final org.bukkit.inventory.ItemFlag HIDE_ATTRIBUTES;
+  public static final org.bukkit.inventory.ItemFlag HIDE_UNBREAKABLE;
+  public static final org.bukkit.inventory.ItemFlag HIDE_DESTROYS;
+  public static final org.bukkit.inventory.ItemFlag HIDE_PLACED_ON;
+  public static final org.bukkit.inventory.ItemFlag HIDE_POTION_EFFECTS;
+  static {};
+  public static org.bukkit.inventory.ItemFlag[] values();
+  public static org.bukkit.inventory.ItemFlag valueOf(java.lang.String);
+}

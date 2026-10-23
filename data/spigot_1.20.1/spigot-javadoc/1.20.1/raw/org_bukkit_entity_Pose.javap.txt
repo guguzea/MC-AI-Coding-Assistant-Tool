@@ -1,0 +1,21 @@
+Compiled from <spigot-api>
+public final class org.bukkit.entity.Pose extends java.lang.Enum<org.bukkit.entity.Pose> {
+  public static final org.bukkit.entity.Pose STANDING;
+  public static final org.bukkit.entity.Pose FALL_FLYING;
+  public static final org.bukkit.entity.Pose SLEEPING;
+  public static final org.bukkit.entity.Pose SWIMMING;
+  public static final org.bukkit.entity.Pose SPIN_ATTACK;
+  public static final org.bukkit.entity.Pose SNEAKING;
+  public static final org.bukkit.entity.Pose LONG_JUMPING;
+  public static final org.bukkit.entity.Pose DYING;
+  public static final org.bukkit.entity.Pose CROAKING;
+  public static final org.bukkit.entity.Pose USING_TONGUE;
+  public static final org.bukkit.entity.Pose SITTING;
+  public static final org.bukkit.entity.Pose ROARING;
+  public static final org.bukkit.entity.Pose SNIFFING;
+  public static final org.bukkit.entity.Pose EMERGING;
+  public static final org.bukkit.entity.Pose DIGGING;
+  static {};
+  public static org.bukkit.entity.Pose[] values();
+  public static org.bukkit.entity.Pose valueOf(java.lang.String);
+}

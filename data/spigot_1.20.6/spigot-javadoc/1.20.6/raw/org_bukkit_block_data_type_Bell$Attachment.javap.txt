@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public final class org.bukkit.block.data.type.Bell$Attachment extends java.lang.Enum<org.bukkit.block.data.type.Bell$Attachment> {
+  public static final org.bukkit.block.data.type.Bell$Attachment FLOOR;
+  public static final org.bukkit.block.data.type.Bell$Attachment CEILING;
+  public static final org.bukkit.block.data.type.Bell$Attachment SINGLE_WALL;
+  public static final org.bukkit.block.data.type.Bell$Attachment DOUBLE_WALL;
+  public static org.bukkit.block.data.type.Bell$Attachment[] values();
+  public static org.bukkit.block.data.type.Bell$Attachment valueOf(java.lang.String);
+  static {};
+}

@@ -1,0 +1,11 @@
+Compiled from <spigot-api>
+public abstract class org.bukkit.inventory.CraftingRecipe implements org.bukkit.inventory.Recipe,org.bukkit.Keyed {
+  protected org.bukkit.inventory.CraftingRecipe(org.bukkit.NamespacedKey, org.bukkit.inventory.ItemStack);
+  public org.bukkit.NamespacedKey getKey();
+  public org.bukkit.inventory.ItemStack getResult();
+  public java.lang.String getGroup();
+  public void setGroup(java.lang.String);
+  public org.bukkit.inventory.recipe.CraftingBookCategory getCategory();
+  public void setCategory(org.bukkit.inventory.recipe.CraftingBookCategory);
+  protected static org.bukkit.inventory.ItemStack checkResult(org.bukkit.inventory.ItemStack);
+}

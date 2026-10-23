@@ -1,0 +1,11 @@
+Compiled from <spigot-api>
+public class org.bukkit.material.EnderChest extends org.bukkit.material.DirectionalContainer {
+  public org.bukkit.material.EnderChest();
+  public org.bukkit.material.EnderChest(org.bukkit.block.BlockFace);
+  public org.bukkit.material.EnderChest(org.bukkit.Material);
+  public org.bukkit.material.EnderChest(org.bukkit.Material, byte);
+  public org.bukkit.material.EnderChest clone();
+  public org.bukkit.material.DirectionalContainer clone();
+  public java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+  public org.bukkit.material.MaterialData clone();
+}

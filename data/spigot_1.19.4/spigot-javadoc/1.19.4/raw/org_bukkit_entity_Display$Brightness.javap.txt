@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public class org.bukkit.entity.Display$Brightness {
+  public org.bukkit.entity.Display$Brightness(int, int);
+  public int getBlockLight();
+  public int getSkyLight();
+  public int hashCode();
+  public boolean equals(java.lang.Object);
+  public java.lang.String toString();
+}

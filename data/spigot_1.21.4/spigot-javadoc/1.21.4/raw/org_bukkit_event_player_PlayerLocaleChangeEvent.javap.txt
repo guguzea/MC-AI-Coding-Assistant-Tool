@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.player.PlayerLocaleChangeEvent extends org.bukkit.event.player.PlayerEvent {
+  public org.bukkit.event.player.PlayerLocaleChangeEvent(org.bukkit.entity.Player, java.lang.String);
+  public java.lang.String getLocale();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  static {};
+}

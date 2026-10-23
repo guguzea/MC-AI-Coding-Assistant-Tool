@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public abstract class org.bukkit.potion.PotionEffectTypeWrapper extends org.bukkit.potion.PotionEffectType {
+  protected org.bukkit.potion.PotionEffectTypeWrapper();
+  public org.bukkit.potion.PotionEffectType getType();
+}

@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public class org.bukkit.Server$Spigot {
+  public org.bukkit.Server$Spigot();
+  public org.bukkit.configuration.file.YamlConfiguration getConfig();
+  public void broadcast(net.md_5.bungee.api.chat.BaseComponent);
+  public void broadcast(net.md_5.bungee.api.chat.BaseComponent...);
+  public void restart();
+}

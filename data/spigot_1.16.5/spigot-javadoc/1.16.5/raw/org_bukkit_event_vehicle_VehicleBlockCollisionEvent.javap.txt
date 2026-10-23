@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.vehicle.VehicleBlockCollisionEvent extends org.bukkit.event.vehicle.VehicleCollisionEvent {
+  static {};
+  public org.bukkit.event.vehicle.VehicleBlockCollisionEvent(org.bukkit.entity.Vehicle, org.bukkit.block.Block);
+  public org.bukkit.block.Block getBlock();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+}

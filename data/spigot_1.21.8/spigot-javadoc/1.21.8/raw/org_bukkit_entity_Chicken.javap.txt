@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Chicken extends org.bukkit.entity.Animals {
+  public abstract org.bukkit.entity.Chicken$Variant getVariant();
+  public abstract void setVariant(org.bukkit.entity.Chicken$Variant);
+}

@@ -1,0 +1,13 @@
+Compiled from <spigot-api>
+public final class org.bukkit.event.block.TNTPrimeEvent$PrimeCause extends java.lang.Enum<org.bukkit.event.block.TNTPrimeEvent$PrimeCause> {
+  public static final org.bukkit.event.block.TNTPrimeEvent$PrimeCause FIRE;
+  public static final org.bukkit.event.block.TNTPrimeEvent$PrimeCause REDSTONE;
+  public static final org.bukkit.event.block.TNTPrimeEvent$PrimeCause PLAYER;
+  public static final org.bukkit.event.block.TNTPrimeEvent$PrimeCause EXPLOSION;
+  public static final org.bukkit.event.block.TNTPrimeEvent$PrimeCause PROJECTILE;
+  public static final org.bukkit.event.block.TNTPrimeEvent$PrimeCause BLOCK_BREAK;
+  public static final org.bukkit.event.block.TNTPrimeEvent$PrimeCause DISPENSER;
+  public static org.bukkit.event.block.TNTPrimeEvent$PrimeCause[] values();
+  public static org.bukkit.event.block.TNTPrimeEvent$PrimeCause valueOf(java.lang.String);
+  static {};
+}

@@ -1,0 +1,12 @@
+Compiled from <spigot-api>
+public class org.bukkit.block.DoubleChest implements org.bukkit.inventory.InventoryHolder {
+  public org.bukkit.block.DoubleChest(org.bukkit.inventory.DoubleChestInventory);
+  public org.bukkit.inventory.Inventory getInventory();
+  public org.bukkit.inventory.InventoryHolder getLeftSide();
+  public org.bukkit.inventory.InventoryHolder getRightSide();
+  public org.bukkit.Location getLocation();
+  public org.bukkit.World getWorld();
+  public double getX();
+  public double getY();
+  public double getZ();
+}

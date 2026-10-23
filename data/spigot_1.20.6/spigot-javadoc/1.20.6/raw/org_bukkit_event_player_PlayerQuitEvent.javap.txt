@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.player.PlayerQuitEvent extends org.bukkit.event.player.PlayerEvent {
+  public org.bukkit.event.player.PlayerQuitEvent(org.bukkit.entity.Player, java.lang.String);
+  public java.lang.String getQuitMessage();
+  public void setQuitMessage(java.lang.String);
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  static {};
+}

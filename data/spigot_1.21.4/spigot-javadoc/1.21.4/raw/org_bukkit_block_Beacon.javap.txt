@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.Beacon extends org.bukkit.block.TileState,org.bukkit.block.Lockable,org.bukkit.Nameable {
+  public abstract java.util.Collection<org.bukkit.entity.LivingEntity> getEntitiesInRange();
+  public abstract int getTier();
+  public abstract org.bukkit.potion.PotionEffect getPrimaryEffect();
+  public abstract void setPrimaryEffect(org.bukkit.potion.PotionEffectType);
+  public abstract org.bukkit.potion.PotionEffect getSecondaryEffect();
+  public abstract void setSecondaryEffect(org.bukkit.potion.PotionEffectType);
+}

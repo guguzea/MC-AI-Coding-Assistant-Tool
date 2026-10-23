@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.meta.components.JukeboxPlayableComponent extends org.bukkit.configuration.serialization.ConfigurationSerializable {
+  public abstract org.bukkit.JukeboxSong getSong();
+  public abstract org.bukkit.NamespacedKey getSongKey();
+  public abstract void setSong(org.bukkit.JukeboxSong);
+  public abstract void setSongKey(org.bukkit.NamespacedKey);
+  public abstract boolean isShowInTooltip();
+  public abstract void setShowInTooltip(boolean);
+}

@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.Dispenser extends org.bukkit.block.Container,org.bukkit.Nameable,org.bukkit.loot.Lootable {
+  public abstract org.bukkit.projectiles.BlockProjectileSource getBlockProjectileSource();
+  public abstract boolean dispense();
+}

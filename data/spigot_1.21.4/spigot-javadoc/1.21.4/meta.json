@@ -1,0 +1,22 @@
+{
+  "version": "1.21.4",
+  "asOfVersion": "1.21.4-R0.1-SNAPSHOT",
+  "faceKind": "signature-face-from-artifact",
+  "sourceNote": "上游 javadoc 无版本轴（/javadocs/spigot/<ver>/ 实测 404）⇒ 本档签名逐字来自 maven 构件 javap，不是 javadoc HTML 抽取",
+  "artifact": "spigot-api-1.21.4-R0.1-20250325.160956-56.jar",
+  "jarMd5": "6ce70a28800bf30e68da45b12871f1f2",
+  "jarBytes": 1640043,
+  "jarUrl": "https://repo.papermc.io/repository/maven-public/org/spigotmc/spigot-api/1.21.4-R0.1-SNAPSHOT/spigot-api-1.21.4-R0.1-20250325.160956-56.jar",
+  "producer": "extract-spigot-api-surface.mjs@1",
+  "javapVersion": "21.0.12.1",
+  "fetchedAt": "2026-10-23T15:30:34.551Z",
+  "counts": {
+    "classes": 1335,
+    "members": 15018,
+    "enumConstants": 3185
+  },
+  "scope": [
+    "org/bukkit/",
+    "org/spigotmc/"
+  ]
+}

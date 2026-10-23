@@ -1,0 +1,74 @@
+---
+title: "org.bukkit.inventory.meta.ItemMeta"
+package: "org.bukkit.inventory.meta"
+source: https://repo.papermc.io/repository/maven-public/org/spigotmc/spigot-api/1.20.6-R0.1-SNAPSHOT/spigot-api-1.20.6-R0.1-20240613.150924-57.jar
+sourceType: javap
+fetchedWith: extract-spigot-api-surface.mjs@1
+fetchedAt: 2026-10-23T15:57:44.525Z
+asOfVersion: "1.20.6-R0.1-SNAPSHOT"
+jarMd5: "90b42d6249e7f6ec8efbf14c97549d3e"
+---
+
+- `public interface org.bukkit.inventory.meta.ItemMeta extends java.lang.Cloneable,org.bukkit.configuration.serialization.ConfigurationSerializable,org.bukkit.persistence.PersistentDataHolder`
+- `public abstract boolean hasDisplayName()`
+- `public abstract java.lang.String getDisplayName()`
+- `public abstract void setDisplayName(java.lang.String)`
+- `public abstract boolean hasItemName()`
+- `public abstract java.lang.String getItemName()`
+- `public abstract void setItemName(java.lang.String)`
+- `public abstract boolean hasLocalizedName()`
+- `public abstract java.lang.String getLocalizedName()`
+- `public abstract void setLocalizedName(java.lang.String)`
+- `public abstract boolean hasLore()`
+- `public abstract java.util.List<java.lang.String> getLore()`
+- `public abstract void setLore(java.util.List<java.lang.String>)`
+- `public abstract boolean hasCustomModelData()`
+- `public abstract int getCustomModelData()`
+- `public abstract void setCustomModelData(java.lang.Integer)`
+- `public abstract boolean hasEnchants()`
+- `public abstract boolean hasEnchant(org.bukkit.enchantments.Enchantment)`
+- `public abstract int getEnchantLevel(org.bukkit.enchantments.Enchantment)`
+- `public abstract java.util.Map<org.bukkit.enchantments.Enchantment, java.lang.Integer> getEnchants()`
+- `public abstract boolean addEnchant(org.bukkit.enchantments.Enchantment, int, boolean)`
+- `public abstract boolean removeEnchant(org.bukkit.enchantments.Enchantment)`
+- `public abstract void removeEnchantments()`
+- `public abstract boolean hasConflictingEnchant(org.bukkit.enchantments.Enchantment)`
+- `public abstract void addItemFlags(org.bukkit.inventory.ItemFlag...)`
+- `public abstract void removeItemFlags(org.bukkit.inventory.ItemFlag...)`
+- `public abstract java.util.Set<org.bukkit.inventory.ItemFlag> getItemFlags()`
+- `public abstract boolean hasItemFlag(org.bukkit.inventory.ItemFlag)`
+- `public abstract boolean isHideTooltip()`
+- `public abstract void setHideTooltip(boolean)`
+- `public abstract boolean isUnbreakable()`
+- `public abstract void setUnbreakable(boolean)`
+- `public abstract boolean hasEnchantmentGlintOverride()`
+- `public abstract java.lang.Boolean getEnchantmentGlintOverride()`
+- `public abstract void setEnchantmentGlintOverride(java.lang.Boolean)`
+- `public abstract boolean isFireResistant()`
+- `public abstract void setFireResistant(boolean)`
+- `public abstract boolean hasMaxStackSize()`
+- `public abstract int getMaxStackSize()`
+- `public abstract void setMaxStackSize(java.lang.Integer)`
+- `public abstract boolean hasRarity()`
+- `public abstract org.bukkit.inventory.ItemRarity getRarity()`
+- `public abstract void setRarity(org.bukkit.inventory.ItemRarity)`
+- `public abstract boolean hasFood()`
+- `public abstract org.bukkit.inventory.meta.components.FoodComponent getFood()`
+- `public abstract void setFood(org.bukkit.inventory.meta.components.FoodComponent)`
+- `public abstract boolean hasTool()`
+- `public abstract org.bukkit.inventory.meta.components.ToolComponent getTool()`
+- `public abstract void setTool(org.bukkit.inventory.meta.components.ToolComponent)`
+- `public abstract boolean hasAttributeModifiers()`
+- `public abstract com.google.common.collect.Multimap<org.bukkit.attribute.Attribute, org.bukkit.attribute.AttributeModifier> getAttributeModifiers()`
+- `public abstract com.google.common.collect.Multimap<org.bukkit.attribute.Attribute, org.bukkit.attribute.AttributeModifier> getAttributeModifiers(org.bukkit.inventory.EquipmentSlot)`
+- `public abstract java.util.Collection<org.bukkit.attribute.AttributeModifier> getAttributeModifiers(org.bukkit.attribute.Attribute)`
+- `public abstract boolean addAttributeModifier(org.bukkit.attribute.Attribute, org.bukkit.attribute.AttributeModifier)`
+- `public abstract void setAttributeModifiers(com.google.common.collect.Multimap<org.bukkit.attribute.Attribute, org.bukkit.attribute.AttributeModifier>)`
+- `public abstract boolean removeAttributeModifier(org.bukkit.attribute.Attribute)`
+- `public abstract boolean removeAttributeModifier(org.bukkit.inventory.EquipmentSlot)`
+- `public abstract boolean removeAttributeModifier(org.bukkit.attribute.Attribute, org.bukkit.attribute.AttributeModifier)`
+- `public abstract java.lang.String getAsString()`
+- `public abstract java.lang.String getAsComponentString()`
+- `public abstract org.bukkit.inventory.meta.tags.CustomItemTagContainer getCustomTagContainer()`
+- `public abstract void setVersion(int)`
+- `public abstract org.bukkit.inventory.meta.ItemMeta clone()`

@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public interface org.bukkit.generator.WorldInfo {
+  public abstract java.lang.String getName();
+  public abstract java.util.UUID getUID();
+  public abstract org.bukkit.World$Environment getEnvironment();
+  public abstract long getSeed();
+  public abstract int getMinHeight();
+  public abstract int getMaxHeight();
+}

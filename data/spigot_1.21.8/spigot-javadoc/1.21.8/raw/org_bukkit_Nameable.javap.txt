@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.Nameable {
+  public abstract java.lang.String getCustomName();
+  public abstract void setCustomName(java.lang.String);
+}

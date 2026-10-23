@@ -1,0 +1,18 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.enchantment.EnchantItemEvent extends org.bukkit.event.inventory.InventoryEvent implements org.bukkit.event.Cancellable {
+  public org.bukkit.event.enchantment.EnchantItemEvent(org.bukkit.entity.Player, org.bukkit.inventory.InventoryView, org.bukkit.block.Block, org.bukkit.inventory.ItemStack, int, java.util.Map<org.bukkit.enchantments.Enchantment, java.lang.Integer>, org.bukkit.enchantments.Enchantment, int, int);
+  public org.bukkit.entity.Player getEnchanter();
+  public org.bukkit.block.Block getEnchantBlock();
+  public org.bukkit.inventory.ItemStack getItem();
+  public int getExpLevelCost();
+  public void setExpLevelCost(int);
+  public java.util.Map<org.bukkit.enchantments.Enchantment, java.lang.Integer> getEnchantsToAdd();
+  public org.bukkit.enchantments.Enchantment getEnchantmentHint();
+  public int getLevelHint();
+  public int whichButton();
+  public boolean isCancelled();
+  public void setCancelled(boolean);
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  static {};
+}

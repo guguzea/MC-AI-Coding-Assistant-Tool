@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.data.type.LeafLitter extends org.bukkit.block.data.Directional {
+  public abstract int getSegmentAmount();
+  public abstract void setSegmentAmount(int);
+  public abstract int getMaximumSegmentAmount();
+}

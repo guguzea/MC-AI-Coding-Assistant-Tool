@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public final class org.bukkit.block.BlockSupport extends java.lang.Enum<org.bukkit.block.BlockSupport> {
+  public static final org.bukkit.block.BlockSupport FULL;
+  public static final org.bukkit.block.BlockSupport CENTER;
+  public static final org.bukkit.block.BlockSupport RIGID;
+  static {};
+  public static org.bukkit.block.BlockSupport[] values();
+  public static org.bukkit.block.BlockSupport valueOf(java.lang.String);
+}

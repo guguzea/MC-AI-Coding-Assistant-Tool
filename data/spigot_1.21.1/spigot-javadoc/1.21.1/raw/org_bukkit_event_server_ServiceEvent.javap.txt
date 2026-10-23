@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public abstract class org.bukkit.event.server.ServiceEvent extends org.bukkit.event.server.ServerEvent {
+  public org.bukkit.event.server.ServiceEvent(org.bukkit.plugin.RegisteredServiceProvider<?>);
+  public org.bukkit.plugin.RegisteredServiceProvider<?> getProvider();
+}

@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public final class org.bukkit.event.player.PlayerSignOpenEvent$Cause extends java.lang.Enum<org.bukkit.event.player.PlayerSignOpenEvent$Cause> {
+  public static final org.bukkit.event.player.PlayerSignOpenEvent$Cause INTERACT;
+  public static final org.bukkit.event.player.PlayerSignOpenEvent$Cause PLACE;
+  public static final org.bukkit.event.player.PlayerSignOpenEvent$Cause PLUGIN;
+  public static final org.bukkit.event.player.PlayerSignOpenEvent$Cause UNKNOWN;
+  public static org.bukkit.event.player.PlayerSignOpenEvent$Cause[] values();
+  public static org.bukkit.event.player.PlayerSignOpenEvent$Cause valueOf(java.lang.String);
+  static {};
+}

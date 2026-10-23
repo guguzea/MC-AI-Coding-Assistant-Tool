@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public abstract class org.bukkit.plugin.PluginBase implements org.bukkit.plugin.Plugin {
+  public org.bukkit.plugin.PluginBase();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public final java.lang.String getName();
+}

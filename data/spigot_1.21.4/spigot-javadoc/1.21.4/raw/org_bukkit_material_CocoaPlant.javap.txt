@@ -1,0 +1,16 @@
+Compiled from <spigot-api>
+public class org.bukkit.material.CocoaPlant extends org.bukkit.material.MaterialData implements org.bukkit.material.Directional,org.bukkit.material.Attachable {
+  public org.bukkit.material.CocoaPlant();
+  public org.bukkit.material.CocoaPlant(org.bukkit.Material, byte);
+  public org.bukkit.material.CocoaPlant(org.bukkit.material.CocoaPlant$CocoaPlantSize);
+  public org.bukkit.material.CocoaPlant(org.bukkit.material.CocoaPlant$CocoaPlantSize, org.bukkit.block.BlockFace);
+  public org.bukkit.material.CocoaPlant$CocoaPlantSize getSize();
+  public void setSize(org.bukkit.material.CocoaPlant$CocoaPlantSize);
+  public org.bukkit.block.BlockFace getAttachedFace();
+  public void setFacingDirection(org.bukkit.block.BlockFace);
+  public org.bukkit.block.BlockFace getFacing();
+  public org.bukkit.material.CocoaPlant clone();
+  public java.lang.String toString();
+  public org.bukkit.material.MaterialData clone();
+  public java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+}

@@ -1,0 +1,11 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.block.BlockFertilizeEvent extends org.bukkit.event.block.BlockEvent implements org.bukkit.event.Cancellable {
+  public org.bukkit.event.block.BlockFertilizeEvent(org.bukkit.block.Block, org.bukkit.entity.Player, java.util.List<org.bukkit.block.BlockState>);
+  public org.bukkit.entity.Player getPlayer();
+  public java.util.List<org.bukkit.block.BlockState> getBlocks();
+  public boolean isCancelled();
+  public void setCancelled(boolean);
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  static {};
+}

@@ -1,0 +1,19 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.entity.VillagerReputationChangeEvent extends org.bukkit.event.entity.EntityEvent implements org.bukkit.event.Cancellable {
+  public org.bukkit.event.entity.VillagerReputationChangeEvent(org.bukkit.entity.Villager, java.util.UUID, org.bukkit.entity.Villager$ReputationEvent, org.bukkit.entity.Villager$ReputationType, int, int, int);
+  public java.util.UUID getTargetUUID();
+  public org.bukkit.entity.Entity getTarget();
+  public org.bukkit.entity.Villager$ReputationEvent getReason();
+  public org.bukkit.entity.Villager$ReputationType getReputationType();
+  public int getOldValue();
+  public int getNewValue();
+  public void setNewValue(int);
+  public int getMaxValue();
+  public boolean isCancelled();
+  public void setCancelled(boolean);
+  public org.bukkit.entity.Villager getEntity();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  public org.bukkit.entity.Entity getEntity();
+  static {};
+}

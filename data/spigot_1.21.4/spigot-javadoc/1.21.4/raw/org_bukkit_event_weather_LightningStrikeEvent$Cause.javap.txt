@@ -1,0 +1,14 @@
+Compiled from <spigot-api>
+public final class org.bukkit.event.weather.LightningStrikeEvent$Cause extends java.lang.Enum<org.bukkit.event.weather.LightningStrikeEvent$Cause> {
+  public static final org.bukkit.event.weather.LightningStrikeEvent$Cause COMMAND;
+  public static final org.bukkit.event.weather.LightningStrikeEvent$Cause CUSTOM;
+  public static final org.bukkit.event.weather.LightningStrikeEvent$Cause SPAWNER;
+  public static final org.bukkit.event.weather.LightningStrikeEvent$Cause TRIDENT;
+  public static final org.bukkit.event.weather.LightningStrikeEvent$Cause TRAP;
+  public static final org.bukkit.event.weather.LightningStrikeEvent$Cause WEATHER;
+  public static final org.bukkit.event.weather.LightningStrikeEvent$Cause ENCHANTMENT;
+  public static final org.bukkit.event.weather.LightningStrikeEvent$Cause UNKNOWN;
+  public static org.bukkit.event.weather.LightningStrikeEvent$Cause[] values();
+  public static org.bukkit.event.weather.LightningStrikeEvent$Cause valueOf(java.lang.String);
+  static {};
+}

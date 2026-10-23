@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public class org.bukkit.potion.PotionEffectTypeWrapper extends org.bukkit.potion.PotionEffectType {
+  protected org.bukkit.potion.PotionEffectTypeWrapper(int);
+  public double getDurationModifier();
+  public java.lang.String getName();
+  public org.bukkit.potion.PotionEffectType getType();
+  public boolean isInstant();
+  public org.bukkit.Color getColor();
+}

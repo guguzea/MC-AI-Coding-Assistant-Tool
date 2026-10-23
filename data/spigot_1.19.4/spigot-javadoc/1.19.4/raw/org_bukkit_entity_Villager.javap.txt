@@ -1,0 +1,15 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Villager extends org.bukkit.entity.AbstractVillager {
+  public abstract org.bukkit.entity.Villager$Profession getProfession();
+  public abstract void setProfession(org.bukkit.entity.Villager$Profession);
+  public abstract org.bukkit.entity.Villager$Type getVillagerType();
+  public abstract void setVillagerType(org.bukkit.entity.Villager$Type);
+  public abstract int getVillagerLevel();
+  public abstract void setVillagerLevel(int);
+  public abstract int getVillagerExperience();
+  public abstract void setVillagerExperience(int);
+  public abstract boolean sleep(org.bukkit.Location);
+  public abstract void wakeup();
+  public abstract void shakeHead();
+  public abstract org.bukkit.entity.ZombieVillager zombify();
+}

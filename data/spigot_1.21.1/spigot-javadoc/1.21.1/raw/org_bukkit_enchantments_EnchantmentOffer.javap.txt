@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public class org.bukkit.enchantments.EnchantmentOffer {
+  public org.bukkit.enchantments.EnchantmentOffer(org.bukkit.enchantments.Enchantment, int, int);
+  public org.bukkit.enchantments.Enchantment getEnchantment();
+  public void setEnchantment(org.bukkit.enchantments.Enchantment);
+  public int getEnchantmentLevel();
+  public void setEnchantmentLevel(int);
+  public int getCost();
+  public void setCost(int);
+}

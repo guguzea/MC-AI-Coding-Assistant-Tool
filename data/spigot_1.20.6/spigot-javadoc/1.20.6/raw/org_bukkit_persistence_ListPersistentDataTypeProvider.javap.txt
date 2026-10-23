@@ -1,0 +1,18 @@
+Compiled from <spigot-api>
+public final class org.bukkit.persistence.ListPersistentDataTypeProvider {
+  org.bukkit.persistence.ListPersistentDataTypeProvider();
+  public org.bukkit.persistence.ListPersistentDataType<java.lang.Byte, java.lang.Byte> bytes();
+  public org.bukkit.persistence.ListPersistentDataType<java.lang.Short, java.lang.Short> shorts();
+  public org.bukkit.persistence.ListPersistentDataType<java.lang.Integer, java.lang.Integer> integers();
+  public org.bukkit.persistence.ListPersistentDataType<java.lang.Long, java.lang.Long> longs();
+  public org.bukkit.persistence.ListPersistentDataType<java.lang.Float, java.lang.Float> floats();
+  public org.bukkit.persistence.ListPersistentDataType<java.lang.Double, java.lang.Double> doubles();
+  public org.bukkit.persistence.ListPersistentDataType<java.lang.Byte, java.lang.Boolean> booleans();
+  public org.bukkit.persistence.ListPersistentDataType<java.lang.String, java.lang.String> strings();
+  public org.bukkit.persistence.ListPersistentDataType<byte[], byte[]> byteArrays();
+  public org.bukkit.persistence.ListPersistentDataType<int[], int[]> integerArrays();
+  public org.bukkit.persistence.ListPersistentDataType<long[], long[]> longArrays();
+  public org.bukkit.persistence.ListPersistentDataType<org.bukkit.persistence.PersistentDataContainer, org.bukkit.persistence.PersistentDataContainer> dataContainers();
+  public <P, C> org.bukkit.persistence.ListPersistentDataType<P, C> listTypeFrom(org.bukkit.persistence.PersistentDataType<P, C>);
+  static {};
+}

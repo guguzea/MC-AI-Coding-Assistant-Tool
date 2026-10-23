@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public class org.bukkit.Vibration {
+  public org.bukkit.Vibration(org.bukkit.Location, org.bukkit.Vibration$Destination, int);
+  public org.bukkit.Location getOrigin();
+  public org.bukkit.Vibration$Destination getDestination();
+  public int getArrivalTime();
+}

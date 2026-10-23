@@ -1,0 +1,13 @@
+Compiled from <spigot-api>
+public class org.bukkit.enchantments.EnchantmentWrapper extends org.bukkit.enchantments.Enchantment {
+  public org.bukkit.enchantments.EnchantmentWrapper(java.lang.String);
+  public org.bukkit.enchantments.Enchantment getEnchantment();
+  public int getMaxLevel();
+  public int getStartLevel();
+  public org.bukkit.enchantments.EnchantmentTarget getItemTarget();
+  public boolean canEnchantItem(org.bukkit.inventory.ItemStack);
+  public java.lang.String getName();
+  public boolean isTreasure();
+  public boolean isCursed();
+  public boolean conflictsWith(org.bukkit.enchantments.Enchantment);
+}

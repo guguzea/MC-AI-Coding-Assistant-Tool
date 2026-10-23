@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public class org.bukkit.configuration.file.YamlRepresenter extends org.yaml.snakeyaml.representer.Representer {
+  public org.bukkit.configuration.file.YamlRepresenter();
+  public org.yaml.snakeyaml.nodes.Tag addClassTag(java.lang.Class, org.yaml.snakeyaml.nodes.Tag);
+  public void setTimeZone(java.util.TimeZone);
+  public java.util.TimeZone getTimeZone();
+}

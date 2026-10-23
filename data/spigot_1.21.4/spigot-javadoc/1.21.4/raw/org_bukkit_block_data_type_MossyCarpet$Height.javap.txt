@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public final class org.bukkit.block.data.type.MossyCarpet$Height extends java.lang.Enum<org.bukkit.block.data.type.MossyCarpet$Height> {
+  public static final org.bukkit.block.data.type.MossyCarpet$Height NONE;
+  public static final org.bukkit.block.data.type.MossyCarpet$Height LOW;
+  public static final org.bukkit.block.data.type.MossyCarpet$Height TALL;
+  public static org.bukkit.block.data.type.MossyCarpet$Height[] values();
+  public static org.bukkit.block.data.type.MossyCarpet$Height valueOf(java.lang.String);
+  static {};
+}

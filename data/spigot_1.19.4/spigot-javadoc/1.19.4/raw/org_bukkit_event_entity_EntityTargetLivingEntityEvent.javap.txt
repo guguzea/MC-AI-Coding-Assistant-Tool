@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.entity.EntityTargetLivingEntityEvent extends org.bukkit.event.entity.EntityTargetEvent {
+  public org.bukkit.event.entity.EntityTargetLivingEntityEvent(org.bukkit.entity.Entity, org.bukkit.entity.LivingEntity, org.bukkit.event.entity.EntityTargetEvent$TargetReason);
+  public org.bukkit.entity.LivingEntity getTarget();
+  public void setTarget(org.bukkit.entity.Entity);
+  public org.bukkit.entity.Entity getTarget();
+}

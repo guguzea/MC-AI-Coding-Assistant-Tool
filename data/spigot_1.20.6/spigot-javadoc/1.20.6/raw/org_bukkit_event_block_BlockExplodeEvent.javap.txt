@@ -1,0 +1,14 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.block.BlockExplodeEvent extends org.bukkit.event.block.BlockEvent implements org.bukkit.event.Cancellable {
+  public org.bukkit.event.block.BlockExplodeEvent(org.bukkit.block.Block, org.bukkit.block.BlockState, java.util.List<org.bukkit.block.Block>, float);
+  public org.bukkit.event.block.BlockExplodeEvent(org.bukkit.block.Block, java.util.List<org.bukkit.block.Block>, float);
+  public boolean isCancelled();
+  public void setCancelled(boolean);
+  public org.bukkit.block.BlockState getExplodedBlockState();
+  public java.util.List<org.bukkit.block.Block> blockList();
+  public float getYield();
+  public void setYield(float);
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  static {};
+}

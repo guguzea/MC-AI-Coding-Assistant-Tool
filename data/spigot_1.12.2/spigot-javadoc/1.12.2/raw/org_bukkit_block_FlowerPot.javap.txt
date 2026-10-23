@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.FlowerPot extends org.bukkit.block.BlockState {
+  public abstract org.bukkit.material.MaterialData getContents();
+  public abstract void setContents(org.bukkit.material.MaterialData);
+}

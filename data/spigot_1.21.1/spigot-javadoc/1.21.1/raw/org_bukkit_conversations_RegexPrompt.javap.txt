@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public abstract class org.bukkit.conversations.RegexPrompt extends org.bukkit.conversations.ValidatingPrompt {
+  public org.bukkit.conversations.RegexPrompt(java.lang.String);
+  public org.bukkit.conversations.RegexPrompt(java.util.regex.Pattern);
+  protected boolean isInputValid(org.bukkit.conversations.ConversationContext, java.lang.String);
+}

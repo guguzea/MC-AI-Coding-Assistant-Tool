@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Chicken$Variant extends org.bukkit.Keyed,org.bukkit.registry.RegistryAware {
+  public static final org.bukkit.entity.Chicken$Variant TEMPERATE;
+  public static final org.bukkit.entity.Chicken$Variant WARM;
+  public static final org.bukkit.entity.Chicken$Variant COLD;
+  public abstract org.bukkit.NamespacedKey getKey();
+  static {};
+}

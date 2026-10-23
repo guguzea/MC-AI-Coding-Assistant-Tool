@@ -1,0 +1,11 @@
+Compiled from <spigot-api>
+public final class org.bukkit.map.MapCursorCollection {
+  public org.bukkit.map.MapCursorCollection();
+  public int size();
+  public org.bukkit.map.MapCursor getCursor(int);
+  public boolean removeCursor(org.bukkit.map.MapCursor);
+  public org.bukkit.map.MapCursor addCursor(org.bukkit.map.MapCursor);
+  public org.bukkit.map.MapCursor addCursor(int, int, byte);
+  public org.bukkit.map.MapCursor addCursor(int, int, byte, byte);
+  public org.bukkit.map.MapCursor addCursor(int, int, byte, byte, boolean);
+}

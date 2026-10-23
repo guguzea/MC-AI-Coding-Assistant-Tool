@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Steerable extends org.bukkit.entity.Animals {
+  public abstract boolean hasSaddle();
+  public abstract void setSaddle(boolean);
+  public abstract int getBoostTicks();
+  public abstract void setBoostTicks(int);
+  public abstract int getCurrentBoostTicks();
+  public abstract void setCurrentBoostTicks(int);
+  public abstract org.bukkit.Material getSteerMaterial();
+}

@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.ThrownPotion extends org.bukkit.entity.Projectile {
+  public abstract java.util.Collection<org.bukkit.potion.PotionEffect> getEffects();
+  public abstract org.bukkit.inventory.ItemStack getItem();
+  public abstract void setItem(org.bukkit.inventory.ItemStack);
+}

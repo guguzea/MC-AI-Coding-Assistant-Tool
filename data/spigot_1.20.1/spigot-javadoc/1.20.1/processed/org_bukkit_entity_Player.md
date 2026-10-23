@@ -1,0 +1,168 @@
+---
+title: "org.bukkit.entity.Player"
+package: "org.bukkit.entity"
+source: https://repo.papermc.io/repository/maven-public/org/spigotmc/spigot-api/1.20.1-R0.1-SNAPSHOT/spigot-api-1.20.1-R0.1-20230921.163938-66.jar
+sourceType: javap
+fetchedWith: extract-spigot-api-surface.mjs@1
+fetchedAt: 2026-10-23T15:33:20.138Z
+asOfVersion: "1.20.1-R0.1-SNAPSHOT"
+jarMd5: "1eba255bc0360c0286ee840906c6095c"
+---
+
+- `public interface org.bukkit.entity.Player extends org.bukkit.entity.HumanEntity,org.bukkit.conversations.Conversable,org.bukkit.OfflinePlayer,org.bukkit.plugin.messaging.PluginMessageRecipient`
+- `public abstract java.lang.String getName()`
+- `public abstract java.lang.String getDisplayName()`
+- `public abstract void setDisplayName(java.lang.String)`
+- `public abstract java.lang.String getPlayerListName()`
+- `public abstract void setPlayerListName(java.lang.String)`
+- `public abstract java.lang.String getPlayerListHeader()`
+- `public abstract java.lang.String getPlayerListFooter()`
+- `public abstract void setPlayerListHeader(java.lang.String)`
+- `public abstract void setPlayerListFooter(java.lang.String)`
+- `public abstract void setPlayerListHeaderFooter(java.lang.String, java.lang.String)`
+- `public abstract void setCompassTarget(org.bukkit.Location)`
+- `public abstract org.bukkit.Location getCompassTarget()`
+- `public abstract java.net.InetSocketAddress getAddress()`
+- `public abstract void sendRawMessage(java.lang.String)`
+- `public abstract void kickPlayer(java.lang.String)`
+- `public abstract org.bukkit.BanEntry<org.bukkit.profile.PlayerProfile> ban(java.lang.String, java.util.Date, java.lang.String, boolean)`
+- `public abstract org.bukkit.BanEntry<org.bukkit.profile.PlayerProfile> ban(java.lang.String, java.time.Instant, java.lang.String, boolean)`
+- `public abstract org.bukkit.BanEntry<org.bukkit.profile.PlayerProfile> ban(java.lang.String, java.time.Duration, java.lang.String, boolean)`
+- `public abstract org.bukkit.BanEntry<java.net.InetAddress> banIp(java.lang.String, java.util.Date, java.lang.String, boolean)`
+- `public abstract org.bukkit.BanEntry<java.net.InetAddress> banIp(java.lang.String, java.time.Instant, java.lang.String, boolean)`
+- `public abstract org.bukkit.BanEntry<java.net.InetAddress> banIp(java.lang.String, java.time.Duration, java.lang.String, boolean)`
+- `public abstract void chat(java.lang.String)`
+- `public abstract boolean performCommand(java.lang.String)`
+- `public abstract boolean isOnGround()`
+- `public abstract boolean isSneaking()`
+- `public abstract void setSneaking(boolean)`
+- `public abstract boolean isSprinting()`
+- `public abstract void setSprinting(boolean)`
+- `public abstract void saveData()`
+- `public abstract void loadData()`
+- `public abstract void setSleepingIgnored(boolean)`
+- `public abstract boolean isSleepingIgnored()`
+- `public abstract org.bukkit.Location getBedSpawnLocation()`
+- `public abstract void setBedSpawnLocation(org.bukkit.Location)`
+- `public abstract void setBedSpawnLocation(org.bukkit.Location, boolean)`
+- `public abstract void playNote(org.bukkit.Location, byte, byte)`
+- `public abstract void playNote(org.bukkit.Location, org.bukkit.Instrument, org.bukkit.Note)`
+- `public abstract void playSound(org.bukkit.Location, org.bukkit.Sound, float, float)`
+- `public abstract void playSound(org.bukkit.Location, java.lang.String, float, float)`
+- `public abstract void playSound(org.bukkit.Location, org.bukkit.Sound, org.bukkit.SoundCategory, float, float)`
+- `public abstract void playSound(org.bukkit.Location, java.lang.String, org.bukkit.SoundCategory, float, float)`
+- `public abstract void playSound(org.bukkit.entity.Entity, org.bukkit.Sound, float, float)`
+- `public abstract void playSound(org.bukkit.entity.Entity, java.lang.String, float, float)`
+- `public abstract void playSound(org.bukkit.entity.Entity, org.bukkit.Sound, org.bukkit.SoundCategory, float, float)`
+- `public abstract void playSound(org.bukkit.entity.Entity, java.lang.String, org.bukkit.SoundCategory, float, float)`
+- `public abstract void stopSound(org.bukkit.Sound)`
+- `public abstract void stopSound(java.lang.String)`
+- `public abstract void stopSound(org.bukkit.Sound, org.bukkit.SoundCategory)`
+- `public abstract void stopSound(java.lang.String, org.bukkit.SoundCategory)`
+- `public abstract void stopSound(org.bukkit.SoundCategory)`
+- `public abstract void stopAllSounds()`
+- `public abstract void playEffect(org.bukkit.Location, org.bukkit.Effect, int)`
+- `public abstract <T> void playEffect(org.bukkit.Location, org.bukkit.Effect, T)`
+- `public abstract boolean breakBlock(org.bukkit.block.Block)`
+- `public abstract void sendBlockChange(org.bukkit.Location, org.bukkit.Material, byte)`
+- `public abstract void sendBlockChange(org.bukkit.Location, org.bukkit.block.data.BlockData)`
+- `public abstract void sendBlockChanges(java.util.Collection<org.bukkit.block.BlockState>)`
+- `public abstract void sendBlockChanges(java.util.Collection<org.bukkit.block.BlockState>, boolean)`
+- `public abstract void sendBlockDamage(org.bukkit.Location, float)`
+- `public abstract void sendBlockDamage(org.bukkit.Location, float, org.bukkit.entity.Entity)`
+- `public abstract void sendBlockDamage(org.bukkit.Location, float, int)`
+- `public abstract void sendEquipmentChange(org.bukkit.entity.LivingEntity, org.bukkit.inventory.EquipmentSlot, org.bukkit.inventory.ItemStack)`
+- `public abstract void sendEquipmentChange(org.bukkit.entity.LivingEntity, java.util.Map<org.bukkit.inventory.EquipmentSlot, org.bukkit.inventory.ItemStack>)`
+- `public abstract void sendSignChange(org.bukkit.Location, java.lang.String[]) throws java.lang.IllegalArgumentException`
+- `public abstract void sendSignChange(org.bukkit.Location, java.lang.String[], org.bukkit.DyeColor) throws java.lang.IllegalArgumentException`
+- `public abstract void sendSignChange(org.bukkit.Location, java.lang.String[], org.bukkit.DyeColor, boolean) throws java.lang.IllegalArgumentException`
+- `public abstract void sendBlockUpdate(org.bukkit.Location, org.bukkit.block.TileState) throws java.lang.IllegalArgumentException`
+- `public abstract void sendMap(org.bukkit.map.MapView)`
+- `public abstract void sendHurtAnimation(float)`
+- `public abstract void addCustomChatCompletions(java.util.Collection<java.lang.String>)`
+- `public abstract void removeCustomChatCompletions(java.util.Collection<java.lang.String>)`
+- `public abstract void setCustomChatCompletions(java.util.Collection<java.lang.String>)`
+- `public abstract void updateInventory()`
+- `public abstract org.bukkit.GameMode getPreviousGameMode()`
+- `public abstract void setPlayerTime(long, boolean)`
+- `public abstract long getPlayerTime()`
+- `public abstract long getPlayerTimeOffset()`
+- `public abstract boolean isPlayerTimeRelative()`
+- `public abstract void resetPlayerTime()`
+- `public abstract void setPlayerWeather(org.bukkit.WeatherType)`
+- `public abstract org.bukkit.WeatherType getPlayerWeather()`
+- `public abstract void resetPlayerWeather()`
+- `public abstract int getExpCooldown()`
+- `public abstract void setExpCooldown(int)`
+- `public abstract void giveExp(int)`
+- `public abstract void giveExpLevels(int)`
+- `public abstract float getExp()`
+- `public abstract void setExp(float)`
+- `public abstract int getLevel()`
+- `public abstract void setLevel(int)`
+- `public abstract int getTotalExperience()`
+- `public abstract void setTotalExperience(int)`
+- `public abstract void sendExperienceChange(float)`
+- `public abstract void sendExperienceChange(float, int)`
+- `public abstract boolean getAllowFlight()`
+- `public abstract void setAllowFlight(boolean)`
+- `public abstract void hidePlayer(org.bukkit.entity.Player)`
+- `public abstract void hidePlayer(org.bukkit.plugin.Plugin, org.bukkit.entity.Player)`
+- `public abstract void showPlayer(org.bukkit.entity.Player)`
+- `public abstract void showPlayer(org.bukkit.plugin.Plugin, org.bukkit.entity.Player)`
+- `public abstract boolean canSee(org.bukkit.entity.Player)`
+- `public abstract void hideEntity(org.bukkit.plugin.Plugin, org.bukkit.entity.Entity)`
+- `public abstract void showEntity(org.bukkit.plugin.Plugin, org.bukkit.entity.Entity)`
+- `public abstract boolean canSee(org.bukkit.entity.Entity)`
+- `public abstract boolean isFlying()`
+- `public abstract void setFlying(boolean)`
+- `public abstract void setFlySpeed(float) throws java.lang.IllegalArgumentException`
+- `public abstract void setWalkSpeed(float) throws java.lang.IllegalArgumentException`
+- `public abstract float getFlySpeed()`
+- `public abstract float getWalkSpeed()`
+- `public abstract void setTexturePack(java.lang.String)`
+- `public abstract void setResourcePack(java.lang.String)`
+- `public abstract void setResourcePack(java.lang.String, byte[])`
+- `public abstract void setResourcePack(java.lang.String, byte[], java.lang.String)`
+- `public abstract void setResourcePack(java.lang.String, byte[], boolean)`
+- `public abstract void setResourcePack(java.lang.String, byte[], java.lang.String, boolean)`
+- `public abstract org.bukkit.scoreboard.Scoreboard getScoreboard()`
+- `public abstract void setScoreboard(org.bukkit.scoreboard.Scoreboard) throws java.lang.IllegalArgumentException, java.lang.IllegalStateException`
+- `public abstract org.bukkit.WorldBorder getWorldBorder()`
+- `public abstract void setWorldBorder(org.bukkit.WorldBorder)`
+- `public abstract void sendHealthUpdate(double, int, float)`
+- `public abstract void sendHealthUpdate()`
+- `public abstract boolean isHealthScaled()`
+- `public abstract void setHealthScaled(boolean)`
+- `public abstract void setHealthScale(double) throws java.lang.IllegalArgumentException`
+- `public abstract double getHealthScale()`
+- `public abstract org.bukkit.entity.Entity getSpectatorTarget()`
+- `public abstract void setSpectatorTarget(org.bukkit.entity.Entity)`
+- `public abstract void sendTitle(java.lang.String, java.lang.String)`
+- `public abstract void sendTitle(java.lang.String, java.lang.String, int, int, int)`
+- `public abstract void resetTitle()`
+- `public abstract void spawnParticle(org.bukkit.Particle, org.bukkit.Location, int)`
+- `public abstract void spawnParticle(org.bukkit.Particle, double, double, double, int)`
+- `public abstract <T> void spawnParticle(org.bukkit.Particle, org.bukkit.Location, int, T)`
+- `public abstract <T> void spawnParticle(org.bukkit.Particle, double, double, double, int, T)`
+- `public abstract void spawnParticle(org.bukkit.Particle, org.bukkit.Location, int, double, double, double)`
+- `public abstract void spawnParticle(org.bukkit.Particle, double, double, double, int, double, double, double)`
+- `public abstract <T> void spawnParticle(org.bukkit.Particle, org.bukkit.Location, int, double, double, double, T)`
+- `public abstract <T> void spawnParticle(org.bukkit.Particle, double, double, double, int, double, double, double, T)`
+- `public abstract void spawnParticle(org.bukkit.Particle, org.bukkit.Location, int, double, double, double, double)`
+- `public abstract void spawnParticle(org.bukkit.Particle, double, double, double, int, double, double, double, double)`
+- `public abstract <T> void spawnParticle(org.bukkit.Particle, org.bukkit.Location, int, double, double, double, double, T)`
+- `public abstract <T> void spawnParticle(org.bukkit.Particle, double, double, double, int, double, double, double, double, T)`
+- `public abstract org.bukkit.advancement.AdvancementProgress getAdvancementProgress(org.bukkit.advancement.Advancement)`
+- `public abstract int getClientViewDistance()`
+- `public abstract int getPing()`
+- `public abstract java.lang.String getLocale()`
+- `public abstract void updateCommands()`
+- `public abstract void openBook(org.bukkit.inventory.ItemStack)`
+- `public abstract void openSign(org.bukkit.block.Sign)`
+- `public abstract void openSign(org.bukkit.block.Sign, org.bukkit.block.sign.Side)`
+- `public abstract void showDemoScreen()`
+- `public abstract boolean isAllowingServerListings()`
+- `public abstract org.bukkit.entity.Player$Spigot spigot()`
+- `public default org.bukkit.command.CommandSender$Spigot spigot()`
+- `public default org.bukkit.entity.Entity$Spigot spigot()`

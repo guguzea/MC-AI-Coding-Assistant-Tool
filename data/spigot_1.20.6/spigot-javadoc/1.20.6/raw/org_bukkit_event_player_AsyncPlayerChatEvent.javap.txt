@@ -1,0 +1,14 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.player.AsyncPlayerChatEvent extends org.bukkit.event.player.PlayerEvent implements org.bukkit.event.Cancellable {
+  public org.bukkit.event.player.AsyncPlayerChatEvent(boolean, org.bukkit.entity.Player, java.lang.String, java.util.Set<org.bukkit.entity.Player>);
+  public java.lang.String getMessage();
+  public void setMessage(java.lang.String);
+  public java.lang.String getFormat();
+  public void setFormat(java.lang.String) throws java.util.IllegalFormatException, java.lang.NullPointerException;
+  public java.util.Set<org.bukkit.entity.Player> getRecipients();
+  public boolean isCancelled();
+  public void setCancelled(boolean);
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  static {};
+}

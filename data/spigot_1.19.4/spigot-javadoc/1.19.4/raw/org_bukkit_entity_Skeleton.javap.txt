@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Skeleton extends org.bukkit.entity.AbstractSkeleton {
+  public abstract boolean isConverting();
+  public abstract int getConversionTime();
+  public abstract void setConversionTime(int);
+}

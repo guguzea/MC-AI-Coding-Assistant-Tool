@@ -1,0 +1,4 @@
+Compiled from <spigot-api>
+public interface org.bukkit.help.HelpTopicFactory<TCommand extends org.bukkit.command.Command> {
+  public abstract org.bukkit.help.HelpTopic createTopic(TCommand);
+}

@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public final class org.bukkit.entity.Display$Billboard extends java.lang.Enum<org.bukkit.entity.Display$Billboard> {
+  public static final org.bukkit.entity.Display$Billboard FIXED;
+  public static final org.bukkit.entity.Display$Billboard VERTICAL;
+  public static final org.bukkit.entity.Display$Billboard HORIZONTAL;
+  public static final org.bukkit.entity.Display$Billboard CENTER;
+  public static org.bukkit.entity.Display$Billboard[] values();
+  public static org.bukkit.entity.Display$Billboard valueOf(java.lang.String);
+  static {};
+}

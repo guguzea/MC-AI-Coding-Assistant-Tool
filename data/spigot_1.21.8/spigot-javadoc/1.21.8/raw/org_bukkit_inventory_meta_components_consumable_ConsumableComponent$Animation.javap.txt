@@ -1,0 +1,16 @@
+Compiled from <spigot-api>
+public final class org.bukkit.inventory.meta.components.consumable.ConsumableComponent$Animation extends java.lang.Enum<org.bukkit.inventory.meta.components.consumable.ConsumableComponent$Animation> {
+  public static final org.bukkit.inventory.meta.components.consumable.ConsumableComponent$Animation DRINK;
+  public static final org.bukkit.inventory.meta.components.consumable.ConsumableComponent$Animation EAT;
+  public static final org.bukkit.inventory.meta.components.consumable.ConsumableComponent$Animation NONE;
+  public static final org.bukkit.inventory.meta.components.consumable.ConsumableComponent$Animation BLOCK;
+  public static final org.bukkit.inventory.meta.components.consumable.ConsumableComponent$Animation BOW;
+  public static final org.bukkit.inventory.meta.components.consumable.ConsumableComponent$Animation BRUSH;
+  public static final org.bukkit.inventory.meta.components.consumable.ConsumableComponent$Animation CROSSBOW;
+  public static final org.bukkit.inventory.meta.components.consumable.ConsumableComponent$Animation SPEAR;
+  public static final org.bukkit.inventory.meta.components.consumable.ConsumableComponent$Animation SPYGLASS;
+  public static final org.bukkit.inventory.meta.components.consumable.ConsumableComponent$Animation TOOT_HORN;
+  public static org.bukkit.inventory.meta.components.consumable.ConsumableComponent$Animation[] values();
+  public static org.bukkit.inventory.meta.components.consumable.ConsumableComponent$Animation valueOf(java.lang.String);
+  static {};
+}

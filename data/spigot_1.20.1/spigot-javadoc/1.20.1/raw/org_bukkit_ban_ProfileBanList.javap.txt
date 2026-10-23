@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.ban.ProfileBanList extends org.bukkit.BanList<org.bukkit.profile.PlayerProfile> {
+  public abstract org.bukkit.BanEntry<org.bukkit.profile.PlayerProfile> addBan(org.bukkit.profile.PlayerProfile, java.lang.String, java.util.Date, java.lang.String);
+  public default org.bukkit.BanEntry addBan(java.lang.Object, java.lang.String, java.util.Date, java.lang.String);
+}

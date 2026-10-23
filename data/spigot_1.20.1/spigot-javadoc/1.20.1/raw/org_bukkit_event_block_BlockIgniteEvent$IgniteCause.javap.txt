@@ -1,0 +1,14 @@
+Compiled from <spigot-api>
+public final class org.bukkit.event.block.BlockIgniteEvent$IgniteCause extends java.lang.Enum<org.bukkit.event.block.BlockIgniteEvent$IgniteCause> {
+  public static final org.bukkit.event.block.BlockIgniteEvent$IgniteCause LAVA;
+  public static final org.bukkit.event.block.BlockIgniteEvent$IgniteCause FLINT_AND_STEEL;
+  public static final org.bukkit.event.block.BlockIgniteEvent$IgniteCause SPREAD;
+  public static final org.bukkit.event.block.BlockIgniteEvent$IgniteCause LIGHTNING;
+  public static final org.bukkit.event.block.BlockIgniteEvent$IgniteCause FIREBALL;
+  public static final org.bukkit.event.block.BlockIgniteEvent$IgniteCause ENDER_CRYSTAL;
+  public static final org.bukkit.event.block.BlockIgniteEvent$IgniteCause EXPLOSION;
+  public static final org.bukkit.event.block.BlockIgniteEvent$IgniteCause ARROW;
+  static {};
+  public static org.bukkit.event.block.BlockIgniteEvent$IgniteCause[] values();
+  public static org.bukkit.event.block.BlockIgniteEvent$IgniteCause valueOf(java.lang.String);
+}

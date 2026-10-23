@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.WanderingTrader extends org.bukkit.entity.AbstractVillager {
+  public abstract int getDespawnDelay();
+  public abstract void setDespawnDelay(int);
+}

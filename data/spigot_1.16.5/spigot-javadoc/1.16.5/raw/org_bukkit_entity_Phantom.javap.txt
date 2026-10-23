@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Phantom extends org.bukkit.entity.Flying {
+  public abstract int getSize();
+  public abstract void setSize(int);
+}

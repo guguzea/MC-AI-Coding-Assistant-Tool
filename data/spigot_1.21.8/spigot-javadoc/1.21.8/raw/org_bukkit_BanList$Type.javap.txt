@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public final class org.bukkit.BanList$Type extends java.lang.Enum<org.bukkit.BanList$Type> {
+  public static final org.bukkit.BanList$Type NAME;
+  public static final org.bukkit.BanList$Type IP;
+  public static final org.bukkit.BanList$Type PROFILE;
+  public static org.bukkit.BanList$Type[] values();
+  public static org.bukkit.BanList$Type valueOf(java.lang.String);
+  static {};
+}

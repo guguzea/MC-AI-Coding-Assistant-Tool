@@ -1,0 +1,14 @@
+Compiled from <spigot-api>
+public final class org.bukkit.inventory.EquipmentSlot extends java.lang.Enum<org.bukkit.inventory.EquipmentSlot> {
+  public static final org.bukkit.inventory.EquipmentSlot HAND;
+  public static final org.bukkit.inventory.EquipmentSlot OFF_HAND;
+  public static final org.bukkit.inventory.EquipmentSlot FEET;
+  public static final org.bukkit.inventory.EquipmentSlot LEGS;
+  public static final org.bukkit.inventory.EquipmentSlot CHEST;
+  public static final org.bukkit.inventory.EquipmentSlot HEAD;
+  public static final org.bukkit.inventory.EquipmentSlot BODY;
+  public static org.bukkit.inventory.EquipmentSlot[] values();
+  public static org.bukkit.inventory.EquipmentSlot valueOf(java.lang.String);
+  public org.bukkit.inventory.EquipmentSlotGroup getGroup();
+  static {};
+}

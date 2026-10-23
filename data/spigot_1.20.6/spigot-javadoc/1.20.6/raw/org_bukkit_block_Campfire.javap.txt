@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.Campfire extends org.bukkit.block.TileState {
+  public abstract int getSize();
+  public abstract org.bukkit.inventory.ItemStack getItem(int);
+  public abstract void setItem(int, org.bukkit.inventory.ItemStack);
+  public abstract int getCookTime(int);
+  public abstract void setCookTime(int, int);
+  public abstract int getCookTimeTotal(int);
+  public abstract void setCookTimeTotal(int, int);
+}

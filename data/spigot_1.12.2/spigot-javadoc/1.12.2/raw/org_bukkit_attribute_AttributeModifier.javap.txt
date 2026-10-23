@@ -1,0 +1,11 @@
+Compiled from <spigot-api>
+public class org.bukkit.attribute.AttributeModifier implements org.bukkit.configuration.serialization.ConfigurationSerializable {
+  public org.bukkit.attribute.AttributeModifier(java.lang.String, double, org.bukkit.attribute.AttributeModifier$Operation);
+  public org.bukkit.attribute.AttributeModifier(java.util.UUID, java.lang.String, double, org.bukkit.attribute.AttributeModifier$Operation);
+  public java.util.UUID getUniqueId();
+  public java.lang.String getName();
+  public double getAmount();
+  public org.bukkit.attribute.AttributeModifier$Operation getOperation();
+  public java.util.Map<java.lang.String, java.lang.Object> serialize();
+  public static org.bukkit.attribute.AttributeModifier deserialize(java.util.Map<java.lang.String, java.lang.Object>);
+}

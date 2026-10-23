@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.CreatureSpawner extends org.bukkit.block.TileState,org.bukkit.spawner.Spawner {
+  public abstract void setCreatureTypeByName(java.lang.String);
+  public abstract java.lang.String getCreatureTypeName();
+}

@@ -1,0 +1,11 @@
+Compiled from <spigot-api>
+public interface org.bukkit.UnsafeValues {
+  public abstract org.bukkit.Material getMaterialFromInternalName(java.lang.String);
+  public abstract java.util.List<java.lang.String> tabCompleteInternalMaterialName(java.lang.String, java.util.List<java.lang.String>);
+  public abstract org.bukkit.inventory.ItemStack modifyItemStack(org.bukkit.inventory.ItemStack, java.lang.String);
+  public abstract org.bukkit.Statistic getStatisticFromInternalName(java.lang.String);
+  public abstract org.bukkit.Achievement getAchievementFromInternalName(java.lang.String);
+  public abstract java.util.List<java.lang.String> tabCompleteInternalStatisticOrAchievementName(java.lang.String, java.util.List<java.lang.String>);
+  public abstract org.bukkit.advancement.Advancement loadAdvancement(org.bukkit.NamespacedKey, java.lang.String);
+  public abstract boolean removeAdvancement(org.bukkit.NamespacedKey);
+}

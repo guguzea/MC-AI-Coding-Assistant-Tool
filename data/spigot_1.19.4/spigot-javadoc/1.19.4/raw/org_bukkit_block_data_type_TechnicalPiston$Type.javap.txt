@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public final class org.bukkit.block.data.type.TechnicalPiston$Type extends java.lang.Enum<org.bukkit.block.data.type.TechnicalPiston$Type> {
+  public static final org.bukkit.block.data.type.TechnicalPiston$Type NORMAL;
+  public static final org.bukkit.block.data.type.TechnicalPiston$Type STICKY;
+  static {};
+  public static org.bukkit.block.data.type.TechnicalPiston$Type[] values();
+  public static org.bukkit.block.data.type.TechnicalPiston$Type valueOf(java.lang.String);
+}

@@ -1,0 +1,4 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.player.PlayerUnregisterChannelEvent extends org.bukkit.event.player.PlayerChannelEvent {
+  public org.bukkit.event.player.PlayerUnregisterChannelEvent(org.bukkit.entity.Player, java.lang.String);
+}

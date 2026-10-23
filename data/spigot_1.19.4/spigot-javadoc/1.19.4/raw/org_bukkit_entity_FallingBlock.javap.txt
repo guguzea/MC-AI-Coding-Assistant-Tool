@@ -1,0 +1,13 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.FallingBlock extends org.bukkit.entity.Entity {
+  public abstract org.bukkit.Material getMaterial();
+  public abstract org.bukkit.block.data.BlockData getBlockData();
+  public abstract boolean getDropItem();
+  public abstract void setDropItem(boolean);
+  public abstract boolean canHurtEntities();
+  public abstract void setHurtEntities(boolean);
+  public abstract float getDamagePerBlock();
+  public abstract void setDamagePerBlock(float);
+  public abstract int getMaxDamage();
+  public abstract void setMaxDamage(int);
+}

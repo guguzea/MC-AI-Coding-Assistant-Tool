@@ -1,0 +1,18 @@
+---
+title: "org.bukkit.potion.PotionType$InternalPotionData"
+package: "org.bukkit.potion"
+source: https://repo.papermc.io/repository/maven-public/org/spigotmc/spigot-api/1.21.1-R0.1-SNAPSHOT/spigot-api-1.21.1-R0.1-20241022.152140-54.jar
+sourceType: javap
+fetchedWith: extract-spigot-api-surface.mjs@1
+fetchedAt: 2026-10-23T15:32:12.811Z
+asOfVersion: "1.21.1-R0.1-SNAPSHOT"
+jarMd5: "9fd276a59330220323c3fdfdcf86d22e"
+---
+
+- `public interface org.bukkit.potion.PotionType$InternalPotionData`
+- `public abstract org.bukkit.potion.PotionEffectType getEffectType()`
+- `public abstract java.util.List<org.bukkit.potion.PotionEffect> getPotionEffects()`
+- `public abstract boolean isInstant()`
+- `public abstract boolean isUpgradeable()`
+- `public abstract boolean isExtendable()`
+- `public abstract int getMaxLevel()`

@@ -1,0 +1,32 @@
+Compiled from <spigot-api>
+public final class org.bukkit.Instrument extends java.lang.Enum<org.bukkit.Instrument> {
+  public static final org.bukkit.Instrument PIANO;
+  public static final org.bukkit.Instrument BASS_DRUM;
+  public static final org.bukkit.Instrument SNARE_DRUM;
+  public static final org.bukkit.Instrument STICKS;
+  public static final org.bukkit.Instrument BASS_GUITAR;
+  public static final org.bukkit.Instrument FLUTE;
+  public static final org.bukkit.Instrument BELL;
+  public static final org.bukkit.Instrument GUITAR;
+  public static final org.bukkit.Instrument CHIME;
+  public static final org.bukkit.Instrument XYLOPHONE;
+  public static final org.bukkit.Instrument IRON_XYLOPHONE;
+  public static final org.bukkit.Instrument COW_BELL;
+  public static final org.bukkit.Instrument DIDGERIDOO;
+  public static final org.bukkit.Instrument BIT;
+  public static final org.bukkit.Instrument BANJO;
+  public static final org.bukkit.Instrument PLING;
+  public static final org.bukkit.Instrument ZOMBIE;
+  public static final org.bukkit.Instrument SKELETON;
+  public static final org.bukkit.Instrument CREEPER;
+  public static final org.bukkit.Instrument DRAGON;
+  public static final org.bukkit.Instrument WITHER_SKELETON;
+  public static final org.bukkit.Instrument PIGLIN;
+  public static final org.bukkit.Instrument CUSTOM_HEAD;
+  public static org.bukkit.Instrument[] values();
+  public static org.bukkit.Instrument valueOf(java.lang.String);
+  public org.bukkit.Sound getSound();
+  public byte getType();
+  public static org.bukkit.Instrument getByType(byte);
+  static {};
+}

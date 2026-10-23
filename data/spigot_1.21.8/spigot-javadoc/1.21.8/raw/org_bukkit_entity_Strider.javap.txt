@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Strider extends org.bukkit.entity.Steerable,org.bukkit.entity.Vehicle {
+  public abstract boolean isShivering();
+  public abstract void setShivering(boolean);
+}

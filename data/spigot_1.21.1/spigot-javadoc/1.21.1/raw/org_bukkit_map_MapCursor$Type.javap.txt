@@ -1,0 +1,43 @@
+Compiled from <spigot-api>
+public interface org.bukkit.map.MapCursor$Type extends org.bukkit.util.OldEnum<org.bukkit.map.MapCursor$Type>, org.bukkit.Keyed {
+  public static final org.bukkit.map.MapCursor$Type PLAYER;
+  public static final org.bukkit.map.MapCursor$Type FRAME;
+  public static final org.bukkit.map.MapCursor$Type RED_MARKER;
+  public static final org.bukkit.map.MapCursor$Type BLUE_MARKER;
+  public static final org.bukkit.map.MapCursor$Type TARGET_X;
+  public static final org.bukkit.map.MapCursor$Type TARGET_POINT;
+  public static final org.bukkit.map.MapCursor$Type PLAYER_OFF_MAP;
+  public static final org.bukkit.map.MapCursor$Type PLAYER_OFF_LIMITS;
+  public static final org.bukkit.map.MapCursor$Type MANSION;
+  public static final org.bukkit.map.MapCursor$Type MONUMENT;
+  public static final org.bukkit.map.MapCursor$Type BANNER_WHITE;
+  public static final org.bukkit.map.MapCursor$Type BANNER_ORANGE;
+  public static final org.bukkit.map.MapCursor$Type BANNER_MAGENTA;
+  public static final org.bukkit.map.MapCursor$Type BANNER_LIGHT_BLUE;
+  public static final org.bukkit.map.MapCursor$Type BANNER_YELLOW;
+  public static final org.bukkit.map.MapCursor$Type BANNER_LIME;
+  public static final org.bukkit.map.MapCursor$Type BANNER_PINK;
+  public static final org.bukkit.map.MapCursor$Type BANNER_GRAY;
+  public static final org.bukkit.map.MapCursor$Type BANNER_LIGHT_GRAY;
+  public static final org.bukkit.map.MapCursor$Type BANNER_CYAN;
+  public static final org.bukkit.map.MapCursor$Type BANNER_PURPLE;
+  public static final org.bukkit.map.MapCursor$Type BANNER_BLUE;
+  public static final org.bukkit.map.MapCursor$Type BANNER_BROWN;
+  public static final org.bukkit.map.MapCursor$Type BANNER_GREEN;
+  public static final org.bukkit.map.MapCursor$Type BANNER_RED;
+  public static final org.bukkit.map.MapCursor$Type BANNER_BLACK;
+  public static final org.bukkit.map.MapCursor$Type RED_X;
+  public static final org.bukkit.map.MapCursor$Type VILLAGE_DESERT;
+  public static final org.bukkit.map.MapCursor$Type VILLAGE_PLAINS;
+  public static final org.bukkit.map.MapCursor$Type VILLAGE_SAVANNA;
+  public static final org.bukkit.map.MapCursor$Type VILLAGE_SNOWY;
+  public static final org.bukkit.map.MapCursor$Type VILLAGE_TAIGA;
+  public static final org.bukkit.map.MapCursor$Type JUNGLE_TEMPLE;
+  public static final org.bukkit.map.MapCursor$Type SWAMP_HUT;
+  public static final org.bukkit.map.MapCursor$Type TRIAL_CHAMBERS;
+  public abstract byte getValue();
+  public static org.bukkit.map.MapCursor$Type byValue(byte);
+  public static org.bukkit.map.MapCursor$Type valueOf(java.lang.String);
+  public static org.bukkit.map.MapCursor$Type[] values();
+  static {};
+}

@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Vehicle extends org.bukkit.entity.Entity {
+  public abstract org.bukkit.util.Vector getVelocity();
+  public abstract void setVelocity(org.bukkit.util.Vector);
+}

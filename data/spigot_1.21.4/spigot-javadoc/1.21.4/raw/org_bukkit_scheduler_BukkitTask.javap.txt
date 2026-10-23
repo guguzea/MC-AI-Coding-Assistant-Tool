@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public interface org.bukkit.scheduler.BukkitTask {
+  public abstract int getTaskId();
+  public abstract org.bukkit.plugin.Plugin getOwner();
+  public abstract boolean isSync();
+  public abstract boolean isCancelled();
+  public abstract void cancel();
+}

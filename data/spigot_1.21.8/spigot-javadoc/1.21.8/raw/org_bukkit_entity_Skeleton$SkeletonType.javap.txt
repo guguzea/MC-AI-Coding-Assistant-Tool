@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public final class org.bukkit.entity.Skeleton$SkeletonType extends java.lang.Enum<org.bukkit.entity.Skeleton$SkeletonType> {
+  public static final org.bukkit.entity.Skeleton$SkeletonType NORMAL;
+  public static final org.bukkit.entity.Skeleton$SkeletonType WITHER;
+  public static final org.bukkit.entity.Skeleton$SkeletonType STRAY;
+  public static final org.bukkit.entity.Skeleton$SkeletonType BOGGED;
+  public static org.bukkit.entity.Skeleton$SkeletonType[] values();
+  public static org.bukkit.entity.Skeleton$SkeletonType valueOf(java.lang.String);
+  static {};
+}

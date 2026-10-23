@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public interface org.bukkit.ServerLinks$ServerLink {
+  public abstract org.bukkit.ServerLinks$Type getType();
+  public abstract java.lang.String getDisplayName();
+  public abstract java.net.URI getUrl();
+}

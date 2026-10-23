@@ -1,0 +1,16 @@
+Compiled from <spigot-api>
+public class org.bukkit.material.NetherWarts extends org.bukkit.material.MaterialData {
+  public org.bukkit.material.NetherWarts();
+  public org.bukkit.material.NetherWarts(org.bukkit.NetherWartsState);
+  public org.bukkit.material.NetherWarts(int);
+  public org.bukkit.material.NetherWarts(org.bukkit.Material);
+  public org.bukkit.material.NetherWarts(int, byte);
+  public org.bukkit.material.NetherWarts(org.bukkit.Material, byte);
+  public org.bukkit.NetherWartsState getState();
+  public void setState(org.bukkit.NetherWartsState);
+  public java.lang.String toString();
+  public org.bukkit.material.NetherWarts clone();
+  public org.bukkit.material.MaterialData clone();
+  public java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+  static int[] $SWITCH_TABLE$org$bukkit$NetherWartsState();
+}

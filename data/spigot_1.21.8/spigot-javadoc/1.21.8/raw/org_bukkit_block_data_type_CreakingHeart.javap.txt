@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.data.type.CreakingHeart extends org.bukkit.block.data.Orientable {
+  public abstract boolean isActive();
+  public abstract void setActive(boolean);
+  public abstract boolean isNatural();
+  public abstract void setNatural(boolean);
+  public abstract org.bukkit.block.data.type.CreakingHeart$State getCreakingHeartState();
+  public abstract void setCreakingHeartState(org.bukkit.block.data.type.CreakingHeart$State);
+}

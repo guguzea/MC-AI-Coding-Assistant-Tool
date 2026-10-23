@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.player.PlayerRiptideEvent extends org.bukkit.event.player.PlayerEvent {
+  static {};
+  public org.bukkit.event.player.PlayerRiptideEvent(org.bukkit.entity.Player, org.bukkit.inventory.ItemStack);
+  public org.bukkit.inventory.ItemStack getItem();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+}

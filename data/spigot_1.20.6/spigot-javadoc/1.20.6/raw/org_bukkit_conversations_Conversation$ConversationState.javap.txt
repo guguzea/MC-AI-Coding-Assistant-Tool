@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public final class org.bukkit.conversations.Conversation$ConversationState extends java.lang.Enum<org.bukkit.conversations.Conversation$ConversationState> {
+  public static final org.bukkit.conversations.Conversation$ConversationState UNSTARTED;
+  public static final org.bukkit.conversations.Conversation$ConversationState STARTED;
+  public static final org.bukkit.conversations.Conversation$ConversationState ABANDONED;
+  public static org.bukkit.conversations.Conversation$ConversationState[] values();
+  public static org.bukkit.conversations.Conversation$ConversationState valueOf(java.lang.String);
+  static {};
+}

@@ -1,0 +1,4 @@
+Compiled from <spigot-api>
+public interface org.bukkit.advancement.Advancement extends org.bukkit.Keyed {
+  public abstract java.util.Collection<java.lang.String> getCriteria();
+}

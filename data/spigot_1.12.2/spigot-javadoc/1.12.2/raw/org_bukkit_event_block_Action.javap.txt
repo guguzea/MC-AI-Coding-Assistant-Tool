@@ -1,0 +1,11 @@
+Compiled from <spigot-api>
+public final class org.bukkit.event.block.Action extends java.lang.Enum<org.bukkit.event.block.Action> {
+  public static final org.bukkit.event.block.Action LEFT_CLICK_BLOCK;
+  public static final org.bukkit.event.block.Action RIGHT_CLICK_BLOCK;
+  public static final org.bukkit.event.block.Action LEFT_CLICK_AIR;
+  public static final org.bukkit.event.block.Action RIGHT_CLICK_AIR;
+  public static final org.bukkit.event.block.Action PHYSICAL;
+  static {};
+  public static org.bukkit.event.block.Action[] values();
+  public static org.bukkit.event.block.Action valueOf(java.lang.String);
+}

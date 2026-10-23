@@ -1,0 +1,4 @@
+Compiled from <spigot-api>
+public interface org.bukkit.Keyed {
+  public abstract org.bukkit.NamespacedKey getKey();
+}

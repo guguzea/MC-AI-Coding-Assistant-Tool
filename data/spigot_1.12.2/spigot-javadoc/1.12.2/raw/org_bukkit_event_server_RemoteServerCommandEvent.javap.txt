@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.server.RemoteServerCommandEvent extends org.bukkit.event.server.ServerCommandEvent {
+  static {};
+  public org.bukkit.event.server.RemoteServerCommandEvent(org.bukkit.command.CommandSender, java.lang.String);
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+}

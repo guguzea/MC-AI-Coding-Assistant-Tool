@@ -1,0 +1,12 @@
+Compiled from <spigot-api>
+public final class org.bukkit.entity.Evoker$Spell extends java.lang.Enum<org.bukkit.entity.Evoker$Spell> {
+  public static final org.bukkit.entity.Evoker$Spell NONE;
+  public static final org.bukkit.entity.Evoker$Spell SUMMON;
+  public static final org.bukkit.entity.Evoker$Spell FANGS;
+  public static final org.bukkit.entity.Evoker$Spell WOLOLO;
+  public static final org.bukkit.entity.Evoker$Spell DISAPPEAR;
+  public static final org.bukkit.entity.Evoker$Spell BLINDNESS;
+  static {};
+  public static org.bukkit.entity.Evoker$Spell[] values();
+  public static org.bukkit.entity.Evoker$Spell valueOf(java.lang.String);
+}

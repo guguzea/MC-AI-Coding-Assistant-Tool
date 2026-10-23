@@ -1,0 +1,16 @@
+Compiled from <spigot-api>
+public abstract class org.bukkit.configuration.file.FileConfiguration extends org.bukkit.configuration.MemoryConfiguration {
+  public org.bukkit.configuration.file.FileConfiguration();
+  public org.bukkit.configuration.file.FileConfiguration(org.bukkit.configuration.Configuration);
+  public void save(java.io.File) throws java.io.IOException;
+  public void save(java.lang.String) throws java.io.IOException;
+  public abstract java.lang.String saveToString();
+  public void load(java.io.File) throws java.io.FileNotFoundException, java.io.IOException, org.bukkit.configuration.InvalidConfigurationException;
+  public void load(java.io.Reader) throws java.io.IOException, org.bukkit.configuration.InvalidConfigurationException;
+  public void load(java.lang.String) throws java.io.FileNotFoundException, java.io.IOException, org.bukkit.configuration.InvalidConfigurationException;
+  public abstract void loadFromString(java.lang.String) throws org.bukkit.configuration.InvalidConfigurationException;
+  protected java.lang.String buildHeader();
+  public org.bukkit.configuration.file.FileConfigurationOptions options();
+  public org.bukkit.configuration.MemoryConfigurationOptions options();
+  public org.bukkit.configuration.ConfigurationOptions options();
+}

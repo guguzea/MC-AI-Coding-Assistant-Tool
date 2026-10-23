@@ -1,0 +1,91 @@
+---
+title: "org.bukkit.configuration.MemorySection"
+package: "org.bukkit.configuration"
+source: https://repo.papermc.io/repository/maven-public/org/spigotmc/spigot-api/1.20.1-R0.1-SNAPSHOT/spigot-api-1.20.1-R0.1-20230921.163938-66.jar
+sourceType: javap
+fetchedWith: extract-spigot-api-surface.mjs@1
+fetchedAt: 2026-10-23T15:33:20.138Z
+asOfVersion: "1.20.1-R0.1-SNAPSHOT"
+jarMd5: "1eba255bc0360c0286ee840906c6095c"
+---
+
+- `public class org.bukkit.configuration.MemorySection implements org.bukkit.configuration.ConfigurationSection`
+- `protected final java.util.Map<java.lang.String, org.bukkit.configuration.SectionPathData> map`
+- `protected org.bukkit.configuration.MemorySection()`
+- `protected org.bukkit.configuration.MemorySection(org.bukkit.configuration.ConfigurationSection, java.lang.String)`
+- `public java.util.Set<java.lang.String> getKeys(boolean)`
+- `public java.util.Map<java.lang.String, java.lang.Object> getValues(boolean)`
+- `public boolean contains(java.lang.String)`
+- `public boolean contains(java.lang.String, boolean)`
+- `public boolean isSet(java.lang.String)`
+- `public java.lang.String getCurrentPath()`
+- `public java.lang.String getName()`
+- `public org.bukkit.configuration.Configuration getRoot()`
+- `public org.bukkit.configuration.ConfigurationSection getParent()`
+- `public void addDefault(java.lang.String, java.lang.Object)`
+- `public org.bukkit.configuration.ConfigurationSection getDefaultSection()`
+- `public void set(java.lang.String, java.lang.Object)`
+- `public java.lang.Object get(java.lang.String)`
+- `public java.lang.Object get(java.lang.String, java.lang.Object)`
+- `public org.bukkit.configuration.ConfigurationSection createSection(java.lang.String)`
+- `public org.bukkit.configuration.ConfigurationSection createSection(java.lang.String, java.util.Map<?, ?>)`
+- `public java.lang.String getString(java.lang.String)`
+- `public java.lang.String getString(java.lang.String, java.lang.String)`
+- `public boolean isString(java.lang.String)`
+- `public int getInt(java.lang.String)`
+- `public int getInt(java.lang.String, int)`
+- `public boolean isInt(java.lang.String)`
+- `public boolean getBoolean(java.lang.String)`
+- `public boolean getBoolean(java.lang.String, boolean)`
+- `public boolean isBoolean(java.lang.String)`
+- `public double getDouble(java.lang.String)`
+- `public double getDouble(java.lang.String, double)`
+- `public boolean isDouble(java.lang.String)`
+- `public long getLong(java.lang.String)`
+- `public long getLong(java.lang.String, long)`
+- `public boolean isLong(java.lang.String)`
+- `public java.util.List<?> getList(java.lang.String)`
+- `public java.util.List<?> getList(java.lang.String, java.util.List<?>)`
+- `public boolean isList(java.lang.String)`
+- `public java.util.List<java.lang.String> getStringList(java.lang.String)`
+- `public java.util.List<java.lang.Integer> getIntegerList(java.lang.String)`
+- `public java.util.List<java.lang.Boolean> getBooleanList(java.lang.String)`
+- `public java.util.List<java.lang.Double> getDoubleList(java.lang.String)`
+- `public java.util.List<java.lang.Float> getFloatList(java.lang.String)`
+- `public java.util.List<java.lang.Long> getLongList(java.lang.String)`
+- `public java.util.List<java.lang.Byte> getByteList(java.lang.String)`
+- `public java.util.List<java.lang.Character> getCharacterList(java.lang.String)`
+- `public java.util.List<java.lang.Short> getShortList(java.lang.String)`
+- `public java.util.List<java.util.Map<?, ?>> getMapList(java.lang.String)`
+- `public <T> T getObject(java.lang.String, java.lang.Class<T>)`
+- `public <T> T getObject(java.lang.String, java.lang.Class<T>, T)`
+- `public <T extends org.bukkit.configuration.serialization.ConfigurationSerializable> T getSerializable(java.lang.String, java.lang.Class<T>)`
+- `public <T extends org.bukkit.configuration.serialization.ConfigurationSerializable> T getSerializable(java.lang.String, java.lang.Class<T>, T)`
+- `public org.bukkit.util.Vector getVector(java.lang.String)`
+- `public org.bukkit.util.Vector getVector(java.lang.String, org.bukkit.util.Vector)`
+- `public boolean isVector(java.lang.String)`
+- `public org.bukkit.OfflinePlayer getOfflinePlayer(java.lang.String)`
+- `public org.bukkit.OfflinePlayer getOfflinePlayer(java.lang.String, org.bukkit.OfflinePlayer)`
+- `public boolean isOfflinePlayer(java.lang.String)`
+- `public org.bukkit.inventory.ItemStack getItemStack(java.lang.String)`
+- `public org.bukkit.inventory.ItemStack getItemStack(java.lang.String, org.bukkit.inventory.ItemStack)`
+- `public boolean isItemStack(java.lang.String)`
+- `public org.bukkit.Color getColor(java.lang.String)`
+- `public org.bukkit.Color getColor(java.lang.String, org.bukkit.Color)`
+- `public boolean isColor(java.lang.String)`
+- `public org.bukkit.Location getLocation(java.lang.String)`
+- `public org.bukkit.Location getLocation(java.lang.String, org.bukkit.Location)`
+- `public boolean isLocation(java.lang.String)`
+- `public org.bukkit.configuration.ConfigurationSection getConfigurationSection(java.lang.String)`
+- `public boolean isConfigurationSection(java.lang.String)`
+- `protected boolean isPrimitiveWrapper(java.lang.Object)`
+- `protected java.lang.Object getDefault(java.lang.String)`
+- `protected void mapChildrenKeys(java.util.Set<java.lang.String>, org.bukkit.configuration.ConfigurationSection, boolean)`
+- `protected void mapChildrenValues(java.util.Map<java.lang.String, java.lang.Object>, org.bukkit.configuration.ConfigurationSection, boolean)`
+- `public static java.lang.String createPath(org.bukkit.configuration.ConfigurationSection, java.lang.String)`
+- `public static java.lang.String createPath(org.bukkit.configuration.ConfigurationSection, java.lang.String, org.bukkit.configuration.ConfigurationSection)`
+- `public java.util.List<java.lang.String> getComments(java.lang.String)`
+- `public java.util.List<java.lang.String> getInlineComments(java.lang.String)`
+- `public void setComments(java.lang.String, java.util.List<java.lang.String>)`
+- `public void setInlineComments(java.lang.String, java.util.List<java.lang.String>)`
+- `public java.lang.String toString()`

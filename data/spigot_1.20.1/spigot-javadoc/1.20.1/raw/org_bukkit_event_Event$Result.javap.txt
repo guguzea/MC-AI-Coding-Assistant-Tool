@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public final class org.bukkit.event.Event$Result extends java.lang.Enum<org.bukkit.event.Event$Result> {
+  public static final org.bukkit.event.Event$Result DENY;
+  public static final org.bukkit.event.Event$Result DEFAULT;
+  public static final org.bukkit.event.Event$Result ALLOW;
+  static {};
+  public static org.bukkit.event.Event$Result[] values();
+  public static org.bukkit.event.Event$Result valueOf(java.lang.String);
+}

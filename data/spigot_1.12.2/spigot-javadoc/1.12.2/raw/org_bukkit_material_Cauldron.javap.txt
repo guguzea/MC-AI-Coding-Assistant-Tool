@@ -1,0 +1,12 @@
+Compiled from <spigot-api>
+public class org.bukkit.material.Cauldron extends org.bukkit.material.MaterialData {
+  public org.bukkit.material.Cauldron();
+  public org.bukkit.material.Cauldron(int, byte);
+  public org.bukkit.material.Cauldron(byte);
+  public boolean isFull();
+  public boolean isEmpty();
+  public java.lang.String toString();
+  public org.bukkit.material.Cauldron clone();
+  public org.bukkit.material.MaterialData clone();
+  public java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+}

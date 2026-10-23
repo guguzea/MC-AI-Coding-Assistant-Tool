@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.player.PlayerLinksSendEvent extends org.bukkit.event.player.PlayerEvent {
+  public org.bukkit.event.player.PlayerLinksSendEvent(org.bukkit.entity.Player, org.bukkit.ServerLinks);
+  public org.bukkit.ServerLinks getLinks();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  static {};
+}

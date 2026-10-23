@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.entity.EntityPortalEvent extends org.bukkit.event.entity.EntityTeleportEvent {
+  public org.bukkit.event.entity.EntityPortalEvent(org.bukkit.entity.Entity, org.bukkit.Location, org.bukkit.Location);
+  public org.bukkit.event.entity.EntityPortalEvent(org.bukkit.entity.Entity, org.bukkit.Location, org.bukkit.Location, int);
+  public void setSearchRadius(int);
+  public int getSearchRadius();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  static {};
+}

@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public final class org.bukkit.block.data.Bisected$Half extends java.lang.Enum<org.bukkit.block.data.Bisected$Half> {
+  public static final org.bukkit.block.data.Bisected$Half TOP;
+  public static final org.bukkit.block.data.Bisected$Half BOTTOM;
+  static {};
+  public static org.bukkit.block.data.Bisected$Half[] values();
+  public static org.bukkit.block.data.Bisected$Half valueOf(java.lang.String);
+}

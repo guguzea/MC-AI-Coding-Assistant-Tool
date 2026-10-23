@@ -1,0 +1,11 @@
+Compiled from <spigot-api>
+public final class org.bukkit.Fluid extends java.lang.Enum<org.bukkit.Fluid> implements org.bukkit.Keyed {
+  public static final org.bukkit.Fluid WATER;
+  public static final org.bukkit.Fluid FLOWING_WATER;
+  public static final org.bukkit.Fluid LAVA;
+  public static final org.bukkit.Fluid FLOWING_LAVA;
+  public static org.bukkit.Fluid[] values();
+  public static org.bukkit.Fluid valueOf(java.lang.String);
+  public org.bukkit.NamespacedKey getKey();
+  static {};
+}

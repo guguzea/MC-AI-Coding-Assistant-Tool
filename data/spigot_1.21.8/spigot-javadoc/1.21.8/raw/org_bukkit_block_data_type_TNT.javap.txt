@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.data.type.TNT extends org.bukkit.block.data.BlockData {
+  public abstract boolean isUnstable();
+  public abstract void setUnstable(boolean);
+}

@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public class org.bukkit.configuration.ConfigurationOptions {
+  protected org.bukkit.configuration.ConfigurationOptions(org.bukkit.configuration.Configuration);
+  public org.bukkit.configuration.Configuration configuration();
+  public char pathSeparator();
+  public org.bukkit.configuration.ConfigurationOptions pathSeparator(char);
+  public boolean copyDefaults();
+  public org.bukkit.configuration.ConfigurationOptions copyDefaults(boolean);
+}

@@ -1,0 +1,12 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Ageable extends org.bukkit.entity.Creature {
+  public abstract int getAge();
+  public abstract void setAge(int);
+  public abstract void setAgeLock(boolean);
+  public abstract boolean getAgeLock();
+  public abstract void setBaby();
+  public abstract void setAdult();
+  public abstract boolean isAdult();
+  public abstract boolean canBreed();
+  public abstract void setBreed(boolean);
+}

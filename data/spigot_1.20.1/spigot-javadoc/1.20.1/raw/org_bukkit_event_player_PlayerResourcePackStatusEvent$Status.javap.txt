@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public final class org.bukkit.event.player.PlayerResourcePackStatusEvent$Status extends java.lang.Enum<org.bukkit.event.player.PlayerResourcePackStatusEvent$Status> {
+  public static final org.bukkit.event.player.PlayerResourcePackStatusEvent$Status SUCCESSFULLY_LOADED;
+  public static final org.bukkit.event.player.PlayerResourcePackStatusEvent$Status DECLINED;
+  public static final org.bukkit.event.player.PlayerResourcePackStatusEvent$Status FAILED_DOWNLOAD;
+  public static final org.bukkit.event.player.PlayerResourcePackStatusEvent$Status ACCEPTED;
+  static {};
+  public static org.bukkit.event.player.PlayerResourcePackStatusEvent$Status[] values();
+  public static org.bukkit.event.player.PlayerResourcePackStatusEvent$Status valueOf(java.lang.String);
+}

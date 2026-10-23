@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public class org.bukkit.util.ChatPaginator$ChatPage {
+  public org.bukkit.util.ChatPaginator$ChatPage(java.lang.String[], int, int);
+  public int getPageNumber();
+  public int getTotalPages();
+  public java.lang.String[] getLines();
+}

@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public class org.bukkit.metadata.LazyMetadataValue extends org.bukkit.metadata.MetadataValueAdapter {
+  static {};
+  public org.bukkit.metadata.LazyMetadataValue(org.bukkit.plugin.Plugin, java.util.concurrent.Callable<java.lang.Object>);
+  public org.bukkit.metadata.LazyMetadataValue(org.bukkit.plugin.Plugin, org.bukkit.metadata.LazyMetadataValue$CacheStrategy, java.util.concurrent.Callable<java.lang.Object>);
+  protected org.bukkit.metadata.LazyMetadataValue(org.bukkit.plugin.Plugin);
+  public java.lang.Object value();
+  public synchronized void invalidate();
+}

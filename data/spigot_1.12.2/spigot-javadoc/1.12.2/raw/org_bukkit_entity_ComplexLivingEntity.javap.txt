@@ -1,0 +1,4 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.ComplexLivingEntity extends org.bukkit.entity.LivingEntity {
+  public abstract java.util.Set<org.bukkit.entity.ComplexEntityPart> getParts();
+}

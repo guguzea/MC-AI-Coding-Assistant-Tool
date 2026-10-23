@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public class org.bukkit.inventory.meta.tags.ItemTagType$PrimitiveTagType<T> implements org.bukkit.inventory.meta.tags.ItemTagType<T, T> {
+  org.bukkit.inventory.meta.tags.ItemTagType$PrimitiveTagType(java.lang.Class<T>);
+  public java.lang.Class<T> getPrimitiveType();
+  public java.lang.Class<T> getComplexType();
+  public T toPrimitive(T, org.bukkit.inventory.meta.tags.ItemTagAdapterContext);
+  public T fromPrimitive(T, org.bukkit.inventory.meta.tags.ItemTagAdapterContext);
+}

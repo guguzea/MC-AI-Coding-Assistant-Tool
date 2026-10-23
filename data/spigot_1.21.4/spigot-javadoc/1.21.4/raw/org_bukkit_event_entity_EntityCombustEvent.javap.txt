@@ -1,0 +1,13 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.entity.EntityCombustEvent extends org.bukkit.event.entity.EntityEvent implements org.bukkit.event.Cancellable {
+  public org.bukkit.event.entity.EntityCombustEvent(org.bukkit.entity.Entity, int);
+  public org.bukkit.event.entity.EntityCombustEvent(org.bukkit.entity.Entity, float);
+  public boolean isCancelled();
+  public void setCancelled(boolean);
+  public float getDuration();
+  public void setDuration(float);
+  public void setDuration(int);
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  static {};
+}

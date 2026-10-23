@@ -1,0 +1,16 @@
+Compiled from <spigot-api>
+public final class org.bukkit.entity.Boat$Type extends java.lang.Enum<org.bukkit.entity.Boat$Type> {
+  public static final org.bukkit.entity.Boat$Type OAK;
+  public static final org.bukkit.entity.Boat$Type SPRUCE;
+  public static final org.bukkit.entity.Boat$Type BIRCH;
+  public static final org.bukkit.entity.Boat$Type JUNGLE;
+  public static final org.bukkit.entity.Boat$Type ACACIA;
+  public static final org.bukkit.entity.Boat$Type CHERRY;
+  public static final org.bukkit.entity.Boat$Type DARK_OAK;
+  public static final org.bukkit.entity.Boat$Type MANGROVE;
+  public static final org.bukkit.entity.Boat$Type BAMBOO;
+  static {};
+  public org.bukkit.Material getMaterial();
+  public static org.bukkit.entity.Boat$Type[] values();
+  public static org.bukkit.entity.Boat$Type valueOf(java.lang.String);
+}

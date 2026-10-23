@@ -1,0 +1,12 @@
+Compiled from <spigot-api>
+public class org.spigotmc.CustomTimingsHandler {
+  static {};
+  public org.spigotmc.CustomTimingsHandler(java.lang.String);
+  public org.spigotmc.CustomTimingsHandler(java.lang.String, org.spigotmc.CustomTimingsHandler);
+  public static void printTimings(java.io.PrintStream);
+  public static void reload();
+  public static void tick();
+  public void startTiming();
+  public void stopTiming();
+  public void reset();
+}

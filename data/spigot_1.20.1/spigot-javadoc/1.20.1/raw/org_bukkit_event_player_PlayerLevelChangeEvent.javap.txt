@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.player.PlayerLevelChangeEvent extends org.bukkit.event.player.PlayerEvent {
+  static {};
+  public org.bukkit.event.player.PlayerLevelChangeEvent(org.bukkit.entity.Player, int, int);
+  public int getOldLevel();
+  public int getNewLevel();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+}

@@ -1,0 +1,13 @@
+Compiled from <spigot-api>
+public interface org.bukkit.BanEntry {
+  public abstract java.lang.String getTarget();
+  public abstract java.util.Date getCreated();
+  public abstract void setCreated(java.util.Date);
+  public abstract java.lang.String getSource();
+  public abstract void setSource(java.lang.String);
+  public abstract java.util.Date getExpiration();
+  public abstract void setExpiration(java.util.Date);
+  public abstract java.lang.String getReason();
+  public abstract void setReason(java.lang.String);
+  public abstract void save();
+}

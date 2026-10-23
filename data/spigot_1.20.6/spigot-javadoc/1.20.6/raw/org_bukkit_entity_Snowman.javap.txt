@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Snowman extends org.bukkit.entity.Golem {
+  public abstract boolean isDerp();
+  public abstract void setDerp(boolean);
+}

@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public interface org.bukkit.damage.DamageSource$Builder {
+  public abstract org.bukkit.damage.DamageSource$Builder withCausingEntity(org.bukkit.entity.Entity);
+  public abstract org.bukkit.damage.DamageSource$Builder withDirectEntity(org.bukkit.entity.Entity);
+  public abstract org.bukkit.damage.DamageSource$Builder withDamageLocation(org.bukkit.Location);
+  public abstract org.bukkit.damage.DamageSource build();
+}

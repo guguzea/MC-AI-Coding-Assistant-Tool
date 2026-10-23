@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public final class org.bukkit.block.sign.Side extends java.lang.Enum<org.bukkit.block.sign.Side> {
+  public static final org.bukkit.block.sign.Side FRONT;
+  public static final org.bukkit.block.sign.Side BACK;
+  public static org.bukkit.block.sign.Side[] values();
+  public static org.bukkit.block.sign.Side valueOf(java.lang.String);
+  static {};
+}

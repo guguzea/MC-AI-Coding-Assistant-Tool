@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.data.type.FlowerBed extends org.bukkit.block.data.Directional {
+  public abstract int getFlowerAmount();
+  public abstract void setFlowerAmount(int);
+  public abstract int getMaximumFlowerAmount();
+}

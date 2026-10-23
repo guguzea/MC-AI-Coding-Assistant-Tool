@@ -1,8 +1,8 @@
-# liteloader 1.8.9 — 未核实
+# liteloader 1.8.9 — 签名面已构件直读，**行为未核**
 
-GitLab 分支 `1.8.9` **存在**。已打开 `HUDRenderListener` 方法名与 1.12.2 相同。其余未打开 → stub；`knowledge/common/verified-api.md` 的构件 javap 表内 9 类接口可引用。禁止把 1.12.2 整树复制过来。
+GitLab 分支 `1.8.9` **存在**。**签名面已从真构件直读**：`knowledge/common/api-surface.md` 有该版**全部 70 个公开类型 / 209 条成员签名**（由 `liteloader-1.8.9-20160414.153538-10.jar` 经 `javap`，md5 `12cbdc8c…` 与本档 `verified-api.md` 登记值逐字一致；本件 MCP 可读）⇒ **类名 / 方法名 / 元数可引用**。已单独打开过 `HUDRenderListener`，方法名与 1.12.2 相同。
 
-**禁止**从邻版 00–10 复制冒充。源码/MCP named 未逐方法打开前：**禁止输出具体 API**。改口打开该版 GitLab/MCP 或提供 `decompile_mod_jar`（摘要必须含 mappingsVersion）。
+**仍禁止**：从邻版 00–10 复制冒充（`00–10` 保持未核实 stub）；输出**行为契约**（方法何时被调、副作用）；输出 `verified-api.md` 之外的具体 API 结论。要改口就打开该版 GitLab/MCP，或提供 `decompile_mod_jar`（摘要必须含 mappingsVersion）。
 
 签名面（**已打开类名 / 方法名 / 元数**）：`knowledge/common/api-surface.md` —— 70 个公开类型、209 条成员签名，由 `liteloader-1.8.9-20160414.153538-10.jar`（md5 `12cbdc8c…`，与本档 `verified-api.md` 登记值逐字一致）经 `javap` 直读；本件 MCP 可读。该文件仍**不是**可对外输出的已核实名单，对外结论以 `verified-api.md` 为准。
 

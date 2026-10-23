@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.meta.components.consumable.effects.ConsumablePlaySound extends org.bukkit.inventory.meta.components.consumable.effects.ConsumableEffect {
+  public abstract org.bukkit.Sound getSound();
+  public abstract void setSound(org.bukkit.Sound);
+}

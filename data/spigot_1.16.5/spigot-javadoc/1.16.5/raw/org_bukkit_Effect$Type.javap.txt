@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public final class org.bukkit.Effect$Type extends java.lang.Enum<org.bukkit.Effect$Type> {
+  public static final org.bukkit.Effect$Type SOUND;
+  public static final org.bukkit.Effect$Type VISUAL;
+  static {};
+  public static org.bukkit.Effect$Type[] values();
+  public static org.bukkit.Effect$Type valueOf(java.lang.String);
+}

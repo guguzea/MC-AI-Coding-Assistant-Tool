@@ -1,0 +1,11 @@
+Compiled from <spigot-api>
+public final class org.bukkit.entity.Boat$Status extends java.lang.Enum<org.bukkit.entity.Boat$Status> {
+  public static final org.bukkit.entity.Boat$Status IN_WATER;
+  public static final org.bukkit.entity.Boat$Status UNDER_WATER;
+  public static final org.bukkit.entity.Boat$Status UNDER_FLOWING_WATER;
+  public static final org.bukkit.entity.Boat$Status ON_LAND;
+  public static final org.bukkit.entity.Boat$Status IN_AIR;
+  static {};
+  public static org.bukkit.entity.Boat$Status[] values();
+  public static org.bukkit.entity.Boat$Status valueOf(java.lang.String);
+}

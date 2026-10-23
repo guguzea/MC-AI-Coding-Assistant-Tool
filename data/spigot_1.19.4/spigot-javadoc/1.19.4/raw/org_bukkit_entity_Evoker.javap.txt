@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Evoker extends org.bukkit.entity.Spellcaster {
+  public abstract org.bukkit.entity.Evoker$Spell getCurrentSpell();
+  public abstract void setCurrentSpell(org.bukkit.entity.Evoker$Spell);
+}

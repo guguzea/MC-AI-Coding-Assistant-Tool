@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public final class org.bukkit.scoreboard.Team$OptionStatus extends java.lang.Enum<org.bukkit.scoreboard.Team$OptionStatus> {
+  public static final org.bukkit.scoreboard.Team$OptionStatus ALWAYS;
+  public static final org.bukkit.scoreboard.Team$OptionStatus NEVER;
+  public static final org.bukkit.scoreboard.Team$OptionStatus FOR_OTHER_TEAMS;
+  public static final org.bukkit.scoreboard.Team$OptionStatus FOR_OWN_TEAM;
+  public static org.bukkit.scoreboard.Team$OptionStatus[] values();
+  public static org.bukkit.scoreboard.Team$OptionStatus valueOf(java.lang.String);
+  static {};
+}

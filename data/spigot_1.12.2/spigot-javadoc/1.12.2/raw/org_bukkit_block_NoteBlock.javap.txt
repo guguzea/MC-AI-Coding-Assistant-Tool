@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.NoteBlock extends org.bukkit.block.BlockState {
+  public abstract org.bukkit.Note getNote();
+  public abstract byte getRawNote();
+  public abstract void setNote(org.bukkit.Note);
+  public abstract void setRawNote(byte);
+  public abstract boolean play();
+  public abstract boolean play(byte, byte);
+  public abstract boolean play(org.bukkit.Instrument, org.bukkit.Note);
+}

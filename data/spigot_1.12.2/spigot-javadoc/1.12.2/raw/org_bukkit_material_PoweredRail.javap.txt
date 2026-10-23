@@ -1,0 +1,15 @@
+Compiled from <spigot-api>
+public class org.bukkit.material.PoweredRail extends org.bukkit.material.ExtendedRails implements org.bukkit.material.Redstone {
+  public org.bukkit.material.PoweredRail();
+  public org.bukkit.material.PoweredRail(int);
+  public org.bukkit.material.PoweredRail(org.bukkit.Material);
+  public org.bukkit.material.PoweredRail(int, byte);
+  public org.bukkit.material.PoweredRail(org.bukkit.Material, byte);
+  public boolean isPowered();
+  public void setPowered(boolean);
+  public org.bukkit.material.PoweredRail clone();
+  public org.bukkit.material.ExtendedRails clone();
+  public java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+  public org.bukkit.material.MaterialData clone();
+  public org.bukkit.material.Rails clone();
+}

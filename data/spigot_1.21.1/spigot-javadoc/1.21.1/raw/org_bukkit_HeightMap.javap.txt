@@ -1,0 +1,12 @@
+Compiled from <spigot-api>
+public final class org.bukkit.HeightMap extends java.lang.Enum<org.bukkit.HeightMap> {
+  public static final org.bukkit.HeightMap MOTION_BLOCKING;
+  public static final org.bukkit.HeightMap MOTION_BLOCKING_NO_LEAVES;
+  public static final org.bukkit.HeightMap OCEAN_FLOOR;
+  public static final org.bukkit.HeightMap OCEAN_FLOOR_WG;
+  public static final org.bukkit.HeightMap WORLD_SURFACE;
+  public static final org.bukkit.HeightMap WORLD_SURFACE_WG;
+  public static org.bukkit.HeightMap[] values();
+  public static org.bukkit.HeightMap valueOf(java.lang.String);
+  static {};
+}

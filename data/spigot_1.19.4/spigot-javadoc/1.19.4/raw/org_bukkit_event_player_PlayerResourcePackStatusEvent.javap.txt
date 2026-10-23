@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.player.PlayerResourcePackStatusEvent extends org.bukkit.event.player.PlayerEvent {
+  static {};
+  public org.bukkit.event.player.PlayerResourcePackStatusEvent(org.bukkit.entity.Player, org.bukkit.event.player.PlayerResourcePackStatusEvent$Status);
+  public org.bukkit.event.player.PlayerResourcePackStatusEvent$Status getStatus();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+}

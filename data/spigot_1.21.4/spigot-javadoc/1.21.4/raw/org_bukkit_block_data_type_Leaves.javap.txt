@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.data.type.Leaves extends org.bukkit.block.data.Waterlogged {
+  public abstract boolean isPersistent();
+  public abstract void setPersistent(boolean);
+  public abstract int getDistance();
+  public abstract void setDistance(int);
+}

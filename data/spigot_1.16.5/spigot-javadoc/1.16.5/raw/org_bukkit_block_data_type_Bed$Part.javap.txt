@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public final class org.bukkit.block.data.type.Bed$Part extends java.lang.Enum<org.bukkit.block.data.type.Bed$Part> {
+  public static final org.bukkit.block.data.type.Bed$Part HEAD;
+  public static final org.bukkit.block.data.type.Bed$Part FOOT;
+  static {};
+  public static org.bukkit.block.data.type.Bed$Part[] values();
+  public static org.bukkit.block.data.type.Bed$Part valueOf(java.lang.String);
+}

@@ -1,0 +1,13 @@
+Compiled from <spigot-api>
+public final class org.bukkit.boss.BarColor extends java.lang.Enum<org.bukkit.boss.BarColor> {
+  public static final org.bukkit.boss.BarColor PINK;
+  public static final org.bukkit.boss.BarColor BLUE;
+  public static final org.bukkit.boss.BarColor RED;
+  public static final org.bukkit.boss.BarColor GREEN;
+  public static final org.bukkit.boss.BarColor YELLOW;
+  public static final org.bukkit.boss.BarColor PURPLE;
+  public static final org.bukkit.boss.BarColor WHITE;
+  static {};
+  public static org.bukkit.boss.BarColor[] values();
+  public static org.bukkit.boss.BarColor valueOf(java.lang.String);
+}

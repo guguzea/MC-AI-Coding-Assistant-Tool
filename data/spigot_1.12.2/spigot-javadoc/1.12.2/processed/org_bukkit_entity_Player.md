@@ -1,0 +1,137 @@
+---
+title: "org.bukkit.entity.Player"
+package: "org.bukkit.entity"
+source: https://repo.papermc.io/repository/maven-public/org/spigotmc/spigot-api/1.12.2-R0.1-SNAPSHOT/spigot-api-1.12.2-R0.1-20180712.012057-156.jar
+sourceType: javap
+fetchedWith: extract-spigot-api-surface.mjs@1
+fetchedAt: 2026-10-23T15:35:10.184Z
+asOfVersion: "1.12.2-R0.1-SNAPSHOT"
+jarMd5: "f1c84754979a6e1344a24f09bb1fed35"
+---
+
+- `public interface org.bukkit.entity.Player extends org.bukkit.entity.HumanEntity,org.bukkit.conversations.Conversable,org.bukkit.command.CommandSender,org.bukkit.OfflinePlayer,org.bukkit.plugin.messaging.PluginMessageRecipient`
+- `public abstract java.lang.String getDisplayName()`
+- `public abstract void setDisplayName(java.lang.String)`
+- `public abstract java.lang.String getPlayerListName()`
+- `public abstract void setPlayerListName(java.lang.String)`
+- `public abstract void setCompassTarget(org.bukkit.Location)`
+- `public abstract org.bukkit.Location getCompassTarget()`
+- `public abstract java.net.InetSocketAddress getAddress()`
+- `public abstract void sendRawMessage(java.lang.String)`
+- `public abstract void kickPlayer(java.lang.String)`
+- `public abstract void chat(java.lang.String)`
+- `public abstract boolean performCommand(java.lang.String)`
+- `public abstract boolean isSneaking()`
+- `public abstract void setSneaking(boolean)`
+- `public abstract boolean isSprinting()`
+- `public abstract void setSprinting(boolean)`
+- `public abstract void saveData()`
+- `public abstract void loadData()`
+- `public abstract void setSleepingIgnored(boolean)`
+- `public abstract boolean isSleepingIgnored()`
+- `public abstract void playNote(org.bukkit.Location, byte, byte)`
+- `public abstract void playNote(org.bukkit.Location, org.bukkit.Instrument, org.bukkit.Note)`
+- `public abstract void playSound(org.bukkit.Location, org.bukkit.Sound, float, float)`
+- `public abstract void playSound(org.bukkit.Location, java.lang.String, float, float)`
+- `public abstract void playSound(org.bukkit.Location, org.bukkit.Sound, org.bukkit.SoundCategory, float, float)`
+- `public abstract void playSound(org.bukkit.Location, java.lang.String, org.bukkit.SoundCategory, float, float)`
+- `public abstract void stopSound(org.bukkit.Sound)`
+- `public abstract void stopSound(java.lang.String)`
+- `public abstract void stopSound(org.bukkit.Sound, org.bukkit.SoundCategory)`
+- `public abstract void stopSound(java.lang.String, org.bukkit.SoundCategory)`
+- `public abstract void playEffect(org.bukkit.Location, org.bukkit.Effect, int)`
+- `public abstract <T> void playEffect(org.bukkit.Location, org.bukkit.Effect, T)`
+- `public abstract void sendBlockChange(org.bukkit.Location, org.bukkit.Material, byte)`
+- `public abstract boolean sendChunkChange(org.bukkit.Location, int, int, int, byte[])`
+- `public abstract void sendBlockChange(org.bukkit.Location, int, byte)`
+- `public abstract void sendSignChange(org.bukkit.Location, java.lang.String[]) throws java.lang.IllegalArgumentException`
+- `public abstract void sendMap(org.bukkit.map.MapView)`
+- `public abstract void updateInventory()`
+- `public abstract void awardAchievement(org.bukkit.Achievement)`
+- `public abstract void removeAchievement(org.bukkit.Achievement)`
+- `public abstract boolean hasAchievement(org.bukkit.Achievement)`
+- `public abstract void incrementStatistic(org.bukkit.Statistic) throws java.lang.IllegalArgumentException`
+- `public abstract void decrementStatistic(org.bukkit.Statistic) throws java.lang.IllegalArgumentException`
+- `public abstract void incrementStatistic(org.bukkit.Statistic, int) throws java.lang.IllegalArgumentException`
+- `public abstract void decrementStatistic(org.bukkit.Statistic, int) throws java.lang.IllegalArgumentException`
+- `public abstract void setStatistic(org.bukkit.Statistic, int) throws java.lang.IllegalArgumentException`
+- `public abstract int getStatistic(org.bukkit.Statistic) throws java.lang.IllegalArgumentException`
+- `public abstract void incrementStatistic(org.bukkit.Statistic, org.bukkit.Material) throws java.lang.IllegalArgumentException`
+- `public abstract void decrementStatistic(org.bukkit.Statistic, org.bukkit.Material) throws java.lang.IllegalArgumentException`
+- `public abstract int getStatistic(org.bukkit.Statistic, org.bukkit.Material) throws java.lang.IllegalArgumentException`
+- `public abstract void incrementStatistic(org.bukkit.Statistic, org.bukkit.Material, int) throws java.lang.IllegalArgumentException`
+- `public abstract void decrementStatistic(org.bukkit.Statistic, org.bukkit.Material, int) throws java.lang.IllegalArgumentException`
+- `public abstract void setStatistic(org.bukkit.Statistic, org.bukkit.Material, int) throws java.lang.IllegalArgumentException`
+- `public abstract void incrementStatistic(org.bukkit.Statistic, org.bukkit.entity.EntityType) throws java.lang.IllegalArgumentException`
+- `public abstract void decrementStatistic(org.bukkit.Statistic, org.bukkit.entity.EntityType) throws java.lang.IllegalArgumentException`
+- `public abstract int getStatistic(org.bukkit.Statistic, org.bukkit.entity.EntityType) throws java.lang.IllegalArgumentException`
+- `public abstract void incrementStatistic(org.bukkit.Statistic, org.bukkit.entity.EntityType, int) throws java.lang.IllegalArgumentException`
+- `public abstract void decrementStatistic(org.bukkit.Statistic, org.bukkit.entity.EntityType, int)`
+- `public abstract void setStatistic(org.bukkit.Statistic, org.bukkit.entity.EntityType, int)`
+- `public abstract void setPlayerTime(long, boolean)`
+- `public abstract long getPlayerTime()`
+- `public abstract long getPlayerTimeOffset()`
+- `public abstract boolean isPlayerTimeRelative()`
+- `public abstract void resetPlayerTime()`
+- `public abstract void setPlayerWeather(org.bukkit.WeatherType)`
+- `public abstract org.bukkit.WeatherType getPlayerWeather()`
+- `public abstract void resetPlayerWeather()`
+- `public abstract void giveExp(int)`
+- `public abstract void giveExpLevels(int)`
+- `public abstract float getExp()`
+- `public abstract void setExp(float)`
+- `public abstract int getLevel()`
+- `public abstract void setLevel(int)`
+- `public abstract int getTotalExperience()`
+- `public abstract void setTotalExperience(int)`
+- `public abstract float getExhaustion()`
+- `public abstract void setExhaustion(float)`
+- `public abstract float getSaturation()`
+- `public abstract void setSaturation(float)`
+- `public abstract int getFoodLevel()`
+- `public abstract void setFoodLevel(int)`
+- `public abstract org.bukkit.Location getBedSpawnLocation()`
+- `public abstract void setBedSpawnLocation(org.bukkit.Location)`
+- `public abstract void setBedSpawnLocation(org.bukkit.Location, boolean)`
+- `public abstract boolean getAllowFlight()`
+- `public abstract void setAllowFlight(boolean)`
+- `public abstract void hidePlayer(org.bukkit.entity.Player)`
+- `public abstract void hidePlayer(org.bukkit.plugin.Plugin, org.bukkit.entity.Player)`
+- `public abstract void showPlayer(org.bukkit.entity.Player)`
+- `public abstract void showPlayer(org.bukkit.plugin.Plugin, org.bukkit.entity.Player)`
+- `public abstract boolean canSee(org.bukkit.entity.Player)`
+- `public abstract boolean isFlying()`
+- `public abstract void setFlying(boolean)`
+- `public abstract void setFlySpeed(float) throws java.lang.IllegalArgumentException`
+- `public abstract void setWalkSpeed(float) throws java.lang.IllegalArgumentException`
+- `public abstract float getFlySpeed()`
+- `public abstract float getWalkSpeed()`
+- `public abstract void setTexturePack(java.lang.String)`
+- `public abstract void setResourcePack(java.lang.String)`
+- `public abstract void setResourcePack(java.lang.String, byte[])`
+- `public abstract org.bukkit.scoreboard.Scoreboard getScoreboard()`
+- `public abstract void setScoreboard(org.bukkit.scoreboard.Scoreboard) throws java.lang.IllegalArgumentException, java.lang.IllegalStateException`
+- `public abstract boolean isHealthScaled()`
+- `public abstract void setHealthScaled(boolean)`
+- `public abstract void setHealthScale(double) throws java.lang.IllegalArgumentException`
+- `public abstract double getHealthScale()`
+- `public abstract org.bukkit.entity.Entity getSpectatorTarget()`
+- `public abstract void setSpectatorTarget(org.bukkit.entity.Entity)`
+- `public abstract void sendTitle(java.lang.String, java.lang.String)`
+- `public abstract void sendTitle(java.lang.String, java.lang.String, int, int, int)`
+- `public abstract void resetTitle()`
+- `public abstract void spawnParticle(org.bukkit.Particle, org.bukkit.Location, int)`
+- `public abstract void spawnParticle(org.bukkit.Particle, double, double, double, int)`
+- `public abstract <T> void spawnParticle(org.bukkit.Particle, org.bukkit.Location, int, T)`
+- `public abstract <T> void spawnParticle(org.bukkit.Particle, double, double, double, int, T)`
+- `public abstract void spawnParticle(org.bukkit.Particle, org.bukkit.Location, int, double, double, double)`
+- `public abstract void spawnParticle(org.bukkit.Particle, double, double, double, int, double, double, double)`
+- `public abstract <T> void spawnParticle(org.bukkit.Particle, org.bukkit.Location, int, double, double, double, T)`
+- `public abstract <T> void spawnParticle(org.bukkit.Particle, double, double, double, int, double, double, double, T)`
+- `public abstract void spawnParticle(org.bukkit.Particle, org.bukkit.Location, int, double, double, double, double)`
+- `public abstract void spawnParticle(org.bukkit.Particle, double, double, double, int, double, double, double, double)`
+- `public abstract <T> void spawnParticle(org.bukkit.Particle, org.bukkit.Location, int, double, double, double, double, T)`
+- `public abstract <T> void spawnParticle(org.bukkit.Particle, double, double, double, int, double, double, double, double, T)`
+- `public abstract org.bukkit.advancement.AdvancementProgress getAdvancementProgress(org.bukkit.advancement.Advancement)`
+- `public abstract java.lang.String getLocale()`
+- `public abstract org.bukkit.entity.Player$Spigot spigot()`

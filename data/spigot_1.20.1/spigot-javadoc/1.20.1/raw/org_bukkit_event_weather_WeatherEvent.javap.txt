@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public abstract class org.bukkit.event.weather.WeatherEvent extends org.bukkit.event.Event {
+  protected org.bukkit.World world;
+  public org.bukkit.event.weather.WeatherEvent(org.bukkit.World);
+  public final org.bukkit.World getWorld();
+}

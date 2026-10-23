@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Zoglin extends org.bukkit.entity.Monster,org.bukkit.entity.Ageable {
+  public abstract boolean isBaby();
+  public abstract void setBaby(boolean);
+}

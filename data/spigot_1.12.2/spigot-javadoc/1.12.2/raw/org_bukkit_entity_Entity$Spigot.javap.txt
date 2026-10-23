@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public class org.bukkit.entity.Entity$Spigot extends org.bukkit.command.CommandSender$Spigot {
+  public org.bukkit.entity.Entity$Spigot();
+  public boolean isInvulnerable();
+}

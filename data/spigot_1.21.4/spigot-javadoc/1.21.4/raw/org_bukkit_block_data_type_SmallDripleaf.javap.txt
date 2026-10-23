@@ -1,0 +1,3 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.data.type.SmallDripleaf extends org.bukkit.block.data.type.Dripleaf,org.bukkit.block.data.Bisected {
+}

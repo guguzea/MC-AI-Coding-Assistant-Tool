@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public class org.bukkit.inventory.TransmuteRecipe extends org.bukkit.inventory.CraftingRecipe implements org.bukkit.inventory.ComplexRecipe {
+  public org.bukkit.inventory.TransmuteRecipe(org.bukkit.NamespacedKey, org.bukkit.Material, org.bukkit.inventory.RecipeChoice, org.bukkit.inventory.RecipeChoice);
+  public org.bukkit.inventory.RecipeChoice getInput();
+  public org.bukkit.inventory.RecipeChoice getMaterial();
+}

@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public class org.bukkit.map.MinecraftFont extends org.bukkit.map.MapFont {
+  public static final org.bukkit.map.MinecraftFont Font;
+  public org.bukkit.map.MinecraftFont();
+  static {};
+}

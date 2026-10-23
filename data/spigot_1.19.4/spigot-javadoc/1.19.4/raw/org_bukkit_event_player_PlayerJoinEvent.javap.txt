@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.player.PlayerJoinEvent extends org.bukkit.event.player.PlayerEvent {
+  static {};
+  public org.bukkit.event.player.PlayerJoinEvent(org.bukkit.entity.Player, java.lang.String);
+  public java.lang.String getJoinMessage();
+  public void setJoinMessage(java.lang.String);
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+}

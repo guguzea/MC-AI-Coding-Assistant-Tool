@@ -1,0 +1,13 @@
+Compiled from <spigot-api>
+public final class org.bukkit.event.inventory.InventoryType$SlotType extends java.lang.Enum<org.bukkit.event.inventory.InventoryType$SlotType> {
+  public static final org.bukkit.event.inventory.InventoryType$SlotType RESULT;
+  public static final org.bukkit.event.inventory.InventoryType$SlotType CRAFTING;
+  public static final org.bukkit.event.inventory.InventoryType$SlotType ARMOR;
+  public static final org.bukkit.event.inventory.InventoryType$SlotType CONTAINER;
+  public static final org.bukkit.event.inventory.InventoryType$SlotType QUICKBAR;
+  public static final org.bukkit.event.inventory.InventoryType$SlotType OUTSIDE;
+  public static final org.bukkit.event.inventory.InventoryType$SlotType FUEL;
+  public static org.bukkit.event.inventory.InventoryType$SlotType[] values();
+  public static org.bukkit.event.inventory.InventoryType$SlotType valueOf(java.lang.String);
+  static {};
+}

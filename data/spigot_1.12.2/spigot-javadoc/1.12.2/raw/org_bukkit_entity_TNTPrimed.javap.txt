@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.TNTPrimed extends org.bukkit.entity.Explosive {
+  public abstract void setFuseTicks(int);
+  public abstract int getFuseTicks();
+  public abstract org.bukkit.entity.Entity getSource();
+}

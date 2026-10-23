@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.player.PlayerBucketFillEvent extends org.bukkit.event.player.PlayerBucketEvent {
+  static {};
+  public org.bukkit.event.player.PlayerBucketFillEvent(org.bukkit.entity.Player, org.bukkit.block.Block, org.bukkit.block.BlockFace, org.bukkit.Material, org.bukkit.inventory.ItemStack);
+  public org.bukkit.event.player.PlayerBucketFillEvent(org.bukkit.entity.Player, org.bukkit.block.Block, org.bukkit.block.Block, org.bukkit.block.BlockFace, org.bukkit.Material, org.bukkit.inventory.ItemStack);
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+}

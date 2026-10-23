@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public final class org.bukkit.advancement.AdvancementDisplayType extends java.lang.Enum<org.bukkit.advancement.AdvancementDisplayType> {
+  public static final org.bukkit.advancement.AdvancementDisplayType TASK;
+  public static final org.bukkit.advancement.AdvancementDisplayType CHALLENGE;
+  public static final org.bukkit.advancement.AdvancementDisplayType GOAL;
+  public static org.bukkit.advancement.AdvancementDisplayType[] values();
+  public static org.bukkit.advancement.AdvancementDisplayType valueOf(java.lang.String);
+  public org.bukkit.ChatColor getColor();
+  static {};
+}

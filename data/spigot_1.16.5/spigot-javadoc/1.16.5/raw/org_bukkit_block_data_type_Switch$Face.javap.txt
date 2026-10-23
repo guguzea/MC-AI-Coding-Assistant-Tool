@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public final class org.bukkit.block.data.type.Switch$Face extends java.lang.Enum<org.bukkit.block.data.type.Switch$Face> {
+  public static final org.bukkit.block.data.type.Switch$Face FLOOR;
+  public static final org.bukkit.block.data.type.Switch$Face WALL;
+  public static final org.bukkit.block.data.type.Switch$Face CEILING;
+  static {};
+  public static org.bukkit.block.data.type.Switch$Face[] values();
+  public static org.bukkit.block.data.type.Switch$Face valueOf(java.lang.String);
+}

@@ -1,0 +1,12 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.block.BlockCookEvent extends org.bukkit.event.block.BlockEvent implements org.bukkit.event.Cancellable {
+  public org.bukkit.event.block.BlockCookEvent(org.bukkit.block.Block, org.bukkit.inventory.ItemStack, org.bukkit.inventory.ItemStack);
+  public org.bukkit.inventory.ItemStack getSource();
+  public org.bukkit.inventory.ItemStack getResult();
+  public void setResult(org.bukkit.inventory.ItemStack);
+  public boolean isCancelled();
+  public void setCancelled(boolean);
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  static {};
+}

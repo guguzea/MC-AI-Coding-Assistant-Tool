@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public final class org.bukkit.damage.DeathMessageType extends java.lang.Enum<org.bukkit.damage.DeathMessageType> {
+  public static final org.bukkit.damage.DeathMessageType DEFAULT;
+  public static final org.bukkit.damage.DeathMessageType FALL_VARIANTS;
+  public static final org.bukkit.damage.DeathMessageType INTENTIONAL_GAME_DESIGN;
+  public static org.bukkit.damage.DeathMessageType[] values();
+  public static org.bukkit.damage.DeathMessageType valueOf(java.lang.String);
+  static {};
+}

@@ -1,0 +1,15 @@
+Compiled from <spigot-api>
+public final class org.bukkit.FireworkEffect implements org.bukkit.configuration.serialization.ConfigurationSerializable {
+  public static org.bukkit.FireworkEffect$Builder builder();
+  org.bukkit.FireworkEffect(boolean, boolean, com.google.common.collect.ImmutableList<org.bukkit.Color>, com.google.common.collect.ImmutableList<org.bukkit.Color>, org.bukkit.FireworkEffect$Type);
+  public boolean hasFlicker();
+  public boolean hasTrail();
+  public java.util.List<org.bukkit.Color> getColors();
+  public java.util.List<org.bukkit.Color> getFadeColors();
+  public org.bukkit.FireworkEffect$Type getType();
+  public static org.bukkit.configuration.serialization.ConfigurationSerializable deserialize(java.util.Map<java.lang.String, java.lang.Object>);
+  public java.util.Map<java.lang.String, java.lang.Object> serialize();
+  public java.lang.String toString();
+  public int hashCode();
+  public boolean equals(java.lang.Object);
+}

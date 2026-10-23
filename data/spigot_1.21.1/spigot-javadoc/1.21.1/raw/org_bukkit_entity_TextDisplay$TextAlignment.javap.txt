@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public final class org.bukkit.entity.TextDisplay$TextAlignment extends java.lang.Enum<org.bukkit.entity.TextDisplay$TextAlignment> {
+  public static final org.bukkit.entity.TextDisplay$TextAlignment CENTER;
+  public static final org.bukkit.entity.TextDisplay$TextAlignment LEFT;
+  public static final org.bukkit.entity.TextDisplay$TextAlignment RIGHT;
+  public static org.bukkit.entity.TextDisplay$TextAlignment[] values();
+  public static org.bukkit.entity.TextDisplay$TextAlignment valueOf(java.lang.String);
+  static {};
+}

@@ -1,0 +1,12 @@
+Compiled from <spigot-api>
+public final class org.bukkit.event.player.PlayerBedEnterEvent$BedEnterResult extends java.lang.Enum<org.bukkit.event.player.PlayerBedEnterEvent$BedEnterResult> {
+  public static final org.bukkit.event.player.PlayerBedEnterEvent$BedEnterResult OK;
+  public static final org.bukkit.event.player.PlayerBedEnterEvent$BedEnterResult NOT_POSSIBLE_HERE;
+  public static final org.bukkit.event.player.PlayerBedEnterEvent$BedEnterResult NOT_POSSIBLE_NOW;
+  public static final org.bukkit.event.player.PlayerBedEnterEvent$BedEnterResult TOO_FAR_AWAY;
+  public static final org.bukkit.event.player.PlayerBedEnterEvent$BedEnterResult NOT_SAFE;
+  public static final org.bukkit.event.player.PlayerBedEnterEvent$BedEnterResult OTHER_PROBLEM;
+  static {};
+  public static org.bukkit.event.player.PlayerBedEnterEvent$BedEnterResult[] values();
+  public static org.bukkit.event.player.PlayerBedEnterEvent$BedEnterResult valueOf(java.lang.String);
+}

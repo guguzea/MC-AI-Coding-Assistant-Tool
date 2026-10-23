@@ -1,0 +1,11 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.inventory.InventoryEvent extends org.bukkit.event.Event {
+  protected org.bukkit.inventory.InventoryView transaction;
+  static {};
+  public org.bukkit.event.inventory.InventoryEvent(org.bukkit.inventory.InventoryView);
+  public org.bukkit.inventory.Inventory getInventory();
+  public java.util.List<org.bukkit.entity.HumanEntity> getViewers();
+  public org.bukkit.inventory.InventoryView getView();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+}

@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public final class org.bukkit.damage.DamageScaling extends java.lang.Enum<org.bukkit.damage.DamageScaling> {
+  public static final org.bukkit.damage.DamageScaling NEVER;
+  public static final org.bukkit.damage.DamageScaling WHEN_CAUSED_BY_LIVING_NON_PLAYER;
+  public static final org.bukkit.damage.DamageScaling ALWAYS;
+  public static org.bukkit.damage.DamageScaling[] values();
+  public static org.bukkit.damage.DamageScaling valueOf(java.lang.String);
+  static {};
+}

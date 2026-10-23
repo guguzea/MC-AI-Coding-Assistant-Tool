@@ -1,0 +1,14 @@
+Compiled from <spigot-api>
+public abstract class org.bukkit.material.TexturedMaterial extends org.bukkit.material.MaterialData {
+  public org.bukkit.material.TexturedMaterial(org.bukkit.Material);
+  public org.bukkit.material.TexturedMaterial(org.bukkit.Material, byte);
+  public abstract java.util.List<org.bukkit.Material> getTextures();
+  public org.bukkit.Material getMaterial();
+  public void setMaterial(org.bukkit.Material);
+  protected int getTextureIndex();
+  protected void setTextureIndex(int);
+  public java.lang.String toString();
+  public org.bukkit.material.TexturedMaterial clone();
+  public org.bukkit.material.MaterialData clone();
+  public java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+}

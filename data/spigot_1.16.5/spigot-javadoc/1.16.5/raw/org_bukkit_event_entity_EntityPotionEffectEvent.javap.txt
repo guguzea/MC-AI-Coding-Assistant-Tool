@@ -1,0 +1,16 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.entity.EntityPotionEffectEvent extends org.bukkit.event.entity.EntityEvent implements org.bukkit.event.Cancellable {
+  static {};
+  public org.bukkit.event.entity.EntityPotionEffectEvent(org.bukkit.entity.LivingEntity, org.bukkit.potion.PotionEffect, org.bukkit.potion.PotionEffect, org.bukkit.event.entity.EntityPotionEffectEvent$Cause, org.bukkit.event.entity.EntityPotionEffectEvent$Action, boolean);
+  public org.bukkit.potion.PotionEffect getOldEffect();
+  public org.bukkit.potion.PotionEffect getNewEffect();
+  public org.bukkit.event.entity.EntityPotionEffectEvent$Cause getCause();
+  public org.bukkit.event.entity.EntityPotionEffectEvent$Action getAction();
+  public org.bukkit.potion.PotionEffectType getModifiedType();
+  public boolean isOverride();
+  public void setOverride(boolean);
+  public boolean isCancelled();
+  public void setCancelled(boolean);
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+}

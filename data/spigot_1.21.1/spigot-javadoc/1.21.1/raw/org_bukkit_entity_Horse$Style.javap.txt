@@ -1,0 +1,11 @@
+Compiled from <spigot-api>
+public final class org.bukkit.entity.Horse$Style extends java.lang.Enum<org.bukkit.entity.Horse$Style> {
+  public static final org.bukkit.entity.Horse$Style NONE;
+  public static final org.bukkit.entity.Horse$Style WHITE;
+  public static final org.bukkit.entity.Horse$Style WHITEFIELD;
+  public static final org.bukkit.entity.Horse$Style WHITE_DOTS;
+  public static final org.bukkit.entity.Horse$Style BLACK_DOTS;
+  public static org.bukkit.entity.Horse$Style[] values();
+  public static org.bukkit.entity.Horse$Style valueOf(java.lang.String);
+  static {};
+}

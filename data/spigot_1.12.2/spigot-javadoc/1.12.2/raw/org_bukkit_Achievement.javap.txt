@@ -1,0 +1,42 @@
+Compiled from <spigot-api>
+public final class org.bukkit.Achievement extends java.lang.Enum<org.bukkit.Achievement> {
+  public static final org.bukkit.Achievement OPEN_INVENTORY;
+  public static final org.bukkit.Achievement MINE_WOOD;
+  public static final org.bukkit.Achievement BUILD_WORKBENCH;
+  public static final org.bukkit.Achievement BUILD_PICKAXE;
+  public static final org.bukkit.Achievement BUILD_FURNACE;
+  public static final org.bukkit.Achievement ACQUIRE_IRON;
+  public static final org.bukkit.Achievement BUILD_HOE;
+  public static final org.bukkit.Achievement MAKE_BREAD;
+  public static final org.bukkit.Achievement BAKE_CAKE;
+  public static final org.bukkit.Achievement BUILD_BETTER_PICKAXE;
+  public static final org.bukkit.Achievement COOK_FISH;
+  public static final org.bukkit.Achievement ON_A_RAIL;
+  public static final org.bukkit.Achievement BUILD_SWORD;
+  public static final org.bukkit.Achievement KILL_ENEMY;
+  public static final org.bukkit.Achievement KILL_COW;
+  public static final org.bukkit.Achievement FLY_PIG;
+  public static final org.bukkit.Achievement SNIPE_SKELETON;
+  public static final org.bukkit.Achievement GET_DIAMONDS;
+  public static final org.bukkit.Achievement NETHER_PORTAL;
+  public static final org.bukkit.Achievement GHAST_RETURN;
+  public static final org.bukkit.Achievement GET_BLAZE_ROD;
+  public static final org.bukkit.Achievement BREW_POTION;
+  public static final org.bukkit.Achievement END_PORTAL;
+  public static final org.bukkit.Achievement THE_END;
+  public static final org.bukkit.Achievement ENCHANTMENTS;
+  public static final org.bukkit.Achievement OVERKILL;
+  public static final org.bukkit.Achievement BOOKCASE;
+  public static final org.bukkit.Achievement EXPLORE_ALL_BIOMES;
+  public static final org.bukkit.Achievement SPAWN_WITHER;
+  public static final org.bukkit.Achievement KILL_WITHER;
+  public static final org.bukkit.Achievement FULL_BEACON;
+  public static final org.bukkit.Achievement BREED_COW;
+  public static final org.bukkit.Achievement DIAMONDS_TO_YOU;
+  public static final org.bukkit.Achievement OVERPOWERED;
+  static {};
+  public boolean hasParent();
+  public org.bukkit.Achievement getParent();
+  public static org.bukkit.Achievement[] values();
+  public static org.bukkit.Achievement valueOf(java.lang.String);
+}

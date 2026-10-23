@@ -1,0 +1,15 @@
+Compiled from <spigot-api>
+public interface org.bukkit.spawner.TrialSpawnerConfiguration extends org.bukkit.spawner.BaseSpawner {
+  public abstract float getBaseSpawnsBeforeCooldown();
+  public abstract void setBaseSpawnsBeforeCooldown(float);
+  public abstract float getBaseSimultaneousEntities();
+  public abstract void setBaseSimultaneousEntities(float);
+  public abstract float getAdditionalSpawnsBeforeCooldown();
+  public abstract void setAdditionalSpawnsBeforeCooldown(float);
+  public abstract float getAdditionalSimultaneousEntities();
+  public abstract void setAdditionalSimultaneousEntities(float);
+  public abstract java.util.Map<org.bukkit.loot.LootTable, java.lang.Integer> getPossibleRewards();
+  public abstract void addPossibleReward(org.bukkit.loot.LootTable, int);
+  public abstract void removePossibleReward(org.bukkit.loot.LootTable);
+  public abstract void setPossibleRewards(java.util.Map<org.bukkit.loot.LootTable, java.lang.Integer>);
+}

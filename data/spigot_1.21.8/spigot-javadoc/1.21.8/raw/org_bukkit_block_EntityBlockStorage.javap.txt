@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.EntityBlockStorage<T extends org.bukkit.entity.Entity> extends org.bukkit.block.TileState {
+  public abstract boolean isFull();
+  public abstract int getEntityCount();
+  public abstract int getMaxEntities();
+  public abstract void setMaxEntities(int);
+  public abstract java.util.List<T> releaseEntities();
+  public abstract void addEntity(T);
+}

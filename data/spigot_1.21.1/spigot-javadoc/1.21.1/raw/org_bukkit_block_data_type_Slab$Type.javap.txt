@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public final class org.bukkit.block.data.type.Slab$Type extends java.lang.Enum<org.bukkit.block.data.type.Slab$Type> {
+  public static final org.bukkit.block.data.type.Slab$Type TOP;
+  public static final org.bukkit.block.data.type.Slab$Type BOTTOM;
+  public static final org.bukkit.block.data.type.Slab$Type DOUBLE;
+  public static org.bukkit.block.data.type.Slab$Type[] values();
+  public static org.bukkit.block.data.type.Slab$Type valueOf(java.lang.String);
+  static {};
+}

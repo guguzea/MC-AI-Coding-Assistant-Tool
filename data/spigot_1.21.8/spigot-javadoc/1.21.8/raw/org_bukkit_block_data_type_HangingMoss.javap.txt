@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.data.type.HangingMoss extends org.bukkit.block.data.BlockData {
+  public abstract boolean isTip();
+  public abstract void setTip(boolean);
+}

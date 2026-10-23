@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public class org.bukkit.conversations.ConversationContext {
+  public org.bukkit.conversations.ConversationContext(org.bukkit.plugin.Plugin, org.bukkit.conversations.Conversable, java.util.Map<java.lang.Object, java.lang.Object>);
+  public org.bukkit.plugin.Plugin getPlugin();
+  public org.bukkit.conversations.Conversable getForWhom();
+  public java.util.Map<java.lang.Object, java.lang.Object> getAllSessionData();
+  public java.lang.Object getSessionData(java.lang.Object);
+  public void setSessionData(java.lang.Object, java.lang.Object);
+}

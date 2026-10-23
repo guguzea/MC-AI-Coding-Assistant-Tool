@@ -1,0 +1,3 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Turtle extends org.bukkit.entity.Animals {
+}

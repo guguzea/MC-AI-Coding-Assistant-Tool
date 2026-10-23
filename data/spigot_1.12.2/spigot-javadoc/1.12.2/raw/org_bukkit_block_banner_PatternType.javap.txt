@@ -1,0 +1,47 @@
+Compiled from <spigot-api>
+public final class org.bukkit.block.banner.PatternType extends java.lang.Enum<org.bukkit.block.banner.PatternType> {
+  public static final org.bukkit.block.banner.PatternType BASE;
+  public static final org.bukkit.block.banner.PatternType SQUARE_BOTTOM_LEFT;
+  public static final org.bukkit.block.banner.PatternType SQUARE_BOTTOM_RIGHT;
+  public static final org.bukkit.block.banner.PatternType SQUARE_TOP_LEFT;
+  public static final org.bukkit.block.banner.PatternType SQUARE_TOP_RIGHT;
+  public static final org.bukkit.block.banner.PatternType STRIPE_BOTTOM;
+  public static final org.bukkit.block.banner.PatternType STRIPE_TOP;
+  public static final org.bukkit.block.banner.PatternType STRIPE_LEFT;
+  public static final org.bukkit.block.banner.PatternType STRIPE_RIGHT;
+  public static final org.bukkit.block.banner.PatternType STRIPE_CENTER;
+  public static final org.bukkit.block.banner.PatternType STRIPE_MIDDLE;
+  public static final org.bukkit.block.banner.PatternType STRIPE_DOWNRIGHT;
+  public static final org.bukkit.block.banner.PatternType STRIPE_DOWNLEFT;
+  public static final org.bukkit.block.banner.PatternType STRIPE_SMALL;
+  public static final org.bukkit.block.banner.PatternType CROSS;
+  public static final org.bukkit.block.banner.PatternType STRAIGHT_CROSS;
+  public static final org.bukkit.block.banner.PatternType TRIANGLE_BOTTOM;
+  public static final org.bukkit.block.banner.PatternType TRIANGLE_TOP;
+  public static final org.bukkit.block.banner.PatternType TRIANGLES_BOTTOM;
+  public static final org.bukkit.block.banner.PatternType TRIANGLES_TOP;
+  public static final org.bukkit.block.banner.PatternType DIAGONAL_LEFT;
+  public static final org.bukkit.block.banner.PatternType DIAGONAL_RIGHT;
+  public static final org.bukkit.block.banner.PatternType DIAGONAL_LEFT_MIRROR;
+  public static final org.bukkit.block.banner.PatternType DIAGONAL_RIGHT_MIRROR;
+  public static final org.bukkit.block.banner.PatternType CIRCLE_MIDDLE;
+  public static final org.bukkit.block.banner.PatternType RHOMBUS_MIDDLE;
+  public static final org.bukkit.block.banner.PatternType HALF_VERTICAL;
+  public static final org.bukkit.block.banner.PatternType HALF_HORIZONTAL;
+  public static final org.bukkit.block.banner.PatternType HALF_VERTICAL_MIRROR;
+  public static final org.bukkit.block.banner.PatternType HALF_HORIZONTAL_MIRROR;
+  public static final org.bukkit.block.banner.PatternType BORDER;
+  public static final org.bukkit.block.banner.PatternType CURLY_BORDER;
+  public static final org.bukkit.block.banner.PatternType CREEPER;
+  public static final org.bukkit.block.banner.PatternType GRADIENT;
+  public static final org.bukkit.block.banner.PatternType GRADIENT_UP;
+  public static final org.bukkit.block.banner.PatternType BRICKS;
+  public static final org.bukkit.block.banner.PatternType SKULL;
+  public static final org.bukkit.block.banner.PatternType FLOWER;
+  public static final org.bukkit.block.banner.PatternType MOJANG;
+  static {};
+  public java.lang.String getIdentifier();
+  public static org.bukkit.block.banner.PatternType getByIdentifier(java.lang.String);
+  public static org.bukkit.block.banner.PatternType[] values();
+  public static org.bukkit.block.banner.PatternType valueOf(java.lang.String);
+}

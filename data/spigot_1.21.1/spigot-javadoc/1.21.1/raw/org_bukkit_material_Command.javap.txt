@@ -1,0 +1,12 @@
+Compiled from <spigot-api>
+public class org.bukkit.material.Command extends org.bukkit.material.MaterialData implements org.bukkit.material.Redstone {
+  public org.bukkit.material.Command();
+  public org.bukkit.material.Command(org.bukkit.Material);
+  public org.bukkit.material.Command(org.bukkit.Material, byte);
+  public boolean isPowered();
+  public void setPowered(boolean);
+  public java.lang.String toString();
+  public org.bukkit.material.Command clone();
+  public org.bukkit.material.MaterialData clone();
+  public java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+}

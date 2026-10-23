@@ -1,0 +1,13 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Item extends org.bukkit.entity.Entity {
+  public abstract org.bukkit.inventory.ItemStack getItemStack();
+  public abstract void setItemStack(org.bukkit.inventory.ItemStack);
+  public abstract int getPickupDelay();
+  public abstract void setPickupDelay(int);
+  public abstract void setUnlimitedLifetime(boolean);
+  public abstract boolean isUnlimitedLifetime();
+  public abstract void setOwner(java.util.UUID);
+  public abstract java.util.UUID getOwner();
+  public abstract void setThrower(java.util.UUID);
+  public abstract java.util.UUID getThrower();
+}

@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.block.BlockFadeEvent extends org.bukkit.event.block.BlockEvent implements org.bukkit.event.Cancellable {
+  public org.bukkit.event.block.BlockFadeEvent(org.bukkit.block.Block, org.bukkit.block.BlockState);
+  public org.bukkit.block.BlockState getNewState();
+  public boolean isCancelled();
+  public void setCancelled(boolean);
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  static {};
+}

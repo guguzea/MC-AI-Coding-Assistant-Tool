@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.ChestedHorse extends org.bukkit.entity.AbstractHorse {
+  public abstract boolean isCarryingChest();
+  public abstract void setCarryingChest(boolean);
+}

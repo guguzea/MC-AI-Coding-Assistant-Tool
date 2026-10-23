@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.SkeletonHorse extends org.bukkit.entity.AbstractHorse {
+  public abstract boolean isTrapped();
+  public abstract void setTrapped(boolean);
+  public abstract int getTrapTime();
+  public abstract void setTrapTime(int);
+}

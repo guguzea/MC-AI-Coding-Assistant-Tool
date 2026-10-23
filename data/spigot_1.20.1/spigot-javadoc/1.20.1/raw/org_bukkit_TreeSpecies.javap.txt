@@ -1,0 +1,14 @@
+Compiled from <spigot-api>
+public final class org.bukkit.TreeSpecies extends java.lang.Enum<org.bukkit.TreeSpecies> {
+  public static final org.bukkit.TreeSpecies GENERIC;
+  public static final org.bukkit.TreeSpecies REDWOOD;
+  public static final org.bukkit.TreeSpecies BIRCH;
+  public static final org.bukkit.TreeSpecies JUNGLE;
+  public static final org.bukkit.TreeSpecies ACACIA;
+  public static final org.bukkit.TreeSpecies DARK_OAK;
+  static {};
+  public byte getData();
+  public static org.bukkit.TreeSpecies getByData(byte);
+  public static org.bukkit.TreeSpecies[] values();
+  public static org.bukkit.TreeSpecies valueOf(java.lang.String);
+}

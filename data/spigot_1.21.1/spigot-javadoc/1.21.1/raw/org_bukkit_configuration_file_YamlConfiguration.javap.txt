@@ -1,0 +1,14 @@
+Compiled from <spigot-api>
+public class org.bukkit.configuration.file.YamlConfiguration extends org.bukkit.configuration.file.FileConfiguration {
+  protected static final java.lang.String COMMENT_PREFIX;
+  protected static final java.lang.String BLANK_CONFIG;
+  public org.bukkit.configuration.file.YamlConfiguration();
+  public java.lang.String saveToString();
+  public void loadFromString(java.lang.String) throws org.bukkit.configuration.InvalidConfigurationException;
+  public org.bukkit.configuration.file.YamlConfigurationOptions options();
+  public static org.bukkit.configuration.file.YamlConfiguration loadConfiguration(java.io.File);
+  public static org.bukkit.configuration.file.YamlConfiguration loadConfiguration(java.io.Reader);
+  public org.bukkit.configuration.file.FileConfigurationOptions options();
+  public org.bukkit.configuration.MemoryConfigurationOptions options();
+  public org.bukkit.configuration.ConfigurationOptions options();
+}

@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public class org.bukkit.conversations.NullConversationPrefix implements org.bukkit.conversations.ConversationPrefix {
+  public org.bukkit.conversations.NullConversationPrefix();
+  public java.lang.String getPrefix(org.bukkit.conversations.ConversationContext);
+}

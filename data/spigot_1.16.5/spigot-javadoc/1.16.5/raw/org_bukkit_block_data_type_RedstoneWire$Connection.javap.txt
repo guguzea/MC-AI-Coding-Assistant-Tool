@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public final class org.bukkit.block.data.type.RedstoneWire$Connection extends java.lang.Enum<org.bukkit.block.data.type.RedstoneWire$Connection> {
+  public static final org.bukkit.block.data.type.RedstoneWire$Connection UP;
+  public static final org.bukkit.block.data.type.RedstoneWire$Connection SIDE;
+  public static final org.bukkit.block.data.type.RedstoneWire$Connection NONE;
+  static {};
+  public static org.bukkit.block.data.type.RedstoneWire$Connection[] values();
+  public static org.bukkit.block.data.type.RedstoneWire$Connection valueOf(java.lang.String);
+}

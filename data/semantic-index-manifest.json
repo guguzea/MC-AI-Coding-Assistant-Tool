@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-10-23T09:59:24.724Z",
+  "built_at": "2026-10-23T15:59:51.436Z",
   "embedMode": "hybrid",
   "entries": [
     {
@@ -829,6 +829,102 @@
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
       "sha256": "2f1773b71b82ef8e3db12416066832d30fef70432a8a057e428a5a8b0ffb3517"
+    },
+    {
+      "platform": "spigot",
+      "version": "1.12.2",
+      "source": "spigot-javadoc",
+      "path": "spigot_1.12.2/spigot-javadoc/1.12.2/semantic/db.sqlite",
+      "chunks": 967,
+      "embedded": 816,
+      "built_at": "2026-10-23T15:36:44.997Z",
+      "model": "Xenova/all-MiniLM-L6-v2",
+      "schemaVersion": "1",
+      "sha256": "5038b6d16c80c45bdc908fd8bfb88a7fe458e7e078fbac1af71c55b294b62a7d"
+    },
+    {
+      "platform": "spigot",
+      "version": "1.16.5",
+      "source": "spigot-javadoc",
+      "path": "spigot_1.16.5/spigot-javadoc/1.16.5/semantic/db.sqlite",
+      "chunks": 1332,
+      "embedded": 1108,
+      "built_at": "2026-10-23T15:40:12.396Z",
+      "model": "Xenova/all-MiniLM-L6-v2",
+      "schemaVersion": "1",
+      "sha256": "05931ea0233f8f5d34a21106c83d011e4cf29d8c4b8e49e4fb1c9325f879d7a8"
+    },
+    {
+      "platform": "spigot",
+      "version": "1.19.4",
+      "source": "spigot-javadoc",
+      "path": "spigot_1.19.4/spigot-javadoc/1.19.4/semantic/db.sqlite",
+      "chunks": 1558,
+      "embedded": 1309,
+      "built_at": "2026-10-23T15:57:31.551Z",
+      "model": "Xenova/all-MiniLM-L6-v2",
+      "schemaVersion": "1",
+      "sha256": "e524dbd42190a37f9864fadf993014e77a4852f6bdb9b98e1c560061256f154b"
+    },
+    {
+      "platform": "spigot",
+      "version": "1.20.1",
+      "source": "spigot-javadoc",
+      "path": "spigot_1.20.1/spigot-javadoc/1.20.1/semantic/db.sqlite",
+      "chunks": 1576,
+      "embedded": 1320,
+      "built_at": "2026-10-23T15:39:36.533Z",
+      "model": "Xenova/all-MiniLM-L6-v2",
+      "schemaVersion": "1",
+      "sha256": "a66904c543b5f0725d64f4e89def363fcbcbaf4d679aa2542854158a2ce2a6ea"
+    },
+    {
+      "platform": "spigot",
+      "version": "1.20.6",
+      "source": "spigot-javadoc",
+      "path": "spigot_1.20.6/spigot-javadoc/1.20.6/semantic/db.sqlite",
+      "chunks": 1982,
+      "embedded": 1713,
+      "built_at": "2026-10-23T15:58:37.807Z",
+      "model": "Xenova/all-MiniLM-L6-v2",
+      "schemaVersion": "1",
+      "sha256": "aacc328d98d10d904407bb04daa3f683abb270cc9575ebd6617dcb2fb36100eb"
+    },
+    {
+      "platform": "spigot",
+      "version": "1.21.1",
+      "source": "spigot-javadoc",
+      "path": "spigot_1.21.1/spigot-javadoc/1.21.1/semantic/db.sqlite",
+      "chunks": 2028,
+      "embedded": 1752,
+      "built_at": "2026-10-23T15:38:51.223Z",
+      "model": "Xenova/all-MiniLM-L6-v2",
+      "schemaVersion": "1",
+      "sha256": "68b3a853b4652719c13e0a54c492effbbe10c95d33668ab55b353b8c9127bade"
+    },
+    {
+      "platform": "spigot",
+      "version": "1.21.4",
+      "source": "spigot-javadoc",
+      "path": "spigot_1.21.4/spigot-javadoc/1.21.4/semantic/db.sqlite",
+      "chunks": 2194,
+      "embedded": 1888,
+      "built_at": "2026-10-23T15:37:53.520Z",
+      "model": "Xenova/all-MiniLM-L6-v2",
+      "schemaVersion": "1",
+      "sha256": "c7c20a7aa1550ea3e9a78825a92b70ecb452a8a38adbb6753a209b55415b6e71"
+    },
+    {
+      "platform": "spigot",
+      "version": "1.21.8",
+      "source": "spigot-javadoc",
+      "path": "spigot_1.21.8/spigot-javadoc/1.21.8/semantic/db.sqlite",
+      "chunks": 2230,
+      "embedded": 1925,
+      "built_at": "2026-10-23T15:59:51.415Z",
+      "model": "Xenova/all-MiniLM-L6-v2",
+      "schemaVersion": "1",
+      "sha256": "40c18a69763f48dab39263b1b7ffa531237a0c64fa086251d23ba1735bc71631"
     },
     {
       "platform": "spigot",

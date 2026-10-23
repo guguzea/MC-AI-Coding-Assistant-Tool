@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public interface org.bukkit.scheduler.BukkitWorker {
+  public abstract int getTaskId();
+  public abstract org.bukkit.plugin.Plugin getOwner();
+  public abstract java.lang.Thread getThread();
+}

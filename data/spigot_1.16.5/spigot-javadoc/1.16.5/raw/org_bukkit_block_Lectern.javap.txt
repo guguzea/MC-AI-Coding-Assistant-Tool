@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.Lectern extends org.bukkit.block.TileState,org.bukkit.inventory.BlockInventoryHolder {
+  public abstract int getPage();
+  public abstract void setPage(int);
+  public abstract org.bukkit.inventory.Inventory getInventory();
+  public abstract org.bukkit.inventory.Inventory getSnapshotInventory();
+}

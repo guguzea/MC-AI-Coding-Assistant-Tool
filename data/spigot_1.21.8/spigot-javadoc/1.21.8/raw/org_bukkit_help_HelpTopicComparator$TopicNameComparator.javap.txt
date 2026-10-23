@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public final class org.bukkit.help.HelpTopicComparator$TopicNameComparator implements java.util.Comparator<java.lang.String> {
+  public int compare(java.lang.String, java.lang.String);
+  public int compare(java.lang.Object, java.lang.Object);
+}

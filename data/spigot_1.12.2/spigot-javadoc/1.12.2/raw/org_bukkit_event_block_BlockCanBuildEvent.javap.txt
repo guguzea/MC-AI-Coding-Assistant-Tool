@@ -1,0 +1,13 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.block.BlockCanBuildEvent extends org.bukkit.event.block.BlockEvent {
+  protected boolean buildable;
+  protected int material;
+  static {};
+  public org.bukkit.event.block.BlockCanBuildEvent(org.bukkit.block.Block, int, boolean);
+  public boolean isBuildable();
+  public void setBuildable(boolean);
+  public org.bukkit.Material getMaterial();
+  public int getMaterialId();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+}

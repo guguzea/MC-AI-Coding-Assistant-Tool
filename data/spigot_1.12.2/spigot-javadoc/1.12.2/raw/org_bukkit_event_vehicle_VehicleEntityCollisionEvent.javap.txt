@@ -1,0 +1,14 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.vehicle.VehicleEntityCollisionEvent extends org.bukkit.event.vehicle.VehicleCollisionEvent implements org.bukkit.event.Cancellable {
+  static {};
+  public org.bukkit.event.vehicle.VehicleEntityCollisionEvent(org.bukkit.entity.Vehicle, org.bukkit.entity.Entity);
+  public org.bukkit.entity.Entity getEntity();
+  public boolean isCancelled();
+  public void setCancelled(boolean);
+  public boolean isPickupCancelled();
+  public void setPickupCancelled(boolean);
+  public boolean isCollisionCancelled();
+  public void setCollisionCancelled(boolean);
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+}

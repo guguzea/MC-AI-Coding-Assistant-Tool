@@ -1,0 +1,11 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.meta.Damageable extends org.bukkit.inventory.meta.ItemMeta {
+  public abstract boolean hasDamage();
+  public abstract int getDamage();
+  public abstract void setDamage(int);
+  public abstract boolean hasMaxDamage();
+  public abstract int getMaxDamage();
+  public abstract void setMaxDamage(java.lang.Integer);
+  public abstract org.bukkit.inventory.meta.Damageable clone();
+  public default org.bukkit.inventory.meta.ItemMeta clone();
+}

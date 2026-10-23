@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.FishHook extends org.bukkit.entity.Projectile {
+  public abstract double getBiteChance();
+  public abstract void setBiteChance(double) throws java.lang.IllegalArgumentException;
+}

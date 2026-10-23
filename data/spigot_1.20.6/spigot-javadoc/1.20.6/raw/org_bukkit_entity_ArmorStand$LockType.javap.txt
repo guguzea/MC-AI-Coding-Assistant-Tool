@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public final class org.bukkit.entity.ArmorStand$LockType extends java.lang.Enum<org.bukkit.entity.ArmorStand$LockType> {
+  public static final org.bukkit.entity.ArmorStand$LockType ADDING_OR_CHANGING;
+  public static final org.bukkit.entity.ArmorStand$LockType REMOVING_OR_CHANGING;
+  public static final org.bukkit.entity.ArmorStand$LockType ADDING;
+  public static org.bukkit.entity.ArmorStand$LockType[] values();
+  public static org.bukkit.entity.ArmorStand$LockType valueOf(java.lang.String);
+  static {};
+}

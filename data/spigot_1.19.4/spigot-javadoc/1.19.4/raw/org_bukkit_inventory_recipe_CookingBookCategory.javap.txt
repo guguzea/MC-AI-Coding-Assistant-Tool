@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public final class org.bukkit.inventory.recipe.CookingBookCategory extends java.lang.Enum<org.bukkit.inventory.recipe.CookingBookCategory> {
+  public static final org.bukkit.inventory.recipe.CookingBookCategory FOOD;
+  public static final org.bukkit.inventory.recipe.CookingBookCategory BLOCKS;
+  public static final org.bukkit.inventory.recipe.CookingBookCategory MISC;
+  static {};
+  public static org.bukkit.inventory.recipe.CookingBookCategory[] values();
+  public static org.bukkit.inventory.recipe.CookingBookCategory valueOf(java.lang.String);
+}

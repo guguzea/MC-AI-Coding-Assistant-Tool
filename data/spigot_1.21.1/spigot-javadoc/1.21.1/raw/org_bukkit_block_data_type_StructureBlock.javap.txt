@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.data.type.StructureBlock extends org.bukkit.block.data.BlockData {
+  public abstract org.bukkit.block.data.type.StructureBlock$Mode getMode();
+  public abstract void setMode(org.bukkit.block.data.type.StructureBlock$Mode);
+}

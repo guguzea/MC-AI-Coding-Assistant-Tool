@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.entity.EntityPortalEnterEvent extends org.bukkit.event.entity.EntityEvent {
+  public org.bukkit.event.entity.EntityPortalEnterEvent(org.bukkit.entity.Entity, org.bukkit.Location);
+  public org.bukkit.Location getLocation();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  static {};
+}

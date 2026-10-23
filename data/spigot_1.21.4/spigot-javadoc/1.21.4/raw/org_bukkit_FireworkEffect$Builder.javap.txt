@@ -1,0 +1,21 @@
+Compiled from <spigot-api>
+public final class org.bukkit.FireworkEffect$Builder {
+  boolean flicker;
+  boolean trail;
+  final com.google.common.collect.ImmutableList$Builder<org.bukkit.Color> colors;
+  com.google.common.collect.ImmutableList$Builder<org.bukkit.Color> fadeColors;
+  org.bukkit.FireworkEffect$Type type;
+  org.bukkit.FireworkEffect$Builder();
+  public org.bukkit.FireworkEffect$Builder with(org.bukkit.FireworkEffect$Type) throws java.lang.IllegalArgumentException;
+  public org.bukkit.FireworkEffect$Builder withFlicker();
+  public org.bukkit.FireworkEffect$Builder flicker(boolean);
+  public org.bukkit.FireworkEffect$Builder withTrail();
+  public org.bukkit.FireworkEffect$Builder trail(boolean);
+  public org.bukkit.FireworkEffect$Builder withColor(org.bukkit.Color) throws java.lang.IllegalArgumentException;
+  public org.bukkit.FireworkEffect$Builder withColor(org.bukkit.Color...) throws java.lang.IllegalArgumentException;
+  public org.bukkit.FireworkEffect$Builder withColor(java.lang.Iterable<?>) throws java.lang.IllegalArgumentException;
+  public org.bukkit.FireworkEffect$Builder withFade(org.bukkit.Color) throws java.lang.IllegalArgumentException;
+  public org.bukkit.FireworkEffect$Builder withFade(org.bukkit.Color...) throws java.lang.IllegalArgumentException;
+  public org.bukkit.FireworkEffect$Builder withFade(java.lang.Iterable<?>) throws java.lang.IllegalArgumentException;
+  public org.bukkit.FireworkEffect build();
+}

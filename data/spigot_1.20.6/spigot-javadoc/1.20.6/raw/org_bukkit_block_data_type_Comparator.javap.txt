@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.data.type.Comparator extends org.bukkit.block.data.Directional,org.bukkit.block.data.Powerable {
+  public abstract org.bukkit.block.data.type.Comparator$Mode getMode();
+  public abstract void setMode(org.bukkit.block.data.type.Comparator$Mode);
+}

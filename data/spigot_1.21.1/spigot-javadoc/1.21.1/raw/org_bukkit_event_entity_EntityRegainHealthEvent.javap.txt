@@ -1,0 +1,12 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.entity.EntityRegainHealthEvent extends org.bukkit.event.entity.EntityEvent implements org.bukkit.event.Cancellable {
+  public org.bukkit.event.entity.EntityRegainHealthEvent(org.bukkit.entity.Entity, double, org.bukkit.event.entity.EntityRegainHealthEvent$RegainReason);
+  public double getAmount();
+  public void setAmount(double);
+  public boolean isCancelled();
+  public void setCancelled(boolean);
+  public org.bukkit.event.entity.EntityRegainHealthEvent$RegainReason getRegainReason();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  static {};
+}

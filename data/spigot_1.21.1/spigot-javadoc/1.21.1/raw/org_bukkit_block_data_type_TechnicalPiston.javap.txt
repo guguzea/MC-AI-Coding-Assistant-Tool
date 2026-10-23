@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.data.type.TechnicalPiston extends org.bukkit.block.data.Directional {
+  public abstract org.bukkit.block.data.type.TechnicalPiston$Type getType();
+  public abstract void setType(org.bukkit.block.data.type.TechnicalPiston$Type);
+}

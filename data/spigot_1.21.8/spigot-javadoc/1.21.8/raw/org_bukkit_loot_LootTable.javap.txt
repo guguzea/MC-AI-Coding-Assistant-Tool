@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.loot.LootTable extends org.bukkit.Keyed {
+  public abstract java.util.Collection<org.bukkit.inventory.ItemStack> populateLoot(java.util.Random, org.bukkit.loot.LootContext);
+  public abstract void fillInventory(org.bukkit.inventory.Inventory, java.util.Random, org.bukkit.loot.LootContext);
+}

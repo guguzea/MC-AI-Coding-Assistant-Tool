@@ -355,6 +355,31 @@
       "files": 1396,
       "allowedStubs": 0,
       "medianFloor": 215
+    },
+    "spigot_1.12.2/spigot-javadoc/1.12.2": {
+      "files": 779,
+      "allowedStubs": 0,
+      "medianFloor": 313
+    },
+    "spigot_1.16.5/spigot-javadoc/1.16.5": {
+      "files": 1027,
+      "allowedStubs": 0,
+      "medianFloor": 297
+    },
+    "spigot_1.20.1/spigot-javadoc/1.20.1": {
+      "files": 1186,
+      "allowedStubs": 0,
+      "medianFloor": 297
+    },
+    "spigot_1.21.1/spigot-javadoc/1.21.1": {
+      "files": 1282,
+      "allowedStubs": 0,
+      "medianFloor": 293
+    },
+    "spigot_1.21.4/spigot-javadoc/1.21.4": {
+      "files": 1335,
+      "allowedStubs": 0,
+      "medianFloor": 289
     }
   }
 }

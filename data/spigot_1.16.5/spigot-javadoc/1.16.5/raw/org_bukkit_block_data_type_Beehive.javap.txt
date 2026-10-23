@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.data.type.Beehive extends org.bukkit.block.data.Directional {
+  public abstract int getHoneyLevel();
+  public abstract void setHoneyLevel(int);
+  public abstract int getMaximumHoneyLevel();
+}

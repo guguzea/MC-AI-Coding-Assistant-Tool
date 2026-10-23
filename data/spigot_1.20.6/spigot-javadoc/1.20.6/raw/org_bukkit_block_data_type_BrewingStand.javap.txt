@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.data.type.BrewingStand extends org.bukkit.block.data.BlockData {
+  public abstract boolean hasBottle(int);
+  public abstract void setBottle(int, boolean);
+  public abstract java.util.Set<java.lang.Integer> getBottles();
+  public abstract int getMaximumBottles();
+}

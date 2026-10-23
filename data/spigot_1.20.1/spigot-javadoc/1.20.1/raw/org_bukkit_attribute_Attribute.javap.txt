@@ -1,0 +1,20 @@
+Compiled from <spigot-api>
+public final class org.bukkit.attribute.Attribute extends java.lang.Enum<org.bukkit.attribute.Attribute> implements org.bukkit.Keyed {
+  public static final org.bukkit.attribute.Attribute GENERIC_MAX_HEALTH;
+  public static final org.bukkit.attribute.Attribute GENERIC_FOLLOW_RANGE;
+  public static final org.bukkit.attribute.Attribute GENERIC_KNOCKBACK_RESISTANCE;
+  public static final org.bukkit.attribute.Attribute GENERIC_MOVEMENT_SPEED;
+  public static final org.bukkit.attribute.Attribute GENERIC_FLYING_SPEED;
+  public static final org.bukkit.attribute.Attribute GENERIC_ATTACK_DAMAGE;
+  public static final org.bukkit.attribute.Attribute GENERIC_ATTACK_KNOCKBACK;
+  public static final org.bukkit.attribute.Attribute GENERIC_ATTACK_SPEED;
+  public static final org.bukkit.attribute.Attribute GENERIC_ARMOR;
+  public static final org.bukkit.attribute.Attribute GENERIC_ARMOR_TOUGHNESS;
+  public static final org.bukkit.attribute.Attribute GENERIC_LUCK;
+  public static final org.bukkit.attribute.Attribute HORSE_JUMP_STRENGTH;
+  public static final org.bukkit.attribute.Attribute ZOMBIE_SPAWN_REINFORCEMENTS;
+  static {};
+  public org.bukkit.NamespacedKey getKey();
+  public static org.bukkit.attribute.Attribute[] values();
+  public static org.bukkit.attribute.Attribute valueOf(java.lang.String);
+}

@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Creaking extends org.bukkit.entity.Monster {
+  public abstract org.bukkit.Location getHome();
+  public abstract void setHome(org.bukkit.Location);
+  public abstract void activate(org.bukkit.entity.Player);
+  public abstract void deactivate();
+  public abstract boolean isActive();
+}

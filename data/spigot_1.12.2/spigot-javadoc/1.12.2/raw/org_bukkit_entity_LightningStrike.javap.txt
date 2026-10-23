@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.LightningStrike extends org.bukkit.entity.Weather {
+  public abstract boolean isEffect();
+  public abstract org.bukkit.entity.LightningStrike$Spigot spigot();
+}

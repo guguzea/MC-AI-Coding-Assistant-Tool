@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public final class org.bukkit.Raid$RaidStatus extends java.lang.Enum<org.bukkit.Raid$RaidStatus> {
+  public static final org.bukkit.Raid$RaidStatus ONGOING;
+  public static final org.bukkit.Raid$RaidStatus VICTORY;
+  public static final org.bukkit.Raid$RaidStatus LOSS;
+  public static final org.bukkit.Raid$RaidStatus STOPPED;
+  static {};
+  public static org.bukkit.Raid$RaidStatus[] values();
+  public static org.bukkit.Raid$RaidStatus valueOf(java.lang.String);
+}

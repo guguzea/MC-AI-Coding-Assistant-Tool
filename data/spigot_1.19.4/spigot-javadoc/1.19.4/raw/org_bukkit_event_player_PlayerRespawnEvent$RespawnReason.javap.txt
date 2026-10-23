@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public final class org.bukkit.event.player.PlayerRespawnEvent$RespawnReason extends java.lang.Enum<org.bukkit.event.player.PlayerRespawnEvent$RespawnReason> {
+  public static final org.bukkit.event.player.PlayerRespawnEvent$RespawnReason DEATH;
+  public static final org.bukkit.event.player.PlayerRespawnEvent$RespawnReason END_PORTAL;
+  public static final org.bukkit.event.player.PlayerRespawnEvent$RespawnReason PLUGIN;
+  static {};
+  public static org.bukkit.event.player.PlayerRespawnEvent$RespawnReason[] values();
+  public static org.bukkit.event.player.PlayerRespawnEvent$RespawnReason valueOf(java.lang.String);
+}

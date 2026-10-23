@@ -1,0 +1,13 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.inventory.TradeSelectEvent extends org.bukkit.event.inventory.InventoryInteractEvent {
+  public org.bukkit.event.inventory.TradeSelectEvent(org.bukkit.inventory.view.MerchantView, int);
+  public int getIndex();
+  public org.bukkit.inventory.MerchantInventory getInventory();
+  public org.bukkit.inventory.Merchant getMerchant();
+  public org.bukkit.inventory.view.MerchantView getView();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  public org.bukkit.inventory.InventoryView getView();
+  public org.bukkit.inventory.Inventory getInventory();
+  static {};
+}

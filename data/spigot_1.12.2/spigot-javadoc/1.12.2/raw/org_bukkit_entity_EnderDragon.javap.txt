@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.EnderDragon extends org.bukkit.entity.ComplexLivingEntity {
+  public abstract org.bukkit.entity.EnderDragon$Phase getPhase();
+  public abstract void setPhase(org.bukkit.entity.EnderDragon$Phase);
+}

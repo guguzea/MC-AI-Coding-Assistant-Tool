@@ -1,0 +1,176 @@
+---
+title: "org.bukkit.Server"
+package: "org.bukkit"
+source: https://repo.papermc.io/repository/maven-public/org/spigotmc/spigot-api/1.21.4-R0.1-SNAPSHOT/spigot-api-1.21.4-R0.1-20250325.160956-56.jar
+sourceType: javap
+fetchedWith: extract-spigot-api-surface.mjs@1
+fetchedAt: 2026-10-23T15:30:34.551Z
+asOfVersion: "1.21.4-R0.1-SNAPSHOT"
+jarMd5: "6ce70a28800bf30e68da45b12871f1f2"
+---
+
+- `public interface org.bukkit.Server extends org.bukkit.plugin.messaging.PluginMessageRecipient`
+- `public static final java.lang.String BROADCAST_CHANNEL_ADMINISTRATIVE`
+- `public static final java.lang.String BROADCAST_CHANNEL_USERS`
+- `public abstract java.lang.String getName()`
+- `public abstract java.lang.String getVersion()`
+- `public abstract java.lang.String getBukkitVersion()`
+- `public abstract java.util.Collection<? extends org.bukkit.entity.Player> getOnlinePlayers()`
+- `public abstract int getMaxPlayers()`
+- `public abstract void setMaxPlayers(int)`
+- `public abstract int getPort()`
+- `public abstract int getViewDistance()`
+- `public abstract int getSimulationDistance()`
+- `public abstract java.lang.String getIp()`
+- `public abstract java.lang.String getWorldType()`
+- `public abstract boolean getGenerateStructures()`
+- `public abstract int getMaxWorldSize()`
+- `public abstract boolean getAllowEnd()`
+- `public abstract boolean getAllowNether()`
+- `public abstract boolean isLoggingIPs()`
+- `public abstract java.util.List<java.lang.String> getInitialEnabledPacks()`
+- `public abstract java.util.List<java.lang.String> getInitialDisabledPacks()`
+- `public abstract org.bukkit.packs.DataPackManager getDataPackManager()`
+- `public abstract org.bukkit.ServerTickManager getServerTickManager()`
+- `public abstract org.bukkit.packs.ResourcePack getServerResourcePack()`
+- `public abstract java.lang.String getResourcePack()`
+- `public abstract java.lang.String getResourcePackHash()`
+- `public abstract java.lang.String getResourcePackPrompt()`
+- `public abstract boolean isResourcePackRequired()`
+- `public abstract boolean hasWhitelist()`
+- `public abstract void setWhitelist(boolean)`
+- `public abstract boolean isWhitelistEnforced()`
+- `public abstract void setWhitelistEnforced(boolean)`
+- `public abstract java.util.Set<org.bukkit.OfflinePlayer> getWhitelistedPlayers()`
+- `public abstract void reloadWhitelist()`
+- `public abstract int broadcastMessage(java.lang.String)`
+- `public abstract java.lang.String getUpdateFolder()`
+- `public abstract java.io.File getUpdateFolderFile()`
+- `public abstract long getConnectionThrottle()`
+- `public abstract int getTicksPerAnimalSpawns()`
+- `public abstract int getTicksPerMonsterSpawns()`
+- `public abstract int getTicksPerWaterSpawns()`
+- `public abstract int getTicksPerWaterAmbientSpawns()`
+- `public abstract int getTicksPerWaterUndergroundCreatureSpawns()`
+- `public abstract int getTicksPerAmbientSpawns()`
+- `public abstract int getTicksPerSpawns(org.bukkit.entity.SpawnCategory)`
+- `public abstract org.bukkit.entity.Player getPlayer(java.lang.String)`
+- `public abstract org.bukkit.entity.Player getPlayerExact(java.lang.String)`
+- `public abstract java.util.List<org.bukkit.entity.Player> matchPlayer(java.lang.String)`
+- `public abstract org.bukkit.entity.Player getPlayer(java.util.UUID)`
+- `public abstract org.bukkit.plugin.PluginManager getPluginManager()`
+- `public abstract org.bukkit.scheduler.BukkitScheduler getScheduler()`
+- `public abstract org.bukkit.plugin.ServicesManager getServicesManager()`
+- `public abstract java.util.List<org.bukkit.World> getWorlds()`
+- `public abstract org.bukkit.World createWorld(org.bukkit.WorldCreator)`
+- `public abstract boolean unloadWorld(java.lang.String, boolean)`
+- `public abstract boolean unloadWorld(org.bukkit.World, boolean)`
+- `public abstract org.bukkit.World getWorld(java.lang.String)`
+- `public abstract org.bukkit.World getWorld(java.util.UUID)`
+- `public abstract org.bukkit.WorldBorder createWorldBorder()`
+- `public abstract org.bukkit.map.MapView getMap(int)`
+- `public abstract org.bukkit.map.MapView createMap(org.bukkit.World)`
+- `public abstract org.bukkit.inventory.ItemStack createExplorerMap(org.bukkit.World, org.bukkit.Location, org.bukkit.StructureType)`
+- `public abstract org.bukkit.inventory.ItemStack createExplorerMap(org.bukkit.World, org.bukkit.Location, org.bukkit.StructureType, int, boolean)`
+- `public abstract void reload()`
+- `public abstract void reloadData()`
+- `public abstract java.util.logging.Logger getLogger()`
+- `public abstract org.bukkit.command.PluginCommand getPluginCommand(java.lang.String)`
+- `public abstract void savePlayers()`
+- `public abstract boolean dispatchCommand(org.bukkit.command.CommandSender, java.lang.String) throws org.bukkit.command.CommandException`
+- `public abstract boolean addRecipe(org.bukkit.inventory.Recipe)`
+- `public abstract java.util.List<org.bukkit.inventory.Recipe> getRecipesFor(org.bukkit.inventory.ItemStack)`
+- `public abstract org.bukkit.inventory.Recipe getRecipe(org.bukkit.NamespacedKey)`
+- `public abstract org.bukkit.inventory.Recipe getCraftingRecipe(org.bukkit.inventory.ItemStack[], org.bukkit.World)`
+- `public abstract org.bukkit.inventory.ItemStack craftItem(org.bukkit.inventory.ItemStack[], org.bukkit.World, org.bukkit.entity.Player)`
+- `public abstract org.bukkit.inventory.ItemStack craftItem(org.bukkit.inventory.ItemStack[], org.bukkit.World)`
+- `public abstract org.bukkit.inventory.ItemCraftResult craftItemResult(org.bukkit.inventory.ItemStack[], org.bukkit.World, org.bukkit.entity.Player)`
+- `public abstract org.bukkit.inventory.ItemCraftResult craftItemResult(org.bukkit.inventory.ItemStack[], org.bukkit.World)`
+- `public abstract java.util.Iterator<org.bukkit.inventory.Recipe> recipeIterator()`
+- `public abstract void clearRecipes()`
+- `public abstract void resetRecipes()`
+- `public abstract boolean removeRecipe(org.bukkit.NamespacedKey)`
+- `public abstract java.util.Map<java.lang.String, java.lang.String[]> getCommandAliases()`
+- `public abstract int getSpawnRadius()`
+- `public abstract void setSpawnRadius(int)`
+- `public abstract boolean shouldSendChatPreviews()`
+- `public abstract boolean isEnforcingSecureProfiles()`
+- `public abstract boolean isAcceptingTransfers()`
+- `public abstract boolean getHideOnlinePlayers()`
+- `public abstract boolean getOnlineMode()`
+- `public abstract boolean getAllowFlight()`
+- `public abstract boolean isHardcore()`
+- `public abstract void shutdown()`
+- `public abstract int broadcast(java.lang.String, java.lang.String)`
+- `public abstract org.bukkit.OfflinePlayer getOfflinePlayer(java.lang.String)`
+- `public abstract org.bukkit.OfflinePlayer getOfflinePlayer(java.util.UUID)`
+- `public abstract org.bukkit.profile.PlayerProfile createPlayerProfile(java.util.UUID, java.lang.String)`
+- `public abstract org.bukkit.profile.PlayerProfile createPlayerProfile(java.util.UUID)`
+- `public abstract org.bukkit.profile.PlayerProfile createPlayerProfile(java.lang.String)`
+- `public abstract java.util.Set<java.lang.String> getIPBans()`
+- `public abstract void banIP(java.lang.String)`
+- `public abstract void unbanIP(java.lang.String)`
+- `public abstract void banIP(java.net.InetAddress)`
+- `public abstract void unbanIP(java.net.InetAddress)`
+- `public abstract java.util.Set<org.bukkit.OfflinePlayer> getBannedPlayers()`
+- `public abstract <T extends org.bukkit.BanList<?>> T getBanList(org.bukkit.BanList$Type)`
+- `public abstract java.util.Set<org.bukkit.OfflinePlayer> getOperators()`
+- `public abstract org.bukkit.GameMode getDefaultGameMode()`
+- `public abstract void setDefaultGameMode(org.bukkit.GameMode)`
+- `public abstract org.bukkit.command.ConsoleCommandSender getConsoleSender()`
+- `public abstract java.io.File getWorldContainer()`
+- `public abstract org.bukkit.OfflinePlayer[] getOfflinePlayers()`
+- `public abstract org.bukkit.plugin.messaging.Messenger getMessenger()`
+- `public abstract org.bukkit.help.HelpMap getHelpMap()`
+- `public abstract org.bukkit.inventory.Inventory createInventory(org.bukkit.inventory.InventoryHolder, org.bukkit.event.inventory.InventoryType)`
+- `public abstract org.bukkit.inventory.Inventory createInventory(org.bukkit.inventory.InventoryHolder, org.bukkit.event.inventory.InventoryType, java.lang.String)`
+- `public abstract org.bukkit.inventory.Inventory createInventory(org.bukkit.inventory.InventoryHolder, int) throws java.lang.IllegalArgumentException`
+- `public abstract org.bukkit.inventory.Inventory createInventory(org.bukkit.inventory.InventoryHolder, int, java.lang.String) throws java.lang.IllegalArgumentException`
+- `public abstract org.bukkit.inventory.Merchant createMerchant(java.lang.String)`
+- `public abstract org.bukkit.inventory.Merchant createMerchant()`
+- `public abstract int getMaxChainedNeighborUpdates()`
+- `public abstract int getMonsterSpawnLimit()`
+- `public abstract int getAnimalSpawnLimit()`
+- `public abstract int getWaterAnimalSpawnLimit()`
+- `public abstract int getWaterAmbientSpawnLimit()`
+- `public abstract int getWaterUndergroundCreatureSpawnLimit()`
+- `public abstract int getAmbientSpawnLimit()`
+- `public abstract int getSpawnLimit(org.bukkit.entity.SpawnCategory)`
+- `public abstract boolean isPrimaryThread()`
+- `public abstract java.lang.String getMotd()`
+- `public abstract void setMotd(java.lang.String)`
+- `public abstract org.bukkit.ServerLinks getServerLinks()`
+- `public abstract java.lang.String getShutdownMessage()`
+- `public abstract org.bukkit.Warning$WarningState getWarningState()`
+- `public abstract org.bukkit.inventory.ItemFactory getItemFactory()`
+- `public abstract org.bukkit.entity.EntityFactory getEntityFactory()`
+- `public abstract org.bukkit.scoreboard.ScoreboardManager getScoreboardManager()`
+- `public abstract org.bukkit.scoreboard.Criteria getScoreboardCriteria(java.lang.String)`
+- `public abstract org.bukkit.util.CachedServerIcon getServerIcon()`
+- `public abstract org.bukkit.util.CachedServerIcon loadServerIcon(java.io.File) throws java.lang.IllegalArgumentException, java.lang.Exception`
+- `public abstract org.bukkit.util.CachedServerIcon loadServerIcon(java.awt.image.BufferedImage) throws java.lang.IllegalArgumentException, java.lang.Exception`
+- `public abstract void setIdleTimeout(int)`
+- `public abstract int getIdleTimeout()`
+- `public abstract int getPauseWhenEmptyTime()`
+- `public abstract void setPauseWhenEmptyTime(int)`
+- `public abstract org.bukkit.generator.ChunkGenerator$ChunkData createChunkData(org.bukkit.World)`
+- `public abstract org.bukkit.boss.BossBar createBossBar(java.lang.String, org.bukkit.boss.BarColor, org.bukkit.boss.BarStyle, org.bukkit.boss.BarFlag...)`
+- `public abstract org.bukkit.boss.KeyedBossBar createBossBar(org.bukkit.NamespacedKey, java.lang.String, org.bukkit.boss.BarColor, org.bukkit.boss.BarStyle, org.bukkit.boss.BarFlag...)`
+- `public abstract java.util.Iterator<org.bukkit.boss.KeyedBossBar> getBossBars()`
+- `public abstract org.bukkit.boss.KeyedBossBar getBossBar(org.bukkit.NamespacedKey)`
+- `public abstract boolean removeBossBar(org.bukkit.NamespacedKey)`
+- `public abstract org.bukkit.entity.Entity getEntity(java.util.UUID)`
+- `public abstract org.bukkit.advancement.Advancement getAdvancement(org.bukkit.NamespacedKey)`
+- `public abstract java.util.Iterator<org.bukkit.advancement.Advancement> advancementIterator()`
+- `public abstract org.bukkit.block.data.BlockData createBlockData(org.bukkit.Material)`
+- `public abstract org.bukkit.block.data.BlockData createBlockData(org.bukkit.Material, java.util.function.Consumer<? super org.bukkit.block.data.BlockData>)`
+- `public abstract org.bukkit.block.data.BlockData createBlockData(java.lang.String) throws java.lang.IllegalArgumentException`
+- `public abstract org.bukkit.block.data.BlockData createBlockData(org.bukkit.Material, java.lang.String) throws java.lang.IllegalArgumentException`
+- `public abstract <T extends org.bukkit.Keyed> org.bukkit.Tag<T> getTag(java.lang.String, org.bukkit.NamespacedKey, java.lang.Class<T>)`
+- `public abstract <T extends org.bukkit.Keyed> java.lang.Iterable<org.bukkit.Tag<T>> getTags(java.lang.String, java.lang.Class<T>)`
+- `public abstract org.bukkit.loot.LootTable getLootTable(org.bukkit.NamespacedKey)`
+- `public abstract java.util.List<org.bukkit.entity.Entity> selectEntities(org.bukkit.command.CommandSender, java.lang.String) throws java.lang.IllegalArgumentException`
+- `public abstract org.bukkit.structure.StructureManager getStructureManager()`
+- `public abstract <T extends org.bukkit.Keyed> org.bukkit.Registry<T> getRegistry(java.lang.Class<T>)`
+- `public abstract org.bukkit.UnsafeValues getUnsafe()`
+- `public abstract org.bukkit.Server$Spigot spigot()`

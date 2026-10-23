@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public abstract class org.bukkit.event.hanging.HangingEvent extends org.bukkit.event.Event {
+  protected org.bukkit.entity.Hanging hanging;
+  protected org.bukkit.event.hanging.HangingEvent(org.bukkit.entity.Hanging);
+  public org.bukkit.entity.Hanging getEntity();
+}

@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.block.BellResonateEvent extends org.bukkit.event.block.BlockEvent {
+  static {};
+  public org.bukkit.event.block.BellResonateEvent(org.bukkit.block.Block, java.util.List<org.bukkit.entity.LivingEntity>);
+  public java.util.List<org.bukkit.entity.LivingEntity> getResonatedEntities();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+}

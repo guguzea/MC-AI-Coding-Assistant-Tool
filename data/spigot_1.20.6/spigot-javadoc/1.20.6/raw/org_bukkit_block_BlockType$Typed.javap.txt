@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.BlockType$Typed<B extends org.bukkit.block.data.BlockData> extends org.bukkit.block.BlockType {
+  public abstract java.lang.Class<B> getBlockDataClass();
+  public abstract B createBlockData(java.util.function.Consumer<? super B>);
+  public abstract B createBlockData();
+  public abstract B createBlockData(java.lang.String);
+}

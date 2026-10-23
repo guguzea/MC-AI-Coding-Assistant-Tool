@@ -1,0 +1,21 @@
+Compiled from <spigot-api>
+public abstract class org.bukkit.util.noise.NoiseGenerator {
+  protected final int[] perm;
+  protected double offsetX;
+  protected double offsetY;
+  protected double offsetZ;
+  public org.bukkit.util.noise.NoiseGenerator();
+  public static int floor(double);
+  protected static double fade(double);
+  protected static double lerp(double, double, double);
+  protected static double grad(int, double, double, double);
+  public double noise(double);
+  public double noise(double, double);
+  public abstract double noise(double, double, double);
+  public double noise(double, int, double, double);
+  public double noise(double, int, double, double, boolean);
+  public double noise(double, double, int, double, double);
+  public double noise(double, double, int, double, double, boolean);
+  public double noise(double, double, double, int, double, double);
+  public double noise(double, double, double, int, double, double, boolean);
+}

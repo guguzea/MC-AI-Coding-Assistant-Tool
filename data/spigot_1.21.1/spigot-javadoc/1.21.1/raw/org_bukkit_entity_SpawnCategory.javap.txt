@@ -1,0 +1,14 @@
+Compiled from <spigot-api>
+public final class org.bukkit.entity.SpawnCategory extends java.lang.Enum<org.bukkit.entity.SpawnCategory> {
+  public static final org.bukkit.entity.SpawnCategory MONSTER;
+  public static final org.bukkit.entity.SpawnCategory ANIMAL;
+  public static final org.bukkit.entity.SpawnCategory WATER_ANIMAL;
+  public static final org.bukkit.entity.SpawnCategory WATER_AMBIENT;
+  public static final org.bukkit.entity.SpawnCategory WATER_UNDERGROUND_CREATURE;
+  public static final org.bukkit.entity.SpawnCategory AMBIENT;
+  public static final org.bukkit.entity.SpawnCategory AXOLOTL;
+  public static final org.bukkit.entity.SpawnCategory MISC;
+  public static org.bukkit.entity.SpawnCategory[] values();
+  public static org.bukkit.entity.SpawnCategory valueOf(java.lang.String);
+  static {};
+}

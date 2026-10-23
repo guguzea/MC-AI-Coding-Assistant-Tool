@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public class org.bukkit.command.defaults.TimingsCommand extends org.bukkit.command.defaults.BukkitCommand {
+  public static long timingStart;
+  static {};
+  public org.bukkit.command.defaults.TimingsCommand(java.lang.String);
+  public void executeSpigotTimings(org.bukkit.command.CommandSender, java.lang.String[]);
+  public boolean execute(org.bukkit.command.CommandSender, java.lang.String, java.lang.String[]);
+  public java.util.List<java.lang.String> tabComplete(org.bukkit.command.CommandSender, java.lang.String, java.lang.String[]);
+}

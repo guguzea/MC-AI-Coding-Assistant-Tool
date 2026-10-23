@@ -1,0 +1,12 @@
+Compiled from <spigot-api>
+public final class org.bukkit.entity.Ocelot$Type extends java.lang.Enum<org.bukkit.entity.Ocelot$Type> {
+  public static final org.bukkit.entity.Ocelot$Type WILD_OCELOT;
+  public static final org.bukkit.entity.Ocelot$Type BLACK_CAT;
+  public static final org.bukkit.entity.Ocelot$Type RED_CAT;
+  public static final org.bukkit.entity.Ocelot$Type SIAMESE_CAT;
+  public static org.bukkit.entity.Ocelot$Type[] values();
+  public static org.bukkit.entity.Ocelot$Type valueOf(java.lang.String);
+  public int getId();
+  public static org.bukkit.entity.Ocelot$Type getType(int);
+  static {};
+}

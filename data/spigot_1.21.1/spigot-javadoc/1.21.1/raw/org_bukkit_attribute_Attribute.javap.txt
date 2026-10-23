@@ -1,0 +1,39 @@
+Compiled from <spigot-api>
+public final class org.bukkit.attribute.Attribute extends java.lang.Enum<org.bukkit.attribute.Attribute> implements org.bukkit.Keyed, org.bukkit.Translatable {
+  public static final org.bukkit.attribute.Attribute GENERIC_MAX_HEALTH;
+  public static final org.bukkit.attribute.Attribute GENERIC_FOLLOW_RANGE;
+  public static final org.bukkit.attribute.Attribute GENERIC_KNOCKBACK_RESISTANCE;
+  public static final org.bukkit.attribute.Attribute GENERIC_MOVEMENT_SPEED;
+  public static final org.bukkit.attribute.Attribute GENERIC_FLYING_SPEED;
+  public static final org.bukkit.attribute.Attribute GENERIC_ATTACK_DAMAGE;
+  public static final org.bukkit.attribute.Attribute GENERIC_ATTACK_KNOCKBACK;
+  public static final org.bukkit.attribute.Attribute GENERIC_ATTACK_SPEED;
+  public static final org.bukkit.attribute.Attribute GENERIC_ARMOR;
+  public static final org.bukkit.attribute.Attribute GENERIC_ARMOR_TOUGHNESS;
+  public static final org.bukkit.attribute.Attribute GENERIC_FALL_DAMAGE_MULTIPLIER;
+  public static final org.bukkit.attribute.Attribute GENERIC_LUCK;
+  public static final org.bukkit.attribute.Attribute GENERIC_MAX_ABSORPTION;
+  public static final org.bukkit.attribute.Attribute GENERIC_SAFE_FALL_DISTANCE;
+  public static final org.bukkit.attribute.Attribute GENERIC_SCALE;
+  public static final org.bukkit.attribute.Attribute GENERIC_STEP_HEIGHT;
+  public static final org.bukkit.attribute.Attribute GENERIC_GRAVITY;
+  public static final org.bukkit.attribute.Attribute GENERIC_JUMP_STRENGTH;
+  public static final org.bukkit.attribute.Attribute GENERIC_BURNING_TIME;
+  public static final org.bukkit.attribute.Attribute GENERIC_EXPLOSION_KNOCKBACK_RESISTANCE;
+  public static final org.bukkit.attribute.Attribute GENERIC_MOVEMENT_EFFICIENCY;
+  public static final org.bukkit.attribute.Attribute GENERIC_OXYGEN_BONUS;
+  public static final org.bukkit.attribute.Attribute GENERIC_WATER_MOVEMENT_EFFICIENCY;
+  public static final org.bukkit.attribute.Attribute PLAYER_BLOCK_INTERACTION_RANGE;
+  public static final org.bukkit.attribute.Attribute PLAYER_ENTITY_INTERACTION_RANGE;
+  public static final org.bukkit.attribute.Attribute PLAYER_BLOCK_BREAK_SPEED;
+  public static final org.bukkit.attribute.Attribute PLAYER_MINING_EFFICIENCY;
+  public static final org.bukkit.attribute.Attribute PLAYER_SNEAKING_SPEED;
+  public static final org.bukkit.attribute.Attribute PLAYER_SUBMERGED_MINING_SPEED;
+  public static final org.bukkit.attribute.Attribute PLAYER_SWEEPING_DAMAGE_RATIO;
+  public static final org.bukkit.attribute.Attribute ZOMBIE_SPAWN_REINFORCEMENTS;
+  public static org.bukkit.attribute.Attribute[] values();
+  public static org.bukkit.attribute.Attribute valueOf(java.lang.String);
+  public org.bukkit.NamespacedKey getKey();
+  public java.lang.String getTranslationKey();
+  static {};
+}

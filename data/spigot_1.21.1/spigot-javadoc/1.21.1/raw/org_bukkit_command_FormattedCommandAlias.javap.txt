@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public class org.bukkit.command.FormattedCommandAlias extends org.bukkit.command.Command {
+  public org.bukkit.command.FormattedCommandAlias(java.lang.String, java.lang.String[]);
+  public boolean execute(org.bukkit.command.CommandSender, java.lang.String, java.lang.String[]);
+}

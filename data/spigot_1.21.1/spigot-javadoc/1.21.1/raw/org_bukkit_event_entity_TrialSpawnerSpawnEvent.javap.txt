@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.entity.TrialSpawnerSpawnEvent extends org.bukkit.event.entity.EntitySpawnEvent {
+  public org.bukkit.event.entity.TrialSpawnerSpawnEvent(org.bukkit.entity.Entity, org.bukkit.block.TrialSpawner);
+  public org.bukkit.block.TrialSpawner getTrialSpawner();
+}

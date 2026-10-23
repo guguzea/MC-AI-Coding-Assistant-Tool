@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.projectiles.ProjectileSource {
+  public abstract <T extends org.bukkit.entity.Projectile> T launchProjectile(java.lang.Class<? extends T>);
+  public abstract <T extends org.bukkit.entity.Projectile> T launchProjectile(java.lang.Class<? extends T>, org.bukkit.util.Vector);
+}

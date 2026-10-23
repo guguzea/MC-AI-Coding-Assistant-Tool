@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.player.PlayerInputEvent extends org.bukkit.event.player.PlayerEvent {
+  public org.bukkit.event.player.PlayerInputEvent(org.bukkit.entity.Player, org.bukkit.Input);
+  public org.bukkit.Input getInput();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  static {};
+}

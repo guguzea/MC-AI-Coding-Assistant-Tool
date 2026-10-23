@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.player.PlayerExpChangeEvent extends org.bukkit.event.player.PlayerEvent {
+  static {};
+  public org.bukkit.event.player.PlayerExpChangeEvent(org.bukkit.entity.Player, int);
+  public int getAmount();
+  public void setAmount(int);
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+}

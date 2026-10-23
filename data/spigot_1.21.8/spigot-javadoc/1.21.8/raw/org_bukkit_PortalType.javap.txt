@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public final class org.bukkit.PortalType extends java.lang.Enum<org.bukkit.PortalType> {
+  public static final org.bukkit.PortalType NETHER;
+  public static final org.bukkit.PortalType ENDER;
+  public static final org.bukkit.PortalType CUSTOM;
+  public static org.bukkit.PortalType[] values();
+  public static org.bukkit.PortalType valueOf(java.lang.String);
+  static {};
+}

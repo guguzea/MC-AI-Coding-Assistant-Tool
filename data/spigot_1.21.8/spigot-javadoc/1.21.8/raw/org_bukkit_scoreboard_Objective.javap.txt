@@ -1,0 +1,17 @@
+Compiled from <spigot-api>
+public interface org.bukkit.scoreboard.Objective {
+  public abstract java.lang.String getName();
+  public abstract java.lang.String getDisplayName();
+  public abstract void setDisplayName(java.lang.String);
+  public abstract java.lang.String getCriteria();
+  public abstract org.bukkit.scoreboard.Criteria getTrackedCriteria();
+  public abstract boolean isModifiable();
+  public abstract org.bukkit.scoreboard.Scoreboard getScoreboard();
+  public abstract void unregister();
+  public abstract void setDisplaySlot(org.bukkit.scoreboard.DisplaySlot);
+  public abstract org.bukkit.scoreboard.DisplaySlot getDisplaySlot();
+  public abstract void setRenderType(org.bukkit.scoreboard.RenderType);
+  public abstract org.bukkit.scoreboard.RenderType getRenderType();
+  public abstract org.bukkit.scoreboard.Score getScore(org.bukkit.OfflinePlayer);
+  public abstract org.bukkit.scoreboard.Score getScore(java.lang.String);
+}

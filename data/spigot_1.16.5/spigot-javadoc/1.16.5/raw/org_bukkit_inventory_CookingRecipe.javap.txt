@@ -1,0 +1,17 @@
+Compiled from <spigot-api>
+public abstract class org.bukkit.inventory.CookingRecipe<T extends org.bukkit.inventory.CookingRecipe> implements org.bukkit.inventory.Recipe, org.bukkit.Keyed {
+  public org.bukkit.inventory.CookingRecipe(org.bukkit.NamespacedKey, org.bukkit.inventory.ItemStack, org.bukkit.Material, float, int);
+  public org.bukkit.inventory.CookingRecipe(org.bukkit.NamespacedKey, org.bukkit.inventory.ItemStack, org.bukkit.inventory.RecipeChoice, float, int);
+  public org.bukkit.inventory.CookingRecipe setInput(org.bukkit.Material);
+  public org.bukkit.inventory.ItemStack getInput();
+  public T setInputChoice(org.bukkit.inventory.RecipeChoice);
+  public org.bukkit.inventory.RecipeChoice getInputChoice();
+  public org.bukkit.inventory.ItemStack getResult();
+  public void setExperience(float);
+  public float getExperience();
+  public void setCookingTime(int);
+  public int getCookingTime();
+  public org.bukkit.NamespacedKey getKey();
+  public java.lang.String getGroup();
+  public void setGroup(java.lang.String);
+}

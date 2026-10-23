@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public class org.bukkit.plugin.InvalidPluginException extends java.lang.Exception {
+  public org.bukkit.plugin.InvalidPluginException(java.lang.Throwable);
+  public org.bukkit.plugin.InvalidPluginException();
+  public org.bukkit.plugin.InvalidPluginException(java.lang.String, java.lang.Throwable);
+  public org.bukkit.plugin.InvalidPluginException(java.lang.String);
+}

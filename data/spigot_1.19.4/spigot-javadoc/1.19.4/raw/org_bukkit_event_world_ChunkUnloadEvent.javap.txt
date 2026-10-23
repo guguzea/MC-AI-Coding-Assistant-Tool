@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.world.ChunkUnloadEvent extends org.bukkit.event.world.ChunkEvent {
+  static {};
+  public org.bukkit.event.world.ChunkUnloadEvent(org.bukkit.Chunk);
+  public org.bukkit.event.world.ChunkUnloadEvent(org.bukkit.Chunk, boolean);
+  public boolean isSaveChunk();
+  public void setSaveChunk(boolean);
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+}

@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.permissions.ServerOperator {
+  public abstract boolean isOp();
+  public abstract void setOp(boolean);
+}

@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.raid.RaidFinishEvent extends org.bukkit.event.raid.RaidEvent {
+  static {};
+  public org.bukkit.event.raid.RaidFinishEvent(org.bukkit.Raid, org.bukkit.World, java.util.List<org.bukkit.entity.Player>);
+  public java.util.List<org.bukkit.entity.Player> getWinners();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+}

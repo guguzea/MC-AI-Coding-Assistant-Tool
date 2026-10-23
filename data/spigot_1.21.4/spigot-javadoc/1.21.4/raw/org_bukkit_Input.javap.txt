@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public interface org.bukkit.Input {
+  public abstract boolean isForward();
+  public abstract boolean isBackward();
+  public abstract boolean isLeft();
+  public abstract boolean isRight();
+  public abstract boolean isJump();
+  public abstract boolean isSneak();
+  public abstract boolean isSprint();
+}

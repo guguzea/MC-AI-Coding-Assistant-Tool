@@ -1,0 +1,12 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.Skull extends org.bukkit.block.BlockState {
+  public abstract boolean hasOwner();
+  public abstract java.lang.String getOwner();
+  public abstract boolean setOwner(java.lang.String);
+  public abstract org.bukkit.OfflinePlayer getOwningPlayer();
+  public abstract void setOwningPlayer(org.bukkit.OfflinePlayer);
+  public abstract org.bukkit.block.BlockFace getRotation();
+  public abstract void setRotation(org.bukkit.block.BlockFace);
+  public abstract org.bukkit.SkullType getSkullType();
+  public abstract void setSkullType(org.bukkit.SkullType);
+}

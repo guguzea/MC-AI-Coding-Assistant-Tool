@@ -1,0 +1,13 @@
+Compiled from <spigot-api>
+public interface org.bukkit.packs.DataPack extends org.bukkit.Keyed {
+  public abstract java.lang.String getTitle();
+  public abstract java.lang.String getDescription();
+  public abstract int getPackFormat();
+  public abstract int getMinSupportedPackFormat();
+  public abstract int getMaxSupportedPackFormat();
+  public abstract boolean isEnabled();
+  public abstract boolean isRequired();
+  public abstract org.bukkit.packs.DataPack$Compatibility getCompatibility();
+  public abstract java.util.Set<org.bukkit.FeatureFlag> getRequestedFeatures();
+  public abstract org.bukkit.packs.DataPack$Source getSource();
+}

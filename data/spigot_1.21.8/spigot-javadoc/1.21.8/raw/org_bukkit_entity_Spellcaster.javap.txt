@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Spellcaster extends org.bukkit.entity.Illager {
+  public abstract org.bukkit.entity.Spellcaster$Spell getSpell();
+  public abstract void setSpell(org.bukkit.entity.Spellcaster$Spell);
+}

@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.hanging.HangingBreakEvent extends org.bukkit.event.hanging.HangingEvent implements org.bukkit.event.Cancellable {
+  public org.bukkit.event.hanging.HangingBreakEvent(org.bukkit.entity.Hanging, org.bukkit.event.hanging.HangingBreakEvent$RemoveCause);
+  public org.bukkit.event.hanging.HangingBreakEvent$RemoveCause getCause();
+  public boolean isCancelled();
+  public void setCancelled(boolean);
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  static {};
+}

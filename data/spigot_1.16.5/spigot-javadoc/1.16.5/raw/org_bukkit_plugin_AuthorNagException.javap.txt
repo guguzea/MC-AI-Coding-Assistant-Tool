@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public class org.bukkit.plugin.AuthorNagException extends java.lang.RuntimeException {
+  public org.bukkit.plugin.AuthorNagException(java.lang.String);
+  public java.lang.String getMessage();
+}

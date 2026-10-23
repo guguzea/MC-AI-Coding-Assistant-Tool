@@ -1,0 +1,23 @@
+Compiled from <spigot-api>
+public final class org.bukkit.material.types.MushroomBlockTexture extends java.lang.Enum<org.bukkit.material.types.MushroomBlockTexture> {
+  public static final org.bukkit.material.types.MushroomBlockTexture ALL_PORES;
+  public static final org.bukkit.material.types.MushroomBlockTexture CAP_NORTH_WEST;
+  public static final org.bukkit.material.types.MushroomBlockTexture CAP_NORTH;
+  public static final org.bukkit.material.types.MushroomBlockTexture CAP_NORTH_EAST;
+  public static final org.bukkit.material.types.MushroomBlockTexture CAP_WEST;
+  public static final org.bukkit.material.types.MushroomBlockTexture CAP_TOP;
+  public static final org.bukkit.material.types.MushroomBlockTexture CAP_EAST;
+  public static final org.bukkit.material.types.MushroomBlockTexture CAP_SOUTH_WEST;
+  public static final org.bukkit.material.types.MushroomBlockTexture CAP_SOUTH;
+  public static final org.bukkit.material.types.MushroomBlockTexture CAP_SOUTH_EAST;
+  public static final org.bukkit.material.types.MushroomBlockTexture STEM_SIDES;
+  public static final org.bukkit.material.types.MushroomBlockTexture ALL_CAP;
+  public static final org.bukkit.material.types.MushroomBlockTexture ALL_STEM;
+  public static org.bukkit.material.types.MushroomBlockTexture[] values();
+  public static org.bukkit.material.types.MushroomBlockTexture valueOf(java.lang.String);
+  public byte getData();
+  public org.bukkit.block.BlockFace getCapFace();
+  public static org.bukkit.material.types.MushroomBlockTexture getByData(byte);
+  public static org.bukkit.material.types.MushroomBlockTexture getCapByFace(org.bukkit.block.BlockFace);
+  static {};
+}

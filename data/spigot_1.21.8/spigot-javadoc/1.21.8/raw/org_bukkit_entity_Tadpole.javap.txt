@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Tadpole extends org.bukkit.entity.Fish {
+  public abstract int getAge();
+  public abstract void setAge(int);
+}

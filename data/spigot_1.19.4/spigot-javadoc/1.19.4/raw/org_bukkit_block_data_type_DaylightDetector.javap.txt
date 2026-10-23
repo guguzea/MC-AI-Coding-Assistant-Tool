@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.data.type.DaylightDetector extends org.bukkit.block.data.AnaloguePowerable {
+  public abstract boolean isInverted();
+  public abstract void setInverted(boolean);
+}

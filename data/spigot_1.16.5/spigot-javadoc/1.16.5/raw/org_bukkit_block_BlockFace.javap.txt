@@ -1,0 +1,32 @@
+Compiled from <spigot-api>
+public final class org.bukkit.block.BlockFace extends java.lang.Enum<org.bukkit.block.BlockFace> {
+  public static final org.bukkit.block.BlockFace NORTH;
+  public static final org.bukkit.block.BlockFace EAST;
+  public static final org.bukkit.block.BlockFace SOUTH;
+  public static final org.bukkit.block.BlockFace WEST;
+  public static final org.bukkit.block.BlockFace UP;
+  public static final org.bukkit.block.BlockFace DOWN;
+  public static final org.bukkit.block.BlockFace NORTH_EAST;
+  public static final org.bukkit.block.BlockFace NORTH_WEST;
+  public static final org.bukkit.block.BlockFace SOUTH_EAST;
+  public static final org.bukkit.block.BlockFace SOUTH_WEST;
+  public static final org.bukkit.block.BlockFace WEST_NORTH_WEST;
+  public static final org.bukkit.block.BlockFace NORTH_NORTH_WEST;
+  public static final org.bukkit.block.BlockFace NORTH_NORTH_EAST;
+  public static final org.bukkit.block.BlockFace EAST_NORTH_EAST;
+  public static final org.bukkit.block.BlockFace EAST_SOUTH_EAST;
+  public static final org.bukkit.block.BlockFace SOUTH_SOUTH_EAST;
+  public static final org.bukkit.block.BlockFace SOUTH_SOUTH_WEST;
+  public static final org.bukkit.block.BlockFace WEST_SOUTH_WEST;
+  public static final org.bukkit.block.BlockFace SELF;
+  static {};
+  public int getModX();
+  public int getModY();
+  public int getModZ();
+  public org.bukkit.util.Vector getDirection();
+  public boolean isCartesian();
+  public org.bukkit.block.BlockFace getOppositeFace();
+  public static org.bukkit.block.BlockFace[] values();
+  public static org.bukkit.block.BlockFace valueOf(java.lang.String);
+  static int[] $SWITCH_TABLE$org$bukkit$block$BlockFace();
+}

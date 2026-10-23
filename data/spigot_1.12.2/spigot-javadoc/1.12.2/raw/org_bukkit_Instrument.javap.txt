@@ -1,0 +1,18 @@
+Compiled from <spigot-api>
+public final class org.bukkit.Instrument extends java.lang.Enum<org.bukkit.Instrument> {
+  public static final org.bukkit.Instrument PIANO;
+  public static final org.bukkit.Instrument BASS_DRUM;
+  public static final org.bukkit.Instrument SNARE_DRUM;
+  public static final org.bukkit.Instrument STICKS;
+  public static final org.bukkit.Instrument BASS_GUITAR;
+  public static final org.bukkit.Instrument FLUTE;
+  public static final org.bukkit.Instrument BELL;
+  public static final org.bukkit.Instrument GUITAR;
+  public static final org.bukkit.Instrument CHIME;
+  public static final org.bukkit.Instrument XYLOPHONE;
+  static {};
+  public byte getType();
+  public static org.bukkit.Instrument getByType(byte);
+  public static org.bukkit.Instrument[] values();
+  public static org.bukkit.Instrument valueOf(java.lang.String);
+}

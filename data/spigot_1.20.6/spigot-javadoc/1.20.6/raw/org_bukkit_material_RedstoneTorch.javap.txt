@@ -1,0 +1,13 @@
+Compiled from <spigot-api>
+public class org.bukkit.material.RedstoneTorch extends org.bukkit.material.Torch implements org.bukkit.material.Redstone {
+  public org.bukkit.material.RedstoneTorch();
+  public org.bukkit.material.RedstoneTorch(org.bukkit.Material);
+  public org.bukkit.material.RedstoneTorch(org.bukkit.Material, byte);
+  public boolean isPowered();
+  public java.lang.String toString();
+  public org.bukkit.material.RedstoneTorch clone();
+  public org.bukkit.material.Torch clone();
+  public org.bukkit.material.SimpleAttachableMaterialData clone();
+  public org.bukkit.material.MaterialData clone();
+  public java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+}

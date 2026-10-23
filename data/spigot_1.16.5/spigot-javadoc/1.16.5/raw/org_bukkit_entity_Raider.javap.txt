@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Raider extends org.bukkit.entity.Monster {
+  public abstract org.bukkit.block.Block getPatrolTarget();
+  public abstract void setPatrolTarget(org.bukkit.block.Block);
+  public abstract boolean isPatrolLeader();
+  public abstract void setPatrolLeader(boolean);
+  public abstract boolean isCanJoinRaid();
+  public abstract void setCanJoinRaid(boolean);
+}

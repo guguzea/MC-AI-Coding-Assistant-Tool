@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public final class org.bukkit.event.entity.CreeperPowerEvent$PowerCause extends java.lang.Enum<org.bukkit.event.entity.CreeperPowerEvent$PowerCause> {
+  public static final org.bukkit.event.entity.CreeperPowerEvent$PowerCause LIGHTNING;
+  public static final org.bukkit.event.entity.CreeperPowerEvent$PowerCause SET_ON;
+  public static final org.bukkit.event.entity.CreeperPowerEvent$PowerCause SET_OFF;
+  public static org.bukkit.event.entity.CreeperPowerEvent$PowerCause[] values();
+  public static org.bukkit.event.entity.CreeperPowerEvent$PowerCause valueOf(java.lang.String);
+  static {};
+}

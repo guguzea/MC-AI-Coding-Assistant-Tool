@@ -1,0 +1,15 @@
+Compiled from <spigot-api>
+public final class org.bukkit.plugin.java.JavaPluginLoader implements org.bukkit.plugin.PluginLoader {
+  final org.bukkit.Server server;
+  public static final org.spigotmc.CustomTimingsHandler pluginParentTimer;
+  static {};
+  public org.bukkit.plugin.java.JavaPluginLoader(org.bukkit.Server);
+  public org.bukkit.plugin.Plugin loadPlugin(java.io.File) throws org.bukkit.plugin.InvalidPluginException;
+  public org.bukkit.plugin.PluginDescriptionFile getPluginDescription(java.io.File) throws org.bukkit.plugin.InvalidDescriptionException;
+  public java.util.regex.Pattern[] getPluginFileFilters();
+  java.lang.Class<?> getClassByName(java.lang.String, boolean, org.bukkit.plugin.PluginDescriptionFile);
+  void setClass(java.lang.String, java.lang.Class<?>);
+  public java.util.Map<java.lang.Class<? extends org.bukkit.event.Event>, java.util.Set<org.bukkit.plugin.RegisteredListener>> createRegisteredListeners(org.bukkit.event.Listener, org.bukkit.plugin.Plugin);
+  public void enablePlugin(org.bukkit.plugin.Plugin);
+  public void disablePlugin(org.bukkit.plugin.Plugin);
+}

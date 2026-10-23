@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.data.MultipleFacing extends org.bukkit.block.data.BlockData {
+  public abstract boolean hasFace(org.bukkit.block.BlockFace);
+  public abstract void setFace(org.bukkit.block.BlockFace, boolean);
+  public abstract java.util.Set<org.bukkit.block.BlockFace> getFaces();
+  public abstract java.util.Set<org.bukkit.block.BlockFace> getAllowedFaces();
+}

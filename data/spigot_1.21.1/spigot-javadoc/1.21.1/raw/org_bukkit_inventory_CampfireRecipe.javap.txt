@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public class org.bukkit.inventory.CampfireRecipe extends org.bukkit.inventory.CookingRecipe<org.bukkit.inventory.CampfireRecipe> {
+  public org.bukkit.inventory.CampfireRecipe(org.bukkit.NamespacedKey, org.bukkit.inventory.ItemStack, org.bukkit.Material, float, int);
+  public org.bukkit.inventory.CampfireRecipe(org.bukkit.NamespacedKey, org.bukkit.inventory.ItemStack, org.bukkit.inventory.RecipeChoice, float, int);
+}

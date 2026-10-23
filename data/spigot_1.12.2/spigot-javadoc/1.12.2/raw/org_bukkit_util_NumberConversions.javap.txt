@@ -1,0 +1,17 @@
+Compiled from <spigot-api>
+public final class org.bukkit.util.NumberConversions {
+  public static int floor(double);
+  public static int ceil(double);
+  public static int round(double);
+  public static double square(double);
+  public static int toInt(java.lang.Object);
+  public static float toFloat(java.lang.Object);
+  public static double toDouble(java.lang.Object);
+  public static long toLong(java.lang.Object);
+  public static short toShort(java.lang.Object);
+  public static byte toByte(java.lang.Object);
+  public static boolean isFinite(double);
+  public static boolean isFinite(float);
+  public static void checkFinite(double, java.lang.String);
+  public static void checkFinite(float, java.lang.String);
+}

@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.raid.RaidTriggerEvent extends org.bukkit.event.raid.RaidEvent implements org.bukkit.event.Cancellable {
+  static {};
+  public org.bukkit.event.raid.RaidTriggerEvent(org.bukkit.Raid, org.bukkit.World, org.bukkit.entity.Player);
+  public org.bukkit.entity.Player getPlayer();
+  public boolean isCancelled();
+  public void setCancelled(boolean);
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+}

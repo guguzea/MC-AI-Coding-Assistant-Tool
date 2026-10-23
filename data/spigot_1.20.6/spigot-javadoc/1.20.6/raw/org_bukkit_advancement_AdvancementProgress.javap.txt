@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public interface org.bukkit.advancement.AdvancementProgress {
+  public abstract org.bukkit.advancement.Advancement getAdvancement();
+  public abstract boolean isDone();
+  public abstract boolean awardCriteria(java.lang.String);
+  public abstract boolean revokeCriteria(java.lang.String);
+  public abstract java.util.Date getDateAwarded(java.lang.String);
+  public abstract java.util.Collection<java.lang.String> getRemainingCriteria();
+  public abstract java.util.Collection<java.lang.String> getAwardedCriteria();
+}

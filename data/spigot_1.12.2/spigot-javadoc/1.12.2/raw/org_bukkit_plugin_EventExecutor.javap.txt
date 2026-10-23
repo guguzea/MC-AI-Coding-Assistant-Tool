@@ -1,0 +1,4 @@
+Compiled from <spigot-api>
+public interface org.bukkit.plugin.EventExecutor {
+  public abstract void execute(org.bukkit.event.Listener, org.bukkit.event.Event) throws org.bukkit.event.EventException;
+}

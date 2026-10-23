@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.data.type.TurtleEgg extends org.bukkit.block.data.Hatchable {
+  public abstract int getEggs();
+  public abstract void setEggs(int);
+  public abstract int getMinimumEggs();
+  public abstract int getMaximumEggs();
+}

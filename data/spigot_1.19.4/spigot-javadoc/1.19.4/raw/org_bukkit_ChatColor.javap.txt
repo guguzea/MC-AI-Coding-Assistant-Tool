@@ -1,0 +1,41 @@
+Compiled from <spigot-api>
+public class org.bukkit.ChatColor extends java.lang.Enum<org.bukkit.ChatColor> {
+  public static final org.bukkit.ChatColor BLACK;
+  public static final org.bukkit.ChatColor DARK_BLUE;
+  public static final org.bukkit.ChatColor DARK_GREEN;
+  public static final org.bukkit.ChatColor DARK_AQUA;
+  public static final org.bukkit.ChatColor DARK_RED;
+  public static final org.bukkit.ChatColor DARK_PURPLE;
+  public static final org.bukkit.ChatColor GOLD;
+  public static final org.bukkit.ChatColor GRAY;
+  public static final org.bukkit.ChatColor DARK_GRAY;
+  public static final org.bukkit.ChatColor BLUE;
+  public static final org.bukkit.ChatColor GREEN;
+  public static final org.bukkit.ChatColor AQUA;
+  public static final org.bukkit.ChatColor RED;
+  public static final org.bukkit.ChatColor LIGHT_PURPLE;
+  public static final org.bukkit.ChatColor YELLOW;
+  public static final org.bukkit.ChatColor WHITE;
+  public static final org.bukkit.ChatColor MAGIC;
+  public static final org.bukkit.ChatColor BOLD;
+  public static final org.bukkit.ChatColor STRIKETHROUGH;
+  public static final org.bukkit.ChatColor UNDERLINE;
+  public static final org.bukkit.ChatColor ITALIC;
+  public static final org.bukkit.ChatColor RESET;
+  public static final char COLOR_CHAR;
+  static {};
+  public net.md_5.bungee.api.ChatColor asBungee();
+  public char getChar();
+  public java.lang.String toString();
+  public boolean isFormat();
+  public boolean isColor();
+  public static org.bukkit.ChatColor getByChar(char);
+  public static org.bukkit.ChatColor getByChar(java.lang.String);
+  public static java.lang.String stripColor(java.lang.String);
+  public static java.lang.String translateAlternateColorCodes(char, java.lang.String);
+  public static java.lang.String getLastColors(java.lang.String);
+  public static org.bukkit.ChatColor[] values();
+  public static org.bukkit.ChatColor valueOf(java.lang.String);
+  org.bukkit.ChatColor(java.lang.String, int, char, int, org.bukkit.ChatColor);
+  org.bukkit.ChatColor(java.lang.String, int, char, int, boolean, org.bukkit.ChatColor);
+}

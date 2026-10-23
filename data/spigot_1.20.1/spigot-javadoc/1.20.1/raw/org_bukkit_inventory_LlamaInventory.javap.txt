@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.LlamaInventory extends org.bukkit.inventory.AbstractHorseInventory {
+  public abstract org.bukkit.inventory.ItemStack getDecor();
+  public abstract void setDecor(org.bukkit.inventory.ItemStack);
+}

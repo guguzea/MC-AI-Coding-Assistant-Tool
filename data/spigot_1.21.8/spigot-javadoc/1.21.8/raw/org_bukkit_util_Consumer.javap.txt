@@ -1,0 +1,4 @@
+Compiled from <spigot-api>
+public interface org.bukkit.util.Consumer<T> extends java.util.function.Consumer<T> {
+  public abstract void accept(T);
+}

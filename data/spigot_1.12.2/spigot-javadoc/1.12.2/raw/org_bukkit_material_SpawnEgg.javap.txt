@@ -1,0 +1,13 @@
+Compiled from <spigot-api>
+public class org.bukkit.material.SpawnEgg extends org.bukkit.material.MaterialData {
+  public org.bukkit.material.SpawnEgg();
+  public org.bukkit.material.SpawnEgg(int, byte);
+  public org.bukkit.material.SpawnEgg(byte);
+  public org.bukkit.material.SpawnEgg(org.bukkit.entity.EntityType);
+  public org.bukkit.entity.EntityType getSpawnedType();
+  public void setSpawnedType(org.bukkit.entity.EntityType);
+  public java.lang.String toString();
+  public org.bukkit.material.SpawnEgg clone();
+  public org.bukkit.material.MaterialData clone();
+  public java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+}

@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Salmon extends org.bukkit.entity.Fish {
+  public abstract org.bukkit.entity.Salmon$Variant getVariant();
+  public abstract void setVariant(org.bukkit.entity.Salmon$Variant);
+}

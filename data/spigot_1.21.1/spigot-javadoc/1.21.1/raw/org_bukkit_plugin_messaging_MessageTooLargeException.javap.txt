@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public class org.bukkit.plugin.messaging.MessageTooLargeException extends java.lang.RuntimeException {
+  public org.bukkit.plugin.messaging.MessageTooLargeException();
+  public org.bukkit.plugin.messaging.MessageTooLargeException(byte[]);
+  public org.bukkit.plugin.messaging.MessageTooLargeException(int);
+  public org.bukkit.plugin.messaging.MessageTooLargeException(java.lang.String);
+}

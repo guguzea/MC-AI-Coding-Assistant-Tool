@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.inventory.CraftItemEvent extends org.bukkit.event.inventory.InventoryClickEvent {
+  public org.bukkit.event.inventory.CraftItemEvent(org.bukkit.inventory.Recipe, org.bukkit.inventory.InventoryView, org.bukkit.event.inventory.InventoryType$SlotType, int, org.bukkit.event.inventory.ClickType, org.bukkit.event.inventory.InventoryAction);
+  public org.bukkit.event.inventory.CraftItemEvent(org.bukkit.inventory.Recipe, org.bukkit.inventory.InventoryView, org.bukkit.event.inventory.InventoryType$SlotType, int, org.bukkit.event.inventory.ClickType, org.bukkit.event.inventory.InventoryAction, int);
+  public org.bukkit.inventory.Recipe getRecipe();
+  public org.bukkit.inventory.CraftingInventory getInventory();
+  public org.bukkit.inventory.Inventory getInventory();
+}

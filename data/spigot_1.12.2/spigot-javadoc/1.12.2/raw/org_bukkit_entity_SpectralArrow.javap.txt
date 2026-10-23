@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.SpectralArrow extends org.bukkit.entity.Arrow {
+  public abstract int getGlowingTicks();
+  public abstract void setGlowingTicks(int);
+}

@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.data.Snowable extends org.bukkit.block.data.BlockData {
+  public abstract boolean isSnowy();
+  public abstract void setSnowy(boolean);
+}

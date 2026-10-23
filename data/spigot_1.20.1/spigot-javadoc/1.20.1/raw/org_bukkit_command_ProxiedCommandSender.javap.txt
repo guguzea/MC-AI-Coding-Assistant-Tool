@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.command.ProxiedCommandSender extends org.bukkit.command.CommandSender {
+  public abstract org.bukkit.command.CommandSender getCaller();
+  public abstract org.bukkit.command.CommandSender getCallee();
+}

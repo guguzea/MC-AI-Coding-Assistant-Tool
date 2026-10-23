@@ -1,0 +1,14 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.entity.EntityDeathEvent extends org.bukkit.event.entity.EntityEvent {
+  public org.bukkit.event.entity.EntityDeathEvent(org.bukkit.entity.LivingEntity, org.bukkit.damage.DamageSource, java.util.List<org.bukkit.inventory.ItemStack>);
+  public org.bukkit.event.entity.EntityDeathEvent(org.bukkit.entity.LivingEntity, org.bukkit.damage.DamageSource, java.util.List<org.bukkit.inventory.ItemStack>, int);
+  public org.bukkit.entity.LivingEntity getEntity();
+  public org.bukkit.damage.DamageSource getDamageSource();
+  public int getDroppedExp();
+  public void setDroppedExp(int);
+  public java.util.List<org.bukkit.inventory.ItemStack> getDrops();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  public org.bukkit.entity.Entity getEntity();
+  static {};
+}

@@ -1,0 +1,11 @@
+Compiled from <spigot-api>
+public interface org.bukkit.command.CommandMap {
+  public abstract void registerAll(java.lang.String, java.util.List<org.bukkit.command.Command>);
+  public abstract boolean register(java.lang.String, java.lang.String, org.bukkit.command.Command);
+  public abstract boolean register(java.lang.String, org.bukkit.command.Command);
+  public abstract boolean dispatch(org.bukkit.command.CommandSender, java.lang.String) throws org.bukkit.command.CommandException;
+  public abstract void clearCommands();
+  public abstract org.bukkit.command.Command getCommand(java.lang.String);
+  public abstract java.util.List<java.lang.String> tabComplete(org.bukkit.command.CommandSender, java.lang.String) throws java.lang.IllegalArgumentException;
+  public abstract java.util.List<java.lang.String> tabComplete(org.bukkit.command.CommandSender, java.lang.String, org.bukkit.Location) throws java.lang.IllegalArgumentException;
+}

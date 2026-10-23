@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public class org.spigotmc.event.entity.EntityDismountEvent extends org.bukkit.event.entity.EntityEvent {
+  static {};
+  public org.spigotmc.event.entity.EntityDismountEvent(org.bukkit.entity.Entity, org.bukkit.entity.Entity);
+  public org.bukkit.entity.Entity getDismounted();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+}

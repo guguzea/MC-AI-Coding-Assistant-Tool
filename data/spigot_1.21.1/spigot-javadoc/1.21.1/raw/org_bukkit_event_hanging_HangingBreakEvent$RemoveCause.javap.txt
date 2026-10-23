@@ -1,0 +1,11 @@
+Compiled from <spigot-api>
+public final class org.bukkit.event.hanging.HangingBreakEvent$RemoveCause extends java.lang.Enum<org.bukkit.event.hanging.HangingBreakEvent$RemoveCause> {
+  public static final org.bukkit.event.hanging.HangingBreakEvent$RemoveCause ENTITY;
+  public static final org.bukkit.event.hanging.HangingBreakEvent$RemoveCause EXPLOSION;
+  public static final org.bukkit.event.hanging.HangingBreakEvent$RemoveCause OBSTRUCTION;
+  public static final org.bukkit.event.hanging.HangingBreakEvent$RemoveCause PHYSICS;
+  public static final org.bukkit.event.hanging.HangingBreakEvent$RemoveCause DEFAULT;
+  public static org.bukkit.event.hanging.HangingBreakEvent$RemoveCause[] values();
+  public static org.bukkit.event.hanging.HangingBreakEvent$RemoveCause valueOf(java.lang.String);
+  static {};
+}

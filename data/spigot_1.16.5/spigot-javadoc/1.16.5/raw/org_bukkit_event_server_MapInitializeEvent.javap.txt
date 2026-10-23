@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.server.MapInitializeEvent extends org.bukkit.event.server.ServerEvent {
+  static {};
+  public org.bukkit.event.server.MapInitializeEvent(org.bukkit.map.MapView);
+  public org.bukkit.map.MapView getMap();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+}

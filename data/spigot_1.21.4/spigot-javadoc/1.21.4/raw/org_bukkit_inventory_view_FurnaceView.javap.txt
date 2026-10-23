@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.view.FurnaceView extends org.bukkit.inventory.InventoryView {
+  public abstract org.bukkit.inventory.FurnaceInventory getTopInventory();
+  public abstract float getCookTime();
+  public abstract float getBurnTime();
+  public abstract boolean isBurning();
+  public abstract void setCookTime(int, int);
+  public abstract void setBurnTime(int, int);
+  public default org.bukkit.inventory.Inventory getTopInventory();
+}

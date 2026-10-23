@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public abstract class org.bukkit.event.world.WorldEvent extends org.bukkit.event.Event {
+  public org.bukkit.event.world.WorldEvent(org.bukkit.World);
+  public org.bukkit.event.world.WorldEvent(org.bukkit.World, boolean);
+  public org.bukkit.World getWorld();
+}

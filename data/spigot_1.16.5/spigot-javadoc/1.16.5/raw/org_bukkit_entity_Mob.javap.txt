@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Mob extends org.bukkit.entity.LivingEntity,org.bukkit.loot.Lootable {
+  public abstract void setTarget(org.bukkit.entity.LivingEntity);
+  public abstract org.bukkit.entity.LivingEntity getTarget();
+  public abstract void setAware(boolean);
+  public abstract boolean isAware();
+}

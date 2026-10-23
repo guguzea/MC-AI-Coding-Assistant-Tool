@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public final class org.bukkit.event.inventory.DragType extends java.lang.Enum<org.bukkit.event.inventory.DragType> {
+  public static final org.bukkit.event.inventory.DragType SINGLE;
+  public static final org.bukkit.event.inventory.DragType EVEN;
+  static {};
+  public static org.bukkit.event.inventory.DragType[] values();
+  public static org.bukkit.event.inventory.DragType valueOf(java.lang.String);
+}

@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public class org.bukkit.command.CommandException extends java.lang.RuntimeException {
+  public org.bukkit.command.CommandException();
+  public org.bukkit.command.CommandException(java.lang.String);
+  public org.bukkit.command.CommandException(java.lang.String, java.lang.Throwable);
+}

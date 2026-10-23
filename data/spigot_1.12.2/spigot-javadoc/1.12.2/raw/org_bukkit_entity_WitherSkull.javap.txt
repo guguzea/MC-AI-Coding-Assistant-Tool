@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.WitherSkull extends org.bukkit.entity.Fireball {
+  public abstract void setCharged(boolean);
+  public abstract boolean isCharged();
+}

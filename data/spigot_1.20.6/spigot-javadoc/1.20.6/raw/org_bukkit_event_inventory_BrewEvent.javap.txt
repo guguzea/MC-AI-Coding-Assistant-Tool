@@ -1,0 +1,12 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.inventory.BrewEvent extends org.bukkit.event.block.BlockEvent implements org.bukkit.event.Cancellable {
+  public org.bukkit.event.inventory.BrewEvent(org.bukkit.block.Block, org.bukkit.inventory.BrewerInventory, java.util.List<org.bukkit.inventory.ItemStack>, int);
+  public org.bukkit.inventory.BrewerInventory getContents();
+  public int getFuelLevel();
+  public java.util.List<org.bukkit.inventory.ItemStack> getResults();
+  public boolean isCancelled();
+  public void setCancelled(boolean);
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  static {};
+}

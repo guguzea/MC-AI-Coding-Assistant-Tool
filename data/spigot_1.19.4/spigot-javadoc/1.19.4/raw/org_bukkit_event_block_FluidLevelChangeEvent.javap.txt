@@ -1,0 +1,11 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.block.FluidLevelChangeEvent extends org.bukkit.event.block.BlockEvent implements org.bukkit.event.Cancellable {
+  static {};
+  public org.bukkit.event.block.FluidLevelChangeEvent(org.bukkit.block.Block, org.bukkit.block.data.BlockData);
+  public org.bukkit.block.data.BlockData getNewData();
+  public void setNewData(org.bukkit.block.data.BlockData);
+  public boolean isCancelled();
+  public void setCancelled(boolean);
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+}

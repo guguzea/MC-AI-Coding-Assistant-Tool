@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.data.type.Wall extends org.bukkit.block.data.Waterlogged {
+  public abstract boolean isUp();
+  public abstract void setUp(boolean);
+  public abstract org.bukkit.block.data.type.Wall$Height getHeight(org.bukkit.block.BlockFace);
+  public abstract void setHeight(org.bukkit.block.BlockFace, org.bukkit.block.data.type.Wall$Height);
+}

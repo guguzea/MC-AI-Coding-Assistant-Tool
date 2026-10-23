@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.block.BrewingStartEvent extends org.bukkit.event.block.InventoryBlockStartEvent {
+  public org.bukkit.event.block.BrewingStartEvent(org.bukkit.block.Block, org.bukkit.inventory.ItemStack, int);
+  public int getTotalBrewTime();
+  public void setTotalBrewTime(int);
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  static {};
+}

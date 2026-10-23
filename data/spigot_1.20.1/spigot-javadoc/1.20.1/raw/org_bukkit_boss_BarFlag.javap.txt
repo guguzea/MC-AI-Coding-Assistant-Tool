@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public final class org.bukkit.boss.BarFlag extends java.lang.Enum<org.bukkit.boss.BarFlag> {
+  public static final org.bukkit.boss.BarFlag DARKEN_SKY;
+  public static final org.bukkit.boss.BarFlag PLAY_BOSS_MUSIC;
+  public static final org.bukkit.boss.BarFlag CREATE_FOG;
+  static {};
+  public static org.bukkit.boss.BarFlag[] values();
+  public static org.bukkit.boss.BarFlag valueOf(java.lang.String);
+}

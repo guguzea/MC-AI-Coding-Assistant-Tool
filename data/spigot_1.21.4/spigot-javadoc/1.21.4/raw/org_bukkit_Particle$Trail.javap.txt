@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public class org.bukkit.Particle$Trail {
+  public org.bukkit.Particle$Trail(org.bukkit.Location, org.bukkit.Color, int);
+  public org.bukkit.Location getTarget();
+  public org.bukkit.Color getColor();
+  public int getDuration();
+}

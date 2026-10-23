@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public class org.bukkit.plugin.messaging.ChannelNameTooLongException extends java.lang.RuntimeException {
+  public org.bukkit.plugin.messaging.ChannelNameTooLongException();
+  public org.bukkit.plugin.messaging.ChannelNameTooLongException(java.lang.String);
+}

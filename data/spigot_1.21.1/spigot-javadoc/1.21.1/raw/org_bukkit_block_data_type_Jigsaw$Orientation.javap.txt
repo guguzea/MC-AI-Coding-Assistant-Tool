@@ -1,0 +1,18 @@
+Compiled from <spigot-api>
+public final class org.bukkit.block.data.type.Jigsaw$Orientation extends java.lang.Enum<org.bukkit.block.data.type.Jigsaw$Orientation> {
+  public static final org.bukkit.block.data.type.Jigsaw$Orientation DOWN_EAST;
+  public static final org.bukkit.block.data.type.Jigsaw$Orientation DOWN_NORTH;
+  public static final org.bukkit.block.data.type.Jigsaw$Orientation DOWN_SOUTH;
+  public static final org.bukkit.block.data.type.Jigsaw$Orientation DOWN_WEST;
+  public static final org.bukkit.block.data.type.Jigsaw$Orientation UP_EAST;
+  public static final org.bukkit.block.data.type.Jigsaw$Orientation UP_NORTH;
+  public static final org.bukkit.block.data.type.Jigsaw$Orientation UP_SOUTH;
+  public static final org.bukkit.block.data.type.Jigsaw$Orientation UP_WEST;
+  public static final org.bukkit.block.data.type.Jigsaw$Orientation WEST_UP;
+  public static final org.bukkit.block.data.type.Jigsaw$Orientation EAST_UP;
+  public static final org.bukkit.block.data.type.Jigsaw$Orientation NORTH_UP;
+  public static final org.bukkit.block.data.type.Jigsaw$Orientation SOUTH_UP;
+  public static org.bukkit.block.data.type.Jigsaw$Orientation[] values();
+  public static org.bukkit.block.data.type.Jigsaw$Orientation valueOf(java.lang.String);
+  static {};
+}

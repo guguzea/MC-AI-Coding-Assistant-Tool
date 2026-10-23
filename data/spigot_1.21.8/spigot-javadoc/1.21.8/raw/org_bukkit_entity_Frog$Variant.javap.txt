@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Frog$Variant extends org.bukkit.util.OldEnum<org.bukkit.entity.Frog$Variant>, org.bukkit.Keyed, org.bukkit.registry.RegistryAware {
+  public static final org.bukkit.entity.Frog$Variant TEMPERATE;
+  public static final org.bukkit.entity.Frog$Variant WARM;
+  public static final org.bukkit.entity.Frog$Variant COLD;
+  public abstract org.bukkit.NamespacedKey getKey();
+  public static org.bukkit.entity.Frog$Variant valueOf(java.lang.String);
+  public static org.bukkit.entity.Frog$Variant[] values();
+  static {};
+}

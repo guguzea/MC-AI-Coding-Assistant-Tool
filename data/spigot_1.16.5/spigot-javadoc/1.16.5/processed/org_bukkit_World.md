@@ -1,0 +1,200 @@
+---
+title: "org.bukkit.World"
+package: "org.bukkit"
+source: https://repo.papermc.io/repository/maven-public/org/spigotmc/spigot-api/1.16.5-R0.1-SNAPSHOT/spigot-api-1.16.5-R0.1-20210611.041013-99.jar
+sourceType: javap
+fetchedWith: extract-spigot-api-surface.mjs@1
+fetchedAt: 2026-10-23T15:34:22.101Z
+asOfVersion: "1.16.5-R0.1-SNAPSHOT"
+jarMd5: "f6f72446ce3adfc1c820a97d7fa56c8c"
+---
+
+- `public interface org.bukkit.World extends org.bukkit.plugin.messaging.PluginMessageRecipient,org.bukkit.metadata.Metadatable`
+- `public abstract org.bukkit.block.Block getBlockAt(int, int, int)`
+- `public abstract org.bukkit.block.Block getBlockAt(org.bukkit.Location)`
+- `public abstract int getHighestBlockYAt(int, int)`
+- `public abstract int getHighestBlockYAt(org.bukkit.Location)`
+- `public abstract org.bukkit.block.Block getHighestBlockAt(int, int)`
+- `public abstract org.bukkit.block.Block getHighestBlockAt(org.bukkit.Location)`
+- `public abstract int getHighestBlockYAt(int, int, org.bukkit.HeightMap)`
+- `public abstract int getHighestBlockYAt(org.bukkit.Location, org.bukkit.HeightMap)`
+- `public abstract org.bukkit.block.Block getHighestBlockAt(int, int, org.bukkit.HeightMap)`
+- `public abstract org.bukkit.block.Block getHighestBlockAt(org.bukkit.Location, org.bukkit.HeightMap)`
+- `public abstract org.bukkit.Chunk getChunkAt(int, int)`
+- `public abstract org.bukkit.Chunk getChunkAt(org.bukkit.Location)`
+- `public abstract org.bukkit.Chunk getChunkAt(org.bukkit.block.Block)`
+- `public abstract boolean isChunkLoaded(org.bukkit.Chunk)`
+- `public abstract org.bukkit.Chunk[] getLoadedChunks()`
+- `public abstract void loadChunk(org.bukkit.Chunk)`
+- `public abstract boolean isChunkLoaded(int, int)`
+- `public abstract boolean isChunkGenerated(int, int)`
+- `public abstract boolean isChunkInUse(int, int)`
+- `public abstract void loadChunk(int, int)`
+- `public abstract boolean loadChunk(int, int, boolean)`
+- `public abstract boolean unloadChunk(org.bukkit.Chunk)`
+- `public abstract boolean unloadChunk(int, int)`
+- `public abstract boolean unloadChunk(int, int, boolean)`
+- `public abstract boolean unloadChunkRequest(int, int)`
+- `public abstract boolean regenerateChunk(int, int)`
+- `public abstract boolean refreshChunk(int, int)`
+- `public abstract boolean isChunkForceLoaded(int, int)`
+- `public abstract void setChunkForceLoaded(int, int, boolean)`
+- `public abstract java.util.Collection<org.bukkit.Chunk> getForceLoadedChunks()`
+- `public abstract boolean addPluginChunkTicket(int, int, org.bukkit.plugin.Plugin)`
+- `public abstract boolean removePluginChunkTicket(int, int, org.bukkit.plugin.Plugin)`
+- `public abstract void removePluginChunkTickets(org.bukkit.plugin.Plugin)`
+- `public abstract java.util.Collection<org.bukkit.plugin.Plugin> getPluginChunkTickets(int, int)`
+- `public abstract java.util.Map<org.bukkit.plugin.Plugin, java.util.Collection<org.bukkit.Chunk>> getPluginChunkTickets()`
+- `public abstract org.bukkit.entity.Item dropItem(org.bukkit.Location, org.bukkit.inventory.ItemStack)`
+- `public abstract org.bukkit.entity.Item dropItem(org.bukkit.Location, org.bukkit.inventory.ItemStack, org.bukkit.util.Consumer<org.bukkit.entity.Item>)`
+- `public abstract org.bukkit.entity.Item dropItemNaturally(org.bukkit.Location, org.bukkit.inventory.ItemStack)`
+- `public abstract org.bukkit.entity.Item dropItemNaturally(org.bukkit.Location, org.bukkit.inventory.ItemStack, org.bukkit.util.Consumer<org.bukkit.entity.Item>)`
+- `public abstract org.bukkit.entity.Arrow spawnArrow(org.bukkit.Location, org.bukkit.util.Vector, float, float)`
+- `public abstract <T extends org.bukkit.entity.AbstractArrow> T spawnArrow(org.bukkit.Location, org.bukkit.util.Vector, float, float, java.lang.Class<T>)`
+- `public abstract boolean generateTree(org.bukkit.Location, org.bukkit.TreeType)`
+- `public abstract boolean generateTree(org.bukkit.Location, org.bukkit.TreeType, org.bukkit.BlockChangeDelegate)`
+- `public abstract org.bukkit.entity.Entity spawnEntity(org.bukkit.Location, org.bukkit.entity.EntityType)`
+- `public abstract org.bukkit.entity.LightningStrike strikeLightning(org.bukkit.Location)`
+- `public abstract org.bukkit.entity.LightningStrike strikeLightningEffect(org.bukkit.Location)`
+- `public abstract java.util.List<org.bukkit.entity.Entity> getEntities()`
+- `public abstract java.util.List<org.bukkit.entity.LivingEntity> getLivingEntities()`
+- `public abstract <T extends org.bukkit.entity.Entity> java.util.Collection<T> getEntitiesByClass(java.lang.Class<T>...)`
+- `public abstract <T extends org.bukkit.entity.Entity> java.util.Collection<T> getEntitiesByClass(java.lang.Class<T>)`
+- `public abstract java.util.Collection<org.bukkit.entity.Entity> getEntitiesByClasses(java.lang.Class<?>...)`
+- `public abstract java.util.List<org.bukkit.entity.Player> getPlayers()`
+- `public abstract java.util.Collection<org.bukkit.entity.Entity> getNearbyEntities(org.bukkit.Location, double, double, double)`
+- `public abstract java.util.Collection<org.bukkit.entity.Entity> getNearbyEntities(org.bukkit.Location, double, double, double, java.util.function.Predicate<org.bukkit.entity.Entity>)`
+- `public abstract java.util.Collection<org.bukkit.entity.Entity> getNearbyEntities(org.bukkit.util.BoundingBox)`
+- `public abstract java.util.Collection<org.bukkit.entity.Entity> getNearbyEntities(org.bukkit.util.BoundingBox, java.util.function.Predicate<org.bukkit.entity.Entity>)`
+- `public abstract org.bukkit.util.RayTraceResult rayTraceEntities(org.bukkit.Location, org.bukkit.util.Vector, double)`
+- `public abstract org.bukkit.util.RayTraceResult rayTraceEntities(org.bukkit.Location, org.bukkit.util.Vector, double, double)`
+- `public abstract org.bukkit.util.RayTraceResult rayTraceEntities(org.bukkit.Location, org.bukkit.util.Vector, double, java.util.function.Predicate<org.bukkit.entity.Entity>)`
+- `public abstract org.bukkit.util.RayTraceResult rayTraceEntities(org.bukkit.Location, org.bukkit.util.Vector, double, double, java.util.function.Predicate<org.bukkit.entity.Entity>)`
+- `public abstract org.bukkit.util.RayTraceResult rayTraceBlocks(org.bukkit.Location, org.bukkit.util.Vector, double)`
+- `public abstract org.bukkit.util.RayTraceResult rayTraceBlocks(org.bukkit.Location, org.bukkit.util.Vector, double, org.bukkit.FluidCollisionMode)`
+- `public abstract org.bukkit.util.RayTraceResult rayTraceBlocks(org.bukkit.Location, org.bukkit.util.Vector, double, org.bukkit.FluidCollisionMode, boolean)`
+- `public abstract org.bukkit.util.RayTraceResult rayTrace(org.bukkit.Location, org.bukkit.util.Vector, double, org.bukkit.FluidCollisionMode, boolean, double, java.util.function.Predicate<org.bukkit.entity.Entity>)`
+- `public abstract java.lang.String getName()`
+- `public abstract java.util.UUID getUID()`
+- `public abstract org.bukkit.Location getSpawnLocation()`
+- `public abstract boolean setSpawnLocation(org.bukkit.Location)`
+- `public abstract boolean setSpawnLocation(int, int, int, float)`
+- `public abstract boolean setSpawnLocation(int, int, int)`
+- `public abstract long getTime()`
+- `public abstract void setTime(long)`
+- `public abstract long getFullTime()`
+- `public abstract void setFullTime(long)`
+- `public abstract long getGameTime()`
+- `public abstract boolean hasStorm()`
+- `public abstract void setStorm(boolean)`
+- `public abstract int getWeatherDuration()`
+- `public abstract void setWeatherDuration(int)`
+- `public abstract boolean isThundering()`
+- `public abstract void setThundering(boolean)`
+- `public abstract int getThunderDuration()`
+- `public abstract void setThunderDuration(int)`
+- `public abstract boolean isClearWeather()`
+- `public abstract void setClearWeatherDuration(int)`
+- `public abstract int getClearWeatherDuration()`
+- `public abstract boolean createExplosion(double, double, double, float)`
+- `public abstract boolean createExplosion(double, double, double, float, boolean)`
+- `public abstract boolean createExplosion(double, double, double, float, boolean, boolean)`
+- `public abstract boolean createExplosion(double, double, double, float, boolean, boolean, org.bukkit.entity.Entity)`
+- `public abstract boolean createExplosion(org.bukkit.Location, float)`
+- `public abstract boolean createExplosion(org.bukkit.Location, float, boolean)`
+- `public abstract boolean createExplosion(org.bukkit.Location, float, boolean, boolean)`
+- `public abstract boolean createExplosion(org.bukkit.Location, float, boolean, boolean, org.bukkit.entity.Entity)`
+- `public abstract org.bukkit.World$Environment getEnvironment()`
+- `public abstract long getSeed()`
+- `public abstract boolean getPVP()`
+- `public abstract void setPVP(boolean)`
+- `public abstract org.bukkit.generator.ChunkGenerator getGenerator()`
+- `public abstract void save()`
+- `public abstract java.util.List<org.bukkit.generator.BlockPopulator> getPopulators()`
+- `public abstract <T extends org.bukkit.entity.Entity> T spawn(org.bukkit.Location, java.lang.Class<T>) throws java.lang.IllegalArgumentException`
+- `public abstract <T extends org.bukkit.entity.Entity> T spawn(org.bukkit.Location, java.lang.Class<T>, org.bukkit.util.Consumer<T>) throws java.lang.IllegalArgumentException`
+- `public abstract org.bukkit.entity.FallingBlock spawnFallingBlock(org.bukkit.Location, org.bukkit.material.MaterialData) throws java.lang.IllegalArgumentException`
+- `public abstract org.bukkit.entity.FallingBlock spawnFallingBlock(org.bukkit.Location, org.bukkit.block.data.BlockData) throws java.lang.IllegalArgumentException`
+- `public abstract org.bukkit.entity.FallingBlock spawnFallingBlock(org.bukkit.Location, org.bukkit.Material, byte) throws java.lang.IllegalArgumentException`
+- `public abstract void playEffect(org.bukkit.Location, org.bukkit.Effect, int)`
+- `public abstract void playEffect(org.bukkit.Location, org.bukkit.Effect, int, int)`
+- `public abstract <T> void playEffect(org.bukkit.Location, org.bukkit.Effect, T)`
+- `public abstract <T> void playEffect(org.bukkit.Location, org.bukkit.Effect, T, int)`
+- `public abstract org.bukkit.ChunkSnapshot getEmptyChunkSnapshot(int, int, boolean, boolean)`
+- `public abstract void setSpawnFlags(boolean, boolean)`
+- `public abstract boolean getAllowAnimals()`
+- `public abstract boolean getAllowMonsters()`
+- `public abstract org.bukkit.block.Biome getBiome(int, int)`
+- `public abstract org.bukkit.block.Biome getBiome(int, int, int)`
+- `public abstract void setBiome(int, int, org.bukkit.block.Biome)`
+- `public abstract void setBiome(int, int, int, org.bukkit.block.Biome)`
+- `public abstract double getTemperature(int, int)`
+- `public abstract double getTemperature(int, int, int)`
+- `public abstract double getHumidity(int, int)`
+- `public abstract double getHumidity(int, int, int)`
+- `public abstract int getMinHeight()`
+- `public abstract int getMaxHeight()`
+- `public abstract int getSeaLevel()`
+- `public abstract boolean getKeepSpawnInMemory()`
+- `public abstract void setKeepSpawnInMemory(boolean)`
+- `public abstract boolean isAutoSave()`
+- `public abstract void setAutoSave(boolean)`
+- `public abstract void setDifficulty(org.bukkit.Difficulty)`
+- `public abstract org.bukkit.Difficulty getDifficulty()`
+- `public abstract java.io.File getWorldFolder()`
+- `public abstract org.bukkit.WorldType getWorldType()`
+- `public abstract boolean canGenerateStructures()`
+- `public abstract boolean isHardcore()`
+- `public abstract void setHardcore(boolean)`
+- `public abstract long getTicksPerAnimalSpawns()`
+- `public abstract void setTicksPerAnimalSpawns(int)`
+- `public abstract long getTicksPerMonsterSpawns()`
+- `public abstract void setTicksPerMonsterSpawns(int)`
+- `public abstract long getTicksPerWaterSpawns()`
+- `public abstract void setTicksPerWaterSpawns(int)`
+- `public abstract long getTicksPerWaterAmbientSpawns()`
+- `public abstract void setTicksPerWaterAmbientSpawns(int)`
+- `public abstract long getTicksPerAmbientSpawns()`
+- `public abstract void setTicksPerAmbientSpawns(int)`
+- `public abstract int getMonsterSpawnLimit()`
+- `public abstract void setMonsterSpawnLimit(int)`
+- `public abstract int getAnimalSpawnLimit()`
+- `public abstract void setAnimalSpawnLimit(int)`
+- `public abstract int getWaterAnimalSpawnLimit()`
+- `public abstract void setWaterAnimalSpawnLimit(int)`
+- `public abstract int getWaterAmbientSpawnLimit()`
+- `public abstract void setWaterAmbientSpawnLimit(int)`
+- `public abstract int getAmbientSpawnLimit()`
+- `public abstract void setAmbientSpawnLimit(int)`
+- `public abstract void playSound(org.bukkit.Location, org.bukkit.Sound, float, float)`
+- `public abstract void playSound(org.bukkit.Location, java.lang.String, float, float)`
+- `public abstract void playSound(org.bukkit.Location, org.bukkit.Sound, org.bukkit.SoundCategory, float, float)`
+- `public abstract void playSound(org.bukkit.Location, java.lang.String, org.bukkit.SoundCategory, float, float)`
+- `public abstract java.lang.String[] getGameRules()`
+- `public abstract java.lang.String getGameRuleValue(java.lang.String)`
+- `public abstract boolean setGameRuleValue(java.lang.String, java.lang.String)`
+- `public abstract boolean isGameRule(java.lang.String)`
+- `public abstract <T> T getGameRuleValue(org.bukkit.GameRule<T>)`
+- `public abstract <T> T getGameRuleDefault(org.bukkit.GameRule<T>)`
+- `public abstract <T> boolean setGameRule(org.bukkit.GameRule<T>, T)`
+- `public abstract org.bukkit.WorldBorder getWorldBorder()`
+- `public abstract void spawnParticle(org.bukkit.Particle, org.bukkit.Location, int)`
+- `public abstract void spawnParticle(org.bukkit.Particle, double, double, double, int)`
+- `public abstract <T> void spawnParticle(org.bukkit.Particle, org.bukkit.Location, int, T)`
+- `public abstract <T> void spawnParticle(org.bukkit.Particle, double, double, double, int, T)`
+- `public abstract void spawnParticle(org.bukkit.Particle, org.bukkit.Location, int, double, double, double)`
+- `public abstract void spawnParticle(org.bukkit.Particle, double, double, double, int, double, double, double)`
+- `public abstract <T> void spawnParticle(org.bukkit.Particle, org.bukkit.Location, int, double, double, double, T)`
+- `public abstract <T> void spawnParticle(org.bukkit.Particle, double, double, double, int, double, double, double, T)`
+- `public abstract void spawnParticle(org.bukkit.Particle, org.bukkit.Location, int, double, double, double, double)`
+- `public abstract void spawnParticle(org.bukkit.Particle, double, double, double, int, double, double, double, double)`
+- `public abstract <T> void spawnParticle(org.bukkit.Particle, org.bukkit.Location, int, double, double, double, double, T)`
+- `public abstract <T> void spawnParticle(org.bukkit.Particle, double, double, double, int, double, double, double, double, T)`
+- `public abstract <T> void spawnParticle(org.bukkit.Particle, org.bukkit.Location, int, double, double, double, double, T, boolean)`
+- `public abstract <T> void spawnParticle(org.bukkit.Particle, double, double, double, int, double, double, double, double, T, boolean)`
+- `public abstract org.bukkit.Location locateNearestStructure(org.bukkit.Location, org.bukkit.StructureType, int, boolean)`
+- `public abstract int getViewDistance()`
+- `public abstract org.bukkit.World$Spigot spigot()`
+- `public abstract org.bukkit.Raid locateNearestRaid(org.bukkit.Location, int)`
+- `public abstract java.util.List<org.bukkit.Raid> getRaids()`
+- `public abstract org.bukkit.boss.DragonBattle getEnderDragonBattle()`

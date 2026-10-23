@@ -1,0 +1,17 @@
+Compiled from <spigot-api>
+public final class org.bukkit.event.player.PlayerTeleportEvent$TeleportCause extends java.lang.Enum<org.bukkit.event.player.PlayerTeleportEvent$TeleportCause> {
+  public static final org.bukkit.event.player.PlayerTeleportEvent$TeleportCause ENDER_PEARL;
+  public static final org.bukkit.event.player.PlayerTeleportEvent$TeleportCause COMMAND;
+  public static final org.bukkit.event.player.PlayerTeleportEvent$TeleportCause PLUGIN;
+  public static final org.bukkit.event.player.PlayerTeleportEvent$TeleportCause NETHER_PORTAL;
+  public static final org.bukkit.event.player.PlayerTeleportEvent$TeleportCause END_PORTAL;
+  public static final org.bukkit.event.player.PlayerTeleportEvent$TeleportCause SPECTATE;
+  public static final org.bukkit.event.player.PlayerTeleportEvent$TeleportCause END_GATEWAY;
+  public static final org.bukkit.event.player.PlayerTeleportEvent$TeleportCause CHORUS_FRUIT;
+  public static final org.bukkit.event.player.PlayerTeleportEvent$TeleportCause DISMOUNT;
+  public static final org.bukkit.event.player.PlayerTeleportEvent$TeleportCause EXIT_BED;
+  public static final org.bukkit.event.player.PlayerTeleportEvent$TeleportCause UNKNOWN;
+  static {};
+  public static org.bukkit.event.player.PlayerTeleportEvent$TeleportCause[] values();
+  public static org.bukkit.event.player.PlayerTeleportEvent$TeleportCause valueOf(java.lang.String);
+}

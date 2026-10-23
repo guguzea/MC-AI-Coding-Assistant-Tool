@@ -1,0 +1,15 @@
+Compiled from <spigot-api>
+public final class org.bukkit.util.permissions.DefaultPermissions {
+  static final boolean $assertionsDisabled;
+  public static org.bukkit.permissions.Permission registerPermission(org.bukkit.permissions.Permission);
+  public static org.bukkit.permissions.Permission registerPermission(org.bukkit.permissions.Permission, boolean);
+  public static org.bukkit.permissions.Permission registerPermission(org.bukkit.permissions.Permission, org.bukkit.permissions.Permission);
+  public static org.bukkit.permissions.Permission registerPermission(java.lang.String, java.lang.String);
+  public static org.bukkit.permissions.Permission registerPermission(java.lang.String, java.lang.String, org.bukkit.permissions.Permission);
+  public static org.bukkit.permissions.Permission registerPermission(java.lang.String, java.lang.String, org.bukkit.permissions.PermissionDefault);
+  public static org.bukkit.permissions.Permission registerPermission(java.lang.String, java.lang.String, org.bukkit.permissions.PermissionDefault, org.bukkit.permissions.Permission);
+  public static org.bukkit.permissions.Permission registerPermission(java.lang.String, java.lang.String, org.bukkit.permissions.PermissionDefault, java.util.Map<java.lang.String, java.lang.Boolean>);
+  public static org.bukkit.permissions.Permission registerPermission(java.lang.String, java.lang.String, org.bukkit.permissions.PermissionDefault, java.util.Map<java.lang.String, java.lang.Boolean>, org.bukkit.permissions.Permission);
+  public static void registerCorePermissions();
+  static {};
+}

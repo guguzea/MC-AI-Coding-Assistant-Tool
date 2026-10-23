@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public interface org.bukkit.metadata.MetadataStore<T> {
+  public abstract void setMetadata(T, java.lang.String, org.bukkit.metadata.MetadataValue);
+  public abstract java.util.List<org.bukkit.metadata.MetadataValue> getMetadata(T, java.lang.String);
+  public abstract boolean hasMetadata(T, java.lang.String);
+  public abstract void removeMetadata(T, java.lang.String, org.bukkit.plugin.Plugin);
+  public abstract void invalidateAll(org.bukkit.plugin.Plugin);
+}

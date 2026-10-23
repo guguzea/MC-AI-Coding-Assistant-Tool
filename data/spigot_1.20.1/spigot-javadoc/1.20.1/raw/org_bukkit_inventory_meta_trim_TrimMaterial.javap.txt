@@ -1,0 +1,14 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.meta.trim.TrimMaterial extends org.bukkit.Keyed {
+  public static final org.bukkit.inventory.meta.trim.TrimMaterial QUARTZ;
+  public static final org.bukkit.inventory.meta.trim.TrimMaterial IRON;
+  public static final org.bukkit.inventory.meta.trim.TrimMaterial NETHERITE;
+  public static final org.bukkit.inventory.meta.trim.TrimMaterial REDSTONE;
+  public static final org.bukkit.inventory.meta.trim.TrimMaterial COPPER;
+  public static final org.bukkit.inventory.meta.trim.TrimMaterial GOLD;
+  public static final org.bukkit.inventory.meta.trim.TrimMaterial EMERALD;
+  public static final org.bukkit.inventory.meta.trim.TrimMaterial DIAMOND;
+  public static final org.bukkit.inventory.meta.trim.TrimMaterial LAPIS;
+  public static final org.bukkit.inventory.meta.trim.TrimMaterial AMETHYST;
+  static {};
+}

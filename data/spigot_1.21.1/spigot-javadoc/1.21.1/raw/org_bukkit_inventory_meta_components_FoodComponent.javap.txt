@@ -1,0 +1,16 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.meta.components.FoodComponent extends org.bukkit.configuration.serialization.ConfigurationSerializable {
+  public abstract int getNutrition();
+  public abstract void setNutrition(int);
+  public abstract float getSaturation();
+  public abstract void setSaturation(float);
+  public abstract boolean canAlwaysEat();
+  public abstract void setCanAlwaysEat(boolean);
+  public abstract float getEatSeconds();
+  public abstract void setEatSeconds(float);
+  public abstract org.bukkit.inventory.ItemStack getUsingConvertsTo();
+  public abstract void setUsingConvertsTo(org.bukkit.inventory.ItemStack);
+  public abstract java.util.List<org.bukkit.inventory.meta.components.FoodComponent$FoodEffect> getEffects();
+  public abstract void setEffects(java.util.List<org.bukkit.inventory.meta.components.FoodComponent$FoodEffect>);
+  public abstract org.bukkit.inventory.meta.components.FoodComponent$FoodEffect addEffect(org.bukkit.potion.PotionEffect, float);
+}

@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.PiglinAbstract extends org.bukkit.entity.Monster,org.bukkit.entity.Ageable {
+  public abstract boolean isImmuneToZombification();
+  public abstract void setImmuneToZombification(boolean);
+  public abstract int getConversionTime();
+  public abstract void setConversionTime(int);
+  public abstract boolean isConverting();
+  public abstract boolean isBaby();
+  public abstract void setBaby(boolean);
+}

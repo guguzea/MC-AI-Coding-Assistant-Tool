@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.player.PlayerPickupArrowEvent extends org.bukkit.event.player.PlayerPickupItemEvent {
+  public org.bukkit.event.player.PlayerPickupArrowEvent(org.bukkit.entity.Player, org.bukkit.entity.Item, org.bukkit.entity.Arrow);
+  public org.bukkit.entity.Arrow getArrow();
+}

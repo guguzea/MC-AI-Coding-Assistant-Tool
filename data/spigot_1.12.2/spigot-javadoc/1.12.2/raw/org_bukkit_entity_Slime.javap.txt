@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Slime extends org.bukkit.entity.LivingEntity {
+  public abstract int getSize();
+  public abstract void setSize(int);
+  public abstract void setTarget(org.bukkit.entity.LivingEntity);
+  public abstract org.bukkit.entity.LivingEntity getTarget();
+}

@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Pig extends org.bukkit.entity.Steerable,org.bukkit.entity.Vehicle {
+  public abstract org.bukkit.entity.Pig$Variant getVariant();
+  public abstract void setVariant(org.bukkit.entity.Pig$Variant);
+}

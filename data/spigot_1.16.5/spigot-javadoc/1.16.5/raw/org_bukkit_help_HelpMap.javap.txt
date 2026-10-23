@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public interface org.bukkit.help.HelpMap {
+  public abstract org.bukkit.help.HelpTopic getHelpTopic(java.lang.String);
+  public abstract java.util.Collection<org.bukkit.help.HelpTopic> getHelpTopics();
+  public abstract void addTopic(org.bukkit.help.HelpTopic);
+  public abstract void clear();
+  public abstract void registerHelpTopicFactory(java.lang.Class<?>, org.bukkit.help.HelpTopicFactory<?>);
+  public abstract java.util.List<java.lang.String> getIgnoredPlugins();
+}

@@ -1,0 +1,15 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.meta.SkullMeta extends org.bukkit.inventory.meta.ItemMeta {
+  public abstract java.lang.String getOwner();
+  public abstract boolean hasOwner();
+  public abstract boolean setOwner(java.lang.String);
+  public abstract org.bukkit.OfflinePlayer getOwningPlayer();
+  public abstract boolean setOwningPlayer(org.bukkit.OfflinePlayer);
+  public abstract org.bukkit.profile.PlayerProfile getOwnerProfile();
+  public abstract void setOwnerProfile(org.bukkit.profile.PlayerProfile);
+  public abstract void setNoteBlockSound(org.bukkit.NamespacedKey);
+  public abstract org.bukkit.NamespacedKey getNoteBlockSound();
+  public abstract org.bukkit.inventory.meta.SkullMeta clone();
+  public default org.bukkit.inventory.meta.ItemMeta clone();
+  public default java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+}

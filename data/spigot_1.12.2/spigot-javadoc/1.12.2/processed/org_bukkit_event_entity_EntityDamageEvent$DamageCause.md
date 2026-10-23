@@ -1,0 +1,41 @@
+---
+title: "org.bukkit.event.entity.EntityDamageEvent$DamageCause"
+package: "org.bukkit.event.entity"
+source: https://repo.papermc.io/repository/maven-public/org/spigotmc/spigot-api/1.12.2-R0.1-SNAPSHOT/spigot-api-1.12.2-R0.1-20180712.012057-156.jar
+sourceType: javap
+fetchedWith: extract-spigot-api-surface.mjs@1
+fetchedAt: 2026-10-23T15:35:10.184Z
+asOfVersion: "1.12.2-R0.1-SNAPSHOT"
+jarMd5: "f1c84754979a6e1344a24f09bb1fed35"
+---
+
+- `public final class org.bukkit.event.entity.EntityDamageEvent$DamageCause extends java.lang.Enum<org.bukkit.event.entity.EntityDamageEvent$DamageCause>`
+- `public static final org.bukkit.event.entity.EntityDamageEvent$DamageCause CONTACT`
+- `public static final org.bukkit.event.entity.EntityDamageEvent$DamageCause ENTITY_ATTACK`
+- `public static final org.bukkit.event.entity.EntityDamageEvent$DamageCause ENTITY_SWEEP_ATTACK`
+- `public static final org.bukkit.event.entity.EntityDamageEvent$DamageCause PROJECTILE`
+- `public static final org.bukkit.event.entity.EntityDamageEvent$DamageCause SUFFOCATION`
+- `public static final org.bukkit.event.entity.EntityDamageEvent$DamageCause FALL`
+- `public static final org.bukkit.event.entity.EntityDamageEvent$DamageCause FIRE`
+- `public static final org.bukkit.event.entity.EntityDamageEvent$DamageCause FIRE_TICK`
+- `public static final org.bukkit.event.entity.EntityDamageEvent$DamageCause MELTING`
+- `public static final org.bukkit.event.entity.EntityDamageEvent$DamageCause LAVA`
+- `public static final org.bukkit.event.entity.EntityDamageEvent$DamageCause DROWNING`
+- `public static final org.bukkit.event.entity.EntityDamageEvent$DamageCause BLOCK_EXPLOSION`
+- `public static final org.bukkit.event.entity.EntityDamageEvent$DamageCause ENTITY_EXPLOSION`
+- `public static final org.bukkit.event.entity.EntityDamageEvent$DamageCause VOID`
+- `public static final org.bukkit.event.entity.EntityDamageEvent$DamageCause LIGHTNING`
+- `public static final org.bukkit.event.entity.EntityDamageEvent$DamageCause SUICIDE`
+- `public static final org.bukkit.event.entity.EntityDamageEvent$DamageCause STARVATION`
+- `public static final org.bukkit.event.entity.EntityDamageEvent$DamageCause POISON`
+- `public static final org.bukkit.event.entity.EntityDamageEvent$DamageCause MAGIC`
+- `public static final org.bukkit.event.entity.EntityDamageEvent$DamageCause WITHER`
+- `public static final org.bukkit.event.entity.EntityDamageEvent$DamageCause FALLING_BLOCK`
+- `public static final org.bukkit.event.entity.EntityDamageEvent$DamageCause THORNS`
+- `public static final org.bukkit.event.entity.EntityDamageEvent$DamageCause DRAGON_BREATH`
+- `public static final org.bukkit.event.entity.EntityDamageEvent$DamageCause CUSTOM`
+- `public static final org.bukkit.event.entity.EntityDamageEvent$DamageCause FLY_INTO_WALL`
+- `public static final org.bukkit.event.entity.EntityDamageEvent$DamageCause HOT_FLOOR`
+- `public static final org.bukkit.event.entity.EntityDamageEvent$DamageCause CRAMMING`
+- `public static org.bukkit.event.entity.EntityDamageEvent$DamageCause[] values()`
+- `public static org.bukkit.event.entity.EntityDamageEvent$DamageCause valueOf(java.lang.String)`

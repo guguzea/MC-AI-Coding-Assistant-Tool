@@ -1,0 +1,39 @@
+Compiled from <spigot-api>
+public final class org.bukkit.event.inventory.InventoryType extends java.lang.Enum<org.bukkit.event.inventory.InventoryType> {
+  public static final org.bukkit.event.inventory.InventoryType CHEST;
+  public static final org.bukkit.event.inventory.InventoryType DISPENSER;
+  public static final org.bukkit.event.inventory.InventoryType DROPPER;
+  public static final org.bukkit.event.inventory.InventoryType FURNACE;
+  public static final org.bukkit.event.inventory.InventoryType WORKBENCH;
+  public static final org.bukkit.event.inventory.InventoryType CRAFTING;
+  public static final org.bukkit.event.inventory.InventoryType ENCHANTING;
+  public static final org.bukkit.event.inventory.InventoryType BREWING;
+  public static final org.bukkit.event.inventory.InventoryType PLAYER;
+  public static final org.bukkit.event.inventory.InventoryType CREATIVE;
+  public static final org.bukkit.event.inventory.InventoryType MERCHANT;
+  public static final org.bukkit.event.inventory.InventoryType ENDER_CHEST;
+  public static final org.bukkit.event.inventory.InventoryType ANVIL;
+  public static final org.bukkit.event.inventory.InventoryType SMITHING;
+  public static final org.bukkit.event.inventory.InventoryType BEACON;
+  public static final org.bukkit.event.inventory.InventoryType HOPPER;
+  public static final org.bukkit.event.inventory.InventoryType SHULKER_BOX;
+  public static final org.bukkit.event.inventory.InventoryType BARREL;
+  public static final org.bukkit.event.inventory.InventoryType BLAST_FURNACE;
+  public static final org.bukkit.event.inventory.InventoryType LECTERN;
+  public static final org.bukkit.event.inventory.InventoryType SMOKER;
+  public static final org.bukkit.event.inventory.InventoryType LOOM;
+  public static final org.bukkit.event.inventory.InventoryType CARTOGRAPHY;
+  public static final org.bukkit.event.inventory.InventoryType GRINDSTONE;
+  public static final org.bukkit.event.inventory.InventoryType STONECUTTER;
+  public static final org.bukkit.event.inventory.InventoryType COMPOSTER;
+  public static final org.bukkit.event.inventory.InventoryType CHISELED_BOOKSHELF;
+  public static final org.bukkit.event.inventory.InventoryType JUKEBOX;
+  public static final org.bukkit.event.inventory.InventoryType CRAFTER;
+  public static final org.bukkit.event.inventory.InventoryType SMITHING_NEW;
+  public static org.bukkit.event.inventory.InventoryType[] values();
+  public static org.bukkit.event.inventory.InventoryType valueOf(java.lang.String);
+  public int getDefaultSize();
+  public java.lang.String getDefaultTitle();
+  public boolean isCreatable();
+  static {};
+}

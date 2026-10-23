@@ -1,0 +1,15 @@
+Compiled from <spigot-api>
+public class org.bukkit.material.Ladder extends org.bukkit.material.SimpleAttachableMaterialData {
+  public org.bukkit.material.Ladder();
+  public org.bukkit.material.Ladder(int);
+  public org.bukkit.material.Ladder(org.bukkit.Material);
+  public org.bukkit.material.Ladder(int, byte);
+  public org.bukkit.material.Ladder(org.bukkit.Material, byte);
+  public org.bukkit.block.BlockFace getAttachedFace();
+  public void setFacingDirection(org.bukkit.block.BlockFace);
+  public org.bukkit.material.Ladder clone();
+  public org.bukkit.material.SimpleAttachableMaterialData clone();
+  public java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+  public org.bukkit.material.MaterialData clone();
+  static int[] $SWITCH_TABLE$org$bukkit$block$BlockFace();
+}

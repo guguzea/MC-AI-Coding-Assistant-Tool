@@ -1,0 +1,14 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.entity.ExplosionPrimeEvent extends org.bukkit.event.entity.EntityEvent implements org.bukkit.event.Cancellable {
+  public org.bukkit.event.entity.ExplosionPrimeEvent(org.bukkit.entity.Entity, float, boolean);
+  public org.bukkit.event.entity.ExplosionPrimeEvent(org.bukkit.entity.Explosive);
+  public boolean isCancelled();
+  public void setCancelled(boolean);
+  public float getRadius();
+  public void setRadius(float);
+  public boolean getFire();
+  public void setFire(boolean);
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  static {};
+}

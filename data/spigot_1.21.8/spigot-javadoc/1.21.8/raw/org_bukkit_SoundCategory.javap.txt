@@ -1,0 +1,17 @@
+Compiled from <spigot-api>
+public final class org.bukkit.SoundCategory extends java.lang.Enum<org.bukkit.SoundCategory> {
+  public static final org.bukkit.SoundCategory MASTER;
+  public static final org.bukkit.SoundCategory MUSIC;
+  public static final org.bukkit.SoundCategory RECORDS;
+  public static final org.bukkit.SoundCategory WEATHER;
+  public static final org.bukkit.SoundCategory BLOCKS;
+  public static final org.bukkit.SoundCategory HOSTILE;
+  public static final org.bukkit.SoundCategory NEUTRAL;
+  public static final org.bukkit.SoundCategory PLAYERS;
+  public static final org.bukkit.SoundCategory AMBIENT;
+  public static final org.bukkit.SoundCategory VOICE;
+  public static final org.bukkit.SoundCategory UI;
+  public static org.bukkit.SoundCategory[] values();
+  public static org.bukkit.SoundCategory valueOf(java.lang.String);
+  static {};
+}

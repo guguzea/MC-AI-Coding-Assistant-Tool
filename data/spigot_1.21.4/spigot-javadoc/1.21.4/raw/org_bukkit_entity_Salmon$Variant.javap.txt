@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public final class org.bukkit.entity.Salmon$Variant extends java.lang.Enum<org.bukkit.entity.Salmon$Variant> {
+  public static final org.bukkit.entity.Salmon$Variant SMALL;
+  public static final org.bukkit.entity.Salmon$Variant MEDIUM;
+  public static final org.bukkit.entity.Salmon$Variant LARGE;
+  public static org.bukkit.entity.Salmon$Variant[] values();
+  public static org.bukkit.entity.Salmon$Variant valueOf(java.lang.String);
+  static {};
+}

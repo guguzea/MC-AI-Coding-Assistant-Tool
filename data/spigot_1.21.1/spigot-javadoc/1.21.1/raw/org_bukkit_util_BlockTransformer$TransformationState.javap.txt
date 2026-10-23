@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.util.BlockTransformer$TransformationState {
+  public abstract org.bukkit.block.BlockState getOriginal();
+  public abstract org.bukkit.block.BlockState getWorld();
+}

@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public final class org.bukkit.entity.Llama$Color extends java.lang.Enum<org.bukkit.entity.Llama$Color> {
+  public static final org.bukkit.entity.Llama$Color CREAMY;
+  public static final org.bukkit.entity.Llama$Color WHITE;
+  public static final org.bukkit.entity.Llama$Color BROWN;
+  public static final org.bukkit.entity.Llama$Color GRAY;
+  static {};
+  public static org.bukkit.entity.Llama$Color[] values();
+  public static org.bukkit.entity.Llama$Color valueOf(java.lang.String);
+}

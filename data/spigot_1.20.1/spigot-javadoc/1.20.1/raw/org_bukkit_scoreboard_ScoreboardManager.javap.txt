@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.scoreboard.ScoreboardManager {
+  public abstract org.bukkit.scoreboard.Scoreboard getMainScoreboard();
+  public abstract org.bukkit.scoreboard.Scoreboard getNewScoreboard();
+}

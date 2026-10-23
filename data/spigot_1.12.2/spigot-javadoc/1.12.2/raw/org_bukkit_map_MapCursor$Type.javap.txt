@@ -1,0 +1,19 @@
+Compiled from <spigot-api>
+public final class org.bukkit.map.MapCursor$Type extends java.lang.Enum<org.bukkit.map.MapCursor$Type> {
+  public static final org.bukkit.map.MapCursor$Type WHITE_POINTER;
+  public static final org.bukkit.map.MapCursor$Type GREEN_POINTER;
+  public static final org.bukkit.map.MapCursor$Type RED_POINTER;
+  public static final org.bukkit.map.MapCursor$Type BLUE_POINTER;
+  public static final org.bukkit.map.MapCursor$Type WHITE_CROSS;
+  public static final org.bukkit.map.MapCursor$Type RED_MARKER;
+  public static final org.bukkit.map.MapCursor$Type WHITE_CIRCLE;
+  public static final org.bukkit.map.MapCursor$Type SMALL_WHITE_CIRCLE;
+  public static final org.bukkit.map.MapCursor$Type MANSION;
+  public static final org.bukkit.map.MapCursor$Type TEMPLE;
+  static {};
+  public byte getValue();
+  public static org.bukkit.map.MapCursor$Type byValue(byte);
+  public static org.bukkit.map.MapCursor$Type[] values();
+  public static org.bukkit.map.MapCursor$Type valueOf(java.lang.String);
+  static byte access$2(org.bukkit.map.MapCursor$Type);
+}

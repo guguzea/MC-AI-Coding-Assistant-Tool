@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.block.BlockRedstoneEvent extends org.bukkit.event.block.BlockEvent {
+  static {};
+  public org.bukkit.event.block.BlockRedstoneEvent(org.bukkit.block.Block, int, int);
+  public int getOldCurrent();
+  public int getNewCurrent();
+  public void setNewCurrent(int);
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+}

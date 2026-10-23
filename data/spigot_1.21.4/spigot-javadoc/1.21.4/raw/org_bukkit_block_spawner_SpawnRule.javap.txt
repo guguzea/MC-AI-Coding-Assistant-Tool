@@ -1,0 +1,18 @@
+Compiled from <spigot-api>
+public class org.bukkit.block.spawner.SpawnRule implements java.lang.Cloneable,org.bukkit.configuration.serialization.ConfigurationSerializable {
+  public org.bukkit.block.spawner.SpawnRule(int, int, int, int);
+  public int getMinBlockLight();
+  public void setMinBlockLight(int);
+  public int getMaxBlockLight();
+  public void setMaxBlockLight(int);
+  public int getMinSkyLight();
+  public void setMinSkyLight(int);
+  public int getMaxSkyLight();
+  public void setMaxSkyLight(int);
+  public boolean equals(java.lang.Object);
+  public int hashCode();
+  public org.bukkit.block.spawner.SpawnRule clone();
+  public java.util.Map<java.lang.String, java.lang.Object> serialize();
+  public static org.bukkit.block.spawner.SpawnRule deserialize(java.util.Map<java.lang.String, java.lang.Object>);
+  public java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+}

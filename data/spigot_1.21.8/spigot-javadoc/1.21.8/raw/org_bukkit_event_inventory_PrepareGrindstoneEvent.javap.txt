@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.inventory.PrepareGrindstoneEvent extends org.bukkit.event.inventory.PrepareInventoryResultEvent {
+  public org.bukkit.event.inventory.PrepareGrindstoneEvent(org.bukkit.inventory.InventoryView, org.bukkit.inventory.ItemStack);
+  public org.bukkit.inventory.GrindstoneInventory getInventory();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  public org.bukkit.inventory.Inventory getInventory();
+  static {};
+}

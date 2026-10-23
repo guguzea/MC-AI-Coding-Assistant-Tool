@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public class org.bukkit.inventory.BlastingRecipe extends org.bukkit.inventory.CookingRecipe<org.bukkit.inventory.BlastingRecipe> {
+  public org.bukkit.inventory.BlastingRecipe(org.bukkit.NamespacedKey, org.bukkit.inventory.ItemStack, org.bukkit.Material, float, int);
+  public org.bukkit.inventory.BlastingRecipe(org.bukkit.NamespacedKey, org.bukkit.inventory.ItemStack, org.bukkit.inventory.RecipeChoice, float, int);
+}

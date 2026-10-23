@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.MerchantInventory extends org.bukkit.inventory.Inventory {
+  public abstract int getSelectedRecipeIndex();
+  public abstract org.bukkit.inventory.MerchantRecipe getSelectedRecipe();
+  public abstract org.bukkit.inventory.Merchant getMerchant();
+}

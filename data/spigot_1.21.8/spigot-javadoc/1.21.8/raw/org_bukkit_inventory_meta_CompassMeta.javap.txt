@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.meta.CompassMeta extends org.bukkit.inventory.meta.ItemMeta {
+  public abstract boolean hasLodestone();
+  public abstract org.bukkit.Location getLodestone();
+  public abstract void setLodestone(org.bukkit.Location);
+  public abstract boolean isLodestoneTracked();
+  public abstract void setLodestoneTracked(boolean);
+  public abstract org.bukkit.inventory.meta.CompassMeta clone();
+  public default org.bukkit.inventory.meta.ItemMeta clone();
+}

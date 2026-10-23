@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Bat extends org.bukkit.entity.Ambient {
+  public abstract boolean isAwake();
+  public abstract void setAwake(boolean);
+}

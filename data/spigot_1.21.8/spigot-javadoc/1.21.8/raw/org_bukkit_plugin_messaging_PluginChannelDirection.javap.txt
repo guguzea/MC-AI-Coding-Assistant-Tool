@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public final class org.bukkit.plugin.messaging.PluginChannelDirection extends java.lang.Enum<org.bukkit.plugin.messaging.PluginChannelDirection> {
+  public static final org.bukkit.plugin.messaging.PluginChannelDirection INCOMING;
+  public static final org.bukkit.plugin.messaging.PluginChannelDirection OUTGOING;
+  public static org.bukkit.plugin.messaging.PluginChannelDirection[] values();
+  public static org.bukkit.plugin.messaging.PluginChannelDirection valueOf(java.lang.String);
+  static {};
+}

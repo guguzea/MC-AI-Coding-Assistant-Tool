@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.entity.EntityBreakDoorEvent extends org.bukkit.event.entity.EntityChangeBlockEvent {
+  public org.bukkit.event.entity.EntityBreakDoorEvent(org.bukkit.entity.LivingEntity, org.bukkit.block.Block);
+  public org.bukkit.entity.LivingEntity getEntity();
+  public org.bukkit.entity.Entity getEntity();
+}

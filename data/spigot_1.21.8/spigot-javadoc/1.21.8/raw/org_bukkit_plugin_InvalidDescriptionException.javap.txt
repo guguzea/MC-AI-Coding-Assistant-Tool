@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public class org.bukkit.plugin.InvalidDescriptionException extends java.lang.Exception {
+  public org.bukkit.plugin.InvalidDescriptionException(java.lang.Throwable, java.lang.String);
+  public org.bukkit.plugin.InvalidDescriptionException(java.lang.Throwable);
+  public org.bukkit.plugin.InvalidDescriptionException(java.lang.String);
+  public org.bukkit.plugin.InvalidDescriptionException();
+}

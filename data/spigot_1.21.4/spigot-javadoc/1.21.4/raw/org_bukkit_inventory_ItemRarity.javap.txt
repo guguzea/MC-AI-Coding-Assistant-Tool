@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public final class org.bukkit.inventory.ItemRarity extends java.lang.Enum<org.bukkit.inventory.ItemRarity> {
+  public static final org.bukkit.inventory.ItemRarity COMMON;
+  public static final org.bukkit.inventory.ItemRarity UNCOMMON;
+  public static final org.bukkit.inventory.ItemRarity RARE;
+  public static final org.bukkit.inventory.ItemRarity EPIC;
+  public static org.bukkit.inventory.ItemRarity[] values();
+  public static org.bukkit.inventory.ItemRarity valueOf(java.lang.String);
+  static {};
+}

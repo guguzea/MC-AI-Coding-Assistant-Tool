@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Camel extends org.bukkit.entity.AbstractHorse,org.bukkit.entity.Sittable {
+  public abstract boolean isDashing();
+  public abstract void setDashing(boolean);
+}

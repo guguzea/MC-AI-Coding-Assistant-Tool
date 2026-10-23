@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Cow$Variant extends org.bukkit.Keyed,org.bukkit.registry.RegistryAware {
+  public static final org.bukkit.entity.Cow$Variant TEMPERATE;
+  public static final org.bukkit.entity.Cow$Variant WARM;
+  public static final org.bukkit.entity.Cow$Variant COLD;
+  public abstract org.bukkit.NamespacedKey getKey();
+  static {};
+}

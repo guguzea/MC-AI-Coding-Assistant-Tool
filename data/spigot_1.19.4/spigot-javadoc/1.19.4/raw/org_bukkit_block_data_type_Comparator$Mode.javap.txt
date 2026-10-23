@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public final class org.bukkit.block.data.type.Comparator$Mode extends java.lang.Enum<org.bukkit.block.data.type.Comparator$Mode> {
+  public static final org.bukkit.block.data.type.Comparator$Mode COMPARE;
+  public static final org.bukkit.block.data.type.Comparator$Mode SUBTRACT;
+  static {};
+  public static org.bukkit.block.data.type.Comparator$Mode[] values();
+  public static org.bukkit.block.data.type.Comparator$Mode valueOf(java.lang.String);
+}

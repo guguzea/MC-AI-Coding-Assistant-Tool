@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public class org.bukkit.plugin.PluginLogger extends java.util.logging.Logger {
+  public org.bukkit.plugin.PluginLogger(org.bukkit.plugin.Plugin);
+  public void log(java.util.logging.LogRecord);
+}

@@ -1,0 +1,25 @@
+Compiled from <spigot-api>
+public final class org.bukkit.event.inventory.InventoryAction extends java.lang.Enum<org.bukkit.event.inventory.InventoryAction> {
+  public static final org.bukkit.event.inventory.InventoryAction NOTHING;
+  public static final org.bukkit.event.inventory.InventoryAction PICKUP_ALL;
+  public static final org.bukkit.event.inventory.InventoryAction PICKUP_SOME;
+  public static final org.bukkit.event.inventory.InventoryAction PICKUP_HALF;
+  public static final org.bukkit.event.inventory.InventoryAction PICKUP_ONE;
+  public static final org.bukkit.event.inventory.InventoryAction PLACE_ALL;
+  public static final org.bukkit.event.inventory.InventoryAction PLACE_SOME;
+  public static final org.bukkit.event.inventory.InventoryAction PLACE_ONE;
+  public static final org.bukkit.event.inventory.InventoryAction SWAP_WITH_CURSOR;
+  public static final org.bukkit.event.inventory.InventoryAction DROP_ALL_CURSOR;
+  public static final org.bukkit.event.inventory.InventoryAction DROP_ONE_CURSOR;
+  public static final org.bukkit.event.inventory.InventoryAction DROP_ALL_SLOT;
+  public static final org.bukkit.event.inventory.InventoryAction DROP_ONE_SLOT;
+  public static final org.bukkit.event.inventory.InventoryAction MOVE_TO_OTHER_INVENTORY;
+  public static final org.bukkit.event.inventory.InventoryAction HOTBAR_MOVE_AND_READD;
+  public static final org.bukkit.event.inventory.InventoryAction HOTBAR_SWAP;
+  public static final org.bukkit.event.inventory.InventoryAction CLONE_STACK;
+  public static final org.bukkit.event.inventory.InventoryAction COLLECT_TO_CURSOR;
+  public static final org.bukkit.event.inventory.InventoryAction UNKNOWN;
+  public static org.bukkit.event.inventory.InventoryAction[] values();
+  public static org.bukkit.event.inventory.InventoryAction valueOf(java.lang.String);
+  static {};
+}

@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public class org.bukkit.permissions.PermissionAttachmentInfo {
+  public org.bukkit.permissions.PermissionAttachmentInfo(org.bukkit.permissions.Permissible, java.lang.String, org.bukkit.permissions.PermissionAttachment, boolean);
+  public org.bukkit.permissions.Permissible getPermissible();
+  public java.lang.String getPermission();
+  public org.bukkit.permissions.PermissionAttachment getAttachment();
+  public boolean getValue();
+}

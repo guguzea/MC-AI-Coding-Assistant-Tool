@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Interaction$PreviousInteraction {
+  public abstract org.bukkit.OfflinePlayer getPlayer();
+  public abstract long getTimestamp();
+}

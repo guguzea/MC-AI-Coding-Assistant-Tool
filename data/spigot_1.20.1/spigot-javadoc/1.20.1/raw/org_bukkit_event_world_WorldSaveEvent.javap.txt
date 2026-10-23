@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.world.WorldSaveEvent extends org.bukkit.event.world.WorldEvent {
+  static {};
+  public org.bukkit.event.world.WorldSaveEvent(org.bukkit.World);
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+}

@@ -1,0 +1,12 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.hanging.HangingPlaceEvent extends org.bukkit.event.hanging.HangingEvent implements org.bukkit.event.Cancellable {
+  static {};
+  public org.bukkit.event.hanging.HangingPlaceEvent(org.bukkit.entity.Hanging, org.bukkit.entity.Player, org.bukkit.block.Block, org.bukkit.block.BlockFace);
+  public org.bukkit.entity.Player getPlayer();
+  public org.bukkit.block.Block getBlock();
+  public org.bukkit.block.BlockFace getBlockFace();
+  public boolean isCancelled();
+  public void setCancelled(boolean);
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+}

@@ -1,0 +1,15 @@
+Compiled from <spigot-api>
+public abstract class org.bukkit.MusicInstrument implements org.bukkit.Keyed {
+  public static final org.bukkit.MusicInstrument PONDER;
+  public static final org.bukkit.MusicInstrument SING;
+  public static final org.bukkit.MusicInstrument SEEK;
+  public static final org.bukkit.MusicInstrument FEEL;
+  public static final org.bukkit.MusicInstrument ADMIRE;
+  public static final org.bukkit.MusicInstrument CALL;
+  public static final org.bukkit.MusicInstrument YEARN;
+  public static final org.bukkit.MusicInstrument DREAM;
+  static {};
+  public org.bukkit.MusicInstrument();
+  public static org.bukkit.MusicInstrument getByKey(org.bukkit.NamespacedKey);
+  public static java.util.Collection<org.bukkit.MusicInstrument> values();
+}

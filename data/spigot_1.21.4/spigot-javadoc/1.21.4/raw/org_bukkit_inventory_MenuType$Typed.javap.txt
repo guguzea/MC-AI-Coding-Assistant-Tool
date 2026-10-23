@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.MenuType$Typed<V extends org.bukkit.inventory.InventoryView, B extends org.bukkit.inventory.view.builder.InventoryViewBuilder<V>> extends org.bukkit.inventory.MenuType {
+  public abstract V create(org.bukkit.entity.HumanEntity, java.lang.String);
+  public abstract B builder();
+}

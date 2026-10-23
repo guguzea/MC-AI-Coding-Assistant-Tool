@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public final class org.bukkit.entity.AbstractArrow$PickupStatus extends java.lang.Enum<org.bukkit.entity.AbstractArrow$PickupStatus> {
+  public static final org.bukkit.entity.AbstractArrow$PickupStatus DISALLOWED;
+  public static final org.bukkit.entity.AbstractArrow$PickupStatus ALLOWED;
+  public static final org.bukkit.entity.AbstractArrow$PickupStatus CREATIVE_ONLY;
+  public static org.bukkit.entity.AbstractArrow$PickupStatus[] values();
+  public static org.bukkit.entity.AbstractArrow$PickupStatus valueOf(java.lang.String);
+  static {};
+}

@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public final class org.bukkit.WeatherType extends java.lang.Enum<org.bukkit.WeatherType> {
+  public static final org.bukkit.WeatherType DOWNFALL;
+  public static final org.bukkit.WeatherType CLEAR;
+  public static org.bukkit.WeatherType[] values();
+  public static org.bukkit.WeatherType valueOf(java.lang.String);
+  static {};
+}

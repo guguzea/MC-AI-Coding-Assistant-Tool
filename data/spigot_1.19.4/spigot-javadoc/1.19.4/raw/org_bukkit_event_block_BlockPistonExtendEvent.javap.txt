@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.block.BlockPistonExtendEvent extends org.bukkit.event.block.BlockPistonEvent {
+  static {};
+  public org.bukkit.event.block.BlockPistonExtendEvent(org.bukkit.block.Block, int, org.bukkit.block.BlockFace);
+  public org.bukkit.event.block.BlockPistonExtendEvent(org.bukkit.block.Block, java.util.List<org.bukkit.block.Block>, org.bukkit.block.BlockFace);
+  public int getLength();
+  public java.util.List<org.bukkit.block.Block> getBlocks();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+}

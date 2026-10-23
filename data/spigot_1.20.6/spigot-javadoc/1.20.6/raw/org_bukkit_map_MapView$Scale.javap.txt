@@ -1,0 +1,13 @@
+Compiled from <spigot-api>
+public final class org.bukkit.map.MapView$Scale extends java.lang.Enum<org.bukkit.map.MapView$Scale> {
+  public static final org.bukkit.map.MapView$Scale CLOSEST;
+  public static final org.bukkit.map.MapView$Scale CLOSE;
+  public static final org.bukkit.map.MapView$Scale NORMAL;
+  public static final org.bukkit.map.MapView$Scale FAR;
+  public static final org.bukkit.map.MapView$Scale FARTHEST;
+  public static org.bukkit.map.MapView$Scale[] values();
+  public static org.bukkit.map.MapView$Scale valueOf(java.lang.String);
+  public static org.bukkit.map.MapView$Scale valueOf(byte);
+  public byte getValue();
+  static {};
+}

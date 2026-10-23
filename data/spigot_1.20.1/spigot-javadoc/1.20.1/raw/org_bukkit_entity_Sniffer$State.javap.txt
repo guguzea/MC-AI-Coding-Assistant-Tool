@@ -1,0 +1,13 @@
+Compiled from <spigot-api>
+public final class org.bukkit.entity.Sniffer$State extends java.lang.Enum<org.bukkit.entity.Sniffer$State> {
+  public static final org.bukkit.entity.Sniffer$State IDLING;
+  public static final org.bukkit.entity.Sniffer$State FEELING_HAPPY;
+  public static final org.bukkit.entity.Sniffer$State SCENTING;
+  public static final org.bukkit.entity.Sniffer$State SNIFFING;
+  public static final org.bukkit.entity.Sniffer$State SEARCHING;
+  public static final org.bukkit.entity.Sniffer$State DIGGING;
+  public static final org.bukkit.entity.Sniffer$State RISING;
+  static {};
+  public static org.bukkit.entity.Sniffer$State[] values();
+  public static org.bukkit.entity.Sniffer$State valueOf(java.lang.String);
+}

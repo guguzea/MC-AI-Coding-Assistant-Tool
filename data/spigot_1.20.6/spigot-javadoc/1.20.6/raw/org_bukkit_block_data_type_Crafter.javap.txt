@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.data.type.Crafter extends org.bukkit.block.data.BlockData {
+  public abstract boolean isCrafting();
+  public abstract void setCrafting(boolean);
+  public abstract boolean isTriggered();
+  public abstract void setTriggered(boolean);
+  public abstract org.bukkit.block.data.type.Crafter$Orientation getOrientation();
+  public abstract void setOrientation(org.bukkit.block.data.type.Crafter$Orientation);
+}

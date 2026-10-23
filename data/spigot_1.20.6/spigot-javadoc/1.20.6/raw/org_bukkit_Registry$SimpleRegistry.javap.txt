@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public final class org.bukkit.Registry$SimpleRegistry<T extends java.lang.Enum<T> & org.bukkit.Keyed> implements org.bukkit.Registry<T> {
+  protected org.bukkit.Registry$SimpleRegistry(java.lang.Class<T>);
+  protected org.bukkit.Registry$SimpleRegistry(java.lang.Class<T>, java.util.function.Predicate<T>);
+  public T get(org.bukkit.NamespacedKey);
+  public java.util.stream.Stream<T> stream();
+  public java.util.Iterator<T> iterator();
+  public java.lang.Class<T> getType();
+  public org.bukkit.Keyed get(org.bukkit.NamespacedKey);
+}

@@ -1,0 +1,12 @@
+Compiled from <spigot-api>
+public interface org.bukkit.TravelAgent {
+  public abstract org.bukkit.TravelAgent setSearchRadius(int);
+  public abstract int getSearchRadius();
+  public abstract org.bukkit.TravelAgent setCreationRadius(int);
+  public abstract int getCreationRadius();
+  public abstract boolean getCanCreatePortal();
+  public abstract void setCanCreatePortal(boolean);
+  public abstract org.bukkit.Location findOrCreate(org.bukkit.Location);
+  public abstract org.bukkit.Location findPortal(org.bukkit.Location);
+  public abstract boolean createPortal(org.bukkit.Location);
+}

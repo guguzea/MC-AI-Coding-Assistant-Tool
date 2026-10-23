@@ -1,0 +1,18 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.entity.ProjectileHitEvent extends org.bukkit.event.entity.EntityEvent implements org.bukkit.event.Cancellable {
+  static {};
+  public org.bukkit.event.entity.ProjectileHitEvent(org.bukkit.entity.Projectile);
+  public org.bukkit.event.entity.ProjectileHitEvent(org.bukkit.entity.Projectile, org.bukkit.entity.Entity);
+  public org.bukkit.event.entity.ProjectileHitEvent(org.bukkit.entity.Projectile, org.bukkit.block.Block);
+  public org.bukkit.event.entity.ProjectileHitEvent(org.bukkit.entity.Projectile, org.bukkit.entity.Entity, org.bukkit.block.Block);
+  public org.bukkit.event.entity.ProjectileHitEvent(org.bukkit.entity.Projectile, org.bukkit.entity.Entity, org.bukkit.block.Block, org.bukkit.block.BlockFace);
+  public org.bukkit.entity.Projectile getEntity();
+  public org.bukkit.block.Block getHitBlock();
+  public org.bukkit.block.BlockFace getHitBlockFace();
+  public org.bukkit.entity.Entity getHitEntity();
+  public boolean isCancelled();
+  public void setCancelled(boolean);
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  public org.bukkit.entity.Entity getEntity();
+}

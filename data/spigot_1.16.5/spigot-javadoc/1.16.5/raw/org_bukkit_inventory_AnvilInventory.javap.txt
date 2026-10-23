@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.AnvilInventory extends org.bukkit.inventory.Inventory {
+  public abstract java.lang.String getRenameText();
+  public abstract int getRepairCost();
+  public abstract void setRepairCost(int);
+  public abstract int getMaximumRepairCost();
+  public abstract void setMaximumRepairCost(int);
+}

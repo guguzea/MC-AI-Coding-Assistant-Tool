@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.Container extends org.bukkit.block.BlockState,org.bukkit.inventory.InventoryHolder,org.bukkit.block.Lockable {
+  public abstract org.bukkit.inventory.Inventory getInventory();
+  public abstract org.bukkit.inventory.Inventory getSnapshotInventory();
+}

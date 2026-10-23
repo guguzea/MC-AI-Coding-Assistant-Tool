@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.minecart.CommandMinecart extends org.bukkit.entity.Minecart,org.bukkit.command.CommandSender {
+  public abstract java.lang.String getCommand();
+  public abstract void setCommand(java.lang.String);
+  public abstract void setName(java.lang.String);
+}

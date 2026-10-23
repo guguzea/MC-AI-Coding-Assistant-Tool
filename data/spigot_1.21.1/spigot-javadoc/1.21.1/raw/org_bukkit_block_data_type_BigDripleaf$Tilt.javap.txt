@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public final class org.bukkit.block.data.type.BigDripleaf$Tilt extends java.lang.Enum<org.bukkit.block.data.type.BigDripleaf$Tilt> {
+  public static final org.bukkit.block.data.type.BigDripleaf$Tilt NONE;
+  public static final org.bukkit.block.data.type.BigDripleaf$Tilt UNSTABLE;
+  public static final org.bukkit.block.data.type.BigDripleaf$Tilt PARTIAL;
+  public static final org.bukkit.block.data.type.BigDripleaf$Tilt FULL;
+  public static org.bukkit.block.data.type.BigDripleaf$Tilt[] values();
+  public static org.bukkit.block.data.type.BigDripleaf$Tilt valueOf(java.lang.String);
+  static {};
+}

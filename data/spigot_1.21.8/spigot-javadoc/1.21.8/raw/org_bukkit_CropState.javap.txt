@@ -1,0 +1,16 @@
+Compiled from <spigot-api>
+public final class org.bukkit.CropState extends java.lang.Enum<org.bukkit.CropState> {
+  public static final org.bukkit.CropState SEEDED;
+  public static final org.bukkit.CropState GERMINATED;
+  public static final org.bukkit.CropState VERY_SMALL;
+  public static final org.bukkit.CropState SMALL;
+  public static final org.bukkit.CropState MEDIUM;
+  public static final org.bukkit.CropState TALL;
+  public static final org.bukkit.CropState VERY_TALL;
+  public static final org.bukkit.CropState RIPE;
+  public static org.bukkit.CropState[] values();
+  public static org.bukkit.CropState valueOf(java.lang.String);
+  public byte getData();
+  public static org.bukkit.CropState getByData(byte);
+  static {};
+}

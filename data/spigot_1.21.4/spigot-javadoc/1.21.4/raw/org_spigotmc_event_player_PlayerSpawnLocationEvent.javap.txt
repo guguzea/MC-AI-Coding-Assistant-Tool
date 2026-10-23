@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public class org.spigotmc.event.player.PlayerSpawnLocationEvent extends org.bukkit.event.player.PlayerEvent {
+  public org.spigotmc.event.player.PlayerSpawnLocationEvent(org.bukkit.entity.Player, org.bukkit.Location);
+  public org.bukkit.Location getSpawnLocation();
+  public void setSpawnLocation(org.bukkit.Location);
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  static {};
+}

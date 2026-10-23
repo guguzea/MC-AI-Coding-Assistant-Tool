@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.view.builder.LocationInventoryViewBuilder<V extends org.bukkit.inventory.InventoryView> extends org.bukkit.inventory.view.builder.InventoryViewBuilder<V> {
+  public abstract org.bukkit.inventory.view.builder.LocationInventoryViewBuilder<V> copy();
+  public abstract org.bukkit.inventory.view.builder.LocationInventoryViewBuilder<V> title(java.lang.String);
+  public abstract org.bukkit.inventory.view.builder.LocationInventoryViewBuilder<V> checkReachable(boolean);
+  public abstract org.bukkit.inventory.view.builder.LocationInventoryViewBuilder<V> location(org.bukkit.Location);
+  public default org.bukkit.inventory.view.builder.InventoryViewBuilder title(java.lang.String);
+  public default org.bukkit.inventory.view.builder.InventoryViewBuilder copy();
+}

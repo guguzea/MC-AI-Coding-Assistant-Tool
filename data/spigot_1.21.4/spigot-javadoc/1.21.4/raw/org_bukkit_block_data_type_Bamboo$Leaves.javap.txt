@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public final class org.bukkit.block.data.type.Bamboo$Leaves extends java.lang.Enum<org.bukkit.block.data.type.Bamboo$Leaves> {
+  public static final org.bukkit.block.data.type.Bamboo$Leaves NONE;
+  public static final org.bukkit.block.data.type.Bamboo$Leaves SMALL;
+  public static final org.bukkit.block.data.type.Bamboo$Leaves LARGE;
+  public static org.bukkit.block.data.type.Bamboo$Leaves[] values();
+  public static org.bukkit.block.data.type.Bamboo$Leaves valueOf(java.lang.String);
+  static {};
+}

@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public class org.bukkit.util.noise.PerlinOctaveGenerator extends org.bukkit.util.noise.OctaveGenerator {
+  public org.bukkit.util.noise.PerlinOctaveGenerator(org.bukkit.World, int);
+  public org.bukkit.util.noise.PerlinOctaveGenerator(long, int);
+  public org.bukkit.util.noise.PerlinOctaveGenerator(java.util.Random, int);
+}

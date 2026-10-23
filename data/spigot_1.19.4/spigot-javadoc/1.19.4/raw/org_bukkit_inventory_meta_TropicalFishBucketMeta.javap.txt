@@ -1,0 +1,13 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.meta.TropicalFishBucketMeta extends org.bukkit.inventory.meta.ItemMeta {
+  public abstract org.bukkit.DyeColor getPatternColor();
+  public abstract void setPatternColor(org.bukkit.DyeColor);
+  public abstract org.bukkit.DyeColor getBodyColor();
+  public abstract void setBodyColor(org.bukkit.DyeColor);
+  public abstract org.bukkit.entity.TropicalFish$Pattern getPattern();
+  public abstract void setPattern(org.bukkit.entity.TropicalFish$Pattern);
+  public abstract boolean hasVariant();
+  public abstract org.bukkit.inventory.meta.TropicalFishBucketMeta clone();
+  public default org.bukkit.inventory.meta.ItemMeta clone();
+  public default java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+}

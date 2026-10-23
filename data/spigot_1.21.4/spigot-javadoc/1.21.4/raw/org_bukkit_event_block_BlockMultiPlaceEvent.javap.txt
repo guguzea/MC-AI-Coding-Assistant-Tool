@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.block.BlockMultiPlaceEvent extends org.bukkit.event.block.BlockPlaceEvent {
+  public org.bukkit.event.block.BlockMultiPlaceEvent(java.util.List<org.bukkit.block.BlockState>, org.bukkit.block.Block, org.bukkit.inventory.ItemStack, org.bukkit.entity.Player, boolean);
+  public java.util.List<org.bukkit.block.BlockState> getReplacedBlockStates();
+}

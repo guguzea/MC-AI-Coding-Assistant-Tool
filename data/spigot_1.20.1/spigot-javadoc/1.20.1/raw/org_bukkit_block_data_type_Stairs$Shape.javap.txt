@@ -1,0 +1,11 @@
+Compiled from <spigot-api>
+public final class org.bukkit.block.data.type.Stairs$Shape extends java.lang.Enum<org.bukkit.block.data.type.Stairs$Shape> {
+  public static final org.bukkit.block.data.type.Stairs$Shape STRAIGHT;
+  public static final org.bukkit.block.data.type.Stairs$Shape INNER_LEFT;
+  public static final org.bukkit.block.data.type.Stairs$Shape INNER_RIGHT;
+  public static final org.bukkit.block.data.type.Stairs$Shape OUTER_LEFT;
+  public static final org.bukkit.block.data.type.Stairs$Shape OUTER_RIGHT;
+  static {};
+  public static org.bukkit.block.data.type.Stairs$Shape[] values();
+  public static org.bukkit.block.data.type.Stairs$Shape valueOf(java.lang.String);
+}

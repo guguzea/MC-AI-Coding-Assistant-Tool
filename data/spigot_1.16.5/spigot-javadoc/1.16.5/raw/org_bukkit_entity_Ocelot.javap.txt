@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Ocelot extends org.bukkit.entity.Animals {
+  public abstract org.bukkit.entity.Ocelot$Type getCatType();
+  public abstract void setCatType(org.bukkit.entity.Ocelot$Type);
+}

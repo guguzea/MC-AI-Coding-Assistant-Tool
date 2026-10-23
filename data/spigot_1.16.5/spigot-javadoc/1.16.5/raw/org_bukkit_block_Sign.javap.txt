@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.Sign extends org.bukkit.block.TileState,org.bukkit.material.Colorable {
+  public abstract java.lang.String[] getLines();
+  public abstract java.lang.String getLine(int) throws java.lang.IndexOutOfBoundsException;
+  public abstract void setLine(int, java.lang.String) throws java.lang.IndexOutOfBoundsException;
+  public abstract boolean isEditable();
+  public abstract void setEditable(boolean);
+}

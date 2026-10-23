@@ -1,0 +1,4 @@
+Compiled from <spigot-api>
+public interface org.bukkit.persistence.ListPersistentDataType<P, C> extends org.bukkit.persistence.PersistentDataType<java.util.List<P>, java.util.List<C>> {
+  public abstract org.bukkit.persistence.PersistentDataType<P, C> elementType();
+}

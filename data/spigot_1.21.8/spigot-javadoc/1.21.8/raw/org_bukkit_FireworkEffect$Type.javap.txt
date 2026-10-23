@@ -1,0 +1,11 @@
+Compiled from <spigot-api>
+public final class org.bukkit.FireworkEffect$Type extends java.lang.Enum<org.bukkit.FireworkEffect$Type> {
+  public static final org.bukkit.FireworkEffect$Type BALL;
+  public static final org.bukkit.FireworkEffect$Type BALL_LARGE;
+  public static final org.bukkit.FireworkEffect$Type STAR;
+  public static final org.bukkit.FireworkEffect$Type BURST;
+  public static final org.bukkit.FireworkEffect$Type CREEPER;
+  public static org.bukkit.FireworkEffect$Type[] values();
+  public static org.bukkit.FireworkEffect$Type valueOf(java.lang.String);
+  static {};
+}

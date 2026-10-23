@@ -1,0 +1,12 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.Conduit extends org.bukkit.block.TileState {
+  public abstract boolean isActive();
+  public abstract boolean isHunting();
+  public abstract java.util.Collection<org.bukkit.block.Block> getFrameBlocks();
+  public abstract int getFrameBlockCount();
+  public abstract int getRange();
+  public abstract boolean setTarget(org.bukkit.entity.LivingEntity);
+  public abstract org.bukkit.entity.LivingEntity getTarget();
+  public abstract boolean hasTarget();
+  public abstract org.bukkit.util.BoundingBox getHuntingArea();
+}

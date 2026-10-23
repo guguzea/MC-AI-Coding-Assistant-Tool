@@ -1,0 +1,114 @@
+---
+title: "org.bukkit.Bukkit"
+package: "org.bukkit"
+source: https://repo.papermc.io/repository/maven-public/org/spigotmc/spigot-api/1.12.2-R0.1-SNAPSHOT/spigot-api-1.12.2-R0.1-20180712.012057-156.jar
+sourceType: javap
+fetchedWith: extract-spigot-api-surface.mjs@1
+fetchedAt: 2026-10-23T15:35:10.184Z
+asOfVersion: "1.12.2-R0.1-SNAPSHOT"
+jarMd5: "f1c84754979a6e1344a24f09bb1fed35"
+---
+
+- `public final class org.bukkit.Bukkit`
+- `public static org.bukkit.Server getServer()`
+- `public static void setServer(org.bukkit.Server)`
+- `public static java.lang.String getName()`
+- `public static java.lang.String getVersion()`
+- `public static java.lang.String getBukkitVersion()`
+- `public static java.util.Collection<? extends org.bukkit.entity.Player> getOnlinePlayers()`
+- `public static int getMaxPlayers()`
+- `public static int getPort()`
+- `public static int getViewDistance()`
+- `public static java.lang.String getIp()`
+- `public static java.lang.String getServerName()`
+- `public static java.lang.String getServerId()`
+- `public static java.lang.String getWorldType()`
+- `public static boolean getGenerateStructures()`
+- `public static boolean getAllowEnd()`
+- `public static boolean getAllowNether()`
+- `public static boolean hasWhitelist()`
+- `public static void setWhitelist(boolean)`
+- `public static java.util.Set<org.bukkit.OfflinePlayer> getWhitelistedPlayers()`
+- `public static void reloadWhitelist()`
+- `public static int broadcastMessage(java.lang.String)`
+- `public static java.lang.String getUpdateFolder()`
+- `public static java.io.File getUpdateFolderFile()`
+- `public static long getConnectionThrottle()`
+- `public static int getTicksPerAnimalSpawns()`
+- `public static int getTicksPerMonsterSpawns()`
+- `public static org.bukkit.entity.Player getPlayer(java.lang.String)`
+- `public static org.bukkit.entity.Player getPlayerExact(java.lang.String)`
+- `public static java.util.List<org.bukkit.entity.Player> matchPlayer(java.lang.String)`
+- `public static org.bukkit.entity.Player getPlayer(java.util.UUID)`
+- `public static org.bukkit.plugin.PluginManager getPluginManager()`
+- `public static org.bukkit.scheduler.BukkitScheduler getScheduler()`
+- `public static org.bukkit.plugin.ServicesManager getServicesManager()`
+- `public static java.util.List<org.bukkit.World> getWorlds()`
+- `public static org.bukkit.World createWorld(org.bukkit.WorldCreator)`
+- `public static boolean unloadWorld(java.lang.String, boolean)`
+- `public static boolean unloadWorld(org.bukkit.World, boolean)`
+- `public static org.bukkit.World getWorld(java.lang.String)`
+- `public static org.bukkit.World getWorld(java.util.UUID)`
+- `public static org.bukkit.map.MapView getMap(short)`
+- `public static org.bukkit.map.MapView createMap(org.bukkit.World)`
+- `public static void reload()`
+- `public static void reloadData()`
+- `public static java.util.logging.Logger getLogger()`
+- `public static org.bukkit.command.PluginCommand getPluginCommand(java.lang.String)`
+- `public static void savePlayers()`
+- `public static boolean dispatchCommand(org.bukkit.command.CommandSender, java.lang.String) throws org.bukkit.command.CommandException`
+- `public static boolean addRecipe(org.bukkit.inventory.Recipe)`
+- `public static java.util.List<org.bukkit.inventory.Recipe> getRecipesFor(org.bukkit.inventory.ItemStack)`
+- `public static java.util.Iterator<org.bukkit.inventory.Recipe> recipeIterator()`
+- `public static void clearRecipes()`
+- `public static void resetRecipes()`
+- `public static java.util.Map<java.lang.String, java.lang.String[]> getCommandAliases()`
+- `public static int getSpawnRadius()`
+- `public static void setSpawnRadius(int)`
+- `public static boolean getOnlineMode()`
+- `public static boolean getAllowFlight()`
+- `public static boolean isHardcore()`
+- `public static void shutdown()`
+- `public static int broadcast(java.lang.String, java.lang.String)`
+- `public static org.bukkit.OfflinePlayer getOfflinePlayer(java.lang.String)`
+- `public static org.bukkit.OfflinePlayer getOfflinePlayer(java.util.UUID)`
+- `public static java.util.Set<java.lang.String> getIPBans()`
+- `public static void banIP(java.lang.String)`
+- `public static void unbanIP(java.lang.String)`
+- `public static java.util.Set<org.bukkit.OfflinePlayer> getBannedPlayers()`
+- `public static org.bukkit.BanList getBanList(org.bukkit.BanList$Type)`
+- `public static java.util.Set<org.bukkit.OfflinePlayer> getOperators()`
+- `public static org.bukkit.GameMode getDefaultGameMode()`
+- `public static void setDefaultGameMode(org.bukkit.GameMode)`
+- `public static org.bukkit.command.ConsoleCommandSender getConsoleSender()`
+- `public static java.io.File getWorldContainer()`
+- `public static org.bukkit.OfflinePlayer[] getOfflinePlayers()`
+- `public static org.bukkit.plugin.messaging.Messenger getMessenger()`
+- `public static org.bukkit.help.HelpMap getHelpMap()`
+- `public static org.bukkit.inventory.Inventory createInventory(org.bukkit.inventory.InventoryHolder, org.bukkit.event.inventory.InventoryType)`
+- `public static org.bukkit.inventory.Inventory createInventory(org.bukkit.inventory.InventoryHolder, org.bukkit.event.inventory.InventoryType, java.lang.String)`
+- `public static org.bukkit.inventory.Inventory createInventory(org.bukkit.inventory.InventoryHolder, int) throws java.lang.IllegalArgumentException`
+- `public static org.bukkit.inventory.Inventory createInventory(org.bukkit.inventory.InventoryHolder, int, java.lang.String) throws java.lang.IllegalArgumentException`
+- `public static org.bukkit.inventory.Merchant createMerchant(java.lang.String)`
+- `public static int getMonsterSpawnLimit()`
+- `public static int getAnimalSpawnLimit()`
+- `public static int getWaterAnimalSpawnLimit()`
+- `public static int getAmbientSpawnLimit()`
+- `public static boolean isPrimaryThread()`
+- `public static java.lang.String getMotd()`
+- `public static java.lang.String getShutdownMessage()`
+- `public static org.bukkit.Warning$WarningState getWarningState()`
+- `public static org.bukkit.inventory.ItemFactory getItemFactory()`
+- `public static org.bukkit.scoreboard.ScoreboardManager getScoreboardManager()`
+- `public static org.bukkit.util.CachedServerIcon getServerIcon()`
+- `public static org.bukkit.util.CachedServerIcon loadServerIcon(java.io.File) throws java.lang.IllegalArgumentException, java.lang.Exception`
+- `public static org.bukkit.util.CachedServerIcon loadServerIcon(java.awt.image.BufferedImage) throws java.lang.IllegalArgumentException, java.lang.Exception`
+- `public static void setIdleTimeout(int)`
+- `public static int getIdleTimeout()`
+- `public static org.bukkit.generator.ChunkGenerator$ChunkData createChunkData(org.bukkit.World)`
+- `public static org.bukkit.boss.BossBar createBossBar(java.lang.String, org.bukkit.boss.BarColor, org.bukkit.boss.BarStyle, org.bukkit.boss.BarFlag...)`
+- `public static org.bukkit.entity.Entity getEntity(java.util.UUID)`
+- `public static org.bukkit.advancement.Advancement getAdvancement(org.bukkit.NamespacedKey)`
+- `public static java.util.Iterator<org.bukkit.advancement.Advancement> advancementIterator()`
+- `public static org.bukkit.UnsafeValues getUnsafe()`
+- `public static org.bukkit.Server$Spigot spigot()`

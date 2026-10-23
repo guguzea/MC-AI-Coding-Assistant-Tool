@@ -1,0 +1,14 @@
+Compiled from <spigot-api>
+public class org.bukkit.material.PistonBaseMaterial extends org.bukkit.material.MaterialData implements org.bukkit.material.Directional,org.bukkit.material.Redstone {
+  public org.bukkit.material.PistonBaseMaterial(org.bukkit.Material);
+  public org.bukkit.material.PistonBaseMaterial(org.bukkit.Material, byte);
+  public void setFacingDirection(org.bukkit.block.BlockFace);
+  public org.bukkit.block.BlockFace getFacing();
+  public boolean isPowered();
+  public void setPowered(boolean);
+  public boolean isSticky();
+  public org.bukkit.material.PistonBaseMaterial clone();
+  public org.bukkit.material.MaterialData clone();
+  public java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+  static int[] $SWITCH_TABLE$org$bukkit$block$BlockFace();
+}

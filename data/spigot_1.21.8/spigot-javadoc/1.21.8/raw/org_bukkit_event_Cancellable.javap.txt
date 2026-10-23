@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.event.Cancellable {
+  public abstract boolean isCancelled();
+  public abstract void setCancelled(boolean);
+}

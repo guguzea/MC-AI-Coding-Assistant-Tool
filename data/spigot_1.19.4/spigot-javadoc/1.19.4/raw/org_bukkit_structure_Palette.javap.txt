@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.structure.Palette {
+  public abstract java.util.List<org.bukkit.block.BlockState> getBlocks();
+  public abstract int getBlockCount();
+}

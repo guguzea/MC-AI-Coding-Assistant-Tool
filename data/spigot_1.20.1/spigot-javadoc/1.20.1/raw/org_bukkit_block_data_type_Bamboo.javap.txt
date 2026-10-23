@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.data.type.Bamboo extends org.bukkit.block.data.Ageable,org.bukkit.block.data.type.Sapling {
+  public abstract org.bukkit.block.data.type.Bamboo$Leaves getLeaves();
+  public abstract void setLeaves(org.bukkit.block.data.type.Bamboo$Leaves);
+}

@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.meta.components.UseCooldownComponent extends org.bukkit.configuration.serialization.ConfigurationSerializable {
+  public abstract float getCooldownSeconds();
+  public abstract void setCooldownSeconds(float);
+  public abstract org.bukkit.NamespacedKey getCooldownGroup();
+  public abstract void setCooldownGroup(org.bukkit.NamespacedKey);
+}

@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.meta.Repairable extends org.bukkit.inventory.meta.ItemMeta {
+  public abstract boolean hasRepairCost();
+  public abstract int getRepairCost();
+  public abstract void setRepairCost(int);
+  public abstract org.bukkit.inventory.meta.Repairable clone();
+  public default org.bukkit.inventory.meta.ItemMeta clone();
+}

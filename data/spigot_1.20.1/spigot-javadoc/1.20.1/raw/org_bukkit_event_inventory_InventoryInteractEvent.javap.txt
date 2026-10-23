@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public abstract class org.bukkit.event.inventory.InventoryInteractEvent extends org.bukkit.event.inventory.InventoryEvent implements org.bukkit.event.Cancellable {
+  public org.bukkit.event.inventory.InventoryInteractEvent(org.bukkit.inventory.InventoryView);
+  public org.bukkit.entity.HumanEntity getWhoClicked();
+  public void setResult(org.bukkit.event.Event$Result);
+  public org.bukkit.event.Event$Result getResult();
+  public boolean isCancelled();
+  public void setCancelled(boolean);
+}

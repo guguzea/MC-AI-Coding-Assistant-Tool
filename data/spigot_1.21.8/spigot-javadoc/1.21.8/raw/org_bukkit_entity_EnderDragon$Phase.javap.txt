@@ -1,0 +1,17 @@
+Compiled from <spigot-api>
+public final class org.bukkit.entity.EnderDragon$Phase extends java.lang.Enum<org.bukkit.entity.EnderDragon$Phase> {
+  public static final org.bukkit.entity.EnderDragon$Phase CIRCLING;
+  public static final org.bukkit.entity.EnderDragon$Phase STRAFING;
+  public static final org.bukkit.entity.EnderDragon$Phase FLY_TO_PORTAL;
+  public static final org.bukkit.entity.EnderDragon$Phase LAND_ON_PORTAL;
+  public static final org.bukkit.entity.EnderDragon$Phase LEAVE_PORTAL;
+  public static final org.bukkit.entity.EnderDragon$Phase BREATH_ATTACK;
+  public static final org.bukkit.entity.EnderDragon$Phase SEARCH_FOR_BREATH_ATTACK_TARGET;
+  public static final org.bukkit.entity.EnderDragon$Phase ROAR_BEFORE_ATTACK;
+  public static final org.bukkit.entity.EnderDragon$Phase CHARGE_PLAYER;
+  public static final org.bukkit.entity.EnderDragon$Phase DYING;
+  public static final org.bukkit.entity.EnderDragon$Phase HOVER;
+  public static org.bukkit.entity.EnderDragon$Phase[] values();
+  public static org.bukkit.entity.EnderDragon$Phase valueOf(java.lang.String);
+  static {};
+}

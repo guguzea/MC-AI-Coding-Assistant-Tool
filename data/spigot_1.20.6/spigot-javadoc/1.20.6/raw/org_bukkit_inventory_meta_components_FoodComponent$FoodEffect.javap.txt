@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.meta.components.FoodComponent$FoodEffect extends org.bukkit.configuration.serialization.ConfigurationSerializable {
+  public abstract org.bukkit.potion.PotionEffect getEffect();
+  public abstract void setEffect(org.bukkit.potion.PotionEffect);
+  public abstract float getProbability();
+  public abstract void setProbability(float);
+}

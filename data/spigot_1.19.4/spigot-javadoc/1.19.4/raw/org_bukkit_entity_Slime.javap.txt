@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Slime extends org.bukkit.entity.Mob,org.bukkit.entity.Enemy {
+  public abstract int getSize();
+  public abstract void setSize(int);
+}

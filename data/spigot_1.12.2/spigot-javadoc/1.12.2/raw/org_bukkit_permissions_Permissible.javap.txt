@@ -1,0 +1,14 @@
+Compiled from <spigot-api>
+public interface org.bukkit.permissions.Permissible extends org.bukkit.permissions.ServerOperator {
+  public abstract boolean isPermissionSet(java.lang.String);
+  public abstract boolean isPermissionSet(org.bukkit.permissions.Permission);
+  public abstract boolean hasPermission(java.lang.String);
+  public abstract boolean hasPermission(org.bukkit.permissions.Permission);
+  public abstract org.bukkit.permissions.PermissionAttachment addAttachment(org.bukkit.plugin.Plugin, java.lang.String, boolean);
+  public abstract org.bukkit.permissions.PermissionAttachment addAttachment(org.bukkit.plugin.Plugin);
+  public abstract org.bukkit.permissions.PermissionAttachment addAttachment(org.bukkit.plugin.Plugin, java.lang.String, boolean, int);
+  public abstract org.bukkit.permissions.PermissionAttachment addAttachment(org.bukkit.plugin.Plugin, int);
+  public abstract void removeAttachment(org.bukkit.permissions.PermissionAttachment);
+  public abstract void recalculatePermissions();
+  public abstract java.util.Set<org.bukkit.permissions.PermissionAttachmentInfo> getEffectivePermissions();
+}

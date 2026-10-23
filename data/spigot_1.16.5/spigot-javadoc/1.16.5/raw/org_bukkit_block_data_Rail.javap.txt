@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.data.Rail extends org.bukkit.block.data.BlockData {
+  public abstract org.bukkit.block.data.Rail$Shape getShape();
+  public abstract void setShape(org.bukkit.block.data.Rail$Shape);
+  public abstract java.util.Set<org.bukkit.block.data.Rail$Shape> getShapes();
+}

@@ -1,0 +1,38 @@
+Compiled from <spigot-api>
+public final class org.bukkit.Art extends java.lang.Enum<org.bukkit.Art> implements org.bukkit.Keyed {
+  public static final org.bukkit.Art KEBAB;
+  public static final org.bukkit.Art AZTEC;
+  public static final org.bukkit.Art ALBAN;
+  public static final org.bukkit.Art AZTEC2;
+  public static final org.bukkit.Art BOMB;
+  public static final org.bukkit.Art PLANT;
+  public static final org.bukkit.Art WASTELAND;
+  public static final org.bukkit.Art POOL;
+  public static final org.bukkit.Art COURBET;
+  public static final org.bukkit.Art SEA;
+  public static final org.bukkit.Art SUNSET;
+  public static final org.bukkit.Art CREEBET;
+  public static final org.bukkit.Art WANDERER;
+  public static final org.bukkit.Art GRAHAM;
+  public static final org.bukkit.Art MATCH;
+  public static final org.bukkit.Art BUST;
+  public static final org.bukkit.Art STAGE;
+  public static final org.bukkit.Art VOID;
+  public static final org.bukkit.Art SKULL_AND_ROSES;
+  public static final org.bukkit.Art WITHER;
+  public static final org.bukkit.Art FIGHTERS;
+  public static final org.bukkit.Art POINTER;
+  public static final org.bukkit.Art PIGSCENE;
+  public static final org.bukkit.Art BURNING_SKULL;
+  public static final org.bukkit.Art SKELETON;
+  public static final org.bukkit.Art DONKEY_KONG;
+  static {};
+  public int getBlockWidth();
+  public int getBlockHeight();
+  public int getId();
+  public org.bukkit.NamespacedKey getKey();
+  public static org.bukkit.Art getById(int);
+  public static org.bukkit.Art getByName(java.lang.String);
+  public static org.bukkit.Art[] values();
+  public static org.bukkit.Art valueOf(java.lang.String);
+}

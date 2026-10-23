@@ -1,0 +1,13 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Villager$Type extends org.bukkit.util.OldEnum<org.bukkit.entity.Villager$Type>, org.bukkit.Keyed {
+  public static final org.bukkit.entity.Villager$Type DESERT;
+  public static final org.bukkit.entity.Villager$Type JUNGLE;
+  public static final org.bukkit.entity.Villager$Type PLAINS;
+  public static final org.bukkit.entity.Villager$Type SAVANNA;
+  public static final org.bukkit.entity.Villager$Type SNOW;
+  public static final org.bukkit.entity.Villager$Type SWAMP;
+  public static final org.bukkit.entity.Villager$Type TAIGA;
+  public static org.bukkit.entity.Villager$Type valueOf(java.lang.String);
+  public static org.bukkit.entity.Villager$Type[] values();
+  static {};
+}

@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public class org.bukkit.conversations.PluginNameConversationPrefix implements org.bukkit.conversations.ConversationPrefix {
+  protected java.lang.String separator;
+  protected org.bukkit.ChatColor prefixColor;
+  protected org.bukkit.plugin.Plugin plugin;
+  public org.bukkit.conversations.PluginNameConversationPrefix(org.bukkit.plugin.Plugin);
+  public org.bukkit.conversations.PluginNameConversationPrefix(org.bukkit.plugin.Plugin, java.lang.String, org.bukkit.ChatColor);
+  public java.lang.String getPrefix(org.bukkit.conversations.ConversationContext);
+}

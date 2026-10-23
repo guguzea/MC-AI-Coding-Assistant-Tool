@@ -1,0 +1,11 @@
+Compiled from <spigot-api>
+public interface org.bukkit.damage.DamageEffect {
+  public static final org.bukkit.damage.DamageEffect HURT;
+  public static final org.bukkit.damage.DamageEffect THORNS;
+  public static final org.bukkit.damage.DamageEffect DROWNING;
+  public static final org.bukkit.damage.DamageEffect BURNING;
+  public static final org.bukkit.damage.DamageEffect POKING;
+  public static final org.bukkit.damage.DamageEffect FREEZING;
+  public abstract org.bukkit.Sound getSound();
+  static {};
+}

@@ -1,0 +1,14 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.entity.EntityEnterLoveModeEvent extends org.bukkit.event.entity.EntityEvent implements org.bukkit.event.Cancellable {
+  public org.bukkit.event.entity.EntityEnterLoveModeEvent(org.bukkit.entity.Animals, org.bukkit.entity.HumanEntity, int);
+  public org.bukkit.entity.Animals getEntity();
+  public org.bukkit.entity.HumanEntity getHumanEntity();
+  public int getTicksInLove();
+  public void setTicksInLove(int);
+  public boolean isCancelled();
+  public void setCancelled(boolean);
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  public org.bukkit.entity.Entity getEntity();
+  static {};
+}

@@ -1,0 +1,12 @@
+Compiled from <spigot-api>
+public final class org.bukkit.event.entity.EntityKnockbackEvent$KnockbackCause extends java.lang.Enum<org.bukkit.event.entity.EntityKnockbackEvent$KnockbackCause> {
+  public static final org.bukkit.event.entity.EntityKnockbackEvent$KnockbackCause DAMAGE;
+  public static final org.bukkit.event.entity.EntityKnockbackEvent$KnockbackCause ENTITY_ATTACK;
+  public static final org.bukkit.event.entity.EntityKnockbackEvent$KnockbackCause EXPLOSION;
+  public static final org.bukkit.event.entity.EntityKnockbackEvent$KnockbackCause SHIELD_BLOCK;
+  public static final org.bukkit.event.entity.EntityKnockbackEvent$KnockbackCause SWEEP_ATTACK;
+  public static final org.bukkit.event.entity.EntityKnockbackEvent$KnockbackCause UNKNOWN;
+  public static org.bukkit.event.entity.EntityKnockbackEvent$KnockbackCause[] values();
+  public static org.bukkit.event.entity.EntityKnockbackEvent$KnockbackCause valueOf(java.lang.String);
+  static {};
+}

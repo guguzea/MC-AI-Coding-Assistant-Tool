@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public abstract class org.bukkit.event.vehicle.VehicleEvent extends org.bukkit.event.Event {
+  protected org.bukkit.entity.Vehicle vehicle;
+  public org.bukkit.event.vehicle.VehicleEvent(org.bukkit.entity.Vehicle);
+  public final org.bukkit.entity.Vehicle getVehicle();
+}

@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public final class org.bukkit.NetherWartsState extends java.lang.Enum<org.bukkit.NetherWartsState> {
+  public static final org.bukkit.NetherWartsState SEEDED;
+  public static final org.bukkit.NetherWartsState STAGE_ONE;
+  public static final org.bukkit.NetherWartsState STAGE_TWO;
+  public static final org.bukkit.NetherWartsState RIPE;
+  public static org.bukkit.NetherWartsState[] values();
+  public static org.bukkit.NetherWartsState valueOf(java.lang.String);
+  static {};
+}

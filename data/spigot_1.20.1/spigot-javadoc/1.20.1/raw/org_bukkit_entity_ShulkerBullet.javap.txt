@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.ShulkerBullet extends org.bukkit.entity.Projectile {
+  public abstract org.bukkit.entity.Entity getTarget();
+  public abstract void setTarget(org.bukkit.entity.Entity);
+}

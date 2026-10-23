@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.Warning extends java.lang.annotation.Annotation {
+  public abstract boolean value();
+  public abstract java.lang.String reason();
+}

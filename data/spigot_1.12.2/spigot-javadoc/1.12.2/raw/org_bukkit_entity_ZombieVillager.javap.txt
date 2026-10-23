@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.ZombieVillager extends org.bukkit.entity.Zombie {
+  public abstract void setVillagerProfession(org.bukkit.entity.Villager$Profession);
+  public abstract org.bukkit.entity.Villager$Profession getVillagerProfession();
+}

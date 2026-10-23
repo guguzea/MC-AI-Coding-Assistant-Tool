@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public interface org.bukkit.command.CommandSender extends org.bukkit.permissions.Permissible {
+  public abstract void sendMessage(java.lang.String);
+  public abstract void sendMessage(java.lang.String[]);
+  public abstract org.bukkit.Server getServer();
+  public abstract java.lang.String getName();
+  public abstract org.bukkit.command.CommandSender$Spigot spigot();
+}

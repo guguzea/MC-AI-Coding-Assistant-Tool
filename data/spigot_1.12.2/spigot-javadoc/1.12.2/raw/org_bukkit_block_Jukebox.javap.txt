@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.Jukebox extends org.bukkit.block.BlockState {
+  public abstract org.bukkit.Material getPlaying();
+  public abstract void setPlaying(org.bukkit.Material);
+  public abstract boolean isPlaying();
+  public abstract boolean eject();
+}

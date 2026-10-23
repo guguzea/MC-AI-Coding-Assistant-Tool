@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.meta.AxolotlBucketMeta extends org.bukkit.inventory.meta.ItemMeta {
+  public abstract org.bukkit.entity.Axolotl$Variant getVariant();
+  public abstract void setVariant(org.bukkit.entity.Axolotl$Variant);
+  public abstract boolean hasVariant();
+  public abstract org.bukkit.inventory.meta.AxolotlBucketMeta clone();
+  public default org.bukkit.inventory.meta.ItemMeta clone();
+}

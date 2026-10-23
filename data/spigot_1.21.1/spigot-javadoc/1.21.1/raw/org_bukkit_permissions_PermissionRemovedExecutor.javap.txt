@@ -1,0 +1,4 @@
+Compiled from <spigot-api>
+public interface org.bukkit.permissions.PermissionRemovedExecutor {
+  public abstract void attachmentRemoved(org.bukkit.permissions.PermissionAttachment);
+}

@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.inventory.PrepareInventoryResultEvent extends org.bukkit.event.inventory.InventoryEvent {
+  public org.bukkit.event.inventory.PrepareInventoryResultEvent(org.bukkit.inventory.InventoryView, org.bukkit.inventory.ItemStack);
+  public org.bukkit.inventory.ItemStack getResult();
+  public void setResult(org.bukkit.inventory.ItemStack);
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  static {};
+}

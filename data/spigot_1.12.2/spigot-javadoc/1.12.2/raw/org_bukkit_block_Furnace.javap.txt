@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.Furnace extends org.bukkit.block.Container,org.bukkit.Nameable {
+  public abstract short getBurnTime();
+  public abstract void setBurnTime(short);
+  public abstract short getCookTime();
+  public abstract void setCookTime(short);
+  public abstract org.bukkit.inventory.FurnaceInventory getInventory();
+  public abstract org.bukkit.inventory.FurnaceInventory getSnapshotInventory();
+}

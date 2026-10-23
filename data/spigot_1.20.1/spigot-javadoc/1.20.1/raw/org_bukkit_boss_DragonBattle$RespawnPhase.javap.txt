@@ -1,0 +1,12 @@
+Compiled from <spigot-api>
+public final class org.bukkit.boss.DragonBattle$RespawnPhase extends java.lang.Enum<org.bukkit.boss.DragonBattle$RespawnPhase> {
+  public static final org.bukkit.boss.DragonBattle$RespawnPhase START;
+  public static final org.bukkit.boss.DragonBattle$RespawnPhase PREPARING_TO_SUMMON_PILLARS;
+  public static final org.bukkit.boss.DragonBattle$RespawnPhase SUMMONING_PILLARS;
+  public static final org.bukkit.boss.DragonBattle$RespawnPhase SUMMONING_DRAGON;
+  public static final org.bukkit.boss.DragonBattle$RespawnPhase END;
+  public static final org.bukkit.boss.DragonBattle$RespawnPhase NONE;
+  static {};
+  public static org.bukkit.boss.DragonBattle$RespawnPhase[] values();
+  public static org.bukkit.boss.DragonBattle$RespawnPhase valueOf(java.lang.String);
+}

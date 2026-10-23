@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public interface org.bukkit.potion.PotionBrewer {
+  public abstract org.bukkit.potion.PotionEffect createEffect(org.bukkit.potion.PotionEffectType, int, int);
+  public abstract java.util.Collection<org.bukkit.potion.PotionEffect> getEffectsFromDamage(int);
+  public abstract java.util.Collection<org.bukkit.potion.PotionEffect> getEffects(org.bukkit.potion.PotionType, boolean, boolean);
+}

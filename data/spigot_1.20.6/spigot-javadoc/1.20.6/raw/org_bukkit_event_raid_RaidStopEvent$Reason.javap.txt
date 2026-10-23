@@ -1,0 +1,11 @@
+Compiled from <spigot-api>
+public final class org.bukkit.event.raid.RaidStopEvent$Reason extends java.lang.Enum<org.bukkit.event.raid.RaidStopEvent$Reason> {
+  public static final org.bukkit.event.raid.RaidStopEvent$Reason PEACE;
+  public static final org.bukkit.event.raid.RaidStopEvent$Reason TIMEOUT;
+  public static final org.bukkit.event.raid.RaidStopEvent$Reason FINISHED;
+  public static final org.bukkit.event.raid.RaidStopEvent$Reason UNSPAWNABLE;
+  public static final org.bukkit.event.raid.RaidStopEvent$Reason NOT_IN_VILLAGE;
+  public static org.bukkit.event.raid.RaidStopEvent$Reason[] values();
+  public static org.bukkit.event.raid.RaidStopEvent$Reason valueOf(java.lang.String);
+  static {};
+}

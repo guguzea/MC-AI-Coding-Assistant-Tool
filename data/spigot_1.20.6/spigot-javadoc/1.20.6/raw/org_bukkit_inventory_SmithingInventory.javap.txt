@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.SmithingInventory extends org.bukkit.inventory.Inventory {
+  public abstract org.bukkit.inventory.ItemStack getResult();
+  public abstract void setResult(org.bukkit.inventory.ItemStack);
+  public abstract org.bukkit.inventory.Recipe getRecipe();
+}

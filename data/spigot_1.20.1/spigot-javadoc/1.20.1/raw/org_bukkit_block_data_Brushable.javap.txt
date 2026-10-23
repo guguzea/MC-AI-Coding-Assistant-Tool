@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.data.Brushable extends org.bukkit.block.data.BlockData {
+  public abstract int getDusted();
+  public abstract void setDusted(int);
+  public abstract int getMaximumDusted();
+}

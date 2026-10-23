@@ -1,0 +1,17 @@
+Compiled from <spigot-api>
+public class org.bukkit.material.Banner extends org.bukkit.material.MaterialData implements org.bukkit.material.Attachable {
+  public org.bukkit.material.Banner();
+  public org.bukkit.material.Banner(org.bukkit.Material);
+  public org.bukkit.material.Banner(int);
+  public org.bukkit.material.Banner(org.bukkit.Material, byte);
+  public org.bukkit.material.Banner(int, byte);
+  public boolean isWallBanner();
+  public org.bukkit.block.BlockFace getAttachedFace();
+  public org.bukkit.block.BlockFace getFacing();
+  public void setFacingDirection(org.bukkit.block.BlockFace);
+  public java.lang.String toString();
+  public org.bukkit.material.Banner clone();
+  public org.bukkit.material.MaterialData clone();
+  public java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+  static int[] $SWITCH_TABLE$org$bukkit$block$BlockFace();
+}

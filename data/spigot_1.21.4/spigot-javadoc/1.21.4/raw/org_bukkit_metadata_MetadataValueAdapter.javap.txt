@@ -1,0 +1,14 @@
+Compiled from <spigot-api>
+public abstract class org.bukkit.metadata.MetadataValueAdapter implements org.bukkit.metadata.MetadataValue {
+  protected final java.lang.ref.WeakReference<org.bukkit.plugin.Plugin> owningPlugin;
+  protected org.bukkit.metadata.MetadataValueAdapter(org.bukkit.plugin.Plugin);
+  public org.bukkit.plugin.Plugin getOwningPlugin();
+  public int asInt();
+  public float asFloat();
+  public double asDouble();
+  public long asLong();
+  public short asShort();
+  public byte asByte();
+  public boolean asBoolean();
+  public java.lang.String asString();
+}

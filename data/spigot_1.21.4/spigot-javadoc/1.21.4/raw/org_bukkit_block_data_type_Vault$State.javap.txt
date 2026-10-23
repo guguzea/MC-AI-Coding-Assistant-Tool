@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public final class org.bukkit.block.data.type.Vault$State extends java.lang.Enum<org.bukkit.block.data.type.Vault$State> {
+  public static final org.bukkit.block.data.type.Vault$State INACTIVE;
+  public static final org.bukkit.block.data.type.Vault$State ACTIVE;
+  public static final org.bukkit.block.data.type.Vault$State UNLOCKING;
+  public static final org.bukkit.block.data.type.Vault$State EJECTING;
+  public static org.bukkit.block.data.type.Vault$State[] values();
+  public static org.bukkit.block.data.type.Vault$State valueOf(java.lang.String);
+  static {};
+}

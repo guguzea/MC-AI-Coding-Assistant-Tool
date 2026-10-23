@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.meta.Damageable {
+  public abstract boolean hasDamage();
+  public abstract int getDamage();
+  public abstract void setDamage(int);
+  public abstract org.bukkit.inventory.meta.Damageable clone();
+  public default java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+}

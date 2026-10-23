@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public final class org.bukkit.loot.LootContext {
+  public static final int DEFAULT_LOOT_MODIFIER;
+  public org.bukkit.Location getLocation();
+  public float getLuck();
+  public int getLootingModifier();
+  public org.bukkit.entity.Entity getLootedEntity();
+  public org.bukkit.entity.HumanEntity getKiller();
+}

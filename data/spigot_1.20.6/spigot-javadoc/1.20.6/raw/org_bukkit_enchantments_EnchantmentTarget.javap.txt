@@ -1,0 +1,23 @@
+Compiled from <spigot-api>
+public abstract class org.bukkit.enchantments.EnchantmentTarget extends java.lang.Enum<org.bukkit.enchantments.EnchantmentTarget> {
+  public static final org.bukkit.enchantments.EnchantmentTarget ALL;
+  public static final org.bukkit.enchantments.EnchantmentTarget ARMOR;
+  public static final org.bukkit.enchantments.EnchantmentTarget ARMOR_FEET;
+  public static final org.bukkit.enchantments.EnchantmentTarget ARMOR_LEGS;
+  public static final org.bukkit.enchantments.EnchantmentTarget ARMOR_TORSO;
+  public static final org.bukkit.enchantments.EnchantmentTarget ARMOR_HEAD;
+  public static final org.bukkit.enchantments.EnchantmentTarget WEAPON;
+  public static final org.bukkit.enchantments.EnchantmentTarget TOOL;
+  public static final org.bukkit.enchantments.EnchantmentTarget BOW;
+  public static final org.bukkit.enchantments.EnchantmentTarget FISHING_ROD;
+  public static final org.bukkit.enchantments.EnchantmentTarget BREAKABLE;
+  public static final org.bukkit.enchantments.EnchantmentTarget WEARABLE;
+  public static final org.bukkit.enchantments.EnchantmentTarget TRIDENT;
+  public static final org.bukkit.enchantments.EnchantmentTarget CROSSBOW;
+  public static final org.bukkit.enchantments.EnchantmentTarget VANISHABLE;
+  public static org.bukkit.enchantments.EnchantmentTarget[] values();
+  public static org.bukkit.enchantments.EnchantmentTarget valueOf(java.lang.String);
+  public abstract boolean includes(org.bukkit.Material);
+  public boolean includes(org.bukkit.inventory.ItemStack);
+  static {};
+}

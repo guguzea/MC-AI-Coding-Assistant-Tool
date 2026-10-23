@@ -1,0 +1,19 @@
+Compiled from <spigot-api>
+public class org.bukkit.material.Step extends org.bukkit.material.TexturedMaterial {
+  static {};
+  public org.bukkit.material.Step();
+  public org.bukkit.material.Step(int);
+  public org.bukkit.material.Step(org.bukkit.Material);
+  public org.bukkit.material.Step(int, byte);
+  public org.bukkit.material.Step(org.bukkit.Material, byte);
+  public java.util.List<org.bukkit.Material> getTextures();
+  public boolean isInverted();
+  public void setInverted(boolean);
+  protected int getTextureIndex();
+  protected void setTextureIndex(int);
+  public org.bukkit.material.Step clone();
+  public java.lang.String toString();
+  public org.bukkit.material.TexturedMaterial clone();
+  public java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+  public org.bukkit.material.MaterialData clone();
+}

@@ -1,0 +1,29 @@
+Compiled from <spigot-api>
+public final class org.bukkit.inventory.InventoryView$Property extends java.lang.Enum<org.bukkit.inventory.InventoryView$Property> {
+  public static final org.bukkit.inventory.InventoryView$Property BREW_TIME;
+  public static final org.bukkit.inventory.InventoryView$Property BURN_TIME;
+  public static final org.bukkit.inventory.InventoryView$Property TICKS_FOR_CURRENT_FUEL;
+  public static final org.bukkit.inventory.InventoryView$Property COOK_TIME;
+  public static final org.bukkit.inventory.InventoryView$Property TICKS_FOR_CURRENT_SMELTING;
+  public static final org.bukkit.inventory.InventoryView$Property ENCHANT_BUTTON1;
+  public static final org.bukkit.inventory.InventoryView$Property ENCHANT_BUTTON2;
+  public static final org.bukkit.inventory.InventoryView$Property ENCHANT_BUTTON3;
+  public static final org.bukkit.inventory.InventoryView$Property ENCHANT_XP_SEED;
+  public static final org.bukkit.inventory.InventoryView$Property ENCHANT_ID1;
+  public static final org.bukkit.inventory.InventoryView$Property ENCHANT_ID2;
+  public static final org.bukkit.inventory.InventoryView$Property ENCHANT_ID3;
+  public static final org.bukkit.inventory.InventoryView$Property ENCHANT_LEVEL1;
+  public static final org.bukkit.inventory.InventoryView$Property ENCHANT_LEVEL2;
+  public static final org.bukkit.inventory.InventoryView$Property ENCHANT_LEVEL3;
+  public static final org.bukkit.inventory.InventoryView$Property LEVELS;
+  public static final org.bukkit.inventory.InventoryView$Property PRIMARY_EFFECT;
+  public static final org.bukkit.inventory.InventoryView$Property SECONDARY_EFFECT;
+  public static final org.bukkit.inventory.InventoryView$Property REPAIR_COST;
+  int id;
+  org.bukkit.event.inventory.InventoryType style;
+  static {};
+  public org.bukkit.event.inventory.InventoryType getType();
+  public int getId();
+  public static org.bukkit.inventory.InventoryView$Property[] values();
+  public static org.bukkit.inventory.InventoryView$Property valueOf(java.lang.String);
+}

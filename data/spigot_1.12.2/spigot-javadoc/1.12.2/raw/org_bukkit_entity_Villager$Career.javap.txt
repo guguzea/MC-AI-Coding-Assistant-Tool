@@ -1,0 +1,21 @@
+Compiled from <spigot-api>
+public final class org.bukkit.entity.Villager$Career extends java.lang.Enum<org.bukkit.entity.Villager$Career> {
+  public static final org.bukkit.entity.Villager$Career FARMER;
+  public static final org.bukkit.entity.Villager$Career FISHERMAN;
+  public static final org.bukkit.entity.Villager$Career SHEPHERD;
+  public static final org.bukkit.entity.Villager$Career FLETCHER;
+  public static final org.bukkit.entity.Villager$Career LIBRARIAN;
+  public static final org.bukkit.entity.Villager$Career CARTOGRAPHER;
+  public static final org.bukkit.entity.Villager$Career CLERIC;
+  public static final org.bukkit.entity.Villager$Career ARMORER;
+  public static final org.bukkit.entity.Villager$Career WEAPON_SMITH;
+  public static final org.bukkit.entity.Villager$Career TOOL_SMITH;
+  public static final org.bukkit.entity.Villager$Career BUTCHER;
+  public static final org.bukkit.entity.Villager$Career LEATHERWORKER;
+  public static final org.bukkit.entity.Villager$Career NITWIT;
+  static {};
+  public org.bukkit.entity.Villager$Profession getProfession();
+  public static java.util.List<org.bukkit.entity.Villager$Career> getCareers(org.bukkit.entity.Villager$Profession);
+  public static org.bukkit.entity.Villager$Career[] values();
+  public static org.bukkit.entity.Villager$Career valueOf(java.lang.String);
+}

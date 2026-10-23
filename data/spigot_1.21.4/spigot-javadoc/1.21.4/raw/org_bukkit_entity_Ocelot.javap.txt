@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Ocelot extends org.bukkit.entity.Animals {
+  public abstract boolean isTrusting();
+  public abstract void setTrusting(boolean);
+  public abstract org.bukkit.entity.Ocelot$Type getCatType();
+  public abstract void setCatType(org.bukkit.entity.Ocelot$Type);
+}

@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.material.Directional {
+  public abstract void setFacingDirection(org.bukkit.block.BlockFace);
+  public abstract org.bukkit.block.BlockFace getFacing();
+}

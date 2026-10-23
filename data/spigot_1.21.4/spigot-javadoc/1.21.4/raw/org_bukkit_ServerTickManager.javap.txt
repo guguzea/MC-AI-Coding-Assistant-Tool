@@ -1,0 +1,16 @@
+Compiled from <spigot-api>
+public interface org.bukkit.ServerTickManager {
+  public abstract boolean isRunningNormally();
+  public abstract boolean isStepping();
+  public abstract boolean isSprinting();
+  public abstract boolean isFrozen();
+  public abstract float getTickRate();
+  public abstract void setTickRate(float);
+  public abstract void setFrozen(boolean);
+  public abstract boolean stepGameIfFrozen(int);
+  public abstract boolean stopStepping();
+  public abstract boolean requestGameToSprint(int);
+  public abstract boolean stopSprinting();
+  public abstract boolean isFrozen(org.bukkit.entity.Entity);
+  public abstract int getFrozenTicksToRun();
+}

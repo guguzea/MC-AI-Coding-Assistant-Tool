@@ -1,0 +1,21 @@
+---
+title: "org.bukkit.command.PluginCommand"
+package: "org.bukkit.command"
+source: https://repo.papermc.io/repository/maven-public/org/spigotmc/spigot-api/1.16.5-R0.1-SNAPSHOT/spigot-api-1.16.5-R0.1-20210611.041013-99.jar
+sourceType: javap
+fetchedWith: extract-spigot-api-surface.mjs@1
+fetchedAt: 2026-10-23T15:34:22.101Z
+asOfVersion: "1.16.5-R0.1-SNAPSHOT"
+jarMd5: "f6f72446ce3adfc1c820a97d7fa56c8c"
+---
+
+- `public final class org.bukkit.command.PluginCommand extends org.bukkit.command.Command implements org.bukkit.command.PluginIdentifiableCommand`
+- `protected org.bukkit.command.PluginCommand(java.lang.String, org.bukkit.plugin.Plugin)`
+- `public boolean execute(org.bukkit.command.CommandSender, java.lang.String, java.lang.String[])`
+- `public void setExecutor(org.bukkit.command.CommandExecutor)`
+- `public org.bukkit.command.CommandExecutor getExecutor()`
+- `public void setTabCompleter(org.bukkit.command.TabCompleter)`
+- `public org.bukkit.command.TabCompleter getTabCompleter()`
+- `public org.bukkit.plugin.Plugin getPlugin()`
+- `public java.util.List<java.lang.String> tabComplete(org.bukkit.command.CommandSender, java.lang.String, java.lang.String[]) throws org.bukkit.command.CommandException, java.lang.IllegalArgumentException`
+- `public java.lang.String toString()`

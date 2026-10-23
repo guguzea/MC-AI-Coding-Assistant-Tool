@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.BeaconInventory extends org.bukkit.inventory.Inventory {
+  public abstract void setItem(org.bukkit.inventory.ItemStack);
+  public abstract org.bukkit.inventory.ItemStack getItem();
+}

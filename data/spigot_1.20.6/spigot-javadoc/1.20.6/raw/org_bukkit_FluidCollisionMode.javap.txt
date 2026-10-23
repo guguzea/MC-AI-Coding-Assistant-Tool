@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public final class org.bukkit.FluidCollisionMode extends java.lang.Enum<org.bukkit.FluidCollisionMode> {
+  public static final org.bukkit.FluidCollisionMode NEVER;
+  public static final org.bukkit.FluidCollisionMode SOURCE_ONLY;
+  public static final org.bukkit.FluidCollisionMode ALWAYS;
+  public static org.bukkit.FluidCollisionMode[] values();
+  public static org.bukkit.FluidCollisionMode valueOf(java.lang.String);
+  static {};
+}

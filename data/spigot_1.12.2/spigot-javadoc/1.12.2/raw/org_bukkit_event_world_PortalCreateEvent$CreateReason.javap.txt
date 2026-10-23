@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public final class org.bukkit.event.world.PortalCreateEvent$CreateReason extends java.lang.Enum<org.bukkit.event.world.PortalCreateEvent$CreateReason> {
+  public static final org.bukkit.event.world.PortalCreateEvent$CreateReason FIRE;
+  public static final org.bukkit.event.world.PortalCreateEvent$CreateReason OBC_DESTINATION;
+  static {};
+  public static org.bukkit.event.world.PortalCreateEvent$CreateReason[] values();
+  public static org.bukkit.event.world.PortalCreateEvent$CreateReason valueOf(java.lang.String);
+}

@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.data.type.TurtleEgg extends org.bukkit.block.data.BlockData {
+  public abstract int getEggs();
+  public abstract void setEggs(int);
+  public abstract int getMinimumEggs();
+  public abstract int getMaximumEggs();
+  public abstract int getHatch();
+  public abstract void setHatch(int);
+  public abstract int getMaximumHatch();
+}

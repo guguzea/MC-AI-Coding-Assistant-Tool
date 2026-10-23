@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.inventory.PrepareSmithingEvent extends org.bukkit.event.inventory.PrepareInventoryResultEvent {
+  public org.bukkit.event.inventory.PrepareSmithingEvent(org.bukkit.inventory.InventoryView, org.bukkit.inventory.ItemStack);
+  public org.bukkit.inventory.SmithingInventory getInventory();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  public org.bukkit.inventory.Inventory getInventory();
+  static {};
+}

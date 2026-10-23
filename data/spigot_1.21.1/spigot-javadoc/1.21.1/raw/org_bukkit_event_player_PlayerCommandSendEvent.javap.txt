@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.player.PlayerCommandSendEvent extends org.bukkit.event.player.PlayerEvent {
+  public org.bukkit.event.player.PlayerCommandSendEvent(org.bukkit.entity.Player, java.util.Collection<java.lang.String>);
+  public java.util.Collection<java.lang.String> getCommands();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  static {};
+}

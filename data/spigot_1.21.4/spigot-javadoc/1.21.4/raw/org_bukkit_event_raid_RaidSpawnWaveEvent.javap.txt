@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.raid.RaidSpawnWaveEvent extends org.bukkit.event.raid.RaidEvent {
+  public org.bukkit.event.raid.RaidSpawnWaveEvent(org.bukkit.Raid, org.bukkit.World, org.bukkit.entity.Raider, java.util.List<org.bukkit.entity.Raider>);
+  public org.bukkit.entity.Raider getPatrolLeader();
+  public java.util.List<org.bukkit.entity.Raider> getRaiders();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  static {};
+}

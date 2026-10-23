@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public class org.bukkit.command.PluginCommandYamlParser {
+  public org.bukkit.command.PluginCommandYamlParser();
+  public static java.util.List<org.bukkit.command.Command> parse(org.bukkit.plugin.Plugin);
+}

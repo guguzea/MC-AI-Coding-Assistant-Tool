@@ -1,0 +1,12 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.block.BlockDispenseLootEvent extends org.bukkit.event.block.BlockEvent implements org.bukkit.event.Cancellable {
+  public org.bukkit.event.block.BlockDispenseLootEvent(org.bukkit.entity.Player, org.bukkit.block.Block, java.util.List<org.bukkit.inventory.ItemStack>);
+  public java.util.List<org.bukkit.inventory.ItemStack> getDispensedLoot();
+  public void setDispensedLoot(java.util.List<org.bukkit.inventory.ItemStack>);
+  public org.bukkit.entity.Player getPlayer();
+  public boolean isCancelled();
+  public void setCancelled(boolean);
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  static {};
+}

@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.block.CampfireStartEvent extends org.bukkit.event.block.InventoryBlockStartEvent {
+  static {};
+  public org.bukkit.event.block.CampfireStartEvent(org.bukkit.block.Block, org.bukkit.inventory.ItemStack, org.bukkit.inventory.CampfireRecipe);
+  public org.bukkit.inventory.CampfireRecipe getRecipe();
+  public int getTotalCookTime();
+  public void setTotalCookTime(int);
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+}

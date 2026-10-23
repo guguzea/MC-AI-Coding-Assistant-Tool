@@ -1,0 +1,11 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Warden extends org.bukkit.entity.Monster {
+  public abstract int getAnger();
+  public abstract int getAnger(org.bukkit.entity.Entity);
+  public abstract void increaseAnger(org.bukkit.entity.Entity, int);
+  public abstract void setAnger(org.bukkit.entity.Entity, int);
+  public abstract void clearAnger(org.bukkit.entity.Entity);
+  public abstract org.bukkit.entity.LivingEntity getEntityAngryAt();
+  public abstract void setDisturbanceLocation(org.bukkit.Location);
+  public abstract org.bukkit.entity.Warden$AngerLevel getAngerLevel();
+}

@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public final class org.bukkit.event.player.PlayerAnimationType extends java.lang.Enum<org.bukkit.event.player.PlayerAnimationType> {
+  public static final org.bukkit.event.player.PlayerAnimationType ARM_SWING;
+  public static final org.bukkit.event.player.PlayerAnimationType OFF_ARM_SWING;
+  public static org.bukkit.event.player.PlayerAnimationType[] values();
+  public static org.bukkit.event.player.PlayerAnimationType valueOf(java.lang.String);
+  static {};
+}

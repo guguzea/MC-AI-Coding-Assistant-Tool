@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.map.MapPalette$MapColorCache {
+  public abstract boolean isCached();
+  public abstract byte matchColor(java.awt.Color);
+}

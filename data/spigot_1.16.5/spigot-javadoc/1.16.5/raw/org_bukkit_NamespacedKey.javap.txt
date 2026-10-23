@@ -1,0 +1,17 @@
+Compiled from <spigot-api>
+public final class org.bukkit.NamespacedKey {
+  public static final java.lang.String MINECRAFT;
+  public static final java.lang.String BUKKIT;
+  static {};
+  public org.bukkit.NamespacedKey(java.lang.String, java.lang.String);
+  public org.bukkit.NamespacedKey(org.bukkit.plugin.Plugin, java.lang.String);
+  public java.lang.String getNamespace();
+  public java.lang.String getKey();
+  public int hashCode();
+  public boolean equals(java.lang.Object);
+  public java.lang.String toString();
+  public static org.bukkit.NamespacedKey randomKey();
+  public static org.bukkit.NamespacedKey minecraft(java.lang.String);
+  public static org.bukkit.NamespacedKey fromString(java.lang.String, org.bukkit.plugin.Plugin);
+  public static org.bukkit.NamespacedKey fromString(java.lang.String);
+}

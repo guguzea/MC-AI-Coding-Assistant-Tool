@@ -1,0 +1,11 @@
+Compiled from <spigot-api>
+public class org.bukkit.material.PressurePlate extends org.bukkit.material.MaterialData implements org.bukkit.material.PressureSensor {
+  public org.bukkit.material.PressurePlate();
+  public org.bukkit.material.PressurePlate(org.bukkit.Material);
+  public org.bukkit.material.PressurePlate(org.bukkit.Material, byte);
+  public boolean isPressed();
+  public java.lang.String toString();
+  public org.bukkit.material.PressurePlate clone();
+  public org.bukkit.material.MaterialData clone();
+  public java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+}

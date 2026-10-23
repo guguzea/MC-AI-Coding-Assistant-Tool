@@ -1,0 +1,16 @@
+Compiled from <spigot-api>
+public class org.bukkit.plugin.SimpleServicesManager implements org.bukkit.plugin.ServicesManager {
+  public org.bukkit.plugin.SimpleServicesManager();
+  public <T> void register(java.lang.Class<T>, T, org.bukkit.plugin.Plugin, org.bukkit.plugin.ServicePriority);
+  public void unregisterAll(org.bukkit.plugin.Plugin);
+  public void unregister(java.lang.Class<?>, java.lang.Object);
+  public void unregister(java.lang.Object);
+  public <T> T load(java.lang.Class<T>);
+  public <T> org.bukkit.plugin.RegisteredServiceProvider<T> getRegistration(java.lang.Class<T>);
+  public java.util.List<org.bukkit.plugin.RegisteredServiceProvider<?>> getRegistrations(org.bukkit.plugin.Plugin);
+  public <T> java.util.List<org.bukkit.plugin.RegisteredServiceProvider<T>> getRegistrations(java.lang.Class<T>);
+  public java.util.Set<java.lang.Class<?>> getKnownServices();
+  public <T> boolean isProvidedFor(java.lang.Class<T>);
+  public java.util.Collection getRegistrations(java.lang.Class);
+  public java.util.Collection getKnownServices();
+}

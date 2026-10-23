@@ -1,0 +1,33 @@
+Compiled from <spigot-api>
+public final class org.bukkit.potion.PotionType extends java.lang.Enum<org.bukkit.potion.PotionType> {
+  public static final org.bukkit.potion.PotionType UNCRAFTABLE;
+  public static final org.bukkit.potion.PotionType WATER;
+  public static final org.bukkit.potion.PotionType MUNDANE;
+  public static final org.bukkit.potion.PotionType THICK;
+  public static final org.bukkit.potion.PotionType AWKWARD;
+  public static final org.bukkit.potion.PotionType NIGHT_VISION;
+  public static final org.bukkit.potion.PotionType INVISIBILITY;
+  public static final org.bukkit.potion.PotionType JUMP;
+  public static final org.bukkit.potion.PotionType FIRE_RESISTANCE;
+  public static final org.bukkit.potion.PotionType SPEED;
+  public static final org.bukkit.potion.PotionType SLOWNESS;
+  public static final org.bukkit.potion.PotionType WATER_BREATHING;
+  public static final org.bukkit.potion.PotionType INSTANT_HEAL;
+  public static final org.bukkit.potion.PotionType INSTANT_DAMAGE;
+  public static final org.bukkit.potion.PotionType POISON;
+  public static final org.bukkit.potion.PotionType REGEN;
+  public static final org.bukkit.potion.PotionType STRENGTH;
+  public static final org.bukkit.potion.PotionType WEAKNESS;
+  public static final org.bukkit.potion.PotionType LUCK;
+  static {};
+  public org.bukkit.potion.PotionEffectType getEffectType();
+  public boolean isInstant();
+  public boolean isUpgradeable();
+  public boolean isExtendable();
+  public int getDamageValue();
+  public int getMaxLevel();
+  public static org.bukkit.potion.PotionType getByDamageValue(int);
+  public static org.bukkit.potion.PotionType getByEffect(org.bukkit.potion.PotionEffectType);
+  public static org.bukkit.potion.PotionType[] values();
+  public static org.bukkit.potion.PotionType valueOf(java.lang.String);
+}

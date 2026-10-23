@@ -1,0 +1,12 @@
+Compiled from <spigot-api>
+public class org.bukkit.material.MonsterEggs extends org.bukkit.material.TexturedMaterial {
+  public org.bukkit.material.MonsterEggs();
+  public org.bukkit.material.MonsterEggs(org.bukkit.Material);
+  public org.bukkit.material.MonsterEggs(org.bukkit.Material, byte);
+  public java.util.List<org.bukkit.Material> getTextures();
+  public org.bukkit.material.MonsterEggs clone();
+  public org.bukkit.material.TexturedMaterial clone();
+  public org.bukkit.material.MaterialData clone();
+  public java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+  static {};
+}

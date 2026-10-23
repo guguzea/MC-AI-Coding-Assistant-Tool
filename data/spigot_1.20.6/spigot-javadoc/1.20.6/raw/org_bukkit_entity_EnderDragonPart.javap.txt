@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.EnderDragonPart extends org.bukkit.entity.ComplexEntityPart,org.bukkit.entity.Damageable {
+  public abstract org.bukkit.entity.EnderDragon getParent();
+  public default org.bukkit.entity.ComplexLivingEntity getParent();
+}

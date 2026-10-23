@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public class org.bukkit.inventory.SmithingTrimRecipe extends org.bukkit.inventory.SmithingRecipe implements org.bukkit.inventory.ComplexRecipe {
+  public org.bukkit.inventory.SmithingTrimRecipe(org.bukkit.NamespacedKey, org.bukkit.inventory.RecipeChoice, org.bukkit.inventory.RecipeChoice, org.bukkit.inventory.RecipeChoice);
+  public org.bukkit.inventory.SmithingTrimRecipe(org.bukkit.NamespacedKey, org.bukkit.inventory.RecipeChoice, org.bukkit.inventory.RecipeChoice, org.bukkit.inventory.RecipeChoice, org.bukkit.inventory.meta.trim.TrimPattern);
+  public org.bukkit.inventory.RecipeChoice getTemplate();
+  public org.bukkit.inventory.meta.trim.TrimPattern getTrimPattern();
+}

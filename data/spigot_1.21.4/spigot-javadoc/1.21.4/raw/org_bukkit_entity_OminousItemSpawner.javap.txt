@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.OminousItemSpawner extends org.bukkit.entity.Entity {
+  public abstract org.bukkit.inventory.ItemStack getItem();
+  public abstract void setItem(org.bukkit.inventory.ItemStack);
+  public abstract long getSpawnItemAfterTicks();
+  public abstract void setSpawnItemAfterTicks(long);
+}

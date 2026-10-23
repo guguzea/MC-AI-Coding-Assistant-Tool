@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.meta.components.WeaponComponent extends org.bukkit.configuration.serialization.ConfigurationSerializable {
+  public abstract int getItemDamagePerAttack();
+  public abstract void setItemDamagePerAttack(int);
+  public abstract float getDisableBlockingForSeconds();
+  public abstract void setDisableBlockingForSeconds(float);
+}

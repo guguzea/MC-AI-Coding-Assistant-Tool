@@ -1,0 +1,15 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.entity.EntityShootBowEvent extends org.bukkit.event.entity.EntityEvent implements org.bukkit.event.Cancellable {
+  static {};
+  public org.bukkit.event.entity.EntityShootBowEvent(org.bukkit.entity.LivingEntity, org.bukkit.inventory.ItemStack, org.bukkit.entity.Projectile, float);
+  public org.bukkit.entity.LivingEntity getEntity();
+  public org.bukkit.inventory.ItemStack getBow();
+  public org.bukkit.entity.Entity getProjectile();
+  public void setProjectile(org.bukkit.entity.Entity);
+  public float getForce();
+  public boolean isCancelled();
+  public void setCancelled(boolean);
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  public org.bukkit.entity.Entity getEntity();
+}

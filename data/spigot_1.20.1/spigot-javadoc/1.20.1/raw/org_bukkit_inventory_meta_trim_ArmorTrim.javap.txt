@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public class org.bukkit.inventory.meta.trim.ArmorTrim {
+  public org.bukkit.inventory.meta.trim.ArmorTrim(org.bukkit.inventory.meta.trim.TrimMaterial, org.bukkit.inventory.meta.trim.TrimPattern);
+  public org.bukkit.inventory.meta.trim.TrimMaterial getMaterial();
+  public org.bukkit.inventory.meta.trim.TrimPattern getPattern();
+  public int hashCode();
+  public boolean equals(java.lang.Object);
+}

@@ -1,0 +1,16 @@
+Compiled from <spigot-api>
+public class org.bukkit.material.Vine extends org.bukkit.material.MaterialData {
+  public org.bukkit.material.Vine();
+  public org.bukkit.material.Vine(org.bukkit.Material, byte);
+  public org.bukkit.material.Vine(byte);
+  public org.bukkit.material.Vine(org.bukkit.block.BlockFace...);
+  public org.bukkit.material.Vine(java.util.EnumSet<org.bukkit.block.BlockFace>);
+  public boolean isOnFace(org.bukkit.block.BlockFace);
+  public void putOnFace(org.bukkit.block.BlockFace);
+  public void removeFromFace(org.bukkit.block.BlockFace);
+  public java.lang.String toString();
+  public org.bukkit.material.Vine clone();
+  public org.bukkit.material.MaterialData clone();
+  public java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+  static {};
+}

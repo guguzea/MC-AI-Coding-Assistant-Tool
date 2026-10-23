@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public class org.bukkit.command.MultipleCommandAlias extends org.bukkit.command.Command {
+  public org.bukkit.command.MultipleCommandAlias(java.lang.String, org.bukkit.command.Command[]);
+  public org.bukkit.command.Command[] getCommands();
+  public boolean execute(org.bukkit.command.CommandSender, java.lang.String, java.lang.String[]);
+}

@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public final class org.bukkit.help.HelpTopicComparator implements java.util.Comparator<org.bukkit.help.HelpTopic> {
+  public static org.bukkit.help.HelpTopicComparator$TopicNameComparator topicNameComparatorInstance();
+  public static org.bukkit.help.HelpTopicComparator helpTopicComparatorInstance();
+  public int compare(org.bukkit.help.HelpTopic, org.bukkit.help.HelpTopic);
+  public int compare(java.lang.Object, java.lang.Object);
+  static {};
+}

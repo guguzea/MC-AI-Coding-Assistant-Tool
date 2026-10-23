@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.server.PluginDisableEvent extends org.bukkit.event.server.PluginEvent {
+  static {};
+  public org.bukkit.event.server.PluginDisableEvent(org.bukkit.plugin.Plugin);
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+}

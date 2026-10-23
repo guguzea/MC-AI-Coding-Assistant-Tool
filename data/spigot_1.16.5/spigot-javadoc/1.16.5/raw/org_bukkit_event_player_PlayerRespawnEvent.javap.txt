@@ -1,0 +1,12 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.player.PlayerRespawnEvent extends org.bukkit.event.player.PlayerEvent {
+  static {};
+  public org.bukkit.event.player.PlayerRespawnEvent(org.bukkit.entity.Player, org.bukkit.Location, boolean);
+  public org.bukkit.event.player.PlayerRespawnEvent(org.bukkit.entity.Player, org.bukkit.Location, boolean, boolean);
+  public org.bukkit.Location getRespawnLocation();
+  public void setRespawnLocation(org.bukkit.Location);
+  public boolean isBedSpawn();
+  public boolean isAnchorSpawn();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+}

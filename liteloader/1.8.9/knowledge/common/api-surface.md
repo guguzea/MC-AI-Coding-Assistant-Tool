@@ -14,12 +14,13 @@ javap：`21.0.12.1` · vanilla 类型可读性：**MCP 可读（真名）**
 
 **计数（分母写清）**
 
-- 构件内扫 `com/mumfrey/liteloader（顶层 + api/** + modconfig/**）` 候选类 **71** 个 → 顶层 public 类型 **70** 个（接口 60 / 类 7 / 枚举 1 / 注解 2）
+- 构件内扫 `com/mumfrey/liteloader（顶层 + api/** + modconfig/**）` 候选类 **73** 个 → 顶层 public 类型 **70** 个（接口 60 / 类 7 / 枚举 1 / 注解 2）
 - 成员签名 **209** 条 + 枚举常量 **2** 个
 - 构件路线**没有形参名**：class 文件不带 `MethodParameters`（三版实测），参数只到类型
 - 构件路线**看不到注解 `default` 值**（`javap` 不带 `-v` 时不显示 `AnnotationDefault`）
 - 枚举按 class 文件原样显示为 `final class ... extends java.lang.Enum<…>`，并含编译器合成的 `values()` / `valueOf()`
 - 含编译器合成的 **bridge method**（泛型擦除产物，多为返回 `java.lang.Object` 的同名重载；写作时按泛型真身取，别照抄桥）
+- 嵌套类型 **2** 个：**只列名**（见文末），未展开成员
 
 ## `com.mumfrey.liteloader`（33 类）
 
@@ -595,8 +596,17 @@ _（无成员签名）_
 - `public abstract java.lang.String filename()`
 - `public abstract boolean aggressive()`
 
+## 嵌套类型（只列名，未展开成员）
+
+本构件范围内的嵌套类型 **2** 个（`Outer$Inner` 形态；匿名类已排除）。
+它们的**成员签名不在本文件里**，且**可见性未逐个核**（`jar tf` 只给文件名，分不出 public 还是 private 内部类）
+⇒ 要用就自己 `javap -classpath <构件> '<Outer$Inner>'` 看那一层，别把这里当成「可引用清单」。
+
+- `com.mumfrey.liteloader.PlayerInteractionListener$MouseButton`
+- `com.mumfrey.liteloader.api.ContainerRegistry$DisabledReason`
+
 ## 未核实 / 未覆盖
 
-- 嵌套类型未抽（只取顶层类型；本构件内候选 71 个里，含 `$` 的内部类已排除）。
+- 嵌套类型**只列名不展开成员**（2 个，见上一节清单）：它们的成员签名不在本文件里，要用就自己 `javap` 那一层。
 - 形参名与注解 `default` 值在构件里取不到（见上「计数」小节的三条限制）。
 - 本文件**只**证明「构件里有这个名字与这个形状」，不证明它的行为、也不证明它在别的版本同样存在。

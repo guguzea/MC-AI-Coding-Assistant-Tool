@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.meta.LeatherArmorMeta extends org.bukkit.inventory.meta.ItemMeta {
+  public abstract org.bukkit.Color getColor();
+  public abstract void setColor(org.bukkit.Color);
+  public abstract org.bukkit.inventory.meta.LeatherArmorMeta clone();
+  public default org.bukkit.inventory.meta.ItemMeta clone();
+}

@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public class org.bukkit.inventory.meta.BookMeta$Spigot {
+  public org.bukkit.inventory.meta.BookMeta$Spigot();
+  public net.md_5.bungee.api.chat.BaseComponent[] getPage(int);
+  public void setPage(int, net.md_5.bungee.api.chat.BaseComponent...);
+  public java.util.List<net.md_5.bungee.api.chat.BaseComponent[]> getPages();
+  public void setPages(java.util.List<net.md_5.bungee.api.chat.BaseComponent[]>);
+  public void setPages(net.md_5.bungee.api.chat.BaseComponent[]...);
+  public void addPage(net.md_5.bungee.api.chat.BaseComponent[]...);
+}

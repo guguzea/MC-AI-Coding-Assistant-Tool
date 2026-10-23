@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public interface org.bukkit.FeatureFlag extends org.bukkit.Keyed {
+  public static final org.bukkit.FeatureFlag VANILLA;
+  public static final org.bukkit.FeatureFlag BUNDLE;
+  public static final org.bukkit.FeatureFlag UPDATE_1_20;
+  static {};
+}

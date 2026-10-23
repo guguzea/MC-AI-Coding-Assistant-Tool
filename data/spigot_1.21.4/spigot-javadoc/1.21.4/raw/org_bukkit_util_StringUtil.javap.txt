@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public class org.bukkit.util.StringUtil {
+  public org.bukkit.util.StringUtil();
+  public static <T extends java.util.Collection<? super java.lang.String>> T copyPartialMatches(java.lang.String, java.lang.Iterable<java.lang.String>, T) throws java.lang.UnsupportedOperationException, java.lang.IllegalArgumentException;
+  public static boolean startsWithIgnoreCase(java.lang.String, java.lang.String) throws java.lang.IllegalArgumentException, java.lang.NullPointerException;
+}

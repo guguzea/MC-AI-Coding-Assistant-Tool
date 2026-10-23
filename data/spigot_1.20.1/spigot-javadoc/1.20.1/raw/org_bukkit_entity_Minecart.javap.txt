@@ -1,0 +1,19 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Minecart extends org.bukkit.entity.Vehicle {
+  public abstract void setDamage(double);
+  public abstract double getDamage();
+  public abstract double getMaxSpeed();
+  public abstract void setMaxSpeed(double);
+  public abstract boolean isSlowWhenEmpty();
+  public abstract void setSlowWhenEmpty(boolean);
+  public abstract org.bukkit.util.Vector getFlyingVelocityMod();
+  public abstract void setFlyingVelocityMod(org.bukkit.util.Vector);
+  public abstract org.bukkit.util.Vector getDerailedVelocityMod();
+  public abstract void setDerailedVelocityMod(org.bukkit.util.Vector);
+  public abstract void setDisplayBlock(org.bukkit.material.MaterialData);
+  public abstract org.bukkit.material.MaterialData getDisplayBlock();
+  public abstract void setDisplayBlockData(org.bukkit.block.data.BlockData);
+  public abstract org.bukkit.block.data.BlockData getDisplayBlockData();
+  public abstract void setDisplayBlockOffset(int);
+  public abstract int getDisplayBlockOffset();
+}

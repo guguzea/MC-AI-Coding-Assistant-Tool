@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Ocelot extends org.bukkit.entity.Animals,org.bukkit.entity.Tameable,org.bukkit.entity.Sittable {
+  public abstract org.bukkit.entity.Ocelot$Type getCatType();
+  public abstract void setCatType(org.bukkit.entity.Ocelot$Type);
+}

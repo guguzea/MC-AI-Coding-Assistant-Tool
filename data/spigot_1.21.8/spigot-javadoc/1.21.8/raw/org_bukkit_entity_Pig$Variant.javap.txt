@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Pig$Variant extends org.bukkit.Keyed,org.bukkit.registry.RegistryAware {
+  public static final org.bukkit.entity.Pig$Variant TEMPERATE;
+  public static final org.bukkit.entity.Pig$Variant WARM;
+  public static final org.bukkit.entity.Pig$Variant COLD;
+  public abstract org.bukkit.NamespacedKey getKey();
+  static {};
+}

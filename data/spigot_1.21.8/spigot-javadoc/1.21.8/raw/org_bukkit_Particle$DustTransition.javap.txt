@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public class org.bukkit.Particle$DustTransition extends org.bukkit.Particle$DustOptions {
+  public org.bukkit.Particle$DustTransition(org.bukkit.Color, org.bukkit.Color, float);
+  public org.bukkit.Color getToColor();
+}

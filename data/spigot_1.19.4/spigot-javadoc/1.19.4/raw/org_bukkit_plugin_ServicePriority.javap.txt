@@ -1,0 +1,11 @@
+Compiled from <spigot-api>
+public final class org.bukkit.plugin.ServicePriority extends java.lang.Enum<org.bukkit.plugin.ServicePriority> {
+  public static final org.bukkit.plugin.ServicePriority Lowest;
+  public static final org.bukkit.plugin.ServicePriority Low;
+  public static final org.bukkit.plugin.ServicePriority Normal;
+  public static final org.bukkit.plugin.ServicePriority High;
+  public static final org.bukkit.plugin.ServicePriority Highest;
+  static {};
+  public static org.bukkit.plugin.ServicePriority[] values();
+  public static org.bukkit.plugin.ServicePriority valueOf(java.lang.String);
+}

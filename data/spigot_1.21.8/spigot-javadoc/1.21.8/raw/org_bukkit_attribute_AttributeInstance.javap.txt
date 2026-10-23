@@ -1,0 +1,11 @@
+Compiled from <spigot-api>
+public interface org.bukkit.attribute.AttributeInstance {
+  public abstract org.bukkit.attribute.Attribute getAttribute();
+  public abstract double getBaseValue();
+  public abstract void setBaseValue(double);
+  public abstract java.util.Collection<org.bukkit.attribute.AttributeModifier> getModifiers();
+  public abstract void addModifier(org.bukkit.attribute.AttributeModifier);
+  public abstract void removeModifier(org.bukkit.attribute.AttributeModifier);
+  public abstract double getValue();
+  public abstract double getDefaultValue();
+}

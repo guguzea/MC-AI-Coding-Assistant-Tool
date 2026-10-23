@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.AnimalTamer {
+  public abstract java.lang.String getName();
+  public abstract java.util.UUID getUniqueId();
+}

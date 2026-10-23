@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.player.PlayerUnleashEntityEvent extends org.bukkit.event.entity.EntityUnleashEvent implements org.bukkit.event.Cancellable {
+  public org.bukkit.event.player.PlayerUnleashEntityEvent(org.bukkit.entity.Entity, org.bukkit.entity.Player);
+  public org.bukkit.entity.Player getPlayer();
+  public boolean isCancelled();
+  public void setCancelled(boolean);
+}

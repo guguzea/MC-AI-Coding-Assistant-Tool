@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public final class org.bukkit.scoreboard.NameTagVisibility extends java.lang.Enum<org.bukkit.scoreboard.NameTagVisibility> {
+  public static final org.bukkit.scoreboard.NameTagVisibility ALWAYS;
+  public static final org.bukkit.scoreboard.NameTagVisibility NEVER;
+  public static final org.bukkit.scoreboard.NameTagVisibility HIDE_FOR_OTHER_TEAMS;
+  public static final org.bukkit.scoreboard.NameTagVisibility HIDE_FOR_OWN_TEAM;
+  static {};
+  public static org.bukkit.scoreboard.NameTagVisibility[] values();
+  public static org.bukkit.scoreboard.NameTagVisibility valueOf(java.lang.String);
+}

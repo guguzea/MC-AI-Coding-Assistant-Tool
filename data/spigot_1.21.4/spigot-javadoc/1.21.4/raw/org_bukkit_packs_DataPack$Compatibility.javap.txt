@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public final class org.bukkit.packs.DataPack$Compatibility extends java.lang.Enum<org.bukkit.packs.DataPack$Compatibility> {
+  public static final org.bukkit.packs.DataPack$Compatibility NEW;
+  public static final org.bukkit.packs.DataPack$Compatibility OLD;
+  public static final org.bukkit.packs.DataPack$Compatibility COMPATIBLE;
+  public static org.bukkit.packs.DataPack$Compatibility[] values();
+  public static org.bukkit.packs.DataPack$Compatibility valueOf(java.lang.String);
+  static {};
+}

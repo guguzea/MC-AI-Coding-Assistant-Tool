@@ -1,0 +1,23 @@
+Compiled from <spigot-api>
+public abstract class org.bukkit.inventory.InventoryView {
+  public static final int OUTSIDE;
+  public org.bukkit.inventory.InventoryView();
+  public abstract org.bukkit.inventory.Inventory getTopInventory();
+  public abstract org.bukkit.inventory.Inventory getBottomInventory();
+  public abstract org.bukkit.entity.HumanEntity getPlayer();
+  public abstract org.bukkit.event.inventory.InventoryType getType();
+  public void setItem(int, org.bukkit.inventory.ItemStack);
+  public org.bukkit.inventory.ItemStack getItem(int);
+  public final void setCursor(org.bukkit.inventory.ItemStack);
+  public final org.bukkit.inventory.ItemStack getCursor();
+  public final org.bukkit.inventory.Inventory getInventory(int);
+  public final int convertSlot(int);
+  public final org.bukkit.event.inventory.InventoryType$SlotType getSlotType(int);
+  public final void close();
+  public final int countSlots();
+  public final boolean setProperty(org.bukkit.inventory.InventoryView$Property, int);
+  public abstract java.lang.String getTitle();
+  public abstract java.lang.String getOriginalTitle();
+  public abstract void setTitle(java.lang.String);
+  static int[] $SWITCH_TABLE$org$bukkit$event$inventory$InventoryType();
+}

@@ -1,0 +1,14 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Allay extends org.bukkit.entity.Creature,org.bukkit.inventory.InventoryHolder {
+  public abstract boolean canDuplicate();
+  public abstract void setCanDuplicate(boolean);
+  public abstract long getDuplicationCooldown();
+  public abstract void setDuplicationCooldown(long);
+  public abstract void resetDuplicationCooldown();
+  public abstract boolean isDancing();
+  public abstract void startDancing(org.bukkit.Location);
+  public abstract void startDancing();
+  public abstract void stopDancing();
+  public abstract org.bukkit.entity.Allay duplicateAllay();
+  public abstract org.bukkit.Location getJukebox();
+}

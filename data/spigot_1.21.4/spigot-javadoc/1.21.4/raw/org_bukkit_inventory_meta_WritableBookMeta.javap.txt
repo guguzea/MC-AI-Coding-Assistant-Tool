@@ -1,0 +1,13 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.meta.WritableBookMeta extends org.bukkit.inventory.meta.ItemMeta {
+  public abstract boolean hasPages();
+  public abstract java.lang.String getPage(int);
+  public abstract void setPage(int, java.lang.String);
+  public abstract java.util.List<java.lang.String> getPages();
+  public abstract void setPages(java.util.List<java.lang.String>);
+  public abstract void setPages(java.lang.String...);
+  public abstract void addPage(java.lang.String...);
+  public abstract int getPageCount();
+  public abstract org.bukkit.inventory.meta.WritableBookMeta clone();
+  public default org.bukkit.inventory.meta.ItemMeta clone();
+}

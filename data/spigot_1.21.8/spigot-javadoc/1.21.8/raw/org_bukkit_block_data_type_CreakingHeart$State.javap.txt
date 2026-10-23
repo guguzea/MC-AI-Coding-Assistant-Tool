@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public final class org.bukkit.block.data.type.CreakingHeart$State extends java.lang.Enum<org.bukkit.block.data.type.CreakingHeart$State> {
+  public static final org.bukkit.block.data.type.CreakingHeart$State UPROOTED;
+  public static final org.bukkit.block.data.type.CreakingHeart$State DORMANT;
+  public static final org.bukkit.block.data.type.CreakingHeart$State AWAKE;
+  public static org.bukkit.block.data.type.CreakingHeart$State[] values();
+  public static org.bukkit.block.data.type.CreakingHeart$State valueOf(java.lang.String);
+  static {};
+}

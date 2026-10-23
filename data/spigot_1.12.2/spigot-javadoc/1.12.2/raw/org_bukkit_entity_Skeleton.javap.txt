@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Skeleton extends org.bukkit.entity.Monster {
+  public abstract org.bukkit.entity.Skeleton$SkeletonType getSkeletonType();
+  public abstract void setSkeletonType(org.bukkit.entity.Skeleton$SkeletonType);
+}

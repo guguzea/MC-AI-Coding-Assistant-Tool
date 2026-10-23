@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.MushroomCow extends org.bukkit.entity.Cow {
+  public abstract org.bukkit.entity.MushroomCow$Variant getVariant();
+  public abstract void setVariant(org.bukkit.entity.MushroomCow$Variant);
+}

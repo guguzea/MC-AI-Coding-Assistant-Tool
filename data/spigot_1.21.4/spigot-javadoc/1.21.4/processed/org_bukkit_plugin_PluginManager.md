@@ -1,0 +1,42 @@
+---
+title: "org.bukkit.plugin.PluginManager"
+package: "org.bukkit.plugin"
+source: https://repo.papermc.io/repository/maven-public/org/spigotmc/spigot-api/1.21.4-R0.1-SNAPSHOT/spigot-api-1.21.4-R0.1-20250325.160956-56.jar
+sourceType: javap
+fetchedWith: extract-spigot-api-surface.mjs@1
+fetchedAt: 2026-10-23T15:30:34.551Z
+asOfVersion: "1.21.4-R0.1-SNAPSHOT"
+jarMd5: "6ce70a28800bf30e68da45b12871f1f2"
+---
+
+- `public interface org.bukkit.plugin.PluginManager`
+- `public abstract void registerInterface(java.lang.Class<? extends org.bukkit.plugin.PluginLoader>) throws java.lang.IllegalArgumentException`
+- `public abstract org.bukkit.plugin.Plugin getPlugin(java.lang.String)`
+- `public abstract org.bukkit.plugin.Plugin[] getPlugins()`
+- `public abstract boolean isPluginEnabled(java.lang.String)`
+- `public abstract boolean isPluginEnabled(org.bukkit.plugin.Plugin)`
+- `public abstract org.bukkit.plugin.Plugin loadPlugin(java.io.File) throws org.bukkit.plugin.InvalidPluginException, org.bukkit.plugin.InvalidDescriptionException, org.bukkit.plugin.UnknownDependencyException`
+- `public abstract org.bukkit.plugin.Plugin[] loadPlugins(java.io.File)`
+- `public abstract org.bukkit.plugin.Plugin[] loadPlugins(java.io.File[])`
+- `public abstract void disablePlugins()`
+- `public abstract void clearPlugins()`
+- `public abstract void callEvent(org.bukkit.event.Event) throws java.lang.IllegalStateException`
+- `public abstract void registerEvents(org.bukkit.event.Listener, org.bukkit.plugin.Plugin)`
+- `public abstract void registerEvent(java.lang.Class<? extends org.bukkit.event.Event>, org.bukkit.event.Listener, org.bukkit.event.EventPriority, org.bukkit.plugin.EventExecutor, org.bukkit.plugin.Plugin)`
+- `public abstract void registerEvent(java.lang.Class<? extends org.bukkit.event.Event>, org.bukkit.event.Listener, org.bukkit.event.EventPriority, org.bukkit.plugin.EventExecutor, org.bukkit.plugin.Plugin, boolean)`
+- `public abstract void enablePlugin(org.bukkit.plugin.Plugin)`
+- `public abstract void disablePlugin(org.bukkit.plugin.Plugin)`
+- `public abstract org.bukkit.permissions.Permission getPermission(java.lang.String)`
+- `public abstract void addPermission(org.bukkit.permissions.Permission)`
+- `public abstract void removePermission(org.bukkit.permissions.Permission)`
+- `public abstract void removePermission(java.lang.String)`
+- `public abstract java.util.Set<org.bukkit.permissions.Permission> getDefaultPermissions(boolean)`
+- `public abstract void recalculatePermissionDefaults(org.bukkit.permissions.Permission)`
+- `public abstract void subscribeToPermission(java.lang.String, org.bukkit.permissions.Permissible)`
+- `public abstract void unsubscribeFromPermission(java.lang.String, org.bukkit.permissions.Permissible)`
+- `public abstract java.util.Set<org.bukkit.permissions.Permissible> getPermissionSubscriptions(java.lang.String)`
+- `public abstract void subscribeToDefaultPerms(boolean, org.bukkit.permissions.Permissible)`
+- `public abstract void unsubscribeFromDefaultPerms(boolean, org.bukkit.permissions.Permissible)`
+- `public abstract java.util.Set<org.bukkit.permissions.Permissible> getDefaultPermSubscriptions(boolean)`
+- `public abstract java.util.Set<org.bukkit.permissions.Permission> getPermissions()`
+- `public abstract boolean useTimings()`

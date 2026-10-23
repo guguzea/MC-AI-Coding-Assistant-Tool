@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.data.type.NoteBlock extends org.bukkit.block.data.Powerable {
+  public abstract org.bukkit.Instrument getInstrument();
+  public abstract void setInstrument(org.bukkit.Instrument);
+  public abstract org.bukkit.Note getNote();
+  public abstract void setNote(org.bukkit.Note);
+}

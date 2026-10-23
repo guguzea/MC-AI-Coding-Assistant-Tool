@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.meta.components.FoodComponent extends org.bukkit.configuration.serialization.ConfigurationSerializable {
+  public abstract int getNutrition();
+  public abstract void setNutrition(int);
+  public abstract float getSaturation();
+  public abstract void setSaturation(float);
+  public abstract boolean canAlwaysEat();
+  public abstract void setCanAlwaysEat(boolean);
+}

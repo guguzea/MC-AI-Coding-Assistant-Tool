@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public final class org.bukkit.MinecraftExperimental$Requires extends java.lang.Enum<org.bukkit.MinecraftExperimental$Requires> {
+  public static final org.bukkit.MinecraftExperimental$Requires UPDATE_1_21;
+  public static org.bukkit.MinecraftExperimental$Requires[] values();
+  public static org.bukkit.MinecraftExperimental$Requires valueOf(java.lang.String);
+  static {};
+}

@@ -1,0 +1,15 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.entity.ExpBottleEvent extends org.bukkit.event.entity.ProjectileHitEvent {
+  public org.bukkit.event.entity.ExpBottleEvent(org.bukkit.entity.ThrownExpBottle, int);
+  public org.bukkit.event.entity.ExpBottleEvent(org.bukkit.entity.ThrownExpBottle, org.bukkit.entity.Entity, org.bukkit.block.Block, org.bukkit.block.BlockFace, int);
+  public org.bukkit.entity.ThrownExpBottle getEntity();
+  public boolean getShowEffect();
+  public void setShowEffect(boolean);
+  public int getExperience();
+  public void setExperience(int);
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  public org.bukkit.entity.Projectile getEntity();
+  public org.bukkit.entity.Entity getEntity();
+  static {};
+}

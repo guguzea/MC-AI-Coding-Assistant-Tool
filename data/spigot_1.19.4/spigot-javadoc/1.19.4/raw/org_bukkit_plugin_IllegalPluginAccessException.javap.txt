@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public class org.bukkit.plugin.IllegalPluginAccessException extends java.lang.RuntimeException {
+  public org.bukkit.plugin.IllegalPluginAccessException();
+  public org.bukkit.plugin.IllegalPluginAccessException(java.lang.String);
+}

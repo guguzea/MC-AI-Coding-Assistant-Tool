@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Parrot extends org.bukkit.entity.Tameable,org.bukkit.entity.Sittable {
+  public abstract org.bukkit.entity.Parrot$Variant getVariant();
+  public abstract void setVariant(org.bukkit.entity.Parrot$Variant);
+  public abstract boolean isDancing();
+}

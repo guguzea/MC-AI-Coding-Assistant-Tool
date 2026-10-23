@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.view.BeaconView extends org.bukkit.inventory.InventoryView {
+  public abstract org.bukkit.inventory.BeaconInventory getTopInventory();
+  public abstract int getTier();
+  public abstract org.bukkit.potion.PotionEffectType getPrimaryEffect();
+  public abstract org.bukkit.potion.PotionEffectType getSecondaryEffect();
+  public abstract void setPrimaryEffect(org.bukkit.potion.PotionEffectType);
+  public abstract void setSecondaryEffect(org.bukkit.potion.PotionEffectType);
+  public default org.bukkit.inventory.Inventory getTopInventory();
+}

@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.meta.BundleMeta extends org.bukkit.inventory.meta.ItemMeta {
+  public abstract boolean hasItems();
+  public abstract java.util.List<org.bukkit.inventory.ItemStack> getItems();
+  public abstract void setItems(java.util.List<org.bukkit.inventory.ItemStack>);
+  public abstract void addItem(org.bukkit.inventory.ItemStack);
+}

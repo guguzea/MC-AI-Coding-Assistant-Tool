@@ -1,0 +1,13 @@
+Compiled from <spigot-api>
+public class org.bukkit.inventory.ShapedRecipe implements org.bukkit.inventory.Recipe,org.bukkit.Keyed {
+  public org.bukkit.inventory.ShapedRecipe(org.bukkit.inventory.ItemStack);
+  public org.bukkit.inventory.ShapedRecipe(org.bukkit.NamespacedKey, org.bukkit.inventory.ItemStack);
+  public org.bukkit.inventory.ShapedRecipe shape(java.lang.String...);
+  public org.bukkit.inventory.ShapedRecipe setIngredient(char, org.bukkit.material.MaterialData);
+  public org.bukkit.inventory.ShapedRecipe setIngredient(char, org.bukkit.Material);
+  public org.bukkit.inventory.ShapedRecipe setIngredient(char, org.bukkit.Material, int);
+  public java.util.Map<java.lang.Character, org.bukkit.inventory.ItemStack> getIngredientMap();
+  public java.lang.String[] getShape();
+  public org.bukkit.inventory.ItemStack getResult();
+  public org.bukkit.NamespacedKey getKey();
+}

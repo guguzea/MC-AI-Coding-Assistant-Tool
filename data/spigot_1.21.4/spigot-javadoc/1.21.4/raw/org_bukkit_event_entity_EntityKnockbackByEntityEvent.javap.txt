@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.entity.EntityKnockbackByEntityEvent extends org.bukkit.event.entity.EntityKnockbackEvent {
+  public org.bukkit.event.entity.EntityKnockbackByEntityEvent(org.bukkit.entity.LivingEntity, org.bukkit.entity.Entity, org.bukkit.event.entity.EntityKnockbackEvent$KnockbackCause, double, org.bukkit.util.Vector, org.bukkit.util.Vector);
+  public org.bukkit.entity.Entity getSourceEntity();
+}

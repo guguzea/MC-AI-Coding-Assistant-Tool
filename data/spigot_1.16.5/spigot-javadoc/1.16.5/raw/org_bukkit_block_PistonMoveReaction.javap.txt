@@ -1,0 +1,13 @@
+Compiled from <spigot-api>
+public final class org.bukkit.block.PistonMoveReaction extends java.lang.Enum<org.bukkit.block.PistonMoveReaction> {
+  public static final org.bukkit.block.PistonMoveReaction MOVE;
+  public static final org.bukkit.block.PistonMoveReaction BREAK;
+  public static final org.bukkit.block.PistonMoveReaction BLOCK;
+  public static final org.bukkit.block.PistonMoveReaction IGNORE;
+  public static final org.bukkit.block.PistonMoveReaction PUSH_ONLY;
+  static {};
+  public int getId();
+  public static org.bukkit.block.PistonMoveReaction getById(int);
+  public static org.bukkit.block.PistonMoveReaction[] values();
+  public static org.bukkit.block.PistonMoveReaction valueOf(java.lang.String);
+}

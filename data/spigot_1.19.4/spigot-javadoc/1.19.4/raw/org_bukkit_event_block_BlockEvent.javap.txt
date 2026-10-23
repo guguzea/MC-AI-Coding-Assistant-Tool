@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public abstract class org.bukkit.event.block.BlockEvent extends org.bukkit.event.Event {
+  protected org.bukkit.block.Block block;
+  public org.bukkit.event.block.BlockEvent(org.bukkit.block.Block);
+  public final org.bukkit.block.Block getBlock();
+}

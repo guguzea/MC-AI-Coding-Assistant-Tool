@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public final class org.bukkit.CoalType extends java.lang.Enum<org.bukkit.CoalType> {
+  public static final org.bukkit.CoalType COAL;
+  public static final org.bukkit.CoalType CHARCOAL;
+  public static org.bukkit.CoalType[] values();
+  public static org.bukkit.CoalType valueOf(java.lang.String);
+  public byte getData();
+  public static org.bukkit.CoalType getByData(byte);
+  static {};
+}

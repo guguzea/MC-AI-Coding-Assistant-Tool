@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.ChiseledBookshelfInventory extends org.bukkit.inventory.Inventory {
+  public abstract org.bukkit.block.ChiseledBookshelf getHolder();
+  public default org.bukkit.inventory.InventoryHolder getHolder();
+}

@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public interface org.bukkit.packs.ResourcePack {
+  public abstract java.util.UUID getId();
+  public abstract java.lang.String getUrl();
+  public abstract java.lang.String getHash();
+  public abstract java.lang.String getPrompt();
+  public abstract boolean isRequired();
+}

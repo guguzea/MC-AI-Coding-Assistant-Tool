@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Vex extends org.bukkit.entity.Monster {
+  public abstract boolean isCharging();
+  public abstract void setCharging(boolean);
+  public abstract org.bukkit.Location getBound();
+  public abstract void setBound(org.bukkit.Location);
+  public abstract int getLifeTicks();
+  public abstract void setLifeTicks(int);
+  public abstract boolean hasLimitedLife();
+}

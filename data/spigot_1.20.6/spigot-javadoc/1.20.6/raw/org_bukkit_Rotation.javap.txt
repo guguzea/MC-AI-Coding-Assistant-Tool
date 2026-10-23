@@ -1,0 +1,16 @@
+Compiled from <spigot-api>
+public final class org.bukkit.Rotation extends java.lang.Enum<org.bukkit.Rotation> {
+  public static final org.bukkit.Rotation NONE;
+  public static final org.bukkit.Rotation CLOCKWISE_45;
+  public static final org.bukkit.Rotation CLOCKWISE;
+  public static final org.bukkit.Rotation CLOCKWISE_135;
+  public static final org.bukkit.Rotation FLIPPED;
+  public static final org.bukkit.Rotation FLIPPED_45;
+  public static final org.bukkit.Rotation COUNTER_CLOCKWISE;
+  public static final org.bukkit.Rotation COUNTER_CLOCKWISE_45;
+  public static org.bukkit.Rotation[] values();
+  public static org.bukkit.Rotation valueOf(java.lang.String);
+  public org.bukkit.Rotation rotateClockwise();
+  public org.bukkit.Rotation rotateCounterClockwise();
+  static {};
+}

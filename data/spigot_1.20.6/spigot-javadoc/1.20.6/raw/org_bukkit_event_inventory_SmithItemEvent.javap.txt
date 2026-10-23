@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.inventory.SmithItemEvent extends org.bukkit.event.inventory.InventoryClickEvent {
+  public org.bukkit.event.inventory.SmithItemEvent(org.bukkit.inventory.InventoryView, org.bukkit.event.inventory.InventoryType$SlotType, int, org.bukkit.event.inventory.ClickType, org.bukkit.event.inventory.InventoryAction);
+  public org.bukkit.event.inventory.SmithItemEvent(org.bukkit.inventory.InventoryView, org.bukkit.event.inventory.InventoryType$SlotType, int, org.bukkit.event.inventory.ClickType, org.bukkit.event.inventory.InventoryAction, int);
+  public org.bukkit.inventory.SmithingInventory getInventory();
+  public org.bukkit.inventory.Inventory getInventory();
+}

@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public final class org.bukkit.block.structure.Mirror extends java.lang.Enum<org.bukkit.block.structure.Mirror> {
+  public static final org.bukkit.block.structure.Mirror NONE;
+  public static final org.bukkit.block.structure.Mirror LEFT_RIGHT;
+  public static final org.bukkit.block.structure.Mirror FRONT_BACK;
+  static {};
+  public static org.bukkit.block.structure.Mirror[] values();
+  public static org.bukkit.block.structure.Mirror valueOf(java.lang.String);
+}

@@ -1,0 +1,20 @@
+Compiled from <spigot-api>
+public final class org.bukkit.event.entity.EntityExhaustionEvent$ExhaustionReason extends java.lang.Enum<org.bukkit.event.entity.EntityExhaustionEvent$ExhaustionReason> {
+  public static final org.bukkit.event.entity.EntityExhaustionEvent$ExhaustionReason BLOCK_MINED;
+  public static final org.bukkit.event.entity.EntityExhaustionEvent$ExhaustionReason HUNGER_EFFECT;
+  public static final org.bukkit.event.entity.EntityExhaustionEvent$ExhaustionReason DAMAGED;
+  public static final org.bukkit.event.entity.EntityExhaustionEvent$ExhaustionReason ATTACK;
+  public static final org.bukkit.event.entity.EntityExhaustionEvent$ExhaustionReason JUMP_SPRINT;
+  public static final org.bukkit.event.entity.EntityExhaustionEvent$ExhaustionReason JUMP;
+  public static final org.bukkit.event.entity.EntityExhaustionEvent$ExhaustionReason SWIM;
+  public static final org.bukkit.event.entity.EntityExhaustionEvent$ExhaustionReason WALK_UNDERWATER;
+  public static final org.bukkit.event.entity.EntityExhaustionEvent$ExhaustionReason WALK_ON_WATER;
+  public static final org.bukkit.event.entity.EntityExhaustionEvent$ExhaustionReason SPRINT;
+  public static final org.bukkit.event.entity.EntityExhaustionEvent$ExhaustionReason CROUCH;
+  public static final org.bukkit.event.entity.EntityExhaustionEvent$ExhaustionReason WALK;
+  public static final org.bukkit.event.entity.EntityExhaustionEvent$ExhaustionReason REGEN;
+  public static final org.bukkit.event.entity.EntityExhaustionEvent$ExhaustionReason UNKNOWN;
+  static {};
+  public static org.bukkit.event.entity.EntityExhaustionEvent$ExhaustionReason[] values();
+  public static org.bukkit.event.entity.EntityExhaustionEvent$ExhaustionReason valueOf(java.lang.String);
+}

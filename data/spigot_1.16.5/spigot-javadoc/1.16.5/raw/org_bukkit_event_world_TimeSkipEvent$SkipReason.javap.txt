@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public final class org.bukkit.event.world.TimeSkipEvent$SkipReason extends java.lang.Enum<org.bukkit.event.world.TimeSkipEvent$SkipReason> {
+  public static final org.bukkit.event.world.TimeSkipEvent$SkipReason COMMAND;
+  public static final org.bukkit.event.world.TimeSkipEvent$SkipReason CUSTOM;
+  public static final org.bukkit.event.world.TimeSkipEvent$SkipReason NIGHT_SKIP;
+  static {};
+  public static org.bukkit.event.world.TimeSkipEvent$SkipReason[] values();
+  public static org.bukkit.event.world.TimeSkipEvent$SkipReason valueOf(java.lang.String);
+}

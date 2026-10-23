@@ -1,0 +1,30 @@
+Compiled from <spigot-api>
+public final class org.bukkit.TreeType extends java.lang.Enum<org.bukkit.TreeType> {
+  public static final org.bukkit.TreeType TREE;
+  public static final org.bukkit.TreeType BIG_TREE;
+  public static final org.bukkit.TreeType REDWOOD;
+  public static final org.bukkit.TreeType TALL_REDWOOD;
+  public static final org.bukkit.TreeType BIRCH;
+  public static final org.bukkit.TreeType JUNGLE;
+  public static final org.bukkit.TreeType SMALL_JUNGLE;
+  public static final org.bukkit.TreeType COCOA_TREE;
+  public static final org.bukkit.TreeType JUNGLE_BUSH;
+  public static final org.bukkit.TreeType RED_MUSHROOM;
+  public static final org.bukkit.TreeType BROWN_MUSHROOM;
+  public static final org.bukkit.TreeType SWAMP;
+  public static final org.bukkit.TreeType ACACIA;
+  public static final org.bukkit.TreeType DARK_OAK;
+  public static final org.bukkit.TreeType MEGA_REDWOOD;
+  public static final org.bukkit.TreeType MEGA_PINE;
+  public static final org.bukkit.TreeType TALL_BIRCH;
+  public static final org.bukkit.TreeType CHORUS_PLANT;
+  public static final org.bukkit.TreeType CRIMSON_FUNGUS;
+  public static final org.bukkit.TreeType WARPED_FUNGUS;
+  public static final org.bukkit.TreeType AZALEA;
+  public static final org.bukkit.TreeType MANGROVE;
+  public static final org.bukkit.TreeType TALL_MANGROVE;
+  public static final org.bukkit.TreeType CHERRY;
+  public static org.bukkit.TreeType[] values();
+  public static org.bukkit.TreeType valueOf(java.lang.String);
+  static {};
+}

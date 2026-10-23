@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.data.type.Vault extends org.bukkit.block.data.Directional {
+  public abstract org.bukkit.block.data.type.Vault$State getTrialSpawnerState();
+  public abstract void setTrialSpawnerState(org.bukkit.block.data.type.Vault$State);
+  public abstract boolean isOminous();
+  public abstract void setOminous(boolean);
+}

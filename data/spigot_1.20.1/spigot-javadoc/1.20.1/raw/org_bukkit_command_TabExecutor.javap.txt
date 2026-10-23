@@ -1,0 +1,3 @@
+Compiled from <spigot-api>
+public interface org.bukkit.command.TabExecutor extends org.bukkit.command.TabCompleter,org.bukkit.command.CommandExecutor {
+}

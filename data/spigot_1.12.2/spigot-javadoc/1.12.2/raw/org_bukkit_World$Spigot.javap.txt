@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public class org.bukkit.World$Spigot {
+  public org.bukkit.World$Spigot();
+  public void playEffect(org.bukkit.Location, org.bukkit.Effect);
+  public void playEffect(org.bukkit.Location, org.bukkit.Effect, int, int, float, float, float, float, int, int);
+  public org.bukkit.entity.LightningStrike strikeLightning(org.bukkit.Location, boolean);
+  public org.bukkit.entity.LightningStrike strikeLightningEffect(org.bukkit.Location, boolean);
+}

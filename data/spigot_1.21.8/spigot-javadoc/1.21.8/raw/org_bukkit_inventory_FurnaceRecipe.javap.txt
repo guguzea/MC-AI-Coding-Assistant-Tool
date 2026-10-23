@@ -1,0 +1,16 @@
+Compiled from <spigot-api>
+public class org.bukkit.inventory.FurnaceRecipe extends org.bukkit.inventory.CookingRecipe<org.bukkit.inventory.FurnaceRecipe> {
+  public org.bukkit.inventory.FurnaceRecipe(org.bukkit.inventory.ItemStack, org.bukkit.Material);
+  public org.bukkit.inventory.FurnaceRecipe(org.bukkit.inventory.ItemStack, org.bukkit.material.MaterialData);
+  public org.bukkit.inventory.FurnaceRecipe(org.bukkit.inventory.ItemStack, org.bukkit.material.MaterialData, float);
+  public org.bukkit.inventory.FurnaceRecipe(org.bukkit.inventory.ItemStack, org.bukkit.Material, int);
+  public org.bukkit.inventory.FurnaceRecipe(org.bukkit.NamespacedKey, org.bukkit.inventory.ItemStack, org.bukkit.Material, float, int);
+  public org.bukkit.inventory.FurnaceRecipe(org.bukkit.NamespacedKey, org.bukkit.inventory.ItemStack, org.bukkit.Material, int, float, int);
+  public org.bukkit.inventory.FurnaceRecipe(org.bukkit.NamespacedKey, org.bukkit.inventory.ItemStack, org.bukkit.inventory.RecipeChoice, float, int);
+  public org.bukkit.inventory.FurnaceRecipe setInput(org.bukkit.material.MaterialData);
+  public org.bukkit.inventory.FurnaceRecipe setInput(org.bukkit.Material);
+  public org.bukkit.inventory.FurnaceRecipe setInput(org.bukkit.Material, int);
+  public org.bukkit.inventory.FurnaceRecipe setInputChoice(org.bukkit.inventory.RecipeChoice);
+  public org.bukkit.inventory.CookingRecipe setInputChoice(org.bukkit.inventory.RecipeChoice);
+  public org.bukkit.inventory.CookingRecipe setInput(org.bukkit.Material);
+}

@@ -1,0 +1,41 @@
+Compiled from <spigot-api>
+public abstract class org.bukkit.generator.structure.Structure implements org.bukkit.Keyed,org.bukkit.registry.RegistryAware {
+  public static final org.bukkit.generator.structure.Structure PILLAGER_OUTPOST;
+  public static final org.bukkit.generator.structure.Structure MINESHAFT;
+  public static final org.bukkit.generator.structure.Structure MINESHAFT_MESA;
+  public static final org.bukkit.generator.structure.Structure MANSION;
+  public static final org.bukkit.generator.structure.Structure JUNGLE_PYRAMID;
+  public static final org.bukkit.generator.structure.Structure DESERT_PYRAMID;
+  public static final org.bukkit.generator.structure.Structure IGLOO;
+  public static final org.bukkit.generator.structure.Structure SHIPWRECK;
+  public static final org.bukkit.generator.structure.Structure SHIPWRECK_BEACHED;
+  public static final org.bukkit.generator.structure.Structure SWAMP_HUT;
+  public static final org.bukkit.generator.structure.Structure STRONGHOLD;
+  public static final org.bukkit.generator.structure.Structure MONUMENT;
+  public static final org.bukkit.generator.structure.Structure OCEAN_RUIN_COLD;
+  public static final org.bukkit.generator.structure.Structure OCEAN_RUIN_WARM;
+  public static final org.bukkit.generator.structure.Structure FORTRESS;
+  public static final org.bukkit.generator.structure.Structure NETHER_FOSSIL;
+  public static final org.bukkit.generator.structure.Structure END_CITY;
+  public static final org.bukkit.generator.structure.Structure BURIED_TREASURE;
+  public static final org.bukkit.generator.structure.Structure BASTION_REMNANT;
+  public static final org.bukkit.generator.structure.Structure VILLAGE_PLAINS;
+  public static final org.bukkit.generator.structure.Structure VILLAGE_DESERT;
+  public static final org.bukkit.generator.structure.Structure VILLAGE_SAVANNA;
+  public static final org.bukkit.generator.structure.Structure VILLAGE_SNOWY;
+  public static final org.bukkit.generator.structure.Structure VILLAGE_TAIGA;
+  public static final org.bukkit.generator.structure.Structure RUINED_PORTAL;
+  public static final org.bukkit.generator.structure.Structure RUINED_PORTAL_DESERT;
+  public static final org.bukkit.generator.structure.Structure RUINED_PORTAL_JUNGLE;
+  public static final org.bukkit.generator.structure.Structure RUINED_PORTAL_SWAMP;
+  public static final org.bukkit.generator.structure.Structure RUINED_PORTAL_MOUNTAIN;
+  public static final org.bukkit.generator.structure.Structure RUINED_PORTAL_OCEAN;
+  public static final org.bukkit.generator.structure.Structure RUINED_PORTAL_NETHER;
+  public static final org.bukkit.generator.structure.Structure ANCIENT_CITY;
+  public static final org.bukkit.generator.structure.Structure TRAIL_RUINS;
+  public static final org.bukkit.generator.structure.Structure TRIAL_CHAMBERS;
+  public org.bukkit.generator.structure.Structure();
+  public abstract org.bukkit.generator.structure.StructureType getStructureType();
+  public abstract org.bukkit.NamespacedKey getKey();
+  static {};
+}

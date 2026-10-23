@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.world.ChunkLoadEvent extends org.bukkit.event.world.ChunkEvent {
+  public org.bukkit.event.world.ChunkLoadEvent(org.bukkit.Chunk, boolean);
+  public boolean isNewChunk();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  static {};
+}

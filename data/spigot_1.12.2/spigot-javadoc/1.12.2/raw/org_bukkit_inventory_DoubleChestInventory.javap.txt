@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.DoubleChestInventory extends org.bukkit.inventory.Inventory {
+  public abstract org.bukkit.inventory.Inventory getLeftSide();
+  public abstract org.bukkit.inventory.Inventory getRightSide();
+  public abstract org.bukkit.block.DoubleChest getHolder();
+}

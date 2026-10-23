@@ -1,0 +1,15 @@
+Compiled from <spigot-api>
+public final class org.bukkit.event.entity.EntityRegainHealthEvent$RegainReason extends java.lang.Enum<org.bukkit.event.entity.EntityRegainHealthEvent$RegainReason> {
+  public static final org.bukkit.event.entity.EntityRegainHealthEvent$RegainReason REGEN;
+  public static final org.bukkit.event.entity.EntityRegainHealthEvent$RegainReason SATIATED;
+  public static final org.bukkit.event.entity.EntityRegainHealthEvent$RegainReason EATING;
+  public static final org.bukkit.event.entity.EntityRegainHealthEvent$RegainReason ENDER_CRYSTAL;
+  public static final org.bukkit.event.entity.EntityRegainHealthEvent$RegainReason MAGIC;
+  public static final org.bukkit.event.entity.EntityRegainHealthEvent$RegainReason MAGIC_REGEN;
+  public static final org.bukkit.event.entity.EntityRegainHealthEvent$RegainReason WITHER_SPAWN;
+  public static final org.bukkit.event.entity.EntityRegainHealthEvent$RegainReason WITHER;
+  public static final org.bukkit.event.entity.EntityRegainHealthEvent$RegainReason CUSTOM;
+  static {};
+  public static org.bukkit.event.entity.EntityRegainHealthEvent$RegainReason[] values();
+  public static org.bukkit.event.entity.EntityRegainHealthEvent$RegainReason valueOf(java.lang.String);
+}

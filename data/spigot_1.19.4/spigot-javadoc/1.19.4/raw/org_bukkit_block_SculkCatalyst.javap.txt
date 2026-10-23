@@ -1,0 +1,3 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.SculkCatalyst extends org.bukkit.block.TileState {
+}

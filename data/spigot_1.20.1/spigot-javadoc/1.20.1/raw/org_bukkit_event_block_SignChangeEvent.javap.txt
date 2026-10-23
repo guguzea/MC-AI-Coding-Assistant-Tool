@@ -1,0 +1,15 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.block.SignChangeEvent extends org.bukkit.event.block.BlockEvent implements org.bukkit.event.Cancellable {
+  static {};
+  public org.bukkit.event.block.SignChangeEvent(org.bukkit.block.Block, org.bukkit.entity.Player, java.lang.String[]);
+  public org.bukkit.event.block.SignChangeEvent(org.bukkit.block.Block, org.bukkit.entity.Player, java.lang.String[], org.bukkit.block.sign.Side);
+  public org.bukkit.entity.Player getPlayer();
+  public java.lang.String[] getLines();
+  public java.lang.String getLine(int) throws java.lang.IndexOutOfBoundsException;
+  public void setLine(int, java.lang.String) throws java.lang.IndexOutOfBoundsException;
+  public org.bukkit.block.sign.Side getSide();
+  public boolean isCancelled();
+  public void setCancelled(boolean);
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+}

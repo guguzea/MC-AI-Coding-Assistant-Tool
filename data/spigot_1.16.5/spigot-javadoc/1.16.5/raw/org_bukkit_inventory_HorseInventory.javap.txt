@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.HorseInventory extends org.bukkit.inventory.AbstractHorseInventory {
+  public abstract org.bukkit.inventory.ItemStack getArmor();
+  public abstract void setArmor(org.bukkit.inventory.ItemStack);
+}

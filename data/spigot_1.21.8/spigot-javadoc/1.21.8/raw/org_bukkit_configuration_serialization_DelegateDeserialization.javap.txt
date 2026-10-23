@@ -1,0 +1,4 @@
+Compiled from <spigot-api>
+public interface org.bukkit.configuration.serialization.DelegateDeserialization extends java.lang.annotation.Annotation {
+  public abstract java.lang.Class<? extends org.bukkit.configuration.serialization.ConfigurationSerializable> value();
+}

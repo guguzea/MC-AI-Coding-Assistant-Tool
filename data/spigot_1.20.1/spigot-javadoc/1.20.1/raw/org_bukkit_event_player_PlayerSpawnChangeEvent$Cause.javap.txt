@@ -1,0 +1,12 @@
+Compiled from <spigot-api>
+public final class org.bukkit.event.player.PlayerSpawnChangeEvent$Cause extends java.lang.Enum<org.bukkit.event.player.PlayerSpawnChangeEvent$Cause> {
+  public static final org.bukkit.event.player.PlayerSpawnChangeEvent$Cause COMMAND;
+  public static final org.bukkit.event.player.PlayerSpawnChangeEvent$Cause BED;
+  public static final org.bukkit.event.player.PlayerSpawnChangeEvent$Cause RESPAWN_ANCHOR;
+  public static final org.bukkit.event.player.PlayerSpawnChangeEvent$Cause PLUGIN;
+  public static final org.bukkit.event.player.PlayerSpawnChangeEvent$Cause RESET;
+  public static final org.bukkit.event.player.PlayerSpawnChangeEvent$Cause UNKNOWN;
+  static {};
+  public static org.bukkit.event.player.PlayerSpawnChangeEvent$Cause[] values();
+  public static org.bukkit.event.player.PlayerSpawnChangeEvent$Cause valueOf(java.lang.String);
+}

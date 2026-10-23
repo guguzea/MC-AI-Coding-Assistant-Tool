@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.Lockable {
+  public abstract boolean isLocked();
+  public abstract java.lang.String getLock();
+  public abstract void setLock(java.lang.String);
+}

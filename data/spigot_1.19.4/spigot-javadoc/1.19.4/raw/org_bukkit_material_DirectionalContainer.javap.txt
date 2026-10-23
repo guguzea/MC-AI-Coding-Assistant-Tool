@@ -1,0 +1,12 @@
+Compiled from <spigot-api>
+public class org.bukkit.material.DirectionalContainer extends org.bukkit.material.MaterialData implements org.bukkit.material.Directional {
+  public org.bukkit.material.DirectionalContainer(org.bukkit.Material);
+  public org.bukkit.material.DirectionalContainer(org.bukkit.Material, byte);
+  public void setFacingDirection(org.bukkit.block.BlockFace);
+  public org.bukkit.block.BlockFace getFacing();
+  public java.lang.String toString();
+  public org.bukkit.material.DirectionalContainer clone();
+  public org.bukkit.material.MaterialData clone();
+  public java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+  static int[] $SWITCH_TABLE$org$bukkit$block$BlockFace();
+}

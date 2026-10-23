@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.GlowSquid extends org.bukkit.entity.Squid {
+  public abstract int getDarkTicksRemaining();
+  public abstract void setDarkTicksRemaining(int);
+}

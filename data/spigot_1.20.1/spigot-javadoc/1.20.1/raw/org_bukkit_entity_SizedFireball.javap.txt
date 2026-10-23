@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.SizedFireball extends org.bukkit.entity.Fireball {
+  public abstract org.bukkit.inventory.ItemStack getDisplayItem();
+  public abstract void setDisplayItem(org.bukkit.inventory.ItemStack);
+}

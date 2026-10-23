@@ -1,0 +1,14 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.entity.EnderDragonChangePhaseEvent extends org.bukkit.event.entity.EntityEvent implements org.bukkit.event.Cancellable {
+  public org.bukkit.event.entity.EnderDragonChangePhaseEvent(org.bukkit.entity.EnderDragon, org.bukkit.entity.EnderDragon$Phase, org.bukkit.entity.EnderDragon$Phase);
+  public org.bukkit.entity.EnderDragon getEntity();
+  public org.bukkit.entity.EnderDragon$Phase getCurrentPhase();
+  public org.bukkit.entity.EnderDragon$Phase getNewPhase();
+  public void setNewPhase(org.bukkit.entity.EnderDragon$Phase);
+  public boolean isCancelled();
+  public void setCancelled(boolean);
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  public org.bukkit.entity.Entity getEntity();
+  static {};
+}

@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public class org.bukkit.inventory.SmithingRecipe implements org.bukkit.inventory.Recipe,org.bukkit.Keyed {
+  public org.bukkit.inventory.SmithingRecipe(org.bukkit.NamespacedKey, org.bukkit.inventory.ItemStack, org.bukkit.inventory.RecipeChoice, org.bukkit.inventory.RecipeChoice);
+  public org.bukkit.inventory.RecipeChoice getBase();
+  public org.bukkit.inventory.RecipeChoice getAddition();
+  public org.bukkit.inventory.ItemStack getResult();
+  public org.bukkit.NamespacedKey getKey();
+}

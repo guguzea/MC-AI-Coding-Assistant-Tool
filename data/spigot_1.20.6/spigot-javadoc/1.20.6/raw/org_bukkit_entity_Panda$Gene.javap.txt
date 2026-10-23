@@ -1,0 +1,14 @@
+Compiled from <spigot-api>
+public final class org.bukkit.entity.Panda$Gene extends java.lang.Enum<org.bukkit.entity.Panda$Gene> {
+  public static final org.bukkit.entity.Panda$Gene NORMAL;
+  public static final org.bukkit.entity.Panda$Gene LAZY;
+  public static final org.bukkit.entity.Panda$Gene WORRIED;
+  public static final org.bukkit.entity.Panda$Gene PLAYFUL;
+  public static final org.bukkit.entity.Panda$Gene BROWN;
+  public static final org.bukkit.entity.Panda$Gene WEAK;
+  public static final org.bukkit.entity.Panda$Gene AGGRESSIVE;
+  public static org.bukkit.entity.Panda$Gene[] values();
+  public static org.bukkit.entity.Panda$Gene valueOf(java.lang.String);
+  public boolean isRecessive();
+  static {};
+}

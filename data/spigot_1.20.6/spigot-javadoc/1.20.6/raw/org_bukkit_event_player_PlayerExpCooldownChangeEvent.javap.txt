@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.player.PlayerExpCooldownChangeEvent extends org.bukkit.event.player.PlayerEvent {
+  public org.bukkit.event.player.PlayerExpCooldownChangeEvent(org.bukkit.entity.Player, int, org.bukkit.event.player.PlayerExpCooldownChangeEvent$ChangeReason);
+  public org.bukkit.event.player.PlayerExpCooldownChangeEvent$ChangeReason getReason();
+  public int getNewCooldown();
+  public void setNewCooldown(int);
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  static {};
+}

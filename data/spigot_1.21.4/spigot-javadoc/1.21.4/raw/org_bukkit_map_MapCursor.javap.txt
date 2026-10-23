@@ -1,0 +1,21 @@
+Compiled from <spigot-api>
+public final class org.bukkit.map.MapCursor {
+  public org.bukkit.map.MapCursor(byte, byte, byte, byte, boolean);
+  public org.bukkit.map.MapCursor(byte, byte, byte, org.bukkit.map.MapCursor$Type, boolean);
+  public org.bukkit.map.MapCursor(byte, byte, byte, byte, boolean, java.lang.String);
+  public org.bukkit.map.MapCursor(byte, byte, byte, org.bukkit.map.MapCursor$Type, boolean, java.lang.String);
+  public byte getX();
+  public byte getY();
+  public byte getDirection();
+  public org.bukkit.map.MapCursor$Type getType();
+  public byte getRawType();
+  public boolean isVisible();
+  public void setX(byte);
+  public void setY(byte);
+  public void setDirection(byte);
+  public void setType(org.bukkit.map.MapCursor$Type);
+  public void setRawType(byte);
+  public void setVisible(boolean);
+  public java.lang.String getCaption();
+  public void setCaption(java.lang.String);
+}

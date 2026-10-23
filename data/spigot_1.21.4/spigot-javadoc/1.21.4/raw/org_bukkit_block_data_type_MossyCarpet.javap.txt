@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.data.type.MossyCarpet extends org.bukkit.block.data.BlockData {
+  public abstract boolean isBottom();
+  public abstract void setBottom(boolean);
+  public abstract org.bukkit.block.data.type.MossyCarpet$Height getHeight(org.bukkit.block.BlockFace);
+  public abstract void setHeight(org.bukkit.block.BlockFace, org.bukkit.block.data.type.MossyCarpet$Height);
+}

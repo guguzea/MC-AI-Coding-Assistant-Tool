@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.meta.KnowledgeBookMeta extends org.bukkit.inventory.meta.ItemMeta {
+  public abstract boolean hasRecipes();
+  public abstract java.util.List<org.bukkit.NamespacedKey> getRecipes();
+  public abstract void setRecipes(java.util.List<org.bukkit.NamespacedKey>);
+  public abstract void addRecipe(org.bukkit.NamespacedKey...);
+  public abstract org.bukkit.inventory.meta.KnowledgeBookMeta clone();
+  public default org.bukkit.inventory.meta.ItemMeta clone();
+}

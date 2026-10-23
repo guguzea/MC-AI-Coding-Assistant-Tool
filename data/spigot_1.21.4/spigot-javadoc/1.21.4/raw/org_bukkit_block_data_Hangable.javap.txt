@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.data.Hangable extends org.bukkit.block.data.BlockData {
+  public abstract boolean isHanging();
+  public abstract void setHanging(boolean);
+}

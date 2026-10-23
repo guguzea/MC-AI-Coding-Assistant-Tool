@@ -1,0 +1,19 @@
+Compiled from <spigot-api>
+public interface org.bukkit.WorldBorder {
+  public abstract void reset();
+  public abstract double getSize();
+  public abstract void setSize(double);
+  public abstract void setSize(double, long);
+  public abstract org.bukkit.Location getCenter();
+  public abstract void setCenter(double, double);
+  public abstract void setCenter(org.bukkit.Location);
+  public abstract double getDamageBuffer();
+  public abstract void setDamageBuffer(double);
+  public abstract double getDamageAmount();
+  public abstract void setDamageAmount(double);
+  public abstract int getWarningTime();
+  public abstract void setWarningTime(int);
+  public abstract int getWarningDistance();
+  public abstract void setWarningDistance(int);
+  public abstract boolean isInside(org.bukkit.Location);
+}

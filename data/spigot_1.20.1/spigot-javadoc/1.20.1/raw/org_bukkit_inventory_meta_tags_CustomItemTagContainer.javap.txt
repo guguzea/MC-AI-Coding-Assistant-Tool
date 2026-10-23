@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.meta.tags.CustomItemTagContainer {
+  public abstract <T, Z> void setCustomTag(org.bukkit.NamespacedKey, org.bukkit.inventory.meta.tags.ItemTagType<T, Z>, Z);
+  public abstract <T, Z> boolean hasCustomTag(org.bukkit.NamespacedKey, org.bukkit.inventory.meta.tags.ItemTagType<T, Z>);
+  public abstract <T, Z> Z getCustomTag(org.bukkit.NamespacedKey, org.bukkit.inventory.meta.tags.ItemTagType<T, Z>);
+  public abstract void removeCustomTag(org.bukkit.NamespacedKey);
+  public abstract boolean isEmpty();
+  public abstract org.bukkit.inventory.meta.tags.ItemTagAdapterContext getAdapterContext();
+}

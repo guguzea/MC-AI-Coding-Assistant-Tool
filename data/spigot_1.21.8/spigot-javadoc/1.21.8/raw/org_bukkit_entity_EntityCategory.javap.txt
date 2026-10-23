@@ -1,0 +1,11 @@
+Compiled from <spigot-api>
+public final class org.bukkit.entity.EntityCategory extends java.lang.Enum<org.bukkit.entity.EntityCategory> {
+  public static final org.bukkit.entity.EntityCategory NONE;
+  public static final org.bukkit.entity.EntityCategory UNDEAD;
+  public static final org.bukkit.entity.EntityCategory ARTHROPOD;
+  public static final org.bukkit.entity.EntityCategory ILLAGER;
+  public static final org.bukkit.entity.EntityCategory WATER;
+  public static org.bukkit.entity.EntityCategory[] values();
+  public static org.bukkit.entity.EntityCategory valueOf(java.lang.String);
+  static {};
+}

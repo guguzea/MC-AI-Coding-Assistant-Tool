@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public abstract class org.bukkit.event.world.ChunkEvent extends org.bukkit.event.world.WorldEvent {
+  protected org.bukkit.Chunk chunk;
+  protected org.bukkit.event.world.ChunkEvent(org.bukkit.Chunk);
+  public org.bukkit.Chunk getChunk();
+}

@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public class org.spigotmc.event.entity.EntityMountEvent extends org.bukkit.event.entity.EntityEvent implements org.bukkit.event.Cancellable {
+  static {};
+  public org.spigotmc.event.entity.EntityMountEvent(org.bukkit.entity.Entity, org.bukkit.entity.Entity);
+  public org.bukkit.entity.Entity getMount();
+  public boolean isCancelled();
+  public void setCancelled(boolean);
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+}

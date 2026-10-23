@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.minecart.ExplosiveMinecart extends org.bukkit.entity.Minecart {
+  public abstract void setFuseTicks(int);
+  public abstract int getFuseTicks();
+  public abstract void ignite();
+  public abstract boolean isIgnited();
+  public abstract void explode();
+  public abstract void explode(double);
+}

@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Sniffer extends org.bukkit.entity.Animals {
+  public abstract java.util.Collection<org.bukkit.Location> getExploredLocations();
+  public abstract void removeExploredLocation(org.bukkit.Location);
+  public abstract void addExploredLocation(org.bukkit.Location);
+  public abstract org.bukkit.entity.Sniffer$State getState();
+  public abstract void setState(org.bukkit.entity.Sniffer$State);
+  public abstract org.bukkit.Location findPossibleDigLocation();
+  public abstract boolean canDig();
+}

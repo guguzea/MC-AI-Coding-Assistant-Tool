@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.EndGateway extends org.bukkit.block.TileState {
+  public abstract org.bukkit.Location getExitLocation();
+  public abstract void setExitLocation(org.bukkit.Location);
+  public abstract boolean isExactTeleport();
+  public abstract void setExactTeleport(boolean);
+  public abstract long getAge();
+  public abstract void setAge(long);
+}

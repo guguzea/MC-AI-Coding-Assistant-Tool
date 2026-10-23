@@ -1,0 +1,12 @@
+Compiled from <spigot-api>
+public interface org.bukkit.Fluid extends org.bukkit.util.OldEnum<org.bukkit.Fluid>, org.bukkit.Keyed, org.bukkit.registry.RegistryAware {
+  public static final org.bukkit.Fluid EMPTY;
+  public static final org.bukkit.Fluid WATER;
+  public static final org.bukkit.Fluid FLOWING_WATER;
+  public static final org.bukkit.Fluid LAVA;
+  public static final org.bukkit.Fluid FLOWING_LAVA;
+  public abstract org.bukkit.NamespacedKey getKey();
+  public static org.bukkit.Fluid valueOf(java.lang.String);
+  public static org.bukkit.Fluid[] values();
+  static {};
+}

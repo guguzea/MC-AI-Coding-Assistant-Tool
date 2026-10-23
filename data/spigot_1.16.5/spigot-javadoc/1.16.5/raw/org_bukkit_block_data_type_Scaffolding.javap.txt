@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.data.type.Scaffolding extends org.bukkit.block.data.Waterlogged {
+  public abstract boolean isBottom();
+  public abstract void setBottom(boolean);
+  public abstract int getDistance();
+  public abstract void setDistance(int);
+  public abstract int getMaximumDistance();
+}

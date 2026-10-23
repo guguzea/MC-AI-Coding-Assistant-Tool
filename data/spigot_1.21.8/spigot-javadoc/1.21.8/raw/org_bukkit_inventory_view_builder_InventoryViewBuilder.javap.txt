@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.view.builder.InventoryViewBuilder<V extends org.bukkit.inventory.InventoryView> {
+  public abstract org.bukkit.inventory.view.builder.InventoryViewBuilder<V> copy();
+  public abstract org.bukkit.inventory.view.builder.InventoryViewBuilder<V> title(java.lang.String);
+  public abstract V build(org.bukkit.entity.HumanEntity);
+}

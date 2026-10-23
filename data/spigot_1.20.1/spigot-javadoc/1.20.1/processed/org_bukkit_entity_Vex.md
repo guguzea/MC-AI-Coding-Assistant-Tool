@@ -1,0 +1,19 @@
+---
+title: "org.bukkit.entity.Vex"
+package: "org.bukkit.entity"
+source: https://repo.papermc.io/repository/maven-public/org/spigotmc/spigot-api/1.20.1-R0.1-SNAPSHOT/spigot-api-1.20.1-R0.1-20230921.163938-66.jar
+sourceType: javap
+fetchedWith: extract-spigot-api-surface.mjs@1
+fetchedAt: 2026-10-23T15:33:20.138Z
+asOfVersion: "1.20.1-R0.1-SNAPSHOT"
+jarMd5: "1eba255bc0360c0286ee840906c6095c"
+---
+
+- `public interface org.bukkit.entity.Vex extends org.bukkit.entity.Monster`
+- `public abstract boolean isCharging()`
+- `public abstract void setCharging(boolean)`
+- `public abstract org.bukkit.Location getBound()`
+- `public abstract void setBound(org.bukkit.Location)`
+- `public abstract int getLifeTicks()`
+- `public abstract void setLifeTicks(int)`
+- `public abstract boolean hasLimitedLife()`

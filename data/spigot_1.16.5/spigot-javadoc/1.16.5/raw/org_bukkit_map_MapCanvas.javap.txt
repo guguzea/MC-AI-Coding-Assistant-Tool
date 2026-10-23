@@ -1,0 +1,11 @@
+Compiled from <spigot-api>
+public interface org.bukkit.map.MapCanvas {
+  public abstract org.bukkit.map.MapView getMapView();
+  public abstract org.bukkit.map.MapCursorCollection getCursors();
+  public abstract void setCursors(org.bukkit.map.MapCursorCollection);
+  public abstract void setPixel(int, int, byte);
+  public abstract byte getPixel(int, int);
+  public abstract byte getBasePixel(int, int);
+  public abstract void drawImage(int, int, java.awt.Image);
+  public abstract void drawText(int, int, org.bukkit.map.MapFont, java.lang.String);
+}

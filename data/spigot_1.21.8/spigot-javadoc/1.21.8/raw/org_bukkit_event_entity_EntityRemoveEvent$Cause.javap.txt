@@ -1,0 +1,19 @@
+Compiled from <spigot-api>
+public final class org.bukkit.event.entity.EntityRemoveEvent$Cause extends java.lang.Enum<org.bukkit.event.entity.EntityRemoveEvent$Cause> {
+  public static final org.bukkit.event.entity.EntityRemoveEvent$Cause DEATH;
+  public static final org.bukkit.event.entity.EntityRemoveEvent$Cause DESPAWN;
+  public static final org.bukkit.event.entity.EntityRemoveEvent$Cause DROP;
+  public static final org.bukkit.event.entity.EntityRemoveEvent$Cause ENTER_BLOCK;
+  public static final org.bukkit.event.entity.EntityRemoveEvent$Cause EXPLODE;
+  public static final org.bukkit.event.entity.EntityRemoveEvent$Cause HIT;
+  public static final org.bukkit.event.entity.EntityRemoveEvent$Cause MERGE;
+  public static final org.bukkit.event.entity.EntityRemoveEvent$Cause OUT_OF_WORLD;
+  public static final org.bukkit.event.entity.EntityRemoveEvent$Cause PICKUP;
+  public static final org.bukkit.event.entity.EntityRemoveEvent$Cause PLAYER_QUIT;
+  public static final org.bukkit.event.entity.EntityRemoveEvent$Cause PLUGIN;
+  public static final org.bukkit.event.entity.EntityRemoveEvent$Cause TRANSFORMATION;
+  public static final org.bukkit.event.entity.EntityRemoveEvent$Cause UNLOAD;
+  public static org.bukkit.event.entity.EntityRemoveEvent$Cause[] values();
+  public static org.bukkit.event.entity.EntityRemoveEvent$Cause valueOf(java.lang.String);
+  static {};
+}

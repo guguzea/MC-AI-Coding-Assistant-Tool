@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Ghast extends org.bukkit.entity.Flying,org.bukkit.entity.Enemy {
+  public abstract boolean isCharging();
+  public abstract void setCharging(boolean);
+}

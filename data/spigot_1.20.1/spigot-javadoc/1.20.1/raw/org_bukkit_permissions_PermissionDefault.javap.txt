@@ -1,0 +1,14 @@
+Compiled from <spigot-api>
+public final class org.bukkit.permissions.PermissionDefault extends java.lang.Enum<org.bukkit.permissions.PermissionDefault> {
+  public static final org.bukkit.permissions.PermissionDefault TRUE;
+  public static final org.bukkit.permissions.PermissionDefault FALSE;
+  public static final org.bukkit.permissions.PermissionDefault OP;
+  public static final org.bukkit.permissions.PermissionDefault NOT_OP;
+  static {};
+  public boolean getValue(boolean);
+  public static org.bukkit.permissions.PermissionDefault getByName(java.lang.String);
+  public java.lang.String toString();
+  public static org.bukkit.permissions.PermissionDefault[] values();
+  public static org.bukkit.permissions.PermissionDefault valueOf(java.lang.String);
+  static int[] $SWITCH_TABLE$org$bukkit$permissions$PermissionDefault();
+}

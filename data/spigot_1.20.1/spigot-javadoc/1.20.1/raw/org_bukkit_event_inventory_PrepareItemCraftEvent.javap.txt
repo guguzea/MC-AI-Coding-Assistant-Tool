@@ -1,0 +1,11 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.inventory.PrepareItemCraftEvent extends org.bukkit.event.inventory.InventoryEvent {
+  static {};
+  public org.bukkit.event.inventory.PrepareItemCraftEvent(org.bukkit.inventory.CraftingInventory, org.bukkit.inventory.InventoryView, boolean);
+  public org.bukkit.inventory.Recipe getRecipe();
+  public org.bukkit.inventory.CraftingInventory getInventory();
+  public boolean isRepair();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  public org.bukkit.inventory.Inventory getInventory();
+}

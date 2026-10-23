@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public interface org.bukkit.BlockChangeDelegate {
+  public abstract boolean setRawTypeId(int, int, int, int);
+  public abstract boolean setRawTypeIdAndData(int, int, int, int, int);
+  public abstract boolean setTypeId(int, int, int, int);
+  public abstract boolean setTypeIdAndData(int, int, int, int, int);
+  public abstract int getTypeId(int, int, int);
+  public abstract int getHeight();
+  public abstract boolean isEmpty(int, int, int);
+}

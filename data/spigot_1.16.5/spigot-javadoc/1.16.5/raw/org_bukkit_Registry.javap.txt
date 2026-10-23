@@ -1,0 +1,20 @@
+Compiled from <spigot-api>
+public interface org.bukkit.Registry<T extends org.bukkit.Keyed> extends java.lang.Iterable<T> {
+  public static final org.bukkit.Registry<org.bukkit.advancement.Advancement> ADVANCEMENT;
+  public static final org.bukkit.Registry<org.bukkit.Art> ART;
+  public static final org.bukkit.Registry<org.bukkit.attribute.Attribute> ATTRIBUTE;
+  public static final org.bukkit.Registry<org.bukkit.block.Biome> BIOME;
+  public static final org.bukkit.Registry<org.bukkit.boss.KeyedBossBar> BOSS_BARS;
+  public static final org.bukkit.Registry<org.bukkit.enchantments.Enchantment> ENCHANTMENT;
+  public static final org.bukkit.Registry<org.bukkit.entity.EntityType> ENTITY_TYPE;
+  public static final org.bukkit.Registry<org.bukkit.loot.LootTables> LOOT_TABLES;
+  public static final org.bukkit.Registry<org.bukkit.Material> MATERIAL;
+  public static final org.bukkit.Registry<org.bukkit.Statistic> STATISTIC;
+  public static final org.bukkit.Registry<org.bukkit.Sound> SOUNDS;
+  public static final org.bukkit.Registry<org.bukkit.entity.Villager$Profession> VILLAGER_PROFESSION;
+  public static final org.bukkit.Registry<org.bukkit.entity.Villager$Type> VILLAGER_TYPE;
+  public static final org.bukkit.Registry<org.bukkit.entity.memory.MemoryKey> MEMORY_MODULE_TYPE;
+  public static final org.bukkit.Registry<org.bukkit.Fluid> FLUID;
+  static {};
+  public abstract T get(org.bukkit.NamespacedKey);
+}

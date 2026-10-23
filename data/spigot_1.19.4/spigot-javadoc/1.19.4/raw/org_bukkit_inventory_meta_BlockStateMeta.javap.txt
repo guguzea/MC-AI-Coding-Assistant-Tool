@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.meta.BlockStateMeta extends org.bukkit.inventory.meta.ItemMeta {
+  public abstract boolean hasBlockState();
+  public abstract org.bukkit.block.BlockState getBlockState();
+  public abstract void setBlockState(org.bukkit.block.BlockState);
+}

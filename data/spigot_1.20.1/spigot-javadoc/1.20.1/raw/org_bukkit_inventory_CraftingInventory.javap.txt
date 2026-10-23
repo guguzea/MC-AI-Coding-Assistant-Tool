@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.CraftingInventory extends org.bukkit.inventory.Inventory {
+  public abstract org.bukkit.inventory.ItemStack getResult();
+  public abstract org.bukkit.inventory.ItemStack[] getMatrix();
+  public abstract void setResult(org.bukkit.inventory.ItemStack);
+  public abstract void setMatrix(org.bukkit.inventory.ItemStack[]);
+  public abstract org.bukkit.inventory.Recipe getRecipe();
+}

@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.SculkShrieker extends org.bukkit.block.TileState {
+  public abstract int getWarningLevel();
+  public abstract void setWarningLevel(int);
+  public abstract void tryShriek(org.bukkit.entity.Player);
+}

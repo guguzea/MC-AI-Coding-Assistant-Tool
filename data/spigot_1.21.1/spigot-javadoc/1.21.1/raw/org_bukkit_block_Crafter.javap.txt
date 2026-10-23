@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.Crafter extends org.bukkit.block.Container,org.bukkit.loot.Lootable {
+  public abstract int getCraftingTicks();
+  public abstract void setCraftingTicks(int);
+  public abstract boolean isSlotDisabled(int);
+  public abstract void setSlotDisabled(int, boolean);
+  public abstract boolean isTriggered();
+  public abstract void setTriggered(boolean);
+}

@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.data.type.Tripwire extends org.bukkit.block.data.Attachable,org.bukkit.block.data.MultipleFacing,org.bukkit.block.data.Powerable {
+  public abstract boolean isDisarmed();
+  public abstract void setDisarmed(boolean);
+}

@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public class org.bukkit.entity.Arrow$Spigot extends org.bukkit.entity.Entity$Spigot {
+  public org.bukkit.entity.Arrow$Spigot();
+  public double getDamage();
+  public void setDamage(double);
+}

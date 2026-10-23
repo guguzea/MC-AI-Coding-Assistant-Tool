@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.entity.EntityPoseChangeEvent extends org.bukkit.event.entity.EntityEvent {
+  public org.bukkit.event.entity.EntityPoseChangeEvent(org.bukkit.entity.Entity, org.bukkit.entity.Pose);
+  public org.bukkit.entity.Pose getPose();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  static {};
+}

@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public abstract class org.bukkit.enchantments.EnchantmentWrapper extends org.bukkit.enchantments.Enchantment {
+  protected org.bukkit.enchantments.EnchantmentWrapper();
+  public org.bukkit.enchantments.Enchantment getEnchantment();
+}

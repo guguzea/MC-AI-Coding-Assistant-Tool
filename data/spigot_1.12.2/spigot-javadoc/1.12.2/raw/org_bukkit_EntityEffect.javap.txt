@@ -1,0 +1,36 @@
+Compiled from <spigot-api>
+public final class org.bukkit.EntityEffect extends java.lang.Enum<org.bukkit.EntityEffect> {
+  public static final org.bukkit.EntityEffect ARROW_PARTICLES;
+  public static final org.bukkit.EntityEffect RABBIT_JUMP;
+  public static final org.bukkit.EntityEffect HURT;
+  public static final org.bukkit.EntityEffect DEATH;
+  public static final org.bukkit.EntityEffect WOLF_SMOKE;
+  public static final org.bukkit.EntityEffect WOLF_HEARTS;
+  public static final org.bukkit.EntityEffect WOLF_SHAKE;
+  public static final org.bukkit.EntityEffect SHEEP_EAT;
+  public static final org.bukkit.EntityEffect IRON_GOLEM_ROSE;
+  public static final org.bukkit.EntityEffect VILLAGER_HEART;
+  public static final org.bukkit.EntityEffect VILLAGER_ANGRY;
+  public static final org.bukkit.EntityEffect VILLAGER_HAPPY;
+  public static final org.bukkit.EntityEffect WITCH_MAGIC;
+  public static final org.bukkit.EntityEffect ZOMBIE_TRANSFORM;
+  public static final org.bukkit.EntityEffect FIREWORK_EXPLODE;
+  public static final org.bukkit.EntityEffect LOVE_HEARTS;
+  public static final org.bukkit.EntityEffect SQUID_ROTATE;
+  public static final org.bukkit.EntityEffect ENTITY_POOF;
+  public static final org.bukkit.EntityEffect GUARDIAN_TARGET;
+  public static final org.bukkit.EntityEffect SHIELD_BLOCK;
+  public static final org.bukkit.EntityEffect SHIELD_BREAK;
+  public static final org.bukkit.EntityEffect ARMOR_STAND_HIT;
+  public static final org.bukkit.EntityEffect THORNS_HURT;
+  public static final org.bukkit.EntityEffect IRON_GOLEM_SHEATH;
+  public static final org.bukkit.EntityEffect TOTEM_RESURRECT;
+  public static final org.bukkit.EntityEffect HURT_DROWN;
+  public static final org.bukkit.EntityEffect HURT_EXPLOSION;
+  static {};
+  public byte getData();
+  public java.lang.Class<? extends org.bukkit.entity.Entity> getApplicable();
+  public static org.bukkit.EntityEffect getByData(byte);
+  public static org.bukkit.EntityEffect[] values();
+  public static org.bukkit.EntityEffect valueOf(java.lang.String);
+}

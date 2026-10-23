@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.entity.ItemSpawnEvent extends org.bukkit.event.entity.EntitySpawnEvent {
+  public org.bukkit.event.entity.ItemSpawnEvent(org.bukkit.entity.Item, org.bukkit.Location);
+  public org.bukkit.event.entity.ItemSpawnEvent(org.bukkit.entity.Item);
+  public org.bukkit.entity.Item getEntity();
+  public org.bukkit.entity.Entity getEntity();
+}

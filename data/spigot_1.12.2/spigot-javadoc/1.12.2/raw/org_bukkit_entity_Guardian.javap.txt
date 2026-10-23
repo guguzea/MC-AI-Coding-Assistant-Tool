@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Guardian extends org.bukkit.entity.Monster {
+  public abstract boolean isElder();
+  public abstract void setElder(boolean);
+}

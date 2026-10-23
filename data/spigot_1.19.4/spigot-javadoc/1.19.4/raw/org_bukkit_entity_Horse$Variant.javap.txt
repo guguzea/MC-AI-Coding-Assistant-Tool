@@ -1,0 +1,13 @@
+Compiled from <spigot-api>
+public final class org.bukkit.entity.Horse$Variant extends java.lang.Enum<org.bukkit.entity.Horse$Variant> {
+  public static final org.bukkit.entity.Horse$Variant HORSE;
+  public static final org.bukkit.entity.Horse$Variant DONKEY;
+  public static final org.bukkit.entity.Horse$Variant MULE;
+  public static final org.bukkit.entity.Horse$Variant UNDEAD_HORSE;
+  public static final org.bukkit.entity.Horse$Variant SKELETON_HORSE;
+  public static final org.bukkit.entity.Horse$Variant LLAMA;
+  public static final org.bukkit.entity.Horse$Variant CAMEL;
+  static {};
+  public static org.bukkit.entity.Horse$Variant[] values();
+  public static org.bukkit.entity.Horse$Variant valueOf(java.lang.String);
+}

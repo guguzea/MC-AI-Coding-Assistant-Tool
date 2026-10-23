@@ -1,0 +1,35 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.ArmorStand extends org.bukkit.entity.LivingEntity {
+  public abstract org.bukkit.inventory.ItemStack getItemInHand();
+  public abstract void setItemInHand(org.bukkit.inventory.ItemStack);
+  public abstract org.bukkit.inventory.ItemStack getBoots();
+  public abstract void setBoots(org.bukkit.inventory.ItemStack);
+  public abstract org.bukkit.inventory.ItemStack getLeggings();
+  public abstract void setLeggings(org.bukkit.inventory.ItemStack);
+  public abstract org.bukkit.inventory.ItemStack getChestplate();
+  public abstract void setChestplate(org.bukkit.inventory.ItemStack);
+  public abstract org.bukkit.inventory.ItemStack getHelmet();
+  public abstract void setHelmet(org.bukkit.inventory.ItemStack);
+  public abstract org.bukkit.util.EulerAngle getBodyPose();
+  public abstract void setBodyPose(org.bukkit.util.EulerAngle);
+  public abstract org.bukkit.util.EulerAngle getLeftArmPose();
+  public abstract void setLeftArmPose(org.bukkit.util.EulerAngle);
+  public abstract org.bukkit.util.EulerAngle getRightArmPose();
+  public abstract void setRightArmPose(org.bukkit.util.EulerAngle);
+  public abstract org.bukkit.util.EulerAngle getLeftLegPose();
+  public abstract void setLeftLegPose(org.bukkit.util.EulerAngle);
+  public abstract org.bukkit.util.EulerAngle getRightLegPose();
+  public abstract void setRightLegPose(org.bukkit.util.EulerAngle);
+  public abstract org.bukkit.util.EulerAngle getHeadPose();
+  public abstract void setHeadPose(org.bukkit.util.EulerAngle);
+  public abstract boolean hasBasePlate();
+  public abstract void setBasePlate(boolean);
+  public abstract boolean isVisible();
+  public abstract void setVisible(boolean);
+  public abstract boolean hasArms();
+  public abstract void setArms(boolean);
+  public abstract boolean isSmall();
+  public abstract void setSmall(boolean);
+  public abstract boolean isMarker();
+  public abstract void setMarker(boolean);
+}

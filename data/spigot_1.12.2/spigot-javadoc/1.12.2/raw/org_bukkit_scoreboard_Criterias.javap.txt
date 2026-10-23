@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public class org.bukkit.scoreboard.Criterias {
+  public static final java.lang.String HEALTH;
+  public static final java.lang.String PLAYER_KILLS;
+  public static final java.lang.String TOTAL_KILLS;
+  public static final java.lang.String DEATHS;
+  static {};
+}

@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public class org.bukkit.conversations.ConversationAbandonedEvent extends java.util.EventObject {
+  public org.bukkit.conversations.ConversationAbandonedEvent(org.bukkit.conversations.Conversation);
+  public org.bukkit.conversations.ConversationAbandonedEvent(org.bukkit.conversations.Conversation, org.bukkit.conversations.ConversationCanceller);
+  public org.bukkit.conversations.ConversationCanceller getCanceller();
+  public org.bukkit.conversations.ConversationContext getContext();
+  public boolean gracefulExit();
+}

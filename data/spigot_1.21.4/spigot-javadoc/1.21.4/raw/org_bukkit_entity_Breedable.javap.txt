@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Breedable extends org.bukkit.entity.Ageable {
+  public abstract void setAgeLock(boolean);
+  public abstract boolean getAgeLock();
+  public abstract boolean canBreed();
+  public abstract void setBreed(boolean);
+}

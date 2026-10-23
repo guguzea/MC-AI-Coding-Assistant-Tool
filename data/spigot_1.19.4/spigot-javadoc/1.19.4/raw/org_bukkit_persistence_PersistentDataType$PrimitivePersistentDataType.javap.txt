@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public class org.bukkit.persistence.PersistentDataType$PrimitivePersistentDataType<T> implements org.bukkit.persistence.PersistentDataType<T, T> {
+  org.bukkit.persistence.PersistentDataType$PrimitivePersistentDataType(java.lang.Class<T>);
+  public java.lang.Class<T> getPrimitiveType();
+  public java.lang.Class<T> getComplexType();
+  public T toPrimitive(T, org.bukkit.persistence.PersistentDataAdapterContext);
+  public T fromPrimitive(T, org.bukkit.persistence.PersistentDataAdapterContext);
+}

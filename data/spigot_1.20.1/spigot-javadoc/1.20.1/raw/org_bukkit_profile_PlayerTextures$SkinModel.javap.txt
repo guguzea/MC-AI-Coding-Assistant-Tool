@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public final class org.bukkit.profile.PlayerTextures$SkinModel extends java.lang.Enum<org.bukkit.profile.PlayerTextures$SkinModel> {
+  public static final org.bukkit.profile.PlayerTextures$SkinModel CLASSIC;
+  public static final org.bukkit.profile.PlayerTextures$SkinModel SLIM;
+  static {};
+  public static org.bukkit.profile.PlayerTextures$SkinModel[] values();
+  public static org.bukkit.profile.PlayerTextures$SkinModel valueOf(java.lang.String);
+}

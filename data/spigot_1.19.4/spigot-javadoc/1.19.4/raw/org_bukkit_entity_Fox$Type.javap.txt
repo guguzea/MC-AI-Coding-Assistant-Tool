@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public final class org.bukkit.entity.Fox$Type extends java.lang.Enum<org.bukkit.entity.Fox$Type> {
+  public static final org.bukkit.entity.Fox$Type RED;
+  public static final org.bukkit.entity.Fox$Type SNOW;
+  static {};
+  public static org.bukkit.entity.Fox$Type[] values();
+  public static org.bukkit.entity.Fox$Type valueOf(java.lang.String);
+}

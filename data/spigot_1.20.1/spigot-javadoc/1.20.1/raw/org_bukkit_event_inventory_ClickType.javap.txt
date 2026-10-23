@@ -1,0 +1,26 @@
+Compiled from <spigot-api>
+public final class org.bukkit.event.inventory.ClickType extends java.lang.Enum<org.bukkit.event.inventory.ClickType> {
+  public static final org.bukkit.event.inventory.ClickType LEFT;
+  public static final org.bukkit.event.inventory.ClickType SHIFT_LEFT;
+  public static final org.bukkit.event.inventory.ClickType RIGHT;
+  public static final org.bukkit.event.inventory.ClickType SHIFT_RIGHT;
+  public static final org.bukkit.event.inventory.ClickType WINDOW_BORDER_LEFT;
+  public static final org.bukkit.event.inventory.ClickType WINDOW_BORDER_RIGHT;
+  public static final org.bukkit.event.inventory.ClickType MIDDLE;
+  public static final org.bukkit.event.inventory.ClickType NUMBER_KEY;
+  public static final org.bukkit.event.inventory.ClickType DOUBLE_CLICK;
+  public static final org.bukkit.event.inventory.ClickType DROP;
+  public static final org.bukkit.event.inventory.ClickType CONTROL_DROP;
+  public static final org.bukkit.event.inventory.ClickType CREATIVE;
+  public static final org.bukkit.event.inventory.ClickType SWAP_OFFHAND;
+  public static final org.bukkit.event.inventory.ClickType UNKNOWN;
+  static {};
+  public boolean isKeyboardClick();
+  public boolean isMouseClick();
+  public boolean isCreativeAction();
+  public boolean isRightClick();
+  public boolean isLeftClick();
+  public boolean isShiftClick();
+  public static org.bukkit.event.inventory.ClickType[] values();
+  public static org.bukkit.event.inventory.ClickType valueOf(java.lang.String);
+}

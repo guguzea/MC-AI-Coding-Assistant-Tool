@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.meta.components.consumable.effects.ConsumableApplyEffects extends org.bukkit.inventory.meta.components.consumable.effects.ConsumableEffect {
+  public abstract java.util.List<org.bukkit.potion.PotionEffect> getEffects();
+  public abstract void setEffects(java.util.List<org.bukkit.potion.PotionEffect>);
+  public abstract org.bukkit.potion.PotionEffect addEffect(org.bukkit.potion.PotionEffect);
+  public abstract float getProbability();
+  public abstract void setProbability(float);
+}

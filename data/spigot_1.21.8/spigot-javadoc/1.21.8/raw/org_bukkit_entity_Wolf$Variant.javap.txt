@@ -1,0 +1,14 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Wolf$Variant extends org.bukkit.Keyed,org.bukkit.registry.RegistryAware {
+  public static final org.bukkit.entity.Wolf$Variant PALE;
+  public static final org.bukkit.entity.Wolf$Variant SPOTTED;
+  public static final org.bukkit.entity.Wolf$Variant SNOWY;
+  public static final org.bukkit.entity.Wolf$Variant BLACK;
+  public static final org.bukkit.entity.Wolf$Variant ASHEN;
+  public static final org.bukkit.entity.Wolf$Variant RUSTY;
+  public static final org.bukkit.entity.Wolf$Variant WOODS;
+  public static final org.bukkit.entity.Wolf$Variant CHESTNUT;
+  public static final org.bukkit.entity.Wolf$Variant STRIPED;
+  public abstract org.bukkit.NamespacedKey getKey();
+  static {};
+}

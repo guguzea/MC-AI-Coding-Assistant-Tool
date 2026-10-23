@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.inventory.FurnaceExtractEvent extends org.bukkit.event.block.BlockExpEvent {
+  public org.bukkit.event.inventory.FurnaceExtractEvent(org.bukkit.entity.Player, org.bukkit.block.Block, org.bukkit.Material, int, int);
+  public org.bukkit.entity.Player getPlayer();
+  public org.bukkit.Material getItemType();
+  public int getItemAmount();
+}

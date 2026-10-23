@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public abstract class org.bukkit.conversations.StringPrompt implements org.bukkit.conversations.Prompt {
+  public org.bukkit.conversations.StringPrompt();
+  public boolean blocksForInput(org.bukkit.conversations.ConversationContext);
+}

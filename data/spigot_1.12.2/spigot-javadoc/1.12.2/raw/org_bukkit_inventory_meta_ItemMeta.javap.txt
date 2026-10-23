@@ -1,0 +1,27 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.meta.ItemMeta extends java.lang.Cloneable,org.bukkit.configuration.serialization.ConfigurationSerializable {
+  public abstract boolean hasDisplayName();
+  public abstract java.lang.String getDisplayName();
+  public abstract void setDisplayName(java.lang.String);
+  public abstract boolean hasLocalizedName();
+  public abstract java.lang.String getLocalizedName();
+  public abstract void setLocalizedName(java.lang.String);
+  public abstract boolean hasLore();
+  public abstract java.util.List<java.lang.String> getLore();
+  public abstract void setLore(java.util.List<java.lang.String>);
+  public abstract boolean hasEnchants();
+  public abstract boolean hasEnchant(org.bukkit.enchantments.Enchantment);
+  public abstract int getEnchantLevel(org.bukkit.enchantments.Enchantment);
+  public abstract java.util.Map<org.bukkit.enchantments.Enchantment, java.lang.Integer> getEnchants();
+  public abstract boolean addEnchant(org.bukkit.enchantments.Enchantment, int, boolean);
+  public abstract boolean removeEnchant(org.bukkit.enchantments.Enchantment);
+  public abstract boolean hasConflictingEnchant(org.bukkit.enchantments.Enchantment);
+  public abstract void addItemFlags(org.bukkit.inventory.ItemFlag...);
+  public abstract void removeItemFlags(org.bukkit.inventory.ItemFlag...);
+  public abstract java.util.Set<org.bukkit.inventory.ItemFlag> getItemFlags();
+  public abstract boolean hasItemFlag(org.bukkit.inventory.ItemFlag);
+  public abstract boolean isUnbreakable();
+  public abstract void setUnbreakable(boolean);
+  public abstract org.bukkit.inventory.meta.ItemMeta clone();
+  public abstract org.bukkit.inventory.meta.ItemMeta$Spigot spigot();
+}

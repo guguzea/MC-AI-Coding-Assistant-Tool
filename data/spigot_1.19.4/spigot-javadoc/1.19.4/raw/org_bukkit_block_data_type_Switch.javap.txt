@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.data.type.Switch extends org.bukkit.block.data.Directional,org.bukkit.block.data.FaceAttachable,org.bukkit.block.data.Powerable {
+  public abstract org.bukkit.block.data.type.Switch$Face getFace();
+  public abstract void setFace(org.bukkit.block.data.type.Switch$Face);
+}

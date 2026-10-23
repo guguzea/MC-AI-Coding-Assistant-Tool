@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.minecart.HopperMinecart extends org.bukkit.entity.Minecart,org.bukkit.inventory.InventoryHolder,org.bukkit.loot.Lootable {
+  public abstract boolean isEnabled();
+  public abstract void setEnabled(boolean);
+}

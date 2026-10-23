@@ -1,0 +1,12 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.entity.EntityTameEvent extends org.bukkit.event.entity.EntityEvent implements org.bukkit.event.Cancellable {
+  public org.bukkit.event.entity.EntityTameEvent(org.bukkit.entity.LivingEntity, org.bukkit.entity.AnimalTamer);
+  public org.bukkit.entity.LivingEntity getEntity();
+  public boolean isCancelled();
+  public void setCancelled(boolean);
+  public org.bukkit.entity.AnimalTamer getOwner();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  public org.bukkit.entity.Entity getEntity();
+  static {};
+}

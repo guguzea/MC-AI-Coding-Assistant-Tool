@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.weather.WeatherChangeEvent extends org.bukkit.event.weather.WeatherEvent implements org.bukkit.event.Cancellable {
+  public org.bukkit.event.weather.WeatherChangeEvent(org.bukkit.World, boolean);
+  public boolean isCancelled();
+  public void setCancelled(boolean);
+  public boolean toWeatherState();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  static {};
+}

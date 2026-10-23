@@ -1,0 +1,11 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.MushroomCow extends org.bukkit.entity.AbstractCow {
+  public abstract boolean hasEffectsForNextStew();
+  public abstract java.util.List<org.bukkit.potion.PotionEffect> getEffectsForNextStew();
+  public abstract boolean addEffectToNextStew(org.bukkit.potion.PotionEffect, boolean);
+  public abstract boolean removeEffectFromNextStew(org.bukkit.potion.PotionEffectType);
+  public abstract boolean hasEffectForNextStew(org.bukkit.potion.PotionEffectType);
+  public abstract void clearEffectsForNextStew();
+  public abstract org.bukkit.entity.MushroomCow$Variant getVariant();
+  public abstract void setVariant(org.bukkit.entity.MushroomCow$Variant);
+}

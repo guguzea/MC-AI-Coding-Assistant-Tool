@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.meta.ShieldMeta extends org.bukkit.inventory.meta.BannerMeta {
+  public abstract org.bukkit.DyeColor getBaseColor();
+  public abstract void setBaseColor(org.bukkit.DyeColor);
+}

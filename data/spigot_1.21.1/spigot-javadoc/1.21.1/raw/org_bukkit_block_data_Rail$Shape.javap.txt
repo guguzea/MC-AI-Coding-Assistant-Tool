@@ -1,0 +1,16 @@
+Compiled from <spigot-api>
+public final class org.bukkit.block.data.Rail$Shape extends java.lang.Enum<org.bukkit.block.data.Rail$Shape> {
+  public static final org.bukkit.block.data.Rail$Shape NORTH_SOUTH;
+  public static final org.bukkit.block.data.Rail$Shape EAST_WEST;
+  public static final org.bukkit.block.data.Rail$Shape ASCENDING_EAST;
+  public static final org.bukkit.block.data.Rail$Shape ASCENDING_WEST;
+  public static final org.bukkit.block.data.Rail$Shape ASCENDING_NORTH;
+  public static final org.bukkit.block.data.Rail$Shape ASCENDING_SOUTH;
+  public static final org.bukkit.block.data.Rail$Shape SOUTH_EAST;
+  public static final org.bukkit.block.data.Rail$Shape SOUTH_WEST;
+  public static final org.bukkit.block.data.Rail$Shape NORTH_WEST;
+  public static final org.bukkit.block.data.Rail$Shape NORTH_EAST;
+  public static org.bukkit.block.data.Rail$Shape[] values();
+  public static org.bukkit.block.data.Rail$Shape valueOf(java.lang.String);
+  static {};
+}

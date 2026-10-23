@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public final class org.bukkit.event.entity.EntityPotionEffectEvent$Action extends java.lang.Enum<org.bukkit.event.entity.EntityPotionEffectEvent$Action> {
+  public static final org.bukkit.event.entity.EntityPotionEffectEvent$Action ADDED;
+  public static final org.bukkit.event.entity.EntityPotionEffectEvent$Action CHANGED;
+  public static final org.bukkit.event.entity.EntityPotionEffectEvent$Action CLEARED;
+  public static final org.bukkit.event.entity.EntityPotionEffectEvent$Action REMOVED;
+  static {};
+  public static org.bukkit.event.entity.EntityPotionEffectEvent$Action[] values();
+  public static org.bukkit.event.entity.EntityPotionEffectEvent$Action valueOf(java.lang.String);
+}

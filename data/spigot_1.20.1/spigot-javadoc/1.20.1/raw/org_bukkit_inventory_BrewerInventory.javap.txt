@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.BrewerInventory extends org.bukkit.inventory.Inventory {
+  public abstract org.bukkit.inventory.ItemStack getIngredient();
+  public abstract void setIngredient(org.bukkit.inventory.ItemStack);
+  public abstract org.bukkit.inventory.ItemStack getFuel();
+  public abstract void setFuel(org.bukkit.inventory.ItemStack);
+  public abstract org.bukkit.block.BrewingStand getHolder();
+  public default org.bukkit.inventory.InventoryHolder getHolder();
+}

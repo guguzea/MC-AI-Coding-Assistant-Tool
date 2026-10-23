@@ -1,0 +1,15 @@
+Compiled from <spigot-api>
+public final class org.bukkit.inventory.CreativeCategory extends java.lang.Enum<org.bukkit.inventory.CreativeCategory> {
+  public static final org.bukkit.inventory.CreativeCategory BUILDING_BLOCKS;
+  public static final org.bukkit.inventory.CreativeCategory DECORATIONS;
+  public static final org.bukkit.inventory.CreativeCategory REDSTONE;
+  public static final org.bukkit.inventory.CreativeCategory TRANSPORTATION;
+  public static final org.bukkit.inventory.CreativeCategory MISC;
+  public static final org.bukkit.inventory.CreativeCategory FOOD;
+  public static final org.bukkit.inventory.CreativeCategory TOOLS;
+  public static final org.bukkit.inventory.CreativeCategory COMBAT;
+  public static final org.bukkit.inventory.CreativeCategory BREWING;
+  static {};
+  public static org.bukkit.inventory.CreativeCategory[] values();
+  public static org.bukkit.inventory.CreativeCategory valueOf(java.lang.String);
+}

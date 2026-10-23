@@ -1,0 +1,13 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.world.AsyncStructureSpawnEvent extends org.bukkit.event.world.WorldEvent implements org.bukkit.event.Cancellable {
+  public org.bukkit.event.world.AsyncStructureSpawnEvent(org.bukkit.World, org.bukkit.generator.structure.Structure, org.bukkit.util.BoundingBox, int, int);
+  public org.bukkit.generator.structure.Structure getStructure();
+  public org.bukkit.util.BoundingBox getBoundingBox();
+  public int getChunkX();
+  public int getChunkZ();
+  public boolean isCancelled();
+  public void setCancelled(boolean);
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  static {};
+}

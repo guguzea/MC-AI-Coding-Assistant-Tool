@@ -1,0 +1,26 @@
+Compiled from <spigot-api>
+public class org.bukkit.material.Door extends org.bukkit.material.MaterialData implements org.bukkit.material.Directional,org.bukkit.material.Openable {
+  public org.bukkit.material.Door();
+  public org.bukkit.material.Door(org.bukkit.Material);
+  public org.bukkit.material.Door(org.bukkit.Material, org.bukkit.block.BlockFace);
+  public org.bukkit.material.Door(org.bukkit.Material, org.bukkit.block.BlockFace, boolean);
+  public org.bukkit.material.Door(org.bukkit.Material, boolean);
+  public org.bukkit.material.Door(org.bukkit.TreeSpecies, org.bukkit.block.BlockFace);
+  public org.bukkit.material.Door(org.bukkit.TreeSpecies, org.bukkit.block.BlockFace, boolean);
+  public org.bukkit.material.Door(org.bukkit.TreeSpecies, boolean);
+  public org.bukkit.material.Door(org.bukkit.Material, byte);
+  public static org.bukkit.Material getWoodDoorOfSpecies(org.bukkit.TreeSpecies);
+  public boolean isOpen();
+  public void setOpen(boolean);
+  public boolean isTopHalf();
+  public void setTopHalf(boolean);
+  public org.bukkit.block.BlockFace getHingeCorner();
+  public java.lang.String toString();
+  public void setFacingDirection(org.bukkit.block.BlockFace);
+  public org.bukkit.block.BlockFace getFacing();
+  public boolean getHinge();
+  public void setHinge(boolean);
+  public org.bukkit.material.Door clone();
+  public org.bukkit.material.MaterialData clone();
+  public java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+}

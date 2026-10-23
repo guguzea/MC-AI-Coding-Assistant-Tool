@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public class org.bukkit.configuration.file.YamlRepresenter extends org.yaml.snakeyaml.representer.Representer {
+  public org.bukkit.configuration.file.YamlRepresenter();
+  public org.bukkit.configuration.file.YamlRepresenter(org.yaml.snakeyaml.DumperOptions);
+}

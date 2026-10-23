@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.ChiseledBookshelf extends org.bukkit.block.TileState,org.bukkit.inventory.BlockInventoryHolder {
+  public abstract int getLastInteractedSlot();
+  public abstract void setLastInteractedSlot(int);
+  public abstract org.bukkit.inventory.ChiseledBookshelfInventory getInventory();
+  public abstract org.bukkit.inventory.ChiseledBookshelfInventory getSnapshotInventory();
+  public default org.bukkit.inventory.Inventory getInventory();
+}

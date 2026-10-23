@@ -1,0 +1,12 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.player.PlayerRecipeBookClickEvent extends org.bukkit.event.player.PlayerEvent {
+  public org.bukkit.event.player.PlayerRecipeBookClickEvent(org.bukkit.entity.Player, org.bukkit.inventory.Recipe, boolean);
+  public org.bukkit.inventory.Recipe getOriginalRecipe();
+  public org.bukkit.inventory.Recipe getRecipe();
+  public void setRecipe(org.bukkit.inventory.Recipe);
+  public boolean isShiftClick();
+  public void setShiftClick(boolean);
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  static {};
+}

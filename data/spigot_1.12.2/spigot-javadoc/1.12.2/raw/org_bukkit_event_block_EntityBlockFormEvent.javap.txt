@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.block.EntityBlockFormEvent extends org.bukkit.event.block.BlockFormEvent {
+  public org.bukkit.event.block.EntityBlockFormEvent(org.bukkit.entity.Entity, org.bukkit.block.Block, org.bukkit.block.BlockState);
+  public org.bukkit.entity.Entity getEntity();
+}

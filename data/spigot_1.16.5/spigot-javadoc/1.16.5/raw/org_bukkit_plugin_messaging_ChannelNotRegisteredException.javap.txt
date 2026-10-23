@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public class org.bukkit.plugin.messaging.ChannelNotRegisteredException extends java.lang.RuntimeException {
+  public org.bukkit.plugin.messaging.ChannelNotRegisteredException();
+  public org.bukkit.plugin.messaging.ChannelNotRegisteredException(java.lang.String);
+}

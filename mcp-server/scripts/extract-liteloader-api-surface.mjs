@@ -355,19 +355,24 @@ function collectFromJar(jarPath) {
   if (!existsSync(jarPath)) throw new Error(`构件不在：${jarPath}`);
   const jarExe = findJdkTool("jar");
   const list = execFileSync(jarExe, ["tf", jarPath], { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
-  const fqcns = list
+  const inScope = (fq) => {
+    if (SCOPE === "all") return true;
+    const pkg = fq.slice(0, fq.lastIndexOf("."));
+    return pkg === PKG_DOTTED || pkg.startsWith(`${PKG_DOTTED}.api`) || pkg.startsWith(`${PKG_DOTTED}.modconfig`);
+  };
+  const all = list
     .split(/\r?\n/)
     .map((s) => s.trim())
     .filter((n) => n.startsWith(`${PKG_ROOT}/`) && n.endsWith(".class"))
     .map((n) => n.slice(0, -".class".length).replace(/\//g, "."))
-    .filter((fq) => !fq.includes("$") && !fq.endsWith("package-info"))
-    .filter((fq) => {
-      if (SCOPE === "all") return true;
-      const pkg = fq.slice(0, fq.lastIndexOf("."));
-      return (
-        pkg === PKG_DOTTED || pkg.startsWith(`${PKG_DOTTED}.api`) || pkg.startsWith(`${PKG_DOTTED}.modconfig`)
-      );
-    });
+    .filter((fq) => !fq.endsWith("package-info"));
+  const fqcns = all.filter((fq) => !fq.includes("$")).filter(inScope);
+  // 嵌套类型**只列名**（`Outer$Inner`）：不展开成员，也不再把它们说成"未抽"。
+  // 匿名类（`Outer$1` / `Outer$1$2`）不是可引用的类型名，排除。
+  const nested = all
+    .filter((fq) => fq.includes("$"))
+    .filter((fq) => !fq.split("$").slice(1).some((seg) => /^\d+$/.test(seg)))
+    .filter((fq) => inScope(fq.split("$")[0]));
   if (SCOPE !== "all" && SCOPE !== "api") throw new Error(`--scope 只认 api|all，收到 ${SCOPE}`);
   if (process.env.MC_SKILL_LL_DEBUG === "1") {
     console.error(`[debug] jar 内条目 ${list.split(/\r?\n/).length} · 候选类 ${fqcns.length} · ${jarExe}`);
@@ -378,7 +383,7 @@ function collectFromJar(jarPath) {
       console.error(`[debug] 含 mumfrey 样例: ${JSON.stringify(raw.filter((l) => l.includes("mumfrey")).slice(0, 3))}`);
     }
   }
-  return fqcns.sort();
+  return { top: fqcns.sort(), nested: [...new Set(nested)].sort() };
 }
 
 /**
@@ -529,6 +534,9 @@ function renderKnowledge(pages, meta) {
           "- 构件路线**看不到注解 `default` 值**（`javap` 不带 `-v` 时不显示 `AnnotationDefault`）",
           "- 枚举按 class 文件原样显示为 `final class ... extends java.lang.Enum<…>`，并含编译器合成的 `values()` / `valueOf()`",
           "- 含编译器合成的 **bridge method**（泛型擦除产物，多为返回 `java.lang.Object` 的同名重载；写作时按泛型真身取，别照抄桥）",
+          meta.nestedTypes?.length
+            ? `- 嵌套类型 **${meta.nestedTypes.length}** 个：**只列名**（见文末），未展开成员`
+            : "- 本构件范围内没有可引用的嵌套类型（匿名类 `Outer$1` 已排除）",
         ]
       : [
           `- 跳过 **${meta.skippedFiles}** 个文件（无顶层 public 类型，即包私有类）`,
@@ -555,12 +563,27 @@ function renderKnowledge(pages, meta) {
     }
   }
 
+  // 嵌套类型清单：2026-10-23 起不再只说「未抽」—— 把可引用的嵌套类型名逐条列出（不展开成员）。
+  // 匿名类（`Outer$1`）不是可写进代码的类型名，已在上游过滤掉。
+  if (isJar && meta.nestedTypes?.length) {
+    out.push(
+      "## 嵌套类型（只列名，未展开成员）",
+      "",
+      `本构件范围内的嵌套类型 **${meta.nestedTypes.length}** 个（\`Outer$Inner\` 形态；匿名类已排除）。`,
+      `它们的**成员签名不在本文件里**，且**可见性未逐个核**（\`jar tf\` 只给文件名，分不出 public 还是 private 内部类）`,
+      `⇒ 要用就自己 \`javap -classpath <构件> '<Outer$Inner>'\` 看那一层，别把这里当成「可引用清单」。`,
+      "",
+    );
+    for (const n of meta.nestedTypes) out.push(`- \`${n}\``);
+    out.push("");
+  }
+
   out.push(
     "## 未核实 / 未覆盖",
     "",
     ...(isJar
       ? [
-          `- 嵌套类型未抽（只取顶层类型；本构件内候选 ${meta.classCandidates} 个里，含 \`$\` 的内部类已排除）。`,
+          `- 嵌套类型**只列名不展开成员**（${meta.nestedTypes?.length ?? 0} 个，见上一节清单）：它们的成员签名不在本文件里，要用就自己 \`javap\` 那一层。`,
           "- 形参名与注解 `default` 值在构件里取不到（见上「计数」小节的三条限制）。",
           ...(meta.vanilla === "mcp"
             ? []
@@ -749,7 +772,7 @@ function main() {
     if (EXPECT_MD5 && jarMd5 !== EXPECT_MD5) {
       throw new Error(`构件 md5 不符：实测 ${jarMd5}，期望 ${EXPECT_MD5} ⇒ 拒绝，这不是本版登记的那件`);
     }
-    const fqcns = collectFromJar(JAR);
+    const { top: fqcns, nested: nestedTypes } = collectFromJar(JAR);
     const javapExe = findJdkTool("javap");
     const javapVersion = execFileSync(javapExe, ["-version"], { encoding: "utf8" }).trim().split(/\r?\n/)[0];
     const text = execFileSync(javapExe, ["-classpath", JAR, ...fqcns], {
@@ -769,7 +792,8 @@ function main() {
       expectMd5: EXPECT_MD5 || null,
       javapVersion,
       vanilla,
-      classCandidates: fqcns.length,
+      classCandidates: fqcns.length + nestedTypes.length,
+      nestedTypes,
       scopeDirs,
       typePages: pages.length,
       kinds: {

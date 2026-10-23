@@ -113,7 +113,8 @@ const LEDGER_SUM = {
   // 重签路径 = `MC_SKILL_INDEX_RELEDGER=1`（该分支只打印不落盘 ⇒ 按打印值手抄，见 :103 既有口径）。
   // 2026-10-23：+ rift 1.13 一棵库（5 页 / 46 chunks / 29 embedded）；
   //             + paper-api 五个历史档（1.21.4/1.21.1/1.20.1/1.16.5/1.12.2，扁平落盘重抓后）。数字取自本门 RELEDGER=1 重算。
-  entries: 70, chunks: 69209, embedded: 45585,
+  // 2026-10-23：+ spigot 五个版本档（构件 javap 抽的签名面，见 `extract-spigot-api-surface.mjs`）。
+  entries: 75, chunks: 77306, embedded: 52469,
   perPlatform: {
     "bedrock": { entries: 2, chunks: 15173, embedded: 4541 },
     "fabric": { entries: 27, chunks: 7935, embedded: 5898 },
@@ -127,7 +128,8 @@ const LEDGER_SUM = {
     "quilt": { entries: 6, chunks: 1790, embedded: 1355 },
     // 2026-10-23：rift 1.13 档入库 ⇒ 2 库（1.13: 5 页/46 块/29 嵌入；1.13.2: 6 页/47 块/29 嵌入）
     "rift": { entries: 2, chunks: 93, embedded: 58 },
-    "spigot": { entries: 1, chunks: 2195, embedded: 1789 },
+    // 2026-10-23：1 → 6（stable + 1.21.4/1.21.1/1.20.1/1.16.5/1.12.2，后五档来自 spigot-api 构件 javap）
+    "spigot": { entries: 6, chunks: 10292, embedded: 8673 },
   },
 };
 // A5 存量债务：有 chunks 但嵌入层为 0（语义检索静默退化成纯 FTS）

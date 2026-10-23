@@ -1,0 +1,13 @@
+Compiled from <spigot-api>
+public class org.bukkit.material.Tripwire extends org.bukkit.material.MaterialData {
+  public org.bukkit.material.Tripwire();
+  public org.bukkit.material.Tripwire(org.bukkit.Material, byte);
+  public boolean isActivated();
+  public void setActivated(boolean);
+  public boolean isObjectTriggering();
+  public void setObjectTriggering(boolean);
+  public org.bukkit.material.Tripwire clone();
+  public java.lang.String toString();
+  public org.bukkit.material.MaterialData clone();
+  public java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+}

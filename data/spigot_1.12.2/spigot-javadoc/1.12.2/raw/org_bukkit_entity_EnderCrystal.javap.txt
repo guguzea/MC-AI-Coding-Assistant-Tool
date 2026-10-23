@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.EnderCrystal extends org.bukkit.entity.Entity {
+  public abstract boolean isShowingBottom();
+  public abstract void setShowingBottom(boolean);
+  public abstract org.bukkit.Location getBeamTarget();
+  public abstract void setBeamTarget(org.bukkit.Location);
+}

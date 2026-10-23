@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public abstract class org.bukkit.conversations.BooleanPrompt extends org.bukkit.conversations.ValidatingPrompt {
+  static {};
+  public org.bukkit.conversations.BooleanPrompt();
+  protected boolean isInputValid(org.bukkit.conversations.ConversationContext, java.lang.String);
+  protected org.bukkit.conversations.Prompt acceptValidatedInput(org.bukkit.conversations.ConversationContext, java.lang.String);
+  protected abstract org.bukkit.conversations.Prompt acceptValidatedInput(org.bukkit.conversations.ConversationContext, boolean);
+}

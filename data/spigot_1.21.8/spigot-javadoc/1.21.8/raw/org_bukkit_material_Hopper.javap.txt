@@ -1,0 +1,20 @@
+Compiled from <spigot-api>
+public class org.bukkit.material.Hopper extends org.bukkit.material.MaterialData implements org.bukkit.material.Directional,org.bukkit.material.Redstone {
+  protected static final org.bukkit.block.BlockFace DEFAULT_DIRECTION;
+  protected static final boolean DEFAULT_ACTIVE;
+  public org.bukkit.material.Hopper();
+  public org.bukkit.material.Hopper(org.bukkit.block.BlockFace);
+  public org.bukkit.material.Hopper(org.bukkit.block.BlockFace, boolean);
+  public org.bukkit.material.Hopper(org.bukkit.Material);
+  public org.bukkit.material.Hopper(org.bukkit.Material, byte);
+  public void setActive(boolean);
+  public boolean isActive();
+  public void setFacingDirection(org.bukkit.block.BlockFace);
+  public org.bukkit.block.BlockFace getFacing();
+  public java.lang.String toString();
+  public org.bukkit.material.Hopper clone();
+  public boolean isPowered();
+  public org.bukkit.material.MaterialData clone();
+  public java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+  static {};
+}

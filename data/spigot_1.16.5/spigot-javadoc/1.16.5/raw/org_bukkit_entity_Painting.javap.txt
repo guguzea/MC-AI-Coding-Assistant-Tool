@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Painting extends org.bukkit.entity.Hanging {
+  public abstract org.bukkit.Art getArt();
+  public abstract boolean setArt(org.bukkit.Art);
+  public abstract boolean setArt(org.bukkit.Art, boolean);
+}

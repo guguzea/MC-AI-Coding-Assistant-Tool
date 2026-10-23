@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public final class org.bukkit.event.world.AsyncStructureGenerateEvent$Cause extends java.lang.Enum<org.bukkit.event.world.AsyncStructureGenerateEvent$Cause> {
+  public static final org.bukkit.event.world.AsyncStructureGenerateEvent$Cause COMMAND;
+  public static final org.bukkit.event.world.AsyncStructureGenerateEvent$Cause WORLD_GENERATION;
+  public static final org.bukkit.event.world.AsyncStructureGenerateEvent$Cause CUSTOM;
+  public static org.bukkit.event.world.AsyncStructureGenerateEvent$Cause[] values();
+  public static org.bukkit.event.world.AsyncStructureGenerateEvent$Cause valueOf(java.lang.String);
+  static {};
+}

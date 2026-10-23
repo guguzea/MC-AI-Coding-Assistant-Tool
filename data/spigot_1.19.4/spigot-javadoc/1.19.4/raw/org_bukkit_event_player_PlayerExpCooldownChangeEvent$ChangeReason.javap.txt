@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public final class org.bukkit.event.player.PlayerExpCooldownChangeEvent$ChangeReason extends java.lang.Enum<org.bukkit.event.player.PlayerExpCooldownChangeEvent$ChangeReason> {
+  public static final org.bukkit.event.player.PlayerExpCooldownChangeEvent$ChangeReason PICKUP_ORB;
+  public static final org.bukkit.event.player.PlayerExpCooldownChangeEvent$ChangeReason PLUGIN;
+  static {};
+  public static org.bukkit.event.player.PlayerExpCooldownChangeEvent$ChangeReason[] values();
+  public static org.bukkit.event.player.PlayerExpCooldownChangeEvent$ChangeReason valueOf(java.lang.String);
+}

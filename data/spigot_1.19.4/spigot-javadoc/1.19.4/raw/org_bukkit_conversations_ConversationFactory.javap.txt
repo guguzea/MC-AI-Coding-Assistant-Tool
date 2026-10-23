@@ -1,0 +1,24 @@
+Compiled from <spigot-api>
+public class org.bukkit.conversations.ConversationFactory {
+  protected org.bukkit.plugin.Plugin plugin;
+  protected boolean isModal;
+  protected boolean localEchoEnabled;
+  protected org.bukkit.conversations.ConversationPrefix prefix;
+  protected org.bukkit.conversations.Prompt firstPrompt;
+  protected java.util.Map<java.lang.Object, java.lang.Object> initialSessionData;
+  protected java.lang.String playerOnlyMessage;
+  protected java.util.List<org.bukkit.conversations.ConversationCanceller> cancellers;
+  protected java.util.List<org.bukkit.conversations.ConversationAbandonedListener> abandonedListeners;
+  public org.bukkit.conversations.ConversationFactory(org.bukkit.plugin.Plugin);
+  public org.bukkit.conversations.ConversationFactory withModality(boolean);
+  public org.bukkit.conversations.ConversationFactory withLocalEcho(boolean);
+  public org.bukkit.conversations.ConversationFactory withPrefix(org.bukkit.conversations.ConversationPrefix);
+  public org.bukkit.conversations.ConversationFactory withTimeout(int);
+  public org.bukkit.conversations.ConversationFactory withFirstPrompt(org.bukkit.conversations.Prompt);
+  public org.bukkit.conversations.ConversationFactory withInitialSessionData(java.util.Map<java.lang.Object, java.lang.Object>);
+  public org.bukkit.conversations.ConversationFactory withEscapeSequence(java.lang.String);
+  public org.bukkit.conversations.ConversationFactory withConversationCanceller(org.bukkit.conversations.ConversationCanceller);
+  public org.bukkit.conversations.ConversationFactory thatExcludesNonPlayersWithMessage(java.lang.String);
+  public org.bukkit.conversations.ConversationFactory addConversationAbandonedListener(org.bukkit.conversations.ConversationAbandonedListener);
+  public org.bukkit.conversations.Conversation buildConversation(org.bukkit.conversations.Conversable);
+}

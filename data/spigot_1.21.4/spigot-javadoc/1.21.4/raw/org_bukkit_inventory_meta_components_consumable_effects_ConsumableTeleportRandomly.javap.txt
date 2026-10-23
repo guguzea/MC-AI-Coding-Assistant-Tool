@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.meta.components.consumable.effects.ConsumableTeleportRandomly extends org.bukkit.inventory.meta.components.consumable.effects.ConsumableEffect {
+  public abstract float getDiameter();
+  public abstract void setDiameter(float);
+}

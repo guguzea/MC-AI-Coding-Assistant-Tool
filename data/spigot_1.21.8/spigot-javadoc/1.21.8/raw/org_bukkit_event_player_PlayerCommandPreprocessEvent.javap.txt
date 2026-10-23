@@ -1,0 +1,14 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.player.PlayerCommandPreprocessEvent extends org.bukkit.event.player.PlayerEvent implements org.bukkit.event.Cancellable {
+  public org.bukkit.event.player.PlayerCommandPreprocessEvent(org.bukkit.entity.Player, java.lang.String);
+  public org.bukkit.event.player.PlayerCommandPreprocessEvent(org.bukkit.entity.Player, java.lang.String, java.util.Set<org.bukkit.entity.Player>);
+  public boolean isCancelled();
+  public void setCancelled(boolean);
+  public java.lang.String getMessage();
+  public void setMessage(java.lang.String) throws java.lang.IllegalArgumentException;
+  public void setPlayer(org.bukkit.entity.Player) throws java.lang.IllegalArgumentException;
+  public java.util.Set<org.bukkit.entity.Player> getRecipients();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  static {};
+}

@@ -1,0 +1,20 @@
+Compiled from <spigot-api>
+public class org.bukkit.material.TripwireHook extends org.bukkit.material.SimpleAttachableMaterialData implements org.bukkit.material.Redstone {
+  public org.bukkit.material.TripwireHook();
+  public org.bukkit.material.TripwireHook(int);
+  public org.bukkit.material.TripwireHook(int, byte);
+  public org.bukkit.material.TripwireHook(org.bukkit.block.BlockFace);
+  public boolean isConnected();
+  public void setConnected(boolean);
+  public boolean isActivated();
+  public void setActivated(boolean);
+  public void setFacingDirection(org.bukkit.block.BlockFace);
+  public org.bukkit.block.BlockFace getAttachedFace();
+  public boolean isPowered();
+  public org.bukkit.material.TripwireHook clone();
+  public java.lang.String toString();
+  public org.bukkit.material.SimpleAttachableMaterialData clone();
+  public java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+  public org.bukkit.material.MaterialData clone();
+  static int[] $SWITCH_TABLE$org$bukkit$block$BlockFace();
+}

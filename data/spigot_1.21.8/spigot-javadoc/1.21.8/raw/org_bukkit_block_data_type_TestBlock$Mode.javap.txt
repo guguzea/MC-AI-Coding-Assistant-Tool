@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public final class org.bukkit.block.data.type.TestBlock$Mode extends java.lang.Enum<org.bukkit.block.data.type.TestBlock$Mode> {
+  public static final org.bukkit.block.data.type.TestBlock$Mode START;
+  public static final org.bukkit.block.data.type.TestBlock$Mode LOG;
+  public static final org.bukkit.block.data.type.TestBlock$Mode FAIL;
+  public static final org.bukkit.block.data.type.TestBlock$Mode ACCEPT;
+  public static org.bukkit.block.data.type.TestBlock$Mode[] values();
+  public static org.bukkit.block.data.type.TestBlock$Mode valueOf(java.lang.String);
+  static {};
+}

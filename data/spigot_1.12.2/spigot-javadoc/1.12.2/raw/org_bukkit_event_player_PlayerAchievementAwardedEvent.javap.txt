@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.player.PlayerAchievementAwardedEvent extends org.bukkit.event.player.PlayerEvent implements org.bukkit.event.Cancellable {
+  static {};
+  public org.bukkit.event.player.PlayerAchievementAwardedEvent(org.bukkit.entity.Player, org.bukkit.Achievement);
+  public org.bukkit.Achievement getAchievement();
+  public boolean isCancelled();
+  public void setCancelled(boolean);
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+}

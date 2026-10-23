@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.block.InventoryBlockStartEvent extends org.bukkit.event.block.BlockEvent {
+  static {};
+  public org.bukkit.event.block.InventoryBlockStartEvent(org.bukkit.block.Block, org.bukkit.inventory.ItemStack);
+  public org.bukkit.inventory.ItemStack getSource();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+}

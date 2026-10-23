@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.data.type.Lantern extends org.bukkit.block.data.Waterlogged {
+  public abstract boolean isHanging();
+  public abstract void setHanging(boolean);
+}

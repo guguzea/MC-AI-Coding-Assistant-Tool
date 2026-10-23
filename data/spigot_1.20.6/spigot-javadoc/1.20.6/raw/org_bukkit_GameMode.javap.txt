@@ -1,0 +1,12 @@
+Compiled from <spigot-api>
+public final class org.bukkit.GameMode extends java.lang.Enum<org.bukkit.GameMode> {
+  public static final org.bukkit.GameMode CREATIVE;
+  public static final org.bukkit.GameMode SURVIVAL;
+  public static final org.bukkit.GameMode ADVENTURE;
+  public static final org.bukkit.GameMode SPECTATOR;
+  public static org.bukkit.GameMode[] values();
+  public static org.bukkit.GameMode valueOf(java.lang.String);
+  public int getValue();
+  public static org.bukkit.GameMode getByValue(int);
+  static {};
+}

@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public final class org.bukkit.block.data.type.SculkSensor$Phase extends java.lang.Enum<org.bukkit.block.data.type.SculkSensor$Phase> {
+  public static final org.bukkit.block.data.type.SculkSensor$Phase INACTIVE;
+  public static final org.bukkit.block.data.type.SculkSensor$Phase ACTIVE;
+  public static final org.bukkit.block.data.type.SculkSensor$Phase COOLDOWN;
+  static {};
+  public static org.bukkit.block.data.type.SculkSensor$Phase[] values();
+  public static org.bukkit.block.data.type.SculkSensor$Phase valueOf(java.lang.String);
+}

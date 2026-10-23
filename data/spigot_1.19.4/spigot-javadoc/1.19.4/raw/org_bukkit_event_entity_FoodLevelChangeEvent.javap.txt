@@ -1,0 +1,15 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.entity.FoodLevelChangeEvent extends org.bukkit.event.entity.EntityEvent implements org.bukkit.event.Cancellable {
+  static {};
+  public org.bukkit.event.entity.FoodLevelChangeEvent(org.bukkit.entity.HumanEntity, int);
+  public org.bukkit.event.entity.FoodLevelChangeEvent(org.bukkit.entity.HumanEntity, int, org.bukkit.inventory.ItemStack);
+  public org.bukkit.entity.HumanEntity getEntity();
+  public org.bukkit.inventory.ItemStack getItem();
+  public int getFoodLevel();
+  public void setFoodLevel(int);
+  public boolean isCancelled();
+  public void setCancelled(boolean);
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  public org.bukkit.entity.Entity getEntity();
+}

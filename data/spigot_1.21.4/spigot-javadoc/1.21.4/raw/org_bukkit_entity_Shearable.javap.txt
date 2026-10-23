@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Shearable {
+  public abstract boolean isSheared();
+  public abstract void setSheared(boolean);
+}

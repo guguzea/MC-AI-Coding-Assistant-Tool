@@ -1,0 +1,11 @@
+Compiled from <spigot-api>
+public final class org.bukkit.entity.Parrot$Variant extends java.lang.Enum<org.bukkit.entity.Parrot$Variant> {
+  public static final org.bukkit.entity.Parrot$Variant RED;
+  public static final org.bukkit.entity.Parrot$Variant BLUE;
+  public static final org.bukkit.entity.Parrot$Variant GREEN;
+  public static final org.bukkit.entity.Parrot$Variant CYAN;
+  public static final org.bukkit.entity.Parrot$Variant GRAY;
+  static {};
+  public static org.bukkit.entity.Parrot$Variant[] values();
+  public static org.bukkit.entity.Parrot$Variant valueOf(java.lang.String);
+}

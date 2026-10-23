@@ -1,0 +1,16 @@
+Compiled from <spigot-api>
+public class org.bukkit.material.Skull extends org.bukkit.material.MaterialData implements org.bukkit.material.Directional {
+  public org.bukkit.material.Skull();
+  public org.bukkit.material.Skull(org.bukkit.block.BlockFace);
+  public org.bukkit.material.Skull(int);
+  public org.bukkit.material.Skull(org.bukkit.Material);
+  public org.bukkit.material.Skull(int, byte);
+  public org.bukkit.material.Skull(org.bukkit.Material, byte);
+  public void setFacingDirection(org.bukkit.block.BlockFace);
+  public org.bukkit.block.BlockFace getFacing();
+  public java.lang.String toString();
+  public org.bukkit.material.Skull clone();
+  public org.bukkit.material.MaterialData clone();
+  public java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+  static int[] $SWITCH_TABLE$org$bukkit$block$BlockFace();
+}

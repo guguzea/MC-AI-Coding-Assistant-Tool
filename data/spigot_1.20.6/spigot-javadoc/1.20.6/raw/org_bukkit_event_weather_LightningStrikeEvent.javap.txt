@@ -1,0 +1,12 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.weather.LightningStrikeEvent extends org.bukkit.event.weather.WeatherEvent implements org.bukkit.event.Cancellable {
+  public org.bukkit.event.weather.LightningStrikeEvent(org.bukkit.World, org.bukkit.entity.LightningStrike);
+  public org.bukkit.event.weather.LightningStrikeEvent(org.bukkit.World, org.bukkit.entity.LightningStrike, org.bukkit.event.weather.LightningStrikeEvent$Cause);
+  public boolean isCancelled();
+  public void setCancelled(boolean);
+  public org.bukkit.entity.LightningStrike getLightning();
+  public org.bukkit.event.weather.LightningStrikeEvent$Cause getCause();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  static {};
+}

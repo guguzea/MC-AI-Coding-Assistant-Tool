@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.util.VoxelShape {
+  public abstract java.util.Collection<org.bukkit.util.BoundingBox> getBoundingBoxes();
+  public abstract boolean overlaps(org.bukkit.util.BoundingBox);
+}

@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public interface org.bukkit.scoreboard.Score {
+  public abstract org.bukkit.OfflinePlayer getPlayer();
+  public abstract java.lang.String getEntry();
+  public abstract org.bukkit.scoreboard.Objective getObjective();
+  public abstract int getScore();
+  public abstract void setScore(int);
+  public abstract boolean isScoreSet();
+  public abstract org.bukkit.scoreboard.Scoreboard getScoreboard();
+}

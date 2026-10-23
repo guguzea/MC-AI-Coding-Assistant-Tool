@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.view.BrewingStandView extends org.bukkit.inventory.InventoryView {
+  public abstract org.bukkit.inventory.BrewerInventory getTopInventory();
+  public abstract int getFuelLevel();
+  public abstract int getBrewingTicks();
+  public abstract void setFuelLevel(int) throws java.lang.IllegalArgumentException;
+  public abstract void setBrewingTicks(int) throws java.lang.IllegalArgumentException;
+  public default org.bukkit.inventory.Inventory getTopInventory();
+}

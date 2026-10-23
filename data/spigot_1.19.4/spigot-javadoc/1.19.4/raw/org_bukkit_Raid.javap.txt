@@ -1,0 +1,15 @@
+Compiled from <spigot-api>
+public interface org.bukkit.Raid {
+  public abstract boolean isStarted();
+  public abstract long getActiveTicks();
+  public abstract int getBadOmenLevel();
+  public abstract void setBadOmenLevel(int);
+  public abstract org.bukkit.Location getLocation();
+  public abstract org.bukkit.Raid$RaidStatus getStatus();
+  public abstract int getSpawnedGroups();
+  public abstract int getTotalGroups();
+  public abstract int getTotalWaves();
+  public abstract float getTotalHealth();
+  public abstract java.util.Set<java.util.UUID> getHeroes();
+  public abstract java.util.List<org.bukkit.entity.Raider> getRaiders();
+}

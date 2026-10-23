@@ -1,0 +1,16 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.world.LootGenerateEvent extends org.bukkit.event.world.WorldEvent implements org.bukkit.event.Cancellable {
+  static {};
+  public org.bukkit.event.world.LootGenerateEvent(org.bukkit.World, org.bukkit.entity.Entity, org.bukkit.inventory.InventoryHolder, org.bukkit.loot.LootTable, org.bukkit.loot.LootContext, java.util.List<org.bukkit.inventory.ItemStack>, boolean);
+  public org.bukkit.entity.Entity getEntity();
+  public org.bukkit.inventory.InventoryHolder getInventoryHolder();
+  public org.bukkit.loot.LootTable getLootTable();
+  public org.bukkit.loot.LootContext getLootContext();
+  public void setLoot(java.util.Collection<org.bukkit.inventory.ItemStack>);
+  public java.util.List<org.bukkit.inventory.ItemStack> getLoot();
+  public boolean isPlugin();
+  public void setCancelled(boolean);
+  public boolean isCancelled();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+}

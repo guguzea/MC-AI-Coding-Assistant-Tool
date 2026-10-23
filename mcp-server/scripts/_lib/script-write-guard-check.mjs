@@ -68,6 +68,10 @@ export const SCRIPT_WRITE_GUARD_NON_WRITERS = new Map([
   // `--root`（默认 F:/MC_GAME，**仓库外**沙箱，与 paper-26.3 同级）；唯一进仓库的是运行日志，
   // 它走 `emit`（受 `wantWrite()` 闸门）。依据正则咬住那个 `--root` 解析 —— 落点一旦改到仓库内即再红。
   ["mcp-server/scripts/playtest-paper-server.mjs", /const ROOT = path\.resolve\(opt\("--root"\) \|\| "F:\/MC_GAME"\)/],
+  // Spigot 构件抽取（2026-10-23 加）：`spigot-api` 的 jar 下载到 `temp/spigot-jars/`（gitignored，
+  // 构件不入库）；`data/` 下的 raw/processed/index/meta **全部走 `emit`**，本文件的写盘原语只剩那个下载落点。
+  // 依据正则咬住 `join(REPO, "temp", "spigot-jars"` —— 一旦改落仓库正文即再红。
+  ["mcp-server/scripts/extract-spigot-api-surface.mjs", /join\(REPO, "temp", "spigot-jars", resolved\.name\)/],
   // 2026-09-19 N3 裁定「补投毒」：--selftest 的 8 例夹具（tiny.gz / upstream *.bak / provenance / 假基线）
   // 全部落 OS tmpdir 下一个一次目录，finally 里 rmSync 收掉；门模式与 --measure-zero-member 全程不写盘。
   // 依据正则咬住那个 mkdtemp 前缀 —— 夹具落点一旦改到仓库内，本豁免即失效（重签或改道 write-guard）。

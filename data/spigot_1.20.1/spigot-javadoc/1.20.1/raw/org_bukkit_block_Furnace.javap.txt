@@ -1,0 +1,14 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.Furnace extends org.bukkit.block.Container {
+  public abstract short getBurnTime();
+  public abstract void setBurnTime(short);
+  public abstract short getCookTime();
+  public abstract void setCookTime(short);
+  public abstract int getCookTimeTotal();
+  public abstract void setCookTimeTotal(int);
+  public abstract java.util.Map<org.bukkit.inventory.CookingRecipe<?>, java.lang.Integer> getRecipesUsed();
+  public abstract org.bukkit.inventory.FurnaceInventory getInventory();
+  public abstract org.bukkit.inventory.FurnaceInventory getSnapshotInventory();
+  public default org.bukkit.inventory.Inventory getInventory();
+  public default org.bukkit.inventory.Inventory getSnapshotInventory();
+}

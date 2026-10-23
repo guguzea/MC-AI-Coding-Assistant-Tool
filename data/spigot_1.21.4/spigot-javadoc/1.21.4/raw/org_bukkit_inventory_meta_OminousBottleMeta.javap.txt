@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.meta.OminousBottleMeta extends org.bukkit.inventory.meta.ItemMeta {
+  public abstract boolean hasAmplifier();
+  public abstract int getAmplifier();
+  public abstract void setAmplifier(int);
+  public abstract org.bukkit.inventory.meta.OminousBottleMeta clone();
+  public default org.bukkit.inventory.meta.ItemMeta clone();
+}

@@ -1,0 +1,30 @@
+Compiled from <spigot-api>
+public final class org.bukkit.DyeColor extends java.lang.Enum<org.bukkit.DyeColor> {
+  public static final org.bukkit.DyeColor WHITE;
+  public static final org.bukkit.DyeColor ORANGE;
+  public static final org.bukkit.DyeColor MAGENTA;
+  public static final org.bukkit.DyeColor LIGHT_BLUE;
+  public static final org.bukkit.DyeColor YELLOW;
+  public static final org.bukkit.DyeColor LIME;
+  public static final org.bukkit.DyeColor PINK;
+  public static final org.bukkit.DyeColor GRAY;
+  public static final org.bukkit.DyeColor SILVER;
+  public static final org.bukkit.DyeColor CYAN;
+  public static final org.bukkit.DyeColor PURPLE;
+  public static final org.bukkit.DyeColor BLUE;
+  public static final org.bukkit.DyeColor BROWN;
+  public static final org.bukkit.DyeColor GREEN;
+  public static final org.bukkit.DyeColor RED;
+  public static final org.bukkit.DyeColor BLACK;
+  static {};
+  public byte getWoolData();
+  public byte getDyeData();
+  public org.bukkit.Color getColor();
+  public org.bukkit.Color getFireworkColor();
+  public static org.bukkit.DyeColor getByWoolData(byte);
+  public static org.bukkit.DyeColor getByDyeData(byte);
+  public static org.bukkit.DyeColor getByColor(org.bukkit.Color);
+  public static org.bukkit.DyeColor getByFireworkColor(org.bukkit.Color);
+  public static org.bukkit.DyeColor[] values();
+  public static org.bukkit.DyeColor valueOf(java.lang.String);
+}

@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Firework extends org.bukkit.entity.Projectile {
+  public abstract org.bukkit.inventory.meta.FireworkMeta getFireworkMeta();
+  public abstract void setFireworkMeta(org.bukkit.inventory.meta.FireworkMeta);
+  public abstract void detonate();
+  public abstract boolean isShotAtAngle();
+  public abstract void setShotAtAngle(boolean);
+}

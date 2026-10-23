@@ -116,6 +116,14 @@ const LEDGER_TREES = {
   // `dup: 0` 是**实测**：落盘用「包路径 `/`→`_`」的扁平唯一名（Java 包里有同名类，如 Bukkit 的三个 `Bed`；
   // 嵌套布局会撞 A2 —— 这一条是门在 2026-10-14 抓出来的，已改布局而非改判据）。
   "spigot_stable/spigot-javadoc/stable": { raw: 1396, proc: 1396, identical: 0, contentDiff: 1396, markerOnly: 0, fmOnly: 0, noTwin: 0, dup: 0, dir: 0, dirFenced: 0 },
+  // 2026-10-23：spigot 五个版本档（构件 javap 抽，见 `extract-spigot-api-surface.mjs`）。
+  // raw 是 `raw/<flat>.javap.txt`、processed 是 `<flat>.md` ⇒ 与既有 `spigot_stable` 同形态（**无同名孪生**），
+  // 所以 `noTwin` 等于两侧篇数、`contentDiff` 为 0；逐页 1:1 由 raw↔proc 文件数相等与 meta 计数把着。
+  "spigot_1.12.2/spigot-javadoc/1.12.2": { raw: 779, proc: 779, identical: 0, contentDiff: 0, markerOnly: 0, fmOnly: 0, noTwin: 779, dup: 0, dir: 0, dirFenced: 0 },
+  "spigot_1.16.5/spigot-javadoc/1.16.5": { raw: 1027, proc: 1027, identical: 0, contentDiff: 0, markerOnly: 0, fmOnly: 0, noTwin: 1027, dup: 0, dir: 0, dirFenced: 0 },
+  "spigot_1.20.1/spigot-javadoc/1.20.1": { raw: 1186, proc: 1186, identical: 0, contentDiff: 0, markerOnly: 0, fmOnly: 0, noTwin: 1186, dup: 0, dir: 0, dirFenced: 0 },
+  "spigot_1.21.1/spigot-javadoc/1.21.1": { raw: 1282, proc: 1282, identical: 0, contentDiff: 0, markerOnly: 0, fmOnly: 0, noTwin: 1282, dup: 0, dir: 0, dirFenced: 0 },
+  "spigot_1.21.4/spigot-javadoc/1.21.4": { raw: 1335, proc: 1335, identical: 0, contentDiff: 0, markerOnly: 0, fmOnly: 0, noTwin: 1335, dup: 0, dir: 0, dirFenced: 0 },
   "paper-api_stable/paper-javadoc/stable": { raw: 2116, proc: 2116, identical: 0, contentDiff: 2116, markerOnly: 0, fmOnly: 0, noTwin: 0, dup: 0, dir: 0, dirFenced: 0 },
   // 2026-10-23：paper-api 五个历史档（按真 MC 版本分）。`dup: 0` 实测成立 —— 落盘改成扁平唯一名后，
   // 不同包的同名类不再互相覆盖（首轮按嵌套目录落时 dup=13/38/55/62/65，已定位为生产者 bug 并修）。

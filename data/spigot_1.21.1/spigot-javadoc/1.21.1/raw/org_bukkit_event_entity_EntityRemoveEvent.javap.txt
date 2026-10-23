@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.entity.EntityRemoveEvent extends org.bukkit.event.entity.EntityEvent {
+  public org.bukkit.event.entity.EntityRemoveEvent(org.bukkit.entity.Entity, org.bukkit.event.entity.EntityRemoveEvent$Cause);
+  public org.bukkit.event.entity.EntityRemoveEvent$Cause getCause();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  static {};
+}

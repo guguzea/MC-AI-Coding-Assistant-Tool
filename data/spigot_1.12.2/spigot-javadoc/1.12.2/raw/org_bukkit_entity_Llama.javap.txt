@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Llama extends org.bukkit.entity.ChestedHorse {
+  public abstract org.bukkit.entity.Llama$Color getColor();
+  public abstract void setColor(org.bukkit.entity.Llama$Color);
+  public abstract int getStrength();
+  public abstract void setStrength(int);
+  public abstract org.bukkit.inventory.LlamaInventory getInventory();
+}

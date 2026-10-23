@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public abstract class org.bukkit.event.raid.RaidEvent extends org.bukkit.event.world.WorldEvent {
+  protected org.bukkit.event.raid.RaidEvent(org.bukkit.Raid, org.bukkit.World);
+  public org.bukkit.Raid getRaid();
+}

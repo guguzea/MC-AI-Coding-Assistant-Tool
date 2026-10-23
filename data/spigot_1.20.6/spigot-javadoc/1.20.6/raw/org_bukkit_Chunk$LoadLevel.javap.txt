@@ -1,0 +1,11 @@
+Compiled from <spigot-api>
+public final class org.bukkit.Chunk$LoadLevel extends java.lang.Enum<org.bukkit.Chunk$LoadLevel> {
+  public static final org.bukkit.Chunk$LoadLevel INACCESSIBLE;
+  public static final org.bukkit.Chunk$LoadLevel BORDER;
+  public static final org.bukkit.Chunk$LoadLevel TICKING;
+  public static final org.bukkit.Chunk$LoadLevel ENTITY_TICKING;
+  public static final org.bukkit.Chunk$LoadLevel UNLOADED;
+  public static org.bukkit.Chunk$LoadLevel[] values();
+  public static org.bukkit.Chunk$LoadLevel valueOf(java.lang.String);
+  static {};
+}

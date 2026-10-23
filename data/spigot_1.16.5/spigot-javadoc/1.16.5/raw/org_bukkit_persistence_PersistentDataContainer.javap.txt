@@ -1,0 +1,11 @@
+Compiled from <spigot-api>
+public interface org.bukkit.persistence.PersistentDataContainer {
+  public abstract <T, Z> void set(org.bukkit.NamespacedKey, org.bukkit.persistence.PersistentDataType<T, Z>, Z);
+  public abstract <T, Z> boolean has(org.bukkit.NamespacedKey, org.bukkit.persistence.PersistentDataType<T, Z>);
+  public abstract <T, Z> Z get(org.bukkit.NamespacedKey, org.bukkit.persistence.PersistentDataType<T, Z>);
+  public abstract <T, Z> Z getOrDefault(org.bukkit.NamespacedKey, org.bukkit.persistence.PersistentDataType<T, Z>, Z);
+  public abstract java.util.Set<org.bukkit.NamespacedKey> getKeys();
+  public abstract void remove(org.bukkit.NamespacedKey);
+  public abstract boolean isEmpty();
+  public abstract org.bukkit.persistence.PersistentDataAdapterContext getAdapterContext();
+}

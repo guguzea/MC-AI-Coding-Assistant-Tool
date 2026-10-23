@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public final class org.bukkit.entity.MushroomCow$Variant extends java.lang.Enum<org.bukkit.entity.MushroomCow$Variant> {
+  public static final org.bukkit.entity.MushroomCow$Variant RED;
+  public static final org.bukkit.entity.MushroomCow$Variant BROWN;
+  public static org.bukkit.entity.MushroomCow$Variant[] values();
+  public static org.bukkit.entity.MushroomCow$Variant valueOf(java.lang.String);
+  static {};
+}

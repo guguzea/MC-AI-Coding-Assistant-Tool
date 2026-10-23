@@ -1,0 +1,11 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.block.BlockReceiveGameEvent extends org.bukkit.event.block.BlockEvent implements org.bukkit.event.Cancellable {
+  static {};
+  public org.bukkit.event.block.BlockReceiveGameEvent(org.bukkit.GameEvent, org.bukkit.block.Block, org.bukkit.entity.Entity);
+  public org.bukkit.GameEvent getEvent();
+  public org.bukkit.entity.Entity getEntity();
+  public void setCancelled(boolean);
+  public boolean isCancelled();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+}

@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public interface org.bukkit.loot.Lootable {
+  public abstract void setLootTable(org.bukkit.loot.LootTable);
+  public abstract org.bukkit.loot.LootTable getLootTable();
+  public abstract void setSeed(long);
+  public abstract long getSeed();
+}

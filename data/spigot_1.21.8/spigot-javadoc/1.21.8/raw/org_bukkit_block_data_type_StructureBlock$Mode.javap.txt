@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public final class org.bukkit.block.data.type.StructureBlock$Mode extends java.lang.Enum<org.bukkit.block.data.type.StructureBlock$Mode> {
+  public static final org.bukkit.block.data.type.StructureBlock$Mode SAVE;
+  public static final org.bukkit.block.data.type.StructureBlock$Mode LOAD;
+  public static final org.bukkit.block.data.type.StructureBlock$Mode CORNER;
+  public static final org.bukkit.block.data.type.StructureBlock$Mode DATA;
+  public static org.bukkit.block.data.type.StructureBlock$Mode[] values();
+  public static org.bukkit.block.data.type.StructureBlock$Mode valueOf(java.lang.String);
+  static {};
+}

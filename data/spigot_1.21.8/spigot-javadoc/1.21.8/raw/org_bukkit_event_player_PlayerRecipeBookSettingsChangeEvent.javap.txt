@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.player.PlayerRecipeBookSettingsChangeEvent extends org.bukkit.event.player.PlayerEvent {
+  public org.bukkit.event.player.PlayerRecipeBookSettingsChangeEvent(org.bukkit.entity.Player, org.bukkit.event.player.PlayerRecipeBookSettingsChangeEvent$RecipeBookType, boolean, boolean);
+  public org.bukkit.event.player.PlayerRecipeBookSettingsChangeEvent$RecipeBookType getRecipeBookType();
+  public boolean isOpen();
+  public boolean isFiltering();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  static {};
+}

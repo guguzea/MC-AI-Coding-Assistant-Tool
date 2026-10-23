@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.vehicle.VehicleUpdateEvent extends org.bukkit.event.vehicle.VehicleEvent {
+  static {};
+  public org.bukkit.event.vehicle.VehicleUpdateEvent(org.bukkit.entity.Vehicle);
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+}

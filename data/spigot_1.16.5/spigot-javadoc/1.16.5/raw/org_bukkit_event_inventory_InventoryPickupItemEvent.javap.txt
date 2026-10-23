@@ -1,0 +1,11 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.inventory.InventoryPickupItemEvent extends org.bukkit.event.Event implements org.bukkit.event.Cancellable {
+  static {};
+  public org.bukkit.event.inventory.InventoryPickupItemEvent(org.bukkit.inventory.Inventory, org.bukkit.entity.Item);
+  public org.bukkit.inventory.Inventory getInventory();
+  public org.bukkit.entity.Item getItem();
+  public boolean isCancelled();
+  public void setCancelled(boolean);
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+}

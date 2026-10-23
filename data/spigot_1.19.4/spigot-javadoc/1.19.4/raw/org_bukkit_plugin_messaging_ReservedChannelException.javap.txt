@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public class org.bukkit.plugin.messaging.ReservedChannelException extends java.lang.RuntimeException {
+  public org.bukkit.plugin.messaging.ReservedChannelException();
+  public org.bukkit.plugin.messaging.ReservedChannelException(java.lang.String);
+}

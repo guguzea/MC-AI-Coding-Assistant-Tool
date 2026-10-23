@@ -1,0 +1,19 @@
+Compiled from <spigot-api>
+public class org.bukkit.material.Wood extends org.bukkit.material.MaterialData {
+  protected static final org.bukkit.Material DEFAULT_TYPE;
+  protected static final org.bukkit.TreeSpecies DEFAULT_SPECIES;
+  static {};
+  public org.bukkit.material.Wood();
+  public org.bukkit.material.Wood(org.bukkit.TreeSpecies);
+  public org.bukkit.material.Wood(org.bukkit.Material);
+  public org.bukkit.material.Wood(org.bukkit.Material, org.bukkit.TreeSpecies);
+  public org.bukkit.material.Wood(org.bukkit.Material, byte);
+  public org.bukkit.TreeSpecies getSpecies();
+  public void setSpecies(org.bukkit.TreeSpecies);
+  public java.lang.String toString();
+  public org.bukkit.material.Wood clone();
+  public org.bukkit.material.MaterialData clone();
+  public java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+  static int[] $SWITCH_TABLE$org$bukkit$Material();
+  static int[] $SWITCH_TABLE$org$bukkit$TreeSpecies();
+}

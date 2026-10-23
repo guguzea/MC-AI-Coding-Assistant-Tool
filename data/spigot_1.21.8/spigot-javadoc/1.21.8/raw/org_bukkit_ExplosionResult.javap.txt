@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public final class org.bukkit.ExplosionResult extends java.lang.Enum<org.bukkit.ExplosionResult> {
+  public static final org.bukkit.ExplosionResult KEEP;
+  public static final org.bukkit.ExplosionResult DESTROY;
+  public static final org.bukkit.ExplosionResult DESTROY_WITH_DECAY;
+  public static final org.bukkit.ExplosionResult TRIGGER_BLOCK;
+  public static org.bukkit.ExplosionResult[] values();
+  public static org.bukkit.ExplosionResult valueOf(java.lang.String);
+  static {};
+}

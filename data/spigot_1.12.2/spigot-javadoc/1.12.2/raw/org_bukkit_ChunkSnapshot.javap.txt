@@ -1,0 +1,17 @@
+Compiled from <spigot-api>
+public interface org.bukkit.ChunkSnapshot {
+  public abstract int getX();
+  public abstract int getZ();
+  public abstract java.lang.String getWorldName();
+  public abstract org.bukkit.Material getBlockType(int, int, int);
+  public abstract int getBlockTypeId(int, int, int);
+  public abstract int getBlockData(int, int, int);
+  public abstract int getBlockSkyLight(int, int, int);
+  public abstract int getBlockEmittedLight(int, int, int);
+  public abstract int getHighestBlockYAt(int, int);
+  public abstract org.bukkit.block.Biome getBiome(int, int);
+  public abstract double getRawBiomeTemperature(int, int);
+  public abstract double getRawBiomeRainfall(int, int);
+  public abstract long getCaptureFullTime();
+  public abstract boolean isSectionEmpty(int);
+}

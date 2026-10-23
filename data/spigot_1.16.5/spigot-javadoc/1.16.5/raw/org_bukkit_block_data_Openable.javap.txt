@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.data.Openable extends org.bukkit.block.data.BlockData {
+  public abstract boolean isOpen();
+  public abstract void setOpen(boolean);
+}

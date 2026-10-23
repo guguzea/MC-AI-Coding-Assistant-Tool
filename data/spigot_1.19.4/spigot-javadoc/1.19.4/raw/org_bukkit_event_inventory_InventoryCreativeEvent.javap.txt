@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.inventory.InventoryCreativeEvent extends org.bukkit.event.inventory.InventoryClickEvent {
+  public org.bukkit.event.inventory.InventoryCreativeEvent(org.bukkit.inventory.InventoryView, org.bukkit.event.inventory.InventoryType$SlotType, int, org.bukkit.inventory.ItemStack);
+  public org.bukkit.inventory.ItemStack getCursor();
+  public void setCursor(org.bukkit.inventory.ItemStack);
+}

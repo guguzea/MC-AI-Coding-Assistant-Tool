@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public interface org.bukkit.packs.DataPackManager {
+  public abstract java.util.Collection<org.bukkit.packs.DataPack> getDataPacks();
+  public abstract org.bukkit.packs.DataPack getDataPack(org.bukkit.NamespacedKey);
+  public abstract java.util.Collection<org.bukkit.packs.DataPack> getEnabledDataPacks(org.bukkit.World);
+  public abstract java.util.Collection<org.bukkit.packs.DataPack> getDisabledDataPacks(org.bukkit.World);
+  public abstract boolean isEnabledByFeature(org.bukkit.Material, org.bukkit.World);
+  public abstract boolean isEnabledByFeature(org.bukkit.entity.EntityType, org.bukkit.World);
+}

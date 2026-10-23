@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.server.ServerLoadEvent extends org.bukkit.event.server.ServerEvent {
+  public org.bukkit.event.server.ServerLoadEvent(org.bukkit.event.server.ServerLoadEvent$LoadType);
+  public org.bukkit.event.server.ServerLoadEvent$LoadType getType();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  static {};
+}

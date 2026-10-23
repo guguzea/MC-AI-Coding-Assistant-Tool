@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.BlockDisplay extends org.bukkit.entity.Display {
+  public abstract org.bukkit.block.data.BlockData getBlock();
+  public abstract void setBlock(org.bukkit.block.data.BlockData);
+}

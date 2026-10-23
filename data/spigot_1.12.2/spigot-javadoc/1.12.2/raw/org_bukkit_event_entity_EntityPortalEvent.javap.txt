@@ -1,0 +1,13 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.entity.EntityPortalEvent extends org.bukkit.event.entity.EntityTeleportEvent {
+  protected boolean useTravelAgent;
+  protected org.bukkit.TravelAgent travelAgent;
+  static {};
+  public org.bukkit.event.entity.EntityPortalEvent(org.bukkit.entity.Entity, org.bukkit.Location, org.bukkit.Location, org.bukkit.TravelAgent);
+  public void useTravelAgent(boolean);
+  public boolean useTravelAgent();
+  public org.bukkit.TravelAgent getPortalTravelAgent();
+  public void setPortalTravelAgent(org.bukkit.TravelAgent);
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+}

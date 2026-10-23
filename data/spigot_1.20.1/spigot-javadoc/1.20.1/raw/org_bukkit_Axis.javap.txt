@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public final class org.bukkit.Axis extends java.lang.Enum<org.bukkit.Axis> {
+  public static final org.bukkit.Axis X;
+  public static final org.bukkit.Axis Y;
+  public static final org.bukkit.Axis Z;
+  static {};
+  public static org.bukkit.Axis[] values();
+  public static org.bukkit.Axis valueOf(java.lang.String);
+}

@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.data.type.RespawnAnchor extends org.bukkit.block.data.BlockData {
+  public abstract int getCharges();
+  public abstract void setCharges(int);
+  public abstract int getMaximumCharges();
+}

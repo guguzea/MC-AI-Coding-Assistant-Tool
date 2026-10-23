@@ -1,0 +1,11 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.inventory.PrepareAnvilEvent extends org.bukkit.event.inventory.PrepareInventoryResultEvent {
+  public org.bukkit.event.inventory.PrepareAnvilEvent(org.bukkit.inventory.view.AnvilView, org.bukkit.inventory.ItemStack);
+  public org.bukkit.inventory.AnvilInventory getInventory();
+  public org.bukkit.inventory.view.AnvilView getView();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  public org.bukkit.inventory.InventoryView getView();
+  public org.bukkit.inventory.Inventory getInventory();
+  static {};
+}

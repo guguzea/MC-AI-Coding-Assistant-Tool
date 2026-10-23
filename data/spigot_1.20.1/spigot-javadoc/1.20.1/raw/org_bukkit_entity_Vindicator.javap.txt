@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Vindicator extends org.bukkit.entity.Illager {
+  public abstract boolean isJohnny();
+  public abstract void setJohnny(boolean);
+}

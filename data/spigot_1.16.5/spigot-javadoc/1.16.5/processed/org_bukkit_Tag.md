@@ -1,0 +1,114 @@
+---
+title: "org.bukkit.Tag"
+package: "org.bukkit"
+source: https://repo.papermc.io/repository/maven-public/org/spigotmc/spigot-api/1.16.5-R0.1-SNAPSHOT/spigot-api-1.16.5-R0.1-20210611.041013-99.jar
+sourceType: javap
+fetchedWith: extract-spigot-api-surface.mjs@1
+fetchedAt: 2026-10-23T15:34:22.101Z
+asOfVersion: "1.16.5-R0.1-SNAPSHOT"
+jarMd5: "f6f72446ce3adfc1c820a97d7fa56c8c"
+---
+
+- `public interface org.bukkit.Tag<T extends org.bukkit.Keyed> extends org.bukkit.Keyed`
+- `public static final java.lang.String REGISTRY_BLOCKS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> WOOL`
+- `public static final org.bukkit.Tag<org.bukkit.Material> PLANKS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> STONE_BRICKS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> WOODEN_BUTTONS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> BUTTONS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> CARPETS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> WOODEN_DOORS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> WOODEN_STAIRS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> WOODEN_SLABS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> WOODEN_FENCES`
+- `public static final org.bukkit.Tag<org.bukkit.Material> PRESSURE_PLATES`
+- `public static final org.bukkit.Tag<org.bukkit.Material> WOODEN_PRESSURE_PLATES`
+- `public static final org.bukkit.Tag<org.bukkit.Material> STONE_PRESSURE_PLATES`
+- `public static final org.bukkit.Tag<org.bukkit.Material> WOODEN_TRAPDOORS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> DOORS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> SAPLINGS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> LOGS_THAT_BURN`
+- `public static final org.bukkit.Tag<org.bukkit.Material> LOGS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> DARK_OAK_LOGS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> OAK_LOGS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> BIRCH_LOGS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> ACACIA_LOGS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> JUNGLE_LOGS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> SPRUCE_LOGS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> CRIMSON_STEMS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> WARPED_STEMS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> BANNERS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> SAND`
+- `public static final org.bukkit.Tag<org.bukkit.Material> STAIRS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> SLABS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> WALLS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> ANVIL`
+- `public static final org.bukkit.Tag<org.bukkit.Material> RAILS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> LEAVES`
+- `public static final org.bukkit.Tag<org.bukkit.Material> TRAPDOORS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> FLOWER_POTS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> SMALL_FLOWERS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> BEDS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> FENCES`
+- `public static final org.bukkit.Tag<org.bukkit.Material> TALL_FLOWERS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> FLOWERS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> PIGLIN_REPELLENTS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> GOLD_ORES`
+- `public static final org.bukkit.Tag<org.bukkit.Material> NON_FLAMMABLE_WOOD`
+- `public static final org.bukkit.Tag<org.bukkit.Material> ENDERMAN_HOLDABLE`
+- `public static final org.bukkit.Tag<org.bukkit.Material> ICE`
+- `public static final org.bukkit.Tag<org.bukkit.Material> VALID_SPAWN`
+- `public static final org.bukkit.Tag<org.bukkit.Material> IMPERMEABLE`
+- `public static final org.bukkit.Tag<org.bukkit.Material> UNDERWATER_BONEMEALS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> CORAL_BLOCKS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> WALL_CORALS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> CORAL_PLANTS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> CORALS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> BAMBOO_PLANTABLE_ON`
+- `public static final org.bukkit.Tag<org.bukkit.Material> STANDING_SIGNS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> WALL_SIGNS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> SIGNS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> DRAGON_IMMUNE`
+- `public static final org.bukkit.Tag<org.bukkit.Material> WITHER_IMMUNE`
+- `public static final org.bukkit.Tag<org.bukkit.Material> WITHER_SUMMON_BASE_BLOCKS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> BEEHIVES`
+- `public static final org.bukkit.Tag<org.bukkit.Material> CROPS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> BEE_GROWABLES`
+- `public static final org.bukkit.Tag<org.bukkit.Material> PORTALS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> FIRE`
+- `public static final org.bukkit.Tag<org.bukkit.Material> NYLIUM`
+- `public static final org.bukkit.Tag<org.bukkit.Material> WART_BLOCKS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> BEACON_BASE_BLOCKS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> SOUL_SPEED_BLOCKS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> WALL_POST_OVERRIDE`
+- `public static final org.bukkit.Tag<org.bukkit.Material> CLIMBABLE`
+- `public static final org.bukkit.Tag<org.bukkit.Material> SHULKER_BOXES`
+- `public static final org.bukkit.Tag<org.bukkit.Material> HOGLIN_REPELLENTS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> SOUL_FIRE_BASE_BLOCKS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> STRIDER_WARM_BLOCKS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> CAMPFIRES`
+- `public static final org.bukkit.Tag<org.bukkit.Material> GUARDED_BY_PIGLINS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> PREVENT_MOB_SPAWNING_INSIDE`
+- `public static final org.bukkit.Tag<org.bukkit.Material> FENCE_GATES`
+- `public static final org.bukkit.Tag<org.bukkit.Material> UNSTABLE_BOTTOM_CENTER`
+- `public static final org.bukkit.Tag<org.bukkit.Material> INFINIBURN_OVERWORLD`
+- `public static final org.bukkit.Tag<org.bukkit.Material> INFINIBURN_NETHER`
+- `public static final org.bukkit.Tag<org.bukkit.Material> INFINIBURN_END`
+- `public static final java.lang.String REGISTRY_ITEMS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> ITEMS_PIGLIN_LOVED`
+- `public static final org.bukkit.Tag<org.bukkit.Material> ITEMS_BANNERS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> ITEMS_BOATS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> ITEMS_FISHES`
+- `public static final org.bukkit.Tag<org.bukkit.Material> ITEMS_MUSIC_DISCS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> ITEMS_CREEPER_DROP_MUSIC_DISCS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> ITEMS_COALS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> ITEMS_ARROWS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> ITEMS_LECTERN_BOOKS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> ITEMS_BEACON_PAYMENT_ITEMS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> ITEMS_STONE_TOOL_MATERIALS`
+- `public static final org.bukkit.Tag<org.bukkit.Material> ITEMS_FURNACE_MATERIALS`
+- `public static final java.lang.String REGISTRY_FLUIDS`
+- `public static final org.bukkit.Tag<org.bukkit.Fluid> FLUIDS_LAVA`
+- `public static final org.bukkit.Tag<org.bukkit.Fluid> FLUIDS_WATER`
+- `public abstract boolean isTagged(T)`
+- `public abstract java.util.Set<T> getValues()`

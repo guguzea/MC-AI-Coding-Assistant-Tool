@@ -1,0 +1,12 @@
+Compiled from <spigot-api>
+public final class org.bukkit.block.data.type.TrialSpawner$State extends java.lang.Enum<org.bukkit.block.data.type.TrialSpawner$State> {
+  public static final org.bukkit.block.data.type.TrialSpawner$State INACTIVE;
+  public static final org.bukkit.block.data.type.TrialSpawner$State WAITING_FOR_PLAYERS;
+  public static final org.bukkit.block.data.type.TrialSpawner$State ACTIVE;
+  public static final org.bukkit.block.data.type.TrialSpawner$State WAITING_FOR_REWARD_EJECTION;
+  public static final org.bukkit.block.data.type.TrialSpawner$State EJECTING_REWARD;
+  public static final org.bukkit.block.data.type.TrialSpawner$State COOLDOWN;
+  public static org.bukkit.block.data.type.TrialSpawner$State[] values();
+  public static org.bukkit.block.data.type.TrialSpawner$State valueOf(java.lang.String);
+  static {};
+}

@@ -1,0 +1,13 @@
+Compiled from <spigot-api>
+public class org.bukkit.material.PistonExtensionMaterial extends org.bukkit.material.MaterialData implements org.bukkit.material.Attachable {
+  public org.bukkit.material.PistonExtensionMaterial(org.bukkit.Material);
+  public org.bukkit.material.PistonExtensionMaterial(org.bukkit.Material, byte);
+  public void setFacingDirection(org.bukkit.block.BlockFace);
+  public org.bukkit.block.BlockFace getFacing();
+  public boolean isSticky();
+  public void setSticky(boolean);
+  public org.bukkit.block.BlockFace getAttachedFace();
+  public org.bukkit.material.PistonExtensionMaterial clone();
+  public org.bukkit.material.MaterialData clone();
+  public java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+}

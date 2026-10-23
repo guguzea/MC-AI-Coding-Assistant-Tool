@@ -1,0 +1,14 @@
+Compiled from <spigot-api>
+public interface org.bukkit.OfflinePlayer extends org.bukkit.permissions.ServerOperator,org.bukkit.entity.AnimalTamer,org.bukkit.configuration.serialization.ConfigurationSerializable {
+  public abstract boolean isOnline();
+  public abstract java.lang.String getName();
+  public abstract java.util.UUID getUniqueId();
+  public abstract boolean isBanned();
+  public abstract boolean isWhitelisted();
+  public abstract void setWhitelisted(boolean);
+  public abstract org.bukkit.entity.Player getPlayer();
+  public abstract long getFirstPlayed();
+  public abstract long getLastPlayed();
+  public abstract boolean hasPlayedBefore();
+  public abstract org.bukkit.Location getBedSpawnLocation();
+}

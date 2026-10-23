@@ -1,0 +1,25 @@
+Compiled from <spigot-api>
+public final class org.bukkit.scoreboard.DisplaySlot extends java.lang.Enum<org.bukkit.scoreboard.DisplaySlot> {
+  public static final org.bukkit.scoreboard.DisplaySlot BELOW_NAME;
+  public static final org.bukkit.scoreboard.DisplaySlot PLAYER_LIST;
+  public static final org.bukkit.scoreboard.DisplaySlot SIDEBAR;
+  public static final org.bukkit.scoreboard.DisplaySlot SIDEBAR_BLACK;
+  public static final org.bukkit.scoreboard.DisplaySlot SIDEBAR_DARK_BLUE;
+  public static final org.bukkit.scoreboard.DisplaySlot SIDEBAR_DARK_GREEN;
+  public static final org.bukkit.scoreboard.DisplaySlot SIDEBAR_DARK_AQUA;
+  public static final org.bukkit.scoreboard.DisplaySlot SIDEBAR_DARK_RED;
+  public static final org.bukkit.scoreboard.DisplaySlot SIDEBAR_DARK_PURPLE;
+  public static final org.bukkit.scoreboard.DisplaySlot SIDEBAR_GOLD;
+  public static final org.bukkit.scoreboard.DisplaySlot SIDEBAR_GRAY;
+  public static final org.bukkit.scoreboard.DisplaySlot SIDEBAR_DARK_GRAY;
+  public static final org.bukkit.scoreboard.DisplaySlot SIDEBAR_BLUE;
+  public static final org.bukkit.scoreboard.DisplaySlot SIDEBAR_GREEN;
+  public static final org.bukkit.scoreboard.DisplaySlot SIDEBAR_AQUA;
+  public static final org.bukkit.scoreboard.DisplaySlot SIDEBAR_RED;
+  public static final org.bukkit.scoreboard.DisplaySlot SIDEBAR_LIGHT_PURPLE;
+  public static final org.bukkit.scoreboard.DisplaySlot SIDEBAR_YELLOW;
+  public static final org.bukkit.scoreboard.DisplaySlot SIDEBAR_WHITE;
+  static {};
+  public static org.bukkit.scoreboard.DisplaySlot[] values();
+  public static org.bukkit.scoreboard.DisplaySlot valueOf(java.lang.String);
+}

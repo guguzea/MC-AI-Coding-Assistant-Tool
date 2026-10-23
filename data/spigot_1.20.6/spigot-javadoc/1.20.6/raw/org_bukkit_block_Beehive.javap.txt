@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.Beehive extends org.bukkit.block.EntityBlockStorage<org.bukkit.entity.Bee> {
+  public abstract org.bukkit.Location getFlower();
+  public abstract void setFlower(org.bukkit.Location);
+  public abstract boolean isSedated();
+}

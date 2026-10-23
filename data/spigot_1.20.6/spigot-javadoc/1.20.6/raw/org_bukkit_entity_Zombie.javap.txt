@@ -1,0 +1,14 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Zombie extends org.bukkit.entity.Monster,org.bukkit.entity.Ageable {
+  public abstract boolean isBaby();
+  public abstract void setBaby(boolean);
+  public abstract boolean isVillager();
+  public abstract void setVillager(boolean);
+  public abstract void setVillagerProfession(org.bukkit.entity.Villager$Profession);
+  public abstract org.bukkit.entity.Villager$Profession getVillagerProfession();
+  public abstract boolean isConverting();
+  public abstract int getConversionTime();
+  public abstract void setConversionTime(int);
+  public abstract boolean canBreakDoors();
+  public abstract void setCanBreakDoors(boolean);
+}

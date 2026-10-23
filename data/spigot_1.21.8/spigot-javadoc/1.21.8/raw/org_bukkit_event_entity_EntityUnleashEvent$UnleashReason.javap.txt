@@ -1,0 +1,12 @@
+Compiled from <spigot-api>
+public final class org.bukkit.event.entity.EntityUnleashEvent$UnleashReason extends java.lang.Enum<org.bukkit.event.entity.EntityUnleashEvent$UnleashReason> {
+  public static final org.bukkit.event.entity.EntityUnleashEvent$UnleashReason HOLDER_GONE;
+  public static final org.bukkit.event.entity.EntityUnleashEvent$UnleashReason PLAYER_UNLEASH;
+  public static final org.bukkit.event.entity.EntityUnleashEvent$UnleashReason DISTANCE;
+  public static final org.bukkit.event.entity.EntityUnleashEvent$UnleashReason SHEAR;
+  public static final org.bukkit.event.entity.EntityUnleashEvent$UnleashReason FIREWORK;
+  public static final org.bukkit.event.entity.EntityUnleashEvent$UnleashReason UNKNOWN;
+  public static org.bukkit.event.entity.EntityUnleashEvent$UnleashReason[] values();
+  public static org.bukkit.event.entity.EntityUnleashEvent$UnleashReason valueOf(java.lang.String);
+  static {};
+}

@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public class org.bukkit.Particle$DustOptions {
+  public org.bukkit.Particle$DustOptions(org.bukkit.Color, float);
+  public org.bukkit.Color getColor();
+  public float getSize();
+}

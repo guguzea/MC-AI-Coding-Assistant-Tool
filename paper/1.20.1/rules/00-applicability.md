@@ -80,8 +80,9 @@
 
 ## 未核实（明写，别当已核）
 
-- **没有**在 Paper 1.20.1 上真机跑过任何插件（本档零真机；26.3 档的 JDK/classpath/api-version 实测结论不自动继承）。
-- **没有**逐方法比对成员签名（只核「这个方法名还在不在」，不核参数表是否变化）。
+- **已做**：真机起过 Paper 1.20.1（见下节），验到「插件被加载并启用」「`BukkitRunnable#runTaskLater` 回调」「控制台命令注册并派发」。
+- **只对探针用到的那 6 组 API 做了参数级验证**（编译通过 + 运行期调用成功）：`JavaPlugin#onEnable/getLogger`、`PluginManager#registerEvents/addPermission`、`@EventHandler(priority, ignoreCancelled)`、`BukkitRunnable#runTaskLater`、`Command#setExecutor`、`Permission/PermissionDefault`。**其余成员仍只核了「名字在不在」，没逐方法比对参数表。**
+- **`PlayerJoinEvent` 的派发未验**：注册了（`registerEvents` 无异常），但没有真客户端连进来触发过。
 - 教程面指针（25 处）指向的是**当前文档**，其正文可能已按新版改写，未按 1.20.1 复核。
 - 「纯类型声明页」118 篇是上游页面本身没有成员签名（注解/嵌套 record/纯继承接口），不是抓取失败；但也意味着这些类的成员本档没有证据。
 

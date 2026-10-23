@@ -67,7 +67,11 @@ export const KNOWN_VERSIONS: Record<Platform, string[]> = {
   // 落 `data/paper_stable/paper-docs/stable/`（`resolvePlatformDataDir` 按 `paper_<v>` 拼目录）。
   paper: ["stable"],
   // 签名面伪版本（同 bedrock 的 `stable` 先例）。上游真实版本串见各页 frontmatter 的 `asOfVersion`。
-  spigot: ["stable"],
+  // `stable` = 当前 javadoc 那档（`spigot_stable/spigot-javadoc/stable/`，1396 类）；
+  // 其后是**按真 MC 版本**分的档（2026-10-23 加）。上游 javadoc 无版本轴（`/javadocs/spigot/1.21.4/` 实测 404），
+  // 所以版本档的签名逐字来自 maven 构件 `org.spigotmc:spigot-api:<ver>-R0.1-SNAPSHOT` 的 javap，
+  // 每页 frontmatter 写 `sourceType: javap`、`meta.json` 写 `faceKind: signature-face-from-artifact`。
+  spigot: ["stable", "1.21.8", "1.21.4", "1.21.1", "1.20.6", "1.20.1", "1.19.4", "1.16.5", "1.12.2"],
   // Paper 签名层：`stable` = 当前档（目录 `data/paper-api_stable/paper-javadoc/stable/`）；
   // 其后是**按真 MC 版本**分的历史档（2026-10-23 加，用户点名：1.21.4 / 1.21.1 / 1.20.1 / 1.16.5 / 1.12.2）。
   // 顺序不影响精确匹配（`--version=1.21.4` 直接命中同名目录），只影响"不指定版本时先找哪个" ⇒ 当前档在前。

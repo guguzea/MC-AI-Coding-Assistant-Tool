@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public class org.bukkit.metadata.FixedMetadataValue extends org.bukkit.metadata.LazyMetadataValue {
+  public org.bukkit.metadata.FixedMetadataValue(org.bukkit.plugin.Plugin, java.lang.Object);
+  public void invalidate();
+  public java.lang.Object value();
+}

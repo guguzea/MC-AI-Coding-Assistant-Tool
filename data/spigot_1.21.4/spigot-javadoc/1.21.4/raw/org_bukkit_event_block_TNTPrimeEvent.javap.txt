@@ -1,0 +1,12 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.block.TNTPrimeEvent extends org.bukkit.event.block.BlockEvent implements org.bukkit.event.Cancellable {
+  public org.bukkit.event.block.TNTPrimeEvent(org.bukkit.block.Block, org.bukkit.event.block.TNTPrimeEvent$PrimeCause, org.bukkit.entity.Entity, org.bukkit.block.Block);
+  public boolean isCancelled();
+  public void setCancelled(boolean);
+  public org.bukkit.event.block.TNTPrimeEvent$PrimeCause getCause();
+  public org.bukkit.entity.Entity getPrimingEntity();
+  public org.bukkit.block.Block getPrimingBlock();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  static {};
+}

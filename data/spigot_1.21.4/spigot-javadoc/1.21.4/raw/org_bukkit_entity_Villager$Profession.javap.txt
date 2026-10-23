@@ -1,0 +1,22 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Villager$Profession extends org.bukkit.util.OldEnum<org.bukkit.entity.Villager$Profession>, org.bukkit.Keyed, org.bukkit.registry.RegistryAware {
+  public static final org.bukkit.entity.Villager$Profession NONE;
+  public static final org.bukkit.entity.Villager$Profession ARMORER;
+  public static final org.bukkit.entity.Villager$Profession BUTCHER;
+  public static final org.bukkit.entity.Villager$Profession CARTOGRAPHER;
+  public static final org.bukkit.entity.Villager$Profession CLERIC;
+  public static final org.bukkit.entity.Villager$Profession FARMER;
+  public static final org.bukkit.entity.Villager$Profession FISHERMAN;
+  public static final org.bukkit.entity.Villager$Profession FLETCHER;
+  public static final org.bukkit.entity.Villager$Profession LEATHERWORKER;
+  public static final org.bukkit.entity.Villager$Profession LIBRARIAN;
+  public static final org.bukkit.entity.Villager$Profession MASON;
+  public static final org.bukkit.entity.Villager$Profession NITWIT;
+  public static final org.bukkit.entity.Villager$Profession SHEPHERD;
+  public static final org.bukkit.entity.Villager$Profession TOOLSMITH;
+  public static final org.bukkit.entity.Villager$Profession WEAPONSMITH;
+  public abstract org.bukkit.NamespacedKey getKey();
+  public static org.bukkit.entity.Villager$Profession valueOf(java.lang.String);
+  public static org.bukkit.entity.Villager$Profession[] values();
+  static {};
+}

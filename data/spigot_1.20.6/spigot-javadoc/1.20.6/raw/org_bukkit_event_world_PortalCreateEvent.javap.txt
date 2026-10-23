@@ -1,0 +1,13 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.world.PortalCreateEvent extends org.bukkit.event.world.WorldEvent implements org.bukkit.event.Cancellable {
+  public org.bukkit.event.world.PortalCreateEvent(java.util.List<org.bukkit.block.BlockState>, org.bukkit.World, org.bukkit.event.world.PortalCreateEvent$CreateReason);
+  public org.bukkit.event.world.PortalCreateEvent(java.util.List<org.bukkit.block.BlockState>, org.bukkit.World, org.bukkit.entity.Entity, org.bukkit.event.world.PortalCreateEvent$CreateReason);
+  public java.util.List<org.bukkit.block.BlockState> getBlocks();
+  public org.bukkit.entity.Entity getEntity();
+  public boolean isCancelled();
+  public void setCancelled(boolean);
+  public org.bukkit.event.world.PortalCreateEvent$CreateReason getReason();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  static {};
+}

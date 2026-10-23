@@ -1,0 +1,11 @@
+Compiled from <spigot-api>
+public final class org.bukkit.boss.BarStyle extends java.lang.Enum<org.bukkit.boss.BarStyle> {
+  public static final org.bukkit.boss.BarStyle SOLID;
+  public static final org.bukkit.boss.BarStyle SEGMENTED_6;
+  public static final org.bukkit.boss.BarStyle SEGMENTED_10;
+  public static final org.bukkit.boss.BarStyle SEGMENTED_12;
+  public static final org.bukkit.boss.BarStyle SEGMENTED_20;
+  public static org.bukkit.boss.BarStyle[] values();
+  public static org.bukkit.boss.BarStyle valueOf(java.lang.String);
+  static {};
+}

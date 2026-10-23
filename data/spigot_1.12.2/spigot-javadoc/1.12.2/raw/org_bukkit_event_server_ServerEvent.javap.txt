@@ -1,0 +1,4 @@
+Compiled from <spigot-api>
+public abstract class org.bukkit.event.server.ServerEvent extends org.bukkit.event.Event {
+  public org.bukkit.event.server.ServerEvent();
+}

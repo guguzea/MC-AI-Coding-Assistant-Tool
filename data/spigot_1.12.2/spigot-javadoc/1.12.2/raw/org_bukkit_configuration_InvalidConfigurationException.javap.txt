@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public class org.bukkit.configuration.InvalidConfigurationException extends java.lang.Exception {
+  public org.bukkit.configuration.InvalidConfigurationException();
+  public org.bukkit.configuration.InvalidConfigurationException(java.lang.String);
+  public org.bukkit.configuration.InvalidConfigurationException(java.lang.Throwable);
+  public org.bukkit.configuration.InvalidConfigurationException(java.lang.String, java.lang.Throwable);
+}

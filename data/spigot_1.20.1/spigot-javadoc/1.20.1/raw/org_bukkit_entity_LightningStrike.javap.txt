@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.LightningStrike extends org.bukkit.entity.Entity {
+  public abstract boolean isEffect();
+  public abstract org.bukkit.entity.LightningStrike$Spigot spigot();
+  public default org.bukkit.command.CommandSender$Spigot spigot();
+  public default org.bukkit.entity.Entity$Spigot spigot();
+}

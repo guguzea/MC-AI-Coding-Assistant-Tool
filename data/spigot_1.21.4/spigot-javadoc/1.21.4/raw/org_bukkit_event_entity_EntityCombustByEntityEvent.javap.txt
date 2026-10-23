@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.entity.EntityCombustByEntityEvent extends org.bukkit.event.entity.EntityCombustEvent {
+  public org.bukkit.event.entity.EntityCombustByEntityEvent(org.bukkit.entity.Entity, org.bukkit.entity.Entity, int);
+  public org.bukkit.event.entity.EntityCombustByEntityEvent(org.bukkit.entity.Entity, org.bukkit.entity.Entity, float);
+  public org.bukkit.entity.Entity getCombuster();
+}

@@ -1,0 +1,13 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Creeper extends org.bukkit.entity.Monster {
+  public abstract boolean isPowered();
+  public abstract void setPowered(boolean);
+  public abstract void setMaxFuseTicks(int);
+  public abstract int getMaxFuseTicks();
+  public abstract void setFuseTicks(int);
+  public abstract int getFuseTicks();
+  public abstract void setExplosionRadius(int);
+  public abstract int getExplosionRadius();
+  public abstract void explode();
+  public abstract void ignite();
+}

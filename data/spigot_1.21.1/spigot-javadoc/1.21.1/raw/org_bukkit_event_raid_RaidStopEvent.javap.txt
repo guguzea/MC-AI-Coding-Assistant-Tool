@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.raid.RaidStopEvent extends org.bukkit.event.raid.RaidEvent {
+  public org.bukkit.event.raid.RaidStopEvent(org.bukkit.Raid, org.bukkit.World, org.bukkit.event.raid.RaidStopEvent$Reason);
+  public org.bukkit.event.raid.RaidStopEvent$Reason getReason();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  static {};
+}

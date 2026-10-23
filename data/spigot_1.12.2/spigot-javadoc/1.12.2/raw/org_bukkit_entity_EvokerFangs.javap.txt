@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.EvokerFangs extends org.bukkit.entity.Entity {
+  public abstract org.bukkit.entity.LivingEntity getOwner();
+  public abstract void setOwner(org.bukkit.entity.LivingEntity);
+}

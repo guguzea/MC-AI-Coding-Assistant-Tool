@@ -1,0 +1,11 @@
+Compiled from <spigot-api>
+public final class org.bukkit.entity.Axolotl$Variant extends java.lang.Enum<org.bukkit.entity.Axolotl$Variant> {
+  public static final org.bukkit.entity.Axolotl$Variant LUCY;
+  public static final org.bukkit.entity.Axolotl$Variant WILD;
+  public static final org.bukkit.entity.Axolotl$Variant GOLD;
+  public static final org.bukkit.entity.Axolotl$Variant CYAN;
+  public static final org.bukkit.entity.Axolotl$Variant BLUE;
+  public static org.bukkit.entity.Axolotl$Variant[] values();
+  public static org.bukkit.entity.Axolotl$Variant valueOf(java.lang.String);
+  static {};
+}

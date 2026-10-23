@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.data.type.Repeater extends org.bukkit.block.data.Directional,org.bukkit.block.data.Powerable {
+  public abstract int getDelay();
+  public abstract void setDelay(int);
+  public abstract int getMinimumDelay();
+  public abstract int getMaximumDelay();
+  public abstract boolean isLocked();
+  public abstract void setLocked(boolean);
+}

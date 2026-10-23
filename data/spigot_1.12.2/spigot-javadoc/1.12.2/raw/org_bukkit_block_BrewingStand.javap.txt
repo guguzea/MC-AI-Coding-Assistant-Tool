@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.BrewingStand extends org.bukkit.block.Container,org.bukkit.Nameable {
+  public abstract int getBrewingTime();
+  public abstract void setBrewingTime(int);
+  public abstract int getFuelLevel();
+  public abstract void setFuelLevel(int);
+  public abstract org.bukkit.inventory.BrewerInventory getInventory();
+  public abstract org.bukkit.inventory.BrewerInventory getSnapshotInventory();
+}

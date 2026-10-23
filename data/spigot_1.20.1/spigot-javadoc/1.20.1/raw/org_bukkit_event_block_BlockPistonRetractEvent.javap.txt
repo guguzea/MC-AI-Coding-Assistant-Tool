@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.block.BlockPistonRetractEvent extends org.bukkit.event.block.BlockPistonEvent {
+  static {};
+  public org.bukkit.event.block.BlockPistonRetractEvent(org.bukkit.block.Block, java.util.List<org.bukkit.block.Block>, org.bukkit.block.BlockFace);
+  public org.bukkit.Location getRetractLocation();
+  public java.util.List<org.bukkit.block.Block> getBlocks();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+}

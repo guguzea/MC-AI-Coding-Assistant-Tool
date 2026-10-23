@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public abstract class org.bukkit.event.block.BlockPistonEvent extends org.bukkit.event.block.BlockEvent implements org.bukkit.event.Cancellable {
+  public org.bukkit.event.block.BlockPistonEvent(org.bukkit.block.Block, org.bukkit.block.BlockFace);
+  public boolean isCancelled();
+  public void setCancelled(boolean);
+  public boolean isSticky();
+  public org.bukkit.block.BlockFace getDirection();
+}

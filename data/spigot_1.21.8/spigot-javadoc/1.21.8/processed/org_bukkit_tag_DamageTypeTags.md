@@ -1,0 +1,47 @@
+---
+title: "org.bukkit.tag.DamageTypeTags"
+package: "org.bukkit.tag"
+source: https://repo.papermc.io/repository/maven-public/org/spigotmc/spigot-api/1.21.8-R0.1-SNAPSHOT/spigot-api-1.21.8-R0.1-20250930.150928-11.jar
+sourceType: javap
+fetchedWith: extract-spigot-api-surface.mjs@1
+fetchedAt: 2026-10-23T15:58:53.605Z
+asOfVersion: "1.21.8-R0.1-SNAPSHOT"
+jarMd5: "b5fa33feaafaaf08dccdb2999aeff20e"
+---
+
+- `public final class org.bukkit.tag.DamageTypeTags`
+- `public static final org.bukkit.Tag<org.bukkit.damage.DamageType> DAMAGES_HELMET`
+- `public static final org.bukkit.Tag<org.bukkit.damage.DamageType> BYPASSES_ARMOR`
+- `public static final org.bukkit.Tag<org.bukkit.damage.DamageType> BYPASSES_SHIELD`
+- `public static final org.bukkit.Tag<org.bukkit.damage.DamageType> BYPASSES_INVULNERABILITY`
+- `public static final org.bukkit.Tag<org.bukkit.damage.DamageType> BYPASSES_COOLDOWN`
+- `public static final org.bukkit.Tag<org.bukkit.damage.DamageType> BYPASSES_EFFECTS`
+- `public static final org.bukkit.Tag<org.bukkit.damage.DamageType> BYPASSES_RESISTANCE`
+- `public static final org.bukkit.Tag<org.bukkit.damage.DamageType> BYPASSES_ENCHANTMENTS`
+- `public static final org.bukkit.Tag<org.bukkit.damage.DamageType> IS_FIRE`
+- `public static final org.bukkit.Tag<org.bukkit.damage.DamageType> IS_PROJECTILE`
+- `public static final org.bukkit.Tag<org.bukkit.damage.DamageType> WITCH_RESISTANT_TO`
+- `public static final org.bukkit.Tag<org.bukkit.damage.DamageType> IS_EXPLOSION`
+- `public static final org.bukkit.Tag<org.bukkit.damage.DamageType> IS_FALL`
+- `public static final org.bukkit.Tag<org.bukkit.damage.DamageType> IS_DROWNING`
+- `public static final org.bukkit.Tag<org.bukkit.damage.DamageType> IS_FREEZING`
+- `public static final org.bukkit.Tag<org.bukkit.damage.DamageType> IS_LIGHTNING`
+- `public static final org.bukkit.Tag<org.bukkit.damage.DamageType> NO_ANGER`
+- `public static final org.bukkit.Tag<org.bukkit.damage.DamageType> NO_IMPACT`
+- `public static final org.bukkit.Tag<org.bukkit.damage.DamageType> ALWAYS_MOST_SIGNIFICANT_FALL`
+- `public static final org.bukkit.Tag<org.bukkit.damage.DamageType> WITHER_IMMUNE_TO`
+- `public static final org.bukkit.Tag<org.bukkit.damage.DamageType> IGNITES_ARMOR_STANDS`
+- `public static final org.bukkit.Tag<org.bukkit.damage.DamageType> BURNS_ARMOR_STANDS`
+- `public static final org.bukkit.Tag<org.bukkit.damage.DamageType> AVOIDS_GUARDIAN_THORNS`
+- `public static final org.bukkit.Tag<org.bukkit.damage.DamageType> ALWAYS_TRIGGERS_SILVERFISH`
+- `public static final org.bukkit.Tag<org.bukkit.damage.DamageType> ALWAYS_HURTS_ENDER_DRAGONS`
+- `public static final org.bukkit.Tag<org.bukkit.damage.DamageType> NO_KNOCKBACK`
+- `public static final org.bukkit.Tag<org.bukkit.damage.DamageType> ALWAYS_KILLS_ARMOR_STANDS`
+- `public static final org.bukkit.Tag<org.bukkit.damage.DamageType> CAN_BREAK_ARMOR_STAND`
+- `public static final org.bukkit.Tag<org.bukkit.damage.DamageType> BYPASSES_WOLF_ARMOR`
+- `public static final org.bukkit.Tag<org.bukkit.damage.DamageType> IS_PLAYER_ATTACK`
+- `public static final org.bukkit.Tag<org.bukkit.damage.DamageType> BURN_FROM_STEPPING`
+- `public static final org.bukkit.Tag<org.bukkit.damage.DamageType> PANIC_CAUSES`
+- `public static final org.bukkit.Tag<org.bukkit.damage.DamageType> PANIC_ENVIRONMENTAL_CAUSES`
+- `public static final org.bukkit.Tag<org.bukkit.damage.DamageType> IS_MACE_SMASH`
+- `public static final java.lang.String REGISTRY_DAMAGE_TYPES`

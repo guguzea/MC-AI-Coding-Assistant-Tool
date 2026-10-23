@@ -1,0 +1,11 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Villager$ReputationType {
+  public static final org.bukkit.entity.Villager$ReputationType MAJOR_NEGATIVE;
+  public static final org.bukkit.entity.Villager$ReputationType MINOR_NEGATIVE;
+  public static final org.bukkit.entity.Villager$ReputationType MINOR_POSITIVE;
+  public static final org.bukkit.entity.Villager$ReputationType MAJOR_POSITIVE;
+  public static final org.bukkit.entity.Villager$ReputationType TRADING;
+  public abstract int getMaxValue();
+  public abstract int getWeight();
+  static {};
+}

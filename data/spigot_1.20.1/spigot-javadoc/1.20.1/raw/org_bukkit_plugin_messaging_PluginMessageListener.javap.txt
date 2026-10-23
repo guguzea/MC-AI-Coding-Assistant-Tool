@@ -1,0 +1,4 @@
+Compiled from <spigot-api>
+public interface org.bukkit.plugin.messaging.PluginMessageListener {
+  public abstract void onPluginMessageReceived(java.lang.String, org.bukkit.entity.Player, byte[]);
+}

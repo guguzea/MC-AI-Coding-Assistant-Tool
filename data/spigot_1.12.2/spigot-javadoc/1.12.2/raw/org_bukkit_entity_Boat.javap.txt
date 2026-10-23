@@ -1,0 +1,13 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Boat extends org.bukkit.entity.Vehicle {
+  public abstract org.bukkit.TreeSpecies getWoodType();
+  public abstract void setWoodType(org.bukkit.TreeSpecies);
+  public abstract double getMaxSpeed();
+  public abstract void setMaxSpeed(double);
+  public abstract double getOccupiedDeceleration();
+  public abstract void setOccupiedDeceleration(double);
+  public abstract double getUnoccupiedDeceleration();
+  public abstract void setUnoccupiedDeceleration(double);
+  public abstract boolean getWorkOnLand();
+  public abstract void setWorkOnLand(boolean);
+}

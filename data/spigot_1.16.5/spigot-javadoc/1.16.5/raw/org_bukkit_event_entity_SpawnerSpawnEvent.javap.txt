@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.entity.SpawnerSpawnEvent extends org.bukkit.event.entity.EntitySpawnEvent {
+  public org.bukkit.event.entity.SpawnerSpawnEvent(org.bukkit.entity.Entity, org.bukkit.block.CreatureSpawner);
+  public org.bukkit.block.CreatureSpawner getSpawner();
+}

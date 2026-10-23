@@ -1,0 +1,28 @@
+Compiled from <spigot-api>
+public final class org.bukkit.StructureType {
+  public static final org.bukkit.StructureType MINESHAFT;
+  public static final org.bukkit.StructureType VILLAGE;
+  public static final org.bukkit.StructureType NETHER_FORTRESS;
+  public static final org.bukkit.StructureType STRONGHOLD;
+  public static final org.bukkit.StructureType JUNGLE_PYRAMID;
+  public static final org.bukkit.StructureType OCEAN_RUIN;
+  public static final org.bukkit.StructureType DESERT_PYRAMID;
+  public static final org.bukkit.StructureType IGLOO;
+  public static final org.bukkit.StructureType SWAMP_HUT;
+  public static final org.bukkit.StructureType OCEAN_MONUMENT;
+  public static final org.bukkit.StructureType END_CITY;
+  public static final org.bukkit.StructureType WOODLAND_MANSION;
+  public static final org.bukkit.StructureType BURIED_TREASURE;
+  public static final org.bukkit.StructureType SHIPWRECK;
+  public static final org.bukkit.StructureType PILLAGER_OUTPOST;
+  public static final org.bukkit.StructureType NETHER_FOSSIL;
+  public static final org.bukkit.StructureType RUINED_PORTAL;
+  public static final org.bukkit.StructureType BASTION_REMNANT;
+  static {};
+  public java.lang.String getName();
+  public org.bukkit.map.MapCursor$Type getMapIcon();
+  public boolean equals(java.lang.Object);
+  public int hashCode();
+  public java.lang.String toString();
+  public static java.util.Map<java.lang.String, org.bukkit.StructureType> getStructureTypes();
+}

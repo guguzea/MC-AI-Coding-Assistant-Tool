@@ -1,0 +1,17 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.player.PlayerStatisticIncrementEvent extends org.bukkit.event.player.PlayerEvent implements org.bukkit.event.Cancellable {
+  protected final org.bukkit.Statistic statistic;
+  public org.bukkit.event.player.PlayerStatisticIncrementEvent(org.bukkit.entity.Player, org.bukkit.Statistic, int, int);
+  public org.bukkit.event.player.PlayerStatisticIncrementEvent(org.bukkit.entity.Player, org.bukkit.Statistic, int, int, org.bukkit.entity.EntityType);
+  public org.bukkit.event.player.PlayerStatisticIncrementEvent(org.bukkit.entity.Player, org.bukkit.Statistic, int, int, org.bukkit.Material);
+  public org.bukkit.Statistic getStatistic();
+  public int getPreviousValue();
+  public int getNewValue();
+  public org.bukkit.entity.EntityType getEntityType();
+  public org.bukkit.Material getMaterial();
+  public boolean isCancelled();
+  public void setCancelled(boolean);
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  static {};
+}

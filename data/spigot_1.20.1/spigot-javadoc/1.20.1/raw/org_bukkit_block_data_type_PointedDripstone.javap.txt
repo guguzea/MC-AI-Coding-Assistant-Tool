@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.data.type.PointedDripstone extends org.bukkit.block.data.Waterlogged {
+  public abstract org.bukkit.block.BlockFace getVerticalDirection();
+  public abstract void setVerticalDirection(org.bukkit.block.BlockFace);
+  public abstract java.util.Set<org.bukkit.block.BlockFace> getVerticalDirections();
+  public abstract org.bukkit.block.data.type.PointedDripstone$Thickness getThickness();
+  public abstract void setThickness(org.bukkit.block.data.type.PointedDripstone$Thickness);
+}

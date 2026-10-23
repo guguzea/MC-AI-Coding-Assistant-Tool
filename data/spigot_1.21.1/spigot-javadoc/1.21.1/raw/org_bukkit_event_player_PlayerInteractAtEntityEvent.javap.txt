@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.player.PlayerInteractAtEntityEvent extends org.bukkit.event.player.PlayerInteractEntityEvent {
+  public org.bukkit.event.player.PlayerInteractAtEntityEvent(org.bukkit.entity.Player, org.bukkit.entity.Entity, org.bukkit.util.Vector);
+  public org.bukkit.event.player.PlayerInteractAtEntityEvent(org.bukkit.entity.Player, org.bukkit.entity.Entity, org.bukkit.util.Vector, org.bukkit.inventory.EquipmentSlot);
+  public org.bukkit.util.Vector getClickedPosition();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  static {};
+}

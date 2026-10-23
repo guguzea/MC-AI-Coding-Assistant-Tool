@@ -1,0 +1,14 @@
+Compiled from <spigot-api>
+public class org.bukkit.util.BlockVector extends org.bukkit.util.Vector {
+  public org.bukkit.util.BlockVector();
+  public org.bukkit.util.BlockVector(org.bukkit.util.Vector);
+  public org.bukkit.util.BlockVector(int, int, int);
+  public org.bukkit.util.BlockVector(double, double, double);
+  public org.bukkit.util.BlockVector(float, float, float);
+  public boolean equals(java.lang.Object);
+  public int hashCode();
+  public org.bukkit.util.BlockVector clone();
+  public static org.bukkit.util.BlockVector deserialize(java.util.Map<java.lang.String, java.lang.Object>);
+  public org.bukkit.util.Vector clone();
+  public java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+}

@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public interface org.bukkit.conversations.Prompt extends java.lang.Cloneable {
+  public static final org.bukkit.conversations.Prompt END_OF_CONVERSATION;
+  static {};
+  public abstract java.lang.String getPromptText(org.bukkit.conversations.ConversationContext);
+  public abstract boolean blocksForInput(org.bukkit.conversations.ConversationContext);
+  public abstract org.bukkit.conversations.Prompt acceptInput(org.bukkit.conversations.ConversationContext, java.lang.String);
+}

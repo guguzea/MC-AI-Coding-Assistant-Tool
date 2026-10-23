@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public interface org.bukkit.registry.RegistryAware {
+  public abstract org.bukkit.NamespacedKey getKeyOrThrow();
+  public abstract org.bukkit.NamespacedKey getKeyOrNull();
+  public abstract boolean isRegistered();
+}

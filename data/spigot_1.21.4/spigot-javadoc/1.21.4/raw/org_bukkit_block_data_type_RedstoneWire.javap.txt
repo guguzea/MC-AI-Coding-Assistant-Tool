@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.data.type.RedstoneWire extends org.bukkit.block.data.AnaloguePowerable {
+  public abstract org.bukkit.block.data.type.RedstoneWire$Connection getFace(org.bukkit.block.BlockFace);
+  public abstract void setFace(org.bukkit.block.BlockFace, org.bukkit.block.data.type.RedstoneWire$Connection);
+  public abstract java.util.Set<org.bukkit.block.BlockFace> getAllowedFaces();
+}

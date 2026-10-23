@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.JukeboxInventory extends org.bukkit.inventory.Inventory {
+  public abstract void setRecord(org.bukkit.inventory.ItemStack);
+  public abstract org.bukkit.inventory.ItemStack getRecord();
+  public abstract org.bukkit.block.Jukebox getHolder();
+  public default org.bukkit.inventory.InventoryHolder getHolder();
+}

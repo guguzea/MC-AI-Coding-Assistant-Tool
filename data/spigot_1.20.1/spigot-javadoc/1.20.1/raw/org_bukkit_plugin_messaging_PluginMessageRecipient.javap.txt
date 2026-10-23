@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.plugin.messaging.PluginMessageRecipient {
+  public abstract void sendPluginMessage(org.bukkit.plugin.Plugin, java.lang.String, byte[]);
+  public abstract java.util.Set<java.lang.String> getListeningPluginChannels();
+}

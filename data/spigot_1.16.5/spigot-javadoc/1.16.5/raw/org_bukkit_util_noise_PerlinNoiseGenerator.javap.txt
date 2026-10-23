@@ -1,0 +1,17 @@
+Compiled from <spigot-api>
+public class org.bukkit.util.noise.PerlinNoiseGenerator extends org.bukkit.util.noise.NoiseGenerator {
+  protected static final int[][] grad3;
+  static {};
+  protected org.bukkit.util.noise.PerlinNoiseGenerator();
+  public org.bukkit.util.noise.PerlinNoiseGenerator(org.bukkit.World);
+  public org.bukkit.util.noise.PerlinNoiseGenerator(long);
+  public org.bukkit.util.noise.PerlinNoiseGenerator(java.util.Random);
+  public static double getNoise(double);
+  public static double getNoise(double, double);
+  public static double getNoise(double, double, double);
+  public static org.bukkit.util.noise.PerlinNoiseGenerator getInstance();
+  public double noise(double, double, double);
+  public static double getNoise(double, int, double, double);
+  public static double getNoise(double, double, int, double, double);
+  public static double getNoise(double, double, double, int, double, double);
+}

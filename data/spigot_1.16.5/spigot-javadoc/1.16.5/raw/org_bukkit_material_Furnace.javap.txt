@@ -1,0 +1,12 @@
+Compiled from <spigot-api>
+public class org.bukkit.material.Furnace extends org.bukkit.material.FurnaceAndDispenser {
+  public org.bukkit.material.Furnace();
+  public org.bukkit.material.Furnace(org.bukkit.block.BlockFace);
+  public org.bukkit.material.Furnace(org.bukkit.Material);
+  public org.bukkit.material.Furnace(org.bukkit.Material, byte);
+  public org.bukkit.material.Furnace clone();
+  public org.bukkit.material.FurnaceAndDispenser clone();
+  public java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+  public org.bukkit.material.MaterialData clone();
+  public org.bukkit.material.DirectionalContainer clone();
+}

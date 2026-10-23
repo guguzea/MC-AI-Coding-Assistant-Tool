@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.meta.Repairable {
+  public abstract boolean hasRepairCost();
+  public abstract int getRepairCost();
+  public abstract void setRepairCost(int);
+  public abstract org.bukkit.inventory.meta.Repairable clone();
+  public default java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+}

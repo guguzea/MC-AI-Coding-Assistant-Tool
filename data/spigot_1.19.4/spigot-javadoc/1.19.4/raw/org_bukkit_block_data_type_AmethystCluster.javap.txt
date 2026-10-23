@@ -1,0 +1,3 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.data.type.AmethystCluster extends org.bukkit.block.data.Directional,org.bukkit.block.data.Waterlogged {
+}

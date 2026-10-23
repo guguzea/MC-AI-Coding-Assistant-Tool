@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.RecipeChoice extends java.util.function.Predicate<org.bukkit.inventory.ItemStack>, java.lang.Cloneable {
+  public abstract org.bukkit.inventory.ItemStack getItemStack();
+  public abstract org.bukkit.inventory.RecipeChoice clone();
+  public abstract boolean test(org.bukkit.inventory.ItemStack);
+  public default boolean test(java.lang.Object);
+  public default java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+}

@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.advancement.AdvancementRequirement {
+  public abstract java.util.List<java.lang.String> getRequiredCriteria();
+  public abstract boolean isStrict();
+}

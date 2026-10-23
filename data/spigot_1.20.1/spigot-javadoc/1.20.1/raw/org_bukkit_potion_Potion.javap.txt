@@ -1,0 +1,29 @@
+Compiled from <spigot-api>
+public class org.bukkit.potion.Potion {
+  public org.bukkit.potion.Potion(org.bukkit.potion.PotionType);
+  public org.bukkit.potion.Potion(org.bukkit.potion.PotionType, int);
+  public org.bukkit.potion.Potion(org.bukkit.potion.PotionType, int, boolean);
+  public org.bukkit.potion.Potion(org.bukkit.potion.PotionType, int, boolean, boolean);
+  public org.bukkit.potion.Potion splash();
+  public org.bukkit.potion.Potion extend();
+  public void apply(org.bukkit.inventory.ItemStack);
+  public void apply(org.bukkit.entity.LivingEntity);
+  public boolean equals(java.lang.Object);
+  public java.util.Collection<org.bukkit.potion.PotionEffect> getEffects();
+  public int getLevel();
+  public org.bukkit.potion.PotionType getType();
+  public boolean hasExtendedDuration();
+  public int hashCode();
+  public boolean isSplash();
+  public void setHasExtendedDuration(boolean);
+  public void setSplash(boolean);
+  public void setType(org.bukkit.potion.PotionType);
+  public void setLevel(int);
+  public short toDamageValue();
+  public org.bukkit.inventory.ItemStack toItemStack(int);
+  public static org.bukkit.potion.Potion fromDamage(int);
+  public static org.bukkit.potion.Potion fromItemStack(org.bukkit.inventory.ItemStack);
+  public static org.bukkit.potion.PotionBrewer getBrewer();
+  public static void setPotionBrewer(org.bukkit.potion.PotionBrewer);
+  public int getNameId();
+}

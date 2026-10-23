@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.server.ServiceRegisterEvent extends org.bukkit.event.server.ServiceEvent {
+  public org.bukkit.event.server.ServiceRegisterEvent(org.bukkit.plugin.RegisteredServiceProvider<?>);
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  static {};
+}

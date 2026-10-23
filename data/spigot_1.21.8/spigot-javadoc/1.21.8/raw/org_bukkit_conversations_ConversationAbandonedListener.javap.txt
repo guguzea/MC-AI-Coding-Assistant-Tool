@@ -1,0 +1,4 @@
+Compiled from <spigot-api>
+public interface org.bukkit.conversations.ConversationAbandonedListener extends java.util.EventListener {
+  public abstract void conversationAbandoned(org.bukkit.conversations.ConversationAbandonedEvent);
+}

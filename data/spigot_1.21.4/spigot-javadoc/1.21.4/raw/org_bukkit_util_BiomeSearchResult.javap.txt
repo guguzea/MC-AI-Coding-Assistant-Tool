@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.util.BiomeSearchResult {
+  public abstract org.bukkit.block.Biome getBiome();
+  public abstract org.bukkit.Location getLocation();
+}

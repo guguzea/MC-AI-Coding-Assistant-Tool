@@ -1,0 +1,11 @@
+Compiled from <spigot-api>
+public final class org.bukkit.SandstoneType extends java.lang.Enum<org.bukkit.SandstoneType> {
+  public static final org.bukkit.SandstoneType CRACKED;
+  public static final org.bukkit.SandstoneType GLYPHED;
+  public static final org.bukkit.SandstoneType SMOOTH;
+  static {};
+  public byte getData();
+  public static org.bukkit.SandstoneType getByData(byte);
+  public static org.bukkit.SandstoneType[] values();
+  public static org.bukkit.SandstoneType valueOf(java.lang.String);
+}

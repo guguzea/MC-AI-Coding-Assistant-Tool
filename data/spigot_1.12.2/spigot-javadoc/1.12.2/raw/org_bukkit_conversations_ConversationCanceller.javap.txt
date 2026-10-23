@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public interface org.bukkit.conversations.ConversationCanceller extends java.lang.Cloneable {
+  public abstract void setConversation(org.bukkit.conversations.Conversation);
+  public abstract boolean cancelBasedOnInput(org.bukkit.conversations.ConversationContext, java.lang.String);
+  public abstract org.bukkit.conversations.ConversationCanceller clone();
+}

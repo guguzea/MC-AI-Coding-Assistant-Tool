@@ -1,0 +1,13 @@
+Compiled from <spigot-api>
+public interface org.bukkit.boss.DragonBattle {
+  public abstract org.bukkit.entity.EnderDragon getEnderDragon();
+  public abstract org.bukkit.boss.BossBar getBossBar();
+  public abstract org.bukkit.Location getEndPortalLocation();
+  public abstract boolean generateEndPortal(boolean);
+  public abstract boolean hasBeenPreviouslyKilled();
+  public abstract void initiateRespawn();
+  public abstract boolean initiateRespawn(java.util.Collection<org.bukkit.entity.EnderCrystal>);
+  public abstract org.bukkit.boss.DragonBattle$RespawnPhase getRespawnPhase();
+  public abstract boolean setRespawnPhase(org.bukkit.boss.DragonBattle$RespawnPhase);
+  public abstract void resetCrystals();
+}

@@ -1,0 +1,13 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.entity.VillagerAcquireTradeEvent extends org.bukkit.event.entity.EntityEvent implements org.bukkit.event.Cancellable {
+  public org.bukkit.event.entity.VillagerAcquireTradeEvent(org.bukkit.entity.AbstractVillager, org.bukkit.inventory.MerchantRecipe);
+  public org.bukkit.inventory.MerchantRecipe getRecipe();
+  public void setRecipe(org.bukkit.inventory.MerchantRecipe);
+  public boolean isCancelled();
+  public void setCancelled(boolean);
+  public org.bukkit.entity.AbstractVillager getEntity();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  public org.bukkit.entity.Entity getEntity();
+  static {};
+}

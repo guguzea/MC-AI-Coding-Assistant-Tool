@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public class org.bukkit.command.CommandSender$Spigot {
+  public org.bukkit.command.CommandSender$Spigot();
+  public void sendMessage(net.md_5.bungee.api.chat.BaseComponent);
+  public void sendMessage(net.md_5.bungee.api.chat.BaseComponent...);
+}

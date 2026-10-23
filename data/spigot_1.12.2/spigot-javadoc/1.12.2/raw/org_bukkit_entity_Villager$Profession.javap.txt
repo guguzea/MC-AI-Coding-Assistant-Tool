@@ -1,0 +1,16 @@
+Compiled from <spigot-api>
+public final class org.bukkit.entity.Villager$Profession extends java.lang.Enum<org.bukkit.entity.Villager$Profession> {
+  public static final org.bukkit.entity.Villager$Profession NORMAL;
+  public static final org.bukkit.entity.Villager$Profession FARMER;
+  public static final org.bukkit.entity.Villager$Profession LIBRARIAN;
+  public static final org.bukkit.entity.Villager$Profession PRIEST;
+  public static final org.bukkit.entity.Villager$Profession BLACKSMITH;
+  public static final org.bukkit.entity.Villager$Profession BUTCHER;
+  public static final org.bukkit.entity.Villager$Profession NITWIT;
+  public static final org.bukkit.entity.Villager$Profession HUSK;
+  static {};
+  public boolean isZombie();
+  public java.util.List<org.bukkit.entity.Villager$Career> getCareers();
+  public static org.bukkit.entity.Villager$Profession[] values();
+  public static org.bukkit.entity.Villager$Profession valueOf(java.lang.String);
+}

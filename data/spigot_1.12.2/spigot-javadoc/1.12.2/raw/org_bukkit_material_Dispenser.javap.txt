@@ -1,0 +1,17 @@
+Compiled from <spigot-api>
+public class org.bukkit.material.Dispenser extends org.bukkit.material.FurnaceAndDispenser {
+  public org.bukkit.material.Dispenser();
+  public org.bukkit.material.Dispenser(org.bukkit.block.BlockFace);
+  public org.bukkit.material.Dispenser(int);
+  public org.bukkit.material.Dispenser(org.bukkit.Material);
+  public org.bukkit.material.Dispenser(int, byte);
+  public org.bukkit.material.Dispenser(org.bukkit.Material, byte);
+  public void setFacingDirection(org.bukkit.block.BlockFace);
+  public org.bukkit.block.BlockFace getFacing();
+  public org.bukkit.material.Dispenser clone();
+  public org.bukkit.material.FurnaceAndDispenser clone();
+  public java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+  public org.bukkit.material.MaterialData clone();
+  public org.bukkit.material.DirectionalContainer clone();
+  static int[] $SWITCH_TABLE$org$bukkit$block$BlockFace();
+}

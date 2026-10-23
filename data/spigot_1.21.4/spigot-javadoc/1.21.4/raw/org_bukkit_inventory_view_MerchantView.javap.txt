@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.view.MerchantView extends org.bukkit.inventory.InventoryView {
+  public abstract org.bukkit.inventory.MerchantInventory getTopInventory();
+  public abstract org.bukkit.inventory.Merchant getMerchant();
+  public default org.bukkit.inventory.Inventory getTopInventory();
+}

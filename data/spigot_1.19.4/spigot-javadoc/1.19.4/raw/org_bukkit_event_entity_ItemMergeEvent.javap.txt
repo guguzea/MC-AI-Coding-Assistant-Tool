@@ -1,0 +1,12 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.entity.ItemMergeEvent extends org.bukkit.event.entity.EntityEvent implements org.bukkit.event.Cancellable {
+  static {};
+  public org.bukkit.event.entity.ItemMergeEvent(org.bukkit.entity.Item, org.bukkit.entity.Item);
+  public boolean isCancelled();
+  public void setCancelled(boolean);
+  public org.bukkit.entity.Item getEntity();
+  public org.bukkit.entity.Item getTarget();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  public org.bukkit.entity.Entity getEntity();
+}

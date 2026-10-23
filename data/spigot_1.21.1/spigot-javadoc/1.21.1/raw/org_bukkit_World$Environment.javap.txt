@@ -1,0 +1,12 @@
+Compiled from <spigot-api>
+public final class org.bukkit.World$Environment extends java.lang.Enum<org.bukkit.World$Environment> {
+  public static final org.bukkit.World$Environment NORMAL;
+  public static final org.bukkit.World$Environment NETHER;
+  public static final org.bukkit.World$Environment THE_END;
+  public static final org.bukkit.World$Environment CUSTOM;
+  public static org.bukkit.World$Environment[] values();
+  public static org.bukkit.World$Environment valueOf(java.lang.String);
+  public int getId();
+  public static org.bukkit.World$Environment getEnvironment(int);
+  static {};
+}

@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.data.Hatchable extends org.bukkit.block.data.BlockData {
+  public abstract int getHatch();
+  public abstract void setHatch(int);
+  public abstract int getMaximumHatch();
+}

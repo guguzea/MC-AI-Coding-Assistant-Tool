@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public abstract class org.bukkit.command.defaults.BukkitCommand extends org.bukkit.command.Command {
+  protected org.bukkit.command.defaults.BukkitCommand(java.lang.String);
+  protected org.bukkit.command.defaults.BukkitCommand(java.lang.String, java.lang.String, java.lang.String, java.util.List<java.lang.String>);
+}

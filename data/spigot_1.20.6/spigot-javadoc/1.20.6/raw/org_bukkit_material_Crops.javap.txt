@@ -1,0 +1,17 @@
+Compiled from <spigot-api>
+public class org.bukkit.material.Crops extends org.bukkit.material.MaterialData {
+  protected static final org.bukkit.Material DEFAULT_TYPE;
+  protected static final org.bukkit.CropState DEFAULT_STATE;
+  public org.bukkit.material.Crops();
+  public org.bukkit.material.Crops(org.bukkit.CropState);
+  public org.bukkit.material.Crops(org.bukkit.Material, org.bukkit.CropState);
+  public org.bukkit.material.Crops(org.bukkit.Material);
+  public org.bukkit.material.Crops(org.bukkit.Material, byte);
+  public org.bukkit.CropState getState();
+  public void setState(org.bukkit.CropState);
+  public java.lang.String toString();
+  public org.bukkit.material.Crops clone();
+  public org.bukkit.material.MaterialData clone();
+  public java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+  static {};
+}

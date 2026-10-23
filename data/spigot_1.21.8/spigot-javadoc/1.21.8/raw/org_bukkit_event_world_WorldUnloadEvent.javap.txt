@@ -1,0 +1,9 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.world.WorldUnloadEvent extends org.bukkit.event.world.WorldEvent implements org.bukkit.event.Cancellable {
+  public org.bukkit.event.world.WorldUnloadEvent(org.bukkit.World);
+  public boolean isCancelled();
+  public void setCancelled(boolean);
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  static {};
+}

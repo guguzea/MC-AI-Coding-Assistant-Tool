@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.data.Levelled extends org.bukkit.block.data.BlockData {
+  public abstract int getLevel();
+  public abstract void setLevel(int);
+  public abstract int getMaximumLevel();
+}

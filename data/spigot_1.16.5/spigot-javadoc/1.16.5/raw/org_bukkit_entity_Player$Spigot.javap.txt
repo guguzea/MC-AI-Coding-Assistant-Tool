@@ -1,0 +1,15 @@
+Compiled from <spigot-api>
+public class org.bukkit.entity.Player$Spigot extends org.bukkit.entity.Entity$Spigot {
+  public org.bukkit.entity.Player$Spigot();
+  public java.net.InetSocketAddress getRawAddress();
+  public boolean getCollidesWithEntities();
+  public void setCollidesWithEntities(boolean);
+  public void respawn();
+  public java.util.Set<org.bukkit.entity.Player> getHiddenPlayers();
+  public void sendMessage(net.md_5.bungee.api.chat.BaseComponent);
+  public void sendMessage(net.md_5.bungee.api.chat.BaseComponent...);
+  public void sendMessage(net.md_5.bungee.api.ChatMessageType, net.md_5.bungee.api.chat.BaseComponent);
+  public void sendMessage(net.md_5.bungee.api.ChatMessageType, net.md_5.bungee.api.chat.BaseComponent...);
+  public void sendMessage(net.md_5.bungee.api.ChatMessageType, java.util.UUID, net.md_5.bungee.api.chat.BaseComponent);
+  public void sendMessage(net.md_5.bungee.api.ChatMessageType, java.util.UUID, net.md_5.bungee.api.chat.BaseComponent...);
+}

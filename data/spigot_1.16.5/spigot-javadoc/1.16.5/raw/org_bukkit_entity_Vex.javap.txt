@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Vex extends org.bukkit.entity.Monster {
+  public abstract boolean isCharging();
+  public abstract void setCharging(boolean);
+}

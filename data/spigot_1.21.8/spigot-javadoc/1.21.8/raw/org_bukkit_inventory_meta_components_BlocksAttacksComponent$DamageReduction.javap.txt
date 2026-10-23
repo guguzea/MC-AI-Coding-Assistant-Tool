@@ -1,0 +1,13 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.meta.components.BlocksAttacksComponent$DamageReduction extends org.bukkit.configuration.serialization.ConfigurationSerializable {
+  public abstract java.util.Collection<org.bukkit.damage.DamageType> getTypes();
+  public abstract void setTypes(org.bukkit.damage.DamageType);
+  public abstract void setTypes(java.util.Collection<org.bukkit.damage.DamageType>);
+  public abstract void setTypes(org.bukkit.Tag<org.bukkit.damage.DamageType>);
+  public abstract float getBase();
+  public abstract void setBase(float);
+  public abstract float getFactor();
+  public abstract void setFactor(float);
+  public abstract float getHorizontalBlockingAngle();
+  public abstract void setHorizontalBlockingAngle(float);
+}

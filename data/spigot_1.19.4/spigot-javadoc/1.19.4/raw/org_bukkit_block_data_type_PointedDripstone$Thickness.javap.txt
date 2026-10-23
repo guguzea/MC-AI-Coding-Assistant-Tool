@@ -1,0 +1,11 @@
+Compiled from <spigot-api>
+public final class org.bukkit.block.data.type.PointedDripstone$Thickness extends java.lang.Enum<org.bukkit.block.data.type.PointedDripstone$Thickness> {
+  public static final org.bukkit.block.data.type.PointedDripstone$Thickness TIP_MERGE;
+  public static final org.bukkit.block.data.type.PointedDripstone$Thickness TIP;
+  public static final org.bukkit.block.data.type.PointedDripstone$Thickness FRUSTUM;
+  public static final org.bukkit.block.data.type.PointedDripstone$Thickness MIDDLE;
+  public static final org.bukkit.block.data.type.PointedDripstone$Thickness BASE;
+  static {};
+  public static org.bukkit.block.data.type.PointedDripstone$Thickness[] values();
+  public static org.bukkit.block.data.type.PointedDripstone$Thickness valueOf(java.lang.String);
+}

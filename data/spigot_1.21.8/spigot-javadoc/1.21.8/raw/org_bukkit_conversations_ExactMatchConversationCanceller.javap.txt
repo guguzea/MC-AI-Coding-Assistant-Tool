@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public class org.bukkit.conversations.ExactMatchConversationCanceller implements org.bukkit.conversations.ConversationCanceller {
+  public org.bukkit.conversations.ExactMatchConversationCanceller(java.lang.String);
+  public void setConversation(org.bukkit.conversations.Conversation);
+  public boolean cancelBasedOnInput(org.bukkit.conversations.ConversationContext, java.lang.String);
+  public org.bukkit.conversations.ConversationCanceller clone();
+  public java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+}

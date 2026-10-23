@@ -1,0 +1,7 @@
+Compiled from <spigot-api>
+public interface org.bukkit.BlockChangeDelegate {
+  public abstract boolean setBlockData(int, int, int, org.bukkit.block.data.BlockData);
+  public abstract org.bukkit.block.data.BlockData getBlockData(int, int, int);
+  public abstract int getHeight();
+  public abstract boolean isEmpty(int, int, int);
+}

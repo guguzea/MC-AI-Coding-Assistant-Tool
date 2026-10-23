@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.meta.SpawnEggMeta extends org.bukkit.inventory.meta.ItemMeta {
+  public abstract org.bukkit.entity.EntityType getSpawnedType();
+  public abstract void setSpawnedType(org.bukkit.entity.EntityType);
+  public abstract org.bukkit.inventory.meta.SpawnEggMeta clone();
+}

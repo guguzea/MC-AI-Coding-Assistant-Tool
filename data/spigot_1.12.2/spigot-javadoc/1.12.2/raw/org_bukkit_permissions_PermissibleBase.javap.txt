@@ -1,0 +1,18 @@
+Compiled from <spigot-api>
+public class org.bukkit.permissions.PermissibleBase implements org.bukkit.permissions.Permissible {
+  public org.bukkit.permissions.PermissibleBase(org.bukkit.permissions.ServerOperator);
+  public boolean isOp();
+  public void setOp(boolean);
+  public boolean isPermissionSet(java.lang.String);
+  public boolean isPermissionSet(org.bukkit.permissions.Permission);
+  public boolean hasPermission(java.lang.String);
+  public boolean hasPermission(org.bukkit.permissions.Permission);
+  public org.bukkit.permissions.PermissionAttachment addAttachment(org.bukkit.plugin.Plugin, java.lang.String, boolean);
+  public org.bukkit.permissions.PermissionAttachment addAttachment(org.bukkit.plugin.Plugin);
+  public void removeAttachment(org.bukkit.permissions.PermissionAttachment);
+  public void recalculatePermissions();
+  public synchronized void clearPermissions();
+  public org.bukkit.permissions.PermissionAttachment addAttachment(org.bukkit.plugin.Plugin, java.lang.String, boolean, int);
+  public org.bukkit.permissions.PermissionAttachment addAttachment(org.bukkit.plugin.Plugin, int);
+  public java.util.Set<org.bukkit.permissions.PermissionAttachmentInfo> getEffectivePermissions();
+}

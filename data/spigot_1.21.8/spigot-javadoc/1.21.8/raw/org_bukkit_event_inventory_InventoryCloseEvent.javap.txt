@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.inventory.InventoryCloseEvent extends org.bukkit.event.inventory.InventoryEvent {
+  public org.bukkit.event.inventory.InventoryCloseEvent(org.bukkit.inventory.InventoryView);
+  public final org.bukkit.entity.HumanEntity getPlayer();
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  static {};
+}

@@ -1,0 +1,16 @@
+Compiled from <spigot-api>
+public class org.bukkit.event.server.ServerListPingEvent extends org.bukkit.event.server.ServerEvent implements java.lang.Iterable<org.bukkit.entity.Player> {
+  static {};
+  public org.bukkit.event.server.ServerListPingEvent(java.net.InetAddress, java.lang.String, int, int);
+  protected org.bukkit.event.server.ServerListPingEvent(java.net.InetAddress, java.lang.String, int);
+  public java.net.InetAddress getAddress();
+  public java.lang.String getMotd();
+  public void setMotd(java.lang.String);
+  public int getNumPlayers();
+  public int getMaxPlayers();
+  public void setMaxPlayers(int);
+  public void setServerIcon(org.bukkit.util.CachedServerIcon) throws java.lang.IllegalArgumentException, java.lang.UnsupportedOperationException;
+  public org.bukkit.event.HandlerList getHandlers();
+  public static org.bukkit.event.HandlerList getHandlerList();
+  public java.util.Iterator<org.bukkit.entity.Player> iterator() throws java.lang.UnsupportedOperationException;
+}

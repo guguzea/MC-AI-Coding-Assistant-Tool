@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Endermite extends org.bukkit.entity.Monster {
+  public abstract boolean isPlayerSpawned();
+  public abstract void setPlayerSpawned(boolean);
+}

@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.ThrowableProjectile extends org.bukkit.entity.Projectile {
+  public abstract org.bukkit.inventory.ItemStack getItem();
+  public abstract void setItem(org.bukkit.inventory.ItemStack);
+}

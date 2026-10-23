@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public class org.bukkit.inventory.meta.ItemMeta$Spigot {
+  public org.bukkit.inventory.meta.ItemMeta$Spigot();
+  public void setUnbreakable(boolean);
+  public boolean isUnbreakable();
+}

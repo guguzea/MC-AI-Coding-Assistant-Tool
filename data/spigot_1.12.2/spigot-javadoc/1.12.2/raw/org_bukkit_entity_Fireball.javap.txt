@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.entity.Fireball extends org.bukkit.entity.Projectile,org.bukkit.entity.Explosive {
+  public abstract void setDirection(org.bukkit.util.Vector);
+  public abstract org.bukkit.util.Vector getDirection();
+}

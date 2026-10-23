@@ -1,0 +1,13 @@
+Compiled from <spigot-api>
+public final class org.bukkit.event.EventPriority extends java.lang.Enum<org.bukkit.event.EventPriority> {
+  public static final org.bukkit.event.EventPriority LOWEST;
+  public static final org.bukkit.event.EventPriority LOW;
+  public static final org.bukkit.event.EventPriority NORMAL;
+  public static final org.bukkit.event.EventPriority HIGH;
+  public static final org.bukkit.event.EventPriority HIGHEST;
+  public static final org.bukkit.event.EventPriority MONITOR;
+  static {};
+  public int getSlot();
+  public static org.bukkit.event.EventPriority[] values();
+  public static org.bukkit.event.EventPriority valueOf(java.lang.String);
+}

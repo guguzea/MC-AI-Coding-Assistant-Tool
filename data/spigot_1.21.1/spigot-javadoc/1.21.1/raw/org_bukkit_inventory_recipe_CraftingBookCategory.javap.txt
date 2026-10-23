@@ -1,0 +1,10 @@
+Compiled from <spigot-api>
+public final class org.bukkit.inventory.recipe.CraftingBookCategory extends java.lang.Enum<org.bukkit.inventory.recipe.CraftingBookCategory> {
+  public static final org.bukkit.inventory.recipe.CraftingBookCategory BUILDING;
+  public static final org.bukkit.inventory.recipe.CraftingBookCategory REDSTONE;
+  public static final org.bukkit.inventory.recipe.CraftingBookCategory EQUIPMENT;
+  public static final org.bukkit.inventory.recipe.CraftingBookCategory MISC;
+  public static org.bukkit.inventory.recipe.CraftingBookCategory[] values();
+  public static org.bukkit.inventory.recipe.CraftingBookCategory valueOf(java.lang.String);
+  static {};
+}

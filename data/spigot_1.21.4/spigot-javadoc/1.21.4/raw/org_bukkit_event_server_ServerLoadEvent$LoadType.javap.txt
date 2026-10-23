@@ -1,0 +1,8 @@
+Compiled from <spigot-api>
+public final class org.bukkit.event.server.ServerLoadEvent$LoadType extends java.lang.Enum<org.bukkit.event.server.ServerLoadEvent$LoadType> {
+  public static final org.bukkit.event.server.ServerLoadEvent$LoadType STARTUP;
+  public static final org.bukkit.event.server.ServerLoadEvent$LoadType RELOAD;
+  public static org.bukkit.event.server.ServerLoadEvent$LoadType[] values();
+  public static org.bukkit.event.server.ServerLoadEvent$LoadType valueOf(java.lang.String);
+  static {};
+}

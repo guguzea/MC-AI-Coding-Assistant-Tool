@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public abstract class org.bukkit.event.server.PluginEvent extends org.bukkit.event.server.ServerEvent {
+  public org.bukkit.event.server.PluginEvent(org.bukkit.plugin.Plugin);
+  public org.bukkit.plugin.Plugin getPlugin();
+}

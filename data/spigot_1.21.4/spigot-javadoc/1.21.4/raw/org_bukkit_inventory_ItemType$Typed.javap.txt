@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public interface org.bukkit.inventory.ItemType$Typed<M extends org.bukkit.inventory.meta.ItemMeta> extends org.bukkit.inventory.ItemType {
+  public abstract java.lang.Class<M> getItemMetaClass();
+  public abstract org.bukkit.inventory.ItemStack createItemStack(java.util.function.Consumer<? super M>);
+  public abstract org.bukkit.inventory.ItemStack createItemStack(int, java.util.function.Consumer<? super M>);
+}

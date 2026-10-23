@@ -1,0 +1,5 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.SuspiciousSand extends org.bukkit.loot.Lootable,org.bukkit.block.TileState {
+  public abstract org.bukkit.inventory.ItemStack getItem();
+  public abstract void setItem(org.bukkit.inventory.ItemStack);
+}

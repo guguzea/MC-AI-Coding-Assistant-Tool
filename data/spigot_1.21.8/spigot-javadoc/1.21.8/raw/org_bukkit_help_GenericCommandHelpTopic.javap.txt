@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public class org.bukkit.help.GenericCommandHelpTopic extends org.bukkit.help.HelpTopic {
+  protected org.bukkit.command.Command command;
+  public org.bukkit.help.GenericCommandHelpTopic(org.bukkit.command.Command);
+  public boolean canSee(org.bukkit.command.CommandSender);
+}

@@ -1,0 +1,12 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.Banner extends org.bukkit.block.TileState {
+  public abstract org.bukkit.DyeColor getBaseColor();
+  public abstract void setBaseColor(org.bukkit.DyeColor);
+  public abstract java.util.List<org.bukkit.block.banner.Pattern> getPatterns();
+  public abstract void setPatterns(java.util.List<org.bukkit.block.banner.Pattern>);
+  public abstract void addPattern(org.bukkit.block.banner.Pattern);
+  public abstract org.bukkit.block.banner.Pattern getPattern(int);
+  public abstract org.bukkit.block.banner.Pattern removePattern(int);
+  public abstract void setPattern(int, org.bukkit.block.banner.Pattern);
+  public abstract int numberOfPatterns();
+}

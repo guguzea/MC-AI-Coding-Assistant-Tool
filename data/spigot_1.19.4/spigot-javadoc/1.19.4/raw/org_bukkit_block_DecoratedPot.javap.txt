@@ -1,0 +1,6 @@
+Compiled from <spigot-api>
+public interface org.bukkit.block.DecoratedPot extends org.bukkit.block.TileState {
+  public abstract java.util.List<org.bukkit.Material> getShards();
+  public abstract void addShard(org.bukkit.Material);
+  public abstract void setShards(java.util.List<org.bukkit.Material>);
+}
