@@ -4,8 +4,37 @@ package: "org.bukkit.scoreboard"
 source: https://jd.papermc.io/paper/1.12.2/org/bukkit/scoreboard/Team.html
 sourceType: javadoc
 fetchedWith: fetch-spigot-javadoc.mjs@1
-fetchedAt: 2026-10-23T07:14:55.890Z
+fetchedAt: 2026-10-23T09:54:19.288Z
 asOfVersion: "1.12.2-R0.1-SNAPSHOT"
 ---
 
-_（上游 javadoc 的 `org.bukkit.scoreboard.Team` 页只输出类型声明、没有 `member-signature` 块：该类未声明自己的成员，成员全部继承自父类型。本档据此不产出成员签名，非抓取失败。）_
+- `static class Team.Option`
+- `static class Team.OptionStatus`
+- `void addEntry(String entry)`
+- `void addPlayer(OfflinePlayer player)`
+- `boolean allowFriendlyFire()`
+- `boolean canSeeFriendlyInvisibles()`
+- `ChatColor getColor()`
+- `String getDisplayName()`
+- `Set<String> getEntries()`
+- `String getName()`
+- `NameTagVisibility getNameTagVisibility()`
+- `Team.OptionStatus getOption(Team.Option option)`
+- `Set<OfflinePlayer> getPlayers()`
+- `String getPrefix()`
+- `Scoreboard getScoreboard()`
+- `int getSize()`
+- `String getSuffix()`
+- `boolean hasEntry(String entry)`
+- `boolean hasPlayer(OfflinePlayer player)`
+- `boolean removeEntry(String entry)`
+- `boolean removePlayer(OfflinePlayer player)`
+- `void setAllowFriendlyFire(boolean enabled)`
+- `void setCanSeeFriendlyInvisibles(boolean enabled)`
+- `void setColor(ChatColor color)`
+- `void setDisplayName(String displayName)`
+- `void setNameTagVisibility(NameTagVisibility visibility)`
+- `void setOption(Team.Option option, Team.OptionStatus status)`
+- `void setPrefix(String prefix)`
+- `void setSuffix(String suffix)`
+- `void unregister()`

@@ -4,8 +4,29 @@ package: "org.bukkit.potion"
 source: https://jd.papermc.io/paper/1.12.2/org/bukkit/potion/Potion.html
 sourceType: javadoc
 fetchedWith: fetch-spigot-javadoc.mjs@1
-fetchedAt: 2026-10-23T07:14:55.890Z
+fetchedAt: 2026-10-23T09:54:19.288Z
 asOfVersion: "1.12.2-R0.1-SNAPSHOT"
 ---
 
-_（上游 javadoc 的 `org.bukkit.potion.Potion` 页只输出类型声明、没有 `member-signature` 块：该类未声明自己的成员，成员全部继承自父类型。本档据此不产出成员签名，非抓取失败。）_
+- `void apply(LivingEntity to)`
+- `void apply(ItemStack to)`
+- `boolean equals(Object obj)`
+- `Potion extend()`
+- `static Potion fromDamage(int damage)`
+- `static Potion fromItemStack(ItemStack item)`
+- `static PotionBrewer getBrewer()`
+- `Collection<PotionEffect> getEffects()`
+- `int getLevel()`
+- `int getNameId()`
+- `PotionType getType()`
+- `boolean hasExtendedDuration()`
+- `int hashCode()`
+- `boolean isSplash()`
+- `void setHasExtendedDuration(boolean isExtended)`
+- `void setLevel(int level)`
+- `static void setPotionBrewer(PotionBrewer other)`
+- `void setSplash(boolean isSplash)`
+- `void setType(PotionType type)`
+- `Potion splash()`
+- `short toDamageValue()`
+- `ItemStack toItemStack(int amount)`

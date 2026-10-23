@@ -4,8 +4,20 @@ package: "org.bukkit.map"
 source: https://jd.papermc.io/paper/1.12.2/org/bukkit/map/MapCursor.html
 sourceType: javadoc
 fetchedWith: fetch-spigot-javadoc.mjs@1
-fetchedAt: 2026-10-23T07:14:55.890Z
+fetchedAt: 2026-10-23T09:54:19.288Z
 asOfVersion: "1.12.2-R0.1-SNAPSHOT"
 ---
 
-_（上游 javadoc 的 `org.bukkit.map.MapCursor` 页只输出类型声明、没有 `member-signature` 块：该类未声明自己的成员，成员全部继承自父类型。本档据此不产出成员签名，非抓取失败。）_
+- `static class MapCursor.Type`
+- `byte getDirection()`
+- `byte getRawType()`
+- `MapCursor.Type getType()`
+- `byte getX()`
+- `byte getY()`
+- `boolean isVisible()`
+- `void setDirection(byte direction)`
+- `void setRawType(byte type)`
+- `void setType(MapCursor.Type type)`
+- `void setVisible(boolean visible)`
+- `void setX(byte x)`
+- `void setY(byte y)`

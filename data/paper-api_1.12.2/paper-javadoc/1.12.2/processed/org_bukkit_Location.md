@@ -4,8 +4,80 @@ package: "org.bukkit"
 source: https://jd.papermc.io/paper/1.12.2/org/bukkit/Location.html
 sourceType: javadoc
 fetchedWith: fetch-spigot-javadoc.mjs@1
-fetchedAt: 2026-10-23T07:14:55.890Z
+fetchedAt: 2026-10-23T09:54:19.288Z
 asOfVersion: "1.12.2-R0.1-SNAPSHOT"
 ---
 
-_（上游 javadoc 的 `org.bukkit.Location` 页只输出类型声明、没有 `member-signature` 块：该类未声明自己的成员，成员全部继承自父类型。本档据此不产出成员签名，非抓取失败。）_
+- `Location add(double x, double y, double z)`
+- `Location add(Location vec)`
+- `Location add(Location base, double x, double y, double z)`
+- `Location add(Vector vec)`
+- `void checkFinite()`
+- `Location clone()`
+- `boolean createExplosion(float power)`
+- `boolean createExplosion(float power, boolean setFire)`
+- `boolean createExplosion(float power, boolean setFire, boolean breakBlocks)`
+- `boolean createExplosion(Entity source, float power)`
+- `boolean createExplosion(Entity source, float power, boolean setFire)`
+- `boolean createExplosion(Entity source, float power, boolean setFire, boolean breakBlocks)`
+- `static Location deserialize(Map<String,Object> args)`
+- `double distance(Location o)`
+- `double distanceSquared(Location o)`
+- `boolean equals(Object obj)`
+- `Block getBlock()`
+- `int getBlockX()`
+- `int getBlockY()`
+- `int getBlockZ()`
+- `Chunk getChunk()`
+- `Vector getDirection()`
+- `Collection<Entity> getNearbyEntities(double x, double y, double z)`
+- `<T extends Entity>Collection<T> getNearbyEntitiesByType(Class<? extends Entity> clazz, double xRadius, double yRadius, double zRadius, Predicate<T> predicate)`
+- `<T extends Entity>Collection<T> getNearbyEntitiesByType(Class<? extends T> clazz, double radius)`
+- `<T extends Entity>Collection<T> getNearbyEntitiesByType(Class<? extends T> clazz, double xzRadius, double yRadius)`
+- `<T extends Entity>Collection<T> getNearbyEntitiesByType(Class<? extends T> clazz, double xRadius, double yRadius, double zRadius)`
+- `<T extends Entity>Collection<T> getNearbyEntitiesByType(Class<? extends T> clazz, double xzRadius, double yRadius, Predicate<T> predicate)`
+- `<T extends Entity>Collection<T> getNearbyEntitiesByType(Class<? extends T> clazz, double radius, Predicate<T> predicate)`
+- `Collection<LivingEntity> getNearbyLivingEntities(double radius)`
+- `Collection<LivingEntity> getNearbyLivingEntities(double xzRadius, double yRadius)`
+- `Collection<LivingEntity> getNearbyLivingEntities(double xRadius, double yRadius, double zRadius)`
+- `Collection<LivingEntity> getNearbyLivingEntities(double xRadius, double yRadius, double zRadius, Predicate<LivingEntity> predicate)`
+- `Collection<LivingEntity> getNearbyLivingEntities(double xzRadius, double yRadius, Predicate<LivingEntity> predicate)`
+- `Collection<LivingEntity> getNearbyLivingEntities(double radius, Predicate<LivingEntity> predicate)`
+- `Collection<Player> getNearbyPlayers(double radius)`
+- `Collection<Player> getNearbyPlayers(double xzRadius, double yRadius)`
+- `Collection<Player> getNearbyPlayers(double xRadius, double yRadius, double zRadius)`
+- `Collection<Player> getNearbyPlayers(double xRadius, double yRadius, double zRadius, Predicate<Player> predicate)`
+- `Collection<Player> getNearbyPlayers(double xzRadius, double yRadius, Predicate<Player> predicate)`
+- `Collection<Player> getNearbyPlayers(double radius, Predicate<Player> predicate)`
+- `float getPitch()`
+- `World getWorld()`
+- `double getX()`
+- `double getY()`
+- `float getYaw()`
+- `double getZ()`
+- `int hashCode()`
+- `boolean isChunkLoaded()`
+- `boolean isGenerated()`
+- `double length()`
+- `double lengthSquared()`
+- `static int locToBlock(double loc)`
+- `Location multiply(double m)`
+- `Map<String,Object> serialize()`
+- `Location set(double x, double y, double z)`
+- `Location setDirection(Vector vector)`
+- `void setPitch(float pitch)`
+- `void setWorld(World world)`
+- `void setX(double x)`
+- `void setY(double y)`
+- `void setYaw(float yaw)`
+- `void setZ(double z)`
+- `Location subtract(double x, double y, double z)`
+- `Location subtract(Location vec)`
+- `Location subtract(Location base, double x, double y, double z)`
+- `Location subtract(Vector vec)`
+- `long toBlockKey()`
+- `Location toBlockLocation()`
+- `Location toCenterLocation()`
+- `String toString()`
+- `Vector toVector()`
+- `Location zero()`

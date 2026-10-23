@@ -4,8 +4,20 @@ package: "org.bukkit.command"
 source: https://jd.papermc.io/paper/1.12.2/org/bukkit/command/SimpleCommandMap.html
 sourceType: javadoc
 fetchedWith: fetch-spigot-javadoc.mjs@1
-fetchedAt: 2026-10-23T07:14:55.890Z
+fetchedAt: 2026-10-23T09:54:19.288Z
 asOfVersion: "1.12.2-R0.1-SNAPSHOT"
 ---
 
-_（上游 javadoc 的 `org.bukkit.command.SimpleCommandMap` 页只输出类型声明、没有 `member-signature` 块：该类未声明自己的成员，成员全部继承自父类型。本档据此不产出成员签名，非抓取失败。）_
+- `protected Map<String,Command> knownCommands`
+- `void clearCommands()`
+- `boolean dispatch(CommandSender sender, String commandLine)`
+- `Command getCommand(String name)`
+- `Collection<Command> getCommands()`
+- `Map<String,Command> getKnownCommands()`
+- `boolean register(String label, String fallbackPrefix, Command command)`
+- `boolean register(String fallbackPrefix, Command command)`
+- `void registerAll(String fallbackPrefix, List<Command> commands)`
+- `void registerServerAliases()`
+- `void setFallbackCommands()`
+- `List<String> tabComplete(CommandSender sender, String cmdLine)`
+- `List<String> tabComplete(CommandSender sender, String cmdLine, Location location)`

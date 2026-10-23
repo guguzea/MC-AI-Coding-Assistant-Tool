@@ -1,0 +1,23 @@
+{
+  "face": "server",
+  "platform": "paper",
+  "minecraftVersion": "1.21.1",
+  "asOfVersion": "1.21.1-R0.1-SNAPSHOT",
+  "upstream": {
+    "javadoc": "https://jd.papermc.io/paper/1.21.1/",
+    "docs": "https://docs.papermc.io/",
+    "server": "https://fill.papermc.io/v3/projects/paper"
+  },
+  "rulesBody": "本档无独立规则正文；正文见 paper/26.3/rules/，本档只给适用性核查",
+  "applicability": {
+    "checkedFrom": "paper/26.3/rules/*.md",
+    "signaturePointers": 39,
+    "memberStillPresent": 27,
+    "classMissing": 0,
+    "memberMissing": 12,
+    "tutorialPointers": 25,
+    "generatedBy": "temp/gen-paper-version-packs.mjs（机核；默认 dry-run）"
+  },
+  "typesInSignatureFace": 1702,
+  "typeShellPages": 141
+}

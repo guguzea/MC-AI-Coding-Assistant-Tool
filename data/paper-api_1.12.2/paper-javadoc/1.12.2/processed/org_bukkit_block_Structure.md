@@ -4,8 +4,34 @@ package: "org.bukkit.block"
 source: https://jd.papermc.io/paper/1.12.2/org/bukkit/block/Structure.html
 sourceType: javadoc
 fetchedWith: fetch-spigot-javadoc.mjs@1
-fetchedAt: 2026-10-23T07:14:55.890Z
+fetchedAt: 2026-10-23T09:54:19.288Z
 asOfVersion: "1.12.2-R0.1-SNAPSHOT"
 ---
 
-_（上游 javadoc 的 `org.bukkit.block.Structure` 页只输出类型声明、没有 `member-signature` 块：该类未声明自己的成员，成员全部继承自父类型。本档据此不产出成员签名，非抓取失败。）_
+- `String getAuthor()`
+- `float getIntegrity()`
+- `String getMetadata()`
+- `Mirror getMirror()`
+- `BlockVector getRelativePosition()`
+- `StructureRotation getRotation()`
+- `long getSeed()`
+- `String getStructureName()`
+- `BlockVector getStructureSize()`
+- `UsageMode getUsageMode()`
+- `boolean isBoundingBoxVisible()`
+- `boolean isIgnoreEntities()`
+- `boolean isShowAir()`
+- `void setAuthor(String author)`
+- `void setAuthor(LivingEntity livingEntity)`
+- `void setBoundingBoxVisible(boolean showBoundingBox)`
+- `void setIgnoreEntities(boolean ignoreEntities)`
+- `void setIntegrity(float integrity)`
+- `void setMetadata(String metadata)`
+- `void setMirror(Mirror mirror)`
+- `void setRelativePosition(BlockVector vector)`
+- `void setRotation(StructureRotation rotation)`
+- `void setSeed(long seed)`
+- `void setShowAir(boolean showAir)`
+- `void setStructureName(String name)`
+- `void setStructureSize(BlockVector vector)`
+- `void setUsageMode(UsageMode mode)`

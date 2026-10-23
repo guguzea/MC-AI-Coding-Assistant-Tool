@@ -4,8 +4,18 @@ package: "com.destroystokyo.paper.event.profile"
 source: https://jd.papermc.io/paper/1.12.2/com/destroystokyo/paper/event/profile/PreLookupProfileEvent.html
 sourceType: javadoc
 fetchedWith: fetch-spigot-javadoc.mjs@1
-fetchedAt: 2026-10-23T07:14:55.890Z
+fetchedAt: 2026-10-23T09:54:19.288Z
 asOfVersion: "1.12.2-R0.1-SNAPSHOT"
 ---
 
-_（上游 javadoc 的 `com.destroystokyo.paper.event.profile.PreLookupProfileEvent` 页只输出类型声明、没有 `member-signature` 块：该类未声明自己的成员，成员全部继承自父类型。本档据此不产出成员签名，非抓取失败。）_
+- `void addProfileProperties(Set<ProfileProperty> properties)`
+- `void addProperties(com.google.common.collect.Multimap<String,com.mojang.authlib.properties.Property> properties)`
+- `static HandlerList getHandlerList()`
+- `HandlerList getHandlers()`
+- `String getName()`
+- `Set<ProfileProperty> getProfileProperties()`
+- `com.google.common.collect.Multimap<String,com.mojang.authlib.properties.Property> getProperties()`
+- `UUID getUUID()`
+- `void setProfileProperties(Set<ProfileProperty> properties)`
+- `void setProperties(com.google.common.collect.Multimap<String,com.mojang.authlib.properties.Property> properties)`
+- `void setUUID(UUID uuid)`

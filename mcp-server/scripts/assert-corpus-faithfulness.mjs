@@ -205,7 +205,7 @@ const DEBT_ANGLE_LOSS = {
   "paper-api_stable/paper-javadoc/stable": 293,
   // 2026-10-23：paper-api 五个历史档，**同一性质**（raw 是 `.html`，`genericTokens(unesc(raw))` 产出带标记的
   // 记号如 `List<<span class="type-param-T">`，天然存活不进 Markdown）。数字取自本门实扫，逐树精确核。
-  "paper-api_1.12.2/paper-javadoc/1.12.2": 83,
+  "paper-api_1.12.2/paper-javadoc/1.12.2": 80,
   "paper-api_1.16.5/paper-javadoc/1.16.5": 103,
   "paper-api_1.20.1/paper-javadoc/1.20.1": 110,
   "paper-api_1.21.1/paper-javadoc/1.21.1": 315,

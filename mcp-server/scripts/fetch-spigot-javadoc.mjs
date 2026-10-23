@@ -317,6 +317,35 @@ async function fetchOne(t) {
       .replace(/\s+/g, " ")
       .trim(),
   );
+  // 老式 javadoc 回落：javadoc ≤10（实测 Paper 1.12.2，生成器 javadoc 10.0.2）**整站没有
+  // `member-signature`**，签名在成员摘要表的 `colFirst`（类型）+ `colSecond`（名/参数）两格里。
+  // 判据用「member-signature 为 0 **且** colFirst>0」：新式的"纯类型声明页"（注解 / 嵌套 record）是
+  // 两者都为 0（实测 1.16.5 的 JSONUtil.JSONPair / Barrel：member-signature=0, colFirst=0, h4=0, pre=0）
+  // ⇒ 不会被这条回落误抓成"继承成员"。
+  // 2026-10-23：不加这条，1.12.2 档 **877/877 全是空壳**（只有类名、零签名），等于白抓。
+  if (!sigs.length && /class="colFirst"/.test(html)) {
+    const stripTags = (s) =>
+      s
+        .replace(/<[^>]+>/g, "")
+        .replace(/&#8203;|&#x200b;/gi, "") // 老 javadoc 在 `名(` 之间插零宽空格（`getCommand&#8203;(`）
+        .replace(/&#(\d+);/g, (_, d) => String.fromCodePoint(Number(d)))
+        .replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCodePoint(parseInt(h, 16)))
+        .replace(/&lt;/g, "<")
+        .replace(/&gt;/g, ">")
+        .replace(/&amp;/g, "&")
+        .replace(/&nbsp;/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+    // **必须按 `<tr>` 切块再匹配**：直接跨行匹配会把表头行（`Method Summary / All Methods / …`）
+    // 一并吞进第一条签名（2026-10-23 实测第一版就这么脏了一条）。块内匹配保证 td/th 同属一行。
+    for (const chunk of html.split(/<tr[\s>]/).slice(1)) {
+      const a = chunk.match(/<td class="colFirst">([\s\S]*?)<\/td>/);
+      const b = chunk.match(/<th class="colSecond"[^>]*>([\s\S]*?)<\/th>/);
+      if (!a || !b) continue;
+      const sig = `${stripTags(a[1])} ${stripTags(b[1])}`.trim();
+      if (sig.length > 2) sigs.push(sig);
+    }
+  }
   // 空页不是缺陷页：老版本 javadoc 对「嵌套类 / 注解 / 纯继承接口」只输出 type-signature，没有
   // member-signature 块（2026-10-23 实测 1.21.4 档 165/1871 = 8.8%，而 26.3 档 0 个）。原来的占位
   // 只有 12 字，会被 `assert-corpus-semantics` 判成 stub（bodyChars<40 且无 `##` 节），撞全局

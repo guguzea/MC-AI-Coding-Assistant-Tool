@@ -4,8 +4,26 @@ package: "org.bukkit.boss"
 source: https://jd.papermc.io/paper/1.12.2/org/bukkit/boss/BossBar.html
 sourceType: javadoc
 fetchedWith: fetch-spigot-javadoc.mjs@1
-fetchedAt: 2026-10-23T07:14:55.890Z
+fetchedAt: 2026-10-23T09:54:19.288Z
 asOfVersion: "1.12.2-R0.1-SNAPSHOT"
 ---
 
-_（上游 javadoc 的 `org.bukkit.boss.BossBar` 页只输出类型声明、没有 `member-signature` 块：该类未声明自己的成员，成员全部继承自父类型。本档据此不产出成员签名，非抓取失败。）_
+- `void addFlag(BarFlag flag)`
+- `void addPlayer(Player player)`
+- `BarColor getColor()`
+- `List<Player> getPlayers()`
+- `double getProgress()`
+- `BarStyle getStyle()`
+- `String getTitle()`
+- `boolean hasFlag(BarFlag flag)`
+- `void hide()`
+- `boolean isVisible()`
+- `void removeAll()`
+- `void removeFlag(BarFlag flag)`
+- `void removePlayer(Player player)`
+- `void setColor(BarColor color)`
+- `void setProgress(double progress)`
+- `void setStyle(BarStyle style)`
+- `void setTitle(String title)`
+- `void setVisible(boolean visible)`
+- `void show()`

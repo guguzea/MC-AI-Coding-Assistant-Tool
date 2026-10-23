@@ -4,8 +4,17 @@ package: "org.bukkit.entity"
 source: https://jd.papermc.io/paper/1.12.2/org/bukkit/entity/Boat.html
 sourceType: javadoc
 fetchedWith: fetch-spigot-javadoc.mjs@1
-fetchedAt: 2026-10-23T07:14:55.890Z
+fetchedAt: 2026-10-23T09:54:19.288Z
 asOfVersion: "1.12.2-R0.1-SNAPSHOT"
 ---
 
-_（上游 javadoc 的 `org.bukkit.entity.Boat` 页只输出类型声明、没有 `member-signature` 块：该类未声明自己的成员，成员全部继承自父类型。本档据此不产出成员签名，非抓取失败。）_
+- `double getMaxSpeed()`
+- `double getOccupiedDeceleration()`
+- `double getUnoccupiedDeceleration()`
+- `TreeSpecies getWoodType()`
+- `boolean getWorkOnLand()`
+- `void setMaxSpeed(double speed)`
+- `void setOccupiedDeceleration(double rate)`
+- `void setUnoccupiedDeceleration(double rate)`
+- `void setWoodType(TreeSpecies species)`
+- `void setWorkOnLand(boolean workOnLand)`

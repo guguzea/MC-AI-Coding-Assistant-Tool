@@ -4,8 +4,24 @@ package: "com.destroystokyo.paper.event.player"
 source: https://jd.papermc.io/paper/1.12.2/com/destroystokyo/paper/event/player/PlayerHandshakeEvent.html
 sourceType: javadoc
 fetchedWith: fetch-spigot-javadoc.mjs@1
-fetchedAt: 2026-10-23T07:14:55.890Z
+fetchedAt: 2026-10-23T09:54:19.288Z
 asOfVersion: "1.12.2-R0.1-SNAPSHOT"
 ---
 
-_（上游 javadoc 的 `com.destroystokyo.paper.event.player.PlayerHandshakeEvent` 页只输出类型声明、没有 `member-signature` 块：该类未声明自己的成员，成员全部继承自父类型。本档据此不产出成员签名，非抓取失败。）_
+- `String getFailMessage()`
+- `static HandlerList getHandlerList()`
+- `HandlerList getHandlers()`
+- `String getOriginalHandshake()`
+- `String getPropertiesJson()`
+- `String getServerHostname()`
+- `String getSocketAddressHostname()`
+- `UUID getUniqueId()`
+- `boolean isCancelled()`
+- `boolean isFailed()`
+- `void setCancelled(boolean cancelled)`
+- `void setFailed(boolean failed)`
+- `void setFailMessage(String failMessage)`
+- `void setPropertiesJson(String propertiesJson)`
+- `void setServerHostname(String serverHostname)`
+- `void setSocketAddressHostname(String socketAddressHostname)`
+- `void setUniqueId(UUID uniqueId)`

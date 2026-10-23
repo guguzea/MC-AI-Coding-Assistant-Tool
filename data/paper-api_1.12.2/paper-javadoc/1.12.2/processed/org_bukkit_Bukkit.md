@@ -4,8 +4,120 @@ package: "org.bukkit"
 source: https://jd.papermc.io/paper/1.12.2/org/bukkit/Bukkit.html
 sourceType: javadoc
 fetchedWith: fetch-spigot-javadoc.mjs@1
-fetchedAt: 2026-10-23T07:14:55.890Z
+fetchedAt: 2026-10-23T09:54:19.288Z
 asOfVersion: "1.12.2-R0.1-SNAPSHOT"
 ---
 
-_（上游 javadoc 的 `org.bukkit.Bukkit` 页只输出类型声明、没有 `member-signature` 块：该类未声明自己的成员，成员全部继承自父类型。本档据此不产出成员签名，非抓取失败。）_
+- `static boolean addRecipe(Recipe recipe)`
+- `static Iterator<Advancement> advancementIterator()`
+- `static void banIP(String address)`
+- `static int broadcast(String message, String permission)`
+- `static void broadcast(net.md_5.bungee.api.chat.BaseComponent component)`
+- `static void broadcast(net.md_5.bungee.api.chat.BaseComponent... components)`
+- `static int broadcastMessage(String message)`
+- `static void clearRecipes()`
+- `static BossBar createBossBar(String title, BarColor color, BarStyle style, BarFlag... flags)`
+- `static ChunkGenerator.ChunkData createChunkData(World world)`
+- `static Inventory createInventory(InventoryHolder owner, int size)`
+- `static Inventory createInventory(InventoryHolder owner, int size, String title)`
+- `static Inventory createInventory(InventoryHolder owner, InventoryType type)`
+- `static Inventory createInventory(InventoryHolder owner, InventoryType type, String title)`
+- `static MapView createMap(World world)`
+- `static Merchant createMerchant(String title)`
+- `static PlayerProfile createProfile(String name)`
+- `static PlayerProfile createProfile(UUID uuid)`
+- `static PlayerProfile createProfile(UUID uuid, String name)`
+- `static World createWorld(WorldCreator creator)`
+- `static boolean dispatchCommand(CommandSender sender, String commandLine)`
+- `static Advancement getAdvancement(NamespacedKey key)`
+- `static boolean getAllowEnd()`
+- `static boolean getAllowFlight()`
+- `static boolean getAllowNether()`
+- `static int getAmbientSpawnLimit()`
+- `static int getAnimalSpawnLimit()`
+- `static BanList getBanList(BanList.Type type)`
+- `static Set<OfflinePlayer> getBannedPlayers()`
+- `static String getBukkitVersion()`
+- `static Map<String,String[]> getCommandAliases()`
+- `static CommandMap getCommandMap()`
+- `static long getConnectionThrottle()`
+- `static ConsoleCommandSender getConsoleSender()`
+- `static GameMode getDefaultGameMode()`
+- `static Entity getEntity(UUID uuid)`
+- `static boolean getGenerateStructures()`
+- `static HelpMap getHelpMap()`
+- `static int getIdleTimeout()`
+- `static String getIp()`
+- `static Set<String> getIPBans()`
+- `static ItemFactory getItemFactory()`
+- `static Logger getLogger()`
+- `static MapView getMap(short id)`
+- `static int getMaxPlayers()`
+- `static Messenger getMessenger()`
+- `static int getMonsterSpawnLimit()`
+- `static String getMotd()`
+- `static String getName()`
+- `static OfflinePlayer getOfflinePlayer(String name)`
+- `static OfflinePlayer getOfflinePlayer(UUID id)`
+- `static OfflinePlayer[] getOfflinePlayers()`
+- `static boolean getOnlineMode()`
+- `static Collection<? extends Player> getOnlinePlayers()`
+- `static Set<OfflinePlayer> getOperators()`
+- `static Player getPlayer(String name)`
+- `static Player getPlayer(UUID id)`
+- `static Player getPlayerExact(String name)`
+- `static UUID getPlayerUniqueId(String playerName)`
+- `static PluginCommand getPluginCommand(String name)`
+- `static PluginManager getPluginManager()`
+- `static int getPort()`
+- `static List<Recipe> getRecipesFor(ItemStack result)`
+- `static BukkitScheduler getScheduler()`
+- `static ScoreboardManager getScoreboardManager()`
+- `static Server getServer()`
+- `static CachedServerIcon getServerIcon()`
+- `static String getServerId()`
+- `static String getServerName()`
+- `static ServicesManager getServicesManager()`
+- `static String getShutdownMessage()`
+- `static int getSpawnRadius()`
+- `static int getTicksPerAnimalSpawns()`
+- `static int getTicksPerMonsterSpawns()`
+- `static double[] getTPS()`
+- `static UnsafeValues getUnsafe()`
+- `static String getUpdateFolder()`
+- `static File getUpdateFolderFile()`
+- `static String getVersion()`
+- `static int getViewDistance()`
+- `static Warning.WarningState getWarningState()`
+- `static int getWaterAnimalSpawnLimit()`
+- `static Set<OfflinePlayer> getWhitelistedPlayers()`
+- `static World getWorld(String name)`
+- `static World getWorld(UUID uid)`
+- `static File getWorldContainer()`
+- `static List<World> getWorlds()`
+- `static String getWorldType()`
+- `static boolean hasWhitelist()`
+- `static boolean isHardcore()`
+- `static boolean isPrimaryThread()`
+- `static CachedServerIcon loadServerIcon(BufferedImage image)`
+- `static CachedServerIcon loadServerIcon(File file)`
+- `static List<Player> matchPlayer(String name)`
+- `static Iterator<Recipe> recipeIterator()`
+- `static void reload()`
+- `static boolean reloadCommandAliases()`
+- `static void reloadData()`
+- `static void reloadPermissions()`
+- `static void reloadWhitelist()`
+- `static void resetRecipes()`
+- `static void savePlayers()`
+- `static void setDefaultGameMode(GameMode mode)`
+- `static void setIdleTimeout(int threshold)`
+- `static void setServer(Server server)`
+- `static void setSpawnRadius(int value)`
+- `static void setWhitelist(boolean value)`
+- `static void shutdown()`
+- `static Server.Spigot spigot()`
+- `static boolean suggestPlayerNamesWhenNullTabCompletions()`
+- `static void unbanIP(String address)`
+- `static boolean unloadWorld(String name, boolean save)`
+- `static boolean unloadWorld(World world, boolean save)`

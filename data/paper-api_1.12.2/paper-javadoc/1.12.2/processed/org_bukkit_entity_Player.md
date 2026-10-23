@@ -4,8 +4,174 @@ package: "org.bukkit.entity"
 source: https://jd.papermc.io/paper/1.12.2/org/bukkit/entity/Player.html
 sourceType: javadoc
 fetchedWith: fetch-spigot-javadoc.mjs@1
-fetchedAt: 2026-10-23T07:14:55.890Z
+fetchedAt: 2026-10-23T09:54:19.288Z
 asOfVersion: "1.12.2-R0.1-SNAPSHOT"
 ---
 
-_（上游 javadoc 的 `org.bukkit.entity.Player` 页只输出类型声明、没有 `member-signature` 块：该类未声明自己的成员，成员全部继承自父类型。本档据此不产出成员签名，非抓取失败。）_
+- `static class Player.Spigot`
+- `int applyMending(int amount)`
+- `void awardAchievement(Achievement achievement)`
+- `default BanEntry banPlayerFull(String reason)`
+- `default BanEntry banPlayerFull(String reason, String source)`
+- `default BanEntry banPlayerFull(String reason, Date expires)`
+- `default BanEntry banPlayerFull(String reason, Date expires, String source)`
+- `default BanEntry banPlayerIP(String reason)`
+- `default BanEntry banPlayerIP(String reason, boolean kickPlayer)`
+- `default BanEntry banPlayerIP(String reason, String source)`
+- `default BanEntry banPlayerIP(String reason, String source, boolean kickPlayer)`
+- `default BanEntry banPlayerIP(String reason, Date expires)`
+- `default BanEntry banPlayerIP(String reason, Date expires, boolean kickPlayer)`
+- `default BanEntry banPlayerIP(String reason, Date expires, String source)`
+- `default BanEntry banPlayerIP(String reason, Date expires, String source, boolean kickPlayer)`
+- `boolean canSee(Player player)`
+- `void chat(String msg)`
+- `void decrementStatistic(Statistic statistic)`
+- `void decrementStatistic(Statistic statistic, int amount)`
+- `void decrementStatistic(Statistic statistic, EntityType entityType)`
+- `void decrementStatistic(Statistic statistic, EntityType entityType, int amount)`
+- `void decrementStatistic(Statistic statistic, Material material)`
+- `void decrementStatistic(Statistic statistic, Material material, int amount)`
+- `InetSocketAddress getAddress()`
+- `AdvancementProgress getAdvancementProgress(Advancement advancement)`
+- `boolean getAffectsSpawning()`
+- `boolean getAllowFlight()`
+- `Location getBedSpawnLocation()`
+- `Location getCompassTarget()`
+- `String getDisplayName()`
+- `float getExhaustion()`
+- `float getExp()`
+- `float getFlySpeed()`
+- `int getFoodLevel()`
+- `double getHealthScale()`
+- `int getLevel()`
+- `String getLocale()`
+- `String getPlayerListName()`
+- `PlayerProfile getPlayerProfile()`
+- `long getPlayerTime()`
+- `long getPlayerTimeOffset()`
+- `WeatherType getPlayerWeather()`
+- `String getResourcePackHash()`
+- `PlayerResourcePackStatusEvent.Status getResourcePackStatus()`
+- `float getSaturation()`
+- `Scoreboard getScoreboard()`
+- `Entity getSpectatorTarget()`
+- `int getStatistic(Statistic statistic)`
+- `int getStatistic(Statistic statistic, EntityType entityType)`
+- `int getStatistic(Statistic statistic, Material material)`
+- `int getTotalExperience()`
+- `int getViewDistance()`
+- `float getWalkSpeed()`
+- `default void giveExp(int amount)`
+- `void giveExp(int amount, boolean applyMending)`
+- `void giveExpLevels(int amount)`
+- `boolean hasAchievement(Achievement achievement)`
+- `boolean hasResourcePack()`
+- `void hidePlayer(Player player)`
+- `void hidePlayer(Plugin plugin, Player player)`
+- `void hideTitle()`
+- `void incrementStatistic(Statistic statistic)`
+- `void incrementStatistic(Statistic statistic, int amount)`
+- `void incrementStatistic(Statistic statistic, EntityType entityType)`
+- `void incrementStatistic(Statistic statistic, EntityType entityType, int amount)`
+- `void incrementStatistic(Statistic statistic, Material material)`
+- `void incrementStatistic(Statistic statistic, Material material, int amount)`
+- `boolean isFlying()`
+- `boolean isHealthScaled()`
+- `boolean isPlayerTimeRelative()`
+- `boolean isSleepingIgnored()`
+- `boolean isSneaking()`
+- `boolean isSprinting()`
+- `void kickPlayer(String message)`
+- `void loadData()`
+- `boolean performCommand(String command)`
+- `void playEffect(Location loc, Effect effect, int data)`
+- `<T> void playEffect(Location loc, Effect effect, T data)`
+- `void playNote(Location loc, byte instrument, byte note)`
+- `void playNote(Location loc, Instrument instrument, Note note)`
+- `void playSound(Location location, String sound, float volume, float pitch)`
+- `void playSound(Location location, String sound, SoundCategory category, float volume, float pitch)`
+- `void playSound(Location location, Sound sound, float volume, float pitch)`
+- `void playSound(Location location, Sound sound, SoundCategory category, float volume, float pitch)`
+- `void removeAchievement(Achievement achievement)`
+- `void resetPlayerTime()`
+- `void resetPlayerWeather()`
+- `void resetTitle()`
+- `void saveData()`
+- `void sendActionBar(char alternateChar, String message)`
+- `void sendActionBar(String message)`
+- `void sendBlockChange(Location loc, int material, byte data)`
+- `void sendBlockChange(Location loc, Material material, byte data)`
+- `boolean sendChunkChange(Location loc, int sx, int sy, int sz, byte[] data)`
+- `void sendMap(MapView map)`
+- `default void sendMessage(net.md_5.bungee.api.chat.BaseComponent component)`
+- `default void sendMessage(net.md_5.bungee.api.chat.BaseComponent... components)`
+- `default void sendMessage(net.md_5.bungee.api.ChatMessageType position, net.md_5.bungee.api.chat.BaseComponent... components)`
+- `void sendRawMessage(String message)`
+- `void sendSignChange(Location loc, String[] lines)`
+- `void sendTitle(Title title)`
+- `void sendTitle(String title, String subtitle)`
+- `void sendTitle(String title, String subtitle, int fadeIn, int stay, int fadeOut)`
+- `void setAffectsSpawning(boolean affects)`
+- `void setAllowFlight(boolean flight)`
+- `void setBedSpawnLocation(Location location)`
+- `void setBedSpawnLocation(Location location, boolean force)`
+- `void setCompassTarget(Location loc)`
+- `void setDisplayName(String name)`
+- `void setExhaustion(float value)`
+- `void setExp(float exp)`
+- `void setFlying(boolean value)`
+- `void setFlySpeed(float value)`
+- `void setFoodLevel(int value)`
+- `void setHealthScale(double scale)`
+- `void setHealthScaled(boolean scale)`
+- `void setLevel(int level)`
+- `void setPlayerListHeaderFooter(net.md_5.bungee.api.chat.BaseComponent[] header, net.md_5.bungee.api.chat.BaseComponent[] footer)`
+- `void setPlayerListHeaderFooter(net.md_5.bungee.api.chat.BaseComponent header, net.md_5.bungee.api.chat.BaseComponent footer)`
+- `void setPlayerListName(String name)`
+- `void setPlayerProfile(PlayerProfile profile)`
+- `void setPlayerTime(long time, boolean relative)`
+- `void setPlayerWeather(WeatherType type)`
+- `void setResourcePack(String url)`
+- `void setResourcePack(String url, byte[] hash)`
+- `void setResourcePack(String url, String hash)`
+- `void setSaturation(float value)`
+- `void setScoreboard(Scoreboard scoreboard)`
+- `void setSleepingIgnored(boolean isSleeping)`
+- `void setSneaking(boolean sneak)`
+- `void setSpectatorTarget(Entity entity)`
+- `void setSprinting(boolean sprinting)`
+- `void setStatistic(Statistic statistic, int newValue)`
+- `void setStatistic(Statistic statistic, EntityType entityType, int newValue)`
+- `void setStatistic(Statistic statistic, Material material, int newValue)`
+- `void setSubtitle(net.md_5.bungee.api.chat.BaseComponent subtitle)`
+- `void setSubtitle(net.md_5.bungee.api.chat.BaseComponent[] subtitle)`
+- `void setTexturePack(String url)`
+- `void setTitleTimes(int fadeInTicks, int stayTicks, int fadeOutTicks)`
+- `void setTotalExperience(int exp)`
+- `void setViewDistance(int viewDistance)`
+- `void setWalkSpeed(float value)`
+- `void showPlayer(Player player)`
+- `void showPlayer(Plugin plugin, Player player)`
+- `void showTitle(net.md_5.bungee.api.chat.BaseComponent title)`
+- `void showTitle(net.md_5.bungee.api.chat.BaseComponent[] title)`
+- `void showTitle(net.md_5.bungee.api.chat.BaseComponent[] title, net.md_5.bungee.api.chat.BaseComponent[] subtitle, int fadeInTicks, int stayTicks, int fadeOutTicks)`
+- `void showTitle(net.md_5.bungee.api.chat.BaseComponent title, net.md_5.bungee.api.chat.BaseComponent subtitle, int fadeInTicks, int stayTicks, int fadeOutTicks)`
+- `void spawnParticle(Particle particle, double x, double y, double z, int count)`
+- `void spawnParticle(Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ)`
+- `void spawnParticle(Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ, double extra)`
+- `<T> void spawnParticle(Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ, double extra, T data)`
+- `<T> void spawnParticle(Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ, T data)`
+- `<T> void spawnParticle(Particle particle, double x, double y, double z, int count, T data)`
+- `void spawnParticle(Particle particle, Location location, int count)`
+- `void spawnParticle(Particle particle, Location location, int count, double offsetX, double offsetY, double offsetZ)`
+- `void spawnParticle(Particle particle, Location location, int count, double offsetX, double offsetY, double offsetZ, double extra)`
+- `<T> void spawnParticle(Particle particle, Location location, int count, double offsetX, double offsetY, double offsetZ, double extra, T data)`
+- `<T> void spawnParticle(Particle particle, Location location, int count, double offsetX, double offsetY, double offsetZ, T data)`
+- `<T> void spawnParticle(Particle particle, Location location, int count, T data)`
+- `Player.Spigot spigot()`
+- `void stopSound(String sound)`
+- `void stopSound(String sound, SoundCategory category)`
+- `void stopSound(Sound sound)`
+- `void stopSound(Sound sound, SoundCategory category)`
+- `void updateInventory()`
+- `void updateTitle(Title title)`

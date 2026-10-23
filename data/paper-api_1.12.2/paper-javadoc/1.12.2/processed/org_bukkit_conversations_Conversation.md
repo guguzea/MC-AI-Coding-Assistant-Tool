@@ -4,8 +4,30 @@ package: "org.bukkit.conversations"
 source: https://jd.papermc.io/paper/1.12.2/org/bukkit/conversations/Conversation.html
 sourceType: javadoc
 fetchedWith: fetch-spigot-javadoc.mjs@1
-fetchedAt: 2026-10-23T07:14:55.890Z
+fetchedAt: 2026-10-23T09:54:19.288Z
 asOfVersion: "1.12.2-R0.1-SNAPSHOT"
 ---
 
-_（上游 javadoc 的 `org.bukkit.conversations.Conversation` 页只输出类型声明、没有 `member-signature` 块：该类未声明自己的成员，成员全部继承自父类型。本档据此不产出成员签名，非抓取失败。）_
+- `static class Conversation.ConversationState`
+- `protected List<ConversationAbandonedListener> abandonedListeners`
+- `protected List<ConversationCanceller> cancellers`
+- `protected ConversationContext context`
+- `protected Prompt currentPrompt`
+- `protected boolean localEchoEnabled`
+- `protected boolean modal`
+- `protected ConversationPrefix prefix`
+- `void abandon()`
+- `void abandon(ConversationAbandonedEvent details)`
+- `void acceptInput(String input)`
+- `void addConversationAbandonedListener(ConversationAbandonedListener listener)`
+- `void begin()`
+- `List<ConversationCanceller> getCancellers()`
+- `ConversationContext getContext()`
+- `Conversable getForWhom()`
+- `ConversationPrefix getPrefix()`
+- `Conversation.ConversationState getState()`
+- `boolean isLocalEchoEnabled()`
+- `boolean isModal()`
+- `void outputNextPrompt()`
+- `void removeConversationAbandonedListener(ConversationAbandonedListener listener)`
+- `void setLocalEchoEnabled(boolean localEchoEnabled)`

@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-10-23T08:15:57.171Z",
+  "built_at": "2026-10-23T09:59:24.724Z",
   "embedMode": "hybrid",
   "entries": [
     {
@@ -655,12 +655,12 @@
       "version": "1.12.2",
       "source": "paper-javadoc",
       "path": "paper-api_1.12.2/paper-javadoc/1.12.2/semantic/db.sqlite",
-      "chunks": 877,
-      "embedded": 0,
-      "built_at": "2026-10-23T08:08:23.068Z",
+      "chunks": 945,
+      "embedded": 359,
+      "built_at": "2026-10-23T09:59:24.572Z",
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
-      "sha256": "441c8d65d21f4592893d0b34693c7a93c70b8a4db8c70ddccc4a26bb88ee9687"
+      "sha256": "4b84bb2ca89aaea1a2fa00940fcb50ce7439c62b38421d39784aed10904bf212"
     },
     {
       "platform": "paper-api",

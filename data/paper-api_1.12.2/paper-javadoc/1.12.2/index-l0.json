@@ -10,7 +10,7 @@
       "co.aikar.timings"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 11
   },
   {
     "id": "1.12.2/co_aikar_timings_NullTimingHandler",
@@ -23,7 +23,7 @@
       "co.aikar.timings"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 8
   },
   {
     "id": "1.12.2/co_aikar_timings_TimedEventExecutor",
@@ -36,7 +36,7 @@
       "co.aikar.timings"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/co_aikar_timings_Timing",
@@ -49,7 +49,7 @@
       "co.aikar.timings"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/co_aikar_timings_TimingHistory",
@@ -62,7 +62,7 @@
       "co.aikar.timings"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/co_aikar_timings_Timings",
@@ -75,7 +75,7 @@
       "co.aikar.timings"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 16
   },
   {
     "id": "1.12.2/co_aikar_timings_TimingsCommand",
@@ -88,7 +88,7 @@
       "co.aikar.timings"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/co_aikar_timings_TimingsManager",
@@ -101,7 +101,7 @@
       "co.aikar.timings"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/co_aikar_timings_TimingsReportListener",
@@ -114,7 +114,7 @@
       "co.aikar.timings"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/co_aikar_util_Counter",
@@ -127,7 +127,7 @@
       "co.aikar.util"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/co_aikar_util_JSONUtil",
@@ -140,7 +140,7 @@
       "co.aikar.util"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 10
   },
   {
     "id": "1.12.2/co_aikar_util_JSONUtil.JSONPair",
@@ -166,7 +166,7 @@
       "co.aikar.util"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/co_aikar_util_LoadingIntMap.Feeder",
@@ -179,7 +179,7 @@
       "co.aikar.util"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/co_aikar_util_LoadingMap",
@@ -192,7 +192,7 @@
       "co.aikar.util"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 28
   },
   {
     "id": "1.12.2/co_aikar_util_LoadingMap.Feeder",
@@ -205,7 +205,7 @@
       "co.aikar.util"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/co_aikar_util_MRUMapCache",
@@ -218,7 +218,7 @@
       "co.aikar.util"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 13
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_entity_RangedEntity",
@@ -231,7 +231,7 @@
       "com.destroystokyo.paper.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_entity_SentientNPC",
@@ -244,7 +244,7 @@
       "com.destroystokyo.paper.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_event_block_BeaconEffectEvent",
@@ -257,7 +257,7 @@
       "com.destroystokyo.paper.event.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 8
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_event_entity_EndermanAttackPlayerEvent",
@@ -270,7 +270,7 @@
       "com.destroystokyo.paper.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_event_entity_EndermanEscapeEvent",
@@ -283,7 +283,7 @@
       "com.destroystokyo.paper.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_event_entity_EndermanEscapeEvent.Reason",
@@ -296,7 +296,7 @@
       "com.destroystokyo.paper.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_event_entity_EntityAddToWorldEvent",
@@ -309,7 +309,7 @@
       "com.destroystokyo.paper.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_event_entity_EntityKnockbackByEntityEvent",
@@ -322,7 +322,7 @@
       "com.destroystokyo.paper.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 8
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_event_entity_EntityPathfindEvent",
@@ -335,7 +335,7 @@
       "com.destroystokyo.paper.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_event_entity_EntityRemoveFromWorldEvent",
@@ -348,7 +348,7 @@
       "com.destroystokyo.paper.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_event_entity_EntityTeleportEndGatewayEvent",
@@ -361,7 +361,7 @@
       "com.destroystokyo.paper.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_event_entity_EntityZapEvent",
@@ -374,7 +374,7 @@
       "com.destroystokyo.paper.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_event_entity_ExperienceOrbMergeEvent",
@@ -387,7 +387,7 @@
       "com.destroystokyo.paper.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_event_entity_PlayerNaturallySpawnCreaturesEvent",
@@ -400,7 +400,7 @@
       "com.destroystokyo.paper.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_event_entity_PreCreatureSpawnEvent",
@@ -413,7 +413,7 @@
       "com.destroystokyo.paper.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 9
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_event_entity_ProjectileCollideEvent",
@@ -426,7 +426,7 @@
       "com.destroystokyo.paper.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_event_entity_WitchConsumePotionEvent",
@@ -439,7 +439,7 @@
       "com.destroystokyo.paper.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_event_entity_WitchReadyPotionEvent",
@@ -452,7 +452,7 @@
       "com.destroystokyo.paper.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 8
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_event_entity_WitchThrowPotionEvent",
@@ -465,7 +465,7 @@
       "com.destroystokyo.paper.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 8
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_event_executor_asm_ASMEventExecutorGenerator",
@@ -478,7 +478,7 @@
       "com.destroystokyo.paper.event.executor.asm"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_event_executor_asm_ClassDefiner",
@@ -491,7 +491,7 @@
       "com.destroystokyo.paper.event.executor.asm"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_event_executor_asm_SafeClassDefiner",
@@ -504,7 +504,7 @@
       "com.destroystokyo.paper.event.executor.asm"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_event_executor_MethodHandleEventExecutor",
@@ -517,7 +517,7 @@
       "com.destroystokyo.paper.event.executor"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_event_executor_StaticMethodHandleEventExecutor",
@@ -530,7 +530,7 @@
       "com.destroystokyo.paper.event.executor"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_event_player_IllegalPacketEvent",
@@ -543,7 +543,7 @@
       "com.destroystokyo.paper.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 9
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_event_player_PlayerAdvancementCriterionGrantEvent",
@@ -556,7 +556,7 @@
       "com.destroystokyo.paper.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_event_player_PlayerArmorChangeEvent",
@@ -569,7 +569,7 @@
       "com.destroystokyo.paper.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_event_player_PlayerArmorChangeEvent.SlotType",
@@ -582,7 +582,7 @@
       "com.destroystokyo.paper.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_event_player_PlayerHandshakeEvent",
@@ -595,7 +595,7 @@
       "com.destroystokyo.paper.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 17
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_event_player_PlayerInitialSpawnEvent",
@@ -608,7 +608,7 @@
       "com.destroystokyo.paper.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_event_player_PlayerJumpEvent",
@@ -621,7 +621,7 @@
       "com.destroystokyo.paper.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_event_player_PlayerLocaleChangeEvent",
@@ -634,7 +634,7 @@
       "com.destroystokyo.paper.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_event_player_PlayerPickupExperienceEvent",
@@ -647,7 +647,7 @@
       "com.destroystokyo.paper.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_event_player_PlayerReadyArrowEvent",
@@ -660,7 +660,7 @@
       "com.destroystokyo.paper.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_event_player_PlayerTeleportEndGatewayEvent",
@@ -673,7 +673,7 @@
       "com.destroystokyo.paper.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_event_player_PlayerUseUnknownEntityEvent",
@@ -686,7 +686,7 @@
       "com.destroystokyo.paper.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_event_profile_FillProfileEvent",
@@ -699,7 +699,7 @@
       "com.destroystokyo.paper.event.profile"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_event_profile_LookupProfileEvent",
@@ -712,7 +712,7 @@
       "com.destroystokyo.paper.event.profile"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_event_profile_PreFillProfileEvent",
@@ -725,7 +725,7 @@
       "com.destroystokyo.paper.event.profile"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_event_profile_PreLookupProfileEvent",
@@ -738,7 +738,7 @@
       "com.destroystokyo.paper.event.profile"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 11
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_event_profile_ProfileWhitelistVerifyEvent",
@@ -751,7 +751,7 @@
       "com.destroystokyo.paper.event.profile"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 10
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_event_server_AsyncTabCompleteEvent",
@@ -764,7 +764,7 @@
       "com.destroystokyo.paper.event.server"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 12
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_event_server_PaperServerListPingEvent",
@@ -777,7 +777,7 @@
       "com.destroystokyo.paper.event.server"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 20
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_event_server_ServerExceptionEvent",
@@ -790,7 +790,7 @@
       "com.destroystokyo.paper.event.server"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_exception_ServerCommandException",
@@ -803,7 +803,7 @@
       "com.destroystokyo.paper.exception"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_exception_ServerEventException",
@@ -816,7 +816,7 @@
       "com.destroystokyo.paper.exception"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_exception_ServerException",
@@ -842,7 +842,7 @@
       "com.destroystokyo.paper.exception"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_exception_ServerPluginEnableDisableException",
@@ -868,7 +868,7 @@
       "com.destroystokyo.paper.exception"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_exception_ServerPluginMessageException",
@@ -881,7 +881,7 @@
       "com.destroystokyo.paper.exception"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_exception_ServerSchedulerException",
@@ -894,7 +894,7 @@
       "com.destroystokyo.paper.exception"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_exception_ServerTabCompleteException",
@@ -920,7 +920,7 @@
       "com.destroystokyo.paper.inventory.meta"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 10
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_loottable_Lootable",
@@ -933,7 +933,7 @@
       "com.destroystokyo.paper.loottable"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_loottable_LootableBlockInventory",
@@ -946,7 +946,7 @@
       "com.destroystokyo.paper.loottable"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_loottable_LootableEntityInventory",
@@ -959,7 +959,7 @@
       "com.destroystokyo.paper.loottable"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_loottable_LootableInventory",
@@ -972,7 +972,7 @@
       "com.destroystokyo.paper.loottable"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 12
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_loottable_LootableInventoryReplenishEvent",
@@ -985,7 +985,7 @@
       "com.destroystokyo.paper.loottable"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_network_NetworkClient",
@@ -998,7 +998,7 @@
       "com.destroystokyo.paper.network"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_network_StatusClient",
@@ -1011,7 +1011,7 @@
       "com.destroystokyo.paper.network"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_ParticleBuilder",
@@ -1024,7 +1024,7 @@
       "com.destroystokyo.paper"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 32
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_profile_PlayerProfile",
@@ -1037,7 +1037,7 @@
       "com.destroystokyo.paper.profile"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 18
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_profile_ProfileProperty",
@@ -1050,7 +1050,7 @@
       "com.destroystokyo.paper.profile"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_Title",
@@ -1063,7 +1063,7 @@
       "com.destroystokyo.paper"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 10
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_Title.Builder",
@@ -1076,7 +1076,7 @@
       "com.destroystokyo.paper"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 10
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_utils_CachedSizeConcurrentLinkedQueue",
@@ -1089,7 +1089,7 @@
       "com.destroystokyo.paper.utils"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_utils_PaperPluginLogger",
@@ -1102,7 +1102,7 @@
       "com.destroystokyo.paper.utils"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_utils_UnsafeUtils",
@@ -1115,7 +1115,7 @@
       "com.destroystokyo.paper.utils"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_VersionHistoryManager",
@@ -1128,7 +1128,7 @@
       "com.destroystokyo.paper"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/com_destroystokyo_paper_VersionHistoryManager.VersionData",
@@ -1141,7 +1141,7 @@
       "com.destroystokyo.paper"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_Achievement",
@@ -1154,7 +1154,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_advancement_Advancement",
@@ -1167,7 +1167,7 @@
       "org.bukkit.advancement"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_advancement_AdvancementProgress",
@@ -1180,7 +1180,7 @@
       "org.bukkit.advancement"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_Art",
@@ -1193,7 +1193,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_attribute_Attributable",
@@ -1206,7 +1206,7 @@
       "org.bukkit.attribute"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_attribute_Attribute",
@@ -1219,7 +1219,7 @@
       "org.bukkit.attribute"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_attribute_AttributeInstance",
@@ -1232,7 +1232,7 @@
       "org.bukkit.attribute"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 8
   },
   {
     "id": "1.12.2/org_bukkit_attribute_AttributeModifier",
@@ -1245,7 +1245,7 @@
       "org.bukkit.attribute"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_attribute_AttributeModifier.Operation",
@@ -1258,7 +1258,7 @@
       "org.bukkit.attribute"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_BanEntry",
@@ -1271,7 +1271,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 10
   },
   {
     "id": "1.12.2/org_bukkit_BanList",
@@ -1284,7 +1284,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_BanList.Type",
@@ -1297,7 +1297,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_block_Banner",
@@ -1310,7 +1310,7 @@
       "org.bukkit.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 9
   },
   {
     "id": "1.12.2/org_bukkit_block_banner_Pattern",
@@ -1323,7 +1323,7 @@
       "org.bukkit.block.banner"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_block_banner_PatternType",
@@ -1336,7 +1336,7 @@
       "org.bukkit.block.banner"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_block_Beacon",
@@ -1349,7 +1349,7 @@
       "org.bukkit.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 8
   },
   {
     "id": "1.12.2/org_bukkit_block_Bed",
@@ -1375,7 +1375,7 @@
       "org.bukkit.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_block_Block",
@@ -1388,7 +1388,7 @@
       "org.bukkit.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 44
   },
   {
     "id": "1.12.2/org_bukkit_block_BlockFace",
@@ -1401,7 +1401,7 @@
       "org.bukkit.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_block_BlockState",
@@ -1414,7 +1414,7 @@
       "org.bukkit.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 21
   },
   {
     "id": "1.12.2/org_bukkit_block_BrewingStand",
@@ -1427,7 +1427,7 @@
       "org.bukkit.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_block_Chest",
@@ -1440,7 +1440,7 @@
       "org.bukkit.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_block_CommandBlock",
@@ -1453,7 +1453,7 @@
       "org.bukkit.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_block_Comparator",
@@ -1479,7 +1479,7 @@
       "org.bukkit.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_block_CreatureSpawner",
@@ -1492,7 +1492,7 @@
       "org.bukkit.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 18
   },
   {
     "id": "1.12.2/org_bukkit_block_DaylightDetector",
@@ -1518,7 +1518,7 @@
       "org.bukkit.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_block_DoubleChest",
@@ -1531,7 +1531,7 @@
       "org.bukkit.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 8
   },
   {
     "id": "1.12.2/org_bukkit_block_Dropper",
@@ -1544,7 +1544,7 @@
       "org.bukkit.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_block_EnchantingTable",
@@ -1583,7 +1583,7 @@
       "org.bukkit.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_block_FlowerPot",
@@ -1596,7 +1596,7 @@
       "org.bukkit.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_block_Furnace",
@@ -1609,7 +1609,7 @@
       "org.bukkit.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_block_Hopper",
@@ -1635,7 +1635,7 @@
       "org.bukkit.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_block_Lockable",
@@ -1648,7 +1648,7 @@
       "org.bukkit.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_block_NoteBlock",
@@ -1661,7 +1661,7 @@
       "org.bukkit.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_block_PistonMoveReaction",
@@ -1674,7 +1674,7 @@
       "org.bukkit.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_block_ShulkerBox",
@@ -1687,7 +1687,7 @@
       "org.bukkit.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_block_Sign",
@@ -1700,7 +1700,7 @@
       "org.bukkit.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_block_Skull",
@@ -1713,7 +1713,7 @@
       "org.bukkit.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 9
   },
   {
     "id": "1.12.2/org_bukkit_block_Structure",
@@ -1726,7 +1726,7 @@
       "org.bukkit.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 27
   },
   {
     "id": "1.12.2/org_bukkit_block_structure_Mirror",
@@ -1739,7 +1739,7 @@
       "org.bukkit.block.structure"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_block_structure_StructureRotation",
@@ -1752,7 +1752,7 @@
       "org.bukkit.block.structure"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_block_structure_UsageMode",
@@ -1765,7 +1765,7 @@
       "org.bukkit.block.structure"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_BlockChangeDelegate",
@@ -1778,7 +1778,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_boss_BarColor",
@@ -1791,7 +1791,7 @@
       "org.bukkit.boss"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_boss_BarFlag",
@@ -1804,7 +1804,7 @@
       "org.bukkit.boss"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_boss_BarStyle",
@@ -1817,7 +1817,7 @@
       "org.bukkit.boss"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_boss_BossBar",
@@ -1830,7 +1830,7 @@
       "org.bukkit.boss"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 19
   },
   {
     "id": "1.12.2/org_bukkit_Bukkit",
@@ -1843,7 +1843,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 113
   },
   {
     "id": "1.12.2/org_bukkit_ChatColor",
@@ -1856,7 +1856,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 13
   },
   {
     "id": "1.12.2/org_bukkit_Chunk",
@@ -1869,7 +1869,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 16
   },
   {
     "id": "1.12.2/org_bukkit_ChunkSnapshot",
@@ -1882,7 +1882,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 14
   },
   {
     "id": "1.12.2/org_bukkit_CoalType",
@@ -1895,7 +1895,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_Color",
@@ -1908,7 +1908,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 36
   },
   {
     "id": "1.12.2/org_bukkit_command_BlockCommandSender",
@@ -1921,7 +1921,7 @@
       "org.bukkit.command"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_command_BufferedCommandSender",
@@ -1934,7 +1934,7 @@
       "org.bukkit.command"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_command_Command",
@@ -1947,7 +1947,7 @@
       "org.bukkit.command"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 29
   },
   {
     "id": "1.12.2/org_bukkit_command_CommandException",
@@ -1973,7 +1973,7 @@
       "org.bukkit.command"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_command_CommandMap",
@@ -1986,7 +1986,7 @@
       "org.bukkit.command"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 9
   },
   {
     "id": "1.12.2/org_bukkit_command_CommandSender",
@@ -1999,7 +1999,7 @@
       "org.bukkit.command"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 8
   },
   {
     "id": "1.12.2/org_bukkit_command_CommandSender.Spigot",
@@ -2012,7 +2012,7 @@
       "org.bukkit.command"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_command_ConsoleCommandSender",
@@ -2051,7 +2051,7 @@
       "org.bukkit.command.defaults"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_command_defaults_PluginsCommand",
@@ -2064,7 +2064,7 @@
       "org.bukkit.command.defaults"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_command_defaults_ReloadCommand",
@@ -2077,7 +2077,7 @@
       "org.bukkit.command.defaults"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_command_defaults_VersionCommand",
@@ -2090,7 +2090,7 @@
       "org.bukkit.command.defaults"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_command_FormattedCommandAlias",
@@ -2103,7 +2103,7 @@
       "org.bukkit.command"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_command_MessageCommandSender",
@@ -2116,7 +2116,7 @@
       "org.bukkit.command"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 17
   },
   {
     "id": "1.12.2/org_bukkit_command_MultipleCommandAlias",
@@ -2129,7 +2129,7 @@
       "org.bukkit.command"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_command_PluginCommand",
@@ -2142,7 +2142,7 @@
       "org.bukkit.command"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 8
   },
   {
     "id": "1.12.2/org_bukkit_command_PluginCommandYamlParser",
@@ -2155,7 +2155,7 @@
       "org.bukkit.command"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_command_PluginIdentifiableCommand",
@@ -2168,7 +2168,7 @@
       "org.bukkit.command"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_command_ProxiedCommandSender",
@@ -2181,7 +2181,7 @@
       "org.bukkit.command"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_command_RemoteConsoleCommandSender",
@@ -2207,7 +2207,7 @@
       "org.bukkit.command"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 13
   },
   {
     "id": "1.12.2/org_bukkit_command_TabCompleter",
@@ -2220,7 +2220,7 @@
       "org.bukkit.command"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_command_TabExecutor",
@@ -2246,7 +2246,7 @@
       "org.bukkit.configuration"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_configuration_ConfigurationOptions",
@@ -2259,7 +2259,7 @@
       "org.bukkit.configuration"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_configuration_ConfigurationSection",
@@ -2272,7 +2272,7 @@
       "org.bukkit.configuration"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 60
   },
   {
     "id": "1.12.2/org_bukkit_configuration_file_FileConfiguration",
@@ -2285,7 +2285,7 @@
       "org.bukkit.configuration.file"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 9
   },
   {
     "id": "1.12.2/org_bukkit_configuration_file_FileConfigurationOptions",
@@ -2298,7 +2298,7 @@
       "org.bukkit.configuration.file"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_configuration_file_YamlConfiguration",
@@ -2311,7 +2311,7 @@
       "org.bukkit.configuration.file"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 10
   },
   {
     "id": "1.12.2/org_bukkit_configuration_file_YamlConfigurationOptions",
@@ -2324,7 +2324,7 @@
       "org.bukkit.configuration.file"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_configuration_file_YamlConstructor",
@@ -2350,7 +2350,7 @@
       "org.bukkit.configuration.file"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_configuration_InvalidConfigurationException",
@@ -2376,7 +2376,7 @@
       "org.bukkit.configuration"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 9
   },
   {
     "id": "1.12.2/org_bukkit_configuration_MemoryConfigurationOptions",
@@ -2389,7 +2389,7 @@
       "org.bukkit.configuration"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_configuration_MemorySection",
@@ -2402,7 +2402,7 @@
       "org.bukkit.configuration"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 68
   },
   {
     "id": "1.12.2/org_bukkit_configuration_serialization_ConfigurationSerializable",
@@ -2415,7 +2415,7 @@
       "org.bukkit.configuration.serialization"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_configuration_serialization_ConfigurationSerialization",
@@ -2428,7 +2428,7 @@
       "org.bukkit.configuration.serialization"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 14
   },
   {
     "id": "1.12.2/org_bukkit_configuration_serialization_DelegateDeserialization",
@@ -2441,7 +2441,7 @@
       "org.bukkit.configuration.serialization"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_configuration_serialization_SerializableAs",
@@ -2454,7 +2454,7 @@
       "org.bukkit.configuration.serialization"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_conversations_BooleanPrompt",
@@ -2467,7 +2467,7 @@
       "org.bukkit.conversations"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_conversations_Conversable",
@@ -2480,7 +2480,7 @@
       "org.bukkit.conversations"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_conversations_Conversation",
@@ -2493,7 +2493,7 @@
       "org.bukkit.conversations"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 23
   },
   {
     "id": "1.12.2/org_bukkit_conversations_Conversation.ConversationState",
@@ -2506,7 +2506,7 @@
       "org.bukkit.conversations"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_conversations_ConversationAbandonedEvent",
@@ -2519,7 +2519,7 @@
       "org.bukkit.conversations"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_conversations_ConversationAbandonedListener",
@@ -2532,7 +2532,7 @@
       "org.bukkit.conversations"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_conversations_ConversationCanceller",
@@ -2545,7 +2545,7 @@
       "org.bukkit.conversations"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_conversations_ConversationContext",
@@ -2558,7 +2558,7 @@
       "org.bukkit.conversations"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_conversations_ConversationFactory",
@@ -2571,7 +2571,7 @@
       "org.bukkit.conversations"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 20
   },
   {
     "id": "1.12.2/org_bukkit_conversations_ConversationPrefix",
@@ -2584,7 +2584,7 @@
       "org.bukkit.conversations"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_conversations_ExactMatchConversationCanceller",
@@ -2597,7 +2597,7 @@
       "org.bukkit.conversations"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_conversations_FixedSetPrompt",
@@ -2610,7 +2610,7 @@
       "org.bukkit.conversations"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_conversations_InactivityConversationCanceller",
@@ -2623,7 +2623,7 @@
       "org.bukkit.conversations"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_conversations_ManuallyAbandonedConversationCanceller",
@@ -2636,7 +2636,7 @@
       "org.bukkit.conversations"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_conversations_MessagePrompt",
@@ -2649,7 +2649,7 @@
       "org.bukkit.conversations"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_conversations_NullConversationPrefix",
@@ -2662,7 +2662,7 @@
       "org.bukkit.conversations"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_conversations_NumericPrompt",
@@ -2675,7 +2675,7 @@
       "org.bukkit.conversations"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_conversations_PlayerNamePrompt",
@@ -2688,7 +2688,7 @@
       "org.bukkit.conversations"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_conversations_PluginNameConversationPrefix",
@@ -2701,7 +2701,7 @@
       "org.bukkit.conversations"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_conversations_Prompt",
@@ -2714,7 +2714,7 @@
       "org.bukkit.conversations"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_conversations_RegexPrompt",
@@ -2727,7 +2727,7 @@
       "org.bukkit.conversations"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_conversations_StringPrompt",
@@ -2740,7 +2740,7 @@
       "org.bukkit.conversations"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_conversations_ValidatingPrompt",
@@ -2753,7 +2753,7 @@
       "org.bukkit.conversations"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_CropState",
@@ -2766,7 +2766,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_Difficulty",
@@ -2779,7 +2779,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_DyeColor",
@@ -2792,7 +2792,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 10
   },
   {
     "id": "1.12.2/org_bukkit_Effect",
@@ -2805,7 +2805,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 9
   },
   {
     "id": "1.12.2/org_bukkit_Effect.Type",
@@ -2818,7 +2818,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_enchantments_Enchantment",
@@ -2831,7 +2831,7 @@
       "org.bukkit.enchantments"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 48
   },
   {
     "id": "1.12.2/org_bukkit_enchantments_EnchantmentOffer",
@@ -2844,7 +2844,7 @@
       "org.bukkit.enchantments"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_enchantments_EnchantmentTarget",
@@ -2857,7 +2857,7 @@
       "org.bukkit.enchantments"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_enchantments_EnchantmentWrapper",
@@ -2870,7 +2870,7 @@
       "org.bukkit.enchantments"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 9
   },
   {
     "id": "1.12.2/org_bukkit_entity_AbstractHorse",
@@ -2883,7 +2883,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 9
   },
   {
     "id": "1.12.2/org_bukkit_entity_Ageable",
@@ -2896,7 +2896,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 9
   },
   {
     "id": "1.12.2/org_bukkit_entity_Ambient",
@@ -2935,7 +2935,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_entity_AreaEffectCloud",
@@ -2948,7 +2948,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 28
   },
   {
     "id": "1.12.2/org_bukkit_entity_ArmorStand",
@@ -2961,7 +2961,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 36
   },
   {
     "id": "1.12.2/org_bukkit_entity_Arrow",
@@ -2974,7 +2974,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 14
   },
   {
     "id": "1.12.2/org_bukkit_entity_Arrow.PickupRule",
@@ -2987,7 +2987,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_entity_Arrow.PickupStatus",
@@ -3000,7 +3000,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_entity_Arrow.Spigot",
@@ -3013,7 +3013,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_entity_Bat",
@@ -3026,7 +3026,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_entity_Blaze",
@@ -3052,7 +3052,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 10
   },
   {
     "id": "1.12.2/org_bukkit_entity_CaveSpider",
@@ -3078,7 +3078,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_entity_Chicken",
@@ -3104,7 +3104,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_entity_ComplexLivingEntity",
@@ -3117,7 +3117,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_entity_Cow",
@@ -3156,7 +3156,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_entity_Damageable",
@@ -3169,7 +3169,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_entity_Donkey",
@@ -3234,7 +3234,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_entity_EnderDragon",
@@ -3247,7 +3247,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_entity_EnderDragon.Phase",
@@ -3260,7 +3260,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_entity_EnderDragonPart",
@@ -3273,7 +3273,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_entity_Enderman",
@@ -3286,7 +3286,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_entity_Endermite",
@@ -3325,7 +3325,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_entity_Entity",
@@ -3338,7 +3338,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 61
   },
   {
     "id": "1.12.2/org_bukkit_entity_Entity.Spigot",
@@ -3351,7 +3351,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_entity_EntityType",
@@ -3364,7 +3364,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 9
   },
   {
     "id": "1.12.2/org_bukkit_entity_Evoker",
@@ -3377,7 +3377,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_entity_Evoker.Spell",
@@ -3390,7 +3390,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_entity_EvokerFangs",
@@ -3403,7 +3403,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_entity_ExperienceOrb",
@@ -3416,7 +3416,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_entity_ExperienceOrb.SpawnReason",
@@ -3429,7 +3429,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_entity_Explosive",
@@ -3442,7 +3442,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_entity_FallingBlock",
@@ -3455,7 +3455,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 8
   },
   {
     "id": "1.12.2/org_bukkit_entity_Fireball",
@@ -3468,7 +3468,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_entity_Firework",
@@ -3481,7 +3481,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_entity_Fish",
@@ -3507,7 +3507,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_entity_Flying",
@@ -3572,7 +3572,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_entity_Hanging",
@@ -3585,7 +3585,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_entity_Horse",
@@ -3598,7 +3598,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 10
   },
   {
     "id": "1.12.2/org_bukkit_entity_Horse.Color",
@@ -3611,7 +3611,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_entity_Horse.Style",
@@ -3624,7 +3624,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_entity_Horse.Variant",
@@ -3637,7 +3637,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_entity_HumanEntity",
@@ -3650,7 +3650,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 35
   },
   {
     "id": "1.12.2/org_bukkit_entity_Husk",
@@ -3702,7 +3702,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_entity_Item",
@@ -3715,7 +3715,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_entity_ItemFrame",
@@ -3728,7 +3728,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_entity_LargeFireball",
@@ -3767,7 +3767,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_entity_LightningStrike.Spigot",
@@ -3780,7 +3780,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_entity_LingeringPotion",
@@ -3806,7 +3806,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 48
   },
   {
     "id": "1.12.2/org_bukkit_entity_Llama",
@@ -3819,7 +3819,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_entity_Llama.Color",
@@ -3832,7 +3832,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_entity_LlamaSpit",
@@ -3871,7 +3871,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 14
   },
   {
     "id": "1.12.2/org_bukkit_entity_minecart_CommandMinecart",
@@ -3884,7 +3884,7 @@
       "org.bukkit.entity.minecart"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_entity_minecart_ExplosiveMinecart",
@@ -3910,7 +3910,7 @@
       "org.bukkit.entity.minecart"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_entity_minecart_PoweredMinecart",
@@ -4027,7 +4027,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_entity_Ocelot.Type",
@@ -4040,7 +4040,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_entity_Painting",
@@ -4053,7 +4053,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_entity_Parrot",
@@ -4066,7 +4066,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_entity_Parrot.Variant",
@@ -4079,7 +4079,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_entity_Pig",
@@ -4092,7 +4092,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_entity_PigZombie",
@@ -4105,7 +4105,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_entity_Player",
@@ -4118,7 +4118,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 167
   },
   {
     "id": "1.12.2/org_bukkit_entity_Player.Spigot",
@@ -4131,7 +4131,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 12
   },
   {
     "id": "1.12.2/org_bukkit_entity_PolarBear",
@@ -4157,7 +4157,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_entity_Rabbit",
@@ -4170,7 +4170,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_entity_Rabbit.Type",
@@ -4183,7 +4183,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_entity_Sheep",
@@ -4196,7 +4196,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_entity_Shulker",
@@ -4222,7 +4222,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_entity_Silverfish",
@@ -4248,7 +4248,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_entity_Skeleton",
@@ -4261,7 +4261,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_entity_Skeleton.SkeletonType",
@@ -4274,7 +4274,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_entity_SkeletonHorse",
@@ -4300,7 +4300,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_entity_SmallFireball",
@@ -4339,7 +4339,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_entity_SpectralArrow",
@@ -4352,7 +4352,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_entity_Spellcaster",
@@ -4365,7 +4365,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_entity_Spellcaster.Spell",
@@ -4378,7 +4378,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_entity_Spider",
@@ -4443,7 +4443,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_entity_ThrownExpBottle",
@@ -4469,7 +4469,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_entity_TippedArrow",
@@ -4482,7 +4482,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 10
   },
   {
     "id": "1.12.2/org_bukkit_entity_TNTPrimed",
@@ -4495,7 +4495,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_entity_Vehicle",
@@ -4508,7 +4508,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_entity_Vex",
@@ -4521,7 +4521,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_entity_Villager",
@@ -4534,7 +4534,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 10
   },
   {
     "id": "1.12.2/org_bukkit_entity_Villager.Career",
@@ -4547,7 +4547,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_entity_Villager.Profession",
@@ -4560,7 +4560,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_entity_Vindicator",
@@ -4651,7 +4651,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_entity_Wolf",
@@ -4664,7 +4664,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_entity_Zombie",
@@ -4677,7 +4677,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_entity_ZombieHorse",
@@ -4703,7 +4703,7 @@
       "org.bukkit.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_EntityEffect",
@@ -4716,7 +4716,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_event_block_Action",
@@ -4729,7 +4729,7 @@
       "org.bukkit.event.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_block_BlockBreakEvent",
@@ -4742,7 +4742,7 @@
       "org.bukkit.event.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_event_block_BlockBurnEvent",
@@ -4755,7 +4755,7 @@
       "org.bukkit.event.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_event_block_BlockCanBuildEvent",
@@ -4768,7 +4768,7 @@
       "org.bukkit.event.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 8
   },
   {
     "id": "1.12.2/org_bukkit_event_block_BlockDamageEvent",
@@ -4781,7 +4781,7 @@
       "org.bukkit.event.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 8
   },
   {
     "id": "1.12.2/org_bukkit_event_block_BlockDispenseEvent",
@@ -4794,7 +4794,7 @@
       "org.bukkit.event.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 8
   },
   {
     "id": "1.12.2/org_bukkit_event_block_BlockEvent",
@@ -4807,7 +4807,7 @@
       "org.bukkit.event.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_block_BlockExpEvent",
@@ -4820,7 +4820,7 @@
       "org.bukkit.event.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_event_block_BlockExplodeEvent",
@@ -4833,7 +4833,7 @@
       "org.bukkit.event.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_event_block_BlockFadeEvent",
@@ -4846,7 +4846,7 @@
       "org.bukkit.event.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_event_block_BlockFormEvent",
@@ -4859,7 +4859,7 @@
       "org.bukkit.event.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_block_BlockFromToEvent",
@@ -4872,7 +4872,7 @@
       "org.bukkit.event.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 9
   },
   {
     "id": "1.12.2/org_bukkit_event_block_BlockGrowEvent",
@@ -4885,7 +4885,7 @@
       "org.bukkit.event.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_event_block_BlockIgniteEvent",
@@ -4898,7 +4898,7 @@
       "org.bukkit.event.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 9
   },
   {
     "id": "1.12.2/org_bukkit_event_block_BlockIgniteEvent.IgniteCause",
@@ -4911,7 +4911,7 @@
       "org.bukkit.event.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_block_BlockMultiPlaceEvent",
@@ -4924,7 +4924,7 @@
       "org.bukkit.event.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_event_block_BlockPhysicsEvent",
@@ -4937,7 +4937,7 @@
       "org.bukkit.event.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_event_block_BlockPistonEvent",
@@ -4950,7 +4950,7 @@
       "org.bukkit.event.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_event_block_BlockPistonExtendEvent",
@@ -4963,7 +4963,7 @@
       "org.bukkit.event.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_event_block_BlockPistonRetractEvent",
@@ -4976,7 +4976,7 @@
       "org.bukkit.event.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_event_block_BlockPlaceEvent",
@@ -4989,7 +4989,7 @@
       "org.bukkit.event.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 19
   },
   {
     "id": "1.12.2/org_bukkit_event_block_BlockRedstoneEvent",
@@ -5002,7 +5002,7 @@
       "org.bukkit.event.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_event_block_BlockSpreadEvent",
@@ -5015,7 +5015,7 @@
       "org.bukkit.event.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_event_block_CauldronLevelChangeEvent",
@@ -5028,7 +5028,7 @@
       "org.bukkit.event.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 10
   },
   {
     "id": "1.12.2/org_bukkit_event_block_CauldronLevelChangeEvent.ChangeReason",
@@ -5041,7 +5041,7 @@
       "org.bukkit.event.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_block_EntityBlockFormEvent",
@@ -5054,7 +5054,7 @@
       "org.bukkit.event.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_event_block_LeavesDecayEvent",
@@ -5067,7 +5067,7 @@
       "org.bukkit.event.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_event_block_NotePlayEvent",
@@ -5080,7 +5080,7 @@
       "org.bukkit.event.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 8
   },
   {
     "id": "1.12.2/org_bukkit_event_block_SignChangeEvent",
@@ -5093,7 +5093,7 @@
       "org.bukkit.event.block"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 8
   },
   {
     "id": "1.12.2/org_bukkit_event_Cancellable",
@@ -5106,7 +5106,7 @@
       "org.bukkit.event"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_command_UnknownCommandEvent",
@@ -5119,7 +5119,7 @@
       "org.bukkit.event.command"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_event_enchantment_EnchantItemEvent",
@@ -5132,7 +5132,7 @@
       "org.bukkit.event.enchantment"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 11
   },
   {
     "id": "1.12.2/org_bukkit_event_enchantment_PrepareItemEnchantEvent",
@@ -5145,7 +5145,7 @@
       "org.bukkit.event.enchantment"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 10
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_AreaEffectCloudApplyEvent",
@@ -5158,7 +5158,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_CreatureSpawnEvent",
@@ -5171,7 +5171,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_CreatureSpawnEvent.SpawnReason",
@@ -5184,7 +5184,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_CreeperPowerEvent",
@@ -5197,7 +5197,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 8
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_CreeperPowerEvent.PowerCause",
@@ -5210,7 +5210,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_EnderDragonChangePhaseEvent",
@@ -5223,7 +5223,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 8
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_EntityAirChangeEvent",
@@ -5236,7 +5236,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_EntityBreakDoorEvent",
@@ -5249,7 +5249,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_EntityBreedEvent",
@@ -5262,7 +5262,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 11
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_EntityChangeBlockEvent",
@@ -5275,7 +5275,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_EntityCombustByBlockEvent",
@@ -5288,7 +5288,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_EntityCombustByEntityEvent",
@@ -5301,7 +5301,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_EntityCombustEvent",
@@ -5314,7 +5314,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_EntityCreatePortalEvent",
@@ -5327,7 +5327,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_EntityDamageByBlockEvent",
@@ -5340,7 +5340,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_EntityDamageByEntityEvent",
@@ -5353,7 +5353,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_EntityDamageEvent",
@@ -5366,7 +5366,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 14
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_EntityDamageEvent.DamageCause",
@@ -5379,7 +5379,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_EntityDamageEvent.DamageModifier",
@@ -5392,7 +5392,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_EntityDeathEvent",
@@ -5405,7 +5405,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 20
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_EntityEvent",
@@ -5418,7 +5418,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_EntityExplodeEvent",
@@ -5431,7 +5431,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 8
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_EntityInteractEvent",
@@ -5444,7 +5444,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_EntityPickupItemEvent",
@@ -5457,7 +5457,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_EntityPortalEnterEvent",
@@ -5470,7 +5470,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_EntityPortalEvent",
@@ -5483,7 +5483,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 8
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_EntityPortalExitEvent",
@@ -5496,7 +5496,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_EntityRegainHealthEvent",
@@ -5509,7 +5509,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 9
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_EntityRegainHealthEvent.RegainReason",
@@ -5522,7 +5522,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_EntityResurrectEvent",
@@ -5535,7 +5535,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_EntityShootBowEvent",
@@ -5548,7 +5548,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 12
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_EntitySpawnEvent",
@@ -5561,7 +5561,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_EntityTameEvent",
@@ -5574,7 +5574,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_EntityTargetEvent",
@@ -5587,7 +5587,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 8
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_EntityTargetEvent.TargetReason",
@@ -5600,7 +5600,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_EntityTargetLivingEntityEvent",
@@ -5613,7 +5613,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_EntityTeleportEvent",
@@ -5626,7 +5626,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 8
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_EntityToggleGlideEvent",
@@ -5639,7 +5639,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_EntityUnleashEvent",
@@ -5652,7 +5652,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_EntityUnleashEvent.UnleashReason",
@@ -5665,7 +5665,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_ExpBottleEvent",
@@ -5678,7 +5678,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_ExplosionPrimeEvent",
@@ -5691,7 +5691,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 8
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_FireworkExplodeEvent",
@@ -5704,7 +5704,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_FoodLevelChangeEvent",
@@ -5717,7 +5717,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_HorseJumpEvent",
@@ -5730,7 +5730,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_ItemDespawnEvent",
@@ -5743,7 +5743,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_ItemMergeEvent",
@@ -5756,7 +5756,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_ItemSpawnEvent",
@@ -5769,7 +5769,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_LingeringPotionSplashEvent",
@@ -5782,7 +5782,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_PigZapEvent",
@@ -5795,7 +5795,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_PlayerDeathEvent",
@@ -5808,7 +5808,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 13
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_PlayerLeashEntityEvent",
@@ -5821,7 +5821,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_PotionSplashEvent",
@@ -5834,7 +5834,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 9
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_ProjectileHitEvent",
@@ -5847,7 +5847,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_ProjectileLaunchEvent",
@@ -5860,7 +5860,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_SheepDyeWoolEvent",
@@ -5873,7 +5873,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_SheepRegrowWoolEvent",
@@ -5886,7 +5886,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_SlimeSplitEvent",
@@ -5899,7 +5899,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_SpawnerSpawnEvent",
@@ -5912,7 +5912,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_VillagerAcquireTradeEvent",
@@ -5925,7 +5925,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_event_entity_VillagerReplenishTradeEvent",
@@ -5938,7 +5938,7 @@
       "org.bukkit.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 9
   },
   {
     "id": "1.12.2/org_bukkit_event_Event",
@@ -5951,7 +5951,7 @@
       "org.bukkit.event"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_event_Event.Result",
@@ -5964,7 +5964,7 @@
       "org.bukkit.event"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_EventException",
@@ -5977,7 +5977,7 @@
       "org.bukkit.event"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_event_EventHandler",
@@ -5990,7 +5990,7 @@
       "org.bukkit.event"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_EventPriority",
@@ -6003,7 +6003,7 @@
       "org.bukkit.event"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_event_HandlerList",
@@ -6016,7 +6016,7 @@
       "org.bukkit.event"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 13
   },
   {
     "id": "1.12.2/org_bukkit_event_hanging_HangingBreakByEntityEvent",
@@ -6029,7 +6029,7 @@
       "org.bukkit.event.hanging"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_event_hanging_HangingBreakEvent",
@@ -6042,7 +6042,7 @@
       "org.bukkit.event.hanging"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_event_hanging_HangingBreakEvent.RemoveCause",
@@ -6055,7 +6055,7 @@
       "org.bukkit.event.hanging"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_hanging_HangingEvent",
@@ -6068,7 +6068,7 @@
       "org.bukkit.event.hanging"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_hanging_HangingPlaceEvent",
@@ -6081,7 +6081,7 @@
       "org.bukkit.event.hanging"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_event_inventory_BrewEvent",
@@ -6094,7 +6094,7 @@
       "org.bukkit.event.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_event_inventory_BrewingStandFuelEvent",
@@ -6107,7 +6107,7 @@
       "org.bukkit.event.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 9
   },
   {
     "id": "1.12.2/org_bukkit_event_inventory_ClickType",
@@ -6120,7 +6120,7 @@
       "org.bukkit.event.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_event_inventory_CraftItemEvent",
@@ -6133,7 +6133,7 @@
       "org.bukkit.event.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_inventory_DragType",
@@ -6146,7 +6146,7 @@
       "org.bukkit.event.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_inventory_FurnaceBurnEvent",
@@ -6159,7 +6159,7 @@
       "org.bukkit.event.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 9
   },
   {
     "id": "1.12.2/org_bukkit_event_inventory_FurnaceExtractEvent",
@@ -6172,7 +6172,7 @@
       "org.bukkit.event.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_event_inventory_FurnaceSmeltEvent",
@@ -6185,7 +6185,7 @@
       "org.bukkit.event.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_event_inventory_InventoryAction",
@@ -6198,7 +6198,7 @@
       "org.bukkit.event.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_inventory_InventoryClickEvent",
@@ -6211,7 +6211,7 @@
       "org.bukkit.event.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 16
   },
   {
     "id": "1.12.2/org_bukkit_event_inventory_InventoryCloseEvent",
@@ -6224,7 +6224,7 @@
       "org.bukkit.event.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_event_inventory_InventoryCloseEvent.Reason",
@@ -6237,7 +6237,7 @@
       "org.bukkit.event.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_inventory_InventoryCreativeEvent",
@@ -6250,7 +6250,7 @@
       "org.bukkit.event.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_inventory_InventoryDragEvent",
@@ -6263,7 +6263,7 @@
       "org.bukkit.event.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 9
   },
   {
     "id": "1.12.2/org_bukkit_event_inventory_InventoryEvent",
@@ -6276,7 +6276,7 @@
       "org.bukkit.event.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_event_inventory_InventoryInteractEvent",
@@ -6289,7 +6289,7 @@
       "org.bukkit.event.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_event_inventory_InventoryMoveItemEvent",
@@ -6302,7 +6302,7 @@
       "org.bukkit.event.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 11
   },
   {
     "id": "1.12.2/org_bukkit_event_inventory_InventoryOpenEvent",
@@ -6315,7 +6315,7 @@
       "org.bukkit.event.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_event_inventory_InventoryPickupItemEvent",
@@ -6328,7 +6328,7 @@
       "org.bukkit.event.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_event_inventory_InventoryType",
@@ -6341,7 +6341,7 @@
       "org.bukkit.event.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_event_inventory_InventoryType.SlotType",
@@ -6354,7 +6354,7 @@
       "org.bukkit.event.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_inventory_PrepareAnvilEvent",
@@ -6367,7 +6367,7 @@
       "org.bukkit.event.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_event_inventory_PrepareItemCraftEvent",
@@ -6380,7 +6380,7 @@
       "org.bukkit.event.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_event_Listener",
@@ -6406,7 +6406,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 9
   },
   {
     "id": "1.12.2/org_bukkit_event_player_AsyncPlayerPreLoginEvent",
@@ -6419,7 +6419,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 17
   },
   {
     "id": "1.12.2/org_bukkit_event_player_AsyncPlayerPreLoginEvent.Result",
@@ -6432,7 +6432,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerAchievementAwardedEvent",
@@ -6445,7 +6445,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerAdvancementDoneEvent",
@@ -6458,7 +6458,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerAnimationEvent",
@@ -6471,7 +6471,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerAnimationType",
@@ -6484,7 +6484,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerArmorStandManipulateEvent",
@@ -6497,7 +6497,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerAttemptPickupItemEvent",
@@ -6510,7 +6510,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 8
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerBedEnterEvent",
@@ -6523,7 +6523,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerBedLeaveEvent",
@@ -6536,7 +6536,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerBucketEmptyEvent",
@@ -6549,7 +6549,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerBucketEvent",
@@ -6562,7 +6562,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerBucketFillEvent",
@@ -6575,7 +6575,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerChangedMainHandEvent",
@@ -6588,7 +6588,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerChangedWorldEvent",
@@ -6601,7 +6601,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerChannelEvent",
@@ -6614,7 +6614,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerChatEvent",
@@ -6627,7 +6627,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 10
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerChatTabCompleteEvent",
@@ -6640,7 +6640,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerCommandPreprocessEvent",
@@ -6653,7 +6653,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 8
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerDropItemEvent",
@@ -6666,7 +6666,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerEditBookEvent",
@@ -6679,7 +6679,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 10
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerEggThrowEvent",
@@ -6692,7 +6692,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 9
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerEvent",
@@ -6705,7 +6705,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerExpChangeEvent",
@@ -6718,7 +6718,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerFishEvent",
@@ -6731,7 +6731,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 10
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerFishEvent.State",
@@ -6744,7 +6744,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerGameModeChangeEvent",
@@ -6757,7 +6757,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerInteractAtEntityEvent",
@@ -6770,7 +6770,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerInteractEntityEvent",
@@ -6783,7 +6783,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerInteractEvent",
@@ -6796,7 +6796,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 21
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerItemBreakEvent",
@@ -6809,7 +6809,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerItemConsumeEvent",
@@ -6822,7 +6822,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 8
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerItemDamageEvent",
@@ -6835,7 +6835,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerItemHeldEvent",
@@ -6848,7 +6848,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerItemMendEvent",
@@ -6861,7 +6861,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 8
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerJoinEvent",
@@ -6874,7 +6874,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerKickEvent",
@@ -6887,7 +6887,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 8
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerLevelChangeEvent",
@@ -6900,7 +6900,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerLocaleChangeEvent",
@@ -6913,7 +6913,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerLoginEvent",
@@ -6926,7 +6926,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 12
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerLoginEvent.Result",
@@ -6939,7 +6939,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerMoveEvent",
@@ -6952,7 +6952,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 8
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerPickupArrowEvent",
@@ -6965,7 +6965,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerPickupItemEvent",
@@ -6978,7 +6978,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 8
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerPortalEvent",
@@ -6991,7 +6991,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 8
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerPreLoginEvent",
@@ -7004,7 +7004,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 12
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerPreLoginEvent.Result",
@@ -7017,7 +7017,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerQuitEvent",
@@ -7030,7 +7030,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerRegisterChannelEvent",
@@ -7056,7 +7056,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerResourcePackStatusEvent.Status",
@@ -7069,7 +7069,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerRespawnEvent",
@@ -7082,7 +7082,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerShearEntityEvent",
@@ -7095,7 +7095,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerStatisticIncrementEvent",
@@ -7108,7 +7108,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 10
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerSwapHandItemsEvent",
@@ -7121,7 +7121,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 8
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerTeleportEvent",
@@ -7134,7 +7134,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerTeleportEvent.TeleportCause",
@@ -7147,7 +7147,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerToggleFlightEvent",
@@ -7160,7 +7160,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerToggleSneakEvent",
@@ -7173,7 +7173,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerToggleSprintEvent",
@@ -7186,7 +7186,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerUnleashEntityEvent",
@@ -7199,7 +7199,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_event_player_PlayerUnregisterChannelEvent",
@@ -7225,7 +7225,7 @@
       "org.bukkit.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_event_server_BroadcastMessageEvent",
@@ -7238,7 +7238,7 @@
       "org.bukkit.event.server"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_event_server_MapInitializeEvent",
@@ -7251,7 +7251,7 @@
       "org.bukkit.event.server"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_event_server_PluginDisableEvent",
@@ -7264,7 +7264,7 @@
       "org.bukkit.event.server"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_server_PluginEnableEvent",
@@ -7277,7 +7277,7 @@
       "org.bukkit.event.server"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_server_PluginEvent",
@@ -7290,7 +7290,7 @@
       "org.bukkit.event.server"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_event_server_RemoteServerCommandEvent",
@@ -7303,7 +7303,7 @@
       "org.bukkit.event.server"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_server_ServerCommandEvent",
@@ -7316,7 +7316,7 @@
       "org.bukkit.event.server"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_event_server_ServerEvent",
@@ -7342,7 +7342,7 @@
       "org.bukkit.event.server"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 12
   },
   {
     "id": "1.12.2/org_bukkit_event_server_ServiceEvent",
@@ -7355,7 +7355,7 @@
       "org.bukkit.event.server"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_event_server_ServiceRegisterEvent",
@@ -7368,7 +7368,7 @@
       "org.bukkit.event.server"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_server_ServiceUnregisterEvent",
@@ -7381,7 +7381,7 @@
       "org.bukkit.event.server"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_server_TabCompleteEvent",
@@ -7394,7 +7394,7 @@
       "org.bukkit.event.server"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 10
   },
   {
     "id": "1.12.2/org_bukkit_event_vehicle_VehicleBlockCollisionEvent",
@@ -7407,7 +7407,7 @@
       "org.bukkit.event.vehicle"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_event_vehicle_VehicleCollisionEvent",
@@ -7433,7 +7433,7 @@
       "org.bukkit.event.vehicle"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_event_vehicle_VehicleDamageEvent",
@@ -7446,7 +7446,7 @@
       "org.bukkit.event.vehicle"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_event_vehicle_VehicleDestroyEvent",
@@ -7459,7 +7459,7 @@
       "org.bukkit.event.vehicle"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_event_vehicle_VehicleEnterEvent",
@@ -7472,7 +7472,7 @@
       "org.bukkit.event.vehicle"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_event_vehicle_VehicleEntityCollisionEvent",
@@ -7485,7 +7485,7 @@
       "org.bukkit.event.vehicle"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 9
   },
   {
     "id": "1.12.2/org_bukkit_event_vehicle_VehicleEvent",
@@ -7498,7 +7498,7 @@
       "org.bukkit.event.vehicle"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_vehicle_VehicleExitEvent",
@@ -7511,7 +7511,7 @@
       "org.bukkit.event.vehicle"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_event_vehicle_VehicleMoveEvent",
@@ -7524,7 +7524,7 @@
       "org.bukkit.event.vehicle"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_event_vehicle_VehicleUpdateEvent",
@@ -7537,7 +7537,7 @@
       "org.bukkit.event.vehicle"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_weather_LightningStrikeEvent",
@@ -7550,7 +7550,7 @@
       "org.bukkit.event.weather"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_event_weather_ThunderChangeEvent",
@@ -7563,7 +7563,7 @@
       "org.bukkit.event.weather"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_event_weather_WeatherChangeEvent",
@@ -7576,7 +7576,7 @@
       "org.bukkit.event.weather"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_event_weather_WeatherEvent",
@@ -7589,7 +7589,7 @@
       "org.bukkit.event.weather"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_world_ChunkEvent",
@@ -7602,7 +7602,7 @@
       "org.bukkit.event.world"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_world_ChunkLoadEvent",
@@ -7615,7 +7615,7 @@
       "org.bukkit.event.world"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_event_world_ChunkPopulateEvent",
@@ -7628,7 +7628,7 @@
       "org.bukkit.event.world"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_world_ChunkUnloadEvent",
@@ -7641,7 +7641,7 @@
       "org.bukkit.event.world"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_event_world_PortalCreateEvent",
@@ -7654,7 +7654,7 @@
       "org.bukkit.event.world"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_event_world_PortalCreateEvent.CreateReason",
@@ -7667,7 +7667,7 @@
       "org.bukkit.event.world"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_world_SpawnChangeEvent",
@@ -7680,7 +7680,7 @@
       "org.bukkit.event.world"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_event_world_StructureGrowEvent",
@@ -7693,7 +7693,7 @@
       "org.bukkit.event.world"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 9
   },
   {
     "id": "1.12.2/org_bukkit_event_world_WorldEvent",
@@ -7706,7 +7706,7 @@
       "org.bukkit.event.world"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_event_world_WorldInitEvent",
@@ -7719,7 +7719,7 @@
       "org.bukkit.event.world"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_world_WorldLoadEvent",
@@ -7732,7 +7732,7 @@
       "org.bukkit.event.world"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_world_WorldSaveEvent",
@@ -7745,7 +7745,7 @@
       "org.bukkit.event.world"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_event_world_WorldUnloadEvent",
@@ -7758,7 +7758,7 @@
       "org.bukkit.event.world"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_FireworkEffect",
@@ -7771,7 +7771,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 13
   },
   {
     "id": "1.12.2/org_bukkit_FireworkEffect.Builder",
@@ -7784,7 +7784,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 12
   },
   {
     "id": "1.12.2/org_bukkit_FireworkEffect.Type",
@@ -7797,7 +7797,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_GameMode",
@@ -7810,7 +7810,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_generator_BlockPopulator",
@@ -7823,7 +7823,7 @@
       "org.bukkit.generator"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_generator_ChunkGenerator",
@@ -7836,7 +7836,7 @@
       "org.bukkit.generator"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 10
   },
   {
     "id": "1.12.2/org_bukkit_generator_ChunkGenerator.BiomeGrid",
@@ -7849,7 +7849,7 @@
       "org.bukkit.generator"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_generator_ChunkGenerator.ChunkData",
@@ -7862,7 +7862,7 @@
       "org.bukkit.generator"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 13
   },
   {
     "id": "1.12.2/org_bukkit_GrassSpecies",
@@ -7875,7 +7875,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_help_GenericCommandHelpTopic",
@@ -7888,7 +7888,7 @@
       "org.bukkit.help"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_help_HelpMap",
@@ -7901,7 +7901,7 @@
       "org.bukkit.help"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_help_HelpTopic",
@@ -7914,7 +7914,7 @@
       "org.bukkit.help"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 11
   },
   {
     "id": "1.12.2/org_bukkit_help_HelpTopicComparator",
@@ -7927,7 +7927,7 @@
       "org.bukkit.help"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_help_HelpTopicComparator.TopicNameComparator",
@@ -7940,7 +7940,7 @@
       "org.bukkit.help"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_help_HelpTopicFactory",
@@ -7953,7 +7953,7 @@
       "org.bukkit.help"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_help_IndexHelpTopic",
@@ -7966,7 +7966,7 @@
       "org.bukkit.help"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 9
   },
   {
     "id": "1.12.2/org_bukkit_Instrument",
@@ -7979,7 +7979,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_inventory_AbstractHorseInventory",
@@ -7992,7 +7992,7 @@
       "org.bukkit.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_inventory_AnvilInventory",
@@ -8005,7 +8005,7 @@
       "org.bukkit.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_inventory_ArmoredHorseInventory",
@@ -8018,7 +8018,7 @@
       "org.bukkit.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_inventory_BeaconInventory",
@@ -8031,7 +8031,7 @@
       "org.bukkit.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_inventory_BrewerInventory",
@@ -8044,7 +8044,7 @@
       "org.bukkit.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_inventory_CraftingInventory",
@@ -8057,7 +8057,7 @@
       "org.bukkit.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_inventory_DoubleChestInventory",
@@ -8070,7 +8070,7 @@
       "org.bukkit.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_inventory_EnchantingInventory",
@@ -8083,7 +8083,7 @@
       "org.bukkit.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_inventory_EntityEquipment",
@@ -8096,7 +8096,7 @@
       "org.bukkit.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 32
   },
   {
     "id": "1.12.2/org_bukkit_inventory_EquipmentSlot",
@@ -8109,7 +8109,7 @@
       "org.bukkit.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_inventory_FurnaceInventory",
@@ -8122,7 +8122,7 @@
       "org.bukkit.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_inventory_FurnaceRecipe",
@@ -8135,7 +8135,7 @@
       "org.bukkit.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_inventory_HorseInventory",
@@ -8161,7 +8161,7 @@
       "org.bukkit.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 38
   },
   {
     "id": "1.12.2/org_bukkit_inventory_InventoryHolder",
@@ -8174,7 +8174,7 @@
       "org.bukkit.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_inventory_InventoryView",
@@ -8187,7 +8187,7 @@
       "org.bukkit.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 15
   },
   {
     "id": "1.12.2/org_bukkit_inventory_InventoryView.Property",
@@ -8200,7 +8200,7 @@
       "org.bukkit.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_inventory_ItemFactory",
@@ -8213,7 +8213,7 @@
       "org.bukkit.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 9
   },
   {
     "id": "1.12.2/org_bukkit_inventory_ItemFlag",
@@ -8226,7 +8226,7 @@
       "org.bukkit.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_inventory_ItemStack",
@@ -8239,7 +8239,7 @@
       "org.bukkit.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 44
   },
   {
     "id": "1.12.2/org_bukkit_inventory_LlamaInventory",
@@ -8252,7 +8252,7 @@
       "org.bukkit.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_inventory_MainHand",
@@ -8265,7 +8265,7 @@
       "org.bukkit.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_inventory_Merchant",
@@ -8278,7 +8278,7 @@
       "org.bukkit.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_inventory_MerchantInventory",
@@ -8291,7 +8291,7 @@
       "org.bukkit.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_inventory_MerchantRecipe",
@@ -8304,7 +8304,7 @@
       "org.bukkit.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 11
   },
   {
     "id": "1.12.2/org_bukkit_inventory_meta_BannerMeta",
@@ -8317,7 +8317,7 @@
       "org.bukkit.inventory.meta"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 9
   },
   {
     "id": "1.12.2/org_bukkit_inventory_meta_BlockStateMeta",
@@ -8330,7 +8330,7 @@
       "org.bukkit.inventory.meta"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_inventory_meta_BookMeta",
@@ -8343,7 +8343,7 @@
       "org.bukkit.inventory.meta"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 21
   },
   {
     "id": "1.12.2/org_bukkit_inventory_meta_BookMeta.Generation",
@@ -8356,7 +8356,7 @@
       "org.bukkit.inventory.meta"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_inventory_meta_BookMeta.Spigot",
@@ -8369,7 +8369,7 @@
       "org.bukkit.inventory.meta"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_inventory_meta_EnchantmentStorageMeta",
@@ -8382,7 +8382,7 @@
       "org.bukkit.inventory.meta"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 8
   },
   {
     "id": "1.12.2/org_bukkit_inventory_meta_FireworkEffectMeta",
@@ -8395,7 +8395,7 @@
       "org.bukkit.inventory.meta"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_inventory_meta_FireworkMeta",
@@ -8408,7 +8408,7 @@
       "org.bukkit.inventory.meta"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 11
   },
   {
     "id": "1.12.2/org_bukkit_inventory_meta_ItemMeta",
@@ -8421,7 +8421,7 @@
       "org.bukkit.inventory.meta"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 25
   },
   {
     "id": "1.12.2/org_bukkit_inventory_meta_ItemMeta.Spigot",
@@ -8434,7 +8434,7 @@
       "org.bukkit.inventory.meta"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_inventory_meta_KnowledgeBookMeta",
@@ -8447,7 +8447,7 @@
       "org.bukkit.inventory.meta"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_inventory_meta_LeatherArmorMeta",
@@ -8460,7 +8460,7 @@
       "org.bukkit.inventory.meta"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_inventory_meta_MapMeta",
@@ -8473,7 +8473,7 @@
       "org.bukkit.inventory.meta"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 9
   },
   {
     "id": "1.12.2/org_bukkit_inventory_meta_PotionMeta",
@@ -8486,7 +8486,7 @@
       "org.bukkit.inventory.meta"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 13
   },
   {
     "id": "1.12.2/org_bukkit_inventory_meta_Repairable",
@@ -8499,7 +8499,7 @@
       "org.bukkit.inventory.meta"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_inventory_meta_SkullMeta",
@@ -8512,7 +8512,7 @@
       "org.bukkit.inventory.meta"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 8
   },
   {
     "id": "1.12.2/org_bukkit_inventory_meta_SpawnEggMeta",
@@ -8525,7 +8525,7 @@
       "org.bukkit.inventory.meta"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_inventory_PlayerInventory",
@@ -8538,7 +8538,7 @@
       "org.bukkit.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 25
   },
   {
     "id": "1.12.2/org_bukkit_inventory_Recipe",
@@ -8551,7 +8551,7 @@
       "org.bukkit.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_inventory_SaddledHorseInventory",
@@ -8577,7 +8577,7 @@
       "org.bukkit.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 8
   },
   {
     "id": "1.12.2/org_bukkit_inventory_ShapelessRecipe",
@@ -8590,7 +8590,7 @@
       "org.bukkit.inventory"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 15
   },
   {
     "id": "1.12.2/org_bukkit_Keyed",
@@ -8603,7 +8603,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_Location",
@@ -8616,7 +8616,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 73
   },
   {
     "id": "1.12.2/org_bukkit_map_MapCanvas",
@@ -8629,7 +8629,7 @@
       "org.bukkit.map"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 8
   },
   {
     "id": "1.12.2/org_bukkit_map_MapCursor",
@@ -8642,7 +8642,7 @@
       "org.bukkit.map"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 13
   },
   {
     "id": "1.12.2/org_bukkit_map_MapCursor.Type",
@@ -8655,7 +8655,7 @@
       "org.bukkit.map"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_map_MapCursorCollection",
@@ -8668,7 +8668,7 @@
       "org.bukkit.map"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_map_MapFont",
@@ -8681,7 +8681,7 @@
       "org.bukkit.map"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_map_MapFont.CharacterSprite",
@@ -8694,7 +8694,7 @@
       "org.bukkit.map"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_map_MapPalette",
@@ -8707,7 +8707,7 @@
       "org.bukkit.map"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 19
   },
   {
     "id": "1.12.2/org_bukkit_map_MapRenderer",
@@ -8720,7 +8720,7 @@
       "org.bukkit.map"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_map_MapView",
@@ -8733,7 +8733,7 @@
       "org.bukkit.map"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 16
   },
   {
     "id": "1.12.2/org_bukkit_map_MapView.Scale",
@@ -8746,7 +8746,7 @@
       "org.bukkit.map"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_map_MinecraftFont",
@@ -8759,7 +8759,7 @@
       "org.bukkit.map"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_Material",
@@ -8772,7 +8772,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 21
   },
   {
     "id": "1.12.2/org_bukkit_material_Attachable",
@@ -8785,7 +8785,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_material_Banner",
@@ -8798,7 +8798,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_material_Bed",
@@ -8811,7 +8811,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_material_Button",
@@ -8824,7 +8824,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_material_Cake",
@@ -8837,7 +8837,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_material_Cauldron",
@@ -8850,7 +8850,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_material_Chest",
@@ -8863,7 +8863,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_material_Coal",
@@ -8876,7 +8876,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_material_CocoaPlant",
@@ -8889,7 +8889,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 8
   },
   {
     "id": "1.12.2/org_bukkit_material_CocoaPlant.CocoaPlantSize",
@@ -8902,7 +8902,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_material_Colorable",
@@ -8915,7 +8915,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_material_Command",
@@ -8928,7 +8928,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_material_Comparator",
@@ -8941,7 +8941,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 11
   },
   {
     "id": "1.12.2/org_bukkit_material_Crops",
@@ -8954,7 +8954,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_material_DetectorRail",
@@ -8967,7 +8967,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_material_Diode",
@@ -8980,7 +8980,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 10
   },
   {
     "id": "1.12.2/org_bukkit_material_Directional",
@@ -8993,7 +8993,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_material_DirectionalContainer",
@@ -9006,7 +9006,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_material_Dispenser",
@@ -9019,7 +9019,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_material_Door",
@@ -9032,7 +9032,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 12
   },
   {
     "id": "1.12.2/org_bukkit_material_Dye",
@@ -9045,7 +9045,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_material_EnderChest",
@@ -9058,7 +9058,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_material_ExtendedRails",
@@ -9071,7 +9071,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_material_FlowerPot",
@@ -9084,7 +9084,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_material_Furnace",
@@ -9097,7 +9097,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_material_FurnaceAndDispenser",
@@ -9110,7 +9110,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_material_Gate",
@@ -9123,7 +9123,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_material_Hopper",
@@ -9136,7 +9136,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 9
   },
   {
     "id": "1.12.2/org_bukkit_material_Ladder",
@@ -9149,7 +9149,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_material_Leaves",
@@ -9162,7 +9162,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 8
   },
   {
     "id": "1.12.2/org_bukkit_material_Lever",
@@ -9175,7 +9175,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_material_LongGrass",
@@ -9188,7 +9188,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_material_MaterialData",
@@ -9201,7 +9201,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 10
   },
   {
     "id": "1.12.2/org_bukkit_material_MonsterEggs",
@@ -9214,7 +9214,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_material_Mushroom",
@@ -9227,7 +9227,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 9
   },
   {
     "id": "1.12.2/org_bukkit_material_NetherWarts",
@@ -9240,7 +9240,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_material_Observer",
@@ -9253,7 +9253,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_material_Openable",
@@ -9266,7 +9266,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_material_PistonBaseMaterial",
@@ -9279,7 +9279,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_material_PistonExtensionMaterial",
@@ -9292,7 +9292,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_material_PoweredRail",
@@ -9305,7 +9305,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_material_PressurePlate",
@@ -9318,7 +9318,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_material_PressureSensor",
@@ -9331,7 +9331,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_material_Pumpkin",
@@ -9344,7 +9344,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_material_Rails",
@@ -9357,7 +9357,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_material_Redstone",
@@ -9370,7 +9370,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_material_RedstoneTorch",
@@ -9383,7 +9383,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_material_RedstoneWire",
@@ -9396,7 +9396,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_material_Sandstone",
@@ -9409,7 +9409,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_material_Sapling",
@@ -9422,7 +9422,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_material_Sign",
@@ -9435,7 +9435,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_material_SimpleAttachableMaterialData",
@@ -9448,7 +9448,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_material_Skull",
@@ -9461,7 +9461,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_material_SmoothBrick",
@@ -9474,7 +9474,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_material_SpawnEgg",
@@ -9487,7 +9487,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_material_Stairs",
@@ -9500,7 +9500,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 8
   },
   {
     "id": "1.12.2/org_bukkit_material_Step",
@@ -9513,7 +9513,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_material_TexturedMaterial",
@@ -9526,7 +9526,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_material_Torch",
@@ -9539,7 +9539,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_material_TrapDoor",
@@ -9552,7 +9552,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 8
   },
   {
     "id": "1.12.2/org_bukkit_material_Tree",
@@ -9565,7 +9565,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_material_Tripwire",
@@ -9578,7 +9578,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_material_TripwireHook",
@@ -9591,7 +9591,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 9
   },
   {
     "id": "1.12.2/org_bukkit_material_types_MushroomBlockTexture",
@@ -9604,7 +9604,7 @@
       "org.bukkit.material.types"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_material_Vine",
@@ -9617,7 +9617,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_material_Wood",
@@ -9630,7 +9630,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_material_WoodenStep",
@@ -9643,7 +9643,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_material_Wool",
@@ -9656,7 +9656,7 @@
       "org.bukkit.material"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_metadata_FixedMetadataValue",
@@ -9669,7 +9669,7 @@
       "org.bukkit.metadata"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_metadata_LazyMetadataValue",
@@ -9682,7 +9682,7 @@
       "org.bukkit.metadata"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_metadata_LazyMetadataValue.CacheStrategy",
@@ -9695,7 +9695,7 @@
       "org.bukkit.metadata"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_metadata_Metadatable",
@@ -9708,7 +9708,7 @@
       "org.bukkit.metadata"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_metadata_MetadataConversionException",
@@ -9747,7 +9747,7 @@
       "org.bukkit.metadata"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_metadata_MetadataStoreBase",
@@ -9760,7 +9760,7 @@
       "org.bukkit.metadata"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_metadata_MetadataValue",
@@ -9773,7 +9773,7 @@
       "org.bukkit.metadata"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 11
   },
   {
     "id": "1.12.2/org_bukkit_metadata_MetadataValueAdapter",
@@ -9786,7 +9786,7 @@
       "org.bukkit.metadata"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 10
   },
   {
     "id": "1.12.2/org_bukkit_Nameable",
@@ -9799,7 +9799,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_NamespacedKey",
@@ -9812,7 +9812,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 9
   },
   {
     "id": "1.12.2/org_bukkit_NetherWartsState",
@@ -9825,7 +9825,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_Note",
@@ -9838,7 +9838,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 13
   },
   {
     "id": "1.12.2/org_bukkit_Note.Tone",
@@ -9851,7 +9851,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 8
   },
   {
     "id": "1.12.2/org_bukkit_OfflinePlayer",
@@ -9864,7 +9864,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 16
   },
   {
     "id": "1.12.2/org_bukkit_Particle",
@@ -9877,7 +9877,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_permissions_Permissible",
@@ -9890,7 +9890,7 @@
       "org.bukkit.permissions"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 11
   },
   {
     "id": "1.12.2/org_bukkit_permissions_PermissibleBase",
@@ -9903,7 +9903,7 @@
       "org.bukkit.permissions"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 14
   },
   {
     "id": "1.12.2/org_bukkit_permissions_Permission",
@@ -9916,7 +9916,7 @@
       "org.bukkit.permissions"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 14
   },
   {
     "id": "1.12.2/org_bukkit_permissions_PermissionAttachment",
@@ -9929,7 +9929,7 @@
       "org.bukkit.permissions"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 10
   },
   {
     "id": "1.12.2/org_bukkit_permissions_PermissionAttachmentInfo",
@@ -9942,7 +9942,7 @@
       "org.bukkit.permissions"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_permissions_PermissionDefault",
@@ -9955,7 +9955,7 @@
       "org.bukkit.permissions"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_permissions_PermissionRemovedExecutor",
@@ -9968,7 +9968,7 @@
       "org.bukkit.permissions"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_permissions_ServerOperator",
@@ -9981,7 +9981,7 @@
       "org.bukkit.permissions"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_plugin_AuthorNagException",
@@ -9994,7 +9994,7 @@
       "org.bukkit.plugin"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_plugin_EventExecutor",
@@ -10007,7 +10007,7 @@
       "org.bukkit.plugin"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_plugin_IllegalPluginAccessException",
@@ -10059,7 +10059,7 @@
       "org.bukkit.plugin.java"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 28
   },
   {
     "id": "1.12.2/org_bukkit_plugin_java_JavaPluginLoader",
@@ -10072,7 +10072,7 @@
       "org.bukkit.plugin.java"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_plugin_java_PluginClassLoader",
@@ -10085,7 +10085,7 @@
       "org.bukkit.plugin.java"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_plugin_messaging_ChannelNameTooLongException",
@@ -10137,7 +10137,7 @@
       "org.bukkit.plugin.messaging"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 21
   },
   {
     "id": "1.12.2/org_bukkit_plugin_messaging_PluginChannelDirection",
@@ -10150,7 +10150,7 @@
       "org.bukkit.plugin.messaging"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_plugin_messaging_PluginMessageListener",
@@ -10163,7 +10163,7 @@
       "org.bukkit.plugin.messaging"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_plugin_messaging_PluginMessageListenerRegistration",
@@ -10176,7 +10176,7 @@
       "org.bukkit.plugin.messaging"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_plugin_messaging_PluginMessageRecipient",
@@ -10189,7 +10189,7 @@
       "org.bukkit.plugin.messaging"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_plugin_messaging_ReservedChannelException",
@@ -10215,7 +10215,7 @@
       "org.bukkit.plugin.messaging"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 21
   },
   {
     "id": "1.12.2/org_bukkit_plugin_Plugin",
@@ -10228,7 +10228,7 @@
       "org.bukkit.plugin"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 20
   },
   {
     "id": "1.12.2/org_bukkit_plugin_PluginAwareness",
@@ -10241,7 +10241,7 @@
       "org.bukkit.plugin"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_plugin_PluginAwareness.Flags",
@@ -10254,7 +10254,7 @@
       "org.bukkit.plugin"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_plugin_PluginBase",
@@ -10267,7 +10267,7 @@
       "org.bukkit.plugin"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_plugin_PluginDescriptionFile",
@@ -10280,7 +10280,7 @@
       "org.bukkit.plugin"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 19
   },
   {
     "id": "1.12.2/org_bukkit_plugin_PluginLoader",
@@ -10293,7 +10293,7 @@
       "org.bukkit.plugin"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_plugin_PluginLoadOrder",
@@ -10306,7 +10306,7 @@
       "org.bukkit.plugin"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_plugin_PluginLogger",
@@ -10319,7 +10319,7 @@
       "org.bukkit.plugin"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_plugin_PluginManager",
@@ -10332,7 +10332,7 @@
       "org.bukkit.plugin"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 30
   },
   {
     "id": "1.12.2/org_bukkit_plugin_RegisteredListener",
@@ -10345,7 +10345,7 @@
       "org.bukkit.plugin"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_plugin_RegisteredServiceProvider",
@@ -10358,7 +10358,7 @@
       "org.bukkit.plugin"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_plugin_ServicePriority",
@@ -10371,7 +10371,7 @@
       "org.bukkit.plugin"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_plugin_ServicesManager",
@@ -10384,7 +10384,7 @@
       "org.bukkit.plugin"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 10
   },
   {
     "id": "1.12.2/org_bukkit_plugin_SimplePluginManager",
@@ -10397,7 +10397,7 @@
       "org.bukkit.plugin"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 35
   },
   {
     "id": "1.12.2/org_bukkit_plugin_SimpleServicesManager",
@@ -10410,7 +10410,7 @@
       "org.bukkit.plugin"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 10
   },
   {
     "id": "1.12.2/org_bukkit_plugin_TimedRegisteredListener",
@@ -10423,7 +10423,7 @@
       "org.bukkit.plugin"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_plugin_UnknownDependencyException",
@@ -10449,7 +10449,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_potion_Potion",
@@ -10462,7 +10462,7 @@
       "org.bukkit.potion"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 22
   },
   {
     "id": "1.12.2/org_bukkit_potion_PotionBrewer",
@@ -10475,7 +10475,7 @@
       "org.bukkit.potion"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_potion_PotionData",
@@ -10488,7 +10488,7 @@
       "org.bukkit.potion"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_potion_PotionEffect",
@@ -10501,7 +10501,7 @@
       "org.bukkit.potion"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 18
   },
   {
     "id": "1.12.2/org_bukkit_potion_PotionEffectType",
@@ -10514,7 +10514,7 @@
       "org.bukkit.potion"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 41
   },
   {
     "id": "1.12.2/org_bukkit_potion_PotionEffectTypeWrapper",
@@ -10527,7 +10527,7 @@
       "org.bukkit.potion"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_potion_PotionType",
@@ -10540,7 +10540,7 @@
       "org.bukkit.potion"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 10
   },
   {
     "id": "1.12.2/org_bukkit_projectiles_BlockProjectileSource",
@@ -10553,7 +10553,7 @@
       "org.bukkit.projectiles"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_projectiles_ProjectileSource",
@@ -10566,7 +10566,7 @@
       "org.bukkit.projectiles"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_Rotation",
@@ -10579,7 +10579,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_SandstoneType",
@@ -10592,7 +10592,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_scheduler_BukkitRunnable",
@@ -10605,7 +10605,7 @@
       "org.bukkit.scheduler"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 9
   },
   {
     "id": "1.12.2/org_bukkit_scheduler_BukkitScheduler",
@@ -10618,7 +10618,7 @@
       "org.bukkit.scheduler"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 29
   },
   {
     "id": "1.12.2/org_bukkit_scheduler_BukkitTask",
@@ -10631,7 +10631,7 @@
       "org.bukkit.scheduler"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_scheduler_BukkitWorker",
@@ -10644,7 +10644,7 @@
       "org.bukkit.scheduler"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_scoreboard_Criterias",
@@ -10657,7 +10657,7 @@
       "org.bukkit.scoreboard"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_scoreboard_DisplaySlot",
@@ -10670,7 +10670,7 @@
       "org.bukkit.scoreboard"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_scoreboard_NameTagVisibility",
@@ -10683,7 +10683,7 @@
       "org.bukkit.scoreboard"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_scoreboard_Objective",
@@ -10696,7 +10696,7 @@
       "org.bukkit.scoreboard"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 11
   },
   {
     "id": "1.12.2/org_bukkit_scoreboard_Score",
@@ -10709,7 +10709,7 @@
       "org.bukkit.scoreboard"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_scoreboard_Scoreboard",
@@ -10722,7 +10722,7 @@
       "org.bukkit.scoreboard"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 17
   },
   {
     "id": "1.12.2/org_bukkit_scoreboard_ScoreboardManager",
@@ -10735,7 +10735,7 @@
       "org.bukkit.scoreboard"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_scoreboard_Team",
@@ -10748,7 +10748,7 @@
       "org.bukkit.scoreboard"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 30
   },
   {
     "id": "1.12.2/org_bukkit_scoreboard_Team.Option",
@@ -10761,7 +10761,7 @@
       "org.bukkit.scoreboard"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_scoreboard_Team.OptionStatus",
@@ -10774,7 +10774,7 @@
       "org.bukkit.scoreboard"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_Server",
@@ -10787,7 +10787,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 114
   },
   {
     "id": "1.12.2/org_bukkit_Server.Spigot",
@@ -10800,7 +10800,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 7
   },
   {
     "id": "1.12.2/org_bukkit_SkullType",
@@ -10813,7 +10813,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_Sound",
@@ -10826,7 +10826,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_SoundCategory",
@@ -10839,7 +10839,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_Statistic",
@@ -10852,7 +10852,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 6
   },
   {
     "id": "1.12.2/org_bukkit_Statistic.Type",
@@ -10865,7 +10865,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_TravelAgent",
@@ -10878,7 +10878,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 9
   },
   {
     "id": "1.12.2/org_bukkit_TreeSpecies",
@@ -10891,7 +10891,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_TreeType",
@@ -10904,7 +10904,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_UnsafeValues",
@@ -10917,7 +10917,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 8
   },
   {
     "id": "1.12.2/org_bukkit_util_BlockIterator",
@@ -10930,7 +10930,7 @@
       "org.bukkit.util"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_util_BlockVector",
@@ -10943,7 +10943,7 @@
       "org.bukkit.util"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_util_CachedServerIcon",
@@ -10956,7 +10956,7 @@
       "org.bukkit.util"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_util_ChatPaginator",
@@ -10969,7 +10969,7 @@
       "org.bukkit.util"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 10
   },
   {
     "id": "1.12.2/org_bukkit_util_ChatPaginator.ChatPage",
@@ -10982,7 +10982,7 @@
       "org.bukkit.util"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 3
   },
   {
     "id": "1.12.2/org_bukkit_util_Consumer",
@@ -10995,7 +10995,7 @@
       "org.bukkit.util"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_util_EulerAngle",
@@ -11008,7 +11008,7 @@
       "org.bukkit.util"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 11
   },
   {
     "id": "1.12.2/org_bukkit_util_FileUtil",
@@ -11021,7 +11021,7 @@
       "org.bukkit.util"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_util_io_BukkitObjectInputStream",
@@ -11034,7 +11034,7 @@
       "org.bukkit.util.io"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_util_io_BukkitObjectOutputStream",
@@ -11047,7 +11047,7 @@
       "org.bukkit.util.io"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_util_noise_NoiseGenerator",
@@ -11060,7 +11060,7 @@
       "org.bukkit.util.noise"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 17
   },
   {
     "id": "1.12.2/org_bukkit_util_noise_OctaveGenerator",
@@ -11073,7 +11073,7 @@
       "org.bukkit.util.noise"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 18
   },
   {
     "id": "1.12.2/org_bukkit_util_noise_PerlinNoiseGenerator",
@@ -11086,7 +11086,7 @@
       "org.bukkit.util.noise"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 9
   },
   {
     "id": "1.12.2/org_bukkit_util_noise_PerlinOctaveGenerator",
@@ -11112,7 +11112,7 @@
       "org.bukkit.util.noise"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 26
   },
   {
     "id": "1.12.2/org_bukkit_util_noise_SimplexOctaveGenerator",
@@ -11125,7 +11125,7 @@
       "org.bukkit.util.noise"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_bukkit_util_NumberConversions",
@@ -11138,7 +11138,7 @@
       "org.bukkit.util"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 14
   },
   {
     "id": "1.12.2/org_bukkit_util_permissions_BroadcastPermissions",
@@ -11151,7 +11151,7 @@
       "org.bukkit.util.permissions"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_util_permissions_CommandPermissions",
@@ -11164,7 +11164,7 @@
       "org.bukkit.util.permissions"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_util_permissions_DefaultPermissions",
@@ -11177,7 +11177,7 @@
       "org.bukkit.util.permissions"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 10
   },
   {
     "id": "1.12.2/org_bukkit_util_StringUtil",
@@ -11190,7 +11190,7 @@
       "org.bukkit.util"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_util_Vector",
@@ -11203,7 +11203,7 @@
       "org.bukkit.util"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 54
   },
   {
     "id": "1.12.2/org_bukkit_Utility",
@@ -11229,7 +11229,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_Warning.WarningState",
@@ -11242,7 +11242,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_WeatherType",
@@ -11255,7 +11255,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_bukkit_World",
@@ -11268,7 +11268,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 177
   },
   {
     "id": "1.12.2/org_bukkit_World.ChunkLoadCallback",
@@ -11281,7 +11281,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 1
   },
   {
     "id": "1.12.2/org_bukkit_World.Environment",
@@ -11294,7 +11294,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_World.Spigot",
@@ -11307,7 +11307,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_bukkit_WorldBorder",
@@ -11320,7 +11320,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 17
   },
   {
     "id": "1.12.2/org_bukkit_WorldCreator",
@@ -11333,7 +11333,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 20
   },
   {
     "id": "1.12.2/org_bukkit_WorldType",
@@ -11346,7 +11346,7 @@
       "org.bukkit"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   },
   {
     "id": "1.12.2/org_spigotmc_CustomTimingsHandler",
@@ -11359,7 +11359,7 @@
       "org.spigotmc"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 2
   },
   {
     "id": "1.12.2/org_spigotmc_event_entity_EntityDismountEvent",
@@ -11372,7 +11372,7 @@
       "org.spigotmc.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_spigotmc_event_entity_EntityMountEvent",
@@ -11385,7 +11385,7 @@
       "org.spigotmc.event.entity"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 5
   },
   {
     "id": "1.12.2/org_spigotmc_event_player_PlayerSpawnLocationEvent",
@@ -11398,6 +11398,6 @@
       "org.spigotmc.event.player"
     ],
     "priority": "⭐",
-    "sectionCount": 0
+    "sectionCount": 4
   }
 ]

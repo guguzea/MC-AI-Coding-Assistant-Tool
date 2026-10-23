@@ -4,8 +4,19 @@ package: "com.destroystokyo.paper.loottable"
 source: https://jd.papermc.io/paper/1.12.2/com/destroystokyo/paper/loottable/LootableInventory.html
 sourceType: javadoc
 fetchedWith: fetch-spigot-javadoc.mjs@1
-fetchedAt: 2026-10-23T07:14:55.890Z
+fetchedAt: 2026-10-23T09:54:19.288Z
 asOfVersion: "1.12.2-R0.1-SNAPSHOT"
 ---
 
-_（上游 javadoc 的 `com.destroystokyo.paper.loottable.LootableInventory` 页只输出类型声明、没有 `member-signature` 块：该类未声明自己的成员，成员全部继承自父类型。本档据此不产出成员签名，非抓取失败。）_
+- `long getLastFilled()`
+- `Long getLastLooted(UUID player)`
+- `default Long getLastLooted(Player player)`
+- `long getNextRefill()`
+- `boolean hasBeenFilled()`
+- `boolean hasPendingRefill()`
+- `boolean hasPlayerLooted(UUID player)`
+- `default boolean hasPlayerLooted(Player player)`
+- `boolean isRefillEnabled()`
+- `boolean setHasPlayerLooted(UUID player, boolean looted)`
+- `default boolean setHasPlayerLooted(Player player, boolean looted)`
+- `long setNextRefill(long refillAt)`

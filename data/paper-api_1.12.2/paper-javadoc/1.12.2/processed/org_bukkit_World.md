@@ -4,8 +4,184 @@ package: "org.bukkit"
 source: https://jd.papermc.io/paper/1.12.2/org/bukkit/World.html
 sourceType: javadoc
 fetchedWith: fetch-spigot-javadoc.mjs@1
-fetchedAt: 2026-10-23T07:14:55.890Z
+fetchedAt: 2026-10-23T09:54:19.288Z
 asOfVersion: "1.12.2-R0.1-SNAPSHOT"
 ---
 
-_（上游 javadoc 的 `org.bukkit.World` 页只输出类型声明、没有 `member-signature` 块：该类未声明自己的成员，成员全部继承自父类型。本档据此不产出成员签名，非抓取失败。）_
+- `static interface World.ChunkLoadCallback`
+- `static class World.Environment`
+- `static class World.Spigot`
+- `boolean canGenerateStructures()`
+- `boolean createExplosion(double x, double y, double z, float power)`
+- `boolean createExplosion(double x, double y, double z, float power, boolean setFire)`
+- `boolean createExplosion(double x, double y, double z, float power, boolean setFire, boolean breakBlocks)`
+- `default boolean createExplosion(Entity source, float power)`
+- `default boolean createExplosion(Entity source, float power, boolean setFire)`
+- `default boolean createExplosion(Entity source, float power, boolean setFire, boolean breakBlocks)`
+- `default boolean createExplosion(Entity source, Location loc, float power)`
+- `default boolean createExplosion(Entity source, Location loc, float power, boolean setFire)`
+- `boolean createExplosion(Entity source, Location loc, float power, boolean setFire, boolean breakBlocks)`
+- `boolean createExplosion(Location loc, float power)`
+- `boolean createExplosion(Location loc, float power, boolean setFire)`
+- `default boolean createExplosion(Location loc, float power, boolean setFire, boolean breakBlocks)`
+- `Item dropItem(Location location, ItemStack item)`
+- `Item dropItemNaturally(Location location, ItemStack item)`
+- `boolean generateTree(Location location, TreeType type)`
+- `boolean generateTree(Location loc, TreeType type, BlockChangeDelegate delegate)`
+- `boolean getAllowAnimals()`
+- `boolean getAllowMonsters()`
+- `int getAmbientSpawnLimit()`
+- `int getAnimalSpawnLimit()`
+- `Biome getBiome(int x, int z)`
+- `Block getBlockAt(int x, int y, int z)`
+- `Block getBlockAt(Location location)`
+- `default Block getBlockAtKey(long key)`
+- `int getBlockTypeIdAt(int x, int y, int z)`
+- `int getBlockTypeIdAt(Location location)`
+- `Chunk getChunkAt(int x, int z)`
+- `default Chunk getChunkAt(long chunkKey)`
+- `Chunk getChunkAt(Block block)`
+- `Chunk getChunkAt(Location location)`
+- `void getChunkAtAsync(int x, int z, World.ChunkLoadCallback cb)`
+- `void getChunkAtAsync(Block block, World.ChunkLoadCallback cb)`
+- `void getChunkAtAsync(Location location, World.ChunkLoadCallback cb)`
+- `int getChunkCount()`
+- `Difficulty getDifficulty()`
+- `ChunkSnapshot getEmptyChunkSnapshot(int x, int z, boolean includeBiome, boolean includeBiomeTempRain)`
+- `List<Entity> getEntities()`
+- `<T extends Entity>Collection<T> getEntitiesByClass(Class<T> cls)`
+- `<T extends Entity>Collection<T> getEntitiesByClass(Class<T>... classes)`
+- `Collection<Entity> getEntitiesByClasses(Class<?>... classes)`
+- `Entity getEntity(UUID uuid)`
+- `int getEntityCount()`
+- `World.Environment getEnvironment()`
+- `long getFullTime()`
+- `String[] getGameRules()`
+- `String getGameRuleValue(String rule)`
+- `ChunkGenerator getGenerator()`
+- `Block getHighestBlockAt(int x, int z)`
+- `Block getHighestBlockAt(Location location)`
+- `int getHighestBlockYAt(int x, int z)`
+- `int getHighestBlockYAt(Location location)`
+- `double getHumidity(int x, int z)`
+- `boolean getKeepSpawnInMemory()`
+- `List<LivingEntity> getLivingEntities()`
+- `Chunk[] getLoadedChunks()`
+- `default Location getLocationAtKey(long key)`
+- `int getMaxHeight()`
+- `int getMonsterSpawnLimit()`
+- `String getName()`
+- `Collection<Entity> getNearbyEntities(Location location, double x, double y, double z)`
+- `default <T extends Entity>Collection<T> getNearbyEntitiesByType(Class<? extends Entity> clazz, Location loc, double xRadius, double yRadius, double zRadius, Predicate<T> predicate)`
+- `default <T extends Entity>Collection<T> getNearbyEntitiesByType(Class<? extends T> clazz, Location loc, double radius)`
+- `default <T extends Entity>Collection<T> getNearbyEntitiesByType(Class<? extends T> clazz, Location loc, double xzRadius, double yRadius)`
+- `default <T extends Entity>Collection<T> getNearbyEntitiesByType(Class<? extends T> clazz, Location loc, double xRadius, double yRadius, double zRadius)`
+- `default <T extends Entity>Collection<T> getNearbyEntitiesByType(Class<? extends T> clazz, Location loc, double xzRadius, double yRadius, Predicate<T> predicate)`
+- `default <T extends Entity>Collection<T> getNearbyEntitiesByType(Class<? extends T> clazz, Location loc, double radius, Predicate<T> predicate)`
+- `default Collection<LivingEntity> getNearbyLivingEntities(Location loc, double radius)`
+- `default Collection<LivingEntity> getNearbyLivingEntities(Location loc, double xzRadius, double yRadius)`
+- `default Collection<LivingEntity> getNearbyLivingEntities(Location loc, double xRadius, double yRadius, double zRadius)`
+- `default Collection<LivingEntity> getNearbyLivingEntities(Location loc, double xRadius, double yRadius, double zRadius, Predicate<LivingEntity> predicate)`
+- `default Collection<LivingEntity> getNearbyLivingEntities(Location loc, double xzRadius, double yRadius, Predicate<LivingEntity> predicate)`
+- `default Collection<LivingEntity> getNearbyLivingEntities(Location loc, double radius, Predicate<LivingEntity> predicate)`
+- `default Collection<Player> getNearbyPlayers(Location loc, double radius)`
+- `default Collection<Player> getNearbyPlayers(Location loc, double xzRadius, double yRadius)`
+- `default Collection<Player> getNearbyPlayers(Location loc, double xRadius, double yRadius, double zRadius)`
+- `default Collection<Player> getNearbyPlayers(Location loc, double xRadius, double yRadius, double zRadius, Predicate<Player> predicate)`
+- `default Collection<Player> getNearbyPlayers(Location loc, double xzRadius, double yRadius, Predicate<Player> predicate)`
+- `default Collection<Player> getNearbyPlayers(Location loc, double radius, Predicate<Player> predicate)`
+- `int getPlayerCount()`
+- `List<Player> getPlayers()`
+- `List<BlockPopulator> getPopulators()`
+- `boolean getPVP()`
+- `int getSeaLevel()`
+- `long getSeed()`
+- `Location getSpawnLocation()`
+- `double getTemperature(int x, int z)`
+- `int getThunderDuration()`
+- `int getTickableTileEntityCount()`
+- `long getTicksPerAnimalSpawns()`
+- `long getTicksPerMonsterSpawns()`
+- `int getTileEntityCount()`
+- `long getTime()`
+- `UUID getUID()`
+- `int getWaterAnimalSpawnLimit()`
+- `int getWeatherDuration()`
+- `WorldBorder getWorldBorder()`
+- `File getWorldFolder()`
+- `WorldType getWorldType()`
+- `boolean hasStorm()`
+- `boolean isAutoSave()`
+- `boolean isChunkGenerated(int x, int z)`
+- `default boolean isChunkGenerated(long chunkKey)`
+- `boolean isChunkInUse(int x, int z)`
+- `boolean isChunkLoaded(int x, int z)`
+- `boolean isChunkLoaded(Chunk chunk)`
+- `boolean isGameRule(String rule)`
+- `boolean isThundering()`
+- `void loadChunk(int x, int z)`
+- `boolean loadChunk(int x, int z, boolean generate)`
+- `void loadChunk(Chunk chunk)`
+- `void playEffect(Location location, Effect effect, int data)`
+- `void playEffect(Location location, Effect effect, int data, int radius)`
+- `<T> void playEffect(Location location, Effect effect, T data)`
+- `<T> void playEffect(Location location, Effect effect, T data, int radius)`
+- `void playSound(Location location, String sound, float volume, float pitch)`
+- `void playSound(Location location, String sound, SoundCategory category, float volume, float pitch)`
+- `void playSound(Location location, Sound sound, float volume, float pitch)`
+- `void playSound(Location location, Sound sound, SoundCategory category, float volume, float pitch)`
+- `boolean refreshChunk(int x, int z)`
+- `boolean regenerateChunk(int x, int z)`
+- `void save()`
+- `void setAmbientSpawnLimit(int limit)`
+- `void setAnimalSpawnLimit(int limit)`
+- `void setAutoSave(boolean value)`
+- `void setBiome(int x, int z, Biome bio)`
+- `void setDifficulty(Difficulty difficulty)`
+- `void setFullTime(long time)`
+- `boolean setGameRuleValue(String rule, String value)`
+- `void setKeepSpawnInMemory(boolean keepLoaded)`
+- `void setMonsterSpawnLimit(int limit)`
+- `void setPVP(boolean pvp)`
+- `void setSpawnFlags(boolean allowMonsters, boolean allowAnimals)`
+- `boolean setSpawnLocation(int x, int y, int z)`
+- `boolean setSpawnLocation(Location location)`
+- `void setStorm(boolean hasStorm)`
+- `void setThunderDuration(int duration)`
+- `void setThundering(boolean thundering)`
+- `void setTicksPerAnimalSpawns(int ticksPerAnimalSpawns)`
+- `void setTicksPerMonsterSpawns(int ticksPerMonsterSpawns)`
+- `void setTime(long time)`
+- `void setWaterAnimalSpawnLimit(int limit)`
+- `void setWeatherDuration(int duration)`
+- `<T extends Entity>T spawn(Location location, Class<T> clazz)`
+- `<T extends Entity>T spawn(Location location, Class<T> clazz, Consumer<T> function)`
+- `Arrow spawnArrow(Location location, Vector direction, float speed, float spread)`
+- `<T extends Arrow>T spawnArrow(Location location, Vector direction, float speed, float spread, Class<T> clazz)`
+- `Entity spawnEntity(Location loc, EntityType type)`
+- `FallingBlock spawnFallingBlock(Location location, int blockId, byte blockData)`
+- `FallingBlock spawnFallingBlock(Location location, MaterialData data)`
+- `FallingBlock spawnFallingBlock(Location location, Material material, byte data)`
+- `void spawnParticle(Particle particle, double x, double y, double z, int count)`
+- `void spawnParticle(Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ)`
+- `void spawnParticle(Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ, double extra)`
+- `default <T> void spawnParticle(Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ, double extra, T data)`
+- `<T> void spawnParticle(Particle particle, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ, T data)`
+- `<T> void spawnParticle(Particle particle, double x, double y, double z, int count, T data)`
+- `default <T> void spawnParticle(Particle particle, List<Player> receivers, Player source, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ, double extra, T data)`
+- `<T> void spawnParticle(Particle particle, List<Player> receivers, Player source, double x, double y, double z, int count, double offsetX, double offsetY, double offsetZ, double extra, T data, boolean force)`
+- `void spawnParticle(Particle particle, Location location, int count)`
+- `void spawnParticle(Particle particle, Location location, int count, double offsetX, double offsetY, double offsetZ)`
+- `void spawnParticle(Particle particle, Location location, int count, double offsetX, double offsetY, double offsetZ, double extra)`
+- `<T> void spawnParticle(Particle particle, Location location, int count, double offsetX, double offsetY, double offsetZ, double extra, T data)`
+- `<T> void spawnParticle(Particle particle, Location location, int count, double offsetX, double offsetY, double offsetZ, T data)`
+- `<T> void spawnParticle(Particle particle, Location location, int count, T data)`
+- `World.Spigot spigot()`
+- `LightningStrike strikeLightning(Location loc)`
+- `LightningStrike strikeLightningEffect(Location loc)`
+- `boolean unloadChunk(int x, int z)`
+- `boolean unloadChunk(int x, int z, boolean save)`
+- `boolean unloadChunk(int x, int z, boolean save, boolean safe)`
+- `boolean unloadChunk(Chunk chunk)`
+- `boolean unloadChunkRequest(int x, int z)`
+- `boolean unloadChunkRequest(int x, int z, boolean safe)`

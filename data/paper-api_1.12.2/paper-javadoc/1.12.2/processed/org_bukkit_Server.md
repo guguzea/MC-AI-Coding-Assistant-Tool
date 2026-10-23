@@ -4,8 +4,121 @@ package: "org.bukkit"
 source: https://jd.papermc.io/paper/1.12.2/org/bukkit/Server.html
 sourceType: javadoc
 fetchedWith: fetch-spigot-javadoc.mjs@1
-fetchedAt: 2026-10-23T07:14:55.890Z
+fetchedAt: 2026-10-23T09:54:19.288Z
 asOfVersion: "1.12.2-R0.1-SNAPSHOT"
 ---
 
-_（上游 javadoc 的 `org.bukkit.Server` 页只输出类型声明、没有 `member-signature` 块：该类未声明自己的成员，成员全部继承自父类型。本档据此不产出成员签名，非抓取失败。）_
+- `static class Server.Spigot`
+- `static String BROADCAST_CHANNEL_ADMINISTRATIVE`
+- `static String BROADCAST_CHANNEL_USERS`
+- `boolean addRecipe(Recipe recipe)`
+- `Iterator<Advancement> advancementIterator()`
+- `void banIP(String address)`
+- `int broadcast(String message, String permission)`
+- `default void broadcast(net.md_5.bungee.api.chat.BaseComponent component)`
+- `default void broadcast(net.md_5.bungee.api.chat.BaseComponent... components)`
+- `int broadcastMessage(String message)`
+- `void clearRecipes()`
+- `BossBar createBossBar(String title, BarColor color, BarStyle style, BarFlag... flags)`
+- `ChunkGenerator.ChunkData createChunkData(World world)`
+- `Inventory createInventory(InventoryHolder owner, int size)`
+- `Inventory createInventory(InventoryHolder owner, int size, String title)`
+- `Inventory createInventory(InventoryHolder owner, InventoryType type)`
+- `Inventory createInventory(InventoryHolder owner, InventoryType type, String title)`
+- `MapView createMap(World world)`
+- `Merchant createMerchant(String title)`
+- `PlayerProfile createProfile(String name)`
+- `PlayerProfile createProfile(UUID uuid)`
+- `PlayerProfile createProfile(UUID uuid, String name)`
+- `World createWorld(WorldCreator creator)`
+- `boolean dispatchCommand(CommandSender sender, String commandLine)`
+- `Advancement getAdvancement(NamespacedKey key)`
+- `boolean getAllowEnd()`
+- `boolean getAllowFlight()`
+- `boolean getAllowNether()`
+- `int getAmbientSpawnLimit()`
+- `int getAnimalSpawnLimit()`
+- `BanList getBanList(BanList.Type type)`
+- `Set<OfflinePlayer> getBannedPlayers()`
+- `String getBukkitVersion()`
+- `Map<String,String[]> getCommandAliases()`
+- `CommandMap getCommandMap()`
+- `long getConnectionThrottle()`
+- `ConsoleCommandSender getConsoleSender()`
+- `GameMode getDefaultGameMode()`
+- `Entity getEntity(UUID uuid)`
+- `boolean getGenerateStructures()`
+- `HelpMap getHelpMap()`
+- `int getIdleTimeout()`
+- `String getIp()`
+- `Set<String> getIPBans()`
+- `ItemFactory getItemFactory()`
+- `Logger getLogger()`
+- `MapView getMap(short id)`
+- `int getMaxPlayers()`
+- `Messenger getMessenger()`
+- `int getMonsterSpawnLimit()`
+- `String getMotd()`
+- `String getName()`
+- `OfflinePlayer getOfflinePlayer(String name)`
+- `OfflinePlayer getOfflinePlayer(UUID id)`
+- `OfflinePlayer[] getOfflinePlayers()`
+- `boolean getOnlineMode()`
+- `Collection<? extends Player> getOnlinePlayers()`
+- `Set<OfflinePlayer> getOperators()`
+- `Player getPlayer(String name)`
+- `Player getPlayer(UUID id)`
+- `Player getPlayerExact(String name)`
+- `UUID getPlayerUniqueId(String playerName)`
+- `PluginCommand getPluginCommand(String name)`
+- `PluginManager getPluginManager()`
+- `int getPort()`
+- `List<Recipe> getRecipesFor(ItemStack result)`
+- `BukkitScheduler getScheduler()`
+- `ScoreboardManager getScoreboardManager()`
+- `CachedServerIcon getServerIcon()`
+- `String getServerId()`
+- `String getServerName()`
+- `ServicesManager getServicesManager()`
+- `String getShutdownMessage()`
+- `int getSpawnRadius()`
+- `int getTicksPerAnimalSpawns()`
+- `int getTicksPerMonsterSpawns()`
+- `double[] getTPS()`
+- `UnsafeValues getUnsafe()`
+- `String getUpdateFolder()`
+- `File getUpdateFolderFile()`
+- `String getVersion()`
+- `int getViewDistance()`
+- `Warning.WarningState getWarningState()`
+- `int getWaterAnimalSpawnLimit()`
+- `Set<OfflinePlayer> getWhitelistedPlayers()`
+- `World getWorld(String name)`
+- `World getWorld(UUID uid)`
+- `File getWorldContainer()`
+- `List<World> getWorlds()`
+- `String getWorldType()`
+- `boolean hasWhitelist()`
+- `boolean isHardcore()`
+- `boolean isPrimaryThread()`
+- `CachedServerIcon loadServerIcon(BufferedImage image)`
+- `CachedServerIcon loadServerIcon(File file)`
+- `List<Player> matchPlayer(String name)`
+- `Iterator<Recipe> recipeIterator()`
+- `void reload()`
+- `boolean reloadCommandAliases()`
+- `void reloadData()`
+- `void reloadPermissions()`
+- `void reloadWhitelist()`
+- `void resetRecipes()`
+- `void savePlayers()`
+- `void setDefaultGameMode(GameMode mode)`
+- `void setIdleTimeout(int threshold)`
+- `void setSpawnRadius(int value)`
+- `void setWhitelist(boolean value)`
+- `void shutdown()`
+- `Server.Spigot spigot()`
+- `boolean suggestPlayerNamesWhenNullTabCompletions()`
+- `void unbanIP(String address)`
+- `boolean unloadWorld(String name, boolean save)`
+- `boolean unloadWorld(World world, boolean save)`

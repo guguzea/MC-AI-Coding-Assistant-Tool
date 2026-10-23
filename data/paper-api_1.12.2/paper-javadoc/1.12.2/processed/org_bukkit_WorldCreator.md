@@ -4,8 +4,27 @@ package: "org.bukkit"
 source: https://jd.papermc.io/paper/1.12.2/org/bukkit/WorldCreator.html
 sourceType: javadoc
 fetchedWith: fetch-spigot-javadoc.mjs@1
-fetchedAt: 2026-10-23T07:14:55.890Z
+fetchedAt: 2026-10-23T09:54:19.288Z
 asOfVersion: "1.12.2-R0.1-SNAPSHOT"
 ---
 
-_（上游 javadoc 的 `org.bukkit.WorldCreator` 页只输出类型声明、没有 `member-signature` 块：该类未声明自己的成员，成员全部继承自父类型。本档据此不产出成员签名，非抓取失败。）_
+- `WorldCreator copy(World world)`
+- `WorldCreator copy(WorldCreator creator)`
+- `World createWorld()`
+- `World.Environment environment()`
+- `WorldCreator environment(World.Environment env)`
+- `boolean generateStructures()`
+- `WorldCreator generateStructures(boolean generate)`
+- `ChunkGenerator generator()`
+- `WorldCreator generator(String generator)`
+- `WorldCreator generator(String generator, CommandSender output)`
+- `WorldCreator generator(ChunkGenerator generator)`
+- `String generatorSettings()`
+- `WorldCreator generatorSettings(String generatorSettings)`
+- `static ChunkGenerator getGeneratorForName(String world, String name, CommandSender output)`
+- `String name()`
+- `static WorldCreator name(String name)`
+- `long seed()`
+- `WorldCreator seed(long seed)`
+- `WorldType type()`
+- `WorldCreator type(WorldType type)`

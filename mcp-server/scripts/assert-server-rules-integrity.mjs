@@ -128,7 +128,22 @@ export function collectRuleFiles(root = RULES_GLOB_ROOT) {
  */
 export function buildCorpusIndex(dataRoot = DATA) {
   const entries = [];
-  for (const face of CORPUS_FACES) {
+  const faces = [...CORPUS_FACES];
+  // 2026-10-23：**真版本签名面**也纳入（`data/paper-api_<ver>/paper-javadoc/<ver>/processed`）。
+  // 版本档规则（`paper/1.21.4/rules/*.md`）的出处指到**本版本**的签名页；不纳入这些面，
+  // 版本档的每条指针都会被判成「编造文件名」。`stable` 已在 CORPUS_FACES 里，跳过免得重复。
+  try {
+    for (const d of readdirSync(dataRoot, { withFileTypes: true })) {
+      if (!d.isDirectory()) continue;
+      const m = d.name.match(/^paper-api_(.+)$/);
+      if (!m || m[1] === "stable") continue;
+      const rel = `${d.name}/paper-javadoc/${m[1]}/processed`;
+      if (existsSync(join(dataRoot, rel))) faces.push(rel);
+    }
+  } catch {
+    /* data 根不存在 ⇒ 按缺面处理（下游会降级） */
+  }
+  for (const face of faces) {
     const dir = join(dataRoot, face);
     if (!existsSync(dir)) continue;
     for (const f of readdirSync(dir, { withFileTypes: true })) {
