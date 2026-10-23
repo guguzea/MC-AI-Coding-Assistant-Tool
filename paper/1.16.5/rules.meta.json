@@ -19,5 +19,44 @@
     "generatedBy": "temp/gen-paper-version-packs.mjs（机核；默认 dry-run）"
   },
   "typesInSignatureFace": 1254,
-  "typeShellPages": 97
+  "typeShellPages": 97,
+  "runtimeProbe": {
+    "verified": true,
+    "at": "2026-10-23",
+    "server": {
+      "artifact": "paper-1.16.5-794.jar",
+      "size": 53944842,
+      "sha256": "e67da4851d08cde378ab2b89be58849238c303351ed2482181a99c2c2b489276",
+      "from": "fill.papermc.io/v3"
+    },
+    "jdk": "8",
+    "launch": "java -jar paper.bin --nogui（.bin 后缀见下）",
+    "plugin": {
+      "main": "qa.QaPlugin",
+      "classes": 2,
+      "covers": [
+        "JavaPlugin#onEnable/getLogger",
+        "PluginManager#registerEvents/addPermission",
+        "@EventHandler(priority, ignoreCancelled)",
+        "BukkitRunnable#runTaskLater",
+        "Command#setExecutor",
+        "Permission/PermissionDefault"
+      ]
+    },
+    "results": {
+      "done": "2.467s",
+      "onEnable": true,
+      "schedulerTick": true,
+      "consoleCommand": true
+    },
+    "notCovered": [
+      "PlayerJoinEvent 派发（需真客户端连入，本轮无客户端）",
+      "PDC（1.12.2 无此 API）",
+      "任何业务语义"
+    ],
+    "envNotes": [
+      "本机安全软件会把 `*.jar` 清空成 0 字节（同内容 `*.bin` 稳定）⇒ 服务端件存 `paper.bin`，`-jar` 只看内容不看扩展名",
+      "老版日志用 `Enabling QaPlugin` 而不是 `Loading server plugin`，判据要认两种写法"
+    ]
+  }
 }

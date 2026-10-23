@@ -86,3 +86,21 @@
 - **没有**逐方法比对成员签名（只核「这个方法名还在不在」，不核参数表是否变化）。
 - 教程面指针（25 处）指向的是**当前文档**，其正文可能已按新版改写，未按 1.12.2 复核。
 - 「纯类型声明页」89 篇是上游页面本身没有成员签名（注解/嵌套 record/纯继承接口），不是抓取失败；但也意味着这些类的成员本档没有证据。
+
+## 真机实测（2026-10-23，**本机跑的**）
+
+| 项 | 值 |
+|---|---|
+| 服务端 | `paper-1.12.2-1620.jar` · 39.1 MB · sha256 `3a2041807f492dcd…`（取自 `fill.papermc.io/v3`，下载后逐字核过） |
+| JDK | **8** |
+| 起法 | `java -jar paper.bin --noconsole` |
+| 插件 | `qa.QaPlugin`（2 个 class，含匿名内部类 `QaPlugin$1`） |
+| `Done` | **2.252s** |
+| `[QA] onEnable` | ✅ 插件被加载并启用 |
+| `[QA] scheduler tick` | ✅ `BukkitRunnable#runTaskLater` 回调 |
+| 控制台 `qa` 命令 → `[QA] command from CONSOLE` | ❌ 不适用（见下） |
+
+**没覆盖的**：`PlayerJoinEvent` 的派发（要真客户端连进来，本轮无客户端）；任何业务语义。
+
+**本版特有**：它的 paperclip **不认 `--nogui`**（打印参数帮助后退出）⇒ 只能 `--noconsole`；而 `--noconsole` 关掉了控制台 ⇒ 控制台命令无法派发，该判据对它不适用。另：PDC（`PersistentDataContainer`）是 1.14+，1.12.2 编译时按该版能力裁掉。
+

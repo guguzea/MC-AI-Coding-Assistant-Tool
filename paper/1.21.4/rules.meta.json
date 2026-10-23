@@ -19,5 +19,43 @@
     "generatedBy": "temp/gen-paper-version-packs.mjs（机核；默认 dry-run）"
   },
   "typesInSignatureFace": 1871,
-  "typeShellPages": 165
+  "typeShellPages": 165,
+  "runtimeProbe": {
+    "verified": true,
+    "at": "2026-10-23",
+    "server": {
+      "artifact": "paper-1.21.4-232.jar",
+      "size": 51437498,
+      "sha256": "5ee4f542f628a14c644410b08c94ea42e772ef4d29fe92973636b6813d4eaffc",
+      "from": "fill.papermc.io/v3"
+    },
+    "jdk": "21",
+    "launch": "java -jar paper.bin --nogui（.bin 后缀见下）",
+    "plugin": {
+      "main": "qa.QaPlugin",
+      "classes": 2,
+      "covers": [
+        "JavaPlugin#onEnable/getLogger",
+        "PluginManager#registerEvents/addPermission",
+        "@EventHandler(priority, ignoreCancelled)",
+        "BukkitRunnable#runTaskLater",
+        "Command#setExecutor",
+        "Permission/PermissionDefault"
+      ]
+    },
+    "results": {
+      "done": "10.428s",
+      "onEnable": true,
+      "schedulerTick": true,
+      "consoleCommand": true
+    },
+    "notCovered": [
+      "PlayerJoinEvent 派发（需真客户端连入，本轮无客户端）",
+      "PDC（1.12.2 无此 API）",
+      "任何业务语义"
+    ],
+    "envNotes": [
+      "本机安全软件会把 `*.jar` 清空成 0 字节（同内容 `*.bin` 稳定）⇒ 服务端件存 `paper.bin`，`-jar` 只看内容不看扩展名"
+    ]
+  }
 }

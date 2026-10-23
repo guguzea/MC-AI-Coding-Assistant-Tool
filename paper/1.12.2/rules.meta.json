@@ -19,5 +19,44 @@
     "generatedBy": "temp/gen-paper-version-packs.mjs（机核；默认 dry-run）"
   },
   "typesInSignatureFace": 877,
-  "typeShellPages": 89
+  "typeShellPages": 89,
+  "runtimeProbe": {
+    "verified": true,
+    "at": "2026-10-23",
+    "server": {
+      "artifact": "paper-1.12.2-1620.jar",
+      "size": 40979699,
+      "sha256": "3a2041807f492dcdc34ebb324a287414946e3e05ec3df6fd03f5b5f7d9afc210",
+      "from": "fill.papermc.io/v3"
+    },
+    "jdk": "8",
+    "launch": "java -jar paper.bin --noconsole（.bin 后缀见下）",
+    "plugin": {
+      "main": "qa.QaPlugin",
+      "classes": 2,
+      "covers": [
+        "JavaPlugin#onEnable/getLogger",
+        "PluginManager#registerEvents/addPermission",
+        "@EventHandler(priority, ignoreCancelled)",
+        "BukkitRunnable#runTaskLater",
+        "Command#setExecutor",
+        "Permission/PermissionDefault"
+      ]
+    },
+    "results": {
+      "done": "2.252s",
+      "onEnable": true,
+      "schedulerTick": true,
+      "consoleCommand": false
+    },
+    "notCovered": [
+      "PlayerJoinEvent 派发（需真客户端连入，本轮无客户端）",
+      "PDC（1.12.2 无此 API）",
+      "任何业务语义"
+    ],
+    "envNotes": [
+      "本机安全软件会把 `*.jar` 清空成 0 字节（同内容 `*.bin` 稳定）⇒ 服务端件存 `paper.bin`，`-jar` 只看内容不看扩展名",
+      "它的 paperclip **不认 `--nogui`**（打印参数帮助后退出）⇒ 只能 `--noconsole`；而 `--noconsole` 关掉了控制台 ⇒ 控制台命令无法派发，该判据对它不适用。另：PDC（`PersistentDataContainer`）是 1.14+，1.12.2 编译时按该版能力裁掉。"
+    ]
+  }
 }

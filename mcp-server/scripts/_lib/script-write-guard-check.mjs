@@ -64,6 +64,10 @@ export const SCRIPT_WRITE_GUARD_NON_WRITERS = new Map([
   // 门模式与仓库面全程只读 —— 仓库真树只被 readFileSync 扫。依据正则一断（夹具落点改到仓库内）本豁免即失效。
   ["mcp-server/scripts/assert-skill-mirrors.mjs", /mkdtempSync\(join\(tmpdir\(\), "mirrors-l14-"/],
   ["mcp-server/scripts/assert-parser-availability.mjs", /mkdtempSync\(path\.join\(os\.tmpdir\(\), "mcskill-g2-"/], // 夹具 jar 只落 OS tmpdir；rmSync 收的就是那个目录，仓库源码全程只读
+  // Paper 服务端真机探针（2026-10-23 加）：服务端件 / 插件 jar / eula.txt / server.properties 全落
+  // `--root`（默认 F:/MC_GAME，**仓库外**沙箱，与 paper-26.3 同级）；唯一进仓库的是运行日志，
+  // 它走 `emit`（受 `wantWrite()` 闸门）。依据正则咬住那个 `--root` 解析 —— 落点一旦改到仓库内即再红。
+  ["mcp-server/scripts/playtest-paper-server.mjs", /const ROOT = path\.resolve\(opt\("--root"\) \|\| "F:\/MC_GAME"\)/],
   // 2026-09-19 N3 裁定「补投毒」：--selftest 的 8 例夹具（tiny.gz / upstream *.bak / provenance / 假基线）
   // 全部落 OS tmpdir 下一个一次目录，finally 里 rmSync 收掉；门模式与 --measure-zero-member 全程不写盘。
   // 依据正则咬住那个 mkdtemp 前缀 —— 夹具落点一旦改到仓库内，本豁免即失效（重签或改道 write-guard）。
