@@ -27,14 +27,20 @@ fork 的 `runClient` **不**把 launchwrapper / mixin / asm 放进游戏 classpa
 `ClassNotFoundException: net.minecraft.launchwrapper.Launch` / `org.spongepowered.asm.launch.MixinBootstrap`。
 用 `t.classpath = t.classpath.plus(t.project.files(extra))` 追加（直接 `cp + list` 会得到 ArrayList，Gradle 拒绝）。
 
-## 4. 已知未核（2026-10-23 更新：部分已闭）
+## 4. 已知未核（2026-10-23 更新：构建已闭，运行有两条相反结论）
 
-**已闭**：Rift 1.0.4-106 在 MC **1.13** 上 listener 会被回调 —— 手工链路（BMCLAPI 取 client + `javac --release 8` + launchwrapper 手拼，非 Gradle）实测日志：
-`Loaded mod 'qaprobe'` → `[QA] registerBlocks` → `[QA] afterVanillaBootstrap`。详见 `pack.meta.json` 的 `scaffold.runtimeProbe`。
+**已闭**：
+
+- **Gradle 构建**：JDK 8（Temurin 8u504）+ Gradle 4.9 + FG fork → `gradle build` **BUILD SUCCESSFUL in 1m 32s**（`buildVerified=true`）。
+- **真实环境 listener 派发**：真实 1.13 client jar（notch 名）+ launchwrapper 手拼 → `[QA] registerBlocks` / `[QA] afterVanillaBootstrap`。
+
+**⚠ 反向结论（最容易踩）**：Gradle `runClient` 里 **listener 不派发** —— 8 条
+`InvalidMixinException: Super class 'MixinEnumConnectionState' ... of MixinEnumConnectionState$Play was not found in the hierarchy of target class 'net/minecraft/network/EnumConnectionState$2'`。
+根因：FG 的 dev 环境是 **deobf（MCP 名）**，而 Rift 的 hook target 是 **notch 短名**。
+⇒ **别用 `runClient` 验 Rift**，那是假否定。
 
 **仍开**：
 
-- 本档样板块**未**在本机用 Gradle 重跑（`buildVerified=false`：本机无 JDK 8，FG fork 只能 Java 8）。
-- `ClientTickable#clientTick` 的每 tick 回调：未核（要进世界；本轮崩在 `lwjgl.dll` 缺 natives，早于 tick）。
-- 进主菜单/进世界：未核（需 natives + 186 MB assets）。
+- `ClientTickable#clientTick` 每 tick 回调：未核（要进世界）。
+- 进世界/主菜单交互：未核（env A 崩在 natives）。
 - 1.13.2 的对照复跑：未做（该档既有记录是 21 个 hook mixin target not found）。

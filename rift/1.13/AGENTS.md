@@ -14,22 +14,40 @@
 
 已核实 Listener 方法见 `knowledge/common/listeners.md`；签名表见 `knowledge/common/verified-api.md`。
 
-## 本档已有的真机证据（2026-10-23）
+## 本档已有的真机证据（2026-10-23）—— **两个环境结论相反**
 
-在 MC **1.13** 上实跑（手工链路，非 Gradle `runClient`）拿到：
+### ✅ 构建：Gradle 4.9 + JDK 8 真跑通
+
+`gradle build` → **BUILD SUCCESSFUL in 1m 32s**（15 tasks 全 executed，含 `accessTransform` / `sourceMainJava` / `retromapReplacedMain`）。
+⇒ `pack.meta.json` 的 `buildVerified = true`。
+
+### A. 真实 1.13 client（**notch 名**）+ launchwrapper 手拼 → **listener 被回调**
 
 ```
-Calling tweak class org.dimdev.riftloader.launch.RiftLoaderClientTweaker
 Loaded mod 'qaprobe'
 Loading Rift!
 [QA] registerBlocks
 [QA] afterVanillaBootstrap
 ```
 
-⇒ **listener 真的被回调**（这正是 `rift/1.13.2` 档做不到的：那档 21 个 hook mixin target not found、探针 0 命中）。
-之后崩在 `lwjgl.dll`（缺 natives，GL 阶段）—— **在 listener 之后**，不影响该结论。
+之后崩在 `lwjgl.dll`（缺 natives，GL 阶段）—— 在 listener 之后，不影响结论。
 
-**没覆盖的**：进主菜单/进世界、`clientTick` 每 tick 回调、Gradle 构建链、1.13.2 的对照复跑。四项都写在 `pack.meta.json` 的 `scaffold.runtimeProbe.notCovered` 里，别把它读成「全绿」。
+### B. Gradle `runClient`（**deobf dev 环境，MCP 名**）→ 客户端起得来，但 **listener 不派发**
+
+`Loaded mod 'qaprobe'` 有、`[QA]` **0 命中**、8 条：
+
+```
+InvalidMixinException: Super class 'org.dimdev.rift.mixin.hook.MixinEnumConnectionState'
+  of MixinEnumConnectionState$Play was not found in the hierarchy of
+  target class 'net/minecraft/network/EnumConnectionState$2'
+```
+
+客户端本体是好的（LWJGL 3.1.6 / textures-atlas 1024x512 / OpenAL / Narrator 全绿）。
+
+**根因是环境不是版本**：Rift 的 mixin target 是 **notch 短名**（`bcj`/`cfl`…），而 FG 的 `runClient` 跑的是 **deobf（MCP 名）** 的环境，target 挂不上。
+⇒ **不要用 `runClient` 验证 Rift 的 listener**，会得到假否定。要验就用真实 client jar。
+
+**没覆盖的**：进世界、`clientTick` 每 tick 回调、1.13.2 的对照复跑。都写在 `pack.meta.json` 的 `scaffold.runtimeProbe.notCovered`。
 
 ## 本档与 rift/1.13.2 的分工（**别混读**）
 
