@@ -78,3 +78,50 @@
 - 全局 vs preset 层：`dsh-web-app/cordis.patch.yml:505-518, 573-574`；`dsh-scope/lib/index.js:162-169, 276-280`
 - 可复用产物：`mcp-server/dist/platform-pack/catalog.d.ts`（`SkillIndexEntry` / `listMergedPackSkills` / `resolvePackRules`）；`detect.js`
 - 仓库门链：`mcp-server/scripts/assert-scripts-parse.mjs`；`mcp-server/scripts/_lib/script-write-guard-check.mjs`；`mcp-server/scripts/assert-skill-skeleton-census.mjs`
+
+## 8. 已实现（v0.1.0）与后续可加功能
+
+### 8.1 v0.1.0 已实现
+
+| 能力 | 实现 | 验证 |
+|---|---|---|
+| 按工程定档、只挂该档 skill | `provider.list({cwd})` → `resolveTierSync` | 真机：forge 35 / fabric 38 / neoforge 35，无跨档重名 |
+| 底座规则注入 | `systemPrompt.section` 只放 00/01/09 | 真机：section 是 string、32458 B |
+| 库模组技能进目录 | `listLibSkillIndex` 按平台追加，描述加 `[库]` 前缀 | forge 档 19 个、无重名冲突 |
+| 零 token 查询 | `/mc-skill [status\|skills\|libs\|rules]` | 真机：四档都返回 success |
+| 免摩擦探测 | `mc_skill_detect_project` | 真机：三平台都正确 |
+
+### 8.2 后续可加（按价值/代价排序，均未实现）
+
+| # | 功能 | 价值 | 代价 | 可行性依据 |
+|---|---|---|---|---|
+| 1 | **按话题注入规则** `/mc-skill topic <词>` | **已实现（v0.2）** | 复用 `session.js` 的 `resolveTopicIds`，零重写判据 | 实测：`gui→10`、`02 03`、`mixin→skillHint`、坏词有告警 |
+| 2 | **`/mc-skill rule <NN>` 单条注入** | **已实现（v0.2）** | 用 `agent.inject({content,source})`：落下个被接纳的步骤、**不唤醒驱动器** | 实测：`rule 10`/`gui`/`02-block` 均注入，注入消息带 `source.kind="mc-skill"` |
+| 3 | **`/mc-skill doc <关键词>`**：直接调仓库文档检索并回显摘要 | 中——省一次 MCP 往返 | 中：要么 `ctx.web`，要么在进程内 `import mcp-server/dist/docs-platform/*`（要确认那套模块能否脱离 MCP server 单独跑） | 未核实（docs-platform 依赖 warmup/索引状态） |
+| 4 | **知识库 `knowledge/` 也进目录**：每档的 `antipatterns/` / `porting/` / `version-changes/` 做成 skill | 中高——这些正是「查过就少犯错」的内容，现在 MCP 才能读 | 中：需要给每篇 md 合成 frontmatter（name/description），并决定放到哪个 rank | 目录已确认存在（每档 5 个子目录） |
+| 5 | **会话级档位覆盖**：`/mc-skill use forge 1.20.1` 强制某档（现在的 `.cursor` 里没工程也该能用） | 中——读别人代码/写文档时没有工程可测 | 中：需要 `ctx.sessionProjections` 存覆盖值（活样板：`dsh-working-directory` 的 projection） | projection API 已读到 |
+| 6 | **`/mc-skill check`**：跑一遍该档的规则自检（如 mappings 口径、modid 合法性） | 中 | 高：要么在插件里重写判据（会与仓库门漂移），要么调 MCP 的 `validate_project` | 违反「只读不复制」纪律，倾向不做 |
+| 7 | **PTC 原生 SDK 类型**：让 `run_code` 里出现 `mc_*` 的类型定义 | 低——工具本来就在 PTC 里可见 | 低 | 自动生效，无需额外做 |
+| 8 | **client 半身（Web 面板）**：设置页里选档位 | 低 | 高：要 `dsh.client`、单独打包、HMR；设计稿 §3 已明确不做 | 不做 |
+
+### 8.3 明确不建议
+
+- **在插件里跑 Gradle / 写盘 / 拷 jar**：仓库铁律禁止 agent 代跑，插件只是换个载体，禁令照样成立。
+- **重宿 89 个 MCP 工具**：MCP 工具本来就是 `ctx.tools` 原生注册，token 成本一样。
+- **改 `agent-instructions` 的 `maxBytes` 来塞规则**：会挤掉工程自己的 `AGENTS.md`。
+
+### 8.4 v0.2 实现记录（本轮）
+
+两条从 §8.2 落地，均**复用仓库判据、零重写**：
+
+| 功能 | 命令 | 实现要点 | 实测读数 |
+|---|---|---|---|
+| 按话题加规则 | `/mc-skill topic <词...>` / `topic` / `topic clear` | 话题存 `WeakMap<session, string[]>`（不投影、不进会话日志）；合并逻辑走 `resolveTopicIds`；section 的 text 每次 assemble 按当前话题重算 | `gui` → 32458→38334 B；`gui 02 03` → 54406 B；`mixin` 额外给 `skillHints=mc-mixin`；`bogus` 不登记并点名 |
+| 临时追加单条规则 | `/mc-skill rule <NN\|名字\|all>` | `agent.inject({content:[{type:"text",text}], source:{kind:"mc-skill",form:"rule-append"}})`；不唤醒驱动器 | `rule 10` 注入 6145 B；`rule 02-block` 注入 6996 B；`rule all` 11 条；非法号返回 error 并列出可用 |
+
+**两条设计取舍**：
+
+1. **话题不落会话日志**。用 `WeakMap` 而不是 `ctx.sessionProjections`：topics 是临时状态，投影要求 `stateSchema` + 事件 + 迁移，代价远大于收益；session 被回收时 WeakMap 自动释放，插件不持有生命周期。
+2. **`rule` 不改常驻段**。走 `agent.inject` 而不是往 topics 里塞：临时要看某条规则不该污染整轮对话的 system prompt（后者每个请求都重复计费）。`inject` 的语义正是「落下个被接纳的步骤、不唤醒驱动器」。
+
+**未做**：§8.2 的 3–8 项仍未动（`doc` 检索那条仍标未核实）。

@@ -351,8 +351,11 @@ if (census.packsChecked === 0) {
 // 净结果 banned 67 = 59 + 8 真判死。另 152 三个 setRegistryName 族符号因披露拆行锚点 159/160→164/165。
 // crossLines 428→455、contextualSkipped 3029→3054、verdictSkipped 2260→2341、歧义丢弃 160（未变）。
 const LEDGER = {
-  packsChecked: 47,
-  rulesFiles: 447,
+  // 2026-10-24 重钉（spigot 三档 + paper-api 五档签名面入库轮）：packsChecked 47→48、rulesFiles 447→458
+  // （新增服务端面规则树带进 1 档 + 11 篇 `.cursor/rules`；reledger 实算逐档一致）。其余四数
+  // （crossLines 455 / contextualSkipped 3065 / verdictSkipped 2354 / banned 67 / conflicts 0）实算未变 —— 原样保留。
+  packsChecked: 48,
+  rulesFiles: 458,
   // 2026-10-06 重钉（非forge javap 普查收口轮）：contextualSkipped 3054→3056（+2 场合型丢弃行，
   // 来自本会话 rift/forge 规则 ❌ 实证行改写与 neoforge loose 修复轮；判死分布与 conflicts 0 不变）。
   // 2026-10-11 重钉（forge 系老版本全量构件裁决轮，10 档 936 行 → 22 处修复）：contextualSkipped

@@ -392,9 +392,16 @@ private void doServerThing() { ... }
 - 不确定是否跨平台 → 明确标注 `// Forge only` 或 `// Fabric only`
 - `DOC_NOT_FOUND` / 无本档规则树：保持未核实骨架，**禁止**用邻版 API 补全。空 stub 不是漏写。
 
-## MCP Server 工具（可选）
+## MCP Server / CLI 工具
 
-如果项目根目录下存在 `mcp-server/`（即本项目 `MC_skill`），可以使用本地 stdio MCP（服务名 **`MC-AI-Coding-Assistant-Tool`**；需 Node **>= 22.5**（**22.5–22.12 与 23.0–23.3 需 `--experimental-sqlite`**，22.13+ / 23.4+ 免），`MC_SKILL_DATA` 指向 `data/`，可选 `MC_SKILL_COMMUNITY`）：
+**两个一等公民入口（同一 core、互不分叉）**：MCP（stdio，给 AI 宿主）与**独立 CLI**（`node mcp-server/dist/cli.js`，终端 / 脚本路径）。
+
+**CLI 速查**（全量 flag 表与细节 → 根 `README.md`「独立 CLI」节 / `mcp-server/README.md`）
+**注意**:
+- **脚本消费坑（Windows PS 5.1）**：GBK 代码页下用管道捕获本 CLI 的 UTF-8 JSON 会引入坏控制字符导致 `JSON.parse` 失败（纯 Node `spawnSync` 正常）⇒ 脚本化消费走 Node 子进程，或先 `chcp 65001`。
+- **维护侧另有一条线**：`node mcp-server/bin/mc-skill-scripts.mjs`（批量反编译 / 摘要重建 / G1 门 / 注入回填）—— **不属 MCP 工具面**，别当工具调。
+
+如果项目根目录下存在 `mcp-server/`（即本项目 `MC_skill`），可以使用本地 stdio MCP/CLI（服务名 **`MC-AI-Coding-Assistant-Tool`**；需 Node **>= 22.5**（**22.5–22.12 与 23.0–23.3 需 `--experimental-sqlite`**，22.13+ / 23.4+ 免），`MC_SKILL_DATA` 指向 `data/`，可选 `MC_SKILL_COMMUNITY`）：
 
 | 工具 | 功能 |
 | --- | --- |

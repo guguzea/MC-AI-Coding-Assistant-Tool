@@ -825,8 +825,40 @@ if (LEDGER_MODE) {
 }
 
 if (failures.length) {
-  for (const f of failures.slice(0, 25)) console.error(`✗ ${f}`);
-  if (failures.length > 25) console.error(`✗ …（另有 ${failures.length - 25} 条，同上）`);
+  /*
+   * 2026-10-24 修既有红：原来只按插入顺序印前 25 条。spigot 三档入库后
+   * 「台账条目已不在实扫结果里」涨到 100+ 条，把**别的类别整类**挤出窗口 ——
+   * 夹具期望的锚点「树 X 不在台账」于是永远印不出来，表现为「门红了但没点名」。
+   * 修法**只动印法不动判据**：按消息归类，每类各印 ≤6 条，并给一行分类汇总。
+   */
+  const FAIL_KINDS = [
+    ["台账条目缺失", /已不在实扫结果里|台账条目 .* 已不在/],
+    ["台账数字漂移", /台账 \d+ ≠ 实扫 \d+|台账 .* ≠ 实扫/],
+    ["树登记关系", /不在台账 ⇒ 新增|在台账里但磁盘没有/],
+    ["未登记残留", /残留出现在未登记档/],
+    ["raw/proc 篇数", /篇 ≠ processed .* 篇/],
+    ["processed 重名", /个重名 basename/],
+    ["中介名外泄", /正文外泄上游中介名/],
+    ["目录层", /0 条目目录|目录名含非 ASCII/],
+    ["内容损坏", /控制字节|U\+FFFD/],
+    ["取件/豁免", /MISSING_BLOB_ALLOWLIST|镜像 blob 不在盘上/],
+    ["采集面", /COLLECTOR_RETURNED_ZERO|没有任何判据吃到输入/],
+  ];
+  const kindOf = (m) => (FAIL_KINDS.find(([, re]) => re.test(m)) || ["其他"])[0];
+  const PER_KIND = 6;
+  const byKind = new Map();
+  for (const f of failures) {
+    const k = kindOf(f);
+    if (!byKind.has(k)) byKind.set(k, []);
+    byKind.get(k).push(f);
+  }
+  for (const [k, list] of byKind) {
+    for (const m of list.slice(0, PER_KIND)) console.error(`✗ ${m}`);
+    if (list.length > PER_KIND) console.error(`✗ …（${k}：另有 ${list.length - PER_KIND} 条同类，同上）`);
+  }
+  if (byKind.size > 1) {
+    console.error(`✗ 分类汇总：${[...byKind].map(([k, l]) => `${k} ${l.length}`).join(" · ")}`);
+  }
   if (LEDGER_MODE) {
     console.error("（台账漂移：跑 `MC_SKILL_CORPUS_RELEDGER=1 node mcp-server/scripts/assert-corpus-faithfulness.mjs` 重算，别手改数字）");
   }

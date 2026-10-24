@@ -2,6 +2,7 @@
  * Wave B/C/D MCP tool, prompt, and resource registration.
  */
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import * as z from "zod";
 import { queryRegistry } from "../registry/index.js";
@@ -24,7 +25,7 @@ import { generatePlaytestDriver } from "../generators/playtest-driver.js";
 import { analyzeBuildLog, analyzeBuildLogSchema } from "../build-log/index.js";
 import { analyzeLog, getMigrationGuide, checkDependencies } from "../diagnostics/index.js";
 import { resolveLibSkills, resolveLibSkillsSchema, RESOLVE_LIB_SKILLS_DESCRIPTION } from "../lib-skills/index.js";
-import { getWorkflowTemplate, listKnowledgeResources, readKnowledgeResource } from "../prompts/index.js";
+import { getWorkflowTemplate, listKnowledgePackNames, listKnowledgeResources, readKnowledgeResource } from "../prompts/index.js";
 import { WORKFLOW_TEMPLATES } from "../prompts/templates.js";
 import { mcSkillUpdate } from "../update/index.js";
 import { localizeMod } from "../localize/index.js";
@@ -1190,6 +1191,50 @@ export function registerWaveExtensions(server: McpServer): void {
       res.name,
       res.uri,
       { description: res.description, mimeType: "text/plain" },
+      async (uri) => {
+        const href = typeof uri === "string" ? uri : uri.href;
+        const body = readKnowledgeResource(href);
+        return {
+          contents: [
+            {
+              uri: href,
+              mimeType: body.mimeType,
+              text: body.text,
+            },
+          ],
+        };
+      },
+    );
+  }
+
+  // ── knowledge/ 面（2026-10-24）─────────────────────────────────────────────
+  //
+  // 为什么用 **ResourceTemplate** 而不是逐条 registerResource：
+  //   knowledge/ 散布 58 档、合计 300+ 篇。逐条注册会把 resources/list 撑到几百条，
+  //   客户端拿到的那份清单本身就是常驻开销，且与「按需读」的初衷相反。
+  //   模板只需一条登记，正文在 resources/read 时才读盘 —— 这才是不读不占的形态。
+  //
+  // 两种 URI 形态（与 knowledgeRel 一一对应）：
+  //   mcskill://knowledge/<平台>/<精确版本>/<类别>/<文件>   （forge|fabric|neoforge|quilt|liteloader|rift|modloader）
+  //   mcskill://knowledge/bedrock/<类别>/<文件>             （bedrock 是平档，无版本段）
+  // 类别白名单：antipatterns / common / porting / version-changes。
+  {
+    const packs = listKnowledgePackNames();
+    const template = new ResourceTemplate("mcskill://knowledge/{a}/{b}/{c}/{d}", {
+      // list 省略 = 本模板不参与 resources/list 枚举（避免几百条刷屏）；
+      // 逐篇清单仍可由 list_knowledge_resources 工具或按模板读来拿。
+      list: undefined,
+    });
+    server.registerResource(
+      "knowledge",
+      template,
+      {
+        description:
+          `平台档 knowledge/ 面（共 ${packs.length} 档：${packs.slice(0, 6).join(", ")}${packs.length > 6 ? " …" : ""}）。` +
+          "按 mcskill://knowledge/<平台>/<精确版本>/<类别>/<文件> 读；bedrock 为 mcskill://knowledge/bedrock/<类别>/<文件>。" +
+          "类别限 antipatterns / common / porting / version-changes（不带 .md 后缀）。按需读取，不读不占上下文。",
+        mimeType: "text/markdown",
+      },
       async (uri) => {
         const href = typeof uri === "string" ? uri : uri.href;
         const body = readKnowledgeResource(href);

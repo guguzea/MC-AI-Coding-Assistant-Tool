@@ -6,6 +6,423 @@
 - 只追加，不改写历史节。要更正旧节，写进新节第 6 块「自我更正」并点名旧节。
 - 夜跑、交接、事后抽查读本文件，不依赖聊天记录。夜批（阶 1）的队列与抽查记账仍在 [`NIGHT_BATCH.md`](./NIGHT_BATCH.md)，本文件不顶替它。
 
+## 2026-10-24 · dsh-mc-skill v0.3：`/mc-skill doc <关键词>` 进程内文档检索（维护档）
+
+**第 0 块 · 结论**：给插件加了 `/mc-skill doc <关键词>` —— 在**进程内**直接调仓库的 `mcp-server/dist/docs-platform`（与 MCP 的 `search_docs` 同一函数），按当前档检索并回显摘要，**不依赖 MCP 挂载**。先验证了上一轮标为「未核实」的前提：`docs-platform` 能脱离 MCP server 单独跑（`searchDocs` 直接可调，返回 MCP content 包装需拆一层）。实测 forge 1.20.1 查 `DeferredRegister` 命中 5 / 池 14、首条是 `1.20.1/concepts_registries` 且片段逐字含该名。另修两个自己引入的显示缺陷（查询词被转小写、无关词不报警）。四个仓库门 rc=0。
+
+### ① 改了哪些文件
+
+- `dsh-plugin/lib/docs.js`（新增，3974 B）：`prepareDocs` 预加载 docs-platform（**必须在 import 前设 `MC_SKILL_DATA`**，该模块顶层读它）、`searchDocs` 检索并拆 MCP content 包装、`DOC_PLATFORMS` 白名单（含 quilt / liteloader / rift / modloader，**不含 bedrock**——基岩走 `search_bedrock_docs` 另一套）。
+- `dsh-plugin/lib/index.js`（20930 B）：`apply` 里调 `prepareDocs`（失败只 warn，不阻断 skill/规则面）；新增 `doc` 子命令；`handler` 改 async；**保留 `rawInput` 原始大小写**（`raw`）与 `mode`（小写）两个变量。
+- `dsh-plugin/README.md`：能力表 +1 行、命令清单 +1 条、结构表 +`lib/docs.js`。
+- 已同步到真实 profile（`~/.dsh/profiles/desktop/node_modules/dsh-mc-skill/`）。
+
+### ② 判据与反证
+
+本轮没有改门。三处「看着对、其实错」的地方，都用实测反证后修掉：
+
+1. **`docs-platform` 能否脱离 MCP 跑（上一轮标「未核实」）** —— 反证方式：直接 `import dist/docs-platform/index.js` 并调 `searchDocs({platform:'forge',version:'1.20.1',query:'DeferredRegister',limit:3})`，返回 `ok:true`。**结论：能**，前提是 import **之前**设好 `MC_SKILL_DATA`（模块顶层读环境变量）。
+2. **查询词被转小写** —— 第一版用 `mode`（已 `toLowerCase()`）切查询词，`DeferredRegister` 变成 `deferredregister` 显示在回执里。反证：同一命令的输出行「检索「deferredregister」」。改法：保留 `raw` 用于切查询，`mode` 只用于分支判断。
+3. **无关词也报「命中 5」** —— 检索是**召回型**，无论查什么都返回池底若干条。反证：查 `zzzznonexistentterm12345` 仍返回 5 条、首条是无关的 Migration Primer。改法：按「命中片段/label/id 里是否真出现查询词（≥3 字符的词项）」做诚实性检查，全不沾边时显式写「以下 N 条没有一条真正包含「X」——这是它凑出来的池底」。
+
+另有一处**真实失败**被记录：`prepareDocs` 失败（dist 未构建 / 加载报错）时插件**不崩**，只在 `/mc-skill doc` 时报错并提示 `cd mcp-server && npm run build`，其余命令不受影响。
+
+### ③ 验证台账
+
+as-of 2026-10-24，Node **v24.21.0**。全部用**真实 profile 安装副本**（`~/.dsh/.../node_modules/dsh-mc-skill/lib/index.js`）+ 真 forge 1.20.1 探针工程：
+
+- `doc DeferredRegister` → success，命中 5 / 候选池 14（`truncated:true`）、`semantic:true`；首条 `1.20.1/concepts_registries`，片段逐字含 `DeferredRegister`。
+- `doc RegistryObject` → success，命中 5 / 池 16。
+- `doc zzzznonexistentterm12345` → success 但带诚实性告警（5 条全不沾边）。
+- `doc`（无参）→ error + 用法；`doc bedrock ...` 类平台 → 明确拒绝并列可用平台。
+- 命令面回归 7/7：`(status)` / `skills` / `libs` / `rules` / `rule 10` / `topic gui` 全 success，`doc` 无参为 error（符合预期）。
+- 仓库门：`assert-scripts-parse` / `assert-script-write-guard` / `assert-authoring-lint` / `assert-skill-mirrors` 全 rc=0。
+- **未跑**：完整 `boot()`（缺 Electron 原生绑定，同前几轮）；真实 DSH 会话里的 `/mc-skill doc` 待用户实测。
+
+### ④ 数据侧变更
+
+（省略：未动 `data/**`。注意：`prepareDocs` 会**读** `MC_SKILL_DATA` 指向的语料与语义索引，但不写。）
+
+### ⑤ 未做清单
+
+- **没有做「取全文」**：回执末尾只给指针（MCP `get_doc_full` / CLI 命令），没有把全文拉进命令输出。理由：命令是零 token 的 UI 面，塞全文反而破坏这个性质；真要看全文应由模型调工具。
+- **没有做跨档搜索**：只查当前档（`/mc-skill doc` 的语义就是「当前工程该看的文档」）。要跨档查仍走 MCP `search_docs`。
+- **`/mc-skill doc` 的 limit 固定 5**：没有暴露参数。理由是命令面保持简单；要更多走工具面。
+- **未提交**：`git add/commit` 归用户。
+
+### ⑥ 自我更正
+
+- 上一轮我把 `/mc-skill doc` 标成「未核实：docs-platform 依赖 warmup/索引状态」——**本轮实测证明可以直接调**，`searchDocs` 不需要 MCP 的 warmup 就能返回 `semantic:true`。这条从「未核实」转为「已核实」。
+- 上一轮的设计稿把这条估成「代价中」——实际代价更低（一个 80 行的桥接模块 + 一个命令分支），但**多踩了两个显示层的坑**（大小写、召回型检索的假命中），这两个在设计稿里没预见到，已补进 README 的「明确不做」段落之外的行为说明。
+
+---
+
+## 2026-10-24 · MCP 资源面加 knowledge/（模板注册，58 档 300+ 篇不占列表）（维护档）
+
+**第 0 块 · 结论**：给 MCP 资源面补上 `knowledge/` —— 新增 URI 形如 `mcskill://knowledge/<平台>/<精确版本>/<类别>/<文件>`（bedrock 为 3 段形），用 **ResourceTemplate 一条登记**覆盖 58 档全部 `knowledge/` 正文，正文只在 `resources/read` 时才读盘。实测：静态 `resources/list` 仍 **133 条**（没被撑爆）、`resources/templates/list` = **1 条**、真读出 forge 1.20.1 `antipatterns/registry` **3323 字节**、fabric `version-changes/1.21.x` **3694 字节**；路径穿越被挡、类别白名单生效。门链 `archive-pointers` / `authoring-lint` / `scripts-parse` / `test-core` / `test-scripts` / `test-mcp` **全 rc=0**。
+
+### ① 改了哪些文件
+
+- `mcp-server/src/prompts/index.ts`：
+  - 新增常量 `KNOWLEDGE_PREFIX` / `KNOWLEDGE_PLATFORMS` / `KNOWLEDGE_KINDS`（类别白名单：antipatterns / common / porting / version-changes）。
+  - 新增 `scanKnowledge(repoRoot)`（只扫**已建档平台档**下的 `knowledge/<白名单类别>/*.md`，bedrock 平档单独处理）、`knowledgeUri(rel)`、`knowledgeRel(uri)`（读入口，挡穿越/任意文件读）。
+  - 新增导出 `listKnowledgeEntries(only?)` 与 `listKnowledgePackNames()`。
+  - `readKnowledgeResourceInner` 新增 `mcskill://knowledge/*` 分支：命中读盘；未命中时**点名该档实际存在的条目**并明写「禁止拿邻近平台/版本的同名文件顶上」。
+- `mcp-server/src/wave/register.ts`：`ResourceTemplate` 值导入；在原有静态资源循环之后新增一个 knowledge 模板注册（`list: undefined`，不进 `resources/list` 枚举）。
+- 未改 `scripts/**`、`data/**`、任何平台档、任何镜像。
+
+### ② 判据与反证
+
+本轮**没有新增门**，但修掉了一个自己刚引入的真 bug，并做了四条边界反证：
+
+1. **「Resource template knowledge is already registered」** —— 第一版把模板注册块插进了静态资源 `for` 循环体**内部**（吞掉了循环的收尾花括号），导致循环每轮都注册一次同名模板。**反证**：CLI 跑 `read_knowledge_resource` 直接报该错。改法：把循环收尾补回模板块之前；`tsc --noEmit` 从 TS1128 回到 rc=0。
+2. **列表不被撑爆**：这是本方案的核心判据。实测 `resources/list` = **133**（与改造前一致），`templates/list` = **1**（`mcskill://knowledge/{a}/{b}/{c}/{d}`）。若改成逐条 `registerResource`，58 档 300+ 篇会全部进静态列表。
+3. **路径穿越**：`mcskill://knowledge/forge/1.20.1/antipatterns/../../../../../etc/passwd` → 服务端返回 `-32602 Resource mcskill://knowledge/etc/passwd not found`（URI 规范化后过不了 `knowledgeRel` 的形状校验，且读入口另有 `isResolvedInside` 兜底）。
+4. **类别白名单 / 未命中提示**：`.../forge/1.20.1/bogus/registry` → 返回非法 URI 说明（含两种合法形态与类别清单）；`.../forge/1.20.1/antipatterns/nonexistent` → 返回 1067 字节的「该档实际有哪些条目」清单 + 禁止顶替提醒。
+
+### ③ 验证台账
+
+as-of 2026-10-24，Node **v24.21.0**。真 MCP stdio 握手（非模拟）：
+
+- `initialize` → capabilities `{tools, prompts, resources}` 三面都在。
+- `resources/list` = **133**（改造前 133，未变）；`resources/templates/list` = **1**。
+- 读 `mcskill://knowledge/forge/1.20.1/antipatterns/registry` → **3323 字节**（正文是「注册相关反模式」，含 RegistryObject NPE、大写/横杠、忘记 register 等条目）。
+- 读 `mcskill://knowledge/fabric/1.21.4/version-changes/1.21.x` → **3694 字节**（第二个平台档，证明不是只对 forge 生效）。
+- 覆盖规模：`scanKnowledge` 扫到的档数 = **58**（所有带 `.cursor/rules` 的档 + bedrock），knowledge 文件合计 **370 篇**（本轮只登记模板，不逐条列）。
+- `tsc` 构建 rc=0；`test-core` rc=0；`test-scripts` rc=0；`test-mcp` rc=0；`assert-archive-pointers` / `assert-authoring-lint` / `assert-scripts-parse` 全 rc=0。
+- CLI 侧：`node dist/cli.js read_knowledge_resource --uri=...` 同样能读到正文（与 MCP 通道同一实现）。
+
+### ④ 数据侧变更
+
+（省略：未动 `data/**`。）
+
+### ⑤ 未做清单
+
+- **没有把 370 篇逐条登记成静态资源** —— 这是**有意为之**（见 ②2）。要「按名字找某一篇」用导出的 `listKnowledgeEntries`（尚未接到工具面）或直接按模板读。
+- **没有给模板配 `list` 回调**（即 `resources/list` 不枚举 knowledge 逐篇）。若日后确认客户端需要「先列再读」，可把 `listKnowledgeEntries(pack)` 接到模板的 `list`，代价是列表变长。
+- **未在 DSH 会话里实测**：本会话的 MCP 被用户关闭，且插件侧 MCP 工具面当前不可见；上面所有读数来自**独立起的 MCP 进程 + 真握手**。DSH 的 `list_mcp_resources` / `read_mcp_resource` 能读到同一批资源（链路已在 `dsh-mcp-client` → `dsh-mcp-resources` 处核实），但**端到端未经 DSH 实测**。
+- **未提交**：`git add/commit` 归用户。
+
+### ⑥ 自我更正
+
+- 上一轮我先说「MCP 资源面只服务外部 server、插件不能塞自己的资源」，后又把「工具不可见」诊断成「会话快照问题」——**两处都不准**。真因是：① MC_skill 的 server **本来就注册了资源**（`wave/register.ts:1186`，133 条），我当时 grep 的措辞没覆盖到；② 工具不可见是**用户主动关掉了 MCP**，不是快照。
+- 上一轮建议「A 插件侧补注册」是重复造轮子：资源面已存在，缺的只是 `knowledge/` 的覆盖 —— 本轮按用户指示做 B（改 MCP server 一处），没有在插件里再实现一套。
+
+---
+
+## 2026-10-24 · 修既有红：G3 语料保真门「红了但没点名」+ 两处台账快照漂移（维护档）
+
+**第 0 块 · 结论**：`test-scripts` 的既有红**修好了**（rc=1 → **rc=0**）。红是**三段叠加**、同一批语料扩容（`b6d93e99` spigot 三档 + paper-api 五档签名面入库）逐步暴露出来的：① 门的诊断输出只按插入顺序印前 25 条，「台账条目缺失」涨到 24+ 条后把**别的类别整类**挤出窗口，夹具期望的锚点永远印不出来；② `test-scripts` 里树数快照写死 51（实际 65）；③ `assert-scaffold-rules-conflict` 的 `packsChecked`/`rulesFiles` 台账写死 47/447（实际 48/458）。**三处都不改判据强度**，只修印法 + 按门自己印的新值重钉。干净 HEAD 对照确认：这三段红在**我上一轮拆 AGENTS.md 之前就已存在**。
+
+### ① 改了哪些文件
+
+- `mcp-server/scripts/assert-corpus-faithfulness.mjs`（+32/−2）：**只改诊断输出**。原 `failures.slice(0, 25)` 按插入顺序印前 25 条 ⇒ 改为按消息归类（11 类）、**每类各印 ≤6 条** + 一行分类汇总。判据、门槛、红绿条件**一字未动**。
+- `mcp-server/test-scripts.mjs`（+4/−3）：`§S4 G3` 真根形状断言里的树数快照 `51 棵` → `65 棵`（该断言的注释原文就写着「树数快照随语料增长……**只改数字，形状判据不变**」）；同段汇总文案 `49 树 / 1185 目录` → `65 树 / 1217 目录`。
+- `mcp-server/scripts/assert-scaffold-rules-conflict.mjs`（+4/−2）：`LEDGER.packsChecked` 47 → **48**、`rulesFiles` 447 → **458**。其余四数（`crossLines 455` / `contextualSkipped 3065` / `verdictSkipped 2354` / `banned 67` / `conflicts 0`）经 `MC_SKILL_SCAFFOLD_RELEDGER=1` 实算**与现台账逐项一致**，原样保留。
+- **没动**：任何测试的判据句、任何 `data/**`、任何 `AGENTS.md`/`doc/`（上一轮的拆分已被用户提交为 `6179f3dd`）。
+
+### ② 判据与反证
+
+- **红 1（输出截断）**：拿「只含一棵未登记树」的假根跑门 ⇒ 106 项不达标，但输出只有 26 行、**锚点 `树 X 不在台账 ⇒ 新增/改名树` 一次都没印**（原前 25 条全是「泛型丢失台账条目 … 已不在实扫结果里」）。修后同一假根：24 行输出里锚点出现在第 15 行，并多一行 `分类汇总：台账条目缺失 24 · 台账数字漂移 16 · 树登记关系 66`。**这是「印法」缺陷，不是判据缺陷** —— 修它不能让任何一条 red 变绿，只让 red 可读。
+- **红 2（树数快照）**：`assert.match` 期望 `/51 棵 raw\/processed 树/`，实得 `65 棵`。按该断言自带注释的规矩「只改数字，形状判据不变」重钉。
+- **红 3（scaffold 台账）**：门自报 `✗ 台账漂移: packsChecked=48，钉的是 47` / `rulesFiles=458，钉的是 447`。跑 `MC_SKILL_SCAFFOLD_RELEDGER=1` 拿到门**自己算出的**新台账（`{packsChecked:48, rulesFiles:458, crossLines:455, contextualSkipped:3065, verdictSkipped:2354, banned:67, conflicts:0}`），只把前两个漂了的数抄回，其余保持 —— 符合该门头注「RELEDGER 只重算并打印，改台账靠人过目后手抄」的纪律。
+- **既有性反证（干净 HEAD）**：`git stash push -u` 把 `AGENTS.md` / `doc/` / 三个门文件**全部撤掉**，在干净 HEAD 上跑 ⇒ `scaffold rc=1`、`test-scripts rc=1` 且报错仍是 `G3「ledgerDrift」红了但没点名`；stash pop 后逐文件字节核对无丢失（AGENTS.md 64786 / gate 52189 / test-scripts 253286 / doc 18 件）。
+
+### ③ 验证台账
+
+as-of 2026-10-24，Node v24.21.0：
+
+- `test-scripts.mjs` → **rc=0**（`script helper regression tests passed`、`本轮未执法腿=0`）
+- `assert-corpus-faithfulness.mjs` 真数据根 → **rc=0**（65 棵 raw/processed 树 · 台账层已跑 · `<<<` 残留 633 处/80 文件 · 中介名 288 处 · 泛型丢失 4866 · 重名 0 · 目录层 1217 个目录）
+- `assert-corpus-faithfulness.mjs --selftest` → **rc=0**
+- `assert-scaffold-rules-conflict.mjs` 真跑 → **rc=0**（48 档 · 规则 458 篇 / ❌ 行 455 条 · 判死符号 67 · 冲突 0 · `台账 checked`）
+- `assert-scaffold-rules-conflict.mjs --selftest` → **rc=0**
+- 其余门全 rc=0：`test-core` / `test-platform-pack` / `test-w3-low` / `assert-skill-mirrors` / `assert-server-rules-integrity` / `assert-signature-face-integrity` / `assert-config-platform-face` / `assert-total-semantics-wording` / `assert-archive-pointers` / `assert-authoring-lint`
+- 语法：三个被改文件 `node --check` 全 rc=0
+
+### ④ 数据侧变更
+
+（省略：未动 `data/**`。两处台账重钉改的是**门的常量**，不是语料；新值均由各门自带的 RELEDGER 模式实算得出，未手写推断。）
+
+### ⑤ 未做清单
+
+- **未重钉 `LEDGER_PER_PACK_BANNED`**：reledger 输出里它只有 17 个键（列到 `forge/1.20.4` 为止，是尾部截断的打印），而现文件里完整表更长且 `banned 67` 总数已对上 ⇒ 判定无需改，但**该判断依据的是「总数一致」而非逐档 diff**，标为未核实边界。
+- **未修 `assert-corpus-faithfulness` 里「补数型」诊断的其它入口**：本次只改了 `failures` 这一处打印口；门里另有 `console.log` 汇总行（真跑永远 <25 条，够用）。
+- **工作区里另有 7 个不是我改的文件**（`.gitignore` / `CONTRIBUTING.md` / `README.md` / `README.en.md` / `doc/dsh-plugin-design.md` / `mcp-server/src/prompts/index.ts` / `mcp-server/src/wave/register.ts`）—— 属用户自己或其它会话的改动，**未碰**。
+- **未提交**：`git add/commit` 归用户。
+
+### ⑥ 自我更正
+
+- 上一轮我说「疑似 `b6d93e99` 改了门里的台账表、但夹具期望的锚点串未同步」——**只对了一半**。真实成因是**门的诊断输出截断**（插入顺序印前 25 条）撞上「`b6d93e99` 让某一类失败涨到 100+ 条」，于是**别的类别被整类挤出窗口**。锚点串本身一个字符都没错。
+- 我第一版修法想给 20 个 `fail()` 调用点逐个加 `cat` 参数，注入时把多行调用的缩进弄坏、`node --check` 直接语法错（`SyntaxError: Unexpected token ','`）。已 `git checkout` 回退，改用**零侵入**方案：只在输出侧按消息正则归类，一个调用点都不动。教训：**改门优先改输出，不要批量动判据调用点**。
+
+---
+
+## 2026-10-24 · 宣传片补 Paper / Rift / Spigot 支持 + 数字刷新到 57 档（主档）
+
+**第 0 块 · 结论**：03 版本站台改成 **10 行**：RIFT 由「1.13.2 支持不完全」改为「1.13 / 1.13.2（1.13.2 实验）」；PAPER 由单行「26.3 服务端面」改为「1.12.2 — 1.21.4 · 26.3，6 档」；新增 **SPIGOT 1.12.2 — 1.21.8，9 档（签名面）**；「最近补齐」改为 Rift 1.13 / Paper 5 档 / Spigot 8 档。计数同步为 **57 版本档 / 48 骨架 / 89 工具 / 61 工作流 / 53 真机档**，S1/S2/索引/README/口播里的 40,817 页、2.35 GB 一并刷新。`_build.mjs` 与 `_audit.mjs` 全绿（7 镜 / 158s / 红 0）；未出 MP4、音效未验。另用本机 SAPI 生成了两版配音样音，试听页 `_vo/试听.html`。
+
+### ① 改了哪些文件 / 给了什么
+
+- `_src/shot-1-3_八个平台.html`：板高 676→660、行高 64→56、字号略收；RIFT 行改 2 档 + 「1.13.2 实验」徽标；PAPER 行改 `1.12.2 — 1.21.4 · 26.3` / `6 档`；新增 `#rowSpigot` 行 `1.12.2 — 1.21.8` / `9 档`；`#newline` 文案改 Rift / Paper / Spigot；计数 `VAL` 改 57/48/89/61/53；服务端面 cue 同时高亮 Paper + Spigot，气泡改「Paper + Spigot 服务端面」；标题/HUD/口播注释同步 57。
+- `_src/shot-1-1_写得很像对的.html`：页脚 `56 个版本档` → `57`。
+- `_src/shot-2-2_按你的版本答.html`：语料卡 `24,227 页` → `40,817 页`，正文补 Spigot，体积 `2.13 GB` → `2.35 GB`（用 `&nbsp;` 防单位断行）；口播「两万多页」→「四万多页」。
+- `index.html`：03 卡标题/描述改 57 与 Paper/Spigot；页脚数字口径改 57 / 48 / 89 / 61 / 53 / 40,817（as-of 2026-10-24）。
+- `README.md`：镜头表 03 行、03「最近补齐」小节（Rift 1.13 / Paper 5 档 / Spigot 8 档 + 旧批次）、数字口径表与两条脚注。
+- `口播稿.md`：03 整节（57 / 48 / Rift·Paper·Spigot / Paper+Spigot 服务端面）、05 的 40,817、数字表与口径说明。
+- `_vo/`（新增，临时素材）：`sample-huihui.wav`（Rate -1，16.9s）、`sample-huihui-fast.wav`（Rate +2，12.2s）、`试听.html`。配音脚本只用于生成样音，已删。
+
+### ② 怎么验（先报已测证据，再给续跑清单）
+
+- **数字重算（本轮实扫，as-of 2026-10-24）**：含 `.cursor/rules` 的模组版本目录 = **57**（forge 15 / fabric 14 / neoforge 10 / quilt 10 / liteloader 3 / rift 2 / modloader 3）；含 `scaffold/` = **48**（rift 2）；`data/**/processed/**/*.md` = **40,817**；`data/` 字节数 = **2.35 GB**；`PLAYTEST_VERIFIED_TIER` 条目 = **53**（fabric 18 / neoforge 14 / quilt 10 / forge 10 / liteloader 1）；`list-tools` = **89**。
+- **一次自我校准**：先按 `asOf:` 数出 54，进一步按 `version: "` 与 `platform: "` 数都是 53 ⇒ 多出来的是数组内注释里的 `platform:` 字样。**本轮没有把 54 写进片子**。
+- **已测**：`node _build.mjs` → 7 页 `[1/7]…[7/7]`；`node _audit.mjs` → **7 镜 / 158s / 红 0**。
+- **已测（截图）**：`_qc/preview-03.png`（11s，10 行板 + 三个新徽标 + 新「最近补齐」）、`_qc/preview-05.png`（14s，40,817 页 / 2.35 GB 单行）、`_qc/preview-01.png`（页脚 57）逐张看过；S3 气泡下移到 `top:540` 贴近角色头部。
+- **未测**：真实浏览器音效、完整 158s 人工观看、MP4 渲染；配音样音只验证了「能生成 + 时长/格式」，**未做整片对齐**。
+- **续跑**：`ffprobe _vo/*.wav` 看时长；浏览器打开 `_vo/试听.html` 直接听两版样音。
+
+### ③ 未核实项与影响面
+
+- **Paper / Spigot 的「支持」形状不同**：Paper 有 26.3 规则树 10 条 + 5 个版本适用性档；Spigot **只有签名面**（9 档：stable + 8 历史档，maven 构件 `javap` 派生，无规则树、无 scaffold、无客户端 driver）。片中把两者都放在「服务端面」，未声称可构建插件骨架以外的内容。
+- **Rift**：1.13 是原生档（件内 `inheritsFrom` = 1.13）；1.13.2 仍是社区分支实验档，片中徽标写「1.13.2 实验」而不是「支持不完全」。
+- 57 / 48 是**按目录实点**，不是「全部真机验证」；真机仍只声称 53 档。
+- 配音样音为本机 **Microsoft Huihui（SAPI）**，22.05 kHz 单声道，机械感明显；未使用任何云端 TTS。
+- 产物只在 `temp/promo-dev/`（`_vo/` 也是临时素材），仓库受管面仅本文件改动。
+
+### ④ 需要你拍板 + 风险与回退
+
+- **Spigot 算不算「平台」**：片头仍写「8 个平台 / 57 版本档」，Spigot 与 Paper 一起列在服务端面（不计入 57）。若你要把它写成「9 个平台」，我把标题/计数一起改。
+- **Rift 1.13.2 的措辞**：现为「1.13.2 实验」；若你认为 1.13.2 也算正式支持，就去掉徽标。
+- **配音**：三条路 —— ① 现在就用 Huihui 生成（零依赖，机械）；② 装 `edge-tts`（`py -m pip install edge-tts`，需联网）用神经网络音色；③ 你自录或给 Azure/OpenAI TTS key。选定后还要定：**是否按口播稿逐句生成、是否允许为了对齐语音改镜头时长**（现有时长是按 cue 排的，TTS 语速不同会顶到下一句）。
+- **回退**：改回 9 行板只需删 `#rowSpigot` 并把板高/行高、VAL、newline 文案还原；数字回退为 56/47/24,227/2.13。配音可直接删 `_vo/`，不影响片子。
+
+---
+
+## 2026-10-24 · dsh-mc-skill v0.2：按话题加规则 + 临时追加单条规则（维护档）
+
+**第 0 块 · 结论**：把设计稿 §8.2 的第 1、2 项做进插件 —— `/mc-skill topic <词>` 按话题把对应规则并进常驻 system prompt，`/mc-skill rule <NN>` 把单条规则注入**下一个被接纳的步骤**（不动常驻段）。两条都**复用仓库自己的判据**（`session.js` 的 `resolveTopicIds`），没有第二张 topic 表。forge 档实测：底座 32,458 B → 加 `gui` 38,334 B → 加 `gui 02 03` 54,406 B，清空回 32,385 B 且 `status` 报的字节数与 section 实际值**逐字节一致**。五个仓库门 rc=0。已同步到真实 profile。
+
+### ① 改了哪些文件
+
+全部在 `dsh-plugin/`（+ 一份设计件 + 真实 profile 副本）：
+
+- `dsh-plugin/lib/pack.js`（12097 B）—— 新增 `resolveRuleIdsForTopicsSync`（转发 `session.resolveTopicIds`）/ `readTierRulesByIdsSync` / `allRuleIdsSync` / `normalizeRuleIdSync`（接受 `2`/`02`/`02-block`/`gui`/`all`）；`prepare()` 额外懒加载 `session.js`（失败降级为「无 topics 能力」，不影响其它功能）。
+- `dsh-plugin/lib/rules.js`（3798 B）—— `buildRulesText(cwd, topics)` 收话题；新增 `resolveActiveRuleIds(topics)`（底座 ∪ 话题，按 00–10 排序去重，返回 `extra` 供 UI 区分来源）；正文头改成动态描述「本次注入规则：…（其中 X 来自 topic 请求）」；`skillHints` 追加尾注。
+- `dsh-plugin/lib/index.js`（16325 B）—— 新增 `sessionTopics`（`WeakMap<session, string[]>`）与 `topicsOf/addTopics/clearTopics`；section 的 text 改传 `topicsOf(agent)`；`/mc-skill` 新增 `rule` 与 `topic` 两个子命令；`status` 改报**实际注入段**的字节数（含标题头/尾注）并显示话题；`hint`/`description` 同步。
+- `dsh-plugin/README.md` —— 能力表 +2 行；命令清单重写为 9 条。
+- `doc/dsh-plugin-design.md`（16276 B）—— §8.2 第 1/2 项标为已实现；新增 **§8.4 v0.2 实现记录**（读数表 + 两条设计取舍 + 未做清单）。
+- `~/.dsh/profiles/desktop/node_modules/dsh-mc-skill/` —— 同步 4 个 lib + README（安装位置与 `dependencies` 声明沿用上一轮，未再改 profile manifest）。
+
+### ② 判据与反证
+
+本轮**没有新增门**，但为两处「看着对、其实错」的地方做了反证：
+
+1. **`status` 报的字节数曾经是错的**。第一版拿 `readTierRulesSync(...).text` 的长度报数，读到 44,974 B；而 section 实际产出 45,221 B —— 差的 247 B 正是标题头与尾注。**反证**：同一次运行里同时打印两者，不等即暴露。改法：`status` 直接量 `buildRulesText(cwd, topics)` 的产出。修后实测 45,221 = 45,221（有话题）/ 32,385 = 32,385（清空后）**两次都逐字节相等**。
+2. **裸 `/mc-skill rule` 曾落到 status 分支**。因为 `mode` 已 `toLowerCase().trim()`，`"rule"` 永远不匹配 `"rule "`（带尾空格）。**反证**：命令矩阵里 `/mc-skill rule` 返回了 status 文本而不是用法错误。改法：`mode === "rule" || mode.startsWith("rule ")`（`topic` 同形修）。修后矩阵里 `rule` 与 `topic` 都走自己的分支。
+3. **未识别的 topic 曾被静默登记**。`topic bogus` 第一版把 `bogus` 存进 topics（永远不生效），状态里挂着死词，且首行误报「这些 topic 之前就登记过了」。**反证**：`/mc-skill topic bogus` 后 `status` 显示 `话题：bogus` 但 `话题追加` 为空。改法：先探测每个词是否解析出规则/技能提示，不认的都剔掉并在回执里点名；`usable.length === 0` 时首行改「没有可登记的 topic」。
+
+### ③ 验证台账
+
+as-of 2026-10-24，Node **v24.21.0**，DSH runtime **0.2.1-rc.2**。全部用真实 install 路径的模块（`~/.dsh/profiles/desktop/node_modules/dsh-mc-skill/lib/index.js`）跑：
+
+- **`normalizeRuleIdSync`**：`2→02`、`02→02`、`10→10`、`gui→10`、`02-block→02`、`block→02`、`99→""`、`""→""`、`all→all`（9/9 正确）。
+- **`resolveRuleIdsForTopicsSync`**：`undefined→00,01,09`；`["02"]→00,01,02,09`；`["gui"]→00,01,09,10`；`["mixin"]→00,01,09` + `skillHints=["mc-mixin"]`；`["bogus"]→` 带告警「无法解析 topics 项 "bogus"，已跳过（不会截成两字符）」。**判据来源是仓库 `session.js`，非插件自造**。
+- **功能 1（topic）**：forge 档 section 32,458 B（无话题）→ 38,334 B（`gui`）→ 54,406 B（`gui 02 03`）→ 32,385 B（`topic clear`）；`status` 报数与 section 实际值两次都相等。
+- **功能 2（rule）**：`rule 10` 注入 **6145 B**；`rule gui` 同样落到 10 号；`rule 02-block` 注入 **6996 B**；`rule all` 注入 11 条；`rule 99` / `rule all x` 返回 error 并列出可用号；注入消息带 `source={kind:"mc-skill",form:"rule-append"}`、`agent.inject` 被调用（探针计数 3 次，仅明确给号时）。
+- **跨平台**：forge 1.20.1 候选 54（库 19）、topic gui 后 38,334 B；fabric 1.21.4 候选 59（库 21）、2718 B（fabric 档规则本身很短，符合预期）。两档 `rule 10` 都 success。
+- **命令矩阵 9/9 正确**：`(status)`/`skills`/`libs`/`rules`/`rule 10` 全 success；`rule`（无参）error + 用法；`topic`（无参）报「本会话没有登记 topic」；`topic mixin` success；`topic clear` success。
+- **仓库门 5/5 rc=0**：`assert-scripts-parse` · `assert-script-write-guard` · `assert-skill-mirrors`（扫档 57 / 镜像目标 12418 / AGENTS 漂移 0） · `assert-authoring-lint` · `assert-archive-pointers`。
+- **未跑**：完整 `boot()`（同上一轮，缺 Electron 原生绑定）；真实 DSH 会话里的可用性仍待用户确认。
+
+### ④ 数据侧变更
+
+（省略：未动 `data/**`。）
+
+### ⑤ 未做清单
+
+- **§8.2 的 3–8 项未动**：`/mc-skill doc`（docs-platform 能否脱离 MCP 跑，**未核实**）、knowledge 目录转 skill、会话级档位覆盖、`/mc-skill check`、PTC SDK 类型、client 半身。
+- **完整 boot 未自测**（见 ③）。
+- **`test-scripts` 既有红未修**（`assert-corpus-faithfulness` 的 `ledgerDrift` 臂，前两轮已证与本插件无关）。
+- **未提交**：`git add/commit` 归用户。
+
+### ⑥ 自我更正
+
+- 上一轮说「§8.2 第 1 项代价低、可直接做」——基本对，但漏了一条：**复用仓库判据需要额外懒加载 `session.js`**，且它可能不存在（dist 未构建/陈旧）。本轮改成「加载失败就降级成没有 topics 能力」，不阻断其它功能。
+- 上一轮把 `status` 的字节数当成「规则正文大小」写进读数 —— 那是**裸规则**大小，不是**实际注入段**大小（差标题头/尾注约 247 B）。本轮 `status` 已改为量实际注入段，并在 ③ 里两个数都记了。
+- `/mc-skill topic` 的话题**不进会话日志**（`WeakMap`），所以换会话即失效；这不是缺陷但要在 README 里写明，避免用户以为它跨会话保留。
+
+---
+
+## 2026-10-24 · dsh-mc-skill 装进真实 profile + 加库技能/命令功能（维护档）
+
+**第 0 块 · 结论**：把 `dsh-mc-skill` 装进用户真实 profile（`~/.dsh/profiles/desktop`）：拷进 `node_modules`、写 `dependencies`（`file:./node_modules/dsh-mc-skill`）、加进 `dsh.profile.bundles`。组合面验证通过（6 层 / `skippedBundles=[]` / 兼容门 OK / 插件行拿到 file URL），插件模块与全部注册面在真实安装路径下自检通过。另加两个功能：**库模组技能进目录**（`listLibSkillIndex`，forge 档 +19 个，无重名冲突）与 **`/mc-skill libs` 子命令**。四个仓库门 rc=0。**完整 `boot()` 未能自测**——my 直调缺 Electron 原生绑定（`node-addon-require-builtin-win32-x64-msvc`），只能由真实桌面进程跑。
+
+### ① 改了哪些文件
+
+**仓库内（`dsh-plugin/`，全部是本轮新增文件自身的迭代）**
+
+- `dsh-plugin/lib/pack.js`（9261 B）—— 新增 `listTierLibSkillsSync(tier)`：走 `catalog.listLibSkillIndex(platform, version, repoRoot)`，返回 `knowledge/libs` 源稿里该平台可用的库技能；失败/缺导出时返回 `[]`（降级不抛）。
+- `dsh-plugin/lib/provider.js`（5781 B）—— `list()` 在平台技能之后追加库技能（按名去重，**平台档优先**）；库技能的描述加 `[库]` 前缀；`locator.lib` 标记。
+- `dsh-plugin/lib/index.js`（10338 B）—— `/mc-skill` 新增 `libs` 子命令；`skills` 子命令分「平台技能 / 库模组技能」两段；`status` 增列库技能数与下一步提示；`input.hint` 与 `description` 同步。
+- `dsh-plugin/README.md`（+约 700 B）—— 能力表加两行；验证命令加 `/mc-skill libs`；**补一条安装硬约束**：只加 `bundles` 不够，必须同时声明 `dependencies`。
+- `doc/dsh-plugin-design.md`（+3450 B）—— 追加 **§8**：v0.1.0 已实现（5 项，带真机读数）+ 后续可加 8 项（按价值/代价排序，含可行性依据）+ 明确不建议 3 项。
+
+**仓库外（用户机器，已备份）**
+
+- `~/.dsh/profiles/desktop/node_modules/dsh-mc-skill/` —— 插件安装副本（4 个 lib + patch + package.json + README）。
+- `~/.dsh/profiles/desktop/package.json` —— 加 `dependencies["dsh-mc-skill"] = "file:./node_modules/dsh-mc-skill"` 与 `dsh.profile.bundles` 末尾追加 `dsh-mc-skill`。备份：`package.json.bak-mcskill-20261024-201528`。
+- `~/.dsh/profiles/desktop/pnpm-lock.yaml` —— 只备份，未改。备份：`pnpm-lock.yaml.bak-mcskill-20261024-201528`。
+
+### ② 判据与反证
+
+安装过程踩到一个**必须靠反证才能发现的坑**，已写进 README：
+
+- **现象**：只把 `dsh-mc-skill` 加进 `dsh.profile.bundles` 后，直调 boot 报 `ERR_MODULE_NOT_FOUND: Cannot find package 'dsh-mc-skill' imported from ...app.asar/dsh/node_modules/@deepseek-ai/cordis-plugin-loader/lib/index.js`。
+- **定位**：`createRuntimeResolution` → `installedProfilePackageNames(profile, manifest)` = `profileDependencyNames(manifest)`（只取 `dependencies` + `peerDependencies`）里那些**在 node_modules 里存在**的名字。只写 `bundles` 不进这个白名单 ⇒ 裸包名回落成 loader 自身的 import 上下文（asar 内），解析不到。
+- **反证**：加 `file:` 依赖后 `localPackageNames` 从 `["dsh-our-free-model"]` 变成 `["dsh-our-free-model","dsh-mc-skill"]`。
+- **另一条**：本插件的 patch 用 `name: ./lib/index.js`（相对路径），由 `anchorInsertedPluginNames` 转 file URL，**不吃**这个白名单；但走 `bundles` 的插件本身仍要 `dependencies` 声明才被运行时视为 profile 包，故两步都做。
+
+### ③ 验证台账
+
+as-of 2026-10-24，Node **v24.21.0**（DSH 自带），DSH runtime **0.2.1-rc.2**：
+
+- **真实 profile 组合**：`loadProfileDirectory` → 6 层（base / web-app / agent-team-profile / auto-review / our-free-model / dsh-mc-skill），`skippedBundles=[]`；`composeEntries` 得 196 条，`mc-skill` 行 = `{id, name:"file:///C:/Users/zzrCN/.dsh/profiles/desktop/node_modules/dsh-mc-skill/lib/index.js", config:{repoRoot}}`。
+- **兼容门**：`evaluatePluginCompatibility` → OK（`engines.dsh ^0.2.0` vs `0.2.1-rc.2`）。
+- **真实安装路径自检**（import `~/.dsh/.../lib/index.js`，非仓库副本）：`name=mc-skill`；`inject` 6 项；① 候选 **54**（平台 35 + 库 19）；② 规则段落是 **string**、**32458 B**；③ 命令 `/mc-skill`、工具 `mc_skill_detect_project` 都在；④ `status` 与 `libs` 两档返回 success；⑤ 工具返回 `{ok:true, platform:"forge", minecraftVersion:"1.20.1"}`。
+- **新功能**：库技能 forge 20 / fabric 23 / neoforge 21（`listLibSkillIndex` 实测）；去重后进入目录 19 个（1 个与平台同名被跳过）；`mc-architectury` 正文可取（4756 B）。
+- **仓库门**：`assert-scripts-parse` / `assert-script-write-guard` / `assert-skill-mirrors` / `assert-authoring-lint` 全 rc=0。
+- **未跑**：完整 `boot()`。直调时报 `host preparation failed: No usable native binding found for node-addon-require-builtin-win32-x64-msvc (auto)` —— 该原生绑定只在 Electron 主进程里可用。⇒ **「插件在真实 DSH 会话里是否激活」这一条本轮未自测**，需用户在 DSH 里实测（`/mc-skill`）。
+
+### ④ 数据侧变更
+
+（省略：未动 `data/**`。）
+
+### ⑤ 未做清单
+
+- **完整 boot 未自测**（见 ③）：靠用户在 DSH 里跑 `/mc-skill` 确认。
+- **未实现 §8.2 的 8 项后续功能**：只做了排序与可行性评估，没有动手。其中 3 项已标「未核实」（`/mc-skill doc` 的 docs-platform 可否脱离 MCP 跑、`/mc-skill rule` 的本步注入、knowledge 目录转 skill 的 frontmatter 方案）。
+- **未提交**：`git add/commit` 归用户。
+- **`test-scripts` 的既有红**（`assert-corpus-faithfulness` 的 `ledgerDrift` 臂）本轮仍未修 —— 上一轮已证与本插件无关（stash 后同样红）。
+
+### ⑥ 自我更正
+
+- 上一轮我在结论里说「插件已装好可用」，那是**只装了 scratch profile**；本轮才装进真实 profile，并暴露出「只写 bundles 不够、必须写 dependencies」这条硬约束 —— 上一轮的 README 缺这一步，已补。
+- 上一轮把 `test-scripts` rc=1 归为「既有账」；本轮复跑仍是同一条红，结论不变，但**它不是本插件引入的**这一点又用一次 stash 法确认过（上一轮做的）。
+- 设计稿 §4 原来写「MVP 6 文件」，实际落地 7 个（含 README），且安装步骤从「拷进 node_modules + 加 bundles」变成「+ dependencies」三步。
+
+---
+
+## 2026-10-24 · README 去 AI 味：处理 I/J/H 三族（撤日期/批次戳、修第14行笔误、计数副本改指针）（维护档）
+
+**第 0 块 · 结论**：按用户令处理清单中的 I（批次号/日期戳）、J（第 14 行笔误）、H（会腐烂的计数副本 + 审计腔复算句）三族，`README.md` 46 处删改 + `CONTRIBUTING.md` 1 处交叉引用同步；钉 README 的五道门（test-core / assert-cli-quick / assert-total-semantics-wording / assert-archive-pointers / assert-authoring-lint）对终态全绿。`npm run test:cli` 现红，但经 stash 复跑证明该红在 HEAD 预先存在（`get_workflow_template`/`mc_skill_update` 两工具的 description 在 registerTool↔静态表两侧漂移，属 `mcp-server/src` 面、本轮未碰），非本轮引入。
+
+### ① 改了哪些文件
+
+- **`README.md`** —— 三族逐条：
+  - **J**：第 14 行「端到端的的全流程开发环境,提供完整的编写,测试模组」重写为单句（叠字「的的」/半角逗号/同句重复消除）。
+  - **I**：撤 `sweep104`（×2）、`sweep103`、「（2026-08）」「2026-09-08 裁定」「2026-08 D-1 补齐」（×2）、「审查补齐」「— T2 Wave C」「修前连包名都会给错」「（不再有空壳警告）」+「S1′」标号、513 行「原先被通用分支静默返回……补上专门分支」背景史；FAQ 悬空锚「工具陷阱（实测，同类问题）」改回现标题「工具陷阱」（并发改动已改标题、FAQ 没跟上——本轮顺手修实）。
+  - **H**：`§7.5` 计数口径 A/B 两整段（2632/824/1880/1836/1830 + 两条复算命令）撤成一行指针「读数与复算纪律见 `CONTRIBUTING.md` §库数据链计数口径」；「反编译数据产物」表内 50/2632/49/3,003/48/824/114,708/545,127/38 MB + 复核 `node -e`/`grep` 命令撤数留结构；目录树注释「实测 110 条」「36 份 / 34 唯一」「49 slug / 3003 条目」改现读指针；正文 §社区/§7/§7.5/741 行/927、933 行/Phase 4.5 里程碑同类计数一并指针化；「当前 package.json = 2.0.0」改「与 `package.json` 的 `version` 一致」；「64 个（实算：find…）」改「清单以 `semantic-index-manifest.json` 为准」；「13 档 100 985 行实测…0.67%」两处改「占比不足 1%」；「共 61 个（…枚举实测）」改「模板名以 `get_workflow_template` 枚举为准」。
+- **`CONTRIBUTING.md`** —— §库数据链计数口径：「根 README §7.5 现场仍给出这两个读数」已因①失实，改为「只留数据链结构与指向本节的指针，读数以本节为准」。
+
+### ② 判据与反证
+
+本轮未动门与断言。反向验证 = 门链对改后 README 真跑，外加 test:cli 预存红的隔离证明：
+- `git stash push README.md CONTRIBUTING.md` 后复跑 `npm run test:cli` → 同一处 `description drift` 红 ⇒ HEAD 预存，非本轮引入（pop 已恢复）。
+- 复刻探针 `temp/doc-claim-probe.mjs` 按真门判式跑我的 README 终态：写死工具数命中仅「本组 **9 个工具 / 8 行**」（GROUP_SCOPED 前缀「本组 **」实测豁免成立，非探针放水——真门 selftest 有同款正控）；per-file 分解 0、`mc-skill` 起头示例 0、行首 `node dist/cli.js` 0、「N 个工作流」pin 0。
+- `293 条` 与族计数（116/99/61/12/5）经 `list_knowledge_resources` CLI 实跑复核与表逐字一致 ⇒ 机器载荷现读，保留。
+
+### ③ 验证台账
+
+命令 + 退出码（as-of 2026-10-24 本轮终态；分母 = 各门自报）：
+- `node test-core.mjs` → exit 0
+- `node scripts/assert-cli-quick.mjs` → exit 0（NP-8「80 个工具」未复现）
+- `node scripts/assert-total-semantics-wording.mjs` → exit 0（README「本次返回条数」注入面 ≥1 仍成立）
+- `node scripts/assert-archive-pointers.mjs` → exit 0
+- `node scripts/assert-authoring-lint.mjs` → exit 0（J2/J3 棘轮未破）
+- `npm run test:cli` → **exit 1**（预存红，判据见②；本轮未修，见⑤）
+- `git diff --stat`：README.md 46+/47−、CONTRIBUTING.md 1+/1−
+- README 体量：1307 行 / 118542 字符（开工时 1308 / 119071，净 −529 字符）
+
+### ④ 数据侧变更
+
+无 `data/**` 改动；文档内读数的撤销不落台账（2632/824 钉值由 `assert-lib-ownership.mjs` LEDGER 自证，本轮读数未变、只搬了复述面）。
+
+### ⑤ 未做清单
+
+- **README.en.md 同款 I/H 残留**（2632/sweep/3,003 等同族 token 均在）——未同步：该文件正被并发会话修改（工作区 M 态非本轮所改），动它会撞车；「三处同步」铁律只钉解释模板段（本轮未触），en 同步待用户拍板另批处理。
+- **A–G 族**（加粗密度、箭头链、括号旁白、自我辩护、对照句、重复禁令合并、巨型表格格）——用户本轮只令 I/J/H，其余未做。
+- `README_human.md` 的「110」未核——人类读本，同样受并发写风险；待拍板。
+- `test:cli` 预存红未修——属 `mcp-server/src` 工具描述面（两 description 未引用共享常量），越出本轮文档授权；等拍板修复或另轮。
+- 探针脚本只落 `temp/`（`temp/readme-*.mjs`、`temp/doc-claim-probe.mjs`、`temp/drift-diff.mjs` 等），未入生效路径。
+
+### ⑥ 自我更正
+
+- 上一节底稿「README.md 工作区已有 6 处早期去标注改动」——本轮 I/J/H 已叠加其上，终态含并发痕迹 + 本轮改动；引用旧行号/读数须以当前文件为准。
+- 本轮中途一次 Edit 吞掉了 513 行 `convert_mapping` 半句（替换边界写错），同轮内已修回并复核；无残留。
+- 本轮曾给 78 行写过「复核命令见 CONTRIBUTING §库数据链计数口径」的假指针（该节只管 A/B 分母、不管 manifest 矩阵），已改为「以文件现读为准」；CONTRIBUTING 侧未因此扩节。
+
+---
+
+## 2026-10-24 · 原生 DSH 插件 dsh-mc-skill（新顶层目录 dsh-plugin/）（维护档）
+
+**第 0 块 · 结论**：新建 `dsh-plugin/`（7 个文件、约 30 KB），把 MC_skill 做成 DSH 原生插件：按当前模组工程自动定档、只挂该档 skill、并把 00/01/09 注入 system prompt。用 DSH 自己的 `loadProfileDirectory` + `boot()` 真起了一遍完整插件树验证：`mc-skill` 插件行激活、`/mc-skill` 命令在列、`mc_skill_detect_project` 工具在列且真调用返回 `forge 1.20.1`、`skills.list` 里 35 个候选全部来自本插件。四个仓库门（scripts-parse / script-write-guard / skill-mirrors / authoring-lint）rc=0；`test-scripts` rc=1 但**已证实与本轮无关**（stash 全部改动后同样红）。未提交。
+
+### ① 改了哪些文件
+
+全部是**新增**，无一处改动既有文件：
+
+- `dsh-plugin/package.json`（828 B）—— `type:module`；`dsh.bundle.patch`；`engines.dsh: ^0.2.0`；peer 只写 `@deepseek-ai/cordis`。
+- `dsh-plugin/cordis.patch.yml`（709 B）—— 一行 `- insert:`，`name: ./lib/index.js`、`config.repoRoot`。
+- `dsh-plugin/lib/index.js`（9286 B）—— `name`/`inject([skills, systemPrompt, commands, workingDirectory, tools, fs])`/`apply`：注册 provider、规则段落、`/mc-skill` 命令、`mc_skill_detect_project` 工具。
+- `dsh-plugin/lib/pack.js`（8433 B）—— 桥接层：`prepare()` 预加载 `mcp-server/dist/platform-pack/{detect,catalog}.js`，其后 `resolveTierSync` / `listTierSkillsSync` / `readTierRulesSync`（带 mtime 缓存）/ `readSkillBodySync` 全同步。
+- `dsh-plugin/lib/provider.js`（5253 B）—— skill provider，`list({cwd})` 按档过滤，`get()` 读源稿正文。
+- `dsh-plugin/lib/rules.js`（2553 B）—— 规则段落，只放 `00/01/09`。
+- `dsh-plugin/README.md`（3665 B）—— 安装三步 + 验证命令 + 两条硬约束。
+
+**未改**：`mcp-server/**`、`scripts/**`、任何平台档、任何镜像、`data/**`、根 `AGENTS.md`。
+
+### ② 判据与反证
+
+本轮**没有改门**，但为三条「静默失败」写了反证（都是真机跑出来的）：
+
+1. **`systemPrompt.section` 的 text 接受 async 会静默失效** —— 我第一版写成 `async (context) => ...`。反证依据：`dsh-system-prompt` 的 assembly 是 `text: typeof section.text === "function" ? section.text(context) : section.text`，随后 `renderPrompt` 做 `filter(t => t.length > 0)`；Promise 没有 `length` ⇒ 被丢弃且**不报错**。改法：`apply()` 里 await 一次预加载，此后全同步。**验证**：现版 `typeof sectionText === "string" && !(sectionText instanceof Promise)`，字节 32458。
+2. **tool 的 `output.schema` 里 `required` 必须对象级数组** —— 第一版写成属性级 `required: true`（那是 `defineTool` 的 author 方言）。真机 boot 直接抛 `JsonSchemaError: schema.properties.ok.required is not supported on type "boolean"`，**整个插件不激活**。反证：改前 boot 报 6 条 schema 违规，改后 boot OK。
+3. **patch 里写裸包名解析不到** —— 第一版 `name: dsh-mc-skill`，真机 boot 报 `ERR_MODULE_NOT_FOUND: Cannot find package 'dsh-mc-skill' imported from ...app.asar\dsh\node_modules\@deepseek-ai\cordis-plugin-loader\lib\index.js`（裸名走 loader 自身的 import 上下文 = asar 内）。改法：`name: ./lib/index.js`，由 `anchorInsertedPluginNames` 转成相对 patch 文件的 file URL。反证：composed row 从 `"dsh-mc-skill"` 变成 `file:///.../node_modules/dsh-mc-skill/lib/index.js`，boot 通过。
+
+### ③ 验证台账
+
+as-of 2026-10-24，Node **v24.21.0**（DSH 自带），DSH runtime **0.2.1-rc.2**。真机验证 = 用 `dsh-app-boot` 的 `loadProfileDirectory` + `boot()` 起完整插件树（profile = base + dsh-mc-skill），非模拟：
+
+- **装载体链路**：`loadProfileDirectory` → layers = base(1) + dsh-mc-skill(1) + web-app(32)，`skippedBundles=[]`；`composeEntries` 得 195 条，含 `{id:"mc-skill", name:"<file url>", config:{repoRoot}}`。
+- **兼容门**：`evaluatePluginCompatibility` 对 `engines.dsh: ^0.2.0` vs runtime `0.2.1-rc.2` → **none (OK)**，未被静默跳过。
+- **真 boot**：`boot()` 成功，98 个 entry、**failed=0**；`ctx.get("skills"/"commands"/"systemPrompt"/"tools"/"workingDirectory")` 全部在场。
+- **A1 定档正确**：`mc_skill_detect_project` 对三个真工程分别返回 `forge/1.20.1`、`fabric/1.21.4`、`neoforge/1.21.1`（三个不同平台档都命中）；对非模组目录返回 `status:nopack` 且技能 0 个。
+- **A2 只挂当前档**：forge 档 35 个候选、fabric 档 38 个、neoforge 档 35 个，全部 `provider === "mc-skill"`，**无跨档同名冲突**。
+- **A3 读源稿不读镜像**：`skills.get("mc-block")` 的 `path` = `forge/1.20.1/.cursor/skills/mc-block/SKILL.md`（**源稿**，非 `.agents/skills` 镜像），正文 4710 B；`resourceBase` 指向同目录。
+- **A4 命令与工具在列**：`commands.list()` 含 `mc-skill`；`tools.schemas()` 含 `mc_skill_detect_project`，且经 `createExecution` + `execute` 真调用返回 `{ok:true, platform:"forge", minecraftVersion:"1.20.1"}`。
+- **边界**：非模组工程 → section 返回 `""`（不注入）；缺 `repoRoot` → 显式 throw；坏 `repoRoot` → warn 后降级为空（不崩、不阻断启动）；`path` 传非字符串 → 返回 `status:"invalid"` 而非静默当没传。
+- **仓库门**：`assert-scripts-parse` rc=0 · `assert-script-write-guard` rc=0 · `assert-skill-mirrors` rc=0（扫档 57 / 镜像比对目标 12418 / AGENTS 漂移 0 档）· `assert-authoring-lint` rc=0。
+
+### ④ 数据侧变更
+
+（省略：未动 `data/**`，未改任何台账数值。）
+
+### ⑤ 未做清单
+
+- **`test-scripts` rc=1，已证与本轮无关**：失败在 `assert-corpus-faithfulness(G3)` 的 `ledgerDrift` 自检臂。**反证：`git stash push -u` 把本轮全部改动（含 dsh-plugin/）移出工作区后重跑，同一条红原样复现**；且单独跑 `assert-corpus-faithfulness.mjs`（给与不给 `MC_SKILL_DATA`）都 rc=0。⇒ 既有账，本轮不代修（属别的片）。
+- **未装进用户真实 profile**：只装了 scratch profile 验证，没有动 `~/.dsh/profiles/desktop`。装法写在 README。
+- **未做 client 半身**（Web 面板/设置页）：设计稿 §3 明确不做。
+- **未上架 npm / 未发布**：`private: true`。
+- **未提交**：`git add/commit` 归用户。
+
+### ⑥ 自我更正
+
+- 本轮推翻了设计稿里的两处实现建议，均以真机反证为准：① 设计稿写「`ctx.systemPrompt.section({text:(context)=>...})` 可为异步」——**错**，必须同步；② 设计稿 MVP 里写「直接 `import { defineTool } from "@deepseek-ai/dsh-tools"`」——第三方插件解析不到这个裸包名（profile 的 `node_modules` 里没有 `@deepseek-ai`），改为直接给 `ctx.tools.register` 原生 schema。
+- 设计稿说「`engines.dsh` 写 `^0.2.0` 才不会被静默禁用」这一句的措辞在上一轮已更正过（不写不施加约束、写错才会被跳过）；本轮实测 `^0.2.0` 对 `0.2.1-rc.2` 判定通过。
+- 设计稿列的最小切片是 6 个文件，实际落地 7 个（多一个 `README.md`）。
+
+---
+
 ## 2026-10-24 · README「AI 味」诊断（只出清单、未改 README）（主档）
 
 **第 0 块 · 结论**：通读 `README.md`（1308 行 / 约 11.9 万字符）并对照本仓 `WRITING-FOR-AGENTS.md`，确认 AI 味成立且违反自家规范；按用户拍板「先只给清单、不改」，本轮未动 `README.md`（其工作区已有 6 处早期去标注改动，非本轮所改），只产出带行号的逐条清单 + 两个计数探针脚本（落 `temp/`，未落生效路径）。未跑测试（纯诊断，无代码改动）。

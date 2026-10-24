@@ -109,6 +109,140 @@ function codePatternRel(uri: string): string | null {
   return `${parts.slice(0, -1).join("/")}/code-patterns/${file}`;
 }
 
+/** 平台档 `knowledge/` 面的 URI 前缀（与 code-patterns 同形，但覆盖全部 58 档）。 */
+const KNOWLEDGE_PREFIX = "mcskill://knowledge/";
+
+/** 有 knowledge/ 的平台树；bedrock 是平档（无版本段），按 platform 单独处理。 */
+const KNOWLEDGE_PLATFORMS = ["forge", "fabric", "neoforge", "quilt", "liteloader", "rift", "modloader"];
+
+/** knowledge/ 下允许的类别目录（白名单：挡住任意文件读）。 */
+const KNOWLEDGE_KINDS = ["antipatterns", "common", "porting", "version-changes"];
+
+function isVersionDirName(n: string): boolean {
+  return /^\d+(\.\d+)*$/.test(n);
+}
+
+/**
+ * 盘上实际有哪些 knowledge 正文 → 仓库根相对路径（形如 `forge/1.20.1/knowledge/antipatterns/block.md`）。
+ * 清单与读取都由它派生，工具输出因此不可能与实文件名脱钩。
+ *
+ * 只扫**已建档的平台档**（有 `.cursor/rules` 的目录），不扫 `data/`、不扫 `scaffold/`。
+ */
+function scanKnowledge(repoRoot: string): string[] {
+  const rels: string[] = [];
+  for (const platform of KNOWLEDGE_PLATFORMS) {
+    const platDir = join(repoRoot, platform);
+    if (!existsSync(platDir)) continue;
+    let versions: string[];
+    try {
+      versions = readdirSync(platDir).filter(isVersionDirName).sort();
+    } catch {
+      continue;
+    }
+    for (const v of versions) {
+      collectKnowledge(rels, join(platDir, v, "knowledge"), `${platform}/${v}/knowledge`);
+    }
+  }
+  // bedrock 是平档：knowledge/ 直接在平台根下
+  collectKnowledge(rels, join(repoRoot, "bedrock", "knowledge"), "bedrock/knowledge");
+  return rels.sort();
+}
+
+/** 只收 KNOWLEDGE_KINDS 白名单下的一层 .md；别的目录（如 README.md 同级、extras/）一律不收。 */
+function collectKnowledge(out: string[], dir: string, relDir: string): void {
+  if (!existsSync(dir)) return;
+  for (const kind of KNOWLEDGE_KINDS) {
+    const kindDir = join(dir, kind);
+    let names: string[];
+    try {
+      names = readdirSync(kindDir);
+    } catch {
+      continue;
+    }
+    for (const n of names.sort()) {
+      if (n.endsWith(".md")) out.push(`${relDir}/${kind}/${n}`);
+    }
+  }
+}
+
+/** `forge/1.20.1/knowledge/antipatterns/block.md` → `mcskill://knowledge/forge/1.20.1/antipatterns/block` */
+function knowledgeUri(rel: string): string {
+  const parts = rel.split("/").filter((x) => x !== "knowledge");
+  const file = parts[parts.length - 1] ?? "";
+  return KNOWLEDGE_PREFIX + [...parts.slice(0, -1), file.replace(/\.md$/, "")].join("/");
+}
+
+/**
+ * `mcskill://knowledge/<平台>/[<版本>/]<类别>/<文件>` → 仓库根相对路径。
+ * 非法输入返回 null（读工具入口，必须挡住穿越与任意文件读）。
+ */
+function knowledgeRel(uri: string): string | null {
+  if (!uri.startsWith(KNOWLEDGE_PREFIX)) return null;
+  const rest = uri.slice(KNOWLEDGE_PREFIX.length);
+  if (!rest || rest.includes("\\")) return null;
+  const parts = rest.split("/");
+  for (const p of parts) {
+    if (!/^[\w.-]+$/.test(p) || p === "." || p === "..") return null;
+  }
+  if (parts.length === 4) {
+    const [platform, version, kind, file] = parts;
+    if (!platform || !version || !kind || !file) return null;
+    if (platform === "bedrock") return null; // bedrock 只有 3 段形态
+    if (!KNOWLEDGE_PLATFORMS.includes(platform)) return null;
+    if (!isVersionDirName(version)) return null;
+    if (!KNOWLEDGE_KINDS.includes(kind)) return null;
+    return `${platform}/${version}/knowledge/${kind}/${file}.md`;
+  }
+  if (parts.length === 3) {
+    // bedrock 平档：mcskill://knowledge/bedrock/<类别>/<文件>
+    const [platform, kind, file] = parts;
+    if (platform !== "bedrock" || !kind || !file) return null;
+    if (!KNOWLEDGE_KINDS.includes(kind)) return null;
+    return `bedrock/knowledge/${kind}/${file}.md`;
+  }
+  return null;
+}
+
+/**
+ * 按平台档归组的 knowledge 清单（给 `resources/templates/list` 与 `list_knowledge_resources`
+ * 的聚合条目用）。`only` 给定时只算该档（`forge/1.20.1` 或 `bedrock`）。
+ */
+export function listKnowledgeEntries(only?: string): Array<{ uri: string; name: string; description: string }> {
+  const root = resolveRepoRoot();
+  const out: Array<{ uri: string; name: string; description: string }> = [];
+  for (const rel of scanKnowledge(root)) {
+    const parts = rel.split("/");
+    const packRel = parts[0] === "bedrock" ? "bedrock" : `${parts[0]}/${parts[1]}`;
+    if (only !== undefined && packRel !== only) continue;
+    const kind = parts[parts.length - 2] ?? "";
+    const stem = (parts[parts.length - 1] ?? "").replace(/\.md$/, "");
+    let title = stem;
+    try {
+      const head = readFileSync(join(root, rel), "utf8").slice(0, 400);
+      const h1 = head.match(/^#\s+(.+)$/m);
+      if (h1) title = h1[1].trim();
+    } catch {
+      /* 读不动就用文件名，登记面不塌 */
+    }
+    out.push({
+      uri: knowledgeUri(rel),
+      name: `knowledge-${packRel.replace(/\//g, "-")}-${kind}-${stem}`,
+      description: `${title}（${packRel} · knowledge/${kind}）`,
+    });
+  }
+  return out;
+}
+
+/** 有哪些平台档带 knowledge（供 tools/list 的聚合条目描述用）。 */
+export function listKnowledgePackNames(): string[] {
+  const names = new Set<string>();
+  for (const rel of scanKnowledge(resolveRepoRoot())) {
+    const parts = rel.split("/");
+    names.add(parts[0] === "bedrock" ? "bedrock" : `${parts[0]}/${parts[1]}`);
+  }
+  return [...names].sort();
+}
+
 /**
  * S32：任意 `mcskill://` URI 是否指向 LEGACY 归档树？命中返回所属归档目录。
  * 两条形态都要管：`mcskill://code-patterns/neoforge/<文件>.md`（经 codePatternRel 归位）
@@ -363,6 +497,40 @@ function readKnowledgeResourceInner(uri: string): {
       mimeType: "text/markdown",
       text: "# patterns\n\n未找到 community_knowledge/patterns/README.md（检查 MC_SKILL_COMMUNITY）。",
     };
+  }
+
+  if (uri.startsWith(KNOWLEDGE_PREFIX)) {
+    const rel = knowledgeRel(uri);
+    if (!rel) {
+      return {
+        found: false,
+        uri,
+        mimeType: "text/plain",
+        text:
+          "非法 knowledge URI。两种合法形态：" +
+          "mcskill://knowledge/<平台>/<精确版本>/<类别>/<文件>（forge|fabric|neoforge|quilt|liteloader|rift|modloader），" +
+          "或 mcskill://knowledge/bedrock/<类别>/<文件>。类别限 antipatterns / common / porting / version-changes；" +
+          "不带 .md 后缀。实名单以 list_knowledge_resources 的 knowledge-* 条目为准。",
+      };
+    }
+    const root = resolveRepoRoot();
+    const abs = join(root, rel);
+    if (!isResolvedInside(root, abs) || !existsSync(abs)) {
+      // 该档没有这篇 ≠ 别的档没有：点名可能的邻近档，但**禁止**拿它们顶上。
+      const parts = rel.split("/");
+      const packRel = parts[0] === "bedrock" ? "bedrock" : `${parts[0]}/${parts[1]}`;
+      const siblings = listKnowledgeEntries(packRel).map((e) => e.uri);
+      return {
+        found: false,
+        uri,
+        mimeType: "text/markdown",
+        text: siblings.length > 0
+          ? `未找到 ${rel}。但 ${packRel} 档有这些 knowledge 条目：\n` + siblings.join("\n") +
+            "\n禁止拿邻近平台/版本的同名文件顶上（各档正文不同）。"
+          : `未找到 ${rel}；${packRel} 档没有 knowledge/ 面。禁止拿邻近版本顶上。`,
+      };
+    }
+    return { found: true, uri, mimeType: "text/markdown", text: readFileSync(abs, "utf8") };
   }
 
   return { found: false, uri, mimeType: "text/plain", text: "未知 URI" };
