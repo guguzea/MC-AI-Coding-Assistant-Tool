@@ -130,14 +130,17 @@ export function buildCorpusIndex(dataRoot = DATA) {
   const entries = [];
   const faces = [...CORPUS_FACES];
   // 2026-10-23：**真版本签名面**也纳入（`data/paper-api_<ver>/paper-javadoc/<ver>/processed`）。
-  // 版本档规则（`paper/1.21.4/rules/*.md`）的出处指到**本版本**的签名页；不纳入这些面，
-  // 版本档的每条指针都会被判成「编造文件名」。`stable` 已在 CORPUS_FACES 里，跳过免得重复。
+  // 2026-10-24：`data/spigot_<ver>/spigot-javadoc/<ver>/processed` 一并纳入 —— 版本档里现在有
+  // 「本版 Bukkit 核心 vs Paper 扩展」那节，它的指针指到 spigot 的版本面；不纳入就会被判「编造文件名」，
+  // 或（更坏）落到 `spigot_stable` 的同名文件上、行号越界而误红。
+  // 版本档规则（`paper/<ver>/rules/*.md`）的出处指到**本版本**的签名页。`stable` 已在 CORPUS_FACES 里，跳过免得重复。
   try {
     for (const d of readdirSync(dataRoot, { withFileTypes: true })) {
       if (!d.isDirectory()) continue;
-      const m = d.name.match(/^paper-api_(.+)$/);
-      if (!m || m[1] === "stable") continue;
-      const rel = `${d.name}/paper-javadoc/${m[1]}/processed`;
+      const m = d.name.match(/^(paper-api|spigot)_(.+)$/);
+      if (!m || m[2] === "stable") continue;
+      const sub = m[1] === "spigot" ? "spigot-javadoc" : "paper-javadoc";
+      const rel = `${d.name}/${sub}/${m[2]}/processed`;
       if (existsSync(join(dataRoot, rel))) faces.push(rel);
     }
   } catch {

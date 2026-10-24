@@ -380,6 +380,21 @@
       "files": 1335,
       "allowedStubs": 0,
       "medianFloor": 289
+    },
+    "spigot_1.19.4/spigot-javadoc/1.19.4": {
+      "files": 1173,
+      "allowedStubs": 0,
+      "medianFloor": 297
+    },
+    "spigot_1.20.6/spigot-javadoc/1.20.6": {
+      "files": 1251,
+      "allowedStubs": 0,
+      "medianFloor": 295
+    },
+    "spigot_1.21.8/spigot-javadoc/1.21.8": {
+      "files": 1352,
+      "allowedStubs": 0,
+      "medianFloor": 289
     }
   }
 }

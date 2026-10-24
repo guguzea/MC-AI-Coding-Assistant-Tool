@@ -1,0 +1,40 @@
+{
+  "verified": true,
+  "at": "2026-10-23",
+  "environment": "**纯 Spigot**（不是 Paper）：服务端件来自 getbukkit 第三方镜像，官方只发 BuildTools 源码、不发成品 jar",
+  "server": {
+    "artifact": "spigot-1.19.4.jar",
+    "bytes": 71219629,
+    "source": "https://download.getbukkit.org/spigot/spigot-1.19.4.jar",
+    "sourceTrust": "第三方镜像；**不由本仓背书**。件字节数与上游 HEAD 的 content-length 一致（2026-10-23 核）",
+    "versionProof": "服务端启动日志里的 `This server is running CraftBukkit version …` 行（判据①）"
+  },
+  "jdk": "17",
+  "plugin": {
+    "compiledAgainst": "spigot-api-1.19.4-R0.1-SNAPSHOT（本档签名面的同一个构件）",
+    "covers": [
+      "JavaPlugin#onEnable/getLogger",
+      "PluginManager#registerEvents/addPermission",
+      "@EventHandler(priority, ignoreCancelled)",
+      "PlayerJoinEvent#getPlayer + PersistentDataContainer#set（PDC）",
+      "BukkitRunnable#runTaskLater",
+      "Command#setExecutor",
+      "Permission/PermissionDefault"
+    ]
+  },
+  "results": {
+    "done": "14.986s",
+    "criteriaPassed": "8/8",
+    "pluginLoaded": true,
+    "onEnable": true,
+    "schedulerTick": true,
+    "consoleCommand": true,
+    "noClassDefFound": false,
+    "enableError": false
+  },
+  "notCovered": [
+    "PlayerJoinEvent 的**派发**（要真客户端连入；本轮无客户端）",
+    "任何业务语义（只证「会被加载 / 会被回调」）",
+    "1.21.4 / 1.21.1 / 1.20.1 / 1.16.5 / 1.12.2 这五档**未跑**真机（只做了签名面）"
+  ]
+}

@@ -68,6 +68,9 @@ export const SCRIPT_WRITE_GUARD_NON_WRITERS = new Map([
   // `--root`（默认 F:/MC_GAME，**仓库外**沙箱，与 paper-26.3 同级）；唯一进仓库的是运行日志，
   // 它走 `emit`（受 `wantWrite()` 闸门）。依据正则咬住那个 `--root` 解析 —— 落点一旦改到仓库内即再红。
   ["mcp-server/scripts/playtest-paper-server.mjs", /const ROOT = path\.resolve\(opt\("--root"\) \|\| "F:\/MC_GAME"\)/],
+  // 纯 Spigot 真机探针（2026-10-23 加）：服务端件 / 插件 jar / eula.txt / server.properties / 运行日志
+  // 全落 `--root`（默认 F:/MC_GAME，**仓库外**沙箱）。依据正则咬住那个 `--root` 解析 —— 落点改到仓库内即再红。
+  ["mcp-server/scripts/playtest-spigot-server.mjs", /const ROOT = path\.resolve\(opt\("--root"\) \|\| "F:\/MC_GAME"\)/],
   // Spigot 构件抽取（2026-10-23 加）：`spigot-api` 的 jar 下载到 `temp/spigot-jars/`（gitignored，
   // 构件不入库）；`data/` 下的 raw/processed/index/meta **全部走 `emit`**，本文件的写盘原语只剩那个下载落点。
   // 依据正则咬住 `join(REPO, "temp", "spigot-jars"` —— 一旦改落仓库正文即再红。

@@ -105,3 +105,26 @@
 
 **本版特有**：它的 paperclip **不认 `--nogui`**（打印参数帮助后退出）⇒ 只能 `--noconsole`；而 `--noconsole` 关掉了控制台 ⇒ 控制台命令无法派发，该判据对它不适用。另：PDC（`PersistentDataContainer`）是 1.14+，1.12.2 编译时按该版能力裁掉。
 
+## 该版 Bukkit 核心 vs Paper 扩展（2026-10-24 机核）
+
+26.3 规则里那 **28** 处签名面指针，在同版 `data/spigot_1.12.2` 面里逐条核。
+判据是**成员级**（不是类级）：Paper 会在 `org.bukkit.*` 的类上**加方法**，那类在纯 Spigot 里存在、但那个方法不在。
+
+| 归类 | 条数 | 纯 Spigot 服能照用吗 |
+|---|---|---|
+| ✅ **Bukkit 核心**（类+成员都在 spigot 面） | **19** | 能 |
+| ◻ **只核到类级**（该行抽不出成员名，类在 spigot 面） | 6 | 大概率能，但**没核到成员** |
+| ⚠ **Paper 扩展方法**（类在、该成员只在 paper 面） | 1 | **不能**，必须 Paper 服务端 |
+| ❌ **Paper 专有类**（类都不在 spigot 面） | 2 | **不能**，必须 Paper 服务端 |
+
+**非 Bukkit 核心的逐条**（照用会 `NoSuchMethodError` / `NoClassDefFoundError`）：
+
+- `org_bukkit_inventory_meta_ItemMeta.md` —— 成员 `setDamageType` 只在 paper-api 1.12.2 面；同版 spigot-api 的 `ItemMeta` 无此成员
+- `PersistentDataHolder` —— `PersistentDataHolder` 是 Paper 专有类，同版 spigot-api 面里没有
+- `PersistentDataHolder` —— `PersistentDataHolder` 是 Paper 专有类，同版 spigot-api 面里没有
+
+**类级对照**：本版 `paper-api` 面 **877** 类里，**163** 类（18.6%）不在同版 `spigot-api` 面
+⇒ 这部分是 Paper 专有 / 改名，纯 Spigot 服一律没有。
+
+> 来源两侧都可核：`data/paper-api_1.12.2/paper-javadoc/1.12.2/processed` 与 `data/spigot_1.12.2/spigot-javadoc/1.12.2/processed`，
+> 都是构件的 `javap` 直读（同一套取数器与判据）。
