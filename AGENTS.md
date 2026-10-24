@@ -70,81 +70,38 @@
 
 ### 游玩自测作业规则（长驻会话 + 剧本热载）
 
-适用范围：`mc-ingame-playtest` 工作流的**执行面**（桥路线 / 无桥剧本 driver / 意图会话三条都适用；逐步教程见仓库根 `README.md`「后半 loop 教程」）。
+适用于 `mc-ingame-playtest` 的**执行面**（桥路线 / 无桥剧本 driver / 意图会话三条都适用）。**六条铁律**：
 
-1. **常驻会话，不许"改一次动作就重启"**：无桥 driver（`generate_playtest_driver` 的 `driverMode=temporary_client_tick_driver`）是**长驻解释器**——进世界后守候 `<evidenceDir>/plan.txt`，**文件一变就在同一游戏进程内开新一轮**（轮次日志、`rounds.jsonl` 与杀进程善后见社区文档）。
-   - **只有两类改动允许重启游戏**：① driver 生成物 / 被测 mod 的 **Java 源码**变了（JVM 不能热换类）；② 会话崩了，或世界被 `session.lock` 占住。
-   - **动作、断言、目标坐标、等待时长、场景编排一律改 `plan.txt`（热载），不得为此重启**。一批代码改动应**攒起来一次重启**，之后在同一次会话里连做多轮。
-   - 桥路线同理：能用 `await` / `execute` 解决的，不要重启实例。
-2. **fail-closed + 证据三件**：每轮必落 `state.json` / `exit-code.txt`（0 绿 / 1 红）/ `qa.log`（**只含本轮** `[QA]` 段，历史在 `rounds.jsonl`）＋ 截图（`<gameDir>/screenshots/`）。超预算、断言不成立、坐标解析不到、目标找不到**一律判红**；缺件在 `inspect_playtest_evidence` 里读作 `absent`，**不得**读成"没有失败"或 0。
-3. **关游戏要先问用户**：要关就精确杀真身 JVM——**别只杀 `gradlew` wrapper**，残留客户端会占住世界 `session.lock`，下一轮进世界报「另一个程序已锁定文件的一部分」。
-4. **撤除纪律**：驱动文件 + `PlaytestQaDriver.register();` 调用行测完**必须删**（绝不提交）；证据只留授权根；驱动代码不进正式实例 / 正式分支。
-5. **进场 pin、出场 lease（世界位移作废）**：每轮开工前记下进场锚（git HEAD 或本轮构建产物哈希 + `plan.txt` 的版本号/修改时间），判绿前对锚验一次没动过——轮中被改（产物重建、plan 中途热换、游戏进程被人重启）则该轮证据一律作废：不判红、也不当绿，重跑该轮。跨轮引用证据必须带轮次号与锚点，带不出按未验证处理。「并发写盘卡死假红」「npm test 与语料抓取并发假红」「两个 runClient 互拆日志」这类事故都是缺这道检测的成因。
-6. **多客户端（多会话）**：会合靠 driver 的 `touch` / `waitfile` 一对**文件**原语 —— 但**各端 `EVIDENCE_DIR` 天然不同**，所以要会合就必须在剧本里写**同一个共享目录的绝对路径**（驱动不猜、不做跨机同步；跨机自己挂共享盘）。判绿用 `inspect_playtest_multi`（**联合判据**：客户端数 ≥1 ∧ 全员 `exit-code=0` ∧ `state.json` 与 `.log` 都 present ∧ `rounds.jsonl` 末轮 `ok≠false` ∧ `expectMarkers` 全 present），并出**锚点表**（各端 `state.json` 的 `at` / `plan.txt` mtime / 末轮号）供跨轮引用。自动发现时 `<evidenceRoot>/sync/` 是**保留名**（会合 marker 的家，不是客户端），跳过必须写进 `autoSkipped` 留痕；**任一**客户端目录 realpath 越出授权根 ⇒ **整体拒**（不逐客户端放行）。
+1. **常驻会话**：无桥 driver 是长驻解释器，守候 `<evidenceDir>/plan.txt`，**文件一变就在同一进程内开新一轮**。只有两类改动允许重启：① driver / 被测 mod 的 **Java 源码**变了；② 会话崩了或世界被 `session.lock` 占住。**动作 / 断言 / 坐标 / 等待时长 / 编排一律改 plan（热载）**，一批代码改动攒起来一次重启。
+2. **fail-closed + 证据三件**：每轮必落 `state.json` / `exit-code.txt`（0 绿 / 1 红）/ `qa.log`（**只含本轮** `[QA]` 段）＋ 截图；缺件读作 `absent`，**不得**读成"没有失败"。
+3. **关游戏先问用户**：精确杀真身 JVM，**别只杀 `gradlew` wrapper**（残留会占住 `session.lock`）。
+4. **撤除纪律**：驱动文件 + `PlaytestQaDriver.register();` 测完**必须删**（绝不提交）；证据只留授权根。
+5. **进场 pin、出场 lease**：开工前记进场锚，判绿前验一次没动过；轮中被改则该轮作废重跑。
+6. **多客户端**：会合靠 `touch` / `waitfile` 一对文件原语 + **同一共享目录绝对路径**；判绿用 `inspect_playtest_multi`（联合判据）；任一客户端越出授权根 ⇒ **整体拒**。
 
+逐条操作细节、为什么这样规定、两条 loop 的对照表 → [`doc/playtest-loops.md`](./doc/playtest-loops.md)（口径与坑位的家仍是 `community_knowledge/authored/ingame-playtest-automation.md`）。
 ### 服务端面（Paper / Spigot）—— **独立面，不是模组平台的第 11 档**
 
-- **语料（正文面）**：`data/paper_stable/paper-docs/stable/`（PaperMC 官方开发文档的 `paper/dev` 面，实测 **67 页**；旁挂 `meta.json` 与 `symbols.json`，后者含 **140 个唯一 `jd:paper:` fqcn**）。产出者是 `mcp-server/scripts/fetch-paper-docs.mjs`（**默认 dry-run**，`--extract` 才落盘）。
-  ⚠️ **取数路线是环境约束，别照抄别的 `fetch-*-docs`**：本机网络 `git clone https://github.com/papermc/docs` 会被 **RST**（实测 `RPC failed` / `expected 'packfile'`）⇒ 只能走 **codeload tarball** + `tar -xzf`。
-- **许可（两套，必须分开看）**：上游仓库**代码** = BSD 2-Clause；**文档正文** = **CC BY-SA 4.0**（署名 + **ShareAlike**）。⇒ `data/paper_stable/**` 及其衍生文本**必须以 CC BY-SA 4.0 分发并署名 PaperMC**，**不得**与本项目 MIT 代码许可混写。记账在 `THIRD_PARTY_NOTICES.md`。
-- **版本轴在 Javadoc，不在正文**：Paper 文档**不按 MC 版本分目录**（故落伪版本 `data/paper_stable/paper-docs/stable/`，**不套**真 MC 版本号）；版本面走 `jd.papermc.io/paper/` —— 实测 **302 → `…/paper/26.3/`**，历史档 `26.3` / `1.21.8` / `1.21.4` / `1.21.1` / `1.20.1` / `1.19.4` / `1.16.5` / `1.12.2` 首页全 **200**。
-- **Spigot 侧的版本轴分两半（2026-10-24 实测）**：**javadoc 页没有**（`/javadocs/spigot/1.21.4/` 404；`/javadocs/bukkit/` 与 `/javadocs/spigot/` 是同一份当前文档）；但 **maven 构件有**（`org/spigotmc/spigot-api` 的 metadata 实测 **83 个版本**）⇒ 八个历史档从构件 `javap` 抽，不是从 javadoc 页抓。
-- **签名面（两个**独立平台 id**：`spigot` 与 `paper-api`）**：`data/spigot_stable/spigot-javadoc/stable/`（**1396 类**）与 `data/paper-api_stable/paper-javadoc/stable/`（**2116 类**，含 `io.papermc.paper.*` 这类 Paper 专有类）。**为什么签名面各占一个平台 id**：`FabricDocStore` 是**单源**（只读一个 `source` 子目录），同平台第二棵树不会进检索；而目录前缀取 `paper-api` 能让 `versionDataDir` / `hasPrefixedIndex` / `resolvePlatformDataDir` 三处的 `${platform}_` 拼法**全自动对上** ⇒ **零特例分支**。产出者 `mcp-server/scripts/fetch-spigot-javadoc.mjs`（**默认 dry-run**；`type-search-index.js` 驱动机读类清单 + `member-signature` 抽签名；**分块续抓** `--offset/--limit`、**批并发** `--concurrency` 默认 8 —— 实测并发 15×：1.03 秒/类 → 0.07 秒/类）。
-  - **版本口径（2026-10-24 更新：版本档已存在）**：**javadoc 面**仍是伪版本 `stable`（上游 URL 无版本轴，`/spigot/1.21.4/` 实测 404），真实版本串留在每页 `asOfVersion`（Spigot `26.3-R0.1-SNAPSHOT` / Paper `26.3.build.178-stable`，取自 `index.html` 的 `<title>`；取数器**双向对钉**，不一致即拒）。复跑现役布局：`--version <上游真实串> --pseudo-version stable --out data/<face>_stable/<face>-javadoc/stable`（两个版本位 2026-10-15 拆开：`--version` 只管双向钉、`--pseudo-version` 只管档目录名与 `id` 前缀；后者缺省 = `--version`，但带后缀的真实串不在 store 白名单内 ⇒ 抓这两个面时**必须**显式给 `--pseudo-version stable`）。
-    **历史档**两套，别混：
-    | 平台 | 历史档落点 | 取数路线 | 档数 |
-    |---|---|---|---|
-    | `paper-api` | `data/paper-api_<ver>/paper-javadoc/<ver>/` | javadoc 页（`jd.papermc.io/paper/<ver>/`）→ `fetch-spigot-javadoc.mjs` | 5（1.21.4/1.21.1/1.20.1/1.16.5/1.12.2） |
-    | `spigot` | `data/spigot_<ver>/spigot-javadoc/<ver>/` | **构件的 javap** → `extract-spigot-api-surface.mjs` | 8（1.21.8/1.21.4/1.21.1/1.20.6/1.20.1/1.19.4/1.16.5/1.12.2） |
-    Spigot 历史档的目录名虽然叫 `spigot-javadoc`（`PLATFORM_DOC_SUBDIR.spigot` 的约定），**来源是构件不是 javadoc HTML**：每页 `sourceType: javap` + `jarMd5`，`meta.json` 有 `faceKind: signature-face-from-artifact`。
-  - **id 口径（扁平唯一名，实测）**：`id` = `stable/` + 「包路径把 `.` 换成 `_`」+ `_` + `<Class>`；`processed` 相对路径 = 同 `id` 去掉 `stable/` 前缀 + `.md`（嵌套类保留 `.`）。例：`stable/org_bukkit_event_player_PlayerFishEvent.State` → `processed/org_bukkit_event_player_PlayerFishEvent.State.md`。**包路径一律不拍回嵌套目录**：Java 里同包名同类（如三个 `Bed`）会撞 `assert-corpus-faithfulness` 的 A2 判据（2026-10-14 实测 ⇒ 改布局而非放松判据，见 `mcp-server/scripts/assert-corpus-faithfulness.mjs:116-117`）；而 `processedFileFor` 只剥版本前缀（`mcp-server/src/docs-platform/fabric/store.ts:307`）⇒ 换个字面量就**静默读空**。（教程面 `paper-docs` 的正文名另用 `__` 连接，见 `mcp-server/scripts/fetch-paper-docs.mjs` 的 `bare` 口径，两个 face 不要互相套。）
-  - **许可**：`SpigotMC/Spigot-API` = **GPL-3.0** 且 **2021-12-28 已归档** ⇒ **不抄源码**，只把 API 名字/签名（事实面）当检索对象。**SpigotMC Wiki 实测无任何开放许可**（仅 `© SpigotMC Pty. Ltd.`）⇒ **一律不入 `data/`**，只能走 `community_knowledge/links/`（仅标题/摘要/外链）—— 这就是 **Spigot 面无教程正文、只有签名面**的原因。
-  - ⚠️ **`paper-api` 与 `paper` 不是同一许可**：`data/paper-api_stable/paper-javadoc/`（签名面）随上游 Paper/Spigot 条款；`data/paper_stable/paper-docs/`（教程面）是 **CC BY-SA 4.0**。2026-10-14 起两棵树分属不同平台 id 与**不同目录**，不要按"同目录子树"理解。
-  - ⚠️ **Spigot 历史档是 GPL-3.0 构件的派生（2026-10-24 登记）**：`data/spigot_<ver>/` 的签名逐字来自 **GPL-3.0 的 `spigot-api` 构件**的 `javap`。入库的只有「类名 / 成员签名 / 枚举常量名」这类事实；**构件本身落 `temp/spigot-jars/`（gitignored）**，方法体 / 注释散文 / 初始化值一律没抽。签名集合与"GPL 传染性是否延及接口清单"**都没有定论** ⇒ 按**最小化派生**处理、**不构成再分发授权**，也不改变上游状态；权利人要求即删该子树与生成器。详见 `THIRD_PARTY_NOTICES.md` 的「派生的签名面」条。
-- **禁止用模组平台的形式装它**：载体是 `runServer`（不是 `runClient`）、API 是 Bukkit 抽象层（插件代码不碰 `net.minecraft.*`）、生命周期是 `plugin.yml` + `onEnable`（不是 `@Mod` + 事件总线）；逐档 javap 改写表在插件侧**零适用**。⇒ 要支持就**单开一条服务端面**（判据走服务端日志/事件），不得挂进现有 8 棵平台树。
+载体是 `runServer` + `plugin.yml` + `onEnable`、API 是 Bukkit 抽象层（插件代码不碰 `net.minecraft.*`），逐档 javap 改写表在插件侧**零适用** ⇒ 要支持就**单开一条服务端面**（判据走服务端日志/事件），**不得挂进现有 8 棵平台树**。
 
-**规则载体（服务端面**自己**的形状，**不是**上面「第二步」那套 `.cursor/rules/00–10.mdc`）**：
+- **语料两面**：教程面 `data/paper_stable/paper-docs/stable/`（**CC BY-SA 4.0**，须署名 PaperMC）；签名面两个独立平台 id = `spigot`（**GPL-3.0 构件的 javap 派生**，只入类名/签名事实）+ `paper-api`。
+- **规则载体**：`paper/<ver>/rules/<NN>-<topic>.md`（**不带** `.cursor/`、用 `.md` 不是 `.mdc`）+ 同档 `rules.meta.json`；只写服务端有的（事件 / 命令 / 物品栏 / 权限 / 调度器 / `plugin.yml` / 配置 / PDC / Adventure / 实测陷阱），**不套**模组 00–10。
+- **不走** `activate_platform_pack session`；用 `search_docs platform=paper|paper-api|spigot` + 本目录规则文件。
+- **写作纪律**：每条 API 论断带 `<语料文件名>.md:<行号>` 指针；语料证不出的写进「未核实」段（两个签名面只有签名、没有散文 ⇒ "该怎么用"没出处就是编造）；**不复述** CC BY-SA 教程原文。
+- **门**：`mcp-server/scripts/assert-server-rules-integrity.mjs`（`REAL_RUN_GATES`，投毒自证 6/6）。
 
-- **位置与扩展名**：`paper/<ver>/rules/<NN>-<topic>.md`（**不带** `.cursor/`、**用 `.md` 不是 `.mdc`**）+ 同档 `paper/<ver>/rules.meta.json`。
-  **为什么不套模组形状**：模组那套 `00–10` 的条款集（Mixin / 注册表 / 客户端事件 / 数据生成）对插件**大半不适用**，硬套会造出一棵假档 —— 与「别为填一个版本号克隆树」同一类错误。本面只写**服务端有的**（事件 / 命令 / 物品栏 / 权限 / 调度器 / `plugin.yml` / 配置 / PDC / Adventure / 实测陷阱）。
-- **不走 `activate_platform_pack session`**：那是模组知识包加载器；本面用 `search_docs platform=paper|paper-api|spigot` + 本目录的规则文件。
-- **写作纪律（可机械检）**：
-  1. 每条 API 论断必须带**出处指针** `<语料文件名>.md:<行号>`（可写短名，按**后缀**解析到三个语料面之一），且**行号在界内、不是空行**；
-  2. 语料证不出的（含所有"通识性"道理）**必须写进「未核实」段**，不许写成结论 —— 两个签名面的 processed 页**只有签名、没有描述散文**，所以"该怎么用"这类话**没有出处就是编造**；
-  3. **不复述教程原文**（`data/paper_stable/paper-docs/` 是 **CC BY-SA 4.0**，复述会把 ShareAlike 义务引到本树）；只写结论 + 指针。
-- **守护门**：`mcp-server/scripts/assert-server-rules-integrity.mjs`（挂 `test-scripts.mjs` 的 `REAL_RUN_GATES`；带投毒自证 **6/6**：①引到不存在的文件 ②行号越界 ③指向空行 ④完全无「未核实」 ⑤**只在行文里提该词（无标题）** ⑥**有标题但空段**）。⚠ 别指望 `assert-rules-api-names.mjs`（只收 `.mdc`）或 `assert-rules-match-tool.mjs`（quilt 专属）代管本面 —— 二者实测**扫不到**这里。
-- ⚠ **「未核实」的判据是"真标题 + 至少一条"**，不是"文中出现过该词"（首版就是这么弱的判据，2026-10-15 改）。写这一面时别只提一句就当交代了。
-
+取数路线、两套许可细则、版本轴两半、签名面 id 口径、逐档落点表 → [`doc/server-face-paper.md`](./doc/server-face-paper.md)。
 ### 服务端面 loop（`generate_playtest_server_driver`）
 
-- **闭环**：`generate_paper_plugin` 出骨架 → `generate_playtest_server_driver --evidenceDir <dir>` 出 driver + `plan.example.txt` → 注册（`onEnable` 留了注入位）→ 写 `plan.txt` → 起服。
-- **classpath 6 件**（被逐类新 API 逼出来的）：`paper-api` · `adventure-api` · `adventure-key` · `org.jetbrains:annotations` · `guava` · `net.md-5:bungeecord-chat`。⚠ 末件 **Maven Central 404** ⇒ 走 `repo.papermc.io`。JDK **25**。
-- **plan verb**：`mark` · `cmd` · `assert marker path=…` · `wait ticks=N` · `stop`。⚠ `cmd`（`dispatchCommand`）**不派发** `ServerCommandEvent`（**T8**）；`stop` 只收工，driver 另调 `Bukkit.shutdown()`，否则 runner 超时强杀。
-- **判据范式**：探针每个通过的检查写 `<name>.ok`；plan 用 `assert marker` 断言 ⇒ **marker 缺席 = 没过**（别靠日志措辞）。
-- **证据**：`exit-code.txt`（**仅 0 算过**）· `qa.log`（含 `[QA] DONE`）· `rounds.jsonl`（`ok:true`）· `state.json`。
-- **起实例必备**：`online-mode=false` · **`white-list=false`** · `level-type`+`generator-settings`（**T3**）· **`-Dmcskill.probe.dir`** · 客户端侧 **`JAVA_HOME`**（逐条表与四个坑见 `rules/09-traps.md` 的 T9/T10）。
-- ⚠ **需玩家动作的项（放方块 / 点物品栏 / 破坏方块）走模组面**：`generate_playtest_driver platform=neoforge version=26.3 driverMode=temporary_client_tick_driver`（档位权威 = `PLAYTEST_VERIFIED_TIER`；动作含 `use` / `gui` / `break`）。装配三处 `EVIDENCE_DIR` · `EXPECT_ITEM` · `EXPECT_SLOT` + 客户端加 `PlaytestQaDriver.register();`；`WORLD` 留空时用 **`--quickPlayMultiplayer <host:port>`** 进世界。
-- **改文本文件走 Node**（`writeFileSync(f, txt, "utf8")`）：PS 5.1 的 `Set-Content -Encoding UTF8` **写 BOM** ⇒ `build.gradle` 编不过（**T10**）。
+闭环：`generate_paper_plugin` 出骨架 → `generate_playtest_server_driver --evidenceDir <dir>` 出 driver + `plan.example.txt` → 注册（`onEnable` 留了注入位）→ 写 `plan.txt` → 起服。
 
+**起实例必备**：`online-mode=false` · `white-list=false` · `level-type`+`generator-settings`（T3）· `-Dmcskill.probe.dir` · 客户端侧 `JAVA_HOME`。
+**证据**：`exit-code.txt`（**仅 0 算过**）· `qa.log`（含 `[QA] DONE`）· `rounds.jsonl`（`ok:true`）· `state.json`。
+
+**与客户端面 loop 共用同一套证据纪律与撤除纪律**，差别只在载体、动作能力与判据位置 —— 两条 loop 的对照表、classpath 6 件、plan verb、T8/T10 等坑位 → [`doc/playtest-loops.md`](./doc/playtest-loops.md) §二/§三。
 ### 判据放接收端
 
 `sendMessage(Component)` 发**控制台** ⇒ 判据在**服务端日志**；发**玩家** ⇒ 判据在**客户端日志**（`[ChatComponent]: [System] [CHAT] …`）。实测发玩家时**服务端日志里没有**该串 ⇒ 判据放错会得假否定。
-
-### 工具的"没有"先别当真
-
-- `javap` 看不到**形参名**（两版 `paper-api` 均无 `MethodParameters`）⇒ 比形参名要走该版本 javadoc。
-- `data/**` 下**不给 `glob`** 的目录搜索会假 0 命中。
-- **签名页只列本类声明的成员**；**签名面没有 ≠ 件里没有**（flat 的权威格式在件内 datapack JSON）。
-
-
-同一件事「文本组件到没到」，**判据放的位置不同，结论会相反**：
-
-| 发往哪里 | 有效判据 | 拿错地方会怎样 |
-|---|---|---|
-| **控制台** | **服务端日志** —— `sendMessage(Component)` 的标记串出现在服务端输出里 | — |
-| **真人玩家** | **客户端日志** —— `[ChatComponent]: [System] [CHAT] <标记串>` | 实测**服务端日志里没有**那两条 ⇒ 拿服务端日志当判据会得到**假否定** |
-
-**规矩**：验证一条链路时，**判据要放在链路的接收端**（或接收端能观测到的地方）。只放在**发送端**能证明"发出去了"，**证明不了"到了"**。
 
 ### ⚠ 取证工具有盲区：`javap` **看不到形参名**
 
@@ -158,34 +115,12 @@
 
 ### ⚠⚠ 检索纪律：在 `data/**` 下按目录搜索**必须显式给 `glob`**
 
-**这是调用姿势问题，不是检索工具坏了**（2026-10-15 四组对照实测）：
-
-| 实验 | 路径 | `glob` | 结果 |
-|---|---|---|---|
-| A | `data/paper_stable/paper-docs/stable/processed` | **不传** | **0 命中**（假） |
-| C | 同上 | `*.md` | **44 命中** |
-| E | 同上 | `*`（裸星号） | **44 命中** |
-| D | `paper/26.3/rules`（**不在** `data/` 下） | 不传 | **10 命中**（正常） |
-
-同一目录、同一词（`Bukkit`）——⇒ **变量只有 `glob`**，与 pattern 是否含中文或 `|` 无关（含中文的 `MONITOR|EventPriority|监听器|priority` 带 `glob` 时照样命中 4 个文件）。**只在 `data/**` 下发作**（`data/` 下疑似有默认过滤或整目录剪枝；**具体机制未核实**，此处只报实测）。另已排除 `.gitignore`：`git check-ignore -v <该面文件>` = **exit 1（未忽略）**。
-
-**两条规矩**：
+**这是调用姿势问题，不是检索工具坏了**（2026-10-15 四组对照实测：同目录同词，唯一变量是 `glob`）。**只在 `data/**` 下发作**，`paper/<ver>/rules` 这类非 `data/` 路径不传 `glob` 正常命中；已排除 `.gitignore`（`git check-ignore -v` = exit 1）。
 
 1. **在 `data/**` 下做目录搜索，必须显式给 `glob`**（`*.md` 或 `*`）。不给就可能拿到**假的 0 命中**。
-2. **做否定性断言（"本仓没有 X"）之前，必须逐文件复核** —— 不能只凭一次目录搜索。2026-10-15 我据一次假 0 命中把「`MONITOR` 只能观测不能改」写成"本仓无从核实"，而官方在 `data/paper_stable/paper-docs/stable/processed/api__event-api__event-listeners.md:100-103` 有**逐字说明**（"The `MONITOR` priority is used to monitor the event, but not change it."）。**假否定比"未核实"更糟：它会把有出处的结论删掉。**
+2. **做否定性断言（"本仓没有 X"）之前，必须逐文件复核**。**假否定比"未核实"更糟：它会把有出处的结论删掉。**
 
-已核实边界（引用前先核，别外推）：driver **真代码**覆盖 = `PLAYTEST_VERIFIED_TIER`（`mcp-server/src/generators/playtest-driver.ts`，**唯一真源、随逐档 javap 取证扩面 —— 正文不数档**；逐版本清单直接读该表）。
-
-- **验证强度三等**：① **真机跑通** = 26.x 十档（fabric 5 + neoforge 5）；② **真构件编译验证**（javap 取证 + `javac` 对**真** jar，JDK 8 腿覆盖 `fabric 1.14.4`/`1.16.5` 与 `forge 1.12.2`/`1.13.2`/`1.14.4`/`1.15.2`/`1.16.5`）——**编译验证 ≠ 真机验证**；③ **替身腿** —— **「替身只证签名形状，不证类存在」**，判某类在该版存不存在必须拿真构件。
-- **能力天花板（分路线读，别当整条链的上限）**：
-  - **driver 路线 = 玩家级**（`temporary_client_tick_driver` / `in_jvm_player_agent`，仅 `PLAYTEST_VERIFIED_TIER` 内的档）：真按键原语 `forward` / `back` / `left` / `right` / `jump` / `sneak` / `sprint` / `attack` / `use`（`playtest-driver.ts` 的 `press()`）+ 步骤 `move` / `goto` / `break` / `gui` / `look` / `scan` / `shot` / `assert` ⇒ **走位 / 跳跃 / 挖掘 / GUI 交互在 driver 档上都做得到**。
-  - **桥路线 = 命令级**（`external_bridge` / `playtest_bridge`）：发聊天包、**不是键位输入** ⇒ 读数 / 观察 + `/tp` `/setblock` 这类命令可用（受实例 op 约束）；**走位 / 跳跃 / 挖掘耗时 / 碰撞 / GUI 点击测不了 —— 这一条只限定桥路线**。桥路线现成件覆盖 `BRIDGE_MOD_TARGETS`（8 个 = `forge 1.7.10–1.12.2` + `rift 1.13.2` + `modloader 1.6.4`）；动作 10 个、恰好覆盖 `playtest_bridge await` 的 5 个 condition（**动作名与 `params` 键名以工具源码 `src/playtest-bridge/index.ts` 的 `probe()` 为准**），不可用动作按档 fail-closed（`1.7.10` 聊天、`1.9.4–1.12.2` `use_item`、`rift` 聊天 + `use_item`、`modloader` 全部）。`liteloader 1.12.2` = hybrid 档（vanilla/Forge 面与 `forge 1.12.2` 同表）；纯 litemod 不在本链；`quilt` 全族只有 javap / 派生面、无编译验证。表外平台 / 版本一律结构壳（须先取证）。
-- **会改变判断的 API 事实**：`fabric` 全族 1.19.4 以下**没有客户端消息事件** ⇒ `goto parsed` 只走 latest.log 兜底、解析不到 fail-closed 判红；**26.2+ 两处 API 变化**（`getMainRenderTarget()` 删 ⇒ `Screenshot.grab(client,false)`；`Minecraft.screen`/`setScreen` 删 ⇒ `client.gui.screen()`/`client.gui.setScreen(x)`）由 `apply26xxShared` 按 `m26(version)>=2` 分支处理；客户端**实体只在追踪范围（≈48 格）内可见** ⇒ 实体断言要靠近目标，方块证据不受此限。三平台生成物含中文注释 ⇒ 编译**必须** `-encoding UTF-8`。
-
-逐档改写表、命名层差异、字段名对照与**逐轮取证史**见 `community_knowledge/authored/ingame-playtest-automation.md`（那是「口径与坑位」的家）。
-
-交付格式：聊天只给三件（文末「§交付汇报」）；判档、主档四块 / 维护档六块、受管面清单与两档硬约束在 [`REPORT-FORMAT.md`](./REPORT-FORMAT.md)，编号块正文落 [`DELIVERY_LOG.md`](./DELIVERY_LOG.md)。
-
+四组对照实验的完整读数、那个假否定事故的经过、以及各平台已核实边界（验证强度三等 / 两路线能力天花板 / 会改变判断的 API 事实）→ [`doc/glob-search-discipline.md`](./doc/glob-search-discipline.md)。
 ### 人在环例外：维护面夜批（阶 1）
 
 仓库维护面允许「一次任务书 = 一次授权」的无人值守批量维护（夜批）：改动只落**专用本地维护分支**（一片一提交），**绝不 push、不合主线、不碰删除类与发布物**。准入、作业流程、回执与晨间抽查协议以 [`CONTRIBUTING.md`](./CONTRIBUTING.md)「维护面夜批协议（阶 1）」为准——本处只声明例外存在，细则不复述（防两处漂移）。
@@ -214,11 +149,11 @@ id 'org.quiltmc.loom'
 Quilt 建档面（实测 `ls -d quilt/*/` 对 `ls -d data/quilt_*/`，2026-09-05）：
 
 - **有规则树**（10 档）：`1.18.2` / `1.19.4` / `1.20.1` / `1.20.4` / `1.21.1` / `1.21.3` / `1.21.4` / `1.21.8` / `1.21.10` / `1.21.11`。
-  - **Quilt 侧语料**：`data/quilt_*` 共 **6 档**带目录（= 有规则树 10 档 − 有树无语料 4 档），每档 18 页（14 篇英文 wiki 页 `wiki-*.md` + 4 篇 QSL/元数据页：`qsl-qfapi` / QSL 按分支 README / `quilt.mod.json` RFC / `qsl-verified`）。命中数随语料扩容，**`total` 不是稳定契约**（两个独立成因：① 语料扩容；② **doc 检索面的 `total` 就是「本次返回条数」，会随你传的 `limit` 变**）。换源史与实测读数见 `CORPUS_PROVENANCE.md` §1。
-- **有树但无 `data/quilt_<ver>` 语料**（4 档）：`1.21.3` / `1.21.4` / `1.21.8` / `1.21.10`。规则树可用；文档检索**不报错而是回 Fabric 正文**——实测 `search_docs platform=quilt version=1.21.4 query=registry` 返回 `ok:true` + `fallback:"fabric"` + `sourcePlatform:"fabric"` + `warning:"Quilt 官方文档无此版本，已回退到同版本 Fabric 文档…"` + `total:14`，`1.21.3` 同形但语义索引缺库 → `semantic:false` + `total:0`。**QSL 专属查询不走 Fabric**：实测同版本 `query="QSL registry key"` → `fallback:"quilt"` + `requestedVersion:"1.21.4"` + `source_version:"1.21.1"`，命中一律 `1.21.1/qsl-*`（改口同 `<maj>.<min>` 线已建档语料，QSL 同线同源）；`get_doc_full platform=quilt version=1.21.4` 同线读回，警示含「仍非 1.21.4 专属正文」。⇒ **必须读 `fallback` / `sourcePlatform` / `source_version` 字段**：`fabric` 命中不是 QSL 证据，`quilt` 命中也不是本版专属正文，`total:0` 更不等于「本版没有该 API」。QSL 签名一律 `query_loader_api`（先 `ingest_loader_api`）或用户自备 jar。
-- **无树**：`1.20.6` / `1.21.2` / `1.21.5` / `1.21.6` / `1.21.7` / `1.21.9` / `26.x` 等 → session 直接 `PACK_NOT_FOUND`。**禁止**拿邻版 quilt 树或同版 Fabric 树顶替，也**禁止**为填一个版本号克隆一棵新树。
-- - **（2026-09-12 S13）`VERSION_NOT_FOUND` 载荷四平台同键**，下一条里「只有 `availableVersions`」不再是 quilt 独有：`search_forge_docs` 与 `search_docs`（forge / neoforge / fabric / quilt / liteloader / rift / modloader）遇到本仓库无语料的档位，返回 `ok:false` + `platform` + 顶层 `availableVersions`（**数值序**：1.21.8 < 1.21.10 < 1.21.11 < 26.1.2）+ `error:{code,message,hint}` 对象。`search_forge_docs` 早期的**字符串 `error` + 顶层 `code`/`hint`** 形状已废除；机器消费方不必再按平台分支取候选。quilt 只是额外多带 `query` / `version` / `fallback:null` 三个自有键；**且 quilt 有两种查询形态**——普通词（`query=registry`）才是上面这套载荷，QSL 措辞（`query="QSL"` / `"QSL registry key"`）返回 `ok:true` + `fallback:"quilt"` + `source_version`（同 `<maj>.<min>` 线改口，那不是本版专属 QSL 正文，签名仍走 `query_loader_api`）。两条腿都由 `test-assistant-gaps.mjs :: A-43` 钉。**唯一例外是 neoforge 的「无主文档树但刻意回空」路径**（如 `version=9.9.9` / 未建档 26.x）：它返回 `ok:true` + `total:0` + `warning`（披露「NeoForge 无独立 X 主文档树，未建档版本禁止读邻档 00–10」）并同样带 `availableVersions`，不是静默空返回。
-
+  - **Quilt 侧语料**：`data/quilt_*` 共 **6 档**带目录，每档 18 页。命中数随语料扩容，**`total` 不是稳定契约**（两个独立成因：① 语料扩容；② **doc 检索面的 `total` 就是「本次返回条数」，会随你传的 `limit` 变**）。
+  - **有树但无 `data/quilt_<ver>` 语料**（4 档）：规则树可用；文档检索**不报错而是回 Fabric 正文** ⇒ **必须读 `fallback` / `sourcePlatform` / `source_version` 三个字段**：`fabric` 命中不是 QSL 证据，`quilt` 命中也不是本版专属正文，`total:0` 更不等于「本版没有该 API」。QSL 签名一律 `query_loader_api`（先 `ingest_loader_api`）或用户自备 jar。
+  - **无树**：`1.20.6` / `1.21.2` / `1.21.5` / `1.21.6` / `1.21.7` / `1.21.9` / `26.x` 等 → session 直接 `PACK_NOT_FOUND`。**禁止**拿邻版 quilt 树或同版 Fabric 树顶替，也**禁止**为填一个版本号克隆一棵新树。
+  - **`VERSION_NOT_FOUND` 载荷四平台同键**：本仓无语料的档位返回 `ok:false` + `platform` + 顶层 `availableVersions`（数值序）+ `error:{code,message,hint}` 对象；机器消费方不必再按平台分支取候选。**唯一例外**是 neoforge「无主文档树但刻意回空」路径（`ok:true` + `total:0` + `warning`）。
+  - 逐档建档面读数、换源史、空洞档逐档复测史 → [`doc/platform-coverage-quilt.md`](./doc/platform-coverage-quilt.md)（另有 `CORPUS_PROVENANCE.md` §1/§4）。
 - **空洞档实测行为**（上面三条清单由 `mcp-server/test-assistant-gaps.mjs :: A-43` 对磁盘实扫钉住）：`1.20.6` / `1.21.2` / `1.21.5` / `1.21.6` / `1.21.7` / `1.21.9` 六档 `activate_platform_pack action=session` 一律 `ok:false` + `PACK_NOT_FOUND`，**同系列有档时带 `candidates` 数组** —— 那是候选提示，**不是**自动折叠授权；`search_docs platform=quilt` 对普通词查询同六档一律 `ok:false` + `VERSION_NOT_FOUND` + `fallback:null` 且**不 fallback**。**唯一例外是 `26.x`**：`quilt 26.1.2` session 仍 `PACK_NOT_FOUND`（**无 `candidates`**），但 `search_docs platform=quilt version=26.1.2` 返回 `ok:true` + `fallback:"fabric"` + `sourcePlatform:"fabric"` + `source_version:"26.1.2"`（读的是 Fabric 26.1.2 语料；A-43 只钉三件套 + `total ≥ 5` 下界，**不钉死命中数**）⇒ **有命中 ≠ quilt 26.x 已建档**，26.x 的 QSL 面本仓库完全没有，规则树只认 `fabric/26.1.2`。**QSL 措辞查询不走这条路**：`query="QSL"` / `"QSL registry key"` 返回 `ok:true` + `fallback:"quilt"` + `source_version:"1.21.1"`（读同线已建档语料），**那不是本版专属 QSL 正文**，签名仍走 `query_loader_api`（先 `ingest_loader_api`）或用户自备 jar。`quilt 26.2` 两侧都拒。逐档明细与复测史见 `CORPUS_PROVENANCE.md` §4。
 
 ### 2. 检查 Fabric
@@ -245,13 +180,9 @@ id 'fabric-loom'
 - 磁盘没有对应 `fabric/<ver>/` 时：停，改口 `search_fabric_docs`，**不要**用邻版规则顶上。`1.21.4` / `1.21.8` / `1.21.10` 已有 versioned `data/fabric_<ver>` + 本档规则树；**`1.21.5` 无规则树** → session `PACK_NOT_FOUND`；无 fabric-docs `versions/` → 文档检索 `VERSION_NOT_FOUND` 且不 fallback。禁止拷 `1.21.11`。
 - **文档 fallback 仅限查询 API**，不代表规则树可用。
 
-**Fabric 建档面（实测 `ls -d fabric/*/` 对 `ls -d data/fabric_*/` 对 `list_fabric_versions`，2026-09-05）：**
+**Fabric 建档面**：规则树 14 档 = 语料 14 档 = `list_fabric_versions` 14 档，**三者完全一致** ⇒ 不存在「有树无语料」的半档。其中**有 `fabric-docs` 正文的只有 7 档**，另 7 档**上游从来没有** docs 树（不是抓取漏 ⇒ **禁止**承诺补抓、**禁止**拿邻版正文顶替）。**空洞档**（既无树也无语料）session 返回 `PACK_NOT_FOUND`（带同系列 candidates 提示，**不是**自动折叠授权）、`search_fabric_docs` 返回 `VERSION_NOT_FOUND` 且**不 fallback**；遇到空洞档把候选清单念给用户选，**禁止**拿邻版树顶上或为填版本号克隆新树。
 
-- 规则树 14 档（每档 11 条 `00–10`）= 语料 14 档 = `list_fabric_versions` 14 档，**三者完全一致**：`1.14.4` / `1.16.5` / `1.17.1` / `1.18.2` / `1.19.4` / `1.20.1` / `1.20.4` / `1.21.1` / `1.21.3` / `1.21.4` / `1.21.8` / `1.21.10` / `1.21.11` / `26.1.2`。⇒ Fabric **不存在**「有树无语料」那类半档，问哪档就在这 14 档里选。
-  - ⚠️ **「语料 14 档」只说明 14 个 `data/fabric_<ver>` 目录都在，不说明 14 档都有 docs 正文。** 有 `fabric-docs` 正文的是 **7 档**：`1.20.4` / `1.21.1` / `1.21.4` / `1.21.8` / `1.21.10` / `1.21.11` / `26.1.2`；另 **7 档**（`1.14.4` / `1.16.5` / `1.17.1` / `1.18.2` / `1.19.4` / `1.20.1` / `1.21.3`）**上游从来没有这些版本的 docs 树**。⇒ 这 7 档「没有 docs 正文」是**上游没有**，不是抓取漏：**禁止**承诺补抓，也**禁止**拿邻版正文顶替。用户问「1.18.2 的 Fabric 官方文档正文」只能答「本仓没有该版 docs 正文，可读物的是该档规则树 + `fabric-wiki` 7 页」。页数、上游 commit 史与 `failures.json` 记账见 `CORPUS_PROVENANCE.md` §2。
-- **空洞（既无树也无语料）**：`1.21.2` / `1.21.5` / `1.21.6` / `1.21.7` / `1.21.9` 等。实测 `activate_platform_pack action=session platform=fabric minecraftVersion=1.21.2` → `PACK_NOT_FOUND`（message 附带「同系列已建档：1.21.1, 1.21.3, 1.21.4, 1.21.8, 1.21.10, 1.21.11」，那是**候选提示不是自动折叠授权**）；`search_fabric_docs version=1.21.2` → `VERSION_NOT_FOUND` 且**不 fallback**。
-- 遇到空洞档：把工具的候选清单念给用户选，**禁止**自行拿邻版树顶上或为填版本号克隆一棵新树。`26.1` / `26.1.1` 是另一回事——走 `knowledgeVersion` 折到 `26.1.2`，不是空洞。
-
+逐档清单、docs 覆盖史与页数记账 → [`doc/platform-coverage-fabric.md`](./doc/platform-coverage-fabric.md)（另有 `CORPUS_PROVENANCE.md` §2）。
 
 ### 3. 检查 NeoForge
 
@@ -271,11 +202,9 @@ id 'net.neoforged.gradle.userdev'
 如果匹配 → 先 `list_neoforge_versions` + 工程元数据锁定**精确**版本，再调用 `activate_platform_pack action=session`（`platform=neoforge` + 精确版本；`1.20.1` / `1.20.4` / `1.20.6` / `1.21.1` / `1.21.3` / `1.21.5` / `1.21.8` / `1.21.10` / `1.21.11` / `26.1`）。**禁止跨目录读邻档 00–10，禁止把 `neoforge/<ver>/.cursor` 当加载器 Read。** `1.20.1` 本档核实表 + 短规则（Forge 兼容数据），禁止用 1.20.4 00–10 顶上。不为 26.1.1 单造规则树；26.1 ≠ 1.21.1。
 > 注记（D9）：NeoForge 1.20.1（20.1.x，Forge 47 兼容层）使用 `mods.toml` + `net.minecraftforge.*` 包，根决策树与 `detect_mod_project` 会将其归为 Forge——功能等价；该版本规则树在 neoforge/1.20.1。
 
-**NeoForge 建档面（实测 `ls -d neoforge/*/` 对 `ls -d data/neoforge_*/`，2026-09-05）：**
+**NeoForge 建档面**：规则树 10 档、每档 11 条 `00–10`；语料 9 档。**唯一差额 `data/neoforge_1.20.1` 缺失 = 按设计，不是半档**（`search_neoforge_docs version=1.20.1` → `ok:true` + `forgeCompatible:true` + `sourceNote` 指「使用 Forge 1.20.1 文档数据」⇒ **不要**为凑数建克隆树）。Forge 侧 `forge/1.21.1` 是 draft（无 00–10、`PACK_NOT_FOUND`）；`1.7.10`–`1.11.2` 是 **3 条短规则树**（短不是漏，**禁止**用 1.12.2 的 00–10 顶替）。
 
-- 规则树 10 档、每档 **11 条** `00–10`：`1.20.1` / `1.20.4` / `1.20.6` / `1.21.1` / `1.21.3` / `1.21.5` / `1.21.8` / `1.21.10` / `1.21.11` / `26.1`。语料 9 档（`data/neoforge_<ver>`）。
-- **唯一差额 `data/neoforge_1.20.1` 缺失 = 按设计，不是半档**：`search_neoforge_docs version=1.20.1` → `ok:true` + `forgeCompatible:true` + `versionFallback:false` + `sourceNote` 指「使用 Forge 1.20.1 文档数据（API 语义兼容）」（走的是 `data/forge_1.20.1`，不是邻近 NeoForge 版冒充）⇒ **不计入**「有树无数据」缺陷，也**不要**为凑数建 `data/neoforge_1.20.1` 克隆树。取数说明见 `CORPUS_PROVENANCE.md` §3。
-- 对比：Forge 侧 `forge/1.21.1` 实测 `.cursor/rules` 内 `00–10` 数 = **0**（draft，见步骤 5）；`1.7.10` / `1.8.9` / `1.9.4` / `1.10.2` / `1.11.2` 是 **3 条短规则树**且各自有 `data/forge_<ver>` 语料——短不是漏，禁止用 1.12.2 的 00–10 顶替。
+逐档清单与 1.20.1 取数说明 → [`doc/platform-coverage-neoforge.md`](./doc/platform-coverage-neoforge.md)（另有 `CORPUS_PROVENANCE.md` §3）。
 
 工作流提醒（**不是硬门**）：仅当用户要走完整流程时才调用 `get_workflow_template`（新建方块 / 物品 / 方块实体 / 实体 / GUI / Mixin / 世界生成 / 配置 / GameTest / 崩溃分诊 / 移植 / 从零构建 / 环境搭建 / 真机循环 / 发布 / 汉化 / 反编译研究）。改已有代码、补方法、查文档走规则 + Skill + `search_*_docs`；从零工程才 `download_official_mdk`。
 
@@ -373,38 +302,26 @@ id 'net.minecraftforge.gradle'
 
 ### Fabric ≤1.21.11：讲解基线 = Yarn，Mojmap 作对照列（2026-09-20 用户裁定①）
 
-不是「收敛到 mojmap」，也不是「只教 Yarn 不提 mojmap」：
+不是「收敛到 mojmap」，也不是「只教 Yarn 不提 mojmap」：**基线** = `fabric/<v>/scaffold` 与各档 `verified-api-<v>.md` 用 Yarn 名（维护老模组、写 Skill、答签名一律按 Yarn 落笔）；**对照列** = 上游 Fabric 文档页正文是 **mojmap 写法**（`GuiGraphics` / `PoseStack` / `ResourceLocation` / `StreamCodec`）—— 看到它们是**口径差异，不是另一套 API**，回本档代码要换名。
 
-- **基线**：`fabric/<v>/scaffold` 与各档 `verified-api-<v>.md` 用 Yarn 名（1.21.4 / 1.21.8 / 1.21.10 三档核实表通篇 `CustomPayload.Id` / `PacketCodec`，0 个 mojmap 名）。维护老模组、写 Skill、答签名 → 一律按 Yarn 落笔。
-- **对照列**：上游 Fabric 文档页正文是 **mojmap 写法**（`GuiGraphics` / `PoseStack` / `ResourceLocation` / `StreamCodec`）。看到它们是**口径差异，不是另一套 API**；回本档代码要换名。逐件对照写在每件 Skill 正文的「`### ⚠️ 映射口径：本档语料是 mojmap`」块里。
-- **对照数据出处**：Mojang `client.txt` ⋈ `data/fabric_<v>/mappings/yarn-mappings.sqlite` 的 **obf 短名 join**。**原始 `client.txt` 仍不入库**——它被 `.gitignore` 排除，文件头许可证「may not redistribute the mappings complete and unmodified」。**按它 join 出的派生对照表已发布进仓库**：`data/_yarn-mojmap-pairs/`（逐档 `yarn-mojmap-<v>.json` + `index.json` + `yarn-mojmap-pairs-provenance.json`，逐件 sha 钉在后者；表里只有 `obf / mojmap / yarn` 三个类名与两侧 FQCN，不含成员名，也不是任何上游文件的原样拷贝）。读侧默认取这份 —— `mcp-server/scripts/assert-skill-mappings-key.mjs`（leg2）与 `assert-cross-layer-names.mjs` 按「仓库副本 → `$MC_SKILL_CACHE/yarn-mojmap-pairs` → tmpdir」取第一个真有 `index.json` 的落点，显式 `--pairs-dir` 一律照办；生成器 `build-yarn-mojmap-pairs.mjs` **仍只写缓存、从不写仓库**（要更新仓库副本按该目录 provenance 的 `refreshHint` 人工复制）。⇒ 干净 clone 现在判得了「键值 ↔ 正文实名」这条腿，但**Skill 正文里继续只写逐件用到的少数名字，不得整段抄表**。档数与类名对计数见 `CORPUS_PROVENANCE.md` §5。
-- ⚠️ **「Loom 新版本默认 mojmap、不必再声明 `yarn_mappings`」是错的**：mappings 一行必须显式写；官方模板用 `loom.officialMojangMappings()` 那是**显式改用 mojmap**，而 `migrateMappings --mappings` 的默认值反而是 `net.fabricmc:yarn:<version>:v2`（`develop_porting_mappings_loom` 「Other Configurations」）。
-- **闸**：含闭合围栏代码的 Skill 源稿必须声明非空 `mappings:` 键 —— `mcp-server/scripts/assert-skill-mappings-key.mjs`（挂在 `test-scripts.mjs` 默认门链）。键值与正文实名的一致性腿仍开账（台账 `skill-mappings-value-matches-code`）。
+⚠️ **「Loom 新版本默认 mojmap、不必再声明 `yarn_mappings`」是错的**：mappings 一行必须显式写。含闭合围栏代码的 Skill 源稿必须声明非空 `mappings:` 键（门：`assert-skill-mappings-key.mjs`）。
 
+派生对照表的出处与取数路径、生成器的写盘纪律、逐件披露块要求 → [`doc/fabric-yarn-baseline.md`](./doc/fabric-yarn-baseline.md)。
 ### yarn-mappings.sqlite = 「类名存在性」合法来源
 
-`data/fabric_<ver>/mappings/yarn-mappings.sqlite` 是 Fabric/Quilt 档的**第二出处**，但边界就五条，越过即失效：
+`data/fabric_<ver>/mappings/yarn-mappings.sqlite` 是 Fabric/Quilt 档的**第二出处**，但**只证存在、不证用法**：它能回答「该版本 Yarn 里有没有 `GoalSelector` 这个名字」，回答不了「怎么调、参数是什么」。**拿到 `found` 就当会写，是本门要拦的原罪。** 它**只含 vanilla 名、不含 Fabric API**；也**认不出「那是 mojmap 名」**。
 
-1. **只证存在，不证用法**。它能回答「该版本 Yarn 里有没有 `GoalSelector` 这个名字」，回答不了「怎么调、参数是什么、返回什么」。签名/流程/为什么仍须 `search_fabric_docs` 或反编译源码（`get_minecraft_source`，需 JDK 17+）。**拿到 `found` 就当会写，是本门要拦的原罪。**
-2. **只含 vanilla 名，不含 Fabric API**。`net.fabricmc.fabric.api.*` 不在 Yarn 映射里 ⇒ Fabric API 类名仍只能走本档语料（`search_fabric_docs` / `get_fabric_doc_full`），查不到就留 `// TODO(未核实)`。
-3. **它能认出"不是本档 Yarn 名"，认不出"那是 mojmap 名"**。`MobEffect` / `Level` / `ServerLevel` / `ResourceLocation` 在该档 sqlite 里 0 命中，而 Yarn 对应名（`StatusEffect` / `World` / `ServerWorld` / `Identifier`）都有类 —— sqlite 只会说"没这个名"，说不了名字的来源 ⇒ 门另持一张 `MOJMAP_ONLY` 名表。
-4. **Fabric 语料本身就是 mojmap 写的**：`data/fabric_<v>/reference/<v>/build.gradle` 钉 `mappings loom.officialMojangMappings()`。⇒ **「本档语料逐字命中」这条腿会替 mojmap 名背书**。抄语料进 Yarn 工程前必须换名并以 Yarn 源码核签名；Skill 正文引用 mojmap 原名时**必须**带「`### ⚠️ 映射口径：本档语料是 mojmap`」披露块并逐名点名，否则门红。
-5. **文件名里的 yarn 会骗人**：`data/forge_<ver>/mappings/yarn-mappings.sqlite` 实为 `forge-srg`（6 档）/ `tsrg`（1.13.2）/ `mcp-csv`（1.14.4、1.15.2）——`classes.named` 装的是 MCP `func_/field_` 名，`intermediary` 列与 `named` 逐行相同（无信息）；且 **1.14.4 / 1.15.2 的 classes/methods/fields 三表 0 行**（meta 里的计数只落在 `searge_*` 表）。⇒ 门读 `meta.mappingEra` 并要求三表真有行；**禁止**按文件名去 forge 档取 Yarn 名。
-
-执行：`node mcp-server/scripts/assert-skill-yarn-attest.mjs`（清单 = `mcp-server/scripts/skill-yarn-attest.files.txt`，只收 `fabric/` 已补正文的源稿）。Forge 档不走本门（那里没有 Yarn 名可查），改按「该标识符在本档 `data/forge_<ver>/**` 原文里逐字出现」核，查无即 `// TODO(未核实)`。判据四条：围栏代码块内标识符须「本档语料逐字命中」**或**「本档 yarn 映射命中」；负例行（同行带 禁止/未核实/零命中）不判红；命中 `MOJMAP_ONLY` 且本档映射查无的名字**必须**在披露块里点名。**两条收紧**：① 语料侧的**注释行不算出处**（上游页里被注释掉的旧示例、javadoc 续行、`<!-- -->` 段常留着早已失效的类名）；② 映射腿按**四态**读（`absent` / `unreadable` / `era` / `zero-rows` / `ok`），库**存在但读不动** ⇒ 主门直接红并点名 `SQLITE-UNREADABLE`（读失败不得塌成「查无此名」），且 `MOJMAP_ONLY` 那道否决腿的判据是「映射腿有没有**证出**该名」而非「能不能读」⇒ 毁库/清空库不再能关执法。已挂在 `test-scripts.mjs` §#17，带 `--selftest` 40 组夹具与真文件两臂。补正别人写的 Skill 时把该文件追加进清单即可。
-
+五条越界即失效的边界（含 forge 档「文件名里的 yarn 会骗人」）、`assert-skill-yarn-attest` 的四条判据与两条收紧（注释行不算出处 / 映射腿四态读）→ [`doc/yarn-mappings-boundary.md`](./doc/yarn-mappings-boundary.md)。
 ### 规则树面另有一道兄弟门
 
-`node mcp-server/scripts/assert-rules-api-names.mjs`。它**不读清单**——直接扫 `fabric/<ver>/.cursor/rules/*.mdc` 全部 154 件；棘轮基线 `mcp-server/scripts/rules-api-names-baseline.json`，豁免台账 `mcp-server/scripts/rules-api-names.exemptions.txt`（六列 TAB，`basis` 只许 `corpus:<路径>:<行>` / `mapping:<档>` / `fapi-roster` / `user-approved:<L号>` 四形，条数上界 0 且只许降）。
+`node mcp-server/scripts/assert-rules-api-names.mjs`：扫 `fabric/<ver>/.cursor/rules/*.mdc` 全部 154 件，判据 = 围栏内类名在**本档** yarn 映射查无 ∧ intermediary 等价类给出本档正解 ∧ 处强类型位 ∧ ¬限定名右段 ∧ ¬箭头简写行 ∧ 锚唯一 ∧ 非 Fabric API 碰撞名 ⇒ 红【RENAME-STALE】。真树现 0 红。
 
-- **判据**：围栏内类名在**本档** yarn 映射查无 ∧ intermediary 等价类给出本档正解 ∧ 处强类型位 ∧ ¬限定名右段 ∧ ¬箭头简写行 ∧ 锚唯一 ∧ 非 Fabric API 碰撞名 ⇒ 红【RENAME-STALE】，红行自带「本档该叫 X ｜ 锚 class_N ｜ 跨档版本链」。真树现 0 红。
-- **与 `assert-skill-yarn-attest` 的分工**：那道门管**技能源稿**的「名字有没有出处」，本门管**规则树**的「名字跟没跟丢版本」；两门映射腿共用 `mcp-server/scripts/_lib/api-name-collector.mjs`，四态读法（`absent` / `era` / `zero-rows` / `unreadable` / `ok`）与「读失败不得塌成查无此名」同口径。**Forge 档不走本门**（那里没有 Yarn 名可查）。**quilt 档同样不走本门**：两门都只扫 `fabric/`；要接 quilt 面，前置是**先建出处**（quilt-loader 的 sources jar ＋ 一个不借邻版的坐标源），不是先扩门。
-- **执法面**：挂在 `mcp-server/test-scripts.mjs` §#23，除真树 rc=0 外另有八臂活证（旧名必红 / 只换标识符必绿 / 奇偶不闭合围栏必红并逐件点名 / 从键集齐全的基线里删一条地板键必红 / FAPI 与 vanilla 同名类必须被第二否决源挡下 等）。缺基线、地板跌破同样判红；摘要件**在盘但解析不动** ⇒ 按来源分别点名 `[FAPI-SUMMARY-UNREADABLE]` / `[LOADER-SUMMARY-UNREADABLE]`（不得塌成「该档没有 FAPI 名」）。门自带 `--selftest` 与 `--measure-floors`（只打印建议值，**绝不自动写基线**）。
-- **给规则树新增类名前先跑本门**。桶 4 / 桶 5（本版没有的名字与切词器噪音）不判红，走 `--queue=<绝对路径>` 出 TSV 人工审；**桶5 不收编进豁免**：收编要么造上千条假红，要么给「豁免条数上界 0 且只许降」开永久口子 ⇒ 门改为自印三分类读数当切词器健康度看，**不进 rc、不进基线、不作判据**。
-- **改 `.cursor/rules` 正文后必须刷 7 面镜像**：`powershell -NoProfile -ExecutionPolicy Bypass -File scripts/sync-skills.ps1 -TargetDir <平台>/<档>`（该脚本会同步写入，并**删除**目标镜像目录里源稿已不存在的多余 skill/rule/command 文件）。不刷 ⇒ `assert-skill-mirrors` 真实跑档红（该门真跑已挂进 `test-scripts.mjs` 的 `REAL_RUN_GATES`）。
+- 与 `assert-skill-yarn-attest` 分工：那道门管**技能源稿**的名字出处，本门管**规则树**的名字有没有跟丢版本；**Forge / quilt 档都不走本门**（只扫 `fabric/`）。
+- **给规则树新增类名前先跑本门**。桶 4 / 桶 5 不判红（`--queue=<绝对路径>` 出 TSV 人工审），**桶5 不收编进豁免**。
+- 棘轮基线 `rules-api-names-baseline.json`、豁免台账 `rules-api-names.exemptions.txt`（条数上界 0 且只许降）；缺基线 / 地板跌破同样判红。
+- **改 `.cursor/rules` 正文后必须刷 7 面镜像**：`powershell -NoProfile -ExecutionPolicy Bypass -File scripts/sync-skills.ps1 -TargetDir <平台>/<档>`（该脚本会同步写入，并**删除**目标镜像目录里源稿已不存在的多余 skill/rule/command 文件）。不刷 ⇒ `assert-skill-mirrors` 真实跑档红。
 
-门的分片史、逐档读数与旧口径作废记录见 `mcp-server/CHANGELOG.md`。
-
+判据细则、四态读法、八臂活证与分片史 → [`doc/rules-tree-sibling-gate.md`](./doc/rules-tree-sibling-gate.md)（另有 `mcp-server/CHANGELOG.md`）。
 ### 物理端约束
 
 ```java
@@ -431,19 +348,9 @@ private void doServerThing() { ... }
 
 ## 第四步：决策树使用方式
 
-每个规则文件中的 **Decision Flow** 章节告诉你在不同场景下如何选择正确的方案。
+每个规则文件中的 **Decision Flow** 章节告诉你在不同场景下如何选择正确的方案。遇到模糊需求时，**先看 Decision Flow，再结合上下文判断**；Decision Flow 覆盖不到的分支，按「不确定时」一节的保守策略走。
 
-遇到模糊需求时，先看 Decision Flow，再结合上下文判断。
-
-示例（`01-registry.mdc` 中的决策树）：
-
-```
-Decision: 选择注册方式
-→ IF 平台 = Forge → 使用该档 01-registry（DeferredRegister 或 RegistryEvent，禁止套用邻版）
-→ ELSE IF 平台 = Fabric → 使用 Registry.register() in onInitialize
-→ ELSE IF 平台 = Quilt → 优先 QSL / org.quiltmc（见 quilt/<ver>/.cursor/rules/01-registry.mdc），不要生成 FAPI Registry 当 QSL
-→ ELSE → 询问用户
-```
+`01-registry.mdc` 的决策树完整示例（Forge / Fabric / Quilt 三支 + 兜底问用户）→ [`doc/decision-flow-example.md`](./doc/decision-flow-example.md)。
 
 ## 第五步：查阅知识库（遇到问题时）
 
@@ -466,26 +373,17 @@ Decision: 选择注册方式
 
 ## 库模组 Skill（knowledge/libs 源稿即用）
 
-涉及常用库模组（配置库 / 饰品 / GeckoLib / Patchouli / CCA / Polymer 等）的 Skill **不落盘**到平台 `.cursor/skills`，一律按解析规则直接读根目录源稿：
+涉及常用库模组（配置库 / 饰品 / GeckoLib / Patchouli / CCA / Polymer 等）的 Skill **不落盘**到平台 `.cursor/skills`，一律按解析规则**直接读根目录源稿** `knowledge/libs/<group>/mc-<name>/SKILL.md`。
 
-1. 平台 → 组映射：
-   - `forge` → `forge-only` + `all-platforms`
-   - `fabric` / `quilt` → `fabric-only` + `all-platforms`
-   - `neoforge` → `neo-only` + `all-platforms`
-   - `bedrock` → `bedrock-only`（Script API 等；禁止把 CCA/Trinkets/GeckoLib 当基岩教程）
-   - LiteLoader / Rift / ModLoader：暂无独立 Java 库组；不要把 Fabric/Forge 库 Skill 当这些加载器的 API
-2. 在组内按名称找 `knowledge/libs/<group>/mc-<name>/SKILL.md`，**直接读源稿**，不要查平台 `.cursor/skills` 的库项（那里已清理，不存在库项）
-3. 用 frontmatter 二次过滤：`platforms`（组是主依据，白名单防组内误放）、`mcVersions`（留空/未写 = 不限版本；非空则必须包含目标 MC 版本；与 knowledge/libs/README.md §3.6 及解析代码一致）
-   - **版本标记是坐标唯一真值**：库 skill 若带 `versions.json`（当前：`knowledge/libs/fabric-only/mc-cloth-config/versions.json`），**写依赖坐标前必须读它对应 MC 版本的 slot**（`coord` / `state` / `basis`）；**`state != active`（`commented` / `todo`）一律不采纳**——`todo` 即 `TODO(未核实)`，**不许按邻居档推**。中心稿 SKILL.md 的「版本映射表」是证据说明，**不是取值入口**。
-   - **档内手稿优先（档内工程）**：`fabric/<v>/.cursor/skills/mc-<lib>.md` 的 `<!-- cloth-version-inject v=… coord=… state=… textApi=… -->` 标记行是该档实况，由 `scripts/project-cloth-skill.mjs` 按 versions.json 回填（**禁止手改标记行**）——直接读它，不要从中心稿表格抄。
-   - 这两条由 `mcp-server/test-core.mjs` §S14（注入标记 ↔ versions.json 一致性）与 §S15（`resolve-lib-skills --validate` 解析链校验）自动闸住；维护侧失步即红。
-4. 不确定该用哪个库 Skill → 先读 `knowledge/libs/all-platforms/mc-lib-catalog/SKILL.md`；完整清单见 `knowledge/libs/README.md`
-5. **禁止**把 Fabric 专属库（Trinkets / CCA / Polymer / Text Placeholder 等）当 Forge 教程；Forge/NeoForge 饰品用 `mc-curios`（`forge-only`），Fabric 用 `mc-trinkets`（`fabric-only`）
-6. **配置不要新写树级 `mc-config` Skill**：配置**原则**一律读 `knowledge/libs/all-platforms/mc-config/SKILL.md`（工作流 `mc-config`）。**调用 `generate_config` 只限工具支持的四个平台 —— `forge` / `neoforge` / `fabric` / `quilt`**（`mcp-server/src/generators/index.ts` 的 `generateConfig(loader)` 枚举即此四者，且它没有 `platform` 参数）；**`LiteLoader` / `Rift` / `ModLoader` / `基岩` 不要调用 `generate_config`**（平台面不含它们，只有拒绝文案）——这些档的配置走各档自述 / pack JSON / Script，也不要套 Cloth / ForgeConfigSpec。
-   - **选型建议与工具默认不同源不是矛盾**：`generate_config` 在 fabric / quilt 上**默认永远吐 Cloth Config 骨架**；YACL 只能作为**用户显式 opt-in** 的结果出现（`library` 参数已实现：枚举 `cloth | yacl`，**默认 `cloth`**，不传即现状；只有显式 `--library=yacl` 才换 YACL 骨架，禁止把默认改成 yacl）。
-   - **第三方配置库不是 loader API（强制）**：Cloth / YACL / Fzzy / owo 等的方法名与注解，必须先由用户自备 jar 走 `ingest_loader_api` 入库（默认 dryRun，只写 `$MC_SKILL_CACHE/loader-api-summaries` overlay，禁写仓库 `data/`）并逐签名核对后才能写进骨架。**`library=yacl` 尤其如此：该用户必须另外对自己的 yacl jar 跑一次 `ingest_loader_api`，否则返回的只是带 `// TODO(未核实)` 的结构壳、编译不过。**未入库 → `query_loader_api` 只回 `found:false`，此时**只能**留 `// TODO(未核实)`，禁止凭训练记忆补方法链。
-   - 本条与上面第 5 条同源：平台库 Skill 按组映射，`generate_config` 按 loader 枚举。两个面都由 `mcp-server/scripts/assert-config-platform-face.mjs` 与本条正文对齐，**单侧改动即红**（子档改了禁令而根纲没跟上、或根纲写成「一律 generate_config」，都会被抓）。
+四条定性与禁令（**必须遵守**）：
 
+- **组映射**：`forge` → `forge-only`+`all-platforms`；`fabric`/`quilt` → `fabric-only`+`all-platforms`；`neoforge` → `neo-only`+`all-platforms`；`bedrock` → `bedrock-only`；LiteLoader / Rift / ModLoader 无独立库组。**禁止**把 Fabric 专属库（Trinkets / CCA / Polymer / Text Placeholder）当 Forge 教程；Forge/NeoForge 饰品用 `mc-curios`，Fabric 用 `mc-trinkets`。
+- **版本标记是坐标唯一真值**：带 `versions.json` 的库 skill，写依赖坐标前必须读对应 MC 版本的 slot；**`state != active` 一律不采纳**，**不许按邻居档推**。
+- **配置不要新写树级 `mc-config` Skill**：配置**原则**一律读 `knowledge/libs/all-platforms/mc-config/SKILL.md`（工作流 `mc-config`）。**调用 `generate_config` 只限工具支持的四个平台 —— `forge` / `neoforge` / `fabric` / `quilt`**（`mcp-server/src/generators/index.ts` 的 `generateConfig(loader)` 枚举即此四者，且它没有 `platform` 参数）；**`LiteLoader` / `Rift` / `ModLoader` / `基岩` 不要调用 `generate_config`**（平台面不含它们，只有拒绝文案）—— 这些档的配置走各档自述 / pack JSON / Script，也不要套 Cloth / ForgeConfigSpec。
+  - **选型建议与工具默认不同源不是矛盾**：`generate_config` 在 fabric / quilt 上**默认永远吐 Cloth Config 骨架**；YACL 只能作为**用户显式 opt-in** 的结果出现（`library` 参数已实现：枚举 `cloth | yacl`，**默认 `cloth`**）。
+- **第三方配置库不是 loader API**：Cloth / YACL / Fzzy / owo 的方法名必须先由用户自备 jar 走 `ingest_loader_api` 入库并逐签名核对；未入库**只能**留 `// TODO(未核实)`，禁止凭训练记忆补方法链。
+
+完整组映射表、frontmatter 二次过滤细则、`generate_config` 的 `library=cloth|yacl` 行为、两条自动门（`test-core` §S14/S15）与 `assert-config-platform-face` 的对齐要求 → [`doc/lib-skills.md`](./doc/lib-skills.md)。
 ## 不确定时
 
 永远选择**保守**方案：
@@ -545,72 +443,33 @@ Decision: 选择注册方式
 
 ### 工具边界（禁止误判）
 
-完整对照表见根目录 `README.md`「工具边界」。调用前必须遵守：
+**优先语义搜索**：查 API / 文档 / 机制先用 `search_*_docs`；`query_api` / `query_loader_api` 是**兼容工具**（每次响应带兼容警告），仅作兜底。
 
-- **优先语义搜索；`query_*` 是兼容工具**：查 API/文档/机制，先用 `search_forge_docs` / `search_fabric_docs` / `search_neoforge_docs` / `search_docs`（语义索引按档在盘），`query_api` / `query_loader_api` 仅作兜底——它们的每次响应都带兼容警告，1.14.4/1.15.2 还会显式报告「api-index 为空」边界。
-- **检索命中 ≠ 该名字存在（verbatim 逐字支撑位）**：查询是**单个标识符形态**（类名 / 方法名 / FQCN / 资源路径；散文与 `|` 分组不判）时，每条命中多带一个 `verbatim`——`true` = 该名字在该页正文**逐字**出现（**点号 / FQCN 查询降级成「末段类名逐字」这一层**：语料几乎不写点号全名，所以命中层写在行级 `verbatimOn`、整体构成在 `verbatim_summary.matchedOn` = `term`／`tail`／`mixed`；读到 `tail` 就**不能**据此断言你输入的那串点号全名在语料里出现过）；`false` = 已读到该页正文且确认没有；**没有该字段 = 未判定**（薄档 / primer / porting 旁路 / 取不到正文），**未判定不等于「语料里没有这个名字」**。要签名就 `get_*_doc_full` 读正文，确认不了就留 `// TODO(未核实)`。该位只事后标注，不改命中集合、顺序与 `total`（闸：`mcp-server/scripts/assert-verbatim-support.mjs`）。
 - **`total` 只是本次条数，判截断看 `totalPool` / `truncated`**：8 个文档检索发射点的载荷**无条件**带这两位（不传 `limit` 也在）：`totalPool` = 进输出窗口之前该面手里可用的候选条数，`truncated` = (`total < totalPool`)。⇒ 本面的 `total` 就是**本次返回条数**（不是语料命中总数，且随你传的 `limit` 变）：`truncated:false` = 本面在手候选已取尽，`true` = 还有页没返回（放宽 `limit` 或换 `tags` 可取回）。**三条边界**：① 该池只到「本面可得」这一层，**不是语料全量**；② `limitWindow.candidates` 在多数面仍是**窗口**不是池；bedrock 面的窗口块挂在 `demotion.{requestedLimit,resultLimit,candidateLimit,candidates,limitMax}` 下而不是顶层 `limitWindow` —— **这是契约不是待修项**；③ 这一族与 `search_loader_api`／`query_upstream_releases`／`search_mod_code` 的 `total`（那三面报的才是全池）**符号相反**，照抄会反。执法：`mcp-server/scripts/assert-total-semantics-wording.mjs` 判据 6。
-- **`found:false` ≠ 游戏里没有该类**：多半是索引覆盖范围外，或简名歧义（`Handler` 不会命中 `MouseHandler`）。1.12.2 只有 SRG 类名与 `func_/field_` 成员名（与 26.1+ 零类不同）；**1.14.4/1.15.2 是空索引档（该档 docs 语料与语义索引反而完整）**；Forge 特有类改 `query_loader_api` / `search_*_docs` 或反编译。
-- **加载器/模组 API 的静态字段名不在 `query_loader_api` 能力内**（摘要只收类 + 方法签名，`fields` 恒为 0）⇒ 它**答不了字段名**，也不要用 `ingest_loader_api` 去「复现」字段名结论。字段名按**四档出处**落笔，四档不得混称：**① 语料逐字**（本仓 `data/**` 上游正文可复核 —— 仍然只有 `BLOCKS` / `ITEMS`）；**①b 官方构件逐字**（自备 jar 可复核、构件不入库）；**② 处方-only**（只有本档 rules/skills 自撰，无外部出处）；**③ 外部-only**（仓内不可复核）；**④ 证伪（不是未核实）**—— 例：1.18.2 **没有**流体类型注册表，流体走 `FLUIDS`，修法是删 / 改写那些表行，**不是**改名成 `FLUID_TYPES`。⚠️ **禁止把本档规则行当外部出处（那是循环引证）**：那只能当「现状长什么样」读。四档都给不出的名字留 `// TODO(未核实)`，禁止凭训练记忆补。逐档字段名证据与复核入口见 `CORPUS_PROVENANCE.md` §6。
-- **`search_*_docs` 查 `constructor` 崩溃**：旧 bug（`Object.prototype`）；已修。改完 `mcp-server` 后必须 `npm run build` **并重载 MCP**，或用 `node mcp-server/dist/cli.js` 验证。
-- **平台工具不要混用**：`get_version_info` 仍仅 Forge。`diagnose_gradle` 覆盖 ForgeGradle + Loom + Neo/MDG；liteloader 插件走轻量模式；Rift / BaseMod / 基岩仍早退。`validate_project` 对 Fabric/Quilt/NeoForge 做真检查，LiteLoader/Rift/ModLoader/基岩 skipped。基岩用 `validate_addon_manifest`。
-- **文档 fallback 仅限查询 API**，不代表规则树可用；命中邻近版时结果含 `fallback: true` 与 `source_version`。本版无树则 `PACK_NOT_FOUND`。
-- **「本仓没入库」≠「上游没有」**（`query_upstream_releases` 存在的理由）：`list_forge_versions` / `list_fabric_versions` / `list_neoforge_versions` / `list_doc_versions` 列的都是**本仓库已入库**的文档档位，不在清单只说明本仓没抓过。要回答「上游有没有该版本 / 最新到哪个 build」用 `query_upstream_releases`，并按三态读：`ok:false` ⇒ 没查到（网络/HTTP/解析），**禁止**据此断言上游没有；`ok:true` + `available:false` ⇒ 上游确实没有。`matchRule` 回显本次的版本归属规则（neoforge 尤其要记：MC `1.21.1` → 版本前缀 `21.1.`）。
-- **文档 `id` 只用搜索结果**，不要用网站 URL；全文一次 ≤ 2 页。
-- **社区短文不能当 API 规范**（`community_knowledge/AGENT_USAGE.md`）。
-- **CLI 的 schema 拒绝已机读（2026-09-25 S6-②）**：`errorKind:"validation"` 的信封另带 `fieldErrors[]`（`{field, code, message, expected?, received?, enumValues?}`；缺必填折成 `MISSING_REQUIRED`，枚举违规给 `INVALID_ENUM_VALUE` + `enumValues`）。要按字段分支就读这个键，**不要再解析 `error` 里那条中文串**（串仍在，给人和旧消费者读）。`mcp-server` 内部生成器那层的机读码是 `result.action.code` + `resultKind`（见 A1），两套不是一回事。
-- **人在环 / 写盘类默认 dryRun**（`port_project` / `mc_skill_update apply` / `activate_platform_pack write`）；`generate_*` 只吐文本。`get_workflow_template` 是清单不是流水线。Gradle、拷 jar、上传发布须用户确认后执行，不要当成漏实现的自动编排。
-- **不要克隆版本文档**（1.21 wiki ≠ 26.1.2；26.1 ≠ 26.2）。
-- **正文里的 `<<< @/…` 与 `@[code …]` 是转引标记，不是可照抄的代码**：`get_doc_full` / `get_fabric_doc_full` 返回的正文已由 reader（`mcp-server/src/docs-platform/fabric/transclude.ts`）展开成围栏代码块，块尾带 `<!-- source: … -->`。若返回正文里**仍有裸标记行** ⇒ 该页取件目标未落盘，属缺陷：不要把标记贴给用户，也不要凭训练记忆补正文，改口 `query_loader_api` / 用户自备 jar 核实。
-- **「本档 docs 零命中」≠「该 API 不存在」**：官方文档的示例常写在 `<<< @/reference/...` include 内，`reference/` 是另一棵目录；检索按页面正文计。同理 `query_api` 的 `found:false` 只说明索引未覆盖。
-- **口径以 [`CONTRIBUTING.md`](./CONTRIBUTING.md) §数据链口径为准**：标签读法（`[Label]` 是标签页标题、非数字花括号是选项、区段名先逐字再 `-`↔`_`）、计数器分母（`sites`/`expanded` 只算 `@[code`，`<<<` 走 `angleSites`）、台账与豁免规则、`packages` 归属与「不可当 import 依据」。
-- **验证纪律见 [`CONTRIBUTING.md`](./CONTRIBUTING.md) §验证纪律**：改了 `mcp-server/scripts/**` 或 `scripts/**` 后，收口**必须**跑第 8 步（`cd mcp-server && node test-scripts.mjs`）——`npm test` 里抽跑几道门**不能**代替它；harness 里的硬钉锚点/计数只许「先对齐生产侧、再改 harness」，禁止靠删断言变绿；`npm test` 不得与语料抓取并发（4000 ms lag 门与磁盘负载耦合，会假红）。CLI 侧另有两档独立门：`npm run test:cli:quick`（`mcp-server/scripts/assert-cli-quick.mjs`，进默认门链）与 `npm run test:cli:full`（`mcp-server/scripts/assert-cli-full.mjs`，全量档（权威名单跑时现取），不默认跑；改动 CLI 入口/退出码/信封后应补跑）。
+
+**其余全部边界**（`found:false` ≠ 类不存在、verbatim 逐字支撑位、加载器字段名四档出处、平台工具不得混用、「本仓没入库」≠「上游没有」等）→ [`doc/tool-boundaries.md`](./doc/tool-boundaries.md)；完整对照表见根目录 `README.md`「工具边界」。
 
 ### 工具不可用排查（clone 后必读）
 
-- **MCP 工具全部调用失败（服务未启动）**：说明 `mcp-server/dist/` 未编译（dist 不入库）。执行：
-  ```bash
-  cd mcp-server && npm ci && npm run build
-  ```
-  （Node 需 >= 22.5；Yarn 映射可再 `npm run build:yarn-sqlite`。配置宿主见 `AUTO_SETUP.md`：先识别 IDE/CLI，再按该宿主的文件与顶层键合并草稿，不要默认写 Cursor 的 `mcp.json`。）
-- **无 MCP 客户端时**：可用独立 CLI 调用任意工具——`node mcp-server/dist/cli.js <工具名> --参数=值`（通用 dispatch，89 工具全可用；如 `search_docs` / `check_dependencies` / `analyze_mod_jar` / `resolve_lib_skills`）。工程类工具可加 `--project <dir>`（映射到 `projectPath`）。工具输出始终为 JSON；`--json` 不改变工具输出，仅为兼容保留；它只在交互式终端下影响 `--help` 的呈现（人读摘要 → 机器可读 schema），表达格式意图用 `--output-format json`（当前唯一合法值）。
-- **CLI 双入口（2026-09-17 提级）**：**工具线** = 上面的 `dist/cli.js`（与 MCP 同一份 `toolHandlers`）；**仓库线** = `node mcp-server/bin/mc-skill-scripts.mjs <lib|corpus|cloth|gate> <命令>`（薄壳转发 `scripts/` 与 `mcp-server/scripts/` 的既有脚本）。仓库线属**维护侧**作业（批量反编译、摘要重建、G1 门、注入标记回填），MCP 工具面不暴露；两者互不分叉；冒烟门 `assert-cli-smoke`（test-core §S16）。安装/链接 mcp-server 包后，两入口的 bin 名分别为 mc-skill 与 mc-skill-scripts。
-- **`get_server_status` 返回 `buildStatus.buildRequired=true`**：src 有比 dist 更新的修改，需重新 `npm run build`，然后**重载宿主 MCP**（只编 dist 不够， AI IDE 进程仍跑旧代码）。
-- **反编译工具报 `TOOLCHAIN_MISSING`**：需要 Java 17+（VineFlower/tiny-remapper）；安装 Temurin 17+ 后重启 MCP，或按返回指引操作。
-- **`search_mod_code` 报 `NOT_DECOMPILED`**：反编译源码尚未生成（按设计不入库），按返回指引先调 `decompile_mod_jar` / `get_minecraft_source` 按需生成。（此前本行误写 `NOT_FOUND`；`src/decompile/index.ts` 发的是 `NOT_DECOMPILED`。）
-- **`PLATFORM_DATA_MISSING`**：对应平台文档数据缺失，先调 `diagnose_data_paths` 确认 `MC_SKILL_DATA` 指向本仓库 `data/`。
+工具全不可调 ⇒ 先查 **`dist/` 编译了没有**（`cd mcp-server && npm run build`），再查 **宿主重载了没有**——宿主里正在跑的进程不会自动换成新 `dist/`。要立刻验证改动用 `node mcp-server/dist/cli.js <tool>`。
 
+逐项排查清单（按症状分：编译 / 数据路径 / 宿主未重载 / Node 版本 / sqlite 边界）、每项对应的失败读数与修法 → [`doc/mcp-troubleshooting.md`](./doc/mcp-troubleshooting.md)。
 ## 游玩测试要求（交付门槛，每轮强制）
 
 模组是给用户玩的产品，不是编译过就完事的代码。**任何功能改动，先按下面的阶梯测到与改动面相称的层级，再把证据写进交付底稿的「怎么验」块（`REPORT-FORMAT.md` 主档第 2 块）。** 没测就说没测：**不得**把「编译通过」写成「功能可用」，也不得把「没有崩溃」写成「测试通过」。
 你添加的任何物品,实体,机制必须全面的以玩家角度使用并测试,覆盖使用的可能的玩家行为
 ### 阶梯：逐层向上，低层红不许跳高层
 
-| 层 | 测什么 | 用什么测 | 红会长什么样 |
-| --- | --- | --- | --- |
-| **L0 构建** | 编译产出 jar | `gradlew build`；构建配置问题走 `diagnose_gradle` | 编译错 / `BUILD FAILED` |
-| **L1 结构与静态** | 工程骨架、平台元数据、依赖、Mixin、AT/AW、资源引用 | `validate_project`、`check_dependencies`、`mixin_analyze`、`validate_at` / `validate_aw`、`audit_resources` | `mods.toml` 的 id 与代码不符、引用不存在的类、模型指向缺失纹理 |
-| **L2 数据面** | 配方 / 战利品 / 标签 / 进度 / 方块状态 / lang 键 | `validate_datapack_json`；基岩 `validate_bp_json` / `validate_addon_manifest` | JSON 被拒、普通合成缺 `result`、lang 缺键 |
-| **L3 自动化功能** | 注册、逻辑、副作用（不必真人玩） | GameTest（工作流 `mc-gametest`） | 断言失败，或测试根本没注册 |
-| **L4 真机冒烟** | 进得去世界，能移动 / 破坏 / 开 GUI / 翻背包 | `generate_playtest_driver scenario=smoke`（已验证档出真 driver）；桥路线 `playtest_bridge` | `exit-code.txt` = `1`；截图停在菜单 |
-| **L5 场景验收** | **本次改动**那个玩家可见行为 | 自定义 `plan` DSL 或意图会话；后置条件 `block_state` / `entity_count` / `inventory_contains` / `marker_log` / `screen_present` | 断言不成立 / 超预算判红 |
-| **L6 服务端与多人(日常可选,由用户判断做不做)** | 专用服起得来、客户端连得上、状态同步 | 工作流 `mc-server-multiplayer-test`；`runServer` | 服务端启动崩溃、两侧状态不一致、权限报错 |
-| **L7 回归与共存(日常可选,由用户判断做不做)** | 改动前的功能不劣化；与其他 mod 同装 | 同一次会话连做多轮（改 `plan.txt` 热载，不重启）；工作流 `mc-modpack` | 旧断言转红、注册名 / 事件冲突 |
-| **收口** | 发布前清单 | `check_publish_ready`；工作流 `mc-publish` | license / version 缺项，`build/libs` 不像正式 jar |
+**L0 构建 → L1 结构与静态 → L2 数据面 → L3 自动化功能 → L4 真机冒烟 → L5 场景验收 → L6 服务端与多人（日常可选）→ L7 回归与共存（日常可选）→ 收口（发布前清单）**，低层红不许跳高层。
 
 **最低测到哪层，按改动面取最大者**：改逻辑 → 至少 L3。改玩家可见行为（方块 / 物品 / 实体 / GUI / 配方效果 / 世界生成）→ 至少 L4 + L5。改网络、存档或服务端侧 → 必须 L6。升 loader 或 MC 版本 → L0–L7 全跑。纯注释 / 文档改动 → 到 L0 即可。
 
+逐层「测什么 / 用什么测 / 红会长什么样」→ [`doc/playtest-ladder.md`](./doc/playtest-ladder.md)。
 ### 「全面」= 把维度铺开，不是同一条路径多跑几遍
 
-- **改动面**：代码、资源、数据（datagen 产物）、配置、`build.gradle`、平台元数据 —— 动了哪块测哪块，别只测代码。
-- **平台 × 版本**：用户实际那一档必须真跑过。跨平台移植或跨版本升级，每个目标档各测一遍，**不许**拿邻版的绿顶替。
-- **客户端 / 服务端 / 双侧**：side-aware 代码（`@OnlyIn`、`Dist` 分支）两侧都要起过；只跑 `runClient` 不算测过服务端。
-- **存档状态**：新世界（首次进）与旧存档（升级 / 迁移）都要进过，见工作流 `mc-save-migration`。
-- **权限档**：生存（`capabilityProfile=strict_survival`，fail-closed）与创造 / 授权（`operator` / `creative`）按功能实际用到的各覆盖一次。
-- **边界与异常**：空 / 满背包、目标方块不存在、区块未加载（先 `forceload`）、玩家死亡与重连、非房主加入。
-- **表现面**：模型 / 纹理 / 光照、GUI 文字溢出与界面缩放、本地化（每个 lang 键在 `en_us` 与 `zh_cn` 都有值）。
-- **日志面**：`latest.log` 无新增 `ERROR` / 异常栈（`inspect_runtime` / `analyze_log`），`crash-reports/` 为空；基岩看 content log（`analyze_bedrock_log`）。
+**六个维度**：改动面（代码 / 资源 / 数据 / 配置 / `build.gradle` / 平台元数据）、平台 × 版本、客户端 / 服务端 / 双侧、存档状态（新世界 + 旧存档）、权限档、边界与异常；外加表现面与日志面。
 
+各维度的逐条判据（什么算覆盖、怎么造场景、该看哪条日志）→ [`doc/playtest-dimensions.md`](./doc/playtest-dimensions.md)。
 ### 判红规则（fail-closed）
 
 - **缺证据 = 没通过**。`inspect_playtest_evidence` 读出 `absent` **不得**当「没有失败」；`exit-code.txt` 非 `0` 或不在盘上 ⇒ 红。
