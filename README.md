@@ -420,7 +420,7 @@ MCP 宿主里工具全不可调 ⇒ 多半是 `dist/` 未编译或宿主未重�
 
 ### 两个一等公民入口：MCP 与 CLI
 
-同一条 core、两个适配器（**互不分叉**）：MCP（stdio，给 AI 宿主）与 CLI（终端 / 脚本，给人）。前提与 MCP 相同：Node ≥ 22.5 + `cd mcp-server && npm ci && npm run build`（CLI 跑 `dist/`）。
+同一条 core、两个适配器（**互不分叉**）：MCP（stdio，给 AI 宿主）与 CLI（终端 / 脚本，给人/AI）。前提与 MCP 相同：Node ≥ 22.5 + `cd mcp-server && npm ci && npm run build`（CLI 跑 `dist/`）。
 
 #### 入口一：工具线（= MCP 工具，全量可调）
 
@@ -546,7 +546,7 @@ node mcp-server/dist/cli.js search_forge_docs --version=1.14.4 --query="entity g
 9. 查询用类名或短词（`Block`、`class:RegistryEvent`）。失败先换短查询或改走 `search_docs`，不要把崩溃/空结果当成「该版没有文档」。
 10. **改完 `mcp-server` 源码后**：`npm run build`，然后在宿主里**重载 MCP**。Cursor 里正在跑的进程不会自动换成新 `dist/`；用 `node mcp-server/dist/cli.js` 才能立刻验证。
 
-### 工具陷阱（实测，同类问题）
+### 工具陷阱
 
 下表现象都出自索引 / 查找写法或文档过时，不代表游戏里没有该类：
 
@@ -627,13 +627,13 @@ Agent **不得**把「工具返回空 / found:false / warning」解释成「游�
 
 写模组时的选用顺序：平台规则（`AGENTS.md`）→ `search_*_docs`（平台 API）→ `query_api`（仅有索引的 Vanilla）→ 反编译（确实要源码）。不要反过来用 `query_api` 猜 Forge 事件名。
 
-### 工具与网络边界（只写边界，不写结论）
+### 工具与网络边界
 
-下列两条**本机核不到上游本身**（能核的只有通道，见下表）。这里登记的是「不许推出什么」，不是「已核实为否」。
+下列两条**核不到上游本身**（能核的只有通道，见下表）。这里登记的是「不许推出什么」，不是「已核实为否」。
 
 | 边界 | 已核实到的程度 | 禁止的推断 |
 |------|----------------|------------|
-| 外网可达性只能核到**本机通道**层面，不是「通 / 不通」一个布尔 | `download_official_mdk` 的 pin commit、`mc_skill_update` 的 Release、以及规则/AGENTS 里钉的 example-mod commit 短哈希，都只能在可达网络下复验。实测：**Node `fetch`** 对 `raw.githubusercontent.com` 与 `services.gradle.org` 一律 `TLS_VERIFY_FAILED`（同口径见 `$MC_SKILL_CACHE/loader-api-summaries/fetch-qsl-last.json` 台账）；**同一 URL** 换 `curl.exe --ssl-no-revoke` GET = `200`（719 B / 0.1s），`services.gradle.org/distributions/…` = `307`；`api.github.com` 的 `git/trees?recursive=1` 单次 12s 超时（未复测） | **本机拉不到 ≠ 上游不存在 / 校验和不对 / 那个 commit 是假的**；也**不得**把 TLS 类失败记成 `NOT_FOUND` 或「缺档」。相关条目保持「未核实」标注，换网络或让用户在本机复验，不要改成另一套自猜的值 |
+| 外网可达性只能核到**此机器通道**层面，不是「通 / 不通」一个布尔 | `download_official_mdk` 的 pin commit、`mc_skill_update` 的 Release、以及规则/AGENTS 里钉的 example-mod commit 短哈希，都只能在可达网络下复验。实测：**Node `fetch`** 对 `raw.githubusercontent.com` 与 `services.gradle.org` 一律 `TLS_VERIFY_FAILED`（同口径见 `$MC_SKILL_CACHE/loader-api-summaries/fetch-qsl-last.json` 台账）；**同一 URL** 换 `curl.exe --ssl-no-revoke` GET = `200`（719 B / 0.1s），`services.gradle.org/distributions/…` = `307`；`api.github.com` 的 `git/trees?recursive=1` 单次 12s 超时（未复测） | **本机拉不到 ≠ 上游不存在 / 校验和不对 / 那个 commit 是假的**；也**不得**把 TLS 类失败记成 `NOT_FOUND` 或「缺档」。相关条目保持「未核实」标注，换网络或让用户在本机复验，不要改成另一套自猜的值 |
 | 基岩 `description.identifier` 等命名空间 ID 的长度上限与字符集 | Microsoft Learn 只规定要带命名空间，**未**给出长度上限与允许字符集；社区只给「小写、无空格/特殊字符」「路径长度受主机限制」这类**建议** | **不要把建议当硬限制**，也不要因 Learn 没写就断言「无限制」。`validate_addon_manifest` / `validate_bp_json` 不据长度/字符集报错；生成 ID 时按建议取保守形式并说明这是约定不是官方约束 |
 
 fetch 通道矩阵（写维护脚本时按这张表选腿；任一腿失败推不出「这台机器没网」）：
@@ -734,7 +734,7 @@ Cursor 主路径是 **tools**；协议层仍注册 Prompt/Resource，工具兜�
 
 
 
-## Agent Skills（**35** 个 Forge 唯一名 + 平台扩展，多 IDE 镜像）
+## Agent Skills
 
 路径示例：`forge/1.20.1/.agents/skills/<name>/`（另有 `.cursor` / `.continue` / `.opencode` / `.zcode` 等宿主镜像；DSH 与 Codex 共用 `.agents/skills`，不另建镜像目录）。Wave D 新增 skill 曾用 `scripts/_oneoff/propagate-wave-d-skills.mjs` 同步（一次性，勿再跑），日常镜像用 `scripts/sync-skills.ps1 -All`。
 
