@@ -79,6 +79,10 @@ export const BRIDGE_MOD_TARGETS: readonly BridgeTarget[] = [
   { platform: "forge", version: "1.10.2" },
   { platform: "forge", version: "1.11.2" },
   { platform: "forge", version: "1.12.2" },
+  // rift 两档**同一份模板**：MC 侧名字都来自 `data/forge_1.13.2/mappings`（MCP 快照 `20180921-1.13`），
+  // Rift 侧 API 同为同一构件的 39 个 listener 接口 ⇒ 1.13 与 1.13.2 共用。1.13 是原生档（件内
+  // `profile.json` 的 `inheritsFrom`=1.13），1.13.2 是社区分支实验档。
+  { platform: "rift", version: "1.13" },
   { platform: "rift", version: "1.13.2" },
   { platform: "modloader", version: "1.6.4" },
 ];

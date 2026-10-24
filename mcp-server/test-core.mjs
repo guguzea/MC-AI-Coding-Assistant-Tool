@@ -6603,7 +6603,7 @@ function findMalformedPins(table) {
 const WRAPPER_VERSION_GAPS = [
   "liteloader/1.12.2", "modloader/1.6.4",
   "neoforge/1.20.1",
-  "rift/1.13.2",
+  "rift/1.13", "rift/1.13.2",
 ];
 // Java 平台档的 scaffold 一律是 <平台>/<版本>/scaffold；bedrock/scaffold 是 RP/BP 目录、不含 Gradle，
 // 故不在扫描平台内。neoforge/scaffold 是平台级共享模板（不是注册档，无 pack.meta.json）。
@@ -6838,7 +6838,8 @@ async function testScaffoldWrappers() {
   assert.equal(findMalformedPins({ "8.4": { ...WRAPPER_JARS["8.4"], gradlewBatSha: "", size: 0 } }).length, 2, "batSha / size 必须分别报错");
 
   const { seen, problems, declaredCount, byVersion, noProps } = scanScaffoldWrappers(REPO_ROOT);
-  assert.equal(seen.length, 48, `全仓 Java scaffold 应为 48 档，实际 ${seen.length} → ${seen.join(",")}`);
+  // 49 = 48 + `rift/1.13`（2026-10-23 新建的原生档；它自带 scaffold，见 `rift/1.13/scaffold/`）
+  assert.equal(seen.length, 49, `全仓 Java scaffold 应为 49 档，实际 ${seen.length} → ${seen.join(",")}`);
   assert.equal(declaredCount, 44, `已声明 Gradle 版本、三件套应完整的 scaffold 应为 44 档，实际 ${declaredCount}`);
   const fabricSeen = seen.filter((k) => k.startsWith("fabric/"));
   assert.equal(fabricSeen.length, 14, `fabric/*/scaffold 应为 14 档，实际 ${fabricSeen.length}`);

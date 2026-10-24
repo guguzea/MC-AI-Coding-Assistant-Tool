@@ -67,12 +67,27 @@ Follow each package’s license as published on npm（`@xenova/transformers` 为
   `paper-api_1.21.4` = 1871 类（`1.21.4-R0.1-SNAPSHOT`）· `paper-api_1.21.1` = 1702（`1.21.1-…`）·
   `paper-api_1.20.1` = 1496（`1.20.1-…`）· `paper-api_1.16.5` = 1254（`1.16.5-…`）· `paper-api_1.12.2` = 877（`1.12.2-…`）。
   每页 frontmatter 带 `source:`（类页绝对 URL）、`sourceType: javadoc`、`fetchedWith:`、`fetchedAt:`、**`asOfVersion:`**（上游真实版本串）
-- **版本口径（2026-10-23 修正）**：**Spigot 侧 URL 确实没有版本轴**（`/spigot/1.21.4/` 实测 404）⇒ 只能落**伪版本 `stable`**；
-  **Paper 侧有**（`jd.papermc.io/paper/<ver>/`，实测 26.3 / 1.21.8 / 1.21.4 / 1.21.1 / 1.20.1 / 1.19.4 / 1.16.5 / 1.12.2 首页全 200）
-  ⇒ Paper 的**历史档按真 MC 版本**落 `data/paper-api_<ver>/paper-javadoc/<ver>/`，只有"当前文档"那一档保留伪版本 `stable`。
-  真实版本串一律留在 `asOfVersion`（取自站点 `index.html` 的 `<title>`；取数器对 `--version` 做**双向对钉**，不一致即拒）
-  复跑：伪版本档 `--version <上游真实串> --pseudo-version stable --out data/<face>_stable/<face>-javadoc/stable`；
-  真版本档 `--version <ver>-R0.1-SNAPSHOT --pseudo-version <ver> --out data/paper-api_<ver>/paper-javadoc/<ver>`
+- **Spigot 的八个版本档走的是另一条路（构件，不是 javadoc 页）**：`data/spigot_<ver>/spigot-javadoc/<ver>/` 由
+  **`mcp-server/scripts/extract-spigot-api-surface.mjs`** 从 maven 构件 `org.spigotmc:spigot-api:<ver>-R0.1-SNAPSHOT`
+  的 **`javap` 直读**生成（每页 `sourceType: javap` + `jarMd5`；`raw/` 存 `javap` 原文）。八档实测：
+  `1.21.8` 1352 类 / `1.21.4` 1335 / `1.21.1` 1282 / `1.20.6` 1251 / `1.20.1` 1186 / `1.19.4` 1173 / `1.16.5` 1027 / `1.12.2` 779
+  （成员签名 15284 / 15018 / 12784 / 12496 / 9440 / 9311 / 7875 / 6213）。目录名沿用平台的 `spigot-javadoc` 子目录
+  （`PLATFORM_DOC_SUBDIR.spigot`），**不代表它是 javadoc HTML 抽取** —— 来源以 `sourceType` 与 `meta.json` 的
+  `faceKind: signature-face-from-artifact` 为准。
+- **版本口径（2026-10-24 再修正）**：分三块看，别混：
+  - **Spigot 的 javadoc 页**：URL **没有版本轴**（`/javadocs/spigot/1.21.4/` 实测 404；`/javadocs/bukkit/` 与
+    `/javadocs/spigot/` 返回同一份当前文档）⇒ 那一档只能落**伪版本 `stable`**（`data/spigot_stable/spigot-javadoc/stable/`）。
+  - **Spigot 的构件**：maven 上**有版本轴**（`org/spigotmc/spigot-api` 的 `maven-metadata.xml` 实测 **83 个版本**）⇒
+    八个历史档从构件 `javap` 抽（见上一条）。
+  - **Paper 的 javadoc**：URL **有版本轴**（`jd.papermc.io/paper/<ver>/`，实测 26.3 / 1.21.8 / 1.21.4 / 1.21.1 /
+    1.20.1 / 1.19.4 / 1.16.5 / 1.12.2 首页全 200）⇒ 历史档落 `data/paper-api_<ver>/paper-javadoc/<ver>/`，
+    只有"当前文档"那一档保留伪版本 `stable`。
+
+  真实版本串一律留在 `asOfVersion`（javadoc 档取自站点 `index.html` 的 `<title>`，取数器对 `--version` 做**双向对钉**，
+  不一致即拒；构件档取自 maven 的 `<snapshotVersion>` 时间戳串 + `meta.json` 的 `artifact`/`jarMd5`）。
+  复跑：javadoc 伪版本档 `--version <上游真实串> --pseudo-version stable --out data/<face>_stable/<face>-javadoc/stable`；
+  javadoc 真版本档 `--version <ver>-R0.1-SNAPSHOT --pseudo-version <ver> --out data/paper-api_<ver>/paper-javadoc/<ver>`；
+  Spigot 版本档 `node mcp-server/scripts/extract-spigot-api-surface.mjs --version <ver> --write`
 - 许可与边界：
   - `SpigotMC/Spigot-API` 仓 = **GPL-3.0**（`LICENCE.txt`；仓库 **2021-12-28 已归档**，About 标注 "OUTDATED - SEE hub.spigotmc.org/stash"）
     ⇒ **本仓不抄其源码**；只把 **API 名字 / 签名**（事实面）当检索对象，与本仓 `loader-api` 同一条线。
@@ -82,6 +97,18 @@ Follow each package’s license as published on npm（`@xenova/transformers` 为
   - `data/paper-api_*/paper-javadoc/**`（含 `stable` 与五个真版本档）同为 Paper 的 API 签名面，跟随上游 Paper/Spigot 条款；
     **与 `data/paper_stable/paper-docs/`（CC BY-SA 4.0）不是同一许可** —— 2026-10-14 起两棵树分属
     不同平台 id（`paper-api` vs `paper`）且**不在同一目录**，单独取用时请按子树区分。
+  - **GPL-3.0 构件的派生签名面（2026-10-24 登记）**：`data/spigot_<ver>/spigot-javadoc/<ver>/` 的八个历史档是从
+    **GPL-3.0 的 `spigot-api` 构件**经 `javap` 抽的签名清单（生成器 `extract-spigot-api-surface.mjs`）。
+    边界与上面 LiteLoader 那段同类：
+    - **入库的**：类型名、成员签名（修饰符 / 返回类型 / 名 / 参数类型 / `throws`）、枚举常量名 —— 即「这个名字与这个形状存在」的事实，不含表达。
+    - **不入库的**：构件本身（下载落 `temp/spigot-jars/`，gitignored）、方法体、注释与 javadoc 散文、初始化值、任何实现逻辑。脚本取不到形参名与注解 `default` 值（class 文件无 `MethodParameters`、`javap` 不带 `-v`），每份产物头部已写明这条限制。
+    - **风险状态**：签名集合的版权地位在各法域仍有争议（**不存在**「签名不受版权保护」的定论）；**GPL-3.0 的传染性是否延及「从构件抽出的接口清单」同样没有定论**。本节登记的是**已知并接受的最小化派生**，**不构成再分发授权**，也不改变上游 GPL-3.0 状态；若权利人要求移除，删 `data/spigot_<ver>/` 与生成器脚本即可，不动其它数据面。
+  - **真机探针用的服务端件不入库（2026-10-24 登记）**：Spigot 官方**只发 BuildTools 源码、不发成品 jar**
+    （`hub.spigotmc.org/nexus/.../org/spigotmc/spigot/maven-metadata.xml` 实测 404），所以
+    `mcp-server/scripts/playtest-spigot-server.mjs` 的服务端件取自 **getbukkit 第三方镜像**（`download.getbukkit.org`），
+    落 F 盘沙箱、**不入库、不由本仓背书**；三档件的字节数与上游 `content-length` 逐一核过
+    （1.19.4 = 71,219,629 · 1.20.6 = 76,012,205 · 1.21.8 = 84,523,129）。Paper 侧的探针件来自官方
+    `fill.papermc.io/v3`，sha256 逐字核过，同样不入库。
 
 ## Minecraft Bedrock creator documentation（`data/bedrock_stable/`）
 

@@ -6,6 +6,68 @@
 - 只追加，不改写历史节。要更正旧节，写进新节第 6 块「自我更正」并点名旧节。
 - 夜跑、交接、事后抽查读本文件，不依赖聊天记录。夜批（阶 1）的队列与抽查记账仍在 [`NIGHT_BATCH.md`](./NIGHT_BATCH.md)，本文件不顶替它。
 
+## 2026-10-24 · 服务端面补 13 棵版本档 + 两个真机探针（维护档）
+
+**第 0 块 · 结论**：Paper 补 5 个真 MC 版本档、**纯 Spigot 补 8 个**（Spigot 的 javadoc 无版本轴 ⇒ 走 maven 构件 `javap`），并给 `/paper/<ver>/rules/` 各加一节「该版 Bukkit 核心 vs Paper 扩展」。两个真机探针跑出：**Paper 4 档 8/8、1.12.2 5/5（命令条目不适用）、纯 Spigot 3 档 8/8**。门链 12 道全绿。**未提交**。
+
+### 1. 改了哪些文件
+
+- `mcp-server/scripts/extract-spigot-api-surface.mjs`（新）：从 `org.spigotmc:spigot-api:<ver>-R0.1-SNAPSHOT` 构件 `javap` 抽签名面 —— 因为 `hub.spigotmc.org/javadocs/spigot/1.21.4/` 实测 **404**，javadoc 路线补不了版本。默认 dry-run；`data/` 下全走 `emit`；构件落 `temp/spigot-jars/`（gitignored）。失败读数：`--expect-md5` 不符即 `构件 md5 不符` 并 rc=1。
+- `mcp-server/scripts/playtest-paper-server.mjs`（新）：Paper 真机探针。件来自 `fill.papermc.io/v3`。**EULA 不代接受** —— 缺 `--accept-eula` 且 `eula.txt` 非 true 时打印停止原因并 **rc=0 退出**（不是失败，是"轮到你"）。
+- `mcp-server/scripts/playtest-spigot-server.mjs`（新）：纯 Spigot 探针。件来自 **getbukkit 第三方镜像**（官方只发 BuildTools；`.../org/spigotmc/spigot/maven-metadata.xml` 实测 404），**来源与"不由本仓背书"写进脚本头与产物**。
+- `mcp-server/scripts/fetch-spigot-javadoc.mjs`：落盘从**嵌套目录**改成**扁平唯一名**（`pkg_path_ClassName`）。原因：盘上既有两档是扁平的，而代码没跟着改 ⇒ index 的 id 与 `processedFileFor` 对不上、`dup` 非 0、store 读空。另加老式 javadoc 回落（见第 6 块）。
+- `mcp-server/scripts/assert-signature-face-integrity.mjs`：`FACES` 2 → **7 面**；id 前缀从写死 `stable/` 改成按 `versionDir` 末段取；selftest 夹具的 pseudo 跟随 spec。判据本身未动。
+- `mcp-server/scripts/assert-server-rules-integrity.mjs`：`buildCorpusIndex` 动态纳入 `paper-api_<ver>` 与 `spigot_<ver>` 面（版本档的出处指本版面；不纳入会落到 `*_stable` 同名文件上、行号越界而误红）。
+- `mcp-server/scripts/assert-corpus-semantics.mjs`：`*-javadoc/` 面的 stub 判据改成「有没有签名行」（一行签名的标记接口 bodyChars 天然 <40；真空页仍判 stub）。
+- `mcp-server/src/docs-platform/platforms.ts`：`paper-api` 1→6 档；`spigot` 1→**9 档**（1.13 之后又补 1.21.8/1.20.6/1.19.4）。已 `npm run build`。
+- `paper/<ver>/rules/00-applicability.md` ×5（新）：版本适用性核查 + Bukkit 核心 vs Paper 扩展。**不复制** 26.3 的 10 条正文。
+- `data/spigot_<ver>/` ×8、`data/paper-api_<ver>/` ×5、`data/*/_runtime-probe.json` ×3：新语料树与真机证据。
+- 文档：`THIRD_PARTY_NOTICES.md`（Spigot 8 档落点 / 版本口径拆三块 / **GPL-3.0 构件派生面**首登 / 探针件来源）、`AGENTS.md`（版本轴、历史档两套对照表、GPL 派生警告）、`README.md` + `README.en.md`（目录树两行、平台表两行、Rift 行）、`CHANGELOG.md` + `mcp-server/CHANGELOG.md`（索引行 + 逐批次条目）。
+
+### 2. 判据与反证
+
+动了门，给「能红」的证据：
+
+- **`assert-signature-face-integrity` 扩面后能红**：把 `FACES` 加进五个真版本档后，它先报了 `index 条目 id 形状不符（应以 stable/ 开头）` —— 这正是前缀写死的实证；改成按面取前缀后转绿，`--selftest` 4/4。
+- **`assert-server-rules-integrity`**：不加 `spigot_<ver>` 面时，新节里 `org_bukkit_inventory_meta_ItemMeta.md` 这类指针会落到 `spigot_stable` 同名文件上 —— 行号不越界但内容错位，属"假绿"，故纳面而非放宽。
+- **`assert-corpus-semantics` 改判据的边界**：真空页（无签名行、无 `##`）仍落 stub 分支；实测 `Σ标题桩 1 ≤ 预算 1` 未涨，全局预算未被绕过。
+- **投毒对照**：`extract-spigot-api-surface.mjs` 给错 `--expect-md5` ⇒ `构件 md5 不符 … rc=1`（实测拒绝，未写盘）。
+
+### 3. 验证台账
+
+口径 = 各门自报末行；as-of 2026-10-24。
+
+- 12 道门全绿：`assert-server-rules-integrity`（**规则 15 篇 / 出处 394 处**可解析且行号在界）、`assert-corpus-faithfulness`（**65 棵** raw/processed 树 · 泛型丢失 **4866**）、`assert-corpus-semantics`（**77 树 / 40817 篇** · Σ桩 1 ≤ 1）、`assert-index-consistency`、`assert-signature-face-integrity`（7 面，含自证 4/4）、`assert-scripts-parse`（235）、`assert-script-write-guard`（范围外违规 **0**）、`assert-pack-meta-coverage`、`assert-skill-mirrors`、`assert-config-platform-face`、`assert-rule-java-shapes`、`assert-rule-internal-refs`。
+- 真机（口径 = 各档 `logs/qa-run.log`）：Paper `1.21.4` 8/8 `Done 10.428s` · `1.21.1` 8/8 `15.306s` · `1.20.1` 8/8 `2.965s` · `1.16.5` 8/8 `2.467s` · `1.12.2` **5/5** `2.252s`（`--noconsole` 关控制台 ⇒ 命令条目不适用）。纯 Spigot `1.21.8` 8/8 `4.456s` · `1.20.6` 8/8 `4.167s` · `1.19.4` 8/8 `14.986s`。
+- 服务端件核验：Paper 五件 sha256 与 `fill.papermc.io/v3` 逐字一致；Spigot 三件字节数与上游 `content-length` 一致（84,523,129 / 76,012,205 / 71,219,629，as-of 2026-10-23）。
+
+### 4. 数据侧变更
+
+数字取自各门 `*_RELEDGER=1` 重算（**未手填**）：
+
+- `assert-index-consistency`：`entries 65→78`、`chunks 58549→83076`、`embedded 37560→57416`；`spigot 1→9 库（2195→16062 块 / 1789→13620 嵌入）`、`paper-api 1→6（3631→14291 / 3169→11194）`。`DEBT_FTS_ONLY` 里 `paper-api|1.12.2` 一条**显式清出**（该档修好老式 javadoc 回落后有 359 个嵌入块）。
+- `assert-corpus-faithfulness`：新增 5 棵 paper-api 树（`dup: 0`，`angleLoss` 83/103/110/315/343）与 8 棵 spigot 树（`noTwin` = 两侧篇数，raw 是 `.javap.txt`）。树数 **57→65**。
+- `assert-corpus-semantics`：新树 13 棵的 `files / allowedStubs: 0 / medianFloor` 全部按实测 median × 0.65 登记（spigot 五档 313/297/297/293/289、paper 五档 185/188/196/207/100）。
+
+### 5. 未做清单
+
+- **`PlayerJoinEvent` 的派发未验**（两个探针都是）：要真客户端连入，本轮无客户端。插件里 `registerEvents` 无异常即注册成功，但事件本身没被触发过。
+- **Spigot 五档未跑真机**（`1.21.4` / `1.21.1` / `1.20.1` / `1.16.5` / `1.12.2`）：只做了签名面 + 编译级。跑一次要再下 5 件（约 350 MB，getbukkit 对部分版本限速到 ~100 KB/s）。
+- **`spigot/<ver>/rules/` 规则树有意不做**：Bukkit 规则与 `paper/26.3` 高度重合，单独建等于复制；且 paper 规则的出处本来就大量指向 spigot 面。改法取自反向 —— 在 paper 版本档里加「Bukkit 核心 vs Paper 扩展」一节（已做）。
+- **`CORPUS_PROVENANCE.md` 未补新树**：它自称"档案，不是必读规范"，各条带旧行号快照；补进去会制造第二真值。
+- **未提交**（`git add/commit` 归用户）。已授权未执行：无。
+
+### 6. 自我更正
+
+本批我推翻/改正了六处自己的判断，逐条点名：
+
+1. **落盘布局**：首版按嵌套目录写 `data/paper-api_<ver>/processed/org/bukkit/...`，与盘上既有的扁平口径不符 ⇒ `dup` 13/38/55/62/65、store 读空。不是"门太严"，是**代码与盘上不符**，改代码。
+2. **`paper-api_1.12.2` 全空壳**：我上一轮报"877 页"时它其实是 **877/877 只有类名、零签名**（老式 javadoc 无 `member-signature`）。补回落判据后空壳 10.1%。
+3. **index 条目字段**：首版只写 `{id, kind, members}`，`search_docs` 直接 `Cannot read properties of undefined (reading 'join')` —— 检索层读 `tags.join()`。按既有档的字段集补齐才通。
+4. **「Paper 扩展方法」14 条是假的**：首版把 `@Retention` 当成员名（`@Target(METHOD) @Retention(RUNTIME) public @interface EventHandler`），且按"paper 面先有就用 paper"归属，导致 `JavaPlugin.md:29` 读错面的行。修正两处后降到 **1 条真差异**（`ItemMeta#setDamageType`）。
+5. **1.19.4 的"截断"是虚惊**：我拿 `spigot-1.21.4.jar` 的 `content-length`（82,448,080）去比 1.19.4 的本地件（71,219,629），误判下载残缺。逐版 HEAD 后三件**全部一致**。
+6. **manifest 写入偶发（第三次遇到）**：`build-semantic-index` 跑完 `data/semantic-index-manifest.json` 有时不落条目（Spigot 五档建完只记了 1 条）。逐档重跑一遍才写全。以后建新档**跑完立刻查 manifest 条数**。
+
 ## 2026-10-22 · 宣传片按反馈改版：6 镜 / 2:26（去门镜 + 全流程 + 平台标注 + 多角色）（主档）
 
 **第 0 块 · 结论**：按用户四点反馈改完：删掉面向维护者的「门 / 判红」整镜，把 04 改成九步「整模组流程」蓝图（含两处返工回路），Paper 改称「服务端面」、LiteLoader/Rift/ModLoader 加「支持不完全」，角色从 6 张扩到 11 张并按语境分配。现在是 **6 镜 / 146s = 2:26**，`_build.mjs` 与 `_audit.mjs` 全绿（6 镜 / 146s / 红 0）；仍未产出 MP4、未在真实浏览器听音效。

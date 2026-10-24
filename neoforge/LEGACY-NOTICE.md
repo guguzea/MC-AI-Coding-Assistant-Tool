@@ -18,8 +18,9 @@
   `data/neoforge_<ver>/neoforge-docs/<ver>/`，从来没读过这三棵树，因此不存在正文泄漏面。
   拿目录名当 `version` 传得到的是既有的「NeoForge 无独立 <name> 主文档树」告警 + `total:0`，
   **不是**归档专属标记（未新增标记）。
-- 这三棵树**不计入** pack 覆盖统计（`scripts/assert-pack-meta-coverage.mjs` 的 58 档判据是
-  「目录内有 `AGENTS.md` 或 `.cursor/rules`」，三棵树两者都没有）。
+- 这三棵树**不计入** pack 覆盖统计（`scripts/assert-pack-meta-coverage.mjs` 的判据是
+  「目录内有 `AGENTS.md` 或 `.cursor/rules`」，三棵树两者都没有）。**档数不在这里抄** ——
+  该门每次自报总数；本行只保留判据本身，数目随增档而变、抄一份等于留一处会过期的第二真值。
 - 以上四条由 `mcp-server/scripts/assert-legacy-isolation.mjs` 钉住，抽掉 trap 即红。
 - **元数据文件名与自报版本不符（A22，已知不修）**：本目录 `scaffold/` 自报
   `minecraft_version=1.20.4` / `neoforge_version=20.4.237`，却发

@@ -38,7 +38,7 @@ MC_skill/
 ├── neoforge/                    # NeoForge 规则与知识
 ├── quilt/                       # Quilt QSL 差异规则（02–10 读同版 fabric）
 ├── liteloader/                  # LiteLoader（主推 1.12.2）+ HYBRID.md
-├── rift/                        # Rift 1.13.2
+├── rift/                        # Rift 1.13（原生档）+ 1.13.2（社区分支实验档）
 ├── modloader/                   # Risugami ModLoader 1.6.4 + 安全 API 表
 ├── bedrock/                     # 基岩 Add-On 规则（扁平 bedrock/）
 │
@@ -82,8 +82,10 @@ MC_skill/
 └── data/                        # 离线官方数据（MC_SKILL_DATA 指向此处根）
     ├── forge_* / fabric_* / neoforge_* / …  # 各平台文档 L0/L1/L2 + semantic/
     ├── paper_stable/            # 服务端面**教程层**：paper-docs/（67 页，**CC BY-SA 4.0**）
-    ├── paper-api_stable/        # 服务端面**签名层**：paper-javadoc/（Paper API 2116 类，随上游条款）
-    ├── spigot_stable/           # 服务端面签名层：Spigot/Bukkit Javadoc 1396 类（**无教程正文**，见 THIRD_PARTY_NOTICES.md）
+    ├── paper-api_stable/        # 服务端面**签名层**（当前档）：paper-javadoc/（Paper API 2116 类，随上游条款）
+    ├── paper-api_<ver>/         # 服务端面签名层**历史档 ×5**（1.21.4/1.21.1/1.20.1/1.16.5/1.12.2）—— javadoc 页抽取
+    ├── spigot_stable/           # 服务端面签名层（当前档）：Spigot/Bukkit Javadoc 1396 类（**无教程正文**，见 THIRD_PARTY_NOTICES.md）
+    ├── spigot_<ver>/            # 服务端面签名层**历史档 ×8**（1.21.8/1.21.4/1.21.1/1.20.6/1.20.1/1.19.4/1.16.5/1.12.2）—— **构件 javap** 抽取，非 javadoc
     └── mappings/                # 分平台版本目录（Yarn SQLite、MCP CSV 等），不是单一扁平文件
 ```
 
@@ -102,10 +104,10 @@ MC_skill/
 | Quilt    | ✅ 混合 | `quilt/<ver>/` 只写 QSL 差异（00/01/05/06）+ **本档 QSL Skill 3**（registry/events/networking），02–04/07–08/10 读 `fabric/<ver>`；`search_docs(platform=quilt)` 问 QSL 不回退 Fabric Registry |
 | 基岩版   | ✅ 完成 | 扁平 `bedrock/`；`search_bedrock_docs` + 滞后 `docsStatus`；实验开关按 `min_engine_version` 分层 |
 | LiteLoader | ✅ 完成 | `liteloader/1.12.2/` 纯客户端 + `HYBRID.md`；`diagnose_gradle` 对 liteloader 插件走轻量模式 |
-| Rift     | ✅ 完成 | `rift/1.13.2/`（`code-patterns/` 3 件 + `knowledge/common/` 4 篇）；元数据 `riftmod.json`；**Rift 侧签名已对真构件 `javap` 核过**（`verified-api.md`，39 个 listener 接口全量表），**MC 侧未核**；依赖走 JitPack `com.github.DimensionalDevelopment:Rift:1.0.4-106`（`dev` classifier；原 `www.dimdev.org/maven/` 已 DNS `ENOTFOUND`） |
+| Rift     | ✅ 完成 | **原生档 `rift/1.13/`**（Rift 件内 `profile.json` 的 `inheritsFrom` = 1.13）+ **`rift/1.13.2/` 标注为社区分支实验档**（件仍是 1.13 的，跨版本不保证）；元数据 `riftmod.json`；Rift 侧签名已对真构件 `javap` 核过（`verified-api.md`）；依赖走 JitPack `com.github.DimensionalDevelopment:Rift:1.0.4-106`（`dev` classifier；原 `www.dimdev.org/maven/` 已 DNS `ENOTFOUND`） |
 | ModLoader | ✅ 完成 | `modloader/1.6.4/` + 安全 API 表；禁止用 Forge Javadoc / `func_*` 冒充 |
-| Paper（服务端） | ✅ 服务端面 | （载体 `runServer`、Bukkit 抽象层、`plugin.yml`+`onEnable`；逐档 javap 改写表在插件侧零适用）。`data/paper_stable/paper-docs/`（教程 **67 页**，**CC BY-SA 4.0**）；`search_docs(platform=paper)`。**签名层另占 `platform=paper-api`**（`data/paper-api_stable/paper-javadoc/`，**2116 类**）—— 教程面与签名面同平台不同树，`FabricDocStore` 单源故各占一个平台 id。上游 = PaperMC 官方文档，分支 **26.3** |
-| Spigot（只签名面）| ✅ 只签名 | `data/spigot_stable/spigot-javadoc/`（**1396 类**）；`search_docs(platform=spigot)`。**没有教程正文** —— SpigotMC Wiki 实测**无任何开放许可**（仅 `© SpigotMC Pty. Ltd.`）⇒ 按本仓准入不入库；要教程请用 `platform=paper` |
+| Paper（服务端） | ✅ 服务端面 | （载体 `runServer`、Bukkit 抽象层、`plugin.yml`+`onEnable`；逐档 javap 改写表在插件侧零适用）。`data/paper_stable/paper-docs/`（教程 **67 页**，**CC BY-SA 4.0**）；`search_docs(platform=paper)`。**签名层另占 `platform=paper-api`**：当前档 `paper-api_stable`（**2116 类**）+ **历史档 ×5**（`paper-api_1.21.4/1.21.1/1.20.1/1.16.5/1.12.2`，javadoc 页抽取）—— 教程面与签名面同平台不同树，`FabricDocStore` 单源故各占一个平台 id。规则树 `paper/26.3/rules/`（10 条）；**版本档 `paper/<ver>/rules/00-applicability.md` ×5**（26.3 规则在各版的适用性 + 该版 Bukkit 核心 vs Paper 扩展） |
+| Spigot（只签名面）| ✅ 只签名 | 当前档 `data/spigot_stable/spigot-javadoc/`（**1396 类**）+ **历史档 ×8**（`data/spigot_<ver>/`，1.21.8/1.21.4/1.21.1/1.20.6/1.20.1/1.19.4/1.16.5/1.12.2）—— 历史档**从 maven 构件 `javap` 抽**（javadoc 无版本轴），每页 `sourceType: javap`；`search_docs(platform=spigot)`。**没有教程正文** —— SpigotMC Wiki 实测**无任何开放许可**（仅 `© SpigotMC Pty. Ltd.`）⇒ 按本仓准入不入库；要教程请用 `platform=paper` |
 
 
 ### 支持版本
@@ -232,7 +234,7 @@ MC_skill/
 
 | 路线 | driverMode / 工具 | 覆盖 | 适合 | 主要代价 |
 | --- | --- | --- | --- | --- |
-| ① 有桥 | 桥 mod + `playtest_bridge` | BlackBoxPro 预编译件（fabric/neoforge 1.21.1+1.21.11、forge 1.12.2）**或**本仓自建最小桥（8 目标 = `forge 1.7.10–1.12.2` + `rift 1.13.2` + `modloader 1.6.4`，`generate_playtest_driver driverMode=external_bridge` 附赠；**rift 是真模板，modloader 只到骨架**） | 到手最快、动作集大 | 版本覆盖窄；自建桥动作 10 个、按档 fail-closed；桥无鉴权 ⇒ 只本机短会话 |
+| ① 有桥 | 桥 mod + `playtest_bridge` | BlackBoxPro 预编译件（fabric/neoforge 1.21.1+1.21.11、forge 1.12.2）**或**本仓自建最小桥（**9 目标** = `forge 1.7.10–1.12.2` + `rift 1.13` / `1.13.2` + `modloader 1.6.4`，`generate_playtest_driver driverMode=external_bridge` 附赠；**rift 两档同一真模板，modloader 只到骨架**） | 到手最快、动作集大 | 版本覆盖窄；自建桥动作 10 个、按档 fail-closed；桥无鉴权 ⇒ 只本机短会话 |
 | ② 无桥剧本 | `generate_playtest_driver driverMode=temporary_client_tick_driver` | 已验证档出真 driver；其余档结构壳 | 确定性回归 / CI 复现 | 要装驱动 + 供世界 |
 | ③ 无桥意图会话 | `driverMode=in_jvm_player_agent` + `playtest_intent` | 真执行器覆盖 = `PLAYTEST_VERIFIED_TIER`（生成器内表，随取证扩面，**正文不数档**；表外档只出菜单契约 + 结构壳） | agent 实时决策、"选错→判红→换意图" | 观测粒度 = 每条意图一次；v1 `goto` 无寻路 |
 
@@ -539,7 +541,7 @@ node mcp-server/dist/cli.js search_forge_docs --version=1.14.4 --query="entity g
 | NeoForge | 先 `list_neoforge_versions`。`1.20.1` 回退 Forge 文档（兼容层） | 26.1+ 无 `query_api` | `*-neoforge` 多档已索引 |
 | LiteLoader / Rift / ModLoader | `search_docs`。LiteLoader/Rift 有官方 wiki **hybrid** 语义库；ModLoader 仍为 **L0-only** | `convert_mapping` / 反编译 | 仓库内核实表仍是 API 准绳；未 ingest → `PLATFORM_SKIPPED`。用户自备 jar 走 `ingest_loader_api`（默认 dryRun） |
 | 基岩 | `search_bedrock_docs`（带 `docsStatus`） | 无 Java `query_api` | `validate_addon_manifest` / `validate_bp_json`，不是 `validate_project` |
-| **Paper / Paper API / Spigot（服务端）** | `search_docs({platform:"paper"})` 取**教程正文**（`data/paper_stable/paper-docs/`，67 页）；`{platform:"paper-api"}` 取 **Paper 的 API 签名面**（`data/paper-api_stable/paper-javadoc/`，**2116 类**，含 `io.papermc.paper.*` 这类 Paper 专有类）；`{platform:"spigot"}` 取 **Bukkit/Spigot 签名面**（`data/spigot_stable/spigot-javadoc/`，**1396 类**）。三个 platform 的版本键都是伪版本 **`stable`** | 无 Java `query_api` —— 插件打的是 Bukkit **抽象层**，正常插件代码不碰 `net.minecraft.*`；逐档 javap 改写表在插件侧**零适用** | 真实上游版本串在各页 `asOfVersion`（实测 Paper `26.3.build.178-stable` / Spigot `26.3-R0.1-SNAPSHOT`）。两个签名面均为 **L0-only**（无语义库），**正文词项 0 命中 ≠ 该 API 不存在** |
+| **Paper / Paper API / Spigot（服务端）** | `search_docs({platform:"paper"})` 取**教程正文**（`data/paper_stable/paper-docs/`，67 页）；`{platform:"paper-api"}` 取 **Paper 的 API 签名面**（当前档 `paper-api_stable` **2116 类**，含 `io.papermc.paper.*` 这类 Paper 专有类；历史档 ×5）；`{platform:"spigot"}` 取 **Bukkit/Spigot 签名面**（当前档 `spigot_stable` **1396 类**；历史档 ×8）。版本键：三个 platform **都有** 当前档伪版本 `stable`，`paper-api` 另有 5 个真 MC 版本、`spigot` 另有 8 个 | 无 Java `query_api` —— 插件打的是 Bukkit **抽象层**，正常插件代码不碰 `net.minecraft.*`；逐档 javap 改写表在插件侧**零适用** | 真实上游版本串在各页 `asOfVersion`（Paper `26.3.build.178-stable` / Spigot `26.3-R0.1-SNAPSHOT`）。**所有签名档都已建语义库**（各档旁 `semantic/db.sqlite`，`semantic: true`）；但签名页正文只有签名行，**正文词项 0 命中 ≠ 该 API 不存在** —— 查类/成员用 `search_docs` 的 L0 索引字段更稳 |
 
 9. 查询用类名或短词（`Block`、`class:RegistryEvent`）。失败先换短查询或改走 `search_docs`，不要把崩溃/空结果当成「该版没有文档」。
 10. **改完 `mcp-server` 源码后**：`npm run build`，然后在宿主里**重载 MCP**。Cursor 里正在跑的进程不会自动换成新 `dist/`；用 `node mcp-server/dist/cli.js` 才能立刻验证。
