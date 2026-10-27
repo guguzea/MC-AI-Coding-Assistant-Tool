@@ -93,8 +93,7 @@ for (const f of process.argv.slice(1)) {
 
 - 出现 **STALE** ⇒ 该宿主仍指向旧仓库位置：把配置里所有绝对路径整体换到**当前仓库根**（正斜杠），再重载宿主 MCP；
   只改 `MC_SKILL_DATA` 不改 `args[0]`（或反之）等于没修——两处都指向仓库内路径。
-- 本机实测（2026-09-24）：`~/.cursor/mcp.json:6` = `"H:/MC_skill/mcp-server/dist/index.js"`、`:9` = `"MC_SKILL_DATA": "H:/MC_skill/data"`，
-  `fs.existsSync("H:/MC_skill")` = **false** ⇒ 两处均 STALE，按本步换路径后恢复。（该文件属用户个人配置面，本仓不代改。）
+- 典型失败形态：`~/.cursor/mcp.json` 的 `args[0]`（MCP 入口 js）与 `env.MC_SKILL_DATA` 两处都写着旧仓库绝对路径，上面脚本对两者都打 `STALE` ⇒ 按本步整体换路径后恢复。（该文件属用户个人配置面，本仓不代改。）
 
 ---
 

@@ -145,7 +145,7 @@ VS Code 项目级配置顶层键是 `servers`（不是 `mcpServers`）。Continu
 | `MC_SKILL_UPDATE_REMOTE` | 强制 git remote 名；空则扫描匹配 URL | `origin` |
 | `MC_SKILL_UPDATE_CACHE_TTL_SEC` | `get_server_status` updateHint 缓存 TTL | `3600` |
 | `MC_SKILL_CACHE` | 反编译/MDK/loader-jar 缓存根。MCP（`resolveCacheRoot`）与脚本都读此变量。不设则分家：MCP 默认 APPDATA/`~/.config/mc-skill-cache`，脚本默认 `os.tmpdir()/mc-skill-cache`。请设成同一路径。 | `%APPDATA%/mc-skill-cache` |
-| `MC_SKILL_SKIP_DOWNLOAD` | `1` 时反编译工具跳过一切下载并诚实失败。**须显式设成逐字 `1`** 才生效（实现 = `src/decompile/java/java-process.ts:168` 的 `=== "1"` 严格比较；不设、或设 `true`/`yes` 一律不生效）。**供 CI/离线环境显式设置；本仓 `.github/workflows/*` 目前未设**（实测 `grep -rn MC_SKILL_SKIP_DOWNLOAD .github` = 0 命中）⇒ 属用户 CI 面，见仓库根 `CONTRIBUTING_LIST.md` 未排期清单 `L23` | 未设（默认按需下载） |
+| `MC_SKILL_SKIP_DOWNLOAD` | `1` 时反编译工具跳过一切下载并诚实失败。**须显式设成逐字 `1`** 才生效（实现 = `src/decompile/java/java-process.ts:168` 的 `=== "1"` 严格比较；不设、或设 `true`/`yes` 一律不生效）。**供 CI/离线环境显式设置；本仓 `.github/workflows/` 四支工作流均已设该变量**（`mcp-server-ci.yml` / `release-mcp-server.yml` / `opencode.yml` / `wrapper-upstream-check.yml`，job 级 env `MC_SKILL_SKIP_DOWNLOAD: "1"`）。覆盖范围只有 `get_minecraft_source` / `decompile_mod_jar`；`download_official_mdk` 不读它 | 未设（默认按需下载） |
 | `MC_SKILL_UPDATE_DOWNLOAD_TIMEOUT_MS` | data zip 下载超时 | `600000` |
 | `MC_SKILL_GITHUB_TIMEOUT_MS` | Release API 超时 | `25000` |
 | `MC_SKILL_GITHUB_API_BASE` | GitHub API 根（可改镜像） | `https://api.github.com` |

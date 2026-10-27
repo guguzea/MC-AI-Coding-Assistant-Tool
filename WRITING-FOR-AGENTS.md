@@ -95,11 +95,24 @@
 
 给 agent 读的文档里，每个 API 名、版本口径、计数，要么带可核出处（`search_*_docs` 命中页 id、语料 `路径:行`、`query_loader_api`、用户自备 jar），要么留 `// TODO(未核实)`；计数带分母 + 口径 + as-of。查文档的入口按平台走 `search_forge_docs` / `search_fabric_docs` / `search_neoforge_docs` / `search_docs`。数据链读法的权威在 `CONTRIBUTING.md` §数据链口径，本篇不重抄。
 
+### §7.1 面别：as-of 只属于 agent 面与台账落点
+
+`分母` / `口径` / `as-of` 这一组是**取证形状**，服务的是"agent 下次照它复跑还要对得上"。它属于 agent 面（根 `AGENTS.md`、平台规则树、Skill 源稿、工作流模板体）与台账落点（`mcp-server/CHANGELOG.md` / `CORPUS_PROVENANCE.md` / `NIGHT_BATCH.md`）。
+
+人读面（`README*`、`AUTO_SETUP.md`）写**现行口径 + 指针**：正文给结论与可执行路径，时点与逐档读数放台账落点。判据：人读面正文出现 `as-of` / 「as of <日期>」/「截至 <日期>」/「实测（<日期>）」/「（<日期> 验证）」这类**给结论盖时间戳**的写法 ⇒ 缺陷，改写成现行口径（要复现就去落点查当时那轮取证）。
+
+人读面正文里的数字日期只剩两种形态，都不带时点语义：
+
+1. **规则落款** —— §6 的「2026-10-05 用户裁定」这类归属（归属说的是规则从哪来，不是给结论续期），随规则留面；
+2. **名字里的年份** —— 路径 / 标题 / slug 里的标识符（`lib-traps-2026`、`…（2026 版）`），改字等于换引用对象，照原样保留。
+
+其余日期一律换成现行口径：「每篇含反编译核对小节（时点见短文标题）」「当前所有已发布正式版都在支持面内」—— 结论不依赖读者知道测于哪天。
+
 ## §8 新增/改动文档 checklist（步骤 + 完成判据）
 
 1. **定负载定位置** —— 先回答"谁读、每轮读还是按需读"，按 §6 位置图选去处；常驻面内容逐行过"每轮都相关"测试。
 2. **写正文** —— 步骤/参考分级（§1），每步完成判据齐清晰与要求度（§3），指针句三件齐（§2），风格禁令正向化、安全禁令配对写（§4）。
-3. **出处关** —— 全文名字逐个给出处或 `// TODO(未核实)`（§7）。
+3. **出处关** —— 全文名字逐个给出处或 `// TODO(未核实)`（§7）；落笔前先判面别（§7.1）：agent 面带分母/口径/as-of，人读面写现行口径 + 指针（时点进台账落点）。
 4. **登记与同步** —— Skill 源稿含闭合围栏代码的，frontmatter 声明非空 `mappings:`（门：`mcp-server/scripts/assert-skill-mappings-key.mjs`）；改 `.cursor/rules` 正文后刷镜像面（`scripts/sync-skills.ps1`，门：`assert-skill-mirrors`）；新平台/新受管目录命中 `REPORT-FORMAT.md` §先判档 的受管清单时同步该行（该清单 2026-10-11 从根 `AGENTS.md` §交付汇报 搬出）；新增 `common_skill/` 技能走完 §6 的三处同步。
 5. **跑门链** —— 动了 `mcp-server/scripts/**` 或 `scripts/**` 后收口必跑 `cd mcp-server && node test-scripts.mjs`；只动 prose 至少跑 `node test-core.mjs`。新加的门必须带 `--selftest` 正反臂（投毒必红、摘掉必绿）。本篇执法面 = `mcp-server/scripts/assert-authoring-lint.mjs`（J1 frontmatter / J2 过期路径 / J3 纯负向棘轮；基线与豁免同目录）。
 6. **记账** —— 改工具面（`mcp-server/src/**`）在同轮 `mcp-server/CHANGELOG.md` 落一条批次；纯文档改动可免。
