@@ -18,7 +18,7 @@ npm install mc-ai-coding-assistant-tool --data
 
 ### 包里有什么、什么要走 Release
 
-npm 包约 **11.5 MB**（解压 149 MB），内容分两类：
+npm 包约 **12 MB**（解压约 **157 MB**），内容分两类：
 
 | 内容 | 位置 | 说明 |
 | --- | --- | --- |

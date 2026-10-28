@@ -963,7 +963,7 @@ authored/lib-*.md frontmatter（+ library-integration / library-integration-jei-
 | `merge-verified-api.mjs` | **`scripts/`（仓库根）** |
 | `build-api-summaries.mjs` | **`scripts/`（仓库根）** |
 
-数据位置见 [反编译数据产物](#反编译数据产物) 一节。
+数据位置见 [反编译数据产物](#14-反编译数据产物) 一节。
 
 > 两个计数口径（A `verifiedApi` 键 / B 库 API 摘要侧）的**定义、读数与复算纪律一律见** [`CONTRIBUTING.md` §库数据链计数口径](./CONTRIBUTING.md)；两个分母不同、禁止互相顶替。本节只描述数据链结构，不抄读数。
 
@@ -1064,7 +1064,7 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 | `analyze_mod_jar` | `{jarPath, version?}`；纯 Node 读 zip 中央目录：`quilt.mod.json` / `fabric.mod.json` / `mods.toml` / `neoforge.mods.toml` / `litemod.json` / `riftmod.json` / 基岩 `manifest.json`、mixins 引用、entrypoints、依赖、AW/AT。传 `version` 回显 `requestedVersion` / `mcVersionConstraints[]` / `versionMatch ∈ match \| mismatch \| unknown` | 无 Java、零下载、不写盘、不反编译。`versionMatch: unknown` = jar 里没有可判定的版本约束，**不是**「不兼容」 |
 | `decompile_mod_jar` | `{jarPath, version?, mapping?: "yarn"\|"mojmap", force?}`。`version` 给出且落在 1.14–1.21.11 才 remap（`mapping` 默认 `yarn`，两步 official→intermediary→named）；26.1–26.3 免 remap；不传 `version` 就是直接反编译原始字节码 | 落 `<cache>/decompiled-mods/<modId>/<modVersion>-<jar sha512 前 12 位>/`。身份段取自 **jar 字节内容**（不是 mod 元数据）⇒ 同 `modId` + 同 `modVersion` 的两个不同构建不会共用一棵树。`modId` 必须自证：jar 自身元数据 → 它自己声明的内层件（`META-INF/jars\|jarjar/*.jar`，多义只回候选不猜）→ 调用方标签（须被该 jar 自己的条目路径证实），都不成立 ⇒ `MOD_ID_UNKNOWN`，**不回落共享的 `unknown-mod` 目录**。写前清空目标子树（失败 ⇒ `CACHE_CLEAN_FAILED`）。remap 失败**降级**为对原 jar 反编译：`remapped:false` + `degraded:true` + warnings，此时名称可能是混淆/中间名，不可当正式 API。完成标记 `.mc-skill-decompiled.json` 写失败 ⇒ `partial:true`（源码树仍可用，`found` 仍为 true）。缓存命中按标记里的 `version`/`mapping` 判，与本次请求不一致 ⇒ `cacheStale:true` 并提示加 `force:true`。返回摘要 `fileCount` / `javaFileCount` / `topLevelDirs` / `sampleFiles` |
 | `search_mod_code` | `{query, decompiledDir?, jarPath?, pattern?, maxResults?}`。`decompiledDir` 优先且必须是绝对路径；`jarPath` 走 `cache.db` 反查已反编译目录。默认**忽略大小写的子串**匹配；`pattern:true` 才走正则（只加 `i`，不加 `g`/`y`；`>512` 字符或嵌套量词直接 `INVALID_INPUT`） | 默认扫 `.java` / `.txt` / `.json` / `.toml` / `.cfg`；`maxResults` 默认 100、上限 500；有单次时间与文件数预算，任一触顶都置 `truncated:true`（**截断 ≠ 没命中**）。`pattern` 模式下超长行不参与检索，会随响应带 `PARTIAL_SCAN`。`found:false` 只表示 0 命中；jar 存在但没反编译 ⇒ `NOT_DECOMPILED`，jar 不存在 ⇒ `NOT_FOUND`，两个入口都没给 ⇒ `INVALID_INPUT` |
-| `download_official_mdk` | `{platform, minecraftVersion, buildPlugin?, dryRun?, confirmed?, destPath?, allowCacheFallback?, allowUnpinned?}`。默认 `dryRun`（只回 pin 元数据）；`dryRun:false` **即使不写用户工程也会联网下载并落 cache**，所以同样要 `confirmed:true`；写用户工程另需 `destPath` + `MC_SKILL_ALLOW_WRITE=1` + `MC_SKILL_PROJECT_ROOT` | 落 `<cache>/mdk/<platform>/<version>/<buildPlugin>/`，解压到 `unpacked/` 并解析 `entryClass` / `loaderVersion` / `mappings`。pin 表 `mcp-server/data/mdk-checksums.json`（可被 `MC_SKILL_MDK_CHECKSUMS` 覆盖）：GitHub 源 `ref` 必须是 40 位 commit SHA 且出现在 `archiveUrl` 里，域名过白名单；`sha256` 为空 ⇒ fail-closed `MDK_NOT_PINNED`，只有显式 `allowUnpinned:true` 才接受未校验下载并回写。解压用 `unzip` / `7z` / **bsdtar**（Windows 自带 `System32\tar.exe` 与 7-Zip 默认安装位都会探；GNU tar 解不了 zip）；另有 zip-slip 拦截、解压体积预算与「解压产物 vs 中央目录清单」复核。**npm 包自带 `data/`**（`package.json` 的 `files` 含 `data`，`npm pack --dry-run` 可见 `data/mdk-checksums.json`）⇒ pin 链在 npm 形态同样可用；但 `allowUnpinned` 的回写目标在该包内，重装会被覆盖，长期维护建议用 Release 形态或 `MC_SKILL_MDK_CHECKSUMS` 指向包外 pin 表。LiteLoader / Rift 无官方 MDK（只剩各档 scaffold） |
+| `download_official_mdk` | `{platform, minecraftVersion, buildPlugin?, dryRun?, confirmed?, destPath?, allowCacheFallback?, allowUnpinned?}`。默认 `dryRun`（只回 pin 元数据）；`dryRun:false` **即使不写用户工程也会联网下载并落 cache**，所以同样要 `confirmed:true`；写用户工程另需 `destPath` + `MC_SKILL_ALLOW_WRITE=1` + `MC_SKILL_PROJECT_ROOT` | 落 `<cache>/mdk/<platform>/<version>/<buildPlugin>/`，解压到 `unpacked/` 并解析 `entryClass` / `loaderVersion` / `mappings`。pin 表 `mcp-server/data/mdk-checksums.json`（可被 `MC_SKILL_MDK_CHECKSUMS` 覆盖）：GitHub 源 `ref` 必须是 40 位 commit SHA 且出现在 `archiveUrl` 里，域名过白名单；`sha256` 为空 ⇒ fail-closed `MDK_NOT_PINNED`，只有显式 `allowUnpinned:true` 才接受未校验下载并回写。解压用 `unzip` / `7z` / **bsdtar**（Windows 自带 `System32\tar.exe` 与 7-Zip 默认安装位都会探；GNU tar 解不了 zip）；另有 zip-slip 拦截、解压体积预算与「解压产物 vs 中央目录清单」复核。**两种发行形态的数据面不同**：npm 包（`package.json` 的 `files` 含 `data`）自带 MCP 侧小数据 —— `mdk-checksums.json` / `bedrock-script-api-pin.json` / `wrapper-jars.json` / `lib-api-summaries/` / `lib-coords/` / `lib-manifests/` / `loader-api-summaries/`，所以 pin 链在 npm 形态可用；**GitHub Release 的 `mcp-server-*.zip` 只打 `dist/` + 元数据，不含这 7 项**，需从 `mc-skill-data-full-*.zip` 解压补齐（`npm install --data` 也按此合并，保留包内自带项）。平台语料（`forge_*` 等）两种包都不含。`allowUnpinned` 的回写目标在 `<包根>/data/`，升级/重装会被覆盖 ⇒ 长期维护用 `MC_SKILL_MDK_CHECKSUMS` 指向包外 pin 表。LiteLoader / Rift 无官方 MDK（只剩各档 scaffold） |
 
 **版本支持面**（只约束 `get_minecraft_source` 的 MC 源码反编译；**`decompile_mod_jar` 没有版本门** —— 任意版本的 jar 都能反编译，`version` 只决定要不要 remap、用哪套映射）。门在 `mcp-server/src/decompile/version-manager.ts` 的两张已发布上界表（`MAX_RELEASED_PATCH_BY_MINOR` / `MAX_RELEASED_PATCH_BY_26X_MINOR`）：表外的 minor/patch 在参数校验就拒，编造的 `1.21.999` 与尚未发布的 minor 都不放行。
 
@@ -1082,7 +1082,7 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 
 **与 `query_api` 的分工**：`query_api` / `get_method_params` 查 **1.16.5–1.20.4 Vanilla** 签名（快、离线）；**不含** Forge/Fabric API，**26.x 无索引**。本节取源码类工具（`get_minecraft_source` / `decompile_mod_jar` / `search_mod_code` / `download_official_mdk`）仅在确实需要完整源码/反编译时使用（下载量大），各工具 description 均带 ⚠️ 边界提示。
 
-### 反编译数据产物
+### 14. 反编译数据产物
 
 **已入库的反编译数据产物**（供 `check_dependencies` 等消费，clone 后即用）：
 
@@ -1105,7 +1105,7 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 反编译源码本体**不入库**（按需生成至 `$MC_SKILL_CACHE`；规模随「反编译过哪些库 × 哪些版本」变化，仓库不承诺固定文件数，需要时按缓存目录现读）。`search_mod_code` 在源码缺失时返回 `NOT_DECOMPILED`（jar 存在但没反编译过）或 `NOT_FOUND`（jar / 目录本身不存在）+ 指引先调 `decompile_mod_jar`。相关脚本：`scripts/build-lib-manifest.mjs`（manifest）、`scripts/build-api-summaries.mjs`（API 摘要）、`scripts/batch-decompile.mjs`（分批反编译）、`scripts/merge-verified-api.mjs`（回填 catalog）。
 
 另：`registerPrompt` / `registerResource`（工作流与知识 URI）供支持 prompts/resources 的客户端使用；详见 `mcp-server/docs/prompts-client-compat.md`。
-### 工作流模板（MCP Prompts）
+### 15. 工作流模板（MCP Prompts）
 
 工作流模板通过 `registerPrompt` 注册（支持 prompts 的客户端可用）；Cursor 等仅 tools 客户端用该工具（`get_workflow_template`）获取同款全文。**模板名以 `get_workflow_template` 的枚举为准**（开发模板 + 编排技能两族，另见本页 `mcskill://skill/` 族）。
 
@@ -1165,7 +1165,7 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 | `mc-resourcepack-standalone` | 独立资源包工作流 | 纯资源包：`resourcepacks/` 或独立 zip（模型 / 方块状态 / 纹理 / lang / 音效 / GUI 贴图）。模组内资源走对应平台 session 与该档规则 |
 
 
-### 知识暴露（MCP Resources）
+### 16. 知识暴露（MCP Resources）
 
 **登记共 293 条**（由 `list_knowledge_resources` 枚举；复核：`node mcp-server/dist/cli.js list_knowledge_resources`）。按 URI 族：
 
@@ -1192,7 +1192,7 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 > `code-patterns` 只覆盖 forge / fabric / neoforge 三树（quilt / liteloader / rift / modloader / bedrock 无 `code-patterns/` → 该族 0 条）；其中 6 条是 `archived` 旧档，注册在册但 `read_knowledge_resource` 会回 `found:false` + 存档说明，不再给正文。
 
 
-### 独立 CLI（`node mcp-server/dist/cli.js`，89 工具全可用）
+### 17. 独立 CLI（`node mcp-server/dist/cli.js`，89 工具全可用）
 
 flags-only（`--key value` / `--key=value` / 裸 `--flag`→true），输出统一 JSON 包装 `{success, tool, result|error}`，退出码 0=成功 / 1=工具错误 / 2=用法错误。全局 flag（不进工具 schema）：`--help`/`-h`、`--version`/`-V`（放在工具名之前、或整条命令没写工具名时打印 CLI 版本；`--version` 跟在工具名后面时是工具字段，而 `-V` 在那个位置会被解析成布尔 `version` ⇒ schema 校验失败，exit 2）、`--json`（不改变工具输出，仅为兼容保留；只在交互式终端下影响 `--help` 的呈现）、`--compact`、`--fail-on-error`、`--quiet`（静音进度行与心跳，错误 / 警告 / 迁移提示照旧）、`--timeout <ms>`（到点 exit 1 + `errorKind:"timeout"`，退出码仍不越 0/1/2）、`--project <dir>`、`--file field=path`、`--raw [field]`（该字段完全按字面传，裸写则全局关闭 `@` 展开）、`--output-format json`（表达格式意图的规范入口，当前唯一合法值，其它值 exit 2）、`--stdin-json`（从 stdin 一次读入整个参数对象当基座，命令行同名字段恒胜；TTY 下、以及与 `@-` / `=-` / `--file f=-` 同现时一律 exit 2）；所有 string 字段支持文件输入——`--crashReport @./latest.txt` 读文件、`--crashReport=-` / `@-` 读 stdin（全进程一次）、`--file crashReport=./latest.txt` 等价写法，单文件与 `--stdin-json` 载荷共用约 8MB 上限。**加 `--fail-on-error` 时，`found:false` 与 `errors[]` 非空也升为退出码 1**。`--fail-on-error=false` **关闭**该行为（不要把写出 `=false` 当成开启）。布尔 flag 只接受 `true/false/1/0/yes/no/on/off`；`--flag=junk` 拒绝。
 

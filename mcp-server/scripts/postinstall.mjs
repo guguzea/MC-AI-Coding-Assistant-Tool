@@ -683,8 +683,8 @@ async function extractZip(zipPath, destDir) {
 /* ─────────────────────────── 主流程 ─────────────────────────── */
 
 function printNoDataHint() {
-  info("未安装 data 资产 —— 这是默认行为：npm 包只发代码，data 走 GitHub Release 分发。");
-  info("需要 data（本地文档检索 / 核实表 / MDK pin 表等）时，二选一：");
+  info("未安装平台数据 —— 这是默认行为：npm 包自带 MCP 侧 7 项小数据（含 MDK pin 表），平台语料走 GitHub Release 分发。");
+  info("需要平台数据（本地文档检索 / 核实表等）时，二选一：");
   info("  1) 重新安装并带上 --data：npm install mc-ai-coding-assistant-tool --data");
   info(`  2) 从 GitHub Release 下载 mc-skill-data-full-<tag>.zip，解压后把其中的 data/ 放到 ${DATA_DIR}`);
   info(`     然后设置 MC_SKILL_DATA=${DATA_DIR}`);

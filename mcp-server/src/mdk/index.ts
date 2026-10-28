@@ -95,24 +95,24 @@ export function checksumsPath(): string {
 }
 
 /**
- * B-06（npm 形态不可用声明）：npm 按 files 白名单只发布 dist/ + README.md + LICENSE +
- * package.json，**不含 data/**（137M 资产走 GitHub Release zip）。而 checksumsPath()
- * 编译后解析到 dist/mdk/../../data/mdk-checksums.json = <包根>/data/mdk-checksums.json
- * ⇒ npm 安装形态下该文件根本不存在，pin 表恒为空。
+ * 分发形态与 pin 表（2026-10-28 按实况订正；旧文案把两种形态说反了）：
+ * - **npm 包**：`package.json` 的 `files` 含 `data` ⇒ 随包带 7 项小数据
+ *   （mdk-checksums.json / bedrock-script-api-pin.json / wrapper-jars.json /
+ *   lib-api-summaries/ / lib-coords/ / lib-manifests/ / loader-api-summaries/），
+ *   `checksumsPath()` 解析到 <包根>/data/mdk-checksums.json —— 存在且可读。
+ * - **GitHub Release 的 `mcp-server-*.zip`**：只打 `dist/` + package.json/lock +
+ *   README/LICENSE/NOTICES，**不含**这 7 项 ⇒ pin 表缺失，需用
+ *   `mc-skill-data-full-*.zip` 或 `npm install --data` 合并进来。
+ * - **仓库检出**：`mcp-server/data/` 受版本控制，恒存在。
  *
- * 缺陷链的要点：单独看「无 sha256 就 fail-closed」是对的（A-2 人在环设计，不改），
- * 但旧文案只给两条路——① 补 pin（需要 data/，npm 形态做不到）② 开 allowUnpinned
- * （回写目标同样是那个不存在的包外路径，npm 形态也写不进去）。等于把「关掉安全校验」
- * 诱导成唯一出路，而出路本身是断的。对以dryRun/门禁为卖点的工具，这是核心损伤。
- *
- * 因此凡是要把用户往 pin 表/回写上引的地方，都必须先声明 npm 形态不可用、Release 形态
- * 才是正解，切断「诱导关校验」这一步。保持 fail-closed 语义与 allowUnpinned 开关不变。
+ * 缺表时仍然 fail-closed（无 sha256 不得解压，A-2 人在环设计不改），但提示按
+ * 「pin 表/条目缺失」表述，并给三条真出路（补 data → env 指表 → 显式 allowUnpinned），
+ * 不把「关校验」诱导成唯一选项。
  */
-const NPM_FORM_UNAVAILABLE_NOTICE =
-  "【分发形态提示】本工具的 npm 包只含代码，不含 data/（含 mdk-checksums.json pin 表）。" +
-  "npm 安装形态下 MDK 校验链不可用：pin 表恒为空，且 sha256 回写目标位于包外、写不进去。" +
-  "请改用 GitHub Release 形态（Release zip 内含 mcp-server/data/），" +
-  "或用 MC_SKILL_MDK_CHECKSUMS 显式指向 Release 形态的 pin 表。";
+const MISSING_PIN_TABLE_NOTICE =
+  "【pin 表提示】未取到该条目的 sha256：`<包根>/data/mdk-checksums.json` 缺文件或该条目未回写。" +
+  "npm 包自带该表（`files` 含 `data`）；GitHub Release 的 `mcp-server-*.zip` 不含，需把 `mc-skill-data-full-*.zip` 解压合并，或 `npm install --data`。" +
+  "三条出路：① 补齐 data 后重试；② `MC_SKILL_MDK_CHECKSUMS` 指向已有的 pin 表；③ 显式 `allowUnpinned:true` 接受未校验下载（会回写 hash，语义不变）。";
 
 /**
  * Z-1（sweep81 结构化信封）：返回里带 `invalid` —— 调用方（resolveMdkEntry → downloadOfficialMdk）
@@ -797,9 +797,8 @@ export function unpackMdkArchive(opts: {
         message:
           "该 pin 表条目无 sha256（首下载未回写）。拒绝解压（fail-closed）。" +
           "两条路：① 先核实官方 zip 的 sha256 并补进 mdk-checksums.json；② 显式传 allowUnpinned:true 接受未校验下载（会回写 hash）。" +
-          // B-06：①② 都依赖 data/ 存在。npm 形态下 data/ 不在包里⇒ 两条路都走不通，
-          // 必须在此显式声明形态问题，否则用户只会看到「关掉校验」这个假出路。
-          NPM_FORM_UNAVAILABLE_NOTICE +
+          // 缺表/缺条目时给出补 data 与环境变量覆盖两条真出路，不把「关校验」当唯一选项。
+          MISSING_PIN_TABLE_NOTICE +
           `zip=${archivePath}`,
       },
     };
@@ -1050,11 +1049,8 @@ export async function downloadOfficialMdk(args: DownloadOfficialMdkArgs): Promis
       message += " Rift 无官方维护的模板仓库：环境搭建用 rift/1.13.2/scaffold 静态骨架。";
       nextSteps = ["读 rift/1.13.2/scaffold 与 AGENTS.md", "riftmod.json 字段以该档核实表为准"];
     }
-    // B-06：npm 形态下 pin 表恒为空（data/ 不在包里），此处是最主要的用户入口。
-    // 必须显式声明「npm 形态不可用、请用 Release 形态」，否则 nextSteps 会把
-    // 「开 allowUnpinned 跳过校验」当成唯一出路，而回写在 npm 形态下必然失败。
-    // 无 pin 时nextSteps 原本整个不存在（只有 LL/Rift/表损坏才有）—— 既然本函数
-    // 已经是「拿不到 MDK」的唯一入口，就必须给出可执行的下一步，否则叙事断链。
+    // 无 pin 时对外只有本函数这一个入口，必须同时给「补 data」与「env 指表」两条可行路，
+    // 否则 nextSteps 会把「开 allowUnpinned 跳过校验」读成唯一出路。
     const shapeSteps: string[] = [
       ...(resolved.checksumsInvalid
         ? ["修复或重建 mcp-server/data/mdk-checksums.json（合法 JSON，含 entries[]）"]
@@ -1066,12 +1062,11 @@ export async function downloadOfficialMdk(args: DownloadOfficialMdkArgs): Promis
       // Z-1：pin 表损坏必须是**自己的错误码**（MDK_CHECKSUMS_INVALID），不得冒充 MDK_NOT_PINNED
       error: {
         code: resolved.checksumsInvalid ? "MDK_CHECKSUMS_INVALID" : "MDK_NOT_PINNED",
-        message: `${message} ${NPM_FORM_UNAVAILABLE_NOTICE}`,
+        message: `${message} ${MISSING_PIN_TABLE_NOTICE}`,
       },
-      // 形态声明恒在第一条：先说「你处在哪种形态」，再讲这一档具体怎么绕过。
-      // （旧代码的checksumsInvalid 分支用对象展开覆盖 nextSteps，会把这里的声明冲掉，
-      //   故改为单一来源 shapeSteps 拼装，避免两处spread 打架。）
-      nextSteps: [NPM_FORM_UNAVAILABLE_NOTICE, ...shapeSteps],
+      // pin 表提示恒在第一条：先说「表缺在哪 / 怎么补」，再讲这一档具体怎么绕过。
+      // （checksumsInvalid 分支不得用对象展开覆盖 nextSteps，故统一走 shapeSteps 拼装。）
+      nextSteps: [MISSING_PIN_TABLE_NOTICE, ...shapeSteps],
       candidates: resolved.candidates.map((c) => ({
         id: c.id,
         buildPlugin: c.buildPlugin,
@@ -1319,18 +1314,15 @@ export async function downloadOfficialMdk(args: DownloadOfficialMdkArgs): Promis
     sha256Pinned: Boolean(entry.sha256) || wroteSha,
     ...(overwrote > 0 ? { overwrote, warning: `目标目录已存在 ${overwrote} 个文件，本次复制已覆盖` } : {}),
     sha256WroteBack: wroteSha,
-    // B-06：旧实现在wroteSha 为 false 时把 warnings 整个省略 ⇒「开了 allowUnpinned 但回写
-    // 根本没落盘」这条最需要人知道的事被静默吞掉。而 npm 形态下 pin 表路径恰好在包外，
-    // writebackSha256IfNull必然走 existsSync 早退返回 false ⇒ 用户永远收不到任何提示，
-    // 只看到 ok:true + sha256Pinned:false，误以为校验已闭环。故补一条显式失败告警。
-    // 注意：无话可说时仍返回 undefined（不是 []）—— 保持既有 JSON 形状不变。
+    // wroteSha 为 false 时不得把 warnings 整个省略：「开了 allowUnpinned 但回写没落盘」
+    // 是最需要人知道的一条。注意无话可说时仍返回 undefined（不是 []），保持既有 JSON 形状。
     warnings: wroteSha
-      ? ["已写仓库 mcp-server/data/mdk-checksums.json（唯一绕过写门禁的点）"]
+      ? [`已写回 pin 表：${checksumsPath()}（唯一绕过写门禁的点）`]
       : writebackAttempted
         ? [
             "未校验下载：sha256 回写**未落盘**（pin 表不可写或不存在）—— " +
               "本次下载未纳入 pin 校验链，下次不会复用该校验结果。" +
-              NPM_FORM_UNAVAILABLE_NOTICE,
+              MISSING_PIN_TABLE_NOTICE,
           ]
         : undefined,
     entryClass: unpacked.entryClass,
