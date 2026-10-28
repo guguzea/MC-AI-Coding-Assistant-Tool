@@ -1,10 +1,15 @@
 # MC AI Coding Assistant Tool
+
+> [!IMPORTANT]
+> **你是人类读者 → [人类读本](README_human.md)**（人话版：能干什么、怎么开始 · [English](README_human.en.md)）
+> 本文件是给 AI 执行用的技术契约，长且密；细节让 agent 讲，比你自己翻快。
+
 ## 写在前面的
 ### 如果你是 agent
 本文件是项目总说明。安装与配置 MCP 请读 `AUTO_SETUP.md`；本文的配置章节是同一内容的副本，用于兜底没读 `AUTO_SETUP.md` 的情况。
 
 ### 如果你是人类
-请读[人类读本](README_human.md)；需要细节可以直接让 agent 讲解。
+见文首那条提示：人类读本 = `README_human.md`；需要细节直接让 agent 讲解。
 [English](README.en.md) | **简体中文** · [人类读本](README_human.md)
 
 让 AI 编程助手（Cursor / Claude Code 等）能更好地编写 Minecraft 模组的完整工具包。

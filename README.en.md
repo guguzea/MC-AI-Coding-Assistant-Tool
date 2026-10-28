@@ -1,12 +1,16 @@
 # MC AI Coding Assistant Tool
 
+> [!IMPORTANT]
+> **Human reader → [Human README](README_human.en.md)** (plain language: what it does, how to start · [简体中文](README_human.md))
+> This file is the technical contract the AI executes against — long and dense. Asking your agent beats reading it.
+
 [简体中文](README.md) | **English** · [For humans](README_human.en.md)
 
 ## Read this first
 
 ### If you are an agent, this file is the project overview. For installing and configuring the MCP server, see AUTO_SETUP.md; the configuration chapter here is a copy of the same content, kept as a fallback for readers who skip AUTO_SETUP.md.
 
-### If you are a human, see the human-facing page linked below
+### If you are a human, see the notice at the top: the human-facing page is README_human.en.md
 
 If you want the fine detail, just let the agent work it out for you.
 
