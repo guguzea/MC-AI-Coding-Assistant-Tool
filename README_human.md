@@ -1,7 +1,7 @@
 <div align="center">
 
 <a href="https://github.com/guguzea/MC-AI-Coding-Assistant-Tool"><img alt="StoneBadge 1/5 · 仓库活体徽章，颜色由最新 commit 生成" src="https://stone.professorlee.work/api/stone/guguzea/MC-AI-Coding-Assistant-Tool" height="40" /></a>&nbsp;&nbsp;<a href="https://github.com/guguzea/MC-AI-Coding-Assistant-Tool"><img alt="StoneBadge 2/5" src="https://stone.professorlee.work/api/stone/guguzea/MC-AI-Coding-Assistant-Tool" height="40" /></a>&nbsp;&nbsp;<a href="https://github.com/guguzea/MC-AI-Coding-Assistant-Tool"><img alt="StoneBadge 3/5" src="https://stone.professorlee.work/api/stone/guguzea/MC-AI-Coding-Assistant-Tool" height="40" /></a>&nbsp;&nbsp;<a href="https://github.com/guguzea/MC-AI-Coding-Assistant-Tool"><img alt="StoneBadge 4/5" src="https://stone.professorlee.work/api/stone/guguzea/MC-AI-Coding-Assistant-Tool" height="40" /></a>&nbsp;&nbsp;<a href="https://github.com/guguzea/MC-AI-Coding-Assistant-Tool"><img alt="StoneBadge 5/5" src="https://stone.professorlee.work/api/stone/guguzea/MC-AI-Coding-Assistant-Tool" height="40" /></a><br />
-[![平台 · 8 个平台（含基岩版）](https://img.shields.io/static/v1?label=%E5%B9%B3%E5%8F%B0&message=8%20%E4%B8%AA&color=8A2BE2&style=for-the-badge)](https://github.com/guguzea/MC-AI-Coding-Assistant-Tool)&nbsp;&nbsp;[![MCP/CLI 工具 · 86 个](https://img.shields.io/static/v1?label=MCP%2FCLI%20%E5%B7%A5%E5%85%B7&message=86&color=2563EB&style=for-the-badge)](README.md)&nbsp;&nbsp;[![Node ≥ 22.5](https://img.shields.io/static/v1?label=Node&message=%E2%89%A522.5&color=339933&style=for-the-badge&logo=node.js)](AUTO_SETUP.md)<br />
+[![平台 · 8 个加载器 + 服务端面](https://img.shields.io/static/v1?label=%E5%B9%B3%E5%8F%B0&message=8%20%E4%B8%AA%2B%E6%9C%8D%E5%8A%A1%E7%AB%AF%E9%9D%A2&color=8A2BE2&style=for-the-badge)](https://github.com/guguzea/MC-AI-Coding-Assistant-Tool)&nbsp;&nbsp;[![MCP/CLI 工具 · 89 个](https://img.shields.io/static/v1?label=MCP%2FCLI%20%E5%B7%A5%E5%85%B7&message=89&color=2563EB&style=for-the-badge)](README.md)&nbsp;&nbsp;[![Node ≥ 22.5](https://img.shields.io/static/v1?label=Node&message=%E2%89%A522.5&color=339933&style=for-the-badge&logo=node.js)](AUTO_SETUP.md)<br />
 [![代码许可 · MIT](https://img.shields.io/static/v1?label=%E4%BB%A3%E7%A0%81%E8%AE%B8%E5%8F%AF&message=MIT&color=8A2BE2&style=for-the-badge)](LICENSE)&nbsp;&nbsp;[![社区知识库 · CC BY-NC-SA 4.0](https://img.shields.io/static/v1?label=%E7%A4%BE%E5%8C%BA%E7%9F%A5%E8%AF%86%E5%BA%93&message=CC%20BY-NC-SA%204.0&color=D93F0B&style=for-the-badge)](community_knowledge/ATTRIBUTION.md)<br />
 [![★ Stars](https://img.shields.io/github/stars/guguzea/MC-AI-Coding-Assistant-Tool?label=%E2%98%85%20Stars&style=social)](https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/stargazers)&nbsp;&nbsp;[![Forks](https://img.shields.io/github/forks/guguzea/MC-AI-Coding-Assistant-Tool?label=Forks&style=social)](https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/forks)&nbsp;&nbsp;[![议题](https://img.shields.io/github/issues/guguzea/MC-AI-Coding-Assistant-Tool?label=Issues&style=social)](https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/issues)&nbsp;&nbsp;[![last commit](https://img.shields.io/github/last-commit/guguzea/MC-AI-Coding-Assistant-Tool?label=last%20commit&style=flat-square)](https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/commits)
 
@@ -77,10 +77,13 @@ graph LR
 > 想看每一层各自有哪些具体东西，见 [README.md 的「项目结构」与「MCP/CLI TOOLS」](README.md)。图中「控制代码」＝仓库里的 `mcp-server/`，「你的 mod 工程」＝你自己的模组项目目录。
 
 ## 适合谁
-
+- 想用写模组但是不想折腾的开发者
 - 正在写模组，想让 AI 少给错答案的开发者
 - 靠 AI 改代码，担心它编造方法名的开发者
 - 整合包 / 服务端维护者（认依赖、查崩溃）
+- 写 **Paper / Spigot 插件**的服务端开发者（走的是另一条服务端面，下面有单独一节）
+- 想研究别人家模组怎么写的开发者（反编译 + 源码检索）
+- 用老版本开工的开发者（Forge 规则树从 `1.7.10` 起就有档，LiteLoader / Rift / ModLoader 也各有一条细线）
 
 ## 三步开始
 
@@ -96,18 +99,27 @@ graph LR
 
 每个平台、每个版本都有一套规则（注册方式、事件、网络、数据生成、反模式……）和一批专用技能文件。AI 装规则时会用**你这个版本**的那一套，不会拿邻近版本糊你。
 
+本机现跑 `activate_platform_pack --action=list` 数出来共 **54 档可加载**的规则树：Forge 15 / Fabric 14 / NeoForge 10 / Quilt 10 / LiteLoader 1 / Rift 2 / ModLoader 1 / 基岩 1（扁平，不分版本）。盘上另有 5 档是 `draft`（会在 `drafts` 里点名：Forge 1.21.1、LiteLoader 1.8.9 / 1.10.2、ModLoader 1.2.5 / 1.5.2）——两个数的分母都写在上面了，随时间会变，跑一遍命令最准。**没有你这个版本的档，它会直说 `PACK_NOT_FOUND` 并把同系列候选清单交给你选，不会悄悄拿邻版顶上——这是刻意的。
+
 → 细节见 [README.md 的「Agent Skills」与「规则文件说明」](README.md)
 
 ### 官方文档检索（离线可用）
 
 把 Forge / Fabric / NeoForge / Quilt / LiteLoader / Rift / Bedrock 的官方文档抓到本地，按关键词与语义混合检索，返回的是**原文页 id**，可以继续读摘要或全文，不需要联网。版本清单和每个版本有哪些文档，都写在数据包里。
 
+服务端那条线也共用这套检索，只是平台 id 不同：`platform=paper` 是教程面（官方 docs，67 页），`paper-api` 与 `spigot` 是签名面（一个管当前档 2116 个类 + 5 个历史档，一个是 1396 个类 + 8 个历史档，且它只有签名、没有教程正文）。
+
 → 细节见 [README.md 的「MCP 工具使用注意」](README.md)
+
+### 基岩 Add-On
+
+基岩是另一套东西，跟 Java 侧不共用：语料是 Microsoft Learn 的基岩文档（`data/bedrock_stable` 下 882 页）和包里的 JSON，工具是单独一组 9 个——搜文档、取摘要 / 全文、校验 `manifest.json` 与行为包实体 JSON、生成 manifest 和 BP 实体（同样只吐文本）、读 `content_log.txt` 分诊。Yarn / Mixin / `query_api` 那套在基岩上一个都对不上，别混着用。
+
+→ 细节见 [README.md 工具参考 §6b](README.md)
 
 ### API、签名与映射查询
 
 按类名和方法名查 Vanilla API 的方法签名与参数名；查加载器 / 库模组 API；把类名、方法名、字段名在 mojang / MCP / Yarn / Parchment / 混淆名之间来回转换；拿崩溃报告里的一个混淆 token（`method_6032`、`er`、`func_110143_aJ` 这类）反查回可读名字。映射层缺失时它会明说"没有索引"，不会拿空壳当答案。
-
 → 细节见 [README.md 的「映射转换」与「工具边界」](README.md)
 
 ### 错误代码与资源校验
@@ -128,6 +140,18 @@ graph LR
 
 → 细节见 [README.md 的工具参考 §10](README.md)
 
+### 反编译与源码研究
+
+有时候文档没写、社区也没人写，那就直接看源码：`analyze_mod_jar` 不联网不反编译，先读 jar 的元数据和依赖；`decompile_mod_jar` 把第三方模组 jar 反编译到本地缓存；`get_minecraft_source` 拉某个版本的 MC 源码某个类（`1.14–1.21.11` 走 Yarn 重映射，`26.1–26.3` 已去混淆）；`search_mod_code` 在反编译产物里搜字符串或正则；`download_official_mdk` 拉官方 MDK 起一个干净工程。**默认零下载**，只在你显式调用时才按需拉；产物只落本地缓存目录（`MC_SKILL_CACHE`），**绝不写你的工程**；需要 JDK 17+，首次反编译一个版本大概 3–10 分钟，之后命中缓存不到 1 秒。第三方库/加载器的 API 也可以由你自备 jar `ingest` 进来，填上官方不代下那几个平台（LiteLoader / Rift / ModLoader）的空。
+
+→ 细节见 [README.md 的「反编译与模组源码」§13 / §14](README.md)
+
+### 依赖、上游版本与发布前检查
+
+`check_dependencies` 读你的 `build.gradle` 与各类元数据，告诉你声明了哪些库、版本窗口对不对；`query_upstream_releases` 直接问上游发行源——Forge / NeoForge maven、`fabric-loader` / `yarn` / `quilt-loader` / `parchment`、Modrinth 上的任意第三方模组、Mojang 官方 manifest——问的是**某个版本到底存不存在、最新出到第几版**。它跟 `list_*_versions` 不一样：后者列的是"本仓入库了哪些文档档"，没列在里面不等于上游没有；而 "查不到"（网络/解析挂了）和 "确实没有" 在返回里是两个不同的信号，不会混成一句"没有"。`check_publish_ready` 在发布前做机器检查：license / version 字段、`build/libs` 里是不是正式 jar，再对照发布清单把缺项列出来。三者**都不替你上传**，上传永远是人自己做。
+
+→ 细节见 [README.md 的工具参考 §8 / §11](README.md)
+
 ### 诊断与崩溃分诊
 
 解析崩溃报告、游戏日志、Gradle 构建失败日志；判断缺失前置与版本不兼容；检查依赖冲突、项目元数据、Mixin 配置。基岩端读 content log。
@@ -142,9 +166,15 @@ graph LR
 
 → 细节见 [README.md 的「模组测试流程 loop」](README.md)
 
+### 服务端面：Paper / Spigot 插件
+
+写插件是另一条线，不挂在模组那八棵平台树下面。规则在 `paper/<ver>/rules/`：`26.3` 有十条正文（事件、命令、物品栏、权限、调度器、`plugin.yml` 与配置、PDC、Adventure、实测陷阱），另 5 档只写「26.3 的条款在本版还成不成立」的适用性核查——教程面本身不分版本，照抄别版的条款就是没核过。语料分两面：`platform=paper` 是官方教程（67 页），`paper-api` / `spigot` 只有签名，当前档各 2116 / 1396 个类，另各带 5 档与 8 档历史。`generate_paper_plugin` 出插件骨架，`generate_playtest_server_driver` 出起服 driver 与 `plan.txt` 样例，判据落在服务端日志里。
+
+→ 细节见 [doc/server-face-paper.md](doc/server-face-paper.md)
+
 ### 移植
 
-把模组从 Forge 迁到 NeoForge / Fabric 这类跨加载器移植：识别平台与映射、给出风险与步骤、按确认执行。默认只做 dryRun 预览。
+把模组从 Forge 迁到 NeoForge / Fabric 这类跨加载器移植：识别平台与映射、给出风险与步骤、按确认执行。默认只做 dryRun 预览。26.2 / 26.3 没规则树也没文档，走官方迁移指南（`get_migration_guide` 的 `26.1->26.2` / `26.2->26.3`，源是 NeoForge Primer）。
 
 → 细节见 [README.md 的「移植分析」](README.md)
 
@@ -153,6 +183,18 @@ graph LR
 把你的模组或第三方 jar 的语言文件抽出来、对比缺失项、生成中文草稿。**没有机器翻译**，它只标出哪些条目需要人填。
 
 → 细节见 [README.md 的 `localize_mod` 说明](README.md)
+
+### 编排技能：动手之前先把事情问清楚
+
+除了"某个方块怎么写"这类开发技能，仓库还带 **12 个跨平台、跨版本的编排技能**（源稿在根目录 `common_skill/`，经 `get_workflow_template` 与 `mcskill://skill/<名字>` 可取）：除了前面提过的 `mc-grill`（需求拷问），还有 `mc-spec`（把共识凝成可验收规格）、`mc-breakdown`（按 L0–L7 拆成竖切片，标明每片的最低验收层级）、`mc-review`（标准轴对规则 / 规格轴对 spec 的双轴评审，只出报告不代改）、`mc-research`（带出处的调查，未核实的点会点名）、`mc-wizard`（把只有人能做的操作写成可粘贴命令 + 逐步判绿点）、`mc-handoff`（换会话 / 换机器前的交接文档）、以及 `mc-router` / `mc-glossary` / `mc-waitwhat` / `mc-prototype` / `mc-retro`。它们不管某个 API 怎么写，管的是**这一步该谁拍板、证据从哪来**。
+
+→ 细节见 [common_skill/README.md](common_skill/README.md) 与 [README.md 的「工作流模板」§15](README.md)
+
+### 更新
+
+装完不用重装。`mc_skill_update`（或 `node mcp-server/dist/cli.js update --action check`）去 GitHub Release 看有没有新的工具或数据，`apply` 默认还是 dryRun，先把要覆盖的文件和要占的磁盘列给你，真写才加 `confirmed=true`。它只动仓库自己的代码和数据，不碰你的模组工程。
+
+→ 细节见 [README.md 工具参考 §12](README.md)
 
 ### 命令行入口
 
@@ -176,6 +218,9 @@ graph LR
 └── .pi/         → Pi（rules/*.md）
 ```
 
+
+DSH 还额外做了一个**原生插件**(仓库根 `dsh-plugin/`):装上以后它按你当前打开的工程自动判平台与精确版本,只挂那一档的技能并把该档的底座规则(`00/01/09`)注入 system prompt,同名技能不会几十档撞车,也不用每次手动 `activate_platform_pack`。有兴趣可以看 [dsh-plugin/README.md](dsh-plugin/README.md)。
+
 ## skill/rules/代码模式库等文件由于上游文档错误(说的就是forge,1.20.4还在教1.20.1的东西),人工维护等问题,难免出现一点问题(1.20.1+应该没有问题了),如发现无法编译,报错,可以优先以文档为主,你也可以提交issue,我会尽快修复,谢谢您的理解Thanks♪(･ω･)ﾉ
 
 ## 在哪找什么
@@ -188,6 +233,9 @@ graph LR
 | CLI 完整语义 | [mcp-server/README.md](mcp-server/README.md) |
 | 社区知识库（发布、崩溃、库选型） | [community_knowledge/README.md](community_knowledge/README.md) |
 | 游戏内自测的详细规程 | [community_knowledge/authored/ingame-playtest-automation.md](community_knowledge/authored/ingame-playtest-automation.md) |
+| 服务端面（Paper / Spigot 插件） | [doc/server-face-paper.md](doc/server-face-paper.md) |
+| 编排技能（拷问 / 拆任务 / 评审 / 交接） | [common_skill/README.md](common_skill/README.md) |
+| 每个平台 / 版本建档到什么程度 | [doc](doc) 下的 `platform-coverage-*.md` |
 | 怎么给仓库提改动 | [CONTRIBUTING.md](CONTRIBUTING.md) |
 | 第三方文档与数据的许可 | [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) |
 
@@ -202,9 +250,4 @@ graph LR
    A:基岩端的游玩自测目前还在开发中,等开发完成后会同步更新
 4. Q:为什么有这么多工具,看上去好多可以合并
    A:为了保证项目的灵活性,每个部分都是单独可拆的,你只需要保留你需要的部分,其他的可以删除来节省空间,而为了可拆,工具就变得非常多了
-   (其实是部分内容拆了之后会导致合并工具出现一些妙妙BUG)
-#### 有问题可以提issue与讨论,我会尽快回复
-## 可以进来玩玩:
-QQ:
-<img width="1228" height="2184" alt="0bd61b684c78842d59a5ad09de01f4be_720" src="https://github.com/user-attachments/assets/41e370aa-611c-4af2-ad9a-007e1973a24a" />
-DISCORD:https://discord.gg/vY8n6G865
+   (其实是部分内容拆了之后�
