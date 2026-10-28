@@ -99,7 +99,9 @@ graph LR
 
 每个平台、每个版本都有一套规则（注册方式、事件、网络、数据生成、反模式……）和一批专用技能文件。AI 装规则时会用**你这个版本**的那一套，不会拿邻近版本糊你。
 
-本机现跑 `activate_platform_pack --action=list` 数出来共 **54 档可加载**的规则树：Forge 15 / Fabric 14 / NeoForge 10 / Quilt 10 / LiteLoader 1 / Rift 2 / ModLoader 1 / 基岩 1（扁平，不分版本）。盘上另有 5 档是 `draft`（会在 `drafts` 里点名：Forge 1.21.1、LiteLoader 1.8.9 / 1.10.2、ModLoader 1.2.5 / 1.5.2）——两个数的分母都写在上面了，随时间会变，跑一遍命令最准。**没有你这个版本的档，它会直说 `PACK_NOT_FOUND` 并把同系列候选清单交给你选，不会悄悄拿邻版顶上——这是刻意的。
+ `activate_platform_pack --action=list` 数出来共 **54 档可加载**的规则树：Forge 15 / Fabric 14 / NeoForge 10 / Quilt 10 / LiteLoader 1 / Rift 2 / ModLoader 1 / 基岩 1（扁平，不分版本）。盘上另有 5 档是 `draft`（会在 `drafts` 里点名：Forge 1.21.1、LiteLoader 1.8.9 / 1.10.2、ModLoader 1.2.5 / 1.5.2）——两个数的分母都写在上面了，随时间会变，跑一遍命令最准。**没有你这个版本的档，它会直说 `PACK_NOT_FOUND` 并把同系列候选清单交给你选，不会悄悄拿邻版顶上——这是刻意的。**
+
+版本变迁也能问：`get_version_info` 给某个 Forge 版本加一个操作（比如「注册方块」），回推荐做法、关键变更、踩坑点和官方 changelog 链接（只有 Forge 有这档）。
 
 → 细节见 [README.md 的「Agent Skills」与「规则文件说明」](README.md)
 
@@ -107,7 +109,7 @@ graph LR
 
 把 Forge / Fabric / NeoForge / Quilt / LiteLoader / Rift / Bedrock 的官方文档抓到本地，按关键词与语义混合检索，返回的是**原文页 id**，可以继续读摘要或全文，不需要联网。版本清单和每个版本有哪些文档，都写在数据包里。
 
-服务端那条线也共用这套检索，只是平台 id 不同：`platform=paper` 是教程面（官方 docs，67 页），`paper-api` 与 `spigot` 是签名面（一个管当前档 2116 个类 + 5 个历史档，一个是 1396 个类 + 8 个历史档，且它只有签名、没有教程正文）。
+服务端那条线也共用这套检索，只是平台 id 不同：`paper` / `paper-api` / `spigot`，差别见下面「服务端面」一节。
 
 → 细节见 [README.md 的「MCP 工具使用注意」](README.md)
 
@@ -124,7 +126,7 @@ graph LR
 
 ### 错误代码与资源校验
 
-字节码级校验 Access Transformer / Access Widener（Forge / NeoForge / Fabric）、分析 mixin 注入目标、校验数据包 JSON、静态审计模型与纹理引用、检查资源包格式。也提供工作流模板库（新建方块 / 物品 / 实体 / GUI / 世界生成 / 配置 / GameTest……），每条都写清先后顺序。
+字节码级校验 Access Transformer / Access Widener（Forge / NeoForge / Fabric）、分析 mixin 注入目标、校验数据包 JSON、静态审计模型与纹理引用、检查资源包格式。工程本身也校：`mods.toml` / `fabric.mod.json` / `neoforge.mods.toml` 与入口点对不对得上。要确认某个 Vanilla 注册 ID（`minecraft:xxx`）在不在，用 `query_registry`。也提供工作流模板库（新建方块 / 物品 / 实体 / GUI / 世界生成 / 配置 / GameTest……），每条都写清先后顺序。
 
 → 细节见 [README.md 的工具参考 §9 / §10](README.md)
 
@@ -154,7 +156,7 @@ graph LR
 
 ### 诊断与崩溃分诊
 
-解析崩溃报告、游戏日志、Gradle 构建失败日志；判断缺失前置与版本不兼容；检查依赖冲突、项目元数据、Mixin 配置。基岩端读 content log。
+解析崩溃报告、游戏日志、Gradle 构建失败日志；判断缺失前置与版本不兼容；检查依赖冲突、项目元数据、Mixin 配置。
 
 → 细节见 [README.md 的工具参考 §2 / §11](README.md)
 
@@ -190,11 +192,15 @@ graph LR
 
 → 细节见 [common_skill/README.md](common_skill/README.md) 与 [README.md 的「工作流模板」§15](README.md)
 
+仓库还挂着一套代码模式库、反模式库、schema 与社区短文，同样走 `mcskill://`：`list_knowledge_resources` 列出全部 293 条，`read_knowledge_resource` 读正文。
+
 ### 更新
 
 装完不用重装。`mc_skill_update`（或 `node mcp-server/dist/cli.js update --action check`）去 GitHub Release 看有没有新的工具或数据，`apply` 默认还是 dryRun，先把要覆盖的文件和要占的磁盘列给你，真写才加 `confirmed=true`。它只动仓库自己的代码和数据，不碰你的模组工程。
 
-→ 细节见 [README.md 工具参考 §12](README.md)
+出问题先 `get_server_status`：它报索引预热状态、Java 探测（反编译要 JDK 17+）、`src` 比 `dist` 新没新、以及上次查到的更新提示。
+
+→ 细节见 [README.md 工具参考 §12](README.md) 与 [doc/mcp-troubleshooting.md](doc/mcp-troubleshooting.md)
 
 ### 命令行入口
 
@@ -250,4 +256,11 @@ DSH 还额外做了一个**原生插件**(仓库根 `dsh-plugin/`):装上以后�
    A:基岩端的游玩自测目前还在开发中,等开发完成后会同步更新
 4. Q:为什么有这么多工具,看上去好多可以合并
    A:为了保证项目的灵活性,每个部分都是单独可拆的,你只需要保留你需要的部分,其他的可以删除来节省空间,而为了可拆,工具就变得非常多了
-   (其实是部分内容拆了之后�
+   (其实是部分内容拆了之后会导致合并工具出现一些妙妙BUG)
+5. Q:我是写 Paper / Spigot 插件的,这套东西对我有用吗?
+   A:有用
+#### 有问题可以提issue与讨论,我会尽快回复
+## 可以进来玩玩:
+QQ:
+<img width="1228" height="2184" alt="0bd61b684c78842d59a5ad09de01f4be_720" src="https://github.com/user-attachments/assets/41e370aa-611c-4af2-ad9a-007e1973a24a" />
+DISCORD:https://discord.gg/vY8n6G865

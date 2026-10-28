@@ -1,7 +1,7 @@
 <div align="center">
 
 <a href="https://github.com/guguzea/MC-AI-Coding-Assistant-Tool"><img alt="StoneBadge 1/5 · live repository badge, colour derived from the latest commit" src="https://stone.professorlee.work/api/stone/guguzea/MC-AI-Coding-Assistant-Tool" height="40" /></a>&nbsp;&nbsp;<a href="https://github.com/guguzea/MC-AI-Coding-Assistant-Tool"><img alt="StoneBadge 2/5" src="https://stone.professorlee.work/api/stone/guguzea/MC-AI-Coding-Assistant-Tool" height="40" /></a>&nbsp;&nbsp;<a href="https://github.com/guguzea/MC-AI-Coding-Assistant-Tool"><img alt="StoneBadge 3/5" src="https://stone.professorlee.work/api/stone/guguzea/MC-AI-Coding-Assistant-Tool" height="40" /></a>&nbsp;&nbsp;<a href="https://github.com/guguzea/MC-AI-Coding-Assistant-Tool"><img alt="StoneBadge 4/5" src="https://stone.professorlee.work/api/stone/guguzea/MC-AI-Coding-Assistant-Tool" height="40" /></a>&nbsp;&nbsp;<a href="https://github.com/guguzea/MC-AI-Coding-Assistant-Tool"><img alt="StoneBadge 5/5" src="https://stone.professorlee.work/api/stone/guguzea/MC-AI-Coding-Assistant-Tool" height="40" /></a><br />
-[![Platforms · 8 (incl. Bedrock)](https://img.shields.io/static/v1?label=Platforms&message=8&color=8A2BE2&style=for-the-badge)](https://github.com/guguzea/MC-AI-Coding-Assistant-Tool)&nbsp;&nbsp;[![MCP/CLI tools · 86](https://img.shields.io/static/v1?label=MCP%2FCLI%20tools&message=86&color=2563EB&style=for-the-badge)](README.en.md)&nbsp;&nbsp;[![Node ≥ 22.5](https://img.shields.io/static/v1?label=Node&message=%E2%89%A522.5&color=339933&style=for-the-badge&logo=node.js)](AUTO_SETUP.md)<br />
+[![Platforms · 8 loaders + server face](https://img.shields.io/static/v1?label=Platforms&message=8%20loaders%2Bserver%20face&color=8A2BE2&style=for-the-badge)](https://github.com/guguzea/MC-AI-Coding-Assistant-Tool)&nbsp;&nbsp;[![MCP/CLI tools · 89](https://img.shields.io/static/v1?label=MCP%2FCLI%20tools&message=89&color=2563EB&style=for-the-badge)](README.en.md)&nbsp;&nbsp;[![Node ≥ 22.5](https://img.shields.io/static/v1?label=Node&message=%E2%89%A522.5&color=339933&style=for-the-badge&logo=node.js)](AUTO_SETUP.md)<br />
 [![code license · MIT](https://img.shields.io/static/v1?label=code%20license&message=MIT&color=8A2BE2&style=for-the-badge)](LICENSE)&nbsp;&nbsp;[![community knowledge · CC BY-NC-SA 4.0](https://img.shields.io/static/v1?label=community%20knowledge&message=CC%20BY-NC-SA%204.0&color=D93F0B&style=for-the-badge)](community_knowledge/ATTRIBUTION.md)<br />
 [![★ Stars](https://img.shields.io/github/stars/guguzea/MC-AI-Coding-Assistant-Tool?label=%E2%98%85%20Stars&style=social)](https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/stargazers)&nbsp;&nbsp;[![Forks](https://img.shields.io/github/forks/guguzea/MC-AI-Coding-Assistant-Tool?label=Forks&style=social)](https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/forks)&nbsp;&nbsp;[![Issues](https://img.shields.io/github/issues/guguzea/MC-AI-Coding-Assistant-Tool?label=Issues&style=social)](https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/issues)&nbsp;&nbsp;[![last commit](https://img.shields.io/github/last-commit/guguzea/MC-AI-Coding-Assistant-Tool?label=last%20commit&style=flat-square)](https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/commits)
 
@@ -80,9 +80,13 @@ In plain words (in case the diagram does not render):
 
 ## Who it is for
 
+- People who want to write mods without fighting the setup
 - Mod developers who want fewer wrong answers from AI
 - People letting AI edit code but worried it will invent method names
 - Pack and server maintainers (dependency checks, crash triage)
+- Server developers writing **Paper / Spigot plugins** (a separate server face, its own section below)
+- Developers who want to see how other people's mods are written (decompile + source search)
+- Anyone starting on an old version (the Forge rule tree goes back to `1.7.10`; LiteLoader / Rift / ModLoader each keep their own thin line)
 
 ## Three steps to start
 
@@ -98,13 +102,25 @@ In plain words (in case the diagram does not render):
 
 Every platform and version ships its own rule set (registration, events, networking, data generation, anti-patterns, …) plus a batch of task-specific skill files. The agent loads **your** version's set, not a neighbouring one.
 
+Running `activate_platform_pack --action=list` here counts **54 loadable** rule trees: Forge 15 / Fabric 14 / NeoForge 10 / Quilt 10 / LiteLoader 1 / Rift 2 / ModLoader 1 / Bedrock 1 (flat, not per version). Another 5 on disk are `draft` (named in `drafts`: Forge 1.21.1, LiteLoader 1.8.9 / 1.10.2, ModLoader 1.2.5 / 1.5.2) — both denominators are written right there, and the numbers drift, so run the command if it matters. **When your version has no pack it says `PACK_NOT_FOUND` and hands you the sibling list to pick from; it will not quietly substitute a neighbouring version — that is deliberate.**
+
+Version history is answerable too: `get_version_info` takes a Forge version plus an action (say "register a block") and returns the recommended approach, the key changes, the gotchas, and official changelog links (Forge only).
+
 → details in the "Agent Skills" and "Rule files" sections of [README.en.md](README.en.md)
 
 ### Official documentation search (works offline)
 
 Forge / Fabric / NeoForge / Quilt / LiteLoader / Rift / Bedrock docs are fetched into a local corpus and searched with a mix of keyword and semantic ranking. Results come back as real page ids you can expand into a summary or the full text. No network needed. Which versions have data is recorded in the data packs.
 
+The server line shares this search under different platform ids: `paper` / `paper-api` / `spigot` — the difference is in "Server face" below.
+
 → details in "Notes on using the MCP tools" in [README.en.md](README.en.md)
+
+### Bedrock Add-Ons
+
+Bedrock is a separate world from Java and shares nothing with it: the corpus is Microsoft Learn's Bedrock docs (882 pages under `data/bedrock_stable`) plus the JSON inside packs, and there is a standalone group of 9 tools — documentation search, summary / full text, `manifest.json` and behaviour-pack entity JSON validation, manifest and BP entity generation (text output only, like everywhere else), and `content_log.txt` triage. Yarn / Mixin / `query_api` map onto nothing on Bedrock; do not mix them.
+
+→ details in section 6b of the tool reference in [README.en.md](README.en.md)
 
 ### API, signatures, and mappings
 
@@ -114,7 +130,7 @@ Look up method signatures and parameter names for Vanilla APIs by class and meth
 
 ### Access transformers, mixins, and resources
 
-Bytecode-level validation of Access Transformer / Access Widener configs (Forge / NeoForge / Fabric), mixin injection-target analysis, data pack JSON validation, static audits of model and texture references, and resource pack format checks. There is also a workflow template library (new block / item / entity / GUI / worldgen / config / GameTest, …) where each template states the order of operations.
+Bytecode-level validation of Access Transformer / Access Widener configs (Forge / NeoForge / Fabric), mixin injection-target analysis, data pack JSON validation, static audits of model and texture references, and resource pack format checks. It validates the project itself too: whether `mods.toml` / `fabric.mod.json` / `neoforge.mods.toml` line up with the entrypoints. To check whether a Vanilla registry id (`minecraft:xxx`) exists, use `query_registry`. There is also a workflow template library (new block / item / entity / GUI / worldgen / config / GameTest, …) where each template states the order of operations.
 
 → details in sections 9 and 10 of the tool reference in [README.en.md](README.en.md)
 
@@ -130,9 +146,21 @@ Skeletons for new blocks, items, entity renderers, worldgen, network packets, co
 
 → details in section 10 of the tool reference in [README.en.md](README.en.md)
 
+### Decompiling and reading mod sources
+
+Sometimes the docs do not cover it and nobody wrote it up, so read the source: `analyze_mod_jar` reads a jar's metadata and dependencies without network or decompilation; `decompile_mod_jar` decompiles a third-party mod jar into the local cache; `get_minecraft_source` pulls one class of a given version's MC source (`1.14–1.21.11` through Yarn remapping, `26.1–26.3` already deobfuscated); `search_mod_code` greps strings or regexes in decompiled output; `download_official_mdk` fetches the official MDK to start a clean project. **Zero downloads by default** — nothing is fetched until you call for it; artifacts land only in the local cache (`MC_SKILL_CACHE`), **never in your project**; JDK 17+ is required, the first decompile of a version takes roughly 3–10 minutes and later cache hits are under a second. You can also `ingest` your own jar for third-party library or loader APIs, which fills the gaps on the platforms we cannot download (LiteLoader / Rift / ModLoader).
+
+→ details in "Decompiling mod sources" §13 / §14 of [README.en.md](README.en.md)
+
+### Dependencies, upstream versions, and the pre-release check
+
+`check_dependencies` reads your `build.gradle` and metadata and reports which libraries are declared and whether the version windows line up. `query_upstream_releases` asks the upstream release sources directly — Forge / NeoForge maven, `fabric-loader` / `yarn` / `quilt-loader` / `parchment`, any third-party mod on Modrinth, Mojang's official manifest — the question being **whether a version exists at all, and what the newest one is**. It is not `list_*_versions`: those list which doc versions this repo has ingested, and absence there does not mean upstream lacks it; "could not reach it" (network or parse failure) and "it really is not there" come back as two different signals, never collapsed into one "no". `check_publish_ready` runs the pre-release machine checks: license / version fields, whether `build/libs` holds a real jar, then diffs against the publishing checklist. None of the three uploads anything for you — publishing is always done by a human.
+
+→ details in sections 8 and 11 of the tool reference in [README.en.md](README.en.md)
+
 ### Diagnostics and crash triage
 
-Parses crash reports, game logs, and Gradle build failures; infers missing prerequisites and version incompatibilities; checks dependency conflicts, project metadata, and mixin configs. On Bedrock it reads the content log.
+Parses crash reports, game logs, and Gradle build failures; infers missing prerequisites and version incompatibilities; checks dependency conflicts, project metadata, and mixin configs.
 
 → details in sections 2 and 11 of the tool reference in [README.en.md](README.en.md)
 
@@ -144,9 +172,15 @@ That said, I would not use this as a companion player: the implementation is a b
 
 → details in "Mod testing loop" in [README.en.md](README.en.md)
 
+### Server face: Paper / Spigot plugins
+
+Writing plugins is a separate line, not hanging under the eight mod platform trees. Rules live in `paper/<ver>/rules/`: `26.3` has ten chapters of body (events, commands, inventory GUIs, permissions, scheduler, `plugin.yml` and config, PDC, Adventure, measured traps), and 5 other versions carry only an applicability check — "does each 26.3 clause still hold here?" — because the tutorial face is not versioned, so copying another version's clauses is simply unverified. The corpus has two faces: `platform=paper` is the official tutorial (67 pages); `paper-api` / `spigot` are signatures only, 2116 / 1396 classes on the current pack, plus 5 and 8 historical packs each. `generate_paper_plugin` produces a plugin skeleton, `generate_playtest_server_driver` produces a server-start driver with a `plan.txt` sample, and the verdicts land in the server log.
+
+→ details in [doc/server-face-paper.md](doc/server-face-paper.md)
+
 ### Porting
 
-Porting a mod across loaders (Forge → NeoForge / Fabric and so on): identify the platform and mappings, list risks and steps, execute after you confirm. DryRun preview by default.
+Porting a mod across loaders (Forge → NeoForge / Fabric and so on): identify the platform and mappings, list risks and steps, execute after you confirm. DryRun preview by default. 26.2 / 26.3 have neither a rule tree nor docs; those go through the official migration guide (`get_migration_guide` with `26.1->26.2` / `26.2->26.3`, sourced from the NeoForge Primer).
 
 → details in "Porting analysis" in [README.en.md](README.en.md)
 
@@ -155,6 +189,22 @@ Porting a mod across loaders (Forge → NeoForge / Fabric and so on): identify t
 Extracts and diffs the language files of your mod or a third-party jar and drafts a Chinese version. **There is no machine translation** — it only marks the entries a human has to fill in.
 
 → details in the `localize_mod` section of [README.en.md](README.en.md)
+
+### Orchestration skills: settle the questions before you build
+
+Beyond "how do I write a block" dev skills, the repo ships **12 cross-platform, cross-version orchestration skills** (sources in `common_skill/`, reachable through `get_workflow_template` and `mcskill://skill/<name>`): besides `mc-grill` (requirement grilling) mentioned earlier, there is `mc-spec` (turning consensus into an acceptable spec), `mc-breakdown` (slicing into vertical L0–L7 pieces, each with its minimum acceptance level), `mc-review` (two-axis review — standards against the rules, spec against the spec — report only, no edits), `mc-research` (investigation with sources; whatever is unverified gets named), `mc-wizard` (turning human-only operations into pasteable commands with step-by-step green checks), `mc-handoff` (a handover document for switching sessions or machines), plus `mc-router` / `mc-glossary` / `mc-waitwhat` / `mc-prototype` / `mc-retro`. None of them say how an API works; they settle **who calls this shot and where the evidence comes from**.
+
+→ details in [common_skill/README.md](common_skill/README.md) and "Workflow templates" §15 of [README.en.md](README.en.md)
+
+The repo also carries a code-pattern library, an anti-pattern library, schemas, and community write-ups, all behind `mcskill://`: `list_knowledge_resources` lists all 293, `read_knowledge_resource` returns the body.
+
+### Updating
+
+Once installed you do not reinstall. `mc_skill_update` (or `node mcp-server/dist/cli.js update --action check`) asks GitHub Releases whether there are new tools or data; `apply` is still a dryRun by default and first lists the files it would overwrite and the disk it would take, and only writes with `confirmed=true`. It touches this repo's own code and data, never your mod project.
+
+When something looks broken, start with `get_server_status`: it reports index warm-up state, the Java probe (decompiling needs JDK 17+), whether `src` is newer than `dist`, and the last update hint.
+
+→ details in section 12 of the tool reference in [README.en.md](README.en.md) and [doc/mcp-troubleshooting.md](doc/mcp-troubleshooting.md)
 
 ### Command line
 
@@ -178,6 +228,8 @@ platform/version/
 └── .pi/         → Pi (rules/*.md)
 ```
 
+DSH also gets a **native plugin** (repo root `dsh-plugin/`): once installed it detects the platform and exact version of whatever project you have open, mounts only that pack's skills, and injects that pack's base rules (`00/01/09`) into the system prompt — same-named skills no longer collide across dozens of packs, and you stop calling `activate_platform_pack` by hand. See [dsh-plugin/README.md](dsh-plugin/README.md).
+
 ## Hand-maintained files
 
 The skill / rules / code-pattern files can run into the occasional problem, both because upstream documentation is wrong (Forge is the offender here — its 1.20.4 docs still teach 1.20.1 things) and because these files are maintained by hand (1.20.1 and later should be fine). If something fails to compile or throws errors, trust the documentation first. You can also open an issue and I'll fix it as soon as I can. Thanks for understanding. Thanks♪(･ω･)ﾉ
@@ -192,6 +244,9 @@ The skill / rules / code-pattern files can run into the occasional problem, both
 | Full CLI semantics | [mcp-server/README.md](mcp-server/README.md) |
 | Community knowledge base (publishing, crashes, library choice) | [community_knowledge/README.md](community_knowledge/README.md) |
 | Detailed playtest procedures | [community_knowledge/authored/ingame-playtest-automation.md](community_knowledge/authored/ingame-playtest-automation.md) |
+| Server face (Paper / Spigot plugins) | [doc/server-face-paper.md](doc/server-face-paper.md) |
+| Orchestration skills (grill / breakdown / review / handoff) | [common_skill/README.md](common_skill/README.md) |
+| How far each platform / version is covered | `platform-coverage-*.md` under [doc](doc) |
 | How to contribute a change | [CONTRIBUTING.md](CONTRIBUTING.md) |
 | Licensing of third-party docs and data | [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) |
 
@@ -205,6 +260,12 @@ The skill / rules / code-pattern files can run into the occasional problem, both
    **A:** it currently goes down to 1.20.1. Support for the flattening era (1.13+) comes after that; pre-flattening is genuinely hard and I'd rather not rush it.
 3. **Q: Can playtesting support Bedrock?**
    **A:** Bedrock playtesting is still under development; this page gets updated once it lands.
+4. **Q: Why so many tools — plenty of them look mergeable.**
+   **A:** flexibility: every piece is separately removable, so you keep what you need and delete the rest to save space — and being removable is exactly why there are so many. (Honestly, merging some of them surfaces some amusing bugs.)
+5. **Q: I write Paper / Spigot plugins — is any of this useful to me?**
+   **A:** yes, but it is another line: the server face (Paper / Spigot) has its own rule tree, its own signature corpora, its own project skeleton and playtest driver, and is not hung under the eight mod platform trees. Tutorials use `platform=paper`; signatures use `paper-api` / `spigot` (the latter signatures only, no tutorial text).
+6. **Q: I'm still on an old version — is it covered?**
+   **A:** the Forge rule tree goes back to 1.7.10 (15 packs), and the historical pre-1.12.2 loaders each keep a thin line: LiteLoader / Rift / Risugami ModLoader are separate trees, and their APIs were `javap`'d from real artifacts rather than passed off as Forge Javadoc. Note that early packs such as 1.8.9–1.11.2 carry only 3 short rules; their job is "do not copy modern APIs into early versions", not to be a full tutorial.
 
 #### Questions or problems — open an issue and I'll reply as soon as I can
 
