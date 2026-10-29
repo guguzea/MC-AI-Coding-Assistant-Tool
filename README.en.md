@@ -37,7 +37,7 @@ MC_skill/
 ├── REPORT-FORMAT.md             # full delivery-report form (for agents: tier judging / main 4 blocks / maintenance 6 blocks / hard rules)
 ├── DELIVERY_LOG.md              # rolling delivery draft (newest on top; chat shows only the three human-facing items)
 ├── THIRD_PARTY_NOTICES.md       # third-party docs / mapping data licensing
-├── LICENSE                      # this repo's code: MIT
+├── LICENSE                      # this repo's code: non-commercial + attribution (not MIT)
 ├── Minecraft 社区常用库模组全览（2026 版）.md  # pointer; full text in community_knowledge/authored/library-catalog-2026
 │
 ├── forge/                       # Forge rules / skills / scaffold / knowledge (multi-version)

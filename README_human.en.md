@@ -2,8 +2,9 @@
 
 <a href="https://github.com/guguzea/MC-AI-Coding-Assistant-Tool"><img alt="StoneBadge 1/5 · live repository badge, colour derived from the latest commit" src="https://stone.professorlee.work/api/stone/guguzea/MC-AI-Coding-Assistant-Tool" height="40" /></a>&nbsp;&nbsp;<a href="https://github.com/guguzea/MC-AI-Coding-Assistant-Tool"><img alt="StoneBadge 2/5" src="https://stone.professorlee.work/api/stone/guguzea/MC-AI-Coding-Assistant-Tool" height="40" /></a>&nbsp;&nbsp;<a href="https://github.com/guguzea/MC-AI-Coding-Assistant-Tool"><img alt="StoneBadge 3/5" src="https://stone.professorlee.work/api/stone/guguzea/MC-AI-Coding-Assistant-Tool" height="40" /></a>&nbsp;&nbsp;<a href="https://github.com/guguzea/MC-AI-Coding-Assistant-Tool"><img alt="StoneBadge 4/5" src="https://stone.professorlee.work/api/stone/guguzea/MC-AI-Coding-Assistant-Tool" height="40" /></a>&nbsp;&nbsp;<a href="https://github.com/guguzea/MC-AI-Coding-Assistant-Tool"><img alt="StoneBadge 5/5" src="https://stone.professorlee.work/api/stone/guguzea/MC-AI-Coding-Assistant-Tool" height="40" /></a><br />
 [![Platforms · 8 loaders + server face](https://img.shields.io/static/v1?label=Platforms&message=8%20loaders%2Bserver%20face&color=8A2BE2&style=for-the-badge)](https://github.com/guguzea/MC-AI-Coding-Assistant-Tool)&nbsp;&nbsp;[![MCP/CLI tools · 89](https://img.shields.io/static/v1?label=MCP%2FCLI%20tools&message=89&color=2563EB&style=for-the-badge)](README.en.md)&nbsp;&nbsp;[![Node ≥ 22.5](https://img.shields.io/static/v1?label=Node&message=%E2%89%A522.5&color=339933&style=for-the-badge&logo=node.js)](AUTO_SETUP.md)<br />
-[![code license · MIT](https://img.shields.io/static/v1?label=code%20license&message=MIT&color=8A2BE2&style=for-the-badge)](LICENSE)&nbsp;&nbsp;[![community knowledge · CC BY-NC-SA 4.0](https://img.shields.io/static/v1?label=community%20knowledge&message=CC%20BY-NC-SA%204.0&color=D93F0B&style=for-the-badge)](community_knowledge/ATTRIBUTION.md)<br />
-[![★ Stars](https://img.shields.io/github/stars/guguzea/MC-AI-Coding-Assistant-Tool?label=%E2%98%85%20Stars&style=social)](https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/stargazers)&nbsp;&nbsp;[![Forks](https://img.shields.io/github/forks/guguzea/MC-AI-Coding-Assistant-Tool?label=Forks&style=social)](https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/forks)&nbsp;&nbsp;[![Issues](https://img.shields.io/github/issues/guguzea/MC-AI-Coding-Assistant-Tool?label=Issues&style=social)](https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/issues)&nbsp;&nbsp;[![last commit](https://img.shields.io/github/last-commit/guguzea/MC-AI-Coding-Assistant-Tool?label=last%20commit&style=flat-square)](https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/commits)
+[![code license · non-commercial + attribution](https://img.shields.io/static/v1?label=code%20license&message=non-commercial%20%2B%20attribution&color=B91C1C&style=for-the-badge)](LICENSE)&nbsp;&nbsp;[![community knowledge · CC BY-NC-SA 4.0](https://img.shields.io/static/v1?label=community%20knowledge&message=CC%20BY-NC-SA%204.0&color=D93F0B&style=for-the-badge)](community_knowledge/ATTRIBUTION.md)&nbsp;&nbsp;[![docs corpus · upstream terms](https://img.shields.io/static/v1?label=docs%20corpus&message=upstream%20terms&color=0F766E&style=for-the-badge)](THIRD_PARTY_NOTICES.md)<br />
+[![★ Stars](https://img.shields.io/github/stars/guguzea/MC-AI-Coding-Assistant-Tool?label=%E2%98%85%20Stars&style=social)](https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/stargazers)&nbsp;&nbsp;[![Forks](https://img.shields.io/github/forks/guguzea/MC-AI-Coding-Assistant-Tool?label=Forks&style=social)](https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/forks)&nbsp;&nbsp;[![Issues](https://img.shields.io/github/issues/guguzea/MC-AI-Coding-Assistant-Tool?label=Issues&style=social)](https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/issues)&nbsp;&nbsp;[![last commit](https://img.shields.io/github/last-commit/guguzea/MC-AI-Coding-Assistant-Tool?label=last%20commit&style=flat-square)](https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/commits)<br />
+<a href="https://discord.gg/vY8n6G865"><img alt="Discord · chat / bug reports / feedback" src="https://img.shields.io/static/v1?label=Discord&message=chat%20%C2%B7%20bug%20reports%20%C2%B7%20feedback&color=5865F2&style=for-the-badge&logo=discord&logoColor=white" /></a>&nbsp;&nbsp;<a href="https://github.com/user-attachments/assets/41e370aa-611c-4af2-ad9a-007e1973a24a"><img alt="QQ group · scan to join" src="https://img.shields.io/static/v1?label=QQ&message=scan%20to%20join&color=12B7F5&style=for-the-badge" /></a>
 
 </div>
 
@@ -102,9 +103,9 @@ In plain words (in case the diagram does not render):
 
 Every platform and version ships its own rule set (registration, events, networking, data generation, anti-patterns, …) plus a batch of task-specific skill files. The agent loads **your** version's set, not a neighbouring one.
 
-Running `activate_platform_pack --action=list` here counts **54 loadable** rule trees: Forge 15 / Fabric 14 / NeoForge 10 / Quilt 10 / LiteLoader 1 / Rift 2 / ModLoader 1 / Bedrock 1 (flat, not per version). Another 5 on disk are `draft` (named in `drafts`: Forge 1.21.1, LiteLoader 1.8.9 / 1.10.2, ModLoader 1.2.5 / 1.5.2) — both denominators are written right there, and the numbers drift, so run the command if it matters. **When your version has no pack it says `PACK_NOT_FOUND` and hands you the sibling list to pick from; it will not quietly substitute a neighbouring version — that is deliberate.**
+54 packs load today (`activate_platform_pack --action=list` shows the current list); a few more on disk are `draft`. When your version has no pack it says `PACK_NOT_FOUND` and offers the sibling versions instead of quietly substituting one.
 
-Version history is answerable too: `get_version_info` takes a Forge version plus an action (say "register a block") and returns the recommended approach, the key changes, the gotchas, and official changelog links (Forge only).
+Version history is answerable too: `get_version_info` takes a Forge version plus an action (say "register a block") and returns the recommended approach, key changes and gotchas.
 
 → details in the "Agent Skills" and "Rule files" sections of [README.en.md](README.en.md)
 
@@ -118,13 +119,13 @@ The server line shares this search under different platform ids: `paper` / `pape
 
 ### Bedrock Add-Ons
 
-Bedrock is a separate world from Java and shares nothing with it: the corpus is Microsoft Learn's Bedrock docs (882 pages under `data/bedrock_stable`) plus the JSON inside packs, and there is a standalone group of 9 tools — documentation search, summary / full text, `manifest.json` and behaviour-pack entity JSON validation, manifest and BP entity generation (text output only, like everywhere else), and `content_log.txt` triage. Yarn / Mixin / `query_api` map onto nothing on Bedrock; do not mix them.
+Bedrock shares nothing with Java: the corpus is Microsoft Learn's Bedrock docs plus the JSON inside packs, with its own group of 9 tools — doc search, summary / full text, `manifest.json` and behaviour-pack entity JSON validation, manifest and BP entity generation, and `content_log.txt` triage. Yarn / Mixin / `query_api` map onto nothing here.
 
 → details in section 6b of the tool reference in [README.en.md](README.en.md)
 
 ### API, signatures, and mappings
 
-Look up method signatures and parameter names for Vanilla APIs by class and method; look up loader and library APIs; convert class, method, and field names between mojang / MCP / Yarn / Parchment / obfuscated naming; and reverse a single obfuscated token from a crash log (`method_6032`, `er`, `func_110143_aJ`, …) back to a readable name. When a mapping layer is missing, it says so instead of passing an empty shell off as an answer.
+Look up method signatures and parameter names for Vanilla APIs by class and method (the index stops at 1.16.5–1.20.4; older versions carry SRG names and 26.1+ has no obfuscation layer — past those edges you get an error code, not a plausible false signature); look up loader and library APIs; convert class, method, and field names between mojang / MCP / Yarn / Parchment / obfuscated naming; and reverse a single obfuscated token from a crash log (`method_6032`, `er`, `func_110143_aJ`, …) back to a readable name. When a mapping layer is missing, it says so instead of passing an empty shell off as an answer.
 
 → details in "Mapping conversion" and "Tool boundaries" in [README.en.md](README.en.md)
 
@@ -148,13 +149,13 @@ Skeletons for new blocks, items, entity renderers, worldgen, network packets, co
 
 ### Decompiling and reading mod sources
 
-Sometimes the docs do not cover it and nobody wrote it up, so read the source: `analyze_mod_jar` reads a jar's metadata and dependencies without network or decompilation; `decompile_mod_jar` decompiles a third-party mod jar into the local cache; `get_minecraft_source` pulls one class of a given version's MC source (`1.14–1.21.11` through Yarn remapping, `26.1–26.3` already deobfuscated); `search_mod_code` greps strings or regexes in decompiled output; `download_official_mdk` fetches the official MDK to start a clean project. **Zero downloads by default** — nothing is fetched until you call for it; artifacts land only in the local cache (`MC_SKILL_CACHE`), **never in your project**; JDK 17+ is required, the first decompile of a version takes roughly 3–10 minutes and later cache hits are under a second. You can also `ingest` your own jar for third-party library or loader APIs, which fills the gaps on the platforms we cannot download (LiteLoader / Rift / ModLoader).
+When the docs do not cover it, read the source: `analyze_mod_jar` reads a jar's metadata, `decompile_mod_jar` decompiles into the local cache, `get_minecraft_source` pulls a class of MC source (1.14–1.21.11 through Yarn, 26.x already deobfuscated), `search_mod_code` greps the output, `download_official_mdk` fetches the official MDK. Zero downloads by default; artifacts land only in `MC_SKILL_CACHE`, never in your project; JDK 17+ required. Bring your own jar and `ingest` it for libraries or loaders we cannot download (LiteLoader / Rift / ModLoader).
 
 → details in "Decompiling mod sources" §13 / §14 of [README.en.md](README.en.md)
 
 ### Dependencies, upstream versions, and the pre-release check
 
-`check_dependencies` reads your `build.gradle` and metadata and reports which libraries are declared and whether the version windows line up. `query_upstream_releases` asks the upstream release sources directly — Forge / NeoForge maven, `fabric-loader` / `yarn` / `quilt-loader` / `parchment`, any third-party mod on Modrinth, Mojang's official manifest — the question being **whether a version exists at all, and what the newest one is**. It is not `list_*_versions`: those list which doc versions this repo has ingested, and absence there does not mean upstream lacks it; "could not reach it" (network or parse failure) and "it really is not there" come back as two different signals, never collapsed into one "no". `check_publish_ready` runs the pre-release machine checks: license / version fields, whether `build/libs` holds a real jar, then diffs against the publishing checklist. None of the three uploads anything for you — publishing is always done by a human.
+`check_dependencies` reads your build script and metadata and reports declared libraries and version windows. `query_upstream_releases` asks upstream directly (forge / neoforge maven, yarn, parchment, Modrinth, Mojang manifest) whether a version exists at all — "could not reach it" and "it really is not there" are two different signals, and neither equals "this repo has no docs for it". `check_publish_ready` runs the pre-release checks (license / version / `build/libs`). None of the three uploads anything.
 
 → details in sections 8 and 11 of the tool reference in [README.en.md](README.en.md)
 
@@ -192,11 +193,9 @@ Extracts and diffs the language files of your mod or a third-party jar and draft
 
 ### Orchestration skills: settle the questions before you build
 
-Beyond "how do I write a block" dev skills, the repo ships **12 cross-platform, cross-version orchestration skills** (sources in `common_skill/`, reachable through `get_workflow_template` and `mcskill://skill/<name>`): besides `mc-grill` (requirement grilling) mentioned earlier, there is `mc-spec` (turning consensus into an acceptable spec), `mc-breakdown` (slicing into vertical L0–L7 pieces, each with its minimum acceptance level), `mc-review` (two-axis review — standards against the rules, spec against the spec — report only, no edits), `mc-research` (investigation with sources; whatever is unverified gets named), `mc-wizard` (turning human-only operations into pasteable commands with step-by-step green checks), `mc-handoff` (a handover document for switching sessions or machines), plus `mc-router` / `mc-glossary` / `mc-waitwhat` / `mc-prototype` / `mc-retro`. None of them say how an API works; they settle **who calls this shot and where the evidence comes from**.
+Beyond "how do I write a block" dev skills, `common_skill/` ships 12 orchestration skills: `mc-grill` (requirement grilling), `mc-spec` (consensus into a spec), `mc-breakdown` (task slicing), `mc-review` (review), `mc-wizard` (human-step wizard), `mc-handoff` (handover), plus routing / retro / glossary / research / prototype / re-explaining. They do not say how an API works; they settle who calls the shot and where the evidence comes from.
 
-→ details in [common_skill/README.md](common_skill/README.md) and "Workflow templates" §15 of [README.en.md](README.en.md)
-
-The repo also carries a code-pattern library, an anti-pattern library, schemas, and community write-ups, all behind `mcskill://`: `list_knowledge_resources` lists all 293, `read_knowledge_resource` returns the body.
+→ details in [common_skill/README.md](common_skill/README.md). Code patterns, anti-patterns and community write-ups live behind `mcskill://` — `list_knowledge_resources` lists them.
 
 ### Updating
 
@@ -234,6 +233,40 @@ DSH also gets a **native plugin** (repo root `dsh-plugin/`): once installed it d
 
 The skill / rules / code-pattern files can run into the occasional problem, both because upstream documentation is wrong (Forge is the offender here — its 1.20.4 docs still teach 1.20.1 things) and because these files are maintained by hand (1.20.1 and later should be fine). If something fails to compile or throws errors, trust the documentation first. You can also open an issue and I'll fix it as soon as I can. Thanks for understanding. Thanks♪(･ω･)ﾉ
 
+## Licensing and compliance
+
+**The code is not MIT.** This project's code is **non-commercial + mandatory attribution**: read it, change it, hand it to someone else — but no commercial use, and attribution with a link is required.
+
+| Material | License | Notes |
+|---|---|---|
+| `mcp-server/`, `scripts/`, generators and validators, per-version scaffolds | **Non-commercial + mandatory attribution** (custom terms; the root `LICENSE` text is being replaced to match) | Non-commercial use, modification and redistribution are allowed; any commercial use is not |
+| Original write-ups in `community_knowledge/` | Non-commercial + mandatory attribution | Distillations of community posts keep **attribution + the original URL** and never rewrite their license; mcmod.cn site default is **CC BY-NC-SA 4.0**, page-level statements win |
+| Platform rules / Skills / anti-patterns / code patterns | **Follow upstream**, not these terms | These are distilled from upstream docs and artifacts, so upstream terms are the ceiling. The per-source inventory is in `THIRD_PARTY_NOTICES.md`; this table is a summary only |
+| Offline corpora under `data/` | **Per sub-tree** | Paper tutorial text is **CC BY-SA 4.0** (extract it on its own and you must credit PaperMC and share alike); Yarn / QuiltMappings / Feather are **CC0**; Forge / Fabric / NeoForge / Quilt docs follow their own terms; Bedrock is under the **Microsoft Learn documentation terms** |
+
+**What "mandatory attribution" concretely requires** (four things; missing any one is non-compliance):
+
+1. Keep the copyright notice and the project name — do not swap in your own name, do not delete the author line.
+2. Keep the repository link: <https://github.com/guguzea/MC-AI-Coding-Assistant-Tool>.
+3. A modified version must say, prominently, "based on MC AI Coding Assistant Tool" and list what you changed.
+4. Ship the terms in this section together with `THIRD_PARTY_NOTICES.md` whenever you redistribute.
+
+**Commercial uses that are explicitly out** (common cases, not an exhaustive list): bundling it into a paid modpack; selling mod-development services or subscriptions built on it; embedding it as a component of a commercial product; turning its knowledge base into paid Q&A or paid courses; using it as a selling point on a paid hosting platform. If it is ambiguous, ask first — do not reason your way to "no money changed hands directly, therefore non-commercial".
+
+Two more that are easy to trip over:
+
+- **The Spigot face is signatures only** (the artifacts are GPL-3.0; method bodies, comments and implementations never go in); the SpigotMC Wiki carries no open license at all ⇒ no tutorial text, which is why that face has signatures and no prose.
+- **LiteLoader upstream is All Rights Reserved**: the source tree is not in git; only the signature face extracted by `javap` from real artifacts is, for all three packs (1.12.2 / 1.10.2 / 1.8.9).
+
+**Mojang / Microsoft ground rules** (all recorded in `THIRD_PARTY_NOTICES.md`; this is just a reminder):
+
+- Minecraft and Bedrock are trademarks of **Mojang Synergies AB**; this project is **not affiliated** with Mojang or Microsoft — do not treat it as an official tool.
+- The official mappings file (`client.txt`) states on its very first line that the mappings **may not be redistributed complete and unmodified** ⇒ the raw table is never committed here; only the class-name pairs joined by obfuscated short name are (`git ls-files | grep -c client.txt` measures 0).
+- The repository ships **no game client, server, or vanilla assets**; playtesting touches only instances you authorised yourself, and **the EULA is never accepted on your behalf**.
+- The Bedrock corpus is a **text extract** of Microsoft Learn, for offline developer assistance only; the `@minecraft/server` `.d.ts` source is not committed — it follows the npm package's own notice.
+
+> Two things stated plainly: ① the non-commercial stance above is **this project's own choice**, not a Mojang requirement — Mojang's terms govern the game itself, its vanilla assets and the official mappings, not the code you write; ② none of this is legal advice, and it settles nothing about upstream. If you redistribute `data/`, read the three "Release assets" rules in `THIRD_PARTY_NOTICES.md` first (keep that file, verify with `SHA256SUMS-*`, and never pack the gitignored `client.txt`).
+
 ## Where to look for what
 
 | If you want | Go to |
@@ -248,6 +281,7 @@ The skill / rules / code-pattern files can run into the occasional problem, both
 | Orchestration skills (grill / breakdown / review / handoff) | [common_skill/README.md](common_skill/README.md) |
 | How far each platform / version is covered | `platform-coverage-*.md` under [doc](doc) |
 | How to contribute a change | [CONTRIBUTING.md](CONTRIBUTING.md) |
+| Code license (non-commercial + attribution) | [LICENSE](LICENSE) |
 | Licensing of third-party docs and data | [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) |
 
 [简体中文](README_human.md) | **English**
@@ -270,4 +304,6 @@ The skill / rules / code-pattern files can run into the occasional problem, both
 #### Questions or problems — open an issue and I'll reply as soon as I can
 
 ## Come hang out:
-DISCORD: https://discord.gg/vY8n6G865
+
+**QQ group** (scan to join; Discord is in the badges above):
+<img width="1228" height="2184" alt="0bd61b684c78842d59a5ad09de01f4be_720" src="https://github.com/user-attachments/assets/41e370aa-611c-4af2-ad9a-007e1973a24a" />

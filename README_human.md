@@ -2,8 +2,9 @@
 
 <a href="https://github.com/guguzea/MC-AI-Coding-Assistant-Tool"><img alt="StoneBadge 1/5 · 仓库活体徽章，颜色由最新 commit 生成" src="https://stone.professorlee.work/api/stone/guguzea/MC-AI-Coding-Assistant-Tool" height="40" /></a>&nbsp;&nbsp;<a href="https://github.com/guguzea/MC-AI-Coding-Assistant-Tool"><img alt="StoneBadge 2/5" src="https://stone.professorlee.work/api/stone/guguzea/MC-AI-Coding-Assistant-Tool" height="40" /></a>&nbsp;&nbsp;<a href="https://github.com/guguzea/MC-AI-Coding-Assistant-Tool"><img alt="StoneBadge 3/5" src="https://stone.professorlee.work/api/stone/guguzea/MC-AI-Coding-Assistant-Tool" height="40" /></a>&nbsp;&nbsp;<a href="https://github.com/guguzea/MC-AI-Coding-Assistant-Tool"><img alt="StoneBadge 4/5" src="https://stone.professorlee.work/api/stone/guguzea/MC-AI-Coding-Assistant-Tool" height="40" /></a>&nbsp;&nbsp;<a href="https://github.com/guguzea/MC-AI-Coding-Assistant-Tool"><img alt="StoneBadge 5/5" src="https://stone.professorlee.work/api/stone/guguzea/MC-AI-Coding-Assistant-Tool" height="40" /></a><br />
 [![平台 · 8 个加载器 + 服务端面](https://img.shields.io/static/v1?label=%E5%B9%B3%E5%8F%B0&message=8%20%E4%B8%AA%2B%E6%9C%8D%E5%8A%A1%E7%AB%AF%E9%9D%A2&color=8A2BE2&style=for-the-badge)](https://github.com/guguzea/MC-AI-Coding-Assistant-Tool)&nbsp;&nbsp;[![MCP/CLI 工具 · 89 个](https://img.shields.io/static/v1?label=MCP%2FCLI%20%E5%B7%A5%E5%85%B7&message=89&color=2563EB&style=for-the-badge)](README.md)&nbsp;&nbsp;[![Node ≥ 22.5](https://img.shields.io/static/v1?label=Node&message=%E2%89%A522.5&color=339933&style=for-the-badge&logo=node.js)](AUTO_SETUP.md)<br />
-[![代码许可 · MIT](https://img.shields.io/static/v1?label=%E4%BB%A3%E7%A0%81%E8%AE%B8%E5%8F%AF&message=MIT&color=8A2BE2&style=for-the-badge)](LICENSE)&nbsp;&nbsp;[![社区知识库 · CC BY-NC-SA 4.0](https://img.shields.io/static/v1?label=%E7%A4%BE%E5%8C%BA%E7%9F%A5%E8%AF%86%E5%BA%93&message=CC%20BY-NC-SA%204.0&color=D93F0B&style=for-the-badge)](community_knowledge/ATTRIBUTION.md)<br />
-[![★ Stars](https://img.shields.io/github/stars/guguzea/MC-AI-Coding-Assistant-Tool?label=%E2%98%85%20Stars&style=social)](https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/stargazers)&nbsp;&nbsp;[![Forks](https://img.shields.io/github/forks/guguzea/MC-AI-Coding-Assistant-Tool?label=Forks&style=social)](https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/forks)&nbsp;&nbsp;[![议题](https://img.shields.io/github/issues/guguzea/MC-AI-Coding-Assistant-Tool?label=Issues&style=social)](https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/issues)&nbsp;&nbsp;[![last commit](https://img.shields.io/github/last-commit/guguzea/MC-AI-Coding-Assistant-Tool?label=last%20commit&style=flat-square)](https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/commits)
+[![许可 · CC BY-NC-SA 4.0](https://img.shields.io/static/v1?label=%E8%AE%B8%E5%8F%AF&message=CC%20BY-NC-SA%204.0&color=D93F0B&style=for-the-badge)](LICENSE)&nbsp;&nbsp;[![文档语料 · 各随上游许可](https://img.shields.io/static/v1?label=%E6%96%87%E6%A1%A3%E8%AF%AD%E6%96%99&message=%E5%90%84%E9%9A%8F%E4%B8%8A%E6%B8%B8&color=0F766E&style=for-the-badge)](THIRD_PARTY_NOTICES.md)<br />
+[![★ Stars](https://img.shields.io/github/stars/guguzea/MC-AI-Coding-Assistant-Tool?label=%E2%98%85%20Stars&style=social)](https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/stargazers)&nbsp;&nbsp;[![Forks](https://img.shields.io/github/forks/guguzea/MC-AI-Coding-Assistant-Tool?label=Forks&style=social)](https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/forks)&nbsp;&nbsp;[![议题](https://img.shields.io/github/issues/guguzea/MC-AI-Coding-Assistant-Tool?label=Issues&style=social)](https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/issues)&nbsp;&nbsp;[![last commit](https://img.shields.io/github/last-commit/guguzea/MC-AI-Coding-Assistant-Tool?label=last%20commit&style=flat-square)](https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/commits)<br />
+<a href="https://discord.gg/vY8n6G865"><img alt="Discord · 聊天 / 报 bug / 提建议" src="https://img.shields.io/static/v1?label=Discord&message=%E8%81%8A%E5%A4%A9%20%C2%B7%20%E6%8A%A5%20bug%20%C2%B7%20%E6%8F%90%E5%BB%BA%E8%AE%AE&color=5865F2&style=for-the-badge&logo=discord&logoColor=white" /></a>&nbsp;&nbsp;<a href="https://github.com/user-attachments/assets/41e370aa-611c-4af2-ad9a-007e1973a24a"><img alt="QQ 群 · 扫码进群" src="https://img.shields.io/static/v1?label=QQ&message=%E6%89%AB%E7%A0%81%E8%BF%9B%E7%BE%A4&color=12B7F5&style=for-the-badge" /></a>
 
 </div>
 
@@ -92,16 +93,16 @@ graph LR
 3. **干活**：查文档、生成代码、查崩溃、让它进游戏自己测——都是直接提问。涉及写文件、跑 Gradle、拷 jar、上传发布这类动作，它会先给你看清单再等你确认。
 
 > **开始写模组之前，建议先花一轮对齐需求**：新内容 / 新机制 / 新玩法先别急着写,减少弯路——让 AI 跑一遍仓库的需求拷问技能 `mc-grill`：它一轮轮提问、每题带推荐答案，把设计树每条分支问到拍板，最后给你一份共识清单，你确认完才动手。触发方式：直接说「拷问我 / 帮我理需求 / 先对齐」或输入 `/mc-grill`（最稳）；需求没定型时它也会自动进入这一步。
-
+# 请遵守MOJANG创作规范
 ## 功能介绍
 
 ### 平台规则与技能
 
 每个平台、每个版本都有一套规则（注册方式、事件、网络、数据生成、反模式……）和一批专用技能文件。AI 装规则时会用**你这个版本**的那一套，不会拿邻近版本糊你。
 
- `activate_platform_pack --action=list` 数出来共 **54 档可加载**的规则树：Forge 15 / Fabric 14 / NeoForge 10 / Quilt 10 / LiteLoader 1 / Rift 2 / ModLoader 1 / 基岩 1（扁平，不分版本）。盘上另有 5 档是 `draft`（会在 `drafts` 里点名：Forge 1.21.1、LiteLoader 1.8.9 / 1.10.2、ModLoader 1.2.5 / 1.5.2）——两个数的分母都写在上面了，随时间会变，跑一遍命令最准。**没有你这个版本的档，它会直说 `PACK_NOT_FOUND` 并把同系列候选清单交给你选，不会悄悄拿邻版顶上——这是刻意的。**
 
-版本变迁也能问：`get_version_info` 给某个 Forge 版本加一个操作（比如「注册方块」），回推荐做法、关键变更、踩坑点和官方 changelog 链接（只有 Forge 有这档）。
+ 现盘 54 档可加载：Forge 15 / Fabric 14 / NeoForge 10 / Quilt 10 / LiteLoader 1 / Rift 2 / ModLoader 1 / 基岩 1（扁平，不分版本）。盘上另有 5 档是 `draft`（会在 `drafts` 里点名：Forge 1.21.1、LiteLoader 1.8.9 / 1.10.2、ModLoader 1.2.5 / 1.5.2）——两个数的分母都写在上面了，随时间会变，跑一遍命令最准。**没有你这个版本的档，它会直说 `PACK_NOT_FOUND` 并把同系列候选清单交给你选，不会悄悄拿邻版顶上——这是刻意的。**
+版本变迁也能问：`get_version_info` 给一个 Forge 版本加一个操作（比如「注册方块」），回推荐做法、关键变更与踩坑点。
 
 → 细节见 [README.md 的「Agent Skills」与「规则文件说明」](README.md)
 
@@ -115,7 +116,7 @@ graph LR
 
 ### 基岩 Add-On
 
-基岩是另一套东西，跟 Java 侧不共用：语料是 Microsoft Learn 的基岩文档（`data/bedrock_stable` 下 882 页）和包里的 JSON，工具是单独一组 9 个——搜文档、取摘要 / 全文、校验 `manifest.json` 与行为包实体 JSON、生成 manifest 和 BP 实体（同样只吐文本）、读 `content_log.txt` 分诊。Yarn / Mixin / `query_api` 那套在基岩上一个都对不上，别混着用。
+基岩跟 Java 侧不共用：语料是 Microsoft Learn 的基岩文档和包里的 JSON，工具单独一组 9 个——搜文档、取摘要 / 全文、校验 `manifest.json` 与行为包实体 JSON、生成 manifest 和 BP 实体、读 `content_log.txt` 分诊。Yarn / Mixin / `query_api` 那套在基岩上对不上。
 
 → 细节见 [README.md 工具参考 §6b](README.md)
 
@@ -144,13 +145,12 @@ graph LR
 
 ### 反编译与源码研究
 
-有时候文档没写、社区也没人写，那就直接看源码：`analyze_mod_jar` 不联网不反编译，先读 jar 的元数据和依赖；`decompile_mod_jar` 把第三方模组 jar 反编译到本地缓存；`get_minecraft_source` 拉某个版本的 MC 源码某个类（`1.14–1.21.11` 走 Yarn 重映射，`26.1–26.3` 已去混淆）；`search_mod_code` 在反编译产物里搜字符串或正则；`download_official_mdk` 拉官方 MDK 起一个干净工程。**默认零下载**，只在你显式调用时才按需拉；产物只落本地缓存目录（`MC_SKILL_CACHE`），**绝不写你的工程**；需要 JDK 17+，首次反编译一个版本大概 3–10 分钟，之后命中缓存不到 1 秒。第三方库/加载器的 API 也可以由你自备 jar `ingest` 进来，填上官方不代下那几个平台（LiteLoader / Rift / ModLoader）的空。
+文档没写、社区也没人写，就直接看源码：`analyze_mod_jar` 只读 jar 元数据，`decompile_mod_jar` 反编译到本地缓存，`get_minecraft_source` 拉某个版本的 MC 源码类（1.14–1.21.11 走 Yarn 重映射，26.x 已去混淆），`search_mod_code` 搜产物，`download_official_mdk` 拉官方 MDK。默认零下载，产物只落 `MC_SKILL_CACHE`，不碰你的工程；需要 JDK 17+。第三方库或加载器（LiteLoader / Rift / ModLoader）可以由你自备 jar `ingest` 进来。
 
 → 细节见 [README.md 的「反编译与模组源码」§13 / §14](README.md)
 
 ### 依赖、上游版本与发布前检查
 
-`check_dependencies` 读你的 `build.gradle` 与各类元数据，告诉你声明了哪些库、版本窗口对不对；`query_upstream_releases` 直接问上游发行源——Forge / NeoForge maven、`fabric-loader` / `yarn` / `quilt-loader` / `parchment`、Modrinth 上的任意第三方模组、Mojang 官方 manifest——问的是**某个版本到底存不存在、最新出到第几版**。它跟 `list_*_versions` 不一样：后者列的是"本仓入库了哪些文档档"，没列在里面不等于上游没有；而 "查不到"（网络/解析挂了）和 "确实没有" 在返回里是两个不同的信号，不会混成一句"没有"。`check_publish_ready` 在发布前做机器检查：license / version 字段、`build/libs` 里是不是正式 jar，再对照发布清单把缺项列出来。三者**都不替你上传**，上传永远是人自己做。
 
 → 细节见 [README.md 的工具参考 §8 / §11](README.md)
 
@@ -188,7 +188,7 @@ graph LR
 
 ### 编排技能：动手之前先把事情问清楚
 
-除了"某个方块怎么写"这类开发技能，仓库还带 **12 个跨平台、跨版本的编排技能**（源稿在根目录 `common_skill/`，经 `get_workflow_template` 与 `mcskill://skill/<名字>` 可取）：除了前面提过的 `mc-grill`（需求拷问），还有 `mc-spec`（把共识凝成可验收规格）、`mc-breakdown`（按 L0–L7 拆成竖切片，标明每片的最低验收层级）、`mc-review`（标准轴对规则 / 规格轴对 spec 的双轴评审，只出报告不代改）、`mc-research`（带出处的调查，未核实的点会点名）、`mc-wizard`（把只有人能做的操作写成可粘贴命令 + 逐步判绿点）、`mc-handoff`（换会话 / 换机器前的交接文档）、以及 `mc-router` / `mc-glossary` / `mc-waitwhat` / `mc-prototype` / `mc-retro`。它们不管某个 API 怎么写，管的是**这一步该谁拍板、证据从哪来**。
+除了"某个方块怎么写"这类开发技能，`common_skill/` 还带 12 个编排技能：`mc-grill` 需求拷问、`mc-spec` 凝规格、`mc-breakdown` 拆任务、`mc-review` 评审、`mc-wizard` 人工步骤向导、`mc-handoff` 交接，另有路由 / 复盘 / 术语表 / 调查 / 原型 / 重讲。
 
 → 细节见 [common_skill/README.md](common_skill/README.md) 与 [README.md 的「工作流模板」§15](README.md)
 
@@ -229,6 +229,8 @@ DSH 还额外做了一个**原生插件**(仓库根 `dsh-plugin/`):装上以后�
 
 ## skill/rules/代码模式库等文件由于上游文档错误(说的就是forge,1.20.4还在教1.20.1的东西),人工维护等问题,难免出现一点问题(1.20.1+应该没有问题了),如发现无法编译,报错,可以优先以文档为主,你也可以提交issue,我会尽快修复,谢谢您的理解Thanks♪(･ω･)ﾉ
 
+
+
 ## 在哪找什么
 
 | 你想找的东西 | 去哪 |
@@ -243,6 +245,7 @@ DSH 还额外做了一个**原生插件**(仓库根 `dsh-plugin/`):装上以后�
 | 编排技能（拷问 / 拆任务 / 评审 / 交接） | [common_skill/README.md](common_skill/README.md) |
 | 每个平台 / 版本建档到什么程度 | [doc](doc) 下的 `platform-coverage-*.md` |
 | 怎么给仓库提改动 | [CONTRIBUTING.md](CONTRIBUTING.md) |
+| 许可（CC BY-NC-SA 4.0） | [LICENSE](LICENSE) |
 | 第三方文档与数据的许可 | [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) |
 
 [English](README_human.en.md) | **简体中文**
@@ -258,9 +261,11 @@ DSH 还额外做了一个**原生插件**(仓库根 `dsh-plugin/`):装上以后�
    A:为了保证项目的灵活性,每个部分都是单独可拆的,你只需要保留你需要的部分,其他的可以删除来节省空间,而为了可拆,工具就变得非常多了
    (其实是部分内容拆了之后会导致合并工具出现一些妙妙BUG)
 5. Q:我是写 Paper / Spigot 插件的,这套东西对我有用吗?
-   A:有用
+   A:有用,走另一条线:服务端面有独立规则树、独立签名语料和插件骨架,不挂在模组那八棵平台树下面。教程用 `platform=paper`,签名用 `paper-api` / `spigot`(后者只有签名)。
+6. Q:我还在用老版本,能覆盖到吗?
+   A:Forge 规则树从 1.7.10 起都有,LiteLoader / Rift / ModLoader 也各有一档。1.8.9–1.11.2 这类早期档只有 3 条短规则,作用是"别把现代 API 抄进早期工程",不是完整教材。
 #### 有问题可以提issue与讨论,我会尽快回复
 ## 可以进来玩玩:
-QQ:
+
+**QQ 群**（扫码进群，Discord 在上面的标签里）:
 <img width="1228" height="2184" alt="0bd61b684c78842d59a5ad09de01f4be_720" src="https://github.com/user-attachments/assets/41e370aa-611c-4af2-ad9a-007e1973a24a" />
-DISCORD:https://discord.gg/vY8n6G865
