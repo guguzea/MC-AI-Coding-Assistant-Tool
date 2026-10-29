@@ -35,7 +35,7 @@ MC_skill/
 ├── REPORT-FORMAT.md             # 交付底稿全量表单（agent 用：判档 / 主档四块 / 维护档六块 / 硬约束）
 ├── DELIVERY_LOG.md              # 每轮交付底稿正文（滚动，最新在上；聊天只给人看三件）
 ├── THIRD_PARTY_NOTICES.md       # 第三方文档 / 映射数据许可说明
-├── LICENSE                      # 本仓库代码：非商业 + 强制署名
+├── LICENSE                      # 本仓库代码：PolyForm Noncommercial 1.0.0 + 强 Copyleft 附加条款（非商业、署名、衍生须同许可开源）
 ├── Minecraft 社区常用库模组全览（2026 版）.md  # 跳转指针；正文在 community_knowledge/authored/library-catalog-2026
 │
 ├── forge/                       # Forge 规则 / skills / scaffold / knowledge（多版本）

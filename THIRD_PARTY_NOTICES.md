@@ -1,8 +1,15 @@
 # Third-Party Notices
 
-This repository’s **own code** (MCP server, scripts, agent rules, scaffolds, etc.) is licensed under the MIT License — see [`LICENSE`](./LICENSE).
+This repository’s **own code, rules and original write-ups** are licensed under the **PolyForm Noncommercial License 1.0.0** — see [`LICENSE`](./LICENSE) — plus a **strong-copyleft addendum** written by this repository (same file). Commercial use is outside the grant. Distributing the project requires passing on the license text (or its URL) together with the `Required Notice:` line at the top of `LICENSE`; distributing a derivative also requires releasing the whole derivative under the same terms **and shipping the complete corresponding source**, including when it is offered as a network service.
 
-The offline bundle under `data/` (and the GitHub Release `mc-skill-data-full-*.zip`) may include third-party documentation extracts, mapping artefacts, and related materials. Those retain their **upstream licenses and terms**. This notice must be kept when redistributing the full data asset, alongside the MIT `LICENSE` for this project’s code.
+Machine-readable note: SPDX covers the official body only (`PolyForm-Noncommercial-1.0.0`, released 2019-07-09). The copyleft addendum is repository-specific and has no SPDX identifier — `package.json` therefore carries `SEE LICENSE IN LICENSE`, and `LICENSE` is the authoritative text.
+
+Two carve-outs:
+
+1. **Platform rules, skills, anti-patterns and code patterns are digests of upstream material.** They stay subject to each upstream project’s terms recorded in this file; the repository license does not extend to them.
+2. **Portions adapted from third-party MIT / Apache-2.0 / CC0 projects keep their original licenses** (see “Code reuse” and the data sections below). This repository cannot and does not narrow those grants.
+
+The offline bundle under `data/` (and the GitHub Release `mc-skill-data-full-*.zip`) may include third-party documentation extracts, mapping artefacts, and related materials. Those retain their **upstream licenses and terms**. This notice must be kept when redistributing the full data asset, alongside the PolyForm Noncommercial `LICENSE` (text or URL) and its `Required Notice:` line for this project’s own code.
 
 ## Runtime / build dependencies (MCP server)
 
@@ -51,7 +58,7 @@ Follow each package’s license as published on npm（`@xenova/transformers` 为
   - 仓库**代码** = **BSD 2-Clause**（上游 `LICENSE`）
   - **文档正文** = **Creative Commons Attribution-ShareAlike 4.0 International（CC BY-SA 4.0）**（上游 `LICENSE-docs`）
 - ⚠️ **ShareAlike 义务**：本仓 `data/paper_stable/**`（正文在 `data/paper_stable/paper-docs/stable/`）是对上游正文的**提取/改编**，因此该子树及其衍生文本必须
-  **以 CC BY-SA 4.0 分发，并署名 PaperMC**；**不得**与本项目 `LICENSE`（MIT）或其他 `data/` 子树混为同一许可。
+  **以 CC BY-SA 4.0 分发，并署名 PaperMC**；**不得**与本项目 `LICENSE`（PolyForm Noncommercial 1.0.0）或其他 `data/` 子树混为同一许可。
   单独取用 `data/paper_stable/**` 时必须保留本节的署名与许可声明。
 - 版本口径：Paper 文档**不按 MC 版本分档**（是"当前"文档）⇒ 落 `data/paper_stable/paper-docs/stable/`（**伪版本 `stable`**；目录名须服从
   `versionDataDir` 的 `<platform>_<ver>/<source>/<ver>` 拼法，先例 = `data/bedrock_stable/bedrock-docs/stable/`）；
@@ -208,6 +215,8 @@ Follow each package’s license as published on npm（`@xenova/transformers` 为
 | [OGMatrix/mcmodding-mcp](https://github.com/OGMatrix/mcmodding-mcp)（MIT） | 文档分块（title/section/code/full）与 RRF 混合检索思路 | `mcp-server/src/docs-platform/semantic/`、`scripts/_lib/build-semantic-index.mjs` |
 
 遵守 MIT 许可：以上借用保留原作者版权声明与本署名；原项目 License 见其 GitHub 仓库。
+
+**这些借用的 MIT 片段仍是 MIT**：本项目 `LICENSE` 的 PolyForm 非商业条款不适用于它们，收件人依 MIT 本来享有的权利（含商业使用）不受影响。要再分发这部分，请保留两处原项目的 MIT 声明，并说明它们与 PolyForm 的边界。
 
 ## Runtime Java tools（按需下载至 `$MC_SKILL_CACHE/resources/`，不进 git）
 

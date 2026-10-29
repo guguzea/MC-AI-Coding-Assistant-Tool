@@ -2,7 +2,7 @@
 
 <a href="https://github.com/guguzea/MC-AI-Coding-Assistant-Tool"><img alt="StoneBadge 1/5 · live repository badge, colour derived from the latest commit" src="https://stone.professorlee.work/api/stone/guguzea/MC-AI-Coding-Assistant-Tool" height="40" /></a>&nbsp;&nbsp;<a href="https://github.com/guguzea/MC-AI-Coding-Assistant-Tool"><img alt="StoneBadge 2/5" src="https://stone.professorlee.work/api/stone/guguzea/MC-AI-Coding-Assistant-Tool" height="40" /></a>&nbsp;&nbsp;<a href="https://github.com/guguzea/MC-AI-Coding-Assistant-Tool"><img alt="StoneBadge 3/5" src="https://stone.professorlee.work/api/stone/guguzea/MC-AI-Coding-Assistant-Tool" height="40" /></a>&nbsp;&nbsp;<a href="https://github.com/guguzea/MC-AI-Coding-Assistant-Tool"><img alt="StoneBadge 4/5" src="https://stone.professorlee.work/api/stone/guguzea/MC-AI-Coding-Assistant-Tool" height="40" /></a>&nbsp;&nbsp;<a href="https://github.com/guguzea/MC-AI-Coding-Assistant-Tool"><img alt="StoneBadge 5/5" src="https://stone.professorlee.work/api/stone/guguzea/MC-AI-Coding-Assistant-Tool" height="40" /></a><br />
 [![Platforms · 8 loaders + server face](https://img.shields.io/static/v1?label=Platforms&message=8%20loaders%2Bserver%20face&color=8A2BE2&style=for-the-badge)](https://github.com/guguzea/MC-AI-Coding-Assistant-Tool)&nbsp;&nbsp;[![MCP/CLI tools · 89](https://img.shields.io/static/v1?label=MCP%2FCLI%20tools&message=89&color=2563EB&style=for-the-badge)](README.en.md)&nbsp;&nbsp;[![Node ≥ 22.5](https://img.shields.io/static/v1?label=Node&message=%E2%89%A522.5&color=339933&style=for-the-badge&logo=node.js)](AUTO_SETUP.md)<br />
-[![code license · non-commercial + attribution](https://img.shields.io/static/v1?label=code%20license&message=non-commercial%20%2B%20attribution&color=B91C1C&style=for-the-badge)](LICENSE)&nbsp;&nbsp;[![community knowledge · CC BY-NC-SA 4.0](https://img.shields.io/static/v1?label=community%20knowledge&message=CC%20BY-NC-SA%204.0&color=D93F0B&style=for-the-badge)](community_knowledge/ATTRIBUTION.md)&nbsp;&nbsp;[![docs corpus · upstream terms](https://img.shields.io/static/v1?label=docs%20corpus&message=upstream%20terms&color=0F766E&style=for-the-badge)](THIRD_PARTY_NOTICES.md)<br />
+[![license · PolyForm NC 1.0.0 + copyleft](https://img.shields.io/static/v1?label=license&message=PolyForm%20NC%201.0.0%20%2B%20copyleft&color=D93F0B&style=for-the-badge)](LICENSE)&nbsp;&nbsp;[![docs corpus · upstream terms](https://img.shields.io/static/v1?label=docs%20corpus&message=upstream%20terms&color=0F766E&style=for-the-badge)](THIRD_PARTY_NOTICES.md)<br />
 [![★ Stars](https://img.shields.io/github/stars/guguzea/MC-AI-Coding-Assistant-Tool?label=%E2%98%85%20Stars&style=social)](https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/stargazers)&nbsp;&nbsp;[![Forks](https://img.shields.io/github/forks/guguzea/MC-AI-Coding-Assistant-Tool?label=Forks&style=social)](https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/forks)&nbsp;&nbsp;[![Issues](https://img.shields.io/github/issues/guguzea/MC-AI-Coding-Assistant-Tool?label=Issues&style=social)](https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/issues)&nbsp;&nbsp;[![last commit](https://img.shields.io/github/last-commit/guguzea/MC-AI-Coding-Assistant-Tool?label=last%20commit&style=flat-square)](https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/commits)<br />
 <a href="https://discord.gg/vY8n6G865"><img alt="Discord · chat / bug reports / feedback" src="https://img.shields.io/static/v1?label=Discord&message=chat%20%C2%B7%20bug%20reports%20%C2%B7%20feedback&color=5865F2&style=for-the-badge&logo=discord&logoColor=white" /></a>&nbsp;&nbsp;<a href="https://github.com/user-attachments/assets/41e370aa-611c-4af2-ad9a-007e1973a24a"><img alt="QQ group · scan to join" src="https://img.shields.io/static/v1?label=QQ&message=scan%20to%20join&color=12B7F5&style=for-the-badge" /></a>
 
@@ -233,40 +233,6 @@ DSH also gets a **native plugin** (repo root `dsh-plugin/`): once installed it d
 
 The skill / rules / code-pattern files can run into the occasional problem, both because upstream documentation is wrong (Forge is the offender here — its 1.20.4 docs still teach 1.20.1 things) and because these files are maintained by hand (1.20.1 and later should be fine). If something fails to compile or throws errors, trust the documentation first. You can also open an issue and I'll fix it as soon as I can. Thanks for understanding. Thanks♪(･ω･)ﾉ
 
-## Licensing and compliance
-
-**The code is not MIT.** This project's code is **non-commercial + mandatory attribution**: read it, change it, hand it to someone else — but no commercial use, and attribution with a link is required.
-
-| Material | License | Notes |
-|---|---|---|
-| `mcp-server/`, `scripts/`, generators and validators, per-version scaffolds | **Non-commercial + mandatory attribution** (custom terms; the root `LICENSE` text is being replaced to match) | Non-commercial use, modification and redistribution are allowed; any commercial use is not |
-| Original write-ups in `community_knowledge/` | Non-commercial + mandatory attribution | Distillations of community posts keep **attribution + the original URL** and never rewrite their license; mcmod.cn site default is **CC BY-NC-SA 4.0**, page-level statements win |
-| Platform rules / Skills / anti-patterns / code patterns | **Follow upstream**, not these terms | These are distilled from upstream docs and artifacts, so upstream terms are the ceiling. The per-source inventory is in `THIRD_PARTY_NOTICES.md`; this table is a summary only |
-| Offline corpora under `data/` | **Per sub-tree** | Paper tutorial text is **CC BY-SA 4.0** (extract it on its own and you must credit PaperMC and share alike); Yarn / QuiltMappings / Feather are **CC0**; Forge / Fabric / NeoForge / Quilt docs follow their own terms; Bedrock is under the **Microsoft Learn documentation terms** |
-
-**What "mandatory attribution" concretely requires** (four things; missing any one is non-compliance):
-
-1. Keep the copyright notice and the project name — do not swap in your own name, do not delete the author line.
-2. Keep the repository link: <https://github.com/guguzea/MC-AI-Coding-Assistant-Tool>.
-3. A modified version must say, prominently, "based on MC AI Coding Assistant Tool" and list what you changed.
-4. Ship the terms in this section together with `THIRD_PARTY_NOTICES.md` whenever you redistribute.
-
-**Commercial uses that are explicitly out** (common cases, not an exhaustive list): bundling it into a paid modpack; selling mod-development services or subscriptions built on it; embedding it as a component of a commercial product; turning its knowledge base into paid Q&A or paid courses; using it as a selling point on a paid hosting platform. If it is ambiguous, ask first — do not reason your way to "no money changed hands directly, therefore non-commercial".
-
-Two more that are easy to trip over:
-
-- **The Spigot face is signatures only** (the artifacts are GPL-3.0; method bodies, comments and implementations never go in); the SpigotMC Wiki carries no open license at all ⇒ no tutorial text, which is why that face has signatures and no prose.
-- **LiteLoader upstream is All Rights Reserved**: the source tree is not in git; only the signature face extracted by `javap` from real artifacts is, for all three packs (1.12.2 / 1.10.2 / 1.8.9).
-
-**Mojang / Microsoft ground rules** (all recorded in `THIRD_PARTY_NOTICES.md`; this is just a reminder):
-
-- Minecraft and Bedrock are trademarks of **Mojang Synergies AB**; this project is **not affiliated** with Mojang or Microsoft — do not treat it as an official tool.
-- The official mappings file (`client.txt`) states on its very first line that the mappings **may not be redistributed complete and unmodified** ⇒ the raw table is never committed here; only the class-name pairs joined by obfuscated short name are (`git ls-files | grep -c client.txt` measures 0).
-- The repository ships **no game client, server, or vanilla assets**; playtesting touches only instances you authorised yourself, and **the EULA is never accepted on your behalf**.
-- The Bedrock corpus is a **text extract** of Microsoft Learn, for offline developer assistance only; the `@minecraft/server` `.d.ts` source is not committed — it follows the npm package's own notice.
-
-> Two things stated plainly: ① the non-commercial stance above is **this project's own choice**, not a Mojang requirement — Mojang's terms govern the game itself, its vanilla assets and the official mappings, not the code you write; ② none of this is legal advice, and it settles nothing about upstream. If you redistribute `data/`, read the three "Release assets" rules in `THIRD_PARTY_NOTICES.md` first (keep that file, verify with `SHA256SUMS-*`, and never pack the gitignored `client.txt`).
-
 ## Where to look for what
 
 | If you want | Go to |
@@ -281,7 +247,7 @@ Two more that are easy to trip over:
 | Orchestration skills (grill / breakdown / review / handoff) | [common_skill/README.md](common_skill/README.md) |
 | How far each platform / version is covered | `platform-coverage-*.md` under [doc](doc) |
 | How to contribute a change | [CONTRIBUTING.md](CONTRIBUTING.md) |
-| Code license (non-commercial + attribution) | [LICENSE](LICENSE) |
+| License (PolyForm Noncommercial 1.0.0) | [LICENSE](LICENSE) |
 | Licensing of third-party docs and data | [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) |
 
 [简体中文](README_human.md) | **English**

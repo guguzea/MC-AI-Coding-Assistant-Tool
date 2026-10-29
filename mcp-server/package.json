@@ -22,7 +22,7 @@
     "url": "git+https://github.com/guguzea/MC-AI-Coding-Assistant-Tool.git",
     "directory": "mcp-server"
   },
-  "license": "MIT",
+  "license": "SEE LICENSE IN LICENSE",
   "author": "guzi",
   "mcpName": "io.github.guguzea/mc-ai-coding-assistant-tool",
   "type": "module",
