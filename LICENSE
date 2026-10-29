@@ -75,31 +75,6 @@ Your licenses are all the licenses granted to you for the software under these t
 Use means anything you do with the software requiring one of your licenses.
 
 © PolyForm Project Inc.
-
----
-
-## 本仓库的适用边界
-
-1. 上面这份许可覆盖**本项目原创的代码**。
-2. **平台规则 / Skill / 反模式 / 代码模式库**是从上游文档与构件提炼的派生内容，适用各上游自己的条款（见 `THIRD_PARTY_NOTICES.md`），本许可不改变它们的许可状态。
-3. **借用的第三方 MIT / Apache-2.0 / CC0 代码**（`THIRD_PARTY_NOTICES.md` 的 Code reuse 一节、`minecraft-data`、桥 mod 等）保留其原许可。本许可不缩小这些既有权利，也不对其施加非商业限制。
-4. `data/` 各子树按其上游许可：Paper 文档正文 CC BY-SA 4.0（署名 PaperMC，同许可分发）、Yarn / QuiltMappings / Feather CC0、Forge / Fabric / NeoForge / Quilt 文档随各自条款、基岩随 Microsoft Learn 文档条款。`community_knowledge/` 里的第三方内容按原许可，只收归属与外链。
-5. 本许可不授予商标权。Minecraft 是 Mojang Synergies AB 的商标，本项目与 Mojang / Microsoft 无关联。
-
-署名做法：分发本项目或其衍生作品时，把上面的 `Required Notice:` 行与这份许可文本一起带上。
-
----
-
-## 附加条款：Copyleft
-
-本节由本仓库作者添加
-
-1. **传染范围**：修改、扩展、并入其它项目或以其它方式产出衍生作品时，整个衍生作品——包括你改过的文件与新增的文件——都必须以「本节 + PolyForm Noncommercial 1.0.0 全文」发布。
-2. **必须给源码**：分发时须同时提供完整对应源码。通过网络提供服务（SaaS、托管、在线试用等）同样视为分发，须在服务界面提供源码获取入口；只给二进制或混淆产物不算合规。
-3. **不得加限制**：不得对衍生作品追加比本许可更严的条款，也不得改挂闭源许可或其它非商业许可。
-4. **保留署名**：保留 `Required Notice:` 行、作者行与仓库链接，并在显眼处注明
-5. **例外**：`data/` 语料，以及 `THIRD_PARTY_NOTICES.md` 记载的第三方 MIT / Apache-2.0 / CC0 / CC BY-SA 片段，不因本节改变许可——它们各自按原条款，本节不对其施加开源义务。
-
 ### Strong Copyleft Addendum (derivatives must stay open and share the same terms)
 
 This section is added by this repository's author. It is **not** official PolyForm Project text and does not replace the PolyForm Noncommercial License 1.0.0 above; both apply, and where they differ the stricter term controls.
@@ -109,3 +84,28 @@ This section is added by this repository's author. It is **not** official PolyFo
 3. **No extra restrictions**: you may not add stricter terms, nor relicense the derivative under a closed or other noncommercial license.
 4. **Keep attribution**: keep the `Required Notice:` line, the author line and the repository link, and state prominently what you changed.
 5. **Carve-out**: corpora under `data/` and third-party MIT / Apache-2.0 / CC0 / CC BY-SA portions recorded in `THIRD_PARTY_NOTICES.md` keep their own licenses; this section imposes no open-source obligation on them.
+
+
+---
+
+## 本仓库的适用边界
+
+1. 上面这份许可覆盖**本项目原创的代码**。
+2. **平台规则 / Skill / 反模式 / 代码模式库**是从上游文档与构件提炼的派生内容，适用各上游自己的条款（见 `THIRD_PARTY_NOTICES.md`），本许可不改变它们的许可状态。
+3. **借用的第三方 MIT / Apache-2.0 / CC0 代码**（`THIRD_PARTY_NOTICES.md` 的 Code reuse 一节、`minecraft-data`、桥 mod 等）保留其原许可。本许可不缩小这些既有权利，也不对其施加非商业限制。
+4. `data/` 各子树按其上游许可：Paper 文档正文 CC BY-SA 4.0（署名 PaperMC，同许可分发）、Yarn / QuiltMappings / Feather CC0、Forge / Fabric / NeoForge / Quilt 文档随各自条款、基岩随 Microsoft Learn 文档条款。`community_knowledge/` 里的第三方内容按原许可，只收归属与外链。
+
+
+
+---
+
+## 附加条款：Copyleft
+
+本节由本仓库作者添加
+
+1. **传染范围**：修改、扩展、并入其它项目或以其它方式产出衍生作品时，整个衍生作品——包括你改过的文件与新增的文件——都必须以「本节 + PolyForm Noncommercial 1.0.0 全文」发布。
+2. **必须给源码**：分发时须同时提供完整对应源码。通过网络提供服务（SaaS、托管、在线试用等）同样视为分发，须在服务界面提供源码获取入口；只给二进制或混淆产物不算合规。
+3. **不得加限制**：不得对衍生作品追加比本许可更严的条款，也不改挂闭源许可或其它非商业许可。
+4. **保留署名**：保留 `Required Notice:` 行、作者行与仓库链接，并在显眼处注明
+5. **例外**：`data/` 语料，以及 `THIRD_PARTY_NOTICES.md` 记载的第三方 MIT / Apache-2.0 / CC0 / CC BY-SA 片段，不因本节改变许可——它们各自按原条款，本节不对其施加开源义务。
+
