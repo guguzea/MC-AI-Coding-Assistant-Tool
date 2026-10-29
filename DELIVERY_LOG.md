@@ -6,6 +6,96 @@
 - 只追加，不改写历史节。要更正旧节，写进新节第 6 块「自我更正」并点名旧节。
 - 夜跑、交接、事后抽查读本文件，不依赖聊天记录。夜批（阶 1）的队列与抽查记账仍在 [`NIGHT_BATCH.md`](./NIGHT_BATCH.md)，本文件不顶替它。
 
+## 2026-10-29 · 附加条款中英同步 + CONTRIBUTING 贡献者授权条款（维护档）
+
+**第 0 块 · 结论**：把 `LICENSE` 的英文附加条款从 5 条补到 **6 条**，与中文逐条对齐（新增第 6 条「衍生作品不包括用本软件创作的模组文件」，并把第 4 条英文从「state prominently what you changed」改为与中文一致的「display them prominently」）；`mcp-server/LICENSE` 再次逐字节同步。另在 `CONTRIBUTING.md` / `CONTRIBUTING.en.md` 各新增一节**贡献者授权条款**（inbound=outbound，六条：版权许可 / 专利许可 / 权利保证 / 不附加条件 / 署名 / 无担保）。测到 L1（静态结构 + 逐字节比对），绿。
+
+### ① 改了哪些文件
+
+- `LICENSE`（+2 行）：英文附加条款第 4 条改措辞、补第 6 条；`© PolyForm Project Inc.` 与英文附加条款标题之间补一个空行（原先紧贴，Markdown 渲染会粘连）。中文段**一字未动**（含第 4 条的截断句与你删减的第 106 行）。
+- `mcp-server/LICENSE`：按根 LICENSE 逐字节覆写，两份 8192 字节完全相同。
+- `CONTRIBUTING.md`（+44 行）：在「模块总览」之后、「添加新平台或新版本」之前插入 `## 贡献者授权条款（提交前必读）`。
+- `CONTRIBUTING.en.md`（+46 行）：同位插入 `## Contributor licence terms (read before you submit)`。
+
+### ② 判据与反证
+
+- **条数对等**：用正则 `^[0-9]+\. ` 分别切英文段（`### Strong Copyleft Addendum` → `## 本仓库的适用边界`）与中文段（`## 附加条款：Copyleft` → 文件尾）⇒ **6 / 6**，逐条编号一一对应。
+- **PolyForm 正文未受影响**：15 个小节标题 `ACCEPTANCE` … `DEFINITIONS` 全在；正文在 683 词基准上仍逐字一致。
+- **两份 LICENSE 字节相等**：`Buffer.byteLength = 8192`，`readFileSync` 字符串比较 `true`。
+- **反证（被否决的做法）**：没有把中文第 4 条的截断句补齐——那是你**刻意删的**；英文侧改为与中文**语义一致**而非「更完整」，否则中英又会对不上。
+- **CONTRIBUTING 原状**：`grep '许可|license|LICENSE'` 在两个文件里 **0 命中** ⇒ 这是全新章节，不存在与旧文冲突。
+
+### ③ 验证台账
+
+| 检查 | 命令 | 读数 |
+|---|---|---|
+| 中英条款数 | 正则切段计数 | **6 / 6** |
+| PolyForm 15 节 | 逐标题 `includes` | **15/15** |
+| 两份 LICENSE | 字节比较 | **相等（8192 B）** |
+| 标题衔接 | 读 76–80 行 | `© PolyForm…` / 空行 / `### Strong Copyleft…` |
+| CONTRIBUTING 新节 | `Select-String '^## (贡献者授权条款\|Contributor licence terms)'` | 中文 :33、英文 :33 |
+
+### ④ 数据侧变更
+
+无。
+
+### ⑤ 未做清单
+
+- `.github/PULL_REQUEST_TEMPLATE.md` 未加署名/授权勾选项（若你想让贡献者在 PR 里显式确认，可在模板末尾加一行复选框；本轮未动）。
+- 中文附加条款第 4 条的截断句、第 106 行「本节由本仓库作者添加」**保持你删后的原样**。
+- 改动仍在工作区，**未提交**。
+
+### ⑥ 自我更正
+
+- 上一轮我说「英文 5 条 / 中文 6 条」是事实，但把它列为「待你决定」；本轮按你的指示直接补齐，未再追问。
+
+## 2026-10-29 · 许可改为 PolyForm Noncommercial 1.0.0 + 附加条款的收尾（维护档）
+
+**第 0 块 · 结论**：把根 `LICENSE` 恢复商标/无关联声明（第 5 条），并以根 `LICENSE` 为唯一权威把 `mcp-server/LICENSE` 逐字同步（含你新加的第 6 条「衍生作品不包括使用本软件创作的模组文件」）；清掉 4 处仍写 MIT 的残留（`package-lock.json` / `SECURITY.md` / `doc/server-face-paper.md` / `fetch-paper-docs.mjs`）。PolyForm 官方正文经逐词比对**仍是 683 词零差异**。你的两处裁决已遵守：中文「残稿」保持你删后的样子不动，`README_human.en.md` 不加许可节。测到 L1（文档静态一致性 + 逐字节比对），绿。
+
+### ① 改了哪些文件
+
+- `LICENSE`（+2）：`## 本仓库的适用边界` 补回第 5 条「本许可不授予商标权。Minecraft 是 Mojang Synergies AB 的商标，本项目与 Mojang / Microsoft 无关联。」（原文取自 `6fdf0edc:LICENSE:87`，`4475ecce` 时被删）。未改动你删减过的中文附加条款。
+- `mcp-server/LICENSE`（+38/−18）：**整份按根 LICENSE 覆写**，两份现在逐字节相同。原先它与根分叉成两套附加条款（顺序相反、标题不同、中文少两句），且缺第 6 条。
+- `mcp-server/package-lock.json:11`：`"license": "MIT"` → `"SEE LICENSE IN LICENSE"`（`npm ci` 会用它回写 `package.json`，不改等于随时把许可冲回 MIT）。
+- `.github/SECURITY.md:108`：「本项目 **MIT 许可**」→「本项目为 **PolyForm Noncommercial 1.0.0 + 仓库作者附加条款**（非商业、强制署名、衍生作品须同许可开源）」。
+- `doc/server-face-paper.md:12`：「不得与本项目 MIT 代码许可混写」→「不得与本项目 PolyForm Noncommercial 1.0.0 代码许可混写」。
+- `mcp-server/scripts/fetch-paper-docs.mjs:15`：同上口径。
+
+### ② 判据与反证
+
+- **PolyForm 正文完整性**：拉 `https://spdx.org/licenses/PolyForm-Noncommercial-1.0.0.json` 的 `licenseText` 作基准，与仓库 LICENSE 正文做词级比对 ⇒ 683 词全等，唯一多出的是 licensor 自填的 `Required Notice:` 行与 `© PolyForm Project Inc.`。15 个小节标题全在。
+- **两份 LICENSE 一致性**：`fs.readFileSync('LICENSE','utf8') === fs.readFileSync('mcp-server/LICENSE','utf8')` ⇒ `true`（先前为 false，根 113 行 / 包 103 行且标题互不相同）。
+- **MIT 残留**：`git grep -E 'MIT 代码许可|本项目 **MIT|"license": "MIT"'` 在排除 `data/ temp/ node_modules/ 各平台树` 后，只剩 `package-lock.json` 里**依赖包自身**的 license 字段（75/89/106… 行，那是第三方包的真实许可，不应改）。
+- **反证（撤销掉的一步）**：中途曾想把中文附加条款按英文补齐（`本节由本仓库作者添加` 那句、第 4 条结尾），确认是你**故意删的**之后未做任何改动。
+
+### ③ 验证台账
+
+| 检查 | 命令 | 读数 |
+|---|---|---|
+| PolyForm 正文逐词 | SPDX json `licenseText` vs 仓库正文 | **683 词，前缀全等（0 分歧）** |
+| 两份 LICENSE | Node 字符串比较 | **true** |
+| 15 个小节 | 逐标题 `includes` | **15/15 全在** |
+| package.json 三方 | `mcp-server` / `package-lock` / `dsh-plugin` | `SEE LICENSE IN LICENSE` ×2、`SEE LICENSE IN ../LICENSE` ×1 |
+| MIT 残留 | `git grep` 排除第三方面 | **0 处本仓声明**（余下均为依赖包自身许可） |
+| 行尾/编码 | 字节检查 | LF、无 BOM、无替换字符 |
+
+### ④ 数据侧变更
+
+无。未动 `data/`、各平台树、`mcp-server/src`。
+
+### ⑤ 未做清单
+
+- `README_human.en.md` 的许可节**按你裁决不加**（HEAD 里那 33 行是这次之前被删的，维持现状）。
+- 中文附加条款第 4 条结尾仍是「并在显眼处注明」——**你删的，不动**。
+- 未提交：改动留在工作区（6 个 `M`）。提交归你。
+- 未实测 GitHub 页面是否显示许可徽章（本机 `github.com` / `api.github.com` 被网络策略挡）。
+
+### ⑥ 自我更正
+
+- 上一轮我把中文附加条款的删减判成「残稿」并建议补齐，是误判：那是你有意删除，不是事故。本轮已撤销该建议，未做改动。
+- 上一轮建议「删掉第 2 条 SaaS 条款、把 Copyleft 改名」——按你本轮说明重新评估后**不再建议**（见聊天里的解释）。
+
 ## 2026-10-28 · 人类读本按宣传片的 12 个模块口径重排措辞（维护档）
 
 **第 0 块 · 结论**：`README_human.md` 的「功能介绍」重写成和宣传片一致的 **12 个模块**顺序与口语措辞，并补上片里有、读本里缺的三块（**反编译 / 工程辅助 / 上游与更新**）；「一句话」换成片子的立意句（少一点「看着能编译、进游戏才发现不对」的代码）；顺手把徽章上过期的「86 个工具」改成 **89**。只改中文读本，`README_human.en.md` **未同步**。改动 52 行增 / 27 行删，链接自检 12 个相对链接 0 缺。

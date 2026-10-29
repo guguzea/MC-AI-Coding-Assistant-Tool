@@ -12,7 +12,7 @@
  * - 仓库代码：`LICENSE` = **BSD 2-Clause**
  * - **文档正文**：`LICENSE-docs` = **CC BY-SA 4.0**（署名 + **ShareAlike**）
  * ⇒ 正文一旦进 `data/`（随 Release 整包分发），衍生文本必须以 CC BY-SA 4.0 分发并署名；
- * **不得与 MIT 代码许可混写**。要绕开 ShareAlike 就只有"只做签名面"这一条路。
+ * **不得与 PolyForm Noncommercial 1.0.0 代码许可混写**。要绕开 ShareAlike 就只有"只做签名面"这一条路。
  *
  * ## 落点口径
  * Paper 文档**不按 MC 版本分档**（就是"当前"文档）⇒ 落 `data/paper_stable/paper-docs/stable/`

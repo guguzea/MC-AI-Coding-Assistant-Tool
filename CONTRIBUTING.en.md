@@ -30,6 +30,31 @@ Knowledge bases and anti-patterns normally live in `knowledge/` under **each pla
 
 ---
 
+## Contributor licence terms (read before you submit)
+
+This repository is **not MIT**, and **not open source**: code is distributed under the **PolyForm Noncommercial 1.0.0 plus the repository author's addendum** in [`LICENSE`](./LICENSE) (non-commercial, mandatory attribution, derivatives must stay under the same terms). That carries a requirement AGPL and GPL have but MIT does not: **contributors must grant an explicit licence**, otherwise the copyright in what you submit stays with you and this repository cannot fold it into the same licence.
+
+### By submitting, you agree
+
+When you submit a pull request, a patch, a code snippet in an issue, or content by any other means (a "Contribution"), you agree to all of the following:
+
+1. **Copyright licence.** You grant the repository author (guzi, the "Maintainer") a **perpetual, worldwide, royalty-free, irrevocable, non-exclusive** copyright licence to use, reproduce, modify, adapt, distribute and sublicense your Contribution under **any licence this repository uses now or in the future**, including but not limited to the PolyForm Noncommercial 1.0.0 plus addendum in `LICENSE` and any other licence the Maintainer later selects, and to permit others to do the same.
+2. **Patent licence.** You grant the Maintainer and every user of this repository a **perpetual, worldwide, royalty-free, irrevocable** patent licence covering the patent claims you are able to license in your Contribution. If you later bring a patent infringement claim against this repository, that patent licence terminates immediately.
+3. **You warrant** that: (a) the Contribution is **your original work**, or you hold sufficient rights to license it as set out above; (b) it contains no third-party code, text or assets you have no right to license; (c) if it does contain third-party material, you have **named the source and its licence** in the pull request, and that licence permits redistribution under this repository's licence.
+4. **No extra conditions.** You may not attach terms to a Contribution that conflict with `LICENSE`. If the organisation you represent imposes additional requirements (a CLA, a patent pool, export controls), **raise it in an issue before submitting** and the Maintainer will decide whether to accept.
+5. **Attribution.** Your Contribution is recorded in the git history. The Maintainer **does not promise** to name you in `LICENSE`, `README`, or any display surface; if you want credit, say so explicitly in the pull request (for example, entering you under "Code reuse" in `THIRD_PARTY_NOTICES.md`) and the Maintainer will decide.
+6. **No warranty.** Your Contribution is provided "as is", without warranties or conditions of any kind, express or implied.
+
+### No form to sign
+
+Submitting **is** the act of acceptance (the usual inbound = outbound approach); there is no separate CLA to sign. If you **disagree** with any of the above, **do not submit** — and that includes code snippets pasted into issues.
+
+### Using your own work elsewhere
+
+Your **use** of this repository is still governed by `LICENSE` (non-commercial). The grant above only settles "can this repository adopt your Contribution"; it **does not change** the limits that apply to you as a user, and it **does not grant** you any extra rights over the rest of the repository.
+
+---
+
 ## Adding a new platform or version
 
 ### Step 1: copy the directory template
