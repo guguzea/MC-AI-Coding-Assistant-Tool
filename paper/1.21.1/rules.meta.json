@@ -11,12 +11,14 @@
   "rulesBody": "本档无独立规则正文；正文见 paper/26.3/rules/，本档只给适用性核查",
   "applicability": {
     "checkedFrom": "paper/26.3/rules/*.md",
-    "signaturePointers": 39,
-    "memberStillPresent": 27,
+    "generatedBy": "scripts/gen-paper-version-packs.mjs（机核；默认 dry-run）",
+    "dataFile": "paper/1.21.1/applicability.json",
+    "signaturePointers": 28,
+    "memberStillPresent": 23,
     "classMissing": 0,
-    "memberMissing": 12,
-    "tutorialPointers": 25,
-    "generatedBy": "temp/gen-paper-version-packs.mjs（机核；默认 dry-run）"
+    "memberMissing": 1,
+    "memberUnresolved": 4,
+    "tutorialPointers": 19
   },
   "typesInSignatureFace": 1702,
   "typeShellPages": 141,

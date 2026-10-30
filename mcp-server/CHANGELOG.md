@@ -2,6 +2,14 @@
 
 ## Unreleased（2026-09 全仓库审查修复轮；工作树，未发版）
 
+- **失败信道 + related 形状统一（2026-10-30，R2 审计修复）**
+  - **`isToolFailure` 增读 `action.code` / 顶层 `code` / 字符串 `error`**：此前只认 `error.code`（对象），而 `decompile_mod_jar` / `get_minecraft_source` / `convert_mapping` / `search_mod_code` 等只用 `found:false + action.code` 报错 ⇒ CLI 仍 `exit 0`。新块只在 `found===false && ok!==true` 时判，两支 OR。豁免表：action 侧 6 码（`PLATFORM_SKIPPED` / `LOADER_API_NOT_INDEXED` / `FALLBACK_IDENTITY` / `AMBIGUOUS` / `CSV_NO_OWNER` / `PICK_PLATFORM`），顶层侧 3 码（另有 `INDEXED_WITHOUT_BODY`）。顶层 `code` 加 `^[A-Z][A-Z0-9_]*$` 形状守卫（`generate_model` 的 `code` 是生成的源码字符串）。**不改任何生产码**：`VERSION_REQUIRED` / `WRONG_TOOL` / `PICK_PLATFORM` 的既有 `ok:true` 与 `status:"skipped"` 约定由 `test-cli-failure-channel.mjs` 运行时锁定。
+  - **`mod-decompile.ts` 12 处 `error:"CODE"` 改 `error:{code,message?}`**（`ModDecompileResult.error` 类型同步）；`localize/jar.ts` 的 5 个内部解析哨兵保持字符串（不进入顶层返回）。
+  - **`query_loader_api` 补平台枚举**：`platform=bogus` 原先拼出 `1.20.1-bogus` 无命中 ⇒ `LOADER_API_NOT_INDEXED` + exit 0（把输入写错伪装成「本档没摘要」）。`candidateKeysSafe` 现只认 8 个平台，未知平台 `INVALID_INPUT`。
+  - **四个 related 工具统一为对象**：`get_forge_doc_related` / `get_fabric_doc_related` / `get_neoforge_doc_related` / `get_doc_related` 成功恒返回 `{ok,platform,id,version,results[]}`（`results` 恒为数组；fabric 保留 `source`；quilt 回退把 `sourcePlatform`/`warning` hoist 到顶层）。**破坏性变更**：按裸数组解析的消费者需改读 `.results`（仓内 test-core / limit-monotony 已同步）。
+  - **新增测试**：`test-cli-failure-channel.mjs`（红 9 / 绿 12，逐条真跑 CLI）、`test-path-guards.mjs`（5 族）；`assert-playtest-intent-gate` 矩阵 15 例。`test-core` 的工具表锚点同步 AGENTS.md 现标题（`## MCP Server / CLI 工具`）。
+
+
 - **服务端面补 13 棵版本档 + 两个真机探针（2026-10-23/24，接「Paper/Spigot 能不能加热门版本」与「做 paper 那样的真机探针」）** —— 数字全部本轮实扫，不引旧账。
 
   - **Spigot 历史档 ×8**（`data/spigot_<ver>/spigot-javadoc/<ver>/`）：`1.21.8` 1352 类 / `1.21.4` 1335 / `1.21.1` 1282 / `1.20.6` 1251 / `1.20.1` 1186 / `1.19.4` 1173 / `1.16.5` 1027 / `1.12.2` 779（成员签名 15284 / 15018 / 12784 / 12496 / 9440 / 9311 / 7875 / 6213）。**走构件的 `javap`、不是 javadoc 页**：`hub.spigotmc.org/javadocs/spigot/1.21.4/` 实测 **404**（`/javadocs/bukkit/` 与 `/javadocs/spigot/` 是同一份当前文档），而 maven 的 `org/spigotmc/spigot-api` metadata 实测 **83 个版本**。生成器 `extract-spigot-api-surface.mjs`（默认 dry-run；`data/` 下全走 `emit`，构件落 `temp/spigot-jars/` 不入库；每页 `sourceType: javap` + `jarMd5`）。

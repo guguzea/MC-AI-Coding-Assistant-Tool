@@ -294,6 +294,12 @@ export function runMatrix(impl, dirs) {
   const outDir = dirs.outside;
   const ro = impl({ action: "read", evidenceDir: outDir });
   if (ro.code !== "PATH_OUTSIDE_ALLOWLIST") p.push(`授权根外: 期望 PATH_OUTSIDE_ALLOWLIST，实际 code=${ro.code ?? "(none)"}`);
+  // 证据目录**及其父目录都不存在**：realpath 最近存在祖先，read 走三态 absent，不得 ENOENT 抛穿。
+  const rm = impl({ action: "read", evidenceDir: dirs.missingParent });
+  if (rm?.ok !== true) p.push(`缺父目录 read: 期望结构化 ok:true，实际 ok=${rm?.ok} code=${rm?.code ?? "(none)"} msg=${rm?.message ?? ""}`);
+  else if (rm.state?.state !== "absent" || rm.menu?.state !== "absent") {
+    p.push(`缺父目录 read: 期望 state/menu 均 absent，实际 ${rm.state?.state}/${rm.menu?.state}`);
+  }
   return p;
 }
 
@@ -383,6 +389,8 @@ async function main() {
       nestedMenuDir: join(root, "proj2", "playtest-evidence", "playtest"),
       obsFail: join(root, "proj3", "playtest-evidence", "fail"),
       obsPass: join(root, "proj3", "playtest-evidence", "pass"),
+      // 目录与其父目录都不存在（read 必须结构化返回 absent，不得 ENOENT 抛穿）
+      missingParent: join(root, "no-such-parent", "deep", "evidence"),
       outside: join(tmpdir(), "mc-skill-intent-outside-" + process.pid),
     };
     for (const d of [dirs.op, dirs.strict, dirs.noMenu, dirs.badMenu, dirs.nested, dirs.nestedMenuDir, dirs.obsFail, dirs.obsPass]) mkdirSync(d, { recursive: true });
@@ -461,7 +469,7 @@ async function main() {
       process.exitCode = 1;
     } else {
       console.log(
-        `assert-playtest-intent-gate: ok（菜单 ${CONTRACT_INTENTS.length} 意图 / 禁列 ${FORBIDDEN.join("+")} / 执行器 ${opArt.java.length} 字符 / 矩阵 14 例 / 已验证档 ${tierKeys.join(" ")}）`,
+        `assert-playtest-intent-gate: ok（菜单 ${CONTRACT_INTENTS.length} 意图 / 禁列 ${FORBIDDEN.join("+")} / 执行器 ${opArt.java.length} 字符 / 矩阵 15 例 / 已验证档 ${tierKeys.join(" ")}）`,
       );
     }
   } finally {
@@ -561,7 +569,7 @@ function runSelftest() {
       process.env.MC_SKILL_PLAYTEST_ROOT = root;
       const menu = generatePlaytestDriver({ platform: "fabric", version: "1.21.11", driverMode: "in_jvm_player_agent", capabilityProfile: "operator" }).files["playtest/intent-menu.json"];
       const strictMenu = generatePlaytestDriver({ platform: "fabric", version: "1.21.11", driverMode: "in_jvm_player_agent", capabilityProfile: "strict_survival" }).files["playtest/intent-menu.json"];
-      const dirs = { op: join(root, "op"), strict: join(root, "strict"), noMenu: join(root, "noMenu"), badMenu: join(root, "badMenu"), nested: join(root, "p2", "playtest-evidence", "run"), obsFail: join(root, "obsFail"), obsPass: join(root, "obsPass"), outside: join(tmpdir(), "mc-skill-intent-outside-selftest") };
+      const dirs = { op: join(root, "op"), strict: join(root, "strict"), noMenu: join(root, "noMenu"), badMenu: join(root, "badMenu"), nested: join(root, "p2", "playtest-evidence", "run"), obsFail: join(root, "obsFail"), obsPass: join(root, "obsPass"), missingParent: join(root, "no-such-parent", "deep", "evidence"), outside: join(tmpdir(), "mc-skill-intent-outside-selftest") };
       for (const d of [dirs.op, dirs.strict, dirs.badMenu, dirs.nested, dirs.obsFail, dirs.obsPass, join(root, "p2", "playtest-evidence", "playtest")]) mkdirSync(d, { recursive: true });
       writeFileSync(join(dirs.op, "intent-menu.json"), menu);
       writeFileSync(join(dirs.strict, "intent-menu.json"), strictMenu);

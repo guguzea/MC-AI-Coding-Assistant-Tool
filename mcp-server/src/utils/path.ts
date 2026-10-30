@@ -174,7 +174,16 @@ export function resolveCommunityDir(...subpaths: string[]): string {
     }
   }
   if (subpaths.length === 0) return base;
-  return join(base, ...subpaths);
+  const joined = join(base, ...subpaths);
+  // 与 resolveDataDir 同一把围栏：含 `..` 或开头 `/` 的片段不得穿出 community_knowledge。
+  // 越界路径不回显（同 C-3 口径）。
+  if (!isResolvedInside(base, joined)) {
+    throw new Error(
+      "resolveCommunityDir: 子路径会逃出 community_knowledge 目录，已拒绝（越界路径不回显，避免泄露文件系统布局）。" +
+        "子路径只接受该目录内的相对片段，例如 resolveCommunityDir(\"authored\", \"lib-caelus.md\")。",
+    );
+  }
+  return joined;
 }
 
 /**

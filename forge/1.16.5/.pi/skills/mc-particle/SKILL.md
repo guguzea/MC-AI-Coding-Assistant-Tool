@@ -19,16 +19,16 @@ mappings: official
 private static final DeferredRegister<ParticleType<?>> PARTICLES =
     DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, MOD_ID);
 
-public static final RegistryObject<SimpleParticleType> MY_PARTICLE =
+public static final RegistryObject<BasicParticleType> MY_PARTICLE =
     PARTICLES.register("my_particle",
-        () -> new SimpleParticleType(false) {}
+        () -> new BasicParticleType(false) {}
     );
 
 // 在 mod 构造函数中
 PARTICLES.register(modEventBus);
 ```
 
-- `SimpleParticleType`：无需额外数据（如爆炸粒子）
+- `BasicParticleType`：无需额外数据（如爆炸粒子）
 - 若需要额外数据，扩展 `ParticleType<T>` 并实现 codec
 
 ### 2. 创建粒子渲染类（客户端）

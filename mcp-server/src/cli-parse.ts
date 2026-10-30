@@ -648,6 +648,40 @@ export function unusedPositionals(cmd: string, positional: string[]): string[] {
   return positional.slice(used);
 }
 
+/**
+ * `found:false` 时**不**判失败的 action 码（正常答复，不是工具故障）。
+ * 只收「文档明确背书 / 调用方 opt-in / 需用户决定」三类；新增条目必须同时补测试。
+ */
+const NON_FATAL_ACTION_CODES = new Set([
+  // loader-api：官方不代下该档 jar（README 明确该码是正常返回，可 ingest）
+  "PLATFORM_SKIPPED",
+  // loader-api：有索引但本档缺摘要；not indexed ≠ absent
+  "LOADER_API_NOT_INDEXED",
+  // convert_mapping：allow_fallback 显式 opt-in，回传原名并置 fallbackUsed:true
+  "FALLBACK_IDENTITY",
+  // 需要调用方补 descriptor / 选一个重载
+  "AMBIGUOUS",
+  // 1.14/1.15 纯 CSV 映射需带 ownerClass；本码是重定向提示
+  "CSV_NO_OWNER",
+  // 多加载器 / 混合工程：必须由用户拍板 platform
+  "PICK_PLATFORM",
+]);
+
+/** `found:false` 时**不**判失败的顶层 code（`error`/`code` 通道）。 */
+const NON_FATAL_TOP_CODES = new Set([
+  "PLATFORM_SKIPPED",
+  "LOADER_API_NOT_INDEXED",
+  // thin summary：索引在但正文薄；提示性，不是失败
+  "INDEXED_WITHOUT_BODY",
+]);
+
+/**
+ * 顶层 `code` 的形状守卫：机读码是 UPPER_SNAKE。
+ * 不加会误吞 `generate_model` 的顶层 `code`（它是**生成的源码字符串**）与注释式字段。
+ * 1–2 字符的大写码也会被判失败（当前 0 命中；fail-closed 可接受）。
+ */
+const TOP_CODE_SHAPE = /^[A-Z][A-Z0-9_]*$/;
+
 export function isToolFailure(result: unknown, isError: boolean, failOnError: boolean): boolean {
   if (isError) return true;
   if (!result || typeof result !== "object") return false;
@@ -667,8 +701,24 @@ export function isToolFailure(result: unknown, isError: boolean, failOnError: bo
   const hasErrorCode =
     nestedErr && typeof nestedErr === "object" && nestedErr !== null && "code" in nestedErr;
   if (r.found === false && hasErrorCode && r.ok !== true) return true;
-  if (r.found === false && !failOnError) return false;
   if (hasErrorCode && r.ok !== true) return true;
+  // 2026-10-30：`found:false` 的失败信道还包括 action.code / 顶层 code / 字符串 error。
+  // 此前只读 error.code（对象），一批工具只用 `found:false + action.code` 报错 ⇒ CLI 仍 exit 0。
+  // 顺序不可换：本块必须排在 `found:false && !failOnError → false` 之前，否则永不可达。
+  // 两支是 OR：任一信道给出致命码即失败；NON_FATAL 只豁免对应通道。
+  if (r.found === false && r.ok !== true) {
+    const action = r.action;
+    const actionCode =
+      action && typeof action === "object" && typeof (action as Record<string, unknown>).code === "string"
+        ? ((action as Record<string, unknown>).code as string)
+        : undefined;
+    const topCode = typeof r.code === "string" && TOP_CODE_SHAPE.test(r.code) ? r.code : undefined;
+    if (actionCode && !NON_FATAL_ACTION_CODES.has(actionCode)) return true;
+    if (topCode && !NON_FATAL_TOP_CODES.has(topCode)) return true;
+    // 字符串 error 只在这里判：本地化解析器内部的哨兵不会出现在顶层返回（见 localize/jar.ts）。
+    if (typeof nestedErr === "string") return true;
+  }
+  if (r.found === false && !failOnError) return false;
   if (failOnError) {
     if (r.found === false) return true;
     if (Array.isArray(r.errors) && r.errors.length > 0) return true;

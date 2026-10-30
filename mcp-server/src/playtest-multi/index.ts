@@ -18,8 +18,30 @@
  * 会合原语在 driver 侧：剧本里 `touch <共享目录绝对路径>/<name>` + `waitfile <同路径> max=<ticks>`。
  */
 import { existsSync, readFileSync, readdirSync, statSync } from "fs";
-import { isAbsolute, join, resolve } from "path";
+import { dirname, isAbsolute, join, parse, resolve } from "path";
 import { isInsideReal, nativeReal } from "../utils/project-sandbox.js";
+
+/**
+ * 多个目录的公共祖先（先按盘符/根分组；跨盘/跨根返回 null）。
+ * 用于「显式 clients 未给 evidenceRoot」时确定 `<root>/sync/` 的位置：
+ * 只取 parents[0] 会在客户端分散于不同父目录时把 marker 找错根 ⇒ 假红（MARKERS_MISSING）。
+ */
+export function commonAncestorOfDirs(dirs: string[]): string | null {
+  if (!dirs.length) return null;
+  const resolved = dirs.map((d) => resolve(d));
+  const roots = resolved.map((p) => parse(p).root);
+  const norm = (s: string) => (process.platform === "win32" ? s.toLowerCase() : s);
+  if (new Set(roots.map(norm)).size > 1) return null;
+  const root = roots[0];
+  const parts = resolved.map((p) => p.slice(root.length).split(/[\\/]+/).filter(Boolean));
+  let acc = parts[0];
+  for (const seg of parts.slice(1)) {
+    let i = 0;
+    while (i < acc.length && i < seg.length && norm(acc[i]) === norm(seg[i])) i++;
+    acc = acc.slice(0, i);
+  }
+  return acc.length ? join(root, ...acc) : root;
+}
 
 export type EvidenceState = "present" | "absent" | "unreadable";
 
@@ -232,9 +254,17 @@ export function inspectPlaytestMulti(query: PlaytestMultiQuery): PlaytestMultiRe
     }
   }
   if (!evidenceRoot) {
-    // 未给 evidenceRoot 时，以「共用的父目录」作为 marker 根（显式 clients 的公共父）
-    const parents = clients.map((c) => resolve(c.evidenceDir).split(/[\\/]/).slice(0, -1).join("/"));
-    evidenceRoot = parents[0] || "";
+    // 未给 evidenceRoot 时，以「共用的父目录」作为 marker 根（显式 clients 的公共父）。
+    // 单客户端 = 它的父目录（与旧行为一致）；多客户端跨父目录 = 真正的公共祖先。
+    const common = commonAncestorOfDirs(clients.map((c) => dirname(resolve(c.evidenceDir))));
+    if (!common) {
+      return {
+        ok: false,
+        code: "INVALID_INPUT",
+        message: "多个客户端的证据目录不在同一盘符/根下，无法确定 marker 根；请显式传 evidenceRoot。",
+      };
+    }
+    evidenceRoot = common;
   }
 
   const auth = authorize(query, clients.map((c) => resolve(c.evidenceDir)));

@@ -5,14 +5,14 @@
 **症状：** 编译错误，找不到对应构造函数
 
 ```java
-// ❌ 错误（混淆了 Yarn 和 MCP 层）
+// ❌ 错误（混淆了 Yarn 与 NeoForge 1.20.4 的官方名层）
 new SwordItem(MyTier.COPPER, ToolMaterial, 3, 1.6f, new Item.Properties());
 
 // ❌ 错误（参数类型用 float，NeoForge 1.20.4 用 int）
 new SwordItem(Tier, float attackDamage, float attackSpeed, Properties);
 ```
 
-**正确（来源：NeoForge 1.20.4 MCP 层）：**
+**正确（来源：NeoForge 1.20.4 = Mojang 官方名 / NeoForm 层，**不是** Forge 的 MCP 命名层）：**
 
 ```java
 new SwordItem(MyTier.COPPER, 3, 1.6f, new Item.Properties());

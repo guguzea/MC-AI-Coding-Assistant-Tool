@@ -13,7 +13,7 @@
  */
 
 import { existsSync, realpathSync, statSync } from "fs";
-import { dirname, isAbsolute, join, resolve, sep } from "path";
+import { basename, dirname, isAbsolute, join, resolve, sep } from "path";
 
 export class ProjectPathError extends Error {
   /** true = 该拒绝来自 2026-08 引入的「MC_SKILL_PROJECT_ROOT 为硬边界」破坏性变更（此前 explicitRoot 可覆盖 env）。 */
@@ -54,6 +54,25 @@ export function isInsideReal(childReal: string, parentReal: string): boolean {
   if (c === p) return true;
   const prefix = p.endsWith(sep) ? p : p + sep;
   return c.startsWith(prefix);
+}
+
+/**
+ * ENOENT-safe realpath：解析**最近存在的祖先**，再把不存在的尾段按原样拼回。
+ * 用于「目标目录允许尚不存在，但仍要判它是否落在授权根内」的读路径与首写路径。
+ * 与 `assertCreatableDir` 的区别：返回解析后的路径（供 isInsideReal 判定），不抛锚点错误。
+ */
+export function realOfNearestExistingAncestor(target: string): string {
+  const abs = resolve(target);
+  let cursor = abs;
+  const tail: string[] = [];
+  while (!existsSync(cursor)) {
+    const parent = dirname(cursor);
+    if (parent === cursor) return abs; // 到盘符/根仍不存在：返回原路径，由调用方按越界/不存在处理
+    tail.unshift(basename(cursor));
+    cursor = parent;
+  }
+  const real = nativeReal(cursor);
+  return tail.length ? join(real, ...tail) : real;
 }
 
 /**

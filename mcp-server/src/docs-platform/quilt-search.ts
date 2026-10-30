@@ -565,19 +565,36 @@ export async function getQuiltDocFull(args: {
   }
 }
 
-/** 与其它 platform 的 get_doc_related 一样：成功时 JSON 根是相关页数组。回退 Fabric 时条目带 sourcePlatform / warning。 */
+/**
+ * 与其它三个 related 工具同构：成功恒为对象 {ok,platform,id,version,results[]}，results 恒为数组。
+ * 回退 Fabric 时条目保留 sourcePlatform / warning，并**hoist** 到顶层。
+ */
 function jsonRelatedList(
+  id: string,
+  version: string,
   hits: SearchResultLike[],
   extra?: { fallback: "fabric"; warning?: string },
 ): CallToolResult {
-  if (!extra) return jsonOk(hits);
-  return jsonOk(
-    hits.map((h) => ({
-      ...h,
-      sourcePlatform: "fabric" as const,
-      ...(extra.warning ? { warning: extra.warning } : {}),
-    })),
-  );
+  const results = extra
+    ? hits.map((h) => ({
+        ...h,
+        sourcePlatform: "fabric" as const,
+        ...(extra.warning ? { warning: extra.warning } : {}),
+      }))
+    : hits;
+  const payload: Record<string, unknown> = {
+    ok: true,
+    platform: "quilt",
+    id,
+    version,
+    results,
+  };
+  if (extra) {
+    payload.fallback = "fabric";
+    payload.sourcePlatform = "fabric";
+    if (extra.warning) payload.warning = extra.warning;
+  }
+  return jsonOk(payload);
 }
 
 export function getQuiltDocRelated(args: {
@@ -590,7 +607,7 @@ export function getQuiltDocRelated(args: {
   if (hasQuiltDocsIndex(args.version, dataRoot)) {
     try {
       const store = createFabricDocStore(args.version, "quilt-docs", dataRoot, "quilt");
-      return jsonRelatedList(store.getRelatedDocs(args.id, args.version, limit));
+      return jsonRelatedList(args.id, args.version, store.getRelatedDocs(args.id, args.version, limit));
     } catch (e) {
       if (!isDocNotFoundLike(e)) throw e;
     }
@@ -602,8 +619,16 @@ export function getQuiltDocRelated(args: {
     try {
       const hits = createFabricDocStore(lineCorps, "quilt-docs", dataRoot, "quilt")
         .getRelatedDocs(args.id, lineCorps, limit);
-      return jsonOk(
-        hits.map((h) => ({
+      return jsonOk({
+        ok: true,
+        platform: "quilt",
+        id: args.id,
+        version: args.version,
+        fallback: "quilt",
+        requestedVersion: args.version,
+        source_version: lineCorps,
+        warning: quiltLineWarning(args.version, lineCorps),
+        results: hits.map((h) => ({
           ...h,
           platform: "quilt",
           fallback: "quilt",
@@ -611,7 +636,7 @@ export function getQuiltDocRelated(args: {
           source_version: lineCorps,
           warning: quiltLineWarning(args.version, lineCorps),
         })),
-      );
+      });
     } catch (e) {
       if (!isDocNotFoundLike(e)) throw e;
     }
@@ -629,7 +654,7 @@ export function getQuiltDocRelated(args: {
       limit,
     );
     const filtered = filterFabricFallbackHits(related);
-    return jsonRelatedList(filtered.hits, {
+    return jsonRelatedList(args.id, args.version, filtered.hits, {
       fallback: "fabric",
       warning: joinSearchWarnings(
         QUILT_FABRIC_FALLBACK_WARNING,

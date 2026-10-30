@@ -10,16 +10,14 @@ public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
 
 public static void register() {
     int id = 0;
-    CHANNEL.messageBuilder(ExamplePacket.class, id++)
-        .encoder(ExamplePacket::encode)
-        .decoder(ExamplePacket::decode)
-        .consumerMainThread(ExamplePacket::handle)
-        .add();
+    CHANNEL.registerMessage(id++, ExamplePacket.class, ExamplePacket::encode, ExamplePacket::decode,
+        ExamplePacket::handle);
 }
 ```
 
 ## 坑
 
+- `registerMessage` 取 5 个参数：discriminator(id++)、消息类、encoder、decoder、handler（官方 1.20.1 页 `networking_simpleimpl.md:34`）
 - 协议版本字符串两端都要匹配
 - 写盘/改世界只在服务端 handler
 - 1.21 NeoForge 请改用 `CustomPacketPayload` + `StreamCodec`（`generate_network_packet` platform=neoforge_1.21）

@@ -58,10 +58,21 @@ function walkRelTree(
   }
 }
 
-function insideRoot(realRoot: string, realPath: string): boolean {
-  if (realPath === realRoot) return true;
-  const prefix = realRoot.endsWith(sep) ? realRoot : realRoot + sep;
-  return realPath.startsWith(prefix);
+/**
+ * 解压树根围栏。大小写只在 Windows 上归一：在大小写敏感的文件系统上把
+ * `/tmp/abc` 与 `/tmp/ABC/x` 当同一棵树，等于让该守卫对「仅大小写不同的兄弟路径」失效。
+ */
+export function isInsideExtractRoot(
+  realRoot: string,
+  realPath: string,
+  caseInsensitive = process.platform === "win32",
+): boolean {
+  const norm = (p: string) => (caseInsensitive ? p.toLowerCase() : p);
+  const root = norm(realRoot);
+  const path = norm(realPath);
+  if (path === root) return true;
+  const prefix = root.endsWith(sep) ? root : root + sep;
+  return path.startsWith(prefix);
 }
 
 /**
@@ -74,7 +85,7 @@ export function verifyExtractedTree(rootDir: string, expectedRelFiles: string[])
   const absRoot = resolve(rootDir);
   let realRoot: string;
   try {
-    realRoot = realpathSync(absRoot).toLowerCase();
+    realRoot = realpathSync(absRoot);
   } catch {
     return { ok: false, problem: "解析解压根 realpath 失败" };
   }
@@ -119,11 +130,11 @@ export function verifyExtractedTree(rootDir: string, expectedRelFiles: string[])
   for (const f of files) {
     let realFile: string;
     try {
-      realFile = realpathSync(join(absRoot, f)).toLowerCase();
+      realFile = realpathSync(join(absRoot, f));
     } catch {
       return { ok: false, problem: `无法解析落盘文件 realpath: ${f}` };
     }
-    if (!insideRoot(realRoot, realFile)) {
+    if (!isInsideExtractRoot(realRoot, realFile)) {
       return { ok: false, problem: `落盘文件 realpath 逃逸解压根: ${f} → ${realFile}` };
     }
   }

@@ -13,7 +13,7 @@
  */
 import { existsSync, mkdirSync, readFileSync, renameSync, statSync, writeFileSync } from "fs";
 import { isAbsolute, join, resolve } from "path";
-import { isInsideReal, nativeReal } from "../utils/project-sandbox.js";
+import { isInsideReal, nativeReal, realOfNearestExistingAncestor } from "../utils/project-sandbox.js";
 
 export interface PlaytestIntentQuery {
   action: "read" | "write";
@@ -80,8 +80,19 @@ function authorize(query: PlaytestIntentQuery):
     return { ok: false, code: "INVALID_INPUT", message: "evidenceDir 必填且必须是绝对路径（证据目录，须在授权根内）。" };
   }
   const dir = resolve(dirArg);
-  // write 允许目录尚不存在（首写建目录）；read / 校验一律要求目录已在
-  const probe = existsSync(dir) ? nativeReal(dir) : nativeReal(resolve(dir, ".."));
+  // write 允许目录尚不存在（首写建目录）；read / 校验一律要求目录已在。
+  // 目录与其父目录都不存在时**不许**对 `resolve(dir,"..")` 直接 realpath —— 会 ENOENT 抛穿 handler；
+  // 改为解析最近存在的祖先再拼回尾段，越界判定仍在 isInsideReal。
+  let probe: string;
+  try {
+    probe = existsSync(dir) ? nativeReal(dir) : realOfNearestExistingAncestor(dir);
+  } catch (e) {
+    return {
+      ok: false,
+      code: "PATH_NOT_FOUND",
+      message: `无法解析证据目录真实路径：${(e as Error).message}`,
+    };
+  }
   if (!isInsideReal(probe, root)) {
     return {
       ok: false,
@@ -96,7 +107,7 @@ function authorize(query: PlaytestIntentQuery):
 function menuCandidates(dir: string, menuPath?: string): string[] {
   const out: string[] = [];
   if (menuPath?.trim()) out.push(resolve(menuPath));
-  out.push(join(dir, "intent-menu.json"), join(dir, "..", "playtest", "intent-menu.json"), join(dir, "..", "playtest-files-intent-menu.json"));
+  out.push(join(dir, "intent-menu.json"), join(dir, "..", "playtest", "intent-menu.json"));
   return out;
 }
 

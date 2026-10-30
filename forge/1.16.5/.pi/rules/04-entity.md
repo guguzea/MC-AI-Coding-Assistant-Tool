@@ -161,7 +161,7 @@ public static void onAttributes(EntityAttributeCreationEvent event) {
 
 ```java
 // entities/MyEntity.java
-public class MyEntity extends Mob {
+public class MyEntity extends MobEntity {
     private int attackCooldown = 0;
 
     protected MyEntity(EntityType<? extends MyEntity> type, World world) {
@@ -173,7 +173,7 @@ public class MyEntity extends Mob {
         super.registerGoals();
         this.goalSelector.addGoal(0, new FloatGoal(this));           // 游泳
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0, true));  // 近战攻击
-        this.goalSelector.addGoal(2, new WaterAvoidingRandomStrollGoal(this, 1.0));
+        this.goalSelector.addGoal(2, new WaterAvoidingRandomWalkingGoal(this, 1.0));
         this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, PlayerEntity.class, 8.0f));
         this.goalSelector.addGoal(4, new RandomLookAroundGoal(this));
 

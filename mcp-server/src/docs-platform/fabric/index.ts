@@ -942,7 +942,14 @@ export async function getFabricDocRelated(
       return {
         content: [{
           type: "text",
-          text: JSON.stringify({ results: others, source: "fabric-porting", id: args.id }, null, 2),
+          text: JSON.stringify({
+            ok: true,
+            platform: "fabric",
+            id: args.id,
+            version: args.version,
+            source: "fabric-porting",
+            results: others,
+          }, null, 2),
         }],
       };
     }
@@ -954,7 +961,14 @@ export async function getFabricDocRelated(
     return {
       content: [{
         type: "text",
-        text: JSON.stringify({ results: result, source: resolvedSource }, null, 2),
+        text: JSON.stringify({
+          ok: true,
+          platform: "fabric",
+          id: args.id,
+          version,
+          source: resolvedSource,
+          results: result,
+        }, null, 2),
       }],
     };
   } catch (e) {

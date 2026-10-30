@@ -96,6 +96,11 @@ function platformRequiredResult(): CallToolResult {
       type: "text",
       text: JSON.stringify({
         ok: false,
+        error: {
+          code: "INVALID_INPUT",
+          message: "请指定 platform，禁止默认 forge。",
+          hint: "platform ∈ forge/fabric/neoforge/quilt/liteloader/rift/modloader；先 list_doc_versions 查看可用版本。",
+        },
         action: actionable(ActionCodes.INVALID_INPUT, "请指定 platform，禁止默认 forge", [
           "传入 platform（forge/fabric/neoforge/quilt/liteloader/rift/modloader）",
           "先 list_doc_versions 查看该平台可用版本",
@@ -488,21 +493,17 @@ export async function getForgeDocRelated(
       args.limit ?? 5,
     );
     const extra = getForgeStore().describeVersionResolution(args.version);
-    if (!extra.versionFallback) {
-      return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
-    }
-    return {
-      content: [{
-        type: "text",
-        text: JSON.stringify(withGetDocFallback(args.version, extra, {
-          ok: true,
-          id: args.id,
-          version: args.version,
-          warning: extra.warning,
-          results: result,
-        }), null, 2),
-      }],
-    };
+    // 统一形状（与 fabric/neoforge/通用 get_doc_related 同构）：成功恒为对象，
+    // results 恒为数组；降级时由 withGetDocFallback 补 requestedVersion/resolvedVersion/versionFallback。
+    const payload = withGetDocFallback(args.version, extra, {
+      ok: true,
+      platform: "forge",
+      id: args.id,
+      version: args.version,
+      ...(extra.warning ? { warning: extra.warning } : {}),
+      results: result,
+    });
+    return { content: [{ type: "text", text: JSON.stringify(payload, null, 2) }] };
   } catch (e) {
     // P2-1：统一走 handleError 对象形状（内含 PLATFORM_DATA_MISSING / VERSION_NOT_FOUND /
     // DOC_NOT_FOUND / INTERNAL_ERROR 单轨分支），废除本文件历史平形状与双轨 INTERNAL 副本。
@@ -1146,9 +1147,9 @@ export const getDocRelatedSchema = {
   name: "get_doc_related",
   description: `获取与指定文档页面相关的其他页面列表，支持多平台（forge/neoforge/fabric/quilt/liteloader/rift/modloader/paper/paper-api/spigot）。
 适用于：想了解某个主题，但不知道还需要查阅哪些关联文档时。返回共享最多关键词的其他页面，按相关性降序排列。基岩请用 get_bedrock_doc_related。
-成功时 JSON 根是数组（与其它 platform 相同）。
+成功时 JSON 根是对象 {ok:true,platform,id,version,results[]}；results 恒为数组（四个 related 工具同构）。
 
-⚠️ Quilt 无此页时会回退 Fabric（条目带 sourcePlatform=fabric 与 warning），并丢掉 FAPI 专属 Registry/ItemGroup 页。FAPI 专属 id 拒绝（ok=false 对象，不是数组）。QSL 不要用 Fabric Registry 页。`,
+⚠️ Quilt 无此页时会回退 Fabric（顶层与条目都带 sourcePlatform=fabric 与 warning），并丢掉 FAPI 专属 Registry/ItemGroup 页。FAPI 专属 id 拒绝（ok=false 对象，results 缺席）。QSL 不要用 Fabric Registry 页。`,
   inputSchema: z.object({
     id: z.string().describe("页面 ID，来自 search_docs 返回的 results[].id"),
     version: z.string().min(1, "版本号不能为空").describe("Minecraft 版本（必填）。请先用 list_doc_versions 查询可用版本。"),
@@ -1181,10 +1182,22 @@ export async function getDocRelated(
     const base = extra?.warning
       ? (Array.isArray(result) ? result.map((h) => ({ ...h, warning: extra.warning })) : result)
       : result;
-    // 成功时 JSON 根仍是数组（description 里写死的合同），兜底来源逐条披露。
-    const payload = fromFabricWiki
+    // 统一形状：成功恒为对象，results 恒为数组（与三个平台专属 related 工具同构）。
+    // 兜底来源逐条保留，并**hoist** 到顶层：warning / sourcePlatform / source。
+    const results = fromFabricWiki
       ? base.map((h) => ({ ...h, source: "fabric-wiki", warning: FABRIC_WIKI_CURRENT_SITE_WARNING }))
       : base;
+    const payload = withGetDocFallback(args.version, extra, {
+      ok: true,
+      platform,
+      id: args.id,
+      version: args.version,
+      results,
+      ...(extra?.warning ? { warning: extra.warning } : {}),
+      ...(fromFabricWiki
+        ? { source: "fabric-wiki", sourcePlatform: "fabric", warning: FABRIC_WIKI_CURRENT_SITE_WARNING }
+        : {}),
+    });
     return { content: [{ type: "text", text: JSON.stringify(payload, null, 2) }] };
   } catch (e) {
     return handleError(e, platform);

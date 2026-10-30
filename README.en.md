@@ -1,10 +1,26 @@
 # MC AI Coding Assistant Tool
 
+[简体中文](README.md) | **English** · [Human README](README_human.en.md)
+
+### A local MCP server that tells your agent which API set, build setup and mappings this exact Minecraft version uses.
+
+**Rule packs, official docs, mappings, library knowledge and in-game testing all live locally — the agent stops guessing from memory.**
+
+- **8 loaders + 2 server faces, rule packs per version**: Forge · Fabric · NeoForge · Quilt · LiteLoader · Rift · ModLoader · Bedrock ｜ Paper · Spigot
+- **Official docs, page for page**: you get the page for your version, not the neighbouring version's text
+- **Six mapping layers plus crash-log deobfuscation**: mojang · mcp · yarn · parchment · obfuscated · intermediary
+- **Library mods**: API summaries for 48 libraries, Modrinth version matrices, ready-made skills
+- **Project and porting work**: scaffolding, Gradle diagnosis, project validation, datagen, crash triage, cross-version port analysis
+- **In-game playtesting**: client driver / bridge / server driver — screenshots, `qa.log` and `state.json` or it does not count
+
+**[Human README](README_human.en.md) · [Setup](AUTO_SETUP.md) · [Contributing](CONTRIBUTING.md)** · [Platforms](#platforms) · [Tool list](#mcpcli-tools89)
+
 > [!IMPORTANT]
+> Get the tool and its data from this repository only. A similarly named repository or a copied README does not make a download official.
 > **Human reader → [Human README](README_human.en.md)** (plain language: what it does, how to start · [简体中文](README_human.md))
 > This file is the technical contract the AI executes against — long and dense. Asking your agent beats reading it.
 
-[简体中文](README.md) | **English** · [For humans](README_human.en.md)
+---
 
 ## Read this first
 
@@ -14,9 +30,7 @@
 
 If you want the fine detail, just let the agent work it out for you.
 
-A complete toolkit that lets AI coding assistants (Cursor, Claude Code, and others) write Minecraft mods with fewer wrong turns.
-
-It gives the AI an environment that "understands the Minecraft mod development ecosystem", removing structural obstacles: stale knowledge, API version confusion, complicated build systems, inconsistent mappings.
+A complete toolkit that lets AI coding assistants (Cursor, Claude Code, and others) write Minecraft mods with fewer wrong turns: it removes structural obstacles such as stale knowledge, API version confusion, complicated build systems and inconsistent mappings, and covers the whole path from writing code to testing the mod.
 
 ## What it is: AI does the work, you make the calls
 
@@ -816,7 +830,7 @@ For tool limits and misreadings, see "Tool boundaries" above.
 | `search_forge_docs`     | **Hybrid** search (L0 + semantic RRF; pure L0 when there is no store). `version` is required (run `list_forge_versions` first). Equivalent to `search_docs({platform:"forge"})`. 1.12.2 uses the `forge-docs` tutorials, not `query_api`. Supports `class:` / `event:` / `method:` prefixes, `\|` OR, stop-word removal, and tag filtering. Returns page `id` values for the follow-up tools. |
 | `get_forge_doc_summary` | L1 summary of a single page: the first paragraph plus section headings / short summaries, to decide whether reading the full text is worth it.                                                                 |
 | `get_forge_doc_full`    | Full L2/L2+ text of a single page; `highlight_key=true` by default highlights the 🔴🟠🟢 key passages. **Never load more than 2 full pages at once.**                              |
-| `get_forge_doc_related` | Related pages based on the path skeleton, tags, and section keywords.                                                                              |
+| `get_forge_doc_related` | Related pages based on the path skeleton, tags, and section keywords. Returns `{ok,id,version,results[]}` on success (`results` is always an array).                                                                              |
 
 ### 4. Fabric official docs (5)
 
@@ -826,7 +840,7 @@ For tool limits and misreadings, see "Tool boundaries" above.
 | `search_fabric_docs`     | **Hybrid** search; optional `source`: `fabric-docs` (default) / `fabric-wiki` / `all`. The wiki leans towards beginners; **26.1.2 has no wiki**. |
 | `get_fabric_doc_summary` | L1 summary of a Fabric page (source selectable).                                                           |
 | `get_fabric_doc_full`    | Full Fabric page text with key-passage highlighting (source selectable).                                                       |
-| `get_fabric_doc_related` | Related Fabric pages.                                                                         |
+| `get_fabric_doc_related` | Related Fabric pages. Returns `{ok,id,version,source,results[]}` on success (`results` is always an array).                                                                         |
 
 ### 5. NeoForge official docs (5)
 
@@ -836,7 +850,7 @@ For tool limits and misreadings, see "Tool boundaries" above.
 | `search_neoforge_docs`     | **Hybrid** search (DeferredRegister, Data Components, Payload, …); pure L0 when there is no semantic store. **You must pass version** (run `list_neoforge_versions` first). |
 | `get_neoforge_doc_summary` | L1 summary of a NeoForge page.                                                     |
 | `get_neoforge_doc_full`    | Full NeoForge page text with key-passage highlighting.                                                 |
-| `get_neoforge_doc_related` | Related NeoForge pages.                                                       |
+| `get_neoforge_doc_related` | Related NeoForge pages. Returns `{ok,id,version,results[]}` on success (`results` is always an array).                                                       |
 
 ### 6. Cross-platform docs (5)
 
@@ -848,7 +862,7 @@ Mirrors the dedicated tools, behind one entry point taking `platform` (`forge` /
 | `search_docs`       | Multi-platform **hybrid** search; `source` is accepted for Fabric. Pure L0 without a semantic store; `PLATFORM_DATA_MISSING` when the platform data is missing. |
 | `get_doc_summary`   | Multi-platform L1 summary, for deciding whether a page contains what you need. A missing Quilt page falls back to Fabric (`fallback=fabric`); FAPI-only Registry/ItemGroup pages are rejected (ok=false).                                                 |
 | `get_doc_full`      | Multi-platform full text. Useful for complete API steps, event lists, and config item lists; `highlight_key` highlights the 🔴🟠🟢 key passages by default. A missing Quilt page falls back to Fabric; FAPI-only pages are rejected and no Registry body is returned.                                                     |
-| `get_doc_related`   | Related multi-platform pages, returning the other pages that share the most keywords. On success the JSON root is an array. A Quilt → Fabric fallback is still an array (entries carry `sourcePlatform:"fabric"` / `warning`) and FAPI-only pages are dropped; FAPI-only ids are rejected (ok=false).                                                    |
+| `get_doc_related`   | Related multi-platform pages, returning the other pages that share the most keywords. On success the root is an object `{ok,platform,id,version,results[]}`. A Quilt → Fabric fallback carries `sourcePlatform:"fabric"` / `warning` at both top level and entry level, and FAPI-only pages are dropped; FAPI-only ids are rejected (ok=false).                                                    |
 
 ### 6b. Bedrock Add-Ons (9)
 

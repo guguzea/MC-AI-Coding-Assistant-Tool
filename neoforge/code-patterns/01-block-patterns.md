@@ -124,8 +124,9 @@ public class MachineBlockEntity extends BlockEntity {
 
 ## 方块状态 JSON
 
+文件：`blockstates/my_block.json`
+
 ```json
-// blockstates/my_block.json
 {
   "variants": {
     "facing=north,powered=false": { "model": "modid:block/my_block" },

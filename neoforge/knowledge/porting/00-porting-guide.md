@@ -118,7 +118,8 @@ public class ExampleMod {
 public class ExampleMod {
     public ExampleMod(IEventBus modBus) {
         BLOCKS.register(modBus);
-        NeoForge.EVENT_BUS.register(this);
+        // FMLCommonSetupEvent 是 **mod bus** 事件；NeoForge.EVENT_BUS 是游戏总线，register 上去永不触发。
+        modBus.addListener(this::onCommonSetup);
     }
 
     @SubscribeEvent

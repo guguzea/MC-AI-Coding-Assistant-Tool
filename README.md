@@ -1,28 +1,36 @@
 # MC AI Coding Assistant Tool
 
+**简体中文** · [English](README.en.md) · [人类读本](README_human.md) · [Human Guide](README_human.en.md)
+
+### 一个跑在本地的 MCP知识库：让 AI 知道你这一版 Minecraft 该用哪套 API、哪套构建、哪套映射。
+
+**规则、官方文档、映射表、库模组、真机自测都在本地，agent 不用凭记忆猜。**
+
+- **8 个加载器 + 2 个服务端面，逐版规则**：Forge · Fabric · NeoForge · Quilt · LiteLoader · Rift · ModLoader · 基岩 ｜ Paper · Spigot
+- **官方文档原文检索**：查的是你这个版本那一页,向量搜索,准确命中!
+- **六层映射互转 + 崩溃日志分析**：mojang · mcp · yarn · parchment · obfuscated · intermediary
+- **库模组与社区知识**：48 个常用库模组的 API 摘要、成套 Skill、精选各个MC社区的帖子
+- **工程与移植**：脚手架、Gradle 诊断、项目校验、Datagen、崩溃分诊、跨版本移植分析、反编译...等等!
+- **游戏内自测**：客户端 driver / 桥 / 服务端 driver，出截图、`qa.log`、`state.json` 才算过
+
+**[人类读本](README_human.md) · [安装说明](AUTO_SETUP.md) · [贡献指南](CONTRIBUTING.md)** · [平台说明](#平台说明) · [工具清单](#mcpcli-tools89)
+
 > [!IMPORTANT]
+> 只从本仓库获取工具与数据。同名仓库或复制本文档不代表官方下载源。
 > **你是人类读者 → [人类读本](README_human.md)**（人话版：能干什么、怎么开始 · [English](README_human.en.md)）
 > 本文件是给 AI 执行用的技术契约，长且密；细节让 agent 讲，比你自己翻快。
 
+---
+
 ## 写在前面的
 ### 如果你是 agent
-本文件是项目总说明。安装与配置 MCP 请读 `AUTO_SETUP.md`；本文的配置章节是同一内容的副本，用于兜底没读 `AUTO_SETUP.md` 的情况。
+本文件是项目总说明。包括详细的功能说明
 
 ### 如果你是人类
 见文首那条提示：人类读本 = `README_human.md`；需要细节直接让 agent 讲解。
-[English](README.en.md) | **简体中文** · [人类读本](README_human.md)
 
-让 AI 编程助手（Cursor / Claude Code 等）能更好地编写 Minecraft 模组的完整工具包。
+让 AI 编程助手（Cursor / Claude Code 等）能更好地编写 Minecraft 模组的完整工具包：消除知识陈旧、API 版本混淆、构建系统复杂、映射不一致等结构性障碍，覆盖从编写到测试模组的全流程。
 
-为 AI 提供一个「读懂 MC Mod 开发生态」的环境，消除知识陈旧、API 版本混淆、构建系统复杂、映射不一致等结构性障碍。
-
-为 AI 提供一个完整、端到端的全流程开发环境：从编写到测试模组。
-## 它是什么：AI 帮你干活，你只用明确创意与取舍
-
-模组开发**不是**确定性流水线。创意设计（做什么内容）、性能权衡、调试策略必须由**人**判断，Agent 不代劳；版本兼容取舍与 API 选择你无法拍板时可以代劳 —— 低风险的，做完就按「解释模板」（见「快速开始」一节）说明取舍、替代方案与回退方法；高风险的（换加载器、改包结构、删依赖、改构建脚本），动手前先说明并等你确认。
-Agent 负责版本门禁、文档检索、规则/反模式、骨架草稿、校验与崩溃分诊等。
-
-下列高风险操作默认停在清单或 `dryRun`，**必须有人在环**（先展示、经用户确认后再做）：写盘、运行 Gradle、拷贝 jar 到游戏目录、上传发布。
 
 ## 项目结构
 
@@ -849,7 +857,7 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；Forge 1.12.2�
 | `search_forge_docs`     | **hybrid** 搜索（L0 + 语义 RRF；无库则纯 L0）。`version` 必填（先 `list_forge_versions`）。与 `search_docs({platform:"forge"})` 等价。1.12.2 走 `forge-docs` 教程，不是 `query_api`。支持 `class:` / `event:` / `method:` 前缀与 `\|` OR、去停用词、标签过滤。返回页面 `id` 供后续工具使用。 |
 | `get_forge_doc_summary` | 取单页 L1 摘要：首段 + 各章节标题/短摘要，用于判断是否值得读全文。                                                                 |
 | `get_forge_doc_full`    | 取单页 L2/L2+ 全文；默认 `highlight_key=true` 突出 🔴🟠🟢 关键段。**不要一次加载超过 2 个全文页。**                              |
-| `get_forge_doc_related` | 根据路径骨架、标签与章节关键词返回相关页面列表。                                                                              |
+| `get_forge_doc_related` | 根据路径骨架、标签与章节关键词返回相关页面列表；成功返回 `{ok,id,version,results[]}`（`results` 恒为数组）。                                                                              |
 
 
 
@@ -863,7 +871,7 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；Forge 1.12.2�
 | `search_fabric_docs`     | **hybrid** 搜索；可选 `source`：`fabric-docs`（默认）/ `fabric-wiki` / `all`。wiki 偏入门；**26.1.2 无 wiki**。 |
 | `get_fabric_doc_summary` | Fabric 页 L1 摘要（可指定 source）。                                                           |
 | `get_fabric_doc_full`    | Fabric 页全文 + 关键段高亮（可指定 source）。                                                       |
-| `get_fabric_doc_related` | Fabric 相关页推荐。                                                                         |
+| `get_fabric_doc_related` | Fabric 相关页推荐；成功返回 `{ok,id,version,source,results[]}`（`results` 恒为数组）。                                                                         |
 
 
 
@@ -877,7 +885,7 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；Forge 1.12.2�
 | `search_neoforge_docs`     | **hybrid** 搜索（DeferredRegister、Data Components、Payload 等）；无语义库则纯 L0。**须传 version**（先 `list_neoforge_versions`）。 |
 | `get_neoforge_doc_summary` | NeoForge 页 L1 摘要。                                                     |
 | `get_neoforge_doc_full`    | NeoForge 页全文 + 关键段高亮。                                                 |
-| `get_neoforge_doc_related` | NeoForge 相关页推荐。                                                       |
+| `get_neoforge_doc_related` | NeoForge 相关页推荐；成功返回 `{ok,id,version,results[]}`（`results` 恒为数组）。                                                       |
 
 
 
@@ -893,7 +901,7 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；Forge 1.12.2�
 | `search_docs`       | 多平台 **hybrid** 搜索；Fabric 时可传 `source`。无语义库 → 纯 L0；缺平台数据 → `PLATFORM_DATA_MISSING`。 |
 | `get_doc_summary`   | 多平台 L1 摘要，用于判断某篇文档是否包含所需内容。Quilt 缺页回退 Fabric（`fallback=fabric`）；FAPI 专属 Registry/ItemGroup 页拒绝（ok=false）。                                                 |
 | `get_doc_full`      | 多平台全文。适用于查看 API 完整步骤、事件列表、配置项清单；`highlight_key` 默认突出 🔴🟠🟢 关键段。Quilt 缺页回退 Fabric；FAPI 专属页拒绝，不返回 Registry 正文。                                                     |
-| `get_doc_related`   | 多平台相关页，返回共享最多关键词的其他页面。成功时 JSON 根是数组。Quilt 回退 Fabric 时仍为数组（条目带 `sourcePlatform:"fabric"` / `warning`），并丢掉 FAPI 专属页；FAPI 专属 id 拒绝（ok=false）。                                                    |
+| `get_doc_related`   | 多平台相关页，返回共享最多关键词的其他页面。成功时返回对象 `{ok,platform,id,version,results[]}`。Quilt 回退 Fabric 时 `sourcePlatform:"fabric"` / `warning` 同时出现在顶层与条目，并丢掉 FAPI 专属页；FAPI 专属 id 拒绝（ok=false）。                                                    |
 
 
 

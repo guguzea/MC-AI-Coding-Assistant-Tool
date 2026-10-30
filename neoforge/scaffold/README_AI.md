@@ -62,6 +62,8 @@ mod_description=Example mod description.\nAdd lines as needed.
 | 项目 | Forge 1.20.1 | NeoForge 1.20.4 |
 |------|---------------|------------------|
 | 元数据文件 | `mods.toml` | 1.20.4 = `mods.toml`；1.20.6+ = `neoforge.mods.toml` |
+
+> ⚠️ **本目录实测不一致（已登记，未改文件）**：本骨架 `gradle.properties` 写 `minecraft_version=1.20.4`，但盘上元数据文件名是 `neoforge.mods.toml`（1.20.6+ 命名）。照本目录建 1.20.4 工程时请把它改名为 `META-INF/mods.toml`；正式用法见 `neoforge/<ver>/scaffold` 各档。 |
 | 入口模式 | `@Mod` 注解类 | `@Mod` + 构造注入 `IEventBus`（禁止 `BuildPlugin` + `init(IEventBus)`） |
 | 包名空间 | `net.minecraftforge` | `net.neoforged` |
 | 事件总线 | `MinecraftForge.EVENT_BUS` | `NeoForge.EVENT_BUS` |

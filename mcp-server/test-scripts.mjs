@@ -2557,6 +2557,10 @@ const SELFTEST_GATES = [
     "./scripts/assert-signature-face-integrity.mjs",
     "./scripts/assert-sync-normalizers.mjs",
     "./scripts/assert-cli-quick.mjs",
+    // 2026-10-30（R2 审计 WP4）：服务端面规则载体的出处门此前只有主流程（REAL_RUN_GATES），
+    // 判据 ⑧⑨⑩（`paper/<ver>/applicability.json` 是单一来源、md 必须由它渲染、counts 与 rows 现算一致）
+    // 的自证臂没有跑过 —— 补进本数组；条数一律以该门 `--selftest` 现印为准。
+    "./scripts/assert-server-rules-integrity.mjs",
   ];
 
 /**

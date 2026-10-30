@@ -6,11 +6,11 @@
 
 ```java
 // ❌ 错误（混淆了 Yarn 和 MCP 层）
-// Yarn (Fabric) 用 ToolMaterial，Forge/MCP 用 Tier
+// Yarn (Fabric) 用 ToolMaterial，Forge 1.16.5 用 IItemTier（Tier 是 1.17+ mojmap 名）
 new SwordItem(MyTier.COPPER, ToolMaterial, 3, 1.6f, new Item.Properties());
 
 // ❌ 错误（参数类型用 float，Forge 1.16.5 用 int）
-new SwordItem(Tier, float attackDamage, float attackSpeed, Properties);
+new SwordItem(IItemTier, float attackDamage, float attackSpeed, Properties);
 ```
 
 **正确（来源：Parchment 1.16.5 = MCP 层）：**
@@ -23,7 +23,7 @@ new SwordItem(MyTier.COPPER, 3, 1.6f, new Item.Properties());
 
 | # | 参数名 | 类型 | 说明 |
 |---|--------|------|------|
-| 1 | `tier` | `Tier` | 工具材料枚举（如 `Tiers.COPPER` 或自定义 `MyTier.COPPER`） |
+| 1 | `tier` | `IItemTier` | 材料接口（vanilla 枚举 `ItemTier.*`，或自定义 `MyTier.*` 实现 `IItemTier`） |
 | 2 | `attackDamageModifier` | `int` | 基础攻击加成（内部转为 float） |
 | 3 | `attackSpeedModifier` | `float` | 攻击速度修正值 |
 | 4 | `properties` | `Item.Properties` | 物品属性配置 |
@@ -42,17 +42,17 @@ new SwordItem(MyTier.COPPER, 3, 1.6f, new Item.Properties());
 
 Forge 没有覆盖 `SwordItem` 构造函数（只有一行 patch：`canPerformAction` 方法），所以 `SwordItem` 直接使用 Vanilla MCP 层签名。
 
-**⚠️ 不要参考 Yarn 文档：** Yarn 是 Fabric 专属映射，类名用 `ToolMaterial`，与 Forge/MCP 使用的 `Tier` 不同。
+**⚠️ 不要参考 Yarn 文档：** Yarn 是 Fabric 专属映射，类名用 `ToolMaterial`，与本档 Forge 使用的 `IItemTier` 不同（1.17+ mojmap 才叫 `Tier`）。
 
 ---
 
-## 错误：Tier 枚举的 getAttackDamageBonus() 返回值含类型加成
+## 错误：IItemTier 实现里的 getAttackDamageBonus() 返回值含类型加成
 
 **症状：** 剑的实际伤害与预期不符
 
 ```java
 // ❌ 错误理解
-public enum MyTier implements Tier {
+public enum MyTier implements IItemTier {
     COPPER(3, 1561, 8.0f, 4.0f, 15, ...);
     //                                  ^^^^^ 以为这个是总攻击伤害
 
@@ -62,7 +62,7 @@ public enum MyTier implements Tier {
 
 **正确理解：**
 ```java
-public enum MyTier implements Tier {
+public enum MyTier implements IItemTier {
     COPPER(3, 1561, 8.0f, 2.0f, 15, ...);
     //                                  ^^^^^ 这是额外攻击加成
 
@@ -70,7 +70,7 @@ public enum MyTier implements Tier {
 }
 ```
 
-**说明：** `Tier` 构造函数的第 4 个参数（对应 `getAttackDamageBonus()`）是**额外加成**，剑的 3.0f 基础伤害由 `SwordItem` 内部自动加上。
+**说明：** 枚举构造函数的第 4 个参数（对应 `getAttackDamageBonus()`）是**额外加成**，剑的 3.0f 基础伤害由 `SwordItem` 内部自动加上。
 
 ---
 

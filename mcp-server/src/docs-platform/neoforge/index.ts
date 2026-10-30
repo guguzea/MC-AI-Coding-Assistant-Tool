@@ -76,8 +76,16 @@ function annotateNeoGetResult(
 }
 
 function versionRequiredDocResult(): CallToolResult {
+  const action = versionRequiredAction();
   return {
-    content: [{ type: "text", text: JSON.stringify({ ok: false, action: versionRequiredAction() }, null, 2) }],
+    content: [{
+      type: "text",
+      text: JSON.stringify(
+        { ok: false, error: { code: "VERSION_REQUIRED", message: action.message, hint: action.nextSteps?.[0] }, action },
+        null,
+        2,
+      ),
+    }],
   };
 }
 
@@ -510,6 +518,7 @@ export async function getNeoForgeDocRelated(args: {
           type: "text",
           text: JSON.stringify({
             ok: true,
+            platform: "neoforge",
             id: args.id,
             version,
             results: related,
@@ -526,6 +535,7 @@ export async function getNeoForgeDocRelated(args: {
         type: "text",
         text: JSON.stringify(annotateNeoGetResult(version, resolution, {
           ok: true,
+          platform: "neoforge",
           id: args.id,
           ...(resolution.sourcePlatform === "forge"
             ? {

@@ -36,6 +36,16 @@
  * ⚠ **围栏代码块不参与 ⑤⑥⑦**：``` 里的 `:1` 是 JSON 的 `"height":1`，
  *    扫进来会造出假红（2026-10-21 实测 `09-traps.md:352` 就是这么被误报的）。
  *
+ * ## 判据 ⑧⑨⑩（2026-10-30 补）：版本档「适用性核查」的机读件与其渲染件必须同源
+ * 版本档除 `00-applicability.md` 外另有 `applicability.json`（**单一来源**）。三项：
+ *  ⑧ **md = render(json)** —— md 逐字等于按 json 重渲染的结果（md 是 json 的函数，手改 md 当场红）；
+ *  ⑨ **json 自洽** —— rows 无重复 `(srcFile,srcLine,member)`、`counts` 与 rows 现算一致、
+ *     `status` 与 `member` 形状相符（`ok`/`no-member` ⇒ member 非空；`member-unresolved` ⇒ member 为 null）；
+ *  ⑩ **重算对拍** —— 用现盘语料重跑一遍（判据实现在 `scripts/_lib/paper-applicability.mjs`，与生成器共用），
+ *     rows 逐行相等；并**禁止** md 出现字面 `` `null` ``（把「抽不出成员名」写成「成员缺失」）。
+ * 这一族同时补上「行号在界内但内容不符」的盲区（审查 R2-QM-03）：成员名**由来源行现抽**，
+ * 指到哪一行就拿那一行的名 —— 不再可能"行号对、内容错"而全绿。
+ *
  * ## 缺件降级（照本仓既定范式）
  * 语料面是**可选数据包**（`data/` 不进 git）⇒ 缺面默认**降级并吼**、`--require` fail-closed（rc=2）。
  * **降级的那个 0 不是通过。**
@@ -46,6 +56,15 @@ import { existsSync, readFileSync, readdirSync, mkdtempSync, mkdirSync, writeFil
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import {
+  PAPER_CORPUS_FACES,
+  buildApplicabilityJson,
+  collectPointers,
+  computeForVersion,
+  dedupePointers,
+  listMd,
+  renderApplicabilityMd,
+} from "../../scripts/_lib/paper-applicability.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = resolve(HERE, "..", "..");
@@ -382,6 +401,94 @@ export function judgeRuleFile({ file, abs }, corpus) {
   return problems;
 }
 
+// ── 判据 ⑧⑨：版本档「适用性核查」的机读件与渲染件一致（2026-10-30）──────────────
+/**
+ * `paper/<ver>/applicability.json` 是**单一来源**，`rules/00-applicability.md` 必须由它渲染。
+ * 本判据三件，缺一即红：
+ *  ⑧ **md = render(json)**：md 逐字等于按 json 重渲染的结果（手改 md 会当场红）；
+ *  ⑨ **json 自洽**：rows 无重复 (srcFile,srcLine,member)、counts 与 rows 现算一致、
+ *     status 与 member 形状相符（ok/no-member ⇒ member 非空；member-unresolved ⇒ member 为 null）。
+ * 另加两条内容判据（对应审查 R2-QM-03「行号在界内但内容不符」）：
+ *  - **抽名来源行必须真含该成员 token**（重读语料该行核）；抽不出的行必须**确实**是声明行；
+ *  - md 里**不得出现字面 `` `null` ``**（把解析失败写成成员缺失就是这条）。
+ */
+export function judgeApplicability(dataRoot = DATA, paperRoot = RULES_GLOB_ROOT) {
+  const problems = [];
+  if (!existsSync(paperRoot)) return problems;
+  const dirs = Object.fromEntries(PAPER_CORPUS_FACES.map(([k, rel]) => [k, join(dataRoot, rel)]));
+  const indexes = Object.fromEntries(PAPER_CORPUS_FACES.map(([k, rel]) => [k, listMd(join(dataRoot, rel))]));
+  const rulesDir = join(paperRoot, "26.3", "rules");
+  const pointers = dedupePointers(collectPointers(rulesDir, indexes, dirs));
+  for (const ver of readdirSync(paperRoot, { withFileTypes: true })) {
+    if (!ver.isDirectory()) continue;
+    const jsonPath = join(paperRoot, ver.name, "applicability.json");
+    if (!existsSync(jsonPath)) continue;
+    let data;
+    try {
+      data = JSON.parse(readFileSync(jsonPath, "utf8"));
+    } catch (e) {
+      problems.push(`paper/${ver.name}/applicability.json: 解析失败 ${e.message}`);
+      continue;
+    }
+    const mdPath = join(paperRoot, ver.name, "rules", "00-applicability.md");
+    if (!existsSync(mdPath)) {
+      problems.push(`paper/${ver.name}: 有 applicability.json 但缺 rules/00-applicability.md`);
+      continue;
+    }
+    const md = readFileSync(mdPath, "utf8");
+    // ⑧ md 必须是 json 的函数
+    const want = renderApplicabilityMd(ver.name, data);
+    if (md.replace(/\r\n/g, "\n") !== want.replace(/\r\n/g, "\n")) {
+      problems.push(`paper/${ver.name}/rules/00-applicability.md 与 applicability.json 不一致（md 必须由 json 渲染；改 json 后重跑生成器）`);
+    }
+    // 字面 null 禁令
+    if (/成员\s*`null`/.test(md) || /`null`/.test(md)) {
+      problems.push(`paper/${ver.name}/rules/00-applicability.md 出现字面 \`null\`（解析失败被写成成员缺失）`);
+    }
+    // ⑨ json 自洽
+    const keys = new Set();
+    let countsOk = true;
+    const recomputed = { signaturePointers: 0, memberStillPresent: 0, classMissing: 0, memberMissing: 0, memberUnresolved: 0, tutorialPointers: 0 };
+    for (const r of data.rows ?? []) {
+      const k = `${r.srcFile}:${r.srcLine}:${r.member ?? ""}`;
+      if (keys.has(k)) problems.push(`paper/${ver.name}/applicability.json: 重复行 ${k}`);
+      keys.add(k);
+      if ((r.status === "ok" || r.status === "no-member") && !r.member) {
+        problems.push(`paper/${ver.name}/applicability.json: ${k} status=${r.status} 却没有成员名`);
+      }
+      if (r.status === "member-unresolved" && r.member) {
+        problems.push(`paper/${ver.name}/applicability.json: ${k} 标 member-unresolved 却带成员名 ${r.member}`);
+      }
+      if (r.srcKey === "tut") recomputed.tutorialPointers++;
+      else {
+        recomputed.signaturePointers++;
+        if (r.status === "ok") recomputed.memberStillPresent++;
+        else if (r.status === "no-class") recomputed.classMissing++;
+        else if (r.status === "no-member") recomputed.memberMissing++;
+        else if (r.status === "member-unresolved") recomputed.memberUnresolved++;
+      }
+    }
+    for (const [k, v] of Object.entries(recomputed)) {
+      if ((data.counts ?? {})[k] !== v) {
+        countsOk = false;
+        problems.push(`paper/${ver.name}/applicability.json: counts.${k}=${(data.counts ?? {})[k]} 与 rows 现算 ${v} 不符`);
+      }
+    }
+    // ⑩ 抽名来源行必须真含该成员 token（重读语料核）；重算整档与 json 逐行对拍
+    const fresh = computeForVersion(ver.name, { dataRoot, pointers });
+    if (!fresh) {
+      problems.push(`paper/${ver.name}: 有 applicability.json 但 data/paper-api_${ver.name} 签名面不在 ⇒ 无法复核`);
+      continue;
+    }
+    const slim = (rows) =>
+      rows.map((r) => `${r.srcFile}:${r.line ?? r.srcLine}:${r.member ?? ""}:${r.status}:${r.newFile ?? ""}:${r.newLine || ""}`);
+    if (countsOk && JSON.stringify(slim(data.rows ?? [])) !== JSON.stringify(slim(fresh.rows))) {
+      problems.push(`paper/${ver.name}/applicability.json 与现盘语料重算结果不一致（语料变了没重跑生成器）`);
+    }
+  }
+  return problems;
+}
+
 // ── 主流程 ────────────────────────────────────────────────────────────────────
 const REQUIRE = process.argv.includes("--require");
 const SELFTEST = process.argv.includes("--selftest");
@@ -444,6 +551,71 @@ if (SELFTEST) {
       else poisons++;
       console.log(`  ${ok ? "✅" : "❌"} ${desc}（期望${wantProblems ? "≥1" : "0"} 个问题，实得 ${got}）`);
     }
+    // ── 判据 ⑧⑨⑩ 的自证臂（2026-10-30）：applicability.json ↔ md 必须同源 ──────────
+    {
+      const aData = join(tmp, "appdata");
+      const sigFace = join(aData, "paper-api_1.21.4", "paper-javadoc", "1.21.4", "processed");
+      const stableFace = join(aData, "paper-api_stable", "paper-javadoc", "stable", "processed");
+      mkdirSync(sigFace, { recursive: true });
+      mkdirSync(stableFace, { recursive: true });
+      const pageBody = ["# x", "", "- `void ok()`", "- `int count`", "**Interface FakeClass**", "`public interface FakeClass`"].join("\n") + "\n";
+      writeFileSync(join(sigFace, "org_test_FakeClass.md"), pageBody, "utf8");
+      writeFileSync(join(stableFace, "org_test_FakeClass.md"), pageBody, "utf8");
+      writeFileSync(join(aData, "paper-api_1.21.4", "paper-javadoc", "1.21.4", "meta.json"), JSON.stringify({ asOfVersion: "1.21.4-TEST" }), "utf8");
+      const aPaper = join(tmp, "appaper");
+      const aRules = join(aPaper, "26.3", "rules");
+      mkdirSync(aRules, { recursive: true });
+      writeFileSync(join(aRules, "01-x.md"), "# x\n出处 org_test_FakeClass.md:3 与 :5\n", "utf8");
+      const dirs2 = Object.fromEntries(PAPER_CORPUS_FACES.map(([k, rel]) => [k, join(aData, rel)]));
+      const idx2 = Object.fromEntries(PAPER_CORPUS_FACES.map(([k, rel]) => [k, listMd(join(aData, rel))]));
+      const ptrs = dedupePointers(collectPointers(aRules, idx2, dirs2));
+      const fresh = computeForVersion("1.21.4", { dataRoot: aData, pointers: ptrs });
+      const appJson = buildApplicabilityJson("1.21.4", {
+        asOf: "1.21.4-TEST",
+        pages: fresh.pages,
+        shell: fresh.shell,
+        rows: fresh.rows,
+        counts: fresh.counts,
+        checkedFrom: "paper/26.3/rules/*.md",
+      });
+      const vDir = join(aPaper, "1.21.4", "rules");
+      mkdirSync(vDir, { recursive: true });
+      writeFileSync(join(aPaper, "1.21.4", "applicability.json"), JSON.stringify(appJson, null, 2) + "\n", "utf8");
+      const mdGood = renderApplicabilityMd("1.21.4", appJson);
+      const mdPath = join(vDir, "00-applicability.md");
+      const arm = (label, mutate, wantRed) => {
+        writeFileSync(mdPath, mdGood, "utf8");
+        writeFileSync(join(aPaper, "1.21.4", "applicability.json"), JSON.stringify(appJson, null, 2) + "\n", "utf8");
+        if (mutate) mutate();
+        const got = judgeApplicability(aData, aPaper).length;
+        const okArm = wantRed ? got > 0 : got === 0;
+        if (!okArm) bad++;
+        if (wantRed) poisons++;
+        else cleans++;
+        console.log(`  ${okArm ? "✅" : "❌"} ${label}（期望${wantRed ? "≥1" : "0"} 个问题，实得 ${got}）`);
+      };
+      arm("applicability 干净应绿", null, false);
+      arm("md 被手改（与 json 脱钩）应红", () => writeFileSync(mdPath, mdGood + "\n手改的一行\n", "utf8"), true);
+      arm("md 出现字面 `null` 应红", () => writeFileSync(mdPath, mdGood.replace("## 怎么写", "- 成员 `null`\n\n## 怎么写"), "utf8"), true);
+      arm(
+        "json rows 重复应红",
+        () => {
+          const dup = JSON.parse(JSON.stringify(appJson));
+          dup.rows.push({ ...dup.rows[0] });
+          writeFileSync(join(aPaper, "1.21.4", "applicability.json"), JSON.stringify(dup, null, 2) + "\n", "utf8");
+        },
+        true,
+      );
+      arm(
+        "json counts 与 rows 不符应红",
+        () => {
+          const bad2 = JSON.parse(JSON.stringify(appJson));
+          bad2.counts.memberStillPresent += 1;
+          writeFileSync(join(aPaper, "1.21.4", "applicability.json"), JSON.stringify(bad2, null, 2) + "\n", "utf8");
+        },
+        true,
+      );
+    }
     // 计数**动态算**：首版把 "4/4" 硬编码在文案里，加了两例之后输出就对不上了（自印不能撒谎）。
     console.log(
       bad === 0
@@ -478,6 +650,7 @@ if (files.length === 0) {
 
 const problems = [];
 for (const f of files) problems.push(...judgeRuleFile(f, corpus));
+problems.push(...judgeApplicability(DATA));
 
 let citeCount = 0;
 for (const f of files) citeCount += [...readFileSync(f.abs, "utf8").matchAll(CITE_RE)].length;
@@ -488,6 +661,10 @@ if (problems.length) {
   if (problems.length > 20) console.log(`  …（共 ${problems.length} 项，只列前 20）`);
   process.exit(1);
 }
+let appCount = 0;
+for (const ver of readdirSync(RULES_GLOB_ROOT, { withFileTypes: true })) {
+  if (ver.isDirectory() && existsSync(join(RULES_GLOB_ROOT, ver.name, "applicability.json"))) appCount++;
+}
 console.log(
-  `assert-server-rules-integrity: ok（规则 ${files.length} 篇 · 出处 ${citeCount} 处全部可解析且行号在界内 · 每篇均有「未核实」段）`,
+  `assert-server-rules-integrity: ok（规则 ${files.length} 篇 · 出处 ${citeCount} 处全部可解析且行号在界内 · 每篇均有「未核实」段 · 版本档 applicability ${appCount} 档：md=render(json) ∧ counts 现算 ∧ 语料重算逐行相等）`,
 );

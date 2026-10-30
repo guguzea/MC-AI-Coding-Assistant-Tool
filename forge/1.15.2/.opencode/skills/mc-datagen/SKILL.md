@@ -1,6 +1,9 @@
 ---
 name: mc-datagen
 description: Minecraft Forge 数据生成器。GatherDataEvent、IDataProvider、RecipeProvider、LootTableProvider、LanguageProvider。触发词：DataGen、DataGenerator、LootTables、Recipes、BlockStates、TagProvider、AdvancementProvider、LanguageProvider
+platform: forge
+version: "1.15.2"
+dependencies: []
 mappings: mcp
 ---
 

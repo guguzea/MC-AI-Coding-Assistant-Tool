@@ -232,15 +232,40 @@ import {
   assert.equal(isToolFailure({ errors: ["x"] }, false, true), true);
   assert.equal(isToolFailure({ hello: 1 }, true, false), true);
   assert.equal(isToolFailure({ error: { code: "UNZIP_TOOL_MISSING" } }, false, false), true);
-  assert.equal(isToolFailure({ found: false, action: { code: "NOT_FOUND" } }, false, false), false);
+  assert.equal(isToolFailure({ found: false, action: { code: "NOT_FOUND" } }, false, false), true);
   assert.equal(isToolFailure({ found: false, error: { code: "INDEX_CORRUPT" } }, false, false), true);
 }
 
-// R66-B′（S8/T1）：顶层 `valid` 是第三类判定键 —— 上一组里的
-// `isToolFailure({ errors: ["x"] }, false, false) === false` 与
-// `isToolFailure({ found: false, action: { code: "NOT_FOUND" } }, false, false) === false`
-// 是「载荷里没有判定键就不许判失败」的既有腿；本组补上退出码这一维：
-// 同样没有 ok 的载荷，只要带 `valid:false`（validate_datapack_json 的形状）就必须判失败。
+// 2026-10-30：`found:false` 的 action.code / 顶层 code / 字符串 error 三条信道。
+// 旧版只读 `error.code`（对象），而一批工具只用 `found:false + action.code` 报错 ⇒ CLI 仍 exit 0。
+// 豁免表只收文档背书的正常答复（PLATFORM_SKIPPED / LOADER_API_NOT_INDEXED / FALLBACK_IDENTITY /
+// AMBIGUOUS / CSV_NO_OWNER / PICK_PLATFORM）；新增豁免必须同时改表与这里的正控。
+{
+  const t = (payload) => isToolFailure(payload, false, false);
+  // 致命：NOT_FOUND / VERSION_REQUIRED / INVALID_INPUT / INTERNAL_ERROR
+  assert.equal(t({ found: false, action: { code: "NOT_FOUND" } }), true, "NOT_FOUND 必须失败");
+  assert.equal(t({ found: false, action: { code: "VERSION_REQUIRED" } }), true, "VERSION_REQUIRED 仍是致命码");
+  assert.equal(t({ found: false, action: { code: "INVALID_INPUT" } }), true, "INVALID_INPUT 必须失败");
+  assert.equal(t({ found: false, code: "INTERNAL_ERROR" }), true, "顶层 UPPER_SNAKE 码默认失败");
+  // 非致命：文档背书的正常答复
+  assert.equal(t({ found: false, action: { code: "PLATFORM_SKIPPED" } }), false, "PLATFORM_SKIPPED 是正常返回");
+  assert.equal(t({ found: false, action: { code: "PICK_PLATFORM" } }), false, "PICK_PLATFORM 需用户拍板，不是故障");
+  assert.equal(t({ found: false, action: { code: "FALLBACK_IDENTITY" } }), false, "allow_fallback opt-in");
+  assert.equal(t({ found: false, action: { code: "AMBIGUOUS" } }), false, "AMBIGUOUS 要调用方补 descriptor");
+  assert.equal(t({ found: false, action: { code: "CSV_NO_OWNER" } }), false, "CSV_NO_OWNER 是重定向提示");
+  assert.equal(t({ found: false, action: { code: "LOADER_API_NOT_INDEXED" } }), false);
+  assert.equal(t({ found: false, code: "LOADER_API_NOT_INDEXED" }), false, "顶层同码同样豁免");
+  assert.equal(t({ found: false, code: "INDEXED_WITHOUT_BODY" }), false, "thin summary 是提示");
+  // 形状守卫：顶层 code 不是机读码时不得误判（generate_model 的 code 是生成的源码）
+  assert.equal(t({ found: false, code: "// 见 files[]" }), false, "源码字符串不是机读码");
+  assert.equal(t({ found: false, code: "Chinese_ready_in" }), false, "混合大小写不匹配形状");
+  // 两支 OR：action 豁免但顶层致命 ⇒ 仍失败
+  assert.equal(t({ found: false, action: { code: "PLATFORM_SKIPPED" }, code: "QUERY_MALFORMED" }), true);
+  // found:true 不动（ok:true + action 码是既有非失败约定，由 test-cli-failure-channel 锁定）
+  assert.equal(t({ found: true, action: { code: "VERSION_REQUIRED" } }), false);
+  assert.equal(t({ ok: true, found: false, action: { code: "NOT_FOUND" } }), false, "ok:true 优先，不判失败");
+}
+// 顶层 `valid` 是第三类判定键（R66-B′ / S8-T1）：无 `ok` 的载荷带 `valid:false` 必须判失败。
 {
   assert.equal(
     isToolFailure({ valid: false, errors: ["缺少必需字段: result"], warnings: [] }, false, false),

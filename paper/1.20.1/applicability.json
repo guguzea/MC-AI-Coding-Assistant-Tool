@@ -1,0 +1,511 @@
+{
+  "version": "1.20.1",
+  "generatedBy": "scripts/gen-paper-version-packs.mjs",
+  "checkedFrom": "paper/26.3/rules/*.md",
+  "asOfVersion": "1.20.1-R0.1-SNAPSHOT",
+  "typesInSignatureFace": 1496,
+  "typeShellPages": 118,
+  "counts": {
+    "signaturePointers": 28,
+    "memberStillPresent": 23,
+    "classMissing": 0,
+    "memberMissing": 1,
+    "memberUnresolved": 4,
+    "tutorialPointers": 19
+  },
+  "rows": [
+    {
+      "rule": "00-face.md",
+      "bare": "org_bukkit_plugin_java_JavaPlugin",
+      "srcKey": "spigot",
+      "srcFile": "org_bukkit_plugin_java_JavaPlugin.md",
+      "srcLine": 40,
+      "member": "getLogger",
+      "status": "ok",
+      "newFile": "org_bukkit_plugin_java_JavaPlugin.md",
+      "newLine": 41
+    },
+    {
+      "rule": "00-face.md",
+      "bare": "PlayerEvent",
+      "srcKey": "spigot",
+      "srcFile": "org_bukkit_event_player_PlayerEvent.md",
+      "srcLine": 15,
+      "member": "getPlayer",
+      "status": "ok",
+      "newFile": "org_bukkit_event_player_PlayerEvent.md",
+      "newLine": 14
+    },
+    {
+      "rule": "00-face.md",
+      "bare": "PlayerJoinEvent",
+      "srcKey": "spigot",
+      "srcFile": "org_bukkit_event_player_PlayerJoinEvent.md",
+      "srcLine": 14,
+      "member": "getJoinMessage",
+      "status": "ok",
+      "newFile": "org_bukkit_event_player_PlayerJoinEvent.md",
+      "newLine": 15
+    },
+    {
+      "rule": "00-face.md",
+      "bare": "api__pdc",
+      "srcKey": "tut",
+      "srcFile": "api__pdc.md",
+      "srcLine": 226,
+      "member": null,
+      "status": "tutorial",
+      "note": "教程面不分版本（同一份当前文档）"
+    },
+    {
+      "rule": "01-events.md",
+      "bare": "PluginManager",
+      "srcKey": "spigot",
+      "srcFile": "org_bukkit_plugin_PluginManager.md",
+      "srcLine": 24,
+      "member": "registerEvents",
+      "status": "ok",
+      "newFile": "org_bukkit_plugin_PluginManager.md",
+      "newLine": 21
+    },
+    {
+      "rule": "01-events.md",
+      "bare": "EventHandler",
+      "srcKey": "spigot",
+      "srcFile": "org_bukkit_event_EventHandler.md",
+      "srcLine": 12,
+      "member": null,
+      "status": "member-unresolved",
+      "newFile": "org_bukkit_event_EventHandler.md"
+    },
+    {
+      "rule": "01-events.md",
+      "bare": "EventHandler",
+      "srcKey": "spigot",
+      "srcFile": "org_bukkit_event_EventHandler.md",
+      "srcLine": 13,
+      "member": "priority",
+      "status": "ok",
+      "newFile": "org_bukkit_event_EventHandler.md",
+      "newLine": 11
+    },
+    {
+      "rule": "01-events.md",
+      "bare": "EventPriority",
+      "srcKey": "spigot",
+      "srcFile": "org_bukkit_event_EventPriority.md",
+      "srcLine": 13,
+      "member": "LOWEST",
+      "status": "ok",
+      "newFile": "org_bukkit_event_EventPriority.md",
+      "newLine": 11
+    },
+    {
+      "rule": "01-events.md",
+      "bare": "EventHandler",
+      "srcKey": "spigot",
+      "srcFile": "org_bukkit_event_EventHandler.md",
+      "srcLine": 14,
+      "member": "ignoreCancelled",
+      "status": "ok",
+      "newFile": "org_bukkit_event_EventHandler.md",
+      "newLine": 12
+    },
+    {
+      "rule": "02-commands.md",
+      "bare": "JavaPlugin",
+      "srcKey": "spigot",
+      "srcFile": "org_bukkit_plugin_java_JavaPlugin.md",
+      "srcLine": 30,
+      "member": "onCommand",
+      "status": "ok",
+      "newFile": "org_bukkit_plugin_java_JavaPlugin.md",
+      "newLine": 31
+    },
+    {
+      "rule": "02-commands.md",
+      "bare": "JavaPlugin",
+      "srcKey": "spigot",
+      "srcFile": "org_bukkit_plugin_java_JavaPlugin.md",
+      "srcLine": 32,
+      "member": "getCommand",
+      "status": "ok",
+      "newFile": "org_bukkit_plugin_java_JavaPlugin.md",
+      "newLine": 33
+    },
+    {
+      "rule": "02-commands.md",
+      "bare": "JavaPlugin",
+      "srcKey": "spigot",
+      "srcFile": "org_bukkit_plugin_java_JavaPlugin.md",
+      "srcLine": 31,
+      "member": "onTabComplete",
+      "status": "ok",
+      "newFile": "org_bukkit_plugin_java_JavaPlugin.md",
+      "newLine": 32
+    },
+    {
+      "rule": "02-commands.md",
+      "bare": "PermissionDefault",
+      "srcKey": "spigot",
+      "srcFile": "org_bukkit_permissions_PermissionDefault.md",
+      "srcLine": 13,
+      "member": "TRUE",
+      "status": "ok",
+      "newFile": "org_bukkit_permissions_PermissionDefault.md",
+      "newLine": 11
+    },
+    {
+      "rule": "03-inventory-gui.md",
+      "bare": "ItemMeta",
+      "srcKey": "spigot",
+      "srcFile": "org_bukkit_inventory_meta_ItemMeta.md",
+      "srcLine": 71,
+      "member": "setDamageType",
+      "status": "no-member",
+      "newFile": "org_bukkit_inventory_meta_ItemMeta.md"
+    },
+    {
+      "rule": "03-inventory-gui.md",
+      "bare": "ItemMeta",
+      "srcKey": "spigot",
+      "srcFile": "org_bukkit_inventory_meta_ItemMeta.md",
+      "srcLine": 12,
+      "member": null,
+      "status": "member-unresolved",
+      "newFile": "org_bukkit_inventory_meta_ItemMeta.md"
+    },
+    {
+      "rule": "03-inventory-gui.md",
+      "bare": "InventoryOpenEvent",
+      "srcKey": "spigot",
+      "srcFile": "org_bukkit_event_inventory_InventoryOpenEvent.md",
+      "srcLine": 14,
+      "member": "getPlayer",
+      "status": "ok",
+      "newFile": "org_bukkit_event_inventory_InventoryOpenEvent.md",
+      "newLine": 12
+    },
+    {
+      "rule": "03-inventory-gui.md",
+      "bare": "InventoryCloseEvent",
+      "srcKey": "spigot",
+      "srcFile": "org_bukkit_event_inventory_InventoryCloseEvent.md",
+      "srcLine": 14,
+      "member": "getPlayer",
+      "status": "ok",
+      "newFile": "org_bukkit_event_inventory_InventoryCloseEvent.md",
+      "newLine": 14
+    },
+    {
+      "rule": "04-permissions.md",
+      "bare": "PermissionDefault",
+      "srcKey": "spigot",
+      "srcFile": "org_bukkit_permissions_PermissionDefault.md",
+      "srcLine": 19,
+      "member": "getValue",
+      "status": "ok",
+      "newFile": "org_bukkit_permissions_PermissionDefault.md",
+      "newLine": 17
+    },
+    {
+      "rule": "04-permissions.md",
+      "bare": "Permissible",
+      "srcKey": "spigot",
+      "srcFile": "org_bukkit_permissions_Permissible.md",
+      "srcLine": 15,
+      "member": "hasPermission",
+      "status": "ok",
+      "newFile": "org_bukkit_permissions_Permissible.md",
+      "newLine": 13
+    },
+    {
+      "rule": "04-permissions.md",
+      "bare": "PluginManager",
+      "srcKey": "spigot",
+      "srcFile": "org_bukkit_plugin_PluginManager.md",
+      "srcLine": 29,
+      "member": "getPermission",
+      "status": "ok",
+      "newFile": "org_bukkit_plugin_PluginManager.md",
+      "newLine": 26
+    },
+    {
+      "rule": "04-permissions.md",
+      "bare": "Permission",
+      "srcKey": "spigot",
+      "srcFile": "org_bukkit_permissions_Permission.md",
+      "srcLine": 16,
+      "member": "Permission",
+      "status": "ok",
+      "newFile": "org_bukkit_permissions_Permission.md",
+      "newLine": 2
+    },
+    {
+      "rule": "04-permissions.md",
+      "bare": "Permission",
+      "srcKey": "spigot",
+      "srcFile": "org_bukkit_permissions_Permission.md",
+      "srcLine": 23,
+      "member": "getChildren",
+      "status": "ok",
+      "newFile": "org_bukkit_permissions_Permission.md",
+      "newLine": 21
+    },
+    {
+      "rule": "04-permissions.md",
+      "bare": "getting-started__plugin-yml",
+      "srcKey": "tut",
+      "srcFile": "getting-started__plugin-yml.md",
+      "srcLine": 152,
+      "member": null,
+      "status": "tutorial",
+      "note": "教程面不分版本（同一份当前文档）"
+    },
+    {
+      "rule": "05-scheduler.md",
+      "bare": "Bukkit",
+      "srcKey": "spigot",
+      "srcFile": "org_bukkit_Bukkit.md",
+      "srcLine": 63,
+      "member": "getScheduler",
+      "status": "ok",
+      "newFile": "org_bukkit_Bukkit.md",
+      "newLine": 63
+    },
+    {
+      "rule": "05-scheduler.md",
+      "bare": "BukkitTask",
+      "srcKey": "spigot",
+      "srcFile": "org_bukkit_scheduler_BukkitTask.md",
+      "srcLine": 17,
+      "member": "cancel",
+      "status": "ok",
+      "newFile": "org_bukkit_scheduler_BukkitTask.md",
+      "newLine": 15
+    },
+    {
+      "rule": "05-scheduler.md",
+      "bare": "BukkitTask",
+      "srcKey": "spigot",
+      "srcFile": "org_bukkit_scheduler_BukkitTask.md",
+      "srcLine": 13,
+      "member": "getTaskId",
+      "status": "ok",
+      "newFile": "org_bukkit_scheduler_BukkitTask.md",
+      "newLine": 11
+    },
+    {
+      "rule": "05-scheduler.md",
+      "bare": "BukkitScheduler",
+      "srcKey": "spigot",
+      "srcFile": "org_bukkit_scheduler_BukkitScheduler.md",
+      "srcLine": 26,
+      "member": "isQueued",
+      "status": "ok",
+      "newFile": "org_bukkit_scheduler_BukkitScheduler.md",
+      "newLine": 24
+    },
+    {
+      "rule": "05-scheduler.md",
+      "bare": "BukkitScheduler",
+      "srcKey": "spigot",
+      "srcFile": "org_bukkit_scheduler_BukkitScheduler.md",
+      "srcLine": 24,
+      "member": "cancelTasks",
+      "status": "ok",
+      "newFile": "org_bukkit_scheduler_BukkitScheduler.md",
+      "newLine": 22
+    },
+    {
+      "rule": "06-plugin-yml-config.md",
+      "bare": "api__plugin-configs",
+      "srcKey": "tut",
+      "srcFile": "api__plugin-configs.md",
+      "srcLine": 55,
+      "member": null,
+      "status": "tutorial",
+      "note": "教程面不分版本（同一份当前文档）"
+    },
+    {
+      "rule": "06-plugin-yml-config.md",
+      "bare": "getting-started__plugin-yml",
+      "srcKey": "tut",
+      "srcFile": "getting-started__plugin-yml.md",
+      "srcLine": 188,
+      "member": null,
+      "status": "tutorial",
+      "note": "教程面不分版本（同一份当前文档）"
+    },
+    {
+      "rule": "07-pdc.md",
+      "bare": "api__pdc",
+      "srcKey": "tut",
+      "srcFile": "api__pdc.md",
+      "srcLine": 232,
+      "member": null,
+      "status": "tutorial",
+      "note": "教程面不分版本（同一份当前文档）"
+    },
+    {
+      "rule": "07-pdc.md",
+      "bare": "PersistentDataHolder",
+      "srcKey": "spigot",
+      "srcFile": "org_bukkit_persistence_PersistentDataHolder.md",
+      "srcLine": 11,
+      "member": null,
+      "status": "member-unresolved",
+      "newFile": "org_bukkit_persistence_PersistentDataHolder.md"
+    },
+    {
+      "rule": "07-pdc.md",
+      "bare": "api__pdc",
+      "srcKey": "tut",
+      "srcFile": "api__pdc.md",
+      "srcLine": 233,
+      "member": null,
+      "status": "tutorial",
+      "note": "教程面不分版本（同一份当前文档）"
+    },
+    {
+      "rule": "07-pdc.md",
+      "bare": "PersistentDataHolder",
+      "srcKey": "spigot",
+      "srcFile": "org_bukkit_persistence_PersistentDataHolder.md",
+      "srcLine": 12,
+      "member": null,
+      "status": "member-unresolved",
+      "newFile": "org_bukkit_persistence_PersistentDataHolder.md"
+    },
+    {
+      "rule": "07-pdc.md",
+      "bare": "api__pdc",
+      "srcKey": "tut",
+      "srcFile": "api__pdc.md",
+      "srcLine": 239,
+      "member": null,
+      "status": "tutorial",
+      "note": "教程面不分版本（同一份当前文档）"
+    },
+    {
+      "rule": "07-pdc.md",
+      "bare": "api__pdc",
+      "srcKey": "tut",
+      "srcFile": "api__pdc.md",
+      "srcLine": 63,
+      "member": null,
+      "status": "tutorial",
+      "note": "教程面不分版本（同一份当前文档）"
+    },
+    {
+      "rule": "07-pdc.md",
+      "bare": "api__pdc",
+      "srcKey": "tut",
+      "srcFile": "api__pdc.md",
+      "srcLine": 273,
+      "member": null,
+      "status": "tutorial",
+      "note": "教程面不分版本（同一份当前文档）"
+    },
+    {
+      "rule": "07-pdc.md",
+      "bare": "api__pdc",
+      "srcKey": "tut",
+      "srcFile": "api__pdc.md",
+      "srcLine": 249,
+      "member": "getPersistentDataContainer",
+      "status": "tutorial",
+      "note": "教程面不分版本（同一份当前文档）"
+    },
+    {
+      "rule": "07-pdc.md",
+      "bare": "api__pdc",
+      "srcKey": "tut",
+      "srcFile": "api__pdc.md",
+      "srcLine": 251,
+      "member": "getPersistentDataContainer",
+      "status": "tutorial",
+      "note": "教程面不分版本（同一份当前文档）"
+    },
+    {
+      "rule": "07-pdc.md",
+      "bare": "api__pdc",
+      "srcKey": "tut",
+      "srcFile": "api__pdc.md",
+      "srcLine": 253,
+      "member": "getPersistentDataContainer",
+      "status": "tutorial",
+      "note": "教程面不分版本（同一份当前文档）"
+    },
+    {
+      "rule": "07-pdc.md",
+      "bare": "api__pdc",
+      "srcKey": "tut",
+      "srcFile": "api__pdc.md",
+      "srcLine": 254,
+      "member": null,
+      "status": "tutorial",
+      "note": "教程面不分版本（同一份当前文档）"
+    },
+    {
+      "rule": "07-pdc.md",
+      "bare": "api__pdc",
+      "srcKey": "tut",
+      "srcFile": "api__pdc.md",
+      "srcLine": 265,
+      "member": "getPersistentDataContainer",
+      "status": "tutorial",
+      "note": "教程面不分版本（同一份当前文档）"
+    },
+    {
+      "rule": "07-pdc.md",
+      "bare": "api__pdc",
+      "srcKey": "tut",
+      "srcFile": "api__pdc.md",
+      "srcLine": 269,
+      "member": "getPersistentDataContainer",
+      "status": "tutorial",
+      "note": "教程面不分版本（同一份当前文档）"
+    },
+    {
+      "rule": "07-pdc.md",
+      "bare": "api__pdc",
+      "srcKey": "tut",
+      "srcFile": "api__pdc.md",
+      "srcLine": 271,
+      "member": null,
+      "status": "tutorial",
+      "note": "教程面不分版本（同一份当前文档）"
+    },
+    {
+      "rule": "07-pdc.md",
+      "bare": "api__pdc",
+      "srcKey": "tut",
+      "srcFile": "api__pdc.md",
+      "srcLine": 198,
+      "member": null,
+      "status": "tutorial",
+      "note": "教程面不分版本（同一份当前文档）"
+    },
+    {
+      "rule": "07-pdc.md",
+      "bare": "api__pdc",
+      "srcKey": "tut",
+      "srcFile": "api__pdc.md",
+      "srcLine": 16,
+      "member": null,
+      "status": "tutorial",
+      "note": "教程面不分版本（同一份当前文档）"
+    },
+    {
+      "rule": "07-pdc.md",
+      "bare": "api__pdc",
+      "srcKey": "tut",
+      "srcFile": "api__pdc.md",
+      "srcLine": 33,
+      "member": null,
+      "status": "tutorial",
+      "note": "教程面不分版本（同一份当前文档）"
+    }
+  ]
+}

@@ -754,7 +754,8 @@ async function testGenericFabricWikiFallback() {
     const sum = parseToolText(await getDocSummary({ id: hit.id, version: ver, platform: "fabric" }));
     assert.ok(sum.firstParagraph || sum.sections?.length, `${ver} generic summary: ${JSON.stringify(sum.error ?? {}).slice(0, 200)}`);
     const rel = parseToolText(await getDocRelated({ id: hit.id, version: ver, platform: "fabric", limit: 3 }));
-    assert.ok(Array.isArray(rel), `${ver} generic related 根必须是数组，实得 ${JSON.stringify(rel).slice(0, 160)}`);
+    assert.equal(rel.ok, true, `${ver} generic related 应成功: ${JSON.stringify(rel).slice(0, 160)}`);
+    assert.ok(Array.isArray(rel.results), `${ver} generic related 的 results 必须是数组，实得 ${JSON.stringify(rel).slice(0, 160)}`);
     const urls = `${full.meta?.url ?? ""} ${sum.url ?? ""}`;
 
     if (hit.source === "fabric-wiki") {
@@ -765,8 +766,8 @@ async function testGenericFabricWikiFallback() {
         assert.equal(payload.wikiIsCurrentSite, true, `${ver} ${leg} 兜底要披露 wikiIsCurrentSite`);
         assert.match(String(payload.warning), /现行/, `${ver} ${leg} 兜底必须带现行站警告`);
       }
-      assert.ok(rel.length > 0, `${ver} wiki related 应有条目`);
-      assert.equal(rel[0].source, "fabric-wiki", `${ver} wiki related 逐条披露 source`);
+      assert.ok(rel.results.length > 0, `${ver} wiki related 应有条目`);
+      assert.equal(rel.results[0].source, "fabric-wiki", `${ver} wiki related 逐条披露 source`);
     } else {
       docsLegs++;
       assert.match(urls, /raw\.githubusercontent\.com\/FabricMC\/fabric-docs/, `${ver} 应由 fabric-docs 供正文: ${urls}`);
@@ -4168,7 +4169,8 @@ async function testReviewFixes() {
   const qRelated = parseToolText(
     await getDocRelated({ platform: "quilt", version: "1.20.1", id: "qsl-qfapi", limit: 5 }),
   );
-  assert.ok(Array.isArray(qRelated), JSON.stringify(qRelated).slice(0, 400));
+  assert.equal(qRelated.ok, true, JSON.stringify(qRelated).slice(0, 400));
+  assert.ok(Array.isArray(qRelated.results), JSON.stringify(qRelated).slice(0, 400));
   // W1-1b（2026-09-19）：原 `qRelated.length >= 0` 恒真 ⇒ 空数组也绿。qsl-qfapi 的关联
   // 必须真召回 QSL 条目（实测恒为 qsl-verified / qsl-readme 形态），钉结构与非空。
   //
@@ -4178,13 +4180,13 @@ async function testReviewFixes() {
   // （overlap=1）⇒ 它们合法入选。旧式在 quilt 语料只有 4 页时碰巧成立；本轮语料补齐 wiki-* 页后
   // 才暴露（不是算法退化）。改 `some` 精确表达原意，并**补一条排序钉**（净增强，非放宽）。
   assert.ok(
-    qRelated.length >= 1 && qRelated.some((r) => /qsl/.test(String(r.id)) && r.label),
-    `qsl-qfapi 关联必须真召回 QSL 条目 —— ${JSON.stringify(qRelated).slice(0, 300)}`,
+    qRelated.results.length >= 1 && qRelated.results.some((r) => /qsl/.test(String(r.id)) && r.label),
+    `qsl-qfapi 关联必须真召回 QSL 条目 —— ${JSON.stringify(qRelated.results).slice(0, 300)}`,
   );
-  const qslHits = qRelated.filter((r) => /qsl/.test(String(r.id)));
+  const qslHits = qRelated.results.filter((r) => /qsl/.test(String(r.id)));
   assert.ok(
-    qslHits.length >= 1 && qRelated.slice(0, qslHits.length).every((r) => /qsl/.test(String(r.id))),
-    `QSL 条目必须按 overlap 降序排在前面（overlap 2/1 > 仅 registry 的 1）—— ${JSON.stringify(qRelated.map((r) => r.id))}`,
+    qslHits.length >= 1 && qRelated.results.slice(0, qslHits.length).every((r) => /qsl/.test(String(r.id))),
+    `QSL 条目必须按 overlap 降序排在前面（overlap 2/1 > 仅 registry 的 1）—— ${JSON.stringify(qRelated.results.map((r) => r.id))}`,
   );
 
   const qRelatedFb = parseToolText(
@@ -4201,10 +4203,11 @@ async function testReviewFixes() {
       JSON.stringify(qRelatedFb).slice(0, 400),
     );
   } else {
-    assert.ok(Array.isArray(qRelatedFb), JSON.stringify(qRelatedFb).slice(0, 400));
-    if (qRelatedFb.length > 0) {
-      assert.equal(qRelatedFb[0].sourcePlatform, "fabric");
-      assert.match(String(qRelatedFb[0].warning || ""), /回退 Fabric|QSL/);
+    assert.ok(Array.isArray(qRelatedFb.results), JSON.stringify(qRelatedFb).slice(0, 400));
+    if (qRelatedFb.results.length > 0) {
+      assert.equal(qRelatedFb.sourcePlatform, "fabric");
+      assert.match(String(qRelatedFb.warning || ""), /回退 Fabric|QSL/);
+      assert.equal(qRelatedFb.results[0].sourcePlatform, "fabric");
     }
   }
 
@@ -7935,7 +7938,9 @@ function diffDocToolTables({ readme, agents, registered }) {
   }
   for (const n of registeredList) if (!groupUnion.has(n)) problems.push(`README 工具表缺 \`${n}\``);
 
-  const agentsSec = docMdSlice(agents.split(/\r?\n/), /^#+ MCP Server 工具/, /^### 工具边界/);
+  // AGENTS.md 的工具节标题已改为「MCP Server / CLI 工具」；锚点同时接受旧写法，
+  // 避免标题与测试再次漂移（节尾锚点仍唯一）。
+  const agentsSec = docMdSlice(agents.split(/\r?\n/), /^#+ MCP Server(?: \/ CLI)? 工具/, /^### 工具边界/);
   if (!agentsSec) problems.push("AGENTS.md 找不到「MCP Server 工具」表节（锚点被改）");
   const agentsCells = agentsSec ? docToolNameColumnCells(agentsSec) : [];
   if (agentsSec && agentsCells.length === 0) problems.push("AGENTS.md 工具表解析出 0 行（表格结构变了？）");

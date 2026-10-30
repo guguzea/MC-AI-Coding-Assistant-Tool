@@ -103,7 +103,11 @@ export interface ModDecompileResult {
   jarIdentity?: string;
   warnings?: string[];
   note?: string;
-  error?: string;
+  /**
+   * 机读码。必须是 `{ code }` 对象：CLI 的失败判据只把 `error.code` 当机读码，
+   * 字符串形态会让 decompile_mod_jar 的失败仍以 exit 0 返回。
+   */
+  error?: { code: string; message?: string };
   action?: ActionEnvelope;
 }
 
@@ -525,13 +529,13 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
   // 0. 参数校验（`args` 整个缺失也要走结构化诊断，不许裸抛 TypeError）
   if (!args?.jarPath) {
     return withAction(
-      { found: false, error: "INVALID_INPUT" },
+      { found: false, error: { code: "INVALID_INPUT" } },
       actionable("INVALID_INPUT", "jarPath 不能为空", ["传入本地 jar 的绝对路径"]),
     );
   }
   if (!existsSync(args.jarPath) || !statSync(args.jarPath).isFile()) {
     return withAction(
-      { found: false, error: "NOT_FOUND", jarPath: args.jarPath },
+      { found: false, error: { code: "NOT_FOUND" }, jarPath: args.jarPath },
       actionable("NOT_FOUND", `jar 不存在: ${args.jarPath}`, ["核对路径后重试"]),
     );
   }
@@ -539,7 +543,7 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
   // 1. skip-download 门控（CI：先于 Java，保证 DOWNLOAD_DISABLED 可测）
   if (skipDownloadsEnabled()) {
     return withAction(
-      { found: false, error: "DOWNLOAD_DISABLED", jarPath: args.jarPath },
+      { found: false, error: { code: "DOWNLOAD_DISABLED" }, jarPath: args.jarPath },
       downloadDisabledActionable("decompile_mod_jar 需要下载 VineFlower 工具 jar"),
     );
   }
@@ -548,7 +552,7 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
   const probe = await probeJava();
   if (!probe.ready) {
     return withAction(
-      { found: false, error: "TOOLCHAIN_MISSING", jarPath: args.jarPath },
+      { found: false, error: { code: "TOOLCHAIN_MISSING" }, jarPath: args.jarPath },
       toolchainActionable(
         `反编译模组需要 Java 17+（当前: ${probe.versionText ?? "未检测到 java"}）。`,
       ),
@@ -558,7 +562,7 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
   // 3. 元数据分析
   const meta = analyzeModJar(args.jarPath);
   if (!meta.found) {
-    return withAction({ found: false, error: meta.action?.code ?? "NOT_FOUND", jarPath: args.jarPath }, meta.action);
+    return withAction({ found: false, error: { code: meta.action?.code ?? "NOT_FOUND" }, jarPath: args.jarPath }, meta.action);
   }
   // F92：产物目录身份段取自 jar 字节内容（sha512 前 12 位）。先算出来，失败诊断与 outDir 共用一份真值。
   const jarIdentity = jarContentIdentity(args.jarPath);
@@ -596,7 +600,7 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
           ? `｜调用方给的外部证据「${args.externalModId}」未通过：它本身非法，或该 jar 自己的条目路径里没有这一段（外部证据不绕过归属）`
           : "";
     return withAction(
-      { found: false, error: identity.code, jarPath: args.jarPath, jarIdentity, bundledJars },
+      { found: false, error: { code: identity.code, message: identity.message }, jarPath: args.jarPath, jarIdentity, bundledJars },
       actionable(
         identity.code,
         `${identity.message}；已拒绝回落 unknown-mod 目录（jar 内容身份 = sha512 前 12 位 ${jarIdentity}）。${why}`,
@@ -635,7 +639,7 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
   const modVersion = sanitizeCacheSegment(rawModVersion);
   if (!modVersion) {
     return withAction(
-      { found: false, error: "INVALID_INPUT", jarPath: args.jarPath },
+      { found: false, error: { code: "INVALID_INPUT" }, jarPath: args.jarPath },
       actionable("INVALID_INPUT", `modVersion 非法（含路径穿越或空段）：${rawModVersion}`, [
         "version 只允许 [a-z0-9._-]，且不得为 `.` / `..` 或包含 `..`",
       ]),
@@ -645,7 +649,7 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
   const outDir = join(cache.decompiledMods, modId, `${modVersion}-${jarIdentity}`);
   if (!isPathInside(cache.decompiledMods, outDir)) {
     return withAction(
-      { found: false, error: "INVALID_INPUT", jarPath: args.jarPath },
+      { found: false, error: { code: "INVALID_INPUT" }, jarPath: args.jarPath },
       actionable("INVALID_INPUT", "反编译输出目录逃出 decompiled-mods", [
         "modId/modVersion 不得把产物写到 $MC_SKILL_CACHE/decompiled-mods 之外",
       ]),
@@ -663,7 +667,7 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
   } catch (err) {
     if (err instanceof CacheLockBusyError) {
       return withAction(
-        { found: false, error: "LOCK_BUSY", jarPath: args.jarPath },
+        { found: false, error: { code: "LOCK_BUSY" }, jarPath: args.jarPath },
         actionable("LOCK_BUSY", "另一并发反编译任务持有该模组的缓存锁。", ["稍后重试（或确认无并发后清除过期锁）"]),
       );
     }
@@ -852,7 +856,7 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
       return withAction(
         {
           found: false,
-          error: "CACHE_CLEAN_FAILED",
+          error: { code: "CACHE_CLEAN_FAILED" },
           modId,
           modVersion,
           jarPath: args.jarPath,
@@ -870,7 +874,7 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
     const r = await runJava(vineflowerCli(vineflower, inputJar, outDir), { cwd: cache.root });
     if (r.code !== 0) {
       return withAction(
-        { found: false, error: "DECOMPILE_FAILED", modId, outputDir: outDir },
+        { found: false, error: { code: "DECOMPILE_FAILED" }, modId, outputDir: outDir },
         actionable("DECOMPILE_FAILED", `VineFlower 失败(code=${r.code}): ${tail(r.stderr)}`, [
           "请将完整 stderr 贴给开发者",
           "可重试：decompile_mod_jar { jarPath, force: true }",
@@ -880,24 +884,24 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
   } catch (err) {
     if (err instanceof DownloadDisabledError) {
       return withAction(
-        { found: false, error: "DOWNLOAD_DISABLED", modId },
+        { found: false, error: { code: "DOWNLOAD_DISABLED" }, modId },
         downloadDisabledActionable(err.message),
       );
     }
     if (err instanceof DownloadError) {
       return withAction(
-        { found: false, error: err.code, modId },
+        { found: false, error: { code: err.code, message: err.message }, modId },
         actionable(err.code, err.message, ["检查网络后重试", "或手动预置 jar 到 $MC_SKILL_CACHE/resources/"]),
       );
     }
     if ((err as { code?: string }).code === "DISK_INSUFFICIENT") {
       return withAction(
-        { found: false, error: "DISK_INSUFFICIENT", modId },
+        { found: false, error: { code: "DISK_INSUFFICIENT" }, modId },
         actionable("DISK_INSUFFICIENT", (err as Error).message, ["清理磁盘后重试"]),
       );
     }
     return withAction(
-      { found: false, error: "DECOMPILE_FAILED", modId },
+      { found: false, error: { code: "DECOMPILE_FAILED" }, modId },
       actionable("DECOMPILE_FAILED", (err as Error).message, ["重试或反馈开发者"]),
     );
   }

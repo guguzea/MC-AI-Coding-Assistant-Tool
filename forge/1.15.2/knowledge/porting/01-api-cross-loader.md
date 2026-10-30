@@ -20,7 +20,7 @@
 | **资源（assets）** | `src/main/resources/assets/<modid>/` | `src/main/resources/assets/<modid>/` | 同 Forge |
 | **Mod ID 元数据** | `fabric.mod.json` | `mods.toml`（或 `neoforge.mods.toml`） | `neoforge.mods.toml` |
 | **注册时机** | `onInitialize()` 中直接 register | `FMLCommonSetupEvent` / mod constructor 中用 DeferredRegister | 同 Forge |
-| **服务端检测** | `FabricServer_tickEvents` 或直接检测 | `DistExecutor.runWhenOn(Dist.DEDICATED_SERVER, () -> ...)` | 同 Forge |
+| **服务端检测** | `ServerTickEvents` 或直接检测 | `DistExecutor.runWhenOn(Dist.DEDICATED_SERVER, () -> ...)` | 同 Forge |
 | **客户端检测** | `EnvType.CLIENT` | `DistExecutor.runWhenOn(Dist.CLIENT, () -> ...)` | 同 Forge |
 
 ---

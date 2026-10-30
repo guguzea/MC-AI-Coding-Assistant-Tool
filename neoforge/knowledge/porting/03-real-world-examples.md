@@ -2,7 +2,7 @@
 
 ## 案例 1：基础物品移植（Forge → NeoForge）
 
-### Forge 版本
+### Forge 版本（1.20.1）
 
 ```java
 package com.example.examplemod;
@@ -27,7 +27,8 @@ public class ExampleMod {
         () -> new Item(new Item.Properties().tab(CreativeModeTab.TAB_MISC)));
 
     public ExampleMod() {
-        MinecraftForge.EVENT_BUS.register(this);
+        // FMLCommonSetupEvent 在 Forge 也属 mod bus：游戏总线 MinecraftForge.EVENT_BUS 上收不到
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
     }
 
     @SubscribeEvent
@@ -37,7 +38,7 @@ public class ExampleMod {
 }
 ```
 
-### NeoForge 版本
+### NeoForge 版本（1.20.4）
 
 ```java
 package com.example.examplemod;
@@ -66,7 +67,8 @@ public class ExampleMod {
 
     public ExampleMod(IEventBus modBus) {
         ITEMS.register(modBus);
-        NeoForge.EVENT_BUS.register(this);
+        // FMLCommonSetupEvent 是 mod bus 事件；NeoForge.EVENT_BUS 是游戏总线
+        modBus.addListener(ExampleMod::commonSetup);
     }
 
     @SubscribeEvent
@@ -80,7 +82,7 @@ public class ExampleMod {
 
 ## 案例 2：方块 + BlockEntity（Forge → NeoForge）
 
-### Forge 版本
+### Forge 版本（1.20.1）
 
 ```java
 @Mod(ExampleMod.MOD_ID)
@@ -93,13 +95,16 @@ public class ExampleMod {
     public static final RegistryObject<Block> MY_BLOCK = BLOCKS.register("my_block",
         () -> new Block(BlockBehaviour.Properties.of(Material.STONE)));
 
+    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
+        DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, MOD_ID);
+
     public static final RegistryObject<BlockEntityType<?>> MY_BLOCK_ENTITY =
-        BlockEntities.register("my_block", () ->
+        BLOCK_ENTITIES.register("my_block", () ->
             BlockEntityType.Builder.of(MyBlockEntity::new, MY_BLOCK.get()).build(null));
 }
 ```
 
-### NeoForge 版本
+### NeoForge 版本（1.20.4）
 
 ```java
 @Mod(ExampleMod.MOD_ID)
@@ -130,7 +135,7 @@ public class ExampleMod {
 
 ## 案例 3：网络消息（Forge → NeoForge）
 
-### Forge 版本
+### Forge 版本（1.20.1）
 
 ```java
 public class MyMessage {
@@ -156,7 +161,7 @@ CHANNEL.registerMessage(0, MyMessage.class, MyMessage::toBytes, MyMessage::new,
 CHANNEL.sendToServer(new MyMessage(42));
 ```
 
-### NeoForge 版本
+### NeoForge 版本（1.20.4）
 
 **不要**只改包名继续用 `SimpleChannel`。1.21.1 官方是 `RegisterPayloadHandlersEvent` + `CustomPacketPayload`（https://docs.neoforged.net/docs/1.21.1/networking/payload/）。按 `neoforge/<精确版本>/.cursor/rules/06-networking.mdc` 写。
 
@@ -164,7 +169,7 @@ CHANNEL.sendToServer(new MyMessage(42));
 
 ## 案例 4：Capability（Forge → NeoForge）
 
-### Forge 版本
+### Forge 版本（1.20.1）
 
 ```java
 public interface IEnergyStorage {
@@ -202,7 +207,7 @@ entity.setData(ENERGY_TYPE.get(), new EnergyStorage());
 
 ## 案例 5：数据生成器（Forge → NeoForge）
 
-### Forge 版本
+### Forge 版本（1.20.1）
 
 ```java
 public class ModRecipeProvider extends DataProvider {
@@ -233,7 +238,7 @@ public class DataGenerators {
 }
 ```
 
-### NeoForge 版本
+### NeoForge 版本（1.20.4）
 
 ```java
 public class ModRecipeProvider extends RecipeProvider {

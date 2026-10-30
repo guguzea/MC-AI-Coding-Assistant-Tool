@@ -6,7 +6,7 @@
 |--------|---------------|------------|--------|
 | **注册方块** | RegistryEvent.Register<Block> | DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID) | Registry.register(Registries.BLOCK, id, block) |
 | **注册物品** | RegistryEvent.Register<Item> | DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID) | Registry.register(Registries.ITEM, id, item) |
-| **注册 TileEntity** | GameRegistry.registerTileEntity() | DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, MOD_ID) | BlockEntityType.Builder.create() |
+| **注册 TileEntity** | GameRegistry.registerTileEntity() | DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, MOD_ID)（1.18.2）/ `BLOCK_ENTITY_TYPES`（1.19.4+） | BlockEntityType.Builder.create() |
 | **网络通信** | SimpleNetworkWrapper | SimpleChannel | ClientPlayNetworking |
 | **事件订阅** | @EventBusSubscriber + @SubscribeEvent | modEventBus.addListener() | @SubscribeEvent |
 | **物理端检测** | @SideOnly(Side.CLIENT) | @OnlyIn(Dist.CLIENT) | @Environment(EnvType.CLIENT) |

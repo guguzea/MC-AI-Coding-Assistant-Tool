@@ -1,6 +1,6 @@
 ---
 name: mc-fluid
-description: Minecraft Forge 流体开发。创建流体 Fluid、FlowingFluid、BucketItem。触发词：Fluid、FlowingFluid、BucketItem、桶、bucket、流体
+description: Minecraft Forge 流体开发。创建流体 Fluid、FlowingFluid、ItemBucket。触发词：Fluid、FlowingFluid、ItemBucket、桶、bucket、流体
 platform: forge
 version: "1.13.2"
 dependencies: []
@@ -16,7 +16,7 @@ IF 只需要静态流体（不流动）
   → Fluid
 
 IF 需要流动、填装、无限水源
-  → Fluid + FlowingFluid + BucketItem
+  → Fluid + FlowingFluid + ItemBucket
 ```
 
 ## 完整示例：自定义流体
@@ -35,10 +35,10 @@ public static final Fluid FLOWING_MY_FLUID = new Fluid("my_fluid_flowing",
 );
 ```
 
-### 2. 注册 BucketItem
+### 2. 注册 ItemBucket
 
 ```java
-public static final Item MY_BUCKET = new BucketItem(MY_FLUID,
+public static final Item MY_BUCKET = new ItemBucket(MY_FLUID,
     new Item.Properties()
         .maxStackSize(1)
         .containerItem(Items.BUCKET)
@@ -55,7 +55,7 @@ public void onItemsRegistry(RegistryEvent.Register<Item> event) {
 ## 常见错误
 
 - ❌ `Fluid` 需要设置正确的状态纹理
-- ❌ `BucketItem` 需要设置 `containerItem`
+- ❌ `ItemBucket` 需要设置 `containerItem`
 - ❌ 流体方块需要特殊处理
 
 ## 参考资料
@@ -66,5 +66,5 @@ public void onItemsRegistry(RegistryEvent.Register<Item> event) {
 
 | 配合 Skill | 协作说明 |
 |-----------|---------|
-| `mc-registry` | Fluid 和 BucketItem 需要注册 |
+| `mc-registry` | Fluid 和 ItemBucket 需要注册 |
 | `mc-block` | 流体方块使用 LiquidBlock |

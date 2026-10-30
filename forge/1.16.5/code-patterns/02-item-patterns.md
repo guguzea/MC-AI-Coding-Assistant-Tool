@@ -19,7 +19,7 @@ public static final RegistryObject<Item> MY_ITEM = ITEMS.register("my_item",
 ## 剑（完整示例）
 
 ```java
-// Tier 枚举（1.16.5 签名）
+// IItemTier 枚举（1.16.5 签名）
 public enum MyTier implements IItemTier { // ❌ ITier = Fabric 名；165 official 构件（javap）= net.minecraft.item.IItemTier
     COPPER(3, 1561, 8.0f, 3.0f, 15, () -> Ingredient.of(Items.IRON_INGOT));   // 1.16.5 构件 javap：本版无 Items.COPPER_INGOT（铜是 1.17 才有）——示例改用本版存在的锭
 

@@ -32,7 +32,7 @@ ENTITY_TYPES.register(modEventBus);
 ## 实体类基础结构
 
 ```java
-public class MyEntity extends Mob {
+public class MyEntity extends MobEntity {
     protected MyEntity(EntityType<? extends MyEntity> type, World world) {
         super(type, world);
         this.stepHeight = 1.0F;
@@ -44,7 +44,7 @@ public class MyEntity extends Mob {
         // 添加 AI 目标
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0, true));
-        this.goalSelector.addGoal(2, new WaterAvoidingRandomStrollGoal(this, 1.0));
+        this.goalSelector.addGoal(2, new WaterAvoidingRandomWalkingGoal(this, 1.0));
         this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
     }
 

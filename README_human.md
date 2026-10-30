@@ -26,17 +26,19 @@
 
 **它能干什么，以及怎么开始用**。
 
-详细的功能细节(如版本清单、工具参数、边界条件、实测数据)这些细节都在 [README.md](README.md)（那里是技术事实的唯一出处，也是 AI 的执行契约）。
+详细的功能细节（版本清单、工具参数、边界条件、实测数据）都在 [README.md](README.md)——那里是技术事实的唯一出处，也是 AI 的执行契约。
 
-## 其实我不太推荐去读readme细节,因为它真的非常长,东西非常多,所以我会把一些比较重要的内容放到这里,方便大家查看,如果你想要查看详细情况,你可以问问你的AI助手,这比人读好得多
-    关于为什么我没有清理README.md的AI味和为什么不把人类读的放到github首页:
-    1.安装本项目的时候AGENT会先读一次[README.md](README.md),为了解决部分AI注意力混乱,看了文档也不做的问题,我尽量把README做成一个详细的说明书(这也导致人的可读性非常低)
-    2.为了保证可读性,我把我觉得人要看的单独分离出来了
-    3.github奇怪的文档渲染机制
+## 为什么分成两份文档
+
+README 真的很长，东西非常多，所以这里只挑人需要看的。想知道细节，问你的 AI 助手比人翻快得多。
+
+- 装本项目的时候，agent 会先完整读一遍 [README.md](README.md)。为了治一部分 AI「看了文档也不照做」的毛病，那份尽量写成了详细说明书，代价是人读起来很累。
+- 为了保证可读性，把人要看的这部分单独拆了出来。
+- 再加上 GitHub 奇怪的文档渲染机制，首页塞太多反而找不到入口。
 
 ## 一句话
 
-让 AI 编程助手（Cursor、Claude Code 等）写 Minecraft 模组时不再凭记忆猜：它知道你这个版本该用哪套 API、哪套构建配置、哪套映射，也知道哪些地方它没核实过。
+让 AI 编程助手能更好地编写 Minecraft 模组的完整工具包：消除知识陈旧、API 版本混淆、构建系统复杂、映射不一致等结构性障碍，覆盖从编写到测试模组的全流程。
 
 ## 它是怎么帮你干活的
 
@@ -68,7 +70,7 @@ graph LR
   GAME -->|"状态回传"| C3
 ```
 
-人话版（万一张图没渲染出来）：
+**图里那三层，用大白话说：**
 
 - **知识库** 存五类东西：官方文档（Forge / Fabric / NeoForge … 各平台的在线文档与 javadoc 语料）、社区文档（社区短文、反模式、库模组经验）、平台规则包（你这个版本该用哪套 API 的成套约束 —— 会话里注进来的就是它）、Skill（做某类任务的成套步骤）、库模组数据（库模组的 API 摘要与版本清单）。它只负责**被查**，不自己动手。
 - **知识库控制器** 是 AI 查知识库的那只手：AI 问它要东西，它去检索、读出原文页再交回去。**AI 本身不记得答案** —— 答案永远来自这里，所以不会凭空编。
@@ -78,33 +80,36 @@ graph LR
 > 想看每一层各自有哪些具体东西，见 [README.md 的「项目结构」与「MCP/CLI TOOLS」](README.md)。图中「控制代码」＝仓库里的 `mcp-server/`，「你的 mod 工程」＝你自己的模组项目目录。
 
 ## 适合谁
-- 想用写模组但是不想折腾的开发者
+
+- 想写模组但不想折腾的开发者
 - 正在写模组，想让 AI 少给错答案的开发者
 - 靠 AI 改代码，担心它编造方法名的开发者
 - 整合包 / 服务端维护者（认依赖、查崩溃）
 - 写 **Paper / Spigot 插件**的服务端开发者（走的是另一条服务端面，下面有单独一节）
 - 想研究别人家模组怎么写的开发者（反编译 + 源码检索）
 - 用老版本开工的开发者（Forge 规则树从 `1.7.10` 起就有档，LiteLoader / Rift / ModLoader 也各有一条细线）
-
+> [!IMPORTANT]
+> 请遵守 Mojang 创作规范。
 ## 三步开始
 
 1. **装上它**：按 [AUTO_SETUP.md](AUTO_SETUP.md) 编译并接入你的 AI 宿主（Cursor / Claude Code / VS Code / Continue / Trae / OpenCode / Codex / DSH 等）。需要 Node.js 22.5 或更高。
 2. **让它认识你的模组工程**：宿主里打开工程即可，AI 会按 [AGENTS.md](AGENTS.md) 判断平台和精确版本，再把对应规则装进当前对话。
 3. **干活**：查文档、生成代码、查崩溃、让它进游戏自己测——都是直接提问。涉及写文件、跑 Gradle、拷 jar、上传发布这类动作，它会先给你看清单再等你确认。
 
-> **开始写模组之前，建议先花一轮对齐需求**：新内容 / 新机制 / 新玩法先别急着写,减少弯路——让 AI 跑一遍仓库的需求拷问技能 `mc-grill`：它一轮轮提问、每题带推荐答案，把设计树每条分支问到拍板，最后给你一份共识清单，你确认完才动手。触发方式：直接说「拷问我 / 帮我理需求 / 先对齐」或输入 `/mc-grill`（最稳）；需求没定型时它也会自动进入这一步。
-# 请遵守MOJANG创作规范
+> **开始写模组之前，建议先花一轮对齐需求**：新内容 / 新机制 / 新玩法先别急着写，减少弯路——让 AI 跑一遍仓库的需求拷问技能 `mc-grill`：它一轮轮提问、每题带推荐答案，把设计树每条分支问到拍板，最后给你一份共识清单，你确认完才动手。触发方式：直接说「拷问我 / 帮我理需求 / 先对齐」或输入 `/mc-grill`（最稳）；需求没定型时它也会自动进入这一步。
+
 ## 功能介绍
+
 
 ### 平台规则与技能
 
 每个平台、每个版本都有一套规则（注册方式、事件、网络、数据生成、反模式……）和一批专用技能文件。AI 装规则时会用**你这个版本**的那一套，不会拿邻近版本糊你。
 
+现盘 54 档可加载：Forge 15 / Fabric 14 / NeoForge 10 / Quilt 10 / LiteLoader 1 / Rift 2 / ModLoader 1 / 基岩 1（扁平，不分版本）。盘上另有 5 档是 `draft`（会在 `drafts` 里点名：Forge 1.21.1、LiteLoader 1.8.9 / 1.10.2、ModLoader 1.2.5 / 1.5.2）——两个数的分母都写在上面了，随时间会变，跑一遍命令最准。**没有你这个版本的档，它会直说 `PACK_NOT_FOUND` 并把同系列候选清单交给你选，不会悄悄拿邻版顶上——这是刻意的。**
 
- 现盘 54 档可加载：Forge 15 / Fabric 14 / NeoForge 10 / Quilt 10 / LiteLoader 1 / Rift 2 / ModLoader 1 / 基岩 1（扁平，不分版本）。盘上另有 5 档是 `draft`（会在 `drafts` 里点名：Forge 1.21.1、LiteLoader 1.8.9 / 1.10.2、ModLoader 1.2.5 / 1.5.2）——两个数的分母都写在上面了，随时间会变，跑一遍命令最准。**没有你这个版本的档，它会直说 `PACK_NOT_FOUND` 并把同系列候选清单交给你选，不会悄悄拿邻版顶上——这是刻意的。**
 版本变迁也能问：`get_version_info` 给一个 Forge 版本加一个操作（比如「注册方块」），回推荐做法、关键变更与踩坑点。
 
-→ 细节见 [README.md 的「Agent Skills」与「规则文件说明」](README.md)
+> 细节见 [README.md 的「Agent Skills」与「规则文件说明」](README.md)
 
 ### 官方文档检索（离线可用）
 
@@ -112,85 +117,88 @@ graph LR
 
 服务端那条线也共用这套检索，只是平台 id 不同：`paper` / `paper-api` / `spigot`，差别见下面「服务端面」一节。
 
-→ 细节见 [README.md 的「MCP 工具使用注意」](README.md)
+> 细节见 [README.md 的「MCP 工具使用注意」](README.md)
 
 ### 基岩 Add-On
 
 基岩跟 Java 侧不共用：语料是 Microsoft Learn 的基岩文档和包里的 JSON，工具单独一组 9 个——搜文档、取摘要 / 全文、校验 `manifest.json` 与行为包实体 JSON、生成 manifest 和 BP 实体、读 `content_log.txt` 分诊。Yarn / Mixin / `query_api` 那套在基岩上对不上。
 
-→ 细节见 [README.md 工具参考 §6b](README.md)
+> 细节见 [README.md 工具参考 §6b](README.md)
 
 ### API、签名与映射查询
 
 按类名和方法名查 Vanilla API 的方法签名与参数名；查加载器 / 库模组 API；把类名、方法名、字段名在 mojang / MCP / Yarn / Parchment / 混淆名之间来回转换；拿崩溃报告里的一个混淆 token（`method_6032`、`er`、`func_110143_aJ` 这类）反查回可读名字。映射层缺失时它会明说"没有索引"，不会拿空壳当答案。
-→ 细节见 [README.md 的「映射转换」与「工具边界」](README.md)
+> 细节见 [README.md 的「映射转换」与「工具边界」](README.md)
 
 ### 错误代码与资源校验
 
 字节码级校验 Access Transformer / Access Widener（Forge / NeoForge / Fabric）、分析 mixin 注入目标、校验数据包 JSON、静态审计模型与纹理引用、检查资源包格式。工程本身也校：`mods.toml` / `fabric.mod.json` / `neoforge.mods.toml` 与入口点对不对得上。要确认某个 Vanilla 注册 ID（`minecraft:xxx`）在不在，用 `query_registry`。也提供工作流模板库（新建方块 / 物品 / 实体 / GUI / 世界生成 / 配置 / GameTest……），每条都写清先后顺序。
 
-→ 细节见 [README.md 的工具参考 §9 / §10](README.md)
+> 细节见 [README.md 的工具参考 §9 / §10](README.md)
 
 ### 库模组知识与选型
 
 社区整理的库模组短文（Cloth Config、YACL、GeckoLib、JEI、Curios、Kotlin for Forge……）与对应技能文件，说明每个库什么时候该用、怎么声明依赖、有哪些版本陷阱。`check_dependencies` 还能读你的 `build.gradle` / 元数据文件，告诉你声明了哪些库、版本窗口对不对。
 
-→ 细节见 [README.md 的「社区知识与库模组」](README.md)
+> 细节见 [README.md 的「社区知识与库模组」](README.md)
 
 ### 代码与资源生成
 
 生成新方块、新物品、实体渲染器、世界生成、网络包、配置、语言文件、模型与 blockstate 的骨架代码。**默认只输出文本**，写盘要你显式确认。第三方库（YACL 之类）需要你提供 jar 才会给可编译的骨架，否则会明确标"未核实"。
 
-→ 细节见 [README.md 的工具参考 §10](README.md)
+> 细节见 [README.md 的工具参考 §10](README.md)
 
 ### 反编译与源码研究
 
 文档没写、社区也没人写，就直接看源码：`analyze_mod_jar` 只读 jar 元数据，`decompile_mod_jar` 反编译到本地缓存，`get_minecraft_source` 拉某个版本的 MC 源码类（1.14–1.21.11 走 Yarn 重映射，26.x 已去混淆），`search_mod_code` 搜产物，`download_official_mdk` 拉官方 MDK。默认零下载，产物只落 `MC_SKILL_CACHE`，不碰你的工程；需要 JDK 17+。第三方库或加载器（LiteLoader / Rift / ModLoader）可以由你自备 jar `ingest` 进来。
 
-→ 细节见 [README.md 的「反编译与模组源码」§13 / §14](README.md)
+> 细节见 [README.md 的「反编译与模组源码」§13 / §14](README.md)
 
 ### 依赖、上游版本与发布前检查
 
+`check_dependencies` 读你的 `build.gradle` 和元数据文件，告诉你加载器判成了什么、认出哪些库、版本窗口对不对。它是启发式加库目录，没收录的库会漏报，别当完整 Gradle 解析。
 
-→ 细节见 [README.md 的工具参考 §8 / §11](README.md)
+`query_upstream_releases` 回答另一个问题：某个加载器 / 映射 / 模组的版本，**上游到底发布了没有**。它查的是上游源（Forge / NeoForge / Fabric Loader / Yarn / Quilt Loader / Parchment / LegacyFabric / Modrinth / Maven / Mojang manifest），和「本仓库入没入库」是两件事——**查不到（`ok:false`）不等于上游没有，只有 `available:false` 才是明确没有**。构建失败时 `analyze_build_log` 解析 Gradle 报错并给出建议工具，但它不替你跑 `gradlew`。
+
+> 细节见 [README.md 的工具参考 §8 / §11](README.md)
 
 ### 诊断与崩溃分诊
 
 解析崩溃报告、游戏日志、Gradle 构建失败日志；判断缺失前置与版本不兼容；检查依赖冲突、项目元数据、Mixin 配置。
 
-→ 细节见 [README.md 的工具参考 §2 / §11](README.md)
+> 细节见 [README.md 的工具参考 §2 / §11](README.md)
 
 ### 游戏内游玩自测
 
 这是比较特别的一块：它能把一个临时 driver 编译进你的工程，让 AI **自己进游戏操作**——飞到某个村庄、扫描方块、断言结果、截图、留下结构化证据，然后根据证据判断过没过。支持三条路线：装第三方桥 mod、用脚本化剧本 driver、或让 AI 实时下意图。
 
-当然,我并不推荐你将这个功能作为陪玩,主要是实现方式有点绿皮,导致偶尔会出现一些奇怪的问题(比如抢鼠标)
+当然，我并不推荐把这个功能当陪玩用：实现方式有点绿皮，偶尔会出现一些奇怪的问题（比如抢鼠标）。
 
-→ 细节见 [README.md 的「模组测试流程 loop」](README.md)
+> 细节见 [README.md 的「模组测试流程 loop」](README.md)
 
 ### 服务端面：Paper / Spigot 插件
 
 写插件是另一条线，不挂在模组那八棵平台树下面。规则在 `paper/<ver>/rules/`：`26.3` 有十条正文（事件、命令、物品栏、权限、调度器、`plugin.yml` 与配置、PDC、Adventure、实测陷阱），另 5 档只写「26.3 的条款在本版还成不成立」的适用性核查——教程面本身不分版本，照抄别版的条款就是没核过。语料分两面：`platform=paper` 是官方教程（67 页），`paper-api` / `spigot` 只有签名，当前档各 2116 / 1396 个类，另各带 5 档与 8 档历史。`generate_paper_plugin` 出插件骨架，`generate_playtest_server_driver` 出起服 driver 与 `plan.txt` 样例，判据落在服务端日志里。
 
-→ 细节见 [doc/server-face-paper.md](doc/server-face-paper.md)
+> 细节见 [doc/server-face-paper.md](doc/server-face-paper.md)
 
 ### 移植
 
 把模组从 Forge 迁到 NeoForge / Fabric 这类跨加载器移植：识别平台与映射、给出风险与步骤、按确认执行。默认只做 dryRun 预览。26.2 / 26.3 没规则树也没文档，走官方迁移指南（`get_migration_guide` 的 `26.1->26.2` / `26.2->26.3`，源是 NeoForge Primer）。
 
-→ 细节见 [README.md 的「移植分析」](README.md)
+> 细节见 [README.md 的「移植分析」](README.md)
 
 ### 汉化
 
 把你的模组或第三方 jar 的语言文件抽出来、对比缺失项、生成中文草稿。**没有机器翻译**，它只标出哪些条目需要人填。
 
-→ 细节见 [README.md 的 `localize_mod` 说明](README.md)
+> 细节见 [README.md 的 `localize_mod` 说明](README.md)
 
 ### 编排技能：动手之前先把事情问清楚
 
 除了"某个方块怎么写"这类开发技能，`common_skill/` 还带 12 个编排技能：`mc-grill` 需求拷问、`mc-spec` 凝规格、`mc-breakdown` 拆任务、`mc-review` 评审、`mc-wizard` 人工步骤向导、`mc-handoff` 交接，另有路由 / 复盘 / 术语表 / 调查 / 原型 / 重讲。
 
-→ 细节见 [common_skill/README.md](common_skill/README.md) 与 [README.md 的「工作流模板」§15](README.md)
+> 细节见 [common_skill/README.md](common_skill/README.md) 与 [README.md 的「工作流模板」§15](README.md)
 
 仓库还挂着一套代码模式库、反模式库、schema 与社区短文，同样走 `mcskill://`：`list_knowledge_resources` 列出全部 293 条，`read_knowledge_resource` 读正文。
 
@@ -200,17 +208,17 @@ graph LR
 
 出问题先 `get_server_status`：它报索引预热状态、Java 探测（反编译要 JDK 17+）、`src` 比 `dist` 新没新、以及上次查到的更新提示。
 
-→ 细节见 [README.md 工具参考 §12](README.md) 与 [doc/mcp-troubleshooting.md](doc/mcp-troubleshooting.md)
+> 细节见 [README.md 工具参考 §12](README.md) 与 [doc/mcp-troubleshooting.md](doc/mcp-troubleshooting.md)
 
 ### 命令行入口
 
 整套工具也能直接在终端 / 脚本里用，输出统一 JSON、退出码分成功 / 工具错误 / 用法错误三档，方便接自动化。
 
-→ 细节见 [mcp-server/README.md 的「独立 CLI」](mcp-server/README.md)
+> 细节见 [mcp-server/README.md 的「独立 CLI」](mcp-server/README.md)
 
 ## 多 IDE 支持
 
-另外,DSH的支持已经加上(DSH看起来非常自由,我打算深度定制一下)
+另外，DSH 的支持已经加上（DSH 看起来非常自由，我打算深度定制一下）。
 
 ```
 平台/版本/
@@ -224,12 +232,13 @@ graph LR
 └── .pi/         → Pi（rules/*.md）
 ```
 
+DSH 还额外做了一个**原生插件**（仓库根 `dsh-plugin/`）：装上以后它按你当前打开的工程自动判平台与精确版本，只挂那一档的技能，并把该档的底座规则（`00/01/09`）注入 system prompt。同名技能不会几十档撞车，也不用每次手动 `activate_platform_pack`。有兴趣可以看 [dsh-plugin/README.md](dsh-plugin/README.md)。
 
-DSH 还额外做了一个**原生插件**(仓库根 `dsh-plugin/`):装上以后它按你当前打开的工程自动判平台与精确版本,只挂那一档的技能并把该档的底座规则(`00/01/09`)注入 system prompt,同名技能不会几十档撞车,也不用每次手动 `activate_platform_pack`。有兴趣可以看 [dsh-plugin/README.md](dsh-plugin/README.md)。
+## 已知问题：文档里的个别错误
 
-## skill/rules/代码模式库等文件由于上游文档错误(说的就是forge,1.20.4还在教1.20.1的东西),人工维护等问题,难免出现一点问题(1.20.1+应该没有问题了),如发现无法编译,报错,可以优先以文档为主,你也可以提交issue,我会尽快修复,谢谢您的理解Thanks♪(･ω･)ﾉ
+skill / rules / 代码模式库这些文件难免出错：一部分是上游文档本身就错（说的就是你(艹皿艹) Forge，1.20.4 还在教 1.20.1 的东西），一部分是人工维护的疏漏。1.20.1+ 应该没有问题了。
 
-
+遇到无法编译、报错，可以优先以官方文档为准，也欢迎提 issue，我会尽快修复，谢谢您的理解Thanks♪(･ω･)ﾉ。
 
 ## 在哪找什么
 
@@ -248,8 +257,6 @@ DSH 还额外做了一个**原生插件**(仓库根 `dsh-plugin/`):装上以后�
 | 许可（PolyForm Noncommercial 1.0.0） | [LICENSE](LICENSE) |
 | 第三方文档与数据的许可 | [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) |
 
-[English](README_human.en.md) | **简体中文**
-
 ## F&Q
 1. Q: 26.2/26.3看上去好像没有对应文件呀,是还没有更新吗?
    A:26.2/26.3主要模组加载器没有任何文档,现在主要依靠官方的26.1->26.2->26.3的版本迁移文档,所以没有对应的文档,等官方文档更新后会同步更新
@@ -263,9 +270,11 @@ DSH 还额外做了一个**原生插件**(仓库根 `dsh-plugin/`):装上以后�
 5. Q:我是写 Paper / Spigot 插件的,这套东西对我有用吗?
    A:有用,走另一条线:服务端面有独立规则树、独立签名语料和插件骨架,不挂在模组那八棵平台树下面。教程用 `platform=paper`,签名用 `paper-api` / `spigot`(后者只有签名)。
 6. Q:我还在用老版本,能覆盖到吗?
-   A:Forge 规则树从 1.7.10 起都有,LiteLoader / Rift / ModLoader 也各有一档。1.8.9–1.11.2 这类早期档只有 3 条短规则,作用是"别把现代 API 抄进早期工程",不是完整教材。
+   A:Forge 规则树从 1.7.10 起都有,LiteLoader / Rift / ModLoader 也各有一档。1.8.9–1.11.2 这类早期档只有 3 条短规则,远古资料太难找了,论坛也关了,如果你有相关资料,欢迎您的贡献!
 #### 有问题可以提issue与讨论,我会尽快回复
-## 可以进来玩玩:
+> 有问题可以提 issue 或发起讨论，我会尽快回复。
 
-**QQ 群**（扫码进群，Discord 在上面的标签里）:
+## 可以进来玩玩
+
+**QQ 群**（扫码进群；Discord 在上方的标签里）：
 <img width="1228" height="2184" alt="0bd61b684c78842d59a5ad09de01f4be_720" src="https://github.com/user-attachments/assets/41e370aa-611c-4af2-ad9a-007e1973a24a" />

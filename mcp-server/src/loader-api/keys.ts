@@ -31,6 +31,22 @@ export function officialSummariesDir(): string {
 // 平台/版本名会拼进缓存路径（${v}-${p}），字符白名单用于阻断路径分隔符与 DOTDOT 穿越
 const KEY_CHAR_PATTERN = /^(?!\.)(?!.*\.\.)[A-Za-z0-9_.-]+$/;
 
+/**
+ * loader-api 认识的平台。字符白名单只挡路径穿越，挡不住 `platform=bogus`：
+ * 未知平台会拼出 `1.20.1-bogus` 且无命中 ⇒ 落进 LOADER_API_NOT_INDEXED + exit 0，
+ * 把「输入写错」伪装成「本档没摘要」。这里补一层枚举，未知平台一律 INVALID_INPUT。
+ */
+const LOADER_API_PLATFORMS = new Set([
+  "forge",
+  "neoforge",
+  "fabric",
+  "quilt",
+  "liteloader",
+  "rift",
+  "modloader",
+  "bedrock",
+]);
+
 export function candidateKeysSafe(
   platform: string,
   minecraftVersion: string,
@@ -43,6 +59,15 @@ export function candidateKeysSafe(
       action: actionable("INVALID_INPUT", `非法 platform/minecraftVersion 字符：${JSON.stringify({ platform, minecraftVersion })}`, [
         "只用字母、数字、点、下划线、连字符",
         "不要含路径分隔符或 ..",
+      ]),
+    };
+  }
+  if (!LOADER_API_PLATFORMS.has(p)) {
+    return {
+      ok: false,
+      action: actionable("INVALID_INPUT", `未知 platform：${platform}。`, [
+        `platform ∈ ${[...LOADER_API_PLATFORMS].join(" | ")}`,
+        "基岩版请用 search_bedrock_docs / validate_addon_manifest",
       ]),
     };
   }
