@@ -1,3 +1,5 @@
+<div align="center">
+
 # MC AI Coding Assistant Tool
 
 **简体中文** · [English](README.en.md) · [人类读本](README_human.md) · [Human Guide](README_human.en.md)
@@ -6,14 +8,16 @@
 
 **规则、官方文档、映射表、库模组、真机自测都在本地，agent 不用凭记忆猜。**
 
+**[人类读本](README_human.md) · [安装说明](AUTO_SETUP.md) · [贡献指南](CONTRIBUTING.md)** · [平台说明](#平台说明) · [工具清单](#mcpcli-tools89)
+
+</div>
+
 - **8 个加载器 + 2 个服务端面，逐版规则**：Forge · Fabric · NeoForge · Quilt · LiteLoader · Rift · ModLoader · 基岩 ｜ Paper · Spigot
 - **官方文档原文检索**：查的是你这个版本那一页,向量搜索,准确命中!
 - **六层映射互转 + 崩溃日志分析**：mojang · mcp · yarn · parchment · obfuscated · intermediary
 - **库模组与社区知识**：48 个常用库模组的 API 摘要、成套 Skill、精选各个MC社区的帖子
 - **工程与移植**：脚手架、Gradle 诊断、项目校验、Datagen、崩溃分诊、跨版本移植分析、反编译...等等!
 - **游戏内自测**：客户端 driver / 桥 / 服务端 driver，出截图、`qa.log`、`state.json` 才算过
-
-**[人类读本](README_human.md) · [安装说明](AUTO_SETUP.md) · [贡献指南](CONTRIBUTING.md)** · [平台说明](#平台说明) · [工具清单](#mcpcli-tools89)
 
 > [!IMPORTANT]
 > 只从本仓库获取工具与数据。同名仓库或复制本文档不代表官方下载源。
@@ -526,16 +530,16 @@ node mcp-server/dist/cli.js search_forge_docs --version=1.14.4 --query="entity g
 
 **Agent 侧规矩**（根 `AGENTS.md`「不确定时」条款）：查 API / 文档 / 机制**先语义搜索**；`query_api` / `query_loader_api` 是兼容工具（见下节），只作兜底。
 
-#### query_\* 兼容工具与 1.14.4/1.15.2 边界报告
+#### query_\* 兼容工具与索引覆盖边界
 
 `query_api` / `query_loader_api` 被标记为**兼容工具**（类名/签名索引类，覆盖按版本而异且有限）。每次调用的响应都显式提醒，不再静默：
 
 1. **query_api 每次响应**：`notes` 末尾追加「query_api 是兼容工具……文档与语义面请优先 search_forge_docs / search_docs 语义搜索」。
-2. **query_api 查 1.14.4 / 1.15.2**：`warning` 显式报告边界——这两档 api-index 为空是**设计行为**（MCP stable CSV 仅成员级 searge↔named，Parchment 索引自 1.16.5 起才有），`found:false` 不代表游戏里没有该类；响应推荐改用 `search_forge_docs` **语义搜索**（这两档 docs 语料与语义库完整，查询返回 `semantic: true`）+ `convert_mapping`（1.14–1.15 CSV 仅 searge↔named，**类名不可查**，方法名可以）。
+2. **query_api 查 1.14.4 / 1.15.2**：这两档有**真索引**（MCPConfig `joined.tsrg` → `tsrg-extractor.js`：1.14.4 = 4,976 类 / 32,570 方法，1.15.2 = 5,137 类 / 34,159 方法）。类名写**该版 SRG 路径**（如 `net.minecraft.item.Item`），成员名是 `func_/field_`，无参数名/javadoc。只有 `extracted/api-index.json` 缺件或 0 类时才回落到「索引为空」的降级 `warning`——那时 `found:false` 不代表游戏里没有该类，改用 `search_forge_docs` **语义搜索**（这两档 docs 语料与语义库完整，查询返回 `semantic: true`）。
 3. **query_loader_api 每次响应**：`notes` 追加兼容注释（覆盖以已 ingest 的档为界）。
 4. **第二档出处 `nameIndex`**：`query_api` 在 api-index 未命中、或该版本没有 Parchment 索引（如 1.21.x Fabric / 无 extracted 索引的 NeoForge 档）时，会再查一次在盘映射索引 `data/<平台>_<版本>/mappings/yarn-mappings.sqlite`，把结果挂在响应里的 `nameIndex`：`exists` / `matchKind`（exact｜simple-unique｜ambiguous｜contains｜none）/ `named` / `memberCounts` / `memberSample` / **`mappingEra` + `dbKind`**。边界有三条，缺一不可：`found` 恒仍为 `false`（存在性证据不等于签名命中）、`mappingEra` 必须读（`yarn-tiny` 的 `named` 是 Yarn 名，`forge-srg`/`tsrg`/`mcp-csv` 的 `named` 是 MCP `func_/field_` 名，`mcp-config-srg`（Forge 1.16.5–1.20.4 六档）的是 SRG 类名 + `m_N_/f_N_` 成员名）、该档没有库或表为空时**整键缺席**（不凭空造一档）。**选库按加载器**：本工具的 api-index 只读 `data/forge_<ver>/extracted` ⇒ `nameIndex` 也按 Forge 线取库，两棵树都有库的 1.16.5–1.20.4 不再由 fabric 的 yarn-tiny 代答（`RenderCall` 在 Yarn 与本档分属 `blaze3d/systems/` 与 `blaze3d/pipeline/`，包名不能跨映射层推定）；forge 无库时照旧回落 fabric。要签名仍走 `search_*_docs` 或按需 `get_minecraft_source`。
 
-钉子：`test-core.mjs`（1.20.1 兼容注释 / 1.14.4 与 1.15.2 边界 warning / 1.12.2 数据健康 / nameIndex 三腿：接线（1.21.1 `StatusEffect` 给得出 nameIndex 且 `found:false`）、证伪（乱造的名字必须 `exists:false`）、披露（三句 note 缺一即红）+ 无库档 26.1.2 与命中路径 1.20.1 都不得出现 nameIndex）与 `test-loader-api.mjs`（兼容注释）。
+钉子：`test-core.mjs`（1.20.1 兼容注释 / 1.14.4 与 1.15.2 真索引命中（`Item` 带方法清单、且不得报空索引 warning） / 1.12.2 数据健康 / nameIndex 三腿：接线（1.21.1 `StatusEffect` 给得出 nameIndex 且 `found:false`）、证伪（乱造的名字必须 `exists:false`）、披露（三句 note 缺一即红）+ 无库档 26.1.2 与命中路径 1.20.1 都不得出现 nameIndex）与 `test-loader-api.mjs`（兼容注释）。
 
 ### 文档查询（Forge / Fabric / NeoForge）
 
@@ -555,7 +559,7 @@ node mcp-server/dist/cli.js search_forge_docs --version=1.14.4 --query="entity g
 | Forge **1.12.2** | `search_forge_docs` / `search_docs`（`version=1.12.2`）。有 `data/forge_1.12.2/forge-docs` 教程（如 `1.12.2/blocks_blocks`） | **不要**把 `query_api` 当 javadoc：该版只给 SRG 类名与 `func_/field_` 成员名（无参数名/javadoc）。映射用 `convert_mapping`（MCP SRG） | `query_loader_api` / `search_loader_api`（`1.12.2-forge` 已索引，约 1100 类） |
 | Forge **1.7.10–1.11.2** | 无教程规则树；落到 `forge_javadoc` / `search_docs`，`semantic: false` | 同上（SRG 类名 + `func_/field_` 成员名，无 javadoc）；不要用它核签名 | 无 loader 摘要（`search_loader_api mode=list` 的 `noIngest`） |
 | Forge **1.13.2** | `search_forge_docs` / javadoc | SRG 类名与成员名可列（无 Parchment javadoc） | `1.13.2-forge` 已索引 |
-| Forge **1.14.4 / 1.15.2** | `search_forge_docs`（**语义库完整**，查询返回 `semantic: true`——查这两档优先用语义搜索） | `query_api` 索引为 `{}`（0 类，**设计边界**——每次查询响应带边界 `warning` 并推荐语义搜索，见「向量 / 语义搜索」节；类名在文档语料里逐字可引） | `*-forge` 已索引 |
+| Forge **1.14.4 / 1.15.2** | `search_forge_docs`（**语义库完整**，查询返回 `semantic: true`） | `query_api` 有真索引（MCPConfig `joined.tsrg` 派生：4,976 / 5,137 类；类名写该版 SRG 路径，成员名为 `func_/field_`，无参数名/javadoc） | `*-forge` 已索引 |
 | Forge **1.16.5–1.20.4** | `search_forge_docs` | Vanilla 可用 `query_api`（真方法签名） | `query_loader_api` 或文档 |
 | Fabric | 先 `list_fabric_versions`；**禁止**把邻版 wiki 当本版。26.1.2 仅 `fabric-docs`、无 wiki | 26.1+ 无 `query_api` 索引 | `search_loader_api mode=list`：`1.14.4` / `1.16.5` / `1.17.1` / `1.18.2` / `1.19.4` / `1.20.1` / `1.20.4` / `1.21.1` / `1.21.3` / `1.21.11` / `26.1.2` 的 fabric-api **已索引**（不要再当成 maven 404；**11 档 = 14 个 `fabric/*` 规则树 − 薄档 `1.21.4` / `1.21.8` / `1.21.10`**） |
 | Quilt | `search_docs({platform:"quilt"})`；问 QSL 禁止把 Fabric Registry 当命中 | 同左版本的 Vanilla 边界 | QSL 摘要见 `mode=list`（如 `1.19.4-qsl` / `1.21.1-qsl`） |
@@ -605,7 +609,7 @@ node mcp-server/dist/cli.js search_forge_docs --version=1.14.4 --query="entity g
 | 情况 | 表现 | Agent 应改用 |
 |------|------|----------------|
 | MC **26.1+** 的 `query_api` / `get_method_params` | 该类 extracted 为 **0 个类**（无 Parchment api-index） | `search_neoforge_docs`（须传 version，先 `list_neoforge_versions`）/ `search_fabric_docs`（先 `list_fabric_versions`，如 26.1.2）；或 `get_minecraft_source` / 反编译。映射层返回 `UNOBFUSCATED_NO_YARN` |
-| Forge **1.14.4 / 1.15.2** `api-index.json` | 占位 `{}`，Parchment 约从 1.16.5 才有。**每次 `query_api` 查询都会报此边界并推荐 `search_forge_docs` 语义搜索**（这两档 docs 语料与语义库完整） | 换 `version=1.16.5+` 查相近 Vanilla 名，或靠文档 / MCP 映射，不要当有完整 javadoc |
+| Forge **1.14.4 / 1.15.2** `api-index.json` | MCPConfig `joined.tsrg` 派生（4,976 / 5,137 类），**不是**占位 `{}`。类名与成员名都是 SRG（`net/minecraft/item/Item` + `func_77658_a`），无参数名/javadoc（Parchment 约从 1.16.5 才有） | 要参数名/javadoc 换 `version=1.16.5+`；在本档就按该版 SRG 名查，不要写 1.17+ 的 `world/item/Item` |
 | Fabric **26.1.2** | 仅 `fabric-docs`（页数少），**无** `fabric-wiki` | `source` 保持默认 `fabric-docs`；不要把 1.21.x wiki 当 26.1.2 |
 | Forge **1.12.2** | `list_forge_versions` **含** 1.12.2；有 `forge-docs` 教程树。`query_api` 给 SRG 类名与 `func_/field_` 成员名（非可读签名） | `search_forge_docs` / `search_docs({platform:"forge", version:"1.12.2"})` → `get_forge_doc_full`。Forge 类用 `query_loader_api`。**禁止**把 `func_/field_` 名当完整签名 |
 | Forge **1.7.10–1.11.2** | `1.7.10` 有 javadoc 核实表与短 00/01/09；其余档搜索落到 Javadoc 类名，`semantic: false` | 当类名索引用；`search_forge_docs version=1.7.10` / `search_docs({platform:"forge"})`。不要用 1.12.2 / 1.20.1 规则顶上，也不要假 pin 1.7.10 MDK |
@@ -621,7 +625,7 @@ Agent **不得**把「工具返回空 / found:false / warning」解释成「游�
 | `query_api` 能查 `DeferredRegister` / Fabric API | **不能**。只含 Vanilla Parchment extracted（约 1.16.5–1.20.4）。平台 API → `query_loader_api`（必填 platform+minecraftVersion）或对应 `search_*_docs` |
 | `query_api` 能查 Forge **1.12.2** `Block` 构造 | **不能**当 javadoc。该版无 Parchment 方法条目，只有 SRG 类名与 `func_/field_` 成员名。改 `search_forge_docs` / `query_loader_api` / `convert_mapping` |
 | `search_forge_docs` 报错或空 = 该版无文档 | 先 `list_forge_versions`。1.12.2 **有**教程树。查询词 `constructor` 曾因原型键崩溃，已修；若仍崩则重载 MCP。失败换短查询或 `search_docs({platform:"forge"})` |
-| `query_api` `found:false` = 类不存在 | 索引没有该类、简名歧义（`Handler` 不会命中 `MouseHandler`），或 `action.code=DATA_UNAVAILABLE`（该版无 extracted / Worker 未就绪）。26.1+ 收录 **0** 类；1.14.4/1.15.2 空 `{}`。1.12.2 有 SRG 类名索引（成员名为 `func_/field_` 混淆名）。改文档搜索或 `get_minecraft_source` |
+| `query_api` `found:false` = 类不存在 | 索引没有该类、简名歧义（`Handler` 不会命中 `MouseHandler`），或 `action.code=DATA_UNAVAILABLE`（该版无 extracted / Worker 未就绪）。26.1+ 收录 **0** 类；1.7.10–1.15.2 有 SRG 类名索引（成员名为 `func_/field_` 混淆名；1.14.4/1.15.2 的类名同样是该版 SRG 路径）。改文档搜索或 `get_minecraft_source` |
 | `get_method_params` 覆盖所有 MC 版本 | 与 `query_api` 同一数据源，边界相同 |
 | `get_version_info` 适用于 Fabric/NeoForge | **仅 Forge** |
 | `diagnose_gradle` 能修 Loom / NeoGradle | **覆盖** ForgeGradle + Loom + NeoGradle/MDG；Rift / BaseMod / 基岩仍早退。liteloader 插件走轻量模式 |
@@ -813,7 +817,7 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；Forge 1.12.2�
 
 | 工具                  | 作用                                                                                                                                                                |
 | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `query_api`         | 查询 Vanilla/Parchment 类的方法签名、参数名、返回类型与 javadoc（按 `version` 加载 extracted 索引，**必填 version**，禁止默认 1.20.1）。**不含** Forge 特有类。覆盖约 **1.16.5–1.20.4**。1.7.10–1.12.2 为 SRG 名（`func_/field_`），无参数名/javadoc；1.14.4/1.15.2 / **26.1+** 无可用方法索引。精确 FQCN 或唯一简名（如 `Item`）才 `found:true`（改写时带 `autoCorrected`）；`Handler` 等歧义子串 `found:false` + suggestions。平台 loader API 用 `query_loader_api`。   |
+| `query_api`         | 查询 Vanilla/Parchment 类的方法签名、参数名、返回类型与 javadoc（按 `version` 加载 extracted 索引，**必填 version**，禁止默认 1.20.1）。**不含** Forge 特有类。有索引的档 = **1.7.10–1.20.4**。1.7.10–1.15.2 为 SRG 名（类名是该版 SRG 路径、成员名 `func_/field_`），无参数名/javadoc；1.16.5–1.20.4 为 Parchment；**26.1+** 无可用方法索引。精确 FQCN 或唯一简名（如 `Item`）才 `found:true`（改写时带 `autoCorrected`）；`Handler` 等歧义子串 `found:false` + suggestions。平台 loader API 用 `query_loader_api`。   |
 | `get_method_params` | 按类名 + 方法名查询完整参数名列表（可带 JNI `descriptor` 区分重载）。多重载未传 descriptor → `found:false` + `ambiguous` + `candidates`。26.1+ 无索引 → `DATA_UNAVAILABLE`。 |
 | `convert_mapping`   | 在 **mojang / mcp / yarn / parchment / obfuscated / intermediary** 间互转类/方法/**字段**（SQLite **v4**）。`memberKind=field`；`to=mojang` 为 Tiny official 短名（同 obfuscated 层）；失败默认 `converted:null`（可选 `allow_fallback`）。**六个层不是每版都可用的**：yarn-tiny 档（fabric **1.14.4–1.21.x**）无 MCP/Parchment 可读层，`to=mcp` / `to=parchment` 直接拒绝 → `YARN_TINY_NO_MCP_LAYER`（改用 `to=yarn` 或 `query_api` / `get_method_params`）；`mcp↔parchment` 为同名层（identity）。**批量（S3）**：`memberName` 用逗号 / 分号 / 换行传 ≤50 个名字，一次拿 `results[]` + `batch{requested,found,missing}`（超上限 `INVALID_INPUT`，不静默截断；单个名字时输出形状不变）。**条目行（S2）**：`accessLines=true` 附可粘贴的 AT / AW 行，名字层按加载器分叉——Forge 成员行必须 SRG 名、NeoForge 用可读名 + 粘连描述符、Fabric/Quilt 的 AW 条目名与描述符须同工程映射层（头随 `to` 取 named / intermediary / official）；缺名或缺描述符 ⇒ `complete:false` 且行内 `<TODO…>`，完整行回灌 `validate_at` / `validate_aw` 同一解析器（`selfCheckOk`）。**生成面收窄**：AW 侧只出 `accessible` 条目，`validate_aw` 认的 `extendable` / `mutable` / `transitive-*` 并列形与两操作数指令 `inject-interface` / `extend-enum` **不代生成**（校验 ⊃ 生成，需要时手写）。**SRG 成员层覆盖**：Forge 1.16.5 / 1.17.1 / 1.18.2 / 1.19.4 / 1.20.1 / 1.20.4 六档已从 MCPConfig 削减件建出 `mappingEra=mcp-config-srg` 的库（`named` = SRG 名：1.17+ 哈希形 `m_/f_`、1.16.5 老形 `func_/field_`），这六档的 Forge AT 成员行出实名；该库只在 `platform=forge` 时参与选库。neoforge_* / quilt_* 仍无成员库 ⇒ 照旧 `<TODO…>`。**`from=mojang` 两档出处**：第一档 = 该档库的 `official` 列，那一列对**被混淆的类**存 Tiny 混淆短名（`a`／`fac`／`ccv`），只有本来不混淆的少数类带可读全路径（可读名占比不足 1%）⇒ 拿 `Container`／`Level` 这类 mojmap 可读名点查必然 `found:false`，**不得**读成「该版本没有这个类」；第二档 = 派生对照表 `data/_yarn-mojmap-pairs/`（类名级 `obf`／`mojmap`／`yarn` + 两侧 FQCN，**无 intermediary 列**），只在 `from=mojang` 且 `to` 为 `yarn`／`obfuscated` 时参与，命中带 `fallbackUsed:true` 且 notes 点名表与条数，`to=intermediary` 直接拒答不回落第一档。 |
 | `lookup_obfuscated` | 崩溃日志反混淆：单 token（`method_6032` / `er` / `func_110143_aJ` / `field_100013_f`）反查 → yarn 可读名 + ownerClass + descriptor。方法→字段→类；多命中 AMBIGUOUS；26.1+ 返回 `UNOBFUSCATED_NO_YARN`。 |

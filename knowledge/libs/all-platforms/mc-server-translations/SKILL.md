@@ -4,6 +4,7 @@ description: Server Translations API 服务端翻译库（NucleoidMC），服务
 platforms: [fabric, forge, neoforge]
 mcVersions: []
 communityDocId: authored/lib-server-translations
+mappings: hint
 ---
 
 > API 摘要状态：**有** ⇒ `mcp-server/data/lib-api-summaries/server-translations.json`（2.0 KB）在盘，catalog `authored/lib-server-translations` 的 `verifiedApi` 非空（键含 `1.21.5/fabric` 等）；Modrinth 页面已下架（slug 空），分发走 maven.nucleoid.xyz。**旧稿「无摘要 / `verifiedApi` 为空对象 {}」已不成立**。落到类名用 `query_loader_api`，要签名先 `ingest_loader_api`（用户自备 jar）

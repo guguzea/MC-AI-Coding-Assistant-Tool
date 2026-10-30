@@ -22,7 +22,7 @@ Fabric 官方支持 Kotlin，通过 `fabric-language-kotlin` 和 Gradle Kotlin D
 ```kotlin
 plugins {
     kotlin("jvm") version "2.0.0"
-    id("fabric-loom") version "1.8"          // 与本档 scaffold/build.gradle:2 同值；旧写法 1.3-SNAPSHOT 是 1.20.1 模板残留
+    id("fabric-loom") version "1.8.13"          // 与本档 scaffold/build.gradle:12 同值；旧写法 1.3-SNAPSHOT 是 1.20.1 模板残留
     id("maven-publish")
 }
 

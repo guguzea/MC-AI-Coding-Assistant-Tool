@@ -5,7 +5,7 @@ platforms: [fabric, forge, neoforge]
 mcVersions: ["1.18-26.2"]
 communityDocId: authored/lib-balm
 modrinthSlug: balm
-mappings: "库按各 loader 预重映射；公共代码禁止 import 平台类，映射差异由 Balm 隔离"
+mappings: hint（库按各 loader 预重映射；公共代码禁止 import 平台类，映射差异由 Balm 隔离）
 ---
 
 > 数据来源：Modrinth project/balm 版本表 limit=100；本轮 release 上界 fabric=26.2 / forge=26.1.2 / neoforge=26.2

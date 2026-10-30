@@ -266,7 +266,10 @@ try {
       fail(`A4 ${label} 裸抛 ${err.constructor.name}：${err.message} —— 缺参必须回 INVALID_INPUT，否则宿主只看到无诊断的内部错误`);
       continue;
     }
-    if (v?.found !== false || v?.error !== "INVALID_INPUT") fail(`A4 ${label} = ${JSON.stringify({ found: v?.found, error: v?.error })}，应为 found:false + INVALID_INPUT`);
+    // 2026-10-30（R2 审计 WP1）：失败信道统一为 `error:{code,message?}` 对象（原为字符串码）。
+    // 判据放宽成「两种形状都收」：字符串码是旧契约，对象是新契约 —— 只钉 code，不再钉形状。
+    const errCode = typeof v?.error === "string" ? v.error : v?.error?.code;
+    if (v?.found !== false || errCode !== "INVALID_INPUT") fail(`A4 ${label} = ${JSON.stringify({ found: v?.found, error: v?.error })}，应为 found:false + INVALID_INPUT（error 可为字符串码或 {code} 对象）`);
     checks++;
   }
 } finally {

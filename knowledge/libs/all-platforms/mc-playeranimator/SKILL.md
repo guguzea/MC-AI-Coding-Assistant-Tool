@@ -6,7 +6,7 @@ mcVersions: ["1.16.4-1.21.7"]
 mcVersionsByPlatform: "fabric=1.16.4-1.21.4; forge=1.16.4-1.19.4; neoforge=1.20.4-1.21.4; quilt=1.16.4-1.19.4"
 communityDocId: authored/lib-playeranimator
 modrinthSlug: playeranimator
-mappings: "库按各 loader 预重映射；公共代码不直接引用渲染类，映射差异由库隔离"
+mappings: hint（库按各 loader 预重映射；公共代码不直接引用渲染类，映射差异由库隔离）
 ---
 
 > 数据来源：Modrinth project/playeranimator 版本表 limit=100；本轮 release 上界 fabric=1.21.4 / forge=1.19.4 / neoforge=1.21.4 ⇒ 本文件 mcVersions 上界 1.21.7 高于 release 上界，仅 beta/alpha 支撑

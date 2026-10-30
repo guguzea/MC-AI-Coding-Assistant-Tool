@@ -6,6 +6,7 @@ mcVersions: ["1.17-26.2"]
 mcVersionsByPlatform: "fabric=1.17-26.2; quilt=1.17-26.2; neoforge=1.21.1-1.21.10"
 communityDocId: authored/lib-owo
 modrinthSlug: owo-lib
+mappings: hint
 ---
 
 > 数据来源：Modrinth project/owo-lib limit=100：release 上界 fabric=26.2 / quilt=26.2（0.13.1+26.2，2026-08-19），neoforge=1.21.10（0.12.28+1.21.10，2025-11-22）；声明 forge 的构建 0 个

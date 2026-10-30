@@ -43,14 +43,14 @@
 - `gradle.properties` 必须包含：
   ```properties
   minecraft_version=1.13.2
-  forge_version=25.0.219
+  forge_version=25.0.223
   mapping_channel=snapshot
   mapping_version=20180921-1.13
-  loader_version=25.0.219
+  loader_version_range=[25,)
   ```
   > 注意：
   > - `build.gradle` 中引用时用 `${minecraft_version}` 等属性
-  > - `loader_version` 填 Forge 版本号，与 mods.toml 中的 `loaderVersion` 字段对应
+  > - `loader_version_range` 与 `mods.toml` 的 `loaderVersion` 字段对应（产物里由 `${loader_version_range}` 展开；MDK **没有** `loader_version` 这个键）
 - **禁止在 `build.gradle` 中直接写版本号**，必须引用 `${minecraft_version}` 等属性
 
 ### Mappings 约束

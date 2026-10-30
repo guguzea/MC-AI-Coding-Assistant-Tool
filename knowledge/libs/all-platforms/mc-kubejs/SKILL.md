@@ -6,7 +6,7 @@ mcVersions: ["1.18.2-26.1.2"]
 mcVersionsByPlatform: "fabric=1.18.2-1.20.1; forge=1.18.2-1.20.1; neoforge=1.20.1-1.21.1; quilt=1.18.2-1.20.1"
 communityDocId: authored/lib-kubejs
 modrinthSlug: kubejs
-mappings: "脚本层 API 由 KubeJS 封装，与项目 mappings 无关；类名以 kubejs.com/wiki/ 对应版本为准"
+mappings: hint（脚本层 API 由 KubeJS 封装，与项目 mappings 无关；类名以 kubejs.com/wiki/ 对应版本为准）
 ---
 
 > 数据来源：Modrinth project/kubejs 版本表 limit=100；本轮 release 上界 fabric=1.20.1 / forge=1.20.1 / neoforge=1.21.1 ⇒ 本文件 mcVersions 上界 26.1.2 高于 release 上界，仅 beta/alpha 支撑

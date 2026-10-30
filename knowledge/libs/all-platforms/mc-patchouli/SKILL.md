@@ -6,7 +6,7 @@ mcVersions: ["1.12.2-26.1.2"]
 mcVersionsByPlatform: "fabric=1.16.4-1.21.1; forge=1.12.2-1.20.1; neoforge=1.20.4-1.21.1; quilt=1.18.2-1.21.1"
 communityDocId: authored/lib-patchouli
 modrinthSlug: patchouli
-mappings: "Forge ≤1.20.6 用 MCP、NeoForge 1.21+/26.x 用 mojmap；Java 代码只在自定义页面类型时出现"
+mappings: hint（Forge ≤1.20.6 用 MCP、NeoForge 1.21+/26.x 用 mojmap；Java 代码只在自定义页面类型时出现）
 ---
 
 > 数据来源：Modrinth project/patchouli 版本表 limit=100；本轮 release 上界 fabric=1.21.1 / forge=1.20.1 / neoforge=1.21.1 ⇒ 本文件 mcVersions 上界 26.1.2 高于 release 上界，仅 beta/alpha 支撑

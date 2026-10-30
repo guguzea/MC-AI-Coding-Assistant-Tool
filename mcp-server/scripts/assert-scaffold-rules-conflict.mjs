@@ -368,10 +368,15 @@ const LEDGER = {
   // 2026-10-16 重钉（全档构件核验轮，forge 1.15.2/1.17.1/1.18.2 + fabric 1.14.4/1.16.5 内容修复）：
   // verdictSkipped 2341→2354（+13 行；来自这五档 `.cursor/rules` 侧把 MCP 层名改成 official 名 +
   // 加「构件实证」注释行）；per-pack 判死分布与 conflicts 0 全部不变（reledger 实算逐档一致）。
-  crossLines: 455,
+  // 2026-10-30 重钉（R2 审计 WP5/WP8）：fabric/1.14.4 `09-anti-patterns.mdc` 的 Block.Properties 反例块
+  // 由「更晚版本才有」改成两个**具名**错 API（`AbstractBlock.Settings.create` / `Block.Properties.create`）
+  // ⇒ crossLines 455→459、banned 67→69、该档判死分布 1→3（判死面扩大 = 有意的内容修复，已人审：
+  // 两条都在 ❌ 块内、✅ 正解仍是 `Block.Settings.of(Material)`）；verdictSkipped 2354→2350（−4 行：
+  // 原「1.17+」措辞不再被当成合法 API 反例演示）。
+  crossLines: 459,
   contextualSkipped: 3065,
-  verdictSkipped: 2354,
-  banned: 67,
+  verdictSkipped: 2350,
+  banned: 69,
   conflicts: 0,
 };
 
@@ -380,7 +385,9 @@ const LEDGER = {
  * 换了个档犯同样的错也红。键 = `<platform>/<version>`，值为 0 的档不登记。
  */
 const LEDGER_PER_PACK_BANNED = {
-  "fabric/1.14.4": 1,
+  // 2026-10-30 重钉：1→3（+ `AbstractBlock.Settings.create` @09-anti-patterns.mdc:287、
+  // + `Block.Properties.create` @:288，两条都是 WP5 改写后具名化进 ❌ 块的错 API）
+  "fabric/1.14.4": 3,
   "fabric/1.17.1": 1,
   "fabric/1.18.2": 2,
   "fabric/1.19.4": 3,

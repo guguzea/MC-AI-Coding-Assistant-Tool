@@ -27,8 +27,8 @@
 plugins {
     // ❌ Forge
     id 'net.minecraftforge.gradle' version '[6.0.16,6.2)'
-    // ✅ Fabric
-    id 'fabric-loom' version '1.4-SNAPSHOT'
+    // ✅ Fabric（本档插件 id 是 net.fabricmc.fabric-loom-remap，版本取 scaffold/gradle.properties:13 的 1.17-SNAPSHOT）
+    id 'net.fabricmc.fabric-loom-remap' version '1.17-SNAPSHOT'
 }
 
 dependencies {

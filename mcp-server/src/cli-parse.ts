@@ -37,7 +37,7 @@ export const LEGAL_OUTPUT_FORMATS = new Set(["json"]);
 /**
  * 与全局 flag 同名的工具字段 —— 在该工具上这个名字归字段所有，全局剥离让位。
  * 这是一份显式声明（解析阶段还没有 schema 可用），test-cli-parse 的枚举门断言它
- * 等于 81 个 schema 字段名与 GLOBAL_FLAG_KEYS 的实际交集；新增同名字段必须同时改这里。
+ * 等于「全部 schema 字段名 ∩ GLOBAL_FLAG_KEYS」的实测交集（**不写死计数**，工具增删不会让这句话过期）；新增同名字段必须同时改这里。
  */
 export const FIELD_OWNED_GLOBALS: Record<string, string[]> = {
   validate_bp_json: ["json"],

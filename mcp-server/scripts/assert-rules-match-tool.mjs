@@ -33,6 +33,7 @@
  *
  * 用法
  *   node mcp-server/scripts/assert-rules-match-tool.mjs
+ *   node mcp-server/scripts/assert-rules-match-tool.mjs --selftest   # 假根夹具：1 正控 + 4 投毒（全内存临时目录）
  *   MC_SKILL_RULES_MATCH_TEST_ROOT=<假根> node mcp-server/scripts/assert-rules-match-tool.mjs
  *     假根模式＝投毒自证专用：A 层（逐文件内容 + 该文件所属档的实测口径）照咬，
  *     B 层（全仓枚举 / 计数下限 / 语料页存在性）跳过。
@@ -158,6 +159,58 @@ function walk(dir, out) {
     if (!/\.(mdc|md|json)$/.test(e.name)) continue;
     out.push(p);
   }
+}
+
+/* ---- `--selftest`：假根夹具的活性自证（不碰仓库；1 正控必绿 + 4 投毒必红）----
+ * 为什么 spawn 自己而不是抽纯函数：本门判据与三条假绿防护全写在模块顶层，抽函数等于重写；
+ * 而 `MC_SKILL_RULES_MATCH_TEST_ROOT` 本来就是为「假根投毒」留的钩子（见文件头用法）。
+ * 每记投毒都断言**红在预期的那条原因上**（子进程输出必须含 marker）—— 否则「门自己崩了」
+ * 也会被当成「投毒被咬住」，那是假绿。干净对照另有两条正断言：rc=0 且打印 ✓ 行（证明扫描真跑了）。
+ */
+if (process.argv.includes('--selftest')) {
+  const { mkdtempSync, mkdirSync, writeFileSync, rmSync } = await import('node:fs');
+  const { spawnSync } = await import('node:child_process');
+  const { tmpdir } = await import('node:os');
+  const SELF = url.fileURLToPath(import.meta.url);
+  const DIR = 'quilt/1.18.2/.cursor/rules/';
+  const CLEAN = '# 项目结构\n\n- 元数据：`quilt.mod.json`，id 允许连字符（官方 example-mod）\n';
+  const cases = [
+    ['干净对照', { [DIR + '00-project-setup.mdc']: CLEAN }, 0, '✓ assert-rules-match-tool ok'],
+    ['禁用形态 no-fabric-fallback-claim', { [DIR + '00-project-setup.mdc']: CLEAN, [DIR + '02-block.mdc']: '- 无独立树时 QSL 查询不会回退 Fabric\n' }, 1, 'no-fabric-fallback-claim'],
+    ['pdm 当工具行为', { [DIR + '00-project-setup.mdc']: CLEAN, [DIR + '03-item.mdc']: '`search_docs(platform=quilt)` 返回 PLATFORM_DATA_MISSING\n' }, 1, 'pdm-as-tool-behavior'],
+    ['必备口径缺失', { [DIR + '00-project-setup.mdc']: '# 项目结构\n\n- id 禁止连字符\n' }, 1, '缺失口径'],
+    ['同行配对缺失', { [DIR + '00-project-setup.mdc']: CLEAN, [DIR + '06-networking.mdc']: '载荷 `source_version:"1.21.1"`\n' }, 1, 'source-version-pair'],
+  ];
+  let fails = 0;
+  for (const [label, files, expectRc, marker] of cases) {
+    const root = mkdtempSync(path.join(tmpdir(), 'rules-match-selftest-'));
+    try {
+      for (const [rel, body] of Object.entries(files)) {
+        const abs = path.join(root, rel.split('/').join(path.sep));
+        mkdirSync(path.dirname(abs), { recursive: true });
+        writeFileSync(abs, body, 'utf8');
+      }
+      const r = spawnSync(process.execPath, [SELF], {
+        encoding: 'utf8',
+        windowsHide: true,
+        env: { ...process.env, MC_SKILL_RULES_MATCH_TEST_ROOT: root },
+      });
+      const out = `${r.stdout || ''}${r.stderr || ''}`;
+      if (r.status !== expectRc || !out.includes(marker)) {
+        fails++;
+        console.error(`  ✗ 「${label}」期望 rc=${expectRc} 且输出含「${marker}」，实得 rc=${r.status}`);
+        for (const l of out.split(/\r?\n/).filter(Boolean).slice(0, 4)) console.error(`    ${l}`);
+      }
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  }
+  console.log(
+    fails
+      ? `selftest FAILED（${fails}/${cases.length} 例红）`
+      : `selftest OK（${cases.length}/${cases.length} 例 = 1 正控 + ${cases.length - 1} 投毒，分母现数）`,
+  );
+  process.exit(fails ? 1 : 0);
 }
 
 const QUILT = path.join(ROOT, 'quilt');

@@ -38,7 +38,7 @@ plugins {
 **正确配置：**
 ```groovy
 plugins {
-    id 'fabric-loom' version '0.4-SNAPSHOT'  // ✅ 1.14.4 专用
+    id 'fabric-loom' version '0.6.60'  // ✅ 1.14.4 专用（= scaffold/build.gradle:7 实钉值）
 }
 ```
 
@@ -141,7 +141,7 @@ targetCompatibility = JavaVersion.VERSION_1_8
 | 检查项 | 方法 |
 |--------|------|
 | Fabric Maven 是否配置 | 检查 repositories 中是否有 maven.fabricmc.net |
-| Loom 版本 | 检查 `fabric-loom` 插件版本，应为 `0.4-SNAPSHOT` |
+| Loom 版本 | 检查 `fabric-loom` 插件版本，应为 `0.6.60` |
 | Java 版本 | 检查 source/targetCompatibility，应为 `VERSION_1_8` |
 | 依赖类型 | API 使用 modApi，实现使用 modImplementation |
 | 映射变更 | 执行 `./gradlew clean genSources` |

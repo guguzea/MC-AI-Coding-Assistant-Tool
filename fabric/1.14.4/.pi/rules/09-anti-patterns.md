@@ -194,14 +194,14 @@ MyClass.class_12345 obj = new MyClass.class_12345();  // 错误！
 ### ❌ Loom 版本使用错误
 
 ```groovy
-// ❌ 错误：Loom 0.4-SNAPSHOT 是 1.14.4 的正确版本
+// ❌ 错误：1.4-SNAPSHOT 是 1.20.1+ 的 Loom 线，1.14.4 用不了
 plugins {
     id 'fabric-loom' version '1.4-SNAPSHOT'  // 错误！这是 1.20.1+ 的版本
 }
 
 // ✅ 正确（1.14.4）
 plugins {
-    id 'fabric-loom' version '0.4-SNAPSHOT'
+    id 'fabric-loom' version '0.6.60'  // = scaffold/build.gradle:7
 }
 ```
 

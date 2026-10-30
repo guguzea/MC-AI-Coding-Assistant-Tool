@@ -6,7 +6,7 @@ mcVersions: ["1.18.1-26.2"]
 mcVersionsByPlatform: "fabric=1.18.2-1.20.4; forge=1.18.1-1.20.4; neoforge=1.20.4-1.20.4"
 communityDocId: authored/lib-terrablender
 modrinthSlug: terrablender
-mappings: "库按各 loader 预重映射，无需特殊配置；Fabric ≤1.21.x 为 yarn、26.x 为 mojmap"
+mappings: hint（库按各 loader 预重映射，无需特殊配置；Fabric ≤1.21.x 为 yarn、26.x 为 mojmap）
 ---
 
 > 数据来源：Modrinth project/terrablender 版本表 limit=100；本轮 release 上界 fabric=近100内无 / forge=近100内无 / neoforge=近100内无 ⇒ 本文件 mcVersions 上界 26.2 高于 release 上界，仅 beta/alpha 支撑

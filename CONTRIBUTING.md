@@ -218,7 +218,7 @@ fabric 档 `mappings/` 里的 `yarn-tiny-provenance.json` 记录 tiny named 列�
 - **不要**假设 `mcp-server/data/` 是运行时路径；MCP 读取的是 `MC_SKILL_DATA` 指向的仓库根 `data/`
 - 大体积 `*.jar` / `*.zip` 的忽略规则见根 `.gitignore`；完整包走 Release artifact + `SHA256SUMS` + `data-manifest.json`
 - Redistribute `data/` 时附带 [`THIRD_PARTY_NOTICES.md`](./THIRD_PARTY_NOTICES.md)
-- **新增仓库顶层目录 / 顶层模块时**：交付汇报的「受管面」是 `REPORT-FORMAT.md` §先判档 里**手列的清单**（2026-10-11 从根 `AGENTS.md` §交付汇报 搬出，AGENTS 侧只留人看三件）（现为 8 个平台树 + `data/` / `knowledge/` / `community_knowledge/` / `doc/` / `mcp-server/` / `scripts/` / `agent-tools/` / `openspec/` / `ralphy-spec/` + 根 `*.md`）。**新目录落地必须同步补进那份清单**（清单以那份为准，本节不复述），否则改动它的那一轮会被判成主档、丢掉维护档的台账与门验证汇报。核对方法：把仓库顶层 `ls`（`Get-ChildItem -Directory`）结果与那份清单逐个比对。
+- **新增仓库顶层目录 / 顶层模块时**：交付汇报的「受管面」是 `REPORT-FORMAT.md` §先判档 里**手列的清单**（2026-10-11 从根 `AGENTS.md` §交付汇报 搬出，AGENTS 侧只留人看三件）（现为 8 个平台树 + `data/` / `knowledge/` / `community_knowledge/` / `common_skill/` / `doc/` / `dsh-plugin/` / `mcp-server/` / `paper/` / `scripts/` + 根 `*.md`；`agent-tools/` / `openspec/` / `ralphy-spec/` 是 gitignored 的本地目录，不在受管面内）。**新目录落地必须同步补进那份清单**（清单以那份为准，本节不复述），否则改动它的那一轮会被判成主档、丢掉维护档的台账与门验证汇报。核对方法：把仓库顶层 `ls`（`Get-ChildItem -Directory`）结果与那份清单逐个比对。
 
 ---
 

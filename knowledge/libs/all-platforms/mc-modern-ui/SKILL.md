@@ -6,7 +6,7 @@ mcVersions: ["1.18.1-26.1.2"]
 mcVersionsByPlatform: "fabric=1.20-26.1.2; neoforge=1.20-26.1.2; quilt=1.20-1.21.3"
 communityDocId: authored/lib-modern-ui
 modrinthSlug: modern-ui
-mappings: "库按各 loader 预重映射；GUI/渲染全部客户端侧，与项目 mappings 无直接交互"
+mappings: hint（库按各 loader 预重映射；GUI/渲染全部客户端侧，与项目 mappings 无直接交互）
 ---
 
 > 数据来源：Modrinth project/modern-ui 版本表 limit=100；本轮 release 上界 fabric=26.1.2 / forge=26.1.2 / neoforge=26.1.2

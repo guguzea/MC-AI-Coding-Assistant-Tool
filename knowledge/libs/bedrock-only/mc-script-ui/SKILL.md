@@ -4,6 +4,7 @@ description: 基岩版 @minecraft/server-ui 表单 UI。触发词：ActionFormDa
 platforms: [bedrock]
 mcVersions: []
 communityDocId: authored/bedrock-script-api-primer
+mappings: hint（基岩 Script API，无 Java 映射层）
 ---
 
 # @minecraft/server-ui（基岩表单）

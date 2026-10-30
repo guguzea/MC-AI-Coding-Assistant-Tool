@@ -15,12 +15,15 @@
  *
  * 退出码：0 = 参与档全部编译通过（**或**本机缺件而降级）；1 = 有档编译失败；2 = 缺件且带 `--require`。
  * 缺件一律打 `SKIP(缺件)`，并在末行把「未验证」吼出来 —— 缺件的 **0 不是通过**。
- * 为什么默认降级：本门的依赖是**本机**资产（`G:\` 上的 JDK + `~/.gradle` 缓存），CI 上必然缺；
+ * 为什么默认降级：本门的依赖是**本机**资产（JDK + `~/.gradle` 缓存），CI 上必然缺；
  * 不降级就没法挂进链（S4 门链普查要求每道门可达），而这正是本门要进的链。
- * 要 fail-closed 请在链外手跑 `node scripts/assert-playtest-driver-compiles.mjs --require`。
+ * `--require` 的消费者（2026-10-30 R2 审计 G-06 后补）：`.github/workflows/release-mcp-server.yml`
+ * 的「Playtest compile legs」步骤在**探测到 loom 缓存**时用它强口径；探测不到就只跑默认档并打
+ * `::warning::`（把「本轮未验证」写进发布日志，而不是当成通过）。
  *
- * ⚠ **本脚本不进 `npm test`**：它依赖本机 `G:\` 上的 JDK 与 `~/.gradle` 缓存，
- *   在无此环境的机器/CI 上必然 exit 2。按需手动跑（或作为夜间批的一腿）。
+ * ⚠ **本脚本不进 `npm test`**：它依赖本机 JDK 与 `~/.gradle` 缓存，在无此环境的机器/CI 上必然 exit 2。
+ *   按需手动跑（或作为夜间批的一腿）。JDK 定位已与 server 侧共用 `scripts/_lib/find-javac.mjs`
+ *   （JAVA_HOME → PATH → 已知安装根），不再只认死写的 Windows `G:\…` 三条路径。
  *
  * 用法：
  *   node scripts/assert-playtest-driver-compiles.mjs                 # 默认档表
@@ -32,17 +35,17 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { findJavacs, pickJavac } from "./_lib/find-javac.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const MCP = path.resolve(HERE, "..");
 const REPO = path.resolve(MCP, "..");
 const GRADLE = path.join(os.homedir(), ".gradle", "caches");
 
-const JDK = {
-  8: "G:\\zulu8.96.0.205-ca-jdk8.0.504-win_x64\\zulu8.96.0.205-ca-jdk8.0.504-win_x64\\bin\\javac.exe",
-  17: "G:\\JAVA17\\jdk-17.0.12_windows-x64_bin\\jdk-17.0.12\\bin\\javac.exe",
-  21: "G:\\graalvm-jdk-21_windows-x64_bin\\graalvm-jdk-21.0.12+7.1\\bin\\javac.exe",
-};
+// 2026-10-30（R2 审计 WP8）：JDK 定位与 `assert-playtest-server-driver-compiles.mjs` 合并到
+// `scripts/_lib/find-javac.mjs`（JAVA_HOME → PATH → 已知安装根）。原来的硬写 `G:\…` 三条路径
+// 换机器恒 SKIP —— 而 SKIP 的打印长得像「没毛病」。`--require` 已接进 release workflow 兜底。
+const JAVACS = findJavacs();
 
 /** 参与编译腿的档。`jdk` = 该档运行期 JVM（与生成器 `applyJava8LibSwaps` 的判据同源）。 */
 const TIERS = [
@@ -174,11 +177,13 @@ let ran = 0;
 const skipped = [];
 const libJars = collectMojangLibJars();
 console.log("（classpath 库件 " + libJars.length + " 个：com.mojang/**）");
+// 定位器的可核读数：SKIP 时看这一行就知道是「本机没这个 major」还是「扫描面塌了」。
+console.log("（本机 javac: " + (JAVACS.map((j) => j.major + "@" + j.path).join(" / ") || "无") + "）");
 
 for (const tier of tiers) {
   const tag = tier.platform + "/" + tier.version;
   const jar = findNamedJar(tier.version);
-  const javac = JDK[tier.jdk];
+  const javac = pickJavac(tier.jdk, { list: JAVACS })?.path ?? null;
   if (!jar || !javac || !fs.existsSync(javac)) {
     console.log("SKIP(缺件) " + tag + " :: jar=" + (jar ?? "ABSENT") + " javac=" + (javac && fs.existsSync(javac) ? "ok" : "ABSENT"));
     skipped.push(tag);
@@ -264,10 +269,14 @@ console.log(
 );
 if (fail) process.exit(1);
 if (!ran) {
-  // 本门的依赖是**本机**资产（`G:\\` 上的 JDK + `~/.gradle` 缓存），CI / 别的机器上必然缺。
+  // 本门的依赖是**本机**资产（JDK + `~/.gradle` 缓存），CI / 别的机器上必然缺。
   // 与 assert-playtest-intent-gate 同范式：**默认降级但要吼**；`--require` 走强口径（缺件即红）。
   if (REQUIRE) process.exit(2);
-  console.log("⚠ 0 档真跑（本机无 JDK / 无 loom named jar）⇒ 本次**未验证**，不是通过；要强口径请加 --require");
+  console.log(
+    "⚠ 0 档真跑（缺件的档：" +
+      skipped.join(", ") +
+      "；原因见上方 SKIP 行 —— 本机 javac 候选见开头那行）⇒ 本次**未验证**，不是通过；要强口径请加 --require",
+  );
   process.exit(0);
 }
 process.exit(0);

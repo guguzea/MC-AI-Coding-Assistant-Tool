@@ -4,6 +4,7 @@ description: 库模组总目录与路由中枢。触发词：库模组、library
 platforms: [fabric, forge, neoforge, quilt, bedrock]
 mcVersions: ["1.20.1+"]
 communityDocId: authored/library-catalog-2026
+mappings: hint
 ---
 
 # 库模组 Skill 路由中枢（knowledge/libs）

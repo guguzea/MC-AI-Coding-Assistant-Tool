@@ -38,14 +38,14 @@ plugins {
 **正确配置：**
 ```groovy
 plugins {
-    id 'fabric-loom' version '1.0.18'  // ✅ 与本档 scaffold/build.gradle:2 实值一致
+    id 'fabric-loom' version '1.4-SNAPSHOT'  // ✅ 与本档 scaffold/build.gradle:7 实值一致
 }
 ```
 
 > 证据：`https://maven.fabricmc.net/net/fabricmc/fabric-loom/maven-metadata.xml` 的 SNAPSHOT 序列
 > 从 `0.13-SNAPSHOT` 直接跳到 `1.0-SNAPSHOT`，**没有 `0.14-SNAPSHOT`**（旧稿把它写成「1.19.x 推荐」，
-> 属虚构钉值）；同文件含 `1.0.1`–`1.0.18`。本档 `scaffold/build.gradle:2` 钉 `1.0.18`，
-> `scaffold/gradle/wrapper/gradle-wrapper.properties:3` 注明「Loom 1.0.18 配对 Gradle 8」。
+> 属虚构钉值）；同文件含 `1.0.1`–`1.0.18`。本档 `scaffold/build.gradle:7` 现钉 `1.4-SNAPSHOT`
+> （`scaffold/gradle/wrapper/gradle-wrapper.properties:4` 记明由 `1.0.18` 升到 `1.4-SNAPSHOT`，因 1.0.18 的 runClient 真机起不来）。
 > 另：裸写 `version '1.0'` 也不在 metadata 中（只有 `1.0-SNAPSHOT` 与 `1.0.x`），不要当钉值用。
 
 ### 3. 混用 modImplementation 和 modApi
@@ -113,7 +113,7 @@ loom {
 | 检查项 | 方法 |
 |--------|------|
 | Fabric Maven 是否配置 | 检查 repositories 中是否有 maven.fabricmc.net |
-| Loom 版本 | 检查 `fabric-loom` 插件版本（本档应为 `1.0.18`，见上「2. Loom 版本不兼容」）|
+| Loom 版本 | 检查 `fabric-loom` 插件版本（本档应为 `1.4-SNAPSHOT`，见上「2. Loom 版本不兼容」）|
 | 依赖类型 | API 使用 modApi，实现使用 modImplementation |
 | 映射变更 | 执行 `./gradlew clean genSources` |
 | 版本一致性 | gradle.properties 中的版本与 build.gradle 一致 |

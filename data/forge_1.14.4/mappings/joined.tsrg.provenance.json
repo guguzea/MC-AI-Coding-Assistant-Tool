@@ -1,0 +1,42 @@
+{
+  "publishedAt": "2026-10-30",
+  "generator": "mcp-server/scripts/tsrg-extractor.js",
+  "kind": "mcpconfig-joined-tsrg（原样副本）",
+  "upstream": {
+    "coordinate": "de.oceanlabs.mcp:mcp_config:1.14.4-20201018.162339",
+    "artifactUrl": "https://maven.minecraftforge.net/de/oceanlabs/mcp/mcp_config/1.14.4-20201018.162339/mcp_config-1.14.4-20201018.162339.zip",
+    "resolvedFrom": "https://maven.minecraftforge.net/de/oceanlabs/mcp/mcp_config/maven-metadata.xml（2026-10-30 现查；1.14.4 / 1.15.2 各取该线最后一个发布）",
+    "zipEntry": "config/joined.tsrg"
+  },
+  "artifacts": {
+    "zip": {
+      "file": "data/forge_1.14.4/mappings/mcp_config-1.14.4-20201018.162339.zip",
+      "bytes": 647304,
+      "sha256": "1e2f2416a975b271e74bae7751afd0877a4d24f73f21a8756801eb4ee9aa522f"
+    },
+    "tsrg": {
+      "file": "data/forge_1.14.4/mappings/joined.tsrg",
+      "bytes": 1786864,
+      "sha256": "d0a1d4e4766ff7dc1428195f33ade060db04fc779d3e371b5732c2ce5e80b489"
+    }
+  },
+  "derived": {
+    "file": "data/forge_1.14.4/mappings/joined.tsrg",
+    "format": "旧式 TSRG（无表头）：类行 `<obf> <deobf路径>`；成员行 `\\t<obf> <deobf>`（字段，2 段）或 `\\t<obf> <descriptor> <deobf>`（方法，3 段）",
+    "sourceLines": 55741,
+    "classes": 4976,
+    "methods": 32570,
+    "fields": 18195,
+    "consumedBy": [
+      "mcp-server/scripts/tsrg-extractor.js → data/forge_<ver>/extracted/{api-index,class-names,method-lookup,critical-classes}.json",
+      "query_api（api-index 只从 data/forge_<ver>/extracted 取）"
+    ]
+  },
+  "boundary": [
+    "joined.tsrg 是 **vanilla-only**：Forge 的 patch 与 Forge 类（DeferredRegister / Capability / SimpleChannel / Event 等）不在此件内 ⇒ critical-classes 的 Forge 条目对本工件恒 null。",
+    "成员名是 **SRG**（`func_/field_`），类路径是**该版 SRG 路径**（1.14/1.15 为 `net/minecraft/item/Item`、`net/minecraft/tileentity/TileEntity`，不是 1.17+ 的 `world/item/Item`）⇒ query_api 的 className 要写该版 SRG 名。",
+    "无参数名 / 无 javadoc（Parchment 自 1.16.5 起才有）⇒ 参数名一律未核实。",
+    "本档 mappings/yarn-mappings.sqlite 是快照状态，本次未重建；mappingEra 那一档出处与本件无联动。"
+  ],
+  "licenseNote": "MCPConfig 是 MCP 团队发布的映射工件（非 Mojang client.txt），仓内已有同形先例：data/forge_1.13.2/mappings/ 同时 tracked mcp-1.13.2.zip 与 joined.tsrg。本件按原样副本入库并用 sha256 钉住，供离线重建 extracted/ 与逐条核对；不替代 client.txt（后者仍不入库）。"
+}

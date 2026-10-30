@@ -18,6 +18,8 @@
 
 ---
 
+<div align="center">
+
 [English](README_human.en.md) | **简体中文**
 
 [技术文档与 AI 契约](README.md) · [安装与配置](AUTO_SETUP.md) · [Agent 总纲](AGENTS.md) · [变更日志](mcp-server/CHANGELOG.md)
@@ -25,6 +27,8 @@
 # 人类读本：这套工具能帮你做什么
 
 **它能干什么，以及怎么开始用**。
+
+</div>
 
 详细的功能细节（版本清单、工具参数、边界条件、实测数据）都在 [README.md](README.md)——那里是技术事实的唯一出处，也是 AI 的执行契约。
 
@@ -159,6 +163,8 @@ graph LR
 `check_dependencies` 读你的 `build.gradle` 和元数据文件，告诉你加载器判成了什么、认出哪些库、版本窗口对不对。它是启发式加库目录，没收录的库会漏报，别当完整 Gradle 解析。
 
 `query_upstream_releases` 回答另一个问题：某个加载器 / 映射 / 模组的版本，**上游到底发布了没有**。它查的是上游源（Forge / NeoForge / Fabric Loader / Yarn / Quilt Loader / Parchment / LegacyFabric / Modrinth / Maven / Mojang manifest），和「本仓库入没入库」是两件事——**查不到（`ok:false`）不等于上游没有，只有 `available:false` 才是明确没有**。构建失败时 `analyze_build_log` 解析 Gradle 报错并给出建议工具，但它不替你跑 `gradlew`。
+
+`check_publish_ready` 管发布前那一步：license / version 字段填没填对、`build/libs` 里的 jar 像不像正式产物，再对照一遍 `community_knowledge/authored/publishing.md` 的发布清单，缺项只给 warning。它不写盘、不上传，也不碰 CurseForge / Modrinth 的发布 API。
 
 > 细节见 [README.md 的工具参考 §8 / §11](README.md)
 

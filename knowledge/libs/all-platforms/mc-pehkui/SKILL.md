@@ -6,7 +6,7 @@ mcVersions: ["1.14.4-1.21.1"]
 mcVersionsByPlatform: "fabric=1.14.4-1.21.1; quilt=1.14.4-1.21.1; forge=1.14.4-1.20.1; neoforge=1.20.1-1.21.1"
 communityDocId: authored/lib-pehkui
 modrinthSlug: pehkui
-mappings: "库按各 loader 预重映射；Fabric ≤1.21.x 为 yarn、Forge 为 MCP，经依赖坐标自动匹配"
+mappings: hint（库按各 loader 预重映射；Fabric ≤1.21.x 为 yarn、Forge 为 MCP，经依赖坐标自动匹配）
 ---
 
 > 数据来源：Modrinth project/pehkui 版本表 limit=100；本轮 release 上界 fabric=1.21.1 / forge=1.20.1 / neoforge=1.21.1 / quilt=1.21.1

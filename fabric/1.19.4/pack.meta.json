@@ -17,6 +17,7 @@
     "provenance": {
       "build": "2026-09-14 跑通前修掉 1 处模板缺陷：ExampleMod.java:92 的 `AnimalEntity::canSpawn` 在 1.19.4 不可编译（本档 yarn-mappings.sqlite 里 AnimalEntity 名下 canSpawn 成员数 = 0；javap 编译器实际用的 minecraft-merged-named.jar 显示同类 public static 谓词是 isValidNaturalSpawn(EntityType<? extends AnimalEntity>, WorldAccess, SpawnReason, BlockPos, Random)，与 SpawnRestriction$SpawnPredicate.test 的 5 参形对得上）⇒ 改为 `AnimalEntity::isValidNaturalSpawn`。修复后副本（cp fabric/1.19.4/scaffold → D:/mc-skill-temp/_fab_build/1.19.4，逐文件 sha 比对与仓内一致 0 差异）gradlew build --no-daemon → BUILD SUCCESSFUL in 2m4s；JDK 17.0.12（G:/JAVA17/jdk-17.0.12_windows-x64_bin/jdk-17.0.12）+ Gradle 8.4 wrapper + fabric-loom 1.0.18 + loader_version=0.14.21 + yarn_mappings=1.19.4+build.2；产物 build/libs/examplemod-1.0.0.jar（8219 B，zip 内可扫到 fabric.mod.json）+ -sources.jar + -javadoc.jar；日志 D:/mc-skill-temp/_fab_build/1.19.4.log。边界：只覆盖 :build 任务链（含 remapJar），未跑 runClient / runServer / runData，也没有真机启动证据。 首记（修复前）BUILD FAILED in 3m 41s，唯一诊断行 ExampleMod.java:92「不兼容的类型」（GBK 日志已解码留档），该记日志已被修复后的成功跑覆盖。 三件套出处登记依据：本档 gradle/wrapper/gradle-wrapper.jar 的 sha256 与 mcp-server/data/wrapper-jars.json 里 Gradle 8.4 的官方发行包内层条目钉值一致（0336f591…）⇒ provenance.wrapper=gradle-wrapper-task。",
       "wrapper": "gradle-wrapper-task"
-    }
+    },
+    "buildPinDrift": "provenance.build 记录的 loom 是 1.0.18；本档 scaffold/build.gradle:7 现钉 1.4-SNAPSHOT（scaffold/gradle/wrapper/gradle-wrapper.properties:4 记明换钉原因：1.0.18 的 runClient 真机起不来）。⇒ buildVerified 只覆盖旧钉值那次 :build 任务链，未按现钉重跑；要复现请按现钉自行跑一次。"
   }
 }

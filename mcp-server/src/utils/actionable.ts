@@ -10,8 +10,10 @@
  * 1) **带内（in-band）失败：`ok:false` + `action`（本模块）** —— 默认且压倒性多数。
  *    实测口径（**一律排除本文件自身**：合同散文里就写着 `ok: false` 字面量，计入即自指；
  *    `test-wave-bcd.mjs` 的 A-27 门按同一口径当场复算，数字脱节就翻红）：
- *    · `grep -rn "ok: false" src/ --include='*.ts' | grep -v actionable.ts | wc -l` = **371** 行 / **52** 个文件（按行计）；
- *    · 按出现次数计（含 `ok:false` 无空格与同行多次）= **393** 处 / **58** 个文件。
+ *    · `grep -rn "ok: false" src/ --include='*.ts' | grep -v actionable.ts | wc -l` = **374** 行 / **52** 个文件（按行计）；
+ *    · 按出现次数计（含 `ok:false` 无空格与同行多次）= **396** 处 / **58** 个文件。
+ *      （2026-10-30 R2 审计复算刷新：原写 371/52 与 393/58。三处新增来自 WP3「四个 related 工具统一为对象」
+ *       时给 forge / quilt / fabric 三侧失败分支补 `ok:false`（+ 同轮 `neoforge` 补 `error` 未新增 ok:false 位点）。
  *      （2026-10-21 复算刷新：原写 358/51 与 381/57。口径未变 —— 一律排除本文件自身，
  *       按 `mcp-server/src` 全量 `.ts` 递归、`ok: false` 子串（含注释）计；Node 逐文件复算所得。
  *       数字脱节会让 `test-wave-bcd.mjs` 的 A-27 门当场翻红 —— 该门按同口径复核，此处不是"参考值"而是被判据钉住的值。）

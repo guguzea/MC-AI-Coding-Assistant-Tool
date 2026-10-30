@@ -3,7 +3,7 @@
  *
  * 数据来源（按 Minecraft 版本）：
  * - 1.7.10–1.13.2: SRG 类名 + `func_/field_` 成员名（无 Parchment 参数/javadoc）+ MCP stable 映射（1.13.2）+ ForgeJavaDocs 文档树；不要把 query_api found:true 当完整签名
- * - 1.14.4–1.15.2: MCP stable CSV 映射+ api-index 为空 {}（Parchment 约从 1.16.5 才有）
+ * - 1.14.4–1.15.2: SRG 类名 + `func_/field_` 成员名（MCPConfig joined.tsrg → tsrg-extractor.js）+ MCP stable CSV 的 mcp 名；无参数名/javadoc（Parchment 约从 1.16.5 才有）
  * - 1.16.5–1.20.4: Parchment 映射（带 javadoc）
  * - 1.21+ / 26.1+: 无 extracted 索引
  *
@@ -818,25 +818,25 @@ function buildMethodResult(
 }
 
 const QUERY_API_EMPTY_INDEX =
-  "当前版本无 Vanilla API 索引，无法执行 query_api（found:false / DATA_UNAVAILABLE 只表示本 Parchment 索引没有该类，不代表游戏里没有）。请改用 search_*_docs，或 get_minecraft_source。query_api 覆盖约 1.16.5–1.20.4；1.21+ / 26.1+ 无索引。";
+  "当前版本无 Vanilla API 索引，无法执行 query_api（found:false / DATA_UNAVAILABLE 只表示本 Parchment 索引没有该类，不代表游戏里没有）。请改用 search_*_docs，或 get_minecraft_source。有索引的档：1.7.10–1.20.4（1.7.10–1.15.2 是 SRG 类名 + func_/field_ 成员名，1.16.5–1.20.4 是 Parchment）；1.21+ / 26.1+ 无索引。";
 
 // 兼容工具标记（sweep104，用户裁定）：query_api 属类名/签名索引类兼容工具，每次调用响应都带此注释，
 // 提示文档/语义面优先 search_*_docs 语义搜索。
 const QUERY_API_COMPAT_NOTE =
   "query_api 是兼容工具（类名/签名索引，覆盖按版本而异且有限）；文档与语义面请优先 search_forge_docs / search_docs 语义搜索。";
 
-// 1.14.4–1.15.2：api-index 刻意为空（MCP stable CSV 仅成员级 searge↔named，Parchment 自 1.16.5 起）。
-// 该版 docs 语料与语义索引完整——每次查询都显式报告边界并推荐语义搜索（sweep103 工具诊断结论）。
+// 1.14.4–1.15.2 的索引来自 MCPConfig joined.tsrg（data/forge_<ver>/mappings/ → tsrg-extractor.js），
+// **不是**「设计为空」。只有 extracted/api-index.json 缺件或 0 类时才报这条降级提示。
 const QUERY_API_EMPTY_1415 =
-  "1.14.4/1.15.2 的 api-index 为空是设计边界（MCP stable CSV 仅成员级 searge↔named，Parchment 索引自 1.16.5 起才有）：found:false 不代表游戏里没有该类。" +
-  "请改用 search_forge_docs 语义搜索（1.14.4/1.15.2 语料与语义索引完整，semantic=true）；方法名可走 convert_mapping（1.14–1.15 CSV 仅 searge↔named）。";
+  "1.14.4/1.15.2 的 api-index 当前为空（本档 data/forge_<ver>/extracted/api-index.json 缺件或 0 类）：先确认 data/forge_<ver>/mappings/joined.tsrg 在盘并重跑 mcp-server/scripts/tsrg-extractor.js --version=<ver>。" +
+  "该状态下 found:false 不代表游戏里没有该类；可先用 search_forge_docs 语义搜索（两档语料与语义索引完整，semantic=true）。";
 
 function queryApiCoverageWarning(version: string, classCount?: number): string | undefined {
   const v = version.trim();
   const outOfRange = isUnobfuscatedMcVersion(v) || /^1\.21(\.|$)/.test(v) || /^26\./.test(v);
+  // 1.14.4–1.15.2 只在索引真的为空时走专用提示，否则按普通「有索引」档返回 undefined
+  if (!outOfRange && classCount === 0 && /^1\.1[45](\.|$)/.test(v)) return QUERY_API_EMPTY_1415;
   if (outOfRange || classCount === 0) return QUERY_API_EMPTY_INDEX;
-  // 1.14.4–1.15.2：api-index 刻意为空的设计边界——报告并推荐语义搜索
-  if (/^1\.1[45](\.|$)/.test(v)) return QUERY_API_EMPTY_1415;
   return undefined;
 }
 

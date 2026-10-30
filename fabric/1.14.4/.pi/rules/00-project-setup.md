@@ -115,7 +115,7 @@ IF 报错包含 "No resource bundling found"
 
 ```groovy
 plugins {
-    id 'fabric-loom' version '0.4-SNAPSHOT'
+    id 'fabric-loom' version '0.6.60'
     id 'maven-publish'
     id 'eclipse'
     id 'idea'

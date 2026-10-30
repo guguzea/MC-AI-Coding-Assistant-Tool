@@ -11,7 +11,7 @@
     "gaps": [
       "plugins 钉 id 'org.quiltmc.loom' version '1.15.1'（钉值出处 = build.gradle :2-3 注释：maven.quiltmc.org 的 org/quiltmc/loom/maven-metadata 最新 release，核对日期 2026-09-02）",
       "java toolchain = JavaLanguageVersion.of(17)（见 build.gradle）",
-      "本档 scaffold 无 README_AI.md（fabric 侧 4 档有）⇒ 构建步骤只在 pack.meta.json 本声明里，没写进该档 AGENTS.md"
+      "本档 scaffold 无 README_AI.md（fabric 侧 10 档有）⇒ 构建步骤只在 pack.meta.json 本声明里，没写进该档 AGENTS.md"
     ],
     "provenance": {
       "wrapper": "gradle-wrapper-task",

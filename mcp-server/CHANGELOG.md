@@ -9,6 +9,17 @@
   - **四个 related 工具统一为对象**：`get_forge_doc_related` / `get_fabric_doc_related` / `get_neoforge_doc_related` / `get_doc_related` 成功恒返回 `{ok,platform,id,version,results[]}`（`results` 恒为数组；fabric 保留 `source`；quilt 回退把 `sourcePlatform`/`warning` hoist 到顶层）。**破坏性变更**：按裸数组解析的消费者需改读 `.results`（仓内 test-core / limit-monotony 已同步）。
   - **新增测试**：`test-cli-failure-channel.mjs`（红 9 / 绿 12，逐条真跑 CLI）、`test-path-guards.mjs`（5 族）；`assert-playtest-intent-gate` 矩阵 15 例。`test-core` 的工具表锚点同步 AGENTS.md 现标题（`## MCP Server / CLI 工具`）。
 
+- **门与数据链补强（2026-10-30，R2 审计 WP8）**
+  - **`assert-rules-match-tool` / `assert-scaffold-selfcheck` 补 `--selftest` 并接进 `SELFTEST_GATES`**：此前只有真跑腿，假根投毒钩子（`MC_SKILL_*_TEST_ROOT`）没人为它写夹具 ⇒ 判据被改软时主流程照常绿。现各带内存夹具（rules-match 1 正控 + 4 投毒；selfcheck 1 正控 + 5 投毒，A1–A5 各一记），spawn 自己跑假根、断言「红在预期原因上」。
+  - **新增 `assert-scaffold-pin-claims.mjs`**（同时进 `REAL_RUN_GATES` 与 `SELFTEST_GATES`）：版本档自述的钉值声明（`forge_version=` / `loader_version=` / `loom_version=` …）必须等于本档 `scaffold/gradle.properties` 实钉值；只扫档内自述面、只咬肯定句（反例/引用/历史行按 `NOT_A_CLAIM` 跳过）。立门即抓到两处真漂移：`forge/1.13.2` `25.0.219→25.0.223`、`forge/1.14.4` `28.2.0→28.2.26`（两条 `loader_version` 键原本在 MDK 里不存在，改回 `loader_version_range`）。
+  - **`assert-pack-meta-coverage` 加计数声明复核**：`gaps.*` 里的「processed N 篇」「全文实扫 = N 篇」按盘上递归计数复算（现 59 档 / 10 条声明全中；突变一条即红）。
+  - **`assert-skill-mappings-key` 扩面到 `knowledge/libs/<组>/<库>/SKILL.md`**：库 Skill 源稿此前完全不过本门。`hint` 入册为合法值（17 件跨平台 Skill 的刻意声明），自检反例换 `bogus`；同时给 12 件无键库 Skill 补 `mappings: hint`、7 件散文值改成 `hint（…）` 体例（信息不丢）。
+  - **`assert-doc-absence-claims` 加「显式路径不存在」通用腿**：正文点名仓内路径并说它不存在而盘上在 ⇒ 红；精度靠否定词与 token 紧邻（放宽版本在真树上 100/101 是假阳性），裸目录名（`data/` / `assets/`）按歧义表不判。带 4 记新自检臂（含 `data/` 歧义对照）。
+  - **两道 playtest 编译腿共用 `scripts/_lib/find-javac.mjs`**（JAVA_HOME → PATH → 已知安装根；JDK 8 的 `1.8.0_x` 主版本解析修正）。`--require` 首次有消费者：`.github/workflows/release-mcp-server.yml` 新增「Playtest compile legs」步骤，资产在则强口径、不在则打 `::warning::` 落发布日志。
+  - **`assert-parser-availability` A4 判据放宽成「字符串码或 `{code}` 对象都收」**（WP1 的失败信道归一让旧判据红在干净根上）。
+  - **台账重钉**：`assert-scaffold-rules-conflict` 的 `crossLines 455→459 / banned 67→69 / fabric/1.14.4 1→3`（WP5 把 `AbstractBlock.Settings.create` / `Block.Properties.create` 具名进 ❌ 块）与 `verdictSkipped 2354→2350`，`scaffold-banned-symbols.json` 已按门重生成（18 档 / 69 符号）。
+  - **`test-scripts.mjs` 两处自退化修复**：门链四数普查的引用判据从裸子串改词边界（`assert-a.mjs` 不再被 `assert-a.mjs.bak` 认成「已引用」）；§#22 的绝对墙钟 `ms < 2000` 改成相对同机空 node 启动的预算（WP8 加腿后实测 380–406ms，12.7× 基线）。
+
 
 - **服务端面补 13 棵版本档 + 两个真机探针（2026-10-23/24，接「Paper/Spigot 能不能加热门版本」与「做 paper 那样的真机探针」）** —— 数字全部本轮实扫，不引旧账。
 

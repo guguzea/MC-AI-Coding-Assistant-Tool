@@ -923,13 +923,16 @@ function assertHasRuleIds(s, want, label) {
   for (const n of gui.nextReads ?? []) {
     assert.ok(!libNames.has(n.name), `nextReads must not include lib skill ${n.name}`);
   }
-  for (const ver of ["1.21.5", "1.21.10"]) {
+  for (const [ver, donorVer] of [["1.21.5", "1.21.3"], ["1.21.10", "1.21.8"]]) {
     const t = sessionPlatformPack({ platform: "neoforge", minecraftVersion: ver });
     assert.ok((t.skills ?? []).some((x) => x.name === "mc-entity"), `${ver} skills missing mc-entity`);
+    // 2026-10-30（R2 审计）：原来只写 `if (donor) {…}` —— 警告整体消失时本测试静默变绿，
+    // 于是一旦 donor 机制被摘掉（或文案改得匹配不上），这条最该红的地方反而什么都不报。
+    // 现改为三条：警告必须在、必须是第一条、且必须点名**本档的** donor 版本（防捐到别的档）。
     const donor = (t.warnings ?? []).find((w) => /并入/.test(w) || /同系列主档/.test(w));
-    if (donor) {
-      assert.equal((t.warnings ?? [])[0], donor, `${ver} donor warning should be first`);
-    }
+    assert.ok(donor, `${ver} 缺「同系列主档并入」警告 ⇒ 薄档 donor 机制失效或文案已改（原测试无 else 分支，会静默变绿）`);
+    assert.equal((t.warnings ?? [])[0], donor, `${ver} donor warning should be first`);
+    assert.ok(donor.includes(`neoforge/${donorVer}`), `${ver} donor 警告未点名预期主档 neoforge/${donorVer}：${donor}`);
   }
   console.log("session neo thin donor nextReads: ok");
 }

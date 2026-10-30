@@ -6,6 +6,7 @@ mcVersions: ["1.19-26.3"]
 mcVersionsByPlatform: "fabric=1.19-26.3; forge=1.19.4-1.20.2; neoforge=1.20-26.3; quilt=1.19-1.20.4"
 communityDocId: authored/lib-yacl
 modrinthSlug: yacl
+mappings: hint
 ---
 
 > 数据来源：Modrinth project/yacl 版本表 limit=100；本轮 release 上界 fabric=26.2 / forge=1.20.1 / neoforge=26.2

@@ -50,6 +50,12 @@ export const SCRIPT_WRITE_GUARD_NON_WRITERS = new Map([
   ["scripts/_lib/copy-tree.mjs", /export function copyTree\(/],
   // ── S4 扩面：mcp-server/scripts/**（逐条对活文本复验过依据正则）──────────
   ["mcp-server/scripts/assert-powershell.mjs", /mkdtempSync\(join\(tmpdir\(\), "mcskill-ps-"/], // 全部落笔在 OS tmpdir 的 workDir；仓库根只读（MC_SKILL_PS_TEST_ROOT 可换根）
+  // 2026-10-30（R2 审计 WP8）：三道门的 `--selftest` 用假根夹具，夹具根一律 `mkdtempSync` 落 OS tmpdir
+  // （`rules-match-selftest-` / `scaffold-selfcheck-selftest-` / `scaffold-pin-selftest-` 三种前缀），
+  // 每臂 finally 里 rmSync 收；这些门的真跑面对仓库根全程只读。依据正则一断（改成写仓库内）豁免即失效。
+  ["mcp-server/scripts/assert-rules-match-tool.mjs", /mkdtempSync\(path\.join\(tmpdir\(\), 'rules-match-selftest-'\)\)/],
+  ["mcp-server/scripts/assert-scaffold-selfcheck.mjs", /mkdtempSync\(path\.join\(tmpdir\(\), "scaffold-selfcheck-selftest-"\)\)/],
+  ["mcp-server/scripts/assert-scaffold-pin-claims.mjs", /mkdtempSync\(path\.join\(tmpdir\(\), "scaffold-pin-selftest-"\)\)/],
   // 未做③（2026-09-26）：SRG 入库门的夹具根（削减件 .tsrg + 建出的 sqlite + 假数据根）全落
   // OS tmpdir 的 "forge-srg-gate-" 前缀下，finally/exit 前用 removeTmp 收；对 data/** 全程只读
   // （在盘对账腿用 readOnly 打开真库）。依据正则一断（改落到仓库内）本豁免即失效。

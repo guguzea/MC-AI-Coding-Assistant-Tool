@@ -34,7 +34,7 @@ mappings: yarn
 
 - ① dependencies 块加入 Fabric Loader JUnit；
 - ② 告知 Gradle 使用 Fabric Loader JUnit 执行测试。
-- 页面以引用片段给出（`reference/build.gradle` 与 `reference/1.21.1/build.gradle`），本仓库 data 未随附 reference 代码 —— **确切依赖坐标不默写**，以官方页面/`search_fabric_docs` 为准。
+- 页面以引用片段给出（`reference/build.gradle` 与 `reference/1.21.1/build.gradle`）；这两份**在盘上**（`data/fabric_1.21.1/reference/`，107 文件 / 70 个 `.java`），逐字坐标照抄：`data/fabric_1.21.1/reference/build.gradle:39` = `testImplementation "net.fabricmc:fabric-loader-junit:${project.loader_version}"`（在 :35-41 的 `dependencies {}` 内），`data/fabric_1.21.1/reference/1.21.1/build.gradle:11-13` = `test { useJUnitPlatform() }`。
 
 ### 3. 写测试
 

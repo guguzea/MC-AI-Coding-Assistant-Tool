@@ -4,6 +4,7 @@ description: SpruceUI / ObsidianUI GUI 抽象库，跨加载器控件与布局�
 platforms: [fabric, forge, neoforge, quilt]
 mcVersions: ["1.16.4-1.21.5"]
 communityDocId: authored/lib-spruceui-obsidianui
+mappings: hint
 ---
 
 > API 摘要状态：**有** ⇒ `mcp-server/data/lib-api-summaries/spruceui-obsidianui.json`（31.2 KB）在盘，catalog 条目 `authored/lib-spruceui-obsidianui` 的 `verifiedApi` 非空（键含 `1.21.5/fabric` 等）。**旧稿「无摘要 / 空 `verifiedApi` 表示无摘要」已不成立**。Modrinth 亦无该项目（slug 空，404）；类名/方法以官方 GitHub README 为准，要签名先 `query_loader_api` 或 `ingest_loader_api`（用户自备 jar），禁止凭记忆补

@@ -18,6 +18,8 @@
 
 ---
 
+<div align="center">
+
 [简体中文](README_human.md) | **English**
 
 [Technical docs & agent contract](README.en.md) · [Install & configure](AUTO_SETUP.md) · [Agent master guide](AGENTS.md) · [Changelog](mcp-server/CHANGELOG.md)
@@ -26,15 +28,17 @@
 
 **What it can do, and how to start using it.**
 
+</div>
+
 The finer details — version lists, tool parameters, boundary conditions, measured results — all live in [README.en.md](README.en.md), which is the single source for technical facts and the contract the agent follows.
 
-## Why I did not scrub the AI tone out of README, and why this text is not on the GitHub front page
+## Why this is split into two documents
 
-When you open this project, the agent reads the README once. To work around the failure mode where an agent reads a long document and then quietly does nothing, I deliberately made README.md a thorough manual — which is exactly what makes it hard for a human to read. The result is a lot of text in README.md that does not read like a person wrote it (the classic tomato-and-egg stir-fry with no beef: all the right colours, none of the substance). So I moved the parts that actually matter onto this page. If you need the fine detail, ask your own AI assistant — that beats a human reading it.
+The README is genuinely long and dense, so this page keeps only what a human needs. If you want the fine detail, asking your own AI assistant beats reading it yourself.
 
-1. The agent reads [README.en.md](README.en.md) first, so it has to be a complete specification.
-2. To keep it readable, I split out the parts I think humans should read.
-3. GitHub's README rendering is odd.
+- When you install this project, the agent reads [README.en.md](README.en.md) in full first. To work around the failure mode where an agent reads a long document and then quietly does nothing, that file is deliberately written as a thorough manual — which is exactly what makes it tiring for a human.
+- To keep things readable, the human-facing part was split out into this page.
+- On top of that, GitHub's README rendering is odd: stuffing everything onto the front page makes the entry points harder to find, not easier.
 
 ## In one sentence
 
@@ -107,7 +111,7 @@ Every platform and version ships its own rule set (registration, events, network
 
 Version history is answerable too: `get_version_info` takes a Forge version plus an action (say "register a block") and returns the recommended approach, key changes and gotchas.
 
-→ details in the "Agent Skills" and "Rule files" sections of [README.en.md](README.en.md)
+> Details in the "Agent Skills" and "Rule files" sections of [README.en.md](README.en.md)
 
 ### Official documentation search (works offline)
 
@@ -115,55 +119,55 @@ Forge / Fabric / NeoForge / Quilt / LiteLoader / Rift / Bedrock docs are fetched
 
 The server line shares this search under different platform ids: `paper` / `paper-api` / `spigot` — the difference is in "Server face" below.
 
-→ details in "Notes on using the MCP tools" in [README.en.md](README.en.md)
+> Details in "Notes on using the MCP tools" in [README.en.md](README.en.md)
 
 ### Bedrock Add-Ons
 
 Bedrock shares nothing with Java: the corpus is Microsoft Learn's Bedrock docs plus the JSON inside packs, with its own group of 9 tools — doc search, summary / full text, `manifest.json` and behaviour-pack entity JSON validation, manifest and BP entity generation, and `content_log.txt` triage. Yarn / Mixin / `query_api` map onto nothing here.
 
-→ details in section 6b of the tool reference in [README.en.md](README.en.md)
+> Details in section 6b of the tool reference in [README.en.md](README.en.md)
 
 ### API, signatures, and mappings
 
 Look up method signatures and parameter names for Vanilla APIs by class and method (the index stops at 1.16.5–1.20.4; older versions carry SRG names and 26.1+ has no obfuscation layer — past those edges you get an error code, not a plausible false signature); look up loader and library APIs; convert class, method, and field names between mojang / MCP / Yarn / Parchment / obfuscated naming; and reverse a single obfuscated token from a crash log (`method_6032`, `er`, `func_110143_aJ`, …) back to a readable name. When a mapping layer is missing, it says so instead of passing an empty shell off as an answer.
 
-→ details in "Mapping conversion" and "Tool boundaries" in [README.en.md](README.en.md)
+> Details in "Mapping conversion" and "Tool boundaries" in [README.en.md](README.en.md)
 
 ### Access transformers, mixins, and resources
 
 Bytecode-level validation of Access Transformer / Access Widener configs (Forge / NeoForge / Fabric), mixin injection-target analysis, data pack JSON validation, static audits of model and texture references, and resource pack format checks. It validates the project itself too: whether `mods.toml` / `fabric.mod.json` / `neoforge.mods.toml` line up with the entrypoints. To check whether a Vanilla registry id (`minecraft:xxx`) exists, use `query_registry`. There is also a workflow template library (new block / item / entity / GUI / worldgen / config / GameTest, …) where each template states the order of operations.
 
-→ details in sections 9 and 10 of the tool reference in [README.en.md](README.en.md)
+> Details in sections 9 and 10 of the tool reference in [README.en.md](README.en.md)
 
 ### Library mods: choosing and wiring them
 
 Community-written notes on libraries such as Cloth Config, YACL, GeckoLib, JEI, Curios, and Kotlin for Forge, each saying when to use it, how to declare it, and which version traps exist. `check_dependencies` reads your `build.gradle` and metadata files and reports which libraries are declared and whether the version windows line up.
 
-→ details in "Community knowledge and library mods" in [README.en.md](README.en.md)
+> Details in "Community knowledge and library mods" in [README.en.md](README.en.md)
 
 ### Code and resource generation
 
 Skeletons for new blocks, items, entity renderers, worldgen, network packets, configs, language files, models, and blockstates. **Text output by default** — writing to disk needs your explicit confirmation. For third-party libraries (YACL and friends) you supply the jar, otherwise you get a structure shell explicitly marked unverified.
 
-→ details in section 10 of the tool reference in [README.en.md](README.en.md)
+> Details in section 10 of the tool reference in [README.en.md](README.en.md)
 
 ### Decompiling and reading mod sources
 
 When the docs do not cover it, read the source: `analyze_mod_jar` reads a jar's metadata, `decompile_mod_jar` decompiles into the local cache, `get_minecraft_source` pulls a class of MC source (1.14–1.21.11 through Yarn, 26.x already deobfuscated), `search_mod_code` greps the output, `download_official_mdk` fetches the official MDK. Zero downloads by default; artifacts land only in `MC_SKILL_CACHE`, never in your project; JDK 17+ required. Bring your own jar and `ingest` it for libraries or loaders we cannot download (LiteLoader / Rift / ModLoader).
 
-→ details in "Decompiling mod sources" §13 / §14 of [README.en.md](README.en.md)
+> Details in "Decompiling mod sources" §13 / §14 of [README.en.md](README.en.md)
 
 ### Dependencies, upstream versions, and the pre-release check
 
 `check_dependencies` reads your build script and metadata and reports declared libraries and version windows. `query_upstream_releases` asks upstream directly (forge / neoforge maven, yarn, parchment, Modrinth, Mojang manifest) whether a version exists at all — "could not reach it" and "it really is not there" are two different signals, and neither equals "this repo has no docs for it". `check_publish_ready` runs the pre-release checks (license / version / `build/libs`). None of the three uploads anything.
 
-→ details in sections 8 and 11 of the tool reference in [README.en.md](README.en.md)
+> Details in sections 8 and 11 of the tool reference in [README.en.md](README.en.md)
 
 ### Diagnostics and crash triage
 
 Parses crash reports, game logs, and Gradle build failures; infers missing prerequisites and version incompatibilities; checks dependency conflicts, project metadata, and mixin configs.
 
-→ details in sections 2 and 11 of the tool reference in [README.en.md](README.en.md)
+> Details in sections 2 and 11 of the tool reference in [README.en.md](README.en.md)
 
 ### In-game playtesting
 
@@ -171,31 +175,33 @@ The unusual one: it can compile a temporary driver into your project so the agen
 
 That said, I would not use this as a companion player: the implementation is a bit crude, so odd things happen now and then (it can grab your mouse cursor, for example).
 
-→ details in "Mod testing loop" in [README.en.md](README.en.md)
+> Details in "Mod testing loop" in [README.en.md](README.en.md)
 
 ### Server face: Paper / Spigot plugins
 
 Writing plugins is a separate line, not hanging under the eight mod platform trees. Rules live in `paper/<ver>/rules/`: `26.3` has ten chapters of body (events, commands, inventory GUIs, permissions, scheduler, `plugin.yml` and config, PDC, Adventure, measured traps), and 5 other versions carry only an applicability check — "does each 26.3 clause still hold here?" — because the tutorial face is not versioned, so copying another version's clauses is simply unverified. The corpus has two faces: `platform=paper` is the official tutorial (67 pages); `paper-api` / `spigot` are signatures only, 2116 / 1396 classes on the current pack, plus 5 and 8 historical packs each. `generate_paper_plugin` produces a plugin skeleton, `generate_playtest_server_driver` produces a server-start driver with a `plan.txt` sample, and the verdicts land in the server log.
 
-→ details in [doc/server-face-paper.md](doc/server-face-paper.md)
+> Details in [doc/server-face-paper.md](doc/server-face-paper.md)
 
 ### Porting
 
 Porting a mod across loaders (Forge → NeoForge / Fabric and so on): identify the platform and mappings, list risks and steps, execute after you confirm. DryRun preview by default. 26.2 / 26.3 have neither a rule tree nor docs; those go through the official migration guide (`get_migration_guide` with `26.1->26.2` / `26.2->26.3`, sourced from the NeoForge Primer).
 
-→ details in "Porting analysis" in [README.en.md](README.en.md)
+> Details in "Porting analysis" in [README.en.md](README.en.md)
 
 ### Localization
 
 Extracts and diffs the language files of your mod or a third-party jar and drafts a Chinese version. **There is no machine translation** — it only marks the entries a human has to fill in.
 
-→ details in the `localize_mod` section of [README.en.md](README.en.md)
+> Details in the `localize_mod` section of [README.en.md](README.en.md)
 
 ### Orchestration skills: settle the questions before you build
 
 Beyond "how do I write a block" dev skills, `common_skill/` ships 12 orchestration skills: `mc-grill` (requirement grilling), `mc-spec` (consensus into a spec), `mc-breakdown` (task slicing), `mc-review` (review), `mc-wizard` (human-step wizard), `mc-handoff` (handover), plus routing / retro / glossary / research / prototype / re-explaining. They do not say how an API works; they settle who calls the shot and where the evidence comes from.
 
-→ details in [common_skill/README.md](common_skill/README.md). Code patterns, anti-patterns and community write-ups live behind `mcskill://` — `list_knowledge_resources` lists them.
+> Details in [common_skill/README.md](common_skill/README.md)
+
+Code patterns, anti-patterns and community write-ups live behind `mcskill://` — `list_knowledge_resources` lists the entries.
 
 ### Updating
 
@@ -203,13 +209,13 @@ Once installed you do not reinstall. `mc_skill_update` (or `node mcp-server/dist
 
 When something looks broken, start with `get_server_status`: it reports index warm-up state, the Java probe (decompiling needs JDK 17+), whether `src` is newer than `dist`, and the last update hint.
 
-→ details in section 12 of the tool reference in [README.en.md](README.en.md) and [doc/mcp-troubleshooting.md](doc/mcp-troubleshooting.md)
+> Details in section 12 of the tool reference in [README.en.md](README.en.md) and [doc/mcp-troubleshooting.md](doc/mcp-troubleshooting.md)
 
 ### Command line
 
 The whole toolset is also callable from a terminal or a script, with uniform JSON output and three exit-code classes (success / tool error / usage error), which makes it easy to wire into automation.
 
-→ details in the "Standalone CLI" section of [mcp-server/README.md](mcp-server/README.md)
+> Details in the "Standalone CLI" section of [mcp-server/README.md](mcp-server/README.md)
 
 ## Multi-IDE support
 
@@ -229,9 +235,11 @@ platform/version/
 
 DSH also gets a **native plugin** (repo root `dsh-plugin/`): once installed it detects the platform and exact version of whatever project you have open, mounts only that pack's skills, and injects that pack's base rules (`00/01/09`) into the system prompt — same-named skills no longer collide across dozens of packs, and you stop calling `activate_platform_pack` by hand. See [dsh-plugin/README.md](dsh-plugin/README.md).
 
-## Hand-maintained files
+## Known issues: occasional mistakes in the docs
 
-The skill / rules / code-pattern files can run into the occasional problem, both because upstream documentation is wrong (Forge is the offender here — its 1.20.4 docs still teach 1.20.1 things) and because these files are maintained by hand (1.20.1 and later should be fine). If something fails to compile or throws errors, trust the documentation first. You can also open an issue and I'll fix it as soon as I can. Thanks for understanding. Thanks♪(･ω･)ﾉ
+The skill / rules / code-pattern files run into the occasional problem: partly because upstream documentation is wrong (Forge is the offender here — its 1.20.4 docs still teach 1.20.1 things), partly because these files are maintained by hand. 1.20.1 and later should be fine.
+
+If something fails to compile or throws errors, trust the official documentation first. You can also open an issue and I'll fix it as soon as I can. Thanks for understanding.
 
 ## Where to look for what
 
@@ -250,26 +258,23 @@ The skill / rules / code-pattern files can run into the occasional problem, both
 | License (PolyForm Noncommercial 1.0.0) | [LICENSE](LICENSE) |
 | Licensing of third-party docs and data | [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) |
 
-[简体中文](README_human.md) | **English**
+## Frequently asked questions (FAQ)
 
-## F&Q
+**Q: 26.2 / 26.3 don't seem to have matching files — is that just not updated yet?** A: the major mod loaders ship no docs for 26.2 / 26.3 at the moment; for those versions we rely on the official 26.1 → 26.2 → 26.3 migration guide, so there is nothing to index. Once the official docs land, this gets updated to match.
 
-1. **Q: 26.2 / 26.3 don't seem to have matching files — is that just not updated yet?**
-   **A:** the major mod loaders ship no docs for 26.2 / 26.3 at the moment; for those versions we rely on the official 26.1 → 26.2 → 26.3 migration guide, so there is nothing to index. Once the official docs land, this gets updated to match.
-2. **Q: Can playtesting support older versions?**
-   **A:** it currently goes down to 1.20.1. Support for the flattening era (1.13+) comes after that; pre-flattening is genuinely hard and I'd rather not rush it.
-3. **Q: Can playtesting support Bedrock?**
-   **A:** Bedrock playtesting is still under development; this page gets updated once it lands.
-4. **Q: Why so many tools — plenty of them look mergeable.**
-   **A:** flexibility: every piece is separately removable, so you keep what you need and delete the rest to save space — and being removable is exactly why there are so many. (Honestly, merging some of them surfaces some amusing bugs.)
-5. **Q: I write Paper / Spigot plugins — is any of this useful to me?**
-   **A:** yes, but it is another line: the server face (Paper / Spigot) has its own rule tree, its own signature corpora, its own project skeleton and playtest driver, and is not hung under the eight mod platform trees. Tutorials use `platform=paper`; signatures use `paper-api` / `spigot` (the latter signatures only, no tutorial text).
-6. **Q: I'm still on an old version — is it covered?**
-   **A:** the Forge rule tree goes back to 1.7.10 (15 packs), and the historical pre-1.12.2 loaders each keep a thin line: LiteLoader / Rift / Risugami ModLoader are separate trees, and their APIs were `javap`'d from real artifacts rather than passed off as Forge Javadoc. Note that early packs such as 1.8.9–1.11.2 carry only 3 short rules; their job is "do not copy modern APIs into early versions", not to be a full tutorial.
+**Q: Can playtesting support older versions?** A: it currently goes down to 1.20.1. Support for the flattening era (1.13+) comes after that; pre-flattening is genuinely hard and I'd rather not rush it.
 
-#### Questions or problems — open an issue and I'll reply as soon as I can
+**Q: Can playtesting support Bedrock?** A: Bedrock playtesting is still under development; this page gets updated once it lands.
 
-## Come hang out:
+**Q: Why so many tools — plenty of them look mergeable.** A: flexibility: every piece is separately removable, so you keep what you need and delete the rest to save space — and being removable is exactly why there are so many. (Honestly, merging some of them surfaces some amusing bugs.)
+
+**Q: I write Paper / Spigot plugins — is any of this useful to me?** A: yes, but it is another line: the server face (Paper / Spigot) has its own rule tree, its own signature corpora, its own project skeleton and playtest driver, and is not hung under the eight mod platform trees. Tutorials use `platform=paper`; signatures use `paper-api` / `spigot` (the latter signatures only, no tutorial text).
+
+**Q: I'm still on an old version — is it covered?** A: the Forge rule tree goes back to 1.7.10 (15 packs), and the historical pre-1.12.2 loaders each keep a thin line: LiteLoader / Rift / Risugami ModLoader are separate trees, and their APIs were `javap`'d from real artifacts rather than passed off as Forge Javadoc. Note that early packs such as 1.8.9–1.11.2 carry only 3 short rules; their job is "do not copy modern APIs into early versions", not to be a full tutorial.
+
+> Questions or problems: open an issue and I'll reply as soon as I can.
+
+## Come hang out
 
 **QQ group** (scan to join; Discord is in the badges above):
 <img width="1228" height="2184" alt="0bd61b684c78842d59a5ad09de01f4be_720" src="https://github.com/user-attachments/assets/41e370aa-611c-4af2-ad9a-007e1973a24a" />

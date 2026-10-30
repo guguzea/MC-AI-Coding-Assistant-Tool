@@ -4,6 +4,7 @@ description: 作者全家桶共享库依赖树纪律。触发词：Collective、
 platforms: [fabric, forge, neoforge]
 mcVersions: ["1.20.1+"]
 communityDocId: authored/library-integration
+mappings: hint
 ---
 
 # 全家桶共享库：依赖树纪律

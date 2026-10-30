@@ -72,6 +72,32 @@ jobs:
         working-directory: mcp-server
         run: npm audit --omit=dev --audit-level=high
 
+      # 2026-10-30（R2 审计 G-06）：两条「真构件编译腿」（driver / server-driver）默认 fail-open，
+      # 而 fail-closed 的 `--require` 此前**没有任何 runner/CI 消费者** ⇒ 最高强度的验证腿在 CI 上
+      # 恒以「未验证」rc=0 计过。本步骤就是那个消费者：
+      #   · 资产在（loom named jar / paper-api 件）⇒ 用 `--require` 强口径，缺件会断发布；
+      #   · 资产不在 ⇒ 跑默认档并打 `::warning::` —— 把「本轮未验证」写进发布日志，不冒充通过。
+      # 编排（ubuntu runner 通常两者都缺）只意味着「本轮未验证」，不代表发布链阻塞。
+      - name: Playtest compile legs (require when assets present)
+        working-directory: mcp-server
+        run: |
+          if [ -d "$HOME/.gradle/caches/fabric-loom" ]; then
+            node scripts/assert-playtest-driver-compiles.mjs --require
+          else
+            echo "::warning::playtest client compile leg NOT verified — no loom named jars on this runner"
+            node scripts/assert-playtest-driver-compiles.mjs
+          fi
+          PAPER_DIR=""
+          for d in "${MC_SKILL_CACHE:-/tmp/mc-skill-cache}/paper-api" "$PWD/temp/paper-cache"; do
+            if ls "$d"/paper-api-*.jar >/dev/null 2>&1; then PAPER_DIR="$d"; break; fi
+          done
+          if [ -n "$PAPER_DIR" ]; then
+            node scripts/assert-playtest-server-driver-compiles.mjs --require
+          else
+            echo "::warning::playtest server compile leg NOT verified — no paper-api jars on this runner"
+            node scripts/assert-playtest-server-driver-compiles.mjs
+          fi
+
       - name: Prepare release bundles
         shell: bash
         run: |

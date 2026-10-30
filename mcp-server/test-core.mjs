@@ -2048,28 +2048,38 @@ async function testDatagenAndMappingGates() {
     rmSync(s4Root, { recursive: true, force: true });
   }
 
-  // 兼容工具标记（sweep104，用户裁定）：query_api 每次调用响应都带兼容注释；
-  // 1.14.4/1.15.2 的 api-index 为空是设计边界——响应必须显式报告边界并推荐语义搜索。
+  // 兼容工具标记（sweep104，用户裁定）：query_api 每次调用响应都带兼容注释。
+  // 1.14.4/1.15.2 的索引由 MCPConfig joined.tsrg 派生（tsrg-extractor.js）⇒ 必须**命中**，
+  // 且不得再报「api-index 为空 / 设计边界」那条 warning（此前两档 api-index 实为 {}）。
   const compatNote = await queryApi({ className: "Item", version: "1.20.1" });
   assert.ok(
     compatNote.found === true &&
       (compatNote.notes ?? []).some((n) => /兼容工具/.test(n)),
     `query_api 响应必须带兼容工具注释: ${JSON.stringify(compatNote.notes)}`,
   );
-  const q1415 = await queryApi({ className: "Goal", version: "1.14.4" });
-  assert.equal(q1415.found, false);
+  const q1415 = await queryApi({ className: "net.minecraft.item.Item", version: "1.14.4" });
+  assert.equal(q1415.found, true, `1.14.4 Item 应可查: ${JSON.stringify(q1415).slice(0, 300)}`);
   assert.ok(
-    q1415.warning && /1\.14\.4|1\.15\.2/.test(q1415.warning) && /search_forge_docs/.test(q1415.warning),
-    `1.14.4 查询必须报告空索引边界并推荐语义搜索: ${JSON.stringify(q1415.warning)}`,
+    (q1415.methods ?? []).length > 0,
+    `1.14.4 Item 必须带方法清单（joined.tsrg 派生）: methods=${(q1415.methods ?? []).length}`,
+  );
+  assert.ok(
+    !q1415.warning || !/api-index 为空|设计边界/.test(q1415.warning),
+    `1.14.4 已有索引，不得再报空索引边界: ${JSON.stringify(q1415.warning)}`,
   );
   assert.ok(
     (q1415.notes ?? []).some((n) => /兼容工具/.test(n)),
     `1.14.4 响应也必须带兼容注释: ${JSON.stringify(q1415.notes)}`,
   );
-  const q1415b = await queryApi({ className: "GoalSelector", version: "1.15.2" });
+  const q1415b = await queryApi({ className: "net.minecraft.item.Item", version: "1.15.2" });
+  assert.equal(q1415b.found, true, `1.15.2 Item 应可查: ${JSON.stringify(q1415b).slice(0, 300)}`);
   assert.ok(
-    q1415b.warning && /1\.14\.4\/1\.15\.2/.test(q1415b.warning),
-    `1.15.2 同样必须报边界: ${JSON.stringify(q1415b.warning)}`,
+    (q1415b.methods ?? []).length > 0,
+    `1.15.2 Item 必须带方法清单: methods=${(q1415b.methods ?? []).length}`,
+  );
+  assert.ok(
+    !q1415b.warning || !/api-index 为空|设计边界/.test(q1415b.warning),
+    `1.15.2 已有索引，不得再报空索引边界: ${JSON.stringify(q1415b.warning)}`,
   );
   // P0-A 修复后：1.7.10–1.12.2 的 api-index 成员已归位，不再有「类名空壳」警告；
   // 且查询必须给出方法清单（此前 owner 错挂使非空类恒为 1、methods 恒 0）。
@@ -7984,7 +7994,7 @@ async function testDocsToolTablesMatchRegistry() {
     ["README 跨节重复", { ...base, readme: readme.replace("### 11. 日志与依赖诊断（8）", "### 11. 日志与依赖诊断（8）\n\n| 工具 | 作用 |\n|------|------|\n| `validate_at` | x |") }, /同时出现在 §/],
     ["AGENTS 漏一个工具", { ...base, agents: agents.replace(" / `download_official_mdk`", "") }, /AGENTS\.md 工具表缺 `download_official_mdk`/],
     ["AGENTS 名字写错", { ...base, agents: agents.replace("`analyze_bedrock_log`", "`analyze_bedrock_logs`") }, /AGENTS\.md 出现未注册的工具名/],
-    ["AGENTS 表锚点被改", { ...base, agents: agents.replace("## MCP Server 工具（可选）", "## MCP 工具（可选）") }, /AGENTS\.md 找不到/],
+    ["AGENTS 表锚点被改", { ...base, agents: agents.replace("## MCP Server / CLI 工具", "## MCP 工具") }, /AGENTS\.md 找不到/],
   ];
   for (const [label, input, anchor] of poisoned) {
     const got = diffDocToolTables(input);

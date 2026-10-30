@@ -16,7 +16,7 @@
 
 - **不触发**：纯问答 / 概念解释 / 只读检索（不改盘、不产出代码或文件）⇒ 直接回答，不套本节任何档。
 - **主档 · 模组开发交付（默认）**：交付物是给用户的 —— 用户自己的模组工程（本仓库之外的代码 / 配置 / 资源），或本轮只吐文本、只给用法 ⇒ 走「主档四块」。**这是常态，别往维护档套。**
-- **维护档 · 仓库维护交付**：改动命中本仓库受管面 —— 8 个平台树（`forge/**`、`fabric/**`、`neoforge/**`、`quilt/**`、`liteloader/**`、`rift/**`、`modloader/**`、`bedrock/**`，含平台根文件、各版本档与 `scaffold/**`）、`data/**`、`knowledge/**`、`community_knowledge/**`、`doc/**`、`mcp-server/**`、`scripts/**`、`agent-tools/**`、`openspec/**`、`ralphy-spec/**`，或根 `*.md` ⇒ 走「维护档六块」。**只要改的是「给 AI 读的结论」（API 名 / 常量 / 映射 / 版本口径 / 骨架 / 门 / 台账），哪怕只有一行也走维护档。**（这份清单是**手列快照**：新增顶层受管目录时必须同步补此处，维护提醒见 [`CONTRIBUTING.md`](./CONTRIBUTING.md) §贡献注意）
+- **维护档 · 仓库维护交付**：改动命中本仓库受管面 —— 8 个平台树（`forge/**`、`fabric/**`、`neoforge/**`、`quilt/**`、`liteloader/**`、`rift/**`、`modloader/**`、`bedrock/**`，含平台根文件、各版本档与 `scaffold/**`）、`data/**`、`knowledge/**`、`community_knowledge/**`、`common_skill/**`、`doc/**`、`dsh-plugin/**`、`mcp-server/**`、`paper/**`、`scripts/**`，或根 `*.md`（`agent-tools/**` / `openspec/**` / `ralphy-spec/**` 是本地未入库目录（`.gitignore` 逐条登记），改它们不算仓库改动） ⇒ 走「维护档六块」。**只要改的是「给 AI 读的结论」（API 名 / 常量 / 映射 / 版本口径 / 骨架 / 门 / 台账），哪怕只有一行也走维护档。**（这份清单是**手列快照**：新增顶层受管目录时必须同步补此处，维护提醒见 [`CONTRIBUTING.md`](./CONTRIBUTING.md) §贡献注意）
 - **混合**：按面分开写 —— 用户工程部分用主档，仓库面用维护档。
 - **只改了 `temp/**`（scratch）**：走主档，但第 3 块必须注明「产物只在 `temp/`，未落生效路径」。
 - **兜底**：拿不准是否属受管面 ⇒ 按维护档；只要本轮动了仓库受管面，维护档六块就必须写，不得用主档少写。

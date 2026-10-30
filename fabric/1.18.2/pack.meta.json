@@ -16,6 +16,7 @@
     "provenance": {
       "build": "2026-09-14 零改动副本（cp fabric/1.18.2/scaffold → D:/mc-skill-temp/_fab_build/1.18.2，逐文件 sha 比对与仓内一致 0 差异）gradlew build --no-daemon → BUILD SUCCESSFUL in 4m27s；JDK 17.0.12（G:/JAVA17/jdk-17.0.12_windows-x64_bin/jdk-17.0.12）+ Gradle 8.4 wrapper + fabric-loom 1.0.18 + loader_version=0.14.24 + yarn_mappings=1.18.2+build.4；产物 build/libs/examplemod-1.0.0.jar（7137 B，zip 内可扫到 fabric.mod.json）+ -sources.jar + -javadoc.jar；日志 D:/mc-skill-temp/_fab_build/1.18.2.log。边界：只覆盖 :build 任务链（含 remapJar），未跑 runClient / runServer / runData，也没有真机启动证据。 三件套出处登记依据：本档 gradle/wrapper/gradle-wrapper.jar 的 sha256 与 mcp-server/data/wrapper-jars.json 里 Gradle 8.4 的官方发行包内层条目钉值一致（0336f591…）⇒ provenance.wrapper=gradle-wrapper-task。",
       "wrapper": "gradle-wrapper-task"
-    }
+    },
+    "buildPinDrift": "provenance.build 记录的 loom 是 1.0.18；本档 scaffold/build.gradle:7 现钉 1.4-SNAPSHOT（scaffold/gradle/wrapper/gradle-wrapper.properties:4 记明换钉原因：1.0.18 的 runClient 真机起不来）。⇒ buildVerified 只覆盖旧钉值那次 :build 任务链，未按现钉重跑；要复现请按现钉自行跑一次。"
   }
 }

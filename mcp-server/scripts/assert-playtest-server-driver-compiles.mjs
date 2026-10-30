@@ -12,11 +12,15 @@
  *   版本串**已实证**：Javadoc 站的 `asOfVersion`（`26.3.build.178-stable`）**就是** maven 版本列表里的
  *   真实条目（`26.3.build.175-stable` … `190-stable` 连续段）—— 上一轮误判成"形状不同"是错的，
  *   那是被 `<latest>` = `26.3-pre-2.build.0-alpha`（预发布、排在列表最末）带偏。
- * - JDK 21+：Paper 26.3 线要的 JDK；本机候选 `G:\graalvm-jdk-21*` / `G:\JAVA17*`。
+ * - JDK 21+：Paper 26.3 线要的 JDK。定位走 `scripts/_lib/find-javac.mjs`（与 client 编译腿同源：
+ *   JAVA_HOME → PATH → 已知安装根），**不再**只扫 `G:\` + Program Files（那会漏 JAVA_HOME/PATH）。
  *   ⚠ 本门**不代下**任何构件件（与既有编译腿同纪律）。
  *
  * ⇒ 缺件时**默认降级并吼**（CI / 别的机器上必然缺），`--require` 走 fail-closed（缺件 rc=2）。
  *   **降级的那个 0 不是通过**。
+ *   `--require` 的消费者（2026-10-30 R2 审计 G-06 后补）：`.github/workflows/release-mcp-server.yml`
+ *   的「Playtest compile legs」在**探测到 paper-api 件**时用它强口径；探测不到只跑默认档并打
+ *   `::warning::`（「本轮未验证」进发布日志，而不是当成通过）。
  *
  * 退出码：0 = 编译通过（或本机缺件而降级）；1 = 编译失败；2 = 缺件且带 `--require`。
  */
@@ -24,6 +28,7 @@ import { existsSync, mkdirSync, readdirSync, rmSync, writeFileSync } from "node:
 import { execFileSync } from "node:child_process";
 import { delimiter, dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { findJavacs } from "./_lib/find-javac.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const MCP = resolve(HERE, "..");
@@ -59,39 +64,6 @@ function findClasspathJars() {
   return null;
 }
 
-function findJavac() {
-  const roots = ["G:\\", "C:\\Program Files\\Java", "C:\\Program Files\\Eclipse Adoptium"];
-  const out = [];
-  const probe = (dir, depth) => {
-    if (depth > 4 || !existsSync(dir)) return;
-    let ents;
-    try {
-      ents = readdirSync(dir, { withFileTypes: true });
-    } catch {
-      return;
-    }
-    if (ents.some((e) => e.isFile() && e.name.toLowerCase() === "javac.exe")) {
-      out.push(join(dir, "javac.exe"));
-      return;
-    }
-    for (const e of ents) {
-      if (e.isDirectory()) probe(join(dir, e.name), depth + 1);
-    }
-  };
-  for (const r of roots) probe(r, 0);
-  return out;
-}
-
-function javacMajor(javac) {
-  try {
-    const r = execFileSync(javac, ["-version"], { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] });
-    const m = String(r).match(/(\d+)/);
-    return m ? Number(m[1]) : 0;
-  } catch {
-    return 0;
-  }
-}
-
 /**
  * **实测钉死的 JDK 底线 = 25**（不是猜的）：
  * 用 JDK 21 编这只 jar 时 javac 报
@@ -104,9 +76,9 @@ const REQUIRED_JDK = 25;
 const cp = findClasspathJars();
 const jar = cp?.jars[0] ?? null; // 仅用于"有没有件"的存在性判断与日志
 const cpArg = cp ? cp.jars.join(delimiter) : "";
-const allJavacs = findJavac()
-  .map((j) => ({ path: j, major: javacMajor(j) }))
-  .sort((a, b) => b.major - a.major);
+// 2026-10-30（R2 审计 WP8）：定位器与 `assert-playtest-driver-compiles.mjs` 同源（`_lib/find-javac.mjs`）——
+// 本文件原来自己扫 G:\ / Program Files，**漏了 JAVA_HOME 与 PATH**，且 `javacMajor` 对 `1.8.0_xxx` 只取到 1。
+const allJavacs = findJavacs();
 const javacs = allJavacs.filter((j) => j.major >= REQUIRED_JDK);
 
 if (!jar || javacs.length === 0) {

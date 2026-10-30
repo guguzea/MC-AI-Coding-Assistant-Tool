@@ -2,6 +2,8 @@
   "note": "A5 判死符号台账：`packs.<platform>/<version>.<符号名>` = 该符号被判死的那条规则行（`<规则文件>:<行>`）。由 assert-scaffold-rules-conflict.mjs 生成与比对；判死面变化（新增/消失/锚点挪位）一律红。禁止手改，改判据要改规则后重生成。",
   "packs": {
     "fabric/1.14.4": {
+      "AbstractBlock.Settings.create": "09-anti-patterns.mdc:287",
+      "Block.Properties.create": "09-anti-patterns.mdc:288",
       "world.isRemote": "08-client-server.mdc:167"
     },
     "fabric/1.17.1": {

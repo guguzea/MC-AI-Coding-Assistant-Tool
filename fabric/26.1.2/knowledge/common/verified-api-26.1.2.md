@@ -10,7 +10,7 @@
 
 两条 provenance 限制（读表前必须知道）：
 
-- docs 页里的示例代码是 `<<< @/reference/26.1.2/src/…` 的 **include 引用**，仓库内 **没有** `reference/` 目录，也没有 `.java` 文件。所以「某类名在本档 docs 零命中」 **不等于**「该 API 不存在」，只等于「该页正文与 include 路径里没写出这个名字」。
+- docs 页里的示例代码是 `<<< @/reference/26.1.2/src/…` 的 **include 引用** —— 被 include 的文件**在盘上**（`data/fabric_26.1.2/reference/`，264 文件 / 159 个 `.java`），要引用时按该路径逐个点明行号。所以「某类名在本档 docs 正文零命中」 **不等于**「该 API 不存在」，只等于「该页正文里没写出这个名字」——名字可能只出现在 include 目标源码里。
 - loader-api 摘要 **只有 methods**（`fqcn / simpleName / pkg / modifiers / apiStatusInternal / environment / methods / file`），**没有** 构造器、字段、常量，`modifiers` 也不区分 class / interface / enum。所以「构造器参数表」「某类型是不是接口」这两类问题本表一律标 **未核实**，禁止按邻版补全。
 
 核不到的类名写成「以该版文档为准，禁止默写」。禁止克隆 `fabric/1.21.11/knowledge`。

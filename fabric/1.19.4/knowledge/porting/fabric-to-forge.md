@@ -23,7 +23,7 @@
 // Fabric → Forge
 plugins {
     // ❌ Fabric
-    id 'fabric-loom' version '1.0.18'
+    id 'fabric-loom' version '1.4-SNAPSHOT'
     // ✅ Forge
     id 'net.minecraftforge.gradle' version '[6.0.16,6.2)'
 }

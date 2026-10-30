@@ -18,6 +18,7 @@
  *   0 success
  *   2 bad CLI usage (missing/empty --version)
  *   3 I/O / parse error
+ *   5 该档已有 mappings/joined.tsrg ⇒ 本通道拒跑（改用 tsrg-extractor.js，否则会把成品擦成空 api-index）
  */
 
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
@@ -263,6 +264,14 @@ async function main() {
     process.exit(2);
   }
   const versionArg = args.flags.version;
+
+  // 本档若已有 joined.tsrg，CSV-only 通道必须让路：它只能产出空 api-index + 无 owner 的
+  // method-lookup（class-names 还会退化成字段名清单），跑一次就把 tsrg-extractor 的成品擦掉。
+  const joinedTsrg = join(__dirname, "..", "..", "data", `forge_${versionArg}`, "mappings", "joined.tsrg");
+  if (existsSync(joinedTsrg)) {
+    console.error(`✗ data/forge_${versionArg}/mappings/joined.tsrg 在盘：本档请走 tsrg-extractor.js（CSV-only 通道会写空 api-index）`);
+    process.exit(5);
+  }
 
   const io = readInputs(versionArg);
   if (io.ioErrors.length) {

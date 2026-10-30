@@ -19,7 +19,7 @@
  *      四腿共用一条**限定规则**：紧跟在大写限定名点号后的 token（`TickEvent.Phase` 的嵌套枚举/静态成员访问）
  *      不是类引用 ⇒ 不判；小写限定的 FQCN（`net.minecraft...Level`）照判。
  *   D. MCP 档出现同代 mojmap 名 ⇒ 红（同代 = 1.16.5 + 1.17.1 的 client.txt；本档 MCP 集合 = 该档
- *      `joined.srg`/`joined.tsrg`，1.14.4/1.15.2 无类名源 ⇒ 以 1.16.5 的 tsrg 代（同为 MCP 层，已在注释里声明）。
+ *      `joined.srg`/`joined.tsrg`，每档优先用自己的 `joined.srg`/`joined.tsrg`；某档两份都没有时才回落到 1.16.5 的 tsrg（同为 MCP 层，见 `assert-skill-mappings-key.mjs` 同一裁决）。
  * 豁免：`ALLOW`（逐文件 × token，必须给 why——解旗不是免责）；基线：`BASELINE`（棘轮，只许降）。
  *
  * 用法：

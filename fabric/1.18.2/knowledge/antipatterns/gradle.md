@@ -28,7 +28,7 @@ repositories {
 
 ### 2. Loom 版本与 Gradle 不配套
 
-> 注：**Loom 的 `1.0` 线不是「版本过低」**——1.0 的线号高于 0.14，真正的约束是它要求配套 Gradle 8（见 `scaffold/gradle/wrapper/gradle-wrapper.properties:3`「Loom 1.0.18 配对 Gradle 8」）。本档统一取 scaffold 实测钉值 `1.0.18`（`scaffold/build.gradle:2` + Gradle 8.4 wrapper；metadata 在册）；旧稿的 `0.14.46`/`0.11.x` 无佐证，已删。
+> 注：**Loom 线号不单调**——1.0 的线号高于 0.14，但本档真正的约束是 Loom 与 Gradle 成对：本档统一取 scaffold 实测钉值 `1.4-SNAPSHOT`（`scaffold/build.gradle:7`）+ Gradle 8.4 wrapper（`scaffold/gradle/wrapper/gradle-wrapper.properties:6`；该文件 `:4` 记明由 `1.0.18` 升到 `1.4-SNAPSHOT`，因 1.0.18 的 runClient 真机起不来）。旧稿的 `0.14.46`/`0.11.x` 无佐证，已删。
 
 **错误配置：**
 ```groovy
@@ -40,7 +40,7 @@ plugins {
 **正确配置：**
 ```groovy
 plugins {
-    id 'fabric-loom' version '1.0.18'  // ✅ 与 scaffold/build.gradle:2 同值（metadata 在册）
+    id 'fabric-loom' version '1.4-SNAPSHOT'  // ✅ 与 scaffold/build.gradle:7 同值
 }
 ```
 

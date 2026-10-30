@@ -281,11 +281,52 @@ function runSelftest() {
   })());
   push(DEG, '断·RELEDGER 面仍算得出漂移（只打印≠不判）', 'green',
     ledgerDriftFailures({ ...LEDGER, propertiesOfNoArg: 3 }, LEDGER).length === 1 ? [] : ['漂移计算被掏空 ⇒ RELEDGER 会把回归洗成绿']);
-  push(DEG, '断·五个环境变量钩子在本文件内都有读者（此前零 harness 消费者 = 装饰）', 'green', (() => {
+  push(DEG, '断·五个环境变量钩子都有真读者与消费者（代码里 process.env 读取 + 仓内外部消费者或头部用法登记）', 'green', (() => {
+    // 2026-10-30（R2 审计）：原判据 = 「钩子名字在本文件出现 ≥2 次」——注释里抄两遍也算过，
+    // 于是「只在清单里声明、代码里没人读」的装饰口照样绿。改成两条腿：
+    //   ① **真读者**：剥离注释块/双斜杠行之后，代码里必须出现 `process.env.<HOOK>`（或方括号读法）；
+    //   ② **消费者**：仓内至少一个其它文件引用该名字（scripts/*.mjs、test-*.mjs、package.json、
+    //      根 AGENTS.md / CONTRIBUTING.md、doc/*.md、.github/workflows/*.yml），
+    //      或本文件头部用法块把它登记为 operator knob（对操作者可见才不是装饰）。
     const src = fs.readFileSync(fileURLToPath(import.meta.url), 'utf8');
+    const headerEnd = src.indexOf('*/');
+    const header = headerEnd > 0 ? src.slice(0, headerEnd) : '';
+    const code = src
+      .replace(/\/\*[\s\S]*?\*\//g, '')
+      .split(/\r?\n/)
+      .filter((l) => !/^\s*\/\//.test(l))
+      .join('\n');
     const hooks = ['MC_SKILL_MAT_TEST_ROOT', 'MC_SKILL_MAT_RELEDGER', 'MC_SKILL_MAT_REQUIRE_PREMISE', 'MC_SKILL_MAT_CLIENT_TXT', 'MC_SKILL_MAT_GATE_INFO'];
-    const dead = hooks.filter((h) => (src.split(h).length - 1) < 2);
-    return dead.length ? [`钩子在本文件出现不足两次（声明了没人读）：${dead.join(',')}`] : [];
+    const selfPath = fileURLToPath(import.meta.url);
+    const consumers = [];
+    const collect = (dir, re, depth = 1) => {
+      if (!fs.existsSync(dir)) return;
+      for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+        const p = path.join(dir, e.name);
+        if (e.isDirectory()) {
+          if (depth > 1) collect(p, re, depth - 1);
+          continue;
+        }
+        if (re.test(e.name)) consumers.push(p);
+      }
+    };
+    collect(path.join(SERVER_ROOT, 'scripts'), /\.mjs$/, 2);
+    collect(SERVER_ROOT, /^(test-.*\.mjs|package\.json)$/, 1);
+    collect(path.join(REPO_ROOT, 'doc'), /\.md$/, 1);
+    collect(path.join(REPO_ROOT, '.github', 'workflows'), /\.ya?ml$/, 1);
+    for (const p of [path.join(REPO_ROOT, 'AGENTS.md'), path.join(REPO_ROOT, 'CONTRIBUTING.md')]) if (fs.existsSync(p)) consumers.push(p);
+    const extText = consumers
+      .filter((p) => p !== selfPath)
+      .map((p) => fs.readFileSync(p, 'utf8'))
+      .join('\n');
+    const bad = [];
+    for (const h of hooks) {
+      const read = code.includes(`process.env.${h}`) || code.includes(`process.env['${h}']`) || code.includes(`process.env["${h}"]`);
+      if (!read) bad.push(`${h}: 代码里没有 process.env 读取（只在清单/注释里出现 = 装饰口）`);
+      else if (!extText.includes(h) && !header.includes(h)) bad.push(`${h}: 仓内无外部消费者，且文件头用法块未登记为 operator knob（操作者看不见 = 装饰）`);
+    }
+    if (consumers.length < 20) bad.push(`消费者扫描面只取到 ${consumers.length} 个文件（< 20）⇒ 扫描塌缩，本腿未跑`);
+    return bad;
   })());
   push(DEG, '断·终判函数对真失败给 fail/exit 1', 'green', (() => {
     const v = gateVerdict({ failCount: 2, premiseChecked: true, testRoot: false, reledger: false });

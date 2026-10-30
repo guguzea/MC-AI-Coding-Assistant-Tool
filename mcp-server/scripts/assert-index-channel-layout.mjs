@@ -82,6 +82,27 @@ for (const [v, n] of Object.entries(LEGACY_SRG_PACKS)) {
   };
 }
 
+/**
+ * 1.13.2 / 1.14.4 / 1.15.2：同属 MCP 层，但映射容器是 MCPConfig **joined.tsrg**（旧式 TSRG）而不是 joined.srg。
+ * 钉值 = 各档 api-index.json 的类数；成员地板与旧 SRG 档同阈值——这三档正是「CSV-only 通道只能吐空
+ * api-index / 成员无 owner」的受害面，地板能挡住同类退化再次发生。
+ */
+const TSRG_SRG_PACKS = {
+  "1.13.2": 4027,
+  "1.14.4": 4976,
+  "1.15.2": 5137,
+};
+for (const [v, n] of Object.entries(TSRG_SRG_PACKS)) {
+  CHANNEL_KEEPS_SRG_CLASSES[`forge/${v}`] = {
+    classes: n,
+    forbiddenPrefixes: [],
+    forbiddenNames: [],
+    requiredNames: [],
+    mappingInput: "mappings/joined.tsrg",
+    membersFloor: { minNonEmptyRatio: 0.9, maxTopClassShare: 0.05 },
+  };
+}
+
 const TEST_ROOT = process.env.MC_SKILL_INDEX_LAYOUT_TEST_ROOT;
 const TEST_INDEX = process.env.MC_SKILL_INDEX_LAYOUT_TEST_INDEX;
 // 可选：把 TEST_INDEX 绑到指定档（如 forge/1.12.2）。留空 = 只跑 testIndexPack 档（1.16.5）。

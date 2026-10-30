@@ -5,6 +5,7 @@ platforms: [fabric, forge, neoforge]
 mcVersions: ["1.14-26.2"]
 communityDocId: authored/lib-cloth-config
 modrinthSlug: cloth-config
+mappings: hint
 ---
 
 > 数据来源：Modrinth project/cloth-config 版本表 limit=100；本轮 release 上界 fabric=26.2 / forge=1.21.3 / neoforge=26.2

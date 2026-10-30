@@ -47,6 +47,7 @@
  *
  * 用法：
  *   node scripts/assert-scaffold-selfcheck.mjs
+ *   node scripts/assert-scaffold-selfcheck.mjs --selftest                               # 假根夹具：1 正控 + 5 投毒（A1–A5 各一记）
  *   MC_SKILL_SCAFFOLD_SELFCHECK_RELEDGER=1 node scripts/assert-scaffold-selfcheck.mjs  # 重算豁免台账并打印
  *   MC_SKILL_SCAFFOLD_SELFCHECK_TEST_ROOT=<假根> node scripts/assert-scaffold-selfcheck.mjs
  *       # 投毒自证用：假根下**不查豁免台账**（否则被投的桩若撞上榜里的键会假绿）
@@ -66,6 +67,101 @@ const RELEDGER = process.env.MC_SKILL_SCAFFOLD_SELFCHECK_RELEDGER === "1";
 const INFO = process.env.MC_SKILL_SCAFFOLD_SELFCHECK_INFO === "1";
 const TEST_ROOT = Boolean(process.env.MC_SKILL_SCAFFOLD_SELFCHECK_TEST_ROOT);
 const PLATFORM = "fabric";
+
+/* ── `--selftest`：假根夹具的活性自证（不碰仓库；1 正控必绿 + 5 投毒必红）─────────────
+ * 为什么 spawn 自己：本门判据全在模块顶层（逐档 walk + 台账层交织），抽纯函数等于重写；
+ * `MC_SKILL_SCAFFOLD_SELFCHECK_TEST_ROOT` 本来就是为「假根投毒」留的钩子（见文件头用法）。
+ * 每记投毒都断言红在**预期的那条原因**上（子进程输出含 marker），否则「门自己崩了」也会
+ * 被当成「投毒被咬住」。干净对照另要求打印出 `1 档 scaffold` —— 证明扫描真跑了、不是空转。
+ * 台账在假根模式下按设计跳过（否则被投的桩撞上榜里的键会假绿），故 A2 icon 这类
+ * 「真根走豁免」的命中在假根下是红 —— 这正是本条臂要证明的。
+ */
+if (process.argv.includes("--selftest")) {
+  const { mkdtempSync, mkdirSync, writeFileSync, rmSync } = await import("node:fs");
+  const { spawnSync } = await import("node:child_process");
+  const { tmpdir } = await import("node:os");
+  const SELF = fileURLToPath(import.meta.url);
+  const SC = "fabric/1.14.4/scaffold/";
+  const WRAP = {
+    [`${SC}gradlew`]: "#!/bin/sh\n",
+    [`${SC}gradlew.bat`]: "@echo off\r\n",
+    [`${SC}gradle/wrapper/gradle-wrapper.properties`]: "distributionUrl=https://example.invalid/gradle-7.0-bin.zip\n",
+  };
+  const BG = [
+    "plugins { id 'fabric-loom' version '0.6.60' }",
+    "",
+    "processResources {",
+    "    filesMatching(\"fabric.mod.json\") {",
+    "        expand mod_id: project.mod_id",
+    "    }",
+    "}",
+    "",
+  ].join("\n");
+  const CLEAN = { [`${SC}build.gradle`]: BG, [`${SC}gradle.properties`]: "mod_id=examplemod\nmod_version=1.0.0\n", ...WRAP };
+  const fmj = (obj) => JSON.stringify(obj, null, 2) + "\n";
+  const cases = [
+    ["干净对照", CLEAN, 0, "1 档 scaffold"],
+    [
+      "A1 expand 缺键",
+      { ...CLEAN, [`${SC}src/main/resources/examplemod.mixins.json`]: '{\n  "package": "${mod_name}.mixin"\n}\n' },
+      1,
+      "MissingPropertyException",
+    ],
+    [
+      "A2 引用文件不存在",
+      { ...CLEAN, [`${SC}src/main/resources/fabric.mod.json`]: fmj({ schemaVersion: 1, icon: "assets/examplemod/icon.png" }) },
+      1,
+      "icon.png",
+    ],
+    [
+      "A3 入口类不存在",
+      { ...CLEAN, [`${SC}src/main/resources/fabric.mod.json`]: fmj({ schemaVersion: 1, entrypoints: { main: ["com.example.ExampleMod"] } }) },
+      1,
+      "入口类缺失",
+    ],
+    ["A4 wrapper 缺件", Object.fromEntries(Object.entries(CLEAN).filter(([k]) => !k.endsWith("gradlew"))), 1, "缺 gradlew"],
+    [
+      "A5 注释依赖仍被 import",
+      {
+        ...CLEAN,
+        [`${SC}build.gradle`]: BG + '// modImplementation "net.fabricmc.fabric-api:fabric-api:0.1"\n',
+        [`${SC}src/main/java/com/example/ExampleMod.java`]: "package com.example;\n\nimport net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;\n",
+      },
+      1,
+      "处于注释态",
+    ],
+  ];
+  let fails = 0;
+  for (const [label, files, expectRc, marker] of cases) {
+    const root = mkdtempSync(path.join(tmpdir(), "scaffold-selfcheck-selftest-"));
+    try {
+      for (const [rel, body] of Object.entries(files)) {
+        const abs = path.join(root, rel.split("/").join(path.sep));
+        mkdirSync(path.dirname(abs), { recursive: true });
+        writeFileSync(abs, body, "utf8");
+      }
+      const r = spawnSync(process.execPath, [SELF], {
+        encoding: "utf8",
+        windowsHide: true,
+        env: { ...process.env, MC_SKILL_SCAFFOLD_SELFCHECK_TEST_ROOT: root },
+      });
+      const out = `${r.stdout || ""}${r.stderr || ""}`;
+      if (r.status !== expectRc || !out.includes(marker)) {
+        fails++;
+        console.error(`  ✗ 「${label}」期望 rc=${expectRc} 且输出含「${marker}」，实得 rc=${r.status}`);
+        for (const l of out.split(/\r?\n/).filter(Boolean).slice(0, 4)) console.error(`    ${l}`);
+      }
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  }
+  console.log(
+    fails
+      ? `selftest FAILED（${fails}/${cases.length} 例红）`
+      : `selftest OK（${cases.length}/${cases.length} 例 = 1 正控 + ${cases.length - 1} 投毒，分母现数）`,
+  );
+  process.exit(fails ? 1 : 0);
+}
 
 /**
  * 已知豁免台账。一条 = 一个「已实测、但本轮无权/不该由 S25a 修」的命中。

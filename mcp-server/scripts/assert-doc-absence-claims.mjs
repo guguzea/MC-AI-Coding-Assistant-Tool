@@ -283,6 +283,81 @@ export function findAnchor(text, anchor) {
 }
 
 /**
+ * 「显式路径不存在」通用腿（2026-10-30 R2 审计）：正文里点名**仓内路径**并说它不存在，
+ * 而盘上该路径在 ⇒ 红。与上面表驱动的缺页腿互补：那条钉 (声称 ↔ 语料页) 对，这条钉 (声称 ↔ 盘上文件)。
+ * 立腿缘由（WP6 实测一类缺陷）：`reference/` 树、`.github/workflows/build.yaml` 在盘上，
+ * 而六处文档写「本档没有 reference/ / 没有 build.yml」—— agent 读到就放弃用真实证据。
+ *
+ * 精度靠**紧邻**：否定词与反引号路径之间只允许空格/「该/本档/目录/文件/树/路径/**」这类填充，
+ * 不认「无规则树也无语料（见根 `AGENTS.md`）」这种否定与引用分属两件事的行（2026-10-30 实测：
+ * 放宽容器的版本在真树上 101 条命中里 100 条是这一类假阳性）。引用/更正行（CITE_RE）同表内腿一并跳过。
+ * 解析根：`data/…` 等仓根相对路径按仓根；`reference/` 这类档内相对路径再按 `<platform>/<ver>/` 试一次。
+ */
+export const PATH_ABSENT_PRE = /(不存在|没有|不在盘上|缺失|无|未提供|未落盘)(?:\s|该|这个|本仓|本档|任何|目录|文件|树|路径|名|\*\*|\*|的)*`([^`\n]+)`/g;
+export const PATH_ABSENT_POST = /`([^`\n]+)`(?:\s|\*\*|\*)*(不存在|不在盘上|缺失|已删除|已被删)/g;
+const PATH_FACE_TOP = ['fabric', 'forge', 'neoforge', 'quilt', 'paper', 'bedrock', 'liteloader', 'rift', 'modloader', 'doc', 'knowledge'];
+const PATH_FACE_SKIP = /^(\.(claude|continue|trae|opencode|agents|zcode|pi)|node_modules|data|temp|dist|build|\.gradle)$/;
+/**
+ * 裸目录名歧义表：`data/` / `assets/` / `src/` 这类 token 在规则正文里几乎总指**Minecraft 工程**里的目录
+ * （「没有 `data/` 配方」「不与 `assets/` 同级」），与仓库语料根 `data/` 同名不同物 —— 2026-10-30 实测
+ * 首版在真树上 6 条命中**全是**这一类。裸名一律不判（要判就写带子路径的 `data/forge_1.20.4/...`）。
+ * 代价（如实登记）：真的想声称「本仓 `data/` 不存在」时这条腿不会红。
+ */
+const PATH_BARE_AMBIGUOUS = new Set([...PATH_FACE_TOP, 'data', 'temp', 'assets', 'src', 'build', 'run', 'gradle', 'libs', 'bin', 'out', 'resources', 'generated']);
+export const PATH_FACE_FILES_MIN = 1500; // 口径 = 上述顶层目录下 .md/.mdc 递归件数；实测 2541；下界
+
+/** 扫描面：档内自述 + `doc/**` + `knowledge/**`（投影目录 / data / temp / build 不入）。 */
+export function pathFaceFiles(root) {
+  const out = [];
+  const walk = (d) => {
+    for (const e of fs.readdirSync(d, { withFileTypes: true })) {
+      if (e.isDirectory()) {
+        if (PATH_FACE_SKIP.test(e.name)) continue;
+        walk(path.join(d, e.name));
+      } else if (/\.(mdc|md)$/.test(e.name)) out.push(path.relative(root, path.join(d, e.name)).split(path.sep).join('/'));
+    }
+  };
+  for (const top of PATH_FACE_TOP) {
+    const d = path.join(root, top);
+    if (fs.existsSync(d)) walk(d);
+  }
+  return out;
+}
+
+/** 纯判定腿：`{problems, scanned, checked}`（`exists` 可注入，selftest 用它做全内存夹具）。 */
+export function pathAbsenceClaims({ root, files, read, exists = fs.existsSync }) {
+  const problems = [];
+  let scanned = 0;
+  let checked = 0;
+  for (const rel of files) {
+    const text = read(rel);
+    if (text == null) continue;
+    scanned += 1;
+    const pack = /^([a-z]+)\/(\d[^/]*)\//.exec(rel);
+    const roots = pack ? [root, path.join(root, pack[1], pack[2])] : [root];
+    String(text)
+      .split(NL)
+      .forEach((line, i) => {
+        if (RES.cite.test(line)) return;
+        const toks = [];
+        for (const m of line.matchAll(PATH_ABSENT_PRE)) toks.push(m[2]);
+        for (const m of line.matchAll(PATH_ABSENT_POST)) toks.push(m[1]);
+        for (const raw of toks) {
+          // 路径判据看**原始** token：`reference/` 去掉尾斜杠后是裸词，拿剥完的串判会把它当普通词漏掉。
+          if (!raw || !/[/.]/.test(raw)) continue;
+          const tok = raw.replace(/\/+$/, '').replace(/\*\*?$/, '');
+          if (!tok) continue;
+          if (PATH_BARE_AMBIGUOUS.has(tok)) continue;
+          checked += 1;
+          const hit = roots.map((r) => path.join(r, tok)).find((p) => exists(p));
+          if (hit) problems.push(`${rel}:${i + 1}: 声称「${raw}」不存在，但盘上在（${path.relative(root, hit).split(path.sep).join('/')}）—— 显式路径的否认必须与盘上一致`);
+        }
+      });
+  }
+  return { problems, scanned, checked };
+}
+
+/**
  * 纯判定腿（--selftest 与真跑共用）。
  * @param claims  登记表
  * @param floors  {filesMin,judgedMin,claimsMin}
@@ -503,6 +578,47 @@ function selftest() {
       r: judge(ALL, F, mk({ ...R, [A_FILE]: agentsCite }), REPO_CLAIM),
       want: (r) => r.conflicts.length === 2 && r.citations.length >= 2 && r.citations.every((c) => c.at === `${A_FILE}:9`),
     },
+    // ⑦「显式路径不存在」通用腿（2026-10-30 R2 审计）：三臂 —— 毒必红 / 引用行不判 / 盘上真没有不判。
+    {
+      name: 'ST7 路径否认腿：称「本档没有 `reference/`」而盘上在 ⇒ 红（WP6 实际病灶形状）',
+      r: pathAbsenceClaims({
+        root: '/R',
+        files: ['fabric/9.9.9/knowledge/x.md'],
+        read: () => '本档没有 `reference/` 源码树，可引的只有语料正文。',
+        exists: (p) => p.replace(/\\/g, '/') === '/R/fabric/9.9.9/reference',
+      }),
+      want: (r) => r.problems.length === 1 && r.problems[0].includes('reference/') && r.checked === 1,
+    },
+    {
+      name: 'ST7b 路径否认腿：同一句包成「旧稿称…已改」引用式 ⇒ 不判红（CITE_RE 分桶）',
+      r: pathAbsenceClaims({
+        root: '/R',
+        files: ['fabric/9.9.9/knowledge/x.md'],
+        read: () => '旧稿称本档没有 `reference/` 源码树，已改。',
+        exists: () => true,
+      }),
+      want: (r) => r.problems.length === 0 && r.scanned === 1,
+    },
+    {
+      name: 'ST7c 路径否认腿：否定的对象真是引用文件（「无规则树也无语料，见根 `AGENTS.md`」）⇒ 不判红（紧邻判据）',
+      r: pathAbsenceClaims({
+        root: '/R',
+        files: ['fabric/9.9.9/knowledge/x.md'],
+        read: () => '本档既无规则树也无语料（见根 `AGENTS.md` fabric 空洞档清单）。',
+        exists: () => true,
+      }),
+      want: (r) => r.problems.length === 0 && r.checked === 0,
+    },
+    {
+      name: 'ST7d 路径否认腿：裸目录名 `data/`（Minecraft 工程目录，与仓根同名不同物）⇒ 不判红',
+      r: pathAbsenceClaims({
+        root: '/R',
+        files: ['forge/9.9.9/.cursor/skills/mc-x/SKILL.md'],
+        read: () => '与资源同在 `assets/` 下，**没有** `data/` 目录。',
+        exists: () => true,
+      }),
+      want: (r) => r.problems.length === 0 && r.checked === 0,
+    },
   ];
 
   let passed = 0;
@@ -511,13 +627,15 @@ function selftest() {
     if (ok) passed++;
     else {
       console.error(`  ✗ ${c.name}`);
-      console.error(`    拒=${c.r.conflicts.length} 活声称=${c.r.activeClaims} 判定=${c.r.resolved} 未判定=${c.r.unjudged.length} 引用=${c.r.citations.length} 丢失=${c.r.lost.length} 改准=${c.r.consistent.length} 扫文件=${c.r.scanned} 地板=${c.r.floorTrips.map((t) => t.kind).join(',') || '无'}`);
-      for (const f of c.r.conflicts.slice(0, 3)) console.error(`    冲突 ${f.id}: ${f.side} | ${f.evidence}`);
+      if (c.r.problems) console.error(`    路径否认腿: 扫文件=${c.r.scanned} 判=${c.r.checked} 拒=${c.r.problems.length}`);
+      else console.error(`    拒=${c.r.conflicts.length} 活声称=${c.r.activeClaims} 判定=${c.r.resolved} 未判定=${c.r.unjudged.length} 引用=${c.r.citations.length} 丢失=${c.r.lost.length} 改准=${c.r.consistent.length} 扫文件=${c.r.scanned} 地板=${c.r.floorTrips.map((t) => t.kind).join(',') || '无'}`);
+      for (const f of (c.r.conflicts || []).slice(0, 3)) console.error(`    冲突 ${f.id}: ${f.side} | ${f.evidence}`);
+      for (const f of (c.r.problems || []).slice(0, 3)) console.error(`    路径否认 ${f}`);
     }
   }
-  const redConf = cases.filter((c) => c.r.conflicts.length > 0).length;
-  const redFloor = cases.filter((c) => c.r.floorTrips.length > 0).length;
-  const redAny = cases.filter((c) => c.r.conflicts.length > 0 || c.r.floorTrips.length > 0).length;
+  const redConf = cases.filter((c) => c.r.conflicts && c.r.conflicts.length > 0).length;
+  const redFloor = cases.filter((c) => c.r.floorTrips && c.r.floorTrips.length > 0).length;
+  const redAny = cases.filter((c) => (c.r.conflicts && c.r.conflicts.length > 0) || (c.r.floorTrips && c.r.floorTrips.length > 0)).length;
   console.log(`assert-doc-absence-claims(selftest): ${passed}/${cases.length}${passed === cases.length ? ` OK（${redAny} 记含红=${redConf} 冲突红 + ${redFloor} 地板红；其余为改准/引用/未判定对照腿）` : ' 有例不符'}`);
   process.exitCode = passed === cases.length ? 0 : 1;
 }
@@ -551,9 +669,18 @@ if (process.argv.includes('--selftest')) {
   }
   if (r.missing) failures.push(`登记表内 ${r.missing} 个锚点文件读不到（路径写错 / 档被搬走 ⇒ 必须显式重签登记表，不许静默少扫）`);
 
+  // 「显式路径不存在」通用腿（2026-10-30 R2 审计）：表外的档也扫，只判「点了名的路径」。
+  const pathLeg = pathAbsenceClaims({ root: ROOT, files: pathFaceFiles(ROOT), read });
+  if (pathLeg.scanned === 0) failures.push('[FLOOR-COLLECTOR] 路径否认腿 扫文件=0 —— 采集器失效（换错根 / 顶层目录改名），不是断言干净');
+  else if (pathLeg.scanned < PATH_FACE_FILES_MIN) {
+    failures.push(`[FLOOR-LOW] 路径否认腿 扫文件=${pathLeg.scanned} < 地板 ${PATH_FACE_FILES_MIN}（口径：档内自述 + doc/** + knowledge/** 的 .md/.mdc 递归件数）`);
+  }
+  failures.push(...pathLeg.problems);
+
   const summary =
     `汇总 扫文件=${r.scanned} 判条目=${r.resolved} 未判定=${r.unjudged.length} 引用=${r.citations.length} 拒=${r.conflicts.length} ` +
-    `采集面=活声称 ${r.activeClaims}/登记 ${r.claims} 地板=文件≥${FLOORS.filesMin} 且 判定条目≥${FLOORS.judgedMin} 且 活声称≥${FLOORS.claimsMin}`;
+    `采集面=活声称 ${r.activeClaims}/登记 ${r.claims} 地板=文件≥${FLOORS.filesMin} 且 判定条目≥${FLOORS.judgedMin} 且 活声称≥${FLOORS.claimsMin} · ` +
+    `路径否认腿 扫文件=${pathLeg.scanned} 判=${pathLeg.checked} 拒=${pathLeg.problems.length}（地板 文件≥${PATH_FACE_FILES_MIN}）`;
   const packs = new Set(CLAIMS.map((c) => c.pack)).size;
   const coverage =
     `覆盖面：表内 ${CLAIMS.length} 条 / 判 ${packs} 档 / 被扫文件 ${r.scanned}（登记表去重实际读到的 anchor.file 件数）；检索侧=只读 data/**/index-l0.json + processed 正文，未 spawn CLI` +

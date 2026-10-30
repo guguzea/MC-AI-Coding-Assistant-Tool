@@ -10,7 +10,7 @@
     "buildVerified": true,
     "provenance": {
       "wrapper": "gradle-wrapper-task",
-      "build": "2026-09-14 零改动副本（cp fabric/1.21.11/scaffold → D:/mc-skill-temp/_fab_build2/1.21.11，逐文件 sha256 比对与仓内一致 0 差异）gradlew build --no-daemon → BUILD SUCCESSFUL in 80m36s；JDK 21（G:/graalvm-jdk-21_windows-x64_bin/graalvm-jdk-21.0.12+7.1）+ Gradle 9.5.1 wrapper + fabric-loom 1.17-SNAPSHOT（取自 gradle.properties 的 loom_version） + loader_version=0.19.3 + yarn=1.21.11+build.6；产物 build/libs/examplemod-1.0.0.jar（5419 B，zip 内可扫到 fabric.mod.json）共 2 件：examplemod-1.0.0-sources.jar=4485 examplemod-1.0.0.jar=5419；日志 D:/mc-skill-temp/_fab_build2/1.21.11.log。 三件套出处登记依据：本档 gradle/wrapper/gradle-wrapper.jar 的 sha256 与 mcp-server/data/wrapper-jars.json 里 Gradle 9.5.1 的官方发行包内层条目钉值一致（497c8c2a…）。 边界：只覆盖 :build 任务链（含 remapJar），未跑 runClient / runServer / runData，也没有真机启动证据。"
+      "build": "2026-09-14 零改动副本（cp fabric/1.21.11/scaffold → D:/mc-skill-temp/_fab_build2/1.21.11，逐文件 sha256 比对与仓内一致 0 差异）gradlew build --no-daemon → BUILD SUCCESSFUL in 80m36s；JDK 21（G:/graalvm-jdk-21_windows-x64_bin/graalvm-jdk-21.0.12+7.1）+ Gradle 9.5.1 wrapper + fabric-loom 1.17-SNAPSHOT（取自 gradle.properties 的 loom_version） + loader_version=0.19.3 + yarn=1.21.11+build.6（注：本档现钉 `loader_version=0.19.5`，见 scaffold/gradle.properties:12；本条构建记录仍按 0.19.3 跑的，未按现钉重跑）；产物 build/libs/examplemod-1.0.0.jar（5419 B，zip 内可扫到 fabric.mod.json）共 2 件：examplemod-1.0.0-sources.jar=4485 examplemod-1.0.0.jar=5419；日志 D:/mc-skill-temp/_fab_build2/1.21.11.log。 三件套出处登记依据：本档 gradle/wrapper/gradle-wrapper.jar 的 sha256 与 mcp-server/data/wrapper-jars.json 里 Gradle 9.5.1 的官方发行包内层条目钉值一致（497c8c2a…）。 边界：只覆盖 :build 任务链（含 remapJar），未跑 runClient / runServer / runData，也没有真机启动证据。"
     }
   }
 }

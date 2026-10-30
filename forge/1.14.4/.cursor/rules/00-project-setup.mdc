@@ -42,19 +42,20 @@
 - `gradle.properties` 必须包含：
   ```properties
   minecraft_version=1.14.4
-  forge_version=28.2.0
-  mappings_version=1.14.4
-  loader_version=28.2.0
+  forge_version=28.2.26
+  mapping_channel=snapshot
+  mapping_version=20190719-1.14.3
+  loader_version_range=[28,)
   ```
   > 注意：
   > - `build.gradle` 中引用时用 `mapping_version`（不带 s），属性名必须与 `build.gradle` 中的 `${property名}` 完全一致
-  > - `loader_version` 填 Forge 版本号，与 mods.toml 中的 `loaderVersion` 字段对应
+  > - `loader_version_range` 与 `mods.toml` 的 `loaderVersion` 字段对应（产物里由 `${loader_version_range}` 展开；MDK **没有** `loader_version` 这个键）
 - **禁止在 `build.gradle` 中直接写版本号**，必须引用 `${minecraft_version}` 等属性
 
 ### Mappings 约束
 
 - Forge 1.14.4 默认使用 **MCP**
-- `gradle.properties` 中的 `mappings_version` 对应 MCP 版本
+- `gradle.properties` 中的 `mapping_version` 对应 MCP 版本（本档 `snapshot` / `20190719-1.14.3`，与本包 `scaffold/gradle.properties:14-15` 一致）
 - **禁止**在 `build.gradle` 中切换到 `yarn` 或 `parchment`（除非用户明确要求且项目已适配）
 - MCP 映射将混淆的 Minecraft 方法映射为可读名称，如 `func_12345_a` → `getHealth`
 

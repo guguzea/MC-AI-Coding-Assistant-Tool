@@ -18,11 +18,11 @@
 
 不要为本档新写 `mc-config` Skill。配置走仓库根 `knowledge/libs/all-platforms/mc-config/SKILL.md` + `generate_config`（工作流 `mc-config`）。LiteLoader / Rift / ModLoader / 基岩不要套 Cloth / ForgeConfigSpec。
 
-## scaffold（参照件，未钉 Gradle 版）
+## scaffold（可直接构建，Gradle 9.5.1）
 
-本档 `scaffold/` 是**参照件**：`pack.meta.json` 记 `scaffold.mode: "reference"`、`scaffold.buildVerified: false`。它用于对照工程结构，**不是**可直接编译的成品。
+本档 `scaffold/` 是**可构建的成品**：`pack.meta.json` 记 `scaffold.mode: "gradle"`、`scaffold.gradle: "9.5.1"`、`scaffold.buildVerified: true`（2026-10-05 base-mod 矩阵实跑 `gradlew build --no-daemon` ⇒ BUILD OK）。
 
-- **不能**直接 `./gradlew build`：`scaffold/gradle/wrapper/gradle-wrapper.jar`、`gradlew`、`gradlew.bat` 三件套均不在盘上；本仓**不为本档钉 Gradle 版**（`gradle.properties` 内无任何 Gradle 版本键）。
+- **可以**直接 `./gradlew build`：`scaffold/gradle/wrapper/gradle-wrapper.jar`、`gradlew`、`gradlew.bat` 三件套均在盘上；wrapper 由 `gradle/wrapper/gradle-wrapper.properties` 钉 `gradle-9.5.1-bin`（`gradle.properties` 无 Gradle 键，钉值在 wrapper 与 `pack.meta.json`）。
 - 需要构建：以**官方 develop 页**（https://fabricmc.net/develop/）与 `search_fabric_docs`（`version=1.21.4`）为准。
 
 <!-- MC_SKILL_WORKFLOW_NOTE -->

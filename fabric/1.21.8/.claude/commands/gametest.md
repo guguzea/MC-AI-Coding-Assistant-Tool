@@ -148,7 +148,7 @@ tasks.register("runProductionClientGameTest", net.fabricmc.loom.task.prod.Client
 ```
 
 - 关键名：`productionRuntimeMods`（配置块名）、`net.fabricmc.loom.task.prod.ClientProductionRunTask`（任务类型 FQCN）、任务名 `runProductionClientGameTest`、`jvmArgs.add("-Dfabric.client.gametest")`、`useXVFB`。
-- **配套 workflow YAML 未落盘**：页面转引 `@[code lang=yaml transcludeWith=:::automatic-testing:game-test:3](@/.github/workflows/build.yml)`，而 `data/fabric_1.21.8/.github/workflows/build.yml` 在盘上不存在 ⇒ 该 job 片段无法引用，留 `TODO(未核实)`，不要自拟 `uses:`/`with:` 键。
+- **配套 workflow YAML 在盘**：页面转引 `@[code lang=yaml transcludeWith=:::automatic-testing:game-test:3](@/.github/workflows/build.yml)`，入库文件的扩展名是 **`.yaml`**：`data/fabric_1.21.8/.github/workflows/build.yaml`（99 行）⇒ 按该路径引用；job 名 `client_game_test`，`- run: ./gradlew runProductionClientGameTest` 在 `:69`（`working-directory: ./reference` 在 `:71`），截图上传 `path:` 在 `:76` 与 `:81`。不要因 `.yml` 找不到就自拟 `uses:`/`with:` 键。
 - 本档页面**没有**「game test 在 GitHub Actions 上可能因 network synchronizer 失败」的告警块（那是 1.21.10 档才有的），故 `-Dfabric.client.gametest.disableNetworkSynchronizer=true` 不属本档。
 
 ## 结构模板（structure）

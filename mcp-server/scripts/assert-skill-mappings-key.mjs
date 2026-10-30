@@ -75,15 +75,20 @@ const PLATFORMS = ["fabric", "forge", "neoforge", "quilt", "liteloader", "rift",
 
 /**
  * leg1 增两记（2026-09-25 修复批，防复发；证据见门头注）：
- *  · **值域**：`mappings:` 值的前缀必须在册（「值 + 括注」体例取前缀）——`hint` 这类垃圾值当场红；
+ *  · **值域**：`mappings:` 值的前缀必须在册（「值 + 括注」体例取前缀）——`bogus` 这类垃圾值当场红。
+ *    `hint` 是在册值（2026-10-30 R2 审计）：库里 17 件跨平台 Skill 刻意声明「本件不钉单一映射层，
+ *    类名以对应 loader 预重映射为准」；它与 `platforms:` 数组同时出现，本就不吃值-版本腿。
  *  · **值-版本**：`mcp` 只在 ≤1.16.5 的 forge 档成立。MCP 由 `stable`/`snapshot` 通道生成，而 FG5 官方文档
  *    明言「stable/snapshot **自 1.17 起不再存在**」（1.17+ 只剩 `official`；parchment 是叠在其上的参数名层）。
  *    跨平台件（frontmatter 带 `platforms:` 数组）不按档位判。
  *  · **值-版本（2026-09-25 第二遍补）**：`parchment` 自 **1.16.5** 起才有（ParchmentMC 构件最早
  *    `parchment-1.16.5`；本仓 `data/` 的 parchment 产物也只从 1.16.5 起）——`forge/1.14.4` 曾声明
  *    `parchment`（§6.8 修复批已改回 `mcp`），本条防复发。
+ *  · **扫描面（2026-10-30 R2 审计）**：从 `<platform>/<ver>/.cursor/skills` 扩到 `knowledge/libs/<组>/<库>/SKILL.md`
+ *    （库 Skill 源稿同样是 agent 逐字抄的代码来源，此前完全不过本门）。值-版本腿只对**档内**路径跑
+ *    （`<platform>/<version>/…`），库路径 `knowledge/libs/…` 的第 2 段是组名不是版本。
  */
-const MAPPING_VALUE_PREFIXES = ["yarn", "mcp", "parchment", "official", "mojmap", "mojmap-unobfuscated"];
+const MAPPING_VALUE_PREFIXES = ["yarn", "mcp", "parchment", "official", "mojmap", "mojmap-unobfuscated", "hint"];
 const MCP_MAX_VERSION = "1.16.5";
 const PARCHMENT_MIN_VERSION = "1.16.5";
 /** 版本号数值比较 a ≤ b（逐段，段数不足补 0）。 */
@@ -117,8 +122,23 @@ function skillFiles(root) {
       }
     }
   }
+  // 库 Skill 源稿（`knowledge/libs/<group>/<mc-name>/SKILL.md`）——同一「逐字抄代码」风险面，
+  // 2026-10-30 R2 审计前完全不过本门（17 件刻意声明 `mappings: hint`，12 件连键都没有）。
+  const libs = path.join(root, "knowledge", "libs");
+  if (fs.existsSync(libs)) {
+    for (const g of fs.readdirSync(libs, { withFileTypes: true })) {
+      if (!g.isDirectory()) continue;
+      for (const d of fs.readdirSync(path.join(libs, g.name), { withFileTypes: true })) {
+        if (!d.isDirectory()) continue;
+        const f = path.join(libs, g.name, d.name, "SKILL.md");
+        if (fs.existsSync(f)) out.push(path.relative(root, f).replace(/\\/g, "/"));
+      }
+    }
+  }
   return out;
 }
+/** 档内路径（`<platform>/<version>/…`）才跑值-版本腿；`knowledge/libs/<group>/…` 的第 2 段是组名。 */
+const inPackPath = (rel) => /^[a-z]+\/\d/.test(rel);
 
 function hasFencedCode(body) {
   const lines = body.split(/\r?\n/);
@@ -309,11 +329,11 @@ function mcpClassNameProtect(root, version) {
   } catch {
     return out;
   }
-  // **回退**（2026-09-25 第三遍补）：1.14.4 / 1.15.2 的 mappings 目录只有 csv/zip、**没有 tsrg/srg**
-  // （与 `assert-cross-layer-names.mjs` 同一裁决：1.14.4/1.15.2 无类名源 ⇒ 以 1.16.5 的 tsrg 代——
-  // 同为 MCP 类名层）。没有这条回退，1.14 时代 yarn≈MCP 的**同形名**（PlayerEntity / World /
-  // ServerWorld / ContainerType / ItemGroup / SoundCategory…）会因「在 pairs 的 yarn 侧」被误判成
-  // 「mcp 声明件用了 yarn 名」（pairs 重拉到 13/13 档把 1.14.4 补进判据面时现形，10 件全假红）。
+  // **回退**（2026-09-25 第三遍补）：某档 mappings 目录里没有 tsrg/srg 时才借 1.16.5 的 tsrg（同为 MCP 类名层）。
+  // 1.14.4 / 1.15.2 原本只有 csv/zip，现已补 MCPConfig `joined.tsrg` ⇒ 走它们自己的表，不再借邻档。
+  // 保留回退是因为「1.14 时代 yarn≈MCP 的同形名」（PlayerEntity / World / ServerWorld /
+  // ContainerType / ItemGroup / SoundCategory…）在 pairs 的 yarn 侧会被误判成「mcp 声明件用了 yarn 名」；
+  // 没有这类表时宁可按 MCP 层借表，也不要把 10 件全判假红。
   if (!files.length) {
     const fallback = path.join(root, "data", "forge_1.16.5", "mappings", "obf_to_srg.tsrg");
     try {
@@ -453,6 +473,9 @@ function leg2Check({ root, files, byVersion }) {
   let noPairs = 0;
   const tokensOf = (text) => new Set(String(text).match(/[A-Za-z_$][A-Za-z0-9_$]*/g) ?? []);
   for (const rel of files) {
+    // 库 Skill 源稿没有「本档」概念（`knowledge/libs/<group>/…` 第 2 段是组名不是版本）——
+    // 对照产物按档索引，库路径进来只会把 noPairs 灌大、判 0 件，故直接跳过。
+    if (!inPackPath(rel)) continue;
     const version = rel.split("/")[1];
     const text = fs.readFileSync(path.join(root, rel), "utf8");
     const fm = frontmatter(text);
@@ -569,12 +592,12 @@ function scan(root) {
         bad.push(
           `${rel}: mappings 值前缀「${prefix}」不在册（合法：${MAPPING_VALUE_PREFIXES.join(" / ")}；「值+括注」体例取前缀）`,
         );
-      } else if (prefix === "mcp" && !/^platforms:/m.test(text)) {
+      } else if (prefix === "mcp" && inPackPath(rel) && !/^platforms:/m.test(text)) {
         const [plat, ver] = rel.split("/");
         if (plat === "forge" && !versionAtMost(ver, MCP_MAX_VERSION)) {
           bad.push(`${rel}: mappings: mcp 在 ${ver} 不存在（MCP 自 1.17 起取消，FG5 文档：stable/snapshot 1.17 起不再存在；本档应声明本包钉的 parchment/official）`);
         }
-      } else if (prefix === "parchment" && !/^platforms:/m.test(text)) {
+      } else if (prefix === "parchment" && inPackPath(rel) && !/^platforms:/m.test(text)) {
         const [, ver] = rel.split("/");
         if (!versionAtMost(PARCHMENT_MIN_VERSION, ver)) {
           bad.push(`${rel}: mappings: parchment 在 ${ver} 不存在（Parchment 构件最早 1.16.5；本仓 data/ 的 parchment 产物也只从 1.16.5 起 —— 见 docs/knowledge-coverage-sweep-20260924.md §6.8 的 forge/1.14.4 mc-sound 例）`);
@@ -596,7 +619,9 @@ if (SELFTEST && isMain) {
   const FM_OK = "---\nname: mc-a\ndescription: d\nplatform: fabric\nversion: \"1.20.1\"\nmappings: yarn\n---\n\n# a\n\n```java\nint x = 1;\n```\n";
   const FM_NO_KEY = "---\nname: mc-a\ndescription: d\nplatform: fabric\nversion: \"1.20.1\"\n---\n\n# a\n\n```java\nint x = 1;\n```\n";
   const FM_EMPTY_KEY = "---\nname: mc-a\nmappings:\n---\n\n# a\n\n```json\n{}\n```\n";
-  // 值域/版本约束（2026-09-25 修复批）夹具
+  // 值域/版本约束（2026-09-25 修复批）夹具；2026-10-30 R2 审计把反例从 `hint` 换成 `bogus`
+  // （`hint` 是库 Skill 的在册值，拿它当反例会与「hint 合法」互相矛盾）。
+  const FM_BOGUS = FM_OK.replace("mappings: yarn", "mappings: bogus");
   const FM_HINT = FM_OK.replace("mappings: yarn", "mappings: hint");
   const FM_PARCH = FM_OK.replace("mappings: yarn", "mappings: parchment");
   const FM_MCP = FM_OK.replace("mappings: yarn", "mappings: mcp");
@@ -624,7 +649,10 @@ if (SELFTEST && isMain) {
     { name: "声明 alt 但无披露块 → 红", rel: "fabric/1.21.4/.cursor/skills/mc-d/SKILL.md", content: ALT_NO_BLOCK, want: 1 },
     { name: "对照行少一列（无适用版本）→ 红", rel: "fabric/1.21.4/.cursor/skills/mc-d/SKILL.md", content: ROW_THREE_COL, want: 1 },
     // 值域/版本约束（2026-09-25 修复批；可证伪：去掉 scan 里那段判据即全绿）
-    { name: "值域门：前缀不在册（hint）⇒ 红", rel: "fabric/1.20.1/.cursor/skills/mc-a/SKILL.md", content: FM_HINT, want: 1 },
+    { name: "值域门：前缀不在册（bogus）⇒ 红", rel: "fabric/1.20.1/.cursor/skills/mc-a/SKILL.md", content: FM_BOGUS, want: 1 },
+    { name: "值域门：hint 在册（库 Skill 的跨平台声明体例）⇒ 绿", rel: "knowledge/libs/forge-only/mc-curios/SKILL.md", content: FM_HINT, want: 0 },
+    // 库 Skill 扫面（2026-10-30 R2 审计）：同一 leg1 判据对 `knowledge/libs/**/SKILL.md` 生效。
+    { name: "库 Skill：有围栏缺 mappings 键 ⇒ 红（此前整面不过门）", rel: "knowledge/libs/all-platforms/mc-config/SKILL.md", content: FM_NO_KEY, want: 1 },
     { name: "值域门：forge/1.18.2 声明 mcp ⇒ 红（1.17+ 无 MCP 层）", rel: "forge/1.18.2/.cursor/skills/mc-a/SKILL.md", content: FM_MCP, want: 1 },
     { name: "值域门：forge/1.16.5 声明 mcp ⇒ 绿（≤1.16.5 合法）", rel: "forge/1.16.5/.cursor/skills/mc-a/SKILL.md", content: FM_MCP, want: 0 },
     { name: "值域门：括注体例取前缀（mojmap（…））⇒ 绿", rel: "neoforge/1.21.1/.cursor/skills/mc-a/SKILL.md", content: FM_ANNOT, want: 0 },

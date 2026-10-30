@@ -2288,6 +2288,11 @@ const REAL_RUN_GATES = [
     "./scripts/assert-rules-match-tool.mjs",
     // 2026-09-14：api-index 类名必须与本档实钉通道一致（1.16.5 的 official 不映射类名，FG #795）。
     "./scripts/assert-index-channel-layout.mjs",
+    // 2026-10-30（R2 审计 WP8）：版本档自述的「钉值声明」（`forge_version=` / `loader_version=` /
+    // `loom_version=` …）必须等于本档 `scaffold/gradle.properties` 的实钉值。立门缘起是同一类缺陷
+    // 反复出现（正文钉 0.19.3 / 1.0.18，scaffold 已升 0.19.5 / 1.4-SNAPSHOT），此前只有人手 grep。
+    // 只扫档内自述面（00-project-setup / AGENTS / .cursor/skills|agent），且只咬肯定句。
+    "./scripts/assert-scaffold-pin-claims.mjs",
     // 2026-09-19 N5：配置口径平台面 —— 根 AGENTS.md 条目 ↔ 59 档 AGENTS.md ↔ generateConfig loader 枚举三方一致。
     "./scripts/assert-config-platform-face.mjs",
     // 2026-09-19 N9(c)：bedrock 脚本 API 钉值真值源（scaffold 钉值 ↔ 声明文件 ↔ 文档快照语义分层）。
@@ -2422,6 +2427,15 @@ const REAL_RUN_GATES = [
   ];
 
 const SELFTEST_GATES = [
+    // 2026-10-30（R2 审计 WP8）：这两道此前只有 REAL_RUN_GATES 里的**真跑**腿 —— 假根投毒臂
+    // （`MC_SKILL_*_TEST_ROOT` 钩子早就在，但没人为它写夹具）一次都没进过默认链 ⇒ 判据被改软时
+    // 主流程照常打印 ok。本轮各补 `--selftest`：rules-match 1 正控 + 4 投毒（禁用形态 / pdm 当工具行为 /
+    // 必备口径缺失 / 同行配对缺失），scaffold-selfcheck 1 正控 + 5 投毒（A1–A5 各一记）。
+    // 条数一律以各门 `--selftest` 现印为准（本数组既有规矩）。
+    "./scripts/assert-rules-match-tool.mjs",
+    "./scripts/assert-scaffold-selfcheck.mjs",
+    // 2026-10-30（R2 审计 WP8）：钉值声明门的判据活性（干净必绿 / 错值必红且红在该键 / 反例行跳过）。
+    "./scripts/assert-scaffold-pin-claims.mjs",
     // S16/T8（第 27 轮）：这两道此前只有「从外面投毒」（yarn-slurp 靠 test-scripts §#16 写盘夹具；
     // skill-mirrors 连外面投毒都没有）。现在各自带内存 `--selftest`，接进默认链，条数照例不写死。
     "./scripts/assert-no-yarn-json-slurp.mjs",
@@ -2588,7 +2602,7 @@ const SELFTEST_GATES = [
  */
 const FLOOR_REAL_RUN = 30; // 口径 = REAL_RUN_GATES 去重长度（真实值以本链 §S4 自印行「真跑 N 道」为准，会随加门漂）；地板是下界（< 才红），非等式
 const FLOOR_SELFTEST = 15; // 口径 = SELFTEST_GATES 去重长度（真实值以本链 §S4 自印行「selftest M 道」为准，会随加门漂）；地板是下界，非等式
-const FLOOR_UNREF = 8; // 口径 = 盘上 assert-*.mjs 中「本文件源码零出现」的道数；实测 10；下界，非等式（合法把某道门挪进本文件 spawn 块会让 Y 降，不该红）
+const FLOOR_UNREF = 6; // 口径 = 盘上 assert-*.mjs 中「本文件源码零出现（按词边界判引用）」的道数；实测 8；下界，非等式（合法把某道门挪进本文件 spawn 块会让 Y 降，不该红）⇒ 地板取实测 − 2 余量
 
 /**
  * 纯函数：输入（盘上清单 / 全 test-*.mjs+package.json 的引用 blob / **本文件自身源码** / 两条数组）
@@ -2598,14 +2612,18 @@ const FLOOR_UNREF = 8; // 口径 = 盘上 assert-*.mjs 中「本文件源码零�
  */
 function censusChain({ diskGates, blob, pkg, selfBlob, realRun, selftest, floorReal, floorSelf, floorUnref }) {
   const K = diskGates.length;
-  const orphans = diskGates.filter((g) => !blob.includes(g) && !pkg.includes(g));
+  // 引用判据用**词边界**而非裸子串（2026-10-30 R2 审计）：`assert-a.mjs` 是 `assert-a.mjs.bak`
+  // 的前缀 ⇒ 裸 `includes` 会把「只提过一个更长的名字」读成「这道门被引用了」（Y 假降 / P 假升）。
+  // 前瞻排除 `[\w.-]`：文件名后接引号、`)`、`"` 等结构字符才算真出现。
+  const mentions = (hay, g) => new RegExp(`${g.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?![\\w.-])`).test(hay);
+  const orphans = diskGates.filter((g) => !mentions(blob, g) && !mentions(pkg, g));
   const P = K - orphans.length;
   const N = new Set(realRun).size;
   const M = new Set(selftest).size;
-  const yNames = diskGates.filter((g) => !selfBlob.includes(g));
+  const yNames = diskGates.filter((g) => !mentions(selfBlob, g));
   const Y = yNames.length;
   const inArrays = new Set([...realRun, ...selftest].map((p) => String(p).split("/").pop()));
-  const Z = diskGates.filter((g) => selfBlob.includes(g) && !inArrays.has(g)).length;
+  const Z = diskGates.filter((g) => mentions(selfBlob, g) && !inArrays.has(g)).length;
   const errors = [];
   if (orphans.length > 0)
     errors.push(`可达性: 以下门禁没有任何调用方 ⇒ 手跑绿也不会进 npm test：\n${orphans.join("\n")}`);
@@ -3551,7 +3569,15 @@ function censusChain({ diskGates, blob, pkg, selfBlob, realRun, selftest, floorR
   const real = run([]);
   const ms = Date.now() - t0;
   assert.equal(real.status, 0, `存在「声称本仓没有该文档页 / 该事件名非本档」而检索侧实测可取的互斥：\n${real.stdout}${real.stderr}`);
-  assert.ok(ms < 2000, `本门单次 ${ms}ms ≥ 2000ms —— 拖慢门链，须退回「只跑静态表核对」或去掉子进程`);
+  // 相对预算（2026-10-30 R2 审计）：原来的绝对墙钟 `ms < 2000` 在慢机 / 并发跑门链时假红。
+  // 判据本意是「本门不得 spawn CLI 拖慢门链」⇒ 与**同机**一次空 node 启动比：纯静态扫门给 20× + 250ms 余量
+  // （WP8 给本门加了「显式路径不存在」通用腿，要读 2541 个 md/mdc，实测 406ms ≈ 12.7× 基线；
+  //  spawn 一次 CLI 的代价是秒级，20× 仍咬得住那类回归），基线本身现测（不是常数），机器整体变慢时两侧一起涨。
+  const tBase0 = Date.now();
+  const base = spawnSync(process.execPath, ["-e", ""], { encoding: "utf8", windowsHide: true });
+  const baseMs = Date.now() - tBase0;
+  assert.equal(base.status, 0, "node 空启动基线没跑起来 ⇒ 相对预算无从判");
+  assert.ok(ms <= baseMs * 20 + 250, `本门单次 ${ms}ms > 基线 ${baseMs}ms × 20 + 250ms —— 判据本意是禁止 spawn CLI 拖慢门链，请退回纯静态核对（或把扫描面收窄）`);
   const face = /覆盖面：表内 (\d+) 条 \/ 判 (\d+) 档 \/ 被扫文件 (\d+)/.exec(real.stdout || "");
   assert.ok(face, `真跑未打印覆盖面分母（表内条 / 判档 / 被扫文件）：\n${real.stdout}`);
   const sum = /汇总 扫文件=(\d+) 判条目=(\d+) 未判定=(\d+) 引用=(\d+) 拒=(\d+) 采集面=活声称 (\d+)\/登记 (\d+) 地板=文件≥(\d+) 且 判定条目≥(\d+) 且 活声称≥(\d+)/.exec(real.stdout || "");

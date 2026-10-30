@@ -11,6 +11,10 @@
  *
  * 运行：
  *   node scripts/tsrg-extractor.js --version=1.13.2
+ *   node scripts/tsrg-extractor.js --version=1.14.4
+ *
+ * 边界：MCPConfig 的 joined.tsrg 是 **vanilla-only**（Forge 的 patch 与 Forge 类不在其中），
+ * 所以 critical-classes 的 Forge 条目在本工件里恒为 null；这里按版本代选 vanilla 路径表。
  */
 
 import { readFileSync, writeFileSync, mkdirSync } from "fs";
@@ -38,6 +42,7 @@ const EXTRACTED = join(__dirname, "..", "..", "data", `forge_${versionArg}`, "ex
 const TSRG_PATH = join(__dirname, "..", "..", "data", `forge_${versionArg}`, "mappings", "joined.tsrg");
 
 // ── 关键 Forge 类（高精度索引）────────────────────────────────────────────
+// 1.16+ 的官方/SRG 路径表（1.16.5 那档走 parchment-extractor，本表只作 1.16+ 的 joined.tsrg 兜底）
 const CRITICAL_CLASSES = new Set([
   "net/minecraftforge/registries/DeferredRegister",
   "net/minecraftforge/registries/ForgeRegistries",
@@ -82,6 +87,37 @@ const CRITICAL_CLASSES = new Set([
   "net/minecraft/data/loot/LootPool",
   "net/minecraftforge/common/data/LanguageProvider",
 ]);
+
+// 1.13–1.15 的 SRG 路径表（1.17 才把 item/block/entity 挪进 world/，Mob 也从 MobEntity 改名）。
+// 逐条在 1.14.4 + 1.15.2 的 joined.tsrg 里实证存在；Forge 类不在 MCPConfig 里 ⇒ 本表只列 vanilla。
+const CRITICAL_CLASSES_LEGACY = new Set([
+  "net/minecraft/item/Item",
+  "net/minecraft/item/BlockItem",
+  "net/minecraft/item/SwordItem",
+  "net/minecraft/item/PickaxeItem",
+  "net/minecraft/item/AxeItem",
+  "net/minecraft/item/HoeItem",
+  "net/minecraft/item/ShovelItem",
+  "net/minecraft/item/ArmorItem",
+  "net/minecraft/item/Food",
+  "net/minecraft/block/Block",
+  "net/minecraft/block/BlockState",
+  "net/minecraft/tileentity/TileEntity",
+  "net/minecraft/tileentity/TileEntityType",
+  "net/minecraft/entity/Entity",
+  "net/minecraft/entity/LivingEntity",
+  "net/minecraft/entity/MobEntity",
+  "net/minecraft/entity/passive/AnimalEntity",
+  "net/minecraft/entity/EntityType",
+  "net/minecraft/entity/ai/attributes/Attribute",
+  "net/minecraft/entity/ai/attributes/RangedAttribute",
+  "net/minecraft/item/crafting/IRecipeSerializer",
+  "net/minecraft/data/RecipeProvider",
+  "net/minecraft/data/ShapedRecipeBuilder",
+  "net/minecraft/data/ShapelessRecipeBuilder",
+]);
+
+const CRITICAL = /^1\.(?:13|14|15)\b/.test(versionArg) ? CRITICAL_CLASSES_LEGACY : CRITICAL_CLASSES;
 
 // ── 解析 TSRG ────────────────────────────────────────────────────────────
 
@@ -190,7 +226,7 @@ console.log(`Parsed ${classNames.size} classes, ${totalMethods} methods, ${total
 
 const criticalStats = {};
 let foundCritical = 0;
-for (const name of CRITICAL_CLASSES) {
+for (const name of CRITICAL) {
   if (apiIndex[name]) {
     foundCritical++;
     criticalStats[name] = {
@@ -201,7 +237,7 @@ for (const name of CRITICAL_CLASSES) {
     criticalStats[name] = null;
   }
 }
-console.log(`Critical classes: ${foundCritical}/${CRITICAL_CLASSES.size} found`);
+console.log(`Critical classes: ${foundCritical}/${CRITICAL.size} found`);
 
 // ── 写入文件 ─────────────────────────────────────────────────────────────
 
@@ -214,7 +250,7 @@ writeFileSync(join(EXTRACTED, "method-lookup.json"), JSON.stringify(methodLookup
 console.log(`method-lookup.json — ${Object.keys(methodLookup).length} entries`);
 
 writeFileSync(join(EXTRACTED, "critical-classes.json"), JSON.stringify(criticalStats, null, 2));
-console.log(`critical-classes.json — ${foundCritical}/${CRITICAL_CLASSES.size} found`);
+console.log(`critical-classes.json — ${foundCritical}/${CRITICAL.size} found`);
 
 const sortedClassNames = [...classNames].sort();
 writeFileSync(join(EXTRACTED, "class-names.json"), JSON.stringify(sortedClassNames, null, 0));

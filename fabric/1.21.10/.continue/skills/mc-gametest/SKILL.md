@@ -151,7 +151,7 @@ tasks.register("runProductionClientGameTest", net.fabricmc.loom.task.prod.Client
 **本档独有的告警（页面 warning 块原文）**：「Currently, game test may fail on GitHub Actions due to an error in the network synchronizer.」出现该错误时，往 production run task 的 JVM args 里加 `-Dfabric.client.gametest.disableNetworkSynchronizer=true`。
 
 - 关键名：`productionRuntimeMods`、`net.fabricmc.loom.task.prod.ClientProductionRunTask`、任务名 `runProductionClientGameTest`、`jvmArgs.add(...)`、`useXVFB`。
-- **配套 workflow YAML 未落盘**：页面转引 `@[code transcludeWith=:::automatic-testing:game-test:3](@/.github/workflows/build.yml)`，而 `data/fabric_1.21.10/.github/workflows/build.yml` 在盘上不存在 ⇒ 无法引用该 job，留 `TODO(未核实)`，禁止自拟 `uses:` / `with:` 键。
+- **配套 workflow YAML 在盘**：页面转引 `@[code transcludeWith=:::automatic-testing:game-test:3](@/.github/workflows/build.yml)`，入库文件的扩展名是 **`.yaml`**：`data/fabric_1.21.10/.github/workflows/build.yaml`（99 行）⇒ 按该路径引用；job 名 `client_game_test`（`runs-on: ubuntu-24.04`，`java-version: 25`），`- run: ./gradlew runProductionClientGameTest` 在 `:69`（`working-directory: ./reference` 在 `:71`），截图上传 `path:` 在 `:76` 与 `:81`。禁止自拟 `uses:` / `with:` 键。
 
 ## 结构模板（structure）
 

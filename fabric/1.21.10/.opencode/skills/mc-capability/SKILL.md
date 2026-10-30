@@ -14,7 +14,7 @@ mappings: yarn
 
 Fabric 没有 NeoForge `AttachmentType` 注册表或 `entity.getData`。用 `fabric-attachment-api-v1`（含在 `fabric-api`）：
 
-> ⚠️ **FQCN / 模块 id 未核实（A-43 复议）**：本档 `knowledge/common/verified-api-1.21.10.md:25` 明文——该页只写简名、示例走 `@[code](@/reference/…)` include（仓内无 `reference/`），`net.fabricmc.fabric.api.attachment.v1.*` FQCN 与 `fabric-attachment-api-v1` 模块 id **在本档未核实、禁止当已核实依赖坐标输出**。下列 import 仅为**形态示意**（包名为真实 Fabric 包名，但未在本档核实）：先 `search_fabric_docs(version=1.21.10)` 或官方文档核对再落地。
+> ⚠️ **模块 id 未核实**：本档 `knowledge/common/verified-api-1.21.10.md:25` 现记明——docs 页正文只写简名，但示例 include 的目标源码**在盘上**：`data/fabric_1.21.10/reference/1.21.10/src/main/java/com/example/docs/attachment/ExampleModAttachments.java:6-8` 逐字 import 下列三个 `net.fabricmc.fabric.api.attachment.v1.*` 类 ⇒ **FQCN 已核实**。仍**未核实**的只有模块 id `fabric-attachment-api-v1`（`1.21.10-fabric-api.json` 的 1531 类里 attachment 命中 0）——写依赖坐标前先 `query_loader_api(platform=fabric, minecraftVersion=1.21.10)` 或对自备 jar `ingest_loader_api`。
 
 ```java
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;

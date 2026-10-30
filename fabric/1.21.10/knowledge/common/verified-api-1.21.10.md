@@ -22,6 +22,6 @@
 | setAttached / modifyAttached / removeAttached | 1.21.10/develop_data-attachments |
 | 注入目标 Entity / BlockEntity / ServerLevel / ChunkAccess | 1.21.10/develop_data-attachments |
 
-Attachment 只登记到简名：该页正文只写简名，示例代码是 `@[code](@/reference/1.21.10/…)` include，仓库内没有 `reference/` 目录。所以 `net.fabricmc.fabric.api.attachment.v1.*` FQCN 与 `fabric-attachment-api-v1` 模块 id 在本档 **未核实**（该版也没有 fabric-api 摘要可查），禁止当已核实依赖坐标输出。
+Attachment 的**页正文**只写简名，示例代码是 `@[code](@/reference/1.21.10/…)` include —— 但这些被 include 的文件**在盘上**：`data/fabric_1.21.10/reference/1.21.10/src/main/java/com/example/docs/attachment/ExampleModAttachments.java:6-8` 逐字 import `net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry` / `AttachmentSyncPredicate` / `AttachmentType`，`Stamina.java` 同目录 ⇒ **FQCN 已核实**。仍**未核实**的只有模块 id `fabric-attachment-api-v1`：本档没有 fabric-api 摘要可查（`loader-api-summaries/1.21.10-fabric-api.json` 的 1531 类里 attachment 命中 0），禁止把它当已核实依赖坐标输出。
 
 核不到的类名写成「以该版文档为准，禁止默写」。
