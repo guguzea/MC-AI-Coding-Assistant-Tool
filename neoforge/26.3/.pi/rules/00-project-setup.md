@@ -16,15 +16,15 @@ description: 00 — 项目结构（NeoForge 26.3）
 
 从零工程调用 `download_official_mdk` 时必须传 `buildPlugin`（`moddevgradle` / `neogradle`）。pin 见 `mcp-server/data/mdk-checksums.json` 的 `neoforge-26.3-*`。
 
-## 版本锚点（MDK-26.3 的 `gradle.properties` 实读）
+## 版本锚点（本档 scaffold 实钉；2026-10-31 已对齐 maven 26.3 线最新非 beta）
 
 ```
 minecraft_version=26.3
 minecraft_version_range=[26.3]
-neo_version=26.3.0.99
+neo_version=26.3.0.100
 ```
 
-- 构件：`net.neoforged:neoforge:26.3.0.99`（maven `releases`；`26.3.0.76` 起脱离 `-beta`）
+- 构件：`net.neoforged:neoforge:26.3.0.100`（= maven `releases` 的 26.3 线最新非 beta，也是整体 `<release>`/`<latest>`；`26.3.0.76` 起脱离 `-beta`）。**上游 MDK 模板当时钉 `26.3.0.99`**（as-of 2026-10-31）⇒ 照抄用 `26.3.0.100`
 - Java **25** —— `build.gradle` 注释原文「Mojang ships Java 25 to end users in 26.3, so mods should target Java 25」，并有 `java.toolchain.languageVersion = JavaLanguageVersion.of(25)`
 - Gradle wrapper **9.2.1**（MDK 自带 `gradle-wrapper.properties`）
 - 游戏 jar 已去混淆（Mojang 名）⇒ **不需要** parchment / mappings 块

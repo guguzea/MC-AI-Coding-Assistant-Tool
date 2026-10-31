@@ -6,6 +6,70 @@
 - 只追加，不改写历史节。要更正旧节，写进新节第 6 块「自我更正」并点名旧节。
 - 夜跑、交接、事后抽查读本文件，不依赖聊天记录。夜批（阶 1）的队列与抽查记账仍在 [`NIGHT_BATCH.md`](./NIGHT_BATCH.md)，本文件不顶替它。
 
+## 2026-10-31 · 用 CLI 真机验证 KubeJS 免疫脚本（主档）
+
+**第 0 块 · 结论**：在 F 盘生产实例（Forge 1.20.1-47.4.10 + KubeJS 2001.6.5-build.26 + Curios 5.11.0+1.20.1）真机跑通改正后的 KubeJS 脚本：装备 nether star 时 `/effect give @s minecraft:slowness` 被 DENY（聊天栏 `Unable to apply this effect…`，`ActiveEffects` 查无），卸下后同一命令成功施加——测到 L4 真机冒烟 + L5 场景双分支（含反向对照），exit-code 0、qa.log DONE、截图与日志同在 F 盘。CLI 侧：`inspect_playtest_evidence` 可读该证据并给三态正读数，两条授权门（未授权 / 越出授权根）实测都拒；但 CLI 不负责起游戏/跑 Gradle，且 `exit-code 0` 只表示「剧本步骤跑完」，不表示断言通过。测试产物全在 F 盘（`F:/MC_GAME/forge-1.20.1-prod`、`F:/mc-skill-temp`），仓库零改动。
+
+1. **改了哪些文件 / 给了什么**
+   - 仓库侧：**无改动**（本轮只读 `README`/`REPORT-FORMAT`/`mcp-server/src`，跑 `mcp-server/dist/cli.js`；本文件追加本节是仓规指定落点）。
+   - F 盘生产实例（测试载体，均在 `F:/MC_GAME/forge-1.20.1-prod`）：
+     - `mods/`：补齐 `kubejs-forge-2001.6.5-build.26.jar`、`rhino-forge-2001.2.3-build.10.jar`、`architectury-9.2.14-forge.jar`、`curios-forge-5.11.0+1.20.1.jar`。
+     - `kubejs/startup_scripts/curio_immunity_test.js`：改正后的答案脚本（v2，见下）。**放在 startup_scripts 是硬要求**：KubeJS 只在 startup 脚本注入 `ForgeEvents`（`BuiltinKubeJSForgePlugin#registerBindings` 的 `event.getType().isStartup()` 分支），且 `ForgeEvents.onEvent` 不可重载、必须重启游戏。
+     - `kubejs/server_scripts/charm_helper.js`：**仅测试辅助**（custom_command `equip_star` / `unequip_star`，用 `event.getEntity()` 调 Curios API），不属于答案。
+     - `config/curios-common.toml`：`slots = ["id=charm;size=1"]`（给测试角色一个 charm 槽）。Curios 槽位命令的槽类型校验表 `CurioArgumentType.slotIds` 在本实例首次进世界时为空（`/curios set charm` 报 `Unknown curio slot type charm`），config 建槽后 `/curios replace/clear` 才可用——**这是测试环境配置，不是答案的一部分**。
+     - `saves/playtest_shield/datapacks/curio_test/`：`pack.mcmeta`(pack_format 15) + `data/curios/tags/items/charm.json`（`{"replace":false,"values":["minecraft:nether_star"]}`），让 nether star 通过 charm 槽的 `curios:tag` 校验器。
+     - `launch-prod-qa.mjs`：生产启动器（合并 vanilla+Forge version JSON、按规则过滤库、离线参数、F 盘 assets/natives、`-DignoreList` 追加 `1.20.1.jar`、`-DlibraryDirectory`、`--launchTarget forgeclient`、日志落 `logs/qa-launch-*.log`）。
+     - `natives/`：从 `libraries/**/` 的 `*-natives-windows.jar` 解出并**摊平** DLL 到根目录（LWJGL 需要的 7 个 dll）。
+     - `evidence/shield-20261003/plan.txt`：driver 热载剧本（`respawn` → creative/peaceful → `/curios replace charm 0 @s with minecraft:nether_star` → `/effect give slowness` → `/data get ActiveEffects` → shot → `/curios clear @s charm` → 同一套反向复测）。
+   - 给的答案脚本（真机通过版核心段，`F:/MC_GAME/forge-1.20.1-prod/kubejs/startup_scripts/curio_immunity_test.js`）：
+     ```js
+     const $CuriosApi = Java.loadClass('top.theillusivec4.curios.api.CuriosApi')
+     const $ForgeRegistries = Java.loadClass('net.minecraftforge.registries.ForgeRegistries')
+     const $ResourceLocation = Java.loadClass('net.minecraft.resources.ResourceLocation')
+     const $EventResult = Java.loadClass('net.minecraftforge.eventbus.api.Event$Result')
+     const $Player = Java.loadClass('net.minecraft.world.entity.player.Player')
+     ForgeEvents.onEvent('net.minecraftforge.event.entity.living.MobEffectEvent$Applicable', event => {
+       const entity = event.getEntity()
+       if (!(entity instanceof $Player)) return
+       const star = $ForgeRegistries.ITEMS.getValue(new $ResourceLocation('minecraft:nether_star'))
+       const inv = $CuriosApi.getCuriosInventory(entity).resolve()
+       if (!inv.isPresent() || !inv.get().isEquipped(star)) return
+       const key = $ForgeRegistries.MOB_EFFECTS.getKey(event.getEffectInstance().getEffect())
+       if (key != null && key.equals(new $ResourceLocation('cataclysm:stun'))) event.setResult($EventResult.DENY)
+     })
+     ```
+     与本轮测试脚本的差异仅在目标效果（实测用 `minecraft:slowness`，因为实例未装 Cataclysm）与逐行取证日志。
+
+2. **怎么验（本轮实测证据）**
+   - **层级**：L4 真机冒烟 + L5 场景验收（「有 curio / 无 curio」双分支），未做 L6 服务端与多人、未做 L7 回归。
+   - **证据落点（全在 F 盘）**：
+     - `F:/MC_GAME/forge-1.20.1-prod/evidence/shield-20261003-pass/`：`exit-code.txt`=`0`、`qa.log`（`[QA] ROUND 4 START（steps=35）` … `[QA] respawn packet sent` … `[QA] DONE :: [round 4] PLAN 全部 35 步完成`）、`state.json`、`rounds.jsonl`（session 内 4 轮 ok:true）、`plan.txt`。
+     - `F:/MC_GAME/forge-1.20.1-prod/logs/qa-launch-pass.log`（本会话完整日志）、`logs/qa-launch-round2.log`、`logs/qa-launch-20261031-round1.log`（失败/无效轮留档）。
+     - 截图：`F:/MC_GAME/forge-1.20.1-prod/screenshots/2026-10-31_23.20.32.png`（有 curio：聊天栏红字 `Unable to apply this effect (target is either immune to effects, or has something stronger)` + `Found no elements matching ActiveEffects`）、`..._23.20.36.png`（无 curio：`Applied effect Slowness`，`ActiveEffects` 有数据）。
+   - **正读数（逐条本轮日志原文）**：
+     - 有 curio（23:20:29）：`[curio-test] lazy present=true` → `resolved present=true` → `isEquipped(nether_star)=true` → `effectKey=minecraft:slowness` → `[curio-test] DENY slowness for QA_Dev`；服务端聊天 `Unable to apply this effect…`；`data get … ActiveEffects` = `Found no elements matching ActiveEffects`。
+     - 无 curio（23:20:34）：`isEquipped(nether_star)=false` → 无 DENY；`Applied effect Slowness`；`ActiveEffects` 含 `minecraft:slowness`（Duration 569）。
+     - 旁证：`PlayerEvent$PlayerLoggedInEvent` 监听在 23:16:34 正常触发（对照臂，证明 `ForgeEvents.onEvent` 在这些档可用）；基类 `MobEffectEvent` 监听实测收到 `Applicable/Added/Remove/Expired` 四种子类事件（23:16:43/47/48、23:19:41），证实「挂在基类上的监听器会吃到子类事件」但基类没有 `@HasResult` 语义。
+   - **CLI 侧读数（本轮现跑，cwd=仓库根，`MC_SKILL_CACHE=F:/mc-skill-temp/cache-cli`）**：
+     - `node mcp-server/dist/cli.js inspect_playtest_evidence --evidenceDir F:/MC_GAME/forge-1.20.1-prod/evidence/shield-20261003-pass --screenshotsDir F:/MC_GAME/forge-1.20.1-prod/screenshots`（`MC_SKILL_PLAYTEST_ALLOW=1`、`MC_SKILL_PLAYTEST_ROOT=F:/MC_GAME/forge-1.20.1-prod`）→ `success:true`、`result.ok:true`、`exitCode.state=present value=0`、`qa.state=present done=1 error=0`、`screenshots.state=present count=53`。
+     - 反证臂①（不设 `MC_SKILL_PLAYTEST_ALLOW`）→ `ok:false code=PLAYTEST_DISABLED`；反证臂②（evidenceDir 指仓库内）→ `ok:false code=PATH_OUTSIDE_ALLOWLIST`（root 硬边界生效）。
+     - 反证臂③（授权根内一个只有 `plan.txt` 的空证据目录）→ `exitCode/stateJson/qa` 三件全 `absent`，`failures.fromExitCode=null` 并附「null ≠ 0」注记（fail-closed 三态生效）。
+   - **CLI 能力边界（本轮实测）**：① 不负责起游戏/跑 Gradle/拷 jar——真机由本仓外的 `launch-prod-qa.mjs` 起；② `exit-code 0` 语义是「剧本步骤跑完」，本剧本未写 `assert` 步，因此**语义判定（是否真免疫）必须另读 `latest.log` 聊天行**，CLI 的 `qa.done/error` 抓不到这类失败；③ `screenshots.count=53` 是**整个截图目录**的存量（含本轮之前旧图），不是本轮计数；④ F 盘那份仓库内 CLI 是 v1.0.4，根本没有 `inspect_playtest_evidence` / `generate_playtest_driver`（只有当前仓库 `mcp-server/dist/cli.js` 有）；⑤ `state.json` 的 `plan.steps=11` 是驱动内置 PLAN 长度，与本轮文件剧本 35 步不一致（`plan.done=35`），读证据时容易误判。
+   - **踩到的假否定（留在日志里，供后续对照）**：第 1 轮（23:16）测试时角色处于死亡屏（实体 `removed=KILLED`），`getCuriosInventory` 直接返回空 Optional ⇒ 脚本静默不 DENY，而 `/curios replace` 仍打印成功——**「命令回执成功」不等于「物品真装上」**；`respawn` 是 driver 的**独立动词**（写 `respawn`），写成 `cmd /respawn` 会当成普通命令报错（23:18:58 日志 `respawn<--[HERE]`）。
+
+3. **未核实项与影响面**
+   - `// TODO(未核实)`：实例**未安装 Cataclysm**，`cataclysm:stun` 本效果未真机验；本轮用 `minecraft:slowness` 验证同一条 `MobEffectEvent$Applicable + DENY` 通路。要复验原效果需装 Cataclysm 后把脚本里的 `TEST_EFFECT` 换成 `cataclysm:stun`。
+   - 版本面：只在 Forge **1.20.1-47.4.10** / KubeJS **2001.6.5-build.26** / Rhino **2001.2.3-build.10** / Curios **5.11.0+1.20.1** 上验证；其它 KubeJS 6 build / Curios 5.x 小版本未验。
+   - `javap` 事实（Forge 1.20.1 `forge-...-client.jar`）：`net.minecraft.world.entity.Entity` **没有** `isPlayer()` 方法；论坛原脚本里的 `player.isPlayer()` 在 1.20.1 不是可靠写法，本轮脚本改用 `entity instanceof Player`（真机通过）——但**未单独真机复现 `isPlayer()` 的报错**，只按字节码判「不存在」。
+   - Curios API 事实（`javap` 于 `curios-forge-5.11.0+1.20.1.jar`）：`ICuriosItemHandler.isEquipped(Item)` / `isEquipped(Predicate<ItemStack>)` 存在；`ICuriosHelper.findFirstCurio` 只有 `(LivingEntity, Item)` 与 `(LivingEntity, Predicate)` 两个重载，**没有 String 重载**——论坛原脚本的崩溃根因成立。
+   - 影响面：仅动 F 盘测试实例（mods / config / kubejs 脚本 / 存档 datapack / 启动器 / natives / 日志与截图）；用户自己的工程与本仓库受管面均未改；`config/curios-common.toml` 的 config 建槽与 `charm_helper.js` 是**测试脚手架**，别当成答案抄进用户工程。
+
+4. **需要你拍板 + 风险与回退**
+   - ① **是否保留 F 实例上的脚手架**（`curios-common.toml` 的 `id=charm;size=1`、`kubejs/server_scripts/charm_helper.js`、datapack `curio_test`）：保留便于复测；要回到干净实例则删除这三处并重启，回退只涉及这三个路径，不碰存档数据（玩家已拥有的 charm 槽来自 config，删配置后槽位会消失，物品内容不保证保留）。
+   - ② **是否要装 Cataclysm 复验原效果**：装后把脚本目标改成 `cataclysm:stun` 重跑同一剧本（预计 2–3 分钟）；不装则本轮结论只覆盖「同通路的效果免疫」。
+   - ③ **启动器是否留档**：`launch-prod-qa.mjs` 是可复用的离线启动器（含 `ignoreList` 追加 `1.20.1.jar` 这条实测必需项）；建议留在 F 实例，若你想收进仓库工具面我再按维护档走。
+   - 风险与回退：本轮所有改动可逆、无删档操作；游戏已用 `taskkill` 关停并确认 `All dimensions are saved`。未做 `stop` 收尾的那一轮（第 1 轮）没有 `exit-code.txt`，按 fail-closed 应读红——已作为反例留存，未混入通过轮。
+
 ## 2026-10-31 · neoforge/26.2 scaffold 真跑 build 并回写 buildVerified（维护档）
 
 **第 0 块 · 结论**：`neoforge/26.2/scaffold` 真跑通了构建，`pack.meta.json` 的 `scaffold.buildVerified` 由 `false` 翻成 `true`，`AGENTS.md` 与本档三个镜像同步改准。四轮构建全部 BUILD SUCCESSFUL（含一轮 NFRT 全链零缓存重算、`recompile` 真编 7055 个 MC 源文件），jar 四轮同 sha。边界照实写：只覆盖 `:build`，未跑 runClient / runServer / gameTestServer。

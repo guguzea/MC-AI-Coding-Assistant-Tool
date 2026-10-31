@@ -1,18 +1,18 @@
 # NeoForge 26.3 — 11 条齐（证据 = 官方 MDK + sources jar）
 
-> 本档 `00–10` **11 条齐**，但**证据是官方 MDK 模板 + NeoForge 26.3.0.99 sources jar**，不是 docs 正文（上游 `/docs/26.3/` 仍 404，`version_labels.json` 的 `current.label="26.1"`，仓库全树 898 文件 0 个 `26.x`）。
+> 本档 `00–10` **11 条齐**，但**证据是官方 MDK 模板 + NeoForge 26.3.0.99 sources jar**（as-of 2026-10-31；该 jar 版本是当时的取证锚，不是本档钉值），不是 docs 正文（上游 `/docs/26.3/` 仍 404，`version_labels.json` 的 `current.label="26.1"`，仓库全树 898 文件 0 个 `26.x`）。
 > 每条规则头部都标了证据类型；未核处逐条写在文内（04 的实体属性事件签名、06 的挂载方式、07 的 `DataGenerator` 方法名、10 的自定义 Screen）。**禁止**把 26.1 的 01–10 当 26.3，也**禁止**把这些当官方文档结论抄给用户。
 
 ## 事实面（2026-10-31 实测）
 
 | 项 | 值 |
 |---|---|
-| 构件 | `net.neoforged:neoforge:26.3.0.99`（maven `releases`；26.3.0.76 起脱离 `-beta`） |
+| 构件 | `net.neoforged:neoforge:26.3.0.100`（2026-10-31 复验 maven `releases` 的 `maven-metadata.xml`：26.3 线最新非 beta，且 = 整体 `<release>`/`<latest>`；26.3.0.76 起脱离 `-beta`）；本档钉值 2026-10-31 由 `26.3.0.99` 对齐到 `26.3.0.100` |
 | 官方 MDK | `MDK-26.3-ModDevGradle@f31f90e7`、`MDK-26.3-NeoGradle@8c9049d0`（`mcp-server/data/mdk-checksums.json` 已 pin，含 archive sha256） |
 | 主文档 | **无**（`/docs/26.3/` 404；`current.label="26.1"`） |
 | primer | `data/neoforge_primers/26.3.md`（26.2→26.3，只讲 vanilla 类改动） |
 | 本机验证 | pinned MDK 归档 `gradle build --no-daemon` → **BUILD SUCCESSFUL in 24s**（Gradle 9.8.1 + JDK 25） |
-| 工具链 | Java 25 · Gradle wrapper 9.2.1 · MDG 2.0.148 / NeoGradle userdev 7.1.39 · `neo_version=26.3.0.99` |
+| 工具链 | Java 25 · Gradle wrapper 9.2.1 · MDG 2.0.148（2026-10-31 复验：已在位，未改）/ NeoGradle userdev 7.1.39 · `neo_version=26.3.0.100` |
 
 ## 规则里的 Java 调用已真编译验证（2026-10-31）
 

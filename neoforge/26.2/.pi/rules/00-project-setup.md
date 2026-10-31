@@ -11,20 +11,20 @@ description: 00 — 项目结构（NeoForge 26.2）
 
 | 插件 | 26.2 MDK 实值 |
 |---|---|
-| ModDevGradle | `id 'net.neoforged.moddev' version '2.0.143'` |
+| ModDevGradle | MDK 模板 `2.0.143`；**本档 scaffold 2026-10-31 已统一到 `2.0.148`**（照抄用 2.0.148） |
 | NeoGradle | `id 'net.neoforged.gradle.userdev'`（26.2 线；依赖 `implementation "net.neoforged:neoforge:${neo_version}"`） |
 
 从零工程调用 `download_official_mdk` 时必须传 `buildPlugin`。pin 见 `mcp-server/data/mdk-checksums.json` 的 `neoforge-26.2-*`。
 
-## 版本锚点（MDK-26.2 的 `gradle.properties` 实读）
+## 版本锚点（本档 scaffold 实钉；2026-10-31 已对齐 maven 26.2 线最新非 beta）
 
 ```
 minecraft_version=26.2
 minecraft_version_range=[26.2]
-neo_version=26.2.0.59
+neo_version=26.2.0.93
 ```
 
-- 模板钉的是 **`26.2.0.59`**；maven `releases` 的 26.2 线已到 **`26.2.0.93`**（`26.2.0.57` 起脱离 `-beta`）⇒ 新工程可直接用最新构建号，**不要**把模板钉值当上限
+- 本档 scaffold 钉 **`26.2.0.93`**（= maven `releases` 的 26.2 线最新非 beta；`26.2.0.57` 起脱离 `-beta`）。**上游 MDK 模板当时钉 `26.2.0.59`**（as-of 2026-10-31）⇒ **照抄用 `26.2.0.93`**，不要把模板值当上限
 - Java **25**（`java.toolchain.languageVersion = JavaLanguageVersion.of(25)`）
 - Gradle wrapper **9.2.1**（MDK 自带）
 - 游戏 jar 已去混淆（Mojang 名）⇒ **不需要** parchment / mappings 块

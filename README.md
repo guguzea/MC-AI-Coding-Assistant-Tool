@@ -4,27 +4,33 @@
 
 **简体中文** · [English](README.en.md) · [人类读本](README_human.md) · [Human Guide](README_human.en.md)
 
-### 一个跑在本地的 MCP知识库：让 AI 知道你这一版 Minecraft 该用哪套 API、哪套构建、哪套映射。
+### 一个跑在本地的 MCP知识/工具库：让 AI 知道你这一版 Minecraft 该用哪套 API、哪套构建、哪套映射。并提供一个完整的工具包去反复验证实现效果
+### 显著降低AI幻觉·AI不再瞎编
+####  检查不好找?AI也是一个好老师!
 #### 显著降低模组开发,整合包开发的工作量! 
 #### 帮助你实现想过但是受限于学习成本的没有完成的梦想! 
+
 **规则、官方文档、映射表、库模组、真机自测**
 
 **[人类读本](README_human.md) · [安装说明](AUTO_SETUP.md) · [贡献指南](CONTRIBUTING.md)** · [平台说明](#平台说明) · [工具清单](#mcpcli-tools89)
 
 </div>
 
-- **8 个加载器 + 2 个服务端面，逐版规则**：Forge · Fabric · NeoForge · Quilt · LiteLoader · Rift · ModLoader · 基岩 ｜ Paper · Spigot
-- **官方文档原文检索**：查的是你这个版本那一页,向量搜索,准确命中!
-- **六层映射互转 + 崩溃日志分析**：mojang · mcp · yarn · parchment · obfuscated · intermediary
-- **库模组与社区知识**：48 个常用库模组的 API 摘要、成套 Skill、精选各个MC社区的帖子
-- **工程与移植**：脚手架、Gradle 诊断、项目校验、Datagen、崩溃分诊、跨版本移植分析、反编译...等等!
-- **游戏内自测**：客户端 driver / 桥 / 服务端 driver，出截图、`qa.log`、`state.json` 才算过
+
 
 > [!IMPORTANT]
 > 只从本仓库获取工具与数据。同名仓库或复制本文档不代表官方下载源。
 > **你是人类读者 → [人类读本](README_human.md)**（人话版：能干什么、怎么开始 · [English](README_human.en.md)）
 > 本文件是给 AI 执行用的技术契约，长且密；细节让 agent 讲，比你自己翻快。
-
+- **8 个加载器 + 2 个服务端面，逐版规则**：Forge · Fabric · NeoForge · Quilt · LiteLoader · Rift · ModLoader · 基岩 ｜ Paper · Spigot
+- **官方文档原文检索**：查的是你这个版本那一页,向量搜索,准确命中!
+- **六层映射互转 + 崩溃日志分析**：mojang · mcp · yarn · parchment · obfuscated · intermediary,把 crash-report 直接扔给 AI，它会帮你解析出可能的原因
+- **库模组与社区知识**：48 个常用库模组的 API 摘要、成套 Skill、精选各个MC社区的帖子
+- **复合工程工具**：脚手架、Gradle 诊断、项目校验、Datagen、崩溃分诊、跨版本移植分析、AT/AW、mixin 分析、资源审计、发布前检查、翻译工具...等等!
+- **移植工具**：找到个好模组但只有 Forge 版，你想在 Fabric 玩？AI 会先分析移植路径、列出风险，确认之后再使用移植工作流，不会乱改你的文件。最后完成移植!
+- **解放人力**:不用再把时间耗在重复劳动上：注册方块、注册物品、数据生成、网络同步……AI 可以照着内置的规则和脚手架直接生成,新方块、新实体、GUI、崩溃分诊、移植、构建、真机测试，都有现成的工作流模板，AI 全部搞定。
+- **反编译工具**:支持反编译MC 源码,解析本地 mod jar,下载模组解析,帮助你解决编程时的问题d(´ω｀*)
+- **游戏内自测**：客户端 driver / 桥 / 服务端 driver，标准软件测试流程,测试全面,能够防止类似于MCR的兼容困难问题,拒绝屎山!出截图、`qa.log`、`state.json` 才算过
 ---
 
 ## 写在前面的
