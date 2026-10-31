@@ -16,7 +16,9 @@
 
 ## 规则里的 Java 调用已真编译验证（2026-10-31）
 
-把 04/06/07/10 的调用原样写进官方 MDK 工程（`MDK-26.3-ModDevGradle@f31f90e7`）的 `probe/Probe.java`，`gradle compileJava` → **BUILD SUCCESSFUL in 5s**（Gradle 9.8.1 + JDK 25）。覆盖：`registerEntityType(Pig::new, …)`、`EntityAttributeCreationEvent.put`、`registrar("1").optional()`、`GatherDataEvent.addProvider`、`Screen#extractRenderState(GuiGraphicsExtractor, …)`、`gui.setScreen` / `setScreenAndShow`。
+把 04/06/07/10 的调用原样写进官方 MDK 工程（`MDK-26.3-ModDevGradle@f31f90e7`）的 `probe/Probe.java`，`gradle compileJava` → **BUILD SUCCESSFUL**（Gradle 9.8.1 + JDK 25）。覆盖：`registerEntityType(Pig::new, …)`、`EntityAttributeCreationEvent.put`、`registrar("1").optional()`、`GatherDataEvent.addProvider` / `createProvider(Factory)` / `getDefaultPackGenerator().getPackOutput()`、`Screen#extractRenderState(GuiGraphicsExtractor, …)` 与 `fill` / `text` / `centeredText` / `outline` 等绘制调用、`gui.setScreen` / `setScreenAndShow`。
+
+**未核清单已清零**：datagen 的两个工厂接口形态、`PackOutput` 的两个入口、自定义 Screen 的绘制 API 全部用 javap + sources + 真编译核过。
 
 ## 配置 / 工作流
 

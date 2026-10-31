@@ -20,6 +20,8 @@
 
 把 04/06/07 的调用原样写进官方 MDK 工程（`MDK-26.2-ModDevGradle@d1c748fd`）的 `probe/Probe.java`，`gradle compileJava` → **BUILD SUCCESSFUL in 2m 44s**（首次拉 26.2 依赖；Gradle 9.8.1 + JDK 25）。26.2 的 datagen 入口 `event.getGenerator().getVanillaPack(includeDev).addProvider(ProbeProvider::new)` 也一起编过（这是与 26.3 唯一不同的调用形态）。
 
+**未核清单已清零**：26.2 的 provider 入口形态、`Factory.create(PackOutput)` 由框架传参、`DataGeneratorConfig` 不可达、Screen 渲染回调（两版一致，26.x 无 `GuiGraphics` 类）全部核过。
+
 ## 配置 / 工作流
 
 同根纲：`mc-config` 走仓库根 `knowledge/libs/all-platforms/mc-config/SKILL.md` + `generate_config`。

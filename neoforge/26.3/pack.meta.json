@@ -4,7 +4,7 @@
   "platform": "neoforge",
   "minecraftVersion": "26.3",
   "gaps": {
-    "rules": "11 条齐（00–10），证据是**官方 MDK 模板 + NeoForge 26.3.0.99 sources jar + 26.3 merged jar 的 javap**，不是 docs 正文（上游 /docs/26.3/ 404、version_labels.json 的 current.label=\"26.1\"、全树 898 文件 0 个 26.x）。2026-10-31 补核：实体工厂形态 / 属性事件签名 / 网络挂载点（IModBusEvent）/ datagen 事件入口 / Screen 渲染回调（extractRenderState，两版一致）全部用 javap + sources 逐条核实，并把 04/06/07/10 的调用原样编过（MDK-26.3 探针 BUILD SUCCESSFUL 5s）。仍标未核的只剩 datagen 的 DataProviderFromOutput 函数形态、PackOutput 实例来源、自定义 Screen 的 GuiGraphics 绘制细节。**禁止把这些当官方文档结论**，也禁止拿 26.1 的 01–10 顶替。",
+    "rules": "11 条齐（00–10），证据是**官方 MDK 模板 + NeoForge 26.3.0.99 sources jar + 26.3 merged jar 的 javap**，不是 docs 正文（上游 /docs/26.3/ 404、version_labels.json 的 current.label=\"26.1\"、全树 898 文件 0 个 26.x）。2026-10-31 补核：实体工厂形态 / 属性事件签名 / 网络挂载点（IModBusEvent）/ datagen 事件入口与两个工厂接口 / PackOutput 两个入口 / Screen 渲染回调与绘制 API（26.x 无 GuiGraphics 类）全部用 javap + sources 逐条核实，并把 04/06/07/10 的调用原样编过（MDK-26.3 探针 BUILD SUCCESSFUL）。**未核清单已清零**（仅剩 vanilla 内部类的细节未碰，如 DatapackBuiltinEntriesProvider 构造签名）。**禁止把这些当官方文档结论**，也禁止拿 26.1 的 01–10 顶替。",
     "knowledge": "无 knowledge/：签名证据由各规则内的 sources jar 类路径承担；独立签名查询走自备 jar + ingest_loader_api + query_loader_api。",
     "scaffold": "只覆盖 :build（compileJava + processResources + jar + generateModMetadata），未跑 runClient / runServer / gameTestServer。"
   },

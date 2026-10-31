@@ -4,7 +4,7 @@ description: 10 — GUI（NeoForge 26.2）
 
 # 10 — GUI（NeoForge 26.2）
 
-> 证据类型：官方 MDK（配置屏）+ 26.2 merged jar 的 `javap`（Screen / Gui / 事件接口）。不是 docs 正文。
+> 证据类型：官方 MDK（配置屏）+ 26.2 merged jar 的 `javap`（`Screen` / `Gui` / `GuiGraphicsExtractor` / `GuiEventListener` 全表）+ **MDK-26.2 探针真编译**。不是 docs 正文。
 
 ## 配置屏（`MDK-26.2-ModDevGradle@d1c748fd:ExampleModClient.java:22`）
 
@@ -28,20 +28,45 @@ public abstract class Screen extends AbstractContainerEventHandler implements Re
 }
 ```
 
-⚠ **26.x 没有 `render(GuiGraphics, int, int, float)`** —— 26.2 与 26.2 都是 `extractRenderState(GuiGraphicsExtractor, ...)`。按 1.21 记忆写 `render` 会 `@Override` 失败。
+⚠ **26.x 里 `net.minecraft.client.gui.GuiGraphics` 这个类不存在**（`javap` 找不到）—— 26.x 用 `GuiGraphicsExtractor` 取代它。按 1.21 记忆写 `render(GuiGraphics, int, int, float)` 会 `@Override` 失败。
 
-`GuiGraphicsExtractor`（26.x 新类，`javap` 实核）：
+## `GuiGraphicsExtractor` 的完整 API（`javap` 全表，探针真编过）
 
 ```java
-public class GuiGraphicsExtractor {
-    public GuiGraphicsExtractor(Minecraft, GuiRenderState, int, int);
-    public int guiWidth();  public int guiHeight();
-    public Matrix3x2fStack pose();
-    public void enableScissor(int,int,int,int);  public void disableScissor();
-    public void nextStratum();  public void blurBeforeThisStratum();
-    public void requestCursor(CursorType);  public void applyCursor(Window);
-}
+// 尺寸 / 变换
+public int guiWidth();  public int guiHeight();
+public Matrix3x2fStack pose();
+public void nextStratum();  public void blurBeforeThisStratum();
+
+// 几何
+public void fill(int x1, int y1, int x2, int y2, int color);
+public void fill(RenderPipeline, int x1, int y1, int x2, int y2, int color);
+public void fillGradient(int x1, int y1, int x2, int y2, int from, int to);
+public void fill(RenderPipeline, TextureSetup, int x1, int y1, int x2, int y2);
+public void outline(int x1, int y1, int x2, int y2, int color);
+public void horizontalLine(int x1, int x2, int y, int color);
+public void verticalLine(int x, int y1, int y2, int color);
+public void enableScissor(int x1, int y1, int x2, int y2);  public void disableScissor();
+public boolean containsPointInScissor(int x, int y);
+
+// 文本
+public void text(Font, String | FormattedCharSequence | Component, int x, int y, int color [, boolean shadow]);
+public void centeredText(Font, String | FormattedCharSequence | Component, int x, int y, int color);
+public int  textWithWordWrap(Font, FormattedText, int x, int y, int width, int color [, boolean]);
+public void textWithBackdrop(Font, Component, int x, int y, int color, int width);
+public void textHighlight(int x, int y, int width, int height, boolean underlined);
+
+// 贴图
+public void blit(RenderPipeline, Identifier, …);      // 4 个重载
+public void blit(Identifier, int x, int y, int w, int h, float u1, float v1, float u2, float v2);
+public void blit(GpuTextureView, GpuSampler, …);
+public void blitSprite(RenderPipeline, Identifier, int x, int y, int w, int h [, float]);
+
+// 光标
+public void requestCursor(CursorType);  public void applyCursor(Window);
 ```
+
+实测调用（探针原样编过）：`fill` / `horizontalLine` / `verticalLine` / `outline` / `fillGradient` / `enableScissor` / `disableScissor` / `text` / `centeredText` / `nextStratum` / `pose`。
 
 ## 输入事件（`GuiEventListener`，`javap` 实核）
 
@@ -57,14 +82,14 @@ default boolean charTyped(CharacterEvent)
 ```
 
 - 鼠标/键盘/字符全部是 **record 参数**（`MouseButtonEvent` / `KeyEvent` / `CharacterEvent`），不是 `(int button, int x, int y)` 那种裸 int
-- `KeyEvent` 的 `key()` / `keycode()` / `modifiers()` 是 record 访问器（`javap` 实核）；26.2 仍在 GLFW 时代，`InputConstants` 常量值**未变**（GLFW→SDL 是 26.3 的改动，见 09 的差异表）
+- `KeyEvent` 的 `key()` / `keycode()` / `modifiers()` 是 record 访问器；26.2 仍在 GLFW 时代（GLFW→SDL 是 26.3 的改动，见 09 差异表）
 
 ## 开屏（`javap` 实核）
 
 ```java
-Minecraft.getMinecraft().gui.setScreen(screen);   // Gui.setScreen(Screen)
-Screen current = mc.gui.screen();                 // Gui.screen()
-mc.setScreenAndShow(screen);                      // = gui.setScreen + renderFrame(false)
+mc.gui.setScreen(screen);      // Gui.setScreen(Screen)
+Screen current = mc.gui.screen();  // Gui.screen()
+mc.setScreenAndShow(screen);   // = gui.setScreen + renderFrame(false)
 ```
 
 - `Minecraft.gui` 是 `public final Gui`；`Minecraft` 上**没有** `setScreen` / `getScreen`
@@ -72,7 +97,7 @@ mc.setScreenAndShow(screen);                      // = gui.setScreen + renderFra
 
 ## 禁止
 
-- 写 `render(GuiGraphics, int, int, float)`（26.x 是 `extractRenderState(GuiGraphicsExtractor, ...)`）
+- 写 `render(GuiGraphics, int, int, float)`（26.x 无 `GuiGraphics` 类，方法是 `extractRenderState(GuiGraphicsExtractor, …)`）
 - override `init(int, int)`（它是 `final`，只能 override 无参 `init()`）
 - 用 `(int mouseX, int mouseY, int button)` 签名的 `mouseClicked`
 - 用 `IConfigScreenFactory` 当自定义 Screen 的注册入口
