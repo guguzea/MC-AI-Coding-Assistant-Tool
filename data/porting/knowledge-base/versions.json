@@ -1,7 +1,7 @@
 {
   "meta": {
     "lastUpdated": "2026-09-01",
-    "coverage": "Forge 1.7.10–1.20.4 + 1.13.2（Javadoc 1.7–1.12 / MkDocs 1.12.2–1.20.4），NeoForge 1.20.1–26.2，Fabric loader 钉值 1.16.5–1.21.11（+ 26.1.2 档）；共 32 个版本键",
+    "coverage": "Forge 1.7.10–1.20.4 + 1.13.2（Javadoc 1.7–1.12 / MkDocs 1.12.2–1.20.4），NeoForge 1.20.1–26.2，Fabric loader 钉值 1.16.5–1.21.11（+ 26.1.2 / 26.2 档）；共 32 个版本键",
     "note": "Forge 1.20.4 为最后一个社区维护版本，后续转向 NeoForge。知识库由人工维护。scripts/generate-porting-breakdown.js 可自动生成版本间文档结构差异。26.1+ 仅 mojmap（无 Yarn）。 2026-09-01 起新增条目一律带 sources{} 证据指针，loader 钉值只在 data/*-versions-manifest.json 或 data/fabric_<ver>/meta.json 有对应行时才填。",
     "provenancePolicy": {
       "rule": "provenance=verified 的条目必须逐字段可解析；老条目登记在 meta.legacyUntaggedKeys，只能缩小不能扩张。",
@@ -41,8 +41,7 @@
       "1.21.2": "无 1.21.2 规则树 / 文档树：NeoForge 把 1.21.2 与 1.21.3 并档（manifest 1.21.3 行 versionLabel \"Version: 1.21.2 - 1.21.3\"）。1.21.1→1.21.2 是本区间最大断代之一。",
       "1.21.6": "无 1.21.6 规则树：NeoForge 把 1.21.6–1.21.8 并档（manifest 1.21.8 行 versionLabel \"Version: 1.21.6 - 1.21.8\"）。",
       "1.21.7": "无 1.21.7 规则树，理由同 1.21.6（并档到 1.21.8）。",
-      "1.21.9": "无 1.21.9 规则树：NeoForge 把 1.21.9 与 1.21.10 并档（manifest 1.21.10 行 versionLabel \"Version: 1.21.9 - 1.21.10\"）。",
-      "26.2": "manifest available:false（官方主文档不按版本分线：/docs/26.2/ 与 /docs/26.1/ 同样 404；26.2 构建已发布，maven 最新 26.2.0.75，2026-09-02 实读）⇒ 只有 primer 26.2；禁止克隆 26.1 树冒充 26.2（AGENTS 红线）。本仓无 26.2 规则树。"
+      "1.21.9": "无 1.21.9 规则树：NeoForge 把 1.21.9 与 1.21.10 并档（manifest 1.21.10 行 versionLabel \"Version: 1.21.9 - 1.21.10\"）。"
     },
     "knownRuleTreeGaps": {
       "modloader/1.6.4": "ModLoader 1.x 三档只有规则树 + 文档，无跨加载器移植需求（该时代只有 MCP 映射），KB 不补条目；若真要移植再补。",
@@ -1823,7 +1822,7 @@
           "license": "未声明（本仓抓取件）"
         }
       ],
-      "note": "manifest available:false（官方主文档不按版本分线：/docs/26.2/ 与 /docs/26.1/ 同样 404；26.2 构建已发布，maven 最新 26.2.0.75，2026-09-02 实读）⇒ 只有 primer 26.2；禁止克隆 26.1 树冒充 26.2（AGENTS 红线）。本仓无 26.2 规则树。"
+      "note": "NeoForge 侧 manifest available:false（官方主文档不按版本分线：/docs/26.2/ 与 /docs/26.1/ 同样 404；26.2 构建早已发布，maven 现到 26.3.0.99，2026-10-31 复读）⇒ 只有 primer 26.2；禁止克隆 26.1 树冒充 26.2（AGENTS 红线）。Fabric 26.2 已于 2026-10-31 按 latest 面建档（fabric/26.2 + data/fabric_26.2，scaffold 真编译通过），故本条不再登记「无规则树」。"
     }
   }
 }

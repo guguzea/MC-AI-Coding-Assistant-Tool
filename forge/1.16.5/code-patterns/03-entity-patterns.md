@@ -18,7 +18,7 @@ public static final RegistryObject<EntityType<MyEntity>> MY_ENTITY = ENTITY_TYPE
 // 实体类
 public class MyEntity extends CreatureEntity {
     private static final DataParameter<Integer> DATA_HEALTH =
-        EntityDataManager.defineId(MyEntity.class, DataSerializers.VARINT); // ❌ createKey = MCP 层名（official: defineId，构件实证）
+        EntityDataManager.defineId(MyEntity.class, DataSerializers.INT); // 1.16.5 只有 INT（无 VARINT）；❌ createKey = MCP 层名（official: defineId，构件实证）
 
     protected MyEntity(EntityType<? extends MyEntity> type, World world) {
         super(type, world);
@@ -27,7 +27,7 @@ public class MyEntity extends CreatureEntity {
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(0, new FloatGoal(this));
+        this.goalSelector.addGoal(0, new SwimGoal(this));   // 1.16.5 真名 SwimGoal（FloatGoal 是 1.17+）
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0, true));
         this.goalSelector.addGoal(2, new WaterAvoidingRandomWalkingGoal(this, 1.0));
         this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
@@ -43,7 +43,7 @@ public class MyEntity extends CreatureEntity {
     @Override
     protected void defineSynchedData() { // ❌ registerData = MCP 层名（official: Entity#defineSynchedData，构件实证）
         super.defineSynchedData();
-        this.entityData.register(DATA_HEALTH, this.getMaxHealth());
+        this.entityData.define(DATA_HEALTH, (int) this.getMaxHealth());   // 1.16.5 是 define()，不是 register()
     }
 }
 ```

@@ -78,6 +78,7 @@ import {
   dedupePointers,
   listMd,
   renderApplicabilityMd,
+  versionFaceDir,
 } from "../../scripts/_lib/paper-applicability.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -488,7 +489,22 @@ export function judgeApplicability(dataRoot = DATA, paperRoot = RULES_GLOB_ROOT)
         problems.push(`paper/${ver.name}/applicability.json: counts.${k}=${(data.counts ?? {})[k]} 与 rows 现算 ${v} 不符`);
       }
     }
-    // ⑩ 抽名来源行必须真含该成员 token（重读语料核）；重算整档与 json 逐行对拍
+    // ⑩a 真伪判据：每条 no-member 都回到本版页面**按 token 搜一次**。
+    // 自洽（重算 == json）证不了真伪 —— 同一份错误逻辑重算两次当然一致。
+    // 实测教训：1.12.2 的枚举常量与 setDamageType 曾被误报，自洽检查全绿放过。
+    for (const r of data.rows ?? []) {
+      if (r.status !== "no-member" || !r.member) continue;
+      const pagePath = join(versionFaceDir(dataRoot, ver.name), r.newFile ?? "");
+      if (!r.newFile || !existsSync(pagePath)) continue;
+      const body = readFileSync(pagePath, "utf8");
+      const tok = String(r.member).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      if (new RegExp(`(^|[^\\w$])${tok}([^\\w$]|$)`).test(body)) {
+        problems.push(
+          `paper/${ver.name}/applicability.json: ${r.srcFile}:${r.srcLine} 标 no-member，但 ${r.newFile} 页面里能找到 ${r.member} ⇒ 假否定（应记 ok）`,
+        );
+      }
+    }
+    // ⑩b 抽名来源行必须真含该成员 token（重读语料核）；重算整档与 json 逐行对拍
     const fresh = computeForVersion(ver.name, { dataRoot, pointers });
     if (!fresh) {
       problems.push(`paper/${ver.name}: 有 applicability.json 但 data/paper-api_${ver.name} 签名面不在 ⇒ 无法复核`);

@@ -13,5 +13,13 @@
   - 自证：`upstream-tree.json`（`source=github_trees`、`layout=latest-unprefixed`、`commitSha`、105 页清单）与 `reference.provenance.json`。
   - 规则树：`fabric/26.2/`（11 条 `00–10` + `knowledge/common/verified-api-26.2.md` + `scaffold`）；`activate_platform_pack platform=fabric minecraftVersion=26.2` → `ok:true` + `ruleIds` + `verifiedApi`。
   - 工具链实测：Java 25 / Gradle 9.8.1 / Loom **1.18.2**（稳定版，官方模板是 1.19-SNAPSHOT）/ loader **0.20.1** / fabric-api **0.161.0+26.2**；scaffold 的 `gradlew build` 与带 fabric-api 的探针工程都是 `BUILD SUCCESSFUL`（2026-10-31）。
+- **26.3 上游现状（2026-10-31 实测）：有博客与模板，没有 docs 正文。**
+  - 官方博客 **2026-09-15** 已发《Fabric for Minecraft 26.3》（文中工具链：Loom 1.17 / Gradle 9.6.0 / Loader 0.19.5，都是**撰写时**值）。
+  - `fabric-example-mod` 的 **`26.3` 分支**真值：`minecraft_version=26.3` / `loader_version=0.20.1` / `loom_version=1.19-SNAPSHOT` / `fabric_api_version=0.165.0+26.3`。
+  - **docs 正文没有**：`versions/` 仍 7 档（无 `26.3`）、`reference/latest/build.gradle` 仍 `minecraftVersion="26.2"`、站点 `/develop/items/first-item` 标题仍是 26.2、`/26.3/` 与 `/26.2/` 均 404。
+  - 在建的是 **`fabric-docs` PR #738「PORT TO 26.3」**（Open，任务 **7/9**，标签 `help-wanted`，2026-09-15 建）。
+  - ⇒ **26.3 不是「像 26.2 那样换了位置」，而是「移植 PR 还没合」**：本仓因此**不建 `data/fabric_26.3`**（无源可抓），也**不拿 26.3 博客当正文**；要讲 26.3 只能说博客级改动（组件化 Compostable/Fuel、BlockTransformer、动态注册表、GLFW→SDL 等）。
+  - **本机实测（2026-10-31）**：用 loom **1.18.2**（稳定版）+ loader 0.20.1 建 `minecraft_version=26.3` 的探针工程 → **`BUILD SUCCESSFUL in 2m 4s`** ⇒ 26.3 的游戏侧能编（即便 docs 没写）；同工程把 26.3 的 `minecraft-merged.jar`（37.7 MB）拉到 `caches/fabric-loom/26.3/`，可当 javap 取证源。
+  - **旁路已落**：`data/fabric_porting/26.3.md`（官方博客摘要，`source=porting-extra`）；`search_fabric_docs version=26.3` 返回 `resolvedVersion:26.3` / `versionFallback:false` / `fallback:true` + warning「非 docs 正文」，**不伪装成 docs**。
 - **空洞（既无树也无语料）**：`1.21.2` / `1.21.5` / `1.21.6` / `1.21.7` / `1.21.9` 等。实测 `activate_platform_pack action=session platform=fabric minecraftVersion=1.21.2` → `PACK_NOT_FOUND`（message 附带「同系列已建档：1.21.1, 1.21.3, 1.21.4, 1.21.8, 1.21.10, 1.21.11」，那是**候选提示不是自动折叠授权**）；`search_fabric_docs version=1.21.2` → `VERSION_NOT_FOUND` 且**不 fallback**。
 - 遇到空洞档：把工具的候选清单念给用户选，**禁止**自行拿邻版树顶上或为填版本号克隆一棵新树。`26.1` / `26.1.1` 是另一回事——走 `knowledgeVersion` 折到 `26.1.2`，不是空洞；`26.2` 是精确档，**没有** `26.2.x` 补丁档，工程写 `26.2.1` 一律拒。

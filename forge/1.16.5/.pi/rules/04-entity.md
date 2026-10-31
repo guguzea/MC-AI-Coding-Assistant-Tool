@@ -38,7 +38,7 @@ EntityType.Builder.of(MyEntity::new, EntityClassification.CREATURE)
 
 - 使用 `Goal` 实现自主行为（行走、攻击、飞行等）
 - 使用 `TargetGoal` 实现目标选择逻辑
-- 每个 Entity 实例创建对应的 `FloatGoal`、`LookAtPlayerGoal` 等
+- 每个 Entity 实例创建对应的 `SwimGoal`、`LookAtGoal` 等（⚠ 1.16.5 真名：`FloatGoal`/`LookAtPlayerGoal`/`RandomLookAroundGoal` 是本档**没有**的，1.17.1+ 才有；见下方「AI Goal 类名按档对照」）
 
 ### 渲染器规范
 
@@ -161,21 +161,25 @@ public static void onAttributes(EntityAttributeCreationEvent event) {
 
 ```java
 // entities/MyEntity.java
-public class MyEntity extends MobEntity {
+// ⚠ 基类必须是 CreatureEntity，不是 MobEntity：MeleeAttackGoal / WaterAvoidingRandomWalkingGoal
+//   的构造器形参是 CreatureEntity（1.16.5 构件 javap 实证），MobEntity 传不进去（编译期报
+//   「不兼容的类型: MyEntity 无法转换为 CreatureEntity」）。CreatureEntity extends MobEntity。
+public class MyEntity extends CreatureEntity {
     private int attackCooldown = 0;
 
     protected MyEntity(EntityType<? extends MyEntity> type, World world) {
         super(type, world);
+        this.maxUpStep = 1.0F;   // 1.16.5 真名字段是 maxUpStep（stepHeight 是 1.17+ mojmap 名）
     }
 
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(0, new FloatGoal(this));           // 游泳
+        this.goalSelector.addGoal(0, new SwimGoal(this));            // 游泳 —— 1.16.5 真名 SwimGoal（FloatGoal 是 1.17+）
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0, true));  // 近战攻击
         this.goalSelector.addGoal(2, new WaterAvoidingRandomWalkingGoal(this, 1.0));
-        this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, PlayerEntity.class, 8.0f));
-        this.goalSelector.addGoal(4, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(3, new LookAtGoal(this, PlayerEntity.class, 8.0f));      // 1.16.5 真名 LookAtGoal
+        this.goalSelector.addGoal(4, new LookRandomlyGoal(this));                          // 1.16.5 真名 LookRandomlyGoal
 
         this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
     }

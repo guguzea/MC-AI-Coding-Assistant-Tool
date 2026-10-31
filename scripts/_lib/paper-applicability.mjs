@@ -49,6 +49,14 @@ export function findPage(bare, index) {
  */
 export function memberOf(line) {
   const trimmed = (line ?? "").trim();
+  // 枚举常量合并行（1.12.2 语料形态）：`- 枚举常量：`A` · `B` · `C``。
+  // 这类行一条含多个常量名，按「最后一个标识符」抽只会抽到第一个常量 ⇒ 目标版把常量拆成多行时
+  // 必然找不到（实测：1.12.2 的 EventPriority/PermissionDefault 报 LOWEST/TRUE「不在本版」，
+  // 而它们在 1.21.4 页面里逐行都在）。⇒ 返回 sentinel，由 computeForVersion 按「任一 token 命中」核。
+  if (/枚举常量/.test(trimmed)) {
+    const toks = [...trimmed.matchAll(/`([A-Za-z_$][\w$]*)`/g)].map((x) => x[1]);
+    return toks.length ? { any: toks } : null;
+  }
   const m = trimmed.match(/^-\s+`(.+)`$/);
   if (!m) return null; // 声明行（`**Interface X**` / 裸 `` `public interface X …` ``）没有成员名
   const sig = m[1].trim();
@@ -59,6 +67,13 @@ export function memberOf(line) {
   if (calls.length) return calls[calls.length - 1][1];
   const ids = [...sig.matchAll(/([A-Za-z_$][\w$]*)/g)];
   return ids.length ? ids[ids.length - 1][1] : null;
+}
+
+/** 成员名的展示形态（`{any:[...]}` 取第一个代表 + 标记多值）。 */
+export function memberLabel(member) {
+  if (!member) return null;
+  if (typeof member === "string") return member;
+  return member.any?.[0] ?? null;
 }
 
 /**
@@ -89,7 +104,13 @@ export function collectPointers(rulesDir, indexes, dirs) {
       if (!srcFile) continue;
       const lines = readFileSync(join(dirs[srcKey], srcFile), "utf8").split(/\r?\n/);
       const text = (lines[line - 1] ?? "").trim();
-      out.push({ rule: f, bare, line, srcKey, srcFile, text, member: memberOf(text) });
+      // 范围描述指针（"X.md:71 之后的行" / "X.md:31-70 各成员"）不是成员指针：
+      // 它指向「从这里往后的一整段」，抽取同行末尾的标识符只会得到误报
+      // （实测：26.3 的 03-inventory-gui.md:53 写 "ItemMeta.md:71 之后的行" ⇒ 抽到同句的 setDamageType，
+      //  5 个版本档全被误判为「成员不在本版」）。判据 = 指针后紧跟范围词。
+      const tail = t.slice(m.index + m[0].length, m.index + m[0].length + 12);
+      const isRange = /^\s*(?:[-~]\s*\d+)?\s*(?:之后|以上|以前|之前|起|往后|后面的行|以后)/.test(tail);
+      out.push({ rule: f, bare, line, srcKey, srcFile, text, member: isRange ? null : memberOf(text) });
     }
   }
   return out;
@@ -137,8 +158,35 @@ export function computeForVersion(version, { dataRoot, pointers, verFace }) {
       continue;
     }
     const lines = readFileSync(join(dir, hit), "utf8").split(/\r?\n/);
-    const newLine = lines.findIndex((l) => l.includes(`${p.member}(`) || new RegExp(`\\b${escapeRe(p.member)}\\b`).test(l)) + 1;
-    rows.push({ ...p, status: newLine > 0 ? "ok" : "no-member", newLine, newFile: hit });
+    // 多值形态（枚举常量合并行）：任一 token 命中即算「在」
+    const names = typeof p.member === "string" ? [p.member] : p.member.any ?? [];
+    let newLine = 0;
+    let hitName = null;
+    for (const nm of names) {
+      const at = lines.findIndex((l) => l.includes(`${nm}(`) || new RegExp(`\\b${escapeRe(nm)}\\b`).test(l)) + 1;
+      if (at > 0) {
+        newLine = at;
+        hitName = nm;
+        break;
+      }
+    }
+    // 「目标页根本不列这一类成员」≠「成员被删」。实测：paper-api_1.12.2 的
+    // EventPriority / PermissionDefault 页只有 getSlot/valueOf/values —— 上游那一版 javadoc
+    // 不列枚举常量（同页在 1.16.5+ 都列 LOWEST/TRUE）。这种页面对枚举常量只能记「未核」。
+    if (newLine === 0 && isEnumConstantPointer(p, lines)) {
+      // member-unresolved 契约：member 必须为 null（门的 ⑨ 判据），把原 token 挪到 note 留痕
+      const raw = typeof p.member === "string" ? p.member : (p.member.any ?? [])[0];
+      rows.push({ ...p, member: null, status: "member-unresolved", newFile: hit, note: `目标页不列枚举常量（上游 javadoc 边界）；原 token: ${raw}` });
+      continue;
+    }
+    rows.push({
+      ...p,
+      member: typeof p.member === "string" ? p.member : hitName,
+      memberMatchedAny: typeof p.member === "string" ? undefined : hitName !== null,
+      status: newLine > 0 ? "ok" : "no-member",
+      newLine,
+      newFile: hit,
+    });
   }
   const sig = rows.filter((r) => r.srcKey !== "tut");
   const counts = {
@@ -150,6 +198,21 @@ export function computeForVersion(version, { dataRoot, pointers, verFace }) {
     tutorialPointers: rows.filter((r) => r.status === "tutorial").length,
   };
   return { rows, counts, pages: pages.length, shell };
+}
+
+/**
+ * 该指针是否是「枚举常量」且目标页整页没有任何枚举常量行。
+ * 形态判据：源行含 枚举常量 / public static final <Type> NAME；目标页无任何 public static final 行。
+ */
+function isEnumConstantPointer(p, targetLines) {
+  const src = (p.text ?? "").trim();
+  // 源行形态（去反引号后判）：- `public static final EventPriority LOWEST`
+  const bare = src.replace(/`/g, "").trim();
+  const looksEnum =
+    /枚举常量/.test(bare) ||
+    /public\s+static\s+final\s+[A-Z][\w.$]*(<[^>]*>)?\s+[A-Z_][A-Z0-9_]*\s*$/.test(bare);
+  if (!looksEnum) return false;
+  return !targetLines.some((l) => /public\s+static\s+final\s/.test(l));
 }
 
 function escapeRe(s) {

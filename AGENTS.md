@@ -178,6 +178,7 @@ id 'fabric-loom'
 
 - 工程是 **Fabric 26.1.2**（或 `list_fabric_versions` 命中 26.1.2）→ 只读 `fabric/26.1.2/`。知识包目录是 `fabric/26.1.2/`；工程写 `26.1` / `26.1.1` 走 `knowledgeVersion` 折到该档，**禁止**打开 `fabric/1.21.11/.cursor/rules` 的 01–10，也禁止把 1.21 wiki 当本版全文。平台 API 只用 `search_fabric_docs`（先 `list_fabric_versions`；查文档请用 `version=26.1.2`，不要用工程 `minecraftVersion=26.1` 当工具参数名）。已入库 `develop_porting_index` 是 **1.21.11→26.1**。
 - **Fabric 26.2 已完整建档**（2026-10-31）：语料 `data/fabric_26.2` 来自上游 **latest 面**（仓库根 `develop/` + `reference/latest`，commit `238533d819fc`，105 页 + 443 reference 件），规则树 `fabric/26.2` 同期建（11 条 `00–10` + `knowledge/common/verified-api-26.2.md` + scaffold，scaffold 的 `gradlew build` 与带 fabric-api 的探针工程均 BUILD SUCCESSFUL）⇒ `activate_platform_pack` 与 `search_fabric_docs` 都直接命中。**禁止**拿 26.1.2 规则当 26.2（26.2 有实删实改：`gui.setScreen` 取代 `Minecraft.setScreen`、`Screenshot.grab` 取代 `getMainRenderTarget`、id 类三分），也**禁止**把这份语料当「克隆树」删掉（它带 `upstream-tree.json` 的 `commitSha` 与 `reference.provenance.json` 自证）。
+- **Fabric 26.3 只有博客旁路，没有 docs**（2026-10-31 实测）：官方博客 2026-09-15 已发《Fabric for Minecraft 26.3》，模板 26.3 分支真值 = loader 0.20.1 / loom 1.19-SNAPSHOT / api 0.165.0+26.3；但 `versions/26.3` 不存在、站点 latest 仍 26.2、`fabric-docs` 的 **PR #738「PORT TO 26.3」仍 Open（7/9）** ⇒ **不建 `data/fabric_26.3` / `fabric/26.3`**。查询走 `search_fabric_docs version=26.3`：命中 `data/fabric_porting/26.3.md`（官方博客摘要，`source=porting-extra`、`fallback:true`、`versionFallback:false`），**不是 docs 正文**，类签名禁止从这里抄。本机实测 loom 1.18.2 + loader 0.20.1 可编 26.3（`BUILD SUCCESSFUL`）。
 - 磁盘没有对应 `fabric/<ver>/` 时：停，改口 `search_fabric_docs`，**不要**用邻版规则顶上。`1.21.4` / `1.21.8` / `1.21.10` 已有 versioned `data/fabric_<ver>` + 本档规则树；**`1.21.5` 无规则树** → session `PACK_NOT_FOUND`；无 fabric-docs `versions/` → 文档检索 `VERSION_NOT_FOUND` 且不 fallback。禁止拷 `1.21.11`。
 - **文档 fallback 仅限查询 API**，不代表规则树可用。
 
@@ -206,6 +207,8 @@ id 'net.neoforged.gradle.userdev'
 > 注记（D9）：NeoForge 1.20.1（20.1.x，Forge 47 兼容层）使用 `mods.toml` + `net.minecraftforge.*` 包，根决策树与 `detect_mod_project` 会将其归为 Forge——功能等价；该版本规则树在 neoforge/1.20.1。
 
 **NeoForge 建档面**：规则树 10 档、每档 11 条 `00–10`；语料 9 档。**唯一差额 `data/neoforge_1.20.1` 缺失 = 按设计，不是半档**（`search_neoforge_docs version=1.20.1` → `ok:true` + `forgeCompatible:true` + `sourceNote` 指「使用 Forge 1.20.1 文档数据」⇒ **不要**为凑数建克隆树）。Forge 侧 `forge/1.21.1` 是 draft（无 00–10、`PACK_NOT_FOUND`）；`1.7.10`–`1.11.2` 是 **3 条短规则树**（短不是漏，**禁止**用 1.12.2 的 00–10 顶替）。
+
+**26.2 / 26.3 无主文档（2026-10-31 实测）**：NeoForge 构件已到 **26.3.0.99**（26.2.0.93 也在），但官方主文档 `docs.neoforged.net` 仍只到 **26.1**（`/docs/26.3/...` → 404）⇒ **不建 `neoforge/26.2` / `neoforge/26.3` 规则树，也不许拿 26.1 顶替**。可用的只有两条：**primer**（`data/neoforge_primers/26.2.md` / `26.3.md`；`get_migration_guide route=26.1->26.2` / `26.2->26.3`）与 **jar javap**（26.3 的 `minecraft-merged.jar` 37.7 MB、`neoforge-26.3.0.99-universal.jar` 6.83 MB）。两者互证结果（含「`SDLScancode` / `SDLKeycode` / `SDLMouse` 其实在 `org.lwjgl.sdl`，不是 MC 类」这条纠偏）见 [`doc/platform-coverage-neoforge.md`](./doc/platform-coverage-neoforge.md)。
 
 逐档清单与 1.20.1 取数说明 → [`doc/platform-coverage-neoforge.md`](./doc/platform-coverage-neoforge.md)（另有 `CORPUS_PROVENANCE.md` §3）。
 

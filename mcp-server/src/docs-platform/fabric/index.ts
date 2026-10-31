@@ -143,6 +143,17 @@ function isFabric26_2Line(v: string): boolean {
 }
 
 /**
+ * 26.3 线（2026-10-31 起）：上游**没有** docs 正文 —— `versions/26.3` 不存在、站点 latest 仍是 26.2、
+ * `fabric-docs` 的移植 PR #738「PORT TO 26.3」仍 Open（7/9）。唯一可引的是官方博客
+ * 《Fabric for Minecraft 26.3》（2026-09-15）→ `data/fabric_porting/26.3.md`（source=porting-extra）。
+ * 与 26.2 分支的区别：26.2 的旁路正文混了 `fabric_26.1.2`，所以 resolvedVersion 必须写 26.1.2；
+ * 26.3 的旁路是**纯博客**，resolvedVersion 就是 26.3，但 sourceIsRequestedVersion 仍按「非 docs」处理。
+ */
+function isFabric26_3BlogLine(v: string): boolean {
+  return v === "26.3" || v.startsWith("26.3.");
+}
+
+/**
  * 26.2 **未入库时**的兜底（2026-10-31 起正常路径走不到）：`data/fabric_26.2` 现在是从上游
  * latest 面（`develop/`，commit `238533d8`）pin 抓的真语料 105 页，`available.includes("26.2")`
  * 成立 ⇒ 检索直接命中、`versionFallback:false`。保留本分支只为「语料被误删」时不至于 500：
@@ -454,6 +465,45 @@ export async function searchFabricDocs(
 
     const available = getStore(version, "fabric-docs").getAvailableVersions();
     if (!available.includes(version)) {
+      if (isFabric26_3BlogLine(requested)) {
+        const portingHits = searchFabricPortingPages(query, version);
+        const blogWarn =
+          "无 fabric_26.3 docs 正文（上游 fabric-docs 的 PR #738「PORT TO 26.3」截至 2026-10-31 仍 Open，7/9）；" +
+          "命中来自官方博客《Fabric for Minecraft 26.3》（2026-09-15）的移植摘要（source=porting-extra）。" +
+          "禁止当 26.3 本版 docs 正文或类签名出处抄写；要签名请 query_loader_api + 自备 26.3 的 fabric-api jar。";
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(
+                withDocsFallbackFields({
+                  ok: true,
+                  query,
+                  version: requested,
+                  requestedVersion: requested,
+                  // 内容确实是 26.3 的（博客），不是邻版正文 ⇒ resolved 就是 26.3
+                  resolvedVersion: requested,
+                  // 不是「版本回退」，而是「语料类型回退」：fallback 为 true，versionFallback 为 false
+                  versionFallback: false,
+                  fallback: true,
+                  platform: "fabric",
+                  source: "porting-extra",
+                  sourceUsed: "porting-extra",
+                  sourcePlatform: "fabric",
+                  // 26.3 的博客摘要不是 docs 正文 ⇒ 不能给 true
+                  sourceIsRequestedVersion: false,
+                  warning: blogWarn,
+                  total: portingHits.length,
+                  ...poolFieldsOf(portingHits.length, portingHits.length),
+                  results: portingHits,
+                }),
+                null,
+                2,
+              ),
+            },
+          ],
+        };
+      }
       if (isFabric26_2Line(requested)) {
         const portingHits = searchFabricPortingPages(query, version);
         const extraWarn =

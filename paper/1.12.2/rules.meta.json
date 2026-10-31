@@ -16,8 +16,8 @@
     "signaturePointers": 28,
     "memberStillPresent": 21,
     "classMissing": 2,
-    "memberMissing": 3,
-    "memberUnresolved": 2,
+    "memberMissing": 1,
+    "memberUnresolved": 4,
     "tutorialPointers": 19
   },
   "typesInSignatureFace": 877,

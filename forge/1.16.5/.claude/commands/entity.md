@@ -32,17 +32,18 @@ ENTITY_TYPES.register(modEventBus);
 ## 实体类基础结构
 
 ```java
-public class MyEntity extends MobEntity {
+// 基类用 CreatureEntity（不是 MobEntity）：MeleeAttackGoal / WaterAvoidingRandomWalkingGoal 要 CreatureEntity
+public class MyEntity extends CreatureEntity {
     protected MyEntity(EntityType<? extends MyEntity> type, World world) {
         super(type, world);
-        this.stepHeight = 1.0F;
+        this.maxUpStep = 1.0F;   // 1.16.5 真名 maxUpStep（stepHeight 是 1.17+ 名）
     }
 
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        // 添加 AI 目标
-        this.goalSelector.addGoal(0, new FloatGoal(this));
+        // 添加 AI 目标（1.16.5 真名 SwimGoal；FloatGoal 是 1.17+）
+        this.goalSelector.addGoal(0, new SwimGoal(this));
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0, true));
         this.goalSelector.addGoal(2, new WaterAvoidingRandomWalkingGoal(this, 1.0));
         this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));

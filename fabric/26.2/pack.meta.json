@@ -14,7 +14,8 @@
     "gradle": "9.8.1",
     "provenance": {
       "text": "official-mdk:FabricMC/fabric-example-mod@26.2",
-      "wrapper": "gradle-wrapper-task"
+      "wrapper": "gradle-wrapper-task",
+      "build": "2026-10-31 实测：本档 scaffold 原样复制到 F:\\MOD_TEST\\fabric262-scaffold（逐文件与仓内一致），用**本档自带 gradlew.bat**（Gradle 9.8.1 wrapper 四件套，2026-10-31 由 9.8.1 发行版自己跑 wrapper 任务生成）跑 `gradlew.bat build --offline --no-daemon` → BUILD SUCCESSFUL in 16s（rc=0）；JDK 25 = G:\\jdk25\\jdk-25.0.4.1+1，GRADLE_USER_HOME=F:\\MOD_TEST（wrapper dist 走 junction 复用 ~/.gradle 的 gradle-9.8.1-bin），依赖全离线命中。同版本组合的带 fabric-api 探针工程 F:\\MOD_TEST\\fabric262-probe（RuleProbe / DataGenProbe / ScreenProbe）另跑 `build` → BUILD SUCCESSFUL。边界：只覆盖 :build（compileJava + processResources + jar），未跑 runClient / runServer / runDatagen，也没有真机启动证据。"
     },
     "buildVerified": true,
     "gaps": [

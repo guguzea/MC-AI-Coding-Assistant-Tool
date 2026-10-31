@@ -1,5 +1,26 @@
 # mcp-server changelog
 
+## Unreleased · R2 审计修复补丁（2026-10-31）
+
+### forge/1.16.5 实体示例：改完类名仍编译不过（真构件 `javac` 定位，已修）
+
+`04-entity.mdc` 上一轮把 `Mob`→`MobEntity` 改对了，但**整段仍编译不过**。用 `G:\graalvm-jdk-21` + `F:\MOD_TEST\caches\forge_gradle\` 的 mapped 构件逐条真编，定位到 4 处：
+
+- **`extends MobEntity` 不够** —— `MeleeAttackGoal` / `WaterAvoidingRandomWalkingGoal` 的构造器形参是 `CreatureEntity`（`javap` 实证），`MobEntity` 传不进去，编译期报「不兼容的类型: MyEntity 无法转换为 CreatureEntity」。改 `extends CreatureEntity`。
+- **`FloatGoal` / `LookAtPlayerGoal` / `RandomLookAroundGoal` 在 1.16.5 不存在** —— 真名分别是 `SwimGoal` / `LookAtGoal` / `LookRandomlyGoal`（1.16.5 goal 包 71 个类全量比对）。这三个名是 **1.17+** 的写法；`FloatGoal` 在 1.17.1–1.20.4 五档都真实存在，**只有 1.16.5 要改**（那 5 档 `code-patterns/03` 保持不动）。
+- **`stepHeight` 在 1.16.5 不存在** —— 真名 `maxUpStep`（1.17+ 才叫 `stepHeight`）。
+- **`DataSerializers.VARINT` / `entityData.register` 不存在** —— 1.16.5 只有 `INT`，注册方法是 `entityData.define(...)`（`javap` 实证：`EntityDataManager.define(DataParameter<T>, T)`，无 `register` 重载）。同一对错误在 **`rules/08-client-server.mdc:152,156`** 也各出现一次（SynchedEntityData 示例），一并改掉。
+
+改动落 `forge/1.16.5/.cursor/{rules/04-entity.mdc,rules/08-client-server.mdc,skills/mc-entity/SKILL.md}` + `code-patterns/03-entity-patterns.md`，再 `sync-skills.ps1 -TargetDir forge/1.16.5` 刷 7 面镜像（6 面 sha256 与源稿一致，`.pi` 为格式差异、内容已同步）。**验收**：`04-entity.mdc` 与 `mc-entity/SKILL.md` 的围栏**真编 EXIT=0**；`code-patterns/03` 的实体类段真编 EXIT=0。
+
+### paper 适用性：两类假否定（生成器 + 门同时修）
+
+- **枚举常量假否定**：`paper-api_1.12.2` 的 `EventPriority` / `PermissionDefault` 页**上游 javadoc 不列枚举常量**（只有 `getSlot`/`valueOf`/`values`），生成器据此判 `LOWEST`/`TRUE`「成员名不在本版」。同页在 1.16.5+ 都列 ⇒ 这是**语料面边界**不是成员被删。新增 `isEnumConstantPointer()`：源行是枚举常量形态 ∧ 目标页整页无任何 `public static final` 行 ⇒ 记 `member-unresolved`（原 token 落 `note` 留痕），不进「不得照用」表。
+- **范围描述指针误当成员指针**：`<file>.md:<n>` 后紧跟「之后 / 以上 / 起 / 往后」等范围词时，抽同行末尾标识符只会得到无关名字。新增判据 → `memberUnresolved`。
+- **门补真伪判据（⑩a）**：`assert-server-rules-integrity.mjs` 原判据 ⑩ 只做「重算 == json」自洽对拍，**同一份错误逻辑重算两次当然一致** ⇒ 假否定恒绿。新增：每条 `no-member` 回本版页面**按 token 搜一次**，搜到即判红。投毒自证：手工把一条 `ok` 改成 `no-member` ⇒ 门正确报「假否定（应记 ok）」并 exit 1。
+
+结果：1.12.2 的 `memberMissing` 3 → **1**（剩 `setDamageType` 是**真缺失**：26.3 有、1.12.2 无）；5 档字面 `null` 全 0；`assert-server-rules-integrity` plain + `--selftest`（15/15 畸变必红、7 例干净必绿）全绿。
+
 ## Unreleased（2026-09 全仓库审查修复轮；工作树，未发版）
 
 - **测试链自退化修护（2026-10-30，R2 审计 WP9 收口）** —— 全属「测试自己烂掉但没人发现」类，产品行为未变。

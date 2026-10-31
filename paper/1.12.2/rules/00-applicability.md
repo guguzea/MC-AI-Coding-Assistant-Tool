@@ -23,8 +23,8 @@
 | 状态 | 条数 |
 |---|---|
 | ✅ 类在 + 成员名在（行号已按本版重定位） | **21** |
-| ⚠ 类在、成员名找不到（该成员在本版被删/改名） | 3 |
-| ❓ 类在、**抽不出成员名**（来源行是类型声明，未核） | 2 |
+| ⚠ 类在、成员名找不到（该成员在本版被删/改名） | 1 |
+| ❓ 类在、**抽不出成员名**（来源行是类型声明，未核） | 4 |
 | ❌ 类不在（本版没有这个类） | 2 |
 | — 教程面指针（不分版本，未核） | 19 |
 
@@ -56,8 +56,6 @@
 
 ### ⚠ 成员名不在本版（**不得**照用 26.3 的对应条款）
 
-- `org_bukkit_event_EventPriority.md:13` —— 成员 `LOWEST` 在 Paper 1.12.2 的 `EventPriority` 页面里找不到
-- `org_bukkit_permissions_PermissionDefault.md:13` —— 成员 `TRUE` 在 Paper 1.12.2 的 `PermissionDefault` 页面里找不到
 - `org_bukkit_inventory_meta_ItemMeta.md:71` —— 成员 `setDamageType` 在 Paper 1.12.2 的 `ItemMeta` 页面里找不到
 
 ### ❓ 抽不出成员名（未核，**不是**成员缺失）
@@ -65,6 +63,8 @@
 这些指针的**来源行是类型声明**（如 `**Interface X**` / `public interface X …`），没有成员名可抽 ⇒ 本档只核到「类在」。
 
 - `org_bukkit_event_EventHandler.md:12` —— `EventHandler`（来源行非成员行）
+- `org_bukkit_event_EventPriority.md:13` —— `EventPriority`（来源行非成员行）
+- `org_bukkit_permissions_PermissionDefault.md:13` —— `PermissionDefault`（来源行非成员行）
 - `org_bukkit_inventory_meta_ItemMeta.md:12` —— `ItemMeta`（来源行非成员行）
 
 ### ❌ 类不在本版
@@ -83,5 +83,5 @@
 - **没有**在 Paper 1.12.2 上真机跑过任何插件（本档零真机；26.3 档的 JDK/classpath/api-version 实测结论不自动继承）。
 - **没有**逐方法比对成员签名（只核「这个方法名还在不在」，不核参数表是否变化）。
 - 教程面指针（19 处）指向的是**当前文档**，其正文可能已按新版改写，未按 1.12.2 复核。
-- 「抽不出成员名」2 处只核到类级（来源行是类型声明），未逐个找成员。
+- 「抽不出成员名」4 处只核到类级（来源行是类型声明），未逐个找成员。
 - 「纯类型声明页」89 篇是上游页面本身没有成员签名（注解/嵌套 record/纯继承接口），不是抓取失败；但也意味着这些类的成员本档没有证据。

@@ -40,11 +40,14 @@
  */
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { existsSync, mkdirSync, readFileSync, writeFileSync, unlinkSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { tmpdir } from "node:os";
 import { resolveDataRoot } from "./_lib/data-root.js";
+// 写盘守卫（仓库纪律）：仓库内落笔只许走 emit（默认 dry-run，--write 才写），
+// 临时文件删除走 scratchRemove；脚本里不许再出现裸 mkdirSync / writeFileSync / unlinkSync。
+import { wantWrite, emit, scratchRemove } from "../../scripts/_lib/write-guard.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -68,7 +71,7 @@ const { kv, flags } = parseCli(process.argv.slice(2));
 const VERSION = kv.get("version");
 const SHA = kv.get("sha");
 const FROM_CLONE = kv.get("from-clone");
-const WRITE = flags.has("write");
+const WRITE = wantWrite();
 const CONCURRENCY = Math.max(1, Math.min(8, Number(kv.get("concurrency") ?? 6) || 6));
 const DATA = resolveDataRoot();
 
@@ -96,7 +99,8 @@ const sha256 = (buf) => createHash("sha256").update(buf).digest("hex");
 
 /** 本机 schannel 默认查吊销会 `CRYPT_E_NO_REVOCATION_CHECK`；`--ssl-no-revoke` 是仓库既有约定。 */
 function curlGet(url, dest, timeoutMs = 60_000) {
-  mkdirSync(dirname(dest), { recursive: true });
+  // dest 一律是系统临时目录里的文件（仓库内落盘由调用方走 emit）
+
   const r = spawnSync(
     "curl.exe",
     ["-sS", "--ssl-no-revoke", "-f", "-L", "--max-time", String(Math.ceil(timeoutMs / 1000)), "-o", dest, url],
@@ -112,7 +116,7 @@ function curlJson(url, timeoutMs = 240_000) {
     return JSON.parse(readFileSync(dest, "utf8"));
   } finally {
     try {
-      unlinkSync(dest);
+      scratchRemove(dest);
     } catch {
       /* ignore */
     }
@@ -226,7 +230,6 @@ function extractTitle(content, fallback) {
 function writeRaw(gitPath, content, finalUrl, fetchedAt, digest) {
   const filename = gitPath.replace(/\//g, "_").replace(/\.md$/, "") + ".md";
   const filepath = join(RAW_DIR, filename);
-  mkdirSync(dirname(filepath), { recursive: true });
   const title = extractTitle(content, gitPath.replace(/\.md$/, "").replace(/\//g, " "));
   const body = [
     `# ${title}`,
@@ -241,7 +244,7 @@ function writeRaw(gitPath, content, finalUrl, fetchedAt, digest) {
     "",
     content,
   ].join("\n");
-  writeFileSync(filepath, body, "utf8");
+  emit(filepath, body);
   return { filename, bytes: Buffer.byteLength(body, "utf8") };
 }
 
@@ -347,7 +350,7 @@ async function main() {
       failures.push({ path: gitPath, kind: "page" });
     } finally {
       try {
-        unlinkSync(tmp);
+        scratchRemove(tmp);
       } catch {
         /* ignore */
       }
@@ -391,12 +394,16 @@ async function main() {
       extraFiles[relPath] = prev;
       return;
     }
-    const ok = await curlGetRetry(`${RAW_BASE}/${relPath}`, dest);
+    const tmp = join(tmpdir(), `mc-skill-extra-${process.pid}-${Math.random().toString(16).slice(2)}`);
+    const ok = await curlGetRetry(`${RAW_BASE}/${relPath}`, tmp);
     if (!ok) {
       failures.push({ path: relPath, kind: "extra" });
       return;
     }
-    const buf = readFileSync(dest);
+    const text = readFileSync(tmp, "utf8");
+    scratchRemove(tmp);
+    emit(dest, text);
+    const buf = Buffer.from(text, "utf8");
     extraFiles[relPath] = { blobSha: blob.blobSha, sha256: sha256(buf), bytes: buf.length };
   });
   console.log(`[provision-fabric-latest] 根级引用取件 ${Object.keys(extraFiles).length}/${extras.length}（${extras.join(", ") || "无"}）`);
@@ -413,12 +420,16 @@ async function main() {
       return;
     }
     try {
-      const ok = await curlGetRetry(url, dest);
+      const tmp = join(tmpdir(), `mc-skill-ref-${process.pid}-${Math.random().toString(16).slice(2)}`);
+      const ok = await curlGetRetry(url, tmp);
       if (!ok) {
         failures.push({ path: f.path, kind: "reference" });
         return;
       }
-      const buf = readFileSync(dest);
+      const text = readFileSync(tmp, "utf8");
+      scratchRemove(tmp);
+      emit(dest, text);
+      const buf = Buffer.from(text, "utf8");
       refFiles[f.path] = { blobSha: f.blobSha, sha256: sha256(buf), bytes: buf.length };
     } catch {
       failures.push({ path: f.path, kind: "reference" });
@@ -428,8 +439,7 @@ async function main() {
 
   pageMeta.sort((a, b) => a.gitPath.localeCompare(b.gitPath));
 
-  mkdirSync(DOCS_ROOT, { recursive: true });
-  writeFileSync(
+  emit(
     join(DOCS_ROOT, "upstream-tree.json"),
     JSON.stringify(
       {
@@ -455,7 +465,7 @@ async function main() {
     "utf8",
   );
 
-  writeFileSync(
+  emit(
     join(PACK_ROOT, "reference.provenance.json"),
     JSON.stringify(
       {
@@ -475,7 +485,7 @@ async function main() {
     "utf8",
   );
 
-  writeFileSync(
+  emit(
     join(PACK_ROOT, "meta.json"),
     JSON.stringify(
       {

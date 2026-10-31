@@ -1012,8 +1012,28 @@ async function testSearchEnhancements() {
   const fab262 = parseToolText(await searchFabricDocs({ query: "porting", version: "26.2" }));
   assert.notEqual(fab262.error?.code, "VERSION_NOT_FOUND", JSON.stringify(fab262).slice(0, 400));
   assert.ok(fab262.ok !== false, JSON.stringify(fab262).slice(0, 400));
-  assert.equal(fab262.sourceUsed ?? fab262.source, "porting-extra");
-  assert.match(String(fab262.warning ?? ""), /porting-extra|26\.2/);
+  // 2026-10-31：26.2 已按 latest 面入库 ⇒ 走 fabric-docs 主树，**不再**走 porting-extra 旁路。
+  // 旧断言（source 必须是 porting-extra）随之作废，换成更强的两条：不许版本回退 + 必须命中 26.2 自己的页。
+  assert.equal(fab262.versionFallback, false, JSON.stringify(fab262).slice(0, 300));
+  assert.ok(
+    (fab262.results ?? []).some((r) => String(r.id).startsWith("26.2/")),
+    JSON.stringify(fab262.results?.slice(0, 5)).slice(0, 400),
+  );
+
+  // 2026-10-31：26.3 走「博客级旁路」——上游 docs 的 PR #738 仍 Open，唯一可引的是官方博客摘要。
+  // 判据要比 26.2 更严：resolvedVersion 必须就是 26.3（不是邻版）、不许标版本回退、必须说明是博客。
+  const fab263 = parseToolText(await searchFabricDocs({ query: "migration", version: "26.3" }));
+  assert.notEqual(fab263.error?.code, "VERSION_NOT_FOUND", JSON.stringify(fab263).slice(0, 400));
+  assert.equal(fab263.ok, true, JSON.stringify(fab263).slice(0, 300));
+  assert.equal(fab263.sourceUsed ?? fab263.source, "porting-extra");
+  assert.equal(fab263.resolvedVersion, "26.3", JSON.stringify(fab263).slice(0, 300));
+  assert.equal(fab263.versionFallback, false);
+  assert.equal(fab263.fallback, true);
+  assert.match(String(fab263.warning ?? ""), /博客|26\.3/);
+  assert.ok(
+    (fab263.results ?? []).some((r) => r.id === "porting/26.3"),
+    JSON.stringify(fab263.results?.slice(0, 5)).slice(0, 400),
+  );
 
   const firstItem = parseToolText(await searchFabricDocs({ query: "first item", version: "1.20.4" }));
   assert.ok(
@@ -6598,6 +6618,10 @@ const WRAPPER_JARS = {
   "9.2.1": { sha256: "423cb469ccc0ecc31f0e4e1c309976198ccb734cdcbb7029d4bda0f18f57e8d9", size: 45633, gradlewSha: "fb68debc1b1acf8ec55dc0d5e5495e1dedd0bd6b61f304bee61613eeb2bd9b92", gradlewBatSha: "fedad02c18e266ec094995a5751b7fe1eb6e74f66bf75db64fae2e50eb22c234" },
   "9.5.1": { sha256: "497c8c2a7e5031f6aa847f88104aa80a93532ec32ee17bdb8d1d2f67a194a9c7", size: 48462, gradlewSha: "ab5c0cad16305af2e619c159c1f58dd68d07fab9c11e36701e109c0277407f7a", gradlewBatSha: "475c4f08cd57cf2faa819e7f36d72aa93f0ad646ea23a8f7fa3ef54dee1cbc52" },
   "9.7.1": { sha256: "7a9ce74cff467ca1bf60a4fcd9f05185acceda4d0f382434d393e17864262c5d", size: 47505, gradlewSha: "a5a5c199ba02189ae8c46a334223371a20599d9c298ef65e7540ede4a3f72d59", gradlewBatSha: "d539676c48b596afda64c963ec8f7ee56c7b3fe7e3b81d1dbe2d1a1e3dd9e9f8" },
+  // 2026-10-31：fabric/26.2 用 Gradle 9.8.1。三件套由 9.8.1 发行版自己跑 wrapper 任务生成（本机 services.gradle.org
+  // 不可达 ⇒ `--no-validate-url`；生成后 properties 的 validateDistributionUrl 已改回 true）。
+  // 注意 9.8.x 的 gradlew.bat 由 2848 B 变 4888 B（脚本改写）；gradlew 与 9.7.1 同 sha。
+  "9.8.1": { sha256: "3b8a25775a69158b5ad2b1d17a80a88dc7b40a352a73eb27d06c612a7ce68e98", size: 48749, gradlewSha: "a5a5c199ba02189ae8c46a334223371a20599d9c298ef65e7540ede4a3f72d59", gradlewBatSha: "f17917f8dbe61182b149273ee78090fec1197442c3f38276af907bfa5190db16" },
 };
 // 钉值表本身必须先过格式校验：抄错一位 hex 会让该版本所有 scaffold 被误判为「被篡改」。
 function findMalformedPins(table) {
@@ -6851,14 +6875,14 @@ async function testScaffoldWrappers() {
   assert.equal(findMalformedPins({ "8.4": { ...WRAPPER_JARS["8.4"], gradlewBatSha: "", size: 0 } }).length, 2, "batSha / size 必须分别报错");
 
   const { seen, problems, declaredCount, byVersion, noProps } = scanScaffoldWrappers(REPO_ROOT);
-  // 49 = 48 + `rift/1.13`（2026-10-23 新建的原生档；它自带 scaffold，见 `rift/1.13/scaffold/`）
-  assert.equal(seen.length, 49, `全仓 Java scaffold 应为 49 档，实际 ${seen.length} → ${seen.join(",")}`);
-  assert.equal(declaredCount, 44, `已声明 Gradle 版本、三件套应完整的 scaffold 应为 44 档，实际 ${declaredCount}`);
+  // 50 = 49 + `fabric/26.2`（2026-10-31 建档；scaffold 用自带 gradlew 真跑 `build --offline` → BUILD SUCCESSFUL in 34s）
+  assert.equal(seen.length, 50, `全仓 Java scaffold 应为 50 档，实际 ${seen.length} → ${seen.join(",")}`);
+  assert.equal(declaredCount, 45, `已声明 Gradle 版本、三件套应完整的 scaffold 应为 45 档，实际 ${declaredCount}`);
   const fabricSeen = seen.filter((k) => k.startsWith("fabric/"));
-  assert.equal(fabricSeen.length, 14, `fabric/*/scaffold 应为 14 档，实际 ${fabricSeen.length}`);
+  assert.equal(fabricSeen.length, 15, `fabric/*/scaffold 应为 15 档，实际 ${fabricSeen.length}`);
   assert.equal(
     fabricSeen.filter((k) => existsSync(join(REPO_ROOT, k, "scaffold", "gradle", "wrapper", "gradle-wrapper.properties"))).length,
-    14, "fabric 已声明 Gradle 版本的档数应为 14（2026-10-05 补齐 1.21.4 / 1.21.8 / 1.21.10 后全档齐全）");
+    15, "fabric 已声明 Gradle 版本的档数应为 15（2026-10-31 补 fabric/26.2 后全档齐全）");
   assert.deepEqual(noProps, [...WRAPPER_VERSION_GAPS].sort(), "无 gradle-wrapper.properties 的 scaffold 必须与空洞登记表逐档相等");
   assert.deepEqual(problems, [], `scaffold wrapper 门禁:\n  ${problems.join("\n  ")}`);
 
@@ -7645,7 +7669,9 @@ async function testLoaderApiRepoDataHygiene() {
   // 52 → 55：同日补出 fabric-api 缺的三档 `1.21.4` / `1.21.8` / `1.21.10` ⇒ 否决源② 在场数 11/14 → **14/14**；
   // 坐标来自 scripts/fabric-api-version-pins.json 的逐档 pin（modrinth gameVersions 实测，非借邻版），
   // mappingsVersion 按仓内既有 11 件同串约定写 `yarn-<MC 版>` / `fabric-api-sources-yarn`。
-  assert.equal(clean.count, 55, `官方摘要应为 55 份，实际 ${clean.count}`);
+  // 55 → 56：2026-10-31 新增 `26.2-fabric-api.json`（fabric-api `0.161.0+26.2` 的 44 个模块 jar 合并后
+  // 反编译抽签名，classCount=1636 / fqcnIndex=1910），供 fabric/26.2 的 verified-api 表与规则名门使用。
+  assert.equal(clean.count, 56, `官方摘要应为 56 份，实际 ${clean.count}`);
   assert.deepEqual(clean.problems, [], `loader-api 数据卫生门禁:\n  ${clean.problems.join("\n  ")}`);
 
   const readJson = (p) => JSON.parse(readFileSync(p, "utf8"));

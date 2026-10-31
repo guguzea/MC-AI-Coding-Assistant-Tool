@@ -15,7 +15,7 @@
   },
   "boot": {
     "measuredOn": "2026-10-05",
-    "note": "29 档全 rc=0：29 个有 props 的 scaffold 各自用自己的 props + 三件套离线引导成功。12 个钉值版本 → 9 个不同 jar 字节类（7.2 代表原 7.2≡7.3.3 字节类、7.6≡7.6.1），10 类全部被至少一行覆盖，故无「钉了字节却没引导过」的版本。门禁 diffWrapperPins 校三件事：boot.rows 存在、每个钉值版本都有 rc=0 行、每行的档在该版本 usedBy 内。（2026-09-16 更新：fabric/1.21.3 随升 Gradle 8.10 重测 boot rc=0（banner=8.10）；8.6 表项因无档声明已撤，其 jar 字节类由 8.5 代表。）（2026-10-01 更新：quilt ×10 补 wrapper 四件套后各自 gradlew build rc=0（D:/mc-skill-temp/qs_build/results3.txt，Gradle 9.5.1 + JDK21 构建 JVM），该 10 档已并入 9.5.1 usedBy；boot.rows 未逐档补行——门禁只要求每个钉值版本至少一条 rc=0 引导行（9.5.1 由 fabric/1.21.11 承担），此处按事实登记不补造行。）（2026-10-03 更新：**新增钉值版本 9.7.1（fabric/26.1.2）** —— 该档按上游 fabric-example-mod 分支 26.1 实读的 Gradle 9.7.1 补 wrapper；boot 实测 `gradlew.bat --version --offline` rc=0 / banner=9.7.1（JAVA_HOME=JDK 25，发行包按 base36(MD5(distributionUrl)) = 1w1c7tv4s851m17nbqdsro2tv seed 进 GRADLE_USER_HOME），故本轮**本行由 fabric/26.1.2 自身承担**（非借用他档）。）（2026-10-05 更新：**forge/1.15.2 与 forge/1.16.5 的 wrapper 由 7.3.3 / 7.6 换成 6.9.4** —— 此前只改了 props 声明值、jar/gradlew 字节仍是 7.x 实物（门禁据此报「声明 6.9.4 但三件套字节不符」），本批按 6.9.4 官方产物补齐实物并各跑 `gradlew.bat --version --offline` rc=0（banner=6.9.4，jarSha8=e996d452，JAVA_HOME=JDK 8）。7.3.3 表项因无任何 scaffold 声明而撤销（其字节类由 7.2 代表，同 8.6→8.5 的处置）。）",
+    "note": "29 档全 rc=0：29 个有 props 的 scaffold 各自用自己的 props + 三件套离线引导成功。12 个钉值版本 → 9 个不同 jar 字节类（7.2 代表原 7.2≡7.3.3 字节类、7.6≡7.6.1），10 类全部被至少一行覆盖，故无「钉了字节却没引导过」的版本。门禁 diffWrapperPins 校三件事：boot.rows 存在、每个钉值版本都有 rc=0 行、每行的档在该版本 usedBy 内。（2026-09-16 更新：fabric/1.21.3 随升 Gradle 8.10 重测 boot rc=0（banner=8.10）；8.6 表项因无档声明已撤，其 jar 字节类由 8.5 代表。）（2026-10-01 更新：quilt ×10 补 wrapper 四件套后各自 gradlew build rc=0（D:/mc-skill-temp/qs_build/results3.txt，Gradle 9.5.1 + JDK21 构建 JVM），该 10 档已并入 9.5.1 usedBy；boot.rows 未逐档补行——门禁只要求每个钉值版本至少一条 rc=0 引导行（9.5.1 由 fabric/1.21.11 承担），此处按事实登记不补造行。）（2026-10-03 更新：**新增钉值版本 9.7.1（fabric/26.1.2）** —— 该档按上游 fabric-example-mod 分支 26.1 实读的 Gradle 9.7.1 补 wrapper；boot 实测 `gradlew.bat --version --offline` rc=0 / banner=9.7.1（JAVA_HOME=JDK 25，发行包按 base36(MD5(distributionUrl)) = 1w1c7tv4s851m17nbqdsro2tv seed 进 GRADLE_USER_HOME），故本轮**本行由 fabric/26.1.2 自身承担**（非借用他档）。）（2026-10-05 更新：**forge/1.15.2 与 forge/1.16.5 的 wrapper 由 7.3.3 / 7.6 换成 6.9.4** —— 此前只改了 props 声明值、jar/gradlew 字节仍是 7.x 实物（门禁据此报「声明 6.9.4 但三件套字节不符」），本批按 6.9.4 官方产物补齐实物并各跑 `gradlew.bat --version --offline` rc=0（banner=6.9.4，jarSha8=e996d452，JAVA_HOME=JDK 8）。7.3.3 表项因无任何 scaffold 声明而撤销（其字节类由 7.2 代表，同 8.6→8.5 的处置）。）（2026-10-31 更新：**新增钉值版本 9.8.1（fabric/26.2）** —— 四件套由 9.8.1 发行版自己跑 wrapper 任务生成；boot 实测 gradlew.bat --version --offline rc=0 / banner=9.8.1（JAVA_HOME=JDK 25，Launcher JVM 25.0.4.1），同档 gradlew.bat build --offline 亦 rc=0（BUILD SUCCESSFUL in 16s）。）",
     "rows": [
       {
         "pack": "fabric/1.14.4",
@@ -256,6 +256,14 @@
         "rc": 0,
         "jarSha8": "7a9ce74c",
         "gradleBanner": "9.7.1"
+      },
+      {
+        "pack": "fabric/26.2",
+        "gradle": "9.8.1",
+        "jvm": 25,
+        "rc": 0,
+        "jarSha8": "3b8a2577",
+        "gradleBanner": "9.8.1"
       }
     ]
   },
@@ -707,6 +715,23 @@
       "jarByteCompareWithZipEntry": true,
       "jarEntry": "gradle-9.7.1/lib/plugins/gradle-wrapper-main-9.7.1.jar!gradle-wrapper.jar",
       "zipSha256": "acd53f1edaf02f1a8ff99879f8a34b302661a057d9b063ae9e35b552f804d20a"
+    },
+    "9.8.1": {
+      "verified": "official-distribution",
+      "distributionUrl": "https://services.gradle.org/distributions/gradle-9.8.1-bin.zip",
+      "jarSha256": "3b8a25775a69158b5ad2b1d17a80a88dc7b40a352a73eb27d06c612a7ce68e98",
+      "jarSize": 48749,
+      "gradlewSize": 8656,
+      "gradlewBatSize": 4888,
+      "usedBy": [
+        "fabric/26.2"
+      ],
+      "caveat": "2026-10-31 取证：三件套由本机 Gradle 9.8.1 发行版自己跑 wrapper --gradle-version 9.8.1 --no-validate-url 生成（services.gradle.org 在本机不可达，wrapper 任务的 URL 自检会失败，故关自检生成；生成的 properties 已把 validateDistributionUrl 改回 true）。zipSha256 取自官方 gradle-9.8.1-bin.zip.sha256（跟随 301 后读到），不是本地 zip 实算（本机没有该 zip）⇒ jarByteCompareWithZipEntry=false。9.8.x 的 gradlew.bat 由 9.7.1 的 2848 B 变为 4888 B（脚本改写）；gradlew 与 9.7.1 同 sha。",
+      "gradlewSha256": "a5a5c199ba02189ae8c46a334223371a20599d9c298ef65e7540ede4a3f72d59",
+      "gradlewBatSha256": "f17917f8dbe61182b149273ee78090fec1197442c3f38276af907bfa5190db16",
+      "measuredOn": "2026-10-31",
+      "jarByteCompareWithZipEntry": false,
+      "zipSha256": "dce76f55f8e251a3a1f130eb120f30b3d271de2b76c9b0729d316b5a1b6dc01f"
     }
   },
   "gaps": {

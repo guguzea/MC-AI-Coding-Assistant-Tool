@@ -9,8 +9,8 @@
     "signaturePointers": 28,
     "memberStillPresent": 21,
     "classMissing": 2,
-    "memberMissing": 3,
-    "memberUnresolved": 2,
+    "memberMissing": 1,
+    "memberUnresolved": 4,
     "tutorialPointers": 19
   },
   "rows": [
@@ -95,9 +95,10 @@
       "srcKey": "spigot",
       "srcFile": "org_bukkit_event_EventPriority.md",
       "srcLine": 13,
-      "member": "LOWEST",
-      "status": "no-member",
-      "newFile": "org_bukkit_event_EventPriority.md"
+      "member": null,
+      "status": "member-unresolved",
+      "newFile": "org_bukkit_event_EventPriority.md",
+      "note": "目标页不列枚举常量（上游 javadoc 边界）；原 token: LOWEST"
     },
     {
       "rule": "01-events.md",
@@ -149,9 +150,10 @@
       "srcKey": "spigot",
       "srcFile": "org_bukkit_permissions_PermissionDefault.md",
       "srcLine": 13,
-      "member": "TRUE",
-      "status": "no-member",
-      "newFile": "org_bukkit_permissions_PermissionDefault.md"
+      "member": null,
+      "status": "member-unresolved",
+      "newFile": "org_bukkit_permissions_PermissionDefault.md",
+      "note": "目标页不列枚举常量（上游 javadoc 边界）；原 token: TRUE"
     },
     {
       "rule": "03-inventory-gui.md",
