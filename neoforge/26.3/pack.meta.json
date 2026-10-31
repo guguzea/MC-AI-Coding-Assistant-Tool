@@ -1,0 +1,26 @@
+{
+  "status": "ready",
+  "pack-status": "ready",
+  "platform": "neoforge",
+  "minecraftVersion": "26.3",
+  "gaps": {
+    "rules": "11 条齐（00–10），证据是**官方 MDK 模板 + NeoForge 26.3.0.99 sources jar + 26.3 merged jar 的 javap**，不是 docs 正文（上游 /docs/26.3/ 404、version_labels.json 的 current.label=\"26.1\"、全树 898 文件 0 个 26.x）。2026-10-31 补核：实体工厂形态 / 属性事件签名 / 网络挂载点（IModBusEvent）/ datagen 事件入口 / Screen 渲染回调（extractRenderState，两版一致）全部用 javap + sources 逐条核实，并把 04/06/07/10 的调用原样编过（MDK-26.3 探针 BUILD SUCCESSFUL 5s）。仍标未核的只剩 datagen 的 DataProviderFromOutput 函数形态、PackOutput 实例来源、自定义 Screen 的 GuiGraphics 绘制细节。**禁止把这些当官方文档结论**，也禁止拿 26.1 的 01–10 顶替。",
+    "knowledge": "无 knowledge/：签名证据由各规则内的 sources jar 类路径承担；独立签名查询走自备 jar + ingest_loader_api + query_loader_api。",
+    "scaffold": "只覆盖 :build（compileJava + processResources + jar + generateModMetadata），未跑 runClient / runServer / gameTestServer。"
+  },
+  "scaffold": {
+    "mode": "gradle",
+    "gradle": "9.2.1",
+    "provenance": {
+      "text": "official-mdk:NeoForgeMDKs/MDK-26.3-ModDevGradle@f31f90e71a3e8fca9d8b821cb25fb5a767d3a2d6",
+      "wrapper": "gradle-wrapper-task",
+      "build": "2026-10-31 实测：按 pin 的 commit 归档（sha256=02ce7634f6f30259ca93bef5e26255e92160a55931c7038ad9c3004bab29a0c7）解压到 D:\\mc-skill-temp\\mdk\\x263，用 Gradle 9.8.1 + JDK 25（G:\\jdk25\\jdk-25.0.4.1+1）跑 `gradle build --no-daemon` → BUILD SUCCESSFUL in 24s；同一模板的 branch-main 归档首跑为 4m11s（含 neoforge 26.3.0.99 / MC 26.3 / NeoForm 依赖下载，需给 JVM 配 HTTP 代理）。边界：只覆盖 :build，未跑 runClient / runServer / gameTestServer。NeoGradle 变体（MDK-26.3-NeoGradle@8c9049d0）未单独 build。"
+    },
+    "buildVerified": true,
+    "gaps": [
+      "本 scaffold 是 MDK 归档的**干净副本**：已剔除 .gradle/、build/、.github/、.vscode/（上游模板里没有这些，是我在本机 build 后产生的）。",
+      "MDK 自带 wrapper 是 Gradle 9.2.1；我实测用的是 9.8.1（向下兼容），9.2.1 未单独跑（`WRAPPER_JARS` 里 9.2.1 有三件套钉值，wrapper 文件本身未改）。",
+      "scaffold 的 `en_us.json` 与 `neoforge.mods.toml` 是模板原样（mod_id=examplemod）；改 mod_id 时两处与 `gradle.properties` 的 `mod_id` 必须一致。"
+    ]
+  }
+}

@@ -6876,8 +6876,9 @@ async function testScaffoldWrappers() {
 
   const { seen, problems, declaredCount, byVersion, noProps } = scanScaffoldWrappers(REPO_ROOT);
   // 50 = 49 + `fabric/26.2`（2026-10-31 建档；scaffold 用自带 gradlew 真跑 `build --offline` → BUILD SUCCESSFUL in 34s）
-  assert.equal(seen.length, 50, `全仓 Java scaffold 应为 50 档，实际 ${seen.length} → ${seen.join(",")}`);
-  assert.equal(declaredCount, 45, `已声明 Gradle 版本、三件套应完整的 scaffold 应为 45 档，实际 ${declaredCount}`);
+  // 52 = 50 + `neoforge/26.2` / `neoforge/26.3`（同日晚些：只建 00 工程条，scaffold 取自官方 MDK 归档，wrapper 9.2.1）
+  assert.equal(seen.length, 52, `全仓 Java scaffold 应为 52 档，实际 ${seen.length} → ${seen.join(",")}`);
+  assert.equal(declaredCount, 47, `已声明 Gradle 版本、三件套应完整的 scaffold 应为 47 档，实际 ${declaredCount}`);
   const fabricSeen = seen.filter((k) => k.startsWith("fabric/"));
   assert.equal(fabricSeen.length, 15, `fabric/*/scaffold 应为 15 档，实际 ${fabricSeen.length}`);
   assert.equal(

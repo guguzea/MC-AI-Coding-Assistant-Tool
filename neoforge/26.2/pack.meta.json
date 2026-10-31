@@ -1,0 +1,26 @@
+{
+  "status": "ready",
+  "pack-status": "ready",
+  "platform": "neoforge",
+  "minecraftVersion": "26.2",
+  "gaps": {
+    "rules": "11 条齐（00–10），证据是**官方 MDK 模板 + NeoForge 26.2.0.93 sources jar + 26.2 merged jar 的 javap**，不是 docs 正文（上游 /docs/26.2/ 404、manifest 记 available=false / httpStatus=404）。与 26.3 的对拍结论写在 09 的比较表里（DeferredRegister 仅 javadoc 差异、PayloadRegistrar 逐字节一致、**GatherDataEvent 两版结构不同 ⇒ 07 单独写**：26.2 走 getGenerator().getVanillaPack(...).addProvider(Factory)，26.3 走事件上的 addProvider）。04/06/07 的调用已在 MDK-26.2 探针里真编过（BUILD SUCCESSFUL 2m44s）。**禁止把这些当官方文档结论**，也禁止拿 26.1 的 01–10 顶替。",
+    "knowledge": "无 knowledge/：签名证据由各规则内的 sources jar 类路径承担；独立签名查询走自备 jar + ingest_loader_api + query_loader_api。",
+    "scaffold": "本档 scaffold **未单独 build**（同结构 / 同 Gradle 9.2.1 的 26.3 MDK 已 build 通过）。"
+  },
+  "scaffold": {
+    "mode": "gradle",
+    "gradle": "9.2.1",
+    "provenance": {
+      "text": "official-mdk:NeoForgeMDKs/MDK-26.2-ModDevGradle@d1c748fd52b311cba7b4a50e3d689927c5daac9a",
+      "wrapper": "gradle-wrapper-task",
+      "build": null
+    },
+    "buildVerified": false,
+    "gaps": [
+      "buildVerified=false：2026-10-31 只做了 archive 完整性校验 —— 下载 pin 的 commit 归档（`d1c748fd`）算 sha256 = 5647144e0f5dbe5b70fc2f8b47b251efd2d9fb2222f8ab7620742cad890e6f2e，与 mdk-checksums.json 的 pin **逐字节一致**；未跑 gradle build。",
+      "本 scaffold 是 MDK 归档的干净副本（已剔除 build 产物与 IDE 目录），结构与已验证的 26.3 模板同形。",
+      "MDK 自带 wrapper 是 Gradle 9.2.1；26.3 侧的实测用的是 9.8.1（向下兼容）。"
+    ]
+  }
+}

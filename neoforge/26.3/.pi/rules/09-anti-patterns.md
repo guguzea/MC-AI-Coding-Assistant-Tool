@@ -1,0 +1,27 @@
+---
+description: 09 — 反模式（NeoForge 26.3）
+---
+
+# 09 — 反模式（NeoForge 26.3）
+
+> 本档 01–10 的证据是**官方 MDK + NeoForge 26.3 sources jar**，不是 docs 正文（上游 `/docs/26.3/` 仍 404）。下面每条都指出「为什么禁」。
+
+- ❌ **把 26.1 的 01–10 当 26.3**：26.1 主文档写的是 26.1 的 API；26.3 只核到 MDK/sources 的部分，未核处已在各条标出。
+- ❌ Forge 的 `META-INF/mods.toml` + `net.minecraftforge.*` 包：NeoForge 用 **`META-INF/neoforge.mods.toml`**（MDK 的 `src/main/templates/META-INF/`）。
+- ❌ `ResourceLocation`：26.x mojmap 是 **`Identifier`**（`DeferredRegister.register(String, Function<Identifier, …>)` 的入参、`Config.java:72` 的 `Identifier.parse(...)` 都是实证）。
+- ❌ **硬编码输入常量**：26.3 起窗口/输入从 GLFW 换成 **SDL**（primer 26.3「LWJGL with SDL」节：`InputConstants` 常量值变了，鼠标键全部变），必须用 `InputConstants` 的常量名而不是数值。
+- ❌ 直接调 `GlDevice` / `VulkanDevice` 这类**后端类**：26.2 起有可选 Vulkan 后端，mod 只写 Blaze3D 通用层（`blaze3d.opengl` 与 `blaze3d.vulkan` 是功能平行的两套实现）。
+- ❌ 把 `@SubscribeEvent` 方法挂错总线：注册/配置/生命周期走 **mod 总线**（构造器参数 `IEventBus`），世界/玩家/服务器事件走 **`NeoForge.EVENT_BUS`**；混用等于事件永不触发。
+- ❌ 把 Fabric 的 API 当 NeoForge：`FabricDataGenerator` / `PayloadTypeRegistry` / `FabricDefaultAttributeRegistry` 都是 Fabric 侧（见 `fabric/26.2` 的规则），NeoForge 对应物是 `GatherDataEvent` / `PayloadRegistrar` / `EntityAttributeCreationEvent`。
+- ❌ 抄 `DeferredRegister.java` 里 **javadoc 示例**的旧写法：`Block.Properties.create(Material.ROCK)`、`ITEMS.registerSimpleBlockItem(ROCK_BLOCK, new Item.Properties())` 是注释里的历史示例，MDK 实际用 `registerSimpleBlock("example_block", p -> p.mapColor(MapColor.STONE))` 这种**属性修改器**形态。
+- ❌ 引用「官方 26.3 文档页」：不存在。要引只能引 MDK 行号 / sources jar 类路径 / primer 章节。
+
+## Decision Flow
+
+```
+→ 看到「26.3 官方文档说…」 → 停，26.3 没有 docs 正文
+→ 看到 ResourceLocation / mods.toml / net.minecraftforge → 换成 Identifier / neoforge.mods.toml / net.neoforged
+→ 看到硬编码的 key code 数值 → 换成 InputConstants 常量
+→ 看到 GlDevice / VulkanDevice → 退回 Blaze3D 通用层
+→ 签名不确定 → 打开 neoforge-26.3.0.99-sources.jar 对应类，或 javap -cp universal.jar
+```

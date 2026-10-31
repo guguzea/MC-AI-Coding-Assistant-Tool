@@ -533,15 +533,32 @@ async function main() {
       if (pinned.ok && pinned.html) {
         console.log(`  Pinned empty-route ${version} → /docs/${version}/ for this run`);
         cfg.route = version;
-      } else if (force) {
-        const existingRaw = join(OUT_DIR, `neoforge_${version}`, "neoforge-docs", version, "raw");
-        const hasTree = existsSync(existingRaw) && readdirSync(existingRaw).some((f) => f.endsWith(".md"));
-        if (hasTree) {
-          console.error(`REFUSE: ${version} route 为空，--force 会用现行未版本化 /docs/ 覆盖已入库树。请先把 manifest.route 钉到 /docs/${version}/，或去掉 --force。`);
+      } else {
+        // 2026-10-31 修漂移缺陷：空 route 抓的是 Docusaurus 的 `current`（`/docs/` 根），
+        // current 一旦被上游切到下一代，**非 --force 的增量抓取**会把下一代的新页静默写进本档
+        // （旧代码只在 --force 时 REFUSE，普通增量没有护栏）。这里先用 versionLabel 校验现行页身份：
+        // manifest 里 26.1 的 versionLabel = "Version: 26.1"，实测该串在 /docs/gettingstarted/ HTML 里出现 1 次。
+        const cur = await fetchPage(`${DOCS_BASE}/docs/gettingstarted/`);
+        const wantLabel = cfg.versionLabel;
+        if (cur.ok && cur.html && wantLabel && !cur.html.includes(wantLabel)) {
+          console.error(
+            `ABORT: ${version} 的 route 为空（只能抓现行 /docs/），但现行页不含 "${wantLabel}" ——` +
+              ` 上游可能已把 current 切到别的版本，继续抓会把下一代正文写进 neoforge_${version}。` +
+              ` 请先把 data/neoforge-versions-manifest.json 的 versions["${version}"].route 钉到 /docs/${version}/。`,
+          );
+          process.exitCode = 1;
           continue;
         }
-      } else {
-        console.log(`  NOTE: ${version} unversionedCurrent=/docs/（无 /docs/${version}/）。结果应标 unversionedCurrent=true。`);
+        if (force) {
+          const existingRaw = join(OUT_DIR, `neoforge_${version}`, "neoforge-docs", version, "raw");
+          const hasTree = existsSync(existingRaw) && readdirSync(existingRaw).some((f) => f.endsWith(".md"));
+          if (hasTree) {
+            console.error(`REFUSE: ${version} route 为空，--force 会用现行未版本化 /docs/ 覆盖已入库树。请先把 manifest.route 钉到 /docs/${version}/，或去掉 --force。`);
+            continue;
+          }
+        } else {
+          console.log(`  NOTE: ${version} unversionedCurrent=/docs/（无 /docs/${version}/）。结果应标 unversionedCurrent=true。`);
+        }
       }
     }
 

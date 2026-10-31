@@ -1,0 +1,82 @@
+---
+description: 06 — 网络（NeoForge 26.2）
+---
+
+# 06 — 网络（NeoForge 26.2）
+
+> 证据类型：NeoForge 26.2 sources jar（`network/event/RegisterPayloadHandlersEvent.java`、`network/registration/PayloadRegistrar.java`、`network/NetworkInitialization.java`）。不是 docs 正文。
+
+## 挂载点：**mod 总线**（已核，不是推断）
+
+```java
+public class RegisterPayloadHandlersEvent extends Event implements IModBusEvent {
+    public PayloadRegistrar registrar(String version)   // version 不可为空
+}
+```
+
+NeoForge 自己的 `NetworkInitialization` 就是标准范例（`@ApiStatus.Internal`，但写法可照）：
+
+```java
+@EventBusSubscriber(modid = NeoForgeMod.MOD_ID)
+final class NetworkInitialization {
+    @SubscribeEvent
+    private static void register(final RegisterPayloadHandlersEvent event) {
+        final PayloadRegistrar registrar = event.registrar("1").optional();
+        registrar
+            .configurationToClient(Payload.TYPE, Payload.STREAM_CODEC)
+            .playToClient(OtherPayload.TYPE, OtherPayload.STREAM_CODEC);
+    }
+}
+```
+
+两种等价写法：
+
+```java
+// A. 构造器里挂 mod 总线
+modEventBus.addListener((RegisterPayloadHandlersEvent event) -> { ... });
+
+// B. 独立类 + @EventBusSubscriber + static @SubscribeEvent（NeoForge 自己用的）
+@EventBusSubscriber(modid = MODID)
+public final class MyNetwork {
+    @SubscribeEvent
+    static void register(RegisterPayloadHandlersEvent event) { ... }
+}
+```
+
+## `PayloadRegistrar` 的 19 个公开方法（全表，sources 实读）
+
+| 分组 | 方法（返回 `PayloadRegistrar`，可链式） |
+|---|---|
+| 构造 | `PayloadRegistrar(String version)` |
+| play → 客户端 | `playToClient(Type<T>, StreamCodec<? super RegistryFriendlyByteBuf, T>, IPayloadHandler<T>)` / 去掉 handler 的二参版 |
+| play → 服务端 | `playToServer(Type<T>, StreamCodec<? super RegistryFriendlyByteBuf, T>, IPayloadHandler<T>)`（**只有三参版**） |
+| play 双向 | `playBidirectional(Type, codec, serverHandler, @Nullable clientHandler)` / 三参版 |
+| configuration → 客户端 | `configurationToClient(Type, StreamCodec<? super FriendlyByteBuf, T>, handler)` / 二参 |
+| configuration → 服务端 | `configurationToServer(...)`（三参） |
+| configuration 双向 | `configurationBidirectional(...)` 四参 / 三参 |
+| common → 客户端 | `commonToClient(...)` 三参 / 二参 |
+| common → 服务端 | `commonToServer(...)`（三参） |
+| common 双向 | `commonBidirectional(...)` 四参 / 三参 |
+| 开关 | `executesOn(HandlerThread)` / `versioned(String)` / `optional()` |
+
+- **缓冲类型别混**：`play*` 用 `RegistryFriendlyByteBuf`，`configuration*` / `common*` 用 `FriendlyByteBuf`
+- `optional()` 让本 mod 的 payload 在对方没装时降级（NeoForge 自己就用了）
+- `executesOn(HandlerThread)` 控制回调线程（默认主线程）
+
+## payload 类型（`javap` 实核）
+
+```java
+public final class CustomPacketPayload$Type<T extends CustomPacketPayload> extends Record {
+    public CustomPacketPayload$Type(Identifier id);
+    public Identifier id();
+}
+```
+
+⇒ `public static final Type<MyPayload> TYPE = new Type<>(Identifier.parse("mymod:my_payload"));`，`STREAM_CODEC` 是 payload 类自己的 `public static final StreamCodec<...>`。
+
+## 禁止
+
+- Forge 的 `SimpleChannel` / `NetworkRegistry.newSimpleChannel`
+- 把 `playToClient` 的 codec 写成 `StreamCodec<FriendlyByteBuf, T>`
+- 在 `RegisterPayloadHandlersEvent` 里 `registrar("")`（空版本号）
+- 忘了 `optional()` 却假设对方一定装了你的 mod

@@ -1,0 +1,64 @@
+---
+description: 05 — 事件（NeoForge 26.2）
+---
+
+# 05 — 事件（NeoForge 26.2）
+
+> 证据类型：官方 MDK 模板源码 + NeoForge 26.2 sources jar（不是 docs 正文）。
+
+## 两条总线，别混
+
+| 总线 | 拿法 | 挂什么 |
+|---|---|---|
+| **mod 总线**（mod 生命周期 / 注册 / 配置） | mod 构造器参数 `IEventBus modEventBus` | `modEventBus.addListener(this::method)`、`DeferredRegister.register(modEventBus)` |
+| **游戏总线**（世界 / 玩家 / 服务器） | `NeoForge.EVENT_BUS` | `NeoForge.EVENT_BUS.register(this)` |
+
+出处：`ExampleMod.java:68-88`。
+
+```java
+public ExampleMod(IEventBus modEventBus, ModContainer modContainer) {
+    modEventBus.addListener(this::commonSetup);      // mod 总线：FMLCommonSetupEvent
+    BLOCKS.register(modEventBus);                    // 注册也走 mod 总线
+    NeoForge.EVENT_BUS.register(this);               // 本类里有 @SubscribeEvent 方法才需要
+    modEventBus.addListener(this::addCreative);      // BuildCreativeModeTabContentsEvent
+}
+```
+
+MDK 注释原文（`:79-81`）：「Register ourselves for server and other game events… Do not add this line if there are no `@SubscribeEvent`-annotated functions in this class」。
+
+## `@SubscribeEvent`（`ExampleMod.java:112-116`）
+
+```java
+@SubscribeEvent
+public void onServerStarting(ServerStartingEvent event) { }
+```
+
+- 实例方法 + 先 `NeoForge.EVENT_BUS.register(this)`
+- 静态方法 + 类上 `@EventBusSubscriber` 可免手工 register（`ExampleModClient.java:16`）
+
+## `@EventBusSubscriber`（`ExampleModClient.java:16`）
+
+```java
+@EventBusSubscriber(modid = ExampleMod.MODID, value = Dist.CLIENT)
+public class ExampleModClient { }
+```
+
+- `value = Dist.CLIENT` ⇒ 只在该端注册
+- 类里 `@SubscribeEvent` 方法**必须是 static**（MDK 里 `static void onClientSetup(FMLClientSetupEvent event)`）
+
+## 本版实读到的三个事件类型
+
+| 事件 | 总线 | 出处 |
+|---|---|---|
+| `FMLCommonSetupEvent` | mod | `ExampleMod.java:91` |
+| `BuildCreativeModeTabContentsEvent` | mod | `ExampleMod.java:105` |
+| `ServerStartingEvent` | 游戏（`NeoForge.EVENT_BUS`） | `ExampleMod.java:113` |
+| `FMLClientSetupEvent` | mod（client 端） | `ExampleModClient.java:26` |
+| `ModConfigEvent` | mod（`Config.java` 的 `@EventBusSubscriber`） | `Config.java:16` |
+
+## 禁止
+
+- 把所有事件都挂 `NeoForge.EVENT_BUS`（注册 / 配置 / 生命周期走 mod 总线）
+- `@SubscribeEvent` 方法非 static 却用 `@EventBusSubscriber`
+- 在 `@EventBusSubscriber` 类上用实例方法 —— 运行期不会调用
+- 忘了 `NeoForge.EVENT_BUS.register(this)` 就期待 `@SubscribeEvent` 生效

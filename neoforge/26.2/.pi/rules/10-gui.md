@@ -1,0 +1,78 @@
+---
+description: 10 — GUI（NeoForge 26.2）
+---
+
+# 10 — GUI（NeoForge 26.2）
+
+> 证据类型：官方 MDK（配置屏）+ 26.2 merged jar 的 `javap`（Screen / Gui / 事件接口）。不是 docs 正文。
+
+## 配置屏（`MDK-26.2-ModDevGradle@d1c748fd:ExampleModClient.java:22`）
+
+```java
+container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
+```
+
+配套 `modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC)`（`ExampleMod.java:88`）。这是**让 NeoForge 自动生成**配置屏，不是手写 `Screen`。**别忘了 `en_us.json` 里配置项的翻译键**（MDK 注释专门提醒）。
+
+## 自定义 Screen 的渲染回调（`javap` 实核，26.2/26.2 两版一致）
+
+```java
+public abstract class Screen extends AbstractContainerEventHandler implements Renderable {
+    public final void init(int, int);                                    // final，不要 override
+    protected void init();                                               // ← 你该 override 这个
+    public void extractRenderState(GuiGraphicsExtractor, int, int, float); // ← 渲染回调（不是 render(GuiGraphics,...)）
+    public final void extractRenderStateWithTooltipAndSubtitles(GuiGraphicsExtractor, int, int, float);
+    public boolean keyPressed(KeyEvent);                                 // 参数是 KeyEvent record
+    public void onClose();
+    public boolean isPauseScreen();
+}
+```
+
+⚠ **26.x 没有 `render(GuiGraphics, int, int, float)`** —— 26.2 与 26.2 都是 `extractRenderState(GuiGraphicsExtractor, ...)`。按 1.21 记忆写 `render` 会 `@Override` 失败。
+
+`GuiGraphicsExtractor`（26.x 新类，`javap` 实核）：
+
+```java
+public class GuiGraphicsExtractor {
+    public GuiGraphicsExtractor(Minecraft, GuiRenderState, int, int);
+    public int guiWidth();  public int guiHeight();
+    public Matrix3x2fStack pose();
+    public void enableScissor(int,int,int,int);  public void disableScissor();
+    public void nextStratum();  public void blurBeforeThisStratum();
+    public void requestCursor(CursorType);  public void applyCursor(Window);
+}
+```
+
+## 输入事件（`GuiEventListener`，`javap` 实核）
+
+```java
+default void mouseMoved(double, double)
+default boolean mouseClicked(MouseButtonEvent, boolean)
+default boolean mouseReleased(MouseButtonEvent)
+default boolean mouseDragged(MouseButtonEvent, double, double)
+default boolean mouseScrolled(double, double, double, double)
+default boolean keyPressed(KeyEvent)
+default boolean keyReleased(KeyEvent)
+default boolean charTyped(CharacterEvent)
+```
+
+- 鼠标/键盘/字符全部是 **record 参数**（`MouseButtonEvent` / `KeyEvent` / `CharacterEvent`），不是 `(int button, int x, int y)` 那种裸 int
+- `KeyEvent` 的 `key()` / `keycode()` / `modifiers()` 是 record 访问器（`javap` 实核）；26.2 仍在 GLFW 时代，`InputConstants` 常量值**未变**（GLFW→SDL 是 26.3 的改动，见 09 的差异表）
+
+## 开屏（`javap` 实核）
+
+```java
+Minecraft.getMinecraft().gui.setScreen(screen);   // Gui.setScreen(Screen)
+Screen current = mc.gui.screen();                 // Gui.screen()
+mc.setScreenAndShow(screen);                      // = gui.setScreen + renderFrame(false)
+```
+
+- `Minecraft.gui` 是 `public final Gui`；`Minecraft` 上**没有** `setScreen` / `getScreen`
+- `setScreenAndShow` 只用于「切屏后必须立刻刷一帧」（加载屏 / 阻塞式界面）
+
+## 禁止
+
+- 写 `render(GuiGraphics, int, int, float)`（26.x 是 `extractRenderState(GuiGraphicsExtractor, ...)`）
+- override `init(int, int)`（它是 `final`，只能 override 无参 `init()`）
+- 用 `(int mouseX, int mouseY, int button)` 签名的 `mouseClicked`
+- 用 `IConfigScreenFactory` 当自定义 Screen 的注册入口

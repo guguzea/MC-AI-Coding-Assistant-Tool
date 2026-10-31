@@ -1,5 +1,5 @@
 {
-  "note": "GitHub pin commit SHA（source=github）。official 源用固定 URL + sha256，无 commit。archiveUrl 禁止 branch HEAD。sha256 仅解压并解析 entryClass 后回填。26.1.1/26.1.2/26.2 均同时提供 ModDevGradle 与 NeoGradle。",
+  "note": "GitHub pin commit SHA（source=github）。official 源用固定 URL + sha256，无 commit。archiveUrl 禁止 branch HEAD。sha256 仅解压并解析 entryClass 后回填。26.1.1/26.1.2/26.2/26.3 均同时提供 ModDevGradle 与 NeoGradle。",
   "entries": [
     {
       "id": "neoforge-26.1.1-neogradle",
@@ -71,7 +71,7 @@
       "license": "MIT (TEMPLATE_LICENSE.txt)",
       "gitPolicy": "submodule_ok",
       "mappings": "mojmap",
-      "notes": "无独立 neoforge_26.2 文档树时不要把 26.1 规则当 26.2。",
+      "notes": "26.2 自 2026-10-31 起有独立规则树（只含 00 工程条），但 01–10 仍无正文 —— 不要把 26.1 的 01–10 当 26.2。",
       "source": "github"
     },
     {
@@ -86,7 +86,7 @@
       "license": "MIT (TEMPLATE_LICENSE.txt)",
       "gitPolicy": "submodule_ok",
       "mappings": "mojmap",
-      "notes": "无独立 neoforge_26.2 文档树时不要把 26.1 规则当 26.2。",
+      "notes": "26.2 自 2026-10-31 起有独立规则树（只含 00 工程条），但 01–10 仍无正文 —— 不要把 26.1 的 01–10 当 26.2。",
       "source": "github"
     },
     {
@@ -586,6 +586,36 @@
       "gitPolicy": "submodule_ok",
       "mappings": "mcp",
       "notes": "recommended/latest 14.23.5.2859 from promotions_slim.json"
+    },
+    {
+      "id": "neoforge-26.3-moddevgradle",
+      "platform": "neoforge",
+      "minecraftVersion": "26.3",
+      "buildPlugin": "moddevgradle",
+      "repo": "https://github.com/NeoForgeMDKs/MDK-26.3-ModDevGradle",
+      "ref": "f31f90e71a3e8fca9d8b821cb25fb5a767d3a2d6",
+      "archiveUrl": "https://github.com/NeoForgeMDKs/MDK-26.3-ModDevGradle/archive/f31f90e71a3e8fca9d8b821cb25fb5a767d3a2d6.zip",
+      "sha256": "02ce7634f6f30259ca93bef5e26255e92160a55931c7038ad9c3004bab29a0c7",
+      "license": "MIT (TEMPLATE_LICENSE.txt)",
+      "gitPolicy": "submodule_ok",
+      "mappings": "mojmap",
+      "notes": "26.3 目前只有 00 工程条（2026-10-31 建）；01–10 无本版正文。本 pin 在本机 build 通过（pinned commit 归档 + Gradle 9.8.1 + JDK 25 → BUILD SUCCESSFUL in 24s）。",
+      "source": "github"
+    },
+    {
+      "id": "neoforge-26.3-neogradle",
+      "platform": "neoforge",
+      "minecraftVersion": "26.3",
+      "buildPlugin": "neogradle",
+      "repo": "https://github.com/NeoForgeMDKs/MDK-26.3-NeoGradle",
+      "ref": "8c9049d000aa5afe038b4b380d6d0816d61fc4b7",
+      "archiveUrl": "https://github.com/NeoForgeMDKs/MDK-26.3-NeoGradle/archive/8c9049d000aa5afe038b4b380d6d0816d61fc4b7.zip",
+      "sha256": "fbb72d2e9ff7826d5a321f9760d17b0f0d7244e969765e8aff36874e04f7b59a",
+      "license": "MIT (TEMPLATE_LICENSE.txt)",
+      "gitPolicy": "submodule_ok",
+      "mappings": "mojmap",
+      "notes": "26.3 目前只有 00 工程条（2026-10-31 建）。本 commit 的归档未单独 build（同版本 ModDevGradle 变体已 build 通过）；三件套/插件版本取自归档内 build.gradle（net.neoforged.gradle.userdev 7.1.39）。",
+      "source": "github"
     }
   ]
 }

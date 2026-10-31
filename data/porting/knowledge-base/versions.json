@@ -47,7 +47,8 @@
       "modloader/1.6.4": "ModLoader 1.x 三档只有规则树 + 文档，无跨加载器移植需求（该时代只有 MCP 映射），KB 不补条目；若真要移植再补。",
       "modloader/1.5.2": "ModLoader 1.x 三档只有规则树 + 文档，无跨加载器移植需求（该时代只有 MCP 映射），KB 不补条目；若真要移植再补。",
       "modloader/1.2.5": "ModLoader 1.x 三档只有规则树 + 文档，无跨加载器移植需求（该时代只有 MCP 映射），KB 不补条目；若真要移植再补。",
-      "rift/1.13": "Rift 1.13 原生档 2026-10-23 新建（11 条规则转置自 1.13.2 + 只重写 00-project-setup 的版本/映射/件）；KB 是**跨加载器移植**表，Rift 内部版本差异不走它 —— 要补的是 1.13↔1.13.2 的差异，而两档 Rift API 同构件（39 个 listener 接口一致）、只差 Chocohead 社区分支的 hook 目标，故不建 KB 条目。"
+      "rift/1.13": "Rift 1.13 原生档 2026-10-23 新建（11 条规则转置自 1.13.2 + 只重写 00-project-setup 的版本/映射/件）；KB 是**跨加载器移植**表，Rift 内部版本差异不走它 —— 要补的是 1.13↔1.13.2 的差异，而两档 Rift API 同构件（39 个 listener 接口一致）、只差 Chocohead 社区分支的 hook 目标，故不建 KB 条目。",
+      "neoforge/26.3": "26.3 只建 00 工程条（2026-10-31）：移植 KB 未补 26.3 条目 —— 26.3 的迁移面只有 primer（26.2→26.3，vanilla 类改动），loader/API 侧没有主文档（/docs/26.3/ 404，current.label=26.1），等主文档上线再补 KB 行。"
     },
     "knownDraftRuleTrees": {
       "forge/1.21.1": "00–10 尚未撰写，session 返回 PACK_NOT_FOUND（根 AGENTS 已记），不得用 NeoForge 1.21.1 或 Forge 1.20.4 顶上。"

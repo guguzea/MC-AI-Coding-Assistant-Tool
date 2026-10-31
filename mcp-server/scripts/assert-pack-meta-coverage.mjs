@@ -132,7 +132,9 @@ for (const rel of packDirs) {
 // 2026-10-31：59 → 60（新增 fabric/26.2 档；依据：上游 latest 面（develop/）已是 26.2 正文、
 // 语料按 commit 238533d8 pin 入库，规则树 + scaffold 均在本机真编译通过，见
 // fabric/26.2/pack.meta.json 与 doc/platform-coverage-fabric.md）。
-const EXPECTED_PACKS = 60;
+// 2026-10-31 同日：60 → 62（新增 neoforge/26.2 与 neoforge/26.3 —— 只建 00 工程条，
+// 依据：官方 MDK 已出（mdk-checksums.json 已 pin 4 条），主文档仍只到 26.1 故 01–10 不建）。
+const EXPECTED_PACKS = 62;
 if (packDirs.length !== EXPECTED_PACKS) {
   errors.push(`pack 档数 ${packDirs.length} ≠ 基线 ${EXPECTED_PACKS}（新增/删除版本档必须同步本基线并注明依据）`);
 }
