@@ -50,7 +50,7 @@ README 真的很长，东西非常多，所以这里只挑人需要看的。想�
 
      > 帮我把这个 MCP <https://github.com/guguzea/MC-AI-Coding-Assistant-Tool.git>安装到 `<你想装的位置>`
 
-     AI 会自己检查 Node、编译 `mcp-server`、按你宿主的格式写好配置；**它先把要改什么给你看，你点头它才动手**。
+     AI 会自己检查 Node、编译 `mcp-server`、按你宿主的格式写好配置
    - **重启（或重载）宿主**：重开之后工具就在了，接着正常提问就行。
 
    **没看到工具，或者你不想重启？** 不配 MCP 也能用，让AI使用命令行工具：
