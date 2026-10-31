@@ -249,7 +249,7 @@ id 'net.minecraftforge.gradle'
 
 查找 **`riftmod.json`**（官方拼写；兼容误写的 `rift.mod.json`）或 `tweaker-client` + `RiftLoaderClientTweaker`。
 
-如果匹配 → 调用 `activate_platform_pack action=session`（`platform=rift`，`minecraftVersion=1.13.2`）。方法名只许来自该档核实表与已核实源码，禁止用 Fabric 记忆填写。禁止把 `rift/1.13.2/.cursor` 当加载器 Read。
+如果匹配 → 调用 `activate_platform_pack action=session`（`platform=rift` + **工程实际版本**：原生档 `1.13`，社区分支实验档 `1.13.2`；两档并存、不得互顶）。方法名只许来自该档核实表与已核实源码，禁止用 Fabric 记忆填写。禁止把 `rift/<ver>/.cursor` 当加载器 Read。
 
 ### 7. 检查 Risugami's ModLoader
 

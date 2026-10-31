@@ -185,7 +185,7 @@ Writing plugins is a separate line, not hanging under the eight mod platform tre
 
 ### Porting
 
-Porting a mod across loaders (Forge → NeoForge / Fabric and so on): identify the platform and mappings, list risks and steps, execute after you confirm. DryRun preview by default. 26.2 / 26.3 rule trees already exist (Fabric 26.2, NeoForge 26.2 / 26.3), but there are no version-specific main docs; game-side changes go through the official migration guide (`get_migration_guide` with `26.1->26.2` / `26.2->26.3`, sourced from the NeoForge Primer).
+Porting a mod across loaders (Forge → NeoForge / Fabric and so on): identify the platform and mappings, list risks and steps, execute after you confirm. DryRun preview by default. For 26.2, Fabric 26.2 is complete (rule tree, scaffold, docs body); NeoForge 26.2 / 26.3 have rule trees but no version-specific main docs, so game-side changes go through the official migration guide (`get_migration_guide` with `26.1->26.2` / `26.2->26.3`, sourced from the NeoForge Primer). Fabric 26.3's upstream docs have not landed yet, so only a blog-level migration summary exists.
 
 > Details in "Porting analysis" in [README.en.md](README.en.md)
 
@@ -260,7 +260,7 @@ If something fails to compile or throws errors, trust the official documentation
 
 ## Frequently asked questions (FAQ)
 
-**Q: 26.2 / 26.3 don't seem to have matching files — is that just not updated yet?** A: the rule trees and scaffolds are in place (Fabric 26.2, NeoForge 26.2 / 26.3); what is missing is the version-specific main docs, which upstream has not published yet, so doc search has no body for them. For game-side changes, use the official 26.1 → 26.2 → 26.3 migration guide until upstream docs land.
+**Q: 26.2 / 26.3 don't seem to have matching files — is that just not updated yet?** A: Fabric 26.2 is complete — rule tree, scaffold and docs body are all there. The ones missing docs are NeoForge 26.2 / 26.3 (rule trees exist, version-specific main docs do not) and Fabric 26.3 (upstream's docs port has not merged; only a blog-level migration summary exists). For game-side changes, use the official 26.1 → 26.2 → 26.3 migration guide until upstream docs land.
 
 **Q: Can playtesting support older versions?** A: it currently goes down to 1.20.1. Support for the flattening era (1.13+) comes after that; pre-flattening is genuinely hard and I'd rather not rush it.
 

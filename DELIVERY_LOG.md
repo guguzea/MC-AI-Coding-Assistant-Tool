@@ -6,6 +6,50 @@
 - 只追加，不改写历史节。要更正旧节，写进新节第 6 块「自我更正」并点名旧节。
 - 夜跑、交接、事后抽查读本文件，不依赖聊天记录。夜批（阶 1）的队列与抽查记账仍在 [`NIGHT_BATCH.md`](./NIGHT_BATCH.md)，本文件不顶替它。
 
+## 2026-10-31 · README 系与相关文档的版本支持补齐到 26.2 / 26.3（维护档）
+
+**第 0 块 · 结论**：把 `fabric/26.2`、`neoforge/26.2`、`neoforge/26.3` 三个新档和 Rift 双档写进了 README 系与相关文档：平台行、支持版本表、26.2/26.3 说明、Fabric loader 摘要计数、人类读本的档数与 FAQ、`CHANGELOG.md` 版本索引、`AGENTS.md` 的 Rift 判定步骤。顺带更正了上一版一句事实错误（Fabric 26.2 其实有文档语料）。验证：`test-cli` / `test-core` / `assert-doc-absence-claims` / `assert-authoring-lint` 全绿。
+
+### ① 改了哪些文件 / 给了什么
+
+- `README.md`：平台说明 Fabric 行（主推加 26.2，26.1.2 / 26.2 均 mojmap，26.3 仅博客摘要）、NeoForge 行（26.2 / 26.3 有规则树无本版文档）；支持版本表 Fabric 档位补 `26.2`、NeoForge 补 `26.2` / `26.3`，主推列与备注同步；26.2/26.3 表注改成按加载器分述；Fabric loader 摘要 `11 档 = 14 个规则树` → `12 档 = 15 个` 并补 `26.2`；`fabric/*` 技能表 `14 档` → `15 档`；`list_neoforge_versions` 工具行补「26.2 / 26.3 有规则树但不进列表」。
+- `README.en.md`：上述六处同构镜像。
+- `README_human.md`：可加载档数 `54` → `57`（Forge 15 / Fabric 15 / NeoForge 12 / Quilt 10 / LiteLoader 1 / Rift 2 / ModLoader 1 / 基岩 1）；移植段与 FAQ 第 1 条改成「Fabric 26.2 已齐，缺文档的是 NeoForge 26.2/26.3 与 Fabric 26.3」。
+- `README_human.en.md`：档数与两段说明同构镜像。
+- `mcp-server/README.md`：NeoForge 文档命令行补「26.2 / 26.3 回落 + 规则树入口」；Fabric loader 摘要列表补 `26.2`（注明仅 fabric-api）。
+- `CHANGELOG.md`：未发布行更新到 2026-10-31（许可证 + 三档 + Paper applicability），并补 `V2.1.0` 索引行。
+- `AGENTS.md`：Rift 判定步骤从写死 `1.13.2` 改成「工程实际版本：原生档 1.13 / 实验档 1.13.2，两档并存不得互顶」。
+
+### ② 判据与反证
+
+- `node mcp-server/dist/cli.js activate_platform_pack --action=list`：`packs` **57**，按平台 = forge 15 / fabric 15 / neoforge 12 / quilt 10 / liteloader 1 / rift 2 / modloader 1 / bedrock 1；`drafts` 5。人类读本的 57 与分母逐项对齐。
+- `list_fabric_versions`：15 档，末项 **26.2**；`list_neoforge_versions`：10 档，**不含** 26.2 / 26.3 —— 表里「规则树有、文档数据无」的写法与工具实况一致。
+- 全仓根级 `*.md` + `doc/*.md` 重扫旧计数（`14 档` / `Fabric 14` / `NeoForge 10` / `54 档`）：0 命中（`DELIVERY_LOG.md`、`doc/name-provenance-audit.md` 的历史记录除外，按「一史一处」不改）。
+- 支持版本表逐行管道符计数 = 6（5 列），中英两版一致。
+
+### ③ 验证台账
+
+- `node test-cli.mjs` → `test-cli: ok`（DOC_SCAN 覆盖 `README.md` / `AGENTS.md` / `mcp-server/README.md`；改后两次复跑均绿）。
+- `node test-core.mjs` → `core regression tests passed`（`docs-tool-tables registered=89 README groups=15 rows=92 tools=89 AGENTS rows=42 tools=89 双向零差异`）。
+- `node scripts/assert-doc-absence-claims.mjs` → `ok`（表内 7 条、声张 5 / 引用 2 / 未判定 0 / 丢失 0）。
+- `node scripts/assert-authoring-lint.mjs` → `ok`（目标 13 件 · J1 12 份 · J2 路径指针 24 枚全在盘 · J3 现数 0）。
+
+### ④ 数据侧变更
+
+无。`data/` 未改动；本轮只读它核对档位与两份 `list_*` 清单。
+
+### ⑤ 未做清单
+
+- `doc/platform-coverage-fabric.md` / `platform-coverage-neoforge.md` 上一轮（2026-10-31 建档）已写 15 / 12 档，本轮未动。
+- `doc/name-provenance-audit.md` 与 `DELIVERY_LOG.md` 里的历史计数是记录，不改。
+- V2.2.0 的 Release 正文仍未落盘（用户要求只发聊天）。
+- 未提交（提交归用户）。
+
+### ⑥ 自我更正
+
+- 上一版（HEAD `2e16dfa5`）我写的「26.2 / 26.3 都没有本版主文档语料（`list_*_versions` 不含）」是**错的**：`data/fabric_26.2` 有 fabric-docs 正文，`list_fabric_versions` 也包含 26.2。本轮改成按加载器分述，并在人类读本 FAQ 里点明。
+- `neoforge/26.2` 的 `scaffold.buildVerified=false` 如实留在文档（README 未宣称它已验证），数据未动。
+
 ## 2026-10-30 · R2 审计（`temp/audit-r2`）逐条核对与彻底修复 WP0–WP9（维护档）
 
 **第 0 块 · 结论**：`temp/audit-r2` 的 119 条只读审计逐条复核后，86 条处置为修复、2 条延后、1 条需外部输入、5 条纯卫生、1 条待验、14 条非缺陷、10 条早已修 —— 88 条真缺陷按 WP0–WP9 修完：CLI 失败信道补三条通道、四个 related 工具统一返回对象、paper 适用性生成器入仓并修掉成员抽取缺陷、forge 1.14.4/1.15.2 的 api-index 从空壳重建、7 个平台的版本钉值 / 内容 / 计数修正、7 道旧门补判据 + 1 道新门。测到 L3：`npm test` 65 步里 58 步绿、7 步红，**7 步红全部不在本轮改动内**（并发会话的未跟踪产物 2 类 + 本机 gitignored 的构建残渣 1 类）。另跑门阵列逐道 113 道（绿 111 / 红 2，两红同为并发会话产物）与 CLI 冒烟 16/16。
