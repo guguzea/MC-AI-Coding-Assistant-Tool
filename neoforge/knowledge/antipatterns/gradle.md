@@ -37,7 +37,7 @@ neoForge {
 ```
 
 > MDG 不需要 `minecraft "net.neoforged:neoforge:..."` 依赖行——`neoForge.version` 自己接入依赖；
-> 该写法是 ForgeGradle 的 `minecraft` 配置，本仓 9 份 MDG `neoforge/<ver>/scaffold/build.gradle` 里没有一行 `minecraft` 依赖。
+> 该写法是 ForgeGradle 的 `minecraft` 配置，本仓 11 份 MDG `neoforge/<ver>/scaffold/build.gradle` 里没有一行 `minecraft` 依赖。
 > 另注：NeoForge 制品版本只有 NeoForge 号（`mcp-server/data/loader-api-summaries/README.md` 实测
 > `net.neoforged:neoforge:20.4.251`、`21.1.x`），没有 Forge 那种 `MC版本-Loader版本` 前缀
 > （`1.20.4-20.4.237` 是不存在的坐标）。
@@ -82,7 +82,7 @@ MDG 模板里没有这个开关，不需要补。官方 1.20.4+ scaffold 里唯�
 neoForge.ideSyncTask generateModMetadata
 ```
 
-> 实测：`copyIdeResources` 在本仓 10 份 `neoforge/<ver>/scaffold/build.gradle` 与全部 `data/neoforge_*` 官方语料中零命中。
+> 实测：`copyIdeResources` 在本仓 12 份 `neoforge/<ver>/scaffold/build.gradle` 与全部 `data/neoforge_*` 官方语料中零命中。
 
 ---
 
@@ -102,7 +102,7 @@ jar {
 // ✅ NeoForge：正常配 jar / manifest 即可，不做 reobf
 ```
 
-> 实测：`reobf` 与 `reobfusc` 在本仓 10 份 `neoforge/<ver>/scaffold/build.gradle` 和全部 `data/neoforge_*` 官方语料中零命中。
+> 实测：`reobf` 与 `reobfusc` 在本仓 12 份 `neoforge/<ver>/scaffold/build.gradle` 和全部 `data/neoforge_*` 官方语料中零命中。
 > 也就是说：**混淆映射这一步在 NeoForge 侧不存在**，缺它不是漏配。Forge 档才需要 `reobfJar`（见 `forge/<ver>/knowledge/antipatterns/gradle.md`）。
 
 ---
@@ -169,7 +169,7 @@ plugins {
     id 'net.neoforged.gradle.userdev' version '[7.0,7.2)'   // 冲突！
 }
 
-// ✅ 正确：只留一套（本仓 10 份版本 scaffold 中 9 份用 MDG）
+// ✅ 正确：只留一套（本仓 12 份版本 scaffold 中 11 份用 MDG，唯一例外 1.20.1）
 plugins {
     id 'java-library'
     id 'maven-publish'
@@ -182,7 +182,7 @@ plugins {
 
 | id | 是什么 | 可用版本 |
 | --- | --- | --- |
-| `net.neoforged.moddev` | ModDevGradle，`neoForge { }` DSL；本仓 10 份 `neoforge/<ver>/scaffold` 中 9 份用它（唯一例外 `1.20.1`＝Forge 兼容层短档） | plugins.gradle.org 最新 `2.0.146`（scaffold 钉 `2.0.143/2.0.144`） |
+| `net.neoforged.moddev` | ModDevGradle，`neoForge { }` DSL；本仓 12 份 `neoforge/<ver>/scaffold` 中 11 份用它（唯一例外 `1.20.1`＝Forge 兼容层短档，未用 MDG） | plugins.gradle.org 最新 `2.0.146`（各档 scaffold 钉值以该档 `build.gradle` 现读为准） |
 | `net.neoforged.gradle.userdev` | NeoGradle，官方 Mod Generator 提供的另一选择 | maven.neoforged.net 最新 `7.1.38` |
 | `net.neoforged.gradle` | **旧（Forge 时代）NeoGradle**，插件门户上最新只到 `6.0.21` | 写 `[7.0.15,7.2)` 永远解析不到 |
 | `net.minecraftforge.gradle` | ForgeGradle，Forge 档专用 | 不要出现在 NeoForge 工程里 |

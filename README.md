@@ -34,7 +34,23 @@
 见文首那条提示：人类读本 = `README_human.md`；需要细节直接让 agent 讲解。
 
 让 AI 编程助手（Cursor / Claude Code 等）能更好地编写 Minecraft 模组的完整工具包：消除知识陈旧、API 版本混淆、构建系统复杂、映射不一致等结构性障碍，覆盖从编写到测试模组的全流程。
+### 安装（第一次用先看这里）
 
+**最省事的装法：让你的 AI 帮你装**
+## 给小白的安装教程
+1. **让你的 AI 装它**：在harness中新建对话,输入:
+
+   > 帮我把这个 MCP <https://github.com/guguzea/MC-AI-Coding-Assistant-Tool.git>安装到 `<你想装的位置>`
+
+   Agent 会自己认宿主 → 检查 Node → `cd mcp-server && npm ci && npm run build` → 按该宿主格式生成配置草稿；**它先把目标文件与 diff 给你看，你确认后它才写**（不会静默覆盖已有 MCP 配置）。宿主不在已列清单里也能装（见 [AUTO_SETUP.md](./AUTO_SETUP.md) Step 4.11）。
+3. **重载宿主**：按AI指导重载 MCP（有的是重启、有的是重连，对照表在 [AUTO_SETUP.md](./AUTO_SETUP.md) Step 5）。重载后让它调一次 `get_server_status`；通了就是装好了。
+
+**前置要求**：**Node.js >= 22.5**（`node -v` 自查）。**22.5–22.12 与 23.0–23.3 必须加 `--experimental-sqlite` 启动**——内置 `node:sqlite` 在 22.13 / 23.4 起才默认开启；MCP/CLI 入口会在**任何 sqlite 使用之前**检测该窗口，命中即打印醒目指引并以非零码退出。**建议直接装 Node 22.13+ / 24 LTS 省心。**
+## 可以让AI帮你安装node
+**没看到工具 / 不想重载宿主** —— 不配 MCP 也能用，直接让AI使用 CLI工具
+**想手动装 / 装坏了要修**：唯一说明书是 [AUTO_SETUP.md](./AUTO_SETUP.md)（Step 0-pre 校验旧路径 → Step 0 识别宿主 → Step 2 编译 → Step 4 按宿主生成配置 → Step 5 重载并验收）；服务名 `MC-AI-Coding-Assistant-Tool`（stdio，**89** 个工具）。另一种装法（把 npm 包装进任意工程、平台数据另取）：见 [`mcp-server/README.md`](./mcp-server/README.md)「npm 安装」。
+
+> **给 Agent**：用户说「帮我装 / 怎么装 / 装不上」时按上面三步走；**配置格式以 `AUTO_SETUP.md` 为准；写盘前必须先给清单 + diff 等用户确认。**Skill 安装（Step 6）与 MCP 无关**，重载 MCP 不会让 Skill 面板出现条目，skill是动态上下文插入机制。
 
 ## 项目结构
 
@@ -155,6 +171,10 @@ MC_skill/
 
 ## 快速开始
 
+### 安装
+
+见开头
+
 **对 AI（打开一个 MC Mod 项目时）：**
 
 > 按根目录 `AGENTS.md` 判断平台与**精确**版本，然后调用 `activate_platform_pack action=session` 加载该档规则 / Skill 索引（不要直接读邻版 `平台/<ver>/.cursor`）。官方文档先 `list_*_versions`，再把 `version` 写死成工程版本去 `search_*_docs` / `search_docs`。创意设计由用户拍板；兼容取舍 / API 选择默认也由用户决定，用户不想或没能力决定时可代劳，但必须按下方「解释模板」说明（模板已同步写入根 `AGENTS.md`「人在环」节，对 Agent 强制生效）；写盘 / Gradle / 拷 jar / 上传须确认后再做（人在环，不是无人值守流水线）。
@@ -206,11 +226,7 @@ MC_skill/
 
 > 修改 `.cursor/` 后，在该版本目录运行 `sync-skills.ps1`。
 
-**配置本地 MCP Server：**
-
-> 将 [AUTO_SETUP.md](./AUTO_SETUP.md) 拖入当前 AI IDE / CLI。Agent 应识别宿主（Cursor / Claude Code / VS Code / Continue / Trae / OpenCode / Codex / DSH 等），编译 `mcp-server`，按该宿主格式生成配置草稿，**经你确认后合并**（不会静默覆盖）。  
-> 要求 **Node.js >= 22.5**（**22.5–22.12 与 23.0–23.3 必须加 `--experimental-sqlite` 启动**——内置 `node:sqlite` 在 22.13 / 23.4 起才默认开启；MCP/CLI 入口会在**任何 sqlite 使用之前**检测该窗口，命中即打印醒目指引并以非零码退出）；服务名 `MC-AI-Coding-Assistant-Tool`（stdio，89 个工具）。无 MCP 客户端时用 `node mcp-server/dist/cli.js`。
->
+**配置本地 MCP Server：** 见上面「安装（第一次用先看这里）」；各宿主的配置格式与验收步骤以 [AUTO_SETUP.md](./AUTO_SETUP.md) 为准（**不要默认 Cursor 的 `mcp.json`**）。
 
 ## 模组测试流程 loop：两段
 

@@ -95,7 +95,17 @@ In plain words (in case the diagram does not render):
 
 ## Three steps to start
 
-1. **Install it**: build it and wire it into your AI host following [AUTO_SETUP.md](AUTO_SETUP.md) (Cursor / Claude Code / VS Code / Continue / Trae / OpenCode / Codex / DSH, and others). Node.js 22.5 or newer is required.
+1. **Install it** ——
+   - **Let the AI install it**: Open this directory in an AI host such as Cursor / Claude Code / VS Code / Continue / Trae / OpenCode / Codex / DSH, then copy this sentence:
+
+     > Help me install this MCP <https://github.com/guguzea/MC-AI-Coding-Assistant-Tool.git> to `<the location where you want to install it>`
+
+     The AI will check Node itself, compile `mcp-server`, and write the configuration in the format for your host; **it will first show you what it plans to change, and will only act after you approve**.
+   - **Restart (or reload) the host**: After reopening, the tool will be there; then just ask questions as usual.
+
+   **Don't see the tool, or don't want to restart?** You can still use it without configuring MCP—just let the AI use the command-line tool:
+   **Prerequisites**: Node.js **22.5 or higher** (run `node -v` to check). It is recommended to install **22.13+ or 24 LTS** directly — versions 22.5–22.12 and 23.0–23.3 require an extra startup flag (`--experimental-sqlite`), which is more troublesome. If you want to install it step by step yourself, or need to fix a broken installation, see [AUTO_SETUP.md](AUTO_SETUP.md): that is the sole manual for installation and configuration (identify the host first → compile → generate configuration in the required format → reload and verify).
+   **You can also let the AI install Node**
 2. **Let it see your mod project**: open the project in your host. The agent identifies the platform and the exact version per [AGENTS.md](AGENTS.md), then loads the matching rule set into the conversation.
 3. **Ask for what you need**: look up docs, generate code, triage a crash, or let it playtest inside the game. Anything that writes files, runs Gradle, copies jars, or uploads a release is shown to you first and waits for your confirmation.
 

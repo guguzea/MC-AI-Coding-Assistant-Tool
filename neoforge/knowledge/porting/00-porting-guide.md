@@ -80,7 +80,7 @@ neoForge {
 > MDG 用 `neoForge { version = ... }`，不需要 `minecraft` 依赖行。
 > NeoForge 侧当前在用的插件 id 是 `net.neoforged.moddev`（MDG）与 `net.neoforged.gradle.userdev`（NeoGradle，最新 7.1.38）两套；
 > 裸 `net.neoforged.gradle` 是旧 Forge 时代的 NeoGradle，版本停在 6.0.21，写 `[7.0.15,7.2)` 解析不到。
-> 上面的骨架取自 `neoforge/1.21.1/scaffold/build.gradle:1-6,41-48`（1.20.6 起的 8 份 scaffold 同形，只有钉值不同；`1.20.4` 钉 `2.0.143`）。移植到具体档时以该档 `neoforge/<精确版本>/scaffold/build.gradle` 为准。
+> 上面的骨架取自 `neoforge/1.21.1/scaffold/build.gradle:1-6,41-48`（MDG 档 scaffold 大体同形、只有钉值不同：26.x 去混淆档无 `parchment`；份数与各档钉值以 `neoforge/<ver>/scaffold/build.gradle` 现读为准）。移植到具体档时以该档 `neoforge/<精确版本>/scaffold/build.gradle` 为准。
 
 ### mods.toml → neoforge.mods.toml
 

@@ -71,7 +71,7 @@
       "license": "MIT (TEMPLATE_LICENSE.txt)",
       "gitPolicy": "submodule_ok",
       "mappings": "mojmap",
-      "notes": "26.2 自 2026-10-31 起有独立规则树（只含 00 工程条），但 01–10 仍无正文 —— 不要把 26.1 的 01–10 当 26.2。",
+      "notes": "26.2 自 2026-10-31 起有独立规则树（11 条 `00–10` 齐，证据＝官方 MDK 模板 + 26.2 sources/merged jar 的 javap，不是 docs 正文），但本版主文档语料仍缺（`/docs/26.2/` 404）—— 不要把 26.1 的 01–10 当 26.2。",
       "source": "github"
     },
     {
@@ -86,7 +86,7 @@
       "license": "MIT (TEMPLATE_LICENSE.txt)",
       "gitPolicy": "submodule_ok",
       "mappings": "mojmap",
-      "notes": "26.2 自 2026-10-31 起有独立规则树（只含 00 工程条），但 01–10 仍无正文 —— 不要把 26.1 的 01–10 当 26.2。",
+      "notes": "26.2 自 2026-10-31 起有独立规则树（11 条 `00–10` 齐，证据＝官方 MDK 模板 + 26.2 sources/merged jar 的 javap，不是 docs 正文），但本版主文档语料仍缺（`/docs/26.2/` 404）—— 不要把 26.1 的 01–10 当 26.2。",
       "source": "github"
     },
     {
@@ -599,7 +599,7 @@
       "license": "MIT (TEMPLATE_LICENSE.txt)",
       "gitPolicy": "submodule_ok",
       "mappings": "mojmap",
-      "notes": "26.3 目前只有 00 工程条（2026-10-31 建）；01–10 无本版正文。本 pin 在本机 build 通过（pinned commit 归档 + Gradle 9.8.1 + JDK 25 → BUILD SUCCESSFUL in 24s）。",
+      "notes": "26.3 自 2026-10-31 起有独立规则树（11 条 `00–10` 齐，同 26.2 口径），但本版主文档语料缺（`/docs/26.3/` 404）—— 不要把 26.1/26.2 的 01–10 当 26.3。本 pin 在本机 build 通过（pinned commit 归档 + Gradle 9.8.1 + JDK 25 → BUILD SUCCESSFUL in 24s）。",
       "source": "github"
     },
     {
@@ -614,7 +614,7 @@
       "license": "MIT (TEMPLATE_LICENSE.txt)",
       "gitPolicy": "submodule_ok",
       "mappings": "mojmap",
-      "notes": "26.3 目前只有 00 工程条（2026-10-31 建）。本 commit 的归档未单独 build（同版本 ModDevGradle 变体已 build 通过）；三件套/插件版本取自归档内 build.gradle（net.neoforged.gradle.userdev 7.1.39）。",
+      "notes": "26.3 自 2026-10-31 起有独立规则树（11 条 `00–10` 齐，同 26.2 口径），但本版主文档语料缺（`/docs/26.3/` 404）—— 不要把 26.1/26.2 的 01–10 当 26.3。本 commit 的归档未单独 build（同版本 ModDevGradle 变体已 build 通过）；三件套/插件版本取自归档内 build.gradle（net.neoforged.gradle.userdev 7.1.39）。",
       "source": "github"
     }
   ]

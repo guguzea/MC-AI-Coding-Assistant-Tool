@@ -28,14 +28,36 @@
 
 ## Read this first
 
-### If you are an agent, this file is the project overview. For installing and configuring the MCP server, see AUTO_SETUP.md; the configuration chapter here is a copy of the same content, kept as a fallback for readers who skip AUTO_SETUP.md.
+### If you are an agent, this file is the project overview. For installing and configuring the MCP server, see AUTO_SETUP.md.
 
 ### If you are a human, see the notice at the top: the human-facing page is README_human.en.md
 
 If you want the fine detail, just let the agent work it out for you.
 
 A complete toolkit that lets AI coding assistants (Cursor, Claude Code, and others) write Minecraft mods with fewer wrong turns: it removes structural obstacles such as stale knowledge, API version confusion, complicated build systems and inconsistent mappings, and covers the whole path from writing code to testing the mod.
+### Installation (read this first if it's your first time)
 
+**The easiest way to install: let your AI install it for you**
+
+## Installation tutorial for beginners
+
+1. **Let your AI install it**: Create a new conversation in the harness and enter:
+
+   > Help me install this MCP <https://github.com/guguzea/MC-AI-Coding-Assistant-Tool.git> to `<the location where you want to install it>`
+
+   The Agent will identify the host itself → check Node → `cd mcp-server && npm ci && npm run build` → generate a configuration draft in the format for that host; **it will first show you the target file and diff, and only write after you confirm** (it will not silently overwrite existing MCP configuration). It can also install when the host is not in the listed inventory (see [AUTO_SETUP.md](./AUTO_SETUP.md) Step 4.11).
+
+3. **Reload the host**: Reload MCP according to the AI's guidance (some require a restart, some require reconnecting; the comparison table is in [AUTO_SETUP.md](./AUTO_SETUP.md) Step 5). After reloading, have it call `get_server_status` once; if it works, installation is complete.
+
+**Prerequisites**: **Node.js >= 22.5** (check with `node -v`). **22.5–22.12 and 23.0–23.3 must be started with `--experimental-sqlite`** — the built-in `node:sqlite` is only enabled by default starting from 22.13 / 23.4; the MCP/CLI entry point will detect this window **before any sqlite use**, and when matched will print prominent guidance and exit with a non-zero code. **It is recommended to install Node 22.13+ / 24 LTS directly to save trouble.**
+
+## You can let AI help you install Node
+
+**Tool not visible / do not want to reload the host** — it can still be used without configuring MCP; just let AI use the CLI tool directly.
+
+**Want to install manually / need to fix a broken installation**: The only manual is [AUTO_SETUP.md](./AUTO_SETUP.md) (Step 0-pre verify old paths → Step 0 identify host → Step 2 compile → Step 4 generate configuration by host → Step 5 reload and accept); service name `MC-AI-Coding-Assistant-Tool` (stdio, **89** tools). Another installation method (install the npm package into any project and retrieve platform data separately): see [`mcp-server/README.md`](./mcp-server/README.md) "npm installation".
+
+> **For the Agent**: When the user says "help me install / how do I install / installation fails", follow the three steps above; **the configuration format is subject to `AUTO_SETUP.md`; before writing to disk, you must first provide the checklist + diff and wait for user confirmation.** Skill installation (Step 6) is unrelated to MCP; reloading MCP will not make an entry appear in the Skill panel. Skill is a dynamic context insertion mechanism.
 ## What it is: AI does the work, you make the calls
 
 Mod development is **not** a deterministic pipeline. Creative scope, performance trade-offs and debugging strategy must be decided by a **human**; the agent does not take those over. Compatibility trade-offs and API choices it may take for you: for a low-risk call it explains the choice, the alternatives and the revert right after acting, per the "explanation template" (see the Quick Start section); for a high-risk call (switch loader, restructure packages, drop a dependency, edit build scripts) it explains first and waits for your confirmation.
@@ -159,6 +181,10 @@ To list what is already indexed on this machine: `node mcp-server/dist/cli.js ac
 
 ## Quick start
 
+### Install (read this first)
+
+see the top
+
 **For the AI (when opening an MC mod project):**
 
 > Follow the root `AGENTS.md` to identify the platform and the **exact** version, then call `activate_platform_pack action=session` to load that version's rules / Skill index (do not read a neighbouring version's `platform/<ver>/.cursor` directly). For official docs, call `list_*_versions` first, then pin `version` to the project version for `search_*_docs` / `search_docs`. Creative design is the user's call; compatibility trade-offs and API choices default to the user as well, and the agent may decide when the user does not want to or cannot, but then it must explain using the template below (the template is also written into the root `AGENTS.md` under "Human in the loop", binding on agents). Writing files, running Gradle, copying jars, uploading — all require confirmation first (human in the loop, not an unattended pipeline).
@@ -210,11 +236,7 @@ To list what is already indexed on this machine: `node mcp-server/dist/cli.js ac
 
 > After editing `.cursor/`, run `sync-skills.ps1` in that version directory.
 
-**Configuring the local MCP server:**
-
-> Drop [AUTO_SETUP.md](./AUTO_SETUP.md) into your AI IDE / CLI. The agent should detect the host (Cursor / Claude Code / VS Code / Continue / Trae / OpenCode / Codex / DSH, etc.), build `mcp-server`, produce a config draft in that host's format, and **merge it only after you confirm** (it never overwrites silently).  
-> Requires **Node.js >= 22.5** (**22.5–22.12 and 23.0–23.3 must be started with `--experimental-sqlite`** — the built-in `node:sqlite` is only on by default from 22.13 / 23.4; the MCP/CLI entry point probes for that window before any sqlite use and, if it hits, prints a loud pointer and exits non-zero). Service name `MC-AI-Coding-Assistant-Tool` (stdio, 89 tools). With no MCP client available, use `node mcp-server/dist/cli.js`.
->
+**Configuring the local MCP server:** see "Install (read this first)" above; the per-host config format and acceptance steps are authoritative in [AUTO_SETUP.md](./AUTO_SETUP.md) (**do not default to Cursor's `mcp.json`**).
 
 ## Mod testing loop: two halves
 

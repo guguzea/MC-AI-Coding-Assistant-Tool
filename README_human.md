@@ -96,7 +96,17 @@ graph LR
 > 请遵守 Mojang 创作规范。
 ## 三步开始
 
-1. **装上它**：按 [AUTO_SETUP.md](AUTO_SETUP.md) 编译并接入你的 AI 宿主（Cursor / Claude Code / VS Code / Continue / Trae / OpenCode / Codex / DSH 等）。需要 Node.js 22.5 或更高。
+1. **装上它** —— 
+   - **让 AI 装**：在 Cursor / Claude Code / VS Code / Continue / Trae / OpenCode / Codex / DSH 等 AI 宿主里打开这个目录，然后照抄一句话：
+
+     > 帮我把这个 MCP <https://github.com/guguzea/MC-AI-Coding-Assistant-Tool.git>安装到 `<你想装的位置>`
+
+     AI 会自己检查 Node、编译 `mcp-server`、按你宿主的格式写好配置；**它先把要改什么给你看，你点头它才动手**。
+   - **重启（或重载）宿主**：重开之后工具就在了，接着正常提问就行。
+
+   **没看到工具，或者你不想重启？** 不配 MCP 也能用，让AI使用命令行工具：
+   **前置要求**：Node.js **22.5 或更高**（敲 `node -v` 就能看）。建议直接装 **22.13+ 或 24 LTS** —— 22.5–22.12 与 23.0–23.3 这几个版本要额外加启动参数（`--experimental-sqlite`），比较麻烦。想自己一步步装、或者装坏了要修，看 [AUTO_SETUP.md](AUTO_SETUP.md)：那是安装与配置的唯一说明书（先认宿主 → 编译 → 按格式生成配置 → 重载验收）。
+   **node你也可以让AI安装**
 2. **让它认识你的模组工程**：宿主里打开工程即可，AI 会按 [AGENTS.md](AGENTS.md) 判断平台和精确版本，再把对应规则装进当前对话。
 3. **干活**：查文档、生成代码、查崩溃、让它进游戏自己测——都是直接提问。涉及写文件、跑 Gradle、拷 jar、上传发布这类动作，它会先给你看清单再等你确认。
 
