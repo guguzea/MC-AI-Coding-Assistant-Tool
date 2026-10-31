@@ -5,7 +5,8 @@
 **简体中文** · [English](README.en.md) · [人类读本](README_human.md) · [Human Guide](README_human.en.md)
 
 ### 一个跑在本地的 MCP知识库：让 AI 知道你这一版 Minecraft 该用哪套 API、哪套构建、哪套映射。
-
+#### 显著降低模组开发,整合包开发的工作量! 
+#### 帮助你实现想过但是受限于学习成本的没有完成的梦想! 
 **规则、官方文档、映射表、库模组、真机自测都在本地，agent 不用凭记忆猜。**
 
 **[人类读本](README_human.md) · [安装说明](AUTO_SETUP.md) · [贡献指南](CONTRIBUTING.md)** · [平台说明](#平台说明) · [工具清单](#mcpcli-tools89)
