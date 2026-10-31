@@ -107,7 +107,7 @@ In plain words (in case the diagram does not render):
 
 Every platform and version ships its own rule set (registration, events, networking, data generation, anti-patterns, …) plus a batch of task-specific skill files. The agent loads **your** version's set, not a neighbouring one.
 
-54 packs load today (`activate_platform_pack --action=list` shows the current list); a few more on disk are `draft`. When your version has no pack it says `PACK_NOT_FOUND` and offers the sibling versions instead of quietly substituting one.
+57 packs load today (Forge 15 / Fabric 15 / NeoForge 12 / Quilt 10 / LiteLoader 1 / Rift 2 / ModLoader 1 / Bedrock 1; `activate_platform_pack --action=list` shows the current list); 5 more on disk are `draft` (Forge 1.21.1, LiteLoader 1.8.9 / 1.10.2, ModLoader 1.2.5 / 1.5.2). When your version has no pack it says `PACK_NOT_FOUND` and offers the sibling versions instead of quietly substituting one.
 
 Version history is answerable too: `get_version_info` takes a Forge version plus an action (say "register a block") and returns the recommended approach, key changes and gotchas.
 
@@ -185,7 +185,7 @@ Writing plugins is a separate line, not hanging under the eight mod platform tre
 
 ### Porting
 
-Porting a mod across loaders (Forge → NeoForge / Fabric and so on): identify the platform and mappings, list risks and steps, execute after you confirm. DryRun preview by default. 26.2 / 26.3 have neither a rule tree nor docs; those go through the official migration guide (`get_migration_guide` with `26.1->26.2` / `26.2->26.3`, sourced from the NeoForge Primer).
+Porting a mod across loaders (Forge → NeoForge / Fabric and so on): identify the platform and mappings, list risks and steps, execute after you confirm. DryRun preview by default. 26.2 / 26.3 rule trees already exist (Fabric 26.2, NeoForge 26.2 / 26.3), but there are no version-specific main docs; game-side changes go through the official migration guide (`get_migration_guide` with `26.1->26.2` / `26.2->26.3`, sourced from the NeoForge Primer).
 
 > Details in "Porting analysis" in [README.en.md](README.en.md)
 
@@ -260,7 +260,7 @@ If something fails to compile or throws errors, trust the official documentation
 
 ## Frequently asked questions (FAQ)
 
-**Q: 26.2 / 26.3 don't seem to have matching files — is that just not updated yet?** A: the major mod loaders ship no docs for 26.2 / 26.3 at the moment; for those versions we rely on the official 26.1 → 26.2 → 26.3 migration guide, so there is nothing to index. Once the official docs land, this gets updated to match.
+**Q: 26.2 / 26.3 don't seem to have matching files — is that just not updated yet?** A: the rule trees and scaffolds are in place (Fabric 26.2, NeoForge 26.2 / 26.3); what is missing is the version-specific main docs, which upstream has not published yet, so doc search has no body for them. For game-side changes, use the official 26.1 → 26.2 → 26.3 migration guide until upstream docs land.
 
 **Q: Can playtesting support older versions?** A: it currently goes down to 1.20.1. Support for the flattening era (1.13+) comes after that; pre-flattening is genuinely hard and I'd rather not rush it.
 

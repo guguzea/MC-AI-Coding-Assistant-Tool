@@ -19,7 +19,8 @@
 
 | 版本 | 变更详情 |
 |------|---------|
-| （未发布 · 工作树 2026-10-24） | 服务端面补 13 棵版本档（Spigot ×8 走构件 `javap`、Paper ×5 走 javadoc 页）+ 两个真机探针 + `paper/<ver>/rules/` ×5 → 明细见 [`mcp-server/CHANGELOG.md`](./mcp-server/CHANGELOG.md) |
+| （未发布 · 工作树 2026-10-31） | 许可证换为 PolyForm Noncommercial 1.0.0 + 强 Copyleft 附加条款；补 Fabric 26.2、NeoForge 26.2 / 26.3 三档；Paper 历史档补 `applicability.json` → 明细见 [`mcp-server/CHANGELOG.md`](./mcp-server/CHANGELOG.md) |
+| V2.1.0 | Release 正文（本机/未跟踪件，见 [Releases](https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/releases)） · 逐批次明细 → [`mcp-server/CHANGELOG.md`](./mcp-server/CHANGELOG.md) |
 | V2.0.0 | Release 正文（本机/未跟踪件，见 [Releases](https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/releases)） · 逐批次明细 → [`mcp-server/CHANGELOG.md`](./mcp-server/CHANGELOG.md) |
 | V1.0.4 | → [`mcp-server/CHANGELOG.md`](./mcp-server/CHANGELOG.md) |
 | V1.0.3 | → [`mcp-server/CHANGELOG.md`](./mcp-server/CHANGELOG.md) |
