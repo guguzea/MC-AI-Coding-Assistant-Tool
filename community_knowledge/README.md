@@ -61,6 +61,9 @@
 | 老加载器上游（LiteLoader/Rift/ModLoader/MCP，含存活状态） | `links/legacy-loader-upstreams` |
 | MC百科开发类教程全集（Java 模组/KubeJS·CrT 脚本/数据包/加载器大全，含许可声明） | `links/mcmod-dev-tutorials` |
 | 高影响力模组教程索引（Create/AE2/MEK/GT/TiC/帕秋莉等生态型大模组） | `links/major-mod-tutorial-indexes` |
+| Bukkit/Spigot 插件开发中文教程（服务端面补教程层；含已失效条目登记） | `links/bukkit-spigot-tutorial-index` |
+| 基岩版服务端软件（LeviLamina/Nukkit/Endstone/Dragonfly/bdsx） | `links/bedrock-server-software-index` |
+| 原版数据包 / 原版模组教程与工具（香草图书馆、Misode） | `links/datapack-vanilla-tutorial-index` |
 
 ## 版本路由矩阵（选篇前必查）
 

@@ -10,6 +10,14 @@
 
 已获许可**仅收指针页**（归属声明 + 原文 URL，**不入库正文**）：`permitted/mcmod-3993-forge-mod-guide/pages/` 4 篇（crash-publishing / items-registry / mixin-basics / setup）+ `meta.json`（作者/来源/许可）。`links/` 侧同样只收指针，两者不同面。
 
+## 我的世界开发者中文指南（CC BY-SA 4.0，仅作选题来源）
+
+- 名称：[我的世界开发者中文指南](https://github.com/mouse0w0/MinecraftDeveloperGuide)（mouse0w0 及全体贡献者）
+- 许可：**CC BY-SA 4.0**（署名 + 相同方式共享），与仓库 LICENSE 的 CC BY-SA 4.0 一致。
+- 用法边界：该仓是**纯索引**（仅 README，280 条外链，无正文）。本仓从它取的是**选题线索**——知道「中文社区在这些主题上有哪些教程站」——再**逐条自行探测存活、自行判断适配**，落成 `links/bukkit-spigot-tutorial-index`、`links/bedrock-server-software-index`、`links/datapack-vanilla-tutorial-index` 三页。
+- **不搬运其内容**：三页的标题/摘要/状态判读均为本仓自写，**未复制**该指南的正文组织或描述文本；链接存活读数（2026-10-31 实测）为本仓自己跑的探测结果，非转述。
+- 若日后要从该指南提炼成篇正文，须先按 CC BY-SA 4.0 履行署名与相同方式共享义务——本仓当前**不做**此举（承接 SA 义务的成本高于收益），只在 `links/` 面记指针。
+
 ## 自写报告 / 综述（不列第三方致谢）
 
 本仓自写的报告与综述（如仓库根《Minecraft 社区常用库模组全览（2026 版）》及其副本 `authored/library-catalog-2026.md`、各 `authored/lib-*.md` 短文等）属**原创内容**，不属第三方致谢范围，故不在本文件登记；本文件只登记有**外部出处**的来源。（A-43 口径说明，2026-09-19：消 T-F6 悬账。）

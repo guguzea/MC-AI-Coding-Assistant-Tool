@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-13T01:20:03.987Z",
+  "generatedAt": "2026-10-31T09:25:16.505Z",
   "entries": [
     {
       "id": "authored/addon-dev-workflow",
@@ -1871,6 +1871,66 @@
       "priority": "🟢",
       "summary": "Microsoft Learn 基岩创作者文档主页 + 官方示例仓库（behavior pack samples、script API samples、starter kits）；本地 search_bedrock_docs 的线上补充。",
       "mcHint": "stable / preview 双线"
+    },
+    {
+      "id": "links/bedrock-server-software-index",
+      "label": "基岩版服务端软件索引（LeviLamina/Nukkit/Endstone/Dragonfly，外链）",
+      "path": "links/bedrock-server-software-index.md",
+      "url": "https://github.com/LiteLDev/LeviLamina",
+      "tags": [
+        "index",
+        "bedrock",
+        "server-side",
+        "leviLamina",
+        "nukkit",
+        "endstone",
+        "dragonfly",
+        "bdsx",
+        "link-only"
+      ],
+      "sourceKind": "links",
+      "priority": "🟢",
+      "summary": "基岩版服务端软件与开发入口：LeviLamina（原 LiteLoaderBDS，C++ 原生）、PowerNukkitX / Cloudburst Nukkit（Java）、Endstone（Python/C++）、Dragonfly（Go）、bdsx（Node.js）。本仓基岩面只做 Add-On（manifest.json / BP / RP），服务端面为零覆盖，本页补这一块的入口，全部仅外链不入库正文。",
+      "mcHint": "各软件自带的 BDS 版本轴不同；引用前先看该软件当前支持的 BDS 版本"
+    },
+    {
+      "id": "links/bukkit-spigot-tutorial-index",
+      "label": "Bukkit/Spigot 插件开发教程索引（中文社区，外链）",
+      "path": "links/bukkit-spigot-tutorial-index.md",
+      "url": "https://www.spigotmc.org/wiki/spigot/",
+      "tags": [
+        "index",
+        "bukkit",
+        "spigot",
+        "paper",
+        "plugin",
+        "chinese",
+        "server-side",
+        "link-only"
+      ],
+      "sourceKind": "links",
+      "priority": "🟢",
+      "summary": "中文社区的 Bukkit/Spigot 插件开发教程与 API 文档入口：官方 wiki、Bukkit 中文 javadoc、事件/Packet 协议库/NMS 自定义实体等专题长文。本仓服务端面只收签名面（data/spigot_*/、data/paper-api_*/），本页补的是「教程该怎么查」这一层，全部仅外链不入库正文。",
+      "mcHint": "跨版本（1.8–1.21.x）；条目多数不标版本，引用前先对版本"
+    },
+    {
+      "id": "links/datapack-vanilla-tutorial-index",
+      "label": "原版数据包 / 原版模组教程与工具索引（外链）",
+      "path": "links/datapack-vanilla-tutorial-index.md",
+      "url": "https://zhangshenxing.github.io/VanillaModTutorial/",
+      "tags": [
+        "index",
+        "datapack",
+        "vanilla",
+        "zh-cn",
+        "misode",
+        "tools",
+        "link-only"
+      ],
+      "sourceKind": "links",
+      "priority": "🟢",
+      "summary": "原版数据包（datapack）与原版模组的中文教程与工具入口：香草图书馆文档站、Minecraft 原版模组入门教程、Misode 生成器族、VSCode datapack 语言服务器、MCreator。本仓主面是 Java 模组与基岩 Add-On，数据包只有零散片段，本页补这一层的入口，全部仅外链不入库正文。",
+      "mcHint": "数据包格式随版本变（pack_format 逐版不同）；引用前先确认目标版本的 pack_format"
     },
     {
       "id": "links/fabric-26.2-blog",
