@@ -6,7 +6,7 @@
   "gaps": {
     "rules": "11 条齐（00–10），证据是**官方 MDK 模板 + NeoForge 26.2.0.93 sources jar + 26.2 merged jar 的 javap**，不是 docs 正文（上游 /docs/26.2/ 404、manifest 记 available=false / httpStatus=404）。与 26.3 的对拍结论写在 09 的比较表里（DeferredRegister 仅 javadoc 差异、PayloadRegistrar 逐字节一致、**GatherDataEvent 两版结构不同 ⇒ 07 单独写**：26.2 走 getGenerator().getVanillaPack(...).addProvider(Factory)，26.3 走事件上的 addProvider）。04/06/07 的调用已在 MDK-26.2 探针里真编过（BUILD SUCCESSFUL 2m44s）；**未核清单已清零**（仅剩 vanilla 内部类细节未碰，如 DatapackBuiltinEntriesProvider 构造签名）。**禁止把这些当官方文档结论**，也禁止拿 26.1 的 01–10 顶替。",
     "knowledge": "无 knowledge/：签名证据由各规则内的 sources jar 类路径承担；独立签名查询走自备 jar + ingest_loader_api + query_loader_api。",
-    "scaffold": "本档 scaffold **未单独 build**（同结构 / 同 Gradle 9.2.1 的 26.3 MDK 已 build 通过）。"
+    "scaffold": "只覆盖 :build（compileJava + processResources + jar + generateModMetadata），未跑 runClient / runServer / gameTestServer。"
   },
   "scaffold": {
     "mode": "gradle",
@@ -14,13 +14,13 @@
     "provenance": {
       "text": "official-mdk:NeoForgeMDKs/MDK-26.2-ModDevGradle@d1c748fd52b311cba7b4a50e3d689927c5daac9a",
       "wrapper": "gradle-wrapper-task",
-      "build": null
+      "build": "2026-10-31 实测（四轮，同一零改动副本 F:\\MOD_TEST\\neoforge262-scaffold*；副本与仓内逐文件 sha256 比对 = 0 差异）：① 本档自带 wrapper（Gradle 9.2.1）+ JDK 25（G:\\jdk25\\jdk-25.0.4.1+1）、GRADLE_USER_HOME=F:\\MOD_TEST，`gradlew.bat build --console=plain` → BUILD SUCCESSFUL in 2m 52s（5/5 executed）；② `clean build` → 48s；③ `clean build --no-build-cache --rerun-tasks` → 40s（6/6 executed）；④ **NFRT 全链零缓存重算** `clean build --no-build-cache -PneoForge.neoFormRuntime.enableCache=false` → BUILD SUCCESSFUL in 3m 12s，preProcessJar / decompile(59.84s) / patch / applyNeoforgePatches / transformSources / **recompile（Compiling 7055 source files，46.77s）** / mergeWithSources 全部 DONE、无一 REUSE。产物 build/libs/examplemod-1.0.0.jar（10066 B，sha256 AF400BC8FBE3D71B78203762EE526B2A70769107F99709FF68A63E81E05527A6，四轮同 sha）；三个 class 的 major version = 69（Java 25）；展开后的 META-INF/neoforge.mods.toml 记 versionRange=\"[26.2.0.59,)\" / \"[26.2]\"。钉值未改（MDG 2.0.143 / neo_version 26.2.0.59，与 pin 归档一致）。边界：只覆盖 :build 任务链（compileJava + processResources + jar + generateModMetadata），未跑 runClient / runServer / gameTestServer。"
     },
-    "buildVerified": false,
+    "buildVerified": true,
     "gaps": [
-      "buildVerified=false：2026-10-31 只做了 archive 完整性校验 —— 下载 pin 的 commit 归档（`d1c748fd`）算 sha256 = 5647144e0f5dbe5b70fc2f8b47b251efd2d9fb2222f8ab7620742cad890e6f2e，与 mdk-checksums.json 的 pin **逐字节一致**；未跑 gradle build。",
-      "本 scaffold 是 MDK 归档的干净副本（已剔除 build 产物与 IDE 目录），结构与已验证的 26.3 模板同形。",
-      "MDK 自带 wrapper 是 Gradle 9.2.1；26.3 侧的实测用的是 9.8.1（向下兼容）。"
+      "**MDG 2.0.143 在 MC 26.2 上的已知隐患已实测排除**：仓内有记录称 MC 26.2/26.3 需 ModDevGradle ≥ 2.0.148（`community_knowledge/authored/ingame-playtest-automation.md:610`，失败形 `Node action for recompile failed` / `HolderSet$1.contents()` 可见性错）。本档钉 2.0.143（与 pin 归档逐字节一致）**未换钉值**，而第 ④ 轮已把 NFRT 缓存关掉、`recompile` 真编 7055 个 MC 源文件并成功 ⇒ 该隐患在本 scaffold 上不复现。理由不是「运气」：② 与 ③ 两轮虽已 rerun-tasks，NFRT 仍 REUSE，只有 ④ 才真重算；前几轮的绿不足以证伪这条雷。**钉值未改**。",
+      "archive 完整性仍成立：pin 的 commit 归档（`d1c748fd`）sha256 = 5647144e0f5dbe5b70fc2f8b47b251efd2d9fb2222f8ab7620742cad890e6f2e，与 `mcp-server/data/mdk-checksums.json:70` 的 pin **逐字节一致**（2026-10-31 从 codeload 重下复验，两个独立对象同 sha）。逐件比对：17 件里 13 件逐字节相同；**3 件不同 = wrapper 三件套**（本仓由 `gradle-wrapper-task` 按 9.2.1 生成，与 MDK 自带那份不是同一字节；三者 sha256 命中 `mcp-server/data/wrapper-jars.json:651/653/655` 的登记值）；归档独有 1 件 = `.github/workflows/build.yml`（已剔除，与 26.3 同口径）。",
+      "本档自带 wrapper 9.2.1 实测可跑（四轮全部用本档 gradlew，未换 9.8.1）；26.3 侧的实测用的是 9.8.1。"
     ]
   }
 }

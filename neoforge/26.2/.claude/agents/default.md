@@ -13,7 +13,7 @@
 | 官方 MDK | `MDK-26.2-ModDevGradle@d1c748fd`、`MDK-26.2-NeoGradle@15955d03`（`mdk-checksums.json` 已 pin，archive sha256 实测与 pin 一致） |
 | 主文档 | **无**（`/docs/26.2/` 404） |
 | primer | `data/neoforge_primers/26.2.md`（26.1→26.2，只讲 vanilla 类改动） |
-| 本机验证 | **未单独 build**（同结构、同 Gradle 9.2.1 的 26.3 MDK 已 build 通过；本档 scaffold 未跑） |
+| 本机验证 | 本档 scaffold 零改动副本 `gradlew build` → **BUILD SUCCESSFUL in 2m 52s**；另跑 3 轮复核（含 **NFRT 全链零缓存重算**：`recompile` 真编 7055 个 MC 源文件）全部通过、jar 同 sha。边界：只覆盖 `:build`，未跑 runClient / runServer |
 | 工具链 | Java 25 · Gradle wrapper 9.2.1 · MDG 2.0.143 · `neo_version=26.2.0.59`（模板） |
 
 ## 规则里的 Java 调用已真编译验证（2026-10-31）

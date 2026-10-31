@@ -6,6 +6,74 @@
 - 只追加，不改写历史节。要更正旧节，写进新节第 6 块「自我更正」并点名旧节。
 - 夜跑、交接、事后抽查读本文件，不依赖聊天记录。夜批（阶 1）的队列与抽查记账仍在 [`NIGHT_BATCH.md`](./NIGHT_BATCH.md)，本文件不顶替它。
 
+## 2026-10-31 · neoforge/26.2 scaffold 真跑 build 并回写 buildVerified（维护档）
+
+**第 0 块 · 结论**：`neoforge/26.2/scaffold` 真跑通了构建，`pack.meta.json` 的 `scaffold.buildVerified` 由 `false` 翻成 `true`，`AGENTS.md` 与本档三个镜像同步改准。四轮构建全部 BUILD SUCCESSFUL（含一轮 NFRT 全链零缓存重算、`recompile` 真编 7055 个 MC 源文件），jar 四轮同 sha。边界照实写：只覆盖 `:build`，未跑 runClient / runServer / gameTestServer。
+
+1. **改了哪些文件**（5 处 + 3 镜像 + 本文件）
+   - `neoforge/26.2/pack.meta.json:9` `gaps.scaffold`：由「本档 scaffold **未单独 build**」改为「只覆盖 `:build`（compileJava + processResources + jar + generateModMetadata），未跑 runClient / runServer / gameTestServer」——原句已不成立。
+   - `neoforge/26.2/pack.meta.json:17` `scaffold.provenance.build`：`null` → 实测串（四轮命令/时间/JDK 路径/GRADLE_USER_HOME/jar sha256/class major 69/mods.toml 展开值/边界）。**这一处是门判据**：`buildVerified=true` 时 `provenance.build` 为空会直接判红。
+   - `neoforge/26.2/pack.meta.json:19` `buildVerified`: `false` → `true`。
+   - `neoforge/26.2/pack.meta.json:21` `gaps[0]`：删掉「buildVerified=false…未跑 gradle build」（留着即自相矛盾，且命中 `test-core` 的矛盾靶），换成 **MDG 2.0.143 已知隐患已实测排除** 的记账（见第 3 块）。
+   - `neoforge/26.2/pack.meta.json:22` `gaps[1]`：把「结构与已验证的 26.3 模板同形」换成本轮实测的**逐件比对**结论（13/17 相同、3 件 wrapper 三件套按 `gradle-wrapper-task` 生成、归档独有 `.github/workflows/build.yml` 已剔除），并保留 archive sha256 事实。
+   - `neoforge/26.2/pack.meta.json:23` `gaps[2]`：改为「本档自带 wrapper 9.2.1 实测可跑（四轮全部用本档 gradlew，未换 9.8.1）」。原句只说「MDK 自带 wrapper 是 9.2.1；26.3 用的是 9.8.1」，未体现本档已实测。
+   - `neoforge/26.2/AGENTS.md:16` 「本机验证」行：由「**未单独 build**（…本档 scaffold 未跑）」改为实测结论 + 边界。**未写任何别的版本号**（`assert-scaffold-pin-claims` 扫 `neo_version=`，真值 = `scaffold/gradle.properties:17` 的 `26.2.0.59`；该行原样保留）。
+   - 3 个 AGENTS 镜像（`.cursor/agent/default.md`、`.claude/agents/default.md`、`.trae/agents/default.md`）：由 `neoforge/26.2/sync-skills.ps1` 生成，未手改；四份 sha256 前 16 位同为 `1B515C56…`、同 2415 B。
+   - 本文件：顶部追加本新节（仓规「只追加，不改写历史节」）。
+
+2. **判据与反证**：本轮**未动任何门脚本**，只按既存门判据回写。反证（会红的路径）已由门自身持有：`mcp-server/test-core.mjs:6698-6703` —— `buildVerified===true` 时 `provenance.build` 必须非空、`gaps` 不得含「未在本机跑通」、`gaps` 不得为空（三条件任一不满足即红）。故本轮回写**没有**放宽任何判据，只是把三条件都填实了。
+
+3. **验证台账**（全部本轮现跑，cwd = 仓库根，除注明）
+
+   **构建面**（零改动副本 `F:\MOD_TEST\neoforge262-scaffold*`，与仓内逐文件 sha256 比对 = 0 差异 / 16 件）：
+
+   | 轮次 | 命令 | 结果 |
+   |---|---|---|
+   | ① | `gradlew.bat build --console=plain` | **BUILD SUCCESSFUL in 2m 52s**（5/5 executed，`:compileJava` 真编） |
+   | ② | `gradlew clean build` | **BUILD SUCCESSFUL in 48s**（`:compileJava` FROM-CACHE） |
+   | ③ | `gradlew clean build --no-build-cache --rerun-tasks` | **BUILD SUCCESSFUL in 40s**（6/6 executed） |
+   | ④ | `gradlew clean build --no-build-cache -PneoForge.neoFormRuntime.enableCache=false` | **BUILD SUCCESSFUL in 3m 12s**（6/6 executed；NFRT **全链零缓存重算**：preProcessJar 5.71s / decompile 59.84s / patch 12.57s / applyNeoforgePatches 8.02s / transformSources 22.65s / **recompile 46.77s「Compiling 7055 source files」** / mergeWithSources 7.16s，无一 REUSE） |
+
+   - 环境：JDK 25 = `G:\jdk25\jdk-25.0.4.1+1`（Temurin 25.0.4.1+1）；Gradle wrapper **9.2.1**（本档自带）；`GRADLE_USER_HOME=F:\MOD_TEST`；MDG 2.0.143；`neo_version=26.2.0.59`（**钉值未改**）。
+   - 产物：`build/libs/examplemod-1.0.0.jar` 10066 B，sha256 `AF400BC8FBE3D71B78203762EE526B2A70769107F99709FF68A63E81E05527A6`（**四轮同 sha**）；13 条目（3 class + `META-INF/neoforge.mods.toml` + `assets/examplemod/lang/en_us.json`）。
+   - 字节码面（`javap -v`）：`Config.class` / `ExampleMod.class` / `ExampleModClient.class` 三者 **major version = 69**（Java 25），与 `build.gradle:39` 的 `JavaLanguageVersion.of(25)` 一致。
+   - 元数据面：展开后 `build/generated/sources/modMetadata/META-INF/neoforge.mods.toml` 记 `versionRange="[26.2.0.59,)"`（neoforge 依赖）与 `versionRange="[26.2]"`（minecraft 依赖）⇒ `generateModMetadata` 的属性展开真生效，不是空模板。
+   - 边界：只覆盖 `:build` 任务链（compileJava + processResources + jar + generateModMetadata）；**未跑** `runClient` / `runServer` / `gameTestServer` / `runData`，故「能进游戏」「注册真生效」均未验。
+
+   **出处面**（MDK pin ↔ 仓内 scaffold 逐件比对）：
+
+   - pin 归档 `MDK-26.2-ModDevGradle@d1c748fd` 本轮从 codeload 重下：64481 B，sha256 `5647144e0f5dbe5b70fc2f8b47b251efd2d9fb2222f8ab7620742cad890e6f2e` == `mcp-server/data/mdk-checksums.json:70` 的 pin，**两独立对象同 sha**。
+   - 归档 17 件 vs 仓内 scaffold 16 件：**13 件逐字节相同**（`build.gradle` / `gradle.properties` / `settings.gradle` / `gradle-wrapper.properties` / `src/**` 五件 / `.gitattributes` / `.gitignore` / `README.md` / `TEMPLATE_LICENSE.txt`）；**3 件不同 = wrapper 三件套**，仓内值命中 `mcp-server/data/wrapper-jars.json:651/653/655` 登记的 9.2.1 值（jar `423cb469…`/45633 B、gradlew `fb68debc…`/8618 B、gradlew.bat `fedad02c…`/2896 B），非漂移；归档独有 1 件 = `.github/workflows/build.yml`（剔除，与 26.3 同口径）。
+
+   **门面**（`node mcp-server/scripts/*.mjs`，除非注明）：
+
+   | 门 | rc | 关键读数 |
+   |---|---|---|
+   | `test-core`（cwd=`mcp-server`） | **0** | `core regression tests passed` |
+   | `assert-skill-mirrors` | **0** | 扫档=61 / 镜像目标=12992 / **AGENTS 漂移 0 档** |
+   | `assert-pack-meta-coverage` | **0** | 62 档全覆盖 · ready=57 draft=5 · 计数声明复核 10 条 |
+   | `assert-scaffold-pin-claims` | **0** | 46 档 / 1403 文件 / 93 处钉值声明与 scaffold 现算一致 |
+   | `assert-doc-absence-claims` | **0** | 表内 7 条：互斥 0 / 改准 5 / 引用 2 / 未判定 0 |
+   | `assert-scaffold-wrappers` | **1**（既存，与本轮无关） | 2 条：`neoforge/26.2/scaffold/gradlew` 与 `neoforge/26.3/…` 的 **git 模式 100644**（应 100755）。修法 `git update-index --chmod=+x` **动 git 索引 ⇒ 归用户**，agent 不代做 |
+
+   **`test-core` 的 cwd 敏感（本轮新发现，非本轮改动引起）**：从仓库根跑 `node mcp-server/test-core.mjs` → **rc=1**，断在 `test-core.mjs:2048`「仓库内缓存根必须被拒: {"dir":"…\\桌面\\upstream-cache","rejected":null}」；从 `mcp-server/` 跑 → **rc=0**。成因是该测试用 `join(process.cwd(), "..")` 构造「仓库内根」并断言被拒（`mcp-server/src/upstream/cache.ts:38-46` 用 `resolveRepoRoot()` 判），只有 cwd=`mcp-server` 时两者才落在同一个仓库。**读本文件的人请注意：本条不是 `neoforge/26.2` 回写导致的红**，是既存的调用姿势依赖。
+
+4. **数据侧变更**：`neoforge/26.2/pack.meta.json` 的 `gaps` 文本侧改动（3 条），**未写**「processed N 篇」「全文实扫 = N 篇」一类会被 `assert-pack-meta-coverage` 复算的数字句。全仓 `pack.meta.json` 的 `scaffold.buildVerified` 分布：回写前 **true 45 / false 8 / 无该字段 9**（62 档），回写后 **true 46 / false 7 / 无该字段 9**；false 七档余 `fabric/26.1.2`、`neoforge/1.20.1`、`neoforge/26.1`、`liteloader/1.8.9`、`liteloader/1.10.2`、`modloader/1.2.5`、`modloader/1.5.2`。口径 = 逐档读 `<platform>/<ver>/pack.meta.json` 的 `scaffold.buildVerified`；as-of 2026-10-31。
+
+5. **未做清单**
+   - **未跑** `runClient` / `runServer` / `gameTestServer` / `runData` ⇒ 「能启动游戏」「注册/配置在运行时真生效」「datagen 真出文件」均**未验**，不得读成已验。
+   - **未修** `assert-scaffold-wrappers` 的 2 条既存红（`gradlew` git 模式 100644）：改它要 `git update-index`，**动 git 索引归用户**。
+   - **未修** `test-core` 的 cwd 敏感（见第 3 块）：属既存缺陷，改它要动门的构造方式，超出「跑构建验证」的授权面。
+   - **未改** `assert-scaffold-rules-conflict` 的 12 条既存红（全来自 `fabric/26.2` 与 `forge/1.16.5`，与本档无关）。
+   - **未改** 三处邻接事实漂移（只报不改，需另开任务）：① `mcp-server/data/mdk-checksums.json:74/:89` 写「26.2 只含 00 工程条」，实测 26.2 有 11 条 `00–10`；② `neoforge/knowledge/common/glossary.md:46` 的「1.20.4 钉 2.0.143，其余 8 份钉 2.0.144」已过期（26.2 也钉 2.0.143、26.3 钉 2.0.148）；③ `doc/platform-coverage-neoforge.md:23` 只写 MDK 真值 `neo_version=26.2.0.93` 而未标「本仓 pin 的是 `d1c748fd`@2026-08-12 = `26.2.0.59`」，易被误读成仓内 scaffold 是 .93。
+   - **未提交**：按仓规 `git add/commit/push` 归用户。
+   - 另：本轮 `maven.neoforged.net` 全端点不可达（4 次重试 + 2 备用端点，rc=28/timeout；同期 repo1.maven.org=200、codeload=301 ⇒ 目标站点侧问题），故 `AGENTS.md:12`「26.2.0.93 是 26.2 线最新」这半句**本轮未能独立复验**，按未核实记账；.93 构件存在本身有本地 sources jar 佐证。
+
+6. **自我更正**
+   - 更正 `DELIVERY_LOG.md` 上一节（`## 2026-10-31 · README 系与相关文档的版本支持补齐到 26.2 / 26.3（维护档）`，原 `:51`）：「`neoforge/26.2` 的 `scaffold.buildVerified=false` 如实留在文档…数据未动」——该句的 `buildVerified=false` 已随本节回写变为 **true**，且数据本轮已动。按仓规不改写历史节，故只在此点名更正。
+   - 更正 `neoforge/26.2/AGENTS.md` 与 `pack.meta.json` 原先的自陈「本档 scaffold 未单独 build」：本档**已实测构建通过**，该自陈作废。
+   - 更正本轮中途一个判断：我起初按 ② ③ 两轮的 `--rerun-tasks` 准备直接判「NFRT 真重算过」，读日志发现那两轮 `recompile` 仍为 `REUSE Used cache of recompile` ⇒ 不足以证伪 MDG 版本雷，于是补跑第 ④ 轮（`-PneoForge.neoFormRuntime.enableCache=false`）才拿到「7055 个源文件真编译」的证据。**前三轮的绿不能替代第 ④ 轮**。
+
 ## 2026-10-31 · README 系与相关文档的版本支持补齐到 26.2 / 26.3（维护档）
 
 **第 0 块 · 结论**：把 `fabric/26.2`、`neoforge/26.2`、`neoforge/26.3` 三个新档和 Rift 双档写进了 README 系与相关文档：平台行、支持版本表、26.2/26.3 说明、Fabric loader 摘要计数、人类读本的档数与 FAQ、`CHANGELOG.md` 版本索引、`AGENTS.md` 的 Rift 判定步骤。顺带更正了上一版一句事实错误（Fabric 26.2 其实有文档语料）。验证：`test-cli` / `test-core` / `assert-doc-absence-claims` / `assert-authoring-lint` 全绿。
