@@ -551,7 +551,7 @@ ${WORKFLOW_ERA_GUARD}
   "mc-events-neoforge": {
     title: "NeoForge 事件系统清单",
     body: `清单${WORKFLOW_HITL_STEPS}。对应 Skill：mc-events；规则 05-events。
-1. 确认精确 NeoForge 档（先 list_neoforge_versions；已建档 1.20.1 / 1.20.4 / 1.20.6 / 1.21.1 / 1.21.3 / 1.21.5 / 1.21.8 / 1.21.10 / 1.21.11 / 26.1；26.1 ≠ 1.21.1）。先 activate_platform_pack action=session（task=mc-events-neoforge 或 topics=["05"]）；禁止 Read neoforge/<ver>/.cursor 当加载器，禁止跨目录读邻档 00–10。
+1. 确认精确 NeoForge 档（先 list_neoforge_versions；规则树已建档 1.20.1 / 1.20.4 / 1.20.6 / 1.21.1 / 1.21.3 / 1.21.5 / 1.21.8 / 1.21.10 / 1.21.11 / 26.1 **+ 26.2 / 26.3**（后两档无 docs 语料，证据 = 官方 MDK + sources jar）；26.1 ≠ 1.21.1 ≠ 26.2/26.3）。先 activate_platform_pack action=session（task=mc-events-neoforge 或 topics=["05"]）；禁止 Read neoforge/<ver>/.cursor 当加载器，禁止跨目录读邻档 00–10。
 2. 【分叉 · 注册期订阅 vs 运行期订阅——逐版取各档 neoforge/<ver>/.cursor/rules/05-events.mdc】≤1.17 的注册期/运行期旧分叉对 NeoForge 不适用：已建档全部 ≥1.20.1，各档 05-events 没有该分支；工程若是老 Forge 版本，改走 mc-events-forge。Neo 的分叉在 mod bus（注册期/lifecycle）与游戏总线（运行期）之间：
    - 1.20.1（neoforge/1.20.1/.cursor/rules/05-events.mdc）：本档文件是 W5-2 备份 stub（不进注入），真值源 = forge/1.20.1/.cursor/rules/05-events.mdc——注册期（RegisterEvent、NewRegistryEvent、FML 生命周期）订 Bus.MOD 或 mod 构造器内 modEventBus.addListener；运行期事件订 Bus.FORGE 游戏总线；在 Bus.FORGE 上订阅 RegisterEvent 永不触发。禁止把 1.20.4+ 复数 Handlers 事件名当本档。
    - 1.20.4（neoforge/1.20.4/.cursor/rules/05-events.mdc）：mod bus = 注册、lifecycle（FMLCommonSetupEvent、FMLClientSetupEvent、RegisterPayloadHandlerEvent（单数）、GatherDataEvent）；游戏总线 = NeoForge.EVENT_BUS，游玩中事件（如 ServerStartingEvent）。类级 @Mod.EventBusSubscriber（≤1.20.4 带 Mod. 前缀，默认总线 Bus.FORGE；mod bus 事件显式 bus = Bus.MOD）；入口里 modEventBus.addListener(this::commonSetup)。
@@ -559,10 +559,11 @@ ${WORKFLOW_ERA_GUARD}
    - 1.21.1 / 1.21.3 / 1.21.8 / 1.21.11（neoforge/1.21.1/.cursor/rules/05-events.mdc、neoforge/1.21.3/.cursor/rules/05-events.mdc、neoforge/1.21.8/.cursor/rules/05-events.mdc、neoforge/1.21.11/.cursor/rules/05-events.mdc）：同形——mod bus 持注册与 lifecycle（FMLCommonSetupEvent、FMLClientSetupEvent、RegisterPayloadHandlersEvent（复数）、GatherDataEvent；1.21.1 档标注 GatherDataEvent 尚未拆成 Client/Server 子类，1.21.8 / 1.21.11 档已拆 GatherDataEvent.Client / Server）；@EventBusSubscriber（1.20.6+ 无 Mod. 前缀，默认总线 Bus.GAME；注册/lifecycle 等 mod bus 事件必须显式 bus = Bus.MOD）。
    - 1.21.5 / 1.21.10（neoforge/1.21.5/.cursor/rules/05-events.mdc、neoforge/1.21.10/.cursor/rules/05-events.mdc）：本两档 05-events 写 @EventBusSubscriber 会同时登记到游戏总线和 mod 总线（官方文档写等价于两边 register），仍建议写 modid；游戏总线示例是嵌套名 LivingEvent.LivingJumpEvent；1.21.10 档客户端物理端检查官方写 FMLEnvironment#getDist()。
    - 26.1（neoforge/26.1/.cursor/rules/05-events.mdc）：两总线同 1.21.11 形态（mod bus：RegisterPayloadHandlersEvent、GatherDataEvent.Client / GatherDataEvent.Server；游戏总线 NeoForge.EVENT_BUS）；但本档 **无** 独立官方 concepts/events 页——签名以 search_neoforge_docs / query_loader_api（先 ingest_loader_api，用户自备 jar）为准；1.20.6 事件页仅作 fallback 且必须标注，禁止当 26.1 签名。
+   - 26.2 / 26.3（neoforge/26.2/.cursor/rules/05-events.mdc、neoforge/26.3/.cursor/rules/05-events.mdc）：**没有文档语料**（/docs/26.2/ 与 /docs/26.3/ 均 404，list_neoforge_versions 也不含这两档）⇒ 事件面按本档规则 + 官方 MDK 骨架写，search_neoforge_docs 查不到本档正文属预期；两档的 GatherDataEvent 结构不同（26.2 与 26.3 各自写），禁止拿 26.1 的 05 顶替。
 3. 各档 05-events 的禁令同样分档生效，不得互抄：禁止 MinecraftForge.EVENT_BUS（那是 Forge 名）；禁止把 Payload 注册写进 FMLCommonSetupEvent 当 SimpleChannel。
 4. 事件类名一律 search_neoforge_docs（version=本档）核实后再落笔，核不到留 // TODO(未核实)；文档 id 只取搜索结果，不要拿网站 URL。
 5. 事件面无专用 generate_* 生成器；附件/Capability 面另走 mc-capability 工作流（1.20.1 = Forge Capability 形态；1.20.4+ = Data Attachment，不是 Forge Capability）。
-6. 【停 · 语料边界】1.21.5 / 1.21.10 / 26.1 档的 05-events 是短文（无逐事件对照表），未列名事件（如 LivingHurt 一类）在这些档一律未核实；本仓无 26.2 规则树与主文档语料，禁止把 26.1 克隆成 26.2 或拿邻档正文当本版全文。`,
+6. 【停 · 语料边界】1.21.5 / 1.21.10 / 26.1 档的 05-events 是短文（无逐事件对照表），未列名事件（如 LivingHurt 一类）在这些档一律未核实；**26.2 / 26.3 有规则树但没有主文档语料**（/docs/26.2/ 与 /docs/26.3/ 均 404）⇒ 这两档照本档 05-events 写、未列名事件同样一律未核实；禁止拿 26.1 的正文当 26.2/26.3 全文。`,
   },
   "mc-events-fabric": {
     title: "Fabric / Quilt 事件系统清单",

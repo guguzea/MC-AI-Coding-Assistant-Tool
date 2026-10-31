@@ -189,7 +189,7 @@ npx @modelcontextprotocol/inspector node dist/index.js
 |------|------|
 | API / 映射 / 状态 | `query_api`、`get_method_params`、`convert_mapping`、`lookup_obfuscated`、`get_server_status`、`get_version_info` |
 | 工程 | `diagnose_gradle`、`generate_datagen`、`crash_analyze`、`validate_project`、`check_publish_ready`、`inspect_runtime` |
-| 游玩自测 | `generate_playtest_driver`（三种 `driverMode`；默认 `external_bridge` 骨架 —— 目标落在 `BRIDGE_MOD_TARGETS`（`forge 1.7.10–1.12.2` + `rift 1.13.2` + `modloader 1.6.4`）时**附赠自建最小桥模板** `playtest/bridge/**`，线协议逐键对齐 BlackBoxPro，**动作 10 个**（覆盖 `playtest_bridge await` 全部 5 个 condition）；**rift = 真模板（逐名有 1.13.2 MCP 快照出处）；modloader 1.6.4 = 骨架（仅 `setInGameHook` 有出处，`Mc` 内部类 10 动作 + `isInWorld` 全 `TODO(未核实)` + fail-closed）**；**不可用动作按档 fail-closed**（1.7.10 聊天、1.9.4–1.12.2 `use_item`、rift 聊天+`use_item`）；`platform` 枚举现与 `PLAYTEST_PLATFORMS` 同集 = forge/neoforge/fabric/quilt/liteloader/rift/modloader）、`inspect_playtest_evidence`（三态证据）、`playtest_bridge`（`127.0.0.1:38081`，`status`/`execute`/`await`，超时映射 `PLAYTEST_TIMEOUT`）、`playtest_intent`（意图邮箱 `read`/`write`；写侧六段校验与 `nextSteps` 回灌） |
+| 游玩自测 | `generate_playtest_driver`（三种 `driverMode`；默认 `external_bridge` 骨架 —— 目标落在 `BRIDGE_MOD_TARGETS`（`forge 1.7.10–1.12.2` + `rift 1.13`/`1.13.2` + `modloader 1.6.4`）时**附赠自建最小桥模板** `playtest/bridge/**`，线协议逐键对齐 BlackBoxPro，**动作 10 个**（覆盖 `playtest_bridge await` 全部 5 个 condition）；**rift = 真模板（逐名有 1.13.2 MCP 快照出处）；modloader 1.6.4 = 骨架（仅 `setInGameHook` 有出处，`Mc` 内部类 10 动作 + `isInWorld` 全 `TODO(未核实)` + fail-closed）**；**不可用动作按档 fail-closed**（1.7.10 聊天、1.9.4–1.12.2 `use_item`、rift 聊天+`use_item`）；`platform` 枚举现与 `PLAYTEST_PLATFORMS` 同集 = forge/neoforge/fabric/quilt/liteloader/rift/modloader）、`inspect_playtest_evidence`（三态证据）、`playtest_bridge`（`127.0.0.1:38081`，`status`/`execute`/`await`，超时映射 `PLAYTEST_TIMEOUT`）、`playtest_intent`（意图邮箱 `read`/`write`；写侧六段校验与 `nextSteps` 回灌） |
 | Forge 文档 | `list_forge_versions`、`search_forge_docs`、`get_forge_doc_*` |
 | Fabric 文档 | `list_fabric_versions`、`search_fabric_docs`、`get_fabric_doc_*` |
 | NeoForge 文档 | `list_neoforge_versions`、`search_neoforge_docs`、`get_neoforge_doc_*`（默认 **26.1**；请求 26.2 / 26.3 会回落并有 warning，不克隆假树；这两版的规则树在 `neoforge/26.2` / `neoforge/26.3`，走 `activate_platform_pack`；`1.20.1` 可回退 Forge） |
@@ -216,7 +216,7 @@ npx @modelcontextprotocol/inspector node dist/index.js
 - `action=read` → 观测面：`state.json` 的 `intentState` / `intents[]` / `lastIntent` / `scan.nearest` / `goto.arrived`，外加 `menu`（`playtest/intent-menu.json`）、`mailbox` 状态与 **`nextSteps`**（上一条失败 = 该意图菜单的 fallback）。
 - `action=write` → 写 `<evidenceDir>/intent.json`（扁平 `{"intent":"walk_to","x":10,"z":-20}`）；写前六段校验（confirmed → 禁列 → 菜单 → 参数白名单 → 必填 → 邮箱占用 `MAILBOX_BUSY`/`overwrite`），非法不进执行器。
 - 失败语义：邮箱形态失败 = 记 `intents[]`（`ok:false` + `failure` 字段）并**继续守候**（不自动重试，按 `nextSteps` 换意图）；协议违规判红停轮；脚本形态（plan 里 `intent` 步骤）失败判红停轮。
-- 真执行器覆盖 = `PLAYTEST_VERIFIED_TIER` 列出的档（**唯一真源、随逐档 javap 取证扩面——正文不数档**；逐版本清单见仓库根 `AGENTS.md`「人在环例外：游玩自测」的已核实边界）；表外档只发 `playtest/intent-menu.json` 契约 + 结构壳。
+- 真执行器覆盖 = `PLAYTEST_VERIFIED_TIER` 列出的档（**唯一真源、随逐档 javap 取证扩面——正文不数档**；**逐版本清单直接读 `src/generators/playtest-driver.ts` 的该数组**，能力边界见 [`doc/glob-search-discipline.md`](../doc/glob-search-discipline.md)）；表外档只发 `playtest/intent-menu.json` 契约 + 结构壳。
 
 ### 社区知识与库模组（与官方文档分离）
 

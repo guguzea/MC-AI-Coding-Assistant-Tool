@@ -1316,7 +1316,7 @@ node mcp-server/dist/cli.js get_community_doc_summary --id authored/lib-curios
 
 | 内容 | 落点 | 什么时候读 / 读法 |
 | --- | --- | --- |
-| 常驻铁律（人在环 / 游玩测试门槛 / 工具边界） | `AGENTS.md` | agent 每轮开工前；其「人在环例外：游玩自测」的「已核实边界」判「这个档能不能跑 / 桥能测到什么」 |
+| 常驻铁律（人在环 / 游玩测试门槛 / 工具边界） | `AGENTS.md` | agent 每轮开工前；「这个档能不能跑 / 桥能测到什么」的已核实边界在 [`doc/glob-search-discipline.md`](./doc/glob-search-discipline.md)，**逐版本清单读生成器内 `PLAYTEST_VERIFIED_TIER` 数组**（正文不数档） |
 | MCP 安装与宿主配置（唯一说明书） | [`AUTO_SETUP.md`](./AUTO_SETUP.md) | 装 / 修 MCP 时按它的 Step 走（Step 0-pre 校验路径 → Step 6 装 Skill）；开头「Agent 必读：执行顺序」是硬约束 |
 | 工具错误码：实跑取证 + 全工具覆盖清单 | [`doc/tool-error-codes.md`](./doc/tool-error-codes.md) | 收到 `code` / `errorKind` 先按表读；**没实跑取证到的一律不写码** |
 | 逐批实现史（含门与基线台账） | `mcp-server/CHANGELOG.md` | 查「哪批改了什么、为什么」 |

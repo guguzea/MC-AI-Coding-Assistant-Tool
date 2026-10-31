@@ -5,14 +5,14 @@
 ```
 Decision:
 → list_neoforge_versions + 工程 neo_version / minecraft_version
-→ IF 版本 ∈ 1.20.4 | 1.20.6 | 1.21.1 | 1.21.3 | 1.21.5 | 1.21.8 | 1.21.10 | 1.21.11 | 26.1 → 只读 neoforge/<ver>/AGENTS.md 与该档 00–10
+→ IF 版本 ∈ 1.20.4 | 1.20.6 | 1.21.1 | 1.21.3 | 1.21.5 | 1.21.8 | 1.21.10 | 1.21.11 | 26.1 | 26.2 | 26.3 → 只读 neoforge/<ver>/AGENTS.md 与该档 00–10
 → ELSE IF 版本 ∈ 1.20.1 → session 注入 Forge 1.20.1 的 02–08/10（兼容层）；仍禁止读 neoforge/1.20.4 邻档 00–10。文档走 search_neoforge_docs（version=1.20.1）
 → ELSE → 询问用户。禁止默默读扁平 .cursor/rules
 ```
 
 文档工具是 `list_neoforge_versions` / `search_neoforge_docs`，不是 `list_forge_versions`。
 
-26.1 与 1.21.1 是两档。26.2 构建已发布但官方主文档不按版本分线（`/docs/26.2/` 与 `/docs/26.1/` 同样 404），本仓无 26.2 树，不要建克隆树。不为 26.1.1 单造规则树。
+26.1 与 1.21.1 是两档；26.2 / 26.3 各有规则树（11 条齐，证据 = 官方 MDK + sources jar）。上游主文档不按版本分线（`/docs/26.2/` `/docs/26.3/` 均 404）⇒ 缺的是**文档语料**（`data/neoforge_26.2` / `26.3`），`search_neoforge_docs` 查不到本档正文属预期；不要建克隆语料树。不为 26.1.1 单造规则树。
 
 ## 禁止（写进本文件即错）
 

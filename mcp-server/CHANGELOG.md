@@ -1,5 +1,33 @@
 # mcp-server changelog
 
+## Unreleased · 游玩自测口径纠偏（2026-10-31）
+
+### 游玩自测口径纠偏：26.2 / 26.3 早已在 `PLAYTEST_VERIFIED_TIER`（2026-10-31）
+
+**症状**：agent 跑测试时读到的表述是「26.2 / 26.3 不在 `PLAYTEST_VERIFIED_TIER`（该表只到 1.20.6 一线）」，而实际这两档**出的是真 driver**。
+
+**根因（不是表错，是正文过期）**：表本身自 2026-10-04（`sweep123`）起就有 10 条 26.x 条目（`fabric`/`neoforge` × `26.1`/`26.1.1`/`26.1.2`/`26.2`/`26.3`，现共 **53** 条），但**消费者最先读到的那几处措辞没跟着改**：
+
+| 落点 | 过期形态 | 改成 |
+|---|---|---|
+| `src/wave/register.ts` 的 `driverMode` 参数 `.describe`（模型每轮看工具清单都读到） | 「其余模式**只出结构壳**」 | 「在 `PLAYTEST_VERIFIED_TIER` 列出的档出真 driver / 真执行器（唯一真源、正文不数档；含 26.x 全代）」，表外档才是结构壳 |
+| `playtest-driver.ts` 的 `in_jvm_player_agent` 结构壳 warning | 硬编码「要真执行器请换已验证档（`fabric 1.20.4 / 1.21.1 / 1.21.3 / 1.21.11 / quilt 1.21.11`）」——**停在 1.21.11 一线、没有 26.x** | 改成指向同一轮由数组现算的那条清单（此处不数档） |
+| `community_knowledge/authored/ingame-playtest-automation.md`「已验证档」行 | 「as-of 2026-10-03 共 **32** 项」+ 逐平台枚举（与现表 53 项不符） | 改成「唯一真源 = 数组，正文与本节都不数档」，并点名 26.x 十档在表内 |
+| 同上「平台降级矩阵」行 | 「driver 现覆盖 `fabric/quilt 1.21.11`，其余待取证」 | 覆盖 = `PLAYTEST_VERIFIED_TIER` 现读（含 26.x 十档与 1.14.4–1.21.11） |
+| `AGENTS.md` 工具表 `playtest_bridge` 行 / `doc/glob-search-discipline.md` / `mcp-server/README.md` / `playtest-bridge-mod.ts` 注释 | 「**8 目标** = forge 六档 + `rift 1.13.2` + modloader 1.6.4」（数组实为 **9**：还含 `rift 1.13`） | 覆盖 = `BRIDGE_MOD_TARGETS` 现读、正文不数档，并补上 `rift 1.13` |
+| `README.md` 指针表 / `mcp-server/README.md` | 指「根 `AGENTS.md`「人在环例外：游玩自测」的**已核实边界**」——该小节**已不存在**（已搬进 `doc/glob-search-discipline.md`）⇒ 悬空指针 | 改指实际落点，并写明「逐版本清单读生成器内数组」 |
+
+**顺带同步的相邻档位表述**（同一类腐烂）：
+
+- `neoforge/AGENTS.md` + `neoforge/CLAUDE.md`：版本分发表**漏 26.2 / 26.3**（两档规则树 2026-10-31 已建、`activate_platform_pack session` 实测 `ok:true`），且仍写「本仓无 26.2 树」⇒ 改成「26.2 / 26.3 各有规则树；缺的是 `data/neoforge_26.2`/`26.3` 文档语料，`search_neoforge_docs` 查不到本档正文属预期」。
+- 根 `AGENTS.md` 第 3 步的 session 版本清单补 `26.2` / `26.3`。
+- `src/prompts/templates.ts` 的 `mc-events-neoforge` 模板：建档清单漏后两档；第 6 步仍写「本仓无 26.2 规则树」⇒ 一并改准。
+
+**判据（本轮现取，全部 rc=0）**：`npm run build`（tsc）干净；`assert-playtest-intent-gate` **ok**（53 档清单原样打印，含 26.x 十档）；`assert-authoring-lint` ok（J2 指针 24 枚全在盘）；`assert-workflow-hitl` ok（61 模板 / 41 条路径引用全在盘）；`assert-doc-absence-claims` ok；`assert-skill-mirrors` ok（AGENTS 漂移 0 档）；`assert-cross-layer-names` ok；`assert-archive-pointers` ok。**行为面复核**：`fabric`/`neoforge` × `26.1`/`26.1.1`/`26.1.2`/`26.2`/`26.3`，两种 driverMode 各出 **108–115 KB 真代码、`TODO(未核实)` = false**；反向控制 `quilt 26.3`（表外）仍出结构壳。
+
+**未跑（说明白）**：`test-core` / `assert-total-semantics-wording` / `assert-legacy-isolation` 三只在**本沙箱内会 spawn 子进程的门**红，红因是 `spawnSync → EPERM`（`assert-legacy-isolation` 报的正是 `rc=null`、`found=undefined`，即 CLI 子进程根本没起来），**与本批改动无关**；需在非沙箱环境复跑。
+
+
 ## Unreleased · R2 审计修复补丁（2026-10-31）
 
 ### forge/1.16.5 实体示例：改完类名仍编译不过（真构件 `javac` 定位，已修）

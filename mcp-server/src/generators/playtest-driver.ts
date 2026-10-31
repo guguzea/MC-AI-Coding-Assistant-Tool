@@ -744,44 +744,60 @@ export function rewriteForNeoForge26xx(java: string, version: string): string {
     'log("[QA] clickchat: 本档无实现（仅 26.x）");',
     `{
         try {
-            // ① 关掉可能开着的屏：探针在 PlayerJoinEvent 里 openInventory ⇒ 实测那时是 ContainerScreen
-            //    （点击只会落在容器上、点不到聊天行）
+            // Step 1: close any currently open screen. The probe opens an inventory on
+            // PlayerJoinEvent, so at that moment this is a ContainerScreen and clicks would
+            // land on the container, never on a chat line.
             if (client.gui.screen() != null) { client.gui.screen().onClose(); }
-            // ② 开 ChatScreen —— 人类按 T 打开的就是它（实测 setScreen 生效，日志 screen=ChatScreen）
+            // Step 2: open ChatScreen, which is what a human gets by pressing T
+            // (measured: setScreen takes effect, log shows screen=ChatScreen).
             client.gui.setScreen(new net.minecraft.client.gui.screens.ChatScreen("", false));
             String _sc = (client.gui.screen() == null ? "null" : client.gui.screen().getClass().getSimpleName());
             int _h = client.getWindow().getGuiScaledHeight();
             int _hits = 0;
-            // ③ 扫 60 点：**从 h-46 起**（底部 h-8 那一排是横跨整宽的 EditBox，点了不发命令）
-            // ⚠ 每个点都要**先把"内部鼠标坐标"移过去再点**：ChatScreen 判定"点了哪条消息"读的是
-            //   MouseHandler.xpos/ypos（getScaledXPos/YPos），**不是**合成事件里的 x/y（实测：输入框能用事件
-            //   坐标命中 5 次，消息区 120 点全 0）。onMove 的字节码只有 putfield xpos/ypos，
-            //   MouseHandler 里**没有任何 glfwSetCursorPos** ⇒ **不会动 OS 光标**。
-            //   dx/dy 传 0：避免累积增量在关屏后把视角带飞。
+            // Scan 60 points starting at h-46: the bottom h-8 row is a full-width EditBox and
+            // clicking it sends no command. Each point must move the client's INTERNAL mouse
+            // coordinates before clicking, because ChatScreen decides which message was clicked
+            // from MouseHandler.xpos/ypos (via getScaledXPos/getScaledYPos) and NOT from the
+            // x/y carried on the synthesized event (measured: the EditBox hit 5 times using
+            // event coords while 120 points over the message area scored 0).
+            // See the per-version note below for how xpos/ypos are set. onMove's bytecode only
+            // does putfield xpos/ypos and MouseHandler has no glfwSetCursorPos, so this never
+            // moves the real OS cursor. dx/dy are 0 so accumulated deltas cannot fling the view
+            // once the screen closes.
             double _gs = client.getWindow().getGuiScale();
             if (_gs <= 0.0) { _gs = 1.0; }
-            // ⚠ 只扫**最底 4 行**（h-12 / -21 / -30 / -39，各 7 个 x）—— 消息从输入框上方开始、
-            //   每行 9 px；先把"最底行是不是我们那条"这件事问清楚（上一版 112 点扫全带、命中 7 次但
-            //   触发的不是带 clickEvent 的行，说明命中落在别的行上）。逐次记录命中坐标，便于对照。
+            // Only scan the bottom 4 text rows (h-12 / -21 / -30 / -39, 7 x positions each):
+            // messages start just above the input box and each row is 9 px. First settle
+            // whether the bottom line is ours. The previous version scanned 112 points across
+            // the whole band and got 7 hits, but the triggered line carried no clickEvent,
+            // i.e. hits landed on other rows. Record each hit coordinate for cross-checking.
             int[] _ys = new int[] { _h - 12, _h - 21, _h - 30, _h - 39 };
             for (int _i = 0; _i < 28; _i++) {
                 int _x = 8 + (_i % 7) * 32;
                 int _y = _ys[(_i / 7) % 4];
                 boolean _hit = false;
                 if (client.gui.screen() != null) {
-                    // ⚠ 三步缺一不可（2026-10-18）：
-                    //   ① onMove → 改 MouseHandler.xpos/ypos（不动 OS 光标）；
-                    //   ② **screen.mouseMoved(x,y)** → 改 **Screen 自己缓存的** mouseX/mouseY。
-                    //      Screen 的命中判定读的是后者（不是 MouseHandler），少了这步"消息带"永远 0 命中；
-                    //   ③ mouseClicked → 真正派发。
-                    client.mouseHandler.onMove(client.getWindow().handle(), _x * _gs, _y * _gs, 0.0, 0.0);
+                    // Three steps, none optional (2026-10-18):
+                    //   1) onMove sets MouseHandler.xpos/ypos without moving the OS cursor.
+                    //      PER-VERSION: 26.1 / 26.1.1 / 26.1.2 / 26.2 declare it PRIVATE as
+                    //      onMove(long,double,double), and xpos/ypos are private with no setter,
+                    //      so calling it there would not compile. Only 26.3 declares it PUBLIC
+                    //      as onMove(long,double,double,double,double). Where it is unavailable
+                    //      we rely on step 2 alone, which is what hit-testing actually reads.
+                    //   2) screen.mouseMoved(x, y) updates the Screen's own cached mouseX/mouseY.
+                    //      Hit-testing reads that cached pair, not MouseHandler, so skipping this
+                    //      step makes the message band score 0 forever.
+                    //   3) mouseClicked does the actual dispatch.
+                    // Emit the call only where it exists: 26.1-26.2 declare it private (would not compile),
+                    // so a runtime guard is NOT enough -- javac still type-checks the body.
+                    ${m26(version) >= 3 ? "client.mouseHandler.onMove(client.getWindow().handle(), _x * _gs, _y * _gs, 0.0, 0.0);" : "// onMove unavailable in this 26.x version; Screen.mouseMoved below is the effective path."}
                     client.gui.screen().mouseMoved(_x, _y);
                     _hit = client.gui.screen().mouseClicked(
                         new net.minecraft.client.input.MouseButtonEvent(_x, _y, new net.minecraft.client.input.MouseButtonInfo(0, 0)), false);
                 }
                 if (_hit) { _hits++; log("[QA] clickchat hit at " + _x + "," + _y); }
             }
-            log("[QA] clickchat: screen=" + _sc + " clicks=60 hits=" + _hits + "（判据看服务端 v-chat-click-executed）");
+            log("[QA] clickchat: screen=" + _sc + " clicks=60 hits=" + _hits + " (judge via server v-chat-click-executed)");
             if (client.gui.screen() != null) { client.gui.screen().onClose(); }
         } catch (Throwable _t) {
             log("[QA] clickchat threw: " + _t);
@@ -5320,7 +5336,7 @@ public final class PlaytestQaDriver {
       files["playtest/intent-menu.json"] = JSON.stringify(buildIntentMenu(input, profile), null, 2) + "\n";
       warnings.push(
         `driverMode=in_jvm_player_agent 在本档（${platform} ${version}）**未 javap 取证** ⇒ 只产出意图菜单契约（playtest/intent-menu.json），` +
-          `Java 执行器仍是结构壳；要真执行器请换已验证档（fabric 1.20.4 / 1.21.1 / 1.21.3 / 1.21.11 / quilt 1.21.11）或先取证。` +
+          `Java 执行器仍是结构壳；要真执行器请换已验证档（清单见上一条 warning，由 PLAYTEST_VERIFIED_TIER 现算；**此处不数档**）或先取证。` +
           `菜单按 capabilityProfile=${profile} 过滤后列出 ${intentsForProfile(profile).length} 条。`,
       );
     }

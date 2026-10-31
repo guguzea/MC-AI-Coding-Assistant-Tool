@@ -194,7 +194,10 @@ export const generatePlaytestDriverSchema = z.object({
   driverMode: z
     .enum(["external_bridge", "in_jvm_player_agent", "temporary_client_tick_driver"])
     .optional()
-    .describe("默认 external_bridge（桥驱动动作序列）；其余模式只出结构壳（TODO(未核实)）"),
+    .describe(
+      "默认 external_bridge（桥驱动动作序列）。`temporary_client_tick_driver` / `in_jvm_player_agent` 在 `PLAYTEST_VERIFIED_TIER` 列出的档出**真 driver / 真执行器**" +
+        "（唯一真源、正文不数档：含 `fabric`/`neoforge` 的 `26.1`/`26.1.1`/`26.1.2`/`26.2`/`26.3` 等；以生成器数组现读为准），表外档才只出结构壳（`TODO(未核实)`）",
+    ),
   capabilityProfile: z.enum(["strict_survival", "operator", "creative"]).optional().describe("默认 strict_survival（fail-closed）"),
   goal: z.string().optional().describe("本次游玩测试目标（一句话）"),
   expectItem: z.string().optional().describe("driverMode=temporary_client_tick_driver 且本档签名已核实时的期望物品 id（如 examplemod:playtest_token）；缺省留占位（编译前须替换）"),

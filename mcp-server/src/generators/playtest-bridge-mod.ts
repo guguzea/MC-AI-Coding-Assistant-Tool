@@ -42,7 +42,7 @@
  *
  * ── 平台面（2026-10-04 第二批扩展） ─────────────────────────────────────────
  *
- * `BRIDGE_MOD_TARGETS` = forge `1.7.10 / 1.8.9 / 1.9.4 / 1.10.2 / 1.11.2 / 1.12.2` **+ rift `1.13.2` + modloader `1.6.4`**。
+ * `BRIDGE_MOD_TARGETS` = forge `1.7.10 / 1.8.9 / 1.9.4 / 1.10.2 / 1.11.2 / 1.12.2` **+ rift `1.13` / `1.13.2`（两档共用一份模板）+ modloader `1.6.4`**（**正文不数档，以数组现读为准**）。
  *
  * **rift 1.13.2 = 真模板（逐名有出处）**：入口换成 Rift listener（`implements org.dimdev.rift.listener.client.ClientTickable`，
  * 类名写进 `riftmod.json` 的 `listeners`），tick = `clientTick()`（**无参** ⇒ 只能自己取单例）。
@@ -66,7 +66,7 @@
  * 并点名「未核实」——**fail-closed**：`/status` 可用，`/execute` 一律返回带 `TODO(未核实)` 的 failure。宁可这样，也不拿 1.7.10 记忆填 1.6.4。
  */
 
-/** 桥模板支持的目标（平台 × 版本）。forge 六档 + rift 1.13.2 + modloader 1.6.4。 */
+/** 桥模板支持的目标（平台 × 版本）。forge 六档 + rift 1.13 / 1.13.2 + modloader 1.6.4（以本数组为唯一真源，正文不数档）。 */
 export interface BridgeTarget {
   readonly platform: string;
   readonly version: string;
