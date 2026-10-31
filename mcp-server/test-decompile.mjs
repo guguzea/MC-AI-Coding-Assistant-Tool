@@ -790,7 +790,10 @@ section("SKIP_DOWNLOAD handlers");
     const mod = await decompileModJar({ jarPath });
     test("decompileModJar → DOWNLOAD_DISABLED", () => {
       assert.equal(mod.found, false);
-      assert.equal(mod.error, "DOWNLOAD_DISABLED", JSON.stringify(mod));
+      // 2026-10-30（R2 审计 WP1）：失败信道归一后 `error` 是对象 `{code,message?}`（不再是裸字符串），
+      // 与 `getMinecraftSource` 的取码方式一致：对象取 .code，仍兼容旧的字符串形态。
+      const modCode = typeof mod.error === "string" ? mod.error : mod.error?.code;
+      assert.equal(modCode, "DOWNLOAD_DISABLED", JSON.stringify(mod));
     });
     rmSync(jarPath, { force: true });
   } finally {

@@ -29,6 +29,12 @@ export function fabricRawName(gitPath) {
 /**
  * 上游 fabric 清单的唯一过滤口径：GitHub trees 全量 blob 路径 → 本档该收的 `develop/**.md`。
  * 抓取（loadUrlList）与门的期望值（upstream-tree.json）必须走同一个函数。
+ *
+ * ⚠ 只覆盖**版本目录**口径（`versions/<ver>/develop/**.md`）。上游「最新版」的正文不在
+ * `versions/` 下，而在仓库根 `develop/`（站点 `/develop/...`，无版本前缀）—— 那条路由
+ * `scripts/provision-fabric-latest.mjs` 自己按同一组过滤规则（排除 players/translated）
+ * 生成，并在 `upstream-tree.json` 标 `layout:"latest-unprefixed"`。别把两者混用：
+ * 拿 `versions/26.2/` 前缀去过滤 latest 面会得到 0 页（26.2 至今没有版本目录）。
  */
 export function upstreamDevelopPaths(treePaths, version) {
   const prefix = `versions/${version}/`;

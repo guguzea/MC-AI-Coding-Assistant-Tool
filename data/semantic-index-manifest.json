@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-10-23T15:59:51.436Z",
+  "built_at": "2026-10-30T16:51:28.827Z",
   "embedMode": "hybrid",
   "entries": [
     {
@@ -349,6 +349,18 @@
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
       "sha256": "c4d7e091a26ddd67b331bc0f75383d3b06803abf49057217fca3a0388d1fc01f"
+    },
+    {
+      "platform": "fabric",
+      "version": "26.2",
+      "source": "fabric-docs",
+      "path": "fabric_26.2/fabric-docs/26.2/semantic/db.sqlite",
+      "chunks": 1237,
+      "embedded": 991,
+      "built_at": "2026-10-30T16:51:28.760Z",
+      "model": "Xenova/all-MiniLM-L6-v2",
+      "schemaVersion": "1",
+      "sha256": "e5aa16cc1d2782e4442233de72bfaadf224b329743393cd558b5891f046f4795"
     },
     {
       "platform": "forge",

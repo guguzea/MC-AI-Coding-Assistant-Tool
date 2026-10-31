@@ -1,0 +1,80 @@
+# Command Arguments
+
+> 来源：https://raw.githubusercontent.com/FabricMC/fabric-docs/238533d819fcb5ec9405acb58fb0ac7655df63b1/develop/commands/arguments.md
+> 版本：26.2
+> GitHub 路径：develop/commands/arguments.md
+> 抓取源：github_latest_pinned
+> 抓取时间：2026-10-30T17:15:12.606Z
+> SHA256：352b0de431dbcb2380e6f55527120affc18739c160fa7d81d4b0d72ab3a6e997
+> 分支：main@238533d819fcb5ec9405acb58fb0ac7655df63b1
+
+---
+title: Command Arguments
+description: Learn how to create commands with complex arguments.
+---
+
+Arguments are used in most of the commands. Sometimes they can be optional, which means if you do not provide that
+argument,
+the command will also run. One node may have multiple argument types, but be aware that there is a possibility of
+ambiguity, which should be avoided.
+
+<<< @/reference/latest/src/main/java/com/example/docs/command/ExampleModCommands.java#command_with_arg{3}
+<<< @/reference/latest/src/main/java/com/example/docs/command/ExampleModCommands.java#execute_command_with_arg
+
+In this case, after the command text `/command_with_arg`, you should type an integer. For example, if you
+run `/command_with_arg 3`, you will get the feedback message:
+
+> Called /command_with_arg with value = 3
+
+If you type `/command_with_arg` without arguments, the command cannot be correctly parsed.
+
+Then we add an optional second argument:
+
+<<< @/reference/latest/src/main/java/com/example/docs/command/ExampleModCommands.java#command_with_two_args{3,5}
+<<< @/reference/latest/src/main/java/com/example/docs/command/ExampleModCommands.java#execute_command_with_two_args
+
+Now you can type one or two integers. If you give one integer, a feedback text with a single value is printed. If you
+provide two integers, a feedback text with two values will be printed.
+
+You may find it unnecessary to specify similar executions twice. Therefore, we can create a method that will be used in
+both executions.
+
+<<< @/reference/latest/src/main/java/com/example/docs/command/ExampleModCommands.java#command_with_common_exec{4,6}
+<<< @/reference/latest/src/main/java/com/example/docs/command/ExampleModCommands.java#execute_common
+
+## Custom Argument Types {#custom-argument-types}
+
+If vanilla does not have the argument type you need, you can create your own. To do this, you need to create a class that inherits the `ArgumentType<T>` interface where `T` is the type of the argument.
+
+You will need to implement the `parse` method, which will parse the input string into the desired type.
+
+For example, you can create an argument type that parses a `BlockPos` from a string with the following format: `{x, y, z}`
+
+<<< @/reference/latest/src/main/java/com/example/docs/command/BlockPosArgumentType.java#custom_argument_types
+
+### Registering Custom Argument Types {#registering-custom-argument-types}
+
+::: warning
+
+You need to register the custom argument type on both the server and the client or else the command will not work!
+
+:::
+
+You can register your custom argument type in the `onInitialize` method of your [mod's initializer](../getting-started/project-structure#entrypoints) using the `ArgumentTypeRegistry` class:
+
+<<< @/reference/latest/src/main/java/com/example/docs/command/ExampleModCommands.java#register_custom_arg
+
+### Using Custom Argument Types {#using-custom-argument-types}
+
+We can use our custom argument type in a command - by passing an instance of it into the `.argument` method on the command builder.
+
+<<< @/reference/latest/src/main/java/com/example/docs/command/ExampleModCommands.java#custom_arg_command{3}
+<<< @/reference/latest/src/main/java/com/example/docs/command/ExampleModCommands.java#execute_custom_arg_command{2}
+
+Running the command, we can test whether or not the argument type works:
+
+![Invalid argument](/assets/develop/commands/custom-arguments_fail.png)
+
+![Valid argument](/assets/develop/commands/custom-arguments_valid.png)
+
+![Command result](/assets/develop/commands/custom-arguments_result.png)

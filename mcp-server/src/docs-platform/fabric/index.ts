@@ -143,9 +143,11 @@ function isFabric26_2Line(v: string): boolean {
 }
 
 /**
- * 26.2 线没有 `data/fabric_26.2` 主文档树（禁止克隆一棵冒充）。26.2 查询的正文
- * 实际取自 `data/fabric_porting/` 移植旁路 + 最近已建档主树 `fabric_26.1.2`，
- * 所以返回体的 resolvedVersion / source_version 必须是这个档位，不能谎报 26.2。
+ * 26.2 **未入库时**的兜底（2026-10-31 起正常路径走不到）：`data/fabric_26.2` 现在是从上游
+ * latest 面（`develop/`，commit `238533d8`）pin 抓的真语料 105 页，`available.includes("26.2")`
+ * 成立 ⇒ 检索直接命中、`versionFallback:false`。保留本分支只为「语料被误删」时不至于 500：
+ * 那时正文只能取自 `data/fabric_porting/` 旁路 + `fabric_26.1.2`，`resolvedVersion` 必须写
+ * 26.1.2，不能谎报 26.2。
  */
 const FABRIC_262_SOURCE_VERSION = "26.1.2";
 

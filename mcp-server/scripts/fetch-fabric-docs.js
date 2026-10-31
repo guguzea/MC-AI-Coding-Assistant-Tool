@@ -15,6 +15,11 @@
  * 禁止成功页：github_raw（main 根路径）、未加版本前缀的 VitePress 现行站。
  * 无 versions/ 的旧档应失败并删除已有污染 raw；search 走 wiki（现行站警告）或 DOC_NOT_FOUND。
  *
+ * ⚠ **最新版不在这里**（2026-10-31 实测）：上游把「当前版」放在仓库根 `develop/`（站点
+ * `/develop/...`，无版本前缀），`versions/<v>/` 只在某版**不再是 latest** 时才建目录 ——
+ * 26.2 正文早已上线而 `versions/26.2` 仍 404。latest 面由 `provision-fabric-latest.mjs`
+ * 按 commit pin 抓（`data/fabric_26.2`），**不要**用本脚本的 `versions/<v>` 口径去猜它。
+ *
  * 输出：data/fabric_<version>/fabric-docs/<version>/raw/<slug>.md
  * 每个文件顶部元数据含 来源 / 版本 / GitHub 路径 / 抓取源 / 抓取时间 / SHA256。
  * 抓取源仅 github_raw_versioned|github_archive。

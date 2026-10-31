@@ -74,9 +74,20 @@ export function candidateKeysSafe(
   return { ok: true, keys: keysFor(p, v) };
 }
 
+/**
+ * 内部读路径用的候选键：**不做平台枚举**。
+ *
+ * 枚举（`LOADER_API_PLATFORMS`）只属于**用户输入边界**（`query_loader_api` / `search_loader_api` /
+ * `ingest_loader_api` 的 platform 参数，走 `candidateKeysSafe`）。本函数被 `store.findSummary()` 调用，
+ * 键可能来自 `ingest_loader_api` 自备 jar 的任意平台名，也可能来自测试夹具的 probe 平台 ——
+ * 用 8 个枚举值卡这里会让**已经合法 ingest 的摘要读不出来**（表现像"没索引"）。
+ * 字符白名单与枚举是两件事：前者挡路径穿越（键会拼进缓存路径，必须保留），后者挡用户打错字。
+ */
 export function candidateKeys(platform: string, minecraftVersion: string): string[] {
-  const r = candidateKeysSafe(platform, minecraftVersion);
-  return r.ok ? r.keys : [];
+  const p = platform.trim().toLowerCase();
+  const v = minecraftVersion.trim();
+  if (!KEY_CHAR_PATTERN.test(p) || !KEY_CHAR_PATTERN.test(v)) return [];
+  return keysFor(p, v);
 }
 
 function keysFor(p: string, v: string): string[] {

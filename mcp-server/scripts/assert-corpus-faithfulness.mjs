@@ -107,6 +107,8 @@ const LEDGER_DIRECTIVE = {
   "fabric_1.21.4": { sites: 3, files: 1 },
   "fabric_1.21.8": { sites: 4, files: 2 },
   "fabric_26.1.2": { sites: 598, files: 69 },
+  // 2026-10-31：上游 latest 面（无版本前缀）pin 抓入库的第一档；105 页里 75 页带 `<<<`
+  "fabric_26.2": { sites: 685, files: 75 },
 };
 // B 层：逐树结构类别 raw/proc 篇数、变换类别计数、processed 重名数、该树 <<< 处数
 const LEDGER_TREES = {
@@ -192,6 +194,8 @@ const LEDGER_TREES = {
   // 2026-10-23：新增 rift 1.13 树（5 页：去掉 26 B 的空壳 wiki_home，避免新增标题桩撞全局预算）。数字取自 RELEDGER 重算。
   "rift_1.13/rift-docs/1.13": { raw: 5, proc: 5, identical: 0, contentDiff: 5, markerOnly: 0, fmOnly: 0, noTwin: 0, dup: 0, dir: 0 },
   "rift_1.13.2/rift-docs/1.13.2": { raw: 6, proc: 6, identical: 0, contentDiff: 6, markerOnly: 0, fmOnly: 0, noTwin: 0, dup: 0, dir: 0 },
+  // 2026-10-31：latest 面无前缀档（`develop/**`，105 页），processed 全部带转换差异，685 处 `<<<`
+  "fabric_26.2/fabric-docs/26.2": { raw: 105, proc: 105, identical: 0, contentDiff: 105, markerOnly: 0, fmOnly: 0, noTwin: 0, dup: 0, dir: 685, dirFenced: 0 },
 };
 // A5 存量债务：按树登记的泛型记号丢失数（今日为空；加工若吃掉签名才登记）
 // 2026-09-22 c4 重抓后本族数字从 5–100 涨到 98–770 —— **不是转换吃掉了泛型**：
@@ -238,14 +242,17 @@ const DEBT_INTERMEDIARY_BARE = [
   "fabric_1.21.8/fabric-wiki/1.21.8/processed/tutorial_commands.md:126|class_2164",
 ];
 // B 层汇总（处数均为「行命中数」：一行出现两个中介名记 1 处）
+// 2026-10-31 RELEDGER 重算：+ fabric_26.2（105 页，685 处 `<<<`，其中 1313 处字节已在盘）
+// ⇒ directiveSites 633→1318 / files 80→155 / onDisk 633→1318；26.2 页里带 2 个中介名（1 围栏内 + 1 行内）
+// ⇒ intermediary 288/274/3 → 290/275/4。数字取自 `MC_SKILL_CORPUS_RELEDGER=1` 的打印值，未手改。
 const LEDGER_TOTALS = {
-  directiveSites: 633,
-  directiveFiles: 80,
+  directiveSites: 1318,
+  directiveFiles: 155,
   directiveFenced: 0,
-  directiveOnDisk: 633,
-  intermediaryTotal: 288,
-  intermediaryFenced: 274,
-  intermediaryInlineCode: 3,
+  directiveOnDisk: 1318,
+  intermediaryTotal: 290,
+  intermediaryFenced: 275,
+  intermediaryInlineCode: 4,
 };
 
 // ── 具名豁免表（R50 · `L59`-C 裁定 ③ 的落点；**不是** SKIP 开关）────────────────

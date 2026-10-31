@@ -471,7 +471,8 @@ export const getForgeDocRelatedSchema = {
   description: `获取与指定 Forge 文档页面相关的其他页面列表。
 
 适用于：想了解某个主题，但不知道还需要查阅哪些关联文档时。
-返回与目标页面共享最多 section 关键词的其他页面，按相关性降序排列。`,
+返回与目标页面共享最多 section 关键词的其他页面，按相关性降序排列。
+成功返回对象 {ok,platform,id,version,results[]}（results 恒为数组）。`,
   inputSchema: z.object({
     id: z.string().describe("页面 ID，来自 search_forge_docs 返回的 results[].id"),
     version: z.string().min(1, "版本号不能为空").describe("Minecraft/Forge 版本（必填）。仅同系列；跨主版本 VERSION_NOT_FOUND。示例：1.16.8→1.16.5。请先 list_forge_versions。"),

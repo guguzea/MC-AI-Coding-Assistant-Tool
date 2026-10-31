@@ -1642,11 +1642,21 @@ description: |
   const fabTrees = treeVersions("fabric");
   const fabCorpus = corpusVersions("fabric");
   assert.equal(Number(fabRuleN), fabTrees.length, `fabric 规则树档数自称 ${fabRuleN}，磁盘 ${fabTrees.length}`);
-  assert.deepEqual(fabCited, fabTrees, "fabric 建档面点名的版本集 ≠ 磁盘规则树集");
-  assert.deepEqual(fabCorpus, fabTrees, "fabric 建档面称「三者完全一致」，磁盘上语料集已不等于规则树集");
+  assert.deepEqual(fabCited, fabTrees, "fabric 建档面「规则树 N 档」那行点名的版本集 ≠ 磁盘规则树集（语料专有档不要混进这行）");
+  // 2026-10-31：fabric 出现第一个「有语料无规则树」的半档（26.2 = 上游 latest 面 pin，见
+  // doc/platform-coverage-fabric.md）。旧断言「语料集 == 规则树集」随之作废 —— 换成更强的两条：
+  // ① 差额必须精确等于白名单（多一档就算漂移）；② 不许反向出现「有树无料」。
+  const FABRIC_CORPUS_ONLY = ["26.2"];
+  const fabCorpusOnly = fabCorpus.filter((v) => !fabTrees.includes(v));
+  assert.deepEqual(
+    fabCorpusOnly,
+    FABRIC_CORPUS_ONLY,
+    `fabric 语料集比规则树集多出的档必须恰好是 ${FABRIC_CORPUS_ONLY.join(",")}（实际：${fabCorpusOnly.join(",") || "无"}）`,
+  );
+  assert.deepEqual(fabTrees.filter((v) => !fabCorpus.includes(v)), [], "fabric 有规则树却缺语料");
   const { listFabricVersions, searchFabricDocs } = await import("./dist/docs-platform/fabric/index.js");
   const fabTool = JSON.parse((await listFabricVersions()).content[0].text);
-  assert.deepEqual([...fabTool.versions].sort(), fabTrees, "list_fabric_versions 与磁盘规则树不同步（登记面写的「三者一致」是假话）");
+  assert.deepEqual([...fabTool.versions].sort(), fabCorpus, "list_fabric_versions 必须等于**语料集**（含只有语料、无规则树的 26.2），不是规则树集");
   for (const v of fabTrees) {
     assert.equal(dirCount(join(repo, "fabric", v, ".cursor", "rules")), Number(fabRuleFiles), `fabric/${v} 规则条数不是建档面写的 ${fabRuleFiles}`);
   }

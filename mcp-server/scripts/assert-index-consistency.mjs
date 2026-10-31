@@ -114,10 +114,13 @@ const LEDGER_SUM = {
   // 2026-10-23：+ rift 1.13 一棵库（5 页 / 46 chunks / 29 embedded）；
   //             + paper-api 五个历史档（1.21.4/1.21.1/1.20.1/1.16.5/1.12.2，扁平落盘重抓后）。数字取自本门 RELEDGER=1 重算。
   // 2026-10-23：+ spigot 八个版本档（构件 javap 抽的签名面，见 `extract-spigot-api-surface.mjs`）。
-  entries: 78, chunks: 83076, embedded: 57416,
+  // 2026-10-31：+ fabric 26.2（上游 latest 面无前缀档，105 页 + reference/latest）入库并建语义库
+  // ⇒ entries 78→79 / chunks 83076→84313 / embedded 57416→58407；fabric 27→28 条 / 7935→9172 / 5898→6889。
+  // 数字取自本门 `MC_SKILL_INDEX_RELEDGER=1` 的打印值，未手改。
+  entries: 79, chunks: 84313, embedded: 58407,
   perPlatform: {
     "bedrock": { entries: 2, chunks: 15173, embedded: 4541 },
-    "fabric": { entries: 27, chunks: 7935, embedded: 5898 },
+    "fabric": { entries: 28, chunks: 9172, embedded: 6889 },
     "forge": { entries: 10, chunks: 7230, embedded: 5486 },
     "liteloader": { entries: 3, chunks: 464, embedded: 384 },
     "modloader": { entries: 3, chunks: 6, embedded: 2 },

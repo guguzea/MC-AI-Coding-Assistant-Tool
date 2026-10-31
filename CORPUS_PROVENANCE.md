@@ -25,7 +25,9 @@
 
 > 原 `AGENTS.md:145`。as-of 2026-09-21（对上游全史逐 commit 核）。
 
-**有 `fabric-docs` 正文的是 7 档**：`1.20.4`(31 页) / `1.21.1`(45) / `1.21.4`(51) / `1.21.8`(67) / `1.21.10`(79) / `1.21.11`(93) / `26.1.2`(100)，页数与上游 `FabricMC/fabric-docs` 的 `versions/<v>/develop` **逐档相等**。
+**有 `fabric-docs` 正文的是 8 档**：`1.20.4`(31 页) / `1.21.1`(45) / `1.21.4`(51) / `1.21.8`(67) / `1.21.10`(79) / `1.21.11`(93) / `26.1.2`(100) / **`26.2`(105)**。前 7 档页数与上游 `FabricMC/fabric-docs` 的 `versions/<v>/develop` **逐档相等**。
+
+**`26.2` 走的是 latest 面，不是 `versions/26.2`**（2026-10-31）：上游 `versions/` 至今仍只有 7 档（最高 `26.1.2`），而站点 `/develop/...`（无版本前缀）已是 26.2 正文、`reference/latest/build.gradle` 的 `minecraftVersion="26.2"`；`versions/26.2` 与 `/26.2/...` 均 404。取数走 `mcp-server/scripts/provision-fabric-latest.mjs --version=26.2 --sha=<pin> --from-clone=<dir> --write`（**必须 pin commit**），基线 commit `238533d819fcb5ec9405acb58fb0ac7655df63b1`，105 页 + `reference/latest` 443 文本件 + 2 个根级引用件；清单快照 `upstream-tree.json` 标 `source=github_trees` / `layout=latest-unprefixed`。⇒ **`versions/<v>` 与 latest 面是两条不同的取数口径，页数不可互推**。
 
 **另 7 档（`1.14.4` / `1.16.5` / `1.17.1` / `1.18.2` / `1.19.4` / `1.20.1` / `1.21.3`）上游从来没有这些版本的 docs 树** —— 该仓全部 492 个 commit（起 2023-12-29）、分支只有 `main` 与 `l10n/main`、tags=0，逐 commit 扫不出 `versions/1.14.4…1.21.3` 任一目录；这 7 档本地目录里只有 `fabric-wiki` 的 7 页 + `failures.json`（记账用）。
 

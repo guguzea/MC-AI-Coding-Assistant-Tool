@@ -81,6 +81,9 @@ const EXPECTED_PROCESSED_SITES = {
   "1.21.10": 344,
   "1.21.11": 439,
   "26.1.2": 0,
+  // 2026-10-31：latest 面无前缀档。26.2 的正文全是 `<<<` 角标（685 处），`@[code]` 站点 0 —— 与本表的
+  // 计数口径（只数 `@[code]`）一致；角标腿由 G3 的 `<<<` 台账与 D 腿的展开痕迹单独覆盖。
+  "26.2": 0,
 };
 const EXPECTED_TOTAL_SITES = 3344;
 const EXPECTED_PROCESSED_TOTAL = 1672;
@@ -204,12 +207,23 @@ for (const { version, packRoot } of packs) {
   const excludeTop = new Set(["mappings"]);
   for (const t of trees) excludeTop.add(t.source);
   const diskFiles = new Set();
+  // 2026-10-30（R2 审计 WP9）：`reference/` 里可能有**本机构建残留**（`.gradle/` / `build/`）。
+  // 它们不是语料镜像（`.gitignore:2` 已忽略 `.gradle/`），却会让「盘上每件文件都要在 provenance 里」
+  // 这条判据在开发机上恒红 —— 实测 13 档里有 102 条全部落在 `reference/**/.gradle/**`。
+  // 只跳过这两个构建输出目录，并打印跳过的件数（不静默），其余任何孤儿文件照旧判红。
+  const BUILD_RESIDUE = new Set([".gradle", "build"]);
+  let skippedResidue = 0;
   const walkDisk = (dir, prefix) => {
     for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
       const abs = path.join(dir, e.name);
       const up = prefix ? `${prefix}/${e.name}` : e.name;
-      if (e.isDirectory()) walkDisk(abs, up);
-      else diskFiles.add(up);
+      if (e.isDirectory()) {
+        if (BUILD_RESIDUE.has(e.name)) {
+          skippedResidue += 1;
+          continue;
+        }
+        walkDisk(abs, up);
+      } else diskFiles.add(up);
     }
   };
   for (const entry of fs.readdirSync(packRoot, { withFileTypes: true })) {
@@ -231,6 +245,9 @@ for (const { version, packRoot } of packs) {
   }
   for (const relPath of diskFiles) {
     if (!listed.has(relPath)) fail(`${rel(packRoot)}: 盘上有 ${relPath} 但 provenance 没记（孤儿镜像文件）`);
+  }
+  if (skippedResidue) {
+    console.log(`  ${rel(packRoot)}: 跳过 ${skippedResidue} 个构建输出目录（.gradle / build，非语料镜像）`);
   }
 
   // C-7 门⑤：越界目标不得被解析成 packRoot 之外的路径 —— 修前**回退分支没有检查**
@@ -562,6 +579,8 @@ const summary = {
 
 if (failures.length > 0) {
   console.error(`assert-fabric-transcludes: ${failures.length} 项不通过（${JSON.stringify(summary.perVersion)}）`);
+  // 红的时候也把完整 summary 打出来：否则重签台账只能靠猜总数（EXPECTED_* 四项都得改）
+  console.error(`  summary=${JSON.stringify(summary)}`);
   for (const f of failures.slice(0, 25)) console.error(`  ✗ ${f}`);
   if (failures.length > 25) console.error(`  …另有 ${failures.length - 25} 项`);
   process.exit(1);

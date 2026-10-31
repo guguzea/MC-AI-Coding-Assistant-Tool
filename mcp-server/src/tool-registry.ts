@@ -836,7 +836,8 @@ server.registerTool(
     description:
       "获取与指定 Forge 文档页面相关的其他页面列表。" +
       "适用于：想了解某个主题，但不知道还需要查阅哪些关联文档时。" +
-      "返回与目标页面共享最多 section 关键词的其他页面，按相关性降序排列。",
+      "返回与目标页面共享最多 section 关键词的其他页面，按相关性降序排列。" +
+      "成功返回对象 {ok,platform,id,version,results[]}（results 恒为数组）。",
     inputSchema: getForgeDocRelatedSchema.inputSchema,
   },
   async (args): Promise<CallToolResult> => {
@@ -969,7 +970,7 @@ server.registerTool(
   getFabricDocRelatedSchema.name,
   {
     title: "Get Related Fabric Docs",
-    description: "返回与目标 Fabric 文档共享最多关键词的其他页面，按相关性降序排列。",
+    description: "返回与目标 Fabric 文档共享最多关键词的其他页面，按相关性降序排列。成功返回对象 {ok,platform,id,version,source,results[]}（results 恒为数组）。",
     inputSchema: getFabricDocRelatedSchema.inputSchema,
   },
   async (args): Promise<CallToolResult> => {
@@ -1080,7 +1081,7 @@ server.registerTool(
   getNeoForgeDocRelatedSchema.name,
   {
     title: "Get Related NeoForge Docs",
-    description: "返回与目标 NeoForge 文档共享最多标签关键词的其他页面，按相关性降序排列。",
+    description: "返回与目标 NeoForge 文档共享最多标签关键词的其他页面，按相关性降序排列。成功返回对象 {ok,platform,id,version,results[]}（results 恒为数组）。",
     inputSchema: getNeoForgeDocRelatedSchema.inputSchema,
   },
   async (args): Promise<CallToolResult> => {

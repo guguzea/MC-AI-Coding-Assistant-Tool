@@ -748,7 +748,10 @@ function perFileSplitForms(docs) {
   }
   const miss = run([...okArgs.slice(0, 2), "--version=1.16.5", ...okArgs.slice(3)]);
   const jm = parseJson(miss, "yarn-datagen-cli-miss");
-  const missCode = jm.result?.code ?? jm.code;
+  // 2026-10-30（R2 审计 WP9 收口）：原写法 `jm.result?.code ?? jm.code` 会把**显式的 `code: null`**
+  // 当成 nullish 落到 `jm.code`（信封无此键 ⇒ undefined）⇒ `undefined !== null` 恒真，测试必红。
+  // 生成器的失败契约就是 `code: null` + `errors[]`（全族同形），所以这里只判「result 有 code 就用它」。
+  const missCode = jm.result ? jm.result.code : jm.code;
   const missErrors = jm.result?.errors ?? jm.errors;
   if (missCode !== null || !Array.isArray(missErrors) || !missErrors.some((e) => /Yarn/.test(e))) {
     throw new Error(`1.16.5 + mapping=yarn 必须 fail-closed 并点明 Yarn: ${JSON.stringify(jm).slice(0, 300)}`);
@@ -1420,7 +1423,6 @@ const DOC_SCAN = [
   ["CONTRIBUTING.md", join(repoRoot, "CONTRIBUTING.md")],
 ];
 const docs = new Map(DOC_SCAN.map(([label, p]) => [label, readFileSync(p, "utf8")]));
-const CLI_DOCS = ["mcp-server/README.md", "AGENTS.md"];
 
 /**
  * 不可解析调用形式：行首或行内 code span 里以 `mc-skill …` / `npx mc-skill …` 起头的命令。
@@ -1472,28 +1474,38 @@ function runExample(cmdline, cwd) {
     throw new Error(`根 README.md 行首短形式 node dist/cli.js 必须 0 行（仓库根 MODULE_NOT_FOUND），实得 ${stale.length}：\n  ${stale.join("\n  ")}`);
   }
   const frozen = docs.get("mcp-server/README.md").split("\n").filter((l) => l.includes("node dist/cli.js"));
-  if (frozen.length !== 15) {
-    throw new Error(`mcp-server/README.md 含 node dist/cli.js 的行数必须等于 S7 开工前快照 15（口径＝含字面量的行，不是行首），实得 ${frozen.length}`);
+  // 2026-10-30（R2 审计 WP9 收口）：钉值 15 是 S7 开工前的快照，2026-10-21 的 dsh 示例
+  // （`--hosts=dsh` 那行）把它推到了 16，但本断言一直被上面 badInvokeForms 的抛出挡住没跑到，
+  // 所以从没报过红 —— 属于「前一条失败把后一条失败藏起来」的静默腐化。按实况重钉。
+  // 现算：total=16、其中行首形态 15；新增可执行示例时必须同步改这里（不是放宽，是重钉）。
+  if (frozen.length !== 16) {
+    throw new Error(`mcp-server/README.md 含 node dist/cli.js 的行数必须等于 16（口径＝含字面量的行，不是行首；当前行首 15 行）。新增示例请同时改本钉值：实得 ${frozen.length}`);
   }
   const lineStart = frozen.filter((l) => /^\s*node dist\/cli\.js\b/.test(l)).length;
-  console.log(`文本地面门：根 README 短形式 0 行；mcp-server/README 含字面量 15 行（其中行首 ${lineStart} 行，口径不混用）`);
+  console.log(`文本地面门：根 README 短形式 0 行；mcp-server/README 含字面量 16 行（其中行首 ${lineStart} 行，口径不混用）`);
 }
 
 {
   const usage = parseJson(run(["--help"]), "s7-json-wording").usage.join("\n");
-  const texts = new Map([["--help", usage], ...CLI_DOCS.map((k) => [k, docs.get(k)])]);
   const KEY = ["工具输出始终为 JSON", "不改变工具输出，仅为兼容保留", "只在交互式终端下影响"];
   const FORBIDDEN = [/--json[^。\n]{0,12}(切换|决定|选择)[^。\n]{0,10}格式/, /--json[^\n]{0,10}(输出|改成)[^\n]{0,6}文本/];
-  for (const [label, text] of texts) {
+  // 2026-10-30（R2 审计 WP9 收口）：三句关键措辞只要求**定义该旗标**的两处（--help 与
+  // mcp-server/README.md）。原名单里还有根 AGENTS.md，但它在 2026-10-24 的重构中已把 CLI `--json`
+  // 说明整段搬走（现 0 处提及 `--json`），于是这条从「措辞对齐」退化成「要求一份不讨论该旗标的文档
+  // 也带这三句」—— 属于门跟着文档搬家失真。反向声明（FORBIDDEN）仍扫全部用户面文档：任何地方写
+  // 「--json 切换/改成文本输出」都仍是假话。
+  for (const [label, text] of [["--help", usage], ["mcp-server/README.md", docs.get("mcp-server/README.md")]]) {
     for (const phrase of KEY) {
       if (!text.includes(phrase)) throw new Error(`${label} 缺 --json 限定措辞关键句「${phrase}」`);
     }
+  }
+  for (const [label, text] of [["--help", usage], ...docs]) {
     for (const bad of FORBIDDEN) {
       const hit = text.match(bad);
       if (hit) throw new Error(`${label} 仍写着被实测否证的措辞「${hit[0]}」`);
     }
   }
-  console.log(`--json 措辞门：--help 与 ${CLI_DOCS.join("、")} 三处关键句齐备，且无「切换输出格式」类反向声明`);
+  console.log(`--json 措辞门：--help 与 mcp-server/README.md 三处关键句齐备；--help 与 ${docs.size} 份文档 0 处反向声明`);
 }
 
 {

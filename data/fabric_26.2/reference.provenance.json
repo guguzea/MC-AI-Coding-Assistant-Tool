@@ -1,0 +1,2237 @@
+{
+  "sourceRepo": "FabricMC/fabric-docs",
+  "branch": "main",
+  "commitSha": "238533d819fcb5ec9405acb58fb0ac7655df63b1",
+  "fetchedAt": "2026-10-30T17:40:30.292Z",
+  "integrity": "git blob SHA-1 取自上游 tree；sha256 为本地防漂移",
+  "expandSpec": "markdown-it-vuepress-code-snippet-enhanced@dfb9fa25527b2f772d50ca37ae526484c890b8ae",
+  "version": "26.2",
+  "layout": "latest-unprefixed",
+  "files": {
+    "reference/build.gradle": {
+      "blobSha": "b036839365b4c9193f7801c9ab055191fc0f49d8",
+      "sha256": "acc571a5f811d61224add811e0db587892b60781f1ea0966dc385b45e1c31895",
+      "bytes": 1532
+    },
+    "reference/latest/build.gradle": {
+      "blobSha": "a03e2ca1db2ff579e100595f83e0d59c489a875c",
+      "sha256": "72ed629d10d50679ff0e89fb70cf64d619d3ea160bc139a876e544ab8c6374e4",
+      "bytes": 1716
+    },
+    "reference/latest/log4j-dev.xml": {
+      "blobSha": "c7f52dc348fb8fce33ebf878760b5f49066e0dc8",
+      "sha256": "2e6f87983c0b7d0ff2da5ae434a01164297f54ef97fc719285214a796a4d4fdb",
+      "bytes": 254
+    },
+    "reference/latest/src/client/java/com/example/docs/accessor_usage/client/ExampleModAccessorUsageClient.java": {
+      "blobSha": "65ab2a0e79df9a891149d12228fe46d0a4b0ea3e",
+      "sha256": "882d0e526030d34d16a659aa52a50a4c61852907f4f68935385de898348452ab",
+      "bytes": 744
+    },
+    "reference/latest/src/client/java/com/example/docs/appearance/ExampleModAppearanceClient.java": {
+      "blobSha": "1b222eacbdc66ce6009b3c7f63f2d684c851ae45",
+      "sha256": "188f159ce6161824fecb1aa30c102396879a993f47aa15aa0fcb9c7af5384ac2",
+      "bytes": 2309
+    },
+    "reference/latest/src/client/java/com/example/docs/appearance/ExampleModAppearanceModelProvider.java": {
+      "blobSha": "fbfc4a667c1aad5d6fc4e1268a81f2a9d1f443bc",
+      "sha256": "c16bd1a8a19b0604d9406fcdef1220f57dc4fe91ee4265b2da124cceccd951ae",
+      "bytes": 1481
+    },
+    "reference/latest/src/client/java/com/example/docs/appearance/RainTintSource.java": {
+      "blobSha": "5af771aabf9c07e077a87297f2445d2a51f2a47c",
+      "sha256": "cb2824c9b68e8fa6b76322287447c31d9039f6fe77a25e1b063664b7bf489f53",
+      "bytes": 1621
+    },
+    "reference/latest/src/client/java/com/example/docs/client/command/ExampleModClientCommands.java": {
+      "blobSha": "088eeaf3df79833e23c07c987481cae12ee9fc5f",
+      "sha256": "124b097e7e950ba30f6d8217ddd36df7d19b9a4a82d2c09d51d6f33fbef271c1",
+      "bytes": 1310
+    },
+    "reference/latest/src/client/java/com/example/docs/datagen/ExampleModAdvancementProvider.java": {
+      "blobSha": "89e0d90d145614d021113b28c44f03de43d7a7c9",
+      "sha256": "0a10c7dfe2186a72b8f24f752b24dea623204c095943fb1dbfdb8e685e80bef7",
+      "bytes": 11132
+    },
+    "reference/latest/src/client/java/com/example/docs/datagen/ExampleModAdvancementRewardLootTableProvider.java": {
+      "blobSha": "0b7276f05e275964a026ce5e6f22d5c810915bd8",
+      "sha256": "977ce2ed942a718e98e9c76f92d8847e15836fc6425cc8096d065acf57d452bf",
+      "bytes": 1651
+    },
+    "reference/latest/src/client/java/com/example/docs/datagen/ExampleModBlockLootTableProvider.java": {
+      "blobSha": "d411d338f61b44295a2019e30d91d945240ac01e",
+      "sha256": "0949fb6d4144849f1cafafa63f890348cfb0c6e80ba493ce5316d6f9a2b1505d",
+      "bytes": 2210
+    },
+    "reference/latest/src/client/java/com/example/docs/datagen/ExampleModChestLootTableProvider.java": {
+      "blobSha": "70842f109609769fc2f4a8499b87b86db7d10f3c",
+      "sha256": "d04548caf82aa1a7748bd7f23b3bfce2e8af7f85de876865fc7d47b9fa20e616",
+      "bytes": 2013
+    },
+    "reference/latest/src/client/java/com/example/docs/datagen/ExampleModCodecExampleProvider.java": {
+      "blobSha": "eafc2a52759c8186252961bc558832e7d97dc556",
+      "sha256": "d3004ecc25609456aa4a8dfa420469c78f86248d6a31a21177b3bf5779e9e2a5",
+      "bytes": 9673
+    },
+    "reference/latest/src/client/java/com/example/docs/datagen/ExampleModDamageTypesProvider.java": {
+      "blobSha": "5140db919155b8d4a6032ea17725bb405da96022",
+      "sha256": "050063c4f1ace5ca5cc45d463d6f5d2c6900c6a72dc1c2882f01c1b35421c75c",
+      "bytes": 2266
+    },
+    "reference/latest/src/client/java/com/example/docs/datagen/ExampleModDataGenerator.java": {
+      "blobSha": "2edb62d11139efbd41fe4cdfe53ad8e58ce33dc4",
+      "sha256": "e1a2bf9e5fdf468c0cc00282b42539255ccc611d81d83af1614bbadc3e0c8200",
+      "bytes": 4484
+    },
+    "reference/latest/src/client/java/com/example/docs/datagen/ExampleModDynamicRegistriesProvider.java": {
+      "blobSha": "f76e78acd7b7f2c46d19c6982226e85014a23815",
+      "sha256": "5738bdcf8f22b2d3d344665c8749910a7af8057900175cf3756955613abc557c",
+      "bytes": 1915
+    },
+    "reference/latest/src/client/java/com/example/docs/datagen/ExampleModEnchantmentGenerator.java": {
+      "blobSha": "615ad569212d9efa1c93eacf51417c5f2fc038bb",
+      "sha256": "4fc7973b5136bbc0b273dd4e1b4e91fa9c854b59d7fac83d76955aeaca707676",
+      "bytes": 5053
+    },
+    "reference/latest/src/client/java/com/example/docs/datagen/ExampleModEnchantmentTagProvider.java": {
+      "blobSha": "2835cb65c6dfcf56453e3778e8711d926becb584",
+      "sha256": "1a31bc5a649b4ead7db7325d761a9617c3054bc7ac0cd50a166045090be56615",
+      "bytes": 1171
+    },
+    "reference/latest/src/client/java/com/example/docs/datagen/ExampleModEnglishLangProvider.java": {
+      "blobSha": "7621a0830c2ae0a3e41d6730272fe2bd745944ad",
+      "sha256": "bb58e9c84f3f1f21f43e3725bc982b02faee192f693eaa2a22c4731252fbd5e4",
+      "bytes": 6512
+    },
+    "reference/latest/src/client/java/com/example/docs/datagen/ExampleModExampleProvider.java": {
+      "blobSha": "c5513ff7c53d7c31268455ad750b6ff5fbd4fd54",
+      "sha256": "491a63cbedc38300ed976ad3e912a2b0bf6b755d5264713e38bb51d1b0323877",
+      "bytes": 2034
+    },
+    "reference/latest/src/client/java/com/example/docs/datagen/ExampleModFluidTagProvider.java": {
+      "blobSha": "342bac4f976e8eb81956dbcf03937d86b38af2a6",
+      "sha256": "c4700169d9cabcccb675321319c4fc6eebd255ad96d74be8cf3f8522a431181c",
+      "bytes": 845
+    },
+    "reference/latest/src/client/java/com/example/docs/datagen/ExampleModItemTagProvider.java": {
+      "blobSha": "2defd3f6451beb0d8b5324e151fe89103d7c0003",
+      "sha256": "5883b86190c70631d8b9535c4ce007a8f8a7ca019d0d81b841e3d3837f273900",
+      "bytes": 2817
+    },
+    "reference/latest/src/client/java/com/example/docs/datagen/ExampleModMagicSkillsTagProvider.java": {
+      "blobSha": "834095732c1c67ab425c5e1a34b2574a0ac11bcc",
+      "sha256": "748a1267384f6ca9eee8c800bbb9fc9887a052c2845de3712ab78881f4b83a75",
+      "bytes": 1145
+    },
+    "reference/latest/src/client/java/com/example/docs/datagen/ExampleModModelProvider.java": {
+      "blobSha": "1c2b6194d03fc8b4df59f98e2745f90ad45de1f1",
+      "sha256": "5d13cf4b4498bb4536056a462a1a71f8b08c053ccb9d1c8b810a68fc5c656ec4",
+      "bytes": 14433
+    },
+    "reference/latest/src/client/java/com/example/docs/datagen/ExampleModRecipeProvider.java": {
+      "blobSha": "27a8779e29935fd4d15f6b2101b7ad0e21ef683b",
+      "sha256": "85ed004e2584426f02d158a900ecb510debf62a20c45fee9fee4a71c6bc35751",
+      "bytes": 5125
+    },
+    "reference/latest/src/client/java/com/example/docs/datagen/internal/ExampleModInternalModelProvider.java": {
+      "blobSha": "334e7b0a1c1505340f7da516390aeac6d517ac35",
+      "sha256": "2aa664334793a1ff475dfded2811e6c093895ccc3920e57320ad795598ef0823",
+      "bytes": 3210
+    },
+    "reference/latest/src/client/java/com/example/docs/datagen/internal/ExampleModResourceConditionProvider.java": {
+      "blobSha": "0e75b0b6b3312d8a35be22b15aa3ab0e0241ebb7",
+      "sha256": "c233067e3004d7bf0d60018d23f45f8ec6339afd3614bc4c631da776554dfc8d",
+      "bytes": 2806
+    },
+    "reference/latest/src/client/java/com/example/docs/dynamic_registries/screens/ExampleModMagicSkillsScreen.java": {
+      "blobSha": "376b47e0dd697b0d580da271d63e54d0d3f22a06",
+      "sha256": "30d8ab208690685a3120d4ab27493e410fb84c854865b2fb673304321dec0ec9",
+      "bytes": 1604
+    },
+    "reference/latest/src/client/java/com/example/docs/dynamic_registries/screens/MagicSkillWidget.java": {
+      "blobSha": "84ed44e21d38d458a0ab74768a103af96a9f8ea7",
+      "sha256": "683a207c0720879b0d6013772d51e2576ec8877eaac8e8ef13b9976cd1815e5a",
+      "bytes": 1218
+    },
+    "reference/latest/src/client/java/com/example/docs/entity/animation/MiniGolemAnimations.java": {
+      "blobSha": "b97223a73a6062cf9f92dc7cb78c28b4953ee58b",
+      "sha256": "17e6a1f2512f42b5cf9a918b1ce30d354e4133e8b72ee4d0a15c08e36f60c230",
+      "bytes": 2088
+    },
+    "reference/latest/src/client/java/com/example/docs/entity/ExampleModCustomEntityClient.java": {
+      "blobSha": "3418e814174b86642af02aea62ce17a619deac85",
+      "sha256": "b8ab1178a0381124361d1360a910701e228e026d60b353b6c869f265861ec02a",
+      "bytes": 710
+    },
+    "reference/latest/src/client/java/com/example/docs/entity/model/MiniGolemEntityModel.java": {
+      "blobSha": "e9c88fbd97c96f70dad6100440462b7d6b54b8f2",
+      "sha256": "ef42d35f319812bac3c686606f6bbfc8eb6f9d4812e58851d83efe5a2526d154",
+      "bytes": 3483
+    },
+    "reference/latest/src/client/java/com/example/docs/entity/model/ModEntityModelLayers.java": {
+      "blobSha": "e2c8e87674df50e8c36646aeed3d6434cd2c84ad",
+      "sha256": "4126520b23d23054875808bcab07a88fe5d52033591bc6b8bd510e8440a486b3",
+      "bytes": 668
+    },
+    "reference/latest/src/client/java/com/example/docs/entity/renderer/MiniGolemEntityRenderer.java": {
+      "blobSha": "677dcd7f267769eefdae92a70fe5ee6ca7b720d4",
+      "sha256": "c4b65817758df1cb22c6c5f3036679911f548cc9921e9eb29484db0508101aaa",
+      "bytes": 1538
+    },
+    "reference/latest/src/client/java/com/example/docs/entity/state/MiniGolemEntityRenderState.java": {
+      "blobSha": "25f38c1765467841a1ac94de95ba8917be24ab4c",
+      "sha256": "c3db75ccf9824930385a01d174728c4810b2aaa5228ffaf4e1ff06a439fc8600",
+      "bytes": 476
+    },
+    "reference/latest/src/client/java/com/example/docs/ExampleModBlockEntityRenderer.java": {
+      "blobSha": "ecc3ecebe672329e8fd4117de3e68100629df683",
+      "sha256": "136e61d9c2b79dff76fb3b15757825d6a1a5d7449df4fd5e24c3cd397e13ec20",
+      "bytes": 597
+    },
+    "reference/latest/src/client/java/com/example/docs/ExampleModClient.java": {
+      "blobSha": "0f7f3de775d5fbb15c22f9701619eb7e8c976ee3",
+      "sha256": "83ec2e46d16d741491daff7f31f964416465fecdbd008785a9c37ce60333180c",
+      "bytes": 1837
+    },
+    "reference/latest/src/client/java/com/example/docs/ExampleModDynamicSound.java": {
+      "blobSha": "566b28fd5b647618c21e8ead6c1c0dfc76f64c9b",
+      "sha256": "5f304cd305479667d90f1b69bf5e1ecc25fea208cdb5dd16635afddc9dcd91b2",
+      "bytes": 1188
+    },
+    "reference/latest/src/client/java/com/example/docs/ExampleModRecipesClient.java": {
+      "blobSha": "39d58ac88484c8f8b6a6a8089f1e1ad446c5f8bf",
+      "sha256": "4a3149961b47a74c3fe2b28f70ca69ab81f0031b64a9320a08a2dc5383654b47",
+      "bytes": 928
+    },
+    "reference/latest/src/client/java/com/example/docs/ExampleModScreens.java": {
+      "blobSha": "0e1b06f20ec90a7ffbec2a62e0079ad95374fb04",
+      "sha256": "7f1020c9f9e150faf3864a183c84f0dd602dcef781b6de11f0a2c91cc73fc2e5",
+      "bytes": 488
+    },
+    "reference/latest/src/client/java/com/example/docs/fog/client/AcidFogEnvironment.java": {
+      "blobSha": "b028c0eab2e70509fe01f61cd00665848a699485",
+      "sha256": "f457464b897d489094d87a6ea3dcef7b95fcd9e0fe4e42d24d7338768c08b892",
+      "bytes": 1085
+    },
+    "reference/latest/src/client/java/com/example/docs/item/shield/GuiditeShieldLayers.java": {
+      "blobSha": "9a16f5955f0c7627f2fb26d88a3ef82fec764c99",
+      "sha256": "1d7c0fce316a0ab50b28c282d5a97e2c092cac094a8a67dfb9e169f186697e2f",
+      "bytes": 343
+    },
+    "reference/latest/src/client/java/com/example/docs/item/shield/GuiditeShieldSpecialRenderer.java": {
+      "blobSha": "ec74939cae9fe2f0f63ca170a5167f057d42a98c",
+      "sha256": "7cd06f842c5498fcbe979afe28f1be483bd4bddcff580922f7ce7c40ab15a25e",
+      "bytes": 4785
+    },
+    "reference/latest/src/client/java/com/example/docs/keymapping/ExampleModKeyMappingsClient.java": {
+      "blobSha": "87f4b5de6c5cef2068b535f810190aad1937ff63",
+      "sha256": "8b109ebd24e6ab75acd520ddb8af154d1fe6af897eb5b3de846c307592e97099",
+      "bytes": 2712
+    },
+    "reference/latest/src/client/java/com/example/docs/mixin/client/accessor/HudAccessor.java": {
+      "blobSha": "649362961c1bd94306fe074e970b478ec0105ab1",
+      "sha256": "d8bc0fa262152a30b52d19e9a8ce5e5313322ae4d80abdf61cd48cc222112e2a",
+      "bytes": 516
+    },
+    "reference/latest/src/client/java/com/example/docs/mixin/client/ExampleClientMixin.java": {
+      "blobSha": "065b9dd607c3d5a4384de33ce58a680db4193f91",
+      "sha256": "94076ff9d32ee9aa1ef1e48c01241bbf28c18c32d725dd66e7f7fe06a5d6926f",
+      "bytes": 500
+    },
+    "reference/latest/src/client/java/com/example/docs/mixin/client/GameRendererMixin.java": {
+      "blobSha": "3ebabd7838be03759f39c37719e5bf4d11fbcbca",
+      "sha256": "7b098a8ee84d9a47b8637f722c17a5c3515efb3a2ce3e39d0daa19355dbde3d0",
+      "bytes": 559
+    },
+    "reference/latest/src/client/java/com/example/docs/mixin/client/TitleScreenMixin.java": {
+      "blobSha": "452bf25aedf90f32fafe36037f8c4afc8be1484a",
+      "sha256": "552e37d6bdae9d77fa314f2fc4ca1e745b90eb3bb4128c8d25dd3decff78ff65",
+      "bytes": 1206
+    },
+    "reference/latest/src/client/java/com/example/docs/network/basic/ExampleModNetworkingBasicClient.java": {
+      "blobSha": "092e7f34fb79045aba0d278c7a1c84bdefbadab9",
+      "sha256": "34b42c932c819c29ace872f8271453761782a8eaf1f600dc3a25aebb5ac4b089",
+      "bytes": 2441
+    },
+    "reference/latest/src/client/java/com/example/docs/network/ClientboundSoundReceiver.java": {
+      "blobSha": "c9d52ba66f55d5fc3a29632233516d730751071b",
+      "sha256": "a19354092d85d5568d6dece0cc0838a380ac7eac5b0f329433bdf25cca4c2403",
+      "bytes": 1612
+    },
+    "reference/latest/src/client/java/com/example/docs/projectile/ExampleModProjectileClient.java": {
+      "blobSha": "5b7cbcdfbdf46277869c632f68a376f47f4c91e5",
+      "sha256": "a0978a6840def72457b26252d37845113a7a7c232d4eb35a9b3da72491137560",
+      "bytes": 556
+    },
+    "reference/latest/src/client/java/com/example/docs/rendering/blockentity/CounterBlockEntityRenderer.java": {
+      "blobSha": "03e35029794f532386c971702f809cfc441bc05f",
+      "sha256": "a8ea408fcec2873a3d3288da77036586a364a82997ae0eb7b09f2904d04e5b0b",
+      "bytes": 2921
+    },
+    "reference/latest/src/client/java/com/example/docs/rendering/blockentity/CounterBlockEntityRenderState.java": {
+      "blobSha": "9b4f0e3092cded4ae61dfe0acf59b98eff255eb3",
+      "sha256": "276e75ffc4c81499e9b61946ed0a2c0830f98017daef92e140247980b323c507",
+      "bytes": 400
+    },
+    "reference/latest/src/client/java/com/example/docs/rendering/CustomRenderPipeline.java": {
+      "blobSha": "591dfe65be62b2a614f8b67f4fb404d2582c9ac7",
+      "sha256": "c9638936d867c9bb5503302918cfeac148315a5572bab1a471f32e7d88fa7fb7",
+      "bytes": 8699
+    },
+    "reference/latest/src/client/java/com/example/docs/rendering/DrawContextExampleScreen.java": {
+      "blobSha": "dd85a39fb93e304e79d125248c38e834949e6260",
+      "sha256": "4b08a6446fea944971e8189ca8db0f6beefa5fd6c22943912b3ea08d13b33dff",
+      "bytes": 3116
+    },
+    "reference/latest/src/client/java/com/example/docs/rendering/HudRenderingEntrypoint.java": {
+      "blobSha": "60e5c9956928ac511d69d2a56d77a60b3da73be5",
+      "sha256": "8ffc33693b694fc67c922498db70c5dc570a27e507d5e506dffb823b00d2adf2",
+      "bytes": 1569
+    },
+    "reference/latest/src/client/java/com/example/docs/rendering/RenderingConceptsEntrypoint.java": {
+      "blobSha": "633c4d486dfa4da8180ea879bd162d8a34aafed1",
+      "sha256": "43734f68525c60051f1497de02af1eae01681f8a453067357e1bfc7df60abd66",
+      "bytes": 2367
+    },
+    "reference/latest/src/client/java/com/example/docs/rendering/screens/CustomScreen.java": {
+      "blobSha": "bd28524b1edda40a2abc945dd9b095d5e7b419f2",
+      "sha256": "b3d1aa1741d03b087d5e62c1831b14828670bea5a6fa9e966995b75651a1c57d",
+      "bytes": 2271
+    },
+    "reference/latest/src/client/java/com/example/docs/rendering/screens/CustomWidget.java": {
+      "blobSha": "dc55c9f6b9c0d3fc2a49d9c794205c8b46c97878",
+      "sha256": "8eba023c317e9aa00abaf8269aa9eed8650ef7fdf17b1e6aa382e96a72e6e38b",
+      "bytes": 1384
+    },
+    "reference/latest/src/client/java/com/example/docs/rendering/screens/inventory/DirtChestScreen.java": {
+      "blobSha": "9248ee6a633e5e3b1f31ba9d7d2f40b452f22b08",
+      "sha256": "2613828b79361bdfe6a6affddde3665e7e6761b3cb3b212e75af101b3f117e5b",
+      "bytes": 1304
+    },
+    "reference/latest/src/client/java/com/example/docs/rendering/screens/inventory/UpgradingScreen.java": {
+      "blobSha": "de1ca928b26b0c261494217736985e6bf2aaa602",
+      "sha256": "925af4c49713d03a4b0e1db313479ce72e76fea00e16b62b2c1ea216d3990093",
+      "bytes": 1101
+    },
+    "reference/latest/src/client/java/com/example/docs/rendering/TextTests.java": {
+      "blobSha": "73207c54a9f16f33a4a5fc9c1acf328114b54ed1",
+      "sha256": "24fcbeb57418a425da37849ecb9e3042e2bc8a80405d2091376ed689769348dd",
+      "bytes": 901
+    },
+    "reference/latest/src/client/java/com/example/docs/sound/AbstractDynamicSoundInstance.java": {
+      "blobSha": "efd32752da6bc34855f69802dcd9e4c6de4b4bc0",
+      "sha256": "779fee095069def898c83946713038cf5d842b2c0f0b98f9f929cddde5cd3e36",
+      "bytes": 4833
+    },
+    "reference/latest/src/client/java/com/example/docs/sound/DynamicSoundManager.java": {
+      "blobSha": "e68e5d6ae4d3b8c644442bdd2eb1467c95eb606d",
+      "sha256": "a665d182f52203b5b1982cf8d7d1c83f76ead42851b296f53927871760af6b74",
+      "bytes": 2858
+    },
+    "reference/latest/src/client/java/com/example/docs/sound/instance/CustomSoundInstance.java": {
+      "blobSha": "b069d8dfc21d5ad2532ed399fc8eb180b682ffde",
+      "sha256": "fdfb37bcb77912d22eed7f6e99c88892f326cd528be54de0da07b2705c9308bb",
+      "bytes": 1714
+    },
+    "reference/latest/src/client/java/com/example/docs/sound/instance/EngineSoundInstance.java": {
+      "blobSha": "9ebc82a3bf5d7af233d59f64959615951cb92722",
+      "sha256": "afce893e98c854930f2fff14ee6f62a8e8df501a87e5d9ed5566a35891208343",
+      "bytes": 1549
+    },
+    "reference/latest/src/client/java/com/example/docs/sound/instance/SoundInstanceCallback.java": {
+      "blobSha": "655f165240dd68a076eb2a86d09a98901629f115",
+      "sha256": "a0481811e61be96727f6d5ff6604279fa4aea1f013f3d3aea1f1191c72d5fcd6",
+      "bytes": 400
+    },
+    "reference/latest/src/client/resources/example-mod.client.mixins.json": {
+      "blobSha": "f913a10731538c8a070f2802287df83cf0238f6b",
+      "sha256": "9e21de053c8c2cced2ecd24f82ada2db17a20b2022c1169ac034657a4e3e434e",
+      "bytes": 251
+    },
+    "reference/latest/src/gametest/java/com/example/docs/entity/EntityAttributesGameTest.java": {
+      "blobSha": "91c919cf5f199a02e5c5d6ebca872a905277e5e2",
+      "sha256": "0f7aebc7b3c8c218dc7ce7e55c3cf51ad6ccef7ec3d8128d10bdf672bb756517",
+      "bytes": 2944
+    },
+    "reference/latest/src/gametest/java/com/example/docs/ExampleModClientGameTest.java": {
+      "blobSha": "5b426d64576afe1e98285ffd014e140ad33088b8",
+      "sha256": "866ecd57b0830480059a737c50024601e0f9d90c999ad6f77fc6b1c5107a1f7d",
+      "bytes": 645
+    },
+    "reference/latest/src/gametest/java/com/example/docs/ExampleModGameTest.java": {
+      "blobSha": "d25336e555d72793c57744ba591baa0e44f2453b",
+      "sha256": "358cb8f5facd47a6d16a63539e2c9b8e14f23fcdaeedda65986eebe61609c6a2",
+      "bytes": 683
+    },
+    "reference/latest/src/gametest/resources/fabric.mod.json": {
+      "blobSha": "001f759a0b367f6f66e12725885d32072ef9e105",
+      "sha256": "c58ed41bc8c4e59ea16bf477cb198840026661c1e1c8a40f2b6268f4441a2241",
+      "bytes": 397
+    },
+    "reference/latest/src/main/generated/assets/example-mod/blockstates/condensed_dirt.json": {
+      "blobSha": "a55f461797b749a1b085fc6d30eaf7db1e17704c",
+      "sha256": "c1146086716eaa280ba6279deb588ec24b2a060b882325598f767063dc65863b",
+      "bytes": 89
+    },
+    "reference/latest/src/main/generated/assets/example-mod/blockstates/condensed_oak_log.json": {
+      "blobSha": "0e57a1271821e2553992316c74193a2fbbbe901a",
+      "sha256": "76e3bc583d27968ed1d53aea955279179abd48784439a0a7e4b64b7bd73f3716",
+      "bytes": 317
+    },
+    "reference/latest/src/main/generated/assets/example-mod/blockstates/counter_block.json": {
+      "blobSha": "bfab2e5197d900fc8c6a8bc822a8015174e90a48",
+      "sha256": "b020f2db904bb70beaf7145d1b8fabdd8b71e84322524c5f06b423e642a5e1a1",
+      "bytes": 88
+    },
+    "reference/latest/src/main/generated/assets/example-mod/blockstates/duplicator.json": {
+      "blobSha": "0b88cecc4170391bfbbb3603e1df549e08803ca9",
+      "sha256": "79ecc29549df4c329619f3762581fe380ab919c878bcea4db44f2018ea5cf469",
+      "bytes": 85
+    },
+    "reference/latest/src/main/generated/assets/example-mod/blockstates/pipe_block.json": {
+      "blobSha": "931a1a390e564a8fc013d410767a7be1e4db649e",
+      "sha256": "408ef0f82609282318afbd3a96653df7a690552a3673fe9abcc24585cf08be84",
+      "bytes": 85
+    },
+    "reference/latest/src/main/generated/assets/example-mod/blockstates/prismarine_lamp.json": {
+      "blobSha": "e25a7cd10ede4da1e1a0fba575438880e8f61a42",
+      "sha256": "189e247481f192ef1b85b8298fed2d19cb14a02a42142ef584fcfd48c2a12238",
+      "bytes": 190
+    },
+    "reference/latest/src/main/generated/assets/example-mod/blockstates/ruby_block.json": {
+      "blobSha": "3c1381c4e6d2ba6be0d7c7bcd72849ecf9c1661a",
+      "sha256": "9922f75284cbb3389f4d794c0557262751e305bb208bc55787cb58e0f51bc0c4",
+      "bytes": 85
+    },
+    "reference/latest/src/main/generated/assets/example-mod/blockstates/ruby_door.json": {
+      "blobSha": "3ec9c2e4a65eff8d36c2c844b8f99a0476839651",
+      "sha256": "6d47bbc80066543f577a673467f8f469b0c2e354f4b28ccf2b09bd5b0f641a13",
+      "bytes": 4238
+    },
+    "reference/latest/src/main/generated/assets/example-mod/blockstates/ruby_fence.json": {
+      "blobSha": "d9436dc90cae31b81c91c0c080da8af3faaf44a8",
+      "sha256": "119d50b505a0f83665c8928223a556dbf6aa88452e21c91fc7f3063657a25e50",
+      "bytes": 821
+    },
+    "reference/latest/src/main/generated/assets/example-mod/blockstates/ruby_slab.json": {
+      "blobSha": "3482b2e9395caa575071aadc77ed86898fb33e29",
+      "sha256": "a45fbebe94bda423ee27d70b0e4bce1bdd3c091181082c3494f174406c2611ea",
+      "bytes": 243
+    },
+    "reference/latest/src/main/generated/assets/example-mod/blockstates/ruby_stairs.json": {
+      "blobSha": "98d296b2872c108870ca551cd2b9c5f86ebe3b91",
+      "sha256": "339244cedc41ccf03ddce03baded0acb3b7296a3b70f0f327c66f8f4aad18e17",
+      "bytes": 5894
+    },
+    "reference/latest/src/main/generated/assets/example-mod/blockstates/ruby_trapdoor.json": {
+      "blobSha": "845b65064a1d39fc009745ad2f628490e5802965",
+      "sha256": "8aed91a827eb0ba720ca8c538984bb3c837ff6c1135f3b3335ed521d6734752f",
+      "bytes": 1776
+    },
+    "reference/latest/src/main/generated/assets/example-mod/blockstates/steel_block.json": {
+      "blobSha": "39661890c23e8ed2c9da417b5b780b1c34d35caa",
+      "sha256": "9e1e189f4a544fecbcb808fc16c5b89a3f7d9cfa833225d0349c31c007b815e8",
+      "bytes": 86
+    },
+    "reference/latest/src/main/generated/assets/example-mod/blockstates/vertical_oak_log_slab.json": {
+      "blobSha": "ec3a10c65f49818e01793bb74427d0facbd144e8",
+      "sha256": "5dbe467240c7322e46102ba46d5da369826c1dde1eadc46ecfbefcf038600103",
+      "bytes": 965
+    },
+    "reference/latest/src/main/generated/assets/example-mod/blockstates/waxcap.json": {
+      "blobSha": "59af11a755cd4275b752baf96bf8feae4da27d2a",
+      "sha256": "f73c06dc6d14ff7f53d5160980ae71b7b1f0815fccbad17cb14502ec50b8e590",
+      "bytes": 81
+    },
+    "reference/latest/src/main/generated/assets/example-mod/items/acid_bucket.json": {
+      "blobSha": "ee7b7bd102ed1933babe76f2920cd56292fa009c",
+      "sha256": "9bb037b3cdfcb97b3c56ef5422b3ed41a08df8b2f9c172642b68812ae767d048",
+      "bytes": 95
+    },
+    "reference/latest/src/main/generated/assets/example-mod/items/balloon.json": {
+      "blobSha": "818bf762ffe861e50ed0f3821815baab1b52ecd9",
+      "sha256": "d78fd05c2de7ce63079ed0798512649f978d9d0d236d635e2989036a06c4c35d",
+      "bytes": 91
+    },
+    "reference/latest/src/main/generated/assets/example-mod/items/bone_marrow.json": {
+      "blobSha": "6cfa66b848fb1ecf4edfc47099f1508534bf6210",
+      "sha256": "56b7ad31eca56f8184756540461bd5502336af63bf2562a11f49a6fd736e4700",
+      "bytes": 95
+    },
+    "reference/latest/src/main/generated/assets/example-mod/items/condensed_dirt.json": {
+      "blobSha": "7465f963d6ae644df34de10a72f053a995aa3763",
+      "sha256": "213d40f9b856b31f4c84355515869b442a0f5a4f87e32714e875aed7a86a05a8",
+      "bytes": 99
+    },
+    "reference/latest/src/main/generated/assets/example-mod/items/condensed_oak_log.json": {
+      "blobSha": "9eabbe0f61f23a5f91ba76a0bbbba419fdffdfb8",
+      "sha256": "e52246c11afd8b240d2c1eee1211d87d5999fc7791a984b48e098fb0dfff30bc",
+      "bytes": 102
+    },
+    "reference/latest/src/main/generated/assets/example-mod/items/counter_block.json": {
+      "blobSha": "2e48697c4001682a60038b53113a65bbc51ba721",
+      "sha256": "ba874e9d2b1d358030640f06a4021459302d599e55b282d39e5714413160bbdd",
+      "bytes": 98
+    },
+    "reference/latest/src/main/generated/assets/example-mod/items/counter.json": {
+      "blobSha": "d9f1d31db368a49e7ee369abba3ab7ad3aae4b53",
+      "sha256": "ceb179940b010f56f13fec934121dfdd806ea878c52229de49220e728094eca8",
+      "bytes": 91
+    },
+    "reference/latest/src/main/generated/assets/example-mod/items/dimensional_crystal.json": {
+      "blobSha": "ba7b0d8c8771d711989d6d45f6efe85055a3c2c7",
+      "sha256": "5f5445815b935914f7853aeedaa3f919a26727b1c87129549acaa88f20c18f81",
+      "bytes": 679
+    },
+    "reference/latest/src/main/generated/assets/example-mod/items/duplicator.json": {
+      "blobSha": "d341a6f3ab59b08e50ac84d3f4a8ab6314a8d4f7",
+      "sha256": "ad79c29377aca727a33e151181f2118a4aed82ec94a0bb42381d2ec015277642",
+      "bytes": 95
+    },
+    "reference/latest/src/main/generated/assets/example-mod/items/enhanced_hoe.json": {
+      "blobSha": "f53b652d15d1ac6289574a050dc59f7fd24b9ea3",
+      "sha256": "f7de3cc21ca50fc948ee484655dde2c4bee7b86d5384ddb7ddc23d5020c845ba",
+      "bytes": 283
+    },
+    "reference/latest/src/main/generated/assets/example-mod/items/flashlight.json": {
+      "blobSha": "82085712ee34939b34275c63bdd78a97479ff5e2",
+      "sha256": "caa69a96c59a5e27583dae0d47c59a19c26082c4b4e7d81701e2e12cdc78d7cb",
+      "bytes": 303
+    },
+    "reference/latest/src/main/generated/assets/example-mod/items/guidite_axe.json": {
+      "blobSha": "fab8b03cf6a47af56fa48902c9621244d8107e34",
+      "sha256": "a5035f7a6a56573b39fcb73f4d2982a01916cb77dd7ab33a70f85b8830ebbf28",
+      "bytes": 95
+    },
+    "reference/latest/src/main/generated/assets/example-mod/items/guidite_boots.json": {
+      "blobSha": "260ca95b2d1651ebfa402d7325fedc12c7358ec8",
+      "sha256": "ea8867f029f398b2fd8bd3a1e7f0226cbd2de6257c31bf332d1248c809b2b360",
+      "bytes": 97
+    },
+    "reference/latest/src/main/generated/assets/example-mod/items/guidite_chestplate.json": {
+      "blobSha": "cc373b02b54e8e4492271d7d3daf1bf681fed965",
+      "sha256": "5a3af68f7449aaf2d60884915d6f81b42b7f58380e98a94eba32b442967d6c16",
+      "bytes": 102
+    },
+    "reference/latest/src/main/generated/assets/example-mod/items/guidite_helmet.json": {
+      "blobSha": "4dbf2daa72355a8fe7c855454ccfdad30a5e01e2",
+      "sha256": "4c68da30b247a0309f715eda3e0273eb918e1cbce99ce25259894e907da432be",
+      "bytes": 98
+    },
+    "reference/latest/src/main/generated/assets/example-mod/items/guidite_hoe.json": {
+      "blobSha": "ea9e1ee2428ea7e6ca99cb374322807ae2e95384",
+      "sha256": "a33a7796eb7dff8f6f835f81994035371fbb0f1f8d16719cae21cf6be244b111",
+      "bytes": 95
+    },
+    "reference/latest/src/main/generated/assets/example-mod/items/guidite_leggings.json": {
+      "blobSha": "b1be023748064f7c645d3c34f32fc6848d57f0f9",
+      "sha256": "96be3b36380a4032875e47b41913b3350883c717f33891140e26ce456ab2c663",
+      "bytes": 100
+    },
+    "reference/latest/src/main/generated/assets/example-mod/items/guidite_pickaxe.json": {
+      "blobSha": "aa0bb714c9b5b3f3fe76f583e110c4d6e2d10c84",
+      "sha256": "4694b147b3bd68af1696029dd3f34f1bce5d96eb46c093306dbbb9fbc4018296",
+      "bytes": 99
+    },
+    "reference/latest/src/main/generated/assets/example-mod/items/guidite_shield.json": {
+      "blobSha": "0ad5ba6c78aadcf3e743abcdd6c7d68e0687d261",
+      "sha256": "f139c70fd4692e1c029c87e742f2031ce1db31732afe9883815f1bf21af360b5",
+      "bytes": 1055
+    },
+    "reference/latest/src/main/generated/assets/example-mod/items/guidite_shovel.json": {
+      "blobSha": "ff6d50cca493f411f09ea902b25a71e447f65ad6",
+      "sha256": "021cdfe173d94f2d9af81d98fb1e515aa606641a8547883fcc73c7786ec9df0c",
+      "bytes": 98
+    },
+    "reference/latest/src/main/generated/assets/example-mod/items/guidite_spear.json": {
+      "blobSha": "b49b87442e1bc537754c012ecd2ead16e8960b45",
+      "sha256": "459387ae037d2e692891d15ed7b74ded44f7b1185a9cdce5d0ceb9dd9d1b30fd",
+      "bytes": 504
+    },
+    "reference/latest/src/main/generated/assets/example-mod/items/guidite_sword.json": {
+      "blobSha": "efe37fa4eb04512a3ae7dae6a1a1b8fe57e517b4",
+      "sha256": "9726c0bcf609bbae8832acb528dfecf570d24bf188a7270c2c54e40a955e863d",
+      "bytes": 97
+    },
+    "reference/latest/src/main/generated/assets/example-mod/items/hot_tater.json": {
+      "blobSha": "28f4794a9ab2325e3a377f18f70dbd3571a25e0f",
+      "sha256": "2e9c4661b5567adee3c1762a0053e6cd7f29f2e2cf1a558139e39a61bf01ccbd",
+      "bytes": 93
+    },
+    "reference/latest/src/main/generated/assets/example-mod/items/leather_gloves.json": {
+      "blobSha": "fcddce1294f6cf87762972789ab6cb0a201527f7",
+      "sha256": "ca2c9eeff106246077a8d505bd5faa9af7f4bab5754fd4e15747377628f3f6e7",
+      "bytes": 197
+    },
+    "reference/latest/src/main/generated/assets/example-mod/items/lightning_stick.json": {
+      "blobSha": "316b8cdff44a00688688bef70b3223f644f67ee1",
+      "sha256": "98288a1ec1ffa02d24214792ea8b4854468cfa9df60d78c3719dd3798ee4da52",
+      "bytes": 99
+    },
+    "reference/latest/src/main/generated/assets/example-mod/items/lightning_tater.json": {
+      "blobSha": "aae2ad8d84fddc6f0ce0eb78ad66ddc36879863e",
+      "sha256": "4871a37353ff504a0b1b4439db8f8adde6de95208112123c26624441277362f4",
+      "bytes": 99
+    },
+    "reference/latest/src/main/generated/assets/example-mod/items/mini_golem_spawn_egg.json": {
+      "blobSha": "2b182ec124a5448e1566b3291e20f0a10dc6dc83",
+      "sha256": "ccf34dfe3b758e0c26c793140a84c11ffc3c8823b76af4f7748ac114c849ca8b",
+      "bytes": 104
+    },
+    "reference/latest/src/main/generated/assets/example-mod/items/pipe_block.json": {
+      "blobSha": "a552053112f805568dde707ab115d4111fecdbe4",
+      "sha256": "7aca46c75ef93535e50ce54c2414427f078014773fd0e83f7c4efb8e4cd61afc",
+      "bytes": 95
+    },
+    "reference/latest/src/main/generated/assets/example-mod/items/poisonous_apple.json": {
+      "blobSha": "a27cb8e2baac31471cb65ab6d376da9095a99c3a",
+      "sha256": "c7cd2b739f6cfd1b15a879a10d54bc738cdc5fe41195fa9c12a244d0be4009c6",
+      "bytes": 99
+    },
+    "reference/latest/src/main/generated/assets/example-mod/items/prismarine_lamp.json": {
+      "blobSha": "59ecfb734d8a424bb39329e82f50a37fa8eb6de6",
+      "sha256": "a0cf66e8981cffacd93a74650f3c2116c7bff8876c0bdb6617fbd8779310a770",
+      "bytes": 100
+    },
+    "reference/latest/src/main/generated/assets/example-mod/items/quark_gluon_plasma.json": {
+      "blobSha": "ba04cb23da8b1dc5e7436763c06706857883b665",
+      "sha256": "bcd479afade4de82a0511d960088fa8270d4cd9c37b4a2b0c642818514cc6f22",
+      "bytes": 102
+    },
+    "reference/latest/src/main/generated/assets/example-mod/items/ruby_block.json": {
+      "blobSha": "a9949528dfe25decd981ef5cc8a8e225c8ce7c99",
+      "sha256": "76cfaf5a376619434e37754822ce1f9e1deadc4743e1fee1fc8b07bf47530b57",
+      "bytes": 95
+    },
+    "reference/latest/src/main/generated/assets/example-mod/items/ruby_door.json": {
+      "blobSha": "79687fe54dc09a9a697952225b566faa309e90fb",
+      "sha256": "2d2c6e6f94a3008dcfc39e7ab8566b96b8ce40b3a4ae969cf8f5550f98e08e9b",
+      "bytes": 93
+    },
+    "reference/latest/src/main/generated/assets/example-mod/items/ruby_fence.json": {
+      "blobSha": "7ac17b5f55b109b87542cdbc73a86505d7a1cc64",
+      "sha256": "79f2f94dbbcb7f7a577e299c2bb2653164955c6bef61037000507a177c8a516d",
+      "bytes": 105
+    },
+    "reference/latest/src/main/generated/assets/example-mod/items/ruby_slab.json": {
+      "blobSha": "29941a5a573d24e40c1b3e9d657a0765cff46b47",
+      "sha256": "c5cf24db97d772e97ee075260f39f2c1a55559949c71c01c8e7a163cae9d0708",
+      "bytes": 94
+    },
+    "reference/latest/src/main/generated/assets/example-mod/items/ruby_stairs.json": {
+      "blobSha": "e936aa97761b757d91aa2c8186054872caddfeb9",
+      "sha256": "efe5c4f25d35bdf228d87bbabf47014d4ecc010d3cc41612daa0ae599d3443a6",
+      "bytes": 96
+    },
+    "reference/latest/src/main/generated/assets/example-mod/items/ruby_trapdoor.json": {
+      "blobSha": "e8e124d2920144e2577a8cc11f1763444bfcc32d",
+      "sha256": "425f976bf4b4549e0193be45a77b0d12d2362d418c80423ab6913f74d7ceaf01",
+      "bytes": 105
+    },
+    "reference/latest/src/main/generated/assets/example-mod/items/ruby.json": {
+      "blobSha": "b50b5bde566eadfc76d9383019e405b5204922ae",
+      "sha256": "e0a1a12656ad505d4efd49d764675cac90bf7176b1335423056df53f715af661",
+      "bytes": 88
+    },
+    "reference/latest/src/main/generated/assets/example-mod/items/steel_block.json": {
+      "blobSha": "a55cec43a800ce4424f4e5312febafeaf7e1a3bd",
+      "sha256": "d72b6e7c710f65f1b1f97e7c32a5961fd105af5961411c1f6b1af10347ed9cc8",
+      "bytes": 96
+    },
+    "reference/latest/src/main/generated/assets/example-mod/items/suspicious_substance.json": {
+      "blobSha": "e693dd7502a83bda9b6c4b0579190067c6c04ec7",
+      "sha256": "4c01a9a383ae057e16d922700fe97410bf997094e69c7301ae2f7cc60bceb149",
+      "bytes": 104
+    },
+    "reference/latest/src/main/generated/assets/example-mod/items/throwing_knives.json": {
+      "blobSha": "380da6b1dcd79f67a0f05e1bfd5894415d3779a3",
+      "sha256": "fb80210937345f7aaecb6ba31c0b02d7d1cce001e9eb7fe3fcae13229eb1cbd2",
+      "bytes": 644
+    },
+    "reference/latest/src/main/generated/assets/example-mod/items/vertical_oak_log_slab.json": {
+      "blobSha": "e2c13ec18729a8753f1b264a06267ea9a74e49a5",
+      "sha256": "b964991b047561b9ca0fce6747baeb3f0d3ad2048db4ab95abbad44482eb8d8c",
+      "bytes": 106
+    },
+    "reference/latest/src/main/generated/assets/example-mod/items/waxcap.json": {
+      "blobSha": "e8586e602841d248304e47a4d94d8e9c71bba4e5",
+      "sha256": "8c2012ebde9e46f1aa846cde74bf130f82a37ed8a1ce6df7e0363b6b4bf18bb6",
+      "bytes": 192
+    },
+    "reference/latest/src/main/generated/assets/example-mod/lang/en_us.json": {
+      "blobSha": "0beddc2cb53cf28dbe01ac925a20fbc6f8b7eb5f",
+      "sha256": "8869febbb55f5c877da4d6d152aeff817fb00af318c6441ad2fbcfb18dd790ac",
+      "bytes": 3469
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/block/condensed_dirt.json": {
+      "blobSha": "28c17287c0d5d0d2ce5d00f3cc63dd9d25bb292c",
+      "sha256": "6802c406997df888dee9aa1243cee00f409047f71e83c742878e9baf0e03f11f",
+      "bytes": 109
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/block/condensed_oak_log_horizontal.json": {
+      "blobSha": "7e0a07bd68a4718ed504ffeb3255ddd3226ba73c",
+      "sha256": "8e72df70efece3984bfe3ec38586eda117fb3e492fd75719473e6b89f0d0dac3",
+      "bytes": 181
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/block/condensed_oak_log.json": {
+      "blobSha": "37ff51798266b612e5d9cd93e323d3eb0df3fd7a",
+      "sha256": "f12772ab9b3db27ea162cf267d25cbe6eea95ca0b9f95fd6eefa686c8ea84e22",
+      "bytes": 170
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/block/counter_block.json": {
+      "blobSha": "a1499e7542ffa1a1d0dcc1bec8ad1f9e8956a6d8",
+      "sha256": "2a655dbe1a3d0e1e7eba3d100e40384129218c292498c71696cdc161b286afb4",
+      "bytes": 108
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/block/duplicator.json": {
+      "blobSha": "74bf6f6925612369d7b27e9ea0293a6343902f10",
+      "sha256": "ddc95dabbeca799609a93fb1b22c47d5a5ce3563a5786009ef0a479a39ec0b68",
+      "bytes": 105
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/block/pipe_block.json": {
+      "blobSha": "88020786309ec744279249a3cc82554ecbd5a408",
+      "sha256": "30d0dffd2c5ff717e1eede6723c04f92cf3ec00131d979c94ddc3d6b72d1de14",
+      "bytes": 156
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/block/prismarine_lamp_on.json": {
+      "blobSha": "0cda296034da966debbb36b4341da1e5a9a1757c",
+      "sha256": "d8bbce0b24a8edef541d965a7a7d4a3363b86b9ddf85a71c5f89d436d536a753",
+      "bytes": 113
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/block/prismarine_lamp.json": {
+      "blobSha": "50734cb006507b75c0588cec027d205221b97893",
+      "sha256": "e6b98f08a6a80decae323c3a489a6d3a1e3342643575683bb044902bb5636420",
+      "bytes": 110
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/block/ruby_block.json": {
+      "blobSha": "85e0231d312e571fe601466056c63fbc956843f6",
+      "sha256": "978e0b60005cda9b032e4cf9a0dccdf5deb161e2a875f525e95441d750c6e6ad",
+      "bytes": 105
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/block/ruby_door_bottom_left_open.json": {
+      "blobSha": "8874e47651cb40876b3701ef762e631f814a5c1c",
+      "sha256": "d6b88c3aa17c5fc3e28aa833717ef3a4841b944be4ded41c6d3ba4ecd15161c7",
+      "bytes": 173
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/block/ruby_door_bottom_left.json": {
+      "blobSha": "e541ad2e96601cbf9161f763d3ca6ab1710dc74a",
+      "sha256": "4cad69edd440248b4c31425815d41bca44c2bbc825962615a05bd89d3a659f20",
+      "bytes": 168
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/block/ruby_door_bottom_right_open.json": {
+      "blobSha": "02e002bf48e987cc0f7c9442ac6425be7570cab0",
+      "sha256": "0efdbdab0a3bd8a94c8e28a5445c452db0715712d20957a6ee1241ff275bd26c",
+      "bytes": 174
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/block/ruby_door_bottom_right.json": {
+      "blobSha": "7df31ddb1e7e6710be3884b20b82bcbf2295fdcf",
+      "sha256": "c250b4c1a7a241f6b09a2e1b8fae1b0a9d47fa05785265ab37812e85e4efe58d",
+      "bytes": 169
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/block/ruby_door_top_left_open.json": {
+      "blobSha": "3ba926079db1d76051be61e338e14a7fa0f78978",
+      "sha256": "2c916422d91166bc57e4bec2e823af097cea06e4c1fbf2d292f2430fcdcba6b5",
+      "bytes": 170
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/block/ruby_door_top_left.json": {
+      "blobSha": "52aba65cfdeb7c308e5f30e578cb40f4c8adc963",
+      "sha256": "1691d66b0036fe7747aba667c919405dde3a1d6ba1425fcabe0dafe8144a6c4b",
+      "bytes": 165
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/block/ruby_door_top_right_open.json": {
+      "blobSha": "37f79de2bf4039ce2db4c7ef4f2815f3a6013fb3",
+      "sha256": "f531106e13ed54688cdefce8e8d2f292018b23e949c36ca49f283f628beb6fc5",
+      "bytes": 171
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/block/ruby_door_top_right.json": {
+      "blobSha": "03e2864c30ba64fa2eba167829928da632d7d2b7",
+      "sha256": "c00b2c2091459e11df3064bbb504a63961cfc401aad29cc0a6a60c1c54488c77",
+      "bytes": 166
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/block/ruby_fence_inventory.json": {
+      "blobSha": "20c80047a9b71a5c67552aad0cc4df54944552bb",
+      "sha256": "6348aacadd3b8c2d081ad4a21e0abd4d98bfc84949d1586a6b22b93475e3b006",
+      "bytes": 116
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/block/ruby_fence_post.json": {
+      "blobSha": "06df8dc5c7d113a1bee927bbe7aa164e851c4950",
+      "sha256": "802280760296d4299835a80895aa390de67b690a7717d3b4e211c054487d7c1e",
+      "bytes": 111
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/block/ruby_fence_side.json": {
+      "blobSha": "c01eb4af33e3b3d94629bd63758de2793dca6353",
+      "sha256": "4e7b71104a2088179c22f0cfb0ef05d672133db4fc12b724f65b01a79a31a954",
+      "bytes": 111
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/block/ruby_slab_top.json": {
+      "blobSha": "7df04115aa2b7db059c472934bcdae79572b5fb1",
+      "sha256": "68eb3161699158799c9874c345175e280e71d0a7a577ac68e7d5f69dd8cff08c",
+      "bytes": 195
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/block/ruby_slab.json": {
+      "blobSha": "f6510542b50d3a3868b4968c6baae7e60cdd186b",
+      "sha256": "6fc1033e16f1a13708a9bcefb904a629c0d2285951851e60964712cb80550b06",
+      "bytes": 191
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/block/ruby_stairs_inner.json": {
+      "blobSha": "41269079b03772f14371b3b9f4d4659c9fdfeb8e",
+      "sha256": "8735fc503a348c040c3045940d66d904e6b6fd93f4742f2d085ca8977426a9b8",
+      "bytes": 199
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/block/ruby_stairs_outer.json": {
+      "blobSha": "024a705afc2af0dbeb6d0880fb4b0089da139583",
+      "sha256": "83cbe3db2cbdb0b046cc9c841be406c899fd74ac93a3890843f974421b92605b",
+      "bytes": 199
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/block/ruby_stairs.json": {
+      "blobSha": "1997a18f7531bcb0b8d9f3948f8304c590ad3a5e",
+      "sha256": "752c4e06869bd45b1f454553646828eadf0f239f156f16995999af910d90d2f9",
+      "bytes": 193
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/block/ruby_trapdoor_bottom.json": {
+      "blobSha": "3fb9d4bd9d7efc9cec121f442e7de0a308d38b50",
+      "sha256": "86ab3151d678f7563a9cd80ea9f7fcad78e58c8773922ff3f6d1ccec14b711b7",
+      "bytes": 128
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/block/ruby_trapdoor_open.json": {
+      "blobSha": "0ac4da35fc051c807f228a47fee7178de175df5b",
+      "sha256": "4fc9d10b971bebffb8b2f0403af82237927efe828cddbef432efe2c9273da8c0",
+      "bytes": 126
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/block/ruby_trapdoor_top.json": {
+      "blobSha": "e3ad3d10a9ada2d9bef5654ce50f1c63c97981d6",
+      "sha256": "3752c19530399ec4605b1af47a767f41e3cdba518fbcb16bec498f5f3e03f5a4",
+      "bytes": 125
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/block/steel_block.json": {
+      "blobSha": "1247aa13c7f26998668b323549e2bef00d842046",
+      "sha256": "e134760b177f0e9e149e0c25ea5d7f873e08669c1113ba8eb7ca534577a97024",
+      "bytes": 106
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/block/vertical_oak_log_slab.json": {
+      "blobSha": "93877ac6acc74565ac5e5e64cfa0bc88f3883a46",
+      "sha256": "a88356156d09f54a20812ec97b05559e4b3092721e7fff05ec04e802213768c0",
+      "bytes": 195
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/block/waxcap.json": {
+      "blobSha": "3582a28573d5630b5d5811d9664eda0f5d8a1a88",
+      "sha256": "53107b12851b172ed412d66861ff2caa06d4387e8e76e86d22d08c135dc803a1",
+      "bytes": 107
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/item/acid_bucket.json": {
+      "blobSha": "538adf9c50663c2d2b621bb0b4208c8810102638",
+      "sha256": "11d9177bead260c5a997153b54ba773b15483b6310c3207382c6aed407d993c2",
+      "bytes": 108
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/item/balloon.json": {
+      "blobSha": "5ab9532083abfe9dfb537731a3b865e991c6115a",
+      "sha256": "8b0090462ad77558a308423adf98a2344d7ebe9bdafa22a7fb939470ef82223e",
+      "bytes": 105
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/item/bone_marrow.json": {
+      "blobSha": "e979e63180fd6bbdacd7d3834ea563fe956bdf6a",
+      "sha256": "e0d8e2588c08ae8ecf017d73c23549491aad1dedaa5c69c77c9b018ba8308b6b",
+      "bytes": 108
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/item/counter.json": {
+      "blobSha": "b6b8edf39da715bb483b1e110e016decc819841f",
+      "sha256": "1bd509248bbd54e1949837fb3fb8e26d1a79d16c72bfc8fd73326b0482eb51c8",
+      "bytes": 104
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/item/dimensional_crystal_end.json": {
+      "blobSha": "d4e7a207a7d383eeea49984c11e28365c777646c",
+      "sha256": "648f9f9b7d7cb67c2e54982580e3d7a8d12839a15e4bf0de73bdf09dd6a7904e",
+      "bytes": 120
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/item/dimensional_crystal_nether.json": {
+      "blobSha": "d367f593c804a233fba4919a94ba3dc086ef43cf",
+      "sha256": "55c61f2d43c2d4f114bf3d734247a92917a505e06a42f3f549feb2c5ee02b278",
+      "bytes": 123
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/item/dimensional_crystal_overworld.json": {
+      "blobSha": "3438edf7fd8582db3cdc506491612fcf1271b5bf",
+      "sha256": "50851c6b0ada18748a5c4780a9f51daecf23c861273f9aa9edce5d643e4a1b3c",
+      "bytes": 126
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/item/enhanced_hoe_plus.json": {
+      "blobSha": "9f76c505c086026db40ba8a5d725a248ae8e6655",
+      "sha256": "e41e2feda71055cf9549e40b725fa18e814c2b371f46828940bdb43d7ad7a1c1",
+      "bytes": 113
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/item/enhanced_hoe.json": {
+      "blobSha": "d68b869ec0ccad246952f7a433bd1c65b1c0fe83",
+      "sha256": "8bff8f58b869c4b244ec4a43593c297b35a3c31bbcade77a340d88c3e435cdb9",
+      "bytes": 108
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/item/flashlight_lit.json": {
+      "blobSha": "1e84c16c98e9f27d8e3904fa383e5895be714359",
+      "sha256": "c21461b0c430590345f024ba6d864e7d7ae682658167317bd1a82d5b63838770",
+      "bytes": 111
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/item/flashlight.json": {
+      "blobSha": "1ff422f1816d0e109fba56af6c172393106cdfa1",
+      "sha256": "7e21ec97dab88c572e65107fe5e5a5af16d7e0bf091d649bec6e56c9213745c2",
+      "bytes": 107
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/item/guidite_axe.json": {
+      "blobSha": "a445717b73cdad68c5feed9615b6c09d00e0c21b",
+      "sha256": "11400c2c3307b1d895629b4b74552c5c630e14c49ed08565667d5f6905409da2",
+      "bytes": 107
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/item/guidite_boots.json": {
+      "blobSha": "1fafe12c9f6b48157154aeb20d80cca4ae9bc9e6",
+      "sha256": "bcfd1716f777912044b959ed44fe605348607ba9c9a7a6205ec3f62c295de7b0",
+      "bytes": 110
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/item/guidite_chestplate.json": {
+      "blobSha": "84ff82d6a8aa0d8ed60ce04de097520422e83d4c",
+      "sha256": "96fc8a591a484e52464d12aa23648b52357825e3ecb5d9aef8087006d2c274f7",
+      "bytes": 115
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/item/guidite_helmet.json": {
+      "blobSha": "36c1e4efa015d2c27078b23ff833c111ee4a4554",
+      "sha256": "0c7ff385b4f3d54742a64b68314e6281937f7e6500e437dde746e00dc5128628",
+      "bytes": 111
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/item/guidite_hoe.json": {
+      "blobSha": "dc65645be1f9e09ebe55cbf10b1df3da483b027f",
+      "sha256": "cb9243e93bcfb45caeafc8bd2d994d8d74930f471db254ab3c461582ce813ff2",
+      "bytes": 107
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/item/guidite_leggings.json": {
+      "blobSha": "e02eda2ba07b6f227091d0f1ce4d75cfeea37791",
+      "sha256": "278b01ee65e4924e929f5b00eb4427450ad8e361c2ac1e267eebbb3655ffe477",
+      "bytes": 113
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/item/guidite_pickaxe.json": {
+      "blobSha": "7f7ad38dcc747e66424242d8f38c5df60e2ae6cf",
+      "sha256": "0a1f373d232eef44a3afcf27098f88f2c86534687804841a44e5c78a282e7c83",
+      "bytes": 111
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/item/guidite_shield_blocking.json": {
+      "blobSha": "665590cdceda31299209b0fd581a008a7296f3ae",
+      "sha256": "f358c3f381bcced4d6ea93f993f260059017d8dfc3fb550bdd2a58588e354f6a",
+      "bytes": 117
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/item/guidite_shield.json": {
+      "blobSha": "b20e3e9edacf9c0dae44d6e269ddc79c2384ce44",
+      "sha256": "28dd6f92c0390b173a714815267c41e4849ae9141e1b0393326a844ae4591204",
+      "bytes": 108
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/item/guidite_shovel.json": {
+      "blobSha": "ab48b34cda298f590e0b17ce45db84d6cdb23d79",
+      "sha256": "ef24f9eb0c43769bcf6ce9a557ca9c8415de03e7129fe8b23abecf35058d6e4e",
+      "bytes": 110
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/item/guidite_spear_in_hand.json": {
+      "blobSha": "f7d6f886294a2ea409e0b8a27d1df1be51fb13e0",
+      "sha256": "00c00f24ab8d97939158fa66f6dcd1edf2fa4f1eabe59b01afadd4589fe9e3be",
+      "bytes": 122
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/item/guidite_spear.json": {
+      "blobSha": "244cc46ef4d3c1649c8360232b4de81c82627bf7",
+      "sha256": "01489328b9fb79b4487ebe40eeac75bfb119c6e0d03db5d8b9056c2781b4c43b",
+      "bytes": 110
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/item/guidite_sword.json": {
+      "blobSha": "a0c929ef596094a75b10a0c49a87eb1dafba92d1",
+      "sha256": "2d27636e551303bcaa7ca5c4e8daefe9bfa19c5e4356a454fe26f006a7bdb3f6",
+      "bytes": 109
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/item/hot_tater.json": {
+      "blobSha": "68ef4017db514ddf9bffe964637127042f7944e3",
+      "sha256": "ea94cb0212aa13a4a3c31a30f5a290a8459e77bf0c4f6e0859a9da88937465ed",
+      "bytes": 106
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/item/leather_gloves.json": {
+      "blobSha": "3ceab6dc61b0e6d6e691c04d1d7b9b420f6bd510",
+      "sha256": "5dd858c0154368123f4f019ad1e243e2b739564e6f49bc1a51213b3c1cc492eb",
+      "bytes": 111
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/item/lightning_stick.json": {
+      "blobSha": "d9e138cae12d0824d3de03584084a80c76a1a116",
+      "sha256": "ecdd7431755346f6b0ee03fbc1182635c03f9cc8f90d5b8d6bd9e457708469d0",
+      "bytes": 112
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/item/lightning_tater.json": {
+      "blobSha": "89c9533da7638e31e3091196607e40faa734b5ff",
+      "sha256": "f7cd60c1bcdd1164bb10edb0ebbd733d26e729f0dec129c6309573ebc76e9e9d",
+      "bytes": 111
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/item/mini_golem_spawn_egg.json": {
+      "blobSha": "7728475473d0d69242268351c7803bdeec659486",
+      "sha256": "76057c3c50a6471c8fd29859bd896724b86f9b3a66f75cb7e8d542a752b506c8",
+      "bytes": 117
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/item/poisonous_apple.json": {
+      "blobSha": "73fc425937f358a513a651094a8ac06022d27ebc",
+      "sha256": "3a71d4c813c1421d559a646ef7daf705c3ad9708ad9ad32b103b6ad419c2573e",
+      "bytes": 112
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/item/quark_gluon_plasma.json": {
+      "blobSha": "9c72a438cf31760fede7c7981aec1b494025e0bd",
+      "sha256": "5f5bed004e885d0eb74b8f1e3b9bc207d9950890f02f358ff852afed28638787",
+      "bytes": 115
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/item/ruby_door.json": {
+      "blobSha": "b7cf6df59b5f52d181f28c4c0e7bd7de48161fea",
+      "sha256": "e0e4392177ca0d6fc3ea7c755987c7e095508a49ec2aadf2173b9e220360a8df",
+      "bytes": 106
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/item/ruby.json": {
+      "blobSha": "55c84909a77426f4595dc808e39f8f59f9cc9dd5",
+      "sha256": "edd221e18710ff2c47ea2b4ac68859525bcef08a5599647f613ccf020fd39b47",
+      "bytes": 101
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/item/suspicious_substance.json": {
+      "blobSha": "dd53556cb9e4877e025f1d804dedd6fc2bafb660",
+      "sha256": "a8159fdd62dd29323296a20443f5e579c10dd6a81362f1747a740113085be4f3",
+      "bytes": 117
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/item/throwing_knives_one.json": {
+      "blobSha": "6a55cdc871dfc19028f92432929d15fe8be8380b",
+      "sha256": "991bc29d09850390dc714c8dbe3b4c15e44b0f4edc7c5576783d2312739d8542",
+      "bytes": 116
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/item/throwing_knives_three.json": {
+      "blobSha": "fe84d6f088c0d16be2a0727c6039e2a243812080",
+      "sha256": "0f44c8207e1117a12164a0328d442cb795f2e99575a97c763e520078791c8b24",
+      "bytes": 118
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/item/throwing_knives_two.json": {
+      "blobSha": "53e92f2a0d6d26a81bbfede3ff4046bedc739a90",
+      "sha256": "a93c1868905021ae7c7eca3b56c69cc4b42fcdd6da2ab68c4b5ed443b2d44251",
+      "bytes": 116
+    },
+    "reference/latest/src/main/generated/assets/example-mod/models/item/waxcap.json": {
+      "blobSha": "aa7a396f13b29c9c45be3db338480148b49e9221",
+      "sha256": "5e675bc47b3113a7b69d04d5eb9a2bd51b270f8733ad8161be75f474541bbccc",
+      "bytes": 103
+    },
+    "reference/latest/src/main/generated/data/c/tags/item/tools/shield.json": {
+      "blobSha": "e533a87e6447a522c82d3bbb860f3419c5f4d7a8",
+      "sha256": "c639b152016e4ccfe72129974984482708c15604924623ea574e8b9179f4cad8",
+      "bytes": 54
+    },
+    "reference/latest/src/main/generated/data/example-mod/advancement/apple_and_beef.json": {
+      "blobSha": "4f1de9d8bbc9bc6af310fdd7d9b0713ea5be0286",
+      "sha256": "78e9e637f695b072c845f4c6c5cdde7a45f0926e2dbff98d7ef7a59107ef83e7",
+      "bytes": 694
+    },
+    "reference/latest/src/main/generated/data/example-mod/advancement/break_block_with_tool_five_times.json": {
+      "blobSha": "29d6b23faa86509d3b48bce29ab19f2a610606e0",
+      "sha256": "07f8156d0f0b28ba73377f3d1cab92c6a93dd4bf6b4948b09d41b4a52c1869bd",
+      "bytes": 536
+    },
+    "reference/latest/src/main/generated/data/example-mod/advancement/break_block_with_tool.json": {
+      "blobSha": "8e774d461d91ba657eaece89df061d1962e8bc62",
+      "sha256": "226aecede60fb979c44e976aa793b5406ff2430e70bd7dbdb576b75cd975ce9b",
+      "bytes": 418
+    },
+    "reference/latest/src/main/generated/data/example-mod/advancement/brewing_fail.json": {
+      "blobSha": "2f7017f8da1e936bc8d22f6b1ddbd1dac71e1b0f",
+      "sha256": "9a5297146a99c2130a5cb8a343dfdc3943bfcdcf568a32ef1293d469e7dd2065",
+      "bytes": 630
+    },
+    "reference/latest/src/main/generated/data/example-mod/advancement/collect_gold.json": {
+      "blobSha": "dadb5802fefc10a5140d4648605dc40bc50b0ea9",
+      "sha256": "228a80ef838b74a51b34d071fdd243f21a14895f2c17c887cefb4a006f908cba",
+      "bytes": 591
+    },
+    "reference/latest/src/main/generated/data/example-mod/advancement/collect_nether_star.json": {
+      "blobSha": "5f94f2576151dd28e0bf95d08a7237331d0bf3f0",
+      "sha256": "677f33d080fb2e388e4396b74563a779012b43fdec5e5b4370d2d822f819acb3",
+      "bytes": 761
+    },
+    "reference/latest/src/main/generated/data/example-mod/advancement/create_dirt_shack.json": {
+      "blobSha": "303136d79d56370890db00bf70017148b10354f4",
+      "sha256": "f7cb1a8ed7947295cc2a6e947fed4d50f0aa62db3269c1d57d52b09c9de35954",
+      "bytes": 609
+    },
+    "reference/latest/src/main/generated/data/example-mod/advancement/experimental_duplication.json": {
+      "blobSha": "840e94ad1586fa9a04cbb65f3e2c185ae9202839",
+      "sha256": "96eefd75e61272e92fb0b74d864cc771ca697fe124d000e2b25640a3aa20b19a",
+      "bytes": 827
+    },
+    "reference/latest/src/main/generated/data/example-mod/advancement/get_dirt.json": {
+      "blobSha": "ddd27355b19a2f1f5099d595910bacb30da2ce7c",
+      "sha256": "f9ac305b48e9400b07ed914bab6394c949d1f8857349e911b4e737c4c33c339a",
+      "bytes": 527
+    },
+    "reference/latest/src/main/generated/data/example-mod/advancement/get_thundering_enchantment.json": {
+      "blobSha": "62516bb3967ae1499e7a31705dc377a975716ad9",
+      "sha256": "00fc6b34a994acf8efe82186bfec6d2331dfe06a7067f216368bc7566a76db78",
+      "bytes": 645
+    },
+    "reference/latest/src/main/generated/data/example-mod/advancement/recipes/building_blocks/dirt.json": {
+      "blobSha": "93cce228efc1da533f35907011663a38a86dd222",
+      "sha256": "1204991fd3010fd11aa5c6c35a67ab375a1eb7f9f00a59059deb71821e195c06",
+      "bytes": 565
+    },
+    "reference/latest/src/main/generated/data/example-mod/advancement/recipes/building_blocks/sand.json": {
+      "blobSha": "fd1708e917ae15a48e3f5a312b33b26f80ab9633",
+      "sha256": "015a8bc25719fa9f70c69c06c1128b3a473fc974f69c19cf7903e6e26e6105ba",
+      "bytes": 722
+    },
+    "reference/latest/src/main/generated/data/example-mod/advancement/recipes/misc/crafting_table.json": {
+      "blobSha": "7ba53052102a5dbda907a66b206f5b84bee97906",
+      "sha256": "ecb725555510e79cda17528e2e1a87cce59660b773c035282b1a500ee21d9103",
+      "bytes": 594
+    },
+    "reference/latest/src/main/generated/data/example-mod/advancement/recipes/misc/glass_from_smelting_glass_bottle.json": {
+      "blobSha": "8cd44bc844f203dd17a5980ce132e051a4c6514c",
+      "sha256": "e9e98ae0a198597e2d672a4f731f7f3f67fb06edbcf5835af6dd0a8c08e3011e",
+      "bytes": 624
+    },
+    "reference/latest/src/main/generated/data/example-mod/advancement/recipes/misc/loom.json": {
+      "blobSha": "db83565be5b9735dd97776ce98abf806e500d9a1",
+      "sha256": "485d4e6a945f7d00c70e421d3a12298458023f7ec3517e8140cd1988449837bd",
+      "bytes": 544
+    },
+    "reference/latest/src/main/generated/data/example-mod/advancement/recipes/misc/water_bucket_to_bucket.json": {
+      "blobSha": "bd945baa3909806e5c7c340a73e4a389f629fd70",
+      "sha256": "fd5ee70c8aed476acbc175bb2bc00ee568863ed17343505278c7727579846788",
+      "bytes": 604
+    },
+    "reference/latest/src/main/generated/data/example-mod/advancement/recipes/redstone/oak_door.json": {
+      "blobSha": "0a2d716956c9dc7aae8d301415e62115d0d8e0c8",
+      "sha256": "81c683847a3b30b0215c4cf4f309be4af7026fbd7df5d343329138a43560b2c5",
+      "bytes": 570
+    },
+    "reference/latest/src/main/generated/data/example-mod/damage_type/tater.json": {
+      "blobSha": "e02cf9daa9a84c6bda061382ae265187ab7b492b",
+      "sha256": "b8d3abae1555c90f244882cf71bf17acad85633f3c5f6f6a9e981be33c725683",
+      "bytes": 97
+    },
+    "reference/latest/src/main/generated/data/example-mod/enchantment/repulsion_curse.json": {
+      "blobSha": "41e08d351616628721d9ac2246d6eb73ff7b91ff",
+      "sha256": "acadc56c6f70105662bcf857f143e0c9eb5efaef22e683c5d7b7026f4ca77f18",
+      "bytes": 1488
+    },
+    "reference/latest/src/main/generated/data/example-mod/enchantment/thundering.json": {
+      "blobSha": "aeaad3634c9e73ca4d07aeb8e6b56944f6e5e8ae",
+      "sha256": "d3150d7ef657a49c10e19c65cc2b0975ef2adcfeb4b930f30f185fa0ca2b1e73",
+      "bytes": 708
+    },
+    "reference/latest/src/main/generated/data/example-mod/example-mod/magic_skills_synced_registry/blast_skill.json": {
+      "blobSha": "1a61fafeef3b9cc77f72c3c3188b17fc85919a3c",
+      "sha256": "d843f7384679d2ed94cebf2850dee7283e2c92c4a4ce6b948968b3bb208e1775",
+      "bytes": 47
+    },
+    "reference/latest/src/main/generated/data/example-mod/example-mod/magic_skills_synced_registry/healing_skill.json": {
+      "blobSha": "67ecdede21f959223fa48453477c368ec4d8e538",
+      "sha256": "bed065377899ded45e0010a67a456e68d89ed164c4eb7c889aa8726d77fac4f7",
+      "bytes": 112
+    },
+    "reference/latest/src/main/generated/data/example-mod/example-mod/magic_skills_synced_registry/magic_missile_skill.json": {
+      "blobSha": "9d7d19e6b4b3c9e29d93078e1bba75ff0fff72d4",
+      "sha256": "a26409ac25c312346b7f937ad018963c5c2c221a6944d9500fb0c32fba6156ac",
+      "bytes": 55
+    },
+    "reference/latest/src/main/generated/data/example-mod/loot_table/advancements/collect_nether_star.json": {
+      "blobSha": "00132493be8c8b623c0fdfb6502af5d66c98949b",
+      "sha256": "591e363179ee9e70422342e86bad7951b3bfecc54d1ee02340cee260efd13a47",
+      "bytes": 424
+    },
+    "reference/latest/src/main/generated/data/example-mod/loot_table/blocks/condensed_dirt.json": {
+      "blobSha": "faa9153c5d812b3a3565e098339f094468754abb",
+      "sha256": "824bd93d976149ff4c72830105e83a23c4ef0de1936d4b924ed070a94fac15b9",
+      "bytes": 316
+    },
+    "reference/latest/src/main/generated/data/example-mod/loot_table/blocks/condensed_oak_log.json": {
+      "blobSha": "6cf549f466f410f3578bcd014f5e5e7ee8b4284c",
+      "sha256": "8d2baa67237687f81f9074a1afbdc5fb3a167cdd4420fd3bd46090800c041e96",
+      "bytes": 389
+    },
+    "reference/latest/src/main/generated/data/example-mod/loot_table/blocks/duplicator.json": {
+      "blobSha": "16354af2b5c734f7501434a2f358849e40ccdf98",
+      "sha256": "d05823b0f792048348499b246cb24516d026715e08aba4e8d2bc87eff7e20f35",
+      "bytes": 452
+    },
+    "reference/latest/src/main/generated/data/example-mod/loot_table/blocks/prismarine_lamp.json": {
+      "blobSha": "78aacbef684515f39b74805051e4ef4aa6594bda",
+      "sha256": "2e7ea0ed7eebaeda3a8d7efe844f12eee7d9785b42db8cec3ecacda89980aa77",
+      "bytes": 620
+    },
+    "reference/latest/src/main/generated/data/example-mod/loot_table/chests/test_loot.json": {
+      "blobSha": "ff607bf176e3f94419d3a3b7a8b1b5201be76ff1",
+      "sha256": "5694d5b7469c7440a37f28d0d3dbc723982538cd8fa5500c429d732c9c67a0cb",
+      "bytes": 445
+    },
+    "reference/latest/src/main/generated/data/example-mod/recipe/crafting_table.json": {
+      "blobSha": "459c01e153c953efc5133b611bf6185a866f9997",
+      "sha256": "342de0b9bdf3a1213a6be242ccfcfc93784346f76eaa682adfc71008ffc3e4dd",
+      "bytes": 221
+    },
+    "reference/latest/src/main/generated/data/example-mod/recipe/dirt.json": {
+      "blobSha": "6edf6a097d131ff19d343f0df67a874e8ffc3547",
+      "sha256": "3f0e8e897788ca2486e258655b18b2a299e14c5b08b8866ba347cf0ed5ce989b",
+      "bytes": 168
+    },
+    "reference/latest/src/main/generated/data/example-mod/recipe/glass_from_smelting_glass_bottle.json": {
+      "blobSha": "f7be134bdc875959babbb97c9c0e7f27b674aa71",
+      "sha256": "eab55ba4ee45f58532812115a002ee11d52388e7f485cce555f835ef8b93a00f",
+      "bytes": 202
+    },
+    "reference/latest/src/main/generated/data/example-mod/recipe/loom.json": {
+      "blobSha": "b836a53a21475490cb44c8cfdf1f99385aa5dc67",
+      "sha256": "2952becbdac847d8cb618199517a2b1179292dfe39261a3331d564cafd3eae56",
+      "bytes": 239
+    },
+    "reference/latest/src/main/generated/data/example-mod/recipe/oak_door.json": {
+      "blobSha": "fdc8c074d6ed3f6ac7e45f69b27d5c41a681c266",
+      "sha256": "3d2033fe6fbfcc64304bb66a31bb679b1ecfe69cec24a6a29654c4fb793de08a",
+      "bytes": 230
+    },
+    "reference/latest/src/main/generated/data/example-mod/recipe/sand.json": {
+      "blobSha": "d0276d2c054447ba301ba70a1ff76f96aa131f06",
+      "sha256": "7e100de8d2b50ff9363a688b733642fb6c4696687c9fd44c438e9c921cbcc2f4",
+      "bytes": 340
+    },
+    "reference/latest/src/main/generated/data/example-mod/recipe/shield_decoration.json": {
+      "blobSha": "2558f5ae0d35c1a7759933ccd24eb6d0cde8a721",
+      "sha256": "7b54b6309912f9ef482d31aa19579c5fcaa2b5ae1e9ea08fadde29b975630b1e",
+      "bytes": 193
+    },
+    "reference/latest/src/main/generated/data/example-mod/recipe/water_bucket_to_bucket.json": {
+      "blobSha": "de1badfca880f3008b4fdfab7024a2b16118e78b",
+      "sha256": "c48275cee50db3ad737b86a11d239d88789364eca3896039b916591866b47899",
+      "bytes": 167
+    },
+    "reference/latest/src/main/generated/data/example-mod/tags/example-mod/magic_skills_synced_registry/attacking_skills.json": {
+      "blobSha": "a30759aef8ab28341915143208088913f36520b1",
+      "sha256": "1ce4a338806abdced393d9b1305dbb8f5b79db0f2c730b1793234c920d42a06e",
+      "bytes": 90
+    },
+    "reference/latest/src/main/generated/data/example-mod/tags/fluid/acid.json": {
+      "blobSha": "5febb64f8d33e70b50ea5c21f24304ba4d05b983",
+      "sha256": "76214ec9c1c47784755364294c88ca9b597ac79da75e53d93d0f460c9c0fc3a2",
+      "bytes": 76
+    },
+    "reference/latest/src/main/generated/data/example-mod/tags/item/repairs_guidite_armor.json": {
+      "blobSha": "1cc1f065c5f88521d4b351fd6afa614cd4e247ed",
+      "sha256": "32c928b0ef67e46d8dfd598fcdc92bb0c930c294a06b0dc0b34ca41748208658",
+      "bytes": 50
+    },
+    "reference/latest/src/main/generated/data/example-mod/tags/item/smelly_items.json": {
+      "blobSha": "706e1c9c59761ac82a30218ecd5f86114876d917",
+      "sha256": "d877dfea02e601534f8ad030ddcde6c5f432bc9249653cf31620fcc20926627a",
+      "bytes": 219
+    },
+    "reference/latest/src/main/generated/data/example-mod/worldgen/configured_feature/diamond_block_vein.json": {
+      "blobSha": "b484de6ea4917ab73b2377ebe98f94c0aa91b470",
+      "sha256": "eef716585d730058c6763d595878b6adea1c8524fbfb45586db423f59cd5f27e",
+      "bytes": 357
+    },
+    "reference/latest/src/main/generated/data/example-mod/worldgen/configured_feature/diamond_tree.json": {
+      "blobSha": "d3a83396fd18bdf92ffb29a06446f343f3df0234",
+      "sha256": "7a5224179ba826f42556ad66a9c3a178aaf565436cbed531832497d553ee1cf5",
+      "bytes": 941
+    },
+    "reference/latest/src/main/generated/data/example-mod/worldgen/placed_feature/diamond_block_ore_placed.json": {
+      "blobSha": "fe624785b6c526eed43ef418bd5aee2feecee055",
+      "sha256": "cbd2cbe33983d6a184f25ae084e3ac540868eb89bf7a93ad19cf564a3bccede2",
+      "bytes": 499
+    },
+    "reference/latest/src/main/generated/data/example-mod/worldgen/placed_feature/diamond_tree_placed.json": {
+      "blobSha": "d7b2281f12f90ab1f0da19aa78734162483b0b01",
+      "sha256": "a54fac0d0c29857601f43b7cdd3e8b0688014b26d06e5cb4497e6c191ad0932c",
+      "bytes": 319
+    },
+    "reference/latest/src/main/generated/data/minecraft/advancement/recipes/misc/leather_gloves_dyed.json": {
+      "blobSha": "3287713277082e1cb2871e7930ba53f3c41acefa",
+      "sha256": "32711758d119c3826bebabedb5248a891fd21784a392f73a6a1782953d80e8f5",
+      "bytes": 602
+    },
+    "reference/latest/src/main/generated/data/minecraft/recipe/leather_gloves_dyed.json": {
+      "blobSha": "0a236274e33165522e167494f319d2ebcc4b2acb",
+      "sha256": "5f040a4a32ef81b3e5eb0d529c415f336edd8e3147ddbb7e6e7e1c76860650f4",
+      "bytes": 195
+    },
+    "reference/latest/src/main/generated/data/minecraft/tags/damage_type/bypasses_armor.json": {
+      "blobSha": "cd53c354fc217e4e16f1fcb6bda9df88db37ddd5",
+      "sha256": "32606ed35af2f07e6217968587e8086be15f3ace0865b0fcefd1d16e3bd20483",
+      "bytes": 45
+    },
+    "reference/latest/src/main/generated/data/minecraft/tags/enchantment/curse.json": {
+      "blobSha": "902cf6c067b96d667cd03f7327ea894e2d8546a5",
+      "sha256": "a4d568cdea286bd7fe7caf097179a8747d8b05ce532f42c21750fca26a22fcad",
+      "bytes": 55
+    },
+    "reference/latest/src/main/generated/data/minecraft/tags/enchantment/non_treasure.json": {
+      "blobSha": "892824fe88e546f1e130288916bec5e33f776e58",
+      "sha256": "717cca6f8a02b3bb9eb60d199cb35b955d72841ec2413cb65f00fafbdcc8caab",
+      "bytes": 50
+    },
+    "reference/latest/src/main/generated/data/minecraft/tags/fluid/water.json": {
+      "blobSha": "630d34035bf725f0b5cacf928f379ed5f9bc5253",
+      "sha256": "1d7ed78176293fab0d937f4399418a90b05075fa17d505de265b3a3497fbbeba",
+      "bytes": 45
+    },
+    "reference/latest/src/main/generated/data/minecraft/tags/item/axes.json": {
+      "blobSha": "ac68423592980915cd1f631f756c9b16e2daedfd",
+      "sha256": "edd6ba08b474d553f369e702e45f467195b91746ba6bd39c2ff7e356b42fae34",
+      "bytes": 51
+    },
+    "reference/latest/src/main/generated/data/minecraft/tags/item/chest_armor.json": {
+      "blobSha": "e449e728854ac59d0943f6756dfd51c0384cea86",
+      "sha256": "1ffd55cf2b295fab09732c004943b0c1838d5b96c14813e1021932c2e594082b",
+      "bytes": 58
+    },
+    "reference/latest/src/main/generated/data/minecraft/tags/item/enchantable/durability.json": {
+      "blobSha": "e533a87e6447a522c82d3bbb860f3419c5f4d7a8",
+      "sha256": "c639b152016e4ccfe72129974984482708c15604924623ea574e8b9179f4cad8",
+      "bytes": 54
+    },
+    "reference/latest/src/main/generated/data/minecraft/tags/item/foot_armor.json": {
+      "blobSha": "47e20ee611b0e2c1d13aa97619890ab69f46a6eb",
+      "sha256": "7218816e18b323928204a8d70ed16f36c86ed0e02346e034e8c4d3b36625de2a",
+      "bytes": 53
+    },
+    "reference/latest/src/main/generated/data/minecraft/tags/item/head_armor.json": {
+      "blobSha": "fd79f46e5615c9eddae9b85be197fde2a1a9da50",
+      "sha256": "aacf7d0eb6eb78fbaafd9c1a0b3eb4085fc291b197ab406a9c0c17093645055a",
+      "bytes": 54
+    },
+    "reference/latest/src/main/generated/data/minecraft/tags/item/hoes.json": {
+      "blobSha": "ef786efbe8287891da680edb25c46214e6de0c85",
+      "sha256": "85b3c4c0c6fabe778fdd1c52baa137163d5e2895a9b96d335a01b6e09ffec53a",
+      "bytes": 51
+    },
+    "reference/latest/src/main/generated/data/minecraft/tags/item/leg_armor.json": {
+      "blobSha": "58cd738c3e10df9ce2b25b94bfac5c58609aacef",
+      "sha256": "3f971de42292a6464d34c7bcbd4f3e84660901310b37592d5bf9d5aecfceddb6",
+      "bytes": 56
+    },
+    "reference/latest/src/main/generated/data/minecraft/tags/item/pickaxes.json": {
+      "blobSha": "70f74aab4bcb73308b819a22ccb1c3b1e8db23c6",
+      "sha256": "d57017a708b19a056421dbc0c83fd47096b16a33533087466ee0796ec577d112",
+      "bytes": 55
+    },
+    "reference/latest/src/main/generated/data/minecraft/tags/item/shovels.json": {
+      "blobSha": "d62c8dd2970e475d9acaa32f9878cfeb277240d4",
+      "sha256": "23a7d8c56543ebe106a00bce024dff4cb413b37fa479bcc3931b91e1d5ac4f6f",
+      "bytes": 54
+    },
+    "reference/latest/src/main/generated/data/minecraft/tags/item/spears.json": {
+      "blobSha": "f10d5d0975d53268526d4490695af27729f704c4",
+      "sha256": "d61aebb20e19842005b47f8dd90e9fd5df4502867b19d4968374733852cff9e4",
+      "bytes": 53
+    },
+    "reference/latest/src/main/generated/data/minecraft/tags/item/swords.json": {
+      "blobSha": "8856eccb9366452741a0487bbf65ceda9559150b",
+      "sha256": "3a15c6bc4fe9845a5d6d8cbf39a68ddf0846ae71a06d06e3fce8ee0aa2a8cc8b",
+      "bytes": 53
+    },
+    "reference/latest/src/main/generated/reports/example-mod/codec_examples/cool_beans.json": {
+      "blobSha": "07c0609fa24df290dc2231ddbb1cf65162873686",
+      "sha256": "27e7572a22477d23517fb0d521fb99cc167468de6a00ec13ac71b714257c63fb",
+      "bytes": 173
+    },
+    "reference/latest/src/main/generated/reports/example-mod/codec_examples/counting_bean.json": {
+      "blobSha": "fd87e8a4fba20cac61934cf386c917ebff16b866",
+      "sha256": "2b9289444ac5977003558c8f4dc06e4288648c470cd4180b4a9d962faf867150",
+      "bytes": 66
+    },
+    "reference/latest/src/main/generated/reports/example-mod/codec_examples/default_field.json": {
+      "blobSha": "9e26dfeeb6e641a33dae4961196235bdb965b21b",
+      "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "bytes": 2
+    },
+    "reference/latest/src/main/generated/reports/example-mod/codec_examples/list_codec.json": {
+      "blobSha": "afd738d9a660d6c2f683056a290ca27618e001bd",
+      "sha256": "f4dc9c6c9fb5cd92f7b376806b5fc3a4f6085a297c38a54e8f75a1add043b66f",
+      "bytes": 32
+    },
+    "reference/latest/src/main/generated/reports/example-mod/codec_examples/map_codec.json": {
+      "blobSha": "9a33edaa6c24a55c62de3e8d716bbe276c619b91",
+      "sha256": "3bc2d194c3b87e2e489694affd0ea228421b3cb71af454e81456f800f8d82335",
+      "bytes": 38
+    },
+    "reference/latest/src/main/generated/reports/example-mod/codec_examples/map.json": {
+      "blobSha": "5492ca4c39e60ef2f2229a125f5da6b4243ddcbd",
+      "sha256": "e09c3962b62e66168bb3a27315d85bc00f0ebf02ef1a3623f1f30ae22ecae44d",
+      "bytes": 69
+    },
+    "reference/latest/src/main/generated/reports/example-mod/codec_examples/numeric_range.json": {
+      "blobSha": "d8263ee9860594d2806b0dfd1bfd17528b0ba2a4",
+      "sha256": "d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35",
+      "bytes": 1
+    },
+    "reference/latest/src/main/generated/reports/example-mod/codec_examples/optional_field.json": {
+      "blobSha": "9e26dfeeb6e641a33dae4961196235bdb965b21b",
+      "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "bytes": 2
+    },
+    "reference/latest/src/main/generated/reports/example-mod/codec_examples/pair.json": {
+      "blobSha": "a0653af195f91cad5794ed5340e84db011d37fdd",
+      "sha256": "ad9af98ada6060497f73d6af09f3e343f246b0e1a4d39570d64926ef3ee85abd",
+      "bytes": 58
+    },
+    "reference/latest/src/main/generated/reports/example-mod/codec_examples/plain_codec.json": {
+      "blobSha": "d93030931199cd5bbf33e63b413d3d2264d81a14",
+      "sha256": "ee72f3be878d91cad8432a95515038c2649e8f04ff3e72f9188712694a8d785f",
+      "bytes": 17
+    },
+    "reference/latest/src/main/generated/reports/example-mod/codec_examples/recursive.json": {
+      "blobSha": "47dd64c0136dc543e8189f3d9705da6f1e7e095e",
+      "sha256": "29ad54d79a64057721a89fa067811f3a69bb0b47094781b3855f4dff96585e96",
+      "bytes": 86
+    },
+    "reference/latest/src/main/generated/reports/example-mod/codec_examples/serialize_blockpos.json": {
+      "blobSha": "d93030931199cd5bbf33e63b413d3d2264d81a14",
+      "sha256": "ee72f3be878d91cad8432a95515038c2649e8f04ff3e72f9188712694a8d785f",
+      "bytes": 17
+    },
+    "reference/latest/src/main/generated/reports/example-mod/codec_examples/stringy_bean.json": {
+      "blobSha": "6c12e67f7c008dd3ada9ac25b33e110c26f83ca4",
+      "sha256": "d177e32f08098a514f263f0f3bbf836b01c535c9191c66b02fa4fff7d92a8110",
+      "bytes": 85
+    },
+    "reference/latest/src/main/generated/reports/example-mod/codec_examples/unit.json": {
+      "blobSha": "9e26dfeeb6e641a33dae4961196235bdb965b21b",
+      "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "bytes": 2
+    },
+    "reference/latest/src/main/generated/reports/example-mod/codec_examples/xmap.json": {
+      "blobSha": "d93030931199cd5bbf33e63b413d3d2264d81a14",
+      "sha256": "ee72f3be878d91cad8432a95515038c2649e8f04ff3e72f9188712694a8d785f",
+      "bytes": 17
+    },
+    "reference/latest/src/main/generated/reports/example-mod/resource_condition_examples/all_mods_loaded.json": {
+      "blobSha": "13de7dc6cd57b20040535a717908585283cf75e1",
+      "sha256": "f674723db10c73482bbca92f99470b21b68f372184a35d0de4a82447723565b1",
+      "bytes": 165
+    },
+    "reference/latest/src/main/generated/reports/example-mod/resource_condition_examples/and.json": {
+      "blobSha": "e5a40760f23c22086b44138c4e234b3cbdc04e1a",
+      "sha256": "4d5626856e3d33ee1de431fed748873138d55f3b44b9fbb8a25f44c6a7edbe15",
+      "bytes": 295
+    },
+    "reference/latest/src/main/generated/reports/example-mod/resource_condition_examples/any_mods_loaded.json": {
+      "blobSha": "c720d6c3ec17b68c34cc7f54027e424e31d91675",
+      "sha256": "1d324d551dedaf6b17afdf0222147f92ba20cd6ecbab044c3957cf8083301d85",
+      "bytes": 165
+    },
+    "reference/latest/src/main/generated/reports/example-mod/resource_condition_examples/date_matches.json": {
+      "blobSha": "e7ed55fe2e8f57643c60601de9760304fafd38bd",
+      "sha256": "6d3ba157a1d0c1e597bc0c247adbd8fe6dbfcf031e0168f217443acdab0b11a8",
+      "bytes": 129
+    },
+    "reference/latest/src/main/generated/reports/example-mod/resource_condition_examples/false.json": {
+      "blobSha": "0482dee8b699a83abcaf673472822b7575447a4e",
+      "sha256": "4382ca1fe1c71a0fd049696e25e502c675645eecc00852e5c555aab0e82be057",
+      "bytes": 83
+    },
+    "reference/latest/src/main/generated/reports/example-mod/resource_condition_examples/features_enabled.json": {
+      "blobSha": "02ef749ff8aec9d27e70baffe4e530f39af4a45b",
+      "sha256": "ce7a9be9ac2bb6643e35e0f49f51685bad5e22b9e4f68763411e6191a4170759",
+      "bytes": 194
+    },
+    "reference/latest/src/main/generated/reports/example-mod/resource_condition_examples/not.json": {
+      "blobSha": "35a06a0c855588265ecdc59034168f0576cfe3e4",
+      "sha256": "e26899843b95e5b356d0795c50b99d7d616095a285d4ce6ec5ccd2c96f0d9053",
+      "bytes": 142
+    },
+    "reference/latest/src/main/generated/reports/example-mod/resource_condition_examples/or.json": {
+      "blobSha": "750ac0d7921fabda5e657a3efc2c4cf3b5c5761f",
+      "sha256": "f63e5a57ea94e03af60ebb36aebebf47df89c8255c4386298eb12b02ca999d69",
+      "bytes": 294
+    },
+    "reference/latest/src/main/generated/reports/example-mod/resource_condition_examples/registry_contains.json": {
+      "blobSha": "63569ffefcb08bc257ef548ca19531c6333a78e4",
+      "sha256": "e56ca696387a3ae900caf7d59c606042ab48ac9b71a68406fec3c7855c3a9124",
+      "bytes": 191
+    },
+    "reference/latest/src/main/generated/reports/example-mod/resource_condition_examples/tags_populated.json": {
+      "blobSha": "fe9b4c576aa599538e01dd1dbb7f196ad1621da4",
+      "sha256": "3fd8f652add3bede453a0e4d9d1074efa8c2817f9c2740814e3182362fe08721",
+      "bytes": 190
+    },
+    "reference/latest/src/main/generated/reports/example-mod/resource_condition_examples/true.json": {
+      "blobSha": "a99ad3ff8588d418d09bd13f36a77bbd3ccd495c",
+      "sha256": "4642cd64cd0bac2573c599219a56ab4993a6a0e1d1743a39c6b8a7ff0cb1deff",
+      "bytes": 82
+    },
+    "reference/latest/src/main/java/com/example/docs/accessor_usage/ExampleModAccessorUsage.java": {
+      "blobSha": "060f0a02d584fecb6e111c947490c24b7248e280",
+      "sha256": "e8443c47034e6212636c1dd79af8db658ce7c8770ab03ab1400ad35125c2c73f",
+      "bytes": 2227
+    },
+    "reference/latest/src/main/java/com/example/docs/advancement/ExampleModDatagenAdvancement.java": {
+      "blobSha": "cbb5b76c35b999429793165d4dbd8896facb8db0",
+      "sha256": "6df4080f2004eca0d87b95733ce4d9ac830481c218ad4aebbea510bbf451b4a2",
+      "bytes": 1698
+    },
+    "reference/latest/src/main/java/com/example/docs/advancement/ModCriteria.java": {
+      "blobSha": "a24ee6ea78d94861fb21327d49a89f7b324693f5",
+      "sha256": "903a2bc7444077d3ab5ec7cc1ff78c05c516c287fbf28a8281b622397e410a17",
+      "bytes": 1225
+    },
+    "reference/latest/src/main/java/com/example/docs/advancement/ParameterizedUseToolCriterion.java": {
+      "blobSha": "6ac8fb1a5e4120d796da4c8ea43146cb218db2c7",
+      "sha256": "d50658c50a93628b7084827f7a25c2903f2d3abaf53ad46de8d7c56c829fc891",
+      "bytes": 2086
+    },
+    "reference/latest/src/main/java/com/example/docs/advancement/UseToolCriterion.java": {
+      "blobSha": "f4dbb84a8a9cd939df1d7d664e60ea1ebe74355f",
+      "sha256": "f5d3a2921229df9864af52d66351e2fd0627f79091dfb5a6e6437cf08c1fffeb",
+      "bytes": 1595
+    },
+    "reference/latest/src/main/java/com/example/docs/attachment/ExampleModAttachments.java": {
+      "blobSha": "b91d56d4c5fe4baf1ce81d81590e20e2602b43bf",
+      "sha256": "459d462c4f040509c075084a24c1988ac569ab1ddba3690d8a9dc7d9a8c9d4a5",
+      "bytes": 1631
+    },
+    "reference/latest/src/main/java/com/example/docs/attachment/Stamina.java": {
+      "blobSha": "87eeb946d85bbdae7e47be274ac1a6d4018f4c7a",
+      "sha256": "684e59ee72fd1c02f232d359f8c08106f881598a017d343048d54e7e3179529a",
+      "bytes": 1558
+    },
+    "reference/latest/src/main/java/com/example/docs/block/custom/CounterBlock.java": {
+      "blobSha": "0cd8c3721a97da05195ccddaf9520b1357645c61",
+      "sha256": "d053dfcb60a427a8d93f960b334fdab4b27ecf07e417202758e90780e754b135",
+      "bytes": 2127
+    },
+    "reference/latest/src/main/java/com/example/docs/block/custom/DirtChestBlock.java": {
+      "blobSha": "0f012605d1f5ea91403eca1c79071420dbc2dbac",
+      "sha256": "1dfd04f78ef9b2d1a8940e855bb32e9c73169a15eb9e30ab9b04e620987223f3",
+      "bytes": 1442
+    },
+    "reference/latest/src/main/java/com/example/docs/block/custom/DuplicatorBlock.java": {
+      "blobSha": "1a6a9c02bc516c0db40f1871e88a405d94d2aa5b",
+      "sha256": "dd198ead2efb191e486b5f1e9322c3f9145bd6364442e292d4c4fd9317fef2be",
+      "bytes": 2566
+    },
+    "reference/latest/src/main/java/com/example/docs/block/custom/EngineBlock.java": {
+      "blobSha": "f9d8d514a38f796b6f7c498c8951d9efdf16cda1",
+      "sha256": "565813cbbf6228a379b333b8e5218c770650d4bf98c2afc050073485e9e7d18f",
+      "bytes": 2790
+    },
+    "reference/latest/src/main/java/com/example/docs/block/custom/FriendsBlock.java": {
+      "blobSha": "81bd971b0ec52c227b5264cb55b32ed0745042d1",
+      "sha256": "b798ee21a8dfa4d915fd81b5007e542780211662fb78fc72f3b1b4266dd7af1e",
+      "bytes": 1548
+    },
+    "reference/latest/src/main/java/com/example/docs/block/custom/PrismarineLampBlock.java": {
+      "blobSha": "950edf7f41c2dfe1aebf74d0f31ed5508ca567f0",
+      "sha256": "e6747c01e26cb3c7572edc5bf972c0b6563e838a81c62f4cf0833d600fe4df15",
+      "bytes": 2352
+    },
+    "reference/latest/src/main/java/com/example/docs/block/custom/UpgradingBlock.java": {
+      "blobSha": "e8e01b8ea573624004d94baacada86286bc89a70",
+      "sha256": "b2fce465d33e5a0d88f977ac8432104b2d43c7d15c29e91ce9ef685c50e79eb7",
+      "bytes": 1420
+    },
+    "reference/latest/src/main/java/com/example/docs/block/custom/VerticalSlabBlock.java": {
+      "blobSha": "e1bb5511857b70fb0804d383ba178e996b15aeda",
+      "sha256": "23bdf4cfea4c1428089b8ce09f26ecff1f4b7242268d18057de52b85eb8221f6",
+      "bytes": 4762
+    },
+    "reference/latest/src/main/java/com/example/docs/block/entity/custom/CounterBlockEntity.java": {
+      "blobSha": "2cc8cd6ec7172fe4b75ee95fa282608d0a8d59ce",
+      "sha256": "ba0172b6b87b286acf25aee1a40972a35675f090d16e0a75e5f3c207ac2076aa",
+      "bytes": 2699
+    },
+    "reference/latest/src/main/java/com/example/docs/block/entity/custom/DirtChestBlockEntity.java": {
+      "blobSha": "8090f8a2355dd14e02596e8c55542f10ff922e5a",
+      "sha256": "1e412b7a5af701f33753c7eff6af28d4285ea520a01321204e09f970599f9f5e",
+      "bytes": 2937
+    },
+    "reference/latest/src/main/java/com/example/docs/block/entity/custom/DuplicatorBlockEntity.java": {
+      "blobSha": "5f34bf3500e4b79843d0734108ddc4760567f2c0",
+      "sha256": "4ce7f48c32abe297abccf30e77e65426e24d743b693c01fb9b4999d1e07875f4",
+      "bytes": 2958
+    },
+    "reference/latest/src/main/java/com/example/docs/block/entity/custom/EngineBlockEntity.java": {
+      "blobSha": "baa68e1e5207a63b3bf7cbfd6eee00d0d0fa5e0d",
+      "sha256": "bd6ec8398bbc20668a705beb56d78c1389a5f8c05e1536ea3f34e012d76905a8",
+      "bytes": 4183
+    },
+    "reference/latest/src/main/java/com/example/docs/block/entity/ExampleModBlockEntities.java": {
+      "blobSha": "c93d729bbb0ddb2e143b1d98204bc5746b531094",
+      "sha256": "38e6d535c65b1ddeaa461df6b1756f602328f3370e6107f20297d5e302a2f05b",
+      "bytes": 225
+    },
+    "reference/latest/src/main/java/com/example/docs/block/entity/ModBlockEntities.java": {
+      "blobSha": "30b6c9a90dbaaa14d0cd21f8211b1198d3c20097",
+      "sha256": "9dbc68acb05d55f1c6aab6263af79d825bcee750107887d3fcb99da7f0fab81e",
+      "bytes": 1923
+    },
+    "reference/latest/src/main/java/com/example/docs/block/ExampleModBlocks.java": {
+      "blobSha": "4456a1dfb6c91790a0d74bc84ce5e217bd2b5494",
+      "sha256": "70bb3c4bafb80409fe065883bd075308d4f5f880c17704e45d9b219026290467",
+      "bytes": 251
+    },
+    "reference/latest/src/main/java/com/example/docs/block/ModBlockIds.java": {
+      "blobSha": "83ae770d963719d94e476019a9621998030dce00",
+      "sha256": "27decf71112b12771a590f26e272ce5aa7eeb529db7cb5f6d482948154f1f2c7",
+      "bytes": 692
+    },
+    "reference/latest/src/main/java/com/example/docs/block/ModBlockItemIds.java": {
+      "blobSha": "9868331b7b06cb45c045728a2866a70ddc061792",
+      "sha256": "ef3d1aad65ab94c11360628f9e4ebe0c88a4360f973fb74654fd6216831e5a97",
+      "bytes": 2386
+    },
+    "reference/latest/src/main/java/com/example/docs/block/ModBlocks.java": {
+      "blobSha": "86453241d3531c0f250ce44645878dac2de78e53",
+      "sha256": "be7763f31a0d04504db1308f800a67f00393757be298bda26cf94bfa06e7f5cf",
+      "bytes": 7459
+    },
+    "reference/latest/src/main/java/com/example/docs/codec/Bean.java": {
+      "blobSha": "3457cdc0cd35a6a3399bf3222cb516225c7b1a67",
+      "sha256": "e3316a6d7b438925e1ba17ea6992be942405a802bc7267403bff74d64a5535ee",
+      "bytes": 610
+    },
+    "reference/latest/src/main/java/com/example/docs/codec/BeanType.java": {
+      "blobSha": "267930e5e7a343f3fcd3e670654542d7aa67fd63",
+      "sha256": "1dcc5363f2eea00d126eac1befd7a4834ae6a0e8fed8523c28c47f6b53848ff6",
+      "bytes": 726
+    },
+    "reference/latest/src/main/java/com/example/docs/codec/BeanTypes.java": {
+      "blobSha": "6f9ea692f426198fd357fdf3288aaadc612765ed",
+      "sha256": "0a829f537f1feabfbb74bb8a4939c555852f32c949db0c21b86dc8fe33a6aef5",
+      "bytes": 886
+    },
+    "reference/latest/src/main/java/com/example/docs/codec/CoolBeansClass.java": {
+      "blobSha": "4ec54afc19ebc0f89b7a2b068b07170b9ad41130",
+      "sha256": "78b69030d168f398ccd04c78d62c406b7266cca006975b98262cd10793ea296f",
+      "bytes": 1466
+    },
+    "reference/latest/src/main/java/com/example/docs/codec/CountingBean.java": {
+      "blobSha": "643b90b8bd44e52b3c93a04d47a6cdaa614d0cd7",
+      "sha256": "aa5c13ae94c790497f9f5433270d609ad6f0721022c927aaf59ffb972344c416",
+      "bytes": 876
+    },
+    "reference/latest/src/main/java/com/example/docs/codec/Identifier.java": {
+      "blobSha": "b32d75428a0b02f03f0e52d24e97766428ed407e",
+      "sha256": "7d1f7acb328383e6a2ad40222fa7dc914156acacd12c157c8a4b8830aa1a34c1",
+      "bytes": 1058
+    },
+    "reference/latest/src/main/java/com/example/docs/codec/ListNode.java": {
+      "blobSha": "e10e3b098ea2331743c8b95ab454ed7ad61dfb60",
+      "sha256": "1d1e3799729c72db2cbbcf4f7dacbc4765d45b235a9e9aa6b6e8320bb4a3a894",
+      "bytes": 173
+    },
+    "reference/latest/src/main/java/com/example/docs/codec/StringyBean.java": {
+      "blobSha": "fcf0749f2368c8e8292bb3b5924ad601051f9077",
+      "sha256": "9996a054224914da8c1c133ecca15d10e9fca6ea621754af996c9f68e44833cf",
+      "bytes": 988
+    },
+    "reference/latest/src/main/java/com/example/docs/command/BlockPosArgumentType.java": {
+      "blobSha": "ee9a792cbdf6e8cb468dccd135a8027169dc2bca",
+      "sha256": "512f7b06578ec3192c2811e382060e920184fc239cd6b4c5bb7f51535130add3",
+      "bytes": 1363
+    },
+    "reference/latest/src/main/java/com/example/docs/command/ExampleModCommands.java": {
+      "blobSha": "cf845c73129cadafabe1dad4b334ea3b950fd68b",
+      "sha256": "9b1fb6acab6bd9e68cf487b00d5aa1948b57f8b7fae002648fdbb85c00beb1d0",
+      "bytes": 11003
+    },
+    "reference/latest/src/main/java/com/example/docs/command/PlayerSuggestionProvider.java": {
+      "blobSha": "2574791a7dee1d1b8f1382569ba037238080239e",
+      "sha256": "21e1f06cfc39d68dde55e3c186cc9977b87f7a9f72fc97a70cf5bfe97016d298",
+      "bytes": 1188
+    },
+    "reference/latest/src/main/java/com/example/docs/component/AdvancedCustomComponent.java": {
+      "blobSha": "42b766587018fd5ecdd66e9b69126e4b59deeb6a",
+      "sha256": "46353c25ac267212c8bb7cf68c39f0cacac27e87c1b0783d8f6dda9b181b6e22",
+      "bytes": 1970
+    },
+    "reference/latest/src/main/java/com/example/docs/component/ComponentWithTooltip.java": {
+      "blobSha": "060126fe5027ed96ad8873dae80de339f8c7da4b",
+      "sha256": "9b914a350fe0e8320e231fbff50fc424865adb1cf8e8bd124f00b25d6a92b5f3",
+      "bytes": 1405
+    },
+    "reference/latest/src/main/java/com/example/docs/component/ExampleModComponents.java": {
+      "blobSha": "a253cd869e45d314ddda857132bf1bdddc31abf3",
+      "sha256": "b06d165de8dad7835b53d885cde3f67e6a7deff6c465217e873e028b0957467f",
+      "bytes": 216
+    },
+    "reference/latest/src/main/java/com/example/docs/component/ModComponents.java": {
+      "blobSha": "71e0a478a2fb1bb8ceef72f93d2f4c7ebd421475",
+      "sha256": "bcd232626d40d9927b0309d725fe0ce6d62f945eb4457e3864aa27b8ccbea53b",
+      "bytes": 1863
+    },
+    "reference/latest/src/main/java/com/example/docs/conditions/DateMatchesResourceCondition.java": {
+      "blobSha": "b206023b73c94dd12ef7296289f3aa83d4fe815b",
+      "sha256": "94e1f108c9e973b389ddfe4ef93b38ea098d34854afba42ff0e896fe367092ce",
+      "bytes": 1905
+    },
+    "reference/latest/src/main/java/com/example/docs/conditions/ExampleModResourceConditions.java": {
+      "blobSha": "ed9b4a53e32db30c46e6efa300345b85e013e211",
+      "sha256": "4e0b665522b690991f3c85669b6394f77c8574a4048e7d9621397aa5c44f0cb1",
+      "bytes": 266
+    },
+    "reference/latest/src/main/java/com/example/docs/conditions/ModResourceConditions.java": {
+      "blobSha": "bbc34877bab922bb2ee3465c3b37e2de19296fde",
+      "sha256": "4bf8418fe79e2e5a258db51d33e1b93ea205c5a29a8f90141c182121820de1d5",
+      "bytes": 1053
+    },
+    "reference/latest/src/main/java/com/example/docs/container/ImplementedContainer.java": {
+      "blobSha": "49683fd4513078960995a71082871d4ee0aaf15a",
+      "sha256": "0d580fabb8aef427a42b2072d62980cc866cf81c7dfbaf18c581cad2c6cf5209",
+      "bytes": 3274
+    },
+    "reference/latest/src/main/java/com/example/docs/damage/ExampleModDamageTypes.java": {
+      "blobSha": "e58092a6d65c7919b3f8695757d2e8954e71ccbd",
+      "sha256": "077d1436e034bfd4c99378cf2a302bd3df4303218b1d74b824a2a1a92876fa1c",
+      "bytes": 547
+    },
+    "reference/latest/src/main/java/com/example/docs/damage/TaterBlock.java": {
+      "blobSha": "616f54519e11a842bdca9b26401c75dfe6fc6344",
+      "sha256": "570dcf4abfa7eb4b48c7b25c570b8378b22462f73d5e4c119fc545210d46ad01",
+      "bytes": 1183
+    },
+    "reference/latest/src/main/java/com/example/docs/debug/ExampleModDebug.java": {
+      "blobSha": "ebb7eacea5f21baf62d90a11d30036cf7f304e51",
+      "sha256": "6d8dfbc89975ef4928f4c4214176578c0d06499ce57c80641dd20b0234ecc9e9",
+      "bytes": 682
+    },
+    "reference/latest/src/main/java/com/example/docs/debug/TestItem.java": {
+      "blobSha": "ce6ac4ad07ba3c65e6ae0e0cae20f04178092ce5",
+      "sha256": "c4244b13d108da0e7d6e9cb07a3e721ff659eb5abd339da5154a2217b048df65",
+      "bytes": 2865
+    },
+    "reference/latest/src/main/java/com/example/docs/dynamic_registries/ExampleModDynamicRegistries.java": {
+      "blobSha": "c65109b6f1888bae6203e5fa0fedc6dd9c5a3625",
+      "sha256": "219d9881f27d845021009fe5f3f33574603f8c0390c78c796bbf30cef8dcd409",
+      "bytes": 274
+    },
+    "reference/latest/src/main/java/com/example/docs/dynamic_registries/ExampleModRegistries.java": {
+      "blobSha": "8552db775764755733544654043884e050e31547",
+      "sha256": "bcd31094b510ce4aea1aa5c72ac0d83bd41bc2a5c16bc2c973888e0e07f8549e",
+      "bytes": 3148
+    },
+    "reference/latest/src/main/java/com/example/docs/dynamic_registries/ExampleModTags.java": {
+      "blobSha": "61f0c9c84dcd66a3015a3e405df49d690e8bedc2",
+      "sha256": "2401f81db23b74f920ef6acd989a0cd277eea704c9132df87a0a74c93384bf66",
+      "bytes": 925
+    },
+    "reference/latest/src/main/java/com/example/docs/dynamic_registries/MagicSkillsRegistryEntry.java": {
+      "blobSha": "be46776dd49cef5c74fa0db9248953ffd5442b4f",
+      "sha256": "c382b9548f61f41257cec3a95e4f43be6f0130320da09d53f2defc662ca65dd6",
+      "bytes": 1423
+    },
+    "reference/latest/src/main/java/com/example/docs/dynamic_registries/MagicSkillsRegistryIds.java": {
+      "blobSha": "e68a187039ad7a962142a33d7ab6060d9ecd1701",
+      "sha256": "c7d3fa3536824d656d9fb2db6cf5dbcef0ee85bdd76c1a91957b528de60ed851",
+      "bytes": 699
+    },
+    "reference/latest/src/main/java/com/example/docs/effect/ExampleModEffects.java": {
+      "blobSha": "a9655667d2e07b0ad13374e749b51e65ba1dda4a",
+      "sha256": "c710e1f4d8133f48721f412633b12e7cf24adfe69016448101755f876ad40065",
+      "bytes": 607
+    },
+    "reference/latest/src/main/java/com/example/docs/effect/TaterEffect.java": {
+      "blobSha": "086bf197415f3cf9b669d51d8251fc98e0f674ed",
+      "sha256": "88474a3153bf72171d322622b0586c8c4a87297ed203100342461979a05c9d72",
+      "bytes": 1245
+    },
+    "reference/latest/src/main/java/com/example/docs/enchantment/effect/LightningEnchantmentEffect.java": {
+      "blobSha": "bda0acaef767580c18008eb9aa333da6efbfadec",
+      "sha256": "55531046ff7d483338e48d9239d5a08c4d4e6ab59d8f8aa5c12b37c70ed9fb22",
+      "bytes": 1733
+    },
+    "reference/latest/src/main/java/com/example/docs/enchantment/ExampleModEnchantments.java": {
+      "blobSha": "b137d2b5f544b62920ae1b44bde4e4b1d281caf2",
+      "sha256": "7d5f9f5d1c3bd922ea841f6061cf858fe3f0f26879807b052f964adbf9a75fd6",
+      "bytes": 247
+    },
+    "reference/latest/src/main/java/com/example/docs/enchantment/ModEnchantmentEffects.java": {
+      "blobSha": "966fbcd8529e129a46154116ceea898d8d922ad0",
+      "sha256": "958b7d23de9324a1dd3799e4a2538d85296a1605275b89b1080b9f11b324f90c",
+      "bytes": 936
+    },
+    "reference/latest/src/main/java/com/example/docs/enchantment/ModEnchantments.java": {
+      "blobSha": "af04e45377694b12848a2a5b41ae77cb13537976",
+      "sha256": "76e37778682f6c8aecaa569a3bf71e0bc6061df8189b60c27d5344cd055b3c9b",
+      "bytes": 747
+    },
+    "reference/latest/src/main/java/com/example/docs/entity/attribute/ExampleModAttributes.java": {
+      "blobSha": "07e09a68be73a7b1a6dbea7296cbb48626f6e1b1",
+      "sha256": "8c3568c2f7e791b15f5053f974969c1ff34433fddf1be3cbe325b7830b5066a3",
+      "bytes": 258
+    },
+    "reference/latest/src/main/java/com/example/docs/entity/attribute/ModAttributes.java": {
+      "blobSha": "c18f05f3b9faa2e92804c0207e7611297778dd01",
+      "sha256": "a5bf38338c9095c91b8bd24cac3093fe4d44d021ab7b669786aa3d19199e30d9",
+      "bytes": 1174
+    },
+    "reference/latest/src/main/java/com/example/docs/entity/ExampleModEntity.java": {
+      "blobSha": "2de47901b2f20ef38e7df214b2f636ceebe6f62c",
+      "sha256": "aa1ce1a41f4a5c624d8856ec655a004ea2ff71d97a4d5d497664a0c9caef1fb9",
+      "bytes": 257
+    },
+    "reference/latest/src/main/java/com/example/docs/entity/MiniGolemEntity.java": {
+      "blobSha": "e5f9e9b2c1f78fa2e71b6c0e11c57640427eaefa",
+      "sha256": "98af0452bf325a42373a5eac83cdae441fdccd24a43562d3b933ee445a41354d",
+      "bytes": 4131
+    },
+    "reference/latest/src/main/java/com/example/docs/entity/ModEntityTypeIds.java": {
+      "blobSha": "86f2ca592c8d57b8a120e8efaab5292732b38b09",
+      "sha256": "7b55e8003e6d39f7fbcccc9c055ce08673d6987506d6e598f3b5b811f43c2bf6",
+      "bytes": 655
+    },
+    "reference/latest/src/main/java/com/example/docs/entity/ModEntityTypes.java": {
+      "blobSha": "0a70e8829410bf145b9e4314c9135502e99f75a5",
+      "sha256": "bcb66e0909229615c2c46c85de28d7439bdf8b78b3c633f57ec2888757acb494",
+      "bytes": 1916
+    },
+    "reference/latest/src/main/java/com/example/docs/enum_extension/ExampleModEnumExtension.java": {
+      "blobSha": "ac1f68ffc4e3b5e929cd13c36fd1cd8f523a8259",
+      "sha256": "0955b4f028df1c6240e265a44a122d7be5f137199db32382c4af3e479df3bbb5",
+      "bytes": 1452
+    },
+    "reference/latest/src/main/java/com/example/docs/event/ExampleModEvents.java": {
+      "blobSha": "e22949b330d54cff8e9b401e07b62901ede66b5b",
+      "sha256": "ae965a909d248b947b53f9ee499ab0a2ecb347cdd01e9e48fa1d8561d4175a49",
+      "bytes": 5609
+    },
+    "reference/latest/src/main/java/com/example/docs/event/SheepShearCallback.java": {
+      "blobSha": "f7a5774b72fb43899303149def4d6900a74514c4",
+      "sha256": "20cb56cda22c6425f2e1e390308e2412db68a734d7e1f10b78fdec8e06652112",
+      "bytes": 1743
+    },
+    "reference/latest/src/main/java/com/example/docs/ExampleMod.java": {
+      "blobSha": "c960dc63a61ed22c8f05ce6c51998c6794d5b752",
+      "sha256": "37b633c89765ef9f9f1f329e3210065a8466ba8c2a5b302f526770a846665b88",
+      "bytes": 3458
+    },
+    "reference/latest/src/main/java/com/example/docs/fluid/custom/AcidFluid.java": {
+      "blobSha": "753ee13e2b4528aa03c35c01ea207df82cc1e006",
+      "sha256": "7da7723d0f28dda5f2f875255524e1b51268ad9688145a320254bdfe5625c111",
+      "bytes": 5775
+    },
+    "reference/latest/src/main/java/com/example/docs/fluid/ModFluidIds.java": {
+      "blobSha": "84a4cc8f4eb24256d682cdca982fab4538d4c4a0",
+      "sha256": "60b6612fbb3047db9a3b1013cb80ee143c74a06dc027c1c18a87803398f1bbd7",
+      "bytes": 588
+    },
+    "reference/latest/src/main/java/com/example/docs/fluid/ModFluids.java": {
+      "blobSha": "a5d984034be8da6b4749f436f559ccbd172717a8",
+      "sha256": "3b5431d463e56d4af8ec535329cb243485d89f4044e61c89d5eb78fb1e91b753",
+      "bytes": 801
+    },
+    "reference/latest/src/main/java/com/example/docs/fluid/ModFluidTags.java": {
+      "blobSha": "f3a3fd22fa59ec047c3077831544e5410cb53502",
+      "sha256": "35fff2c7a8bc96bcac7521b09ac644d4c630568daaf14de7cd7a33f03f433dd0",
+      "bytes": 360
+    },
+    "reference/latest/src/main/java/com/example/docs/fog/ExampleModFogTypes.java": {
+      "blobSha": "2c6abb81756c09c84bcc1441b8072ad6e45f8f9c",
+      "sha256": "bb61aba29b804bf97e7d30c5b1a60e20262fcdea9a076510caf1087c379745af",
+      "bytes": 222
+    },
+    "reference/latest/src/main/java/com/example/docs/gamerule/ExampleModGameRules.java": {
+      "blobSha": "cb028823c74e52b0a185bbbfc6b44b9cbd59c949",
+      "sha256": "eb22338b9536482e671a73780cabc530f1bde816a6a03c57feeb165a3e163f9e",
+      "bytes": 2353
+    },
+    "reference/latest/src/main/java/com/example/docs/interface_injection/BucketEmptySoundGetter.java": {
+      "blobSha": "b1d3ed46e511efb0e13096fa00a81dc0287c87c0",
+      "sha256": "c423925b9e144f42ef52587af9f0af5649f94c512aed6a07eee080a0c171fdfd",
+      "bytes": 382
+    },
+    "reference/latest/src/main/java/com/example/docs/interface_injection/ExampleModInterfaceInjection.java": {
+      "blobSha": "72825c31fdd41a0bccda293b1efbf2a48e4b58d1",
+      "sha256": "11e67dda592c58193d1fd618417adfdc2555d50f6b1107e18d2a692f1f26cdb3",
+      "bytes": 526
+    },
+    "reference/latest/src/main/java/com/example/docs/interface_injection/GenericInterface.java": {
+      "blobSha": "1eb5c8f2768f1edb759f98e07233431113790509",
+      "sha256": "496552d3ca890126c4ca2f03cf5b38072ce15b058ade2d6ed50ee94ce8105d8a",
+      "bytes": 193
+    },
+    "reference/latest/src/main/java/com/example/docs/item/armor/GuiditeArmorMaterial.java": {
+      "blobSha": "fdb944f305fbfbec06e7708b05a9a9958a99cdfc",
+      "sha256": "9c9c86f2b0d0f9e6d355ca3499461ea408af28aa741d0a01cbe2504a3f3aa513",
+      "bytes": 1480
+    },
+    "reference/latest/src/main/java/com/example/docs/item/custom/CounterItem.java": {
+      "blobSha": "10c01aedba5e9bbf5bd0a138c8b488336758ee91",
+      "sha256": "ce90524ca5a387d86b4af0790e804d32d1a207da36bdf1e0a95c871fbd1cecaa",
+      "bytes": 1752
+    },
+    "reference/latest/src/main/java/com/example/docs/item/custom/CustomSoundItem.java": {
+      "blobSha": "45a756f2d99a350285511a48b283abe87935fc75",
+      "sha256": "dac5f619fd48debd015599c0291049b0c06ad2c22007601b5ad3d3327e669cb5",
+      "bytes": 1520
+    },
+    "reference/latest/src/main/java/com/example/docs/item/custom/LightningStick.java": {
+      "blobSha": "37497d82e7dade495b0c59fbe16236e2150be59b",
+      "sha256": "dd81b521f63fecc18b49cff3844a2d7af8a0487b68832ba0abfdf6be1bced432",
+      "bytes": 1849
+    },
+    "reference/latest/src/main/java/com/example/docs/item/ExampleModItems.java": {
+      "blobSha": "bdbfb570458375fd5ab3c3ce6317e20006833442",
+      "sha256": "d2b79d54a3d4ee6a78de3acc5b8b14a64bbe56acc61d3ac318235b8722c2126a",
+      "bytes": 248
+    },
+    "reference/latest/src/main/java/com/example/docs/item/ModItemIds.java": {
+      "blobSha": "c7091428e192a8dccbbad834c7746a55a72b01e5",
+      "sha256": "7cc53b91cd3311b1a2f2f8015cca8ac25e406374b4bdb00430aaadad93d6d65c",
+      "bytes": 3790
+    },
+    "reference/latest/src/main/java/com/example/docs/item/ModItems.java": {
+      "blobSha": "36be9bd4ed9843b45714ce718ae9ecd8d24a42da",
+      "sha256": "4b710f2250b8c8347c0b5d9f22036919f89f75120cf7442bc585faec088ede82",
+      "bytes": 16902
+    },
+    "reference/latest/src/main/java/com/example/docs/menu/custom/DirtChestMenu.java": {
+      "blobSha": "2719bb7fc9e148e05a680cb00373b6a4b9529766",
+      "sha256": "2976e69d4a5c8fad319af2c1bc640a423a4dd24c8bf334b6f963105480b04a7e",
+      "bytes": 3687
+    },
+    "reference/latest/src/main/java/com/example/docs/menu/custom/SuperiorUpgradingMenu.java": {
+      "blobSha": "3715f52cdb8291b1f0121a6afaee83b50336efcb",
+      "sha256": "cb1865fabab4db3c951588a649cc2a8513dd065b834212ba76e64e088946875b",
+      "bytes": 2547
+    },
+    "reference/latest/src/main/java/com/example/docs/menu/custom/UpgradingMenu.java": {
+      "blobSha": "9ebcf62fd1ab09880399338122c747d9c13d5cc4",
+      "sha256": "70841bba5ae002df9f8be5fbd54f56d7b650be3fc4724f0ef0a4f6c4bd4672e7",
+      "bytes": 3708
+    },
+    "reference/latest/src/main/java/com/example/docs/menu/custom/UpgradingResultSlot.java": {
+      "blobSha": "d8f75ce7e8eb50772fa0a76209562947433c016d",
+      "sha256": "2614a307e18e89ee28ce794b426e8ce3e427a521b1d9a98dba669c2c3314dbb6",
+      "bytes": 728
+    },
+    "reference/latest/src/main/java/com/example/docs/menu/ExampleModMenuType.java": {
+      "blobSha": "2a999e2f37ef8b1e67257a1df21cce7b007d26fb",
+      "sha256": "71e12649dbd305b2085c78929c7e45dc62766922423e4e62f33bf2994327d904",
+      "bytes": 248
+    },
+    "reference/latest/src/main/java/com/example/docs/menu/ModMenuTypes.java": {
+      "blobSha": "a69d26b0fd8afe0e2ad78cb98c10c4721a966655",
+      "sha256": "b28e0dda298402e61aaec17065915b49bf1caaf38207545d49c6c822f476d1c8",
+      "bytes": 1212
+    },
+    "reference/latest/src/main/java/com/example/docs/mixin/accessor/ClientboundCustomPayloadPacketAccessor.java": {
+      "blobSha": "2dc9a1f778daaf62c58370522c5be0cd218a2e6e",
+      "sha256": "a42adea18ce624deb67526d5934a590e576098716899cb59f34491930fbccc54",
+      "bytes": 688
+    },
+    "reference/latest/src/main/java/com/example/docs/mixin/accessor/IdentifierAccessor.java": {
+      "blobSha": "24b3a27d16f0d593139ad94fbc6a3cc3a0b8daa6",
+      "sha256": "fd582b8e4f5b67d8feebd589c91689aad036fc127fbd78df6d840a5c66521c80",
+      "bytes": 497
+    },
+    "reference/latest/src/main/java/com/example/docs/mixin/accessor/InventoryAccessor.java": {
+      "blobSha": "cb937949a5b9e1c3b354130c3a8df3e8507796b3",
+      "sha256": "9f4770cb93582b9b12ac0c52833c02f8c4c6fbfe7417aac9944ec3fcd7e61e91",
+      "bytes": 531
+    },
+    "reference/latest/src/main/java/com/example/docs/mixin/accessor/ShulkerBoxBlockAccessor.java": {
+      "blobSha": "68fbecc8f7eae15157c5df54c1006cf23e223794",
+      "sha256": "bf0ac3943deb4ecf6e801f5e0217c679d080dead0a7dc2c70ebaf48fb0e67214",
+      "bytes": 753
+    },
+    "reference/latest/src/main/java/com/example/docs/mixin/accessor/SlotDisplayAccessor.java": {
+      "blobSha": "4f62eb1a296ec96f9b8b1079640e16eb7641ceaa",
+      "sha256": "04e089fdc3d4ecc6f56dc6dcf0ec7723eda75198a74e372b06b1ddf1c7b6ea7a",
+      "bytes": 942
+    },
+    "reference/latest/src/main/java/com/example/docs/mixin/accessor/VillagerAccessor.java": {
+      "blobSha": "57a218e0b3c057ca1745ca1dcf4e6f62a75af3e8",
+      "sha256": "46212da539fa59172930f4fae65e8b9696870b1d3cd764631d5b200b1dc58ff5",
+      "bytes": 558
+    },
+    "reference/latest/src/main/java/com/example/docs/mixin/class_tweakers/ConversionTypeMixin.java": {
+      "blobSha": "5346b50670019a1c49d8773812c9af888726ca37",
+      "sha256": "57ddc44812958309526cd4f6f3569fa3e47e724e30a8db176c6d0ea83160d616",
+      "bytes": 740
+    },
+    "reference/latest/src/main/java/com/example/docs/mixin/class_tweakers/FlowingFluidMixin.java": {
+      "blobSha": "4924d63bba06372a23f0a43b9fb784fd1c02dac4",
+      "sha256": "75d8c77042fae708e778bfc9a766cdd26bbb964cbbef2e55fba908b23c557c88",
+      "bytes": 802
+    },
+    "reference/latest/src/main/java/com/example/docs/mixin/class_tweakers/IllagerSpellMixin.java": {
+      "blobSha": "943d28af1887ebaea55d7f32a41ad9787984dc35",
+      "sha256": "469c6ae139ff0112b5937696b37b93f601675c6634a1bf0475332338c01430ce",
+      "bytes": 617
+    },
+    "reference/latest/src/main/java/com/example/docs/mixin/class_tweakers/RecipeBookTypeMixin.java": {
+      "blobSha": "4d8ef95b0a47a4fd6eb949a5c292a080d6f5a59e",
+      "sha256": "9e117ce20460f51bfc8c392c9b42a9687f82e91e039eb253ee21ab05a09e8cfc",
+      "bytes": 334
+    },
+    "reference/latest/src/main/java/com/example/docs/mixin/class_tweakers/RecipeCategoryMixin.java": {
+      "blobSha": "0bd2249402963e14df6234125bc7dd00f3884874",
+      "sha256": "e3023be2d6ad40018bf57e598a70a674a380777bed309e53c06c57a8322cd8dc",
+      "bytes": 469
+    },
+    "reference/latest/src/main/java/com/example/docs/mixin/event/SheepMixin.java": {
+      "blobSha": "07493a19f9e91f34fbc7934af6c3210b01f9819b",
+      "sha256": "f86666e9b997a40f0016d1412680e1e70931980aa7de77a4b9bb3251e7361b11",
+      "bytes": 1177
+    },
+    "reference/latest/src/main/java/com/example/docs/mixin/ExampleMixin.java": {
+      "blobSha": "eec2134e4d1bc732cbfc49e5b3e352f13ac0804b",
+      "sha256": "dbb86a1c10272ff43144bc4425df503a67d6da8202081ab9c700b95a35f72933",
+      "bytes": 518
+    },
+    "reference/latest/src/main/java/com/example/docs/ModLootTables.java": {
+      "blobSha": "ca11a790d3c665da9b9579118e2cf46ae10fd3e3",
+      "sha256": "df94944d19db057a42289b8ceeecf65cfff0943a93271105194b2c737af22f9a",
+      "bytes": 705
+    },
+    "reference/latest/src/main/java/com/example/docs/networking/basic/ClientboundSummonLightningPayload.java": {
+      "blobSha": "cb5af7a2dcebdeda203e0ddca400cd8e6648c207",
+      "sha256": "6f1828c1fb50b693a75ad9d4979c305246b92ac855c470617e40073c22f20d51",
+      "bytes": 1396
+    },
+    "reference/latest/src/main/java/com/example/docs/networking/basic/ExampleModNetworkingBasic.java": {
+      "blobSha": "4ba85cf2c43328800b12a48d21022d84045a5d57",
+      "sha256": "ca76a1dbcf82f8d200040a23d8226100cc45d7ace765061fef98102ab39c638a",
+      "bytes": 1457
+    },
+    "reference/latest/src/main/java/com/example/docs/networking/basic/GiveGlowingEffectServerboundPayload.java": {
+      "blobSha": "2d152e40769999b60317d74ccaecea64ae22e200",
+      "sha256": "d88f9b0137e50dcbce3d950de43fa4977c9d3fcd284e8d831f4e6708a59464d7",
+      "bytes": 1104
+    },
+    "reference/latest/src/main/java/com/example/docs/networking/basic/LightningTaterItem.java": {
+      "blobSha": "e710dce5b282f9007491702e5e552e1054ba94db",
+      "sha256": "d280f1d59b2ee69f9ac27c34e41ff59592d4bc03bf7680193f027ceb7a9e44f3",
+      "bytes": 1294
+    },
+    "reference/latest/src/main/java/com/example/docs/networking/ExampleModNetworking.java": {
+      "blobSha": "9a470b30e57eec21d6fe32432ea873ac2b8017b4",
+      "sha256": "719b04d6487df372fe9a2d170c4a4559e18081593738662dca9e0e642960b9f2",
+      "bytes": 219
+    },
+    "reference/latest/src/main/java/com/example/docs/networking/NetworkPayloads.java": {
+      "blobSha": "d2276bd741556ead5631e01fe2793d70dea6eaf7",
+      "sha256": "fc1569ff0b7c62589f0edecf7ff9e06b5ce3a592171e6f8e3f0cd0445c718a10",
+      "bytes": 1041
+    },
+    "reference/latest/src/main/java/com/example/docs/networking/payload/EngineSoundInstancePacket.java": {
+      "blobSha": "2ef27d5af96f34153174d659ea12b3d403c45d4a",
+      "sha256": "80b4e7307b2b285bc9372ee56025f04e5e19658f0d08f39d03fc6fb23ae49f03",
+      "bytes": 996
+    },
+    "reference/latest/src/main/java/com/example/docs/potion/ExampleModPotions.java": {
+      "blobSha": "497c8296c4ee3f9ee78bb93c92caa1fe8799db3d",
+      "sha256": "f38e4a7c8d84aaf7879152c7646d13112e56a7ddd7022dd8089b87a72fbc601a",
+      "bytes": 1229
+    },
+    "reference/latest/src/main/java/com/example/docs/potion/ModPotionIds.java": {
+      "blobSha": "2264cd6358a7b892ca179f4bcb2a671b7ae9f2e4",
+      "sha256": "e2738ed890e6b9d7023359cce52eed8a211b66e1199239ff1bd595724f120f20",
+      "bytes": 579
+    },
+    "reference/latest/src/main/java/com/example/docs/projectile/HotTaterEntity.java": {
+      "blobSha": "2ed24408b4e5a523625cf72582431e3cc500d7b8",
+      "sha256": "31f16b2576e9e1bcc7ef9c8b62fbe136dcc097fda90a359e92b5f37d80f1d05d",
+      "bytes": 2549
+    },
+    "reference/latest/src/main/java/com/example/docs/projectile/HotTaterItem.java": {
+      "blobSha": "d47676771293826c73be078e8314c4cea4ded268",
+      "sha256": "74ef305e120324765f4b23b6d9fae4232ce59be3ee3654b88fbdd7f0f1971351",
+      "bytes": 1907
+    },
+    "reference/latest/src/main/java/com/example/docs/recipe/ExampleModRecipes.java": {
+      "blobSha": "1395d19cdf17f5de7a4aed26e2844dc615649ca8",
+      "sha256": "5057a1b84fe604ab906c9b544912a2aea4016e9cf703daf994198b142b3212f5",
+      "bytes": 2272
+    },
+    "reference/latest/src/main/java/com/example/docs/recipe/extending/EnchantingSmithingDemoSlotDisplay.java": {
+      "blobSha": "0be1ac7b77d110ff79f1659fd4a9cf1528247dfd",
+      "sha256": "aab887c30abaa3b70ea497208c9a6d5a62d7b8e88fd251c4c0dc689246af6782",
+      "bytes": 2523
+    },
+    "reference/latest/src/main/java/com/example/docs/recipe/extending/EnchantingSmithingRecipe.java": {
+      "blobSha": "db08afc55394281591742ab474d12338d83d1b89",
+      "sha256": "0a5a701150c566f02f31579eb3726e3074226d406928259e0f4614f563e4ba62",
+      "bytes": 5170
+    },
+    "reference/latest/src/main/java/com/example/docs/recipe/extending/package-info.java": {
+      "blobSha": "fcdb2843e599658fd66aa919fb99f5b0ab44e222",
+      "sha256": "5a72ee1efc553191093e9c773513217941708048a76f4267ef900ef0d6787f8e",
+      "bytes": 100
+    },
+    "reference/latest/src/main/java/com/example/docs/recipe/extending/StewSpikingCraftingRecipe.java": {
+      "blobSha": "374f4a84a83eb3be7334c3d735aa351ac009550e",
+      "sha256": "0b0d4dd0b2dc49b69847baaedb37b7f1e579e08dbe19ae7d7e2a58d0522a463e",
+      "bytes": 4643
+    },
+    "reference/latest/src/main/java/com/example/docs/recipe/UpgradingRecipe.java": {
+      "blobSha": "fece1ffb792962a9bc1100ca606b880453ffb2b9",
+      "sha256": "3d1ee7e814ae02d230ff630d7d7ae82cfbac14cf30327fa73b92aba3ecbe6fd1",
+      "bytes": 3504
+    },
+    "reference/latest/src/main/java/com/example/docs/recipe/UpgradingRecipeInput.java": {
+      "blobSha": "87ce784f134eb3980216421a4c6d1c042ee1d604",
+      "sha256": "d38c7130774134269f3ddcd4a30777656d6b37770e192dd85ef1c7948f7a6f8b",
+      "bytes": 510
+    },
+    "reference/latest/src/main/java/com/example/docs/saveddata/ExampleModSavedData.java": {
+      "blobSha": "56006544c4ec1ab278b9fba163f1f5f589930b8a",
+      "sha256": "c87e9568208a0c90b7dbf1b0ba60d0b2dfa90a9618e55221a8d165a81e7b1c5d",
+      "bytes": 909
+    },
+    "reference/latest/src/main/java/com/example/docs/saveddata/SavedBlockData.java": {
+      "blobSha": "17c44edb19bc95eda87987a503beec6b82329889",
+      "sha256": "f40033cc0ffe7e0ebf3e4220ced3af45a254257b25229b9ade0f5a92de2a42f5",
+      "bytes": 2310
+    },
+    "reference/latest/src/main/java/com/example/docs/sound/CustomSounds.java": {
+      "blobSha": "3a73d3323ff9c7e6cc7d0dba8c1f21432d89b325",
+      "sha256": "dfc525f7219e4ef7019fbb5ecfe0a3f809ff4d774c1f449e697e161de72850d0",
+      "bytes": 1380
+    },
+    "reference/latest/src/main/java/com/example/docs/sound/DynamicSoundSource.java": {
+      "blobSha": "30cbfcdd8dc4c76b538c913ab9c3ca47ba869068",
+      "sha256": "b580d4f416682f0b4891775442b670e38a78ada7b910d25d3b77343e7680e50f",
+      "bytes": 617
+    },
+    "reference/latest/src/main/java/com/example/docs/sound/ExampleModSounds.java": {
+      "blobSha": "eb9b77b6c1ec0dc4ec7ed2019386411591774d48",
+      "sha256": "bafb73e04983d453ca033e7a54151ee1d30a39302c027b23a94889453b8c2abf",
+      "bytes": 819
+    },
+    "reference/latest/src/main/java/com/example/docs/sound/TransitionState.java": {
+      "blobSha": "f94dffed71e8667b0eda63b32b461aa184ed0365",
+      "sha256": "a629863e301634f5d5028fcca3475053a517e7ef84b61ee5ae7ab2366589ca10",
+      "bytes": 466
+    },
+    "reference/latest/src/main/java/com/example/docs/stats/ExampleModStats.java": {
+      "blobSha": "58683a62539ed0b101b56ceaa3e9d7c137140540",
+      "sha256": "be5304aa9dcc9f11b1bf49447a4ca2cbd0097949342f30ae05e3082f07af1c72",
+      "bytes": 249
+    },
+    "reference/latest/src/main/java/com/example/docs/stats/ModStats.java": {
+      "blobSha": "c7e7a67e1f70c365ba53af2e5a4eb37ffd792e4a",
+      "sha256": "ef17068d36dcac0a654b36acdcc2c75b0ab1555e73dce07b1a4bf176fc0e5078",
+      "bytes": 853
+    },
+    "reference/latest/src/main/java/com/example/docs/Unreferenced.java": {
+      "blobSha": "029d1caaac7dac9226d6db2c27872f68f996e81f",
+      "sha256": "bb3fe8ea2726e1a430e93283b1fc88d77f16a5287d16cecfc0527e498f642d23",
+      "bytes": 3299
+    },
+    "reference/latest/src/main/java/com/example/docs/worldgen/ExampleModWorldConfiguredFeatures.java": {
+      "blobSha": "996ec03de36fab4f8b7042c6e7d93dda789d223c",
+      "sha256": "f914d2a92b9cdcf929bd476cafeaed2850d85f7a8e54e50d848a7279a53d3998",
+      "bytes": 4078
+    },
+    "reference/latest/src/main/java/com/example/docs/worldgen/ExampleModWorldgenProvider.java": {
+      "blobSha": "d49228d986333f1a127fbcee51f55d1c22b0d8bb",
+      "sha256": "b6e3424fa322a6f85f479b0f021fa39f43d04506eddeed1f5162694080da8299",
+      "bytes": 1011
+    },
+    "reference/latest/src/main/java/com/example/docs/worldgen/ExampleModWorldPlacedFeatures.java": {
+      "blobSha": "a374dd086f7b32acd668e2c7aee3a9f32b82121f",
+      "sha256": "6be2f37924327ab790c28c90d6cc2c5fd90fd2150002b090db031415a0d27862",
+      "bytes": 3248
+    },
+    "reference/latest/src/main/resources/assets/example-mod/equipment/guidite.json": {
+      "blobSha": "b5223160738cd43ba60d02be2269f3da8f3987fc",
+      "sha256": "c81c515ba9e9bae391c939c154925803d0c424ac435f2531dc077446323217e1",
+      "bytes": 281
+    },
+    "reference/latest/src/main/resources/assets/example-mod/lang/en_us.existing.json": {
+      "blobSha": "3da4593fa86ca1e495341ef8722c05ded15c2383",
+      "sha256": "73d37553b5cfade75990ad2b2d43217e5859992f034f7a6b19db1c1c571ba236",
+      "bytes": 76
+    },
+    "reference/latest/src/main/resources/assets/example-mod/models/block/vertical_slab.json": {
+      "blobSha": "e0ccfcab25e08d7860556b9fc38e995a031d6a6f",
+      "sha256": "d8af28270a666bda43010576c361a9c5fb343901b70743144a0e02e06c50c162",
+      "bytes": 1735
+    },
+    "reference/latest/src/main/resources/assets/example-mod/models/item/scaled2x.json": {
+      "blobSha": "a652d7c215bf1e8298af6da859515e76addc7d39",
+      "sha256": "0b9206f9ed703d268d33ab73e652df384a5f39198836887d1530b780d8683d01",
+      "bytes": 545
+    },
+    "reference/latest/src/main/resources/assets/example-mod/particles/sparkle_particle.json": {
+      "blobSha": "f9c283ef1f5fa9021e12379a29950af134f6d6c8",
+      "sha256": "831128dffece17c4a61b9c37e60099790c19a7dafd43ebb5815526f341c6d11b",
+      "bytes": 59
+    },
+    "reference/latest/src/main/resources/assets/example-mod/sounds.json": {
+      "blobSha": "f79c5ff90aee843d54ed71eda0b1ebdb996431d6",
+      "sha256": "436627d3d8734b2a4668856eaecc66daaada5539381544b128e42597ca269e92",
+      "bytes": 224
+    },
+    "reference/latest/src/main/resources/data/c/tags/item/buckets.json": {
+      "blobSha": "6bf5c627c9254f4396bac16fd89d8c399ad16b20",
+      "sha256": "fab88d147012793c64c293807ef44aab2650e420b1a7552812f516a96132af67",
+      "bytes": 44
+    },
+    "reference/latest/src/main/resources/data/example-mod/function/got_nether_star.mcfunction": {
+      "blobSha": "c8497455a3c6e9181d2ea31855541e338e0c03a7",
+      "sha256": "acfeac1ece1450ed654efb4fe5bfbab62b4b0b717570a482eeb998c9a8211009",
+      "bytes": 35
+    },
+    "reference/latest/src/main/resources/data/example-mod/function/healing_skill_function.mcfunction": {
+      "blobSha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "reference/latest/src/main/resources/data/example-mod/loot_tables/blocks/condensed_dirt.json": {
+      "blobSha": "d9e4efb13c41e31cc786c599589c17303158e4a1",
+      "sha256": "bd65206612e784978de71de154c9d6dd54c07ff7c7fb1c9f95f41cbcb113d13f",
+      "bytes": 315
+    },
+    "reference/latest/src/main/resources/data/example-mod/recipe/smithing_enchanting/netherite_sword_smithing_enchanting.json": {
+      "blobSha": "c7412382ef6a42059b70c370419348ae232f5f84",
+      "sha256": "22784621c95dfcccf75d097b6aeba8bdd7dcbd1d3bb3bcd47bba336a80ab4cc8",
+      "bytes": 311
+    },
+    "reference/latest/src/main/resources/data/example-mod/recipe/stew_spiking/stew_spiking.json": {
+      "blobSha": "6e3ba510c07306211cfbe5f4ba380c3330a07f4a",
+      "sha256": "15905b41e1403424734a919a97bf706aa91e649f3ba431460a6f9b1674d1b680",
+      "bytes": 41
+    },
+    "reference/latest/src/main/resources/data/example-mod/recipe/upgrading/diamond_pickaxe.json": {
+      "blobSha": "878e2bee5bd3a3fcaa4d3d0f29c05d40136900a3",
+      "sha256": "9a423f0a5d6567d858c0ed2b195ac062b1327f66d576d24d7ce705636b24649f",
+      "bytes": 173
+    },
+    "reference/latest/src/main/resources/data/example-mod/tags/block/incorrect_for_guidite_tool.json": {
+      "blobSha": "67e823d762d5e7601bf4a862715fe239d1508281",
+      "sha256": "7d9bca91edea6d63ecbe5df3f8107f562b55d72cfe3cc1a29f0af4b44fbb7608",
+      "bytes": 104
+    },
+    "reference/latest/src/main/resources/data/minecraft/tags/mineable/shovel.json": {
+      "blobSha": "8033d59b8a2a8ac83d315d015fbc1fc2cd2b0f23",
+      "sha256": "9a58e74b272bc7092ff218129a166596f41706b67a8665894ecd95059f119811",
+      "bytes": 67
+    },
+    "reference/latest/src/main/resources/example-mod.classtweaker": {
+      "blobSha": "2402a427b72290bff01bf1f22ba60a40efb4b185",
+      "sha256": "5828583331a233d4c509c31ef801ddd695adfca93609c39bb01a4f21bc811ddb",
+      "bytes": 2208
+    },
+    "reference/latest/src/main/resources/example-mod.mixins.json": {
+      "blobSha": "1ca8488f11079cfb42a091afc224dd78440565c9",
+      "sha256": "c26aed1674527c924b9c2ccc2ac63d1f25070b7e41035cec09b7d8e2b2a65d2b",
+      "bytes": 665
+    },
+    "reference/latest/src/main/resources/fabric.mod.json": {
+      "blobSha": "90cbd2cbd2362a4f8f88d39f3ec4fdf8c7b3bd5c",
+      "sha256": "893b9e886a15b11a2f56b5de4bce9d18514da4ca2dc4766f7617caeb7ee05dbc",
+      "bytes": 2800
+    },
+    "reference/latest/src/test/java/com/example/docs/codec/BeanTypeTest.java": {
+      "blobSha": "795f0ed1eacb01a41a6eacf0e59ad54ee2605f99",
+      "sha256": "fd5f0be6df9ef3d25317dcad68a8fdf953e80b045c40a83c9fea3859de5d82ba",
+      "bytes": 1724
+    },
+    ".github/workflows/build.yaml": {
+      "blobSha": "1d55d026c886a0f2f828029f906dc028b51249a0",
+      "sha256": "38e241fdfe9892e2f99916dc9f4bcdc349b393e58ef6f05cb18001aceadc4261",
+      "bytes": 2908
+    },
+    "public/assets/develop/automatic-testing/crash-report.log": {
+      "blobSha": "bd08468d1781b89eab2b84c6dd7a80088b47d62f",
+      "sha256": "606389fcd0235cd12ff4959426092a807d00cff920690aff0ddc50ba5daed2a3",
+      "bytes": 1751
+    }
+  }
+}

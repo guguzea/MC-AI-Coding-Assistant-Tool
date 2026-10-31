@@ -40,9 +40,13 @@ npm 包约 **12 MB**（解压约 **157 MB**），内容分两类：
 ### 安装后校验
 
 ```bash
-npx mc-skill --version
-npx mc-skill diagnose_data_paths   # 列出各平台数据目录状态
+./node_modules/.bin/mc-skill --version
+./node_modules/.bin/mc-skill diagnose_data_paths   # 列出各平台数据目录状态
 ```
+
+> 为什么不用 `npx mc-skill`：npm 包名是 `mc-ai-coding-assistant-tool`，`mc-skill` 只是它声明的 bin 名
+> （`package.json` 的 `bin` 字段），仓库里没有同名包 —— `npx mc-skill` 会去 registry 找而落空。
+> 克隆形态见下一节。
 
 ### 仓库检出形态（与 npm 形态不同）
 

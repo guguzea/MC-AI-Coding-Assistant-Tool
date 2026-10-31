@@ -313,11 +313,17 @@ function sliceTag(content: string, tag: string): string {
  * `:49` 是 `\t// #endregion repair_tags`。首尾标记行不计入正文，与本文件 `transcludeWith` 的处理一致。
  * 名字做字面匹配并转义（真实标签里有 `datagen-tags:provider` 这类含 `-`/`:` 的名字，不能当正则用）。
  * 起止任一缺失即返回空串 ⇒ 上层按 `No lines matched.` 处理（宁可不给，不给半截）。
+ *
+ * **两种标记都要认**（2026-10-31 上游 26.2 实测）：`data/fabric_26.2/reference/latest/src/client/
+ * java/com/example/docs/projectile/ExampleModProjectileClient.java:14` 写的是裸 `// region renderer`
+ * / `// endregion renderer`（无 `#`），而页面 `develop/entities/projectiles.md:158` 引用 `#renderer`；
+ * 上游站点该处**确实展开成一行 `EntityRenderers.register(...)`**（线上核过），所以只认 `#region`
+ * 会把一条真引用判成「区段名对不上」。`\b` 前缀保证 `endregion` 里的 `region` 不会被当起点。
  */
 function sliceRegionMarker(content: string, name: string): string {
   const esc = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const startRe = new RegExp(`#region\\s+${esc}(\\b|$)`);
-  const endRe = new RegExp(`#endregion\\s+${esc}(\\b|$)`);
+  const startRe = new RegExp(`(?:#)?\\bregion\\s+${esc}(\\b|$)`);
+  const endRe = new RegExp(`(?:#)?\\bendregion\\s+${esc}(\\b|$)`);
   const lines = content.split("\n");
   let i = 0;
   while (i < lines.length && !startRe.test(lines[i])) i++;
