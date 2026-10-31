@@ -129,7 +129,10 @@ for (const rel of packDirs) {
 
 // 2026-10-23：58 → 59（新增 rift/1.13 原生档；依据：Rift 原生线目标版本是 1.13，
 // 件内 profile.json 的 inheritsFrom=1.13，而 1.13.1/1.13.2 只有社区分支、无原生件）
-const EXPECTED_PACKS = 59;
+// 2026-10-31：59 → 60（新增 fabric/26.2 档；依据：上游 latest 面（develop/）已是 26.2 正文、
+// 语料按 commit 238533d8 pin 入库，规则树 + scaffold 均在本机真编译通过，见
+// fabric/26.2/pack.meta.json 与 doc/platform-coverage-fabric.md）。
+const EXPECTED_PACKS = 60;
 if (packDirs.length !== EXPECTED_PACKS) {
   errors.push(`pack 档数 ${packDirs.length} ≠ 基线 ${EXPECTED_PACKS}（新增/删除版本档必须同步本基线并注明依据）`);
 }

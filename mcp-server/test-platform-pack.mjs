@@ -880,9 +880,11 @@ function assertHasRuleIds(s, want, label) {
   assert.equal(s.knowledgeVersion, "26.1.2");
   assert.match(String(s.packDir), /fabric\/26\.1\.2/);
   assert.ok((s.warnings ?? []).some((w) => /不要用 minecraftVersion=26\.1/.test(w)), (s.warnings ?? []).join(" | "));
-  const miss = sessionPlatformPack({ platform: "fabric", minecraftVersion: "26.2" });
-  assert.equal(miss.ok, false);
-  assert.equal(miss.action?.code, "PACK_NOT_FOUND");
+  // 2026-10-31：fabric/26.2 建档后，这一档从「必须 PACK_NOT_FOUND」翻成「必须真加载」。
+  // 判据不放宽：仍要求 packDir 精确落在 fabric/26.2；负例由下面 1.21 那条继续担。
+  const has262 = sessionPlatformPack({ platform: "fabric", minecraftVersion: "26.2" });
+  assert.equal(has262.ok, true, JSON.stringify(has262).slice(0, 400));
+  assert.match(String(has262.packDir), /fabric[\\/]26\.2/);
   const cross = sessionPlatformPack({ platform: "fabric", minecraftVersion: "1.21" });
   assert.equal(cross.ok, false);
   assert.equal(cross.action?.code, "PACK_NOT_FOUND");

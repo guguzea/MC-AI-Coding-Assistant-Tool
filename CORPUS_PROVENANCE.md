@@ -56,7 +56,7 @@
 > 原 `AGENTS.md:108` / `:142` / `:168` 的方法脚注。
 
 - Quilt：实测 `ls -d quilt/*/` 对 `ls -d data/quilt_*/`（as-of 2026-09-05）。
-- Fabric：实测 `ls -d fabric/*/` 对 `ls -d data/fabric_*/` 对 `list_fabric_versions`（as-of 2026-09-05）。
+- Fabric：实测 `ls -d fabric/*/` 对 `ls -d data/fabric_*/` 对 `list_fabric_versions`（as-of 2026-09-05；26.2 补齐后 2026-10-31 复测 = 15/15/15）。
 - NeoForge：实测 `ls -d neoforge/*/` 对 `ls -d data/neoforge_*/`（as-of 2026-09-05）。
 
 三条清单一律由 `mcp-server/test-assistant-gaps.mjs :: A-43` 对磁盘实扫钉住 —— 数值以该门现跑为准，任何手抄读数都只是当时的快照。

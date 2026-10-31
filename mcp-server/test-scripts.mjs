@@ -1904,9 +1904,10 @@ public class ForeignHelper {
   assert.match(
     runs.realRoot.stdout,
     // 树数快照随语料增长（2026-10-14：+2 棵服务端面签名层树 ⇒ 49→51；2026-10-24：spigot 3 档 +
-    // paper-api 5 档 javadoc 面入库 ⇒ 51→65）。**只改数字，形状判据不变**
+    // paper-api 5 档 javadoc 面入库 ⇒ 51→65；2026-10-31：fabric 26.2 latest 面入库 ⇒ 65→66）。
+    // **只改数字，形状判据不变**
     // （`泛型丢失 \d+` / `目录层 \d+ 个目录` 本就是通配；`重名 0` 与 `0 条目 0 / 非法名 0` 仍是硬钉）。
-    /65 棵 raw\/processed 树[\s\S]*处字节已在盘上[\s\S]*泛型丢失 \d+ · 重名 0[\s\S]*目录层 \d+ 个目录（0 条目 0 \/ 非法名 0）/,
+    /66 棵 raw\/processed 树[\s\S]*处字节已在盘上[\s\S]*泛型丢失 \d+ · 重名 0[\s\S]*目录层 \d+ 个目录（0 条目 0 \/ 非法名 0）/,
     `真根少跑了层或台账口径变了：\n${runs.realRoot.stdout}`,
   );
   console.log(

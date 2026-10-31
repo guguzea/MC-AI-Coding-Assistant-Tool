@@ -1,0 +1,97 @@
+---
+description: 05 — 事件系统（26.2）
+---
+
+# 05 — 事件系统（26.2）
+
+> 适用版本：Fabric 26.2（**Mojmap**，不要抄 Yarn `PlayerEntity` / `ActionResult`）
+
+26.2 的 events 已从单页拆成目录：`26.2/develop_events_index`（总论 / 回调 / 自定义事件 / mixin 触发）+ `26.2/develop_events_loot-tables`。
+事件本体是 `net.fabricmc.fabric.api.event.Event`，回调 `.register()`（`26.2/develop_events_index:28`）。
+不要用 Forge `@SubscribeEvent`。注意：26.2 摘要里**确实有** `net.fabricmc.fabric.api.event.player.BlockEvents` 与 `ItemEvents`，但两者 `methods` 为空 —— 它们不是注册入口；`PlayerTickEvents` / `@EventHandler` 则根本不存在，不要编造。
+
+---
+
+## 约束
+
+### 核心原则
+
+- 回调是传给事件的代码；游戏触发时执行（`develop_events_index:32`）
+- 在初始化里 `SomeCallback.EVENT.register(...)`
+- 静态 `Event` 字段，不是注解总线
+- 方法名与类型用 **Mojmap**：`Player`、`Level`、`InteractionResult`、`InteractionHand`
+
+### 与 Forge 的区别
+
+| Forge | Fabric 26.2 |
+|-------|--------|
+| `@SubscribeEvent` | `EVENT.register(lambda)` |
+| `IEventBus` | 各 API 类上的静态 `Event` |
+| `EventPriority` | Fabric Phase，不是 Forge 优先级 |
+| `setCanceled` | 返回 `InteractionResult` / `boolean` |
+
+---
+
+## Decision Flow
+
+```
+→ Fabric 事件 → Event.register
+→ 玩家 tick → ClientTickEvents / ServerTickEvents（不要 PlayerTickEvents）
+→ 破坏方块 → PlayerBlockBreakEvents.BEFORE（boolean）
+→ 左键方块 → AttackBlockCallback.EVENT
+→ 右键方块 → UseBlockCallback.EVENT
+→ 使用物品 → UseItemCallback.EVENT（本档返回 InteractionResult）
+→ 实体死亡 → ServerLivingEntityEvents.AFTER_DEATH
+→ 生命周期 → ServerLifecycleEvents.SERVER_STARTED / SERVER_STOPPING
+→ 掉落表 → LootTableEvents.MODIFY（26.2/develop_events_loot-tables）
+→ 自定义按键 → 仅客户端：KeyMappingHelper + ClientTickEvents（26.2/develop_key-mappings）
+→ 不要 @SubscribeEvent / IEventBus
+→ 核不到 → search_fabric_docs version=26.2
+```
+
+---
+
+## 常用事件
+
+```java
+ClientTickEvents.END_CLIENT_TICK.register(client -> {
+    if (client.player == null) return;
+});
+
+ServerTickEvents.END_SERVER_TICK.register(server -> {
+    for (var player : server.getPlayerList().getPlayers()) {
+    }
+});
+
+AttackBlockCallback.EVENT.register((player, level, hand, pos, direction) -> InteractionResult.PASS);
+UseBlockCallback.EVENT.register((player, level, hand, hitResult) -> InteractionResult.PASS);
+UseItemCallback.EVENT.register((player, level, hand) -> InteractionResult.PASS);
+
+PlayerBlockBreakEvents.BEFORE.register((level, player, pos, state, blockEntity) -> true);
+
+ServerLivingEntityEvents.AFTER_DEATH.register((entity, source) -> {});
+ServerLivingEntityEvents.ALLOW_DAMAGE.register((entity, source, amount) -> true);
+
+ServerLifecycleEvents.SERVER_STARTED.register(server -> {});
+ServerLifecycleEvents.SERVER_STOPPING.register(server -> {});
+```
+
+### 按键（仅客户端）
+
+`26.2/develop_key-mappings`；loader-api 26.2 摘要：`net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper.registerKeyMapping(KeyMapping)`。分类翻译键 `key.category.<namespace>.<path>`。响应用 `ClientTickEvents`，不要在服务端入口注册。
+
+## 常见错误
+
+- ❌ 把 Yarn 的 `ActionResult` / `PlayerEntity` / `world.isClient` 抄进 26.2
+- ❌ 引用 `26.2/develop_events`（该页在 26.2 已拆目录，只有 `develop_events_index` 与 `develop_events_loot-tables`）
+- ❌ 在服务端入口调用 KeyMappingHelper / 注册 KeyMapping
+
+## 扩展点
+
+| 配合 Skill | 协作说明 |
+|-----------|---------|
+| `mc-item` | UseItemCallback / UseBlockCallback |
+| `mc-entity` | ServerLivingEntityEvents |
+| `mc-networking` | 事件里发 CustomPacketPayload |
+| `mc-gui` | 客户端 tick 打开 Screen |
+| `mc-fabric-api` | KeyMappingHelper |

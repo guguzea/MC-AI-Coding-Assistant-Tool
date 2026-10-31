@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "id": "examplemod",
+  "version": "${version}",
+  "name": "Example Mod",
+  "environment": "*",
+  "entrypoints": { "main": ["com.example.examplemod.ExampleMod"] },
+  "depends": { "fabricloader": ">=0.20.1", "minecraft": "26.2" }
+}

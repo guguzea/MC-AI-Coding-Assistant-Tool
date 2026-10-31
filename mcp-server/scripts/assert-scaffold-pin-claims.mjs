@@ -51,6 +51,23 @@ const PIN_KEYS = [
   "mapping_version",
 ];
 const CLAIM_RE = new RegExp(`\\b(${PIN_KEYS.join("|")})\\s*=\\s*["']?([0-9][0-9A-Za-z._+\\-]*)`, "g");
+/**
+ * 第二形态：build.gradle 片段 `id 'fabric-loom' version '1.4-SNAPSHOT'`。
+ *
+ * 为什么要加（2026-10-31 R2 复审）：本门首版只认 `key=value`，而**规则树 00-project-setup 教
+ * 构建脚本时用的是 Groovy 片段形** —— 2026-10-30 修掉的真实缺陷 `fabric/1.18.2/.../00-project-setup.mdc:108`
+ * 原文是 `id 'fabric-loom' version '1.0.18'`，首版门对它 **miss**（实测：同一行 OLD_RE 不命中、
+ * 本正则命中）。真树上两形态**零重叠**（OLD only 87 行 / 片段形 only 10 行 / 交集 0），
+ * 所以漏掉的不是边角，是整整一类。
+ *
+ * 真值源不是 gradle.properties 的键（loom 版本多数档只在 build.gradle 里，properties 里没有
+ * `loom_version` 键），而是**该档 scaffold/build.gradle 实钉**（支持 `"${loom_version}"` 变量引用，
+ * 按 properties 解引用）。
+ */
+const SCRIPT_CLAIM_RE =
+  /id\s+['"]([\w.\-]*loom[\w.\-]*)['"]\s+version\s+['"]([0-9][0-9A-Za-z._+\-]*)['"]/g;
+const SCRIPT_VAR_RE =
+  /id\s+['"]([\w.\-]*loom[\w.\-]*)['"]\s+version\s+"\$\{(\w+)\}"/;
 /** 否定 / 引用 / 历史行：这些不是「本档声明」，写别的版本是对的。 */
 const NOT_A_CLAIM = /不要|禁止|不得|旧写法|旧文档|照抄|残留|备选|另一条|曾|历史|示例|例如|如\s*`|e\.g\.|^\s*>/;
 /** 声明总数地板（实测值以本门 ok 行与 §S4 类汇总为准；下界，非等式）。 */
@@ -65,6 +82,22 @@ function readProps(file) {
     map.set(line.slice(0, i).trim(), line.slice(i + 1).trim());
   }
   return map;
+}
+
+/**
+ * 该档 scaffold/build.gradle 里 loom 插件的**实钉值**（真值源）。
+ * 支持 `id 'fabric-loom' version '1.4-SNAPSHOT'` 与 `id '…loom-remap' version "${loom_version}"`
+ * （变量按同档 gradle.properties 解引用）。读不出就返回 null —— 调用方会判红，不静默放过。
+ */
+function readScaffoldLoom(buildGradle, props) {
+  if (!fs.existsSync(buildGradle)) return null;
+  const t = fs.readFileSync(buildGradle, "utf8");
+  const lit = SCRIPT_CLAIM_RE.exec(t);
+  SCRIPT_CLAIM_RE.lastIndex = 0;
+  if (lit) return lit[2];
+  const v = SCRIPT_VAR_RE.exec(t);
+  if (v) return props.get(v[2]) ?? null;
+  return null;
 }
 
 function tierFiles(dir) {
@@ -99,6 +132,7 @@ function scan(root) {
       if (!fs.existsSync(propsPath)) continue;
       stats.tiers += 1;
       const props = readProps(propsPath);
+      const realLoom = readScaffoldLoom(path.join(dir, "scaffold", "build.gradle"), props);
       const files = tierFiles(dir);
       stats.faces += files.length;
       if (!files.length) {
@@ -126,6 +160,31 @@ function scan(root) {
             stats.claims += 1;
             failures.push(`${rel}:${i + 1}: 声称 ${key}=${claimed}，本档 scaffold 实钉 ${actual}（照抄会生成过期工程）`);
           }
+          // 第二形态：build.gradle 片段的 loom 钉值（真值 = 该档 scaffold/build.gradle）
+          SCRIPT_CLAIM_RE.lastIndex = 0;
+          let s;
+          while ((s = SCRIPT_CLAIM_RE.exec(line))) {
+            const [, plugin, claimed] = s;
+            if (realLoom === null) {
+              stats.claims += 1;
+              failures.push(
+                `${rel}:${i + 1}: 声称 ${plugin} version '${claimed}'，但本档 scaffold/build.gradle 里读不出 loom 钉值（真值源缺失，无法核对）`,
+              );
+              continue;
+            }
+            if (realLoom === claimed) {
+              stats.claims += 1;
+              continue;
+            }
+            if (NOT_A_CLAIM.test(line)) {
+              stats.skipped += 1;
+              continue;
+            }
+            stats.claims += 1;
+            failures.push(
+              `${rel}:${i + 1}: 声称 ${plugin} version '${claimed}'，本档 scaffold/build.gradle 实钉 '${realLoom}'（照抄会生成过期工程）`,
+            );
+          }
         });
       }
     }
@@ -145,11 +204,39 @@ if (SELFTEST) {
   const TIER = "forge/9.9.9/";
   const PROPS = "minecraft_version=9.9.9\nforge_version=9.9.9.1\nmapping_channel=official\nmapping_version=9.9.9\n";
   const OK_00 = "# 版本号管理\n\n```properties\nminecraft_version=9.9.9\nforge_version=9.9.9.1\nmapping_version=9.9.9\n```\n";
+  // ── 第二形态夹具：build.gradle 片段（真值源 = scaffold/build.gradle，不是 properties 键）──
+  const SC_BG = "forge/9.9.9/scaffold/build.gradle";
+  const BG_PROPS = "minecraft_version=9.9.9\nmapping_channel=official\nmapping_version=9.9.9\n";
+  const BG_LIT = "plugins {\n    id 'fabric-loom' version '1.4-SNAPSHOT'\n}\n";
+  const BG_00 = "# 构建\n\n```groovy\nplugins {\n    id 'fabric-loom' version '1.4-SNAPSHOT'\n}\n```\n";
+  const BG_VAR_PROPS = "loom_version=1.17-SNAPSHOT\nminecraft_version=9.9.9\n";
+  const BG_VAR_SC = "plugins {\n    id 'net.fabricmc.fabric-loom-remap' version \"\${loom_version}\"\n}\n";
+  const BG_VAR_00 = "# 构建\n\n```groovy\nplugins {\n    id 'net.fabricmc.fabric-loom-remap' version '1.17-SNAPSHOT'\n}\n```\n";
   const cases = [
     // 地板在假根里达不到 ⇒ 用 --root 模式单独关掉地板（selftest 只证判据咬不咬得住）
     ["干净对照", { [SC + "gradle.properties"]: PROPS, [TIER + ".cursor/rules/00-project-setup.mdc"]: OK_00 }, 0, "0 处漂移|ok"],
     ["错值必红", { [SC + "gradle.properties"]: PROPS, [TIER + ".cursor/rules/00-project-setup.mdc"]: OK_00.replace("forge_version=9.9.9.1", "forge_version=8.8.8.8") }, 1, "forge_version=8.8.8.8"],
     ["反例行跳过", { [SC + "gradle.properties"]: PROPS, [TIER + ".cursor/rules/00-project-setup.mdc"]: OK_00 + "\n- **不要**照抄旧写法 `forge_version=1.2.3`\n" }, 0, "0 处漂移|ok"],
+    // —— 第二形态：build.gradle 片段（首版门对它 miss；2026-10-31 补，见 SCRIPT_CLAIM_RE 注释）——
+    ["片段形·干净对照", { [SC_BG]: BG_LIT, [SC + "gradle.properties"]: BG_PROPS, [TIER + ".cursor/rules/00-project-setup.mdc"]: BG_00 }, 0, "0 处漂移|ok"],
+    [
+      "片段形·错值必红（真缺陷复现：fabric/1.18.2 曾写 1.0.18）",
+      { [SC_BG]: BG_LIT, [SC + "gradle.properties"]: BG_PROPS, [TIER + ".cursor/rules/00-project-setup.mdc"]: BG_00.replace("version '1.4-SNAPSHOT'", "version '1.0.18'") },
+      1,
+      "version '1\\.0\\.18'",
+    ],
+    [
+      "片段形·变量解引用（scaffold 用 \${loom_version}，正文写实值）",
+      { [SC_BG]: BG_VAR_SC, [SC + "gradle.properties"]: BG_VAR_PROPS, [TIER + ".cursor/rules/00-project-setup.mdc"]: BG_VAR_00 },
+      0,
+      "0 处漂移|ok",
+    ],
+    [
+      "片段形·变量解引用后不匹配必红",
+      { [SC_BG]: BG_VAR_SC, [SC + "gradle.properties"]: BG_VAR_PROPS, [TIER + ".cursor/rules/00-project-setup.mdc"]: BG_VAR_00.replace("'1.17-SNAPSHOT'", "'1.16-SNAPSHOT'") },
+      1,
+      "1\\.17-SNAPSHOT",
+    ],
   ];
   let fails = 0;
   for (const [label, files, wantRc, marker] of cases) {

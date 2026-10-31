@@ -1643,10 +1643,9 @@ description: |
   const fabCorpus = corpusVersions("fabric");
   assert.equal(Number(fabRuleN), fabTrees.length, `fabric 规则树档数自称 ${fabRuleN}，磁盘 ${fabTrees.length}`);
   assert.deepEqual(fabCited, fabTrees, "fabric 建档面「规则树 N 档」那行点名的版本集 ≠ 磁盘规则树集（语料专有档不要混进这行）");
-  // 2026-10-31：fabric 出现第一个「有语料无规则树」的半档（26.2 = 上游 latest 面 pin，见
-  // doc/platform-coverage-fabric.md）。旧断言「语料集 == 规则树集」随之作废 —— 换成更强的两条：
-  // ① 差额必须精确等于白名单（多一档就算漂移）；② 不许反向出现「有树无料」。
-  const FABRIC_CORPUS_ONLY = ["26.2"];
+  // 2026-10-31：fabric/26.2 规则树补齐后，语料集与规则树集重新相等 —— 白名单清空。
+  // 判据保留（差额必须精确等于白名单 + 禁止反向缺料）：再出现半档时必须显式登记，不许静默。
+  const FABRIC_CORPUS_ONLY = [];
   const fabCorpusOnly = fabCorpus.filter((v) => !fabTrees.includes(v));
   assert.deepEqual(
     fabCorpusOnly,

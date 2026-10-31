@@ -1,0 +1,175 @@
+# 07 — 数据生成器
+
+> 适用版本：Fabric 26.2（Mojmap）
+
+文档入口（若本机文档索引有 26.2）：`develop_data-generation_setup` / `recipes` / `loot-tables` / `tags`。
+本档方法名来自 `query_loader_api`（26.2 fabric-api），**不要**把 Yarn 1.21 的 `generate(Consumer)` 抄过来。
+逐名可核来源见 **`knowledge/common/verified-api-26.2.md`**（表 A 名称来源 / 表 B 已核实方法签名 / 表 C 改名对照 / 表 D javap 核实 / 表 E 未核实清单）。
+该摘要**只有 methods**，不含构造器参数表：下文 Provider 构造器签名以本档示例为准，改动前先 `query_loader_api` 复核，禁止按邻版默写。
+
+> ⚠️ 易错点：**`Identifier` 不是 Yarn 名**。本档（26.2，Mojmap 轴）的官方类名就叫 `Identifier`，已核实依据 =
+> 本档核实表 `knowledge/common/verified-api-26.2.md:95`（26.1 client jar 内 `resources/Identifier.class` 1 条、无嵌套，`ResourceLocation` 0 条）。
+> 旧文本在此断言「改名自 **1.21.11** 起、1.21.10 及更早为 `ResourceLocation`（mappings.dev 核实）」——该节点按同表 :95 **未核实**
+> （1.21.11 客户端 jar 仍是混淆名，无法用同名核对，本仓也没有可引的 mappings.dev 取件记录）。26.1 的「去混淆」是另一件事，与本档写 `Identifier` 这个名不冲突。
+> 跨到 1.21.x 档时**不要**把本段当结论抄：Yarn 轴以该档 `data/fabric_<ver>/mappings/` 映射表为准，Mojmap 轴以该档自己的 verified-api 表为准，两边都缺证据就留 `TODO(未核实)`。
+
+---
+
+## 约束
+
+### 核心原则
+
+- 入口：`DataGeneratorEntrypoint.onInitializeDataGenerator(FabricDataGenerator)`
+- `fabric.mod.json` 用 `"fabric-datagen"`
+- **禁止** `DataGeneratorInitializer` / `init_data`
+- 配方：`FabricRecipeProvider.createRecipeProvider(HolderLookup.Provider, RecipeOutput)`，在返回的 `RecipeProvider` 里写 `buildRecipes()`
+- 掉落：`FabricBlockLootSubProvider.generate()` + Mojmap `dropSelf`
+- 语言：`FabricLanguageProvider.generateTranslations(HolderLookup.Provider, TranslationBuilder)`
+
+> ⚠️ **包名陷阱（本档实测编译踩到）**：26.2 有**两个** `FabricBlockLootSubProvider`。
+> 只有 `net.fabricmc.fabric.api.datagen.v1.**provider**.FabricBlockLootSubProvider` 才有
+> `(FabricPackOutput, CompletableFuture<Provider>)` 构造器与 `generate()`（`dropSelf` 继承自 vanilla）；
+> `...datagen.v1.**loot**.FabricBlockLootSubProvider` 只有一个 `withConditions(ResourceCondition...)`，
+> 去 extends 它 ⇒ `构造器不适用` + `找不到符号 dropSelf`（2026-10-31 实编报错原文）。
+- **禁止** `ExistingFileHelper`、Yarn 的 `ShapedRecipeJsonBuilder` 包名
+
+---
+
+## Decision Flow
+
+```
+IF 入口 → DataGeneratorEntrypoint + fabric-datagen
+IF 配方 → FabricRecipeProvider.createRecipeProvider
+IF 方块掉落 → FabricBlockLootSubProvider
+IF 语言 → FabricLanguageProvider
+IF 标签 → FabricTagsProvider 系（以本版 loader-api 为准）
+```
+
+---
+
+## 添加 DataGen 依赖
+
+```groovy
+fabricApi {
+    configureDataGeneration()
+}
+// build.gradle — 用完整 fabric-api，不要单独钉死 fabric-data-generation-api-v1 的假版本号
+// 先声明：`fabric_api_version` 写在 `gradle.properties`（与当前 Minecraft 匹配）。
+// 本档 scaffold 的 gradle.properties **不含该键**，直接抄这段会解析失败。
+dependencies {
+    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+}
+```
+
+## 创建 DataGeneratorEntrypoint
+
+```java
+public class ExampleModDataGenerator implements DataGeneratorEntrypoint {
+    @Override
+    public void onInitializeDataGenerator(FabricDataGenerator generator) {
+        FabricDataGenerator.Pack pack = generator.createPack();
+        pack.addProvider(MyRecipeProvider::new);
+        pack.addProvider(MyBlockLootProvider::new);
+        pack.addProvider(MyEnLangProvider::new);
+    }
+}
+```
+
+## 注册 fabric-datagen
+
+```json
+{
+  "entrypoints": {
+    "fabric-datagen": [
+      "com.example.examplemod.ExampleModDataGenerator"
+    ]
+  }
+}
+```
+
+## 生成配方
+
+```java
+public class MyRecipeProvider extends FabricRecipeProvider {
+    public MyRecipeProvider(FabricPackOutput output,
+                            CompletableFuture<HolderLookup.Provider> registriesFuture) {
+        super(output, registriesFuture);
+    }
+
+    @Override
+    protected RecipeProvider createRecipeProvider(HolderLookup.Provider registries, RecipeOutput output) {
+        return new RecipeProvider(registries, output) {
+            @Override
+            public void buildRecipes() {
+                ShapedRecipeBuilder.shaped(registries.lookupOrThrow(Registries.ITEM), RecipeCategory.MISC, MY_ITEM)
+                    .pattern("AAA")
+                    .pattern("A A")
+                    .pattern(" A ")
+                    .define('A', Items.DIAMOND)
+                    .unlockedBy("has_diamond", has(Items.DIAMOND))
+                    .save(output);
+            }
+        };
+    }
+}
+```
+
+## 生成 Loot Table
+
+```java
+public class MyBlockLootProvider extends FabricBlockLootSubProvider {
+    public MyBlockLootProvider(FabricPackOutput output,
+                               CompletableFuture<HolderLookup.Provider> registriesFuture) {
+        super(output, registriesFuture);
+    }
+
+    @Override
+    public void generate() {
+        dropSelf(MY_BLOCK);
+    }
+}
+```
+
+## 生成语言文件
+
+```java
+public class MyEnLangProvider extends FabricLanguageProvider {
+    public MyEnLangProvider(FabricPackOutput output,
+                            CompletableFuture<HolderLookup.Provider> registriesFuture) {
+        super(output, "en_us", registriesFuture);
+    }
+
+    @Override
+    public void generateTranslations(HolderLookup.Provider registryLookup,
+                                     TranslationBuilder translationBuilder) {
+        translationBuilder.add(MY_ITEM, "My Item");
+        translationBuilder.add(MY_BLOCK, "My Block");
+    }
+}
+```
+
+## 运行 DataGen
+
+```bash
+./gradlew runDatagen
+```
+
+## 常见错误
+
+- ❌ 忘记在 `fabric.mod.json` 中注册 `fabric-datagen` entrypoint — DataGen 不执行
+- ❌ 使用 `DataGeneratorInitializer` / `init_data` — 那是编造入口
+- ❌ 手动编辑生成目录 — 文件会被重新生成覆盖
+- ❌ 引用未注册的资源 — DataGen / 游戏找不到现有文件
+- ❌ 在 DataGen 中使用动态路径 — 必须使用确定的 `Identifier`
+- ❌ 抄 Forge 的 `ExistingFileHelper` / `ItemModelProvider` / `DatapackBuiltinEntriesProvider`
+- ❌ 调用不存在的 `offerShapedRecipe` / `offerTo(exporter)` — 那是 Yarn 收集器写法。本档在 `RecipeProvider#buildRecipes()` 里用 `ShapedRecipeBuilder.shaped(...).save(output)`，`output` 是 `RecipeOutput`
+- ❌ 把 Yarn `CommandManager` / `Text.literal` / `addDrop` 抄进本档 — 本档是 Mojmap（`Commands` / `Component` / `dropSelf`）
+
+## 扩展点
+
+| 配合 Skill | 协作说明 |
+|-----------|---------|
+| `mc-item` | DataGen 生成物品模型 JSON |
+| `mc-block` | DataGen 生成方块模型和掉落表 |
+| `mc-entity` | DataGen 生成实体语言名和 loot table |
+| `mc-registry` | DataGen 引用已注册的方块/物品/实体 |

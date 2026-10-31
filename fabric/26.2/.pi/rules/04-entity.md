@@ -1,0 +1,30 @@
+---
+description: 04 — 实体（26.2）
+---
+
+# 04 — 实体（26.2）
+
+逐步：`26.2/develop_entities_first-entity`、属性 `26.2/develop_entities_attributes`、伤害类型 `26.2/develop_entities_damage-types`、状态效果 `26.2/develop_entities_effects`。
+**26.2 新增**：`26.2/develop_entities_projectiles`（自定义弹射物，26.1.2 没有这一页）。
+
+## 弹射物（26.2 新页）
+
+`26.2/develop_entities_projectiles`：
+
+- 物品侧先注册（该页 `:130-132` 引 `ModItemIds#hot_tater`）
+- 客户端渲染直接复用原版：`EntityRenderers.register(ModEntityTypes.HOT_TATER, ThrownItemRenderer::new)`（该页 `:158` 引 `ExampleModProjectileClient.java#renderer`；上游站点此处只展开这一行）
+- 不要为「投掷物品」硬写自定义 `EntityRenderer`，先看 `ThrownItemRenderer` 够不够
+
+## 默认属性
+
+`FabricDefaultAttributeRegistry`（loader-api 26.2 摘要可查）；属性名以 `26.2/develop_entities_attributes` 与摘要为准。
+
+## Decision Flow
+
+```
+→ 普通实体 → first-entity 页的注册工厂（不要 DeferredRegister）
+→ 投掷物/弹射物 → 26.2/develop_entities_projectiles + ThrownItemRenderer
+→ 属性 → FabricDefaultAttributeRegistry.register
+→ 伤害类型 → damage-types 页的 datapack JSON + 注册
+→ 类名以该页 reference 与 search_fabric_docs version=26.2 为准
+```

@@ -1,0 +1,27 @@
+{
+  "status": "ready",
+  "pack-status": "ready",
+  "platform": "fabric",
+  "minecraftVersion": "26.2",
+  "note": "2026-10-31 新建。语料来源是上游 **latest 面**（仓库根 develop/ + reference/latest，pin commit 238533d819fcb5ec9405acb58fb0ac7655df63b1），不是 versions/26.2 —— 上游至今没有该版本目录（/26.2/ 站点 404）。规则侧 00–10 只引用 data/fabric_26.2 能核到的 id，逐名可核清单在 knowledge/common/verified-api-26.2.md（表 A 名称来源 / 表 B 签名 / 表 C 26.1.2→26.2 迁移 / 表 D 编译实测 / 表 E 未核实）。与 26.1.2 的实质差异：gui.setScreen 取代 Minecraft.setScreen、Screenshot.grab 取代 getMainRenderTarget、id 类三分（ModItemIds/ModBlockIds/ModBlockItemIds）、events 拆目录、新增 registries/projectiles/custom-compostable/custom-fuel/custom-shields 五页。",
+  "gaps": {
+    "code-patterns": "设计如此（薄档先例 fabric/26.1.2）。本档 code-patterns/ 不存在；模式证据在 rules 00–10 + data/fabric_26.2/reference/latest 的 1490 个 .java（include 目标）。禁止克隆 fabric/1.21.11/code-patterns 顶数。",
+    "version-changes": "无 knowledge/version-changes/ 目录。26.1→26.2 的变更表在 knowledge/common/verified-api-26.2.md 表 C（每条带 docs 行号或 javap 出处），不另建目录。",
+    "knowledge": "knowledge/ 实测仅 1 个文件（common/verified-api-26.2.md）；antipatterns/ 与 porting/ 不存在。26.2 的移植面在 docs（26.2/develop_porting_index，标题即 Porting to 26.2）。"
+  },
+  "scaffold": {
+    "mode": "gradle",
+    "gradle": "9.8.1",
+    "provenance": {
+      "text": "official-mdk:FabricMC/fabric-example-mod@26.2",
+      "wrapper": "gradle-wrapper-task"
+    },
+    "buildVerified": true,
+    "gaps": [
+      "buildVerified=true 的实测：2026-10-31 在 F:\\MOD_TEST\\fabric262-scaffold 用本档自带 gradlew.bat（wrapper 9.8.1）跑 `gradlew.bat build --offline` → BUILD SUCCESSFUL in 34s（JDK 25 = G:\\jdk25\\jdk-25.0.4.1+1，依赖缓存 GRADLE_USER_HOME=F:\\MOD_TEST）。",
+      "loom_version=1.18.2 是**稳定版**（上游 26.2 模板钉 1.19-SNAPSHOT）；SNAPSHOT 会漂，本档取稳定版并在同一工程实测可解析 MC 26.2。",
+      "dependencies 只含 minecraft + loader：**不代带 fabric-api**（照 26.1.2 最小化先例）。要用 Fabric API（事件/网络/datagen）须自行取消 build.gradle 里那行注释并按 gradle.properties 的 fabric_api_version=0.161.0+26.2 解析。",
+      "带 fabric-api 的完整验证在 F:\\MOD_TEST\\fabric262-probe（同版本组合 + datagen/事件探针）→ BUILD SUCCESSFUL；本 scaffold 是最小壳，未含探针源码。"
+    ]
+  }
+}

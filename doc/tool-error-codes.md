@@ -115,6 +115,15 @@ Three evidence tiers: **measured** = read from a minimum failing call on this ma
 | `found:false` + 其余任意 `action.code` / 形状合法的顶层 `code` / 字符串 `error` | 1 | **新增码默认判失败**：要放行必须同时改豁免表与 `test-cli-failure-channel.mjs` |
 | `found:false` 且无任何码 | 0（`failOnError` 下为 1） | 未命中本身不是失败 |
 
+**「否定答案」与「非法请求」必须分开读**（2026-10-31 补：两者都返回 `found:false`，只有后者该判红）：
+
+| 情形 | 形状 | rc | 例 |
+|---|---|---|---|
+| **否定答案**（查了，没有） | `found:false` + `suggestions`/`notes`，**无任何码** | 0 | `query_api --className=NoSuchClassXyz` → 只有 `suggestions:["未找到 …"]`；`lookup_obfuscated` / `query_registry` 的同类未命中 |
+| **非法请求**（参数本身不成立） | `found:false` + `action.code`（`VERSION_REQUIRED` / `INVALID_INPUT` / `QUERY_MALFORMED` …） | 1 | `query_api` 缺 `version`（`api/index.ts` 的 `withAction(versionRequiredAction())`）；`convert_mapping` 批量超 50 名 |
+
+⇒ **不要**把「缺参/非法版本」和「查无此类」统一成同一条判定：前者要 fail-closed（否则脚本把非法调用当成功），后者按「否定答案」放行（否则每次查了个不存在的类都变成故障）。
+
 **`ok:true` + `action.code` 是既有约定，不是失败**：`crash_analyze` / `inspect_runtime` 缺 `version` 给 `VERSION_REQUIRED`（`analysisComplete:false`）、`detect_mod_project` 多加载器给 `PICK_PLATFORM`、`validate_project` / `diagnose_gradle` 的 `WRONG_TOOL` 都在这一档。读响应时看 `ok` / `status` / `analysisComplete`，**不要只看 action 码**。
 
 运行时锁定（不是静态启发式）：`mcp-server/test-cli-failure-channel.mjs` 用 9 红 + 12 绿真实 CLI fixture 钉住上面每一行；改判据或改豁免表都会让它红。

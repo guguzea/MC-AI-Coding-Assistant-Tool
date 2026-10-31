@@ -588,6 +588,16 @@
       "source": "official",
       "fromSourcesJar": true,
       "invalid": false
+    },
+    {
+      "file": "26.2-fabric-api.jar",
+      "mappingsVersion": "mojmap-unobfuscated-26.x",
+      "mappingsSource": "inferMappings(filename)",
+      "classCount": 1636,
+      "fqcnIndexCount": 1910,
+      "sourceJarSha256": "2659302c14e8776f69c856e12b80c5d699502906473cc56308c4ec13dafcda0f",
+      "source": "official",
+      "invalid": false
     }
   ],
   "notIndexed": [

@@ -177,12 +177,12 @@ id 'fabric-loom'
 **例外（禁止读邻版 01–10）：**
 
 - 工程是 **Fabric 26.1.2**（或 `list_fabric_versions` 命中 26.1.2）→ 只读 `fabric/26.1.2/`。知识包目录是 `fabric/26.1.2/`；工程写 `26.1` / `26.1.1` 走 `knowledgeVersion` 折到该档，**禁止**打开 `fabric/1.21.11/.cursor/rules` 的 01–10，也禁止把 1.21 wiki 当本版全文。平台 API 只用 `search_fabric_docs`（先 `list_fabric_versions`；查文档请用 `version=26.1.2`，不要用工程 `minecraftVersion=26.1` 当工具参数名）。已入库 `develop_porting_index` 是 **1.21.11→26.1**。
-- **Fabric 26.2 = 有语料、无规则树**（2026-10-31 起）：`data/fabric_26.2` 是从上游 **latest 面**（仓库根 `develop/` + `reference/latest`，commit `238533d819fc`）pin 抓的真语料（105 页 + 443 reference 件），`search_fabric_docs version=26.2` 已直接命中、**不再 fallback 到 26.1.2**；但 `fabric/26.2` 规则树仍不存在 ⇒ `activate_platform_pack` 照样 `PACK_NOT_FOUND`。**禁止**拿 26.1.2 规则当 26.2，也**禁止**把这份语料当「克隆树」删掉（它带 `upstream-tree.json` 的 `commitSha` 与 `reference.provenance.json` 自证）。
+- **Fabric 26.2 已完整建档**（2026-10-31）：语料 `data/fabric_26.2` 来自上游 **latest 面**（仓库根 `develop/` + `reference/latest`，commit `238533d819fc`，105 页 + 443 reference 件），规则树 `fabric/26.2` 同期建（11 条 `00–10` + `knowledge/common/verified-api-26.2.md` + scaffold，scaffold 的 `gradlew build` 与带 fabric-api 的探针工程均 BUILD SUCCESSFUL）⇒ `activate_platform_pack` 与 `search_fabric_docs` 都直接命中。**禁止**拿 26.1.2 规则当 26.2（26.2 有实删实改：`gui.setScreen` 取代 `Minecraft.setScreen`、`Screenshot.grab` 取代 `getMainRenderTarget`、id 类三分），也**禁止**把这份语料当「克隆树」删掉（它带 `upstream-tree.json` 的 `commitSha` 与 `reference.provenance.json` 自证）。
 - 磁盘没有对应 `fabric/<ver>/` 时：停，改口 `search_fabric_docs`，**不要**用邻版规则顶上。`1.21.4` / `1.21.8` / `1.21.10` 已有 versioned `data/fabric_<ver>` + 本档规则树；**`1.21.5` 无规则树** → session `PACK_NOT_FOUND`；无 fabric-docs `versions/` → 文档检索 `VERSION_NOT_FOUND` 且不 fallback。禁止拷 `1.21.11`。
 - **文档 fallback 仅限查询 API**，不代表规则树可用。
 
-**Fabric 建档面**：规则树 14 档（每档 11 条 `00–10`）= `list_fabric_versions` 里的 14 个版本化档：`1.14.4` / `1.16.5` / `1.17.1` / `1.18.2` / `1.19.4` / `1.20.1` / `1.20.4` / `1.21.1` / `1.21.3` / `1.21.4` / `1.21.8` / `1.21.10` / `1.21.11` / `26.1.2`。
-**语料 15 档** = 上列 14 档 + 一档只有语料、无规则树的（即上条那个 26.2，来源 = latest 面 pin）⇒ 「有语料无树」的半档**只有它一档**，`list_fabric_versions` 必须等于语料集（15 档）、不等于规则树集（14 档）。其中**有 `fabric-docs` 正文的 8 档**：7 档 versioned（`1.20.4`/`1.21.1`/`1.21.4`/`1.21.8`/`1.21.10`/`1.21.11`/`26.1.2`）+ 26.2（latest 面无前缀）；另 7 档**上游从来没有** docs 树（不是抓取漏 ⇒ **禁止**承诺补抓、**禁止**拿邻版正文顶替）。
+**Fabric 建档面**：规则树 15 档（每档 11 条 `00–10`）= 语料 15 档 = `list_fabric_versions` 15 档：`1.14.4` / `1.16.5` / `1.17.1` / `1.18.2` / `1.19.4` / `1.20.1` / `1.20.4` / `1.21.1` / `1.21.3` / `1.21.4` / `1.21.8` / `1.21.10` / `1.21.11` / `26.1.2` / `26.2`，**三者一致**（`26.2` 于 2026-10-31 补齐，语料来源 = latest 面无前缀档）。
+其中**有 `fabric-docs` 正文的 8 档**：7 档 versioned（`1.20.4`/`1.21.1`/`1.21.4`/`1.21.8`/`1.21.10`/`1.21.11`/`26.1.2`）+ 26.2（latest 面无前缀）；另 7 档**上游从来没有** docs 树（不是抓取漏 ⇒ **禁止**承诺补抓、**禁止**拿邻版正文顶替）。
 **空洞（既无树也无语料）**：`1.21.2` / `1.21.5` / `1.21.6` / `1.21.7` / `1.21.9` 等 → `activate_platform_pack` 返回 `PACK_NOT_FOUND`（带同系列 candidates 提示，**不是**自动折叠授权），`search_fabric_docs` 返回 `VERSION_NOT_FOUND` 且**不 fallback**；遇到空洞档把候选清单念给用户选，**禁止**拿邻版树顶上或为填版本号克隆新树。
 
 逐档清单、docs 覆盖史与页数记账 → [`doc/platform-coverage-fabric.md`](./doc/platform-coverage-fabric.md)（另有 `CORPUS_PROVENANCE.md` §2）。

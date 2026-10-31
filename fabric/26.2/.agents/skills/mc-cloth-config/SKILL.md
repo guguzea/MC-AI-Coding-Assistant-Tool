@@ -1,0 +1,15 @@
+---
+name: mc-cloth-config
+description: Fabric 26.2 mc-cloth-config。核不到则 search_fabric_docs version=26.2，禁止输出。
+platform: fabric
+version: "26.2"
+dependencies: []
+mappings: official
+---
+<!-- cloth-version-inject v=26.2 coord=26.1.154+fabric state=active textApi=literal -->
+
+# mc-cloth-config（Fabric 26.2）
+
+本 Skill **尚未用本版文档核到可执行步骤**。禁止输出方法名/示例代码。
+
+改口：`search_fabric_docs`（version=26.2）。核不到就停。

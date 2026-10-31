@@ -1,0 +1,44 @@
+---
+description: 01 — 注册（26.2）
+---
+
+# 01 — 注册（26.2）
+
+物品注册见 `26.2/develop_items_first-item`；方块见 `26.2/develop_blocks_first-block`。
+**26.2 的 id 类按 Block / BlockItem / Item 三分**（26.1.2 不是这样，别照抄）：
+
+| 类 | 用途 | 出处 |
+|---|---|---|
+| `ModItemIds` | 物品 `ResourceKey` | `26.2/develop_items_first-item:25,33` |
+| `ModBlockIds` | 方块 `ResourceKey` | `26.2/develop_blocks_first-block:45,51` |
+| `ModBlockItemIds` | 方块对应的 BlockItem id | `26.2/develop_blocks_first-block:30,36` |
+
+原版对应类（javap 已核，`public static final ResourceKey<…>` 常量类）：`net.minecraft.references.ItemIds` / `BlockIds` / `BlockItemIds`。
+
+注册本体仍是 `Registry.register(Registries.X, Identifier, object)`；创造栏 `CreativeModeTabEvents.modifyOutputEvent`。
+
+## 动态注册表（26.2 新页）
+
+`26.2/develop_registries_dynamic-registry`：
+
+- 两种策略：`DynamicRegistries.register()`（仅服务端、不同步）或 `DynamicRegistries.registerSynced()`（`:49`）
+- 条目类型自带 `Codec`（`:25`）；注册表 key 放独立类（`:35`）；在 mod initializer 里调该类的 `initialize()`（`:45`）
+
+## 附加数据（Data Attachments）
+
+官方页 `26.2/develop_serialization_data-attachments`（本档 attachments 仅此 1 页）。名字与签名只用 `knowledge/common/verified-api-26.2.md` 表 A / 表 B 登记的 `net.fabricmc.fabric.api.attachment.v1.*`：`AttachmentRegistry.create / createPersistent / createDefaulted / builder`、`AttachmentRegistry.Builder.persistent / initializer / copyOnDeath / syncWith / buildAndRegister`、`AttachmentSyncPredicate.all / targetOnly / allButTarget`、`AttachmentTarget`、`AttachmentType`、`GlobalAttachments` / `GlobalAttachmentsProvider`。
+
+- 该页**未写模块 id**；依赖坐标仍是 `fabric-api`，不要编造 `fabric-attachment-api-v1`。
+- 创建方法首参是 26.2 Mojmap `Identifier`（不是 `ResourceLocation`）。
+- 不要用 NeoForge `AttachmentType` / `getData` / `setData`，不要用 Forge Capability。
+
+## Decision Flow
+
+```
+→ 物品 → 26.2/develop_items_first-item（ModItemIds + Registry.register）
+→ 方块 → 26.2/develop_blocks_first-block（ModBlockIds + ModBlockItemIds）
+→ 动态注册表 → DynamicRegistries.register / registerSynced（26.2/develop_registries_dynamic-registry）
+→ 附加数据 → AttachmentRegistry + AttachmentTarget（本档核实表），不要套 Neo 的 getData/setData
+→ 类名以该页 reference 与 search_fabric_docs version=26.2 为准（去混淆官方名）
+→ query_api 无本版索引
+```

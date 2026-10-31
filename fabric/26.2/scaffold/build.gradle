@@ -1,0 +1,34 @@
+// 钉值出处（2026-10-31 实测）：F:\MOD_TEST\fabric262-probe 用
+//   Java 25 + Gradle 9.8.1 + Loom 1.18.2（稳定版）+ loader 0.20.1 + fabric-api 0.161.0+26.2
+// 跑出 BUILD SUCCESSFUL（含 datagen / 事件探针）。
+// 官方模板 fabric-example-mod@26.2 钉 loom 1.19-SNAPSHOT + Gradle 9.8.2 —— SNAPSHOT 会漂，本档用稳定版 1.18.2。
+plugins {
+    id "net.fabricmc.fabric-loom" version "${loom_version}"
+}
+
+version = project.mod_version
+group = project.maven_group
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+repositories {
+    maven { url "https://maven.fabricmc.net/" }
+    mavenCentral()
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    // scaffold 刻意最小化：本行**默认注释**，需要 Fabric API（事件/网络/datagen）时取消注释。
+    // implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+}
+
+processResources {
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+}

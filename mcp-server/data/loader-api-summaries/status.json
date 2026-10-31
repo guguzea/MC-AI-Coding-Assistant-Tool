@@ -55,7 +55,8 @@
     "1.6.4-modloader",
     "26.1-neoforge.jar",
     "26.1.2-fabric-api.jar",
-    "26.1.2-fabric.jar"
+    "26.1.2-fabric.jar",
+    "26.2-fabric-api.jar"
   ],
   "mappingsVersion": {
     "1.12.2-forge": "snapshot-20171003-1.12",
@@ -112,7 +113,8 @@
     "1.6.4-modloader": "mcp-1.6.4",
     "26.1-neoforge": "mojmap-unobfuscated-26.1",
     "26.1.2-fabric": "unobfuscated-fabric-loader-0.19.5",
-    "26.1.2-fabric-api": "mojmap-26.1.2"
+    "26.1.2-fabric-api": "mojmap-26.1.2",
+    "26.2-fabric-api": "mojmap-unobfuscated-26.x"
   },
   "cache": "$MC_SKILL_CACHE",
   "invalid": [],
