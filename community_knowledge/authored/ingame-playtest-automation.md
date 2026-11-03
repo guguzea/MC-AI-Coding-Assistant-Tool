@@ -1019,7 +1019,77 @@ NeoForge 1.20.1 无官方 MDK pin（原返回 `MDK_NOT_PINNED`）⇒ 按**兼容
 - **「替身只证签名形状，不证类存在」** —— 判某类在该版存不存在必须拿真构件。
 - 桥路线现成件下限的两批扩面（2026-10-04）：`generate_playtest_driver driverMode=external_bridge` 在 `(platform,version) ∈ BRIDGE_MOD_TARGETS`（8 个 = `forge {1.7.10,1.8.9,1.9.4,1.10.2,1.11.2,1.12.2}` + `rift 1.13.2` + `modloader 1.6.4`）时附赠自建最小桥模板 `playtest/bridge/**`（生成器 `mcp-server/src/generators/playtest-bridge-mod.ts`，**不进 `PLAYTEST_VERIFIED_TIER`**、`temporary_client_tick_driver` 时不附赠 ⇒ 与 driver 链隔离）。线协议逐键对齐 BlackBoxPro（`GET /status` → `{status,version,platform,httpPort,actions,ready}`；`POST /execute` → `{id,status,message,data}`，HTTP 恒 200；超时串逐字 `Timeout after 10000ms` ⇒ 工具侧照常映射 `PLAYTEST_TIMEOUT`）。
 - 桥件验证强度两等：`1.12.2` 已 JDK 8 `javac` 对真 `forgeBin-1.12.2-14.23.5.2847.jar` 编译验证（**这轮真构件编译揪出 `Item.getUnlocalizedName()` 改名 —— stable_39 真 jar 是 `getTranslationKey()`，javadoc 骗人**）；`1.7.10–1.11.2` 只有 javadoc 出处、未编译验证；`rift 1.13.2` = 真模板（MC 侧逐名有 1.13.2 MCP 快照出处 —— 与 rift scaffold 的 `snapshot_20180921` 同快照，且 2026-10-06 起已对本机真构件 `forgeBin-1.13.2-25.0.223_mapped` 逐名 javap 核过：43/43 在盘，`Minecraft.getInstance()` 的 static 性**已证出** —— 旧「证不出」作废；右键入口实名 `PlayerControllerMP`、`EntityType` tsrg 成员 122 行 —— 旧「不在 tsrg / m·f 皆 0」两处陈述作废）。仍为缺口：`block_at` 只回 translation key、实体 `type` 只回类简单名（升级走 `EntityType.getId`，需改模板重编译）。
-- 桥件版本支持（2026-10-06 用户裁定 + GitHub API 同日核）：原生线只到 MC 1.13（最终原生 `1.0.4-105`），1.13.1/1.13.2 = Chocohead 社区分支 `newerer`/`newerest`，JitPack 无已取到成品 ⇒ 桥件用原生 `1.0.4-106`，在 1.13.2 上实测「能启动但 listener 不派发」。
-- `modloader 1.6.4` = 骨架（本仓只 tick 一处出处 ⇒ `Mc` 内部类 10 动作 + `isInWorld` 全 `TODO(未核实)` + fail-closed，宁出骨架也不猜）。
+- 桥件版本支持（2026-10-06 用户裁定 + GitHub API 同日核）：原生线只到 MC 1.13（最终原生 `1.0.4-105`），1.13.1/1.13.2 = Chocohead 社区分支 `newerer`/`newerest`。**2026-11-03 更新**：rift **1.13** 已用原生 `1.0.4-106` + **生产（混淆）客户端 + reobfJar** 达成**驱动面**（`dz=+12.800`；dev 环境反而 42 个 mixin miss）；**1.13.2 仍未达成** —— Chocohead `newerest` 分支的构建卡在精确映射件与 Mixin AP 无 MCP 支持（详见「编号 97」后那条缺口留档）。
+- `modloader 1.6.4` = **不可行（不是骨架问题）**：Risugami 自 MC 1.6.2 起停更，**1.6.4 无官方 ModLoader 发布物** ⇒ 载体不存在。
+- `modloader 1.2.5 / 1.5.2 / 1.6.2` = **已有真二合一 mod 且真机达成驱动面**（2026-11-03）：走「默认包 + 直接对官方混淆 client.jar 编译」，**不需要映射、不需要 reobf**；读数见上「编号 91–97」节。桥侧注意：这三个档的 mod 类**必须在默认包**（`BaseMod`/`ModLoader` 与 MC 类都在默认包）⇒ 桥模板里 `package net.minecraft.src` 的写法在本路线下**不成立**。
 - 字段名逐档不同（玩家/世界字段在 `1.10.2 → 1.11.2` 改名；游戏目录只 `1.12.2` 有「构件 `gameDir` ↔ javadoc `mcDataDir`」一处差异）。
 - `/locate` 实测 ≈2.5 秒且结果落 `<gameDir>/logs/latest.log` 的 `[CHAT]` 行。
+
+### 老平台（ModLoader / Rift）真机做「驱动面」：七个坑（编号 91–97，2026-11-03 · 本机真机实测）
+
+**场景**：把 **Risugami's ModLoader 1.2.5 / 1.5.2 / 1.6.2** 与 **Rift 1.13** 从「平台集成能跑」推到**驱动动作真的驱动玩家**（判据 = `open_world` → `press forward` → `query_player_state` **坐标真的变**）。四档全部达成，读数：rift 1.13 `dz=+12.800`；1.6.2 `dz=+4.2000`；1.2.5 `dz=+0.2000`（四向 back 4.5050 / forward 5.4000 / left 2.2000 / right 2.4000）；1.5.2 `dz=+0.2000`。
+
+**先记一条路线（不是坑，是方法）**：这三档 ModLoader 的 **MCP named conf 根本取不到**（`mcp/1.6.2/*` 与 `mcp_snapshot/2013*-1.6.2` 全 404；`Aizistral-Studios/MCP-Archive` 的 2600 个快照最早只到 2014-09/1.7.10）⇒「写可读名 + reobf」**此路不通**。可行路线 = **默认包 + 直接对官方混淆 client.jar 编译**：写的本来就是混淆名 ⇒ **不需要映射、也不需要 reobf**。
+
+- **91 · 「按结构反推」定成员身份，在本项目错了 5 行**（javap 实测）
+  拿「字段类型/顺序像」去猜哪个是 `thePlayer`/`posX`/`GameSettings`，在 1.6.2 上**连错 5 行**（`avg`/`aul`/`ats.r` 全是错的）。**处方**：改**调用点锚定** —— 找**语义上必须用该字段**的方法当锚。已验证有效的锚：
+  · `posX/Y/Z` ← 距离函数（`nm.f(DDD)`/`g(DDD)`）**读三个 double 做差再算平方和**；
+  · `rotationYaw/Pitch` ← `setAngles` 里只有 pitch 被夹到 ±90、`moveFlying` 把 yaw 喂 `sin/cos`、存档写出里字面量 `"Rotation"` 紧跟 `float[]{yaw,pitch}`；
+  · `thePlayer` ← ModLoader 自己的 `onTick(float, <Mc>)` 里 `getfield <Mc>.h; getfield <Player>.q:<World>; invokevirtual <World>.J()J`。
+  ⚠ **同一版本内 `posX` 与 `prevPosX` 是相邻的同类字段**，光看布局必错；只有「谁会用它」能分辨。
+
+- **92 · `open_world` 不先装 PlayerController ⇒ 进世界第一帧 NPE 崩客户端**（ModLoader 1.2.5 · 真机 crash）
+  集成服起来了、世界也加载了，但第一帧 `Minecraft.k()`（`SourceFile:1354`，用 `javap -c -l` 映到**字节码偏移 150**）执行 `getfield c:<PlayerController>; invokevirtual <PC>.c()` ⇒ **NPE 直接崩客户端**。
+  **处方**：`open_world` 里**先装**那个字段再进世界。**怎么找到「该怎么装」**：全 jar 常量池扫描 `putfield <Mc>.c` 的**全部**调用点 —— 本档只有 `GuiSelectWorld` / `GuiCreateWorld` 两处写它 ⇒ **照抄那两条调用点**即可（这就是「调用点锚定」的用法，不是猜）。
+
+- **93 · 照抄邻档实例的 `libraries` ⇒ 集成服 `InternalError`（外部 bcprov 与客户端自带的混淆 BC 打架）**（ModLoader 1.5.2 · 真机 crash）
+  报错：`kl.<clinit>` 抛 `InternalError: cannot create instance of org.bouncycastle…GOST3411$Mappings : ClassCastException … cannot be cast to aso`。
+  **根因**：1.5.2 的 client.jar **自带已混淆的** BouncyCastle（`aso`/`asp`/`asq`）；外部 `bcprov-jdk15on-1.47.jar` 被它的 provider 按**类名反射**到并**强转失败**。而**官方 1.5.2 的 library 清单里根本没有 bcprov**（抓 Mojang version JSON 逐条核实：只有 `lwjgl`/`lwjgl_util`/`jinput`/`jutils`）。
+  **处方**：**照抄 Mojang version JSON 的 libraries，别照抄别的实例的**。老版本尤其如此 —— 相邻档的库清单会带进对方年代才有的东西。
+
+- **94 · 键位表在运行期出现「重复项」⇒ 按名字判唯一会失败**（ModLoader 1.5.2 · javap 实证）
+  `avy`（= `GameSettings` 形）的**两个构造器各 `new` 一遍全部绑定** ⇒ 运行期 `ava.a`（键位表）里每条描述串出现**两次**（`rawKeyCount=28` / 描述串仅 **14 种**）。原来「段名必须全局唯一」的判据因此退回完整串 `key.forward`，与 `press` 传的名字对不上。
+  **处方**：判据改成「按**描述串种类**判唯一」（1.2.5 的 `rawKeyCount=13` 不受影响，两种口径都过），并**加 `rawKeyCount` 自证**。⚠ 这类「同版本不同补丁的加载器把同一张表建两遍」的差异，**只有运行期读数能发现**。
+
+- **95 · 自造 tick 代理的**构造**需要 GL 上下文**（ModLoader 1.6.2 · 真机异常）
+  在**看门狗线程**里 `new` 那个 `bfb`（= `EntityRenderer` 形）子类 ⇒ `No OpenGL context found in the current thread`。
+  **处方**：在 **`BaseMod.load()` 里构造**（`load()` 跑在 MC 线程，且 `Display.create()` 早已执行），看门狗线程只做赋值。
+  **另记一条同源事实**：1.6.2 的 `ModLoader.onTick` 由 `EntityRendererProxy` 调，而它**只在 `IntegratedServer` 构造器里装** ⇒ **进世界前没有任何 MC 线程 tick**，自造代理才有 `open_world` 可用。**但 1.2.5 / 1.5.2 不需要** —— 它们的 `ModLoader.init()` 在 Minecraft 构造器里就装了 `EntityRendererProxy`，进世界前 `onTick` 已在跑（**同族平台不同档，结论不能互搬**）。
+
+- **96 · ModLoader 的 modDir 逐档不同：1.6.2 优先 `versions/<ver>/mods`，1.2.5/1.5.2 只看 `mods/`**（真机实测）
+  1.6.2 上把 jar 放进 `<gameDir>/mods/` **会被无视**（它优先 `<gameDir>/versions/<ver>/mods`，存在就用它）；1.2.5/1.5.2 的 `modDir = new File(Minecraft.b(), "/mods/")`（字节码实证）**没有**这个前缀。
+  **另**：1.2.5/1.5.2 的 main 是**旧式（无 `--gameDir`）** ⇒ gameDir 取 `%APPDATA%\\.minecraft`；做自包含实例要**进程级覆盖 APPDATA**（别动系统设置）。
+
+- **97 · reobf 不改反射字符串 ⇒ 反射找 MC 字段在生产环境必然失败**（Rift 1.13 · 真机实测两连）
+  ① `GameSettings.class.getField("keyBindForward")` ⇒ `未知按键：forward`；② `KeyBinding.class.getDeclaredField("keyCode")` ⇒ `NoSuchFieldException: keyCode`。
+  **根因**：**reobf 只改写字节码里的字段引用，不改反射用的字符串** ⇒ 生产（混淆）环境里那些名字不存在。而且 1.13 的 `keyCode` 是 **private**（`javap` 实测 `private cfd$a h;`），公开可取的是 `getDefault()`。
+  **处方**：**生成器层面禁掉反射访问 MC**（本仓已加 `assertNoReflectiveMcAccess(files)`：生成期扫所有产出的 `.java`，命中反射即**拒绝产出**）；必须用直接字段/方法访问，reobf 才会正确改写。⚠ 这类 bug **编译期完全看不出来**，只有真机跑才暴露。
+
+- **（附）Rift 1.13.2 的构建阻塞**（不是坑，是缺口，留档免得重走）：Chocohead `newerest` 分支需要**精确的 `mcp_snapshot:20181106-1.13.2`**（Forge maven 与 Central 均 **404**；MCP-Archive 只有 `20181106-1.13.1` 与 `20190311-1.13.2`，两种替代都在 `:compileJava` 失败）。绕过 MixinGradle 后（手动给 Mixin AP 传 `-AoutRefMapFile` / `-AdefaultObfuscationEnv=notch` / `-AreobfNotchSrgFile` / `-AoutSrgFile`）AP **能跑并写出 refmap**，但 **Mixin AP 0.7.11 只支持 `searge`/`notch` 两个环境、没有 MCP 支持**（78 个 class 全扫：`mcpConfDir`/`methods.csv`/`fields.csv` 零命中）⇒ 而 fork 源码是 **MCP 名** ⇒ **refmap 为空**。缺的正是 MixinGradle 的合成步骤（把 MCP conf 并进 SRG）。
+
+### 「第二客户端（真·第二玩家）」路线：四个坑（编号 98–101，2026-11-01 真机实测 · neoforge 1.21.11）
+
+**为什么走这条路**：`FakePlayer` 架构下「AI 捡东西」是**设计边界**（NeoForge 把 `FakePlayer.tick()` 置空 ⇒ 玩家逻辑永不运行，只能手动喂它）。换成**第二客户端**后这条边界整个消失 —— AI 侧是真客户端里的真玩家，**捡拾 / 挖掘 / 放置 / 物品栏 / GUI / 聊天全部走原版逻辑**。
+
+**开局三步（人在环：①②由人做）**：① 主客户端进世界 → ESC →「对局域网开放」；② 开第二客户端（独立工作区 + 独立用户名 + 独立 HTTP 端口）；③ 从主客户端 `latest.log` 读局域网端口 → 主机 `set_auth {online:false}` → bot `join_server 127.0.0.1:<port>`。
+
+**实测读数**（判据原文）：`PlayerList: AIBot[/127.0.0.1:65409] logged in with entity id 881` ✓；真物理走路（位移 1.20 格后撞方块停住，逐 0.7s 采样）✓；`data get entity AIBot Inventory` → `[{count: 1, Slot: 0b, id: "minecraft:wheat_seeds"}]`（**真捡起了丢的种子**）✓；聊天双向可见 ✓。
+
+- **98 · 局域网世界的认证是**构造器里硬开的**⇒ 离线会话必然 `Failed to log in: Invalid session`**（javap 字节码）
+  `IntegratedServer` 的构造器里 `iconst_1; invokevirtual setUsesAuthentication:(Z)V` ⇒ **局域网世界强制要求正版会话认证**，而开发环境是离线会话（无有效 access token）⇒ 连接**必然**被拒，且客户端只在**断开界面**显示原因（模组读不到 ⇒ 当时只能回头问人）。
+  **处方**：主机侧 `MinecraftServer.setUsesAuthentication(false)`（javap 实测 **public**）⇒ 做成 `set_auth {online:false}` 动作；另给游戏内 `!offline` / `!online` 与 `!join <地址:端口>` 便于人手动用。
+  ⚠ **诊断缺口**：模组当时没有「读当前界面文字」的动作 ⇒ 断开原因只能靠人念。**处方**：补 `query_screen_text`（返回当前界面标题与可见文本），这类问题以后自己就能读。
+
+- **99 · 两个客户端的模组列表不一致会被联机校验拒**（NeoForge）
+  主实例 `run/mods` 有 `bandd_playtest + BlackBoxPro + kotlinforforge`，bot 侧只留了 `bandd_playtest` ⇒ 联机校验可能因此拒。**但本例的真因是 98**（认证），模组列表是**首要怀疑但被证否**。
+  **处方**：先按 98 修；模组列表不一致**先对齐再说**（本仓另有「桥件固定占 38081」的端口冲突要处理 ⇒ 冲突件挪 `mods-disabled/`，要恢复移回去）。
+
+- **100 · 离线会话发不出「玩家聊天」**（服务端日志 `Ignoring chat session … missing Services public key`）
+  离线会话签不了名 ⇒ AI 用**玩家聊天**发的话会被服务端**静默忽略**（人看不到）。
+  **处方**：`chat_say` 走 **tellraw**（系统消息，不受签名约束）⇒ 实测人能看到 `[AI] …`；要让发言显示成 `<AIBot> …`，需服务端 `enforce-secure-profile=false`。
+
+- **101 · `bot_*` 系列对**真客户端**不适用（`bot_look` 返回 `NO_BOT`）**
+  `bot_*` 是给**假玩家化身**用的；真客户端的「身体」就是 `mc.player` 本身 ⇒ 面向本机玩家的动作**必须另立**（`look {yaw,pitch}` 等）。
+  **处方**：照 driver 里既有的 `look` / `lookat` verb 形状补一个面向本机玩家的 `look`。⚠ 这条在 2026-11-03 的 ModLoader 四档复查里再次确认：core 的 27 个动作里**只有 `bot_look`**，**没有本机玩家的 `look`**。
+
+**移植状态（2026-11-03）**：本路线**只在 neoforge 1.21.11 一档做成过**；rift 1.13 与 modloader 1.2.5/1.5.2/1.6.2（这四档已达成 L-b 驱动面）**尚未移植**。移植时的逐档实名取证见 `temp/port/artifacts/第二客户端-setAuth-joinServer-取证.md`（三档 `joinServer` 均 **javac rc=0**；`set_auth`：1.2.5/1.5.2 可换 public Session 字段，**1.6.2 不可行**（`Session` 是 private final 无 setter）⇒ 走启动参数 `--username/--session`；1.2.5 **无集成服** ⇒ 必须专用服务端 + `online-mode=false`）。

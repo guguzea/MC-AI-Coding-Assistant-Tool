@@ -17,6 +17,8 @@
  */
 import { eraUpperBoundError, exactMcVersion, toPascalCase, type GeneratorResult } from "./common.js";
 import { isBridgeTarget, generateBridgeMod } from "./playtest-bridge-mod.js";
+import { PLAYTEST_MOD_CORE_SOURCES, PLAYTEST_MOD_CORE_CLASSES } from "./playtest-mod-core.js";
+import { PLAYTEST_MOD_ADAPTERS } from "./playtest-mod-adapters.js";
 
 export const PLAYTEST_DRIVER_MODES = ["external_bridge", "in_jvm_player_agent", "temporary_client_tick_driver"] as const;
 export const PLAYTEST_CAPABILITY_PROFILES = ["strict_survival", "operator", "creative"] as const;
@@ -2282,6 +2284,65 @@ export const PLAYTEST_VERIFIED_TIER: ReadonlyArray<{ platform: string; version: 
     asOf: "2026-10-03",
   },
 ];
+/**
+ * **二合一 mod 形态**的真机验证表（2026-11-03 回填）。
+ *
+ * ⚠ 与 `PLAYTEST_VERIFIED_TIER` **不是同一件事**，别混：
+ *   - `PLAYTEST_VERIFIED_TIER` 管的是**本文件产出的单文件解释器**（`temporary_client_tick_driver` / `in_jvm_player_agent`）；
+ *   - **本表**管的是**另一个产物**：`playtest/core/*.java`（版本无关 core，9 类）+ `playtest/mod/<适配层>`，
+ *     走 `GameBridge` 适配层架构。**两者并存，互不替代。**
+ *
+ * 因此**不要**把本表的档塞进上面那张表 —— 那会让生成器对它们声明「解释器已验」，而实际验的是 mod 形态。
+ *
+ * 判据一律 = **驱动动作真的驱动玩家**（`open_world` → `press forward` → `query_player_state` **坐标真的变**），
+ * 不是「调用返回 ok」。读数原文见 `F:\B AND D MOD\artifacts\`。
+ */
+export const PLAYTEST_MOD_VERIFIED_TIER: ReadonlyArray<{
+  platform: string;
+  version: string;
+  /** 这一档跑通所用的路线（写进生成物头注释）*/
+  route: string;
+  /** 真机读数（判据原文）*/
+  reading: string;
+  asOf: string;
+}> = [
+  {
+    platform: "rift",
+    version: "1.13",
+    route: "原生 Rift + **生产（官方混淆）客户端 + reobfJar**（dev 环境 refmap 对不上：实测 42 个 mixin miss；生产 0）",
+    reading: "press forward ⇒ dz = +12.800 格",
+    asOf: "2026-11-03",
+  },
+  {
+    platform: "modloader",
+    version: "1.2.5",
+    route: "**默认包 + 直接对官方混淆 client.jar 编译**（零映射件、零 reobf）",
+    reading: "press forward ⇒ dz = +0.2000；四向 back 4.5050 / forward 5.4000 / left 2.2000 / right 2.4000；jump 真弧线",
+    asOf: "2026-11-03",
+  },
+  {
+    platform: "modloader",
+    version: "1.5.2",
+    route: "同上（默认包 + 混淆名直编）",
+    reading: "press forward ⇒ dz = +0.2000；四向 back 0.0000(地形挡) / forward 0.4000 / left 3.2000 / right 5.4000",
+    asOf: "2026-11-03",
+  },
+  {
+    platform: "modloader",
+    version: "1.6.2",
+    route: "同上（默认包 + 混淆名直编）",
+    reading: "press forward ⇒ dz = +4.2000；四向对照与 jump 弧线均正常",
+    asOf: "2026-11-03",
+  },
+];
+
+/** 查该档有没有「二合一 mod 形态」的适配层与真机验证。 */
+export function playtestModTier(platform: string, version: string) {
+  const tier = PLAYTEST_MOD_VERIFIED_TIER.find((t) => t.platform === platform && t.version === version);
+  const adapter = PLAYTEST_MOD_ADAPTERS.find((a) => a.platform === platform && a.version === version);
+  return tier && adapter ? { tier, adapter } : null;
+}
+
 /**
  * 意图空间定稿 v2（2026-10-01 用户审改）—— 口径单源见
  * `community_knowledge/authored/ingame-playtest-automation.md` §意图空间。
@@ -5061,6 +5122,7 @@ const useLiteLoaderTable = platform === "liteloader" && version === "1.12.2";
                   ? rewriteForFabric1211(javaSource)
                   : javaSource;
     files["playtest/PlaytestQaDriver.java"] = javadocSafe(emittedJava);
+
     if (useLiteLoaderTable) {
       warnings.push(
         `platform=liteloader version=${version} 档 = **hybrid（liteloader_forge）**：vanilla/Forge 面与 \`forge ${version}\` 同表（\`applyForgeMCP132\` + \`applyForgeMCP1122\`），` +
@@ -5398,6 +5460,26 @@ public final class PlaytestQaDriver {
 - 证据（截图 / state / calls）不入正式分支，放独立 evidence 目录。
 `;
   }
+
+    // ── 二合一 mod 形态（2026-11-03 回填）────────────────────────────────────────────
+    // 与上面的单文件解释器**并存**：上面那份是默认产物；这四档**额外**发 core + 适配层
+    // （它们的真机验证走的就是这个形态，见 PLAYTEST_MOD_VERIFIED_TIER）。
+    const modTier = playtestModTier(platform, version);
+    if (modTier) {
+      for (const [rel, src] of Object.entries(PLAYTEST_MOD_CORE_SOURCES)) {
+        files[rel] = javadocSafe(src);
+      }
+      for (const [rel, src] of Object.entries(modTier.adapter.files)) {
+        files["playtest/mod/" + rel] = javadocSafe(src);
+      }
+      warnings.push(
+        `platform=${platform} version=${version} 档：**另发二合一 mod 形态** —— ` +
+          `\`playtest/core/\`（版本无关 core，${PLAYTEST_MOD_CORE_CLASSES.length} 类）+ \`playtest/mod/\`（适配层，唯一与平台相关的一层）。` +
+          `路线：${modTier.tier.route}。**真机读数**：${modTier.tier.reading}（${modTier.tier.asOf}）。` +
+          `⚠ 这是**与 PlaytestQaDriver.java 不同的产物**：core 走 GameBridge 适配层架构，HttpApi 在 HTTP 线程只入队、PlaytestCore.onTick() 在客户端 tick 线程执行。` +
+          `⚠ 该形态**禁止反射**访问 MC（reobf 不改反射字符串 ⇒ 生产环境必失败），且 HTTP 端口**动态**（HttpApi.start() 从首选端口往后试 20 个）。`,
+      );
+    }
 
   // 铁律闸：生成物里**不许**有基于反射的 MC 访问（真机教训，2026-11-02；命中即 throw，不产出）
   assertNoReflectiveMcAccess(files);

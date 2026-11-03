@@ -4,7 +4,7 @@
 
 **简体中文** · [English](README.en.md) · [人类读本](README_human.md) · [Human Guide](README_human.en.md)
 
-### 一个跑在本地的 MCP知识/工具库：让 AI 知道你这一版 Minecraft 该用哪套 API、哪套构建、哪套映射。并提供一个完整的工具包去反复验证实现效果
+### 一个跑在本地的 MCP知识/工具库：一站式MC模组解决方案
 ### 显著降低AI幻觉·AI不再瞎编
 ####  检查不好找?AI也是一个好老师!
 #### 显著降低模组开发,整合包开发的工作量! 

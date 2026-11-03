@@ -42,6 +42,17 @@
  *
  * ── 平台面（2026-10-04 第二批扩展） ─────────────────────────────────────────
  *
+ * ── 2026-11-03 回填（真机实测，勿重走）───────────────────────────────────────
+ * **modloader 三档的「默认包路线」**：1.2.5 / 1.5.2 / 1.6.2 已用「默认包 + 直接对官方混淆 client.jar 编译」
+ * 做出**真二合一 mod**（桥协议 + 驱动动作），真机达成驱动面（`press forward` 坐标真的变）。
+ * ⇒ **`modloader 1.6.4` 不该留在目标表里**：Risugami 自 MC 1.6.2 停更，**1.6.4 无官方 ModLoader 发布物**，载体不存在。
+ * ⇒ 本函数产出的 `package net.minecraft.src` 骨架**不适用于该路线**：ModLoader 的 `BaseMod`/`ModLoader` 与
+ *   MC 混淆类都在**默认包**，mod 也必须在默认包（具名包不能引用默认包）。
+ * ⇒ 待办：把 modloader 分支改成**默认包形态 + 逐档混淆名表**（1.2.5/1.5.2/1.6.2 名字逐条不同，不可互抄），
+ *   并把数组换成这三档。**在改完之前，数组保持现状**（宁缺不错）。
+ * 逐档字段锚定表与真机读数：`F:\B AND D MOD\artifacts\modloader-1.2.5-1.5.2-lb-record.md` /
+ * `modloader-1.6.2-lb-record.md`；坑位见 `community_knowledge/authored/ingame-playtest-automation.md` 编号 91–97。
+ *
  * `BRIDGE_MOD_TARGETS` = forge `1.7.10 / 1.8.9 / 1.9.4 / 1.10.2 / 1.11.2 / 1.12.2` **+ rift `1.13` / `1.13.2`（两档共用一份模板）+ modloader `1.6.4`**（**正文不数档，以数组现读为准**）。
  *
  * **rift 1.13.2 = 真模板（逐名有出处）**：入口换成 Rift listener（`implements org.dimdev.rift.listener.client.ClientTickable`，

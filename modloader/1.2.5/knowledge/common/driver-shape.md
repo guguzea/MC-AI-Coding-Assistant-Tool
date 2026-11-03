@@ -101,3 +101,7 @@
 - 完整读数：`F:\B AND D MOD\artifacts\modloader-1.6.2-lb-record.md`（385 行）+ `modloader-1.6.2-lb-evidence\`（9 件）。
 
 **两条真机才暴露的坑**（已修，勿重踩）：① 自造 tick 代理的构造**需要 GL 上下文** ⇒ 必须在 `BaseMod.load()` 里 `new`（MC 线程、`Display.create()` 之后）；② ModLoader 1.6.2 的 modDir **优先 `<gameDir>/versions/<ver>/mods`**，jar 放 `mods/` 会被无视。
+
+**桥侧注意**：本档的 mod 类**必须在默认包**（`BaseMod`/`ModLoader` 与 MC 混淆类都在默认包；Java 具名包不能引用默认包）⇒ 生成器里 `package net.minecraft.src` 的桥骨架形态**不适用于本路线**。
+
+**第二客户端（真·第二玩家）**：本仓已在 **neoforge 1.21.11** 验证过这条路线（人类开世界→对局域网开放，AI 客户端 `join_server` 进来 ⇒ AI 是**真玩家**，捡拾/挖掘/放置/物品栏/GUI/聊天全原生）。本档**尚未移植**；逐档实名取证见 `temp/port/artifacts/第二客户端-setAuth-joinServer-取证.md`，坑位见 `community_knowledge/authored/ingame-playtest-automation.md` 编号 98–101。
