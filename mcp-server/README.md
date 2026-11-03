@@ -1,16 +1,58 @@
-# MC MCP Server
+# MC AI Coding Assistant Tool
 
-本地 **stdio** MCP Server，供各 MCP 宿主（Cursor / Claude Code / VS Code / Continue / Trae / OpenCode / DSH 等）查询 Minecraft 模组开发资料（Forge / Fabric / NeoForge）。配置格式对照见仓库根 [AUTO_SETUP.md](../AUTO_SETUP.md)，不要默认写成 Cursor 的 `mcp.json`。
+**Minecraft 模组开发的一站式 AI 工具箱 —— 从零到上线，全流程都在一条会话里。**
+
+本地 **stdio** MCP Server，把「建工程 → 写代码 → 查文档查 API → 数据生成 → 调构建 → 排崩溃 → 真机游玩自测 → 发布前体检」串成一条闭环，交给任意支持 MCP 的 AI 宿主（Cursor / Claude Code / VS Code / Continue / Trae / OpenCode / DSH 等）驱动。配置格式对照见仓库根 [AUTO_SETUP.md](../AUTO_SETUP.md)，不要默认写成 Cursor 的 `mcp.json`。
+
+**通用 89 个工具，覆盖 8 个平台 + 服务端插件面**：Forge、Fabric、NeoForge、Quilt、LiteLoader、Rift、Risugami's ModLoader、基岩版 Add-On，外加 Paper / Spigot 服务端插件。
 
 **要求：Node.js >= 22.5**（Yarn 映射使用内置 `node:sqlite`；**22.5–22.12 需加 `--experimental-sqlite` 启动参数或 NODE_OPTIONS，22.13+ 无需**）。
+
+## 全流程：一个工具覆盖模组开发每一段
+
+| 阶段 | 你做什么 | 工具箱提供什么 |
+| --- | --- | --- |
+| **0 定平台** | 拿到一个工程，先搞清它是什么 | `detect_mod_project` 自动认平台与精确版本（Quilt → NeoForge → Fabric → LiteLoader → Forge → Rift → ModLoader → 基岩）；`activate_platform_pack` 把该档规则与技能灌进当前会话 |
+| **1 搭工程** | 从零起步 | `download_official_mdk` 拉官方 MDK；`diagnose_gradle` 体检构建配置 |
+| **2 写内容** | 方块 / 物品 / 实体 / GUI / 世界生成 / 网络包 / 配置 / 能力 / 渲染器 | 一整套 `generate_*` 生成器，按平台+版本出骨架，默认只吐文本不写盘 |
+| **3 查资料** | 「这个方法在这个版本叫什么」 | 三级文档（搜索 → 摘要 → 全文）+ API 签名查询 + 映射互转 + 混淆名反查 |
+| **4 数据生成** | Datagen、配方、模型、语言文件 | `generate_datagen`（Fabric 支持 Yarn / Mojmap 双骨架）、`generate_model`、`generate_lang`、`validate_datapack_json` |
+| **5 编译排错** | 构建红了、游戏崩了 | `analyze_build_log`、`crash_analyze`、`analyze_log`、`diagnose_gradle`、`validate_project` |
+| **6 真机自测** | 「我写的方块在游戏里到底什么样」 | `generate_playtest_driver` 生成可驱动真实玩家的自测驱动（桥 / 临时客户端 tick / JVM 内玩家代理三种模式）+ `inspect_playtest_evidence` 读证据 |
+| **7 发布前** | 上线前最后一道 | `check_publish_ready` 清单体检、`localize_mod` 汉化、`migrate` 版本迁移指南 |
+| **全程** | 反复查 | 61 个内置工作流模板、社区实务知识库、36 份常用库模组 Skill（配置库 / 饰品 / GeckoLib / Patchouli 等） |
+
+配套的 `mc_skill_update` 负责自我升级，`diagnose_data_paths` 随时体检数据完备度。
+
+## 离开数据包，大部分功能照常可用
+
+这一点很重要：**装完不需要任何额外下载，就已经能用掉大半工具箱。**
+
+平台语料（约 2.31 GiB 的文档 / 映射 / 反编译索引）体积远超 npm 单包上限，因此与代码分离分发。但**代码随包自带 7 项小数据**（MDK 校验 pin 表、loader API 摘要、库模组构件清单等），足以支撑绝大部分工作。
+
+实测（清空平台目录、只留随包数据）下的行为：
+
+| 能力 | 无平台数据时 | 说明 |
+| --- | --- | --- |
+| 全部 `generate_*` 生成器 | **可用** | 方块/物品/实体/GUI/网络包/配置/渲染器/世界生成骨架照常出 |
+| `detect_mod_project` / `diagnose_gradle` / `validate_project` | **可用** | 认平台、体检构建、校验项目结构都不依赖平台语料 |
+| 61 个工作流模板 + 知识资源 + 库模组 Skill 解析 | **可用** | 流程引导与库坐标查询是内置的 |
+| `query_loader_api` / `search_loader_api` | **可用** | `loader-api-summaries` 随包发布，加载器 API 摘要直接能查 |
+| `check_publish_ready` / `crash_analyze` / `get_server_status` / `diagnose_data_paths` | **可用** | 排错与体检不依赖语料 |
+| `mc_skill_update` | **可用** | 自我升级 |
+| `search_*_docs` / `list_*_versions` | 需平台数据 | 返回结构化 `PLATFORM_DATA_MISSING` + 下载指引，**不会崩** |
+| `query_api` / `convert_mapping` | 需平台数据 | 查游戏本体 API 与做映射互转要映射库 |
+| `get_minecraft_source` / `decompile_mod_jar` | 需按需下载 | 首次调用时下载到缓存（Java 17+） |
+
+**降级是优雅的**：缺语料的工具一律返回带 `code` / `message` / `hint` 的结构化错误并附下载指引，不会抛栈、不会静默给错答案。`diagnose_data_paths` 随时告诉你缺什么、缺哪一档。
 
 ## npm 安装
 
 ```bash
-# 默认：只装代码与查库语料，不含平台数据
+# 装完立即可用：代码 + 7 项随包小数据
 npm install mc-ai-coding-assistant-tool
 
-# 需要平台数据（本地文档检索 / 平台 API 查询 / MDK 等）：安装时带上 --data
+# 想要平台文档 / 映射 / 反编译索引：加 --data 一并拉取
 npm install mc-ai-coding-assistant-tool --data
 ```
 
@@ -18,17 +60,15 @@ npm install mc-ai-coding-assistant-tool --data
 
 ### 包里有什么、什么要走 Release
 
-npm 包约 **12 MB**（解压约 **157 MB**），内容分两类：
+npm 包约 **12 MB**（解压约 **154 MB**），内容分两类：
 
 | 内容 | 位置 | 说明 |
 | --- | --- | --- |
-| **代码** | `dist/` | MCP Server 本体 |
-| **小体积语料** | `data/`（127 个文件） | `mdk-checksums.json`（MDK 校验链的 pin 表）、`lib-api-summaries/`、`loader-api-summaries/`、`lib-manifests/`、`lib-coords/`、`wrapper-jars.json`、`bedrock-script-api-pin.json` |
-| **平台数据** | **不在包里** | `forge_*` / `fabric_*` / `neoforge_*` / `quilt_*` / `bedrock_*` / `paper_*` 等 76 个平台目录，约 **1.8 GiB / 4.2 万文件** ⇒ 走 **GitHub Release** 的 `mc-skill-data-full-<tag>.zip` |
+| **代码** | `dist/` | MCP Server 本体，89 个工具 |
+| **小体积语料** | `data/`（128 个文件） | `mdk-checksums.json`（MDK 校验链的 pin 表）、`lib-api-summaries/`、`loader-api-summaries/`、`lib-manifests/`、`lib-coords/`、`wrapper-jars.json`、`bedrock-script-api-pin.json` |
+| **平台数据** | **不在包里** | `forge_*` / `fabric_*` / `neoforge_*` / `quilt_*` / `bedrock_*` / `paper_*` 等 73 个平台目录，约 **2.31 GiB / 8.3 万文件** ⇒ 走 **GitHub Release** 的 `mc-skill-data-full-<tag>.zip` |
 
 平台数据体积远超 npm 单包上限，且数据发版节奏与代码发版节奏不同 ⇒ 分离分发。
-
-装完默认**代码与查库语料都在**（Modrinth 库查询、MDK pin 校验可用），但**平台文档与映射数据不在** ⇒ `search_*_docs` / `query_api`（查平台 API）/ `validate_project` 等依赖平台数据的工具会返回「数据缺失」类结构化错误，而不是崩溃。
 
 ### 手动获取平台数据（兜底路径）
 
@@ -46,6 +86,8 @@ npm 包约 **12 MB**（解压约 **157 MB**），内容分两类：
 
 > 为什么不用 `npx mc-skill`：npm 包名是 `mc-ai-coding-assistant-tool`，`mc-skill` 只是它声明的 bin 名
 > （`package.json` 的 `bin` 字段），仓库里没有同名包 —— `npx mc-skill` 会去 registry 找而落空。
+> 本包同时声明了与包名同名的 bin（指向 MCP 入口），所以 `npx mc-ai-coding-assistant-tool` 能直接拉起 MCP 服务；
+> 但它是 stdio 服务、**不解析 `--version`**，要看版本号请用上面那条带 `--version` 的 CLI 命令。
 > 克隆形态见下一节。
 
 ### 仓库检出形态（与 npm 形态不同）

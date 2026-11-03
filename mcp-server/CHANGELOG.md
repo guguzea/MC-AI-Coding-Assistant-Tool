@@ -1,5 +1,72 @@
 # mcp-server changelog
 
+## 2.3.0 · npm 发版（2026-11-04）
+
+### 发版口径
+
+上一版 npm 是 **2.0.0**（2026-10-21），此后累计 47 条提交未发布到 npm（git tag 只到 V2.2.0，且 tag 不触发 npm publish）。
+本版把这些改动一并发出，并按 SemVer 定 **2.3.0**：破坏面只落在两个 related 工具的返回形状上，见下。
+
+同时按 npm 页面的实际问题重写了 `mcp-server/README.md` 的开头：旧版把本包写成一个「查文档的 server」，
+与仓库 README 的一站式定位差距很大，且正文里的数据体量读数已过期。
+
+### 破坏性变更（2 条）
+
+| # | 变更 | 影响面 |
+|---|---|---|
+| B1 | `get_doc_related`（含 `platform=quilt` 分支）成功返回值从**裸数组**改为对象 `{ok,platform,id,version,results[]}` | 直接把返回值当数组遍历的脚本 |
+| B2 | `get_forge_doc_related` 旧形状**本身不稳定**（无版本回退时裸数组、有回退时对象），现恒为对象 | 同上 |
+
+**不破的**（容易误传成「四个都变了」）：`get_fabric_doc_related` / `get_neoforge_doc_related` 基线就是对象，
+本版只补 `ok`/`platform`/`version` 字段；`get_bedrock_doc_related` 完全未变（字段名是 `related` 不是 `results`）。
+
+出处：`src/docs-platform/forge/index.ts:1186-1202`；基线物证 = 已发布 2.0.0 的
+`dist/docs-platform/forge/index.js:961,989` 注释「成功时 JSON 根仍是数组」。
+
+### 其他用户可见变更
+
+- **CLI 失败信道收紧**：`isToolFailure` 增读 `action.code` / 顶层 `code` / 字符串 `error`。
+  `decompile_mod_jar` / `get_minecraft_source` / `convert_mapping` / `search_mod_code` 等工具
+  **失败时终于 exit 1**（此前 exit 0，把失败伪装成成功）。`--fail-on-error` 默认仍为 `false`，
+  旗标语义未变。物证：基线 `dist/cli-parse.js` 无 `NON_FATAL_ACTION_CODES` 符号。
+- **`npx` 可用**：新增与包名同名的 bin（指向 MCP 入口 `dist/index.js`）+ 给该文件补 shebang，
+  修掉 `npx -y mc-ai-coding-assistant-tool` 的 `could not determine executable to run`。
+  注意它是 stdio 服务、**不解析 `--version`**；看版本号用 `mc-skill --version`。
+- **`license` 字段**：`"MIT"` → `"SEE LICENSE IN LICENSE"`（PolyForm Noncommercial 1.0.0 + 作者强 Copyleft，
+  2026-10-29 换）。`LICENSE` 第 88 行明确豁免「用本软件创作的模组文件」——用户写的模组不算衍生作品。
+- **`files[]` 新增 `"data"`**：随包发布 7 项小数据（128 文件 / 约 139 MB），
+  使 `query_loader_api` / `search_loader_api` 等在没有平台语料时仍可用。
+- **配套修复（关键）**：`postinstall` 的 `--data` 判据从「`data/` 非空即跳过」改成「**有没有平台目录**」。
+  否则包自带数据会让该目录天然非空 ⇒ 平台数据永远下不来（`scripts/postinstall.mjs:718-736`）。
+
+### 新功能与数据（摘要，明细见 Unreleased 各节）
+
+- **服务端面（Paper / Spigot）**：`generate_paper_plugin`、`generate_playtest_server_driver`、
+  `paper` / `spigot` / `paper-api` 三个文档平台 id、13 个签名面版本档、5 份 `paper/<ver>/rules/00-applicability.md`。
+- **MC 26.2 / 26.3**：`fabric/26.2` 完整建档（105 页语料 + 411 文件规则树）；`neoforge/26.2` `26.3` 各有规则树
+  （无本版文档语料，属预期）；`fabric 26.3` 只有博客旁路。
+- **`rift/1.13` 原生档**新建；`KNOWN_VERSIONS.rift` 改为 `["1.13","1.13.2"]`。
+- **`generate_datagen` 新增 `mapping: "mojmap" | "yarn"`**：Fabric Yarn 骨架覆盖 11 档，其余档 fail-closed 并给拒因。
+- **游玩自测二合一 mod 形态**（rift 1.13 + modloader 1.2.5/1.5.2/1.6.2）；`BRIDGE_MOD_TARGETS` 8 → 9（多 `rift 1.13`）。
+- **`mcskill://knowledge/` URI 族**（4 类）；`mc_skill_update` 的 `dryRun` 明说下载代价。
+- 仓库根新增 `dsh-plugin/`（DSH 原生插件）。
+
+### 文档
+
+- `mcp-server/README.md` 开头重写：从「查资料 server」改为**一站式全流程**定位（阶段表 + 「离开数据包仍可用」实测表）；
+  校正过期读数：平台目录 76 → **73**、1.8 GiB / 4.2 万 → **2.31 GiB / 8.3 万**、`data/` 127 → **128** 文件。
+- `package.json` 的 `description` 与 `keywords` 重写，覆盖一站式 / 全流程 / 8 平台 + 服务端面。
+
+### 未核实（发布时诚实披露）
+
+- 本机沙箱 `spawnSync` 管道捕获被拒（EPERM），`npm test` 整条链**未能在本机跑通**；
+  `test-core.mjs` 挂在 `testMdkUnpackFixtures`（`UNPACK_FAILED` vs 期望 `ZIP_SLIP`，根因是 bsdtar 输出捕获不了）。
+  以 CI 记录为准。
+- 已跑通的本地检查：`npm run build`（tsc）、`npm pack --dry-run`、`npm publish --dry-run`、
+  `assert-archive-pointers` / `assert-authoring-lint` / `assert-doc-absence-claims`、
+  `test-path-guards` / `test-localize` / `test-analyze-build-log`。
+
+---
 ## Unreleased · 第三方 MCP 目录收录准备（2026-11-03）
 
 ### 收录准备：修好两处「发不出去 / 发出去也起不来」，并补上立项手册
