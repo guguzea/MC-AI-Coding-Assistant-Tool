@@ -157,6 +157,15 @@ public final class RiftAdapter implements GameBridge {
     @Override public void moveBotTo(double x, double y, double z) { }
     @Override public void tickBot() { }
     @Override public String giveBot(String item, int count) { return null; }
+    /** 本机玩家转视角（`Entity.rotationYaw/rotationPitch`，出处 = 本档 §六类真名表）。 */
+    @Override public boolean look(double yaw, double pitch) {
+        Minecraft m = mc();
+        if (m == null || m.player == null) return false;
+        m.player.rotationYaw = (float) yaw;
+        m.player.rotationPitch = (float) pitch;
+        return true;
+    }
+
     @Override public boolean lookBot(double yaw, double pitch) { return false; }
     @Override public String breakBotBlock(double x, double y, double z) { return null; }
     @Override public String placeBotBlock(double x, double y, double z) { return null; }

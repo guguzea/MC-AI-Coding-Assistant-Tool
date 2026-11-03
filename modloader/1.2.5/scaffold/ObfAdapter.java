@@ -277,6 +277,16 @@ public final class ObfAdapter implements GameBridge {
     @Override public void moveBotTo(double x, double y, double z) { todo("移动化身"); }
     @Override public void tickBot() { }
     @Override public String giveBot(String item, int count) { todo("给化身发物品"); return null; }
+    /** 本机玩家转视角。锚点：`nn.u`=rotationYaw（`c(FF)` 里走 par1*0.15）、`nn.v`=rotationPitch（只有它被夹 ±90）。 */
+    @Override public boolean look(double yaw, double pitch) {
+        net.minecraft.client.Minecraft mc = MC;
+        if (mc == null || mc.h == null) return false;
+        vq p = mc.h;
+        p.u = (float) yaw;    // nn.u = rotationYaw
+        p.v = (float) pitch;  // nn.v = rotationPitch
+        return true;
+    }
+
     @Override public boolean lookBot(double yaw, double pitch) { todo("化身转向"); return false; }
     @Override public String breakBotBlock(double x, double y, double z) { todo("化身挖方块"); return null; }
     @Override public String placeBotBlock(double x, double y, double z) { todo("化身放方块"); return null; }
