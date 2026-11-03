@@ -14,7 +14,7 @@
 | `public void load()` | 加载期（构件复核：abstract） |
 | `public void modsLoaded()` | 全部 mod 已 load 之后（构件复核） |
 | `public String getName()` | 显示名（若实现；构件复核：**非 abstract**，带默认实现） |
-| `public boolean onTickInGame(float, Minecraft)` | **每 tick 回调**（构件复核：1.2.5/1.5.2/1.6.2 三件均在；1.2.5/1.5.2 构件第二参逐字 `net.minecraft.client.Minecraft`，1.6.2 为混淆名 `ats`）。**返回 boolean**（返回值语义未核） |
+| `public boolean onTickInGame(float, Minecraft)` | **每 tick 回调**（构件复核：1.2.5/1.5.2/1.6.2 三件均在；1.2.5/1.5.2 构件第二参逐字 `net.minecraft.client.Minecraft`，**1.6.2** 为混淆名 `ats`）。**返回 boolean**（返回值语义未核）。⚠ **不要把 `ats` 带到 1.6.4** —— 见文末「勘误①」 |
 | `public boolean onTickInGUI(float, Minecraft, GuiScreen)` | GUI tick 回调（构件复核，同上；1.6.2 第三参混淆名 `awb`） |
 | `public void clientChat(String)` / `serverChat(?, String)` | 聊天回调（构件复核：名字三件都在；**触发语义未核**。1.2.5 线的同族名不同：`receiveChatPacket(String)` / `receiveCustomPacket(?)`） |
 
@@ -78,7 +78,7 @@
 | 桥前置 | 骨架里的状态 |
 |---|---|
 | tick 钩子 | ✅ 真：`ModLoader.setInGameHook(this, true, false)`（本表行 29）——**但两个 boolean 的语义未核实** |
-| 回调方法名/签名 | ✅ 已核（构件）：`public boolean onTickInGame(float, Minecraft)`；骨架里原占位的 `onTick()` 已按此改名（1.5.2/1.2.5 构件第二参可读名；1.6.2 为混淆名 `ats`） |
+| 回调方法名/签名 | ✅ 已核（构件）：`public boolean onTickInGame(float, Minecraft)`；骨架里原占位的 `onTick()` 已按此改名（1.5.2/1.2.5 构件第二参可读名；**1.6.2** 为混淆名 `ats`）。⚠ 见文末「勘误①」：`ats` 在 **1.6.4** 不是 Minecraft |
 | MC 半边（`Mc` 内部类，**10 动作 + `isInWorld` 共 11 条**） | ❌ 逐条 `throw new UnsupportedOperationException("TODO(未核实)：…")` |
 
 `Mc.execute(...)` 逐动作抛 TODO 的清单（与真模板动作面对齐）：
@@ -106,3 +106,90 @@
 **要把它变成真桥**：在自备的 MCP 1.6.4 工作区里核出上表剩余 4 项（玩家字段 / 聊天语义 / 截图 / 读方块签名）+ 两个 boolean 语义，
 **只改 `Mc` 内部类**（回调名与签名已按构件实证填好），HTTP 半边一行不用动；清单见生成物 `README.bridge.md`。
 
+---
+
+## 驱动面（玩家级）：**六类 MC 侧名字本档无出处 ⇒ 逐条 fail-closed**
+
+> 落库：2026-11-02（task-17 实测）。同目录 `driver-shape.md` 是完整形态说明。
+
+桥面（命令级）之外，驱动面还需要下面六类 MC 侧名字。**本档这三类出处都没有**（`processed/safe-api.md` 是空表；
+`knowledge/common/safe-api.md` 的构件 javap 表只覆盖 `BaseMod` / `ModLoader` / `Minecraft` 三个类的形状）：
+
+| # | 类别 | 驱动面用途 | 本档状态 |
+|---|---|---|---|
+| 1 | 按键字段名 + 按下/松开入口 | `press` / `release_all` | **无出处** ⇒ fail-closed |
+| 2 | 玩家/位置（`player` / 坐标 / 视角） | `query_player_state` / `bot_look` | **无出处** ⇒ fail-closed |
+| 3 | 聊天发送 | `chat_say` / `chat_command` | **无出处** ⇒ fail-closed |
+| 4 | 截图 | `screenshot` | **无出处** ⇒ fail-closed |
+| 5 | 读方块 | `block_at` / `bot_break` / `bot_place` | **无出处** ⇒ fail-closed |
+| 6 | 开世界 | `open_world` | **无出处** ⇒ fail-closed |
+
+**纯仲裁、不碰 MC 的两个动作如实算「能做」**：`take_over`（`Arbitration.takeOver()`）与 `release_all`
+（`Arbitration.releaseOwned()`；本档 `supportedKeys()` 为空表 ⇒ 永远没有可放的键，但动作本身不依赖 MC 名字）。
+把它们算成「做不了」是**反向谎报**。
+
+⇒ **要真驱动必须先补一个 MCP named 工作区**，在其中核出六类真名与签名。
+**按键面已查清（2026-11-02）** —— 见本文末「按键面」段：ModLoader 自己**没有**按键注入 API，
+但 **vanilla 有**（1.6.2 `KeyBinding`=`atp`，静态 `atp.a(int,boolean)` = `setKeyBindState`）
+⇒ **不需要给 Minecraft 打补丁**；本档缺的只是**名字**，不是入口。
+
+**另有一处结构性问题（未核实）**：真构件的 `BaseMod` / `ModLoader` 在**默认包**（`jar tf` 实测无 `net/` 前缀），
+而 MCP 时代 mod 源码用 `package net.minecraft.src;` —— 两者不能同时成立 ⇒ 官方 zip 是**二进制投放形态**。
+且**未 reobf**（源码用可读名、真机是混淆 jar）⇒ 现产出 jar 直接丢进混淆客户端**不会 tick**。
+
+---
+
+## 按键面（2026-11-02 查清）：**ModLoader 没有"按下某个键"的 API；vanilla 有**
+
+**结论**：ModLoader 的键盘面**全是入站**（登记 + 回调），**没有**任何"把键按下去"的入口；
+而**原版 Minecraft 自己有**，且它就在客户端 jar 里 ⇒ **按键面不需要给 Minecraft 打补丁**。
+本档缺的**只是名字**（无 MCP named 工作区），不是入口。
+
+### 本机 javap 实证（真构件 `ModLoader-1.6.4.zip`，逐字）
+
+```
+ModLoader:
+  private static final java.util.Map<BaseMod, java.util.Map<atp, boolean[]>> keyList;
+  public static atp[] registerAllKeys(atp[]);
+  public static void registerKey(BaseMod, atp, boolean);
+BaseMod:
+  public void keyboardEvent(atp);
+```
+
+**读法**：`registerKey` 是「把某个键**登记**给我，按下时回调我」——**入站**；
+`keyboardEvent` 是**被回调**。两者都**不能**产生一次按键。
+
+> **旁证（同一次 javap 的意外收获）**：ModLoader 自己的泛型签名把键类型写成了**可读上下文里的混淆名**
+> —— 本档是 `atp`。这正好说明**混淆名逐档不同**：1.2.5 = `afu` / 1.5.2 = `ava` / **1.6.2 = `atp`**。
+
+### vanilla 侧的注入点
+
+| 项 | 取值 | 出处 |
+|---|---|---|
+| 键类 | `KeyBinding` | 1.6.2 混淆名 **`atp`**（上面 javap 的泛型位可读） |
+| 注入方法 | 静态 **`atp.a(int,boolean)`** = `setKeyBindState` | task-22 用户/Lead 提供；**本档未自行复现**（无 MCP named 工作区） |
+
+⇒ **推论**：要做按键面，**不必改 Minecraft 字节码**，只要拿到 `KeyBinding` / `GameSettings` 的**可读名**。
+而"拿名字"正是本档缺的那一件 ⇒ **按键面与其余五类卡在同一处**，不是两个独立问题。
+
+> ⚠ 本档（1.6.4）**无官方件**，上面的 javap 跑的是 **1.6.2 件**；1.6.4 的键类混淆名是 `ats`（见下「勘误①」）。
+
+
+---
+
+## 勘误①（2026-11-02）：`ats` 在不同档**不是同一个类** —— 混淆名必须逐档取
+
+**被修正的说法**：本表（及桥模板）原先写「1.6.2 的第二参是混淆名 `ats`」，读的人容易把它**当成 1.6.4 的答案**搬过去。
+**实测（2026-11-02）**：
+
+| 档 | `ats` 是什么 | `Minecraft` 的混淆名 | `KeyBinding` 的混淆名 |
+|---|---|---|---|
+| **1.6.2** | **`Minecraft`** | `ats` | `atp`（本表「按键面」段的 javap 泛型位实证） |
+| **1.6.4** | **`KeyBinding`** | **`atv`** | **`ats`** |
+
+⇒ **`ats` 在 1.6.2 是 Minecraft，在 1.6.4 是 KeyBinding** —— 同名不同物。
+
+**纪律（写进本档）**：
+1. **混淆名一律逐档取**，不许从 1.2.5 / 1.5.2 / 1.6.2 的件往 1.6.4 搬；
+2. 引用本档任何构件级结论时，**必须写明"按 1.6.2 件"**（本档没有 1.6.4 官方件）；
+3. 1.6.4 的名字要么来自 **MCP 1.6.4 named 工作区**，要么来自 **1.6.4 的 srg**，两者之一 —— 不许外推。

@@ -213,6 +213,8 @@ Follow each package’s license as published on npm（`@xenova/transformers` 为
 |------|---------|------|
 | [MCDxAI/minecraft-dev-mcp](https://github.com/MCDxAI/minecraft-dev-mcp)（MIT） | CLI flags-only / coerceFlagValue / `{success,tool,result\|error}` / isMainModule；反编译与 Mixin 字节码校验思路参照 | `mcp-server/src/cli.ts`、`src/decompile/`、`src/mixin/`（适配改写，非整体拷贝） |
 | [OGMatrix/mcmodding-mcp](https://github.com/OGMatrix/mcmodding-mcp)（MIT） | 文档分块（title/section/code/full）与 RRF 混合检索思路 | `mcp-server/src/docs-platform/semantic/`、`scripts/_lib/build-semantic-index.mjs` |
+| [junyudev/pixel-art](https://github.com/junyudev/pixel-art)（MIT） | **整套 skill 原样收录**（SKILL.md / reference 三篇 / `tools/grid.py` / LICENSE / README），未修改 | `common_skill/pixel-art-upstream/` |
+| [sulfurchi-art/claude-skills](https://github.com/sulfurchi-art/claude-skills)（**无 LICENSE**） | **仅参考思路，未拷贝任何文件与代码**：分层绘制顺序、差分参数化、特效元素分解、v1→v8 踩坑清单 | 无落点（已在 `common_skill/mc-texture/SKILL.md` 中按本仓措辞重写） |
 
 遵守 MIT 许可：以上借用保留原作者版权声明与本署名；原项目 License 见其 GitHub 仓库。
 

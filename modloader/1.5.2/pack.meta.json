@@ -12,7 +12,9 @@
     "gaps": [
       "本档 11/11 规则文件为「未核实、禁止输出」占位，故 status 由 ready 降为 draft；`knowledge/common/safe-api.md` 的构件 javap 表可引用，其余仍按占位口径",
       "该加载器无 Gradle 工程形态（MCP + Eclipse），给它造 gradlew 属造假；构建步骤见 AGENTS.md 与本档 00-project-setup 的待核实标记",
-      "CLI: download_official_mdk --platform=modloader → 参数校验失败（platform enum 无 modloader）：本工具链无 ModLoader MDK 通道"
+      "CLI: download_official_mdk --platform=modloader → 参数校验失败（platform enum 无 modloader）：本工具链无 ModLoader MDK 通道",
+      "驱动面（2026-11-02 判定）：**L-b 不可行**，卡在「MCP 命名映射取不到」—— Forge MCP maven 最早只到 1.6.4、mcp_snapshot 最早 20130918-1.6.3、历史主机 mcp.ocean-labs.de 已死；客户端 jar 可得但**全混淆**（本档默认包混淆类占绝大多数）⇒ 六类 MC 侧名字无法命名。按键面不缺入口（vanilla 有 KeyBinding.setKeyBindState），缺的也只是名字。详见 knowledge/common/driver-shape.md",
+      "驱动面已出形态说明（`knowledge/common/driver-shape.md`），但驱动面所需六类 MC 侧名字本档无出处 ⇒ 驱动面 fail-closed；要真驱动须先补一个 MCP named 工作区（按键面还须先确认该时代有无可注入按键的入口）"
     ]
   }
 }

@@ -301,7 +301,12 @@ function facts(version: string): VerFacts {
       ].join("\n")
     : version === "1.8.9"
       ? [
-          "            net.minecraft.util.math.BlockPos pos = new net.minecraft.util.math.BlockPos(x, y, z);",
+          // 1.8.9 的 BlockPos 在 net.minecraft.util，**不是** net.minecraft.util.math
+          // （util.math 是 1.9 才引入）。出处 = 本仓映射实件逐行：
+          //   data/forge_1.8.9/mappings/joined.srg:1656  "CL: cj net/minecraft/util/BlockPos"
+          //   data/forge_1.9.4/mappings/joined.srg:2059  "CL: cl net/minecraft/util/math/BlockPos"
+          // 该缺陷 2026-11-02 由 forge 1.8.9 桥模板的编译级验证暴露（此前 1.8.9 无编译验证）。
+          "            net.minecraft.util.BlockPos pos = new net.minecraft.util.BlockPos(x, y, z);",
           "            net.minecraft.block.state.IBlockState st = mc." + fields.world + ".getBlockState(pos);",
           "            net.minecraft.block.Block b = st.getBlock();",
           '            out.append(",\\"cls\\":\\"").append(esc(b.getClass().getSimpleName())).append("\\"");',

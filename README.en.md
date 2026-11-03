@@ -796,6 +796,67 @@ Path example: `forge/1.20.1/.agents/skills/<name>/`. Each version carries **8 ho
 
 Fabric additionally has `mc-fabric-api`, `mc-kotlin`, `mc-cloth-config`; Forge 1.12.2–1.20.4 and the Fabric main versions all have `mc-events` (the thin versions backfilled through `FABRIC_SKILL_DONORS` carry a DONOR_SKILL banner). Code pattern samples live in `community_knowledge/patterns/` (also readable via `mcskill://patterns/README`).
 
+## Textures and models
+
+Modeling and texturing sit outside the MCP tool surface. Model JSON skeletons come from `generate_model`; textures go through the `mc-texture` skill.
+
+### Division of labour
+
+| Step | What to use | What this repo provides |
+|---|---|---|
+| Block models / blockstates / item `items/` | `generate_model` (requires `version`) | cube and `item/generated` skeletons |
+| Models with real shape, Bedrock `.geo.json`, GeckoLib animation | External Blockbench MCP | Placement rules (`geo/`, `animations/`, `textures/`) |
+| Texture painting / texture animation / particle FX | `mc-texture` | Full procedure plus three zero-dependency scripts |
+| Canvases above 32 px, character sprites | `pixel-art-upstream` | Upstream methodology plus `grid.py` |
+| Reference integrity | `audit_resources` | Does not check `pack_format` |
+
+The model MCP is a GPL-3.0 standalone program, installed as an external tool and reached over MCP: <https://github.com/jasonjgardner/blockbench-mcp-plugin>
+
+### Skill entry
+
+`read_knowledge_resource uri=mcskill://skill/mc-texture`; source in `common_skill/mc-texture/SKILL.md`. The warning from `activate_platform_pack task=mc-texture` points at both it and `pixel-art-upstream`.
+
+Procedure: pick size → pick style → pick palette → layer the art → render → check at 1× → revise (≥3 rounds). A style, color budget or size given by the user outranks vanilla convention; otherwise use 16×16, tileable, 4–8 colors, light from the upper left. Layer order is flat silhouette → light → interior detail → outline → features.
+
+Materials follow in-game states: copper has four oxidation stages (unoxidized / exposed / weathered / oxidized), with green spreading from the edges and inverting to teal at the last stage, and four texture sets are made together. Wood separates into log / stripped / planks, stone into stone / cobblestone / stone bricks, and metal uses highlight blocks rather than noise. Basis: the Minecraft Wiki "Oxidation" article and the corpus under `data/`.
+
+### Texture animation
+
+A vertical frame strip plus a sibling `.png.mcmeta` (the file name keeps the `.png`). Fields `frametime` / `interpolate` / `frames` / `width`·`height`, defaulting to 1 / false / all frames in order / inferred from the shorter side. The atlas height must divide by the frame height; `frames: [0,1,2,1]` gives a back-and-forth loop.
+
+Multiple frames go through the atlas mode of `render-pixels.mjs`: one grid file per frame, rendering a vertical PNG and writing the mcmeta in one pass. Preview with `gif.mjs`; frame-by-frame checking still reads the PNG atlas.
+
+### Particle effects
+
+Computed per frame by rule: split into elements → seed the randomness → integrate with a fixed step → color by distance travelled. Structural patterns (faces, logos, text) use a raster; natural spread (balls, sparks) uses particles.
+
+A firework `shape` has five legal values — `small_ball` / `large_ball` / `star` / `creeper` / `burst` (default `small_ball`) — plus `trail` and `flicker`. Source: `data/neoforge_*/…/resources_server_loottables_lootfunctions.md`.
+
+### Scripts
+
+Three zero-dependency scripts; PNG and GIF are written over `node:zlib`.
+
+| Script | Purpose | Pre-write validation |
+|---|---|---|
+| `render-pixels.mjs` | palette + pixel grid to a 1× PNG; with multiple files, stacks a vertical atlas and writes the mcmeta | ragged rows, undefined color keys, size mismatch; warns on isolated pixels and semi-transparency |
+| `firework.mjs` | five-shape firework atlas + mcmeta | argument validity, trailing empty frames trimmed |
+| `gif.mjs` | vertical atlas to GIF preview | GIF89a structure |
+
+```bash
+# single texture
+node common_skill/mc-texture/tools/render-pixels.mjs sprite.txt --out out.png --size 16x16 --scale 16
+
+# texture animation: stack frames into a vertical atlas and write the .png.mcmeta
+node common_skill/mc-texture/tools/render-pixels.mjs f0.txt f1.txt f2.txt --atlas out/anim.png --frametime 3
+
+# firework effects
+node common_skill/mc-texture/tools/firework.mjs temp/firework --shape star --fps 12 --size 32 --trail --flicker
+
+# GIF preview
+node common_skill/mc-texture/tools/gif.mjs temp/firework/firework.png out.gif --delayCs 8 --scale 6
+```
+
+
 ## MCP/CLI TOOLS:89
 
 Service name: `MC-AI-Coding-Assistant-Tool`.

@@ -182,6 +182,7 @@ export const getWorkflowTemplateSchema = z.object({
     "mc-glossary",
     "mc-waitwhat",
     "mc-prototype",
+    "mc-new-model",
   ]),
 });
 // ── 游玩自测（playtest）工具面：schema + 描述常量（registerTool 与 waveToolSchemas 共用同串）──

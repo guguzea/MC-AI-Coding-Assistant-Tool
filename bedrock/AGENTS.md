@@ -58,3 +58,11 @@
   真机可得的内容错误只在**控制台**，行形是 `[YYYY-MM-DD HH:MM:SS:mmm LEVEL] msg`（级别与时间戳同处一方括号、无标签方括号），
   明细以**制表符缩进**跟在下一行 ⇒ 把控制台输出原样存成 `.txt` 交给 `analyze_bedrock_log --logPath` 即可（工具已支持该行形 + 缩进续行归并）。
   样例：`mcp-server/test-fixtures/bedrock-bds-console.txt`（Session ID 已脱敏）。
+
+## 真机自测（BDS）
+
+`bedrock/playtest/` 提供可复跑的基岩无头闭环：`run-bds-qa.mjs` + `qa-pack/`（脚本、方块、命令、动态属性）。
+前置 = 自备官方 BDS（EULA 由使用者接受）+ `MC_SKILL_PLAYTEST_ALLOW=1` + `MC_SKILL_PLAYTEST_ROOT` + `MC_SKILL_BDS_DIR`；
+用法、证据契约与 fail-closed 边界见 `bedrock/playtest/README.md`。
+
+客户端渲染 / RP 外观 / GUI / 客户端 content log 走真客户端半自动路线：`bedrock/playtest/client/`（URI 直进世界 + 世界脚本摆场景 + PrintWindow 截图 + 退出时落盘的 content log）。实测边界见该页「已知边界」——鼠标注入被忽略、最小化只是起动更慢、命令通道的键盘端需前台焦点。

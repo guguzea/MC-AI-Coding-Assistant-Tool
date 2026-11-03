@@ -119,9 +119,9 @@ graph LR
 
 每个平台、每个版本都有一套规则（注册方式、事件、网络、数据生成、反模式……）和一批专用技能文件。AI 装规则时会用**你这个版本**的那一套，不会拿邻近版本糊你。
 
-现盘 57 档可加载：Forge 15 / Fabric 15 / NeoForge 12 / Quilt 10 / LiteLoader 1 / Rift 2 / ModLoader 1 / 基岩 1（扁平，不分版本）。盘上另有 5 档是 `draft`（会在 `drafts` 里点名：Forge 1.21.1、LiteLoader 1.8.9 / 1.10.2、ModLoader 1.2.5 / 1.5.2）——两个数的分母都写在上面了，随时间会变，跑一遍命令最准。**没有你这个版本的档，它会直说 `PACK_NOT_FOUND` 并把同系列候选清单交给你选，不会悄悄拿邻版顶上**
+没有你这个版本的档，它会直说 `PACK_NOT_FOUND` 并把同系列候选清单交给你选，不会悄悄拿邻版顶上。现盘可加载哪些档，跑 `list_*_versions` 最准。
 
-版本变迁也能问：`get_version_info` 给一个 Forge 版本加一个操作（比如「注册方块」），回推荐做法、关键变更与踩坑点。
+`get_version_info` 给一个 Forge 版本加一个操作（比如「注册方块」），返回推荐做法、关键变更与踩坑点。
 
 > 细节见 [README.md 的「Agent Skills」与「规则文件说明」](README.md)
 
@@ -135,13 +135,14 @@ graph LR
 
 ### 基岩 Add-On
 
-基岩跟 Java 侧不共用：语料是 Microsoft Learn 的基岩文档和包里的 JSON，工具单独一组 9 个——搜文档、取摘要 / 全文、校验 `manifest.json` 与行为包实体 JSON、生成 manifest 和 BP 实体、读 `content_log.txt` 分诊。Yarn / Mixin / `query_api` 那套在基岩上对不上。
+基岩跟 Java 侧不共用：语料是 Microsoft Learn 的基岩文档和包里的 JSON，工具单独一组——搜文档、取摘要 / 全文、校验 `manifest.json` 与行为包实体 JSON、生成 manifest 和 BP 实体、读 `content_log.txt` 分诊。Yarn / Mixin / `query_api` 那套在基岩上对不上。
 
 > 细节见 [README.md 工具参考 §6b](README.md)
 
 ### API、签名与映射查询
 
 按类名和方法名查 Vanilla API 的方法签名与参数名；查加载器 / 库模组 API；把类名、方法名、字段名在 mojang / MCP / Yarn / Parchment / 混淆名之间来回转换；拿崩溃报告里的一个混淆 token（`method_6032`、`er`、`func_110143_aJ` 这类）反查回可读名字。映射层缺失时它会明说"没有索引"，不会拿空壳当答案。
+
 > 细节见 [README.md 的「映射转换」与「工具边界」](README.md)
 
 ### 错误代码与资源校验
@@ -158,9 +159,27 @@ graph LR
 
 ### 代码与资源生成
 
-生成新方块、新物品、实体渲染器、世界生成、网络包、配置、语言文件、模型与 blockstate 的骨架代码。**默认只输出文本**，写盘要你显式确认。第三方库（YACL 之类）需要你提供 jar 才会给可编译的骨架，否则会明确标"未核实"。
+生成新方块、新物品、实体渲染器、世界生成、网络包、配置、语言文件、模型与 blockstate 的骨架代码。**默认只输出文本**，写盘要你显式确认。第三方库（YACL 之类）需要你提供 jar 才会给可编译的骨架。
 
 > 细节见 [README.md 的工具参考 §10](README.md)
+
+### 模型与纹理
+
+方块、物品、实体的模型与贴图。模型骨架由 `generate_model` 生成，有形状的模型、基岩几何体和 GeckoLib 动画用[Blockbench MCP](https://github.com/jasonjgardner/blockbench-mcp-plugin) 插件。
+
+贴图由 `mc-texture` 技能带着画，画完缩到真实尺寸核对。材质按游戏内状态区分，例如：
+
+![铜的四级锈蚀](copper-stages.png)
+
+纹理动画用竖排图集加一个 `.png.mcmeta`。粒子特效按规则逐帧算：
+
+![烟花动画](firework-star.gif)
+
+![烟花的五种形状](firework-shapes.png)
+
+仓库另带三个零依赖。
+
+> 细节见 [README.md 的「纹理与模型」](README.md)
 
 ### 反编译与源码研究
 
@@ -186,21 +205,21 @@ graph LR
 
 ### 游戏内游玩自测
 
-这是比较特别的一块：它能把一个临时 driver 编译进你的工程，让 AI **自己进游戏操作**——飞到某个村庄、扫描方块、断言结果、截图、留下结构化证据，然后根据证据判断过没过。支持三条路线：装第三方桥 mod、用脚本化剧本 driver、或让 AI 实时下意图。
+它能把一个临时 driver 编译进你的工程，让 AI **自己进游戏操作**——飞到某个村庄、扫描方块、断言结果、截图、留下结构化证据，再根据证据判断过没过。三条路线：装第三方桥 mod、用脚本化剧本 driver、或让 AI 实时下意图。
+
 
 当然，我并不推荐把这个功能当陪玩用：实现方式有点绿皮，偶尔会出现一些奇怪的问题（比如抢鼠标）。
-
 > 细节见 [README.md 的「模组测试流程 loop」](README.md)
 
 ### 服务端面：Paper / Spigot 插件
 
-写插件是另一条线，不挂在模组那八棵平台树下面。规则在 `paper/<ver>/rules/`：`26.3` 有十条正文（事件、命令、物品栏、权限、调度器、`plugin.yml` 与配置、PDC、Adventure、实测陷阱），另 5 档只写「26.3 的条款在本版还成不成立」的适用性核查——教程面本身不分版本，照抄别版的条款就是没核过。语料分两面：`platform=paper` 是官方教程（67 页），`paper-api` / `spigot` 只有签名，当前档各 2116 / 1396 个类，另各带 5 档与 8 档历史。`generate_paper_plugin` 出插件骨架，`generate_playtest_server_driver` 出起服 driver 与 `plan.txt` 样例，判据落在服务端日志里。
+写插件是另一条线，不挂在模组那八棵平台树下面。规则在 `paper/<ver>/rules/`，最新档有十条正文（事件、命令、物品栏、权限、调度器、`plugin.yml` 与配置、PDC、Adventure、实测陷阱），其余档只写「最新档的条款在本版还成不成立」的适用性核查——教程面本身不分版本，照抄别版的条款就是没核过。语料分两面：`platform=paper` 是官方教程，`paper-api` / `spigot` 只有签名。`generate_paper_plugin` 出插件骨架，`generate_playtest_server_driver` 出起服 driver 与 `plan.txt` 样例，判据落在服务端日志里。
 
 > 细节见 [doc/server-face-paper.md](doc/server-face-paper.md)
 
 ### 移植
 
-把模组从 Forge 迁到 NeoForge / Fabric 这类跨加载器移植：识别平台与映射、给出风险与步骤、按确认执行。默认只做 dryRun 预览。26.2 这边，Fabric 26.2 已经齐了（规则树、脚手架、文档正文）；NeoForge 26.2 / 26.3 有规则树但没本版主文档，游戏侧变更走官方迁移指南（`get_migration_guide` 的 `26.1->26.2` / `26.2->26.3`，源是 NeoForge Primer）。Fabric 26.3 上游文档还没发，只有博客级迁移摘要。
+把模组从 Forge 迁到 NeoForge / Fabric 这类跨加载器移植：识别平台与映射、给出风险与步骤、按确认执行。默认只做 dryRun 预览。NeoForge 26.2 / 26.3 有规则树但没本版主文档，游戏侧变更走官方迁移指南（`get_migration_guide` 的 `26.1->26.2` / `26.2->26.3`）。Fabric 26.3 上游文档还没发，只有博客级迁移摘要。
 
 > 细节见 [README.md 的「移植分析」](README.md)
 
@@ -216,7 +235,7 @@ graph LR
 
 > 细节见 [common_skill/README.md](common_skill/README.md) 与 [README.md 的「工作流模板」§15](README.md)
 
-仓库还挂着一套代码模式库、反模式库、schema 与社区短文，同样走 `mcskill://`：`list_knowledge_resources` 列出全部 293 条，`read_knowledge_resource` 读正文。
+仓库还挂着一套代码模式库、反模式库、schema 与社区短文，同样走 `mcskill://`：`list_knowledge_resources` 列出条目，`read_knowledge_resource` 读正文。
 
 ### 更新
 

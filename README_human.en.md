@@ -162,6 +162,14 @@ Skeletons for new blocks, items, entity renderers, worldgen, network packets, co
 
 > Details in section 10 of the tool reference in [README.en.md](README.en.md)
 
+### Models and textures
+
+Models and textures for blocks, items and entities. Model skeletons come from `generate_model`; models with real shape, Bedrock geometry and GeckoLib animation go through the original [Blockbench MCP](https://github.com/jasonjgardner/blockbench-mcp-plugin) plugin.
+
+Textures are drawn with the `mc-texture` skill and checked at real size when done. Texture animation is a vertical frame strip plus a `.png.mcmeta`. The repo also ships three zero-dependency scripts, and the [junyudev/pixel-art](https://github.com/junyudev/pixel-art) methodology for larger canvases and character work.
+
+> Details in "Textures and models" in [README.en.md](README.en.md)
+
 ### Decompiling and reading mod sources
 
 When the docs do not cover it, read the source: `analyze_mod_jar` reads a jar's metadata, `decompile_mod_jar` decompiles into the local cache, `get_minecraft_source` pulls a class of MC source (1.14–1.21.11 through Yarn, 26.x already deobfuscated), `search_mod_code` greps the output, `download_official_mdk` fetches the official MDK. Zero downloads by default; artifacts land only in `MC_SKILL_CACHE`, never in your project; JDK 17+ required. Bring your own jar and `ingest` it for libraries or loaders we cannot download (LiteLoader / Rift / ModLoader).

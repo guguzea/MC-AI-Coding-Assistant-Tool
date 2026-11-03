@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-31T09:25:16.505Z",
+  "generatedAt": "2026-11-01T14:33:43.776Z",
   "entries": [
     {
       "id": "authored/addon-dev-workflow",
@@ -22,6 +22,28 @@
       "priority": "⭐",
       "summary": "给既有模组写附属的端到端套路：先决策「硬前置附属 vs 可选集成」；构建期挂宿主（FG fg.deobf / MDG·NG 自动重映射 / 26.1+ 免 deobf 三种记法）；mods.toml 声明 ordering=AFTER 与版本区间策略；只用宿主公开 API；多宿主版本测试矩阵。",
       "mcHint": "思路全版本通用；构建记法按 FG≤1.20.4 / 1.20.5+MDG·NG / 26.1+ 三段区分"
+    },
+    {
+      "id": "authored/ai-modeling-toolchain",
+      "label": "AI 辅助建模与材质工具链（MCP 接线与选型）",
+      "path": "authored/ai-modeling-toolchain.md",
+      "url": "",
+      "tags": [
+        "modeling",
+        "model",
+        "texture",
+        "blockbench",
+        "mcp",
+        "toolchain",
+        "workflow",
+        "geckolib",
+        "bedrock",
+        "licensing"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "想用 AI 做模型时，建模环节接外部 Blockbench MCP，插件版与 headless 版各适合什么场景；AI 出图工具在许可和还原度上的两个坑；代码与资源结构仍按本仓规则走。",
+      "mcHint": "工具链本身与版本基本无关；GeckoLib、基岩落位规则以当档 search_*_docs 为准"
     },
     {
       "id": "authored/bedrock-script-api-primer",
@@ -1892,6 +1914,28 @@
       "priority": "🟢",
       "summary": "基岩版服务端软件与开发入口：LeviLamina（原 LiteLoaderBDS，C++ 原生）、PowerNukkitX / Cloudburst Nukkit（Java）、Endstone（Python/C++）、Dragonfly（Go）、bdsx（Node.js）。本仓基岩面只做 Add-On（manifest.json / BP / RP），服务端面为零覆盖，本页补这一块的入口，全部仅外链不入库正文。",
       "mcHint": "各软件自带的 BDS 版本轴不同；引用前先看该软件当前支持的 BDS 版本"
+    },
+    {
+      "id": "links/blockbench-mcp",
+      "label": "Blockbench MCP（外链，GPL-3.0）",
+      "path": "links/blockbench-mcp.md",
+      "url": "https://github.com/jasonjgardner/blockbench-mcp-plugin",
+      "tags": [
+        "blockbench",
+        "model",
+        "modeling",
+        "mcp",
+        "geckolib",
+        "bedrock",
+        "java",
+        "gpl",
+        "link-only",
+        "external-tool"
+      ],
+      "sourceKind": "links",
+      "priority": "🟢",
+      "summary": "建模环节用的外部 MCP。两种形态：Blockbench 插件走 HTTP（默认 :3000/bb-mcp），或 headless 走 stdio。可编 .bbmodel、导出基岩 .geo.json 与 Bedrock 动画、导出 Java 方块与物品模型 JSON，带 GeckoLib 集成。许可是 GPL-3.0。",
+      "mcHint": "工具面与 MC 版本基本无关；GeckoLib、基岩 geometry 的落位规则仍按当档 search_*_docs"
     },
     {
       "id": "links/bukkit-spigot-tutorial-index",

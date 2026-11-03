@@ -14,7 +14,7 @@
 | `links/` | 无全文许可：仅标题、摘要、外链 URL |
 | `authored/` | 本仓库自写短文（可自由修改） |
 
-索引：`indexes/index-l0.json`（可由 `mcp-server/scripts/build-community-index.mjs` 重建；当前 **110** 条：authored 95 / links 11 / permitted 4）。
+索引：`indexes/index-l0.json`（可由 `mcp-server/scripts/build-community-index.mjs` 重建；当前 **115** 条：authored 96 / links 15 / permitted 4）。
 
 ## `authored/` 主题速查
 
@@ -49,6 +49,7 @@
 | Forge 事件系统实务（双总线/订阅/坑） | `authored/forge-event-system-practices` |
 | Jigsaw 结构生成 | `authored/jigsaw-structure-generation` |
 | 自定义维度与生物群系（TerraBlender） | `authored/custom-dimension-and-biomes` |
+| AI 辅助建模与材质工具链（模型 MCP 接线、出图工具的许可坑） | `authored/ai-modeling-toolchain` |
 
 ## `links/` 教程站索引
 
@@ -64,6 +65,7 @@
 | Bukkit/Spigot 插件开发中文教程（服务端面补教程层；含已失效条目登记） | `links/bukkit-spigot-tutorial-index` |
 | 基岩版服务端软件（LeviLamina/Nukkit/Endstone/Dragonfly/bdsx） | `links/bedrock-server-software-index` |
 | 原版数据包 / 原版模组教程与工具（香草图书馆、Misode） | `links/datapack-vanilla-tutorial-index` |
+| Blockbench MCP（原作者项目，GPL-3.0，建模环节用它） | `links/blockbench-mcp` |
 
 ## 版本路由矩阵（选篇前必查）
 

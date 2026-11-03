@@ -6,6 +6,181 @@
 - 只追加，不改写历史节。要更正旧节，写进新节第 6 块「自我更正」并点名旧节。
 - 夜跑、交接、事后抽查读本文件，不依赖聊天记录。夜批（阶 1）的队列与抽查记账仍在 [`NIGHT_BATCH.md`](./NIGHT_BATCH.md)，本文件不顶替它。
 
+## 2026-11-01 · 基岩客户端面半自动自测入库（维护档）
+
+**第 0 块 · 结论**：新增 `bedrock/playtest/client/`（驱动脚本 + QA 包 BP/RP + 说明，共 8 个新文件），把「URI 直进世界 → 世界脚本摆场景 → PrintWindow 截图 → 退出时落盘的 content log」这条客户端面半自动路线落进仓库。真机（Minecraft for Windows 1.26.6005.0）实测到：包被识别、脚本启动、展示场景生成并传送玩家、10 条自定义命令注册成功（`command channel=custom(10/10)`）、**玩家键入 `/qa:ping` 端到端跑通**（日志三行 + 聊天栏 `pong pos=-3.50,221.00,-1.50`）。另验 `/qa:pos` 也端到端绿；脚本自调用探针证明 `qa:look 0 90` / `qa:time 1000` 的命令定义与回调都正常。遗留：**玩家键入带参命令** `/qa:look 15 90` 两轮都没进回调（日志无 `cmd invoked name=qa:look`，聊天栏出现原版黄色错误「此世界未启用无敌模式。」），原因未坐实；鼠标注入被该客户端忽略（已实测）。
+
+1. **改了哪些文件**
+   - `bedrock/playtest/client/ui-drive.ps1`（新，动作 state/launch/show/minimize/focus/shot/screens/key/hold/type/chat|command/click/close）：`shot` 走 `PrintWindow(PW_RENDERFULLCONTENT)`、`close` 走 `CloseMainWindow`、`launch` 支持 `-Minimize`，这三条不调用 `SetForegroundWindow`；`key`/`hold`/`type`/`chat` 会先抢焦点并在失败时 `error=focus-failed`；`screens` 是整屏 `CopyFromScreen`（PrintWindow 会裁掉聊天输入行，排查键入内容时用它）。
+   - `bedrock/playtest/client/qa-pack/BP/{manifest.json, blocks/client_block.json, scripts/main.js}`（新）：世界脚本在 `system.beforeEvents.startup → customCommandRegistry.registerCommand` 注册 `/qa:*`（`cheatsRequired:false`），失败回退 `chatSend`；`playerSpawn` 铺 3×3 展示墙 + 金块/钻石块 + 传送；每 2 秒心跳；break/place 日志；脚本启动后 200 ticks 用 `runCommand("qa:ping")` 做一次自调用。
+   - `bedrock/playtest/client/qa-pack/RP/{manifest.json, textures/terrain_texture.json, textures/blocks/qa_block.png}`（新）：品红/青棋盘格，用来验 RP 在真客户端里的渲染。
+   - `bedrock/playtest/client/README.md`（新）：前置三件、装包四步、无焦点取证、命令表与判据、已知边界、排查。
+   - `bedrock/playtest/README.md`（改 2 处）：把「客户端渲染 / RP / GUI 不覆盖」改成指向 `client/README.md`（首段一句 + 已知边界一条）。
+   - `bedrock/AGENTS.md`（+2 行）：真机自测节补客户端面指针与三条实测边界。
+   - `DELIVERY_LOG.md`：追加本节。
+
+3. **验证台账**
+   - 真机（Minecraft for Windows 1.26.6005.0；`@minecraft/server` 2.10.0 被运行时提升到 2.11.0）：
+     - `%APPDATA%\Minecraft Bedrock\logs\ContentLog2026-11-01_16-45-41_1.txt`（2,400 B）：`boot script loaded` / `command channel=custom(10/10)` / `playerSpawn player=zx8429 at=-2.43,220.00,-3.05` / `showcase ready anchor=-3,220,-4 wall=3x3 at z=-7 ...` / `hb t=3..t=10`。
+     - `..._13-27-56_1.txt`（8,876 B）：`hb t=36 pos=0.50,220.00,3.50` → `hb t=37 pos=0.50,220.00,0.30`（按住 W 1.5 s 前进 3.2 格并停在墙的碰撞边界）⇒ 键盘注入可用。
+     - `..._16-39-49_1.txt`（843 B）：`chat channel=unavailable`（旧版脚本探测 `world.beforeEvents.chatSend` / `afterEvents.chatSend` 均不存在）。
+     - `..._16-55-51_1.txt` 与 `..._17-00-04_1.txt`（各 836 B）：只有 `boot script loaded` + `command channel=custom(10/10)`，无 `playerSpawn`、无心跳 ⇒ 最小化起动卡 splash、世界不 tick。
+     - 截图 `F:\MC_GAME\bedrock-qa\screens\client-42.png`：3×3 棋盘格墙 + 金块 + 钻石块，RP 纹理在真客户端渲染成功。
+     - 截图 `F:\MC_GAME\bedrock-qa\screens\r1-00-loaded.png` 与 `r1-01-mine.png`：同一机位按住左键 2.5 s（创造模式）后逐像素一致、方块未破 ⇒ 鼠标注入被忽略。
+   - **端到端绿臂**（可见窗口，`ContentLog2026-11-01_17-53-41_1.txt`）：
+     - `17:59:08 [CLIENT] cmd invoked name=qa:ping sourceType=Entity entity=minecraft:player`
+     - `17:59:08 [CLIENT] cmd channel=custom raw=ping`
+     - `17:59:08 [CLIENT] cmd ping ok`
+     - 截图 `F:\MC_GAME\bedrock-qa\screens\r4-03-after-enter.png` 聊天栏显示 `pong pos=-3.50,221.00,-1.50`。
+     - 同轮 `hb t=32..t=40` 全为 `pos=-2.50,221.00,-1.50 rot=0.00,-180.00`（未输入时静止，排除误触移动）。
+   - **未到回调的一条**（同轮）：键入 `/qa:look 15 90` 后日志无 `cmd invoked name=qa:look`；截图 `r4-04-look.png` 聊天栏是原版黄色错误「此世界未启用无敌模式。」，视角未转。
+   - **第二轮（18:13 会话，`ContentLog2026-11-01_18-13-09_1.txt`）**：单回车复现同一黄色错误；同轮 `/qa:pos` 端到端绿（`cmd invoked name=qa:pos sourceType=Entity entity=minecraft:player` / `cmd pos ok gm=Creative`，截图聊天栏 `pos=-3.50,221.00,-0.50 rot=0.00,-180.00 gm=Creative`）。
+   - **第三轮（18:23 会话，`ContentLog2026-11-01_18-23-06_1.txt`）脚本自调用探针**：`cmd invoked name=qa:ping sourceType=Server entity=none` / `... name=qa:look sourceType=Server entity=none` / `... name=qa:time sourceType=Server entity=none` 三条都进回调（`selftest command raw=... successCount=0`，0 是因为回调按设计拒绝非玩家源）。⇒ 命令定义与参数解析没问题，缺口只在「玩家键入带参命令」这一层。
+   - `node --check bedrock/playtest/client/qa-pack/BP/scripts/main.js` → OK。
+   - 4 个 JSON 全部 `JSON.parse` 通过；`qa_block.png` 177 B、签名 `89504e470d0a1a0a`。
+   - `node mcp-server/dist/cli.js validate_addon_manifest --manifestJson=@...`（BP 与 RP 各一次）→ `ok:true`、`errors:[]`。
+   - `node mcp-server/dist/cli.js validate_bp_json --kind=block --json=@...client_block.json` → `ok:true`、`errors:[]`（精简 schema，非全量官方 schema）。
+   - PowerShell `[Parser]::ParseFile` 对 `ui-drive.ps1` → `parse_errors=0`；`-Action state` 输出 `foreground_is_game=False`（确认不抢焦点）。
+   - 门：`assert-bedrock-script-api-pin` rc=0 · `assert-bedrock-genre-demote` rc=0 · `assert-bedrock-scriptapi-members` rc=0。
+
+5. **未做清单**
+   - **玩家键入带参命令**端到端未通：`/qa:look 15 90` 两轮都没进回调，聊天栏弹原版黄色错误「此世界未启用无敌模式。」；命令定义本身已由脚本自调用证明可用（见第 3 块）。剩余带参命令（tp / give / spawn / clear / time / gm / wall）的玩家键入路径同样未逐条实测。
+   - 脚本自调用 `runCommand("qa:ping")` 的探针仍未拿到绿读数：最小化轮次世界不 tick，可见窗口轮次又被前台输入抢先完成验证；探针保留在包里，尚未产出结论。
+   - 未写装包自动化脚本：装包仍是 README 的人工四步（复制 BP/RP + 写两份世界清单 + 世界内各放一份）。
+   - 未接 MCP 工具面（没有 `generate_playtest_client_driver`），也未并入 `doc/playtest-loops.md` 的 loop 清单。
+   - 只在 1.26.6005.0 / Windows 实测；其它版本与平台未验。
+   - 鼠标 / 触屏 / 手柄的真实手感仍不可自动化（客户端忽略注入鼠标；触摸注入 error 87 未解）。
+
+6. **自我更正**
+   - 本轮前半段按语料 `World.md` 的 `customCommand.ts` 示例写了 `world.beforeEvents.chatSend`，真机报 `TypeError: cannot read property 'subscribe' of undefined at main.js:137`；`WorldBeforeEvents.md` 成员表里也没有 chatSend。⇒ 该示例与 1.26.6005.0 的 stable 事件面不一致，改走自定义命令 API 并保留 chat 回退；README 的命令表由 `qa ping` 改为 `/qa:ping`。
+   - 「最小化会阻止加载（卡 64 MB）」与紧随其后的「最小化不阻止加载、只是慢」两条都作废。最终读数：4 次最小化运行里 2 次卡在 splash（不 tick）、1 次正常跑到 `playerSpawn`、1 次关得太早无法判定；以「最小化只能验包加载与命令注册」为准。
+   - `Object.keys(world.beforeEvents)` / `Object.keys(world.afterEvents)` 在该 build 都返回空串（事件挂在原型上）⇒ 删掉「枚举事件名当判据」的写法。
+   - README 原写「世界内截图没有 HUD、聊天文字不保证抓到」作废：本轮截图抓到了聊天栏（`pong pos=...` 与黄色错误行），只是快捷栏 / 血条没出现。
+
+## 2026-11-01 · 基岩 BDS 自测 harness 入库（维护档）
+
+**第 0 块 · 结论**：新增 `bedrock/playtest/`（可复跑 harness + QA 包 + 说明，共 5 个文件），并在 `bedrock/AGENTS.md` 加了指针；在官方 BDS 1.26.61.1 上跑通：QA 包 13 行全 PASS、scaffold 冒烟 PASS，6 条反证腿全部按预期变红（授权缺失 / 越出授权根 / 缺 entry 文件 / 同 UUID 冲突均 exit 2；包被忽略与脚本抛错 exit 1）。仓库改动未提交，BDS 二进制不入库（EULA 由使用者接受）。
+
+1. **改了哪些文件**
+   - `bedrock/playtest/run-bds-qa.mjs`（新，15,936 B）：装包 → 改测试配置 → 起 BDS → 抓控制台 → 写 `exit-code.txt` / `qa.log` / `state.json` / `console.txt` → 还原 `server.properties` 与 `world_behavior_packs.json`。支持 `--pack` / `--world` / `--done-token` / `--timeout-ms` / `--startup-timeout-ms` / `--port` / `--install-name`；启动超时与「起服后等标记」分开计时。
+   - `bedrock/playtest/qa-pack/manifest.json`（665 B）、`scripts/main.js`（3,150 B）、`blocks/qa_block.json`（511 B）：真机测试包源文件（`@minecraft/server` 2.10.0；方块读写、命令、动态属性、自定义方块）。
+   - `bedrock/playtest/README.md`（新，5,080 B）：前置（自备 BDS + EULA）、cmd.exe 用法、参数表、证据契约、fail-closed 边界、已知边界。
+   - `bedrock/AGENTS.md`（+6 行）：加「真机自测（BDS）」指针，指向 `bedrock/playtest/README.md`。
+   - 上一轮遗留仍未提交：`bedrock/scaffold/BP/scripts/main.js`（+5 行 `worldLoad` 日志）。
+   - `DELIVERY_LOG.md`：追加本节。
+
+2. **判据与反证**
+   - 绿臂（QA）：`evidence/repo-harness-qa-5/` → `exit-code.txt=0`、`state.json {done:true, errors:0, timedOut:false}`、`qa.log` 13 行（`worldLoad fired` / 3× `PASS` / `custom block` 2× / `dynamic property` / `DONE`）。
+   - 绿臂（scaffold）：`evidence/repo-harness-scaffold-2/` → exit 0、`qa.log` 恰 1 行 `[Scripting] [scaffold] world loaded`。
+   - 红臂（全部实跑，不是推演）：
+     - 缺 `MC_SKILL_PLAYTEST_ALLOW=1` → rc=2 `PLAYTEST_DISABLED`，未起服。
+     - `MC_SKILL_BDS_DIR=C:/Windows` → rc=2 `PATH_OUTSIDE_ALLOWLIST`。
+     - 包只有 manifest、无 `scripts/main.js` → rc=2 `SCRIPT_ENTRY_FILE_MISSING`，未起服。
+     - 同 UUID 的 `scaffold_bp` 已装在别的目录 → rc=2 `PACK_UUID_CONFLICT`。
+     - `evidence/repo-harness-red-1/`：BDS 忽略包 → rc=1，`qa.log` 抓 `Configured pack … was not found and was ignored`。
+     - `evidence/repo-harness-red-2/`：脚本在 `worldLoad` 抛错 → rc=1，`qa.log` 抓 `ERROR] [Scripting] [MC Skill Bad Pack] Error: QA_RED_ARM`。
+   - CLI 侧：`analyze_bedrock_log` 对绿臂控制台 → errors 0（49 行 / 42 INFO）；对 red-2 控制台 → errors 1（同一条 `QA_RED_ARM`）；`inspect_playtest_evidence`（`MC_SKILL_PLAYTEST_ALLOW=1` + `ROOT=F:/MC_GAME`）对 qa-5 → `exitCode 0`、`qa.done=1`、`qa.error=0`。
+
+3. **验证台账**
+   - `node bedrock/playtest/run-bds-qa.mjs --pack bedrock/playtest/qa-pack`（BDS 1.26.61.1）→ rc=0，`ok:true`、`done:true`、`errorCount:0`；console 写入改同步后复跑 qa-5 → console 63 行、`qa.log` 13 行、exit 0。
+   - `--pack bedrock/scaffold/BP --done-token "[scaffold] world loaded"` → rc=0。
+   - 三条 exit-2 反证（授权 / 越界 / 缺 entry）与两条 exit-1 反证（包被忽略 / 脚本抛错）→ rc 与错误码逐条对齐（见第 2 块）。
+   - `node --check bedrock/playtest/run-bds-qa.mjs`、`node --check bedrock/playtest/qa-pack/scripts/main.js` → 均 OK。
+   - 门：`assert-bedrock-script-api-pin` rc=0；`assert-bedrock-genre-demote` rc=0；`assert-archive-pointers` rc=0。
+   - 环境读数：BDS 进程启动到 `Server started` 实测 **2m18s**（signaling 等待）；因此默认 `--startup-timeout-ms=300000`。
+
+5. **未做清单**
+   - BDS 二进制未入库（EULA 与体积）；下载、解包、接受 EULA 由使用者完成。
+   - 客户端侧测试（RP 渲染 / GUI / 手感 / 客户端 content log）未做，本机未装客户端。
+   - 只验了 BDS **1.26.61.1 / Windows**；Preview 1.26.70.22 与其它版本未测。
+   - 未接入 MCP 工具面（没有 `generate_playtest_bedrock_driver`），也未写进 `doc/playtest-loops.md` 的 loop 清单；本轮只做到「仓库内可复跑脚本」。
+   - 未覆盖资源包外观；`qa-pack` 的自定义方块用原版 `stone` 图集键。
+   - `content-log-file-enabled=true` 仍不产出文件，证据取控制台（与 `bedrock/AGENTS.md` 既有结论一致）。
+
+6. **自我更正**
+   - 上一节 `2026-11-01 · 基岩脚手架复测与客户端通道探测（维护档）` §5 写的「BDS harness 入库：未做，等你拍板」状态已更新：本轮按你的指示入库。
+   - 本轮内两处自纠：① 首版 harness 把 `sawServerStarted` 写成 `sawServerStart`，`finish()` 抛 `ReferenceError`（`evidence/repo-harness-qa-1/` 只有 console，无三件）；② 首版用「进程启动 + 150s」的总计时器，实际起服 2m18s，导致 `repo-harness-qa-2` 提前 stop（`tickingarea` 后即停机）。两处修复后才得到 qa-3/qa-4 绿；随后把 console 写入从流改为同步追加（避免 `process.exit` 截断），最终由 qa-5 复验绿。
+   - `repo-harness-red-1` 原本想做「脚本抛错」臂，但被我写错的 module UUID（末段 10 位，应 12 位）变成「包被忽略」臂；修正 UUID 后的 `red-2` 才是脚本错误臂。两条都保留作红臂，但归因不同。
+
+## 2026-11-01 · 基岩脚手架复测与客户端通道探测（维护档）
+
+**第 0 块 · 结论**：上一轮「`bedrock/scaffold/BP` 缺 `scripts/main.js`」的结论作废——该文件自 `c8addfed` 起就已入库，真机报错来自我往 BDS 拷贝时只拷了 `manifest.json`。本轮给该脚本补了一行 `worldLoad` 日志（让无头 BDS 也能证明脚本通道在跑），整包复测绿：`exit-code 0`、`[scaffold] world loaded`、0 脚本错误。基岩客户端仍未装：本机 Store 源查不到 `Minecraft for Windows`（`9NBLGGH2JHXJ`），安装/登录只能由你本人完成。
+
+1. **改了哪些文件**
+   - `bedrock/scaffold/BP/scripts/main.js:3-5`：新增 `world.afterEvents.worldLoad` 订阅，打印 `[scaffold] world loaded`。为什么：原脚本只挂 `playerSpawn`，无头 BDS 永远不触发玩家事件 ⇒ 任何自动测试都无法区分「脚本跑起来了」和「包只被加载」。
+   - `DELIVERY_LOG.md`：追加本节（仓规落点）。
+   - 仓库其它零改动。F 盘 scratch（不入库）：`F:/MC_GAME/bedrock-qa/scaffold-run.mjs` 重写为完整取证（装包 → 起服 → 判 `[scaffold]`/缺主文件 → 写 `exit-code/qa.log/state.json` → 还原 `world_behavior_packs.json`）；`F:/MC_GAME/bedrock-qa/dist/mcskill_qa.mcpack`（1,757 B，MD5 `d969babf65e6dd7a4dce525806718ff2`，根含 `manifest.json`/`blocks/qa_block.json`/`scripts/main.js`）供客户端导入用，**未在客户端导入过**。
+
+2. **判据与反证**
+   - 红臂（旧、仍在盘）：`evidence/scaffold-2026-10-31T16-52-17-537Z/console.txt` 含 `Plugin [Example BP - 1.0.0] - does not contain main file [main.js].` ⇒ 证明「缺主文件的包会被 BDS 拒」，但它只对应 BDS 里那份只有 manifest 的副本。
+   - 绿臂（本轮）：`evidence/scaffold-2026-11-01T03-17-22-190Z/`。同一 BDS、同一 world，整包拷贝后：`Pack Stack - [00] Example BP (id: aaaaaaaa-…, version: 1.0.0) @ behavior_packs/scaffold_bp`；`[2026-11-01 11:18:34:314 INFO] [Scripting] [scaffold] world loaded`；`exit-code.txt=0`；`qa.log` 恰 1 行；`state.json` `verdict:PASS`、`scriptingError:null`。
+   - 判据的「能红」由上一轮红臂提供（同一条检测路径会因缺主文件置 1）。
+
+3. **验证台账**
+   - `node scaffold-run.mjs`（F 盘，BDS 1.26.61.1）→ `ok:true`、`sawWorldLoadMarker:true`、`scriptingError:null`，exit 0。
+   - `analyze_bedrock_log --logPath <绿臂 console>` → rc=0；37 行 / 30 INFO / `errors:[]` / `warnings:[]`；7 条 banner 行未解析。
+   - `validate_addon_manifest --manifestJson <scaffold manifest>` → `ok:true`、`errors:[]`（仅 Learn 对照 warning + docsStatus STALE）。
+   - `node mcp-server/scripts/assert-bedrock-script-api-pin.mjs` → rc=0（模板钉值 2.10.0 与模板声明一致；本改动不动 manifest）。
+   - 客户端通道：`Get-AppxPackage Microsoft.MinecraftUWP` 空；`winget list/install --id 9NBLGGH2JHXJ --source msstore` 均返回「找不到与输入条件匹配的程序包」（更新 msstore 源后重试同）；Storefront `products/9NBLGGH2JHXJ?market=GB` → `Title: Minecraft for Windows`、`Accessible:false`、SKU 列表空；`Microsoft.GamingApp`（Xbox）已装 2611.1001.9.0；区域 = 英国（GeoId 242）；磁盘 C 18.6 GB / F 218.7 GB 可用。
+
+5. **未做清单**
+   - 客户端安装：未做。CLI 通道取不到包；Store/Xbox 安装需你登录微软账号（并可能需已有授权）。装完若要落 F 盘，需在「设置 → 系统 → 存储 → 高级存储设置 → 新内容的保存位置」把「新应用」改到 F（系统设置，需你操作；默认落 C）。
+   - 客户端侧测试（RP 渲染、GUI、手感、客户端 content log）：未做，依赖上一条；本机也没有可用的客户端输入自动化通道。
+   - BDS harness 入库：未做，等你拍板。**不入库的后果**：仓库对基岩没有任何可复跑的自动测试入口——`generate_playtest_driver` 的覆盖表不含基岩，现有 playtest 面全是 Java / Paper 服务端；每次都要像这轮一样在 F 盘重建。若要入库，建议只提交脚本 + 文档（如 `bedrock/playtest/`），不提交 BDS 二进制（EULA 由使用者接受）。
+   - BDS Preview 1.26.70.22 未测。
+
+6. **自我更正**
+   - 上一节 `2026-11-01 · 基岩版 BDS 真机首测（主档）` 第 3 块「仓库缺陷（未修）」与第 4 块 ① 作废：`git ls-files` 显示 `bedrock/scaffold/BP/scripts/main.js` 已跟踪，`git show HEAD:…` 内容为 `playerSpawn` 订阅；缺文件的是 BDS 里的 `behavior_packs/scaffold_bp`（我此前只拷了 manifest）。该节第 2 块引用的红臂仍有效，但它证的是「缺主文件的包会被 BDS 拒」，不证仓库缺文件。
+   - 上一节第 3 块「`validate_addon_manifest` 不做 entry 文件存在性检查」仍成立（工具只吃 manifest 全文），但它是工具边界，不是仓库缺陷。
+
+## 2026-11-01 · 基岩版 BDS 真机首测（主档）
+
+**第 0 块 · 结论**：在 F 盘 `F:/MC_GAME/bedrock-bds/bedrock-server-1.26.61.1/` 跑起官方 BDS 1.26.61.1（Windows，zip MD5 与 Content-MD5 一致），用一个自建 QA 行为包真机验通：包加载、`world.afterEvents.worldLoad`、Script API 方块读写、命令 `setblock`/`testforblock`、动态属性、自定义方块 `mcskill:qa_block` 注册与放置全部 PASS，`exit-code.txt=0`、`qa.log` 全 PASS、无内容错误。同时发现仓库自带 `bedrock/scaffold/BP` 在真机上报错：manifest 声明 `entry: scripts/main.js`，但 scaffold 目录里没有该文件，BDS 打印 `[ERROR] [Scripting] Plugin [Example BP - 1.0.0] - does not contain main file [main.js].`（未改仓库，待你拍板）。本机未安装 Bedrock 客户端（`Get-AppxPackage Microsoft.MinecraftUWP` 为空）⇒ 客户端渲染/GUI/手感未测，本轮只覆盖服务端运行时。
+
+1. **改了哪些文件 / 给了什么**
+   - 仓库侧：**零改动**（只读 `bedrock/AGENTS.md`、`bedrock/.cursor/rules/00/05/07`、`data/bedrock_stable/.../server-properties.md`、F 盘 d.ts）。本文件追加本节是仓规指定落点。
+   - 下载物（按用户要求全放 F 盘 `MC_GAME`）：
+     - `F:/MC_GAME/bedrock-bds/bedrock-server-1.26.61.1.zip`：官方链接 `https://www.minecraft.net/bedrockdedicatedserver/bin-win/bedrock-server-1.26.61.1.zip`（由 `net-secondary.web.minecraft-services.net/api/v1.0/download/links` 取得）；大小 **88,760,649 B**，MD5 **e3a2e22b229e258ad07b22aeb3c959b5**，与响应头 `Content-MD5: 46LiKyKeJYrQeyKus8lZtQ==` 解出的十六进制一致（6 段并行 Range 下载后拼接、校验通过）。
+     - `F:/MC_GAME/bedrock-bds/bedrock-server-1.26.61.1/`：解包后的 BDS（`bedrock_server.exe` 232,647,536 B）。
+   - 测试实例 `F:/MC_GAME/bedrock-qa/`：
+     - `behavior_packs/mcskill_qa/manifest.json`：`format_version 2`、`min_engine_version [1,26,44]`、script 模块、依赖 `@minecraft/server 2.10.0`（与仓内 scaffold 默认值一致）。
+     - `behavior_packs/mcskill_qa/scripts/main.js`：`world.afterEvents.worldLoad` 里依次做：`tickingarea add`（否则无玩家时区块未加载/ticking，`setBlockType` 抛 `LocationInUnloadedChunkError`）、Script API 方块读写、命令 `setblock`/`testforblock`、动态属性、自定义方块放置与 `testforblock`；每步打 `[QA] PASS/FAIL`，末尾 `[QA] DONE`。
+     - `behavior_packs/mcskill_qa/blocks/qa_block.json`：`mcskill:qa_block`，`format_version 1.21.80`，按规则 05 成对给 `minecraft:geometry` + `minecraft:material_instances`。
+     - `run-bds-qa.mjs`：`init`（建世界）/`qa`（装包起服）两态；写 `server.properties`（`online-mode=false`、`allow-list=false`、`enable-lan-visibility=false`、端口 29132/29133、`content-log-file-enabled=false`）、把包同步进 BDS 的 `behavior_packs/`、写 `worlds/qa_world/world_behavior_packs.json`、抓控制台、看到 `[QA] DONE/FAIL` 或包缺失就 `stop`，最后按证据契约写 `exit-code.txt` / `qa.log` / `state.json`（另存 `bds-console-qa.txt`、`raw-qa.txt`）。
+     - `scaffold-run.mjs`：同一套抓取逻辑，但载入的是仓库 `bedrock/scaffold/BP`（只用于发现缺 `scripts/main.js` 的真机错误）。
+
+2. **怎么验（本轮实测证据）**
+   - **层级**：L3 自动化功能 + 服务端 L4 真机冒烟；**不是**玩家可见 L4/L5（无客户端、无玩家操作）。
+   - 证据落点（F 盘）：
+     - 最终绿轮：`F:/MC_GAME/bedrock-qa/evidence/qa-2026-10-31T16-49-45-869Z/`（`exit-code.txt`=0、`qa.log` 13 行全 PASS、`state.json`、`bds-console-qa.txt`、`raw-qa.txt`）。
+     - 留存副本：`evidence/pass-script-qa-2026-10-31T16-47-15-873Z/`（首轮 3 项）、`evidence/pass-custom-block-qa-2026-10-31T16-48-31-484Z/`（自定义方块轮）。
+     - 红臂（故意失败，留档）：`evidence/qa-2026-10-31T16-44-19-806Z/`（包没同步进 BDS ⇒ `Configured pack … was not found and was ignored`，exit 1）、`evidence/qa-2026-10-31T16-46-02-727Z/`（无 ticking area ⇒ `[QA] FAIL exception=LocationInUnloadedChunkError`，exit 1）、`evidence/scaffold-2026-10-31T16-52-17-537Z/console.txt`（仓库 scaffold 缺主文件，ERROR）。
+   - 绿轮原始读数（`evidence/qa-…16-49-45/bds-console-qa.txt`）：
+     - `Pack Stack - [00] MC Skill QA BP (id: 2b7b1a52-…, version: 1.0.0) @ behavior_packs/mcskill_qa`
+     - `[QA] worldLoad fired` → `tickingarea successCount=1` → `block_readback=minecraft:stone` / `PASS block roundtrip` → `cmd_setblock=1 cmd_testforblock=1` / `PASS command block check` → `custom_block_readback=mcskill:qa_block` / `PASS custom block roundtrip` → `cmd_testforblock_custom=1` / `PASS custom block command check` → `dynamic_property=v1` / `PASS dynamic property` → `[QA] DONE`。
+   - CLI 侧（当前仓库 `mcp-server/dist/cli.js`，`MC_SKILL_DATA` 指向仓内 `data`，缓存落 `F:/mc-skill-temp/cache-cli`）：
+     - `validate_addon_manifest --manifestJson <QA manifest>` → `ok:true`，`errors:[]`（仅一条「对照 Learn」warning + docsStatus STALE 提示）。
+     - `validate_bp_json --kind block --json <qa_block.json>` → `ok:true`，`errors:[]`。
+     - `analyze_bedrock_log --logPath <绿轮 console>` → 49 行、`levelCounts {INFO:42}`、`errors:[]`、`warnings:[]`、7 行 banner/`Quit correctly` 未解析。
+     - `analyze_bedrock_log --logPath <scaffold console>` → `{INFO:29, ERROR:1}`，`errors[]` 命中 `Plugin [Example BP - 1.0.0] - does not contain main file [main.js].`（反证：分析器能抓到真错误）。
+     - `inspect_playtest_evidence --evidenceDir <绿轮>`（`MC_SKILL_PLAYTEST_ALLOW=1`、`ROOT=F:/MC_GAME/bedrock-qa`）→ `ok:true`、`exitCode {state:present,value:0}`、`qa {state:present,done:1,error:0}`、`screenshots {state:absent}`、`calls {state:absent}`；对红臂 → `exitCode.value=1`、`failures.fromExitCode=1`。
+   - 证据纪律发现：把原始控制台同时写成 `raw-qa.log`（与 `qa.log` 同目录同后缀）时，`inspect_playtest_evidence` 会把两份都算进 `[QA]` 段 ⇒ 16:48 那轮 `qa.done=2`；改成 `raw-qa.txt` 后同一轮 `done=1`。**一个证据目录里只留一份含 `[QA]` 的 `.log`。**
+
+3. **未核实项与影响面**
+   - 本机**没有 Bedrock 客户端**（`Microsoft.MinecraftUWP` 未安装）⇒ 纹理/模型渲染、GUI、触屏/手柄手感、客户端 content log 全未测；本轮结论只到「服务端运行时 + Script API」。
+   - 只验了 BDS **1.26.61.1**（Windows）；Preview（1.26.70.22）与其它小版本未跑。
+   - 自定义方块只验了服务端注册/放置/命令识别；`minecraft:material_instances.texture` 用的是原版 `stone` 图集键，**未验带 RP 纹理的完整外观**。
+   - `bing`/`content-log-file-enabled=true`：本次 1.26.61.1 实测打印 `Content logging to disk is enabled. Writing log to: C:/Users/…/Minecraft Bedrock Server/logs/ContentLog…`，但该目录**为空** ⇒ 与仓内 `bedrock/AGENTS.md` 的「BDS 不产出内容日志文件」一致（本次为免 C 盘写盘已改为 false，改用控制台）。
+   - **仓库缺陷（未修）**：`bedrock/scaffold/BP/manifest.json` 声明 `entry: scripts/main.js`，但 `bedrock/scaffold/BP/` 下只有 manifest（`find` 实测），真机 BDS 报 `does not contain main file [main.js]`。`validate_addon_manifest` 只吃 manifest 全文，不做「entry 文件是否存在」检查 ⇒ 该缺陷不会被现有门拦住。
+   - CLI 计数口径：`inspect_playtest_evidence` 的 `qa.error` 统计的是 `[QA] ERROR` 类标记；本 harness 用 `[QA] FAIL`，所以失败轮的 `qa.error` 仍为 0（靠 `exit-code` 判红）。若要把 `[QA] FAIL` 也纳入计数属工具行为变更。
+   - 影响面：仅在 F 盘新增 BDS 与 QA 实例；仓库与用户工程零改动；BDS 端口绑在 29132/29133 且 `enable-lan-visibility=false`（不参与 LAN 发现）。
+
+4. **需要你拍板 + 风险与回退**
+   - ① **scaffold 缺主文件怎么修**：A) 给 `bedrock/scaffold/BP/scripts/main.js` 加一个最小可运行脚本（真机已验证同形脚本可跑）；B) 改 manifest 去掉 script 模块/entry（那 scaffold 就不再演示脚本）；C) 维持现状只在 scaffold 文档标注「需自建 scripts/main.js」。推荐 A；三项都属仓库受管面，需你点头后按维护档执行。
+   - ② **是否要把这套 BDS 真机 harness 收进仓库工具面**（如 `generate_playtest_bedrock_driver` 或脚本工具）：当前只落在 `F:/MC_GAME/bedrock-qa/`，入库属维护档变更，推荐先留 F 盘观察。
+   - ③ **是否需要客户端侧真机**：要装 Microsoft Store 版 Minecraft（需你的账号/登录），再由你按向导导入包；agent 不代装、不代登录。
+   - 回退：删掉 `F:/MC_GAME/bedrock-bds/` 与 `F:/MC_GAME/bedrock-qa/` 即完全回退；本轮未改系统设置、未改仓库、未提交。
+
 ## 2026-10-31 · 用 CLI 真机验证 KubeJS 免疫脚本（主档）
 
 **第 0 块 · 结论**：在 F 盘生产实例（Forge 1.20.1-47.4.10 + KubeJS 2001.6.5-build.26 + Curios 5.11.0+1.20.1）真机跑通改正后的 KubeJS 脚本：装备 nether star 时 `/effect give @s minecraft:slowness` 被 DENY（聊天栏 `Unable to apply this effect…`，`ActiveEffects` 查无），卸下后同一命令成功施加——测到 L4 真机冒烟 + L5 场景双分支（含反向对照），exit-code 0、qa.log DONE、截图与日志同在 F 盘。CLI 侧：`inspect_playtest_evidence` 可读该证据并给三态正读数，两条授权门（未授权 / 越出授权根）实测都拒；但 CLI 不负责起游戏/跑 Gradle，且 `exit-code 0` 只表示「剧本步骤跑完」，不表示断言通过。测试产物全在 F 盘（`F:/MC_GAME/forge-1.20.1-prod`、`F:/mc-skill-temp`），仓库零改动。

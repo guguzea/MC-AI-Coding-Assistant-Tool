@@ -47,6 +47,23 @@ const NEG = /(禁止|不得|不可|不要|严禁|绝不|勿)/;
 const OBLIG = /(必须|须|该|要先|先|只能|只准|一律|照|按|用|选|走|改口|留|给|停|标|明说|直接|立即|优于|而非|不是|保留|配|落|放|读|跑|追加|登记|同步|过目|点头)/;
 const SKIP_ROOTS = new Set(["dist", "build", "node_modules", "run", "temp"]);
 
+/**
+ * **原样收录的第三方技能树**（vendored）：目录名以 `-upstream` 结尾。
+ *
+ * 为什么单列一类而不是改上游原文：
+ *   · J1 的 `name == 目录名` 在本仓会冲突（上游 name 是 `pixel-art`，目录得叫
+ *     `pixel-art-upstream` 才不会与本仓 `mc-*` 撞名）；
+ *   · J1 的「description 必须有排除形态」是本仓写作规范，上游没这要求，改它就不再是
+ *     「原样收录」，而与 THIRD_PARTY_NOTICES 的登记口径对不上；
+ *   · J2 的「反引号路径必须在**仓库根**可解析」也不成立：上游写的是**相对自己的**路径
+ *     （`tools/grid.py`、`reference/large.md`），那是上游仓库内的相对面。
+ *
+ * 处置：这三条腿都不判 vendored 树；但 vendored 树**仍须**有 LICENSE 与
+ * THIRD_PARTY_NOTICES 登记（由 `assert-vendored-attribution.mjs` 单独判），
+ * 免得「豁免」变成「没人管」。
+ */
+const VENDORED_DIR = /^common_skill\/[^/]+-upstream\//;
+
 // ---------- 纯判据（selftest 与真跑共用一份） ----------
 
 /** 行内反引号 token（跳过 ``` 围栏）。 */
@@ -155,10 +172,13 @@ function evaluate(env) {
   const counts = { j1: 0, j2Paths: 0, j3: 0, exempt: 0 };
 
   for (const [rel, text] of Object.entries(skills)) {
+    if (VENDORED_DIR.test(rel)) continue;   // 原样收录：不套本仓 frontmatter 规范
     errors.push(...lintJ1(rel, text));
     counts.j1++;
   }
   for (const [rel, text] of Object.entries(docs)) {
+    // 原样收录的第三方树：上游写的是相对它自己仓库的路径，本仓根解析不到属正常。
+    if (VENDORED_DIR.test(rel)) continue;
     errors.push(...lintJ2(rel, text, exists));
     counts.j2Paths += inlineTokens(text).filter(isRepoPathClaim).length;
     const raw = negLines(text);

@@ -2546,6 +2546,41 @@ const javaIdent = (s: string) => {
   return /^[A-Za-z_]/.test(cleaned) ? cleaned : `_${cleaned}`;
 };
 
+/**
+ * **禁令：生成物里不许出现基于反射的 MC 访问。**
+ *
+ * 为什么（**真机实测 2026-11-02，rift 1.13**）：反射版按键表在生产环境报
+ * `未知按键：forward`，进一步查是 `NoSuchFieldException: keyCode`。
+ * 根因 —— **reobf 只改写字节码里的字段/方法引用，不改反射用的字符串**：
+ * 源码写 `getField("keyBindForward")`，reobf 后字段已变混淆名，字符串却还是可读名 ⇒ **生产必失败**。
+ * 正确做法 = **直接字段/方法访问**（编译期引用会被 reobf 正确改写）。
+ *
+ * 本函数在**生成期**把这条钉死：命中即 throw，不产出。
+ * 今天生成器里 0 处反射（实测），所以这条禁令不会误伤既有产物。
+ */
+const REFLECTIVE_MC_PATTERNS: ReadonlyArray<readonly [RegExp, string]> = [
+  [/Class\s*\.\s*forName\s*\(\s*"net\.minecraft/, 'Class.forName("net.minecraft…")'],
+  [/\.\s*getDeclaredField\s*\(/, "getDeclaredField("],
+  [/\.\s*getDeclaredMethod\s*\(/, "getDeclaredMethod("],
+  [/\.\s*getField\s*\(\s*"/, 'getField("…")'],
+  [/\.\s*getMethod\s*\(\s*"/, 'getMethod("…")'],
+];
+
+function assertNoReflectiveMcAccess(files: Record<string, string>): void {
+  for (const [name, body] of Object.entries(files)) {
+    if (!name.endsWith(".java") || typeof body !== "string") continue;
+    for (const [re, label] of REFLECTIVE_MC_PATTERNS) {
+      if (re.test(body)) {
+        throw new Error(
+          `generate_playtest_driver: 生成物 ${name} 里出现了基于反射的 MC 访问（${label}）—— 按铁律拒绝发射。` +
+            `原因：**reobf 不改写反射用的字符串** ⇒ 生产环境里 getField("可读名") 必然 NoSuchFieldException` +
+            `（真机实测 2026-11-02：未知按键：forward）。处方：改成直接的字段/方法访问（编译期引用会被 reobf 正确改写）。`,
+        );
+      }
+    }
+  }
+}
+
 export function generatePlaytestDriver(input: PlaytestDriverInput): GeneratorResult {
   const errors: string[] = [];
   const warnings: string[] = [];
@@ -2659,7 +2694,10 @@ export function generatePlaytestDriver(input: PlaytestDriverInput): GeneratorRes
       : platform === "rift"
         ? `⚠️ rift 1.13.2 的 MC 侧名字来自本仓 1.13.2 MCP 快照（与 rift scaffold 同快照）**逐名有出处**；` +
           `但 \`Minecraft.getInstance()\` 的 **static 性本仓证不出**、\`block_at\` **只回 translation key 不回注册名**（见 README.bridge.md）；` +
-          `另：Rift 官方依赖源 dimdev.org **DNS 已死** ⇒ 需自备 Rift API jar。`
+          `另：Rift 官方依赖源 dimdev.org **DNS 已死** ⇒ 需自备 Rift API jar。` +
+          `**两条真机才抓得到的坑（2026-11-02，rift 1.13 L-b 实测）**：① **reobf 不改写反射用的字符串** ⇒ 反射按名字找 MC 字段/方法在生产必失败` +
+          `（实测 \`未知按键：forward\` / \`NoSuchFieldException: keyCode\`）⇒ 一律用**直接字段/方法访问**；` +
+          `② **正确运行形态 = 生产（reobf）+ 真机**：dev 环境 refmap 对不上（实测 **42 个 mixin miss**）⇒ dev 的红不是真红。`
         : `⚠️ 1.7.10–1.11.2 的 Minecraft 字段名只有 javadoc 出处（**未编译验证**），1.12.2 已按 stable_39 真构件 javap 兑过。`;
     warnings.push(
       `已附赠「最小桥 mod」模板（${Object.keys(bridgeFiles).join(" / ")}）：${platform} ${version} 无现成桥件` +
@@ -5315,6 +5353,18 @@ ${mode === "in_jvm_player_agent" ? `## 意图（in_jvm_player_agent 的玩法）
     warnings.push(
       `driverMode=${mode} 在本档（${platform} ${version}）仍是**结构壳**：已 javap 实测签名的档只有 ${verifiedHint}；其余档须先取证（该档 search_*_docs / 自备 jar 反编译）再填。`,
     );
+    if (platform === "rift") {
+      // 两条**真机才抓得到**的坑（2026-11-02，rift 1.13 L-b 实测）——不写下来下一位必重踩。
+      warnings.push(
+        `**rift 的两条真机坑（2026-11-02 实测）**：` +
+          `① **reobf 不改写反射用的字符串** ⇒ 用反射按名字找 MC 字段/方法，在**生产环境必然失败**` +
+          `（真机实测 \`未知按键：forward\`、\`NoSuchFieldException: keyCode\`）` +
+          `⇒ 生成器**禁止**发射基于反射的 MC 访问（本文件 \`assertNoReflectiveMcAccess\` 已把这条钉死：命中即拒绝产出）；` +
+          `正确做法是**直接字段/方法访问**，编译期引用会被 reobf 正确改写。` +
+          `② **正确运行形态 = 生产（reobf）+ 真机**：dev 环境 refmap 对不上，实测 **42 个 mixin miss**` +
+          `⇒ 拿 dev 跑出来的"红"**不是**真红，别据此改代码。`,
+      );
+    }
     files["playtest/PlaytestQaDriver.java"] = `// TODO(未核实)：本壳不含任何已核实的玩家挂接 / tick 钩子 / 截图 API 签名。
 // 取证顺序：① 该档 search_*_docs 核 tick 钩子与截图 API；② 需要玩家行为 AI 时，对用户自备的 mc_aiplayer jar 走 decompile_mod_jar 后按签名填。
 // 已实测可参照的档：${verifiedHint}（其生成物见 generate_playtest_driver 的同档输出，可作 API 对照，但**不要**跨版本照抄签名）。
@@ -5348,6 +5398,9 @@ public final class PlaytestQaDriver {
 - 证据（截图 / state / calls）不入正式分支，放独立 evidence 目录。
 `;
   }
+
+  // 铁律闸：生成物里**不许**有基于反射的 MC 访问（真机教训，2026-11-02；命中即 throw，不产出）
+  assertNoReflectiveMcAccess(files);
 
   return { code: null, files, warnings, experimental: true };
 }

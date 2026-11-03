@@ -814,6 +814,65 @@ Cursor 主路径是 **tools**；协议层仍注册 Prompt/Resource，工具兜�
 
 Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；Forge 1.12.2–1.20.4 与 Fabric 主档均含 `mc-events`（经 `FABRIC_SKILL_DONORS` 回填的薄档带 DONOR_SKILL 横幅）。代码模式示范见 `community_knowledge/patterns/`（也可经 `mcskill://patterns/README` 读取）。
 
+## 纹理与模型
+
+建模与贴图不在 MCP 工具面里。模型 JSON 骨架由 `generate_model` 出，纹理走 `mc-texture` 技能。
+
+### 分工
+
+| 环节 | 用什么 | 本仓库给什么 |
+|---|---|---|
+| 方块模型 / blockstate / 物品 `items/` | `generate_model`（须传 `version`） | cube 与 `item/generated` 骨架 |
+| 有形状的模型、基岩 `.geo.json`、GeckoLib 动画 | 外部 Blockbench MCP | 落位规则（`geo/`、`animations/`、`textures/`） |
+| 纹理 / 纹理动画 / 粒子特效 | `mc-texture` | 完整流程 + 三个零依赖脚本 |
+| 32px 以上大图、人物立绘 | `pixel-art-upstream` | 上游方法论 + `grid.py` |
+| 引用完整性 | `audit_resources` | 不判 `pack_format` |
+
+模型 MCP 是 GPL-3.0 的独立程序，按外部工具安装，与本仓库通过 MCP 协议通信：<https://github.com/jasonjgardner/blockbench-mcp-plugin>
+
+### 技能入口
+
+`read_knowledge_resource uri=mcskill://skill/mc-texture`，源稿 `common_skill/mc-texture/SKILL.md`。`activate_platform_pack task=mc-texture` 的 warning 同时指向它与 `pixel-art-upstream`。
+
+步骤：定尺寸 → 定风格 → 定调色板 → 分层画 → 渲染 → 1× 核对 → 改（≥3 轮）。用户指定的风格、色数、尺寸优先于原版惯例；未指定时按 16×16、可平铺、4–8 色、左上光源。分层顺序为平涂剪影 → 打光 → 内部细节 → 描边 → 五官。
+
+材质按游戏内状态区分：铜为四级锈蚀（Unoxidized / Exposed / Weathered / Oxidized），绿色自棱角扩散、逐级反转，四套图一并制作；木头分原木 / 去皮 / 木板，石头分石头 / 圆石 / 石砖，金属用高光块而非噪点。依据为 Minecraft Wiki 的 Oxidation 条目与本仓 `data/` 语料。
+
+### 纹理动画
+
+竖排图集 + 同名 `.png.mcmeta`（文件名含 `.png`）。字段 `frametime` / `interpolate` / `frames` / `width`·`height`，默认 1 / false / 全部按序 / 按最短边推断。图集总高须被帧高整除；`frames: [0,1,2,1]` 可用于来回循环。
+
+多帧制作用 `render-pixels.mjs` 的图集模式：一帧一个网格文件，一次渲染出竖排 PNG 并写好 mcmeta。预览用 `gif.mjs` 转 GIF，逐帧核对仍看 PNG 图集。
+
+### 粒子特效
+
+按规则逐帧计算：拆元素 → 带种子生成 → 固定步长积分 → 按已飞出距离着色。结构性图案（脸、logo、文字）用栅格，自然扩散（球、火花）用粒子。
+
+MC 烟花的 `shape` 合法值为 `small_ball` / `large_ball` / `star` / `creeper` / `burst`（缺省 `small_ball`），另有 `trail` 与 `flicker`。出处 `data/neoforge_*/…/resources_server_loottables_lootfunctions.md`。
+
+### 脚本
+
+三个脚本零依赖，PNG 与 GIF 均由 `node:zlib` 手写。
+
+| 脚本 | 作用 | 写入前校验 |
+|---|---|---|
+| `render-pixels.mjs` | 调色板 + 像素网格 → 1× PNG；多文件时拼竖排图集并写 mcmeta | 行宽、色号未定义、尺寸不符；警告孤立像素与半透明 |
+| `firework.mjs` | 五形状烟花图集 + mcmeta | 参数合法性，剔除尾部空帧 |
+| `gif.mjs` | 竖排图集 → GIF 预览 | GIF89a 结构 |
+
+```bash
+# 单张纹理
+node common_skill/mc-texture/tools/render-pixels.mjs sprite.txt --out out.png --size 16x16 --scale 16
+
+# 纹理动画：多帧拼竖排图集，同时写出 .png.mcmeta
+node common_skill/mc-texture/tools/render-pixels.mjs f0.txt f1.txt f2.txt --atlas out/anim.png --frametime 3
+
+# 烟花特效
+node common_skill/mc-texture/tools/firework.mjs temp/firework --shape star --fps 12 --size 32 --trail --flicker
+
+# 转 GIF 预览
+node common_skill/mc-texture/tools/gif.mjs temp/firework/firework.png out.gif --delayCs 8 --scale ，6
+
 ## MCP/CLI TOOLS:89
 
 服务名：`MC-AI-Coding-Assistant-Tool`。
@@ -1203,6 +1262,7 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 | `mc-modpack` | 整合包集成工作流 | 把第三方 mod 装成可跑的包：依赖闭包、加载顺序、冲突分诊。不做自动发布，不代下载 / 代上传 mod 文件 |
 | `mc-datapack-standalone` | 独立数据包工作流（无 Java 代码） | 纯数据包：世界 `datapacks/` 目录或独立 zip，无 `build.gradle`、无 Java 源码。模组附带的配方 / 战利品走 `mc-recipe-data` 与对应平台 session |
 | `mc-resourcepack-standalone` | 独立资源包工作流 | 纯资源包：`resourcepacks/` 或独立 zip（模型 / 方块状态 / 纹理 / lang / 音效 / GUI 贴图）。模组内资源走对应平台 session 与该档规则 |
+| `mc-new-model` | 模型与纹理工作流 | session task=mc-new-model → mc-model / mc-resourcepack / mc-renderer；定形状由用户拍板 → `generate_model` 出 cube 骨架再改 `elements[]`（基岩走 RP `models/` 与 `minecraft:geometry`）→ 16×16 贴图逐像素核对 → `audit_resources` 查引用 → 真机看朝向与 UV 接缝 |
 
 
 ### 16. 知识暴露（MCP Resources）
@@ -1342,6 +1402,7 @@ node mcp-server/dist/cli.js get_community_doc_summary --id authored/lib-curios
 | 常驻铁律（人在环 / 游玩测试门槛 / 工具边界） | `AGENTS.md` | agent 每轮开工前；「这个档能不能跑 / 桥能测到什么」的已核实边界在 [`doc/glob-search-discipline.md`](./doc/glob-search-discipline.md)，**逐版本清单读生成器内 `PLAYTEST_VERIFIED_TIER` 数组**（正文不数档） |
 | MCP 安装与宿主配置（唯一说明书） | [`AUTO_SETUP.md`](./AUTO_SETUP.md) | 装 / 修 MCP 时按它的 Step 走（Step 0-pre 校验路径 → Step 6 装 Skill）；开头「Agent 必读：执行顺序」是硬约束 |
 | 工具错误码：实跑取证 + 全工具覆盖清单 | [`doc/tool-error-codes.md`](./doc/tool-error-codes.md) | 收到 `code` / `errorKind` 先按表读；**没实跑取证到的一律不写码** |
+| 被 MCP 目录收录（协议件 / 发布链 / 未核实清单） | [`doc/mcp-registry-publishing.md`](./doc/mcp-registry-publishing.md) | 要发版进官方 registry、改 `server.json` / `glama.json`、或判断「某目录收不收」时；**发布动作由人执行** |
 | 逐批实现史（含门与基线台账） | `mcp-server/CHANGELOG.md` | 查「哪批改了什么、为什么」 |
 | 语料来源 / 换源 / 逐档复测史 | `CORPUS_PROVENANCE.md` | 引用档位覆盖 / 语料计数前先核 |
 | 游玩自测：口径 / 坑位 / 逐轮取证史（§真机台账 = 现行判据 T5 + 历史归档 T0–T4） | `community_knowledge/authored/ingame-playtest-automation.md` | 跑任何一档游玩自测**前**先读；台账里查不到你的 combo ⇒ 按「未验证」处理，**不得**拿邻档外推 |

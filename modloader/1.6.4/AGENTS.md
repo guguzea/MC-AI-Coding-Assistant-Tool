@@ -1,6 +1,10 @@
 # Risugami's ModLoader 1.6.4 — Agent 总纲
 
 > ⚠️ **历史背景**：Risugami 自 MC 1.6.2（2013 年）起停止更新 ModLoader，**1.6.4 无官方 ModLoader 发布物**。本档基于公开 API + MCP 1.6.4 named 整理，仅供维护既有 1.6.4 整合/魔改包；新工程请用 Forge。
+>
+> **「无官方发布物」的实物读数（2026-11-02 复核）**：本机留档 `F:\MC_GAME\_oracle-jars\modloader\` 里**只有三个 zip** —— `ModLoader-1.2.5.zip`(103 347 B) / `ModLoader-1.5.2.zip`(199 825 B) / `ModLoader-1.6.2.zip`(182 824 B)，**没有 1.6.4**；mcarchive 的官方版本清单最新也只到 1.6.2。⇒ 本档（1.6.4）的一切构件级结论**都借自 1.6.2 件**，引用时必须写明「按 1.6.2 件」。
+>
+> ⚠ **混淆名必须逐档取，不许跨档搬**（2026-11-02 实测）：`ats` 在 **1.6.2** 是 `Minecraft`，但在 **1.6.4** 的 srg 里 `ats`=`KeyBinding`、`atv`=`Minecraft` —— **同名不同物**。详见 [knowledge/common/safe-api.md](knowledge/common/safe-api.md) 文末「勘误」。
 
 工程形态：**MCP + Eclipse**，通常无 Gradle。生成代码 **只能**用 [knowledge/common/safe-api.md](knowledge/common/safe-api.md) 内的名字。
 

@@ -94,6 +94,7 @@ const BEDROCK_TASK_SPECS: Record<string, TaskSpec> = {
   "mc-bedrock-worldgen": { rules: ["08"], skills: ["mc-bedrock-worldgen"], nextReads: [] },
   "mc-publish-addon": { rules: ["10"], skills: ["mc-publish-addon"], nextReads: [] },
   "mc-resource-pack": { rules: ["02"], skills: ["mc-resource-pack"], nextReads: [] },
+  "mc-new-model": { rules: ["02"], skills: ["mc-resource-pack"], nextReads: ["mc-bedrock-entity"] },
   "mc-behavior-pack": { rules: ["03"], skills: ["mc-behavior-pack"], nextReads: [] },
   "mc-script-api": { rules: ["07"], skills: ["mc-script-api"], nextReads: ["mc-molang"] },
   "mc-molang": { rules: ["06"], skills: ["mc-molang"], nextReads: [] },
@@ -276,6 +277,20 @@ const TASK_SPECS: Record<string, TaskSpec> = {
     nextReads: [],
     warning:
       "整合包不是单个模组工程：本平台 00–10 规则不自动升级成规范。依赖与冲突面用 check_dependencies / analyze_mod_jar / audit_resources；Agent 不代下载 mod、不代上传发布。",
+  },
+  "mc-texture": {
+    rules: [],
+    skills: ["mc-model"],
+    nextReads: ["mc-resourcepack"],
+    warning:
+      "纹理没有平台规则主题：像素画法读 mcskill://skill/mc-texture，它配套 mcskill://skill/pixel-art-upstream（junyudev/pixel-art，MIT）——32px 以上或画人物时两篇一起读。生成式出图只当草稿，进包前按 1× 核对尺寸与色值。",
+  },
+  "mc-new-model": {
+    rules: [],
+    skills: ["mc-model"],
+    nextReads: ["mc-resourcepack", "mc-renderer"],
+    warning:
+      "模型与纹理无对应 00–10 规则主题：形状与贴图是创意决定，由用户拍板；本仓只给 JSON 骨架与资源路径。generate_model 出的是 cube 模板，不是成品模型。贴图进包前逐像素核对，别把生成图直接当 16×16 素材。",
   },
   "mc-events-forge": { rules: ["05"], skills: ["mc-events"], nextReads: ["mc-capability"] },
   "mc-events-neoforge": { rules: ["05"], skills: ["mc-events"], nextReads: ["mc-capability"] },

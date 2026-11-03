@@ -701,6 +701,19 @@ ${WORKFLOW_HITL_STEPS}`,
 4. 选哪个由用户拍板——agent 只给每案取舍说明；结论回写 mc-spec 条目或共识清单，原型用完即弃。实现是拍板后的事，另走对应开发模板。
 ${WORKFLOW_HITL_STEPS}`,
   },
+  "mc-new-model": {
+    title: "模型与纹理工作流",
+    body: `${WORKFLOW_HITL}
+1. 确认平台与精确 MC 版本，再定这次要哪类产物：方块模型 / 物品模型 / 实体或方块实体模型 / 附带动画（动画另走 GeckoLib 或 mc-rendering）。产物形态不同，后面的路径与校验也不同。
+2. 先 activate_platform_pack action=session（task=mc-new-model），用返回的 rules / skillBodies：mc-model 管模型 JSON 与层级，mc-resourcepack 管 assets/ 目录与 pack.mcmeta，mc-renderer 管渲染侧注册。禁止 Read 平台/<ver>/.cursor 当加载器。
+3. 定形状是创意决定，由用户拍板。要么自己写 elements[]，要么用外部建模工具产出后导入。本仓不做建模界面，也不代画像素。
+4. 出 JSON：现代档 generate_model（须传 version；1.21.4+ / 1.21.11 / 26.1 物品走 assets/<modid>/items/）先出 cube 骨架，再改 elements[]；基岩走 RP 的 models/ 与 minecraft:geometry。骨架不是成品，别拿模板交差。
+5. 纹理：16×16 PNG、带 alpha、调色板贴合原版。生成式出图只当草稿，进包前逐像素核对（糊边、渐变、边长不是 16 的整数倍都算不合格）。文件名与 models 里的 textures 引用逐一对上。
+6. 接线：方块接 blockstates/<name>.json，物品接 items/ 或 models/item，实体模型在客户端渲染器注册（generate_entity_renderer）。写法按该档规则，禁止把 Fabric 的注册方式搬进 Forge。
+7. 校验：audit_resources 查引用完整（它不判 pack_format，别当版本检查）；JSON 语法用 validate_datapack_json 或该档规则；lang 键与模型名对齐用 generate_lang。
+8. 进游戏看：按游玩测试阶梯至少到 L4 + L5——朝向、UV 接缝、透明排序、光照这些只有真机看得出来。留截图，别用「编译通过」当验收。
+${WORKFLOW_HITL_STEPS}`,
+  },
 };
 
 export function getWorkflowTemplate(name: string): { found: boolean; name: string; title?: string; body?: string } {

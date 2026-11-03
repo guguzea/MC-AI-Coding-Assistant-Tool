@@ -20,6 +20,10 @@
 | `mc-prototype` | 一次性设计原型：GUI/HUD/tooltip 这类屏幕可见设计题做 2–3 个差异明显的单文件 HTML 变体给用户当场选，选完即弃 | 「给我看看几种方案 / 画个样子我选」；游戏内渲染与可行性不走这里 |
 | `mc-wizard` | 人工步骤向导：把「只有人能做的操作」打包成可粘贴命令 + 逐步判绿点的向导文档 | 「接下来我该做什么 / 这些手动步骤怎么做」；EULA/授权/装桥/重载 MCP 场景 |
 | `mc-retro` | 会话复盘：四类摩擦找点，建议带本轮证据与最小改法 | 收尾时；或「复盘 / 这轮哪里不顺」 |
+| `mc-texture` | 像素纹理、纹理动画与特效：先问用户风格、没问再按 MC 惯例；分层画（剪影→打光→细节→描边→五官），1× 四问核对、至少 3 轮；动画拆成参数生成每帧；特效按元素+积分算、不手画；含铜四级锈蚀、MC 烟花五形状等材质逻辑 | 「画个 16×16 贴图 / 这个贴图糊了 / 做个烟花动画」；模型与资源路径走 mc-model |
+| `pixel-art-upstream` | 上游 [junyudev/pixel-art](https://github.com/junyudev/pixel-art) 原样收录（MIT）：Grid / Construct / Concept 三路线方法论 + `grid.py` 渲染器（需 python + pillow + numpy）。与 `mc-texture` 并存，取它的长篇方法论时读这里 | 「要 32px 以上的大图 / 想看上游原文 / 要用 grid.py」；MC 像素规则走 mc-texture |
+
+> `mc-texture` 与 `pixel-art-upstream` 是**绑定关系**：用前者画纹理时必须同时读后者（前者是 MC 规则，后者是长篇方法论）。两个都经 `read_knowledge_resource` 取正文。
 
 **MCP 面入口（跨宿主，2026-10-09 已接）**：本目录的源稿同时经两个既有工具可达——
 

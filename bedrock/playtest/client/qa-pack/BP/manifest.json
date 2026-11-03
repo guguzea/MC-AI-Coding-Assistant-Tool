@@ -1,0 +1,37 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "MC Skill Client QA BP",
+    "description": "Client-side QA pack: showcase build, chat command channel, heartbeat",
+    "uuid": "8f1c2d3e-4a5b-4c6d-8e7f-901234567890",
+    "version": [
+      1,
+      0,
+      0
+    ],
+    "min_engine_version": [
+      1,
+      26,
+      44
+    ]
+  },
+  "modules": [
+    {
+      "type": "script",
+      "uuid": "8f1c2d3e-4a5b-4c6d-8e7f-901234567891",
+      "version": [
+        1,
+        0,
+        0
+      ],
+      "language": "javascript",
+      "entry": "scripts/main.js"
+    }
+  ],
+  "dependencies": [
+    {
+      "module_name": "@minecraft/server",
+      "version": "2.10.0"
+    }
+  ]
+}

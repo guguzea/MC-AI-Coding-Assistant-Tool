@@ -1,0 +1,37 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "MC Skill QA BP",
+    "description": "BDS real-machine QA pack: script module + world mutation checks",
+    "uuid": "2b7b1a52-7a4b-4f5d-9a40-1c2b3d4e5f60",
+    "version": [
+      1,
+      0,
+      0
+    ],
+    "min_engine_version": [
+      1,
+      26,
+      44
+    ]
+  },
+  "modules": [
+    {
+      "type": "script",
+      "uuid": "3c8c2b63-8b5c-4a6e-0b51-2d3c4e5f6071",
+      "version": [
+        1,
+        0,
+        0
+      ],
+      "language": "javascript",
+      "entry": "scripts/main.js"
+    }
+  ],
+  "dependencies": [
+    {
+      "module_name": "@minecraft/server",
+      "version": "2.10.0"
+    }
+  ]
+}
