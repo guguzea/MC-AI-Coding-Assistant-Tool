@@ -51,6 +51,12 @@
       "offerShapedRecipe": "07-datagen.mdc:159",
       "offerTo": "07-datagen.mdc:159"
     },
+    "fabric/26.2": {
+      "RecipeProvider#buildRecipes": "07-datagen.mdc:165",
+      "ShapedRecipeBuilder.shaped.save": "07-datagen.mdc:165",
+      "offerShapedRecipe": "07-datagen.mdc:165",
+      "offerTo": "07-datagen.mdc:165"
+    },
     "forge/1.14.4": {
       "event.getRegistry": "02-block.mdc:171",
       "getRegistry": "02-block.mdc:171",
@@ -75,7 +81,7 @@
       "getDurability": "03-item.mdc:204",
       "getRegistry": "02-block.mdc:155",
       "setRegistryName": "02-block.mdc:156",
-      "type.setRegistryName": "04-entity.mdc:220"
+      "type.setRegistryName": "04-entity.mdc:224"
     },
     "forge/1.17.1": {
       "event.getRegistry": "02-block.mdc:156",

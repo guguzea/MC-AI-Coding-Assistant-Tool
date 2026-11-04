@@ -24,6 +24,114 @@
 
 配套的 `mc_skill_update` 负责自我升级，`diagnose_data_paths` 随时体检数据完备度。
 
+## 一条命令自动配置
+
+不用手写规则文件、不用逐个 IDE 抄配置。`activate_platform_pack` 认准平台与版本后，**一条命令**就把该档的规则、技能和入口文件写进你的模组工程：
+
+```bash
+# 先看它会写什么（默认 dryRun，不落盘）
+node node_modules/mc-ai-coding-assistant-tool/dist/cli.js activate_platform_pack \
+  --action=write --platform=forge --minecraftVersion=1.20.1 \
+  --hosts=cursor --project /abs/path/to/your-mod
+
+# 确认无误后真写
+node node_modules/mc-ai-coding-assistant-tool/dist/cli.js activate_platform_pack \
+  --action=write --platform=forge --minecraftVersion=1.20.1 \
+  --hosts=cursor --project /abs/path/to/your-mod --dry-run=false --confirm
+```
+
+**支持的宿主（9 个，可写 `--hosts=all` 一次全配）**：
+
+| `--hosts` | 写入位置 | 说明 |
+| --- | --- | --- |
+| `cursor` | `.cursor/rules/*.mdc` + `.cursor/skills/` | alwaysApply |
+| `claude` | `.claude/rules/` + `CLAUDE.md` + `.claude/skills/` | |
+| `continue` | `.continue/rules/` + `.continue/skills/` | |
+| `trae` | `.trae/rules/` + `.trae/agents/default.md` + `.trae/skills/` | |
+| `opencode` | `AGENTS.md` + `.opencode/skills/` | |
+| `codex` | `AGENTS.md` + `.agents/skills/` | |
+| `zcode` | `AGENTS.md` + `.zcode/skills/` | |
+| `pi` | `.pi/rules/` + `.pi/skills/` | |
+| `dsh` | `AGENTS.md` + `.agents/skills/` | 与 codex 共树 |
+
+写盘有**幂等标记块**（`<!-- BEGIN MC_SKILL_PACK host=… -->`）：重复执行只更新标记块内的内容，不会重复堆叠，也不碰你自己的文件。写完后 IDE 直接认，不需要手工合并。
+
+**不想落盘？** 用 `--action=session` 把同一套规则直接注入当前对话，零写盘：
+
+```bash
+node node_modules/mc-ai-coding-assistant-tool/dist/cli.js activate_platform_pack \
+  --action=session --platform=fabric --minecraftVersion=1.21.1
+```
+
+## 平台与版本支持
+
+**73 个文档版本档 + 55 个脚手架构档**，按平台展开：
+
+| 平台 | 文档/API 档 | 脚手架 | 说明 |
+| --- | --- | --- | --- |
+| **Forge** | 14 档：1.7.10 / 1.8.9 / 1.9.4 / 1.10.2 / 1.11.2 / 1.12.2 / 1.13.2 / 1.14.4 / 1.15.2 / 1.16.5 / 1.17.1 / 1.18.2 / 1.19.4 / 1.20.1 / 1.20.4 | 10 档 | 1.7.10–1.12.2 用 SRG 名，1.16.5+ 有 Parchment 签名 |
+| **NeoForge** | 10 档：1.20.1 / 1.20.4 / 1.20.6 / 1.21.1 / 1.21.3 / 1.21.5 / 1.21.8 / 1.21.10 / 1.21.11 / 26.1 | 10 档 | 1.20.1 回退 Forge；26.2 / 26.3 有规则树无本版文档 |
+| **Fabric** | 14 档：1.14.4 / 1.16.5 / 1.17.1 / 1.18.2 / 1.19.4 / 1.20.1 / 1.20.4 / 1.21.1 / 1.21.3 / 1.21.4 / 1.21.8 / 1.21.10 / 1.21.11 / 26.1.2 / 26.2 | 15 档 | ≤1.21.11 用 Yarn，26.1+ 去混淆用 Mojmap |
+| **Quilt** | 10 档：1.18.2 / 1.19.4 / 1.20.1 / 1.20.4 / 1.21.1 / 1.21.3 / 1.21.4 / 1.21.8 / 1.21.10 / 1.21.11 | 10 档 | QSL 签名需 `query_loader_api` |
+| **LiteLoader** | 3 档：1.8.9 / 1.10.2 / 1.12.2 | 1 档 | 构件级 javap 签名 |
+| **Rift** | 2 档：1.13 / 1.13.2 | 2 档 | 1.13 原生线，1.13.2 社区分支 |
+| **ModLoader** | 3 档：1.2.5 / 1.5.2 / 1.6.4 | 4 档 | 无 Gradle 形态（MCP + Eclipse 时代） |
+| **基岩 Add-On** | `stable` | — | Microsoft Learn 语料，RP/BP/Script API |
+| **Paper（服务端）** | `stable` 教程面 + 6 个 API 档：1.12.2 / 1.16.5 / 1.20.1 / 1.21.1 / 1.21.4 | — | 插件开发，独立于模组面 |
+| **Spigot（服务端）** | 9 个签名档：`stable` / 1.12.2 / 1.16.5 / 1.19.4 / 1.20.1 / 1.20.6 / 1.21.1 / 1.21.4 / 1.21.8 | — | 从 maven 构件 javap 抽取 |
+
+**关于「没有某档」**：不在表里的版本是**本仓库没有该档语料**，不是「上游不支持」。遇到空洞档会明确报 `PACK_NOT_FOUND` / `VERSION_NOT_FOUND` 并列出同系列候选，**不会**拿邻版语料顶上，也不会编造。
+
+## 功能详解
+
+### 工程与构建
+`detect_mod_project`（自动定平台与精确版本）· `validate_project`（结构校验，Forge/Fabric/Quilt/NeoForge 真检查）· `diagnose_gradle`（ForgeGradle / Loom / NeoGradle / MDG 四套构建诊断）· `analyze_build_log`（javac / Gradle 报错分诊）· `download_official_mdk`（拉官方 MDK，带 sha256 校验链）
+
+### 代码生成（10 个）
+`generate_model` · `generate_lang` · `generate_network_packet` · `generate_capability` · `generate_config`（Fabric/Quilt 出 Cloth 骨架，可选 YACL）· `generate_entity_renderer` · `generate_worldgen` · `generate_datagen`（Fabric 支持 Yarn / Mojmap 双骨架）· `generate_addon_manifest` · `generate_bp_entity`
+
+默认**只吐文本不写盘**；要落盘加 `write=true confirmed=true`，且受工程根沙箱约束（路径不许出根）。
+
+### 文档与 API 查询
+- 三级检索：`search_*_docs`（L0 搜索）→ `get_*_doc_summary`（L1 摘要）→ `get_*_doc_full`（L2 全文）
+- 签名查询：`query_api`（Vanilla/Parchment 1.7.10–1.20.4）· `query_loader_api`（Forge/Fabric/NeoForge/QSL 加载器 API）· `get_method_params`
+- 映射互转：`convert_mapping`（mojang / mcp / yarn / parchment / intermediary / obfuscated 六层互转）
+- 崩溃短名反查：`lookup_obfuscated`（`method_6032` / `er` / `func_110143_aJ` → 可读签名）
+- 语义检索：混合 RRF 排行，缺模型时优雅降级为 FTS5
+
+### 反编译与源码研究
+`get_minecraft_source` · `decompile_mod_jar`（VineFlower）· `search_mod_code` · `analyze_mod_jar`（纯 Node 解析，零下载，读 fabric.mod.json / mods.toml / mixins / AW / AT）
+
+**默认零下载**：只在显式调用时按需下载到缓存，不会预热。
+
+### 校验与静态分析
+`validate_at` · `validate_aw`（字节码级 Access Transformer / Widener 校验）· `mixin_analyze`（含 `deep:true` 深度模式）· `audit_resources` · `validate_datapack_json` · `query_registry` · `check_dependencies`
+
+### 排错与运行时
+`crash_analyze` · `analyze_log` · `analyze_bedrock_log` · `inspect_runtime` · `get_server_status` · `diagnose_data_paths`
+
+### 游玩自测（真机驱动）
+`generate_playtest_driver` 三种模式：`external_bridge`（桥，命令级）、`temporary_client_tick_driver`（长驻解释器，玩家级）、`in_jvm_player_agent`（JVM 内玩家代理，带意图邮箱）。配套 `inspect_playtest_evidence`（三态判读）、`inspect_playtest_multi`（多客户端联合判绿）、`playtest_bridge`、`playtest_intent`。
+
+服务端面另有 `generate_playtest_server_driver`（Paper/Bukkit，证据契约与客户端逐字相同）。
+
+### 移植与升级
+`analyze_porting_path`（跨版本/跨加载器迁移分析）· `port_project`（脚手架级移植，默认 dryRun）· `get_migration_guide`
+
+### 发布与本地化
+`check_publish_ready`（发布前清单）· `localize_mod`（模组汉化，diff / draft / jar 抽取打包，无机器翻译）
+
+### 知识库与工作流
+61 个工作流模板（新建方块/物品/实体/GUI/维度的完整清单，含人在环确认点）· 36 份常用库模组 Skill（Cloth Config / YACL / Curios / Trinkets / GeckoLib / Patchouli / EMI / JEI 等）· 社区实务知识库（发布 / 崩溃 / 软依赖）· `mcskill://` 资源 URI 族
+
+## 人在环与自动化边界
+
+**默认自动**：查询、检索、生成（只吐文本）、诊断、分析、校验、工作流引导 —— 这些直接跑，不用确认。
+
+**需要你点头**：只有**写盘**和**会改变你工程/游戏状态**的动作 —— `write=true` 落盘生成物、`port_project` 真移植、`activate_platform_pack` 真写规则、启动游戏做自测。这些默认 **dryRun 预览**，你看清单再执行。
+
+**永不代劳**：不替你跑 Gradle 构建、不把 jar 拷进游戏目录、不代你上传发布、不代你接受 EULA。这是设计选择，不是功能缺失 —— 这些动作的责任和凭据都在你这边。
+
 ## 离开数据包，大部分功能照常可用
 
 这一点很重要：**装完不需要任何额外下载，就已经能用掉大半工具箱。**

@@ -864,28 +864,37 @@ CREATE TABLE meta(key TEXT PRIMARY KEY, value TEXT NOT NULL);`;
 
 // ── S6/F18：search_fabric_docs 26.2 旁路的 provenance ──────────────────────────
 
-testAsync("S6 26.2 旁路必须带 sourcePlatform 且 sourceIsRequestedVersion=false", async () => {
+testAsync("S6 26.2 provenance：有主树时不得走旁路，无主树时才允许旁路", async () => {
   const dataRoot = process.env.MC_SKILL_DATA || join(process.cwd(), "..", "data");
   if (!existsSync(join(dataRoot, "fabric_porting"))) {
     console.log(`      ${dataRoot}/fabric_porting 不存在，跳过 26.2 provenance 断言`);
     return;
   }
   const { searchFabricDocs } = await import("./dist/docs-platform/fabric/index.js");
-  // 26.2 既无 fabric_26.2 主文档树、也不在 list_fabric_versions 里：走的是
-  // index.ts 里 isFabric26_2Line 的早退旁路，而不是查完树的主返回体。
+  // 前提在 2026-10-31 变了：fabric/26.2 已完整建档（105 页语料 + index-l0.json + reference 件，
+  // 上游 latest 面 commit 238533d8）⇒ 26.2 现在走**主树**，不再是 isFabric26_2Line 早退旁路。
+  // 旧断言把「无主树」写死成前提（sourceIsRequestedVersion=false / versionFallback=true），
+  // 主树一到就变成假红 —— 那不是产品退化，是测试前提过期。
+  // 新判据分两支、按盘上事实选，两支都必须自证「没有谎称本版专属正文」：
+  //   A 有主树 ⇒ 必须 resolvedVersion=26.2 + versionFallback=false + sourceIsRequestedVersion=true
+  //   B 无主树 ⇒ 必须走旁路且带 sourcePlatform=fabric + sourceIsRequestedVersion=false + fallback=true
+  const hasMainTree = existsSync(join(dataRoot, "fabric_26.2", "fabric-docs", "26.2", "index-l0.json"));
   const out = JSON.parse((await searchFabricDocs({ query: "registry", version: "26.2" })).content[0].text);
-  assert.equal(out.ok, true, `26.2 旁路应返回 ok:true：${JSON.stringify(out).slice(0, 300)}`);
-  assert.equal(typeof out.sourcePlatform, "string", "26.2 旁路必须带 sourcePlatform（与 quilt 回退同名字段）");
-  assert.equal(out.sourcePlatform, "fabric", `sourcePlatform 是平台族名，实际=${out.sourcePlatform}`);
-  assert.equal(
-    out.sourceIsRequestedVersion,
-    false,
-    "26.2 正文来自 fabric_porting 旁路 + fabric_26.1.2 树，不得谎称本版专属正文",
-  );
-  assert.notEqual(out.resolvedVersion, "26.2", "resolvedVersion 不得谎报成请求版本");
-  assert.equal(out.source_version, out.resolvedVersion, "source_version 必须与 resolvedVersion 同档");
-  assert.equal(out.versionFallback, true, "resolvedVersion != requestedVersion ⇒ versionFallback 必须为 true");
-  assert.equal(out.fallback, true, "旁路必须带 fallback 标记，不得让 ok:true 被当成本版正文");
+  assert.equal(out.ok, true, `26.2 应返回 ok:true：${JSON.stringify(out).slice(0, 300)}`);
+  if (hasMainTree) {
+    assert.equal(out.resolvedVersion, "26.2", `有 fabric_26.2 主树时必须命主树，实际 resolvedVersion=${out.resolvedVersion}`);
+    assert.equal(out.versionFallback, false, "命主树时 versionFallback 必须为 false");
+    assert.notEqual(out.sourceIsRequestedVersion, false, "命主树时不得把自己标成「非请求版本正文」");
+    console.log("      （盘上有 fabric_26.2 主树 ⇒ 走 A 支：主树直命，非旁路）");
+  } else {
+    assert.equal(typeof out.sourcePlatform, "string", "无主树时必须走旁路并带 sourcePlatform");
+    assert.equal(out.sourcePlatform, "fabric", `sourcePlatform 是平台族名，实际=${out.sourcePlatform}`);
+    assert.equal(out.sourceIsRequestedVersion, false, "旁路正文来自 fabric_porting + 邻版树，不得谎称本版专属正文");
+    assert.notEqual(out.resolvedVersion, "26.2", "旁路时 resolvedVersion 不得谎报成请求版本");
+    assert.equal(out.versionFallback, true, "resolvedVersion != requestedVersion ⇒ versionFallback 必须为 true");
+    assert.equal(out.fallback, true, "旁路必须带 fallback 标记，不得让 ok:true 被当成本版正文");
+    console.log("      （盘上无 fabric_26.2 主树 ⇒ 走 B 支：旁路契约）");
+  }
 });
 
 // ── S11：docs-platform 层的载荷自相矛盾（回归门，2026-09-22）──────────────────────

@@ -1,7 +1,7 @@
 {
   "name": "mc-ai-coding-assistant-tool",
-  "version": "2.3.0",
-  "description": "Minecraft 模组开发一站式 MCP：从建工程、写代码、查文档 API、Datagen、调试排错到真机游玩自测的全流程本地工具箱，覆盖 Forge/Fabric/NeoForge/Quilt/基岩/Paper 服务端插件。89 个工具开箱即用，无需下载数据包也能建工程、生成代码、跑工作流与诊断。",
+  "version": "2.3.1",
+  "description": "Minecraft 模组开发一站式 MCP 工具箱：89 个工具覆盖从定平台、搭工程、写方块物品实体 GUI、Datagen、查文档与 API 映射、调 Gradle、分诊崩溃、到真机游玩自测与发布前体检的全流程。支持 Forge/Fabric/NeoForge/Quilt/LiteLoader/Rift/ModLoader/基岩 Add-On 与 Paper/Spigot 服务端插件，共 8 平台 + 服务端面、73 个文档版本档。一条命令自动把该平台该版本的规则与技能写进你的工程。装完即用，无需下载数据包也能建工程、生成代码、跑 61 个工作流与诊断。",
   "keywords": [
     "mcp",
     "model-context-protocol",

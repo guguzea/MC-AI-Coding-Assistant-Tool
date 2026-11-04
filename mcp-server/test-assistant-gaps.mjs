@@ -1680,7 +1680,10 @@ description: |
   assert.ok(qGapLine, "根 AGENTS.md 缺 quilt「有树但无语料」清单");
   const qGap = qTrees.filter((v) => !qCorpus.includes(v)).sort();
   assert.deepEqual(cited(qGapLine).sort(), qGap, "quilt「有树但无语料」清单 ≠ 磁盘差额");
-  const qNoneLine = lineMatching(/^- \*\*无树\*\*/m);
+  // 缩进容差：quilt 的「有规则树 / 有树无语料 / 无树 / 空洞档行为」是「有规则树（10 档）」下的
+  // 二级列表（行首 2 空格），写成 ^- 会永远匹配不到 ⇒ 早年靠「前一条先红」被掩盖。
+  // 判据仍是「存在这一条清单行」，只是不再假定它在一级缩进上。
+  const qNoneLine = lineMatching(/^\s*- \*\*无树\*\*/m);
   assert.ok(qNoneLine, "根 AGENTS.md 缺 quilt「无树」清单");
   for (const v of cited(qNoneLine)) {
     assert.equal(qTrees.includes(v), false, `quilt「无树」清单里的 ${v} 其实有规则树`);

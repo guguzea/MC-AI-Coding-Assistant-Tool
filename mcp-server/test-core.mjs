@@ -6639,6 +6639,10 @@ function findMalformedPins(table) {
 // 补齐后必须从这里删掉（登记过期同样算失败）。
 const WRAPPER_VERSION_GAPS = [
   "liteloader/1.12.2", "modloader/1.6.4",
+  // 2026-11-04：游玩自测二合一 mod 形态补了三档 scaffold（modloader/1.2.5、1.5.2 与 rift/1.13 的
+  // 驱动脚手架）。这三档与 1.6.4 同形——只有 playtest 驱动源码 + README.driver.md，不含 Gradle
+  // wrapper（该形态由外部 javac / 游戏自带构建链编译，不走 gradlew），故与 1.6.4 同列空洞。
+  "modloader/1.2.5", "modloader/1.5.2", "modloader/1.6.2",
   "neoforge/1.20.1",
   "rift/1.13", "rift/1.13.2",
 ];
@@ -6704,8 +6708,15 @@ function checkScaffoldMeta(root, key, declared) {
   } else if (sc.mode === "reference") {
     if (declared != null) out.push(`${key}: meta.scaffold.mode=reference 但 props 已声明 ${declared}（形态声明过期）`);
     if (gaps.length === 0) out.push(`${key}: mode=reference 且 gaps 为空（无模板必须说明原因）`);
+  } else if (sc.mode === "source-only") {
+    // source-only：该档只发源码/驱动脚手架，无 Gradle 工程形态（MCP + Eclipse 时代加载器，
+    // 给它们造 gradlew 属造假）。判据与 reference 同构：不许声明 Gradle 版本，且必须写明原因。
+    // 2026-11-04：liteloader/1.10.2 · liteloader/1.8.9 早已在用这个值，但它们没有 scaffold/ 目录
+    // ⇒ 从未被本函数扫到，枚举缺口一直没暴露；modloader/1.2.5 · 1.5.2 补了 scaffold/ 后才把缺口顶出来。
+    if (declared != null) out.push(`${key}: meta.scaffold.mode=source-only 但 props 已声明 ${declared}（形态声明过期）`);
+    if (gaps.length === 0) out.push(`${key}: mode=source-only 且 gaps 为空（无 Gradle 形态必须说明原因）`);
   } else {
-    out.push(`${key}: meta.scaffold.mode=${JSON.stringify(sc.mode)} 非法（只允许 gradle / reference）`);
+    out.push(`${key}: meta.scaffold.mode=${JSON.stringify(sc.mode)} 非法（只允许 gradle / reference / source-only）`);
   }
   const text = String(sc.provenance?.text ?? "");
   if (text && !/^(?:house\+)?(?:house|official-mdk:\S+)$/.test(text))
@@ -6877,7 +6888,9 @@ async function testScaffoldWrappers() {
   const { seen, problems, declaredCount, byVersion, noProps } = scanScaffoldWrappers(REPO_ROOT);
   // 50 = 49 + `fabric/26.2`（2026-10-31 建档；scaffold 用自带 gradlew 真跑 `build --offline` → BUILD SUCCESSFUL in 34s）
   // 52 = 50 + `neoforge/26.2` / `neoforge/26.3`（同日晚些：只建 00 工程条，scaffold 取自官方 MDK 归档，wrapper 9.2.1）
-  assert.equal(seen.length, 52, `全仓 Java scaffold 应为 52 档，实际 ${seen.length} → ${seen.join(",")}`);
+  // 55 = 52 + `modloader/1.2.5` / `modloader/1.5.2` / `modloader/1.6.2`（2026-11-04 游玩自测二合一 mod 形态，
+  //      三档都只有 playtest 驱动脚手架、无 gradle wrapper ⇒ 已登记进 WRAPPER_VERSION_GAPS）。
+  assert.equal(seen.length, 55, `全仓 Java scaffold 应为 55 档，实际 ${seen.length} → ${seen.join(",")}`);
   assert.equal(declaredCount, 47, `已声明 Gradle 版本、三件套应完整的 scaffold 应为 47 档，实际 ${declaredCount}`);
   const fabricSeen = seen.filter((k) => k.startsWith("fabric/"));
   assert.equal(fabricSeen.length, 15, `fabric/*/scaffold 应为 15 档，实际 ${fabricSeen.length}`);
@@ -6982,7 +6995,7 @@ async function testScaffoldWrappers() {
         // 与 forge/1.16.5 2026-10-05 都已补上 provenance.build）。现余 fabric/26.1.2 与 neoforge/26.1
         // （两者 buildVerified 仍为 false、无出处），本靶取前者的 pack.meta 投毒。
         mutate: setMeta("fabric/26.1.2/pack.meta.json", (m) => { m.scaffold.buildVerified = true; }) },
-      { name: "meta mode 非法", needle: "非法（只允许 gradle / reference）", key: "rift/1.13.2",
+      { name: "meta mode 非法", needle: "非法（只允许 gradle / reference / source-only）", key: "rift/1.13.2",
         mutate: setMeta("rift/1.13.2/pack.meta.json", (m) => { m.scaffold.mode = "maven"; }) },
     ];
     for (const c of cases) assert.equal(poison(c.name, c.needle, c.mutate, c.probe), c.key, `${c.name}: 命中档应为 ${c.key}`);

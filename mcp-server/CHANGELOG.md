@@ -1,5 +1,55 @@
 # mcp-server changelog
 
+## 2.3.1 · 文案与门禁修复（2026-11-04）
+
+### 测试首次跑通，暴露并修掉 5 处既有缺陷
+
+此前 2.0.0 / 2.3.0 的验证受沙箱限制（`spawnSync` 管道捕获 EPERM）**只能跑部分门链**。本次环境恢复后跑完整链，
+`test-core` 依次暴露 5 处问题 —— 都是 2.3.0 之前就存在的，不是本版引入：
+
+| # | 症状 | 根因 | 修法 |
+|---|---|---|---|
+| 1 | `testPortingKbProvenance` 红：「规则树无 KB 键」未登记 `modloader/1.6.2` | 10-03 新建 `modloader/1.6.2` 时漏登记 | `data/porting/knowledge-base/versions.json` 的 `knownRuleTreeGaps` 补条目 |
+| 2 | 同上第二处：「0 规则 draft 树」未登记 | 该档只有 scaffold 4 件，无 00–10 规则 | 补进 `knownDraftRuleTrees` 并写明缺什么 |
+| 3 | `testScaffoldWrappers` 红：Java scaffold 应为 52 实得 55 | 新增 3 档 playtest 驱动脚手架无 gradle wrapper | `WRAPPER_VERSION_GAPS` + `wrapper-jars.json` 双向补登记；档数钉值 52→55 |
+| 4 | `checkScaffoldMeta` 红：`mode="source-only"` 非法 | 该值 `liteloader/1.10.2`、`1.8.9` 早已在用，但它们没有 `scaffold/` 目录 ⇒ 从未被扫到，枚举缺口一直没暴露 | 枚举扩为 `gradle / reference / source-only`，并为 source-only 补判据（不许声明 Gradle 版本 + 必须写原因） |
+| 5 | `testAssertionProvenance` 红：5 处「见 temp/」失效引用 | fabric 1.21.1/1.21.3/1.21.4/1.21.8/1.21.10 适配层注释指向不入库的 `temp/port/artifacts/*` | 改指仓库内 `PLAYTEST_VERIFIED_TIER` 与本档 GameBridge 实现 |
+
+**判据**：`node test-core.mjs` → `EXIT=0`、末行 `core regression tests passed`。
+
+### 继续跑完整链，又暴露 7 处（同属「前一条失败把后一条藏起来」）
+
+`test-core` 绿了之后 `npm test` 继续推进，逐层暴露 —— 每一处都是**上一次失败挡住**才没被看见：
+
+| # | 症状 | 根因 | 修法 |
+|---|---|---|---|
+| 6 | `test-scripts` 门链普查红：`assert-playtest-26x-onmove-shape.mjs` 无任何调用方 | 10-31 配的回归门（26.x driver 不得调 `MouseHandler.onMove`）**从落地起就没挂进任何数组** ⇒ 手跑绿也不进 npm test | 挂进 `REAL_RUN_GATES`（该门 shell out 到本地 CLI，与 intent-gate 同列）；该门实测 5 档全过 |
+| 7 | `assert-corpus-semantics` 红：`fabric_26.2` 树未登记进基线 | 10-31 新建语料树，基线停在 10-23（77 棵） | `MC_SKILL_CORPUS_SEMANTICS_RELEDGER=1` 重签 → 78 棵 / 40,922 篇 |
+| 8 | 同上第二处：`rift_1.13.2` 有 1 篇真·空页但基线无 `residue` 段 | 具名层被静默关闭（该门 fail-closed） | 按门要求逐条具名 `wiki_home.md`（上游 wiki Home 页正文仅 25 字符，是归档页真实形态） |
+| 9 | `assert-scaffold-rules-conflict` 红：台账六项漂移 | 新增 5 棵带 `.cursor/rules` 的规则树 | reledger 重钉：packsChecked 48→**53** / rulesFiles 458→**513** / crossLines 459→**462** / contextualSkipped 3065→**3077** / verdictSkipped 2350→**2386** / banned 69→**73**（conflicts 仍 **0**）；符号台账 `--write` 重生成（19 档 / 73 符号） |
+| 10 | `test-semantic` 红：26.2 断言 `sourceIsRequestedVersion=false` | **测试前提过期**：断言写死「26.2 无主文档树、走旁路」，而 10-31 已建 `fabric_26.2` 完整语料（105 页 + index-l0） | 改成分两支按盘上事实选：有主树 ⇒ 断言主树直命；无主树 ⇒ 断言旁路契约。两支都自证「没谎称本版专属正文」 |
+| 11 | `test-assistant-gaps` 红：根 AGENTS.md quilt「有树但无语料」清单解析为空 | 那一行只写了「（4 档）」**没点版本号** | 补 `1.21.3` / `1.21.4` / `1.21.8` / `1.21.10` |
+| 12 | 同上第二处：quilt「无树」清单匹配不到 | 该清单是二级列表（行首 2 空格），判据写死 `^- \*\*无树\*\*` ⇒ 恒不命中 | 正则加缩进容差 `^\s*- \*\*无树\*\*` |
+
+**共性**：这 7 处没有一处是产品行为退化 —— 5 处是**登记/台账没跟上内容增长**，2 处是**判据前提过期**（写死了当时的事实）。这也说明「跑通一次就绿」不等于门链健康：门与台账本身会腐烂。
+
+**判据**：`npm test` 完整链（含 `test-core` / `test-scripts` / `test-semantic` / `test-assistant-gaps` 等全部子链）。
+
+### npm 页面文案重写
+
+- **`package.json` `description`**：从一句「一站式 MCP」扩到完整表述 —— 89 工具、全流程七段、8 平台 + 服务端面、73 个文档版本档、一条命令自动配置、无需数据包可用。
+- **`mcp-server/README.md` 新增四节**：
+  - **一条命令自动配置**：9 个宿主的写入路径对照表 + 幂等标记块说明 + `--action=session` 零写盘方案；
+  - **平台与版本支持**：逐平台列出 73 个文档版本档与脚手架构档（Forge 14 / NeoForge 10 / Fabric 14 / Quilt 10 / LiteLoader 3 / Rift 2 / ModLoader 3 / 基岩 / Paper 6 / Spigot 9）；
+  - **功能详解**：按工程构建 / 代码生成 / 文档查询 / 反编译 / 校验 / 排错 / 游玩自测 / 移植 / 发布 / 知识库分十组逐工具点名；
+  - **人在环与自动化边界**：改成三段式（默认自动 / 需要点头 / 永不代劳），把「默认自动」的范围写清楚，不再让整份文档读起来像处处要人工确认。
+
+### 说明
+
+本次是**纯文案 + 门禁修复**，不改任何工具行为。
+`package.json` 版本未变（仍 2.3.0 已发布版本）；若要发到 npm 需另行 bump。
+
+---
 ## 2.3.0 · npm 发版（2026-11-04）
 
 ### 发版口径

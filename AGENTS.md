@@ -150,7 +150,7 @@ Quilt 建档面（实测 `ls -d quilt/*/` 对 `ls -d data/quilt_*/`，2026-09-05
 
 - **有规则树**（10 档）：`1.18.2` / `1.19.4` / `1.20.1` / `1.20.4` / `1.21.1` / `1.21.3` / `1.21.4` / `1.21.8` / `1.21.10` / `1.21.11`。
   - **Quilt 侧语料**：`data/quilt_*` 共 **6 档**带目录，每档 18 页。命中数随语料扩容，**`total` 不是稳定契约**（两个独立成因：① 语料扩容；② **doc 检索面的 `total` 就是「本次返回条数」，会随你传的 `limit` 变**）。
-  - **有树但无 `data/quilt_<ver>` 语料**（4 档）：规则树可用；文档检索**不报错而是回 Fabric 正文** ⇒ **必须读 `fallback` / `sourcePlatform` / `source_version` 三个字段**：`fabric` 命中不是 QSL 证据，`quilt` 命中也不是本版专属正文，`total:0` 更不等于「本版没有该 API」。QSL 签名一律 `query_loader_api`（先 `ingest_loader_api`）或用户自备 jar。
+  - **有树但无 `data/quilt_<ver>` 语料**（4 档：`1.21.3` / `1.21.4` / `1.21.8` / `1.21.10`）：规则树可用；文档检索**不报错而是回 Fabric 正文** ⇒ **必须读 `fallback` / `sourcePlatform` / `source_version` 三个字段**：`fabric` 命中不是 QSL 证据，`quilt` 命中也不是本版专属正文，`total:0` 更不等于「本版没有该 API」。QSL 签名一律 `query_loader_api`（先 `ingest_loader_api`）或用户自备 jar。
   - **无树**：`1.20.6` / `1.21.2` / `1.21.5` / `1.21.6` / `1.21.7` / `1.21.9` / `26.x` 等 → session 直接 `PACK_NOT_FOUND`。**禁止**拿邻版 quilt 树或同版 Fabric 树顶替，也**禁止**为填一个版本号克隆一棵新树。
   - **`VERSION_NOT_FOUND` 载荷四平台同键**：本仓无语料的档位返回 `ok:false` + `platform` + 顶层 `availableVersions`（数值序）+ `error:{code,message,hint}` 对象；机器消费方不必再按平台分支取候选。**唯一例外**是 neoforge「无主文档树但刻意回空」路径（`ok:true` + `total:0` + `warning`）。
   - 逐档建档面读数、换源史、空洞档逐档复测史 → [`doc/platform-coverage-quilt.md`](./doc/platform-coverage-quilt.md)（另有 `CORPUS_PROVENANCE.md` §1/§4）。

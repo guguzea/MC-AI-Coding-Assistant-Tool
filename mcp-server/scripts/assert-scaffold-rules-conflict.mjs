@@ -351,11 +351,16 @@ if (census.packsChecked === 0) {
 // 净结果 banned 67 = 59 + 8 真判死。另 152 三个 setRegistryName 族符号因披露拆行锚点 159/160→164/165。
 // crossLines 428→455、contextualSkipped 3029→3054、verdictSkipped 2260→2341、歧义丢弃 160（未变）。
 const LEDGER = {
+  // 2026-11-04 重钉（游玩自测二合一 mod 形态 + 服务端面/26.x 规则树入库轮）：
+  // packsChecked 48→53（新增 5 棵带 .cursor/rules 的规则树）、rulesFiles 458→513（+55 篇规则文件）、
+  // crossLines 459→462、contextualSkipped 3065→3077、verdictSkipped 2350→2386、banned 69→73。
+  // 全部为新增档带来的自然增量，conflicts 仍 0（无新旧矛盾），判死面逐个已人审落在 ❌ 块内。
+  // 逐档分布见 LEDGER_PER_PACK_BANNED（reledger 实算逐档一致）。
   // 2026-10-24 重钉（spigot 三档 + paper-api 五档签名面入库轮）：packsChecked 47→48、rulesFiles 447→458
   // （新增服务端面规则树带进 1 档 + 11 篇 `.cursor/rules`；reledger 实算逐档一致）。其余四数
   // （crossLines 455 / contextualSkipped 3065 / verdictSkipped 2354 / banned 67 / conflicts 0）实算未变 —— 原样保留。
-  packsChecked: 48,
-  rulesFiles: 458,
+  packsChecked: 53,
+  rulesFiles: 513,
   // 2026-10-06 重钉（非forge javap 普查收口轮）：contextualSkipped 3054→3056（+2 场合型丢弃行，
   // 来自本会话 rift/forge 规则 ❌ 实证行改写与 neoforge loose 修复轮；判死分布与 conflicts 0 不变）。
   // 2026-10-11 重钉（forge 系老版本全量构件裁决轮，10 档 936 行 → 22 处修复）：contextualSkipped
@@ -373,10 +378,10 @@ const LEDGER = {
   // ⇒ crossLines 455→459、banned 67→69、该档判死分布 1→3（判死面扩大 = 有意的内容修复，已人审：
   // 两条都在 ❌ 块内、✅ 正解仍是 `Block.Settings.of(Material)`）；verdictSkipped 2354→2350（−4 行：
   // 原「1.17+」措辞不再被当成合法 API 反例演示）。
-  crossLines: 459,
-  contextualSkipped: 3065,
-  verdictSkipped: 2350,
-  banned: 69,
+  crossLines: 462,
+  contextualSkipped: 3077,
+  verdictSkipped: 2386,
+  banned: 73,
   conflicts: 0,
 };
 
@@ -385,8 +390,8 @@ const LEDGER = {
  * 换了个档犯同样的错也红。键 = `<platform>/<version>`，值为 0 的档不登记。
  */
 const LEDGER_PER_PACK_BANNED = {
-  // 2026-10-30 重钉：1→3（+ `AbstractBlock.Settings.create` @09-anti-patterns.mdc:287、
-  // + `Block.Properties.create` @:288，两条都是 WP5 改写后具名化进 ❌ 块的错 API）
+  // 2026-11-04 重钉（reledger 实算逐档一致）：新增 fabric/26.2 档 4 个判死符号，
+  // 其余档增量来自本轮新增规则树的 ❌ 实证行。conflicts 仍 0。
   "fabric/1.14.4": 3,
   "fabric/1.17.1": 1,
   "fabric/1.18.2": 2,
@@ -394,16 +399,12 @@ const LEDGER_PER_PACK_BANNED = {
   "fabric/1.20.1": 3,
   "fabric/1.20.4": 3,
   "fabric/1.21.1": 3,
-  "fabric/1.21.3": 2,
   "fabric/1.21.11": 6,
+  "fabric/1.21.3": 2,
   "fabric/26.1.2": 4,
+  "fabric/26.2": 4,
   "forge/1.14.4": 3,
-  // 2026-10-05 重钉（第二次）：5→8（+ onBlockActivated @02-block.mdc:14、notSolid/doesNotBlockMovement @02-block.mdc:97，
-  // 均 152 official 构件证无；setRegistryName 族锚点 159/160→164/165）
   "forge/1.15.2": 8,
-  // 2026-10-05 重钉（第二次）：4→9（+ ServerPlayer @06-networking.mdc:91、SimpleCookingRecipeBuilder/
-  // campfireCooking @07-datagen.mdc:66、getDurability/getDefenseForType @03-item.mdc:204，
-  // 均 mapped_official jar javap 证无；13 个假判死已脱离 ❌ 管辖救回）
   "forge/1.16.5": 9,
   "forge/1.17.1": 4,
   "forge/1.18.2": 3,

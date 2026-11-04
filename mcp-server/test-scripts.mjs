@@ -2408,6 +2408,12 @@ const REAL_RUN_GATES = [
     // 默认只跑三族离线判据（菜单契约 ×2 profile、执行器 Java 形状、工具 14 例矩阵）；真机 E2E 是 opt-in
     // （MC_SKILL_PLAYTEST_INTENT_E2E=1 + …_EVIDENCE=<abs>），不设即跳过且不静默通过。
     "./scripts/assert-playtest-intent-gate.mjs",
+    // 2026-11-04（门链普查抓到的孤儿）：26.x driver「不得调用已删除 API」回归门。
+    // 2026-10-31 的 rewriteForNeoForge26xx 修复（MouseHandler.onMove 在 26.1–26.2 不存在，
+    // 5 参重载只在 26.3 有）当时配了这道门，但**一直没挂进任何调用方** ⇒ 手跑绿也不进 npm test，
+    // 属「门在盘上、无人跑」的静默失效。它会 shell out 到本地 CLI（按档真出 driver 再查文本），
+    // 依赖已构建的 dist + 平台数据；缺件时它按 A 档逐档报红，故与 intent-gate 同列 REAL_RUN_GATES。
+    "./scripts/assert-playtest-26x-onmove-shape.mjs",
     // 2026-10-10 作者规范执法面：WRITING-FOR-AGENTS.md 的机器可判子集（J1 frontmatter 形状 /
     // J2 指针路径防过期 / J3 纯负向棘轮 + 豁免台账原文在盘）。面 = WRITING-FOR-AGENTS.md +
     // common_skill/**（CONTRIBUTING/根 AGENTS 属相对平台路径假红区，扩面另批，见门头注）。

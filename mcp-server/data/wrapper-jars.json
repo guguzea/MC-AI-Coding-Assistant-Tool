@@ -739,6 +739,9 @@
   "gaps": {
     "wrapperVersionUndeclared": [
       "liteloader/1.12.2",
+      "modloader/1.2.5",
+      "modloader/1.5.2",
+      "modloader/1.6.2",
       "modloader/1.6.4",
       "neoforge/1.20.1",
       "rift/1.13",

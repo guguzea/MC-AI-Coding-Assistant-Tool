@@ -2,8 +2,8 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.guguzea/mc-ai-coding-assistant-tool",
   "title": "MC AI Coding Assistant Tool",
-  "description": "Minecraft mod-dev MCP: offline docs, API lookup, codegen, crash triage for Forge/Fabric/NeoForge.",
-  "version": "2.0.0",
+  "description": "Minecraft mod-dev MCP: setup, codegen, docs, API, crash triage, playtest. Forge/Fabric/Neo/Paper.",
+  "version": "2.3.1",
   "websiteUrl": "https://github.com/guguzea/MC-AI-Coding-Assistant-Tool#readme",
   "repository": {
     "url": "https://github.com/guguzea/MC-AI-Coding-Assistant-Tool",
@@ -15,7 +15,7 @@
       "registryType": "npm",
       "registryBaseUrl": "https://registry.npmjs.org",
       "identifier": "mc-ai-coding-assistant-tool",
-      "version": "2.0.0",
+      "version": "2.3.1",
       "runtimeHint": "npx",
       "transport": {
         "type": "stdio"
@@ -25,12 +25,12 @@
   "_meta": {
     "io.modelcontextprotocol.registry/publisher-provided": {
       "tool": "mc-skill",
-      "version": "2.0.0",
+      "version": "2.3.1",
       "dataDistribution": {
-        "summary": "npm 包随包发布 MCP 侧 7 项小数据（mdk-checksums.json / bedrock-script-api-pin.json / wrapper-jars.json / lib-api-summaries/ / lib-coords/ / lib-manifests/ / loader-api-summaries/）；约 1.8 GiB 平台语料不在包内，走 GitHub Release。",
+        "summary": "npm 包随包发布 MCP 侧 7 项小数据（mdk-checksums.json / bedrock-script-api-pin.json / wrapper-jars.json / lib-api-summaries/ / lib-coords/ / lib-manifests/ / loader-api-summaries/）；约 2.31 GiB 平台语料不在包内，走 GitHub Release。",
         "dataLocation": "GitHub Release zip",
         "dataPathInRelease": "mc-skill-data-full-<tag>.zip 内的 data/（平台目录）",
-        "why": "平台语料约 1.8 GiB / 4.2 万文件，体积远超 npm 单包上限，且与代码发版节奏不同，故分离分发；MCP 侧 7 项小数据与代码同节奏，随包发布。",
+        "why": "平台语料约 2.31 GiB / 8.3 万文件，体积远超 npm 单包上限，且与代码发版节奏不同，故分离分发；MCP 侧 7 项小数据与代码同节奏，随包发布。",
         "userActionRequired": "npm 安装后已含 pin 表等 7 项小数据；需要本地文档检索 / 核实表等平台语料时，从 GitHub Release 下载 mc-skill-data-full-<tag>.zip，把其中平台目录并入 <包>/data/（不要整目录覆盖，保住包内那 7 项）。",
         "pinTablePath": "<包根>/data/mdk-checksums.json",
         "envOverride": "MC_SKILL_MDK_CHECKSUMS 可显式指定 pin 表路径（例如指向包外维护的那一份）。"
