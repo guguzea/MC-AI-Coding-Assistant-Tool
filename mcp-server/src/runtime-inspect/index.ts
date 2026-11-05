@@ -15,6 +15,23 @@ export interface InspectRuntimeQuery {
   maxLines?: number;
   maxBytes?: number;
   version?: string;
+  /** 日志字节游标：上一次返回的 nextOffset。缺口一律显式披露（rotated/missed）。 */
+  sinceOffset?: number;
+  /** 日志字节游标：上一次返回的 logStat.mtimeMs（配合 sinceInode 识别文件被换）。 */
+  sinceMtimeMs?: number;
+  /**
+   * 日志字节游标：上一次返回的 logStat.inode。0 表示该文件系统不提供 inode，此时不做 inode 判定。
+   *
+   * ⚠️ **必须原样回灌 logStat.inode，不要手工做算术**：NTFS 的 inode 是 64 位且**可超过 2^53**
+   * （本机实测 40532396647084936 / 34339947159512590），JS double 下 `inode + 1 === inode` 是**空操作**
+   * ⇒ 用算术构造「不同的 inode」会静默失效（2026-11-04 task-9 的测试就是这么红的）。
+   * 回灌原值是精确的：fs 给的 inode 已是 double，JSON 序列化-反序列化往返不变（实测 round-trip 相等）。
+   */
+  sinceInode?: number;
+  /** 正则源字符串（不带 flags）：轮询日志直到命中或 waitMs 超时。缺省 = 不等待。 */
+  waitForPattern?: string;
+  /** 有界等待毫秒数，默认 0（不等待），硬顶 HARD_MAX_WAIT_MS。 */
+  waitMs?: number;
 }
 
 const DEFAULT_MAX_LINES = 200;
@@ -23,6 +40,13 @@ const DEFAULT_MAX_BYTES = 512 * 1024;
 const HARD_MAX_BYTES = 2 * 1024 * 1024;
 const DUMP_MAX_BYTES = 64 * 1024;
 const SCAN_TIMEOUT_MS = 5000;
+/** 有界等待：默认不等待（兼容旧调用），硬顶 60s。 */
+const DEFAULT_WAIT_MS = 0;
+const HARD_MAX_WAIT_MS = 60_000;
+const WAIT_POLL_MS = 150;
+/** matchedLines 上限：条数与单行字符数都设界，避免一次等待把响应撑爆。 */
+const MATCHED_LINES_MAX = 50;
+const MATCHED_LINE_CHARS = 300;
 
 const REL_LOG_DIRS = [
   ["run", "logs"],
@@ -45,6 +69,33 @@ function capBytes(n?: number): number {
   const v = n ?? DEFAULT_MAX_BYTES;
   if (!Number.isFinite(v) || v < 1) return DEFAULT_MAX_BYTES;
   return Math.min(Math.floor(v), HARD_MAX_BYTES);
+}
+
+function capWaitMs(n?: number): number {
+  const v = n ?? DEFAULT_WAIT_MS;
+  if (!Number.isFinite(v) || v <= 0) return 0;
+  return Math.min(Math.floor(v), HARD_MAX_WAIT_MS);
+}
+
+function finiteNumber(n?: number): number | undefined {
+  return typeof n === "number" && Number.isFinite(n) ? n : undefined;
+}
+
+/**
+ * 有界阻塞睡眠：Atomics.wait 在 Node 主线程可用（本机实测请求 120ms ≈ 实际 124ms）。
+ * 本工具是 stdio MCP 面，等待默认 0、硬顶 60s，故阻塞式等待不会无限挂住调用方。
+ */
+const SLEEP_BUF = new Int32Array(new SharedArrayBuffer(4));
+function sleepMs(ms: number): void {
+  if (!(ms > 0)) return;
+  try {
+    Atomics.wait(SLEEP_BUF, 0, 0, ms);
+  } catch {
+    const end = Date.now() + ms;
+    while (Date.now() < end) {
+      /* 兜底自旋：仅在 Atomics.wait 不可用时走到 */
+    }
+  }
 }
 
 function isDir(p: string): boolean {
@@ -88,10 +139,21 @@ function newestMatching(dir: string, re: RegExp, deadline: number): string | und
   return candidates.slice(0, 80)[0]?.path;
 }
 
-function readTail(abs: string, maxBytes: number, maxLines: number): { text: string; truncated: boolean; bytes: number } {
+/** 日志窗口读数的公共字段（尾部读与游标读共用）。 */
+interface LogReadBase {
+  text: string;
+  truncated: boolean;
+  bytes: number;
+  size: number;
+  mtimeMs: number;
+  inode: number;
+}
+
+function readTail(abs: string, maxBytes: number, maxLines: number): LogReadBase {
   const fd = openSync(abs, "r");
   try {
-    const size = fstatSync(fd).size;
+    const st = fstatSync(fd);
+    const size = st.size;
     const start = size > maxBytes ? size - maxBytes : 0;
     const len = Math.max(0, size - start);
     const buf = Buffer.alloc(len);
@@ -111,7 +173,140 @@ function readTail(abs: string, maxBytes: number, maxLines: number): { text: stri
     const lines = text.split(/\r?\n/);
     const truncated = start > 0 || lines.length > maxLines;
     const kept = lines.length > maxLines ? lines.slice(-maxLines) : lines;
-    return { text: kept.join("\n"), truncated, bytes: buf.length };
+    return { text: kept.join("\n"), truncated, bytes: buf.length, size, mtimeMs: st.mtimeMs, inode: Number(st.ino ?? 0) };
+  } finally {
+    closeSync(fd);
+  }
+}
+
+/** 游标读的入参：offset 必填，mtime/inode 可选（有才做「文件被换」判定）。 */
+interface CursorInput {
+  offset: number;
+  mtimeMs?: number;
+  inode?: number;
+}
+
+/** 游标读的返回：在 LogReadBase 之上加缺口披露与下一游标。 */
+interface CursorRead extends LogReadBase {
+  nextOffset: number;
+  missed: boolean;
+  rotated: boolean;
+  reason: string | null;
+}
+
+/**
+ * 字节游标增量读：调用方带上次的 nextOffset 回来。**缺口必须显式**，绝不静默读成「没有新日志」：
+ *  - sinceOffset > size ⇒ rotated+missed，reason=file_shrank，窗口重置到尾部；
+ *  - inode 变（文件被换）⇒ rotated+missed，reason=file_replaced，窗口重置到尾部；
+ *  - mtime 倒退 ⇒ rotated+missed，reason=mtime_went_backwards，窗口重置到尾部；
+ *  - 增量行数超 maxLines ⇒ missed，reason=line_cap（只返回最后 maxLines 行，nextOffset 仍前进，
+ *    需要完整增量可用同一 sinceOffset 配更大的 maxLines 重读）；
+ *  - 窗口被 maxBytes 截断 ⇒ truncated:true，nextOffset 停在最后一个完整行末（下次接着读，不撕裂行）；
+ *  - 单行长度超 maxBytes ⇒ missed，reason=line_exceeds_max_bytes（该行进不去，只能显式披露）。
+ * 无缺口时 missed/rotated 均为 false、reason 为 null。
+ */
+function readFromCursor(abs: string, cursor: CursorInput, maxBytes: number, maxLines: number): CursorRead {
+  const fd = openSync(abs, "r");
+  try {
+    const st = fstatSync(fd);
+    const size = st.size;
+    const mtimeMs = st.mtimeMs;
+    const inode = Number(st.ino ?? 0);
+    let missed = false;
+    let rotated = false;
+    let reason: string | null = null;
+    let start: number;
+    const tailStart = (): number => (size > maxBytes ? size - maxBytes : 0);
+
+    if (cursor.offset > size) {
+      rotated = true;
+      missed = true;
+      reason = "file_shrank";
+      start = tailStart();
+    } else if (
+      // inode 判定：两侧都是 fs 给的 double。**不要**在这里引入算术 / 取整 —— inode 可超 2^53
+      // （NTFS 实测 4.05e16），任何 ±1 都可能被 double 吞掉；这里只做「原样相等」比较。
+      cursor.inode !== undefined &&
+      cursor.inode !== 0 &&
+      inode !== 0 &&
+      cursor.inode !== inode
+    ) {
+      rotated = true;
+      missed = true;
+      reason = "file_replaced";
+      start = tailStart();
+    } else if (cursor.mtimeMs !== undefined && mtimeMs < cursor.mtimeMs) {
+      rotated = true;
+      missed = true;
+      reason = "mtime_went_backwards";
+      start = tailStart();
+    } else {
+      start = cursor.offset;
+    }
+
+    const want = Math.max(0, size - start);
+    const len = Math.min(want, maxBytes);
+    const raw = Buffer.alloc(len);
+    if (len > 0) {
+      let off = 0;
+      while (off < len) {
+        const n = readSync(fd, raw, off, len - off, start + off);
+        if (n <= 0) break;
+        off += n;
+      }
+    }
+
+    // 起点落在半行中间（上一字节不是 \n）⇒ 跳到下一行，避免把半行当完整行交付。
+    let buf = raw;
+    let effStart = start;
+    if (start > 0 && buf.length > 0) {
+      const prev = Buffer.alloc(1);
+      const pn = readSync(fd, prev, 0, 1, start - 1);
+      if (pn === 1 && prev[0] !== 0x0a) {
+        const nl = buf.indexOf(0x0a);
+        if (nl < 0) {
+          // 整窗都是一行的一部分：本次不交付，游标前进到窗口末尾并显式披露缺口。
+          return {
+            text: "",
+            truncated: want > len,
+            bytes: buf.length,
+            size,
+            mtimeMs,
+            inode,
+            nextOffset: start + len,
+            missed: true,
+            rotated,
+            reason: reason ?? "partial_line_only",
+          };
+        }
+        buf = buf.subarray(nl + 1);
+        effStart = start + nl + 1;
+      }
+    }
+
+    let truncated = want > len;
+    let nextOffset = effStart + buf.length;
+    // 尾部半行（仅当后面还有没读的字节时）退回最后一个完整行末：下次接着读，不撕裂行、不丢字节。
+    if (want > len && buf.length > 0 && buf[buf.length - 1] !== 0x0a) {
+      const nl = buf.lastIndexOf(0x0a);
+      if (nl >= 0) {
+        buf = buf.subarray(0, nl + 1);
+        nextOffset = effStart + buf.length;
+      } else {
+        missed = true;
+        reason = reason ?? "line_exceeds_max_bytes";
+      }
+    }
+
+    let text = buf.toString("utf8");
+    const lines = text.split(/\r?\n/);
+    if (lines.length > maxLines) {
+      text = lines.slice(-maxLines).join("\n");
+      truncated = true;
+      missed = true;
+      reason = reason ?? "line_cap";
+    }
+    return { text, truncated, bytes: buf.length, size, mtimeMs, inode, nextOffset, missed, rotated, reason };
   } finally {
     closeSync(fd);
   }
@@ -243,23 +438,162 @@ export function inspectRuntime(query: InspectRuntimeQuery): Record<string, unkno
     };
   }
 
-  const logFile = logsDir
-    ? (isFile(join(logsDir, "latest.log")) ? join(logsDir, "latest.log") : newestMatching(logsDir, /\.log$/i, deadline))
-    : undefined;
   const crashFile = crashDir ? newestMatching(crashDir, /\.(txt|log)$/i, deadline) : undefined;
 
-  let logTail: { text: string; truncated: boolean } | undefined;
-  let logAnalysis: Record<string, unknown> | undefined;
-  if (logFile) {
+  // ── 日志字节游标（P0-A2）：缺口一律显式，绝不静默读成「没有新日志」 ──────────
+  const rawSinceOffset = finiteNumber(query.sinceOffset);
+  const sinceOffset = rawSinceOffset !== undefined && rawSinceOffset >= 0 ? rawSinceOffset : undefined;
+  const sinceMtimeMs = finiteNumber(query.sinceMtimeMs);
+  const sinceInode = finiteNumber(query.sinceInode);
+  const requestedWaitMs = finiteNumber(query.waitMs);
+  const waitMs = capWaitMs(query.waitMs);
+  const waitSrc = query.waitForPattern?.trim();
+  if (requestedWaitMs !== undefined && requestedWaitMs > HARD_MAX_WAIT_MS) {
+    warnings.push(`waitMs=${requestedWaitMs} 超过硬顶 ${HARD_MAX_WAIT_MS}ms，已按硬顶处理（不静默等更久）。`);
+  }
+  if (!waitSrc && requestedWaitMs !== undefined && requestedWaitMs > 0) {
+    warnings.push("只传了 waitMs 没传 waitForPattern：不等待（waitForPattern 是等待的触发条件）。");
+  }
+  let waitPattern: RegExp | undefined;
+  if (waitSrc) {
     try {
-      logTail = readTail(logFile, maxBytes, maxLines);
-      if (logTail.truncated) warnings.push(`日志已截断（尾部 ${maxLines} 行 / ${maxBytes} 字节上限）`);
-      logAnalysis = query.version?.trim()
-        ? summarizeLog(analyzeLog({ logText: logTail.text, version: query.version }))
-        : { skipped: true, reason: "未指定 version，未调用 analyze_log（禁止默认 1.20.1）" };
+      waitPattern = new RegExp(waitSrc);
     } catch (e) {
-      warnings.push(`读取日志失败：${(e as Error).message}`);
+      return {
+        ok: false,
+        action: actionable(ActionCodes.INVALID_INPUT, `waitForPattern 不是合法正则：${(e as Error).message}`, [
+          "传正则源字符串（不带 flags），例如 Done .* For help",
+        ]),
+        warnings,
+      };
     }
+  }
+
+  const resolveLogFile = (dl: number): string | undefined => {
+    if (!logsDir) return undefined;
+    const latest = join(logsDir, "latest.log");
+    if (isFile(latest)) return latest;
+    return newestMatching(logsDir, /\.log$/i, dl);
+  };
+
+  let logFile: string | undefined;
+  let logTail: LogReadBase | undefined;
+  let logStat: { size: number; mtimeMs: number; inode: number } | null = null;
+  let nextOffset: number | null = null;
+  let missed = false;
+  let rotated = false;
+  let reason: string | null = null;
+  let readError: string | undefined;
+
+  const readOnce = (): void => {
+    logFile = resolveLogFile(Date.now() + SCAN_TIMEOUT_MS);
+    logTail = undefined;
+    logStat = null;
+    nextOffset = null;
+    missed = false;
+    rotated = false;
+    reason = null;
+    if (!logFile) return;
+    try {
+      if (sinceOffset !== undefined) {
+        const r = readFromCursor(
+          logFile,
+          { offset: sinceOffset, mtimeMs: sinceMtimeMs, inode: sinceInode },
+          maxBytes,
+          maxLines,
+        );
+        logTail = r;
+        nextOffset = r.nextOffset;
+        missed = r.missed;
+        rotated = r.rotated;
+        reason = r.reason;
+      } else {
+        const r = readTail(logFile, maxBytes, maxLines);
+        logTail = r;
+        nextOffset = r.size;
+      }
+      logStat = { size: logTail.size, mtimeMs: logTail.mtimeMs, inode: logTail.inode };
+      readError = undefined;
+    } catch (e) {
+      readError = (e as Error).message;
+      logTail = undefined;
+      logStat = null;
+    }
+  };
+
+  const waitStart = Date.now();
+  let matched = false;
+  let matchedLines: string[] = [];
+  let matchedOverflow = false;
+
+  if (waitPattern) {
+    const until = waitStart + waitMs;
+    for (;;) {
+      readOnce();
+      const text = logTail?.text ?? "";
+      const hits = text.length > 0 ? text.split(/\r?\n/).filter((l) => waitPattern!.test(l)) : [];
+      if (hits.length > 0) {
+        matched = true;
+        matchedOverflow = hits.length > MATCHED_LINES_MAX;
+        matchedLines = hits
+          .slice(0, MATCHED_LINES_MAX)
+          .map((l) => (l.length > MATCHED_LINE_CHARS ? l.slice(0, MATCHED_LINE_CHARS) + "…" : l));
+        break;
+      }
+      const now = Date.now();
+      if (now >= until) break;
+      sleepMs(Math.min(WAIT_POLL_MS, Math.max(1, until - now)));
+    }
+  } else {
+    readOnce();
+  }
+
+  const waitedMs = waitPattern ? Date.now() - waitStart : 0;
+  const waitTimedOut = waitPattern !== undefined && !matched && waitMs > 0;
+  if (waitPattern && !matched) {
+    warnings.push(
+      waitMs > 0
+        ? `等待 ${waitMs}ms 未命中正则（matched:false, waitTimedOut:true）：超时即未命中，不得读成成功。`
+        : "waitMs=0（默认不等待），只检查了一次当前窗口：matched:false 表示此刻未命中。",
+    );
+  }
+  if (matchedOverflow) {
+    warnings.push(
+      `命中行超过 ${MATCHED_LINES_MAX} 条，matchedLines 只保留前 ${MATCHED_LINES_MAX} 条（单行超 ${MATCHED_LINE_CHARS} 字符已截断）。`,
+    );
+  }
+
+  // 有游标却找不到日志文件：同样是缺口，必须显式披露。
+  if (sinceOffset !== undefined && logsDir && !logFile) {
+    rotated = true;
+    missed = true;
+    reason = "file_missing";
+  }
+
+  if (rotated) {
+    warnings.push(
+      `日志被截断/轮转（rotated:true, missed:true, reason:${reason ?? "unknown"}）：读取窗口已重置到尾部，` +
+        "sinceOffset 之前的内容无法保证完整 —— 不得读成「没有新日志」。",
+    );
+  } else if (missed && reason === "line_cap") {
+    warnings.push(
+      `增量超过 maxLines=${maxLines}，仅返回最后 ${maxLines} 行（missed:true, reason:line_cap）；需要完整增量请用同一 sinceOffset 配更大的 maxLines 重读。`,
+    );
+  } else if (missed) {
+    warnings.push(`日志游标出现缺口（missed:true, reason:${reason ?? "unknown"}）。`);
+  }
+  if (logTail?.truncated && sinceOffset === undefined) {
+    warnings.push(`日志已截断（尾部 ${maxLines} 行 / ${maxBytes} 字节上限）`);
+  } else if (logTail?.truncated && !missed) {
+    warnings.push(`本次增量未读尽（${maxBytes} 字节上限）：用返回的 nextOffset 继续读。`);
+  }
+  if (readError) warnings.push(`读取日志失败：${readError}`);
+
+  let logAnalysis: Record<string, unknown> | undefined;
+  if (logTail) {
+    logAnalysis = query.version?.trim()
+      ? summarizeLog(analyzeLog({ logText: logTail.text, version: query.version }))
+      : { skipped: true, reason: "未指定 version，未调用 analyze_log（禁止默认 1.20.1）" };
   }
 
   let crashAnalysis: ReturnType<typeof analyzeCrash> | undefined;
@@ -318,6 +652,20 @@ export function inspectRuntime(query: InspectRuntimeQuery): Record<string, unkno
     dump: dump ?? undefined,
     warnings,
     nextSteps,
+    // 游标 + 缺口披露（P0-A2）：missed/rotated 必须显式，绝不静默当成「没有新日志」。
+    nextOffset,
+    missed,
+    rotated,
+    reason,
+    // logStat.inode 是 double 化的 64 位 inode（可超 2^53）：调用方**原样回灌** sinceInode，
+    // 不要做算术（±1 在超 2^53 的值上是空操作）；原样回灌是精确的。
+    logStat,
+    // 有界等待（默认 waitMs=0 ⇒ 不等待；超时 = matched:false + waitTimedOut:true）。
+    waitMs,
+    waitedMs,
+    matched,
+    matchedLines,
+    waitTimedOut,
     limits: { maxLines, maxBytes },
     analysisComplete: !noVer,
     ...(noVer ? { action: versionRequiredAction() } : {}),

@@ -271,7 +271,23 @@ export const playtestBridgeSchema = z.object({
   timeoutMs: z.number().int().positive().optional().describe("await 超时，默认 30000，硬顶 120000"),
   pollIntervalMs: z.number().int().positive().optional().describe("轮询间隔，默认 250ms"),
   evidenceDir: z.string().optional().describe("calls.jsonl 落点（须在授权根内；不在根内则忽略）"),
-  port: z.number().int().min(1).max(65535).optional().describe("默认 38081；host 恒为 127.0.0.1"),
+  port: z
+    .number()
+    .int()
+    .min(1)
+    .max(65535)
+    .optional()
+    .describe(
+      "不给 ⇒ 从 38081 **递减扫描**到 38071（11 个端口），第一个通过形状握手的端口胜出；显式给了就只探这一个端口、**不扫描**（向后兼容）。host 恒为 127.0.0.1",
+    ),
+  expectPlatform: z
+    .string()
+    .optional()
+    .describe("连错实例防线：期望 /status 报的 platform（如 forge/rift/modloader）；不一致 ⇒ BRIDGE_INSTANCE_MISMATCH，载荷同时给两侧值"),
+  expectVersion: z
+    .string()
+    .optional()
+    .describe("连错实例防线：期望 /status 报的 version（如 1.12.2）；不一致 ⇒ BRIDGE_INSTANCE_MISMATCH，载荷同时给两侧值"),
   authorization: z.enum(["sandbox", "dev_instance"]).optional(),
   confirmed: z.boolean().optional().describe("execute/await 必填 true"),
 });
@@ -291,9 +307,9 @@ export const playtestIntentSchema = z.object({
 export const PLAYTEST_INTENT_DESCRIPTION =
   "in_jvm_player_agent 的 LLM 接线面（2026-10-01 裁定 3A：独立工具，不复用桥）：action=read 读 <evidenceDir>/state.json（intentState / intents[] / lastIntent / scan.nearest / goto.arrived）+ 菜单 + 邮箱状态；action=write 把 {intent, ...params} 落到 <evidenceDir>/intent.json（driver 的 waitintent 步消费）。写前校验 fail-closed：意图名在菜单里 / 不在禁列 / 参数 ⊆ 声明 / 必填齐 / 不覆盖未消费件（除非 overwrite=true）。须 MC_SKILL_PLAYTEST_ALLOW=1 + MC_SKILL_PLAYTEST_ROOT（realpath 在根内）；不装桥、不跑游戏。";
 export const GENERATE_PLAYTEST_DRIVER_DESCRIPTION =
-  "Generate playtest driver（只吐文本，默认不写盘）。platform 与 version 必填（精确 MC 版本）。driverMode 默认 external_bridge（桥 HTTP 动作序列 + 后置条件 + 证据约定）——**若 (platform,version) ∈ 桥模板目标集（`playtest-bridge-mod.ts` 的 `BRIDGE_MOD_TARGETS` = forge {1.7.10,1.8.9,1.9.4,1.10.2,1.11.2,1.12.2} + rift 1.13.2 + modloader 1.6.4），另附赠自建「最小桥 mod」模板** `playtest/bridge/**`（forge/rift 出 `BridgeMod.java`+元数据，rift 附 `riftmod.json`、modloader 出 `mod_*.java`；**⚠️ 本桥（external_bridge）的能力天花板 = 命令级**：桥发聊天包不是键位输入 ⇒ 读数/观察 + `/tp` `/setblock` 这类命令级操控可用（受实例 op 约束），**玩家物理路径（走位/跳跃/挖掘耗时/碰撞）测不了**，别当 driver 用（**对照**：`temporary_client_tick_driver` / `in_jvm_player_agent` 是**玩家级**——真按键原语 forward/jump/sneak/attack/use + move/goto/break/gui，走位/跳跃/挖掘/GUI 交互都做得到；这句「测不了」只限定本桥）；线协议逐键对齐 BlackBoxPro：/status 六键、/execute {id,status,message,data} + HTTP 恒 200、超时串 Timeout after 10000ms ⇒ playtest_bridge 工具面零改动；动作 **10 个**（`query_player_state`(含 health)/`chat_command`/`screenshot`/`block_at`/`query_inventory_slot`/`query_inventory`/`query_nearby_entities`/`query_chat_history`/`use_item`/`query_screen`，与 `playtest-bridge-mod.ts` 的 `ACTIONS` 常量逐项一致；逐档可用性不同，不可用的返回带原因的 `failure`，不是假绿）；1.12.2 已 JDK 8 javac 对真 forgeBin 编译验证，1.7.10–1.11.2 只有 javadoc 出处、未编译验证；**rift 1.13.2 逐名有 1.13.2 MCP 快照出处（但 `Minecraft.getInstance()` 的 static 性证不出、`block_at` 只回 translation key）；modloader 1.6.4 只出「骨架」——本仓已实证三类出处（`setInGameHook` 注册 / `onTickInGame` 回调实名 / `getMinecraftInstance` 单例），MC 侧玩家与位置、聊天语义、截图、读方块 4 项仍无来源 ⇒ `/execute` 一律 fail-closed**；**不进 PLAYTEST_VERIFIED_TIER**）；temporary_client_tick_driver 在**`PLAYTEST_VERIFIED_TIER` 列出的档**（唯一真源，随逐档 javap 取证扩面——**不要按某版正文里数的档位当权威**；生成器按该数组现算并点名清单）产出**可编译的真 driver**——**解释器引擎**：动作序列是数据（scenario=smoke|village 或自定义 plan DSL：wait/look/fly/move/cmd/goto/scan/assert/waitfor/shot/break/gui/mark/touch/waitfile；waitfor 与 assert 同一求值器但**轮询等条件**、超时判红，用来替掉「用时间当同步」的固定 wait），换场景只改剧本不改 Java；产物含 driver + plan.json + REVERT.md + README + actions.json；in_jvm_player_agent 在**同一批已验证档**上是**真执行器**（intent / waitintent 邮箱步族），表外档才退回结构壳（// TODO(未核实)）——它不是「全档结构壳」。不装桥、不跑游戏；无桥路线与坑位见社区短文 authored/ingame-playtest-automation。";
+  "Generate playtest driver（只吐文本，默认不写盘）。platform 与 version 必填（精确 MC 版本）。driverMode 默认 external_bridge（桥 HTTP 动作序列 + 后置条件 + 证据约定；cmd 步带命令回执 —— 真回执覆盖 = PLAYTEST_CMD_RECEIPT_TIERS，表外档回 {success:false,errorType:\"unobserved\"}，不假装成功）——**若 (platform,version) ∈ 桥模板目标集（`playtest-bridge-mod.ts` 的 `BRIDGE_MOD_TARGETS` = forge {1.7.10,1.8.9,1.9.4,1.10.2,1.11.2,1.12.2} + rift 1.13.2 + modloader 1.6.4），另附赠自建「最小桥 mod」模板** `playtest/bridge/**`（forge/rift 出 `BridgeMod.java`+元数据，rift 附 `riftmod.json`、modloader 出 `mod_*.java`；**⚠️ 本桥（external_bridge）的能力天花板 = 命令级**：桥发聊天包不是键位输入 ⇒ 读数/观察 + `/tp` `/setblock` 这类命令级操控可用（受实例 op 约束），**玩家物理路径（走位/跳跃/挖掘耗时/碰撞）测不了**，别当 driver 用（**对照**：`temporary_client_tick_driver` / `in_jvm_player_agent` 是**玩家级**——真按键原语 forward/jump/sneak/attack/use + move/goto/break/gui，走位/跳跃/挖掘/GUI 交互都做得到；这句「测不了」只限定本桥）；线协议逐键对齐 BlackBoxPro：/status 六键、/execute {id,status,message,data} + HTTP 恒 200、超时串 Timeout after 10000ms ⇒ playtest_bridge 工具面零改动；动作 **10 个**（`query_player_state`(含 health)/`chat_command`/`screenshot`/`block_at`/`query_inventory_slot`/`query_inventory`/`query_nearby_entities`/`query_chat_history`/`use_item`/`query_screen`，与 `playtest-bridge-mod.ts` 的 `ACTIONS` 常量逐项一致；逐档可用性不同，不可用的返回带原因的 `failure`，不是假绿）；1.12.2 已 JDK 8 javac 对真 forgeBin 编译验证，1.7.10–1.11.2 只有 javadoc 出处、未编译验证；**rift 1.13.2 逐名有 1.13.2 MCP 快照出处（但 `Minecraft.getInstance()` 的 static 性证不出、`block_at` 只回 translation key）；modloader 1.6.4 只出「骨架」——本仓已实证三类出处（`setInGameHook` 注册 / `onTickInGame` 回调实名 / `getMinecraftInstance` 单例），MC 侧玩家与位置、聊天语义、截图、读方块 4 项仍无来源 ⇒ `/execute` 一律 fail-closed**；**不进 PLAYTEST_VERIFIED_TIER**）；temporary_client_tick_driver 在**`PLAYTEST_VERIFIED_TIER` 列出的档**（唯一真源，随逐档 javap 取证扩面——**不要按某版正文里数的档位当权威**；生成器按该数组现算并点名清单）产出**可编译的真 driver**——**解释器引擎**：动作序列是数据（scenario=smoke|village 或自定义 plan DSL：wait/look/fly/move/cmd/goto/scan/assert/waitfor/shot/break/gui/mark/touch/waitfile；waitfor 与 assert 同一求值器但**轮询等条件**、超时判红，用来替掉「用时间当同步」的固定 wait），换场景只改剧本不改 Java；产物含 driver + plan.json + REVERT.md + README + actions.json；in_jvm_player_agent 在**同一批已验证档**上是**真执行器**（intent / waitintent 邮箱步族），表外档才退回结构壳（// TODO(未核实)）——它不是「全档结构壳」。不装桥、不跑游戏；无桥路线与坑位见社区短文 authored/ingame-playtest-automation。";
 export const INSPECT_PLAYTEST_EVIDENCE_DESCRIPTION =
-  "读游玩自测证据目录（exit-code.txt / state.json / [QA] 段 / calls.jsonl / 截图），每件三态 present|absent|unreadable —— 缺件不得读成「没有失败」。须 MC_SKILL_PLAYTEST_ALLOW=1 + MC_SKILL_PLAYTEST_ROOT（目标 realpath 必须在根内）。可选 logsDir 委派 inspect_runtime；不并入 inspect_runtime 的只读禁令面。";
+  "读游玩自测证据目录（exit-code.txt / state.json / [QA] 段 / calls.jsonl / 截图），每件三态 present|absent|unreadable；A1 命令回执：artifacts.commandReceipt（读 state.json.lastCommand）+ failures.fromCommandReceipts（parse/runtime 条数）+ failures.fromUnobservedCommands（calls.jsonl 的 observed:false 条数）—— errorType=unobserved 表示「命令投递了但未观测」，**不得**读成通过 —— 缺件不得读成「没有失败」。须 MC_SKILL_PLAYTEST_ALLOW=1 + MC_SKILL_PLAYTEST_ROOT（目标 realpath 必须在根内）。可选 logsDir 委派 inspect_runtime；不并入 inspect_runtime 的只读禁令面。";
 export const INSPECT_PLAYTEST_MULTI_DESCRIPTION =
   "多客户端**联合判读**（多会话；单客户端看 inspect_playtest_evidence）：给 clients[]（{id,evidenceDir}）或 evidenceRoot（扫它的直接子目录当客户端；**保留名 sync/ 跳过并在 autoSkipped 里留痕** —— 跳过不静默）⇒ 逐客户端三态 + 联合判绿 + 锚点 + 会合 marker。判绿三条**全要满足**：① 客户端数 ≥1（不给 = 没测，不判绿）；② 每个客户端 exit-code=0、state.json 与 qa.log 都 present、rounds.jsonl 末轮 ok≠false；③ 给了 expectMarkers 时每个 marker 都在 <evidenceRoot>/sync/ 下 present。缺件一律读作 absent|unreadable，**不得**读成「没有失败」。任一客户端目录 realpath 越出授权根 ⇒ 整体拒（不逐客户端放行）。须 MC_SKILL_PLAYTEST_ALLOW=1 + MC_SKILL_PLAYTEST_ROOT。会合原语在 driver 侧：剧本写 touch <共享目录绝对路径>/<name> 与 waitfile <同路径> max=<ticks>。";
 export const GENERATE_PLAYTEST_SERVER_DRIVER_DESCRIPTION =
@@ -301,7 +317,7 @@ export const GENERATE_PLAYTEST_SERVER_DRIVER_DESCRIPTION =
 export const GENERATE_PAPER_PLUGIN_DESCRIPTION =
   "生成 Paper 插件工程骨架 —— **服务端面，独立于模组面**（载体 gradlew runServer 而非 runClient；API 是 Bukkit/Paper 抽象层而非 net.minecraft.*；生命周期 plugin.yml+onEnable 而非 @Mod+事件总线；逐档 javap 改写表对本面**零适用**）。**只返回文本**（files 映射）、默认 dry-run，落盘由 write=true 控制 —— **不写仓库、不建平台树、不进任何模组面 scaffold 门**。已核实：依赖坐标 io.papermc.paper:paper-api 在 repo.papermc.io 真实存在（maven-metadata.xml HTTP 200）。未核实：① 版本串（maven <latest>=26.3-pre-2.build.0-alpha 与 Javadoc asOfVersion=26.3.build.178-stable 形状不同）⇒ paperApiVersion 不给则生成解析期报错的占位符；② JDK 主版本；③ plugin.yml 的 api-version（默认留 TODO-未核实）。**不产出二进制**（gradle wrapper jar 须使用者自备）。证据等级 = 结构壳，未构建未运行；返回的 notes[] 逐条列出未核实项。";
 export const PLAYTEST_BRIDGE_DESCRIPTION =
-  "调用 BlackBoxPro 桥（HTTP 恒 200；host 恒 127.0.0.1，端口默认 38081）。status 看 /status.ready（已进世界）；execute 发 /execute（桥原生超时是 failure +「Timeout after Nms」⇒ 本工具映射 PLAYTEST_TIMEOUT，不塌成空结果）；await 轮询 query_* 等条件成立（桥无 wait_until）。execute/await 须 confirmed=true + 授权（allow/root）。桥无鉴权且通配绑定 —— 只在本机使用。";
+  "调用 BlackBoxPro 桥（HTTP 恒 200；host 恒 127.0.0.1）。**端口**：不传 port ⇒ 从 38081 **递减扫描**到 38071（11 个端口），第一个通过**形状握手**的端口胜出（38081 空闲时行为与今天一致）；显式 port ⇒ 只探这一个端口、**不扫描**（向后兼容）。**形状握手**：严格档 = status===\"success\" ∧ type===\"mc-skill-playtest-bridge\" ∧ bridgeProtocol 是数字且 ≤ 1；旧桥（/status 无 type，但有 platform/httpPort/actions）按 **legacy 档接受并显式披露**（bridge.handshake=\"legacy\" + handshakeNote，**不静默当严格档**）。**新错误码**：BRIDGE_NOT_FOUND（扫完不中，载荷带 scanned:[{port,reason}]，reason ∈ refused|timeout|wrong_shape|protocol_too_new，**不是空结果**）/ BRIDGE_PROTOCOL_TOO_NEW（bridgeProtocol > 1，不猜、不降级）/ BRIDGE_INSTANCE_MISMATCH（expectPlatform / expectVersion 与 /status 自报值不符，载荷给两侧值）。**每个响应**都带 bridge 块 {type,bridgeProtocol,platform,version,httpPort,handshake,probedPort}。**掉线自愈**：status 与 await 探针对已解析端口失败时**重新解析一次 + 重试一次**（只读）；execute **绝不自动重试**（可能重复施加副作用），失败照实报。status 看 /status.ready（已进世界）；execute 发 /execute（桥原生超时是 failure +「Timeout after Nms」⇒ 本工具映射 PLAYTEST_TIMEOUT，不塌成空结果）；await 轮询 query_* 等条件成立（桥无 wait_until）；execute 的响应带 observed/errorType —— observed:false = 动作发出去了但未观测（本仓桥模板的 chat_command 恒为 false），判绿必须另有独立观测。execute/await 须 confirmed=true + 授权（allow/root）。桥无鉴权且通配绑定 —— 只在本机使用。";
 export const localizeModSchema = z.object({
   mode: z.enum(["own", "third_party"]),
   action: z.enum(["diff", "draft_zh", "extract", "pack_draft"]),
@@ -650,6 +666,27 @@ export const inspectRuntimeSchema = z.object({
   maxLines: z.number().optional().describe("日志尾部行数，默认 200，封顶 2000"),
   maxBytes: z.number().optional().describe("读取字节上限，默认 512KiB"),
   version: z.string().optional().describe("MC 版本（可选）。缺省仍读日志/crashKind，analysisComplete=false"),
+  sinceOffset: z
+    .number()
+    .optional()
+    .describe(
+      "日志字节游标：上次返回的 nextOffset（只作用于日志文件）。文件变小/被换 ⇒ rotated:true + missed:true" +
+        "（reason=file_shrank|file_replaced|mtime_went_backwards），读取窗口重置到尾部；绝不静默当成「没有新日志」。" +
+        "不传 = 旧的尾部读语义（无缺口声明）。",
+    ),
+  sinceMtimeMs: z.number().optional().describe("日志字节游标：上次返回的 logStat.mtimeMs（与 sinceInode 一起识别文件被换）"),
+  sinceInode: z.number().optional().describe("日志字节游标：上次返回的 logStat.inode；0 = 该文件系统不提供 inode，此时不做 inode 判定。**必须原样回灌，不要做算术** —— NTFS inode 是 64 位、可超过 2^53，手工 +1 在 double 下会退化成空操作（2026-11-04 实测事故：游标被误判为未换文件）"),
+  waitForPattern: z
+    .string()
+    .optional()
+    .describe(
+      "正则源字符串（不带 flags）：轮询日志直到命中或 waitMs 超时；不传 = 不等待。" +
+        "匹配窗口 = 本次读数窗口（传了 sinceOffset 就是增量，否则是尾部 maxLines/maxBytes 窗口）。",
+    ),
+  waitMs: z
+    .number()
+    .optional()
+    .describe("有界等待毫秒数，默认 0（不等待），硬顶 60000；超时返回 matched:false + waitTimedOut:true，不得读成成功"),
 });
 
 function jsonResult(obj: unknown): CallToolResult {
@@ -1063,7 +1100,10 @@ export function registerWaveExtensions(server: McpServer): void {
       title: "Inspect latest.log / crash-reports (log-based, no JVM attach)",
       description:
         "日志型 runtime inspector。优先只读用户确认的 logsDir/crashReportsDir；否则在 projectPath 下有界探测 run/logs、runs/client/logs、build/run/logs。" +
-        "禁止向上走到盘符根、禁止全盘。默认只读文件尾部 N 行并设字节上限。复用 analyze_log / crash_analyze。不做 JDWP attach。",
+        "禁止向上走到盘符根、禁止全盘。默认只读文件尾部 N 行并设字节上限。" +
+        "支持字节游标 sinceOffset：返回 nextOffset/missed/rotated/reason，文件变小或被换时显式披露缺口（rotated+missed，窗口重置到尾部），绝不静默当成「没有新日志」。" +
+        "支持有界等待 waitForPattern+waitMs（默认 0 不等待，硬顶 60000ms）：超时返回 matched:false + waitTimedOut:true。" +
+        "复用 analyze_log / crash_analyze。不做 JDWP attach。",
       inputSchema: inspectRuntimeSchema,
     },
     async (args): Promise<CallToolResult> => jsonResult(inspectRuntime(args)),
@@ -1292,7 +1332,7 @@ export const waveToolSchemas: Array<{ name: string; description: string; inputSc
   { name: "detect_mod_project", description: DETECT_MOD_PROJECT_DESCRIPTION, inputSchema: detectModProjectSchema },
   { name: "activate_platform_pack", description: ACTIVATE_PLATFORM_PACK_DESCRIPTION, inputSchema: activatePlatformPackSchema },
   { name: "check_publish_ready", description: "发布前机器检查：硬检查 license/version 字段与 build/libs 是否像正式 jar；并读 community_knowledge/authored/publishing.md 的发布前清单，缺项只给 warning。默认不写盘、不上传、不调 Curse/Modrinth 发布 API。", inputSchema: checkPublishReadySchema },
-  { name: "inspect_runtime", description: "日志型 runtime inspector。优先只读用户确认的 logsDir/crashReportsDir；否则在 projectPath 下有界探测 run/logs、runs/client/logs、build/run/logs。禁止向上走到盘符根、禁止全盘。默认只读文件尾部 N 行并设字节上限。复用 analyze_log / crash_analyze。不做 JDWP attach。", inputSchema: inspectRuntimeSchema },
+  { name: "inspect_runtime", description: "日志型 runtime inspector。优先只读用户确认的 logsDir/crashReportsDir；否则在 projectPath 下有界探测 run/logs、runs/client/logs、build/run/logs。禁止向上走到盘符根、禁止全盘。默认只读文件尾部 N 行并设字节上限。支持字节游标 sinceOffset：返回 nextOffset/missed/rotated/reason，文件变小或被换时显式披露缺口（rotated+missed，窗口重置到尾部），绝不静默当成「没有新日志」。支持有界等待 waitForPattern+waitMs（默认 0 不等待，硬顶 60000ms）：超时返回 matched:false + waitTimedOut:true。复用 analyze_log / crash_analyze。不做 JDWP attach。", inputSchema: inspectRuntimeSchema },
   { name: "generate_playtest_driver", description: GENERATE_PLAYTEST_DRIVER_DESCRIPTION, inputSchema: generatePlaytestDriverSchema },
   { name: "inspect_playtest_evidence", description: INSPECT_PLAYTEST_EVIDENCE_DESCRIPTION, inputSchema: inspectPlaytestEvidenceSchema },
   { name: "inspect_playtest_multi", description: INSPECT_PLAYTEST_MULTI_DESCRIPTION, inputSchema: inspectPlaytestMultiSchema },

@@ -31,6 +31,29 @@
 5. **进场 pin、出场 lease（世界位移作废）**：每轮开工前记下进场锚（git HEAD 或本轮构建产物哈希 + `plan.txt` 的版本号/修改时间），判绿前对锚验一次没动过——轮中被改（产物重建、plan 中途热换、游戏进程被人重启）则该轮证据一律作废：不判红、也不当绿，重跑该轮。跨轮引用证据必须带轮次号与锚点，带不出按未验证处理。「并发写盘卡死假红」「npm test 与语料抓取并发假红」「两个 runClient 互拆日志」这类事故都是缺这道检测的成因。
 6. **多客户端（多会话）**：会合靠 driver 的 `touch` / `waitfile` 一对**文件**原语 —— 但**各端 `EVIDENCE_DIR` 天然不同**，所以要会合就必须在剧本里写**同一个共享目录的绝对路径**（驱动不猜、不做跨机同步；跨机自己挂共享盘）。判绿用 `inspect_playtest_multi`（**联合判据**：客户端数 ≥1 ∧ 全员 `exit-code=0` ∧ `state.json` 与 `.log` 都 present ∧ `rounds.jsonl` 末轮 `ok≠false` ∧ `expectMarkers` 全 present），并出**锚点表**（各端 `state.json` 的 `at` / `plan.txt` mtime / 末轮号）供跨轮引用。自动发现时 `<evidenceRoot>/sync/` 是**保留名**（会合 marker 的家，不是客户端），跳过必须写进 `autoSkipped` 留痕；**任一**客户端目录 realpath 越出授权根 ⇒ **整体拒**（不逐客户端放行）。
 
+### 桥（`playtest_bridge`）的端口区间与形状握手（2026-11-04 冻结协议）
+
+桥是客户端面的一条独立路线（**不进** `PLAYTEST_VERIFIED_TIER`、不参与 driver 派发）。下面三条是**两侧共同**的契约，
+Java 侧（本仓自建桥模板 `mcp-server/src/generators/playtest-bridge-mod.ts`，三套模板 forge / rift / modloader 逐字同形）已实现并跑过：
+
+- **端口区间 = `38081 → 38071`（含两端，共 11 个）**：桥 mod 起 HTTP server 时**从 38081 递减**逐个试 bind，
+  **第一个可用端口胜出**；实际端口存进字段，`/status` 的 `httpPort` 回**实际值** ⇒ **别假设 38081**，要连哪个端口以该键为准。
+  38081 空闲时行为与旧版**逐字一致**。客户端**显式给 `port` 时只探该端口、不扫描**（向后兼容）。
+- **形状握手**：`/status` 在**逐字保留全部旧键**（`status` / `version` / `platform` / `httpPort` / `actions` / `ready`）的前提下
+  **追加** `"type":"mc-skill-playtest-bridge"` 与 `"bridgeProtocol":1`。严格档判据 =
+  `status=="success"` ∧ `type=="mc-skill-playtest-bridge"` ∧ `typeof bridgeProtocol=="number"` ∧ `bridgeProtocol<=1`；
+  **旧桥**（无 `type`，但 `status=="success"` ∧ `platform` 是字符串 ∧ `httpPort` 是数字 ∧ `actions` 是数组）走 **legacy 档**接受，
+  但**必须显式披露**（`handshake:"legacy"` + 一条 note），**不得静默当成严格档**；`bridgeProtocol > 1` ⇒ **拒绝**（`BRIDGE_PROTOCOL_TOO_NEW`），不猜不降级。
+  客户端侧同一协议还要求：`expectPlatform` / `expectVersion` 与 `/status` 不符 ⇒ `BRIDGE_INSTANCE_MISMATCH`（两侧值都给）；
+  每个响应带 `bridge` 块（`{type,bridgeProtocol,platform,version,httpPort,handshake,probedPort}`）。
+- **全占用 fail-closed**：11 个端口全被占 ⇒ 桥打一条**含扫描区间**的日志并**不启动**（不静默降级到随机端口、不假装起好了）；
+  调用侧扫完一个都没命中 ⇒ `BRIDGE_NOT_FOUND`，载荷带 `scanned:[{port,reason}]`（`reason ∈ refused|timeout|wrong_shape|protocol_too_new`），**不得返回空结果**。
+  掉线自愈只对**只读**操作（`status` / `await` 的轮询探针）重解析一次并重试一次；**`execute` 不自动重试**（可能重复施加副作用）。
+
+**验证读数（2026-11-04，本机 JDK 8 `javac 1.8.0_504`）**：三套模板**整文件**对签名替身 COMPILE_OK；HTTP 半边抽出来**真跑**三场景 ——
+① 端口全空 ⇒ bind `38081`；② `38081` 被另一座桥占 ⇒ bind `38080`；③ 11 个全占 ⇒ `server == null` 且日志打 `端口区间 [38071, 38081] … 桥不启动（fail-closed）`。
+⚠ **替身只证签名形状、不证类存在**（本机无 1.12.2 / 1.13.2 / 1.6.4 构件）。逐条坑位见 `community_knowledge/authored/ingame-playtest-automation.md` 编号 107。
+
 ---
 
 ## 二、服务端面 loop
@@ -53,3 +76,21 @@
 - **判据放接收端**：验证一条链路时判据要放在链路接收端（或接收端能观测到的地方）。只放在发送端只能证明"发出去了"，证明不了"到了"。
 - **撤除纪律**：驱动文件与注册调用行测完必须删（绝不提交）；证据只留授权根。
 - **fail-closed**：缺证据 = 没通过；超预算 / 断言不成立 / 坐标解析不到 / 目标找不到一律判红。
+
+### 命令回执：把「发出去了」与「效果发生了」分开（2026-11-04 补）
+
+上面第一条（判据放接收端）在**命令**这条链路上最容易破功：发命令的 API 只保证「包交出去了」。
+本仓两条路线的处置：
+
+| 路线 | 真值通道 | 表外档怎么办 |
+| --- | --- | --- |
+| driver（`cmd` 步） | 在**集成服务端线程**（`MinecraftServer.execute`）分发，用 `ServerCommandSource.withReturnValueConsumer` 的 `onResult(boolean,int)` 拿真 `success`/`result` | 回 `{success:false, errorType:"unobserved"}` —— **投递了但未观测**，不假装成功 |
+| 桥（`chat_command`） | 本档未取证 ⇒ **只发聊天包** | 返回体带 `observed:false` + `reason`（旧版只回 `sent` = 反模式）；判绿必须**再发一条独立观测**（`await condition=chat_message_matches` / `query_*`） |
+
+**字段语义**：`errorType` 四态 —— `parse`（没进分发器）/ `runtime`（跑了但没成功）/ `success:true`+`result:N`（真成功，`N=0` 也**不是**失败）/ `unobserved`（通道不存在或超时，**既非成功也非失败**）。
+**判读消费点**：`inspect_playtest_evidence` 的 `artifacts.commandReceipt` + `failures.fromCommandReceipts` / `failures.fromUnobservedCommands`；桥侧响应带 `observed` / `errorType`。
+**真回执覆盖档**：`PLAYTEST_CMD_RECEIPT_TIERS`（现读，正文不数档）；逐条 javap 证据与坑位见 `community_knowledge/authored/ingame-playtest-automation.md` 编号 102–106。
+
+**两个截图假阴性坑**（同编号 104/105）：
+- **PauseGuard**：失焦会弹暂停菜单**盖住画面** ⇒ 截图与屏幕读取同时失真。driver 启动时关 `client.options.pauseOnLostFocus`，并在 `[QA]` 日志写明为什么与回退开关。
+- **等帧**：`setScreen(null)` / 改视角之后**当前帧缓冲还是上一帧** ⇒ 立刻抓 = 「新文件 + 旧内容」（`mtime` 检查抓不到这个坑）。抓帧前先等 `SHOT_SETTLE_TICKS`；长距离传送后的区块渲染**不在**覆盖范围内，要另补 `wait`。

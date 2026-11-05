@@ -140,10 +140,49 @@ export function inspectPlaytestEvidence(query: PlaytestEvidenceQuery): Record<st
   // state.json
   const stateRaw = readTextSafe(join(dir, "state.json"));
   let stateJson: Record<string, unknown> = { state: stateRaw.state };
+  // A1（2026-11-04）· 命令回执（driver 的 cmd 步）：把「命令发出去了」与「效果发生了」分开报。
+  // 三态纪律照旧：absent（本轮没有 cmd 步）≠ 通过；unobserved 必须**明说未观测**，不得读成通过。
+  let commandReceipt: Record<string, unknown> = {
+    state: "absent",
+    reason: "state.json 里没有 lastCommand（本轮没有 cmd 步，或该档 driver 未产出该字段）",
+  };
   if (stateRaw.state === "present") {
     try {
       const parsed = JSON.parse(stateRaw.text ?? "") as Record<string, unknown>;
       stateJson = { state: "present", keys: Object.keys(parsed).sort(), data: parsed };
+      const lc = parsed.lastCommand;
+      if (lc && typeof lc === "object") {
+        const o = lc as Record<string, unknown>;
+        const et = typeof o.errorType === "string" ? o.errorType : null;
+        const observed = o.observed === true;
+        const okFlag = o.success === true;
+        const result = typeof o.result === "number" ? o.result : null;
+        commandReceipt = {
+          state: "present",
+          command: typeof o.command === "string" ? o.command : null,
+          success: okFlag,
+          result,
+          error: typeof o.error === "string" ? o.error : null,
+          errorType: et,
+          executedAs: typeof o.executedAs === "string" ? o.executedAs : null,
+          observed,
+          messageCount: Array.isArray(o.messages) ? (o.messages as unknown[]).length : null,
+          note: typeof o.note === "string" ? o.note : null,
+          verdict: !observed
+            ? "unobserved：命令**已投递但未观测**（errorType=" + (et ?? "unobserved") + "）—— 不得读成通过；判绿必须另有独立观测"
+            : et !== null && et !== "unobserved"
+              ? "命令跑了但**没成功**（errorType=" + et + "，与「未观测」可区分）"
+              : okFlag
+                ? "命令真成功（result=" + String(result) + "）"
+                : "命令跑了但回报 success=false（result=" + String(result) + "）—— 与 parse 失败可区分",
+        };
+      } else if ("lastCommand" in parsed) {
+        commandReceipt = {
+          state: "present",
+          value: lc ?? null,
+          verdict: "本轮没有 cmd 步（lastCommand=null）",
+        };
+      }
     } catch (e) {
       stateJson = { state: "unreadable", reason: (e as Error).message };
     }
@@ -156,6 +195,11 @@ export function inspectPlaytestEvidence(query: PlaytestEvidenceQuery): Record<st
     let done = 0;
     let error = 0;
     const hits: string[] = [];
+    // A1：命令回执行（driver 的 cmdStep 落 `[QA] cmd-receipt {…}`）—— 逐条按 errorType 分档。
+    let cmdReceipts = 0;
+    let cmdUnobserved = 0;
+    let cmdFailed = 0;
+    let cmdOk = 0;
     for (const n of logs.slice(0, 5)) {
       const r = readTextSafe(join(dir, n));
       if (r.state !== "present") continue;
@@ -166,10 +210,19 @@ export function inspectPlaytestEvidence(query: PlaytestEvidenceQuery): Record<st
           error++;
           if (hits.length < 5) hits.push(line.trim().slice(0, 160));
         }
+        if (line.includes("[QA] cmd-receipt")) {
+          cmdReceipts++;
+          if (/"errorType":"unobserved"/.test(line) || /"observed":false/.test(line)) cmdUnobserved++;
+          else if (/"success":true/.test(line)) cmdOk++;
+          else cmdFailed++;
+        }
       }
     }
     qa.state = logs.length === 0 ? "absent" : "present";
-    if (qa.state === "present") Object.assign(qa, { logs: logs.slice(0, 5), done, error, errorLines: hits });
+    if (qa.state === "present") {
+      Object.assign(qa, { logs: logs.slice(0, 5), done, error, errorLines: hits });
+      if (cmdReceipts > 0) Object.assign(qa, { cmdReceipts, cmdUnobserved, cmdFailed, cmdOk });
+    }
   } catch (e) {
     qa.state = "unreadable";
     qa.reason = (e as Error).message;
@@ -188,11 +241,14 @@ export function inspectPlaytestEvidence(query: PlaytestEvidenceQuery): Record<st
       const timeouts = lines.filter(
         (l) => l.includes("PLAYTEST_TIMEOUT") || /"matched"\s*:\s*false/.test(l) || /Timeout after \d+ms/.test(l),
       ).length;
+      // A1：桥侧回执 observed:false（动作发出去了但没观测到效果）—— 单列计数，**不得**并进「成功」。
+      const unobserved = lines.filter((l) => /"observed"\s*:\s*false/.test(l)).length;
       calls = {
         state: "present",
         lines: lines.length,
         shown: Math.min(lines.length, maxEntries),
         timeouts,
+        unobserved,
         last: lines.slice(-3).map((l) => l.slice(0, 200)),
       };
     }
@@ -235,13 +291,19 @@ export function inspectPlaytestEvidence(query: PlaytestEvidenceQuery): Record<st
       stateJson,
       qa,
       calls,
+      // A1：命令回执（driver 的 cmd 步）——「命令发出去了」与「效果发生了」在这里分开报。
+      commandReceipt,
       screenshots: { state: shots.count > 0 ? "present" : "absent", count: shots.count, newest: shots.newest },
     },
     failures: {
       fromExitCode: failures,
       fromQa: qaError,
       fromCallsTimeouts: typeof calls.timeouts === "number" ? calls.timeouts : null,
-      note: "三个口径分别给出，不合并；null = 该件 absent/unreadable —— 不得读成 0。",
+      // A1：命令**跑了但没成功**的条数（parse/runtime/safety；**不含** unobserved —— 那还没观测到，不能算失败也不能算通过）
+      fromCommandReceipts: typeof qa.cmdFailed === "number" ? qa.cmdFailed : null,
+      // A1：桥侧「发出去了但未观测」条数（calls.jsonl 的 observed:false）—— **不得**读成 0/通过
+      fromUnobservedCommands: typeof calls.unobserved === "number" ? calls.unobserved : null,
+      note: "四个口径分别给出，不合并；null = 该件 absent/unreadable —— 不得读成 0。",
     },
     runtime,
     warnings,
@@ -249,6 +311,10 @@ export function inspectPlaytestEvidence(query: PlaytestEvidenceQuery): Record<st
       "exitCode.absent/unreadable ⇒ 先确认 GameTest 或桥调用确实跑过（不是「没有失败」）",
       "calls.timeouts > 0 ⇒ 有 await/execute 超时（PLAYTEST_TIMEOUT），逐条看 calls.last",
       "桥模式判读用两遍法；跨查询非原子 ⇒ 只认条件成立",
+      "commandReceipt.state=present 且 observed=false / errorType=unobserved ⇒ **命令投递了但没观测到效果**：" +
+        "要么该档未取证回执通道（driver 的 cmd 步结构壳），要么该实例没有集成服务端（多人）；" +
+        "**判绿必须另有独立观测**（assert / waitfor / await query_*）",
+      "commandReceipt.errorType=parse|runtime ⇒ 命令**跑了但没成功**（与 unobserved 是两回事）：parse 看 messages 与 error 原文",
     ],
   };
 }

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
-import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync, existsSync, utimesSync, readdirSync, statSync, cpSync } from "node:fs";
+import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync, appendFileSync, existsSync, utimesSync, readdirSync, statSync, cpSync } from "node:fs";
 import { createHash } from "node:crypto";
-import { execFileSync, spawnSync } from "node:child_process";
+import { execFileSync, spawn, spawnSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import { dirname, join, relative, sep } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -109,6 +109,7 @@ import { getWorkflowTemplate, WORKFLOW_TEMPLATES } from "./dist/prompts/index.js
 import { KNOWN_VERSIONS } from "./dist/docs-platform/platforms.js";
 import { sessionPlatformPack } from "./dist/platform-pack/session.js";
 import { detectModProject } from "./dist/platform-pack/detect.js";
+import { callPlaytestBridge, BRIDGE_HANDSHAKE_TYPE, BRIDGE_PROTOCOL_MAX } from "./dist/playtest-bridge/index.js";
 
 const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -5805,6 +5806,151 @@ public class ExampleMod { }
     rmSync(logRoot, { recursive: true, force: true });
   }
 
+  // ── P0-A2（2026-11-04）：inspect_runtime 日志字节游标 + 缺口披露 + 有界等待 ──
+  // 契约核心 = 缺口必须显式（rotated/missed），绝不静默读成「没有新日志」。
+  const cursorRoot = mkdtempSync(join(tmpdir(), "mc-inspect-cursor-"));
+  try {
+    const cursorLogs = join(cursorRoot, "run", "logs");
+    mkdirSync(cursorLogs, { recursive: true });
+    const cursorLog = join(cursorLogs, "latest.log");
+    writeFileSync(cursorLog, "boot-1\nboot-2\n", "utf8");
+
+    // ① 正常增量读：nextOffset 之前的内容不重发，之后的内容才进窗口
+    const c1 = inspectRuntime({ logsDir: cursorLogs, maxLines: 50 });
+    assert.equal(c1.ok, true, JSON.stringify(c1));
+    assert.equal(typeof c1.nextOffset, "number", JSON.stringify(c1));
+    assert.equal(c1.nextOffset, statSync(cursorLog).size, "nextOffset 必须等于本次读到的文件末尾");
+    assert.equal(c1.missed, false, JSON.stringify(c1));
+    assert.equal(c1.rotated, false, JSON.stringify(c1));
+    assert.equal(c1.reason, null, JSON.stringify(c1));
+    assert.equal(c1.logStat.inode, statSync(cursorLog).ino, "logStat 必须回传可回灌的 inode");
+    assert.equal(c1.logStat.mtimeMs, statSync(cursorLog).mtimeMs, "logStat 必须回传可回灌的 mtimeMs");
+    assert.equal(c1.matched, false, "未传 waitForPattern 时 matched 恒 false");
+    assert.equal(c1.waitTimedOut, false, "未传 waitForPattern 时 waitTimedOut 恒 false");
+    assert.equal(c1.waitedMs, 0, "未传 waitForPattern 时不等待");
+
+    appendFileSync(cursorLog, "delta-3\ndelta-4\n", "utf8");
+    const c2 = inspectRuntime({ logsDir: cursorLogs, sinceOffset: c1.nextOffset, waitForPattern: "^delta-", maxLines: 50 });
+    assert.equal(c2.rotated, false, JSON.stringify(c2));
+    assert.equal(c2.missed, false, JSON.stringify(c2));
+    assert.equal(c2.reason, null, JSON.stringify(c2));
+    assert.equal(c2.matched, true, "游标增量里必须命中 delta 行：" + JSON.stringify(c2.matchedLines));
+    assert.deepEqual(c2.matchedLines, ["delta-3", "delta-4"], "增量窗口必须只含 nextOffset 之后的行");
+    assert.equal(c2.nextOffset, statSync(cursorLog).size, JSON.stringify(c2));
+
+    // ② 文件被截断（变小）⇒ rotated + missed，窗口重置到尾部
+    writeFileSync(cursorLog, "rotated-only\n", "utf8");
+    assert.ok(statSync(cursorLog).size < c2.nextOffset, "前置：文件必须真的变小");
+    const c3 = inspectRuntime({ logsDir: cursorLogs, sinceOffset: c2.nextOffset });
+    assert.equal(c3.rotated, true, JSON.stringify(c3));
+    assert.equal(c3.missed, true, JSON.stringify(c3));
+    assert.equal(c3.reason, "file_shrank", JSON.stringify(c3));
+    assert.equal(c3.nextOffset, statSync(cursorLog).size, "窗口重置到尾部后 nextOffset 必须指到新末尾");
+    assert.ok(c3.warnings.some((w) => /缺口|轮转/.test(w)), JSON.stringify(c3.warnings));
+
+    // ②b 文件被换（inode 变）⇒ rotated + missed，reason=file_replaced
+    // ⚠️ 回归（2026-11-04，task-9）：**NTFS inode 可超过 2^53**（本机实测 40532396647084936 /
+    // 34339947159512590）⇒ double 下 `inoNow + 1 === inoNow` 是空操作，实现看到的 inode 没变、
+    // 该腿随机红绿。测试**不得**用算术构造「不同的 inode」，必须用一个必然不同的值，并把
+    // 「必然不同」当**前置断言**（前置不成立即红，绝不静默退化）。
+    const inoNow = statSync(cursorLog).ino;
+    assert.notEqual(inoNow, 0, "本机文件系统必须提供 inode（file_replaced 判定依赖它）");
+    const wrongIno = inoNow === 1 ? 2 : 1;
+    assert.notEqual(wrongIno, inoNow, "前置：构造的 sinceInode 必须真的不等于当前 inode");
+    const c4 = inspectRuntime({ logsDir: cursorLogs, sinceOffset: 0, sinceInode: wrongIno });
+    assert.equal(c4.rotated, true, JSON.stringify(c4));
+    assert.equal(c4.missed, true, JSON.stringify(c4));
+    assert.equal(c4.reason, "file_replaced", JSON.stringify(c4));
+
+    // ②b' 超 2^53 的 inode 同样必须触发 file_replaced（实现按 double 比较，回灌值原样即精确）
+    const hugeWrong = inoNow * 2;
+    assert.notEqual(hugeWrong, inoNow, "前置：超 2^53 的 inode 也必须能构造出不同的值");
+    const c4b = inspectRuntime({ logsDir: cursorLogs, sinceOffset: 0, sinceInode: hugeWrong });
+    assert.equal(c4b.rotated, true, JSON.stringify(c4b));
+    assert.equal(c4b.reason, "file_replaced", JSON.stringify(c4b));
+    // 回灌同一 inode（原样，不做算术）⇒ 不是「文件被换」
+    const c4c = inspectRuntime({ logsDir: cursorLogs, sinceOffset: 0, sinceInode: inoNow });
+    assert.equal(c4c.rotated, false, "原样回灌 logStat.inode 不得误判为被换：" + JSON.stringify(c4c));
+    assert.equal(c4c.missed, false, JSON.stringify(c4c));
+
+    // ②c mtime 倒退 ⇒ rotated + missed，reason=mtime_went_backwards
+    const c5 = inspectRuntime({ logsDir: cursorLogs, sinceOffset: 0, sinceMtimeMs: Date.now() + 60000 });
+    assert.equal(c5.rotated, true, JSON.stringify(c5));
+    assert.equal(c5.missed, true, JSON.stringify(c5));
+    assert.equal(c5.reason, "mtime_went_backwards", JSON.stringify(c5));
+
+    // ②d 有游标但日志文件不存在 ⇒ 同样是缺口（不得读成「没有新日志」）
+    rmSync(cursorLog);
+    const c6 = inspectRuntime({ logsDir: cursorLogs, sinceOffset: 0 });
+    assert.equal(c6.rotated, true, JSON.stringify(c6));
+    assert.equal(c6.missed, true, JSON.stringify(c6));
+    assert.equal(c6.reason, "file_missing", JSON.stringify(c6));
+    assert.equal(c6.nextOffset, null, JSON.stringify(c6));
+
+    // ③ 有界等待命中：等待期间由子进程真写入新行（主线程阻塞在 Atomics.wait，只有独立进程能写）
+    writeFileSync(cursorLog, "boot-1\n", "utf8");
+    const c7 = inspectRuntime({ logsDir: cursorLogs, maxLines: 50 });
+    const writer = spawn(
+      process.execPath,
+      ["-e", "const fs=require('fs');setTimeout(()=>fs.appendFileSync(process.argv[1],process.argv[2]),250);", cursorLog, "WAIT-HIT\n"],
+      { stdio: "ignore" },
+    );
+    writer.unref();
+    const hit = inspectRuntime({ logsDir: cursorLogs, sinceOffset: c7.nextOffset, waitForPattern: "WAIT-HIT", waitMs: 8000 });
+    assert.equal(hit.matched, true, "等待期间写入的行必须命中：" + JSON.stringify(hit));
+    assert.equal(hit.waitTimedOut, false, JSON.stringify(hit));
+    assert.deepEqual(hit.matchedLines, ["WAIT-HIT"], JSON.stringify(hit.matchedLines));
+    assert.ok(hit.waitedMs >= 100, "waitedMs 必须反映真实等待（实际 " + hit.waitedMs + "ms）");
+    assert.ok(hit.waitedMs < 8000, "命中不得等到超时（实际 " + hit.waitedMs + "ms）");
+    assert.equal(hit.missed, false, JSON.stringify(hit));
+
+    // ④ 等待超时 ⇒ matched:false + waitTimedOut:true（超时即未命中，不得返回空当成功）
+    const c8 = inspectRuntime({ logsDir: cursorLogs, sinceOffset: hit.nextOffset, waitForPattern: "NEVER-APPEARS", waitMs: 400 });
+    assert.equal(c8.matched, false, JSON.stringify(c8));
+    assert.equal(c8.waitTimedOut, true, JSON.stringify(c8));
+    assert.deepEqual(c8.matchedLines, [], JSON.stringify(c8.matchedLines));
+    assert.ok(c8.waitedMs >= 400, "超时必须真的等满（实际 " + c8.waitedMs + "ms）");
+    assert.ok(c8.waitedMs < 2000, "等待必须是有界的（实际 " + c8.waitedMs + "ms）");
+    assert.ok(c8.warnings.some((w) => /未命中|超时/.test(w)), JSON.stringify(c8.warnings));
+    assert.equal(c8.waitMs, 400, JSON.stringify(c8));
+
+    // ⑤ 游标 + maxBytes 截断：分三次读必须不重不漏（nextOffset 停在完整行末，不撕裂行）
+    writeFileSync(cursorLog, "L1\nL2\nL3\nL4\nL5\n", "utf8");
+    const d1 = inspectRuntime({ logsDir: cursorLogs, sinceOffset: 0, maxBytes: 6, maxLines: 50, waitForPattern: "^L" });
+    assert.deepEqual(d1.matchedLines, ["L1", "L2"], "首窗只读满 6 字节：" + JSON.stringify(d1.matchedLines));
+    assert.equal(d1.nextOffset, 6, "nextOffset 必须停在完整行末：" + JSON.stringify(d1.nextOffset));
+    assert.ok(d1.warnings.some((w) => /未读尽/.test(w)), JSON.stringify(d1.warnings));
+    const d2 = inspectRuntime({ logsDir: cursorLogs, sinceOffset: d1.nextOffset, maxBytes: 6, maxLines: 50, waitForPattern: "^L" });
+    assert.deepEqual(d2.matchedLines, ["L3", "L4"], JSON.stringify(d2.matchedLines));
+    const d3 = inspectRuntime({ logsDir: cursorLogs, sinceOffset: d2.nextOffset, maxBytes: 6, maxLines: 50, waitForPattern: "^L" });
+    assert.deepEqual(d3.matchedLines, ["L5"], JSON.stringify(d3.matchedLines));
+    assert.equal(d3.nextOffset, statSync(cursorLog).size, JSON.stringify(d3.nextOffset));
+    assert.equal(d3.missed, false, "分次读尽不得报缺口：" + JSON.stringify(d3));
+
+    // ⑥ 增量超过 maxLines ⇒ missed + reason=line_cap（只回最后 maxLines 行，nextOffset 仍前进）
+    const d4 = inspectRuntime({ logsDir: cursorLogs, sinceOffset: 0, maxLines: 3, maxBytes: 4096, waitForPattern: "^L" });
+    assert.equal(d4.missed, true, JSON.stringify(d4));
+    assert.equal(d4.reason, "line_cap", JSON.stringify(d4.reason));
+    assert.deepEqual(d4.matchedLines, ["L4", "L5"], JSON.stringify(d4.matchedLines));
+    assert.equal(d4.nextOffset, statSync(cursorLog).size, JSON.stringify(d4.nextOffset));
+
+    // ⑦ waitMs 超硬顶 ⇒ 披露并按硬顶处理（不静默等更久）；只传 waitMs 不传 pattern ⇒ 不等待
+    const capped = inspectRuntime({ logsDir: cursorLogs, sinceOffset: 0, waitForPattern: "^L", waitMs: 999999 });
+    assert.equal(capped.waitMs, 60000, "waitMs 必须封顶到 60000：" + JSON.stringify(capped.waitMs));
+    assert.ok(capped.warnings.some((w) => /硬顶/.test(w)), JSON.stringify(capped.warnings));
+    const noPat = inspectRuntime({ logsDir: cursorLogs, waitMs: 5000 });
+    assert.equal(noPat.waitedMs, 0, JSON.stringify(noPat.waitedMs));
+    assert.equal(noPat.matched, false, JSON.stringify(noPat));
+    assert.ok(noPat.warnings.some((w) => /waitForPattern/.test(w)), JSON.stringify(noPat.warnings));
+
+    // ⑧ 非法正则 ⇒ ok:false + INVALID_INPUT（fail-closed，不静默忽略）
+    const badRe = inspectRuntime({ logsDir: cursorLogs, waitForPattern: "([", waitMs: 10 });
+    assert.equal(badRe.ok, false, JSON.stringify(badRe));
+    assert.equal(badRe.action && badRe.action.code, "INVALID_INPUT", JSON.stringify(badRe));
+  } finally {
+    rmSync(cursorRoot, { recursive: true, force: true });
+  }
+
   const inspCrashRoot = mkdtempSync(join(tmpdir(), "mc-inspect-crash-"));
   try {
     const body = `---- Minecraft Crash Report ----\nFabric Loader\n${("xxxxxxxx\n").repeat(70_000)}`;
@@ -8698,6 +8844,405 @@ function testSessionVerifiedApiReachesRealTables() {
   }
 }
 
+/**
+ * A3（2026-11-04）· `playtest_bridge` 客户端：端口扫描 + 形状握手（严格档 / legacy 披露）+ 连错实例防线 + 有界自愈。
+ *
+ * 夹具 = **真起真连**的 Node http server（不需要游戏，也不 mock fetch）。
+ * **与真实 38081 的隔离办法**（报告里同款）：
+ *   ① 扫描区间经 env 注入到随机高位区间（`MC_SKILL_BRIDGE_SCAN_BASE` / `MC_SKILL_BRIDGE_SCAN_MIN`），
+ *      跑的是与生产**同一条代码路径**，但端口不是 38081/38071 ⇒ 绝不与本机真桥/真服务打架；
+ *   ② 选区间时先把这 11 个口**整段绑一遍**确认全空再放开 ⇒ 区间内不会有别的监听者混进来；
+ *   ③ 每个用例只绑自己要用的 1–2 个口，用例之间 `closeAllConnections()` 全放。
+ */
+async function testPlaytestBridgeScanAndHandshake() {
+  const { createServer } = await import("node:http");
+
+  const prevEnv = {
+    MC_SKILL_PLAYTEST_ALLOW: process.env.MC_SKILL_PLAYTEST_ALLOW,
+    MC_SKILL_PLAYTEST_ROOT: process.env.MC_SKILL_PLAYTEST_ROOT,
+    MC_SKILL_BRIDGE_SCAN_BASE: process.env.MC_SKILL_BRIDGE_SCAN_BASE,
+    MC_SKILL_BRIDGE_SCAN_MIN: process.env.MC_SKILL_BRIDGE_SCAN_MIN,
+  };
+  const authRoot = mkdtempSync(join(tmpdir(), "mc-bridge-auth-"));
+  process.env.MC_SKILL_PLAYTEST_ALLOW = "1";
+  process.env.MC_SKILL_PLAYTEST_ROOT = authRoot;
+
+  const listen = (srv, port) =>
+    new Promise((res, rej) => {
+      const onErr = (e) => {
+        srv.removeListener("listening", onOk);
+        rej(e);
+      };
+      const onOk = () => {
+        srv.removeListener("error", onErr);
+        res(srv);
+      };
+      srv.once("error", onErr);
+      srv.once("listening", onOk);
+      srv.listen(port, "127.0.0.1");
+    });
+  const closeSrv = (srv) =>
+    new Promise((res) => {
+      try {
+        srv.closeAllConnections?.();
+      } catch {
+        /* ignore */
+      }
+      srv.close(() => res());
+    });
+
+  const strictPayload = (port, over = {}) => ({
+    status: "success",
+    version: "1.12.2",
+    platform: "forge",
+    httpPort: port,
+    actions: ["query_player_state", "chat_command"],
+    ready: true,
+    type: BRIDGE_HANDSHAKE_TYPE,
+    bridgeProtocol: BRIDGE_PROTOCOL_MAX,
+    ...over,
+  });
+  /** 旧桥形状：**没有 type / bridgeProtocol**，但有 platform + httpPort + actions。 */
+  const legacyPayload = (port) => ({
+    status: "success",
+    version: "1.12.2",
+    platform: "forge",
+    httpPort: port,
+    actions: ["query_player_state"],
+    ready: true,
+  });
+
+  const startFixture = async (port, opts = {}) => {
+    let statusHits = 0;
+    let execHits = 0;
+    const srv = createServer((req, res) => {
+      if (req.url === "/status") {
+        statusHits++;
+        // 模拟「已解析端口掉线」：握手那次照常应答，之后一律掐连接。
+        if (opts.destroyStatusAfterFirst && statusHits > 1) {
+          req.socket.destroy();
+          return;
+        }
+        const body = typeof opts.payload === "function" ? opts.payload(statusHits) : opts.payload;
+        res.writeHead(200, { "content-type": "application/json" });
+        res.end(JSON.stringify(body));
+        return;
+      }
+      if (req.url === "/execute") {
+        execHits++;
+        if (opts.destroyExecute) {
+          req.socket.destroy();
+          return;
+        }
+        res.writeHead(200, { "content-type": "application/json" });
+        res.end(JSON.stringify({ id: "x", status: "success", message: "ok", data: {} }));
+        return;
+      }
+      res.writeHead(404, { "content-type": "application/json" });
+      res.end("{}");
+    });
+    await listen(srv, port);
+    srv.hits = () => ({ statusHits, execHits });
+    return srv;
+  };
+
+  const servers = [];
+  const up = async (port, opts) => {
+    const s = await startFixture(port, opts);
+    servers.push(s);
+    return s;
+  };
+  const reset = async () => {
+    while (servers.length) await closeSrv(servers.pop());
+  };
+
+  /** 选一段 11 口全空的区间：先整段绑上验证，再全放（避免与别的监听者撞口）。 */
+  const pickRange = async () => {
+    for (let attempt = 0; attempt < 40; attempt++) {
+      const candidate = 20000 + Math.floor(Math.random() * 10000);
+      const hold = [];
+      let ok = true;
+      for (let p = candidate; p >= candidate - 10; p--) {
+        try {
+          hold.push(await listen(createServer(), p));
+        } catch {
+          ok = false;
+          break;
+        }
+      }
+      for (const s of hold) await closeSrv(s);
+      if (ok) return { base: candidate, min: candidate - 10 };
+    }
+    throw new Error("找不到 11 口全空的测试区间（端口空间被占满？）");
+  };
+
+  /**
+   * 每个用例**换一段全新的空区间**：同一个口「关掉再立刻重绑」在 Windows 回环上有一拍竞态
+   * （实测重绑后首个 connect 会被拒），换区间既避开它、也保证用例之间零串扰。
+   */
+  const useRange = async () => {
+    const r = await pickRange();
+    process.env.MC_SKILL_BRIDGE_SCAN_BASE = String(r.base);
+    process.env.MC_SKILL_BRIDGE_SCAN_MIN = String(r.min);
+    return r;
+  };
+
+  try {
+    // ① 区间顶口被**别的服务**占着，下一口是正确的**新形状**假桥 ⇒ 扫描命中下一口
+    {
+      const { base } = await useRange();
+      await up(base, { payload: { hello: "not-a-bridge" } });
+      await up(base - 1, { payload: strictPayload(base - 1) });
+      const r = await callPlaytestBridge({ action: "status" });
+      assert.equal(r.ok, true, `① 扫描应命中 ${base - 1}：${JSON.stringify(r).slice(0, 400)}`);
+      assert.equal(r.bridge?.probedPort, base - 1, `① probedPort 应为 ${base - 1}：${JSON.stringify(r.bridge)}`);
+      assert.equal(r.bridge?.handshake, "strict", `① 应为严格档：${JSON.stringify(r.bridge)}`);
+      assert.equal(r.bridge?.type, BRIDGE_HANDSHAKE_TYPE, `① bridge.type 应为握手标记：${JSON.stringify(r.bridge)}`);
+      assert.equal(r.bridge?.bridgeProtocol, BRIDGE_PROTOCOL_MAX);
+      assert.equal(r.bridge?.httpPort, base - 1);
+      assert.equal(r.httpPort, base - 1, "① status 载荷仍是 /status 透传（httpPort 与探通端口一致）");
+      assert.equal(r.handshakeNote, undefined, "① 严格档不得带 legacy 披露");
+      console.log(`  [A3] ① 区间顶口 ${base} 是不相干服务 ⇒ 扫描命中 ${base - 1}（handshake=strict，probedPort/httpPort 一致）`);
+    }
+    await reset();
+
+    // ② 全扫不中 ⇒ BRIDGE_NOT_FOUND + scanned[]（**不是空结果**），空口记 refused
+    {
+      const { base } = await useRange();
+      await up(base, { payload: { hello: "not-a-bridge" } });
+      const r = await callPlaytestBridge({ action: "status" });
+      assert.equal(r.ok, false, "② 全扫不中必须失败");
+      assert.equal(r.code, "BRIDGE_NOT_FOUND", JSON.stringify(r).slice(0, 400));
+      assert.ok(Array.isArray(r.scanned), `② 必须带 scanned[]：${JSON.stringify(r).slice(0, 300)}`);
+      assert.equal(r.scanned.length, 11, `② scanned 必须覆盖注入区间全 11 口：${JSON.stringify(r.scanned)}`);
+      assert.deepEqual(r.scanned[0], { port: base, reason: "wrong_shape" }, `② 首口形状不对：${JSON.stringify(r.scanned[0])}`);
+      const allowed = new Set(["refused", "timeout", "wrong_shape", "protocol_too_new"]);
+      for (const e of r.scanned) assert.ok(allowed.has(e.reason), `② reason 越界：${JSON.stringify(e)}`);
+      assert.ok(
+        r.scanned.filter((e) => e.reason === "refused").length >= 5,
+        `② 空口应记 refused（refused 与 timeout 必须分开记账）：${JSON.stringify(r.scanned)}`,
+      );
+      assert.equal(r.bridge, undefined, "② 失败载荷不得带 bridge 块（没连上就没有实例）");
+      console.log("  [A3] ② 扫完 11 口全不中 ⇒ BRIDGE_NOT_FOUND + scanned[]（首口 wrong_shape，空口 refused）");
+    }
+    await reset();
+
+    // ③ 旧桥形状（无 type）⇒ 接受 + **显式披露**（handshake=legacy + note），不得静默当严格档
+    {
+      const { base } = await useRange();
+      await up(base - 2, { payload: legacyPayload(base - 2) });
+      const r = await callPlaytestBridge({ action: "status" });
+      assert.equal(r.ok, true, `③ legacy 形状应被接受：${JSON.stringify(r).slice(0, 400)}`);
+      assert.equal(r.bridge?.handshake, "legacy", `③ 必须标 legacy 档：${JSON.stringify(r.bridge)}`);
+      assert.notEqual(r.bridge?.handshake, "strict", "③ 不得静默当成严格档");
+      assert.equal(r.bridge?.type, null, "③ legacy 档没有 type ⇒ 回 null（缺键 ≠ 假值）");
+      assert.equal(r.bridge?.bridgeProtocol, null);
+      assert.equal(r.bridge?.probedPort, base - 2);
+      assert.equal(typeof r.handshakeNote, "string", "③ 顶层必须带 legacy 披露");
+      assert.match(String(r.handshakeNote), /legacy|旧桥/, `③ 披露要说清是旧桥档：${r.handshakeNote}`);
+      assert.match(String(r.bridge?.handshakeNote), /legacy|旧桥/, "③ bridge 块内也要带披露");
+      console.log("  [A3] ③ 旧桥形状 ⇒ 接受且显式披露（handshake=legacy + handshakeNote，不静默当严格档）");
+    }
+    await reset();
+
+    // ④ 协议过新 ⇒ BRIDGE_PROTOCOL_TOO_NEW（不猜、不降级）
+    {
+      const { base } = await useRange();
+      await up(base, { payload: strictPayload(base, { bridgeProtocol: 99 }) });
+      const r = await callPlaytestBridge({ action: "status" });
+      assert.equal(r.ok, false, "④ 协议过新必须拒");
+      assert.equal(r.code, "BRIDGE_PROTOCOL_TOO_NEW", JSON.stringify(r).slice(0, 400));
+      assert.deepEqual(r.scanned?.[0], { port: base, reason: "protocol_too_new" });
+      assert.equal(r.bridge, undefined, "④ 协议过新不得回实例（不猜、不降级）");
+      console.log("  [A3] ④ bridgeProtocol=99 ⇒ BRIDGE_PROTOCOL_TOO_NEW（scanned 记 protocol_too_new）");
+    }
+    await reset();
+
+    // ④b 混合：顶口协议过新、下一口协议 1 ⇒ **第一个通过形状握手的端口胜出**（扫描继续，但不使用过新桥）
+    {
+      const { base } = await useRange();
+      await up(base, { payload: strictPayload(base, { bridgeProtocol: 99 }) });
+      await up(base - 1, { payload: strictPayload(base - 1) });
+      const r = await callPlaytestBridge({ action: "status" });
+      assert.equal(r.ok, true, `④b 应跳过协议过新的顶口、命中 ${base - 1}：${JSON.stringify(r).slice(0, 400)}`);
+      assert.equal(r.bridge?.probedPort, base - 1);
+      assert.equal(r.bridge?.bridgeProtocol, BRIDGE_PROTOCOL_MAX);
+      console.log("  [A3] ④b 顶口协议过新 + 下一口协议 1 ⇒ 命中协议 1 的那口（过新桥绝不被静默使用）");
+    }
+    await reset();
+
+    // ⑤ 连错实例防线：expectPlatform / expectVersion 不符 ⇒ BRIDGE_INSTANCE_MISMATCH（两侧值都在），且副作用未发出
+    {
+      const { base } = await useRange();
+      const srv = await up(base, { payload: strictPayload(base) });
+      const bad = await callPlaytestBridge({ action: "status", expectPlatform: "rift" });
+      assert.equal(bad.ok, false);
+      assert.equal(bad.code, "BRIDGE_INSTANCE_MISMATCH", JSON.stringify(bad).slice(0, 400));
+      assert.equal(bad.expected?.platform, "rift", `⑤ 期望侧要给：${JSON.stringify(bad.expected)}`);
+      assert.equal(bad.actual?.platform, "forge", `⑤ 实际侧要给：${JSON.stringify(bad.actual)}`);
+      assert.equal(bad.actual?.version, "1.12.2");
+      assert.deepEqual(bad.mismatch, ["platform"]);
+      assert.equal(bad.bridge?.probedPort, base, "⑤ 拒绝载荷仍要说清连到了哪个实例");
+
+      const badVer = await callPlaytestBridge({ action: "status", expectVersion: "1.7.10" });
+      assert.equal(badVer.code, "BRIDGE_INSTANCE_MISMATCH");
+      assert.deepEqual(badVer.mismatch, ["version"]);
+      assert.equal(badVer.expected?.version, "1.7.10");
+      assert.equal(badVer.actual?.version, "1.12.2");
+
+      const good = await callPlaytestBridge({ action: "status", expectPlatform: "forge", expectVersion: "1.12.2" });
+      assert.equal(good.ok, true, `⑤ 期望一致应放行：${JSON.stringify(good).slice(0, 400)}`);
+
+      const exec = await callPlaytestBridge({
+        action: "execute",
+        command: { action: "chat_command", params: { message: "hi" } },
+        expectPlatform: "rift",
+        authorization: "sandbox",
+        confirmed: true,
+      });
+      assert.equal(exec.code, "BRIDGE_INSTANCE_MISMATCH", "⑤ execute 也必须走同一道防线");
+      assert.equal(srv.hits().execHits, 0, "⑤ 实例不符必须在**发副作用之前**拒绝（/execute 一次都没发）");
+      console.log("  [A3] ⑤ expectPlatform/expectVersion 不符 ⇒ BRIDGE_INSTANCE_MISMATCH（两侧值齐 + 副作用未发出）");
+    }
+    await reset();
+
+    // ⑥ 显式 port ⇒ **不扫描**：顶口空、下一口有正确桥，也必须失败而不是“聪明地”跳过去
+    {
+      const { base } = await useRange();
+      await up(base - 1, { payload: strictPayload(base - 1) });
+      const r = await callPlaytestBridge({ action: "status", port: base });
+      assert.equal(r.ok, false, `⑥ 显式 port 不得跳到 ${base - 1}：${JSON.stringify(r).slice(0, 400)}`);
+      assert.ok(
+        ["BRIDGE_UNREACHABLE", "BRIDGE_NOT_FOUND"].includes(r.code),
+        `⑥ 显式 port 空口应报不可达/未找到，实得 ${r.code}`,
+      );
+      assert.equal(r.bridge, undefined, "⑥ 没连上就没有实例");
+      assert.ok(
+        Array.isArray(r.scanned) && r.scanned.length === 1 && r.scanned[0].port === base,
+        `⑥ 显式 port 只探这一口（scanned 只 1 条）：${JSON.stringify(r.scanned)}`,
+      );
+
+      const ok = await callPlaytestBridge({ action: "status", port: base - 1 });
+      assert.equal(ok.ok, true, `⑥ 显式给对端口照常可用：${JSON.stringify(ok).slice(0, 300)}`);
+      assert.equal(ok.bridge?.probedPort, base - 1);
+      console.log("  [A3] ⑥ 显式 port ⇒ 不扫描（空口即失败，不会跳到下一口；给对端口照常可用）");
+    }
+    await reset();
+
+    // ⑦ status 掉线自愈：已解析端口探不通 ⇒ **重新解析一次 + 重试一次**（有界、只读）
+    {
+      const { base } = await useRange();
+      const a = await up(base, { payload: strictPayload(base), destroyStatusAfterFirst: true });
+      const b = await up(base - 1, { payload: strictPayload(base - 1) });
+      const r = await callPlaytestBridge({ action: "status" });
+      assert.equal(r.ok, true, `⑦ 掉线后应自愈重连：${JSON.stringify(r).slice(0, 400)}`);
+      assert.equal(r.bridge?.probedPort, base - 1, `⑦ 自愈应重新解析到 ${base - 1}：${JSON.stringify(r.bridge)}`);
+      assert.equal(
+        a.hits().statusHits,
+        3,
+        `⑦ 自愈必须**只重解析一次 + 只重试一次**：旧口应恰好被探 3 次（握手 / 取数 / 重扫），实得 ${a.hits().statusHits}`,
+      );
+      assert.ok(b.hits().statusHits >= 1, "⑦ 新口应接管（至少 1 次命中）");
+      console.log("  [A3] ⑦ status 掉线自愈：重新解析一次 + 重试一次（旧口恰好 3 次命中，新口接管）");
+    }
+    await reset();
+
+    // ⑧ execute **绝不自动重试**（可能重复施加副作用）：传输层失败照实报，POST 恰好 1 次
+    {
+      const { base } = await useRange();
+      const srv = await up(base, { payload: strictPayload(base), destroyExecute: true });
+      const r = await callPlaytestBridge({
+        action: "execute",
+        command: { action: "chat_command", params: { message: "hi" } },
+        authorization: "sandbox",
+        confirmed: true,
+      });
+      assert.equal(r.ok, false, "⑧ 传输层失败必须照实报错");
+      assert.equal(r.code, "BRIDGE_UNREACHABLE", JSON.stringify(r).slice(0, 400));
+      assert.equal(
+        srv.hits().execHits,
+        1,
+        `⑧ execute **绝不自动重试**：POST /execute 应恰好 1 次，实得 ${srv.hits().execHits}`,
+      );
+      assert.equal(r.bridge?.probedPort, base, "⑧ 失败载荷也要带 bridge 块（调用方要知道刚连的是谁）");
+      console.log("  [A3] ⑧ execute 传输层失败 ⇒ 照实报错且 POST 恰好 1 次（绝不重试）");
+    }
+    await reset();
+  } finally {
+    await reset();
+    for (const [k, v] of Object.entries(prevEnv)) {
+      if (v === undefined) delete process.env[k];
+      else process.env[k] = v;
+    }
+    rmSync(authRoot, { recursive: true, force: true, maxRetries: 6, retryDelay: 120 });
+  }
+}
+
+/**
+ * A3 跨侧一致性（Lead 追加要求）· 客户端握手判据要的键，必须真的出现在 `playtest-bridge-mod.ts`
+ * **生成的三套 Java 模板**的 /status 响应里 —— 否则上面那组 Node 夹具只是自说自话。
+ * 反证（门要有活性自证）：内存里把 `type` 从模板里删掉（**不落盘**），同一检查必须判红。
+ */
+async function testBridgeTemplateStatusShape() {
+  const { generateBridgeMod } = await import("./dist/generators/playtest-bridge-mod.js");
+  const CASES = [
+    ["forge", "1.12.2"],
+    ["rift", "1.13.2"],
+    ["modloader", "1.6.4"],
+  ];
+  const FROZEN = ["status", "version", "platform", "httpPort", "actions", "ready"]; // 旧客户端仍读这六键
+  const STRICT_NEED = ["type", "bridgeProtocol"]; // 严格档握手要的
+  const LEGACY_NEED = ["status", "platform", "httpPort", "actions"]; // 旧桥档判据要的
+
+  /** 从生成物里抽 /status 处理器区段（createContext("/status") → 下一个 createContext）的键集。 */
+  const statusKeysOf = (javaText) => {
+    const i = javaText.indexOf('createContext("/status"');
+    assert.ok(i >= 0, '生成物里找不到 createContext("/status") —— 模板结构变了，跨侧检查的锚要跟着改');
+    const j = javaText.indexOf('createContext("/execute"', i);
+    const block = javaText.slice(i, j > 0 ? j : i + 2000);
+    const keys = new Set();
+    for (const m of block.matchAll(/\\"([A-Za-z_][A-Za-z0-9_]*)\\":/g)) keys.add(m[1]);
+    return keys;
+  };
+  const checkOne = (label, javaText) => {
+    const keys = statusKeysOf(javaText);
+    for (const k of [...FROZEN, ...STRICT_NEED]) {
+      assert.ok(
+        keys.has(k),
+        `${label} 的 /status 响应缺键 \`${k}\`（实得 ${[...keys].join(",")}）⇒ 客户端形状握手与桥模板不同形`,
+      );
+    }
+    for (const k of LEGACY_NEED) {
+      assert.ok(keys.has(k), `${label} 的 /status 缺旧桥档判据键 \`${k}\`（实得 ${[...keys].join(",")}）`);
+    }
+    return keys;
+  };
+
+  const texts = {};
+  for (const [platform, version] of CASES) {
+    const gen = generateBridgeMod(platform, version, "demo");
+    const javaFile = Object.keys(gen.files).find((f) => f.endsWith(".java"));
+    assert.ok(javaFile, `${platform} ${version} 没有生成 .java 模板`);
+    texts[`${platform} ${version}`] = gen.files[javaFile];
+  }
+  assert.equal(Object.keys(texts).length, 3, "三套模板（forge / rift / modloader）都要被覆盖，不许只抽一套");
+  for (const [label, text] of Object.entries(texts)) checkOne(label, text);
+
+  // 反证：内存里删掉 type 标记 ⇒ 同一检查必须判红（证明它不是恒绿装饰）
+  const [victimLabel, victimText] = Object.entries(texts)[0];
+  const poisoned = victimText.replace(/\\"type\\":\\"mc-skill-playtest-bridge\\",?/, "");
+  assert.notEqual(poisoned, victimText, "反证注入没生效（模板里找不到预期的 type 字面量形态）⇒ 反证无效");
+  assert.throws(
+    () => checkOne(`${victimLabel}(反证)`, poisoned),
+    /缺键/,
+    "反证失败：删掉 type 后跨侧检查仍判绿 = 恒绿装饰",
+  );
+  checkOne(victimLabel, victimText); // 正例仍绿（确认反证只毒了内存副本）
+  console.log(
+    `  [A3] 跨侧 /status 键集一致性：三套模板（${Object.keys(texts).join(" / ")}）齐 ${FROZEN.length + STRICT_NEED.length} 键；反证（删 type）判红`,
+  );
+}
+
 await testNeoForgeGenericRouting();
 await testUnknownPlatformEvidence();
 await testForgeDetectedFromGradleOnly();
@@ -8745,6 +9290,8 @@ await testPortingKbProvenance();
 await testScaffoldWrappers();
 await testAssertionProvenance();
 testSessionVerifiedApiReachesRealTables(); // C-7 门⑦
+await testPlaytestBridgeScanAndHandshake(); // A3 桥客户端：扫描 / 形状握手 / 连错实例 / 有界自愈
+await testBridgeTemplateStatusShape(); // A3 跨侧：桥模板 /status 键集必须覆盖握手判据（含反证）
 
 // ── Y-2（sweep81 顺延）：loaderVersion 大窗按「官方 scheme 证据」钉住现状 ──────────
 // 证据：Forge javafml 的 loaderVersion 主版本 ≥14（官方 1.12.2 MDK = [14,)；scaffold 检索

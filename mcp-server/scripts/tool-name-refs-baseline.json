@@ -1,0 +1,96 @@
+{
+  "$comment": "assert-tool-name-refs 的棘轮基线（只许降）。pinned = 首测（2026-11-04）存量误报：这 12 个名字全部出现在 mcp-server/src/prompts/templates.ts 的**语料页文件名 / 数据包目录名 / Maven 构件名**位置，不是工具引用。 它们**没有**被自动放过 —— 本门刻意不做「路径邻接就豁免」的启发式（那等于把门调软），而是逐条记在这里；任何一条不再被扫红就必须当场从本文件删除（门会报 BASELINE-STALE）。 ratchet.ceiling 不得大于脚本里的 FROZEN_CEILING（现 12），即条数只能降不能升。",
+  "ratchet": {
+    "ceiling": 12,
+    "note": "只许降；条目一旦不再是红必须当场删除（BASELINE-STALE）；要放宽得改脚本里的 FROZEN_CEILING，改不动就看不见"
+  },
+  "pinned": [
+    {
+      "id": "blockentities_ber",
+      "reason": "语料页文件名（data/<平台>_<档>/…/processed/blockentities_ber.md:26 / :51,57,59），不是工具引用",
+      "sites": [
+        "mcp-server/src/prompts/templates.ts:440",
+        "mcp-server/src/prompts/templates.ts:441"
+      ]
+    },
+    {
+      "id": "damage_type",
+      "reason": "数据包资源目录名（data/<modid>/damage_type/<name>.json），且出现在「recipe / loot_table / advancement / tag / function / damage_type」的斜杠枚举里",
+      "sites": [
+        "mcp-server/src/prompts/templates.ts:412",
+        "mcp-server/src/prompts/templates.ts:501"
+      ]
+    },
+    {
+      "id": "datastorage_codecs",
+      "reason": "NeoForge 语料页文件名（…/processed/datastorage_codecs.md:3,13）",
+      "sites": [
+        "mcp-server/src/prompts/templates.ts:475",
+        "mcp-server/src/prompts/templates.ts:476"
+      ]
+    },
+    {
+      "id": "datastorage_saveddata",
+      "reason": "NeoForge 语料页文件名（…/processed/datastorage_saveddata.md:9,12,18,20）",
+      "sites": [
+        "mcp-server/src/prompts/templates.ts:473"
+      ]
+    },
+    {
+      "id": "develop_blocks_block",
+      "reason": "Fabric 语料页文件名前缀（develop_blocks_block-entity-renderer.md:44）",
+      "sites": [
+        "mcp-server/src/prompts/templates.ts:442"
+      ]
+    },
+    {
+      "id": "develop_entities_first",
+      "reason": "Fabric 语料页文件名前缀（develop_entities_first-entity.md:65）",
+      "sites": [
+        "mcp-server/src/prompts/templates.ts:442"
+      ]
+    },
+    {
+      "id": "misc_debugprofiler",
+      "reason": "NeoForge 语料页文件名（…/processed/misc_debugprofiler.md:7）",
+      "sites": [
+        "mcp-server/src/prompts/templates.ts:459"
+      ]
+    },
+    {
+      "id": "networking_streamcodecs",
+      "reason": "NeoForge 语料页文件名（networking_streamcodecs.md）",
+      "sites": [
+        "mcp-server/src/prompts/templates.ts:476"
+      ]
+    },
+    {
+      "id": "qsl_base",
+      "reason": "Maven 构件名（org.quiltmc.qsl.core:qsl_base），不是工具",
+      "sites": [
+        "mcp-server/src/prompts/templates.ts:587"
+      ]
+    },
+    {
+      "id": "rendering_modelloaders",
+      "reason": "Forge 语料专页名（rendering_modelloaders.md）",
+      "sites": [
+        "mcp-server/src/prompts/templates.ts:446"
+      ]
+    },
+    {
+      "id": "resources_client_models_modelloaders",
+      "reason": "NeoForge 语料页文件名（…/processed/resources_client_models_modelloaders.md:323,335）",
+      "sites": [
+        "mcp-server/src/prompts/templates.ts:446"
+      ]
+    },
+    {
+      "id": "resources_server_damagetypes",
+      "reason": "NeoForge 语料页文件名（…/processed/resources_server_damagetypes.md:1,7,19）",
+      "sites": [
+        "mcp-server/src/prompts/templates.ts:501"
+      ]
+    }
+  ]
+}

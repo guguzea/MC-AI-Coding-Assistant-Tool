@@ -2431,6 +2431,17 @@ const REAL_RUN_GATES = [
     // 补 assert-rules-api-names 只判类名的盲区（`Registries` 类在各档都在，而 `Registries.ENCHANTMENT`
     // 自 1.21.1 起已改挂 `RegistryKeys`）。
     "./scripts/assert-registry-field-existence.mjs",
+    // P0-A5（2026-11-04）：**工具名引用**门 —— 注册时传出去的 description / title（含 CLI list-tools 读的
+    // 那份 schema 清单 description 与 prompts/templates.ts 的模板正文）里点名的「工具名形状」标识符，
+    // 若不是已注册的工具名、且在 mcp-server/src/** 里也找不到别的出处 ⇒ 红。
+    // 立门缘起 = 对标项目的反面教材：mcp-rogal 的 FakePlayersTool.java:48 写了不存在的
+    // click_dialog_button、OpenScreenTool.java:74 把真名 options 写成 set_option ——
+    // 模型会照着 description 去调不存在的工具，而这类缺陷此前**没有任何门**看得见。
+    // 真值源两条交叉校验（registerTool 首参 ⇄ indexToolSchemas / waveToolSchemas 的 name，必须相等；
+    // **不写死 89**，加工具是合法动作）；误报靠「src/** 里另有出处」这一层 + 棘轮基线（12 条，只许降）过滤；
+    // 零写盘、不依赖 dist（直接读 src 源码）。自带 --selftest 三桶（投毒 / 对照 / 活性腿；
+    // 臂数一律以该门 --selftest 末行现印为准，此处不写死；全内存夹具，不 spawn）。
+    "./scripts/assert-tool-name-refs.mjs",
   ];
 
 const SELFTEST_GATES = [
@@ -2582,6 +2593,11 @@ const SELFTEST_GATES = [
     // 判据 ⑧⑨⑩（`paper/<ver>/applicability.json` 是单一来源、md 必须由它渲染、counts 与 rows 现算一致）
     // 的自证臂没有跑过 —— 补进本数组；条数一律以该门 `--selftest` 现印为准。
     "./scripts/assert-server-rules-integrity.mjs",
+    // P0-A5（2026-11-04）：工具名引用门的判据活性自证。投毒桶按臂名逐条留：发明名 click_dialog_button /
+    // 近名真名 set_option / 少一个字母 search_forge_doc / 两条真值源漂移 / 基线陈旧条目 / 棘轮上界被抬 /
+    // 钉住条数超上界 / 台账缺 reason-sites / 相邻字面量粘连造出假名 / title 面确实进抽取；
+    // 另有对照桶与一条真盘真值源活性腿。**臂数一律以该门 --selftest 末行现印为准，此处不写死**（R-5）。
+    "./scripts/assert-tool-name-refs.mjs",
   ];
 
 /**

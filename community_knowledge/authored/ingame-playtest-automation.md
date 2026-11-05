@@ -1083,6 +1083,7 @@ NeoForge 1.20.1 无官方 MDK pin（原返回 `MDK_NOT_PINNED`）⇒ 按**兼容
 - **99 · 两个客户端的模组列表不一致会被联机校验拒**（NeoForge）
   主实例 `run/mods` 有 `bandd_playtest + BlackBoxPro + kotlinforforge`，bot 侧只留了 `bandd_playtest` ⇒ 联机校验可能因此拒。**但本例的真因是 98**（认证），模组列表是**首要怀疑但被证否**。
   **处方**：先按 98 修；模组列表不一致**先对齐再说**（本仓另有「桥件固定占 38081」的端口冲突要处理 ⇒ 冲突件挪 `mods-disabled/`，要恢复移回去）。
+⚠ **该「固定占 38081」只对第三方件（BlackBoxPro）成立**；本仓**自建**桥模板 2026-11-04 起改为**递减扫描 38081–38071**（见坑位 107）。
 
 - **100 · 离线会话发不出「玩家聊天」**（服务端日志 `Ignoring chat session … missing Services public key`）
   离线会话签不了名 ⇒ AI 用**玩家聊天**发的话会被服务端**静默忽略**（人看不到）。
@@ -1093,3 +1094,80 @@ NeoForge 1.20.1 无官方 MDK pin（原返回 `MDK_NOT_PINNED`）⇒ 按**兼容
   **处方**：照 driver 里既有的 `look` / `lookat` verb 形状补一个面向本机玩家的 `look`。⚠ 这条在 2026-11-03 的 ModLoader 四档复查里再次确认：core 的 27 个动作里**只有 `bot_look`**，**没有本机玩家的 `look`**。
 
 **移植状态（2026-11-03）**：本路线**只在 neoforge 1.21.11 一档做成过**；rift 1.13 与 modloader 1.2.5/1.5.2/1.6.2（这四档已达成 L-b 驱动面）**尚未移植**。移植时的逐档实名取证见 `temp/port/artifacts/第二客户端-setAuth-joinServer-取证.md`（三档 `joinServer` 均 **javac rc=0**；`set_auth`：1.2.5/1.5.2 可换 public Session 字段，**1.6.2 不可行**（`Session` 是 private final 无 setter）⇒ 走启动参数 `--username/--session`；1.2.5 **无集成服** ⇒ 必须专用服务端 + `online-mode=false`）。
+
+### 命令回执（真值通道）+ 两个截图假阴性坑（编号 102–106，2026-11-04 · 本机 javap + 真 javac 实测）
+
+**这一节的中心命题**：**「命令发出去了」与「效果发生了」必须可区分**。旧实现把前者当后者报（桥回 `{"sent":…}`、driver 的 `cmd` 步只 `sendCommand` 然后 `next()`）⇒ 判读侧只能读到「成功」，这是**假绿**的源头。
+
+**回执字段形状**（driver 与桥同词表；`cursor` 只在有控制台游标概念的实现里出现，本仓两条路线都没有 ⇒ 不生成该键）：
+
+| 字段 | 类型 | 语义 |
+| --- | --- | --- |
+| `success` | boolean | 分发器回报的成功位（`ReturnValueConsumer.onResult(boolean,int)` 的第一个参数） |
+| `result` | number | 命令返回值（`onResult` 第二个参数）；`-1` = 未观测（不是 0！） |
+| `error` | string \| null | 失败原文（parse 异常原文 / 分发异常 `toString()`） |
+| `errorType` | `parse` \| `runtime` \| `safety` \| `skipped` \| `unobserved` \| null | 见下 |
+| `executedAs` | string | 以什么身份跑的（`server_player` / `server` / `client_chat`） |
+| `observed` | boolean | **`false` = 投递了但没观测到效果**（判读侧**不得**读成通过） |
+| `command` / `messages` / `note` | string / string[] / string | 原文、反馈消息、补充说明 |
+
+- **102 · `errorType` 四态要分清（这是「跑没跑」「成没成」的分界）**
+  - `parse` = **没进分发器**（brigadier 解析失败）⇒ 命令根本没跑；看 `messages` / `error` 原文。
+  - `runtime` = **跑了但没成功**（分发抛异常，或 `onResult(false, r)`）。与 `parse` 是两回事，**别合并**。
+  - `success:true && result:N` = 真成功（`N` 可为 0 —— 那表示「跑成功了但什么都没改」，**不是失败**）。
+  - `unobserved` = **通道不存在或超时**（多人档没有集成服务端 / 本档未取证 / 服务端 100 tick 未回报）⇒ **既不是成功也不是失败**，判绿必须另有独立观测。
+  - `safety` / `skipped` 留给「被禁列拦下」「被预算/档位跳过」两类，本仓当前实现未产生（词表先留位，防以后改形状）。
+  - **判读侧消费点**：`inspect_playtest_evidence` 的 `artifacts.commandReceipt`（driver 侧，读 `state.json.lastCommand`）+ `failures.fromCommandReceipts`（parse/runtime 条数）+ `failures.fromUnobservedCommands`（`calls.jsonl` 的 `observed:false` 条数，桥侧）；`playtest_bridge action=execute` 的响应带 `observed` / `errorType` + note。
+
+- **103 · driver 的 `cmd` 步真回执：必须在集成服务端线程分发，且只有部分档取证**
+  **为什么不能在客户端线程直接分发**：客户端 tick 与服务端 tick 是**两个线程** ⇒ 直接调分发器会与服务端世界状态竞态；正确姿势是 `MinecraftServer.execute(Runnable)`（= `ThreadExecutor.execute(Runnable)`，javap 实测 public）。
+  **取玩家源**：`ServerPlayerEntity#getCommandSource()`（1.21.3+）或 `MinecraftServer#getCommandSource().withEntity(sp)`（1.20.1 / 1.21.1 没有前者 —— javap 实测）。玩家实体用 `PlayerManager#getPlayer(String)` 取（按名字；取不到 ⇒ `unobserved`）。
+  **档位覆盖表**（逐条 javap 实测；**表外一律 `unobserved` 结构壳，fail-closed**）：`PLAYTEST_CMD_RECEIPT_TIERS`（fabric/quilt `1.21.1 / 1.21.3 / 1.21.4 / 1.21.8 / 1.21.10 / 1.21.11`；三个变体只差两处 = 分发方法名 `parseAndExecute`（1.21.10+）/ `executeWithPrefix`（≤1.21.8）、以及取玩家源的方式）。
+  **本档没取证的档**（forge / neoforge / 26.x / quilt 1.20.4 / fabric·quilt 1.20.1）：`cmd` 步照旧投递（真实玩家路径），但回执恒 `{success:false, errorType:"unobserved"}` —— **不假装成功**。
+
+- **104 · PauseGuard：`pauseOnLostFocus` 不关掉，截图与屏幕读取会同时失真**
+  切窗口 / 切输入法 / 焦点被抢 ⇒ 原版立刻弹**暂停菜单**，它**盖住画面**：① 截图里是暂停菜单不是被测画面；② 屏幕读取（`currentScreen` / GUI 断言）一起失真。症状「操作对了、证据却是暂停菜单」极难归因。
+  **处方**：driver 启动时 `client.options.pauseOnLostFocus = false`（javap 实测 public 字段，yarn 1.20.1–1.21.11 七档均 ✓），并在 `[QA]` 日志里写**为什么**与**怎么回退**（删该行 / `PAUSE_GUARD=false`）。回退后截图前必须先确认窗口有焦点。
+
+- **105 · 截图等帧：`mtime` 检查**不防**「新文件里是旧帧」**
+  `case "shot"` 已有的「等出现 mtime ≥ 请求时刻的 .png」只防**读到旧文件当新证据**（实测 2026-10-01 读到 3 小时前的图仍 PASS）。它**不防**另一类：`setScreen(null)` / 改视角只改了「下一帧画什么」，**当前帧缓冲里还是上一帧**（含 GUI / 改视角前的画面）⇒ 立刻抓 = 「新文件 + 旧内容」，mtime 完全正常。
+  **处方**：关屏与抓帧之间等够 `SHOT_SETTLE_TICKS`（本仓 5 tick ≈ 至少 5 帧）。⚠ **仍不覆盖**「长距离传送后区块还没渲染完」——那类要在剧本里补 `wait`。
+
+- **106 · 三条 javap/编译坑（都踩过，别再踩）**
+  ① **`CommandDispatcher.parse(String,S)` 不声明 `throws`**（brigadier-1.0.17/1.0.18 javap：`public ParseResults<S> parse(java.lang.String, S)`）⇒ 解析失败只能从 `ParseResults.getExceptions()` 读；写成 `try/catch(CommandSyntaxException)` 会 **javac 报「exception is never thrown」**（真编译实测）。
+  ② **`ServerPlayerEntity#getCommandSource()` 在 1.20.1 / 1.21.1 不存在**（javap 七档横扫：1.21.3 起才有）。
+  ③ **`ServerCommandSource#withReturnValueConsumer` 的参数在 1.20.1 是 `java.util.function.IntConsumer`**（该档**没有** `net.minecraft.command.ReturnValueConsumer` 类）⇒ 拿不到 success 位 ⇒ 1.20.1 不出真回执。
+  ④ **bridge 侧最低线**：`chat_command` 的返回体必须带 `observed:false` + `reason`（旧版只回 `sent` 就是「只报已投递」的反模式）。要判「命令真的生效」，必须**再发一条独立观测**（`await condition=chat_message_matches` / `query_*`）。
+
+### 桥的端口区间与形状握手（编号 107，2026-11-04 · 冻结协议；本仓桥模板已实现）
+
+- **107 · 自建桥「固定占 38081」的假设作废：端口要**递减扫描**，全占用必须 fail-closed（附：顺带揪出一个编不过的语法错）**
+  **背景**：坑位 99 的处方写着「桥件固定占 38081」—— 那是**第三方件（BlackBoxPro）**的性质。本仓
+  `generate_playtest_driver driverMode=external_bridge` 附赠的自建桥模板（`mcp-server/src/generators/playtest-bridge-mod.ts`，三套 = forge / rift / modloader）
+  此前也照抄常量 `PORT = 38081`：两台实例同时开（或上次会话的残留进程没退）时，第二座桥**直接起不来**，而调用侧只看到「连不上」，
+  分不清是「没起」还是「端口被占」。
+  **处方（冻结协议；三套模板逐字同形）**：
+  - 常量 `BRIDGE_PORT_BASE = 38081` / `BRIDGE_PORT_MIN = 38071`（共 11 个）；起 HTTP server 时**从 38081 递减**逐个试 bind，
+    **第一个可用端口胜出**；实际端口存进 `actualPort` 字段，`/status` 的 `httpPort` 回**实际值**（不再回常量）
+    ⇒ **38081 空闲时行为与旧版逐字一致**（旧客户端只读 `httpPort` ⇒ 不受影响）。
+  - **11 个端口全被占 ⇒ 打一条含区间的日志并 `return`：桥不启动**（fail-closed）。**不静默降级到随机端口、不假装成功** ——
+    调用侧连不上就是连不上；扫完一个都没命中 ⇒ `BRIDGE_NOT_FOUND` + `scanned:[{port,reason}]`
+    （`reason ∈ refused|timeout|wrong_shape|protocol_too_new`），**不得返回空结果**。
+  - **形状握手**：`/status` 在**逐字保留全部旧键**（`status` / `version` / `platform` / `httpPort` / `actions` / `ready`）的前提下
+    **追加** `"type":"mc-skill-playtest-bridge"` 与 `"bridgeProtocol":1`。严格档判据 =
+    `status=="success"` ∧ `type=="mc-skill-playtest-bridge"` ∧ `typeof bridgeProtocol=="number"` ∧ `bridgeProtocol<=1`；
+    旧桥（无 `type`）按 **legacy 档**接受但**必须显式披露**（`handshake:"legacy"` + note），**不得静默当严格档**；
+    `bridgeProtocol > 1` ⇒ **拒绝**（`BRIDGE_PROTOCOL_TOO_NEW`）。客户端**显式给 `port` 时只探该端口、不扫描**（向后兼容）。
+    桥无鉴权、只绑 `127.0.0.1` ⇒ 只在本机短会话用。
+  - **掉线自愈有界**：`status` / `await` 的轮询探针对已解析端口失败（`BRIDGE_UNREACHABLE`）⇒ 重新解析一次 + 重试一次；
+    **`execute` 不得自动重试**（可能重复施加副作用），失败照实报错。
+  - **验证读数（2026-11-04，本机 JDK 8 `javac 1.8.0_504`）**：三套模板**整文件**对签名替身 COMPILE_OK；
+    HTTP 半边抽出来**真跑**三场景 —— ① 端口全空 ⇒ bind `38081`；② `38081` 被另一座桥占 ⇒ bind `38080`；
+    ③ 11 个全占 ⇒ `server == null` 且日志打 `端口区间 [38071, 38081] … 桥不启动（fail-closed）`。
+    三套模板的 `startServer()` 归一化 platform/version 后**逐字相同**。⚠ **替身只证签名形状、不证类存在**
+    （本机无 1.12.2 / 1.13.2 / 1.6.4 构件；`~/.gradle/caches/fabric-loom/minecraftMaven` 只有 1.18.2–1.21.11）。
+  - ⚠ **顺带揪出一个既有语法错（A1 引入，同轮修掉）**：给 `chat_command` 加回执时返回体收尾的 `}` **漏转义** ——
+    Java 里写成 `。"}";`（应为 `。\"}";`）⇒ 生成的 Java **编不过**（`error: unclosed string literal`），
+    影响 forge `1.8.9 / 1.9.4 / 1.10.2 / 1.11.2 / 1.12.2` 与 rift `1.13 / 1.13.2` 两处模板（forge 1.7.10 无聊天分支 ⇒ 不受影响）。
+    **教训**：模板生成器里的**转义层数**（TS 模板字面量 → Java 字符串 → JSON）最容易漏，**改动后必须真 javac 一遍**。
+

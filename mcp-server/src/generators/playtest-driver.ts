@@ -2559,6 +2559,14 @@ const PLAYTEST_OBSERVATION_CONTRACT = {
   nearby: "追踪范围（≈48 格）内的实体摘要（id/距离/坐标，最多 NEARBY_MAX 个）—— 0 条 ≠ 世界上没有该实体",
   logTail: "runDir 下 logs/latest.log 的尾部 LOG_TAIL_MAX 行（分诊用）",
   lastStep: { intent: "string", ok: "boolean", postcondition: "string（判过后置条件时 = 该 kind）", failure: "string（步级失败原因，如 goto_timeout / param_not_number）", detail: "string" },
+  /**
+   * A1 命令回执（cmd 步的真值通道；**区分「命令发出去了」与「效果发生了」**）。
+   * 形状 = {success, result, error, errorType, executedAs, observed, command, messages, note}；
+   * errorType ∈ {parse, runtime, safety, skipped, unobserved}（null = 无错）。
+   * ⚠ observed:false / errorType:"unobserved" = **投递了但没观测**（多人档、本档未取证、服务端超时）——
+   *   **不得**读成通过；要判绿必须另有独立观测（assert / waitfor / query_*）。
+   */
+  lastCommand: "object|null（本轮最近一次 cmd 步的回执；null = 本轮没有 cmd 步）",
   lastStepNote: "ok:true ⇒ postcondition 非空、failure 空；ok:false ⇒ 二者恰一非空（判了后置条件没过 = postcondition 非空；步级失败 = failure 非空）",
   remainingBudget: "tick + 意图数 + 总时长",
   availableIntents: "按 capabilityProfile 过滤后的意图名列表",
@@ -2600,6 +2608,332 @@ function buildIntentMenu(input: PlaytestDriverInput, profile: PlaytestCapability
 
 const isVerifiedTier = (platform: string, version: string) =>
   PLAYTEST_VERIFIED_TIER.some((t) => t.platform === platform && t.version === version);
+
+/**
+ * ── A1 · 命令回执（cmd receipt）真代码覆盖表 ─────────────────────────────────────────
+ *
+ * **与 PLAYTEST_VERIFIED_TIER 不是同一件事，别混**：
+ *   - PLAYTEST_VERIFIED_TIER 管「本档整体能不能出真 driver」（玩家挂接 / 截图 / 进世界整套签名）；
+ *   - 本表只管**命令回执这一条链路**（分发器 + 回执回调 + 取玩家源）。两者都满足才出真回执；
+ *   **本表外的已验证档一律回 errorType="unobserved" 的结构壳（fail-closed，不假装成功）**。
+ *
+ * 为什么单独一张表（逐档 javap 实测，2026-11-04）：回执链路的 API 在各档**不同名/不同型** ——
+ *   ① CommandManager.parseAndExecute 只在 1.21.10+ 有；1.21.8 及更早叫 executeWithPrefix；
+ *   ② ServerCommandSource.withReturnValueConsumer 的参数在 **1.20.1 是 java.util.function.IntConsumer**
+ *      （该档**没有** net.minecraft.command.ReturnValueConsumer 这个类）⇒ 1.20.1 拿不到 success 位 ⇒ 不出真回执；
+ *   ③ ServerPlayerEntity.getCommandSource() 在 **1.20.1 / 1.21.1 不存在** ⇒ 1.21.1 改走
+ *      MinecraftServer.getCommandSource().withEntity(sp)（权限面 = 控制台，note 里已写明）。
+ *
+ * 取证件（**本机 loom 缓存里的 yarn-named merged jar**，不是 obf 件）：
+ *   ~/.gradle/caches/fabric-loom/minecraftMaven/net/minecraft/minecraft-merged/<ver>-net.fabricmc.yarn.../minecraft-merged-<ver>-....jar
+ *   —— 逐条 javap 读数见交付报告；quilt 同版本共用同一 yarn 命名层（故并列）。
+ *
+ * ⚠ **本表只增不减**：删条目 = 把该档悄悄降级成 unobserved（可以做，但必须在报告里说明）。
+ */
+export type PlaytestCmdReceiptVariant = "yarn_1210" | "yarn_1213" | "yarn_1211";
+export const PLAYTEST_CMD_RECEIPT_TIERS: ReadonlyArray<{
+  platform: string;
+  version: string;
+  variant: PlaytestCmdReceiptVariant;
+  asOf: string;
+}> = [
+  // parseAndExecute(ServerCommandSource,String) + ServerPlayerEntity.getCommandSource() + withReturnValueConsumer(ReturnValueConsumer)
+  { platform: "fabric", version: "1.21.11", variant: "yarn_1210", asOf: "2026-11-04" },
+  { platform: "quilt", version: "1.21.11", variant: "yarn_1210", asOf: "2026-11-04" },
+  { platform: "fabric", version: "1.21.10", variant: "yarn_1210", asOf: "2026-11-04" },
+  { platform: "quilt", version: "1.21.10", variant: "yarn_1210", asOf: "2026-11-04" },
+  // executeWithPrefix(ServerCommandSource,String)（该档为 void）+ ServerPlayerEntity.getCommandSource() + withReturnValueConsumer
+  { platform: "fabric", version: "1.21.8", variant: "yarn_1213", asOf: "2026-11-04" },
+  { platform: "quilt", version: "1.21.8", variant: "yarn_1213", asOf: "2026-11-04" },
+  { platform: "fabric", version: "1.21.4", variant: "yarn_1213", asOf: "2026-11-04" },
+  { platform: "quilt", version: "1.21.4", variant: "yarn_1213", asOf: "2026-11-04" },
+  { platform: "fabric", version: "1.21.3", variant: "yarn_1213", asOf: "2026-11-04" },
+  { platform: "quilt", version: "1.21.3", variant: "yarn_1213", asOf: "2026-11-04" },
+  // executeWithPrefix + MinecraftServer.getCommandSource().withEntity(sp)（该档无 ServerPlayerEntity.getCommandSource()）
+  { platform: "fabric", version: "1.21.1", variant: "yarn_1211", asOf: "2026-11-04" },
+  { platform: "quilt", version: "1.21.1", variant: "yarn_1211", asOf: "2026-11-04" },
+];
+
+/** 本档的命令回执变体；null = 未取证 ⇒ 出 fail-closed 结构壳（unobserved）。 */
+const cmdReceiptVariantOf = (platform: string, version: string): PlaytestCmdReceiptVariant | null => {
+  const hit = PLAYTEST_CMD_RECEIPT_TIERS.find((t) => t.platform === platform && t.version === version);
+  return hit ? hit.variant : null;
+};
+
+const CMD_RECEIPT_REAL = String.raw`    // >>>CMD_RECEIPT_BEGIN（生成期整块替换：真回执 / fail-closed 结构壳；档表 = PLAYTEST_CMD_RECEIPT_TIERS）
+    /** A1 命令回执：最近一次 cmd 步的**真值**。null = 无待结算回执（服务端线程**整对象发布**，避免逐字段竞态）。 */
+    private static volatile CmdReceipt cmdReceipt;
+    /** 最近一次**已结算**回执的 JSON（state.json 的 lastCommand 用它；空串 = 本轮还没有 cmd 步）。 */
+    private static String lastCmdJson = "";
+    private static String cmdLine = "";
+    private static int cmdAtTick;
+    /** 等回执的最长 tick 数（超时 ⇒ unobserved，**不**塌成成功）。 */
+    private static final int CMD_WAIT_TICKS = 100;
+
+    /**
+     * 命令回执形状（判读侧 playtest-evidence 消费）。
+     * errorType ∈ {parse, runtime, safety, skipped, unobserved}；**unobserved = 未观测**，判读侧不得读成通过。
+     * executedAs 记「这条命令以什么身份跑的」（server_player / server / client_chat）。
+     */
+    private static final class CmdReceipt {
+        final boolean ok;
+        final int result;
+        final String err;
+        final String errType;
+        final String executedAs;
+        final String messages;
+        final String note;
+
+        CmdReceipt(boolean ok, int result, String err, String errType, String executedAs, String messages, String note) {
+            this.ok = ok;
+            this.result = result;
+            this.err = err == null ? "" : err;
+            this.errType = errType == null ? "" : errType;
+            this.executedAs = executedAs == null ? "" : executedAs;
+            this.messages = messages == null ? "" : messages;
+            this.note = note == null ? "" : note;
+        }
+
+        boolean observed() {
+            return !"unobserved".equals(errType);
+        }
+
+        String json() {
+            return "{\"success\":" + ok
+                + ", \"result\":" + result
+                + ", \"error\":" + (err.isEmpty() ? "null" : "\"" + jsonEsc(err) + "\"")
+                + ", \"errorType\":" + (errType.isEmpty() ? "null" : "\"" + jsonEsc(errType) + "\"")
+                + ", \"executedAs\":\"" + jsonEsc(executedAs) + "\""
+                + ", \"observed\":" + observed()
+                + ", \"command\":\"" + jsonEsc(cmdLine) + "\""
+                + ", \"messages\":[" + messages + "]"
+                + ", \"note\":\"" + jsonEsc(note) + "\"}";
+        }
+    }
+
+    /**
+     * cmd 步（A1）：**在集成服务端线程上**分发命令并取回执，区分「发出去了」与「效果发生了」。
+     *
+     * 为什么必须排队到服务端线程：客户端 tick 与服务端 tick 是两个线程，直接分发会与服务端世界状态竞态
+     * ⇒ 走 MinecraftServer.execute(Runnable)（= ThreadExecutor.execute(Runnable)，javap 实测）。
+     *
+     * javap 实测（yarn 1.21.11 named merged jar，2026-11-04；逐档见 PLAYTEST_CMD_RECEIPT_TIERS）：
+     *   CommandManager.parseAndExecute(ServerCommandSource,String):void
+     *   CommandManager.getDispatcher():CommandDispatcher<ServerCommandSource>
+     *   CommandManager.getException(ParseResults<S>):CommandSyntaxException（static）
+     *   ServerCommandSource.withOutput(CommandOutput) / .withReturnValueConsumer(ReturnValueConsumer)
+     *   ReturnValueConsumer.onResult(boolean,int)
+     *   ServerPlayerEntity.getCommandSource():ServerCommandSource
+     *   PlayerManager.getPlayer(String):ServerPlayerEntity
+     *   MinecraftServer.execute(Runnable)（ThreadExecutor）
+     *   GameOptions.pauseOnLostFocus:boolean（PauseGuard 用）
+     *
+     * 语义：parse 失败 ⇒ parse；分发抛异常 ⇒ runtime；回调 onResult(success,result) ⇒ 真成功/真失败；
+     *      超时或通道不存在 ⇒ **unobserved**（明说未观测，不假装成功）。
+     */
+    private static void cmdStep(MinecraftClient client, ClientPlayerEntity player, String raw) {
+        if (cmdAtTick == 0) {
+            cmdLine = raw;
+            cmdAtTick = stepTicks;
+            final net.minecraft.server.integrated.IntegratedServer server = client.getServer();
+            if (server == null) {
+                // 无集成服务端（多人 / 未进世界）⇒ 回执通道不存在：仍然投递（真实玩家路径），但**明说未观测**
+                sendCommand(client, raw);
+                cmdReceipt = new CmdReceipt(false, -1, "", "unobserved", "client_chat", "",
+                    "无集成服务端（多人 / 未进世界）⇒ 命令已投递，但无回执通道：未观测");
+            } else {
+                final String cmdText = raw.startsWith("/") ? raw.substring(1) : raw;
+                final String wantName = player == null ? "" : player.getName().getString();
+                server.execute(() -> cmdRunOnServer(server, cmdText, wantName));
+            }
+        }
+        if (cmdReceipt == null) {
+            if (stepTicks - cmdAtTick > CMD_WAIT_TICKS) {
+                cmdReceipt = new CmdReceipt(false, -1, "", "unobserved", "server_player", "",
+                    "服务端 " + CMD_WAIT_TICKS + " tick 内未回报（世界未加载 / 服务端线程未在跑？）⇒ 未观测");
+            } else {
+                return;
+            }
+        }
+        CmdReceipt r = cmdReceipt;
+        cmdReceipt = null;
+        cmdAtTick = 0;
+        lastCmdJson = r.json();
+        log("[QA] cmd-receipt " + lastCmdJson);
+        writeState(client, player);
+        next();
+    }
+
+    /** 服务端线程侧：分发 + 收集反馈 + 拿 (success, result)。**不要**在客户端线程直接调它。 */
+    private static void cmdRunOnServer(net.minecraft.server.MinecraftServer server, String cmdText, String wantName) {
+        final StringBuilder msgs = new StringBuilder();
+        try {
+            net.minecraft.server.network.ServerPlayerEntity sp = server.getPlayerManager().getPlayer(wantName);
+            if (sp == null) {
+                cmdReceipt = new CmdReceipt(false, -1, "", "unobserved", "server", "",
+                    "集成服务端里找不到该玩家实体（还没进世界？）⇒ 未观测");
+                return;
+            }
+            net.minecraft.server.command.CommandOutput sink = new net.minecraft.server.command.CommandOutput() {
+                public void sendMessage(net.minecraft.text.Text message) {
+                    if (msgs.length() > 0) {
+                        msgs.append(", ");
+                    }
+                    msgs.append('"').append(jsonEsc(message.getString())).append('"');
+                }
+
+                public boolean shouldReceiveFeedback() {
+                    return true;
+                }
+
+                public boolean shouldTrackOutput() {
+                    return true;
+                }
+
+                public boolean shouldBroadcastConsoleToOps() {
+                    return false;
+                }
+            };
+            final boolean[] ok = new boolean[] { false };
+            final int[] res = new int[] { 0 };
+            net.minecraft.server.command.ServerCommandSource src = sp.getCommandSource().withOutput(sink)
+                .withReturnValueConsumer((success, value) -> {
+                    ok[0] = success;
+                    res[0] = value;
+                });
+            net.minecraft.server.command.CommandManager cm = server.getCommandManager();
+            // ⚠ brigadier 的 CommandDispatcher.parse(String,S) **不声明 throws**（javap 实测 brigadier-1.0.17/1.0.18：
+            //   public ParseResults<S> parse(java.lang.String, S)）⇒ 解析失败只能从 ParseResults.getExceptions() 读；
+            //   写成 try/catch(CommandSyntaxException) 会报「exception is never thrown」（真 javac 实测，2026-11-04）。
+            com.mojang.brigadier.ParseResults<net.minecraft.server.command.ServerCommandSource> pr =
+                cm.getDispatcher().parse(cmdText, src);
+            if (!pr.getExceptions().isEmpty()) {
+                cmdReceipt = new CmdReceipt(false, 0,
+                    String.valueOf(net.minecraft.server.command.CommandManager.getException(pr).getMessage()),
+                    "parse", "server_player", msgs.toString(), "命令解析失败（没进分发器）");
+                return;
+            }
+            try {
+                cm.parseAndExecute(src, cmdText);
+            } catch (Throwable t) {
+                cmdReceipt = new CmdReceipt(false, 0, String.valueOf(t), "runtime", "server_player",
+                    msgs.toString(), "命令分发抛异常");
+                return;
+            }
+            if (ok[0]) {
+                cmdReceipt = new CmdReceipt(true, res[0], "", "", "server_player", msgs.toString(), "");
+            } else {
+                cmdReceipt = new CmdReceipt(false, res[0], "命令已执行但回报 success=false（result=" + res[0] + "）",
+                    "runtime", "server_player", msgs.toString(), "跑了但没成功（与 parse 失败可区分）");
+            }
+        } catch (Throwable t) {
+            cmdReceipt = new CmdReceipt(false, 0, String.valueOf(t), "runtime", "server_player", msgs.toString(),
+                "服务端回执采集异常");
+        }
+    }
+    // <<<CMD_RECEIPT_END
+`;
+
+const CMD_RECEIPT_SHELL = String.raw`    // >>>CMD_RECEIPT_BEGIN（本档**未核实**命令分发器签名 ⇒ 结构壳：投递但不声称生效）
+    /** 本档没有真回执通道 ⇒ 恒为 null。 */
+    private static volatile CmdReceipt cmdReceipt;
+    /** 最近一次**已结算**回执的 JSON（state.json 的 lastCommand 用它；空串 = 本轮还没有 cmd 步）。 */
+    private static String lastCmdJson = "";
+    private static String cmdLine = "";
+    private static int cmdAtTick;
+
+    /**
+     * 命令回执形状（判读侧 playtest-evidence 消费）。
+     * 本档恒为 errorType="unobserved"（**未观测**）——判读侧不得读成通过。
+     */
+    private static final class CmdReceipt {
+        final boolean ok;
+        final int result;
+        final String err;
+        final String errType;
+        final String executedAs;
+        final String messages;
+        final String note;
+
+        CmdReceipt(boolean ok, int result, String err, String errType, String executedAs, String messages, String note) {
+            this.ok = ok;
+            this.result = result;
+            this.err = err == null ? "" : err;
+            this.errType = errType == null ? "" : errType;
+            this.executedAs = executedAs == null ? "" : executedAs;
+            this.messages = messages == null ? "" : messages;
+            this.note = note == null ? "" : note;
+        }
+
+        boolean observed() {
+            return !"unobserved".equals(errType);
+        }
+
+        String json() {
+            return "{\"success\":" + ok
+                + ", \"result\":" + result
+                + ", \"error\":" + (err.isEmpty() ? "null" : "\"" + jsonEsc(err) + "\"")
+                + ", \"errorType\":" + (errType.isEmpty() ? "null" : "\"" + jsonEsc(errType) + "\"")
+                + ", \"executedAs\":\"" + jsonEsc(executedAs) + "\""
+                + ", \"observed\":" + observed()
+                + ", \"command\":\"" + jsonEsc(cmdLine) + "\""
+                + ", \"messages\":[" + messages + "]"
+                + ", \"note\":\"" + jsonEsc(note) + "\"}";
+        }
+    }
+
+    /**
+     * cmd 步（A1 结构壳）：**本档未核实**集成服务端分发器签名（见 PLAYTEST_CMD_RECEIPT_TIERS）⇒
+     * 只投递（真实玩家路径），回执一律 {success:false, errorType:"unobserved"}：**不假装成功**。
+     * // TODO(未核实)：按该档 jar javap 核 CommandManager / ServerCommandSource / ReturnValueConsumer 等价签名后开真回执。
+     */
+    private static void cmdStep(MinecraftClient client, ClientPlayerEntity player, String raw) {
+        cmdLine = raw;
+        cmdAtTick = 0;
+        sendCommand(client, raw);
+        CmdReceipt r = new CmdReceipt(false, -1, "", "unobserved", "client_chat", "",
+            "本档未核实命令分发器签名（回执通道未取证）⇒ 命令已投递，但**未观测**：不得读成通过");
+        lastCmdJson = r.json();
+        log("[QA] cmd-receipt " + lastCmdJson);
+        writeState(client, player);
+        next();
+    }
+    // <<<CMD_RECEIPT_END
+`;
+
+/**
+ * 把 driver 模板里的命令回执块换成该档的形态：
+ *   variant === null ⇒ fail-closed 结构壳（unobserved，不假装成功）；
+ *   否则 = 真回执（三个变体只差两处：分发方法名、取玩家源的方式）。
+ * 用法：对 **原始模板**（javaSource）先换，再做该档的改写表 —— 这样变体替换不会被改写表误伤。
+ */
+function applyCmdReceipt(java: string, variant: PlaytestCmdReceiptVariant | null): string {
+  const BEGIN = "    // >>>CMD_RECEIPT_BEGIN";
+  const END = "    // <<<CMD_RECEIPT_END";
+  const i = java.indexOf(BEGIN);
+  const j = java.indexOf(END);
+  if (i < 0 || j < 0) {
+    throw new Error("applyCmdReceipt: 模板里找不到 CMD_RECEIPT 块标记（BEGIN/END）—— 生成器坏了，拒绝产出。");
+  }
+  let block: string;
+  if (variant === null) {
+    block = CMD_RECEIPT_SHELL;
+  } else {
+    let b = CMD_RECEIPT_REAL;
+    if (variant === "yarn_1213" || variant === "yarn_1211") {
+      b = b.replaceAll("cm.parseAndExecute(src, cmdText);", "cm.executeWithPrefix(src, cmdText);");
+    }
+    if (variant === "yarn_1211") {
+      b = b.replaceAll(
+        "sp.getCommandSource().withOutput(sink)",
+        "server.getCommandSource().withEntity(sp).withOutput(sink)",
+      );
+    }
+    block = b;
+  }
+  return java.slice(0, i) + block + java.slice(j + END.length);
+}
+
 
 const sanitizeId = (s: string) => s.replace(/[^A-Za-z0-9_-]/g, "");
 const javaIdent = (s: string) => {
@@ -2913,6 +3247,13 @@ public final class PlaytestQaDriver {
     /** 解释器 shot 步「等新截图落盘」的最长 tick 数：截图是**异步写盘**的，慢盘 / U 盘上 3 s 不够
      * （实测 2026-10-03 fabric-26.1.2 的 E: 盘：请求到落盘 4 s+ ⇒ 60 tick 预算直接判红，而 PNG 其实已写出）⇒ 给到 10 s。 */
     private static final int SHOT_WAIT_TICKS = 200;
+    /**
+     * A8-② 等帧：关屏 / 改视角之后到**抓帧**之间必须等够的 tick 数。
+     * 为什么：setScreen(null) 只是改了「下一帧要画什么」，当前帧缓冲里仍是**上一帧**（含 GUI / 改视角前的画面）
+     * ⇒ 立刻抓会得到「新文件 + 旧内容」。5 tick = 至少 5 帧（60fps 下远不止），足够覆盖关屏与视角切换；
+     * ⚠ **不覆盖**「长距离传送后区块还没渲染完」——那类要在剧本里补 wait（见 doc/playtest-loops.md 坑位段）。
+     */
+    private static final int SHOT_SETTLE_TICKS = 5;
     /** 硬预算：超时判红，绝不静默（含世界加载与启动期，180s @20tps）。 */
     private static final int BUDGET_TICKS = ${budgetTicks};
     /** 真游玩证明①：按前进键的 tick 数 + 最小水平位移（格）；出生点可能被地形卡住 ⇒ 4 向轮试。 */
@@ -2996,6 +3337,8 @@ public final class PlaytestQaDriver {
     private static double moveStartZ;
     private static final StringBuilder QA = new StringBuilder();
 
+${CMD_RECEIPT_REAL}
+
     // ─────────────── 意图引擎（in_jvm_player_agent：菜单校验 + 原语展开 + 类型化后置条件） ───────────────
     /** 意图菜单（生成器从 PLAYTEST_INTENTS 落成；一行 = name|budgetTicks|profiles，profiles 空 = 全档）。 */
     private static final String[] INTENT_MENU = { ${intentMenuJava} };
@@ -3022,6 +3365,8 @@ public final class PlaytestQaDriver {
     private static long intentStartMillis;
     /** 截图请求时刻（ms；异步落盘，0 = 无待落盘请求）。 */
     private static long shotRequestMillis;
+    /** A8-② 等帧：shot 步里 setScreen(null) 落在哪个 tick（0 = 本步还没关屏）。 */
+    private static int shotSettleAt;
     /** 观测面刷新闩：会话起步时玩家可能还在标题屏（player==null）⇒ 进世界后的第一条 waitintent tick 再补种一次。 */
     private static boolean stateSeeded;
     private static String[] savedPlan;
@@ -3083,6 +3428,7 @@ public final class PlaytestQaDriver {
             return;
         }
         ticks++;
+        applyPauseGuard(client); // A8-①（相位机路径同样要关，见方法注释）
         if (ticks > BUDGET_TICKS) {
             finish(false, "budget exhausted (" + BUDGET_TICKS + " ticks) —— 未进世界或条件永不成立");
             return;
@@ -3289,6 +3635,7 @@ public final class PlaytestQaDriver {
             return;
         }
         ticks++;
+        applyPauseGuard(client); // A8-①（一次性；见方法注释的为什么与回退）
         // 只在"本轮进行中"判预算：否则轮末 ticks 继续增长会让**每一 tick 都把刚结束的这轮再判一次红**
         // （实测：卡在世界外的旧版驱动刷出 800+ 条 round 0 budget exhausted 与 82KB rounds.jsonl）。
         if (roundActive && ticks > BUDGET_TICKS) {
@@ -3497,9 +3844,8 @@ public final class PlaytestQaDriver {
                 }
                 case "cmd":
                     lastGameMessage = "";
-                    sendCommand(client, rest);
-                    log("[QA] cmd: /" + rest);
-                    next();
+                    // A1：回执走 cmdStep（真回执 / unobserved 结构壳由生成期按档决定，见 PLAYTEST_CMD_RECEIPT_TIERS）
+                    cmdStep(client, player, rest);
                     break;
                 case "goto": {
                     if (!gotoTargetSet) {
@@ -3761,7 +4107,17 @@ public final class PlaytestQaDriver {
                     break;
                 }
                 case "shot": {
-                    client.setScreen(null);
+                    // A8-② 等帧（2026-11-04 补）：见 SHOT_SETTLE_TICKS 注释 —— 关屏 / 改视角后帧缓冲还是上一帧，
+                    // 立刻抓 = 「新文件 + 旧内容」。紧随其后的 newestShotMillis 只防「读到旧**文件**当新证据」，
+                    // **不防**「新文件里是旧帧」；两条是两回事，故先等够帧再请求截图。
+                    if (shotSettleAt == 0) {
+                        client.setScreen(null);
+                        shotSettleAt = stepTicks;
+                        break;
+                    }
+                    if (stepTicks - shotSettleAt < SHOT_SETTLE_TICKS) {
+                        break;
+                    }
                     if (shotRequestMillis == 0) {
                         shotRequestMillis = System.currentTimeMillis();
                         ScreenshotRecorder.saveScreenshot(client.runDirectory, client.getFramebuffer(), t -> { });
@@ -3990,6 +4346,7 @@ public final class PlaytestQaDriver {
         stepIdx++;
         stepTicks = 0;
         gotoTargetSet = false;
+        shotSettleAt = 0; // A8-②：等帧闸随步复位，下一步重新关屏+等帧
     }
 
     // ─────────────────────────────── 意图引擎：校验 / 展开 / 判定 / 证据 ───────────────────────────────
@@ -4594,6 +4951,11 @@ public final class PlaytestQaDriver {
         lastIntentPost = "";
         lastIntentFailure = "";
         lastIntentDetail = "";
+        // A1：轮边界重置命令回执 —— 否则第 2 轮的 state.json 会带着上一轮的 lastCommand（与 A19 同一条纪律）。
+        lastCmdJson = "";
+        cmdReceipt = null;
+        cmdAtTick = 0;
+        shotSettleAt = 0;
         // A19：轮边界重置「破坏 / GUI 观测静态位」——否则第 2 轮起 blockBefore 非空会跳过取基准、
         // guiOpened 等沿用上一轮的值（currentScreen 打开失败时会假绿），证据用的是上一轮的坐标与状态。
         blockPosText = "";
@@ -4710,6 +5072,37 @@ public final class PlaytestQaDriver {
             case "use": client.options.useKey.setPressed(down); break;
             default: log("[QA] 未知键位：" + key);
         }
+    }
+
+    /**
+     * A8-① PauseGuard：启动时关掉 pauseOnLostFocus（失焦不弹暂停菜单）。
+     *
+     * 为什么必须关：切窗口 / 切输入法 / 焦点被别的窗口抢走时，原版会立刻弹出暂停菜单 —— 它**盖住画面**，
+     * 于是 ① 截图里是暂停菜单而不是被测画面；② 屏幕读取（currentScreen / GUI 断言）也一起失真。
+     * 症状是「明明操作对了，证据却是暂停菜单」，极难归因 ⇒ 在驱动里一次性钉死。
+     *
+     * javap 实测（2026-11-04）：GameOptions.pauseOnLostFocus 是 **public 字段**，在 yarn
+     *   1.20.1 / 1.21.1 / 1.21.3 / 1.21.4 / 1.21.8 / 1.21.10 / 1.21.11 七档 named merged jar 上逐档 ✓
+     *   （mojmap 同名 GameOptions.pauseOnLostFocus；本档 driver 的 options 访问走既有改写表）。
+     *
+     * **怎么回退**：① 把下面那行注释掉即恢复原版行为；② 或把 PAUSE_GUARD 改成 false（保留日志）。
+     * 注意回退后截图前必须先手动确认窗口有焦点，否则会得到「暂停菜单」的假证据。
+     */
+    private static final boolean PAUSE_GUARD = true;
+    private static boolean pauseGuardApplied;
+
+    private static void applyPauseGuard(MinecraftClient client) {
+        if (pauseGuardApplied || client.options == null) {
+            return;
+        }
+        pauseGuardApplied = true;
+        if (!PAUSE_GUARD) {
+            log("[QA] PauseGuard DISABLED（PAUSE_GUARD=false）—— 截图前请确认窗口有焦点");
+            return;
+        }
+        boolean was = client.options.pauseOnLostFocus;
+        client.options.pauseOnLostFocus = false;
+        log("[QA] PauseGuard: pauseOnLostFocus " + was + " -> false（失焦不弹暂停菜单，防止截图/屏幕读取被暂停菜单盖住；回退 = 删本行或 PAUSE_GUARD=false）");
     }
 
     private static void sendCommand(MinecraftClient client, String command) {
@@ -5021,6 +5414,9 @@ public final class PlaytestQaDriver {
             + "  " + q + "block" + q + ": {" + q + "pos" + q + ": " + q + jsonEsc(blockPosText) + q + ", " + q + "before" + q + ": " + q + jsonEsc(blockBefore) + q + ", " + q + "after" + q + ": " + q + jsonEsc(blockAfter) + q + "}," + nl()
             + "  " + q + "gui" + q + ": {" + q + "opened" + q + ": " + guiOpened + ", " + q + "class" + q + ": " + q + jsonEsc(guiClass) + q + ", " + q + "clicked" + q + ": " + guiClicked + ", " + q + "closed" + q + ": " + guiClosed + "}," + nl()
             + "  " + q + "plan" + q + ": {" + q + "steps" + q + ": " + PLAN.length + ", " + q + "done" + q + ": " + stepIdx + "}," + nl()
+            // A1：最近一次 cmd 步的**回执**（null = 本轮没有 cmd 步）。判读侧 playtest-evidence 读它 ——
+            // errorType=unobserved 表示「投递了但没观测」，**不得**读成通过。
+            + "  " + q + "lastCommand" + q + ": " + (lastCmdJson.isEmpty() ? "null" : lastCmdJson) + "," + nl()
             + "  " + q + "nearby" + q + ": " + nearbyJson() + "," + nl()
             + "  " + q + "logTail" + q + ": " + logTailJson() + "," + nl()
             + "  " + q + "scan" + q + ": {" + q + "entities" + q + ": " + q + jsonEsc(scanEntityText) + q + ", " + q + "blocks" + q + ": " + q + jsonEsc(scanBlockText) + q
@@ -5102,25 +5498,38 @@ const useLiteLoaderTable = platform === "liteloader" && version === "1.12.2";
     // MC 26.1+ = 去混淆层（jackpot：vanilla 名 = mojmap，免 remap）+ Fabric API 事件 ⇒ 独立表。
     // 只覆盖 fabric（本仓 quilt 无 26.x 档，quilt 26.x 仍走结构壳，别越界借 fabric 表）。
     const useFabric26Table = platform === "fabric" && /^26\./.test(version);
+    // ── A1 · 命令回执块按档替换（**必须在改写表之前**：变体锚串是模板原生 yarn 名，
+    //    改写表之后锚点已被改掉；且结构壳不含任何 yarn 专名 ⇒ 不会被改写表误伤）──
+    const cmdReceiptVariant = cmdReceiptVariantOf(platform, version);
+    if (cmdReceiptVariant === null) {
+      warnings.push(
+        `platform=${platform} version=${version} 档的 \`cmd\` 步回 fail-closed 结构壳：` +
+          `回执恒为 {success:false, errorType:"unobserved"}（**命令已投递但未观测**，不得读成通过）。` +
+          `原因 = 本档未逐条 javap 核实「集成服务端分发器 + 回执回调 + 取玩家源」这条链路` +
+          `（真回执覆盖表 = PLAYTEST_CMD_RECEIPT_TIERS，由该表现算，此处不数档）。` +
+          `// TODO(未核实)：核到签名后把该档加进 PLAYTEST_CMD_RECEIPT_TIERS 即可开真回执。`,
+      );
+    }
+    const javaSourceCmd = applyCmdReceipt(javaSource, cmdReceiptVariant);
     const emittedJava = useLiteLoaderTable
-      ? applyLiteLoader1122(rewriteForForgeLegacy(javaSource, version))
+      ? applyLiteLoader1122(rewriteForForgeLegacy(javaSourceCmd, version))
       : useForgeLegacyTable
-      ? rewriteForForgeLegacy(javaSource, version)
+      ? rewriteForForgeLegacy(javaSourceCmd, version)
       : useForgeTable
-      ? rewriteForForge(javaSource, version)
+      ? rewriteForForge(javaSourceCmd, version)
       : useNeoForge26Table
-        ? rewriteForNeoForge26xx(javaSource, version)
+        ? rewriteForNeoForge26xx(javaSourceCmd, version)
         : useNeoForgeTable
-          ? rewriteForNeoForge(javaSource, version)
+          ? rewriteForNeoForge(javaSourceCmd, version)
           : useFabric26Table
-            ? rewriteForFabric26xx(javaSource, version)
+            ? rewriteForFabric26xx(javaSourceCmd, version)
             : useFabric1201Table
-              ? rewriteForFabric1201(javaSource)
+              ? rewriteForFabric1201(javaSourceCmd)
               : useFabricLegacyTable
-                ? rewriteForFabricLegacy(javaSource, version)
+                ? rewriteForFabricLegacy(javaSourceCmd, version)
                 : useFabric1211Table
-                  ? rewriteForFabric1211(javaSource)
-                  : javaSource;
+                  ? rewriteForFabric1211(javaSourceCmd)
+                  : javaSourceCmd;
     files["playtest/PlaytestQaDriver.java"] = javadocSafe(emittedJava);
 
     if (useLiteLoaderTable) {

@@ -7,12 +7,21 @@
  *
  * **线协议（逐键对齐 BlackBoxPro，源码级；不对齐就等于"工具面零改动"是假的）**：
  *   - `GET /status` → `{status,version,platform,httpPort,actions,ready}`；`ready = player!=null && world!=null`
+ *     **前 6 个键逐字保留**（旧客户端靠它们活着）；`type` / `bridgeProtocol` 是**追加**的握手标记，旧客户端忽略也无害。
  *     （本模板里 `ready` 由 tick 线程每 tick 刷新、HTTP 线程只读 `volatile` —— HTTP 线程直接碰 `Minecraft` 会崩）。
  *   - `POST /execute` body = `{id,action,params,delay}` →
  *     `{id,status:"success"|"failure",message,data}`，**HTTP 恒 200**（成败只看 body 的 `status`）。
  *     工具侧 `playtest_bridge` 的 `responseOf` 正是只读这四个键 ⇒ 不改一行代码就能调。
  *   - 超时串**逐字**用 `Timeout after <N>ms`（BlackBoxPro 无专用码，工具按这个正则映射 `PLAYTEST_TIMEOUT`）。
  *   - `delay` 参数本模板**忽略**（最小实现；要延迟请在调用侧 sleep），README 里写明。
+ *
+ * **端口递减扫描 + 形状握手（2026-11-04 冻结协议；三套模板逐字同形）**：
+ *   - 常量 `BRIDGE_PORT_BASE = 38081` / `BRIDGE_PORT_MIN = 38071`（共 11 个）；起服务时**从 38081 递减**试 bind，
+ *     首个可用端口胜出；**实际端口存进 `actualPort` 字段**，`/status` 的 `httpPort` 回实际值（不再回常量）
+ *     ⇒ 38081 空闲时行为与旧版**逐字一致**。
+ *   - **11 个端口全占用 ⇒ 打一条含扫描区间的日志并 `return`（不启动）** —— fail-closed，不许静默降级到随机端口。
+ *   - `/status` **追加** `"type":"mc-skill-playtest-bridge"` 与 `"bridgeProtocol":1`（常量 `BRIDGE_PROTOCOL_MAX`）；
+ *     调用侧握手判据 = `status=="success"` ∧ `type=="mc-skill-playtest-bridge"` ∧ `typeof bridgeProtocol=="number"` ∧ `bridgeProtocol<=1`。
  *
  * **逐版本差异全部有出处**（每条都能在 `data/forge_javadoc/<ver>/raw/**` 找到实页；1.12.2 另有真构件 javap 复证）：
  *   - **包名在 1.8 换代**：1.7.10 = `cpw.mods.fml.*`；1.8.9+ = `net.minecraftforge.fml.*`（`@Mod` / `@SubscribeEvent` / `TickEvent` 三者同源）。
@@ -379,8 +388,23 @@ import net.minecraft.client.Minecraft;
 @Mod(modid = "${modId}_playtest_bridge")
 public class BridgeMod {
 
-    /** 端口与驱动侧 \`playtest_bridge\` 的默认值一致（只绑 127.0.0.1，桥无鉴权 ⇒ 别暴露到公网）。 */
-    public static final int PORT = 38081;
+    /**
+     * 端口扫描区间：从 \`BRIDGE_PORT_BASE\` **递减**到 \`BRIDGE_PORT_MIN\`（含两端，共 11 个）。
+     * 起服务时逐个试 bind，首个可用端口胜出 ⇒ **38081 空闲时行为与旧版逐字一致**；
+     * 全区间占用 ⇒ 打一条含区间的日志且**不启动**（fail-closed，不许静默降级到随机端口）。
+     * 只绑 127.0.0.1；桥无鉴权 ⇒ 别暴露到公网。
+     */
+    public static final int BRIDGE_PORT_BASE = 38081;
+    public static final int BRIDGE_PORT_MIN = 38071;
+
+    /**
+     * 握手协议上界（\`/status\` 的 \`bridgeProtocol\` 回本值；当前**实现版本 = 上界 = 1**）。
+     * 调用侧读到 \`bridgeProtocol > 本值\` 必须**拒绝**（\`BRIDGE_PROTOCOL_TOO_NEW\`），不许猜、不许降级。
+     */
+    public static final int BRIDGE_PROTOCOL_MAX = 1;
+
+    /** **实际绑定端口**（扫描结果；启动前 = -1）。\`/status\` 的 \`httpPort\` 回这个值，**不再读常量**。 */
+    private static volatile int actualPort = -1;
 
     /** \`GET /status\` 报的动作清单（与 \`execute\` 的分支一一对应；调用侧靠它判断桥能力）。 */
     private static final String ACTIONS = "[\\"query_player_state\\",\\"chat_command\\",\\"screenshot\\",\\"block_at\\",\\"query_inventory_slot\\",\\"query_inventory\\",\\"query_nearby_entities\\",\\"query_chat_history\\",\\"use_item\\",\\"query_screen\\"]";
@@ -442,7 +466,13 @@ ${f.busRegister}
             if (cmd == null || cmd.length() == 0) throw new IllegalArgumentException("chat_command 需要 command");
             // 命令要带前导 '/'；聊天不要。（1.7.10 是 EntityClientPlayerMP，1.8.9+ 是 EntityPlayerSP —— 方法同名 ⇒ 不声明类型名）
             mc.thePlayer.sendChatMessage(cmd.charAt(0) == '/' ? cmd : "/" + cmd);
-            return "{\\"sent\\":\\"" + esc(cmd) + "\\"}";
+            // ⚠ **停止说谎**（A1，2026-11-04）：sendChatMessage 只把聊天包丢给服务端，本桥**观测不到**它有没有被解析、
+            //   有没有真的生效 —— 旧实现回 {"sent":...} 会被判读侧当成「命令成功」。
+            //   本档（forge 1.7.10–1.12.2）**未**逐档 javap 核实「命令分发器 + 可捕获反馈的 sender + 服务端线程排队」，
+            //   ⇒ 按 fail-closed 回 observed:false（**投递了，但未观测**）。
+            //   // TODO(未核实)：核出该档 ICommandManager#executeCommand(ICommandSender,String) / MinecraftServer#getCommandManager()
+            //   //   与主线程排队入口的签名后，改成「服务端线程分发 + 把 success/result 回填」，再翻 observed:true。
+            return "{\\"sent\\":\\"" + esc(cmd) + "\\", \\"observed\\":false, \\"errorType\\":\\"unobserved\\", \\"reason\\":\\"本桥只发聊天包（sendChatMessage）：包发出去了，但**观测不到**它是否被解析、是否真的生效；该档的命令分发器 + 反馈捕获 + 服务端线程排队三者签名**未核实** ⇒ 按 fail-closed 记 unobserved，不得读成成功。\\"}";
         }
         if ("screenshot".equals(action)) {
             // 返回类型在 1.7.10/1.8.9 是 IChatComponent、1.9.4+ 是 ITextComponent ⇒ 忽略返回值，避免引入类型名
@@ -468,13 +498,34 @@ ${f.extraActions}
     // ───────────────────────── HTTP 侧（只入队 + 等结果） ─────────────────────────
 
     private static void startServer() {
+        // 端口递减扫描（2026-11-04 冻结协议）：从 BRIDGE_PORT_BASE 起逐个试 bind，首个可用端口胜出。
+        // 38081 空闲时行为与旧版逐字一致；**不做静默降级** —— 全区间占用时下面的分支打日志并 return（不启动）。
+        HttpServer srv = null;
+        int boundPort = -1;
+        for (int p = BRIDGE_PORT_BASE; p >= BRIDGE_PORT_MIN && srv == null; p--) {
+            try {
+                srv = HttpServer.create(new InetSocketAddress("127.0.0.1", p), 0);
+                boundPort = p;
+            } catch (IOException e) {
+                System.out.println("[PT-BRIDGE] 端口 " + p + " 不可用（" + e.getMessage() + "），继续递减扫描");
+            }
+        }
+        if (srv == null) {
+            // ⚠ fail-closed：区间全占 ⇒ 桥**不启动**（不是"降级到随机端口"，也不是"假装成功"）。
+            System.out.println("[PT-BRIDGE] 起服务失败：端口区间 [" + BRIDGE_PORT_MIN + ", " + BRIDGE_PORT_BASE
+                + "] 共 " + (BRIDGE_PORT_BASE - BRIDGE_PORT_MIN + 1) + " 个端口全部不可用 ⇒ 桥不启动（fail-closed）");
+            return;
+        }
+        actualPort = boundPort;
+        server = srv;
         try {
-            server = HttpServer.create(new InetSocketAddress("127.0.0.1", PORT), 0);
             server.createContext("/status", new Handler() {
                 public void handle(HttpExchange ex) throws IOException {
-                    // 形状与 BlackBoxPro 逐键一致：{status,version,platform,httpPort,actions,ready}
+                    // 形状与 BlackBoxPro 逐键一致（**旧键逐字保留**），并在末尾**追加**形状标记：
+                    // {status,version,platform,httpPort,actions,ready,type,bridgeProtocol}；httpPort = **实际绑定端口**（扫描结果）。
                     respond(ex, "{\\"status\\":\\"success\\",\\"version\\":\\"${version}\\",\\"platform\\":\\"forge\\","
-                        + "\\"httpPort\\":" + PORT + ",\\"actions\\":" + ACTIONS + ",\\"ready\\":" + ready + "}");
+                        + "\\"httpPort\\":" + actualPort + ",\\"actions\\":" + ACTIONS + ",\\"ready\\":" + ready
+                        + ",\\"type\\":\\"mc-skill-playtest-bridge\\",\\"bridgeProtocol\\":" + BRIDGE_PROTOCOL_MAX + "}");
                 }
             });
             server.createContext("/execute", new Handler() {
@@ -507,8 +558,8 @@ ${f.extraActions}
             });
             server.setExecutor(null);
             server.start();
-            System.out.println("[PT-BRIDGE] listening on 127.0.0.1:" + PORT + " (mc ${version})");
-        } catch (IOException e) {
+            System.out.println("[PT-BRIDGE] listening on 127.0.0.1:" + actualPort + " (mc ${version})");
+        } catch (Throwable e) {
             System.out.println("[PT-BRIDGE] 起服务失败：" + e);
         }
     }
@@ -676,6 +727,14 @@ function forgeReadme(version: string, modId: string): string {
 
 ⇒ 一句话：**「命令级操控 + 观察」通了，「玩家级操控」没通。** 生存模式下没有 op / 没开作弊时，\`chat_command\` 基本只能读、改不动世界——**能不能改世界取决于实例权限，不取决于本桥**。要做玩家物理级验证，只能在**有 driver 的档**上做（\`PLAYTEST_VERIFIED_TIER\`），老平台没有 driver（载体不允许）。
 
+> ⚠️ **\`chat_command\` 的回执语义（2026-11-04，A1「命令回执」）**：返回体 = \`{"sent":"<命令>", "observed":false, "errorType":"unobserved", "reason":"…"}\`。
+> \`sendChatMessage\` 只把聊天包丢给服务端，**本桥观测不到**它有没有被解析、有没有真的生效 ⇒ \`observed:false\` = **投递了但未观测**，
+> **不得**读成「命令成功」（旧版只回 \`sent\` 就是这个反模式）。
+> 要判「命令真的生效」，必须**再发一条独立观测**：\`chat_command {"command":"/time set day"}\` 之后用 \`await condition=chat_message_matches\`
+> （或 \`query_player_state\` / \`block_at\` / \`query_inventory*\`）复核；判读侧 \`inspect_playtest_evidence\` 会把 \`observed:false\` 单列成未观测计数。
+> // TODO(未核实)：本档的命令分发器（\`ICommandManager#executeCommand(ICommandSender,String)\` 等）+ 反馈捕获 + 服务端线程排队入口未逐档核实，
+> //   核到签名后可把 \`observed\` 翻成 true 并补 \`success\`/\`result\`/\`errorType\`（与 driver 的 \`cmd\` 步同形状）。
+
 ## 逐版本差异（都有实页出处，见仓库 \`forge/${version}/knowledge/common/verified-api.md\`）
 
 | 项 | 本档取值 |
@@ -697,13 +756,15 @@ function forgeReadme(version: string, modId: string): string {
 - **编码（三个平台通用）**：生成的 Java 含中文注释 ⇒ 你的 \`build.gradle\` 要有 \`tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }\`，手工 \`javac\` 要带 \`-encoding UTF-8\`；
   否则 Windows 默认 GBK 会报 \`unmappable character for encoding GBK\`。
 - 装到**你自己**的实例（\`.minecraft/mods/\` 或实例的 mods 目录），客户端启动后日志应出现：
-  \`[PT-BRIDGE] listening on 127.0.0.1:38081 (mc ${version})\`。
+  \`[PT-BRIDGE] listening on 127.0.0.1:<实际端口> (mc ${version})\` —— **默认 \`38081\`**；若 38081 被占，桥会**递减**到 \`38081–38071\` 里第一个空闲端口，日志里的就是实际端口。
+  11 个端口全被占时日志打 \`起服务失败：端口区间 [38071, 38081] … 桥不启动（fail-closed）\` ⇒ **桥根本没启动**（别去连一个不存在的桥）。
 
-## 线协议（**逐键对齐** BlackBoxPro ⇒ \`playtest_bridge\` 工具面零改动）
+## 线协议（**逐键对齐** BlackBoxPro ⇒ \`playtest_bridge\` 工具面零改动；2026-11-04 起**追加**两个握手键）
 
 \`\`\`
-GET  /status   → {"status":"success","version":"${version}","platform":"forge","httpPort":38081,
-                 "actions":["query_player_state","chat_command","screenshot","block_at","query_inventory_slot","query_inventory","query_nearby_entities","query_chat_history","use_item","query_screen"],"ready":<bool>}
+GET  /status   → {"status":"success","version":"${version}","platform":"forge","httpPort":<实际端口，默认 38081>,
+                 "actions":["query_player_state","chat_command","screenshot","block_at","query_inventory_slot","query_inventory","query_nearby_entities","query_chat_history","use_item","query_screen"],"ready":<bool>},
+                 "type":"mc-skill-playtest-bridge","bridgeProtocol":1
 POST /execute  body = {"id":"<uuid>","action":"<name>","params":{...},"delay":0}
                → {"id":"<同一个 id>","status":"success"|"failure","message":"...","data":{...}}   ← HTTP 恒 200
 超时（客户端未在 tick / 未进世界）→ {"id":...,"status":"failure","message":"Timeout after 10000ms"}
@@ -713,8 +774,22 @@ POST /execute  body = {"id":"<uuid>","action":"<name>","params":{...},"delay":0}
 - 成败**只看 body 的 \`status\`**，不要看 HTTP 码（恒 200）。
 - 超时串逐字是 \`Timeout after 10000ms\` ⇒ 工具侧映射成 \`PLAYTEST_TIMEOUT\`，**别读成"没有失败"**。
 - \`delay\` 参数**本模板忽略**（最小实现）；要延迟请在调用侧 sleep。
+- \`httpPort\` 回的是**实际绑定端口**（递减扫描结果），不是常量 —— 38081 空闲时就是 38081；**别假设 38081**，要连哪个端口以这个键为准。
+- \`type\` / \`bridgeProtocol\` 是**追加**的握手标记（旧键逐字未动）：\`type\` 恒为 \`mc-skill-playtest-bridge\`，\`bridgeProtocol\` 当前 = \`1\`。
+
+### 端口递减扫描与 fail-closed（2026-11-04 冻结协议）
+
+- 常量：\`BRIDGE_PORT_BASE = 38081\`、\`BRIDGE_PORT_MIN = 38071\`（共 **11** 个端口）。
+- 起 HTTP server 时**从 38081 递减**逐个试 bind，**第一个可用端口胜出**；实际端口存进 \`actualPort\` 字段，\`/status\` 的 \`httpPort\` 回它
+  ⇒ **38081 空闲时行为与旧版逐字一致**。
+- **11 个端口全被占用 ⇒ 打一条含扫描区间的日志并 \`return\`：桥不启动**（fail-closed）。这是刻意的：不静默降级到随机端口，也不假装起好了 ——
+  调用侧连不上就是连不上，会按 \`BRIDGE_NOT_FOUND\` 报出扫过的端口。
+- 握手：\`/status\` 在**逐字保留全部旧键**的前提下**追加** \`"type":"mc-skill-playtest-bridge"\` 与 \`"bridgeProtocol":1\`；
+  调用侧未显式给 \`port\` 时会从 38081 递减扫描，**第一个通过形状握手的端口**胜出；读到 \`bridgeProtocol > 1\` 会拒绝（\`BRIDGE_PROTOCOL_TOO_NEW\`）。
 
 ## 手动调（curl）
+
+下面按**默认端口 38081** 写；若 38081 被占，先用第一条的响应体看 \`httpPort\`，再把后续命令里的端口换成它。
 
 \`\`\`bash
 curl -s http://127.0.0.1:38081/status
@@ -902,8 +977,23 @@ import net.minecraft.util.ScreenShotHelper;
  */
 public class BridgeMod implements org.dimdev.rift.listener.client.ClientTickable {
 
-    /** 与驱动侧 \`playtest_bridge\` 默认端口一致（只绑 127.0.0.1；桥无鉴权 ⇒ 别暴露到公网）。 */
-    public static final int PORT = 38081;
+    /**
+     * 端口扫描区间：从 \`BRIDGE_PORT_BASE\` **递减**到 \`BRIDGE_PORT_MIN\`（含两端，共 11 个）。
+     * 起服务时逐个试 bind，首个可用端口胜出 ⇒ **38081 空闲时行为与旧版逐字一致**；
+     * 全区间占用 ⇒ 打一条含区间的日志且**不启动**（fail-closed，不许静默降级到随机端口）。
+     * 只绑 127.0.0.1；桥无鉴权 ⇒ 别暴露到公网。
+     */
+    public static final int BRIDGE_PORT_BASE = 38081;
+    public static final int BRIDGE_PORT_MIN = 38071;
+
+    /**
+     * 握手协议上界（\`/status\` 的 \`bridgeProtocol\` 回本值；当前**实现版本 = 上界 = 1**）。
+     * 调用侧读到 \`bridgeProtocol > 本值\` 必须**拒绝**（\`BRIDGE_PROTOCOL_TOO_NEW\`），不许猜、不许降级。
+     */
+    public static final int BRIDGE_PROTOCOL_MAX = 1;
+
+    /** **实际绑定端口**（扫描结果；启动前 = -1）。\`/status\` 的 \`httpPort\` 回这个值，**不再读常量**。 */
+    private static volatile int actualPort = -1;
 
     private static final String ACTIONS = "[\\"query_player_state\\",\\"chat_command\\",\\"screenshot\\",\\"block_at\\",\\"query_inventory_slot\\",\\"query_inventory\\",\\"query_nearby_entities\\",\\"query_chat_history\\",\\"use_item\\",\\"query_screen\\"]";
 
@@ -956,8 +1046,15 @@ public class BridgeMod implements org.dimdev.rift.listener.client.ClientTickable
         if ("chat_command".equals(action)) {
             String cmd = params.get("command");
             if (cmd == null || cmd.length() == 0) throw new IllegalArgumentException("chat_command 需要 command");
+            // 命令要带前导 '/'；聊天不要。（1.7.10 是 EntityClientPlayerMP，1.8.9+ 是 EntityPlayerSP —— 方法同名 ⇒ 不声明类型名）
             mc.player.sendChatMessage(cmd.charAt(0) == '/' ? cmd : "/" + cmd);
-            return "{\\"sent\\":\\"" + esc(cmd) + "\\"}";
+            // ⚠ **停止说谎**（A1，2026-11-04）：sendChatMessage 只把聊天包丢给服务端，本桥**观测不到**它有没有被解析、
+            //   有没有真的生效 —— 旧实现回 {"sent":...} 会被判读侧当成「命令成功」。
+            //   本档（forge 1.7.10–1.12.2）**未**逐档 javap 核实「命令分发器 + 可捕获反馈的 sender + 服务端线程排队」，
+            //   ⇒ 按 fail-closed 回 observed:false（**投递了，但未观测**）。
+            //   // TODO(未核实)：核出该档 ICommandManager#executeCommand(ICommandSender,String) / MinecraftServer#getCommandManager()
+            //   //   与主线程排队入口的签名后，改成「服务端线程分发 + 把 success/result 回填」，再翻 observed:true。
+            return "{\\"sent\\":\\"" + esc(cmd) + "\\", \\"observed\\":false, \\"errorType\\":\\"unobserved\\", \\"reason\\":\\"本桥只发聊天包（sendChatMessage）：包发出去了，但**观测不到**它是否被解析、是否真的生效；该档的命令分发器 + 反馈捕获 + 服务端线程排队三者签名**未核实** ⇒ 按 fail-closed 记 unobserved，不得读成成功。\\"}";
         }
         if ("screenshot".equals(action)) {
             // 1.13.2：saveScreenshot(File,int,int,Framebuffer,Consumer)（本仓 static_methods.txt 正面证明其为静态）
@@ -1075,19 +1172,35 @@ curl -L -o libs/rift-1.0.4-106-dev.jar \\
    ⇒ **编码**：本文件含中文注释，Java 编译器默认在本机是 GBK ⇒ 你的 \`build.gradle\` 必须有
    \`tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }\`（或命令行 \`javac -encoding UTF-8\`），否则报 \`unmappable character for encoding GBK\`。
    （本仓生成物已用 JDK 8 \`javac -encoding UTF-8\` 对**签名替身**编译通过 —— **替身只证签名形状、不证类存在**。）
-3. 装到**你自己**的 Rift 实例的 \`mods/\`，启动后日志应出现 \`[PT-BRIDGE] listening on 127.0.0.1:38081 (mc 1.13.2)\`。
+3. 装到**你自己**的 Rift 实例的 \`mods/\`，启动后日志应出现 \`[PT-BRIDGE] listening on 127.0.0.1:<实际端口> (mc 1.13.2)\` —— **默认 \`38081\`**；若 38081 被占，桥会**递减**到 \`38081–38071\` 里第一个空闲端口（日志里的就是实际端口）；11 个全被占 ⇒ 日志打 \`桥不启动（fail-closed）\`，**桥根本没起**。
 
-## 线协议（**逐键对齐** BlackBoxPro ⇒ \`playtest_bridge\` 工具面零改动）
+## 线协议（**逐键对齐** BlackBoxPro ⇒ \`playtest_bridge\` 工具面零改动；2026-11-04 起**追加**两个握手键）
 
 \`\`\`
-GET  /status   → {"status":"success","version":"1.13.2","platform":"rift","httpPort":38081,
-                 "actions":["query_player_state","chat_command","screenshot","block_at","query_inventory_slot","query_inventory","query_nearby_entities","query_chat_history","use_item","query_screen"],"ready":<bool>}
+GET  /status   → {"status":"success","version":"1.13.2","platform":"rift","httpPort":<实际端口，默认 38081>,
+                 "actions":["query_player_state","chat_command","screenshot","block_at","query_inventory_slot","query_inventory","query_nearby_entities","query_chat_history","use_item","query_screen"],"ready":<bool>,
+                 "type":"mc-skill-playtest-bridge","bridgeProtocol":1}
 POST /execute  body = {"id":"<uuid>","action":"<name>","params":{...},"delay":0}
                → {"id":"<同一个 id>","status":"success"|"failure","message":"...","data":{...}}   ← HTTP 恒 200
 超时 → {"id":...,"status":"failure","message":"Timeout after 10000ms"}
 \`\`\`
 
+- \`httpPort\` 回的是**实际绑定端口**（递减扫描结果），不是常量 —— 38081 空闲时就是 38081；**别假设 38081**，要连哪个端口以这个键为准。
+- \`type\` / \`bridgeProtocol\` 是**追加**的握手标记（旧键逐字未动）：\`type\` 恒为 \`mc-skill-playtest-bridge\`，\`bridgeProtocol\` 当前 = \`1\`。
+
+### 端口递减扫描与 fail-closed（2026-11-04 冻结协议）
+
+- 常量：\`BRIDGE_PORT_BASE = 38081\`、\`BRIDGE_PORT_MIN = 38071\`（共 **11** 个端口）。
+- 起 HTTP server 时**从 38081 递减**逐个试 bind，**第一个可用端口胜出**；实际端口存进 \`actualPort\` 字段，\`/status\` 的 \`httpPort\` 回它
+  ⇒ **38081 空闲时行为与旧版逐字一致**。
+- **11 个端口全被占用 ⇒ 打一条含扫描区间的日志并 \`return\`：桥不启动**（fail-closed）。这是刻意的：不静默降级到随机端口，也不假装起好了 ——
+  调用侧连不上就是连不上，会按 \`BRIDGE_NOT_FOUND\` 报出扫过的端口。
+- 握手：\`/status\` 在**逐字保留全部旧键**的前提下**追加** \`"type":"mc-skill-playtest-bridge"\` 与 \`"bridgeProtocol":1\`；
+  调用侧未显式给 \`port\` 时会从 38081 递减扫描，**第一个通过形状握手的端口**胜出；读到 \`bridgeProtocol > 1\` 会拒绝（\`BRIDGE_PROTOCOL_TOO_NEW\`）。
+
 ## 手动调（curl）
+
+下面按**默认端口 38081** 写；若 38081 被占，先用第一条的响应体看 \`httpPort\`，再把后续命令里的端口换成它。
 
 \`\`\`bash
 curl -s http://127.0.0.1:38081/status
@@ -1164,7 +1277,23 @@ import com.sun.net.httpserver.HttpServer;
  */
 public class ${cls} extends BaseMod {
 
-    public static final int PORT = 38081;
+    /**
+     * 端口扫描区间：从 \`BRIDGE_PORT_BASE\` **递减**到 \`BRIDGE_PORT_MIN\`（含两端，共 11 个）。
+     * 起服务时逐个试 bind，首个可用端口胜出 ⇒ **38081 空闲时行为与旧版逐字一致**；
+     * 全区间占用 ⇒ 打一条含区间的日志且**不启动**（fail-closed，不许静默降级到随机端口）。
+     * 只绑 127.0.0.1；桥无鉴权 ⇒ 别暴露到公网。
+     */
+    public static final int BRIDGE_PORT_BASE = 38081;
+    public static final int BRIDGE_PORT_MIN = 38071;
+
+    /**
+     * 握手协议上界（\`/status\` 的 \`bridgeProtocol\` 回本值；当前**实现版本 = 上界 = 1**）。
+     * 调用侧读到 \`bridgeProtocol > 本值\` 必须**拒绝**（\`BRIDGE_PROTOCOL_TOO_NEW\`），不许猜、不许降级。
+     */
+    public static final int BRIDGE_PROTOCOL_MAX = 1;
+
+    /** **实际绑定端口**（扫描结果；启动前 = -1）。\`/status\` 的 \`httpPort\` 回这个值，**不再读常量**。 */
+    private static volatile int actualPort = -1;
 
     private static final String ACTIONS = "[\\"query_player_state\\",\\"chat_command\\",\\"screenshot\\",\\"block_at\\",\\"query_inventory_slot\\",\\"query_inventory\\",\\"query_nearby_entities\\",\\"query_chat_history\\",\\"use_item\\",\\"query_screen\\"]";
 
@@ -1314,16 +1443,30 @@ function modloaderReadme(modId: string): string {
 4. 安装：ModLoader 1.6.4 的常规位置是 \`.minecraft/mods/\` 下的 zip/jar（jar 里含 \`${cls}.class\` 与 \`mcmod.info\`）。
    **⚠️ 本仓无该位置/格式的出处** —— 请按你的实例实际确认。
    （官方 ModLoader 1.6.4 发布物**不存在**，见 safe-api.md:5；你能跑起来的多半是某个 1.6.4 整合/魔改包里的 ModLoader。）
-5. 启动后日志应出现 \`[PT-BRIDGE] listening on 127.0.0.1:38081 (mc 1.6.4)\` —— 出现即证明**协议半边是活的**。
+5. 启动后日志应出现 \`[PT-BRIDGE] listening on 127.0.0.1:<实际端口> (mc 1.6.4)\` —— 出现即证明**协议半边是活的**。**默认 \`38081\`**；若被占则递减到 \`38081–38071\` 里第一个空闲端口（以日志里的为准）；11 个全占 ⇒ 打 \`桥不启动（fail-closed）\` 且**不启动**。
 
-## 线协议（与其它档逐键一致）
+## 线协议（与其它档逐键一致；2026-11-04 起**追加**两个握手键）
 
 \`\`\`
-GET  /status   → {"status":"success","version":"1.6.4","platform":"modloader","httpPort":38081,
-                 "actions":["query_player_state","chat_command","screenshot","block_at","query_inventory_slot","query_inventory","query_nearby_entities","query_chat_history","use_item","query_screen"],"ready":<bool>}
+GET  /status   → {"status":"success","version":"1.6.4","platform":"modloader","httpPort":<实际端口，默认 38081>,
+                 "actions":["query_player_state","chat_command","screenshot","block_at","query_inventory_slot","query_inventory","query_nearby_entities","query_chat_history","use_item","query_screen"],"ready":<bool>,
+                 "type":"mc-skill-playtest-bridge","bridgeProtocol":1}
 POST /execute  → {"id":...,"status":"success"|"failure","message":"...","data":{...}}   ← HTTP 恒 200
 超时 → {"id":...,"status":"failure","message":"Timeout after 10000ms"}
 \`\`\`
+
+- \`httpPort\` 回的是**实际绑定端口**（递减扫描结果），不是常量 —— 38081 空闲时就是 38081；**别假设 38081**，要连哪个端口以这个键为准。
+- \`type\` / \`bridgeProtocol\` 是**追加**的握手标记（旧键逐字未动）：\`type\` 恒为 \`mc-skill-playtest-bridge\`，\`bridgeProtocol\` 当前 = \`1\`。
+
+### 端口递减扫描与 fail-closed（2026-11-04 冻结协议）
+
+- 常量：\`BRIDGE_PORT_BASE = 38081\`、\`BRIDGE_PORT_MIN = 38071\`（共 **11** 个端口）。
+- 起 HTTP server 时**从 38081 递减**逐个试 bind，**第一个可用端口胜出**；实际端口存进 \`actualPort\` 字段，\`/status\` 的 \`httpPort\` 回它
+  ⇒ **38081 空闲时行为与旧版逐字一致**。
+- **11 个端口全被占用 ⇒ 打一条含扫描区间的日志并 \`return\`：桥不启动**（fail-closed）。这是刻意的：不静默降级到随机端口，也不假装起好了 ——
+  调用侧连不上就是连不上，会按 \`BRIDGE_NOT_FOUND\` 报出扫过的端口。
+- 握手：\`/status\` 在**逐字保留全部旧键**的前提下**追加** \`"type":"mc-skill-playtest-bridge"\` 与 \`"bridgeProtocol":1\`；
+  调用侧未显式给 \`port\` 时会从 38081 递减扫描，**第一个通过形状握手的端口**胜出；读到 \`bridgeProtocol > 1\` 会拒绝（\`BRIDGE_PROTOCOL_TOO_NEW\`）。
 
 ## 边界（写清不吹）
 
@@ -1341,12 +1484,34 @@ function bridgeHttpCore(platform: string, version: string): string {
   return `    // ───────────────────────── HTTP 侧（只入队 + 等结果） ─────────────────────────
 
     private static void startServer() {
+        // 端口递减扫描（2026-11-04 冻结协议）：从 BRIDGE_PORT_BASE 起逐个试 bind，首个可用端口胜出。
+        // 38081 空闲时行为与旧版逐字一致；**不做静默降级** —— 全区间占用时下面的分支打日志并 return（不启动）。
+        HttpServer srv = null;
+        int boundPort = -1;
+        for (int p = BRIDGE_PORT_BASE; p >= BRIDGE_PORT_MIN && srv == null; p--) {
+            try {
+                srv = HttpServer.create(new InetSocketAddress("127.0.0.1", p), 0);
+                boundPort = p;
+            } catch (IOException e) {
+                System.out.println("[PT-BRIDGE] 端口 " + p + " 不可用（" + e.getMessage() + "），继续递减扫描");
+            }
+        }
+        if (srv == null) {
+            // ⚠ fail-closed：区间全占 ⇒ 桥**不启动**（不是"降级到随机端口"，也不是"假装成功"）。
+            System.out.println("[PT-BRIDGE] 起服务失败：端口区间 [" + BRIDGE_PORT_MIN + ", " + BRIDGE_PORT_BASE
+                + "] 共 " + (BRIDGE_PORT_BASE - BRIDGE_PORT_MIN + 1) + " 个端口全部不可用 ⇒ 桥不启动（fail-closed）");
+            return;
+        }
+        actualPort = boundPort;
+        server = srv;
         try {
-            server = HttpServer.create(new InetSocketAddress("127.0.0.1", PORT), 0);
             server.createContext("/status", new Handler() {
                 public void handle(HttpExchange ex) throws IOException {
+                    // 形状与 BlackBoxPro 逐键一致（**旧键逐字保留**），并在末尾**追加**形状标记：
+                    // {status,version,platform,httpPort,actions,ready,type,bridgeProtocol}；httpPort = **实际绑定端口**（扫描结果）。
                     respond(ex, "{\\"status\\":\\"success\\",\\"version\\":\\"${version}\\",\\"platform\\":\\"${platform}\\","
-                        + "\\"httpPort\\":" + PORT + ",\\"actions\\":" + ACTIONS + ",\\"ready\\":" + ready + "}");
+                        + "\\"httpPort\\":" + actualPort + ",\\"actions\\":" + ACTIONS + ",\\"ready\\":" + ready
+                        + ",\\"type\\":\\"mc-skill-playtest-bridge\\",\\"bridgeProtocol\\":" + BRIDGE_PROTOCOL_MAX + "}");
                 }
             });
             server.createContext("/execute", new Handler() {
@@ -1361,7 +1526,8 @@ function bridgeHttpCore(platform: string, version: string): string {
                         Task t = new Task(action, flat);
                         Task.QUEUE.add(t);
                         // 等 tick 线程回填；客户端没在 tick（菜单/未进世界/卡住）会超时。
-                        // 超时串与 BlackBoxPro 逐字一致（"Timeout after <N>ms"）⇒ 调用侧照常映射成 PLAYTEST_TIMEOUT，**不是"空结果"**。
+                        // 超时串与 BlackBoxPro 逐字一致（\`Timeout after <N>ms\`）⇒ 调用侧照常映射成 PLAYTEST_TIMEOUT，
+                        // **不是"空结果"**；\`delay\` 参数本实现忽略（要延迟请在调用侧 sleep）。
                         if (!t.latch.await(10000, TimeUnit.MILLISECONDS)) {
                             respond(ex, "{\\"id\\":\\"" + esc(id) + "\\",\\"status\\":\\"failure\\",\\"message\\":\\"Timeout after 10000ms\\"}");
                             return;
@@ -1378,8 +1544,8 @@ function bridgeHttpCore(platform: string, version: string): string {
             });
             server.setExecutor(null);
             server.start();
-            System.out.println("[PT-BRIDGE] listening on 127.0.0.1:" + PORT + " (mc ${version})");
-        } catch (IOException e) {
+            System.out.println("[PT-BRIDGE] listening on 127.0.0.1:" + actualPort + " (mc ${version})");
+        } catch (Throwable e) {
             System.out.println("[PT-BRIDGE] 起服务失败：" + e);
         }
     }
