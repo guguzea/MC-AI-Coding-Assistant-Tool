@@ -2289,7 +2289,7 @@ export const PLAYTEST_VERIFIED_TIER: ReadonlyArray<{ platform: string; version: 
  *
  * ⚠ 与 `PLAYTEST_VERIFIED_TIER` **不是同一件事**，别混：
  *   - `PLAYTEST_VERIFIED_TIER` 管的是**本文件产出的单文件解释器**（`temporary_client_tick_driver` / `in_jvm_player_agent`）；
- *   - **本表**管的是**另一个产物**：`playtest/core/*.java`（版本无关 core，9 类）+ `playtest/mod/<适配层>`，
+ *   - **本表**管的是**另一个产物**：`playtest/core/*.java`（版本无关 core，18 类）+ `playtest/mod/<适配层>`，
  *     走 `GameBridge` 适配层架构。**两者并存，互不替代。**
  *
  * 因此**不要**把本表的档塞进上面那张表 —— 那会让生成器对它们声明「解释器已验」，而实际验的是 mod 形态。
@@ -2336,11 +2336,199 @@ export const PLAYTEST_MOD_VERIFIED_TIER: ReadonlyArray<{
   },
 ];
 
-/** 查该档有没有「二合一 mod 形态」的适配层与真机验证。 */
+/**
+ * **「生成器文本已与磁盘对齐」表**（2026-11-11 立，T27）。
+ *
+ * 语义**只有一个**，请逐字读：
+ *   > 该 (platform, version) 的适配层源码字面量（PLAYTEST_MOD_ADAPTERS 里那一份）
+ *   > 已与磁盘真值 F:\B AND D MOD\mod\** 逐字符相等（diff = -0/+0）。
+ *
+ * ⇒ 发射这一档**只是把磁盘上已有的文本搬进产物**，生成器不会引入任何新的、未核实的文本。
+ *
+ * ⚠ **本表与真机验证无关**（它不回答「能不能跑」）：
+ *   - 进本表**不**代表该档跑过游戏、**不**代表签名在该档运行期可用、**不**代表编译过；
+ *   - 真机事实**只在** PLAYTEST_MOD_VERIFIED_TIER 里（那是另一张表，每条带 route / reading）；
+ *   - ⇒ **禁止**把真机读数写进本表，也**禁止**把本表的档当「已验证」讲。
+ *
+ * **逐档依据**（2026-11-11 全量复核，可复跑）：对每条 entry 的每个文件，比对「表内字面量 UTF-8 字节」
+ * vs「磁盘文件 UTF-8 字节（去 BOM）」= 逐字节相等；53/53 档全部相等（core 18 件同样逐字节相等）。
+ * 磁盘路径规则：
+ *   - 一般档：F:\B AND D MOD\mod\<platform>-<version>\src\main\java\<表内相对路径>
+ *   - modloader 1.2.5 / 1.5.2：modloader-<version>-lb\src\<表内相对路径>（默认包 / obf 路线）
+ *   - modloader 1.6.2：modloader-1.6.2\src\<表内相对路径>
+ *
+ * **与 PLAYTEST_MOD_VERIFIED_TIER 的关系**：真机验证过的 4 档**同时也是**文本对齐的 ⇒ 那 4 档也在本表内
+ * （本表是「文本对齐」的**全集**，不看验证与否）。发射判据取两表**并集**，理由见 playtestModTier 的注释。
+ */
+export const PLAYTEST_MOD_GENERATOR_READY: ReadonlyArray<{
+  platform: string;
+  version: string;
+  /** 文本对齐复核日期（**不是**真机验证日期）*/
+  asOf: string;
+}> = [
+  { platform: "fabric", version: "1.14.4", asOf: "2026-11-11" },
+  { platform: "fabric", version: "1.16.5", asOf: "2026-11-11" },
+  { platform: "fabric", version: "1.17.1", asOf: "2026-11-11" },
+  { platform: "fabric", version: "1.18.2", asOf: "2026-11-11" },
+  { platform: "fabric", version: "1.19.4", asOf: "2026-11-11" },
+  { platform: "fabric", version: "1.20.1", asOf: "2026-11-11" },
+  { platform: "fabric", version: "1.20.4", asOf: "2026-11-11" },
+  { platform: "fabric", version: "1.21.1", asOf: "2026-11-11" },
+  { platform: "fabric", version: "1.21.10", asOf: "2026-11-11" },
+  { platform: "fabric", version: "1.21.11", asOf: "2026-11-11" },
+  { platform: "fabric", version: "1.21.3", asOf: "2026-11-11" },
+  { platform: "fabric", version: "1.21.4", asOf: "2026-11-11" },
+  { platform: "fabric", version: "1.21.8", asOf: "2026-11-11" },
+  { platform: "fabric", version: "26.1.2", asOf: "2026-11-11" },
+  { platform: "fabric", version: "26.2", asOf: "2026-11-11" },
+  { platform: "forge", version: "1.12.2", asOf: "2026-11-11" },
+  { platform: "forge", version: "1.13.2", asOf: "2026-11-11" },
+  { platform: "forge", version: "1.14.4", asOf: "2026-11-11" },
+  { platform: "forge", version: "1.15.2", asOf: "2026-11-11" },
+  { platform: "forge", version: "1.16.5", asOf: "2026-11-11" },
+  { platform: "forge", version: "1.17.1", asOf: "2026-11-11" },
+  { platform: "forge", version: "1.18.2", asOf: "2026-11-11" },
+  { platform: "forge", version: "1.19.4", asOf: "2026-11-11" },
+  { platform: "forge", version: "1.20.1", asOf: "2026-11-11" },
+  { platform: "forge", version: "1.20.4", asOf: "2026-11-11" },
+  { platform: "liteloader", version: "1.12.2", asOf: "2026-11-11" },
+  { platform: "modloader", version: "1.2.5", asOf: "2026-11-11" },
+  { platform: "modloader", version: "1.5.2", asOf: "2026-11-11" },
+  { platform: "modloader", version: "1.6.2", asOf: "2026-11-11" },
+  { platform: "neoforge", version: "1.20.1", asOf: "2026-11-11" },
+  { platform: "neoforge", version: "1.20.4", asOf: "2026-11-11" },
+  { platform: "neoforge", version: "1.20.6", asOf: "2026-11-11" },
+  { platform: "neoforge", version: "1.21.1", asOf: "2026-11-11" },
+  { platform: "neoforge", version: "1.21.10", asOf: "2026-11-11" },
+  { platform: "neoforge", version: "1.21.11", asOf: "2026-11-11" },
+  { platform: "neoforge", version: "1.21.3", asOf: "2026-11-11" },
+  { platform: "neoforge", version: "1.21.5", asOf: "2026-11-11" },
+  { platform: "neoforge", version: "1.21.8", asOf: "2026-11-11" },
+  { platform: "neoforge", version: "26.1", asOf: "2026-11-11" },
+  { platform: "neoforge", version: "26.2", asOf: "2026-11-11" },
+  { platform: "neoforge", version: "26.3", asOf: "2026-11-11" },
+  { platform: "quilt", version: "1.18.2", asOf: "2026-11-11" },
+  { platform: "quilt", version: "1.19.4", asOf: "2026-11-11" },
+  { platform: "quilt", version: "1.20.1", asOf: "2026-11-11" },
+  { platform: "quilt", version: "1.20.4", asOf: "2026-11-11" },
+  { platform: "quilt", version: "1.21.1", asOf: "2026-11-11" },
+  { platform: "quilt", version: "1.21.10", asOf: "2026-11-11" },
+  { platform: "quilt", version: "1.21.11", asOf: "2026-11-11" },
+  { platform: "quilt", version: "1.21.3", asOf: "2026-11-11" },
+  { platform: "quilt", version: "1.21.4", asOf: "2026-11-11" },
+  { platform: "quilt", version: "1.21.8", asOf: "2026-11-11" },
+  { platform: "rift", version: "1.13", asOf: "2026-11-11" },
+  { platform: "rift", version: "1.13.2", asOf: "2026-11-11" },
+];
+
+/** 产物证据标记：真机验证过（有真机读数）。 */
+export const PLAYTEST_MOD_MARKER_VERIFIED = "【证据等级 = 真机验证过】";
+/** 产物证据标记：仅生成器文本与磁盘逐字符对齐，**未**真机验证。 */
+export const PLAYTEST_MOD_MARKER_ALIGNED = "【证据等级 = 仅文本对齐，未真机验】";
+
+/**
+ * 查该档有没有「二合一 mod 形态」的适配层，以及**凭什么**发射它。
+ *
+ * 发射判据 = PLAYTEST_MOD_VERIFIED_TIER（真机验证过）**或** PLAYTEST_MOD_GENERATOR_READY（仅文本对齐）。
+ * **为什么取并集**：两张表回答的是**不同问题**，但各自都足以支持「发射」这个动作 ——
+ *   - verified 支 = 更强的证据（真机读过数）⇒ 产物标「真机验证过」；
+ *   - ready 支 = 较弱的证据（只保证文本搬运，未真机验）⇒ 产物标「仅文本对齐、未真机验」。
+ * 保留 verified 独立成支还有一个实际作用：**真机事实不该被磁盘变更撤销** —— 日后磁盘改了文本、
+ * 该档从本表掉出时，它仍是真机验过的档，照旧发射（只是不再声称「文本对齐」）。
+ *
+ * ⚠ 返回的 tier 只在 verified 支非 null ⇒ 调用方**必须**按 reason 分支，别无条件读 tier.route。
+ */
 export function playtestModTier(platform: string, version: string) {
-  const tier = PLAYTEST_MOD_VERIFIED_TIER.find((t) => t.platform === platform && t.version === version);
   const adapter = PLAYTEST_MOD_ADAPTERS.find((a) => a.platform === platform && a.version === version);
-  return tier && adapter ? { tier, adapter } : null;
+  if (!adapter) return null;
+  const tier = PLAYTEST_MOD_VERIFIED_TIER.find((t) => t.platform === platform && t.version === version);
+  if (tier) return { reason: "real_machine_verified" as const, tier, adapter };
+  const ready = PLAYTEST_MOD_GENERATOR_READY.find((r) => r.platform === platform && r.version === version);
+  if (ready) return { reason: "text_aligned_only" as const, tier: null, adapter, asOf: ready.asOf };
+  return null;
+}
+
+/**
+ * 每档「二合一 mod 形态」产物的证据等级头（playtest/mod/EVIDENCE-HEADER.md）。
+ *
+ * 为什么要有这个文件：发射面在 2026-11-11 由「4 档真机验证」扩到「53 档（4 真机 + 49 仅文本对齐）」
+ * ⇒ 产物里必须能**一眼看出**这一档是哪一种证据，否则「文本对齐」会冒充「真机验证」。
+ * 本文件是每条 entry 的产物头，写在 core / 适配层文件**之前**（files 键序里排最前）。
+ * 它**只**描述证据等级，不修改任何 Java 载荷 ⇒ 发射的 .java 仍逐字节等于 javadocSafe(磁盘文本)。
+ */
+function buildModEvidenceHeader(
+  modTier: NonNullable<ReturnType<typeof playtestModTier>>,
+  platform: string,
+  version: string,
+): string {
+  const adapterCount = Object.keys(modTier.adapter.files).length;
+  const coreCount = Object.keys(PLAYTEST_MOD_CORE_SOURCES).length;
+  const head = [
+    `# 二合一 mod 形态 · 发射证据等级（${platform} ${version}）`,
+    "",
+    `> **${modTier.reason === "real_machine_verified" ? PLAYTEST_MOD_MARKER_VERIFIED : PLAYTEST_MOD_MARKER_ALIGNED}**`,
+    "",
+  ];
+  const tail = [
+    "",
+    "## 判据来源",
+    "",
+    "- 发射判据 = PLAYTEST_MOD_VERIFIED_TIER（真机验证表）**或** PLAYTEST_MOD_GENERATOR_READY（文本对齐表）。",
+    "- 本档命中：" + modTier.reason + "。",
+    "",
+    "```json",
+  ];
+  if (modTier.reason === "real_machine_verified") {
+    const payload = {
+      emissionEvidence: modTier.reason,
+      marker: PLAYTEST_MOD_MARKER_VERIFIED,
+      platform,
+      version,
+      adapterFiles: adapterCount,
+      coreFiles: coreCount,
+      asOf: modTier.tier.asOf,
+      route: modTier.tier.route,
+      reading: modTier.tier.reading,
+    };
+    return [
+      ...head,
+      "本档在**真机**上验过：驱动动作真的驱动了玩家。",
+      "",
+      "## 这一档的证据证明了什么 / 没证明什么",
+      "",
+      "- ✅ **真机验证过**：路线 = " + modTier.tier.route,
+      "- ✅ **真机读数**：" + modTier.tier.reading,
+      "- ✅ 同时也满足「文本对齐」（在本表 PLAYTEST_MOD_GENERATOR_READY 内）",
+      ...tail,
+      JSON.stringify(payload, null, 2),
+      "```",
+      "",
+    ].join("\n");
+  }
+  const payload = {
+    emissionEvidence: modTier.reason,
+    marker: PLAYTEST_MOD_MARKER_ALIGNED,
+    platform,
+    version,
+    adapterFiles: adapterCount,
+    coreFiles: coreCount,
+    asOf: modTier.asOf,
+  };
+  return [
+    ...head,
+    "本档**只**证明了「生成器文本已与磁盘真值逐字符对齐」——**没有**真机验证，**没有**编译验证。",
+    "",
+    "## 这一档的证据证明了什么 / 没证明什么",
+    "",
+    `- ✅ 适配层 ${adapterCount} 件 + core ${coreCount} 件的字面量 = 磁盘真值 F:\\B AND D MOD\\mod\\... ，**逐字符相等（diff -0/+0）** ⇒ 发射只是**搬运**磁盘上已有的文本。`,
+    "- ❌ **未**真机验证（没跑过游戏、没有真机读数）",
+    "- ❌ **未**编译验证（本仓不为该档跑 javac / Gradle）",
+    "- ❌ **不**代表这些签名在该档运行期可用",
+    ...tail,
+    JSON.stringify(payload, null, 2),
+    "```",
+    "",
+  ].join("\n");
 }
 
 /**
@@ -3072,20 +3260,25 @@ export function generatePlaytestDriver(input: PlaytestDriverInput): GeneratorRes
     "playtest/README.playtest.md": readme,
   };
 
-  // ── 老平台「最小桥 mod」附加产物（forge 1.7.10–1.12.2 + rift 1.13.2 + modloader 1.6.4）──
+  // ── 老平台「最小桥 mod」附加产物（forge 1.7.10–1.12.2 + rift 1.13.2 + modloader 1.6.2 / 1.6.4）──
   // 桥路线与 driver 链**互相隔离**：本模板不进 PLAYTEST_VERIFIED_TIER、不参与 driver 派发。
   // 只在用户走 external_bridge（默认模式）时附赠一份**逐版本正确**的自建桥源码 —— 因为这些档里
-  // 1.7.10–1.11.2 / rift 1.13.2 / modloader 1.6.4 **没有现成桥件**
+  // 1.7.10–1.11.2 / rift 1.13.2 / modloader 1.6.2 / 1.6.4 **没有现成桥件**
+  // modloader 两档**形态不同**：1.6.2 = 默认包 / obf 路线的**三件真源码（逐字节、无插值，真机已达成驱动面）**；
+  // 1.6.4 = 骨架 + fail-closed（Risugami 自 1.6.2 停更，1.6.4 无官方发布物）⇒ caveat 必须按 version 分叉。
   // （BlackBoxPro 只覆盖 fabric/neoforge 1.21.1 + 1.21.11、forge 1.12.2），
   // 而协议与 playtest_bridge 一致（GET /status、POST /execute）⇒ 老平台不必改工具面就能走桥。
   if (mode === "external_bridge" && isBridgeTarget(platform, version)) {
     const bridgeFiles = generateBridgeMod(platform, version, modId).files;
     Object.assign(files, bridgeFiles);
     const caveat = platform === "modloader"
-      ? `⚠️ **modloader 1.6.4 只出到「骨架」**：本仓对该档已实证三类出处（\`ModLoader.setInGameHook\` 注册 / ` +
-        `\`BaseMod.onTickInGame(float, Minecraft)\` 回调实名 / \`ModLoader.getMinecraftInstance()\` 客户端单例），` +
-        `玩家与位置 / 发聊天（语义）/ 截图 / 读方块 **4 项仍无来源** ⇒ MC 半边逐条 \`TODO(未核实)\` + throw，` +
-        `\`/status\` 可用但 \`/execute\` 一律 fail-closed；补齐清单在 README.bridge.md。`
+      ? version === "1.6.2"
+        ? `⚠️ **modloader 1.6.2 = 默认包 / obf 路线的「真源码」**：\`mod_bandd_playtest.java\` / \`ObfAdapter.java\` / \`BanddTickProxy.java\` 三件**逐字节**产出、**零插值**（与磁盘真值 \`F:\\B AND D MOD\\mod\\modloader-1.6.2\\src\\\` 一致），` +
+          `该档**真机已达成驱动面**（记录件 \`F:\\B AND D MOD\\artifacts\\modloader-1.6.2-lb-record.md\`）⇒ 不走 1.6.4 的「骨架 + fail-closed」口径。`
+        : `⚠️ **modloader 1.6.4 只出到「骨架」**：本仓对该档已实证三类出处（\`ModLoader.setInGameHook\` 注册 / ` +
+          `\`BaseMod.onTickInGame(float, Minecraft)\` 回调实名 / \`ModLoader.getMinecraftInstance()\` 客户端单例），` +
+          `玩家与位置 / 发聊天（语义）/ 截图 / 读方块 **4 项仍无来源** ⇒ MC 半边逐条 \`TODO(未核实)\` + throw，` +
+          `\`/status\` 可用但 \`/execute\` 一律 fail-closed；补齐清单在 README.bridge.md。`
       : platform === "rift"
         ? `⚠️ rift 1.13.2 的 MC 侧名字来自本仓 1.13.2 MCP 快照（与 rift scaffold 同快照）**逐名有出处**；` +
           `但 \`Minecraft.getInstance()\` 的 **static 性本仓证不出**、\`block_at\` **只回 translation key 不回注册名**（见 README.bridge.md）；` +
@@ -5870,23 +6063,33 @@ public final class PlaytestQaDriver {
 `;
   }
 
-    // ── 二合一 mod 形态（2026-11-03 回填）────────────────────────────────────────────
-    // 与上面的单文件解释器**并存**：上面那份是默认产物；这四档**额外**发 core + 适配层
-    // （它们的真机验证走的就是这个形态，见 PLAYTEST_MOD_VERIFIED_TIER）。
+    // ── 二合一 mod 形态（2026-11-03 回填；2026-11-11 接上发射闸）──────────────────────
+    // 与上面的单文件解释器**并存**：上面那份是默认产物；闸内各档**额外**发 core + 适配层。
+    // 发射闸 = PLAYTEST_MOD_VERIFIED_TIER（真机验证过）∪ PLAYTEST_MOD_GENERATOR_READY（仅文本对齐）。
+    // ⇒ 产物头必须写明**是哪一种**，不得让「文本对齐」冒充「真机验证」。
     const modTier = playtestModTier(platform, version);
     if (modTier) {
+      // 每档的产物头：先写（files 键序里排最前），让证据等级不会被忽略。
+      // 它**不**改任何 Java 载荷 ⇒ 下面每个 .java 仍逐字节等于 javadocSafe(磁盘文本)。
+      files["playtest/mod/EVIDENCE-HEADER.md"] = buildModEvidenceHeader(modTier, platform, version);
       for (const [rel, src] of Object.entries(PLAYTEST_MOD_CORE_SOURCES)) {
         files[rel] = javadocSafe(src);
       }
       for (const [rel, src] of Object.entries(modTier.adapter.files)) {
         files["playtest/mod/" + rel] = javadocSafe(src);
       }
+      const evidenceLine =
+        modTier.reason === "real_machine_verified"
+          ? `${PLAYTEST_MOD_MARKER_VERIFIED} 路线：${modTier.tier.route}。**真机读数**：${modTier.tier.reading}（as-of ${modTier.tier.asOf}）。`
+          : `${PLAYTEST_MOD_MARKER_ALIGNED} **本档只有「文本对齐」这一条证据**：适配层 ${Object.keys(modTier.adapter.files).length} 件的字面量已与磁盘真值逐字符相等（as-of ${modTier.asOf}）` +
+            `⇒ 发射只是搬运磁盘上已有的文本；**没有跑过真机、没有编译过**，也不代表这些签名在该档运行期可用。`;
       warnings.push(
         `platform=${platform} version=${version} 档：**另发二合一 mod 形态** —— ` +
           `\`playtest/core/\`（版本无关 core，${PLAYTEST_MOD_CORE_CLASSES.length} 类）+ \`playtest/mod/\`（适配层，唯一与平台相关的一层）。` +
-          `路线：${modTier.tier.route}。**真机读数**：${modTier.tier.reading}（${modTier.tier.asOf}）。` +
+          evidenceLine +
           `⚠ 这是**与 PlaytestQaDriver.java 不同的产物**：core 走 GameBridge 适配层架构，HttpApi 在 HTTP 线程只入队、PlaytestCore.onTick() 在客户端 tick 线程执行。` +
-          `⚠ 该形态**禁止反射**访问 MC（reobf 不改反射字符串 ⇒ 生产环境必失败），且 HTTP 端口**动态**（HttpApi.start() 从首选端口往后试 20 个）。`,
+          `⚠ 该形态**禁止反射**访问 MC（reobf 不改反射字符串 ⇒ 生产环境必失败），且 HTTP 端口**动态**（HttpApi.start() 从首选端口往后试 20 个）。` +
+          `⚠ 证据等级的机读字段在 \`playtest/mod/EVIDENCE-HEADER.md\` 的 \`emissionEvidence\`。`,
       );
     }
 

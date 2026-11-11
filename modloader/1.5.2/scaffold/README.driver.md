@@ -5,7 +5,7 @@
 ## 这份代码是什么
 
 bandd_playtest **二合一**模组的一层：**桥面**（命令级 9 动作）+ **驱动面**（玩家级 15 动作），
-共用同一份**版本无关 core**（9 类，见 `mcp-server/src/generators/playtest-mod-core.ts`）。
+共用同一份**版本无关 core**（18 类，见 `mcp-server/src/generators/playtest-mod-core.ts`）。
 
 架构（四层，**只有最底一层与平台相关**）：
 
