@@ -384,7 +384,8 @@ Three layers (details in the MCP tool sections **§7 / §7.5** below):
 | ----------------------- | -------------------------------------- | --------------------------------- |
 | `MC_SKILL_DATA`         | Root of the data directories (points at `data/`, not at a version subdirectory)            | `<repo root>/data`                |
 | `MC_SKILL_COMMUNITY`    | Root of the community knowledge base (defaults to the repo's `community_knowledge/`) | `<repo root>/community_knowledge` |
-| `MC_SKILL_ALLOW_WRITE`  | Set to `1` to let `port_project` write to disk              | `1`                               |
+| `MC_SKILL_ALLOW_WRITE`  | Set to `1` to let `port_project` / `mc_skill_update` write to disk              | `1`                               |
+| `MC_SKILL_AUTO_MODE`    | Set to `1` to enable **project-sandbox full-auto mode** (off by default): waives `confirmed` / `MC_SKILL_ALLOW_WRITE` inside `MC_SKILL_PROJECT_ROOT`, unlocks autonomous decisions, Gradle execution, and workflow prompts; `MC_SKILL_PLAYTEST_ROOT` must still be set explicitly (when set, also waives playtest confirmation and allows `eula.txt` + `kill`/`tnt`/`fill` inside that root); `mc_skill_update`, MDK SHA256 pins, refusing writes to this repo, formal `.minecraft`, and external uploads remain strict | `1` |
 | `MC_SKILL_PROJECT_ROOT` | Project root allowed for writes (absolute path)                         | `<absolute path to your mod project>`                  |
 | `MC_SKILL_STRICT`       | Set to `1` to make MCP startup fail when data is invalid                    | `1`                               |
 | `MC_SKILL_DEBUG_PATHS`  | Set to `1` to print path resolution steps (turn it on first when "can't find data/") | `1` |
@@ -417,7 +418,7 @@ Three layers (details in the MCP tool sections **§7 / §7.5** below):
 | `NODE_OPTIONS`          | Node 22.5–22.12 / 23.0–23.3 need `--experimental-sqlite` in here | unset (not needed on 22.13+ / 23.4+)      |
 | `MCP_TIMEOUT_MS`        | **Test/CI-side** timeout in ms (read by `test-mcp.mjs` / `release-smoke.mjs` / the four CI workflows; the **MCP server process itself does not read it**) | `60000`            |
 
-> The two tables above list the **entire user-configurable surface**. The server source reads **37** distinct environment-variable names when counted case-sensitively; the remainder are case aliases of the same switch plus process details (`HTTP_PROXY` / `http_proxy`, `ComSpec` / `COMSPEC`) and need no separate configuration. To get the full list, scan `mcp-server/src/**` for `process.env.*`.
+> The two tables above list the **entire user-configurable surface**. The server source reads **38** distinct environment-variable names when counted case-sensitively; the remainder are case aliases of the same switch plus process details (`HTTP_PROXY` / `http_proxy`, `ComSpec` / `COMSPEC`) and need no separate configuration. To get the full list, scan `mcp-server/src/**` for `process.env.*`.
 
 ## Notes on using the MCP tools
 

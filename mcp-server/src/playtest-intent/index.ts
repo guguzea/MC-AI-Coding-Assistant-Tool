@@ -14,6 +14,7 @@
 import { existsSync, mkdirSync, readFileSync, renameSync, statSync, writeFileSync } from "fs";
 import { isAbsolute, join, resolve } from "path";
 import { isInsideReal, nativeReal, realOfNearestExistingAncestor } from "../utils/project-sandbox.js";
+import { isAutoModeEnabled, resolvePlaytestAuthRoot } from "../utils/auto-mode.js";
 
 export interface PlaytestIntentQuery {
   action: "read" | "write";
@@ -62,19 +63,9 @@ function readJsonSafe(p: string): { state: "present" | "absent" | "unreadable"; 
 function authorize(query: PlaytestIntentQuery):
   | { ok: true; root: string; dir: string }
   | { ok: false; code: string; message: string } {
-  if (process.env.MC_SKILL_PLAYTEST_ALLOW !== "1") {
-    return {
-      ok: false,
-      code: "PLAYTEST_DISABLED",
-      message: "游玩自测未授权。设 MC_SKILL_PLAYTEST_ALLOW=1 + MC_SKILL_PLAYTEST_ROOT=<绝对路径>（一次授权一路径，见根 AGENTS.md）。",
-    };
-  }
-  const envRoot = (process.env.MC_SKILL_PLAYTEST_ROOT || "").trim();
-  if (!envRoot) return { ok: false, code: "AUTHORIZATION_REQUIRED", message: "缺 MC_SKILL_PLAYTEST_ROOT（绝对路径的授权根）。" };
-  if (!isAbsolute(envRoot) || !existsSync(envRoot)) {
-    return { ok: false, code: "AUTHORIZATION_REQUIRED", message: `MC_SKILL_PLAYTEST_ROOT 必须是存在的绝对路径：${envRoot}` };
-  }
-  const root = nativeReal(resolve(envRoot));
+  const authRoot = resolvePlaytestAuthRoot();
+  if (!authRoot.ok) return authRoot;
+  const root = authRoot.root;
   const dirArg = (query.evidenceDir || "").trim();
   if (!dirArg || !isAbsolute(dirArg)) {
     return { ok: false, code: "INVALID_INPUT", message: "evidenceDir 必填且必须是绝对路径（证据目录，须在授权根内）。" };
@@ -173,7 +164,8 @@ export function playtestIntent(query: PlaytestIntentQuery): PlaytestIntentResult
   }
 
   // ── write ──────────────────────────────────────────────────────────────
-  if (query.confirmed !== true) {
+  const autoMode = isAutoModeEnabled();
+  if (query.confirmed !== true && !autoMode) {
     return { ...base, ok: false, code: "CONFIRMATION_REQUIRED", message: "写意图需 confirmed=true（显式确认，避免误写邮箱）。" };
   }
   const name = (query.intent || "").trim();
@@ -190,7 +182,7 @@ export function playtestIntent(query: PlaytestIntentQuery): PlaytestIntentResult
     return { ...base, ok: false, code: "MENU_UNREADABLE", message: `菜单读不动（${menuFile}）：${menuRead.reason}` };
   }
   const forbidden = new Set(menu.forbidden ?? ["kill", "tnt", "fill"]);
-  if (forbidden.has(name)) {
+  if (!autoMode && forbidden.has(name)) {
     return { ...base, ok: false, code: "INTENT_FORBIDDEN", message: `意图 ${name} 在禁列（${[...forbidden].join(", ")}）。` };
   }
   const spec = menuIntents.find((i) => i.name === name);

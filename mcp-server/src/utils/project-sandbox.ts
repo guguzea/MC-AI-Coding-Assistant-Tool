@@ -12,8 +12,12 @@
  *   realpath the dirname only — the target file may not exist yet (ENOENT-safe).
  */
 
-import { existsSync, realpathSync, statSync } from "fs";
+import { existsSync, statSync } from "fs";
 import { basename, dirname, isAbsolute, join, resolve, sep } from "path";
+import { isInsideReal, nativeReal } from "./path.js";
+import { isAutoModeEnabled, isInsideKnowledgeRepoTree } from "./auto-mode.js";
+
+export { isInsideReal, nativeReal };
 
 export class ProjectPathError extends Error {
   /** true = 该拒绝来自 2026-08 引入的「MC_SKILL_PROJECT_ROOT 为硬边界」破坏性变更（此前 explicitRoot 可覆盖 env）。 */
@@ -25,35 +29,14 @@ export class ProjectPathError extends Error {
       | "PROJECT_ROOT_REQUIRED"
       | "PATH_OUTSIDE_ALLOWLIST"
       | "PATH_NOT_FOUND"
-      | "PARENT_DIR_MISSING",
+      | "PARENT_DIR_MISSING"
+      | "REFUSE_KNOWLEDGE_REPO",
     breakingChange = false,
   ) {
     super(message);
     this.name = "ProjectPathError";
     this.breakingChange = breakingChange;
   }
-}
-
-/** Prefer native realpath (resolves Windows Junctions); fall back to realpathSync. */
-export function nativeReal(p: string): string {
-  const native = (realpathSync as typeof realpathSync & { native?: (path: string) => string }).native;
-  if (typeof native === "function") {
-    return native(p);
-  }
-  return realpathSync(p);
-}
-
-/** Compare already-resolved real paths; case-insensitive on Windows. */
-export function isInsideReal(childReal: string, parentReal: string): boolean {
-  let c = childReal;
-  let p = parentReal;
-  if (process.platform === "win32") {
-    c = c.toLowerCase();
-    p = p.toLowerCase();
-  }
-  if (c === p) return true;
-  const prefix = p.endsWith(sep) ? p : p + sep;
-  return c.startsWith(prefix);
 }
 
 /**
@@ -84,9 +67,11 @@ export function realOfNearestExistingAncestor(target: string): string {
  */
 export function resolveWriteAllowRoot(
   explicitRoot?: string,
-  opts?: { requireEnvRoot?: boolean },
+  opts?: { requireEnvRoot?: boolean; allowAutoMode?: boolean },
 ): string {
-  if (process.env.MC_SKILL_ALLOW_WRITE !== "1") {
+  const allowWriteEnv = process.env.MC_SKILL_ALLOW_WRITE === "1";
+  const autoArmed = Boolean(opts?.allowAutoMode) && isAutoModeEnabled();
+  if (!allowWriteEnv && !autoArmed) {
     throw new ProjectPathError(
       "写操作已禁用。设置环境变量 MC_SKILL_ALLOW_WRITE=1，并以 dryRun=false 且 confirmed=true 执行。",
       "WRITE_DISABLED",
@@ -94,10 +79,14 @@ export function resolveWriteAllowRoot(
   }
 
   const envRoot = (process.env.MC_SKILL_PROJECT_ROOT || "").trim();
-  if (!envRoot && opts?.requireEnvRoot) {
+  const requireEnv = Boolean(opts?.requireEnvRoot) || (!allowWriteEnv && autoArmed);
+  if (!envRoot && requireEnv) {
     throw new ProjectPathError(
-      "该写操作要求显式设置 MC_SKILL_PROJECT_ROOT（绝对路径）作为硬边界；" +
-        "只传 projectPath 不足以放行——projectPath 由调用方/模型给出，与写盘根同义时沙箱形同虚设。",
+      autoArmed && !allowWriteEnv
+        ? "工程沙箱全自动模式（MC_SKILL_AUTO_MODE=1）仍要求显式设置 MC_SKILL_PROJECT_ROOT（绝对路径）作为硬边界；" +
+            "只传 projectPath 不足以放行，避免越界写盘。"
+        : "该写操作要求显式设置 MC_SKILL_PROJECT_ROOT（绝对路径）作为硬边界；" +
+            "只传 projectPath 不足以放行——projectPath 由调用方/模型给出，与写盘根同义时沙箱形同虚设。",
       "PROJECT_ROOT_REQUIRED",
     );
   }
@@ -113,6 +102,12 @@ export function resolveWriteAllowRoot(
       throw new ProjectPathError(`MC_SKILL_PROJECT_ROOT 不存在：${envReal}`, "PATH_NOT_FOUND");
     }
     const root = nativeReal(envReal);
+    if (autoArmed && isInsideKnowledgeRepoTree(root)) {
+      throw new ProjectPathError(
+        `全自动模式禁止写入 MC Skill 知识库目录树：${root}。请将 MC_SKILL_PROJECT_ROOT 设为外部模组工程目录。`,
+        "REFUSE_KNOWLEDGE_REPO",
+      );
+    }
 
     const arg = explicitRoot?.trim();
     if (arg) {
@@ -165,8 +160,10 @@ export function resolveWriteAllowRoot(
   return nativeReal(root);
 }
 
-function resolveAllowRoot(): string {
-  if (process.env.MC_SKILL_ALLOW_WRITE !== "1") {
+function resolveAllowRoot(opts?: { allowAutoMode?: boolean }): string {
+  const allowWriteEnv = process.env.MC_SKILL_ALLOW_WRITE === "1";
+  const autoArmed = Boolean(opts?.allowAutoMode) && isAutoModeEnabled();
+  if (!allowWriteEnv && !autoArmed) {
     throw new ProjectPathError(
       "写操作已禁用。设置环境变量 MC_SKILL_ALLOW_WRITE=1 并配置 MC_SKILL_PROJECT_ROOT 后，" +
         "再以 dryRun=false 且 confirmed=true 执行。",
@@ -197,7 +194,14 @@ function resolveAllowRoot(): string {
     );
   }
 
-  return nativeReal(root);
+  const real = nativeReal(root);
+  if (autoArmed && isInsideKnowledgeRepoTree(real)) {
+    throw new ProjectPathError(
+      `全自动模式禁止写入 MC Skill 知识库目录树：${real}。请将 MC_SKILL_PROJECT_ROOT 设为外部模组工程目录。`,
+      "REFUSE_KNOWLEDGE_REPO",
+    );
+  }
+  return real;
 }
 
 /**
@@ -296,14 +300,18 @@ export function assertCreatableDir(dirPath: string, allowRootReal?: string): voi
 /**
  * Resolve and validate a project path for read (always) or write (gated).
  */
-export function resolveProjectPath(projectPath: string, forWrite: boolean): string {
+export function resolveProjectPath(
+  projectPath: string,
+  forWrite: boolean,
+  opts?: { allowAutoMode?: boolean },
+): string {
   const resolved = resolve(isAbsolute(projectPath) ? projectPath : resolve(process.cwd(), projectPath));
 
   if (!forWrite) {
     return resolved;
   }
 
-  const realRoot = resolveAllowRoot();
+  const realRoot = resolveAllowRoot(opts);
 
   // Ensure project root resolves inside allowlist (Junction-aware via existing path).
   if (existsSync(resolved)) {
@@ -322,6 +330,6 @@ export function resolveProjectPath(projectPath: string, forWrite: boolean): stri
 }
 
 /** Return the resolved absolute allowlist root (native realpath), or throw. */
-export function getAllowRootReal(): string {
-  return resolveAllowRoot();
+export function getAllowRootReal(opts?: { allowAutoMode?: boolean }): string {
+  return resolveAllowRoot(opts);
 }

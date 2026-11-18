@@ -3,6 +3,7 @@ import { join, relative, basename, dirname, resolve as pathResolve, sep } from "
 import { fileURLToPath } from "url";
 import { resolveDataDir } from "../utils/path.js";
 import { resolveProjectPath, ProjectPathError, assertWritablePath, assertCreatableDir, getAllowRootReal } from "../utils/project-sandbox.js";
+import { isAutoModeEnabled } from "../utils/auto-mode.js";
 import { parseGradleProperties } from "../gradle/index.js";
 import { detectLoader } from "../diagnostics/index.js";
 import { isKnowledgeRepo } from "../platform-pack/write.js";
@@ -1319,7 +1320,7 @@ function applyPackageRenames(root: string, dryRun: boolean): {
   if (files.length === 0) {
     return { renames: [], unreviewed: [], modified: [], srcNotFound: true };
   }
-  const allowRoot = dryRun ? null : getAllowRootReal();
+  const allowRoot = dryRun ? null : getAllowRootReal({ allowAutoMode: true });
 
   const renames: { from: string; to: string; affectedFiles: number }[] = [];
   const unreviewed: { file: string; reason: string }[] = [];
@@ -1440,11 +1441,11 @@ export async function portProject(args: unknown) {
       },
     });
   }
-  const doWrite = !dryRun && safeConfirmed(confirmed);
+  const doWrite = !dryRun && (safeConfirmed(confirmed) || isAutoModeEnabled());
 
   let root: string;
   try {
-    root = resolveProjectPath(parsed.data.projectPath, doWrite);
+    root = resolveProjectPath(parsed.data.projectPath, doWrite, { allowAutoMode: true });
   } catch (err) {
     if (err instanceof ProjectPathError) {
       return JSON.stringify({
@@ -1530,7 +1531,7 @@ export async function portProject(args: unknown) {
     const files = buildArchitecturySkeleton(root, modId, mcVersion, neoVer);
 
     if (doWrite) {
-      const allowRoot = getAllowRootReal();
+      const allowRoot = getAllowRootReal({ allowAutoMode: true });
       const written: string[] = [];
       try {
         for (const [filePath, content] of Object.entries(files)) {

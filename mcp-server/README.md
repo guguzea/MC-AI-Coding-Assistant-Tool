@@ -132,6 +132,8 @@ node node_modules/mc-ai-coding-assistant-tool/dist/cli.js activate_platform_pack
 
 **永不代劳**：不替你跑 Gradle 构建、不把 jar 拷进游戏目录、不代你上传发布、不代你接受 EULA。这是设计选择，不是功能缺失 —— 这些动作的责任和凭据都在你这边。
 
+**可选：工程沙箱内全自动模式（`MC_SKILL_AUTO_MODE=1`）**：默认关闭。仅当你在环境变量中显式设 `MC_SKILL_AUTO_MODE=1` 并绑定外部工程根 `MC_SKILL_PROJECT_ROOT` 时生效——工程根内免除 `confirmed` 与 `MC_SKILL_ALLOW_WRITE=1`，工作流与会话包会指示 Agent 自主拍板并直接执行构建与测试（仍严禁写入 `MC_skill` 自身、触碰正式 `.minecraft` 或外网上传）；游玩自测仍须单独显式设置 `MC_SKILL_PLAYTEST_ROOT`（设了之后一并免确认并放开根内 `eula.txt` 与 `kill`/`tnt`/`fill`）；`mc_skill_update` 自更新确认与 MDK SHA256 pin 校验不随全自动放开。
+
 ## 离开数据包，大部分功能照常可用
 
 这一点很重要：**装完不需要任何额外下载，就已经能用掉大半工具箱。**

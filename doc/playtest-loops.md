@@ -54,6 +54,17 @@ Java 侧（本仓自建桥模板 `mcp-server/src/generators/playtest-bridge-mod.
 ① 端口全空 ⇒ bind `38081`；② `38081` 被另一座桥占 ⇒ bind `38080`；③ 11 个全占 ⇒ `server == null` 且日志打 `端口区间 [38071, 38081] … 桥不启动（fail-closed）`。
 ⚠ **替身只证签名形状、不证类存在**（本机无 1.12.2 / 1.13.2 / 1.6.4 构件）。逐条坑位见 `community_knowledge/authored/ingame-playtest-automation.md` 编号 107。
 
+### 二合一 mod 形态（`playtest/core/**` + `playtest/mod/**`）的发射证据等级（2026-11-12 回灌）
+
+`generate_playtest_driver` 在闸内档**另外**发「二合一 mod 形态」产物（`playtest/core/**` 18 类 + `playtest/mod/**` 适配层 + 产物头 `EVIDENCE-HEADER.md`），**与默认的单文件解释器并存、互不替代**。它的**档位权威不是** `PLAYTEST_VERIFIED_TIER`，而是**另一组表**：
+
+- `PLAYTEST_MOD_VERIFIED_TIER` —— **真机验证过**（4 档，每条带 `route` / `reading` / `asOf`）；
+- `PLAYTEST_MOD_ADAPTERS` —— 适配层源码字面量（53 档 / 110 个 `.java`）；
+- `PLAYTEST_MOD_GENERATOR_READY` —— **仅**「生成器文本已与磁盘逐字符对齐」（53 档；**与真机验证无关**，不回答能不能跑、不代表编译过）。
+
+⇒ 发射判据取 `verified ∪ generatorReady`，每档产物头与响应 warning 都带机读 `emissionEvidence` ∈ `real_machine_verified` / `text_aligned_only`。
+**判读第一步就是读 `emissionEvidence`** —— 别把「文本对齐」当「真机验证过」。口径与八条坑位（编号 108–115）见 `community_knowledge/authored/ingame-playtest-automation.md`。
+
 ---
 
 ## 二、服务端面 loop

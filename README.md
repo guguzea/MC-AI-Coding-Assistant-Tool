@@ -381,7 +381,8 @@ MC_skill/
 | ----------------------- | -------------------------------------- | --------------------------------- |
 | `MC_SKILL_DATA`         | 数据目录根路径（指向 `data/`，不含版本子目录）            | `<仓库根>/data`                |
 | `MC_SKILL_COMMUNITY`    | 社区知识库根路径（默认仓库根 `community_knowledge/`） | `<仓库根>/community_knowledge` |
-| `MC_SKILL_ALLOW_WRITE`  | `1` 时允许 `port_project` 写盘              | `1`                               |
+| `MC_SKILL_ALLOW_WRITE`  | `1` 时允许 `port_project` / `mc_skill_update` 等写盘              | `1`                               |
+| `MC_SKILL_AUTO_MODE`    | `1` 时开启**工程沙箱内全自动模式**（默认关闭）：放开 `MC_SKILL_PROJECT_ROOT` 内写盘确认 / Gradle / 自主决策与工作流停顿；`MC_SKILL_PLAYTEST_ROOT` 仍须单独显式设置（设了则免确认并放开根内 `eula.txt` 与 `kill`/`tnt`/`fill`）；`mc_skill_update`、MDK SHA256 校验、禁写本仓、正式 `.minecraft` 与上传发布仍严格保持禁止/需确认 | `1` |
 | `MC_SKILL_PROJECT_ROOT` | 写盘允许的项目根（绝对路径）                         | `<你的模组工程绝对路径>`                  |
 | `MC_SKILL_STRICT`       | `1` 时数据无效则 MCP 启动失败                    | `1`                               |
 | `MC_SKILL_DEBUG_PATHS`  | `1` 打印路径解析过程（诊断“找不到 data/”时先开它）        | `1`                               |
@@ -414,7 +415,7 @@ MC_skill/
 | `NODE_OPTIONS`          | Node 22.5–22.12 / 23.0–23.3 需含 `--experimental-sqlite` | 未设（22.13+ / 23.4+ 无需）      |
 | `MCP_TIMEOUT_MS`        | **测试/CI 侧**超时毫秒数（`test-mcp.mjs` / `release-smoke.mjs` / 四支 CI 工作流读它；**MCP 服务进程本身不读**） | `60000`            |
 
-> 上表已列**用户可配置面**。服务端源码按大小写敏感去重共读 **37** 个环境变量名；差出来的几个是同一开关的大小写别名与进程细节（`HTTP_PROXY` / `http_proxy`、`ComSpec` / `COMSPEC`），不需要单独配置。要拿全量清单，扫 `mcp-server/src/**` 的 `process.env.*` 即可。
+> 上表已列**用户可配置面**。服务端源码按大小写敏感去重共读 **38** 个环境变量名；差出来的几个是同一开关的大小写别名与进程细节（`HTTP_PROXY` / `http_proxy`、`ComSpec` / `COMSPEC`），不需要单独配置。要拿全量清单，扫 `mcp-server/src/**` 的 `process.env.*` 即可。
 
 
 

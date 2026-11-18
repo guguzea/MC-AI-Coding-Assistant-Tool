@@ -22,7 +22,8 @@ import { fileURLToPath } from "url";
 import { crc32 } from "zlib";
 import { resolveCacheRoot } from "../decompile/cache.js";
 import { escapeRegExp } from "../utils/regex.js";
-import { assertWritablePath, ProjectPathError } from "../utils/project-sandbox.js";
+import { assertWritablePath, getAllowRootReal, ProjectPathError } from "../utils/project-sandbox.js";
+import { isAutoModeEnabled } from "../utils/auto-mode.js";
 import { verifyExtractedTree } from "../utils/extract-verify.js";
 import * as zipPathGuard from "../utils/zip-path-guard.js";
 
@@ -1150,7 +1151,9 @@ export async function downloadOfficialMdk(args: DownloadOfficialMdkArgs): Promis
     return {
       ...base,
       downloaded: false,
-      note: "dryRun：未下载。确认后 dryRun=false 解压到 $MC_SKILL_CACHE/mdk/…。写入用户工程还需 confirmed + MC_SKILL_ALLOW_WRITE + MC_SKILL_PROJECT_ROOT。git clone 用 pin 的 commit SHA，不对 branch HEAD zip 做校验和。",
+      note: isAutoModeEnabled()
+        ? "dryRun：未下载。已启用 MC_SKILL_AUTO_MODE=1：传 dryRun=false 即可解压到 $MC_SKILL_CACHE/mdk/…（仍强制校验 SHA256 pin）；写入用户工程需同时设 MC_SKILL_PROJECT_ROOT。"
+        : "dryRun：未下载。确认后 dryRun=false 解压到 $MC_SKILL_CACHE/mdk/…。写入用户工程还需 confirmed + MC_SKILL_ALLOW_WRITE + MC_SKILL_PROJECT_ROOT。git clone 用 pin 的 commit SHA，不对 branch HEAD zip 做校验和。",
     };
   }
 
@@ -1178,12 +1181,14 @@ export async function downloadOfficialMdk(args: DownloadOfficialMdkArgs): Promis
     };
   }
 
+  let destAllowRoot: string | undefined;
   if (args.destPath) {
     try {
-      if (args.confirmed !== true) {
+      if (args.confirmed !== true && !isAutoModeEnabled()) {
         return { ...base, ok: false, error: { code: "NOT_CONFIRMED", message: "写入用户工程需要 confirmed=true" } };
       }
-      assertWritablePath(args.destPath);
+      destAllowRoot = getAllowRootReal({ allowAutoMode: true });
+      assertWritablePath(args.destPath, destAllowRoot);
     } catch (e) {
       const err = e as ProjectPathError;
       return {
@@ -1201,7 +1206,7 @@ export async function downloadOfficialMdk(args: DownloadOfficialMdkArgs): Promis
     if (args.destPath) {
       mkdirSync(args.destPath, { recursive: true });
       // mkdir 后复核：destPath 若是预置 junction/symlink，cpSync 会整树穿出沙箱（F-B02）
-      assertWritablePath(args.destPath);
+      assertWritablePath(args.destPath, destAllowRoot);
       // mdk 覆盖预检（不阻断）：目标目录已有内容时如实报数（覆盖式复制是有意行为）
       overwrote = countExistingFilesDeep(args.destPath);
       copyTreeSync(cached.unpackedRoot!, args.destPath);
@@ -1219,7 +1224,7 @@ export async function downloadOfficialMdk(args: DownloadOfficialMdkArgs): Promis
   }
 
   mkdirSync(destCache, { recursive: true });
-  if (args.confirmed !== true) {
+  if (args.confirmed !== true && !isAutoModeEnabled()) {
     return {
       ...base,
       ok: false,
@@ -1298,7 +1303,7 @@ export async function downloadOfficialMdk(args: DownloadOfficialMdkArgs): Promis
   if (args.destPath) {
     mkdirSync(args.destPath, { recursive: true });
     // mkdir 后复核：destPath 若是预置 junction/symlink，cpSync 会整树穿出沙箱（F-B02）
-    assertWritablePath(args.destPath);
+    assertWritablePath(args.destPath, destAllowRoot);
     // mdk 覆盖预检（不阻断）：目标目录已有内容时如实报数（覆盖式复制是有意行为）
     overwrote = countExistingFilesDeep(args.destPath);
     copyTreeSync(unpacked.unpackedRoot!, args.destPath);

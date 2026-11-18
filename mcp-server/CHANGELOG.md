@@ -1,5 +1,14 @@
 # mcp-server changelog
 
+## 2.3.1+ · 工程沙箱内全自动模式（2026-11-18）
+
+新增受环境变量严格控制的「工程沙箱内全自动模式」，设 `MC_SKILL_AUTO_MODE=1` 时在外部合法沙箱内免除写盘确认门与部分游玩自测阻断，同时守住仓库保护与校验和红线：
+
+- **单源开关与状态面（`src/utils/auto-mode.ts`、`src/utils/path.ts`、`get_server_status`）**：仅认 `MC_SKILL_AUTO_MODE === "1"`（对话口头请求不放行）；`get_server_status` 新增 `autoMode` 字段披露 `enabled`、`projectWriteArmed`、`playtestArmed`、`strictExceptions` 与 `unlockedInPlaytestRoot`。
+- **工程写盘免确认与知识库保护（`src/utils/project-sandbox.ts` 等）**：开启且设置外部 `MC_SKILL_PROJECT_ROOT` 时，`generate_*`、`port_project`、`activate_platform_pack`（write/deactivate）、`download_official_mdk`、`ingest_loader_api` 免除 `MC_SKILL_ALLOW_WRITE=1` 与 `confirmed=true`；未设 `MC_SKILL_PROJECT_ROOT` 仍报 `PROJECT_ROOT_REQUIRED`（`activate_platform_pack` 不再仅凭 `projectPath` 放行），目标落入 `MC_skill` 知识库目录树一律报 `REFUSE_KNOWLEDGE_REPO` 拒绝。
+- **游玩自测独立根与解锁边界（`src/playtest-*/index.ts`）**：`MC_SKILL_PLAYTEST_ROOT` 绝不自动回落到 `MC_SKILL_PROJECT_ROOT`；显式设置合法 `MC_SKILL_PLAYTEST_ROOT` 且开启全自动时，`inspect_playtest_evidence`、`inspect_playtest_multi`、`playtest_bridge`、`playtest_intent` 免除 `MC_SKILL_PLAYTEST_ALLOW=1` 与 `confirmed=true`，并放开 `MC_SKILL_PLAYTEST_ROOT` 内的 `eula.txt` 同意与 `playtest_intent` 的 `kill`/`tnt`/`fill`。
+- **永久严格例外与运行时提示同步**：`mc_skill_update`（仍强制 `confirmed=true` + `MC_SKILL_ALLOW_WRITE=1`）与 `download_official_mdk` SHA256 pin（不绕过 `allowUnpinned`）保持严格；`getWorkflowTemplate`、`registerPrompt`、`activate_platform_pack session` 在开启时动态切换为沙箱全自动指引（静态 `WORKFLOW_TEMPLATES` 与 `assert-workflow-hitl` 保持不变），`src/utils/actionable.ts` A-27 台账口径复算更新为 369 行 / 53 文件、392 处 / 60 文件，并新增回归单测 `test-auto-mode.mjs`。
+
 ## 2.3.1 · 文案与门禁修复（2026-11-04）
 
 ### 测试首次跑通，暴露并修掉 5 处既有缺陷

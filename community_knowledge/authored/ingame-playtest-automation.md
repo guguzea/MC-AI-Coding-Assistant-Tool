@@ -1171,3 +1171,91 @@ NeoForge 1.20.1 无官方 MDK pin（原返回 `MDK_NOT_PINNED`）⇒ 按**兼容
     影响 forge `1.8.9 / 1.9.4 / 1.10.2 / 1.11.2 / 1.12.2` 与 rift `1.13 / 1.13.2` 两处模板（forge 1.7.10 无聊天分支 ⇒ 不受影响）。
     **教训**：模板生成器里的**转义层数**（TS 模板字面量 → Java 字符串 → JSON）最容易漏，**改动后必须真 javac 一遍**。
 
+### 二合一 mod 形态（`bandd_playtest`）：能力面 + 发射闸三表 + 八条坑（编号 108–115，2026-11-12 回灌 · 证据等级逐条标死）
+
+> **来源与性质**：本段**回灌**自 `F:\B AND D MOD\STATUS.md` / `交付底稿.md` 的 T12–T27 轮（2026-11-10～11-11 真机与磁盘读数），
+> 叠加本仓生成器源码 `mcp-server/src/generators/playtest-mod-core.ts` / `playtest-mod-adapters.ts` / `playtest-driver.ts`。**不是新取证** —— 原文读数在哪一级，就照哪一级写。
+>
+> **证据等级四档**（本仓口径，本节逐条必标）：**真机验证过** / **只到编译 + 单测** / **仅文本对齐（未真机验、未编译）** / **未取得读数**。
+> ⚠ **单测过 ≠ 真机过**；⚠ **文本对齐 ≠ 真机验证** —— 这两个不等号是本段最容易被读糊的两处。
+
+#### 能力面（13 条；每条标证据等级）
+
+| 能力 | 关键形状 / 参数（照磁盘回执） | 证据等级 |
+| --- | --- | --- |
+| 地图网格**定宽高度**（`query_state` / `query_map`） | `stateVersion=6`；`cellWidth == 1 + heightWidth`（实测 4 = 1 + 3）；每行长度恒 `cols × cellWidth`（48×4 = 192）；分帧每 tick ≤128 格 ⇒ 48×48 = 2304 格约 21 tick；`sinceVersion` 只回 `{schema,unchanged,stateVersion,tick}`；fail-loud 截断（`maxChars=300` ⇒ `truncated:true`、`totalChars=587`、`shownRows=6`） | **真机**（fabric 1.21.11 `:38085` / neoforge 1.20.1 `:38090`） |
+| 纵层 `yMode`（`surface` 默认 / `player` / `absolute`）+ 地下自动切层 | 旋钮 `yModeAuto`（默认 true）/ `yModeAutoDepth`（默认 3）/ `yLayerMax`（默认 8、硬上限 16）/ `yAutoRange`（默认 2）；回 N 张**同几何**层网格、每层标绝对 y；要 65 层 ⇒ `requested=65 scanned=8 shown=8 dropped=57 truncated=true` 并列出实采 Y 列表；`yMode=surface` 与改动前存档**逐字相同**（1039 字符） | **真机**（自动切层：fabric `depth=10.0` / neoforge `depth=22.0`；层与 `query_column` 8/8 对上） |
+| `query_column` 纵剖面 | 参数 `x`/`z`（必填）、`y1`/`y2`（缺省 = 玩家 Y −32..+16）、`maxBlocks`（默认 96、硬上限 512）；逐行 `{y,id}` **降序**，空气也如实出现 `minecraft:air`（`id == null` 才表示取不到）；错误码 `STATE_MAP_UNSUPPORTED` / `MISSING_REQUIRED_PARAM` / `BAD_REQUEST` / `NO_PLAYER` | **真机**（`firstNonAirY` 与地图 `h` / `topSolidY` / `mapHeightAtColumn` 四方相等；挖掉命中坐标后再搜该坐标消失，stone 命中 9 → 8） |
+| `query_blocks` 按条件搜 | 参数 `filter`（必填、id 数组、支持 `*`）、`radius`（默认 8、硬上限 32）、`y1`/`y2`、`maxMatches`（默认 64、硬上限 512）、`refresh`；**只回命中坐标** `matches[{x,y,z,id,dist}]`；分帧 `SEARCH_BLOCKS_PER_TICK=256` | **真机**（一步找到全部树 + 120 铁矿 + 2 钻石矿；`matched=200` 撞上限、`truncated=true`） |
+| `playerDepthBelowSurface` | 公式 = **地表平面 Y − 玩家 Y**（地表平面 Y = `topSolidY + 1`）⇒ **正值 = 在地下**；取不到一律 `null` + 人话（不填 0 冒充） | **真机** |
+| 实体叠加层 `entityGrid`（**平行层，不覆盖方块层**） | 与 `grid` 同 cols/rows/step/origin；**实体标记是独立命名空间，方块码只出现在 `grid` 里**；独立 `entityLegend` + `entities[]`（按距离近到远）；无实体 ⇒ 如实给空层；不支持的档 ⇒ `entitiesIncluded:false` + note | **真机**（开与不开实体，`grid` 与 `legend` 逐字相同、各 1039 字符）⚠ 其余标记种类只在单测（`A18` 钉牛格 = `a`） |
+| 读背包 `query_inventory` / `query_inventory_slot` | `{size, slots:[{slot,empty,itemId,idKind,count}]}`（**跳过空格子**）+ `mainHand` / `selectedSlot` / `hotbar`（9 格含空格）；`idKind` 现代口径 = `registryName`（如 `minecraft:stone`），桥路线 = `unlocalizedName`（如 `item.stone`）⇒ **别拿同一个串直接比** | **真机**（`give` 后 fabric `stone` 64；neoforge `stone` 64 + `rotten_flesh` 1） |
+| 界面 / 容器五动作 `query_slots` / `click_slot` / `click_widget` / `use_on` / `place_block`（DRIVER + 子表 `GUI_ACTIONS`） | `query_slots` 由 `SlotRoles` 按 menuType + 下标补 `role`（11 类）；`click_slot` 照原版语义（`button=0` 左 / `1` 右 ⇒ `PICKUP`；`shift=true` ⇒ `QUICK_MOVE`）；`click_widget` 与控件树共用同一次遍历（下标不漂移）；失败码 `NO_SCREEN_OPEN` / `SLOT_OUT_OF_RANGE` / `WIDGET_OUT_OF_RANGE` / `WIDGET_NOT_CLICKABLE` / `WIDGET_CLICK_REJECTED` / `GUI_ACTIONS_UNSUPPORTED` | **只到编译 + 单测**（`GuiActionsTest` 75）—— **真机 L4 未做** |
+| `select_slot{slot}`（DRIVER + 子表 `HOTBAR`） | `slot` 必填**整值**（`8` / `8.0` / `"8"` 都收，`8.7` 一律拒）；回执 `previousSlot` / `selectedSlot`（**切换后复读**）/ `mainHand` / `consistent`（两边都读到数字才给布尔，否则 `null`）；越界不静默当切 0 号槽 | **只到编译 + 单测**（`T22ActionsTest` 43） |
+| `drop_item{slot?,count?,all?}` | 复用 `click_slot` 通路 + 原版 `SlotActionType.THROW`；`all=true`（或缺省 count）⇒ 整叠（`button=1`）；`count=1` ⇒ 一个（`button=0`）；`1<count<叠` ⇒ 连点 count 次；**丢空格不是错误**（`status=ok` + `count=0`） | **只到编译 + 单测** |
+| `query_player_state` 补 `gameMode` / `flying` / `canFly` / `cheats` | 走**新 default 方法** `playerMetaJson()`（默认 `null` = 本档不报；只喂 `query_player_state` 一条动作 ⇒ `query_state` / `query_map` 回执逐字不变）；拿不到一律 `null` + note | **只到编译 + 单测** |
+| `query_blocks` 截断契约 | 顶层新增 `complete` / `stoppedBy` / `remainingBlocks` / `completeNote` / `completeReasonNote`；`complete=true` **仅当**「本轮起了 + 整盒扫完 + 没提前停」；`stoppedBy ∈ maxMatches / scanning / aborted / notStarted / null` | **只到编译 + 单测**（事故原形是真机：`maxMatches=128` 时 `doneBlocks=32783 < totalBlocks=266175`） |
+| 设置面 17 键（`settings_set` / `settings_save` BRIDGE + `open_settings` DRIVER） | 白名单 = `StateConfig` 的 17 个旋钮；`settings_save` **幂等**（连存两次 `changedKeys` 为空且文件 sha 不变）；无 GUI 的 54 档如实回 `SETTINGS_GUI_UNSUPPORTED` | **真机**（两档 `open_settings` 都开出 `ClothConfigScreen`、`query_widgets` 见 5 个 `ClothConfigTabButton`）⚠ 54 档未逐一真机 |
+
+#### 发射闸三表（代码落点 = `mcp-server/src/generators/playtest-driver.ts`）
+
+`generate_playtest_driver` 在闸内档**额外**发「二合一 mod 形态」产物（`playtest/core/**` 18 类 + `playtest/mod/**` 适配层 + 产物头 `EVIDENCE-HEADER.md`），**与默认的单文件解释器 `PlaytestQaDriver.java` 并存、互不替代**。三张表的语义**各不相同，别混**：
+
+| 表 | 落点 | 语义 | 档数（as-of 2026-11-11） |
+| --- | --- | --- | --- |
+| `PLAYTEST_MOD_ADAPTERS` | `mcp-server/src/generators/playtest-mod-adapters.ts` | 逐档适配层**源码字面量**（逐档一条、**无共享模板**） | 53 条 entry / 110 个 `.java` 字面量（其中 `*Adapter.java` 53 个） |
+| `PLAYTEST_MOD_VERIFIED_TIER` | `mcp-server/src/generators/playtest-driver.ts` | **真机验证过**：每条带 `route` / `reading` / `asOf`，判据 = 驱动动作真的驱动玩家 | **4 档**（rift 1.13 / modloader 1.2.5 / 1.5.2 / 1.6.2） |
+| `PLAYTEST_MOD_GENERATOR_READY` | `mcp-server/src/generators/playtest-driver.ts` | **新增**（2026-11-11 立）：语义**只有一个** = 「表内适配层字面量已与磁盘真值逐字符相等（diff −0/+0）」⇒ 发射只是**搬运**磁盘上已有的文本 | **53 档**（= 适配层全集） |
+
+- **发射判据 = `verified || generatorReady`**（`playtestModTier()`）⇒ `reason ∈ real_machine_verified | text_aligned_only`；返回 `null` = 该档没有适配层。**取并集的理由**：两张表回答不同问题，各自都足以支持「发射」这个动作；真机事实不该被日后的磁盘变更撤销。
+- **产物必须能一眼区分证据等级**：每档产物头 `EVIDENCE-HEADER.md`（落在 `playtest/mod/**`，写在 `files` 键序**最前**）+ 响应 warning + 机读字段 **`emissionEvidence`** ∈ `real_machine_verified` / `text_aligned_only`；中文面另有 `PLAYTEST_MOD_MARKER_VERIFIED` / `PLAYTEST_MOD_MARKER_ALIGNED` 两个标记。
+- **本仓复核读数**（2026-11-12，用现 `mcp-server/dist` 复跑；分母 = 表内 entry / 文件数）：`PLAYTEST_MOD_ADAPTERS` 53 条 / 110 件，对 `F:\B AND D MOD\mod\**` 逐文件字节比对（磁盘去 BOM）⇒ **53/53 档相等、0 mismatch、0 missing**；表内字面量 **1,394,315 B** = 磁盘 **1,394,315 B**；core **18/18** 相等（**428,524 B** = **428,524 B**）；`PLAYTEST_MOD_GENERATOR_READY`(53) 与适配层集合**逐一相等**；发射冒烟 fabric 1.21.11 ⇒ 25 文件（`playtest/mod/` 5 + `playtest/core/` 18 + 2）、`emissionEvidence=text_aligned_only`，rift 1.13 与 modloader 1.6.2 ⇒ `real_machine_verified`。
+
+#### 坑位 108–115
+
+- **108 · 挖矿返回值误判：破坏延迟未到的分支也回 `true` —— 当成「已挖穿」会第一 tick 清空目标（全档 47 处）**
+  **根因**：`continueDestroyBlock`（mojmap）/ `updateBlockBreakingProgress`（yarn；1.14.4 档叫 `method_2902`）/ `onPlayerDamageBlock`（MCP）在**破坏延迟 / 冷却未到**的分支里**也回 true**。javap 实证：`MultiPlayerGameMode#continueDestroyBlock` 在 `destroyDelay--` 之后仍 `iconst_1; ireturn`（fabric 1.21.11 的 `blockBreakingCooldown` 分支同形）。
+  **真机铁证**（neoforge 1.20.1 **生存**）：`mine` 40 次 / 22 秒、`press attack` 按住 12 秒 ⇒ 方块**纹丝不动**；同实例 `bot_break` 能挖穿 ⇒ **排除世界 / 服务端问题**。
+  **全档清单 47 处 / 47 文件（修复前口径，磁盘未留修复前快照）**：A `continueDestroyBlock` 20 · B `updateBlockBreakingProgress` 21 · C `method_2902` 1 · D `onPlayerDamageBlock` 5。
+  **处方**：**不看返回值**；**唯一完成判据 = 目标格变空气**（`beginTick(targetIsAir) ⇒ MINE_BROKEN`）；返回值**只记账**（`noteContinueReturnedTrueCount`）**绝不据此收工**；超时 600 tick ⇒ `MINE_TIMEOUT`（fail-loud，不无限空转）；`aim` 对同一目标回 false ⇒ **绝不重发 START**（重发会清零进度）。实现落 `MiningTracker.java`（core 面、可离线单测）。
+  **诚实边界**：**46 个非参照档只做了机械替换 + 源码门**（`T20CorrectnessTest` 扫 56 个适配层源文件，旧写法 0 残留、48 个带 `[T20-①]` 标记）—— **未编译、未运行**；**D 组未做 javap 复核**（1.12.2 映射件不在本机）。
+  **证据等级**：真机（两个参照档 + 事故读数）/ 磁盘原件（实现与门）。
+
+- **109 · 「在创造模式跑真机 L4 = 假绿」—— 它同时遮住挖矿缺陷与合成能力缺失**
+  **读数**：fabric 那台基线是**脏世界**（`diamond×7` + `beef×2`）且 `gamemode survival` 回 `result=1` ⇒ **此前不是生存**；两台卡点一致 = 卡在「原木 → 木板」（**没有格子交互 ⇒ 合不了成**）。
+  **处方**：**玩家可见行为**的 L4 **必须至少有一次生存模式走通主链**；世界基线要**声明**（`clear @s` 属世界设置、可用于诚实从零，但**必须声明**）。
+  **证据等级**：真机（T18 fabric / T18b neoforge 两头独立实测）。
+
+- **110 · 并发重建会让 jar 的 `sha256` 漂 ⇒ 合并验收看开包内容，别比 sha**
+  **现象**：同一档多次重建，jar 的 `sha256` 每次漂（neoforge 另因 `Implementation-Timestamp` + mtime **不可字节复现**，三跑三 hash）。
+  **处方**：合并验收的正确判据 = **打开 jar 验 class / 方法**（本仓验收读到两个 jar **同时含** `GuiResult` / `SlotRoles` / `MiningTracker`；`GameBridge` 7 项、`GameStateService` 3 项、`PlaytestCore` 9 项、两档适配层 5 项特征）；**`sha` 只作台账、不作判据**。
+  **证据等级**：磁盘原件（jar 大小 + 开包读数）。
+
+- **111 · 同一工作树并发构建互相破坏；并发测试抢同一 HTTP 端口（两条环境红，别读成代码缺陷）**
+  **构建**：一方报「程序包 `com.bandd.playtest.core` 不存在」**153 错**（`BUILD FAILED in 3m 50s`；同类还有 **56 错 / 5m 41s**），另一方 clean build 撞 **`Failed to clean up stale outputs`**（`1m 27s`）。
+  **测试**：`[FAIL] HTTP: 端口被占用自增到 39182`（同轮 `core tests: PASS=123 FAIL=1`）—— **环境红**；**独占重跑即绿**（`PASS=124 FAIL=0`）。
+  **处方**：同一工作树同一时刻**只跑一个构建 / 一套测试**；终局验收**独占该卷**（与 `CONTRIBUTING.md` §验证纪律「`npm test` 不与语料/文档抓取并发」同源）。
+  **证据等级**：磁盘原件（三份构建日志 + 测试日志）。
+
+- **112 · 异步面必须轮询到 `active=false` 再下结论（查询是分帧 job）**
+  **真机**：`query_blocks` 与纵层扫描都是**分帧 job** ⇒ 查询**立刻返回**时 `scan.complete=false` / `layers` 为空是**正常半途读数**（`layerScan.active=true` + `layers=[]`）。
+  **处方**：**判据必须等 `scan.active` 为假再读**；本轮两次差点把半途读数当结论（一次空循环得**假绿**、一次 `scanned=0`）。
+  **证据等级**：真机。
+
+- **113 · 错误响应没有 `data` 字段（别按 `data.*` 解析）**
+  **形状**：禁列 / 拒答走**顶层**错误体 `{status:"failed", code, message, parsed:false, sent:false}` —— **`data` 不存在**。
+  **处方**：解析脚本**不能假设 `data` 恒有**（按 `data.sent` 取 ⇒ 取到 `undefined` ⇒ 脚本抛错一次）。
+  **更正留痕**：曾误记「拒答回执含 `sent:false` 与真机不符」—— **该说法本身是错的**（顶层确有 `parsed:false` / `sent:false`）；本条的正当内容只剩「**不能假设 `data` 恒有**」。
+  **证据等级**：真机（完整响应体）。
+
+- **114 · `query_blocks` 换条件不带 `refresh` 会拿旧结果冒充新条件**
+  **真机原形**：点名 `iron_ore` 却回 **11 条 `minecraft:air`**（顶层 `filter` 回显**新**条件，`matched` / `matches` 仍是**上一次**的；唯一诚实字段是 `scan.filterApplied`）。
+  **处方**：**条件变即自动重扫** —— 条件签名含 `filter` / `radius` / `y1` / `y2` / `maxMatches`；回执新增 `restarted` / `restartedReason` / `conditionChanged` / `previousCondition`（条件逐字相同 ⇒ `restarted:false` + `reused:true`；显式 `refresh=true` ⇒ 无条件重扫）。
+  **证据等级**：真机。
+
+- **115 · `press` 失焦会静默失效却报 `down`**
+  **真机**：窗口**失焦**时 `attack` / `use` 不生效，而旧回执照样写 `down`。
+  **处方**：**诚实回执但照发按键** —— 回执补 `windowFocused`（`Boolean`，取不到留 `null` = 未知、**不假装已聚焦**）与 `mayTakeEffect`；`down=false`（释放）恒为 true。
+  **边界**：「不依赖聚焦」在**不做宿主级输入注入**的前提下**无解**（GLFW 焦点回调 + 单人世界 `pauseOnFocusLost` 默认 true 会弹暂停屏）；且**未擅自改用户 `options.txt`**。
+  **证据等级**：真机。
+

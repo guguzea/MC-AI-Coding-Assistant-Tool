@@ -20,6 +20,7 @@
 import { existsSync, readFileSync, readdirSync, statSync } from "fs";
 import { dirname, isAbsolute, join, parse, resolve } from "path";
 import { isInsideReal, nativeReal } from "../utils/project-sandbox.js";
+import { resolvePlaytestAuthRoot } from "../utils/auto-mode.js";
 
 /**
  * 多个目录的公共祖先（先按盘符/根分组；跨盘/跨根返回 null）。
@@ -111,18 +112,9 @@ function readTextSafe(p: string): { state: EvidenceState; text?: string; reason?
 function authorize(q: PlaytestMultiQuery, dirs: string[]):
   | { ok: true; root: string }
   | { ok: false; code: string; message: string } {
-  if (process.env.MC_SKILL_PLAYTEST_ALLOW !== "1") {
-    return {
-      ok: false,
-      code: "PLAYTEST_DISABLED",
-      message: "游玩自测未授权。设置 MC_SKILL_PLAYTEST_ALLOW=1 + MC_SKILL_PLAYTEST_ROOT=<绝对路径>（见根 AGENTS.md）。",
-    };
-  }
-  const envRoot = (process.env.MC_SKILL_PLAYTEST_ROOT || "").trim();
-  if (!envRoot || !isAbsolute(envRoot) || !existsSync(envRoot)) {
-    return { ok: false, code: "AUTHORIZATION_REQUIRED", message: `MC_SKILL_PLAYTEST_ROOT 必须是存在的绝对路径：${envRoot || "(空)"}` };
-  }
-  const root = nativeReal(resolve(envRoot));
+  const authRoot = resolvePlaytestAuthRoot();
+  if (!authRoot.ok) return authRoot;
+  const root = authRoot.root;
   // 逐目录 realpath 校验；**任一越界整体拒**（不逐客户端放行 —— 否则「一半在根内」会静默变成"部分可信"）
   for (const d of dirs) {
     const real = existsSync(d) ? nativeReal(resolve(d)) : resolve(d);

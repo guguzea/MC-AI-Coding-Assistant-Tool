@@ -8,9 +8,9 @@
  * 3. process.cwd() 回退
  */
 
-import { existsSync, readdirSync, readFileSync, statSync } from "fs";
+import { existsSync, readdirSync, readFileSync, realpathSync, statSync } from "fs";
 import { homedir } from "os";
-import { join, dirname, resolve, relative, isAbsolute } from "path";
+import { join, dirname, resolve, relative, isAbsolute, sep } from "path";
 import { fileURLToPath } from "url";
 import {
   getSemanticIndexStatus,
@@ -483,4 +483,26 @@ export function assertDataUsable(
     info.push(`语义库探测按上限 ${MAX_SEMANTIC_TREES} 截断（实质语料树共 ${trees.length} 棵）。`);
   }
   return { ok: true, info };
+}
+
+/** Prefer native realpath (resolves Windows Junctions); fall back to realpathSync. */
+export function nativeReal(p: string): string {
+  const native = (realpathSync as typeof realpathSync & { native?: (path: string) => string }).native;
+  if (typeof native === "function") {
+    return native(p);
+  }
+  return realpathSync(p);
+}
+
+/** Compare already-resolved real paths; case-insensitive on Windows. */
+export function isInsideReal(childReal: string, parentReal: string): boolean {
+  let c = childReal;
+  let p = parentReal;
+  if (process.platform === "win32") {
+    c = c.toLowerCase();
+    p = p.toLowerCase();
+  }
+  if (c === p) return true;
+  const prefix = p.endsWith(sep) ? p : p + sep;
+  return c.startsWith(prefix);
 }

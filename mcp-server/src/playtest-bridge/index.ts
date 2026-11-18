@@ -12,6 +12,7 @@ import { appendFileSync, existsSync, mkdirSync, statSync } from "fs";
 import { isAbsolute, join, resolve } from "path";
 import { randomUUID } from "crypto";
 import { isInsideReal, nativeReal } from "../utils/project-sandbox.js";
+import { isAutoModeEnabled, resolvePlaytestAuthRoot } from "../utils/auto-mode.js";
 
 export type BridgeAction = "status" | "execute" | "await";
 export type AwaitCondition =
@@ -64,19 +65,10 @@ let callsCapNoted = false;
 type AuthResult = { ok: true; root: string } | { ok: false; code: string; message: string };
 
 function authorize(query: PlaytestBridgeQuery): AuthResult {
-  if (process.env.MC_SKILL_PLAYTEST_ALLOW !== "1") {
-    return {
-      ok: false,
-      code: "PLAYTEST_DISABLED",
-      message:
-        "游玩自测未授权。设置 MC_SKILL_PLAYTEST_ALLOW=1 + MC_SKILL_PLAYTEST_ROOT=<绝对路径>（一次授权一路径，见根 AGENTS.md）。",
-    };
-  }
-  const envRoot = (process.env.MC_SKILL_PLAYTEST_ROOT || "").trim();
-  if (!envRoot || !isAbsolute(envRoot) || !existsSync(envRoot)) {
-    return { ok: false, code: "AUTHORIZATION_REQUIRED", message: `MC_SKILL_PLAYTEST_ROOT 必须是存在的绝对路径：${envRoot || "(空)"}` };
-  }
-  if (query.action !== "status") {
+  const authRoot = resolvePlaytestAuthRoot();
+  if (!authRoot.ok) return authRoot;
+  const auto = isAutoModeEnabled();
+  if (query.action !== "status" && !auto) {
     if (!query.authorization) {
       return { ok: false, code: "AUTHORIZATION_REQUIRED", message: 'execute / await 须带 authorization:"sandbox"|"dev_instance"。' };
     }
@@ -84,7 +76,7 @@ function authorize(query: PlaytestBridgeQuery): AuthResult {
       return { ok: false, code: "CONFIRMATION_REQUIRED", message: "execute / await 会真的操作游戏：须带 confirmed=true。" };
     }
   }
-  return { ok: true, root: nativeReal(resolve(envRoot)) };
+  return { ok: true, root: authRoot.root };
 }
 
 interface HttpResult {

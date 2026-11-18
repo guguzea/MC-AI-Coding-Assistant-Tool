@@ -3,6 +3,7 @@ import { isAbsolute, join, resolve } from "path";
 import { resolveCacheRoot } from "../decompile/cache.js";
 import { listZipEntries, readZip } from "../decompile/zip-util.js";
 import { actionable } from "../utils/actionable.js";
+import { isAutoModeEnabled } from "../utils/auto-mode.js";
 import { extractCompilationUnit } from "./extract.js";
 import { candidateKeysSafe, howToIngestCli, mcpServerRoot } from "./keys.js";
 import { assertCacheFresh, readSidecar, sha256File, sidecarSchemaCompatible } from "./sidecar.js";
@@ -28,7 +29,7 @@ export function ingestLoaderApi(args: IngestLoaderApiArgs) {
   const mappingsVersion = String(args.mappingsVersion ?? "").trim();
   const library = String(args.library ?? "").trim().toLowerCase();
   const dryRun = args.dryRun !== false;
-  const confirmed = args.confirmed === true;
+  const confirmed = args.confirmed === true || isAutoModeEnabled();
   const force = args.force === true;
 
   if (!platform || !minecraftVersion) {
@@ -157,7 +158,9 @@ export function ingestLoaderApi(args: IngestLoaderApiArgs) {
       dryRun: true,
       ...planned,
       howToWrite:
-        "设置后重跑：--dry-run=false --confirm。只写 $MC_SKILL_CACHE overlay（与 decompile 同口径，不需要 MC_SKILL_ALLOW_WRITE）。仍不会写仓库 data/",
+        isAutoModeEnabled()
+          ? "已启用 MC_SKILL_AUTO_MODE=1：设置 --dry-run=false 即可直接写入 $MC_SKILL_CACHE overlay（免 --confirm，仍不会写仓库 data/）。"
+          : "设置后重跑：--dry-run=false --confirm。只写 $MC_SKILL_CACHE overlay（与 decompile 同口径，不需要 MC_SKILL_ALLOW_WRITE）。仍不会写仓库 data/",
     };
   }
 

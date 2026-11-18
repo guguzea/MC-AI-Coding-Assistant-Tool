@@ -6,6 +6,60 @@
 - 只追加，不改写历史节。要更正旧节，写进新节第 6 块「自我更正」并点名旧节。
 - 夜跑、交接、事后抽查读本文件，不依赖聊天记录。夜批（阶 1）的队列与抽查记账仍在 [`NIGHT_BATCH.md`](./NIGHT_BATCH.md)，本文件不顶替它。
 
+## 2026-11-18 · 工程沙箱内全自动模式（`MC_SKILL_AUTO_MODE=1`）（维护档）
+
+**第 0 块 · 结论**：已落地工程沙箱内全自动模式，仅认严格环境变量 `MC_SKILL_AUTO_MODE=1`（未设、非 `"1"` 或对话口头请求一律维持现行人在环），开启后在外部 `MC_SKILL_PROJECT_ROOT` 内免除工程写盘的 `MC_SKILL_ALLOW_WRITE=1` 与 `confirmed=true`，并在单独显式设置的 `MC_SKILL_PLAYTEST_ROOT` 内免除游玩自测确认门且解锁 `eula.txt` 同意与 `playtest_intent` 的 `kill`/`tnt`/`fill`；`mc_skill_update`、`download_official_mdk` 的 SHA256 pin、禁止写入 `MC_skill` 知识库仓库自身及 `MC_SKILL_PLAYTEST_ROOT` 绝不回落到 `MC_SKILL_PROJECT_ROOT` 等边界保持严格不变。`mcp-server` 完整 `npm test` 链（含新增 `test-auto-mode.mjs` 7 组回归）全部通过（exit 0）。
+
+1. **改了哪些文件**
+   - `mcp-server/src/utils/path.ts`、`mcp-server/src/utils/auto-mode.ts`（新）、`mcp-server/src/utils/project-sandbox.ts`：抽取 `nativeReal`/`isInsideReal`，建立单源开关 `isAutoModeEnabled()`、`isInsideKnowledgeRepoTree()`、`resolvePlaytestAuthRoot()` 与 `getAutoModeStatus()`；项目写盘在 `allowAutoMode` 下免除 `MC_SKILL_ALLOW_WRITE=1`，未设 `MC_SKILL_PROJECT_ROOT` 仍报 `PROJECT_ROOT_REQUIRED`，落入 `MC_skill` 仓库目录树报 `REFUSE_KNOWLEDGE_REPO`。
+   - `mcp-server/src/generators/write-helper.ts`、`mcp-server/src/porting/index.ts`、`mcp-server/src/platform-pack/write.ts`、`mcp-server/src/mdk/index.ts`、`mcp-server/src/loader-api/ingest.ts`：全自动下免除 `confirmed` 确认门（`activate_platform_pack` 在 `MC_SKILL_AUTO_MODE=1` 下不再仅凭 `projectPath` 绕过 `MC_SKILL_PROJECT_ROOT`；`download_official_mdk` 仍强制 SHA256 pin 不绕过 `allowUnpinned`；`mc_skill_update` 保持严格确认）。
+   - `mcp-server/src/playtest-evidence/index.ts`、`mcp-server/src/playtest-multi/index.ts`、`mcp-server/src/playtest-bridge/index.ts`、`mcp-server/src/playtest-intent/index.ts`：四模块统一通过 `resolvePlaytestAuthRoot()` 校验 `MC_SKILL_PLAYTEST_ROOT`；显式授权根下免除 `MC_SKILL_PLAYTEST_ALLOW=1` 与 `confirmed`，并解锁菜单内 `kill`/`tnt`/`fill`。
+   - `mcp-server/src/prompts/templates.ts`、`mcp-server/src/wave/register.ts`、`mcp-server/src/platform-pack/session.ts`、`mcp-server/src/tool-registry.ts`、`mcp-server/src/utils/actionable.ts`：`getWorkflowTemplate` / `registerPrompt` / `session` / `get_server_status` 动态联动披露 `autoMode` 状态与指引（保留静态 `WORKFLOW_TEMPLATES`）；同步刷新 `actionable.ts` A-27 复算口径（`369` 行 / `53` 文件、`392` 处 / `60` 文件）。
+   - `mcp-server/test-auto-mode.mjs`（新）、`mcp-server/package.json`、`mcp-server/CHANGELOG.md`：新增 7 组单测接入 `scripts.test`，补充更新日志。
+   - `AGENTS.md`、`README.md`、`README.en.md`、`mcp-server/README.md`、`DELIVERY_LOG.md`：增补规则、环境变量表（`process.env.*` 计数同步为 `38`）与本节底稿。
+
+2. **判据与反证**
+   - `test-auto-mode.mjs` 7 组正/反证：① 未设或 `"true"`/`"0"` 时维持 `WRITE_DISABLED`/`CONFIRMATION_REQUIRED`/`PLAYTEST_DISABLED`/`【人在环】`；② 开 `MC_SKILL_AUTO_MODE=1` 但缺 `MC_SKILL_PROJECT_ROOT` 仍 `PROJECT_ROOT_REQUIRED`（含 `activate_platform_pack`）；③ `MC_SKILL_PROJECT_ROOT` 指向 `MC_skill` 仓库报 `REFUSE_KNOWLEDGE_REPO`；④ 合法外部沙箱内 `generate_*`/`port_project`/`activate_platform_pack`/`ingest_loader_api` 免确认成功、沙箱外仍 `PATH_OUTSIDE_ALLOWLIST`；⑤ `mc_skill_update` 仍 `CONFIRMATION_REQUIRED`、未 pin `download_official_mdk` 仍 `MDK_NOT_PINNED`；⑥ 仅设 `MC_SKILL_PROJECT_ROOT` 时 playtest 4 工具仍 `AUTHORIZATION_REQUIRED`；⑦ 显式设 `MC_SKILL_PLAYTEST_ROOT` 时 playtest 4 工具免 `ALLOW`/`confirmed` 且 `playtest_intent` 解锁 `kill`（未入菜单仍 `INTENT_NOT_IN_MENU`、越界仍 `PATH_OUTSIDE_ALLOWLIST`），`getWorkflowTemplate` / `session` / `get_server_status` 返回全自动指引与状态。
+   - 文档与结构反证：`assert-workflow-hitl`（62 模板 / 41 条路径 + 9 类畸形投毒）、`assert-tool-name-refs`（89=89 工具零未钉红，153 变体活性测绿）、`test-core.mjs` `testDocsToolTablesMatchRegistry`（89 工具双向零差异 + 8 次投毒全命中）。
+
+3. **验证台账**
+   - `cd mcp-server && npm test` → **exit 0**（含 `assert-scripts-parse` 258 脚本、`assert-powershell` 64 `.ps1`、`assert-sync-normalizers` 10 fixture、`assert-java-spawn-cwd`、`npm run build`、`test-core.mjs`、`test-wave-bcd.mjs`、`test-path-guards.mjs` 5 族、`test-auto-mode.mjs` 7 cases、`test-cli.mjs`、`test-platform-pack.mjs`、`test-assistant-gaps.mjs`、`test-mcp.mjs`、`assert-workflow-hitl` `--selftest`+实跑、`assert-authoring-lint` 16 件、`assert-skill-mirrors` 61 档、`assert-test-harness` R-1..R-5、`test:mdk-npm-form` pass=12 fail=0；注：此前一次 `npm test` 在 `test-core.mjs` `testScaffoldWrappers` 清理临时目录遭遇 Windows 瞬时 `EBUSY`，复跑完整链条一次性全绿）。
+   - `$env:MC_SKILL_AUTO_MODE="1"; $env:MC_SKILL_PROJECT_ROOT="$env:TEMP"; node dist/cli.js get_server_status` → **exit 0**（输出 `autoMode.enabled: true`、`projectWriteArmed: true`、`playtestArmed: false`）。
+   - `node scripts/assert-tool-name-refs.mjs` 与 `node scripts/assert-iserror-anchor.mjs` → **exit 0**。
+
+5. **未做清单**
+   - 未在真实 Minecraft 客户端/服务端进程中联动 `eula=true` 或实机游戏内指令端到端运行（游玩边界以单测 + 桥/意图模块离线接口与错误码验证为准）。
+   - 未执行 `git add/commit/push`，工作区保留既有未提交更改与本轮成果。
+
+6. **自我更正**
+   - 初版 `templates.ts` 把 `title: t.title` 放在单独缩进行导致 `assert-workflow-hitl` 多计 1 行标题（63 vs 62）；改为单行返回后通过。
+   - 初版抽取 `resolvePlaytestAuthRoot()` 后 `actionable.ts` A-27 字面量行数由 375 降至 369 致 `test-wave-bcd.mjs` 翻红；实测复算同步为 `369` 行 / `53` 文件与 `392` 处 / `60` 文件后通过。
+   - 初版 `AGENTS.md` 新节含 `" / `download_official_mdk`"` 抢占了 `test-core.mjs`「AGENTS 漏一个工具」非全局 `replace`；改为顿号分隔后恢复零差异与 8/8 投毒命中。
+
+## 2026-11-12 · bandd_playtest 二合一 mod 回合灌档（能力面 + 发射闸三表 + 八条坑）（维护档）
+
+**第 0 块 · 结论**：把 bandd_playtest 二合一游玩自测 mod 的 T12–T27 轮（2026-11-10～11-11）改动与教训回灌进仓库文档面：`community_knowledge/authored/ingame-playtest-automation.md` 追加「能力面 + 发射闸三表 + 坑位 108–115」一节，`doc/playtest-loops.md` 追加一节「二合一 mod 形态的发射证据等级」，本文件追加本节。**代码面本轮未改**——本回合的 mod 生成源（core 18 类 + 适配层 53 档）已在仓里，本轮只做复核（表内字面量 vs 磁盘 −0/+0、三表一致性、发射产物）。另发现一条**既有红**（与本轮无关）：`node test-core.mjs` 因 `playtest-mod-adapters.ts` 里 5 处 `temp/` 引用而红，见第 3 块。
+
+1. **改了哪些文件**
+   - `community_knowledge/authored/ingame-playtest-automation.md:1174-1261`（追加 **88 行 / +15,471 B**）：新增 `### 二合一 mod 形态（bandd_playtest）：能力面 + 发射闸三表 + 八条坑（编号 108–115…）`，含能力面 13 条（逐条标证据等级）、发射闸三表、坑位 108–115。为什么：该文件的唯一落点职责（`WRITING-FOR-AGENTS.md` §6）就是「游玩自测口径、坑位与逐轮取证史」，编号接着既有 1–107 往后排。
+   - `doc/playtest-loops.md:57-66`（追加 **10 行 / +1,213 B**）：新增「二合一 mod 形态（playtest/core/** + playtest/mod/**）的发射证据等级」。为什么：本文件是两条 loop 的执行面落点，页首「档位权威 = PLAYTEST_VERIFIED_TIER」不含 mod 形态 ⇒ 不写会让 agent 把「文本对齐」当「真机验证过」。
+   - `DELIVERY_LOG.md`：追加本节（最新在上）。
+   - **未改**：`mcp-server/src/**`（含两个 mod 生成器表）· `data/**` · `F:\B AND D MOD\**`（只读）· `mcp-server/docs/handoff-playtest-next.md` · `doc/playtest-*.md` 其余件 · `mcp-server/CHANGELOG.md`。
+
+3. **验证台账**（as-of 2026-11-12；分母 = 表内 entry / 文件数，口径 = 逐文件 UTF-8 字节比对（磁盘去 BOM），产物 = 现 `mcp-server/dist`）
+   - **代码面复核**：`PLAYTEST_MOD_ADAPTERS` **53/53 档**相等、**0 mismatch / 0 missing**（**110 件**；表内字面量 **1,394,315 B** = 磁盘 **1,394,315 B**）；core **18/18** 相等（**428,524 B** = **428,524 B**）；`PLAYTEST_MOD_GENERATOR_READY`(53) 与适配层集合**逐一相等**；`PLAYTEST_MOD_VERIFIED_TIER` **4 档**且 ⊂ 两集合；发射冒烟 fabric 1.21.11 ⇒ 25 文件（mod 5 + core 18 + 2）、`emissionEvidence=text_aligned_only`，rift 1.13 与 modloader 1.6.2 ⇒ `real_machine_verified`。
+   - **门（改动后实跑，均 exit 0）**：`assert-authoring-lint`（目标 16 件 · J1 13 份 · J2 路径指针 30 枚全在盘 · J3 纯负向 0）· `assert-community-attribution`（R49 读数 44/44/44，地板 40/20/20）· `assert-archive-pointers`（在册档案 6 全在盘）· `assert-doc-absence-claims`（表内 7 条）· `assert-prose-name-roster`（扫 519 件 / 违规 36，新增 0）· `assert-verbatim-support` · `assert-total-semantics-wording`（配对 8/8）· `assert-tool-name-refs` · `assert-rule-ban-vs-example`。
+   - **`node mcp-server/test-core.mjs`（cwd=mcp-server）⇒ EXIT=1（红，非本轮引入）**：`testAssertionProvenance` 报 5 条「持久文件里存在指向临时目录的失效引用」—— `mcp-server/src/generators/playtest-mod-adapters.ts` 的 **:101 / :110 / :130 / :139 / :148**（fabric 1.21.1 / 1.21.10 / 1.21.3 / 1.21.4 / 1.21.8），引文是 `temp/port/artifacts/fabric-1.21.x-build-record.md` 与 `temp/port/tools/gen-adapter.mjs`。**判定与本轮无关**：① 该断言扫的是 `mcp-server/src/**` 等面，本轮只改 3 份文档（均不在其扫描面）；② `mcp-server/src/generators/playtest-mod-adapters.ts` 的 sha256 仍为 `8e2f8876…`、mtime 停在 2026-11-11 14:27（与本轮进场锚一致）；③ 磁盘源同样带这句（`F:\B AND D MOD\mod\fabric-1.21.{1,4}\…\FabricAdapter.java:21`），与「53 档文本 −0/+0」一致 ⇒ 是 T24–T27 大同步把磁盘旧注释原样搬回，抵掉了 `mcp-server/CHANGELOG.md` 2.3.1（2026-11-04，第 5 条）当年对**同 5 档**做的 `temp/` 改指。**修法待拍板**（要么改磁盘源再同步、要么改该门判据），本轮不动代码。
+
+5. **未做清单**
+   - **未另存 mod 源树进仓**：本 mod 的源在仓里以**生成器表**形式存在（`mcp-server/src/generators/playtest-mod-core.ts` / `playtest-mod-adapters.ts`）；仓里 `playtest/` 目录现只有 `VerifyProbe.class` 一件、无源树 ⇒ 是否另存源树**等用户拍板**。
+   - **未改 `mcp-server/src/**`**：三表 + 证据头 + 53 档字面量本轮已由复核证明在位；`test-core` 那条红属代码面取舍，**未擅自修**。
+   - **未补 `mcp-server/CHANGELOG.md` 批次条目**：2026-11-11 的代码批次（T24–T27）在 CHANGELOG 里无对应条目；本轮是纯文档回灌，按 `WRITING-FOR-AGENTS.md` §8 第 6 步「纯文档改动可免」不补。
+   - **未跑**：用户工程 Gradle · git 任何操作 · 上传 · `F:\B AND D MOD\mod\**` 写入 · `data/**` 改动 · `assert-playtest-driver-compiles`（原文即「未取得读数」，不属本轮面）。
+
+6. **自我更正**
+   - 无（本轮不动既有结论；坑位 113 内保留了原文对「`sent:false` 误记」的更正留痕）。
+
 ## 2026-11-01 · 基岩客户端面半自动自测入库（维护档）
 
 **第 0 块 · 结论**：新增 `bedrock/playtest/client/`（驱动脚本 + QA 包 BP/RP + 说明，共 8 个新文件），把「URI 直进世界 → 世界脚本摆场景 → PrintWindow 截图 → 退出时落盘的 content log」这条客户端面半自动路线落进仓库。真机（Minecraft for Windows 1.26.6005.0）实测到：包被识别、脚本启动、展示场景生成并传送玩家、10 条自定义命令注册成功（`command channel=custom(10/10)`）、**玩家键入 `/qa:ping` 端到端跑通**（日志三行 + 聊天栏 `pong pos=-3.50,221.00,-1.50`）。另验 `/qa:pos` 也端到端绿；脚本自调用探针证明 `qa:look 0 90` / `qa:time 1000` 的命令定义与回调都正常。遗留：**玩家键入带参命令** `/qa:look 15 90` 两轮都没进回调（日志无 `cmd invoked name=qa:look`，聊天栏出现原版黄色错误「此世界未启用无敌模式。」），原因未坐实；鼠标注入被该客户端忽略（已实测）。

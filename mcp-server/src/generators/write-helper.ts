@@ -12,6 +12,7 @@ import {
   ProjectPathError,
   resolveWriteAllowRoot,
 } from "../utils/project-sandbox.js";
+import { isAutoModeEnabled } from "../utils/auto-mode.js";
 import { generatorRejectionAction, type GeneratorResult } from "./common.js";
 import type { ActionEnvelope } from "../utils/actionable.js";
 
@@ -221,7 +222,8 @@ function maybeWriteGeneratorResultInner(
   }
   if (!opts.write) return base;
 
-  if (!opts.confirmed) {
+  const autoMode = isAutoModeEnabled();
+  if (!opts.confirmed && !autoMode) {
     // C1 行为面（2026-09-19 用户确认）：write 被拒 = 请求的操作未完成 ⇒ ok:false / CLI exit 1。
     // 文本预览仍在 result（人在环：看完预览再带 confirmed=true 重发），不引入第三种返回状态；
     // 与真失败（WRITE_FAILED / PATH_OUTSIDE_ALLOWLIST）的区分仍靠 writeError.code。
@@ -236,7 +238,7 @@ function maybeWriteGeneratorResultInner(
   }
 
   try {
-    const allowRoot = resolveWriteAllowRoot(opts.projectPath, { requireEnvRoot: true });
+    const allowRoot = resolveWriteAllowRoot(opts.projectPath, { requireEnvRoot: true, allowAutoMode: true });
     // allowRoot 只是边界；写入基准是 projectPath（resolveWriteAllowRoot 已校验它存在且落在边界内）。
     const projectBase = opts.projectPath?.trim() ? resolve(opts.projectPath) : allowRoot;
     const written: string[] = [];

@@ -125,6 +125,14 @@
 
 仓库维护面允许「一次任务书 = 一次授权」的无人值守批量维护（夜批）：改动只落**专用本地维护分支**（一片一提交），**绝不 push、不合主线、不碰删除类与发布物**。准入、作业流程、回执与晨间抽查协议以 [`CONTRIBUTING.md`](./CONTRIBUTING.md)「维护面夜批协议（阶 1）」为准——本处只声明例外存在，细则不复述（防两处漂移）。
 
+### 人在环例外：工程沙箱内全自动模式（`MC_SKILL_AUTO_MODE=1`）
+
+**只认严格环境变量开关 `MC_SKILL_AUTO_MODE=1`**（默认未设；对话口头要求不放开工具门控与工作流停顿，未设时严格按上文人在环执行）。单源判定与状态查询见 `mcp-server/src/utils/auto-mode.ts` 与 `get_server_status.autoMode`。
+
+- **工程写盘与构建（仍须绑定 `MC_SKILL_PROJECT_ROOT`）**：设了 `MC_SKILL_AUTO_MODE=1` 且 `MC_SKILL_PROJECT_ROOT` 指向仓库外的合法工程根时，自动免除 `MC_SKILL_ALLOW_WRITE=1` 与 `confirmed=true`（`generate_*` 可直接 `write=true`，`port_project`、`activate_platform_pack`、`download_official_mdk`、`ingest_loader_api` 可直接 `dryRun=false`）；创意、性能、调试策略与版本/API 选型由 Agent 自主拍板并继续推进（在最终交付汇报中注明选择与回退方法），并允许宿主终端在 `MC_SKILL_PROJECT_ROOT` 内直接跑 Gradle 与测试。未设 `MC_SKILL_PROJECT_ROOT` 时写盘仍报 `PROJECT_ROOT_REQUIRED`（`activate_platform_pack` 在全自动下也不再回退到仅靠 `projectPath` 放行）。
+- **游玩自测（仍须显式绑定 `MC_SKILL_PLAYTEST_ROOT`）**：`MC_SKILL_PLAYTEST_ROOT` **不会**自动回落到 `MC_SKILL_PROJECT_ROOT`；未单独设置时，游玩自测工具仍保持未授权。显式设置了合法 `MC_SKILL_PLAYTEST_ROOT` 时，自动免除 `MC_SKILL_PLAYTEST_ALLOW=1` 与 `confirmed=true`（`playtest_bridge` 缺省 `authorization` 按 `"sandbox"` 处理），并在该授权 playtest 根内放开 `eula.txt` 同意与 `playtest_intent` 的 `kill`/`tnt`/`fill`。
+- **永久严格例外（全自动下也不放开）**：① 禁止写入或修改 `MC_skill` 知识库仓库自身（`REFUSE_KNOWLEDGE_REPO`）；② 禁止触碰正式 `.minecraft` 实例；③ 禁止外网上传发布；④ `mc_skill_update` 仍严格要求 `confirmed=true` + `MC_SKILL_ALLOW_WRITE=1` + `MC_SKILL_PROJECT_ROOT`；⑤ `download_official_mdk` 仍强制 SHA256 pin 校验（不自动开 `allowUnpinned`）；⑥ 仍必须遵守 API 查证（核不到留 `// TODO(未核实)`）与游玩测试 fail-closed 判绿纪律。
+
 ## 第一步：判断项目使用的平台和版本
 
 打开任何 MC Mod / Add-On 项目时，**必须按此顺序**判断（Quilt → NeoForge → Fabric；残留 `fabric.mod.json` 不得压过 Neo 元数据，也不得压过 LiteLoader 插件 / `litemod.json`；LiteLoader 元数据在「看见 ForgeGradle 就算 Forge」之前）：

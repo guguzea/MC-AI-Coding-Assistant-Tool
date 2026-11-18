@@ -13,6 +13,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from "fs";
 import { isAbsolute, join, resolve } from "path";
 import { inspectRuntime } from "../runtime-inspect/index.js";
 import { isInsideReal, nativeReal } from "../utils/project-sandbox.js";
+import { resolvePlaytestAuthRoot } from "../utils/auto-mode.js";
 
 export type EvidenceState = "present" | "absent" | "unreadable";
 
@@ -52,22 +53,9 @@ function readTextSafe(p: string): { state: EvidenceState; text?: string; reason?
 function authorize(query: PlaytestEvidenceQuery):
   | { ok: true; root: string; dir: string }
   | { ok: false; code: string; message: string } {
-  if (process.env.MC_SKILL_PLAYTEST_ALLOW !== "1") {
-    return {
-      ok: false,
-      code: "PLAYTEST_DISABLED",
-      message:
-        "游玩自测未授权。设置 MC_SKILL_PLAYTEST_ALLOW=1 + MC_SKILL_PLAYTEST_ROOT=<绝对路径>（一次授权一路径，见根 AGENTS.md）。",
-    };
-  }
-  const envRoot = (process.env.MC_SKILL_PLAYTEST_ROOT || "").trim();
-  if (!envRoot) {
-    return { ok: false, code: "AUTHORIZATION_REQUIRED", message: "缺 MC_SKILL_PLAYTEST_ROOT（绝对路径的授权根）。" };
-  }
-  if (!isAbsolute(envRoot) || !existsSync(envRoot)) {
-    return { ok: false, code: "AUTHORIZATION_REQUIRED", message: `MC_SKILL_PLAYTEST_ROOT 必须是存在的绝对路径：${envRoot}` };
-  }
-  const root = nativeReal(resolve(envRoot));
+  const authRoot = resolvePlaytestAuthRoot();
+  if (!authRoot.ok) return authRoot;
+  const root = authRoot.root;
 
   const base = query.evidenceDir?.trim()
     ? resolve(query.evidenceDir)

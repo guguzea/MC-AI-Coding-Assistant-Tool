@@ -4,6 +4,7 @@ import { actionable, ActionCodes } from "../utils/actionable.js";
 import { packNotFoundNextSteps, packNotFoundRelatedTools } from "./pack-not-found.js";
 import { ownGet } from "../utils/own-record.js";
 import { resolveRepoRoot } from "../utils/path.js";
+import { getAutoModeStatus, isAutoModeEnabled } from "../utils/auto-mode.js";
 import {
   inspectPack,
   listLibSkillIndex,
@@ -690,6 +691,8 @@ export function sessionPlatformPack(args: SessionArgs) {
     warnings.push(platform === "bedrock" ? BEDROCK_BASE_ONLY_WARNING : BASE_ONLY_WARNING);
   }
 
+  const autoMode = isAutoModeEnabled() ? getAutoModeStatus() : undefined;
+
   return {
     ok: true,
     dest: "session",
@@ -715,6 +718,13 @@ export function sessionPlatformPack(args: SessionArgs) {
       "库 Skill 只在 libSkills[]，不进入 skills[] 与 nextReads。须读 libSkills[]；只有显式 skillNames 才注入库正文（计入 skillBodies 上限 8）。不确定先读 knowledge/libs/all-platforms/mc-lib-catalog/SKILL.md。",
     includeAllRules: includeAll,
     topicWarnings: topicWarnings.length ? topicWarnings : undefined,
+    ...(autoMode
+      ? {
+          autoMode,
+          autoModeNote:
+            "已启用工程沙箱全自动模式（MC_SKILL_AUTO_MODE=1）：在 MC_SKILL_PROJECT_ROOT 内可自主拍板并直接传 write=true / dryRun=false 落盘（免 confirmed 与 MC_SKILL_ALLOW_WRITE），且允许宿主跑 Gradle；仅当同时配置 MC_SKILL_PLAYTEST_ROOT 时放开游玩自测（含授权根内 eula.txt 与 kill/tnt/fill）。仍禁写 MC_skill 仓库自身、禁碰正式 .minecraft、禁上传发布、禁跳过 MDK SHA256 或 mc_skill_update 确认、禁编造未核实 API。",
+        }
+      : {}),
     next:
       rulesMode === "base" && !includeAll
         ? {

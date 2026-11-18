@@ -1118,7 +1118,7 @@ export function registerWaveExtensions(server: McpServer): void {
         messages: [
           {
             role: "user",
-            content: { type: "text", text: meta.body },
+            content: { type: "text", text: getWorkflowTemplate(name).body ?? meta.body },
           },
         ],
       }),

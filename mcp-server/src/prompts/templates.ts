@@ -1,5 +1,6 @@
 import { ownGet } from "../utils/own-record.js";
 import { generateNetworkPacketDescription } from "../generators/index.js";
+import { getAutoModeStatus, isAutoModeEnabled } from "../utils/auto-mode.js";
 
 /** 人在环：工作流是步骤清单，不是无人值守编排器。 */
 export const WORKFLOW_HITL =
@@ -11,6 +12,16 @@ export const WORKFLOW_HITL =
  * 渲染文本与改前**逐字相同**（纯去重，零行为变化）。
  */
 export const WORKFLOW_HITL_STEPS = "（人在环：Agent 出步骤与草稿；Gradle / 写盘 / 上传须用户确认后执行）";
+
+/**
+ * 工程沙箱内全自动模式（MC_SKILL_AUTO_MODE=1）运行时替换文本。
+ * 不改动下方 WORKFLOW_TEMPLATES 静态常量引用，保证 assert-workflow-hitl 静态门与默认人在环测试不变。
+ */
+export const WORKFLOW_AUTO_MODE =
+  "【沙箱全自动模式】MC_SKILL_AUTO_MODE=1 已启用：在 MC_SKILL_PROJECT_ROOT 沙箱内，创意设计、版本/API 选型、性能权衡与调试策略由 Agent 自主拍板并直接推进（无需中途【停】下来等用户回复，最终汇报时附决策理由与回退方法）；写盘可直接传 write=true / dryRun=false（免 confirmed 与 MC_SKILL_ALLOW_WRITE），且允许宿主在沙箱内跑 Gradle 与测试。若同时显式配置 MC_SKILL_PLAYTEST_ROOT，游玩自测同样免 confirmed / MC_SKILL_PLAYTEST_ALLOW 并放开授权根内 eula.txt 与 playtest_intent 的 kill/tnt/fill；未设 MC_SKILL_PLAYTEST_ROOT 时游玩自测仍未授权。以下永久红线不变：禁写 MC_skill 仓库自身、禁碰正式 .minecraft 实例、禁外网上传发布、禁跳过 mc_skill_update 确认、禁跳过 MDK SHA256 校验（不自动传 allowUnpinned）、禁编造未核实 API（核不到仍留 TODO(未核实)）。";
+
+export const WORKFLOW_AUTO_STEPS =
+  "（沙箱全自动模式：Agent 自主拍板并在 MC_SKILL_PROJECT_ROOT 内直接写盘 / 跑 Gradle；禁碰正式实例、禁写 MC_skill 自身、禁上传发布）";
 
 /** LiteLoader / Rift / ModLoader / 基岩：禁止把现代 Forge/Fabric API 当骨架。 */
 export const WORKFLOW_ERA_GUARD =
@@ -716,12 +727,34 @@ ${WORKFLOW_HITL_STEPS}`,
   },
 };
 
-export function getWorkflowTemplate(name: string): { found: boolean; name: string; title?: string; body?: string } {
+function renderTemplateBodyForRuntime(body: string): { body: string; autoMode: boolean } {
+  if (!isAutoModeEnabled()) return { body, autoMode: false };
+  let out = body
+    .replaceAll(WORKFLOW_HITL, WORKFLOW_AUTO_MODE)
+    .replaceAll(WORKFLOW_HITL_STEPS, WORKFLOW_AUTO_STEPS);
+  if (!out.includes(WORKFLOW_AUTO_MODE)) {
+    out = `${WORKFLOW_AUTO_MODE}\n${out}`;
+  }
+  return { body: out, autoMode: true };
+}
+
+export function getWorkflowTemplate(name: string): {
+  found: boolean;
+  name: string;
+  title?: string;
+  body?: string;
+  autoMode?: boolean;
+  autoModeScope?: ReturnType<typeof getAutoModeStatus>;
+} {
   const t = ownGet(WORKFLOW_TEMPLATES, name);
   if (!t) {
     return { found: false, name, body: `可用模板: ${Object.keys(WORKFLOW_TEMPLATES).join(", ")}` };
   }
-  return { found: true, name, title: t.title, body: t.body };
+  const rendered = renderTemplateBodyForRuntime(t.body);
+  if (!rendered.autoMode) {
+    return { found: true, name, title: t.title, body: rendered.body };
+  }
+  return { found: true, name, title: t.title, body: rendered.body, autoMode: true, autoModeScope: getAutoModeStatus() };
 }
 
 export function listWorkflowTemplateNames(): string[] {

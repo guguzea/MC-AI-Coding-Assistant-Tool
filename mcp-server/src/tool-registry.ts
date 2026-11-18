@@ -6,6 +6,7 @@ import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import * as z from "zod";
 import { missingMcVersion, versionRequiredAction } from "./utils/actionable.js";
 import { getBuildStatus } from "./utils/build-status.js";
+import { getAutoModeStatus } from "./utils/auto-mode.js";
 import { assertToolRegistrationComplete, patchToolCollection } from "./tool-handlers.js";
 import { queryApi, warmupApi, listApiPreloadStatuses, getApiPreloadStatus } from "./api/index.js";
 import { getMethodParams, convertMappingEx } from "./mappings/index.js";
@@ -627,6 +628,7 @@ server.registerTool(
       bedrockDocsStatus: loadBedrockDocsStatus(),
       /** ② build 状态：dist 缺失/过期提示（src 修改未重新编译时 buildRequired=true） */
       buildStatus: getBuildStatus(),
+      autoMode: getAutoModeStatus(),
       updateHint: getUpdateHint(),
       descriptorSelfCheck: {
         sample: "()F",

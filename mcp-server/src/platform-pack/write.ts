@@ -20,6 +20,7 @@ import {
   ProjectPathError,
   resolveWriteAllowRoot,
 } from "../utils/project-sandbox.js";
+import { isAutoModeEnabled } from "../utils/auto-mode.js";
 import {
   findPack,
   inspectPack,
@@ -472,7 +473,8 @@ function writeManifestAtomic(projectRoot: string, manifest: Manifest, allowRoot:
 
 export function writePlatformPack(args: WriteArgs) {
   const dryRun = args.dryRun !== false;
-  const confirmed = args.confirmed === true;
+  const autoMode = isAutoModeEnabled();
+  const confirmed = args.confirmed === true || autoMode;
   const hostsOrErr = expandHosts(args.hosts);
   if ("error" in hostsOrErr) {
     return { ok: false, action: actionable("INVALID_INPUT", hostsOrErr.error, ["传入 hosts 数组，或 hosts=all"]) };
@@ -546,8 +548,10 @@ export function writePlatformPack(args: WriteArgs) {
   );
 
   const howToWrite = {
-    env: { MC_SKILL_ALLOW_WRITE: "1" },
-    note: "真写还需要 dryRun=false 且 confirmed=true。CLI 不要用已废弃的 --projectRoot=。",
+    env: autoMode ? { MC_SKILL_AUTO_MODE: "1" } : { MC_SKILL_ALLOW_WRITE: "1" },
+    note: autoMode
+      ? "工程沙箱全自动模式已启用（MC_SKILL_AUTO_MODE=1）：直接传 dryRun=false 即可写入 MC_SKILL_PROJECT_ROOT 内工程（免 confirmed）。"
+      : "真写还需要 dryRun=false 且 confirmed=true。CLI 不要用已废弃的 --projectRoot=。",
     cli: howToWriteCli({
       platform: pack.platform,
       version: pack.minecraftVersion,
@@ -596,7 +600,7 @@ export function writePlatformPack(args: WriteArgs) {
 
   let allowRoot: string;
   try {
-    allowRoot = resolveWriteAllowRoot(proj.root);
+    allowRoot = resolveWriteAllowRoot(proj.root, { allowAutoMode: true });
   } catch (err) {
     if (err instanceof ProjectPathError) {
       return {
@@ -753,7 +757,8 @@ export function writePlatformPack(args: WriteArgs) {
 
 export function deactivatePlatformPack(args: WriteArgs) {
   const dryRun = args.dryRun !== false;
-  const confirmed = args.confirmed === true;
+  const autoMode = isAutoModeEnabled();
+  const confirmed = args.confirmed === true || autoMode;
   const hostsOrErr = expandHosts(args.hosts);
   if ("error" in hostsOrErr) {
     return { ok: false, action: actionable("INVALID_INPUT", hostsOrErr.error, ["传入要停用的 hosts"]) };
@@ -786,8 +791,10 @@ export function deactivatePlatformPack(args: WriteArgs) {
       willUnpatch: [...toUnpatch],
       hosts,
       howToWrite: {
-        env: { MC_SKILL_ALLOW_WRITE: "1" },
-        cli: `node dist/cli.js activate_platform_pack --action=deactivate --hosts=${hosts.join(",")} --project ${proj.root} --dry-run=false --confirm`,
+        env: autoMode ? { MC_SKILL_AUTO_MODE: "1" } : { MC_SKILL_ALLOW_WRITE: "1" },
+        cli: autoMode
+          ? `node dist/cli.js activate_platform_pack --action=deactivate --hosts=${hosts.join(",")} --project ${proj.root} --dry-run=false`
+          : `node dist/cli.js activate_platform_pack --action=deactivate --hosts=${hosts.join(",")} --project ${proj.root} --dry-run=false --confirm`,
       },
       ...(deactNotConfirmed
         ? {
@@ -804,7 +811,7 @@ export function deactivatePlatformPack(args: WriteArgs) {
 
   let allowRoot: string;
   try {
-    allowRoot = resolveWriteAllowRoot(proj.root);
+    allowRoot = resolveWriteAllowRoot(proj.root, { allowAutoMode: true });
   } catch (err) {
     if (err instanceof ProjectPathError) {
       return {
