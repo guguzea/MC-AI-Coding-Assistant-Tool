@@ -1,0 +1,483 @@
+[
+  {
+    "platform": "fabric",
+    "version": "1.14.4",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/fabric144/FabricAdapter.java",
+      "com/bandd/playtest/PlaytestMod.java"
+    ]
+  },
+  {
+    "platform": "fabric",
+    "version": "1.16.5",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/fabric1165/FabricAdapter.java",
+      "com/bandd/playtest/PlaytestMod.java"
+    ]
+  },
+  {
+    "platform": "fabric",
+    "version": "1.17.1",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/fabric1171/FabricAdapter.java",
+      "com/bandd/playtest/PlaytestMod.java"
+    ]
+  },
+  {
+    "platform": "fabric",
+    "version": "1.18.2",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/fabric1182/FabricAdapter.java",
+      "com/bandd/playtest/PlaytestMod.java"
+    ]
+  },
+  {
+    "platform": "fabric",
+    "version": "1.19.4",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/fabric1194/FabricAdapter.java",
+      "com/bandd/playtest/PlaytestMod.java"
+    ]
+  },
+  {
+    "platform": "fabric",
+    "version": "1.20.1",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/fabric1201/FabricAdapter.java",
+      "com/bandd/playtest/PlaytestMod.java"
+    ]
+  },
+  {
+    "platform": "fabric",
+    "version": "1.20.4",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/fabric1204/FabricAdapter.java",
+      "com/bandd/playtest/PlaytestMod.java"
+    ]
+  },
+  {
+    "platform": "fabric",
+    "version": "1.21.1",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/fabric_1_21_1/FabricAdapter.java",
+      "com/bandd/playtest/PlaytestMod.java"
+    ]
+  },
+  {
+    "platform": "fabric",
+    "version": "1.21.10",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/fabric_1_21_10/FabricAdapter.java",
+      "com/bandd/playtest/PlaytestMod.java"
+    ]
+  },
+  {
+    "platform": "fabric",
+    "version": "1.21.11",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/fabric1211/ClothModMenu.java",
+      "com/bandd/playtest/fabric1211/ClothSettingsScreen.java",
+      "com/bandd/playtest/fabric1211/FabricAdapter.java",
+      "com/bandd/playtest/PlaytestMod.java"
+    ]
+  },
+  {
+    "platform": "fabric",
+    "version": "1.21.3",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/fabric_1_21_3/FabricAdapter.java",
+      "com/bandd/playtest/PlaytestMod.java"
+    ]
+  },
+  {
+    "platform": "fabric",
+    "version": "1.21.4",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/fabric_1_21_4/FabricAdapter.java",
+      "com/bandd/playtest/PlaytestMod.java"
+    ]
+  },
+  {
+    "platform": "fabric",
+    "version": "1.21.8",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/fabric_1_21_8/FabricAdapter.java",
+      "com/bandd/playtest/PlaytestMod.java"
+    ]
+  },
+  {
+    "platform": "fabric",
+    "version": "26.1.2",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/fabric26/FabricAdapter.java",
+      "com/bandd/playtest/PlaytestMod.java"
+    ]
+  },
+  {
+    "platform": "fabric",
+    "version": "26.2",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/fabric26/FabricAdapter.java",
+      "com/bandd/playtest/PlaytestMod.java"
+    ]
+  },
+  {
+    "platform": "forge",
+    "version": "1.12.2",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/forge_1_12_2/ForgeAdapter.java",
+      "com/bandd/playtest/PlaytestMod.java"
+    ]
+  },
+  {
+    "platform": "forge",
+    "version": "1.13.2",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/forge_1_13_2/ForgeAdapter.java",
+      "com/bandd/playtest/PlaytestMod.java"
+    ]
+  },
+  {
+    "platform": "forge",
+    "version": "1.14.4",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/forge_1_14_4/ForgeAdapter.java",
+      "com/bandd/playtest/PlaytestMod.java"
+    ]
+  },
+  {
+    "platform": "forge",
+    "version": "1.15.2",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/forge_1_15_2/ForgeAdapter.java",
+      "com/bandd/playtest/PlaytestMod.java"
+    ]
+  },
+  {
+    "platform": "forge",
+    "version": "1.16.5",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/forge_1_16_5/ForgeAdapter.java",
+      "com/bandd/playtest/PlaytestMod.java"
+    ]
+  },
+  {
+    "platform": "forge",
+    "version": "1.17.1",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/forge_1_17_1/ForgeAdapter.java",
+      "com/bandd/playtest/PlaytestMod.java"
+    ]
+  },
+  {
+    "platform": "forge",
+    "version": "1.18.2",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/forge_1_18_2/ForgeAdapter.java",
+      "com/bandd/playtest/PlaytestMod.java"
+    ]
+  },
+  {
+    "platform": "forge",
+    "version": "1.19.4",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/forge_1_19_4/ForgeAdapter.java",
+      "com/bandd/playtest/PlaytestMod.java"
+    ]
+  },
+  {
+    "platform": "forge",
+    "version": "1.20.1",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/forge_1_20_1/ForgeAdapter.java",
+      "com/bandd/playtest/PlaytestMod.java"
+    ]
+  },
+  {
+    "platform": "forge",
+    "version": "1.20.4",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/forge_1_20_4/ForgeAdapter.java",
+      "com/bandd/playtest/PlaytestMod.java"
+    ]
+  },
+  {
+    "platform": "liteloader",
+    "version": "1.12.2",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/liteloader1122/LiteLoaderAdapter.java",
+      "com/bandd/playtest/LiteModPlaytest.java"
+    ]
+  },
+  {
+    "platform": "modloader",
+    "version": "1.2.5",
+    "note": "磁盘真值目录 = modloader-1.2.5-lb（默认包/obf 路线：src/ObfAdapter.java + src/mod_bandd_playtest.java）。同版本的具名包路线在 modloader-1.2.5（含 stubs/ 与 probe/），不属本表条目。",
+    "files": [
+      "mod_bandd_playtest.java",
+      "ObfAdapter.java"
+    ]
+  },
+  {
+    "platform": "modloader",
+    "version": "1.5.2",
+    "note": "磁盘真值目录 = modloader-1.5.2-lb（默认包/obf 路线：src/ObfAdapter.java + src/mod_bandd_playtest.java）。同版本的具名包路线在 modloader-1.5.2（含 stubs/ 与 probe/），不属本表条目。",
+    "files": [
+      "mod_bandd_playtest.java",
+      "ObfAdapter.java"
+    ]
+  },
+  {
+    "platform": "modloader",
+    "version": "1.6.2",
+    "note": "磁盘真值目录 = modloader-1.6.2（默认包/obf 路线：src/ObfAdapter.java + src/mod_bandd_playtest.java + src/BanddTickProxy.java）。该版本只有 obf 形态。",
+    "files": [
+      "BanddTickProxy.java",
+      "mod_bandd_playtest.java",
+      "ObfAdapter.java"
+    ]
+  },
+  {
+    "platform": "neoforge",
+    "version": "1.20.1",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/neoforge1201/ForgeClothSettingsScreen.java",
+      "com/bandd/playtest/neoforge1201/NeoForgeAdapter.java",
+      "com/bandd/playtest/PlaytestMod.java"
+    ]
+  },
+  {
+    "platform": "neoforge",
+    "version": "1.20.4",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/neoforge1204/NeoForgeAdapter.java",
+      "com/bandd/playtest/PlaytestMod.java"
+    ]
+  },
+  {
+    "platform": "neoforge",
+    "version": "1.20.6",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/neoforge1206/NeoForgeAdapter.java",
+      "com/bandd/playtest/PlaytestMod.java"
+    ]
+  },
+  {
+    "platform": "neoforge",
+    "version": "1.21.1",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/neoforge_1_21_1/NeoForgeAdapter.java",
+      "com/bandd/playtest/PlaytestMod.java"
+    ]
+  },
+  {
+    "platform": "neoforge",
+    "version": "1.21.10",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/neoforge_1_21_10/NeoForgeAdapter.java",
+      "com/bandd/playtest/PlaytestMod.java"
+    ]
+  },
+  {
+    "platform": "neoforge",
+    "version": "1.21.11",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/neoforge1211/NeoForgeAdapter.java",
+      "com/bandd/playtest/PlaytestMod.java"
+    ]
+  },
+  {
+    "platform": "neoforge",
+    "version": "1.21.3",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/neoforge_1_21_3/NeoForgeAdapter.java",
+      "com/bandd/playtest/PlaytestMod.java"
+    ]
+  },
+  {
+    "platform": "neoforge",
+    "version": "1.21.5",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/neoforge_1_21_5/NeoForgeAdapter.java",
+      "com/bandd/playtest/PlaytestMod.java"
+    ]
+  },
+  {
+    "platform": "neoforge",
+    "version": "1.21.8",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/neoforge_1_21_8/NeoForgeAdapter.java",
+      "com/bandd/playtest/PlaytestMod.java"
+    ]
+  },
+  {
+    "platform": "neoforge",
+    "version": "26.1",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/neoforge261/NeoForgeAdapter.java",
+      "com/bandd/playtest/PlaytestMod.java"
+    ]
+  },
+  {
+    "platform": "neoforge",
+    "version": "26.2",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/neoforge262/NeoForgeAdapter.java",
+      "com/bandd/playtest/PlaytestMod.java"
+    ]
+  },
+  {
+    "platform": "neoforge",
+    "version": "26.3",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/neoforge263/NeoForgeAdapter.java",
+      "com/bandd/playtest/PlaytestMod.java"
+    ]
+  },
+  {
+    "platform": "quilt",
+    "version": "1.18.2",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/PlaytestMod.java",
+      "com/bandd/playtest/quilt_1_18_2/QuiltAdapter.java"
+    ]
+  },
+  {
+    "platform": "quilt",
+    "version": "1.19.4",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/PlaytestMod.java",
+      "com/bandd/playtest/quilt_1_19_4/QuiltAdapter.java"
+    ]
+  },
+  {
+    "platform": "quilt",
+    "version": "1.20.1",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/PlaytestMod.java",
+      "com/bandd/playtest/quilt_1_20_1/QuiltAdapter.java"
+    ]
+  },
+  {
+    "platform": "quilt",
+    "version": "1.20.4",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/PlaytestMod.java",
+      "com/bandd/playtest/quilt_1_20_4/QuiltAdapter.java"
+    ]
+  },
+  {
+    "platform": "quilt",
+    "version": "1.21.1",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/PlaytestMod.java",
+      "com/bandd/playtest/quilt_1_21_1/QuiltAdapter.java"
+    ]
+  },
+  {
+    "platform": "quilt",
+    "version": "1.21.10",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/PlaytestMod.java",
+      "com/bandd/playtest/quilt_1_21_10/QuiltAdapter.java"
+    ]
+  },
+  {
+    "platform": "quilt",
+    "version": "1.21.11",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/PlaytestMod.java",
+      "com/bandd/playtest/quilt_1_21_11/QuiltAdapter.java"
+    ]
+  },
+  {
+    "platform": "quilt",
+    "version": "1.21.3",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/PlaytestMod.java",
+      "com/bandd/playtest/quilt_1_21_3/QuiltAdapter.java"
+    ]
+  },
+  {
+    "platform": "quilt",
+    "version": "1.21.4",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/PlaytestMod.java",
+      "com/bandd/playtest/quilt_1_21_4/QuiltAdapter.java"
+    ]
+  },
+  {
+    "platform": "quilt",
+    "version": "1.21.8",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/PlaytestMod.java",
+      "com/bandd/playtest/quilt_1_21_8/QuiltAdapter.java"
+    ]
+  },
+  {
+    "platform": "rift",
+    "version": "1.13",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/PlaytestMod.java",
+      "com/bandd/playtest/rift113/RiftAdapter.java"
+    ]
+  },
+  {
+    "platform": "rift",
+    "version": "1.13.2",
+    "note": "",
+    "files": [
+      "com/bandd/playtest/PlaytestMod.java",
+      "com/bandd/playtest/rift1132/RiftAdapter.java"
+    ]
+  }
+]

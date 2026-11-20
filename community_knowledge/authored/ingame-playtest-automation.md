@@ -1259,3 +1259,59 @@ NeoForge 1.20.1 无官方 MDK pin（原返回 `MDK_NOT_PINNED`）⇒ 按**兼容
   **边界**：「不依赖聚焦」在**不做宿主级输入注入**的前提下**无解**（GLFW 焦点回调 + 单人世界 `pauseOnFocusLost` 默认 true 会弹暂停屏）；且**未擅自改用户 `options.txt`**。
   **证据等级**：真机。
 
+- **116 · `drop_item` 在没有容器界面开着时**静默无效**：回执照报 `count` / `droppedId`，物品栏纹丝不动，且不 fail-loud**
+  **真机原形**（neoforge 1.20.1 **生存**，2026-11-12）：`close_screen` 之后 `drop_item{slot:8,count:1}` 回执 `{"count":1,"remaining":3,"droppedId":"minecraft:birch_planks"}` —— `remaining` 恰等于**丢前**计数；隔 3 s 复读 `{"count":3,"empty":false}` 完全没变；`all:true` 同样。**开屏时同一动作是真的**（丢出的 4 个木板在玩家回原坐标后被自动拾回、1+3=4 逐一吻合）⇒ 不是状态回滚，是**这一击根本没落到菜单上**。
+  **根因（反编译源逐行核过）**：原版点击有守卫 —— `MultiPlayerGameMode#handleInventoryMouseClick`（neo 1.20.1，`t35/src/.../MultiPlayerGameMode.java:492`）/ `ClientPlayerInteractionManager#clickSlot`（fabric 1.21.11，`t35/src/.../ClientPlayerInteractionManager.java:491-492`）：`containerId` / `syncId` 与 `player.containerMenu` / `player.currentScreenHandler` **不等时只记一条 `LOGGER.warn("Ignoring click in mismatching container…")` 就把这一击丢掉**。而 `close_screen` **只 `setScreen(null)`、不重置 containerMenu**（`NeoForgeAdapter.java:360-366` / `FabricAdapter.java:429-435`）⇒ 旧代码在无屏时改用 `inventoryMenu`（`containerId=0`），实际 `containerMenu` 是 `1` ⇒ **静默丢弃**。
+  **处方**：目标菜单**必须取 `player.containerMenu` / `player.currentScreenHandler`**（**与判据同源**，不可能再错配）；按下标找格要用 **`Slot` 的容器同一性**（`s.container == inv && s.getContainerSlot() == slot`），别按槽号硬编码；回执补 `menuSlot` / `containerId` / `menuSource`（`menuSource` 逐字写死来源字段名）；该格在**当前菜单**里找不到 ⇒ `SLOT_OUT_OF_RANGE` 并**教用户先 `press inventory`**。
+  **仍缺（本仓口径：未取得读数 ✗）**：点击后的**落地校验**（一格都没少时 fail-loud）**正在收尾中**。实现痕迹已在盘上（`// [T36]` 标记 + `GuiResult.DROP_ITEM_NOT_APPLIED` / `DROP_ITEM_VERIFY_UNREADABLE`），但**该臂的绿灯运行没拿到读数**：`t36/poison-run.log` = `PASS=60 FAIL=2`、`t36/poison2-run.log` = `PASS=58 FAIL=4`，**两份都是投毒负控**（FAIL 行正是被投毒的那两三条）。
+  **证据等级**：真机（缺陷现象）/ 反编译源（根因）/ 编译 + 单测（修复本体：两档 `BUILD SUCCESSFUL`、13 套 **706 条** `FAIL=0`）/ **未取得读数**（落地校验的绿灯臂、修复后的真机复验）。
+
+- **117 · `mine` 是跨 tick 的，且 `progress.lastStopReason` 是**粘滞**字段 —— 拿它当循环出口会首发就退出**
+  **真机原形**（2026-11-12，同一台 neoforge 1.20.1）：把「`lastStopReason == MINE_BROKEN`」当挖穿判据 ⇒ **第一发就退出**（B5 首发那条 `MINE_BROKEN` 是**上一轮砍树留下的历史值**）；另一头 `query_column` 在 `mine` 后**立刻**读，仍可能读到**原方块**（B6 第一轮就撞上，`b6-oak.json` 留作对照）。
+  **处方**：**唯一循环出口 = 轮询目标格的真实方块 id**（变空气 / 变别的方块才收工）；`lastStopReason` 只作**记账**，不当状态机；`query_column` 复查要**等跨 tick 生效**（判据里给足采样或轮询，别读一发就下结论）。
+  **证据等级**：真机。
+
+- **118 · 跨维度传送期间会给未同步的垃圾读数（`ReceivingLevelScreen`）**
+  **真机原形**：`execute in minecraft:the_nether run tp @s …` 之后，客户端停在 `ReceivingLevelScreen`（「正在接收地形」）时，`query_player_state` 读到 **`y=-377.7000139791515`**（原始回执 `t32/b6-oakscan.json`，同一条 `screen=ReceivingLevelScreen`）—— 那是**读数没同步**，不是世界异常。
+  **处方**：**界面没消失就不下结论** —— 先按 `screen` 判「还在接收地形」，等它变 `null` 再读位置 / 背包 / 方块；判据里凡跨维度传送，前后各留一次「等界面消失」的采样。
+  **诚实边界**：同一条记录里 `query_inventory` 的 **`slotCount=0`** 那半，**本轮未在盘上找到同一窗口的原始回执**（`slotCount:0` 只出现在空背包的**正常**读数里）⇒ 该半条**照信口径、未复核**。
+  **证据等级**：真机（`y=-377.7` 那半）/ 未复核（`slotCount=0` 那半）。
+
+> **本组（116–118）的来源与边界**：回灌自 `F:\B AND D MOD\STATUS.md` / `交付底稿.md` 的 **T29–T36 轮**（2026-11-12 真机 L4 与 2026-11-18 文档轮），原始回执在 `D:\mc-skill-temp\t32\`（**42 个 json + `report.md` 207 行 + `progress.md` 331 行**）、门修复在 `t33` / `t34`、修复与测试在 `t35`（`run13.txt` 774 行 / 13 套）、判据原文在 `t36` 与 `D:\mc-skill-temp\l4\`（11 条）。**本组不改任何代码**，只把「现象 → 根因 → 处方 → 证据等级」写死；**未取得读数**的项一律照上面点名，不写成通过。
+
+
+- **119 · `walk_to` 写 `Input.forwardImpulse` / `ClientPlayerEntity.input.playerInput` 在真机零位移（`KeyboardInput#tick` 每 tick 覆写）**
+  **真机原形**（2026-11-19 T40，neoforge 1.20.1）：调 `walk_to` 连续 12 个 tick 玩家坐标逐字不变；`javap -c` 证实运行时 `LocalPlayer.input` 实为 `KeyboardInput`，其 `tick()` 每帧按 `options.keyUp/keyDown/keyLeft/keyRight/keyJump.isDown()` 重算并覆写 `forwardImpulse` / `leftImpulse` / `jumping`。
+  **处方**：适配层 `walkDrive` 改驱动原版移动键（NeoForge 1.20.1 `KeyMapping#setDown(boolean)`；Fabric 1.21.11 `KeyBinding#setPressed(boolean)`；`screen != null` 返回 `false`；`walkHeld[5]` 记账式释放），同时由 `PlaytestCore` 将活跃移动键同步进 `Arbitration.owned`（防止 `AUTO` 自我让位；真人按任意未持有键立刻让位并收口 `stopReason=YIELDED`，且绝不覆盖真人键；`DUAL` / `!aiOwns` 挡实际走动、放行 `plan_only`）。`javap -c` 实测两版 `KeyboardInput.getMovementMultiplier(left, right)` 均为 `left=+1 / right=-1`（顺手修正 Fabric 1.21.11 原 `strafe` 左右反向）。`WalkTo.receipt` 补 `startPos` / `actualDisplacement` / `moved` / `alreadyWithinTolerance`，使初始已在容差内（`ticks=0`）诚实标明「未发生位移」，杜绝假到达。
+  **对坑 115 边界的补充实证**：2026-11-20 在**未置前后台窗口**（`pauseOnLostFocus=false`、`mc.screen == null`）下，基于 `KeyMapping#setDown` 的 `walk_to` 实测 6 格平走（`ticks=34, actualDisplacement=5.99, yields=0`）、上 1 格台阶跳跃（`ticks=47, actualDisplacement=6.31`）及整轮生存钻石镐全通；窗口失焦导致静默失效的边界在 GLFW 点击计数依赖项（`attack`/`use`）或未关 `pauseOnLostFocus` 弹出暂停屏，而非 `KeyMapping#setDown` 移动本身。
+  **证据等级**：NeoForge 1.20.1 真机验证；Fabric 1.21.11 仅编译 + 离线单测（未真机运行）。
+
+- **120 · `close_screen` 只调 `setScreen(null)` 导致容器菜单协议脱节（坑 116 的根源，真机生存合成复现并根治）**
+  **真机原形**（2026-11-20，neoforge 1.20.1 生存）：在 `CraftingScreen` 合成石镐后调 `close_screen`，再开 `InventoryScreen` 将石镐移入槽 1；客户端 `query_inventory` 显示槽 1 为 `stone_pickaxe`，但服务端仍为 `tomato_seeds`（挖石耗时 `7549 ms` 空手速度且零掉落）。
+  **根因（`javap -c` 字节码实证）**：旧 `closeScreen()` 仅调用 `mc.setScreen(null)`，从未向服务端发送关闭容器包，导致服务端 `ServerPlayer.containerMenu` 停在 `CraftingMenu(containerId=1)`；随后打开 `InventoryScreen(containerId=0)` 的所有点击与 `drop_item` 均命中 `ServerGamePacketListenerImpl#handleContainerClick` 偏移 `19..33` 的静默丢包守卫（`if (player.containerMenu.containerId != packet.getContainerId()) return;`），无任何错误日志。
+  **处方**：NeoForge 1.20.1 在 `mc.player != null && (mc.player.containerMenu != mc.player.inventoryMenu || mc.screen instanceof AbstractContainerScreen)` 时调 `mc.player.closeContainer()`（字节码实证发送 `ServerboundContainerClosePacket`、重置 `containerMenu = inventoryMenu` 并清屏）；Fabric 1.21.11 同步改为 `c.player.closeHandledScreen()`（发送 `CloseHandledScreenC2SPacket`、重置 `currentScreenHandler = playerScreenHandler` 并清屏）。
+  **真机复验**：修复后（`T41b`）`CraftingScreen → close_screen → InventoryScreen` 移物完毕，只读 `/data get entity AIBot Inventory` 与客户端 `query_inventory` 逐格 100% 吻合，石镐挖石 `746 ms`；同轮生存模式从头合成铁镐与钻石镐全程零脱节。
+  **证据等级**：NeoForge 1.20.1 真机验证；Fabric 1.21.11 仅编译 + 离线单测（未真机运行）。
+
+- **121 · `Pathfinder.standable()` 误拒脚部格非实心危险（`minecraft:fire` / `sweet_berry_bush` / `powder_snow` / `wither_rose` 位于 `y` 而非 `y-1`）**
+  **真机原形**（2026-11-20，neoforge 1.20.1 生存）：在 1 格宽密封深板岩走廊用自制打火石于 `(53,-23,-27)` 点燃 `minecraft:fire` 后，`walk_to` 误报 `stopReason="BLOCKED"`（而非 `DANGER`）。离线单测 L8 当初之所以通过，是因为旧单测把 `minecraft:fire` 嵌在了地板格 `y-1`（空气在 `y`），而真实 Minecraft 中火 / 甜浆果丛 / 粉雪 / 凋零玫瑰占据**脚所在格 `y`**（坐落在 `y-1` 实心块上），旧 `standable()` 仅放行 `PASSABLE | WATER`，在 `relax()` 调 `hazardKindOf()` 之前就将其拦截。
+  **处方**：在 `DangerTable` 新增 `isWalkableHazardFeet(int)`（仅放行非实心可进入的 `FIRE` / `SWEET_BERRY` / `POWDER_SNOW` / `WITHER_ROSE`；不含整块实心 `MAGMA` 与 14/16 碰撞柱 `CACTUS`），并在 `Pathfinder.standable()` 放行，使 `relax()` 交由 `hazardKindOf()` 按 `allow` 裁决。
+  **真机复验**（`T41c`）：无 `allow:["fire"]` 时 `walk_to(55,-23,-27)` 诚实返回 `WALK_BLOCKED` + `stopReason="DANGER"` + `dangerKind="fire"` + `dangerAt=(53,-23,-27)` + `dangerBlock="minecraft:fire"` + `detourAvailable=false` + `riskRouteLength=4` + `riskRouteDangerCount=1` + `riskRouteDamage=4` + `needAllow=["fire"]` + `moved=false`（实测 `posDelta=0, hp=20`）；`plan_only:true` 同报 `planStopReason="DANGER"`；灭火复查 `minecraft:air` 后正对照 `walk_to(55,-23,-27)` 返回 `REACHED`（`ticks=28, moved=true, actualDisplacement=3.63, distance=0.37, hpAfter=20`）。离线单测补 L18（5 条密封走廊回归用例）。
+  **证据等级**：NeoForge 1.20.1 真机验证；Fabric 1.21.11 仅编译 + 离线单测。
+
+- **122 · `walk_to` 的末段 `(tolerance, 1.15]` 路点跳过陷阱与 5 s HTTP 超时截断**
+  ① `PlaytestCore.advanceWalk` ④ 步原循环 `idx < s.route.size()` 在真实 MC 步速（~0.215 格/tick）下，距离终点落在 `(tolerance, 1.15]` 环内时会把终点格本身跳过，导致紧容差（如 `tolerance=0.45`）误报 `BLOCKED-at-end`。改为 `idx < s.route.size() - 1` 后真机平滑收敛（`d=1.11 → 0.89 → 0.75 → 0.61 → 0.46 → REACHED`）。
+  ② `PlaytestCore.timeoutMsFor("walk_to")` 原走默认 `5000 ms`，与 `DEFAULT_MAX_TICKS=600`（30 s）不匹配，超过 ~15 格的正常行走在 HTTP 层会误报 `PLAYTEST_TIMEOUT`（游戏内仍在正常走动）。已提升至 `35000 ms` 并纳入单测 L17-8。
+  **证据等级**：真机（neoforge 1.20.1）+ 离线单测（L16 / L17）。
+
+- **123 · 掉落物拾取疑似回退的 A/B 排查与 `select_slot` 非 0 槽端到端证通**
+  ① T40 曾怀疑新 jar 破坏掉落物拾取。2026-11-20 在同一存档备份下做严格 A/B 对照：`preT40`（`192,048 B`, SHA `E656DEB1…`）与 `T41`（`236,844 B`, SHA `7E9B9F1E…`）在同一坐标 `(34,64,5)` 挖沙均耗时 `757 ms` 且背包 `minecraft:sand` 均由 `2 → 3`（存档基线已有 `sand×2`，`qa.log` 只打 `slotCount` 不打堆叠 `count` 导致误判）⇒ 排除拾取回退。
+  ② `select_slot` 非 0 槽实机证通：槽 0 为 `sand×3`、槽 2 为 `wooden_pickaxe`；`select_slot{slot:2}` 回 `serverSynced=true` / `packetSent=true` / `packetClass="ServerboundSetCarriedItemPacket"`，`1548 ms` 挖 `(51,67,-24)` `minecraft:stone` 后走近拾得 `minecraft:cobblestone 0→1`（`requiresCorrectToolForDrops` 端到端闭环）。
+  **证据等级**：真机（neoforge 1.20.1）。
+
+- **124 · 模组非实心植物与悬边站位触发 `walk_to` 起点 `WALK_BLOCKED`，以及 `mods/` 同 modid 双 jar 误载**
+  ① `DangerTable` 保守将未知模组方块归类为 `SOLID`，若玩家站在模组非实心植物（如 `farmersdelight:wild_tomatoes`、`biomesoplenty:bush`）内或脚悬出方块边缘（`floor(x)` 落在空气格但 `onGround=true`），`Pathfinder` 会以起点站不住拒绝；行动脚本应先清理脚下模组草丛或挪回完整方块中心。
+  ② 部署新 jar 到游戏实例 `mods/` 时，若旧 jar（如 `bandd_playtest-0.1.0-forge-1.20.1.jar`）与新拷入 jar（`bandd_playtest-0.1.0.jar`）文件名不同并存，Forge 按文件名序加载旧 jar 会导致「改了源码但跑着旧字节码」；部署后务必确认 `mods/*bandd*.jar` 唯一且 SHA256 与最新构建一致。
+  **证据等级**：真机（neoforge 1.20.1）。
+
+> **本组（119–124）的来源与边界**：来自 2026-11-20 `bandd_playtest` T40–T41 轮真机验证（`F:\MC_GAME\forge-1.20.1-AIBot`，世界 `新的世界 (12)`，全程 `survival`、0 死亡、0 作弊，最终以 `iron_pickaxe` 掘取 3 颗钻石合成 `minecraft:diamond_pickaxe` 并由只读 `/data get entity AIBot SelectedItem` 证实服务端真值），离线纯 JDK 单测 14/14 套 **853/853 PASS, 0 FAIL**（`WalkToTest` 133/133）。NeoForge 1.20.1 `T41c` 已真机验证；Fabric 1.21.11 `T41c` 为编译 + 离线单测通过（未做 Fabric 实机运行）。可读 `.java` 单一真值源已落地 `mcp-server/playtest-mod/` 并由 `assert-playtest-mod-sync.mjs` 防漂移守护。

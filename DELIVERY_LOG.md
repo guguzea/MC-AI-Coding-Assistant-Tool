@@ -6,6 +6,180 @@
 - 只追加，不改写历史节。要更正旧节，写进新节第 6 块「自我更正」并点名旧节。
 - 夜跑、交接、事后抽查读本文件，不依赖聊天记录。夜批（阶 1）的队列与抽查记账仍在 [`NIGHT_BATCH.md`](./NIGHT_BATCH.md)，本文件不顶替它。
 
+## 2026-11-20 · bandd_playtest T41c：两档构建 + NeoForge 1.20.1 全项真机验证（生存钻石镐 / DANGER 火走廊 / 容器同步）+ 仓库选项 B 单源树与防漂移门（混合：主档 + 维护档）
+
+**第 0 块 · 结论**：已完成两档 Gradle 构建（NeoForge 1.20.1 `T41c` 与 Fabric 1.21.11 `T41c`）、NeoForge 1.20.1 **全项真机验证**（A/B 捡取对照排除回退、`walk_to` 真实位移与假到达回执、`select_slot` 非 0 槽服务端同步与掉落、`closeScreen()` 容器协议同步修复、真实火走廊 `DANGER` 分支与灭火正对照、生存模式 0 死 0 作弊合成 `minecraft:diamond_pickaxe` 并由服务端 `/data get` 证真），并落地 `MC_skill` 选项 B 可读 `.java` 单一真值源（`mcp-server/playtest-mod/`）与逐字节防漂移门禁 + 全部文档回灌。离线纯 JDK 14 套 **853/853 PASS（`FAIL=0`）**、`test-scripts.mjs`（88/88 可达、64 真跑、54 selftest、`本轮未执法腿=0`）与 `test-core.mjs`（1605 档、失效引用 0）均 `exit 0`；**仅 Fabric 1.21.11 为编译 + 单测通过、未做 Fabric 实机游戏内验证**，游戏 JVM 已精确终止（残留 Java=0）。
+
+### A. 主档 · 模组工程部分（`F:\B AND D MOD`）
+
+1. **改了哪些文件 / 给了什么**（在上一节 T41 基础上，本轮新增实机发现并落地以下修复与文档）：
+   - `F:\B AND D MOD\mod\neoforge-1.20.1\src\main\java\com\bandd\playtest\neoforge1201\NeoForgeAdapter.java`（`:360-384`）：`closeScreen()` 改为存在打开容器菜单时调 `mc.player.closeContainer()`（发送 `ServerboundContainerClosePacket` 并重置 `containerMenu = inventoryMenu`），根治 `CraftingScreen` 关屏后服务端停留在 `containerId=1` 导致后续 `InventoryScreen(containerId=0)` 点击静默丢包的协议脱节（坑位 116 根源）。
+   - `F:\B AND D MOD\mod\fabric-1.21.11\src\main\java\com\bandd\playtest\fabric1211\FabricAdapter.java`（`:429-450`）：同步修复 `closeScreen()`，存在容器菜单时调 `c.player.closeHandledScreen()`（发送 `CloseHandledScreenC2SPacket` 并重置 `currentScreenHandler = playerScreenHandler`）。
+   - `F:\B AND D MOD\mod\shared\core\com\bandd\playtest\core\PlaytestCore.java`（`timeoutMsFor`）：将 `walk_to` 的 HTTP 等待预算由默认 `5000 ms` 提升至 `35000 ms`（匹配 `DEFAULT_MAX_TICKS=600` = 30s + 5s 余量），消除 >15 格正常行走的 HTTP 误超时。
+   - `F:\B AND D MOD\mod\shared\core\com\bandd\playtest\core\DangerTable.java`（`:186-200`）& `Pathfinder.java`（`:255-266`）：新增 `DangerTable.isWalkableHazardFeet(int)` 放行真实占据**脚所在格 `y`** 的非实心危险（`FIRE` / `SWEET_BERRY` / `POWDER_SNOW` / `WITHER_ROSE`；不含实心 `MAGMA` 与碰撞柱 `CACTUS`），修复真机火走廊误报 `BLOCKED` 而非 `DANGER` 的路径规划缺陷。
+   - `F:\B AND D MOD\tests\src\com\bandd\playtest\test\WalkToTest.java`（`:65`、`:973-1055`）：补齐 L17-8（35s HTTP 预算）与 L18-1..L18-5（1 格宽密封走廊脚部格 `minecraft:fire` 无许可 `DANGER` / `plan_only` / `allow:["fire"]` 穿行与 `cactus` 实心柱不可穿）。
+   - `F:\B AND D MOD\STATUS.md`（末尾追加：`141,004 → 149,241 B`，sha16 `97cfb73132e2393a → 36c79ca06472a3f8`）& `F:\B AND D MOD\交付底稿.md`（末尾追加：`167,653 → 172,573 B`，sha16 `4de0292dd7423a0c → 055fde3d7fc3a17a`）：追加 T40–T41 真机实证与选项 B 落点记录（历史旧段逐字节未改）。
+   - 两档构建产物：
+     - NeoForge 1.20.1 `T41c`：`F:\B AND D MOD\mod\neoforge-1.20.1\build\libs\bandd_playtest-0.1.0.jar`（`237,050 B`，SHA256 `35E8FC8E746A04A72EB5C6CED49540318DBA35664C39B3A9E160D2C997C8654F`），已部署为 `F:\MC_GAME\forge-1.20.1-AIBot\mods\bandd_playtest-0.1.0-forge-1.20.1.jar`（且确认 `mods\*bandd*.jar` 唯一）。
+     - Fabric 1.21.11 `T41c`：`F:\B AND D MOD\mod\fabric-1.21.11\build\libs\bandd_playtest-0.1.0.jar`（`231,048 B`，SHA256 `D8DCA9DFF58E1E176B8E738F5EB59527065D763A69193C1B321F6F6DF0266E0B`）。
+
+2. **怎么验（先报已测证据，再给续跑清单）**
+   - **本轮实际已测层与证据**（as-of 2026-11-20）：
+     - **离线单测层**：`F:\B AND D MOD\tests\run-tests.ps1` **14/14 套、853/853 PASS, 0 FAIL**（`javac_exit=0`，全套 `*_exit=0`；`WalkToTest` 133/133）。
+     - **编译与重映射层**：NeoForge 1.20.1 `gradlew.bat build --no-daemon --offline` `BUILD SUCCESSFUL in 45s`；Fabric 1.21.11 `gradlew.bat build --no-daemon --offline` `BUILD SUCCESSFUL in 1m 3s`。
+     - **真机生存游戏内层（NeoForge 1.20.1，`F:\MC_GAME\forge-1.20.1-AIBot`，世界 `新的世界 (12)`，全程 `survival`、0 死亡、0 作弊、0 窗口置前/OS 输入注入）**：
+       1. **A/B 捡取对照**：同存档备份（`D:\mc-skill-temp\t41\backup\save-world12`，初态 `sand×2`）下 `preT40`（`192,048 B`，SHA `E656DEB1…`）与 `T41`（`236,844 B`，SHA `7E9B9F1E…`）挖 `(34,64,5)` 沙均 `757 ms`、`sand 2→3` ⇒ 无回退。
+       2. **`walk_to` 实机位移**：假到达 `reached=true, ticks=0, moved=false, actualDisplacement=0, alreadyWithinTolerance=true`；6 格平走 `(40,63,5)` (`tolerance=0.45`) `reached=true, ticks=34, distance=0.3, moved=true, actualDisplacement=5.99, arb={mode:AUTO,aiOwns:true,yields:0,ownedKeys:0}`；回走上台阶 (`allowJump:true`) `ticks=47, distance=0.29, actualDisplacement=6.31`。
+       3. **`select_slot` 非 0 槽服务端同步**：槽 2 持木镐 `serverSynced=true`（`ServerboundSetCarriedItemPacket`），`1548 ms` 挖 `(51,67,-24)` 石头并拾得圆石 `0→1`。
+       4. **`closeScreen()` 容器同步修复复验（`T41b`）**：`CraftingScreen` 合成石镐/熔炉 → `close_screen` → `InventoryScreen` 移物 → 只读 `/data get entity AIBot Inventory` 与客户端 `query_inventory` 逐格吻合，石镐挖石 `746 ms`。
+       5. **真机 DANGER 火走廊（`T41c`）**：自制打火石在 `y=-23` 密封深板岩走廊点燃 `(53,-23,-27)` `minecraft:fire`，无 `allow:["fire"]` 时 `walk_to(55,-23,-27)` 回 `WALK_BLOCKED + stopReason="DANGER" + dangerKind="fire" + dangerAt={x:53,y:-23,z:-27} + dangerBlock="minecraft:fire" + detourAvailable=false + riskRouteLength=4 + riskRouteDangerCount=1 + riskRouteDamage=4 + needAllow=["fire"] + moved=false`（`posDelta=0, hp=20`）；`plan_only:true` 同回 `planStopReason="DANGER"`；灭火复查 `minecraft:air` 后正对照 `walk_to(55,-23,-27)` 回 `REACHED`（`ticks=28, moved=true, actualDisplacement=3.63, distance=0.37, hpAfter=20`）；证据见 `qa.log:13896`/`:13910` 与截图 `F:\MC_GAME\forge-1.20.1-AIBot\screenshots\2026-11-20_15.10.29.png`。
+       6. **生存钻石镐（0 死 0 作弊）**：手掘安全井 `y=64→18→11→-6→-22`、炼 4 铁合铁镐、挖 3 深板岩钻石矿（2750/1550/1500 ms）合 `minecraft:diamond_pickaxe` 并切槽 0；只读 `/data get entity AIBot SelectedItem` 证实服务端真值 `{id:"minecraft:diamond_pickaxe", Count:1b, tag:{Damage:0}}`，`/data get entity AIBot DeathTime` = `0s`，`logs\latest.log` 零死亡记录；截图 `F:\MC_GAME\forge-1.20.1-AIBot\screenshots\2026-11-20_15.00.52.png`。
+     - **实例清理确认**：测完已精确杀游戏 JVM，`REMAINING_JAVA=0`，`PORT_38090_BUSY=False`。
+   - **续跑清单**：如需在 Fabric 1.21.11 实机复核，将 `F:\B AND D MOD\mod\fabric-1.21.11\build\libs\bandd_playtest-0.1.0.jar` 拷入 Fabric 1.21.11 测试实例 `mods\`，启动客户端后在生存世界依次跑 `walk_to` / `close_screen` 容器同步 / 火走廊 `DANGER` 测试并查看 `bandd-playtest-evidence/qa.log`。
+
+3. **未核实项与影响面**
+   - **未核实项**：Fabric 1.21.11 `T41c` 仅完成 Gradle 编译 + 重映射 + 字节码核对 + core 纯 JDK 单测，**尚未在 Fabric 1.21.11 真实客户端运行验证**；其余 51 档适配层仍维持仅文本对齐口径。
+   - **影响面**：改动仅落 `shared/core` 5 类、`NeoForgeAdapter.java`、`FabricAdapter.java`、`WalkToTest.java` 及实例 `mods\bandd_playtest-0.1.0-forge-1.20.1.jar`；未动任何 `build.gradle`、平台元数据、mappings、依赖与其余 54 档适配层。
+
+4. **需要你拍板 + 风险与回退**
+   - **待拍板**：无（用户已于本轮拍板方案 B、驱动选项 1、假到达选项 1、仓库单源选项 B 及授权项 1；`MC_skill\3` 与 git 提交仍留归用户自行处理）。
+   - **风险与回退**：实例旧版备份位于 `D:\mc-skill-temp\t40\backup\bandd_playtest-0.1.0-forge-1.20.1.jar.192048B.preT40` 与 `D:\mc-skill-temp\t41\backup\bandd_playtest-0.1.0-forge-1.20.1.jar.T40.234028B`，存档备份位于 `D:\mc-skill-temp\t41\backup\save-world12`，随时可直接拷回恢复。
+
+### B. 维护档 · 仓库受管面部分（`MC_skill`）
+
+1. **改了哪些文件**
+   - **新建可读 `.java` 单一真值源树**：`mcp-server/playtest-mod/`
+     - `core/com/bandd/playtest/core/*.java`（21 个核心类，同步自 T41c 最新代码）
+     - `adapters/manifest.json` + `adapters/<platform>-<version>/**/*.java`（53 档 / 110 个 `.java` 文件，含 T41c 最新 `NeoForgeAdapter.java` 与 `FabricAdapter.java`）
+     - `tests/src/com/bandd/playtest/test/*.java`（16 个纯 JDK 离线测试源码）
+     - `README.md`（目录说明、单一真源派生与离线复跑口径）
+   - **新建派生脚本（走 `write-guard.mjs`）**：`mcp-server/scripts/sync-playtest-mod.mjs`（默认 dry-run，`--write` 确定性渲染并落盘 `src/generators/playtest-mod-{core,adapters}.ts`，零裸写盘原语）。
+   - **新建防漂移门禁（只读 + 纯内存 `--selftest`）**：`mcp-server/scripts/assert-playtest-mod-sync.mjs`（逐字节校验 `playtest-mod/` ↔ `playtest-mod-{core,adapters}.ts` + 孤儿/缺失/空树检查）。
+   - **派生与接线**：
+     - `mcp-server/src/generators/playtest-mod-core.ts`（`588,319 B`）& `mcp-server/src/generators/playtest-mod-adapters.ts`（`1,486,319 B`）+ `mcp-server/dist/**`（由 `sync-playtest-mod.mjs --write` + `npm run build` 确定性生成）。
+     - `mcp-server/test-scripts.mjs`（`:2445-2448`、`:2604-2607`）：将 `./scripts/assert-playtest-mod-sync.mjs` 同时接入 `REAL_RUN_GATES` 与 `SELFTEST_GATES`。
+     - `mcp-server/package.json`（`:55-57`）：新增 `sync:playtest-mod`、`assert:playtest-mod-sync` 并将 `--selftest` + 真跑接入 `scripts.test`。
+   - **文档回灌**：
+     - `community_knowledge/authored/ingame-playtest-automation.md`（末尾追加坑位 **119–124**，`401,189 → 410,228 B`，sha16 `7d7b04d7a976de44 → 832ede424839575b`）。
+     - `doc/playtest-loops.md`（更新二合一 mod 21 类/单源树口径与 L4 坑 2 进展，追加 T41 补遗，`15,437 → 17,660 B`，sha16 `ff2748d2400df77c → 4cafa1b1eb27d96a`）。
+     - `DELIVERY_LOG.md`：顶部追加本节。
+
+2. **判据与反证**
+   - **真盘活证（同步前必红、同步后必绿）**：落盘 `playtest-mod/` 后、执行 `--write` 前直跑 `node scripts/assert-playtest-mod-sync.mjs` 实测 `rc=1`，准确点名 `[CORE_TS_DRIFT]`（`disk=494339 chars, expected=495286 chars`）与 `[ADAPTERS_TS_DRIFT]`（`disk=1330383 chars, expected=1331571 chars`）；执行 `node scripts/sync-playtest-mod.mjs --write` 后复跑 `rc=0`（`core=21 类 · adapters=53 档/110 件 · tests=16 件 · 逐字节一致`）。
+   - **内存自证（`--selftest`）**：`node scripts/assert-playtest-mod-sync.mjs --selftest` 实测 `自检 8/8 通过（1 正控 + 7 投毒）`（正控绿；7 记投毒：core 漂移 `[CORE_TS_DRIFT]`、adapter 漂移 `[ADAPTERS_TS_DRIFT]`、孤儿 `.java` `[ORPHAN_ADAPTER_FILE]`、manifest 缺件 `[MISSING_ADAPTER_FILE]`、core 空树 `[EMPTY_CORE_TREE]`、tests 空树 `[EMPTY_TESTS_TREE]`、缺失派生 TS `[MISSING_ADAPTERS_TS]` 全红并命中锚点）。
+
+3. **验证台账**（as-of 2026-11-20；分母 + 口径写死）
+   - `powershell -NoProfile -ExecutionPolicy Bypass -File 'F:\B AND D MOD\tests\run-tests.ps1'`：`javac_exit=0`，14/14 套 `*_exit=0`，**853/853 PASS, 0 FAIL**（`WalkToTest` 133/133）。
+   - 仓内独立编译复跑（仅用 `mcp-server/playtest-mod/{core,tests}`）：`STANDALONE_CORE=21 STANDALONE_TESTS=16`、`STANDALONE_JAVAC_EXIT=0`，12/14 纯 core 套件（含 `WalkToTest` 133/133）零外部依赖全绿（另 2 套源码形态套件 `T20CorrectnessTest`/`T22ActionsTest` 按设计读 `<modRoot>/<tier>/src/main/java/...`，已在 `playtest-mod/README.md` 写明口径）。
+   - NeoForge 1.20.1 `.\gradlew.bat build --no-daemon --offline`：`GRADLE_EXIT=0`（`45s`），`237,050 B`，SHA256 `35E8FC8E746A04A72EB5C6CED49540318DBA35664C39B3A9E160D2C997C8654F`。
+   - Fabric 1.21.11 `.\gradlew.bat build --no-daemon --offline`：`GRADLE_EXIT=0`（`1m 3s`），`231,048 B`，SHA256 `D8DCA9DFF58E1E176B8E738F5EB59527065D763A69193C1B321F6F6DF0266E0B`。
+   - `cd mcp-server`:
+     - `node scripts/sync-playtest-mod.mjs`（dry-run）：`exit=0`；`--write`：`exit=0`；`npm run build`（`tsc`）：`exit=0`。
+     - `node scripts/assert-playtest-mod-sync.mjs --selftest` & 真跑：`exit=0`（8/8 自检 + 21 类/53 档 110 件/16 测试逐字节一致）。
+     - `node scripts/assert-script-write-guard.mjs --selftest` & 真跑：`exit=0`（222 脚本，范围外违规 0）。
+     - `node scripts/assert-scripts-parse.mjs`：`exit=0`（259 跟踪脚本可解析，`.test.mjs` 10/10 孤儿 0）。
+     - `node scripts/assert-test-harness.mjs`：`exit=0`（R-1..R-5 全部通过，R-5 命中 0 / 自证 16/16）。
+     - `node test-scripts.mjs`：`TEST_SCRIPTS_EXIT=0`（`§S4` 盘上 88 道 / 可达 88 道 / 真跑 64 道 / selftest 54 道、`#23` 62/62 红 0、`本轮未执法腿=0`）。
+     - `node test-core.mjs`：`TEST_CORE_EXIT=0`（`[assertion-provenance]` 189 根 / 1605 档 / 失效引用 0、`[community-index]` 115=115 陈旧 0、`core regression tests passed`）。
+     - `node scripts/assert-archive-pointers.mjs` & `node scripts/assert-community-attribution.mjs`：均 `exit=0`。
+
+5. **未做清单**
+   - **未做 Fabric 1.21.11 真机运行**：本轮仅完成编译重映射与离线单测，无现成 Fabric 1.21.11 实机测试实例启动授权，故明确标为仅编译+单测。
+   - **未触碰未追踪文件 `MC_skill\3`、未执行 `git add/commit/push`**：删除与提交权归用户。
+   - **未改 `mcp-server/CHANGELOG.md` 与 `data/**`**：未发版亦未改动语料数据面。
+
+6. **自我更正**
+   - **纠正旧坑 115 / `HANDOFF-2026-11-20.md` §6.5 对「失焦下移动按键完全无效」的过宽断言**：2026-11-20 真机证实，在 `pauseOnLostFocus=false` 且 `screen == null` 的未置前后台窗口下，`KeyMapping#setDown` 驱动的 `walk_to` 可以正常完成移动、跳跃与整轮生存钻石镐闭环；失焦失效的真实边界是 GLFW 点击计数动作（`attack`/`use`）或暂停屏弹出（已写入坑位 119）。
+   - **纠正 T39 `WalkToTest` L8 将火块嵌在 `y-1` 地板格造成的测试盲区**：实机火走廊暴露出真实 Minecraft 中 `fire`/`sweet_berry_bush`/`powder_snow`/`wither_rose` 位于脚部格 `y`，旧 `Pathfinder.standable()` 拦截了这些方块导致误报 `BLOCKED`；已于 T41c 修复并用 L18 密封走廊单测 + 实机火走廊（`T41c`）双向闭环。
+   - **纠正 T41c 首轮部署时未覆盖旧文件名 `bandd_playtest-0.1.0-forge-1.20.1.jar` 导致的双 jar 误载**：已删去多余副本 `bandd_playtest-0.1.0.jar`，确认 `mods\*bandd*.jar` 唯一且 SHA256 与最新构建一致后重跑实机通过，并将该排查纪律写入坑位 124。
+
+## 2026-11-20 · bandd_playtest T41：`walk_to` 按键驱动修复 + `Arbitration` 联动 +「假到达」位移回执（混合：主档 + 维护档）
+
+**第 0 块 · 结论**：已完成 `walk_to` 两端适配层按键驱动修复（NeoForge 1.20.1 `KeyMapping#setDown` 与 Fabric 1.21.11 `KeyBinding#setPressed`）、`PlaytestCore` 与 `Arbitration` 移动键归属联动、「假到达」位移回执（`startPos`/`actualDisplacement`/`moved`/`alreadyWithinTolerance`）及末段 `(tolerance, 1.15]` 路点防跳过修复，并已同步进 `MC_skill` TS 生成器单源。离线层 14 套 / **847 条**纯 JDK 单测全绿（含新增 L16–L17 共 **13 条**，`WalkToTest` 127/127 `FAIL=0`），`MC_skill` `tsc` 构建 `exit=0` 且 core 21/21 与两档 adapter 往返逐字节一致。**尚未执行 Gradle 构建、未替换实例 `mods\` jar、未启动游戏做真机验证与 A/B 捡取对照**（等用户授权高风险操作）。
+
+### A. 主档 · 模组工程部分（`F:\B AND D MOD`）
+
+1. **改了哪些文件 / 给了什么**
+   - `F:\B AND D MOD\mod\shared\core\com\bandd\playtest\core\GameBridge.java`（`:717-768`）：更新 `walkDrive`/`walkStop` 接口契约注释，标明 T40/T41 字节码根因（`KeyboardInput#tick` 每 tick 覆写 `Input` 字段）及 `strafe` 遵循原版 `leftImpulse` 符号（`>0` 左、`<0` 右）。
+   - `F:\B AND D MOD\mod\shared\core\com\bandd\playtest\core\WalkTo.java`（`:12-16`、`:286-292`、`:381-390`）：`WalkTo.Session` 新增 `startX/startY/startZ`；`WalkTo.receipt` 新增 `startPos`、`actualDisplacement`、`moved`、`alreadyWithinTolerance` 字段，诚实区分「初始已在容差内未移动」与「实际走到目标」。
+   - `F:\B AND D MOD\mod\shared\core\com\bandd\playtest\core\PlaytestCore.java`（`:349-650`、`:1655-1845`、`:2279-2295`）：
+     - 新增 `walkOwnedKeys`、`applyWalkDrive`、`syncWalkOwnedKey`、`stopWalkBridge`、`abortActiveWalks`、`checkAutoYield`：`walk_to` 驱动移动键时同步写入 `Arbitration.owned`，防止 `AUTO` 仲裁自我让位；真人按键介入时先查 `checkAutoYield` 立刻让位并中止 `walk_to`（`stopReason=YIELDED`），不覆盖真人键；`release_all` / `set_arbitration(DUAL)` / `onShutdown` 同步停走释键；
+     - `walk_to` 非 `plan_only` 分支增加 `DUAL`（`DRIVER_DISABLED`）与 `!aiOwns`（`NOT_OWNING`）门控，记录起步精确坐标 `startX/Y/Z`；
+     - `advanceWalk` ② 步在 `ticks==0 && !moved` 时写明「初始已在容差内，未发生位移」；④ 步将路点跳过循环改为 `idx < s.route.size() - 1`，修复低步速（~0.215 格/tick）在 `(tolerance, 1.15]` 环内跳过终点误报 `BLOCKED-at-end` 的缺陷。
+   - `F:\B AND D MOD\mod\neoforge-1.20.1\src\main\java\com\bandd\playtest\neoforge1201\NeoForgeAdapter.java`（`:185-198`、`:1554-1648`）：`walkDrive` 改为驱动 `mc.options.keyUp/keyDown/keyLeft/keyRight/keyJump.setDown(boolean)`（`mc.screen != null` 返回 `false`），`walkHeld[5]` 记账式释放，`setPressed(key, false)` 同步复位 `walkHeld`。
+   - `F:\B AND D MOD\mod\fabric-1.21.11\src\main\java\com\bandd\playtest\fabric1211\FabricAdapter.java`（`:239-247`、`:1401-1481`）：`walkDrive` 改为驱动 `c.options.forwardKey/backKey/leftKey/rightKey/jumpKey.setPressed(boolean)`（`c.currentScreen != null` 返回 `false`），同步修正 `strafe` 方向与 `walkHeld[5]` 记账式释放。
+   - `F:\B AND D MOD\tests\src\com\bandd\playtest\test\WalkToTest.java`（`:61-68`、`:807-971`）：新增 L16（假到达回执 + 0.215 步速 `tolerance=0.4` 末段防跳过，6 条）与 L17（`KeyedMapBridge` 模拟真实按键状态验证 `AUTO` 不自让位 / 真人按 `jump` 让位并保留真人键 / `NOT_OWNING` / `DUAL` 门控与 `plan_only` 放行，7 条）。
+
+2. **怎么验（先报已测证据，再给续跑清单）**
+   - **本轮已测层**：离线纯 JDK 单测（`F:\B AND D MOD\tests\run-tests.ps1`，as-of 2026-11-20）**14/14 套、847/847 条全绿（`FAIL=0`，全部 `*_exit=0`）**；具体分项：`CoreTest` 124 · `StateTest` 102 · `SettingsTest` 27 · `SettingsActionsTest` 45 · `InventoryEntityTest` 68 · `ColumnSearchTest` 86 · `YLayerTest` 47 · `T16VoidAirTest` 8 · `T16ConfigKnobsTest` 19 · `T16CommandFallbackTest` 12 · `GuiActionsTest` 75 · `T20CorrectnessTest` 45 · `T22ActionsTest` 62 · `WalkToTest` 127。**本轮未跑 Gradle 构建、未拷 jar、未做真机游戏内验证**。
+   - **续跑清单（待用户确认授权后执行）**：
+     1. 分别在 `F:\B AND D MOD\mod\neoforge-1.20.1` 与 `F:\B AND D MOD\mod\fabric-1.21.11` 跑 Gradle `build`，确认两档编译与重映射 jar 产出；
+     2. 启动 `F:\MC_GAME\forge-1.20.1-AIBot` 实例：先用 `D:\mc-skill-temp\t40\backup\bandd_playtest-0.1.0-forge-1.20.1.jar.192048B.preT40`（`192048 B`）与本次新 jar 在同坐标做挖块捡取 A/B 对照；
+     3. 在新 jar 下依次真机验：`walk_to` 真实位移与到位停止（含 `tolerance=0.4` 与 `ticks=0` 假到达回执字段）、`select_slot` 切镐挖石/矿掉落（`requiresCorrectToolForDrops`）、构造火/仙人掌等可许可危险测 DANGER 分支、生存模式无死亡无作弊合成钻石镐；
+     4. 读 `F:\MC_GAME\forge-1.20.1-AIBot\bandd-playtest-evidence\qa.log` / `logs\latest.log` 与截图落证，用完精确杀游戏 JVM 进程。
+
+3. **未核实项与影响面**
+   - **未核实项**：`NeoForgeAdapter.java` 与 `FabricAdapter.java` 本轮仅按 1.20.1 / 1.21.11 `javap` 字节码编写，**尚未通过对应 Gradle 工程编译与真机运行**；1.20.1 捡取疑似回退尚未完成真机 A/B 对照；Fabric 1.21.11 后台失焦下的 `KeyBinding.isPressed` 真机表现未实测（仅核过 `KeyBinding.java` 字节码）。
+   - **影响面**：只改了 `shared/core` 3 个文件 + 2 个适配层文件 + 1 个单测文件；未动 `build.gradle`、平台元数据、mappings、依赖与其余 54 档适配层。
+
+4. **需要你拍板 + 风险与回退**
+   - **待拍板**：① 是否授权执行两档 Gradle 构建、更新 `F:\MC_GAME\forge-1.20.1-AIBot\mods\` jar 并启停该实例跑 A/B 捡取 + 全项真机验证；② `MC_skill` 内是否继续只留生成器 TS 单源还是改成 `.java` 真源；③ `MC_skill` 根目录未追踪空文件 `3` 的处置。
+   - **风险与回退**：改动全在 `walkDrive`/`walkStop`/`PlaytestCore` 走动与仲裁分支；若真机发现按键驱动异常，回退上述 5 个 Java 文件并重新执行 `sync-core.mjs`/`sync-adapters.mjs` 即可恢复到 T40 状态，实例恢复 `D:\mc-skill-temp\t40\backup\bandd_playtest-0.1.0-forge-1.20.1.jar.192048B.preT40`。
+
+### B. 维护档 · 仓库受管面部分（`MC_skill`）
+
+1. **改了哪些文件**
+   - `mcp-server/src/generators/playtest-mod-core.ts`（`587,080 B`，21 个 core 类）：由 `D:\mc-skill-temp\t39\sync-core.mjs` 同步更新 `GameBridge.java`、`PlaytestCore.java`、`WalkTo.java`。
+   - `mcp-server/src/generators/playtest-mod-adapters.ts`（`1,485,249 B`）：由 `D:\mc-skill-temp\t39\sync-adapters.mjs` 同步更新 `com/bandd/playtest/neoforge1201/NeoForgeAdapter.java`（`100,270 B`）与 `com/bandd/playtest/fabric1211/FabricAdapter.java`（`93,307 B`）。
+   - `mcp-server/dist/**`：`npm run build`（`tsc`）重新编译产物。
+   - `DELIVERY_LOG.md`：顶部追加本节。
+
+3. **验证台账**（as-of 2026-11-20；分母 + 口径写死）
+   - `powershell -NoProfile -ExecutionPolicy Bypass -File 'F:\B AND D MOD\tests\run-tests.ps1'`：`javac_exit=0`，14/14 套 `*_exit=0`，**847/847 PASS, 0 FAIL**（其中 `WalkToTest` 127/127，较 T39 的 114 新增 13 条）。
+   - `node 'D:\mc-skill-temp\t39\sync-core.mjs'` + `sync-adapters.mjs` + `roundtrip.mjs`：退出码 `0`，core 往返 `EQUAL=21 DIFF=0 MISSING=0 TOTAL=21`。
+   - `npm run build`（`MC_skill\mcp-server`，`tsc`）：`tsc_exit=0`；随后对 `dist/generators/playtest-mod-adapters.js` 做盘面字节比对：`neoforge 1.20.1 ADAPTER_ROUNDTRIP=true`、`fabric 1.21.11 ADAPTER_ROUNDTRIP=true`（2/2）。
+   - `javap -c -p` 取证：`D:\mc-skill-temp\t40\cls\net$minecraft$client$player$KeyboardInput.class`（1.20.1）与 `F:\MOD_TEST\caches\fabric-loom\minecraftMaven\net\minecraft\minecraft-merged\1.21.11-net.fabricmc.yarn.1_21_11.1.21.11+build.6-v2\minecraft-merged-1.21.11-net.fabricmc.yarn.1_21_11.1.21.11+build.6-v2.jar` 中 `KeyBinding` 均退出码 `0`，确认两版 `getMovementMultiplier(left, right)` 均为 `left=+1 / right=-1` 且 `KeyBinding.setPressed/isPressed` 直接读写 `pressed` 字段。
+
+5. **未做清单**
+   - **未跑两档 Gradle 构建、未替换实例 jar、未启游戏做真机与 A/B 捡取对照**：属 `AGENTS.md` 高风险操作，等用户明确授权后执行。
+   - **未回灌社区知识 / 文档**（`community_knowledge/authored/ingame-playtest-automation.md`、`doc/playtest-loops.md`、`F:\B AND D MOD\STATUS.md`、`F:\B AND D MOD\交付底稿.md`）：按方案 B 待真机实测拿齐读数后再一并回灌，避免无真机证据先写文档。
+   - **未碰 `MC_skill\3` 空文件、未做 `git add/commit/push`**：删除/提交权归用户。
+
+6. **自我更正**
+   - 更正 T39 在 `GameBridge.java` / `NeoForgeAdapter.java` / `FabricAdapter.java` 注释中「`Input.tick` 为空、直接写 `forwardImpulse` / `playerInput` 可生效」的误判（运行时 `LocalPlayer.input` 是 `KeyboardInput`，每 tick 从按键重算并覆写）；同时修正 `FabricAdapter.walkDrive` 原先 `strafe` 左右反向的映射（原写 `left = strafe < -0.05f`，实际 1.21.11 `KeyboardInput.getMovementMultiplier(left, right)` 与 1.20.1 `leftImpulse` 一致，均为 `left=+1 / right=-1`）。另外在审计 `PlaytestCore.advanceWalk` ④ 步时发现并一并修复了低速末段在 `(tolerance, 1.15]` 环内跳过终点导致 `BLOCKED-at-end` 的隐蔽缺陷。
+
+## 2026-11-18 · bandd_playtest T29–T36 回灌：真机 L4（**生存模式**）+ `drop_item` 修复 + 仓库门修复（维护档）
+
+**第 0 块 · 结论**：把 bandd_playtest 的 **T29–T36 轮**（2026-11-12 真机 L4 与当天三条修复，2026-11-18 文档轮收口）**只写文档、不碰代码**地回灌进仓：`community_knowledge/authored/ingame-playtest-automation.md` 追加坑位 **116–118**，`doc/playtest-loops.md` 追加一小节「判据怎么写才不假绿」，本文件追加本节。**主链三条（生存挖矿 / 原木→木板→工作台→3×3 合成 / 切快捷栏）在生存模式下真机全绿**；同场抓到 **3 个新坑**，其中 `drop_item` 无容器界面时**静默无效**是真缺陷（已修 + 两档重建 + 13 套 **706 条**单测全绿，但**修复后的真机复验与落地校验绿灯臂均未取得读数** ✗）。另把仓库 `test-core.mjs` 那条「5 处 `temp/` 失效引用」的**归因**写清：11-11 的生成器大同步把 F 盘**旧注释**搬回仓里，抵掉了 11-04 的修复。
+
+1. **改了哪些文件**
+   - `community_knowledge/authored/ingame-playtest-automation.md`（追加 **19 行 / +5,060 B**，起于 **:1262**）：坑位 **116**（`drop_item` 无屏静默无效：真机原形 + 反编译源根因 + 处方 + 仍缺项）、**117**（`mine` 跨 tick 且 `lastStopReason` 粘滞 ⇒ 出口只能是目标格真实 id）、**118**（跨维度 `ReceivingLevelScreen` 期间读到 `y=-377.7` 这类未同步读数）。为什么：该文件的唯一落点职责就是「游玩自测口径、坑位与逐轮取证史」，编号接着既有 1–115 往后排（116 起）。
+   - `doc/playtest-loops.md`（追加 **10 行 / +2,177 B**，起于 **:109**，落在文件末 §三 之后）：新增「真机 L4 的三条『判据怎么写才不假绿』」一小节（挖矿出口 / 容器动作要复读 / 跨维度等界面消失），并回指编号 116–118。为什么：本文件是两条 loop 的执行面落点，判据形状比档位清单更容易被读糊。
+   - `F:\B AND D MOD\STATUS.md`（追加，起于 **:829**）与 `F:\B AND D MOD\交付底稿.md`（追加，起于 **:1265**）：那两份是本轮任务书点名的落点，**只追加、不改写旧段**，历史保留、就地补注。
+   - `DELIVERY_LOG.md`：追加本节（最新在上）。
+   - **未改**：`mcp-server/src/**`（含三个 mod 生成器）· `mcp-server/dist/**` · `mcp-server/CHANGELOG.md` · `data/**` · 任何 `.java` / `.ts` / `.mjs` / `.ps1` · `F:\B AND D MOD\mod\**`（**只读**）。
+
+3. **验证台账**（as-of 2026-11-18；分母 + 口径写死）
+   - **真机 L4（2026-11-12，forge/neoforge 1.20.1，生存）**：A1 挖矿 32 发 / 8.0 s，同一目标 **31** 个 `miningTicks` 采样 0→150 单调增、`targetStillThere` **31/31 true**，末发 `MINE_BROKEN`，复查该格 `andesite → minecraft:air`；A2 全链（`birch_log×2` → `birch_planks×4` → `crafting_table` → `place_block` 复查 → `CraftingScreen` **3×3 九格 + 结果格** → 结果格 `empty:true → birch_planks×4` → `query_inventory` 多出 4 个）；A3 `S0=8 → 0`、`consistent=true`、再查逐字相等；B1/B2/B5/B6/B8 全绿，B3 开屏绿 + 无屏红（缺陷），B4 绿但 `cheats` 两支**未验** ✗，**B7 失焦分支未验** ✗。
+   - **修复与测试**：两档 jar `BUILD SUCCESSFUL`（`53s` / `2m 41s`）；**13 套 / 706 条** `FAIL=0` 且逐套 `*_exit=0`（core 124 / state 102 / settings 27 / settings-actions 45 / inventory-entity 68 / column-search 86 / ylayer 47 / t16-voidair 8 / t16-knobs 19 / t16-cmd 12 / gui-actions 75 / T20 45 / T22 **48**）。⚠ T22 的**改前**锚点是 **43**（`t22/run-tests-t22b.log`），任务书里的「45」**盘上找不到** ⇒ 按 **43 → 48** 记。
+   - **本轮文档改动实测**（本 agent 现读盘；进场锚全部一致才落笔）：`ingame-playtest-automation.md` `396,129 → 401,189 B`（sha `30f2f75f… → 7d7b04d7…`）；`doc/playtest-loops.md` `13,260 → 15,437 B`（`02ab9b53… → ff2748d2…`）；`STATUS.md` `118,844 → 141,004 B`（`f770fe48… → 97cfb731…`）；`交付底稿.md` `150,832 → 167,653 B`（`d0ff1792… → 4de0292d…`）。**四份的前缀逐字节未动**（追加式写入，旧段零改写）。
+   - **门**：本轮**未跑任何门** ✗。理由：任务书明令并发期不跑 `test-core.mjs` / `run-tests.ps1` / Gradle / `dist` 重建；`assert-verbatim-support` 与 `assert-total-semantics-wording` 会 spawn `dist/cli.js`（与正在重建 dist 的另一路**抢**），`assert-authoring-lint` 的真跑面**不含**本文件与 `community_knowledge/**`（面 = `WRITING-FOR-AGENTS.md` + `common_skill/**`），`assert-archive-pointers` / `assert-community-attribution` 虽扫 `community_knowledge/**` 但只判**在册档案在盘 / 必读面提及 / 指定文件的第三态措辞**，与本轮追加的正文无交集。⇒ 「9 道文档门 exit 0」沿用 **2026-11-12** 上一节的读数，**不是**本轮实测。
+   - **并发自保**：5 个目标 md 的进场 sha256 + 字节数逐个记录并在落笔前复核一致（`STATUS.md` `118,844/f770fe48…`、`交付底稿.md` `150,832/d0ff1792…`、`ingame-playtest-automation.md` `396,129/30f2f75f…`、`playtest-loops.md` `13,260/02ab9b53…`、`DELIVERY_LOG.md` `826,295/eddda411…`）；无一次漂移。
+
+5. **未做清单**
+   - **未改一行代码**：`.java` / `.ts` / `.mjs` / `.ps1` 零改动；**未重建 `dist`**；**未跑 `test-core.mjs` / `run-tests.ps1` / 任何 Gradle**；**未起任何游戏实例**（并发期另一路正在跑这些）。
+   - **未跑门**：见第 3 块「门」那一条（含为什么每道都不该在本轮跑）。
+   - **未补 `mcp-server/CHANGELOG.md`**：T29–T36 的代码批次（`[T35]` / `[T36]` 两轮改动）在 CHANGELOG 里无对应条目；本轮是纯文档回灌，按 `WRITING-FOR-AGENTS.md` §8 第 6 步「纯文档改动可免」不补。⚠ 但**归因**已写进两份 F 盘文档与编号 116，未凭空消失。
+   - **未复跑、故未取得读数**（逐条点名，不写成通过 ✗）：`test-core.mjs` **改后**的 `EXIT=0` / `失效引用 0`（盘上只有**改前红**的 `t33/test-core-after.log`）· 生成器「往返 125/125」「53/53 档 −0/+0」「core 18/18 = 428,524 B」· rift 1.13.2 与 forge 1.12.2 的**不回归** · **T36 落地校验的绿灯臂**（盘上两份 `t36/poison*-run.log` 都是**投毒负控**）· **B7 失焦分支**及其反例 · B4 的 `cheats` 两支。
+   - **未打包票**：`STATUS.md` / `交付底稿.md` 里凡「照信口径」的项（上述未复跑项）都**逐条标了**，没有一条被写成「已验」。
+
+6. **自我更正**
+   - **T22 计数**：任务书写「45 → 48」，盘上两个锚点是 **43 → 48**（`t22/run-tests-t22b.log` 2026-11-11 / `t35/run13.txt` 2026-11-12）；本轮按盘写 **43 → 48** 并点名「45 盘上找不到」，**不改写**任务书原话的留痕。
+   - **`qa.log` 行数**：`t32/report.md` 记「**528** 行 / `query_column` **54**」，本 agent 按 `[2026-11-12` 日期前缀**整日切分**复算得 **532 / 55**（差 4 与 1，切分口径不同）⇒ 两份文档都**照本 agent 实测写 532/55** 并同时保留报告原数，**不调平**。
+   - **`CHANGELOG.md` 行号**：任务书写 `:16`，盘上是 **:12 节标题（2.3.1，2026-11-04）+ :25 表格第 5 条**，按盘写。
+   - **坑 118 的 `slotCount=0` 那半**：盘上**没找到**同一窗口的原始回执（`slotCount:0` 只出现在空背包的**正常**读数里）⇒ 编号 118 里已把它标成「照信口径、未复核」，**不当已证**。
+
+---
 ## 2026-11-18 · 工程沙箱内全自动模式（`MC_SKILL_AUTO_MODE=1`）（维护档）
 
 **第 0 块 · 结论**：已落地工程沙箱内全自动模式，仅认严格环境变量 `MC_SKILL_AUTO_MODE=1`（未设、非 `"1"` 或对话口头请求一律维持现行人在环），开启后在外部 `MC_SKILL_PROJECT_ROOT` 内免除工程写盘的 `MC_SKILL_ALLOW_WRITE=1` 与 `confirmed=true`，并在单独显式设置的 `MC_SKILL_PLAYTEST_ROOT` 内免除游玩自测确认门且解锁 `eula.txt` 同意与 `playtest_intent` 的 `kill`/`tnt`/`fill`；`mc_skill_update`、`download_official_mdk` 的 SHA256 pin、禁止写入 `MC_skill` 知识库仓库自身及 `MC_SKILL_PLAYTEST_ROOT` 绝不回落到 `MC_SKILL_PROJECT_ROOT` 等边界保持严格不变。`mcp-server` 完整 `npm test` 链（含新增 `test-auto-mode.mjs` 7 组回归）全部通过（exit 0）。

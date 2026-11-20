@@ -54,9 +54,9 @@ Java 侧（本仓自建桥模板 `mcp-server/src/generators/playtest-bridge-mod.
 ① 端口全空 ⇒ bind `38081`；② `38081` 被另一座桥占 ⇒ bind `38080`；③ 11 个全占 ⇒ `server == null` 且日志打 `端口区间 [38071, 38081] … 桥不启动（fail-closed）`。
 ⚠ **替身只证签名形状、不证类存在**（本机无 1.12.2 / 1.13.2 / 1.6.4 构件）。逐条坑位见 `community_knowledge/authored/ingame-playtest-automation.md` 编号 107。
 
-### 二合一 mod 形态（`playtest/core/**` + `playtest/mod/**`）的发射证据等级（2026-11-12 回灌）
+### 二合一 mod 形态（`playtest/core/**` + `playtest/mod/**`）的发射证据等级与单源维护（2026-11-12 回灌 · 2026-11-20 更新）
 
-`generate_playtest_driver` 在闸内档**另外**发「二合一 mod 形态」产物（`playtest/core/**` 18 类 + `playtest/mod/**` 适配层 + 产物头 `EVIDENCE-HEADER.md`），**与默认的单文件解释器并存、互不替代**。它的**档位权威不是** `PLAYTEST_VERIFIED_TIER`，而是**另一组表**：
+`generate_playtest_driver` 在闸内档**另外**发「二合一 mod 形态」产物（`playtest/core/**` **21 类** + `playtest/mod/**` 适配层 + 产物头 `EVIDENCE-HEADER.md`），**与默认的单文件解释器并存、互不替代**。仓内可读 `.java` 单一真值源位于 `mcp-server/playtest-mod/`（`core/` 21 类 + `adapters/` 53 档/110 文件 + `tests/` 16 个离线单测），由 `mcp-server/scripts/sync-playtest-mod.mjs`（默认 dry-run，`--write` 落盘）确定性派生 `src/generators/playtest-mod-{core,adapters}.ts`，并由只读防漂移门 `mcp-server/scripts/assert-playtest-mod-sync.mjs` 守住逐字节一致。它的**档位权威不是** `PLAYTEST_VERIFIED_TIER`，而是**另一组表**：
 
 - `PLAYTEST_MOD_VERIFIED_TIER` —— **真机验证过**（4 档，每条带 `route` / `reading` / `asOf`）；
 - `PLAYTEST_MOD_ADAPTERS` —— 适配层源码字面量（53 档 / 110 个 `.java`）；
@@ -105,3 +105,21 @@ Java 侧（本仓自建桥模板 `mcp-server/src/generators/playtest-bridge-mod.
 **两个截图假阴性坑**（同编号 104/105）：
 - **PauseGuard**：失焦会弹暂停菜单**盖住画面** ⇒ 截图与屏幕读取同时失真。driver 启动时关 `client.options.pauseOnLostFocus`，并在 `[QA]` 日志写明为什么与回退开关。
 - **等帧**：`setScreen(null)` / 改视角之后**当前帧缓冲还是上一帧** ⇒ 立刻抓 = 「新文件 + 旧内容」（`mtime` 检查抓不到这个坑）。抓帧前先等 `SHOT_SETTLE_TICKS`；长距离传送后的区块渲染**不在**覆盖范围内，要另补 `wait`。
+
+### 真机 L4 的三条「判据怎么写才不假绿」（2026-11-12 生存模式实测回灌）
+
+这一段只讲**判据形状**，不讲某档能力。三条都是 2026-11-12 在 forge/neoforge 1.20.1 **生存模式**下真机踩出来的，口径与原始回执的家仍是 `community_knowledge/authored/ingame-playtest-automation.md` 编号 **116–118**。
+
+1. **挖矿的出口不是回执字段，是目标格本身**。`mine` 是**跨 tick** 的，`progress.lastStopReason` 又是**粘滞**字段（会保留上一轮的收工原因）⇒ 用 `lastStopReason == MINE_BROKEN` 当循环出口会**首发就退出**；同理，`mine` 刚发完立刻 `query_column` 也可能仍读到**原方块**。判据写成：**轮询目标格的真实方块 id**，变空气才算挖穿；`lastStopReason` 只记账。（实测正例：32 发 / 8.0 s，同一目标 31 个 `miningTicks` 采样 0→150 单调增、`targetStillThere` 31/31 true，末发才 `MINE_BROKEN`，复查该格 `andesite → minecraft:air`。）
+2. **「回执照报成功」不等于「效果发生了」—— 容器动作尤其**。`drop_item` 在**没有容器界面开着**时回执照样给 `count` / `droppedId`，物品栏却纹丝不动、也不 fail-loud。根因是原版点击守卫：菜单 id 与 `player.containerMenu`（Yarn：`currentScreenHandler`）不等时**只记一条 WARN 就把这一击丢掉**，而 `close_screen` 只关界面、**不重置菜单**。判据写成：**动作之后再独立复读一次被改的那一格**（或 `query_inventory` diff），别拿动作回执当结论；写实现时目标菜单必须与判据**同源**。
+3. **跨维度传送期间不许读数下结论**。客户端停在 `ReceivingLevelScreen`（「正在接收地形」）时，`query_player_state` 会给出未同步的位置（实测读到过 `y=-377.7`）⇒ 判据里凡跨维度，**先等 `screen` 变 `null` 再采样**，前后各留一次。
+
+> **证据等级**：第 1、2 条的**现象**与第 3 条的位置读数 = **真机验证过**；第 2 条缺陷的 `close_screen` 源头（未发容器关闭包导致服务端 `containerMenu` 脱节）已于 **2026-11-20（T41b）** 在 NeoForge 1.20.1 (`closeContainer()`) 与 Fabric 1.21.11 (`closeHandledScreen()`) 修复，NeoForge 1.20.1 真机复验服务端 `/data get` 与客户端 `query_inventory` 100% 吻合（Fabric 1.21.11 仅编译+单测）。
+
+### T41 真机实测补遗（2026-11-20，`walk_to` / 容器同步 / 脚部危险，详见坑位 119–124）
+
+- **移动驱动走原版按键并联动仲裁**：直接写 `Input.forwardImpulse` / `playerInput` 会被 `KeyboardInput#tick` 每 tick 覆写归零；改为 `KeyMapping#setDown`（NeoForge 1.20.1）/ `KeyBinding#setPressed`（Fabric 1.21.11）并把活跃移动键同步进 `Arbitration.owned`，在未置前后台窗口（`pauseOnLostFocus=false`、`screen == null`）下实测可完成长距离寻路、跳跃与完整生存钻石镐闭环（0 死 0 作弊）。
+- **判真走动不看裸 `reached`**：同时核对 `moved` / `actualDisplacement` / `alreadyWithinTolerance`（区分 `ticks=0` 初始在容差内与真实位移），且长距离 `walk_to` 的 HTTP 等待预算须匹配 `DEFAULT_MAX_TICKS`（35s，而非 5s）。
+- **容器关闭走协议关菜单**：`closeScreen()` 必须调 `closeContainer()` / `closeHandledScreen()` 发关闭容器包并重置 `containerMenu` / `currentScreenHandler`，不可仅 `setScreen(null)`。
+- **寻路脚部危险几何**：`minecraft:fire` / `sweet_berry_bush` / `powder_snow` / `wither_rose` 位于玩家脚所在格 `y`（非地板 `y-1`），`standable()` 须经 `DangerTable.isWalkableHazardFeet` 放行至 `hazardKindOf()` 才能在真机诚实报 `stopReason=DANGER`（实心 `magma_block` 与碰撞柱 `cactus` 除外）。
+- **部署唯一性**：更新测试实例 `mods/` 时核查同 modid jar 唯一且 SHA256 与本次构建一致，避免旧文件名 jar 掩盖新构建。

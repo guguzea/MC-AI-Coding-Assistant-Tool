@@ -2442,6 +2442,9 @@ const REAL_RUN_GATES = [
     // 零写盘、不依赖 dist（直接读 src 源码）。自带 --selftest 三桶（投毒 / 对照 / 活性腿；
     // 臂数一律以该门 --selftest 末行现印为准，此处不写死；全内存夹具，不 spawn）。
     "./scripts/assert-tool-name-refs.mjs",
+    // T41 选项 B（2026-11-20）：bandd_playtest 可读 `.java` 单一真值源（mcp-server/playtest-mod/）↔
+    // 派生文件 src/generators/playtest-mod-{core,adapters}.ts 逐字节防漂移门（只读零写盘，自带纯内存 --selftest）。
+    "./scripts/assert-playtest-mod-sync.mjs",
   ];
 
 const SELFTEST_GATES = [
@@ -2598,6 +2601,9 @@ const SELFTEST_GATES = [
     // 钉住条数超上界 / 台账缺 reason-sites / 相邻字面量粘连造出假名 / title 面确实进抽取；
     // 另有对照桶与一条真盘真值源活性腿。**臂数一律以该门 --selftest 末行现印为准，此处不写死**（R-5）。
     "./scripts/assert-tool-name-refs.mjs",
+    // T41 选项 B（2026-11-20）：bandd_playtest 可读 `.java` 单一真值源（mcp-server/playtest-mod/）↔
+    // 派生文件 src/generators/playtest-mod-{core,adapters}.ts 逐字节防漂移门（只读零写盘，自带纯内存 --selftest）。
+    "./scripts/assert-playtest-mod-sync.mjs",
   ];
 
 /**
